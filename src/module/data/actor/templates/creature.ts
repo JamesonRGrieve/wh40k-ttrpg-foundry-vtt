@@ -7,6 +7,7 @@ import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
 import { coerceInt } from '../../fields/coerce.ts';
 import { applyCharacteristicRollData, computeCharacteristicTotals } from '../../shared/characteristic-math.ts';
 import { CHARACTERISTIC_SHORT_TO_FULL } from '../../shared/characteristics.ts';
+import { clampSize, coerceIntFields, sizeNameToInt } from '../../shared/field-coercion.ts';
 import { computeMovement } from '../../shared/movement-math.ts';
 import { SKILL_DEFINITIONS } from '../../shared/skill-definitions.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../../shared/stat-fields.ts';
@@ -643,22 +644,11 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migrateSize(source: RawSource): void {
-        if (source['size'] !== undefined && typeof source['size'] === 'string') {
-            const sizeMap: Record<string, number> = {
-                miniscule: 1,
-                puny: 2,
-                scrawny: 3,
-                average: 4,
-                hulking: 5,
-                enormous: 6,
-                massive: 7,
-                immense: 8,
-            };
-            source['size'] = sizeMap[source['size'].toLowerCase()] ?? 4;
+        if (typeof source['size'] === 'string') {
+            source['size'] = sizeNameToInt(source['size']);
         }
         if (source['size'] !== undefined) {
-            const sizeInt = this._toInt(source['size']);
-            source['size'] = sizeInt < 1 ? 1 : sizeInt > 10 ? 10 : sizeInt;
+            source['size'] = clampSize(this._toInt(source['size']));
         }
     }
 
@@ -669,9 +659,7 @@ export default class CreatureTemplate extends CommonTemplate {
     static #migrateWounds(source: RawSource): void {
         const wounds = asRawSource(source['wounds']);
         if (!wounds) return;
-        if (wounds['max'] !== undefined) wounds['max'] = this._toInt(wounds['max']);
-        if (wounds['value'] !== undefined) wounds['value'] = this._toInt(wounds['value']);
-        if (wounds['critical'] !== undefined) wounds['critical'] = this._toInt(wounds['critical']);
+        coerceIntFields(wounds, ['max', 'value', 'critical']);
     }
 
     /**
@@ -681,8 +669,7 @@ export default class CreatureTemplate extends CommonTemplate {
     static #migrateFatigue(source: RawSource): void {
         const fatigue = asRawSource(source['fatigue']);
         if (!fatigue) return;
-        if (fatigue['max'] !== undefined) fatigue['max'] = this._toInt(fatigue['max']);
-        if (fatigue['value'] !== undefined) fatigue['value'] = this._toInt(fatigue['value']);
+        coerceIntFields(fatigue, ['max', 'value']);
     }
 
     /**
@@ -711,8 +698,7 @@ export default class CreatureTemplate extends CommonTemplate {
     static #migrateFate(source: RawSource): void {
         const fate = asRawSource(source['fate']);
         if (!fate) return;
-        if (fate['max'] !== undefined) fate['max'] = this._toInt(fate['max']);
-        if (fate['value'] !== undefined) fate['value'] = this._toInt(fate['value']);
+        coerceIntFields(fate, ['max', 'value']);
     }
 
     /**
@@ -722,9 +708,7 @@ export default class CreatureTemplate extends CommonTemplate {
     static #migratePsy(source: RawSource): void {
         const psy = asRawSource(source['psy']);
         if (!psy) return;
-        if (psy['rating'] !== undefined) psy['rating'] = this._toInt(psy['rating']);
-        if (psy['sustained'] !== undefined) psy['sustained'] = this._toInt(psy['sustained']);
-        if (psy['defaultPR'] !== undefined) psy['defaultPR'] = this._toInt(psy['defaultPR']);
+        coerceIntFields(psy, ['rating', 'sustained', 'defaultPR']);
     }
 
     /* -------------------------------------------- */
@@ -751,20 +735,9 @@ export default class CreatureTemplate extends CommonTemplate {
             if (source['size'] === '' || source['size'] === null) {
                 delete source['size']; // Use schema default
             } else if (typeof source['size'] === 'string') {
-                const sizeMap: Record<string, number> = {
-                    miniscule: 1,
-                    puny: 2,
-                    scrawny: 3,
-                    average: 4,
-                    hulking: 5,
-                    enormous: 6,
-                    massive: 7,
-                    immense: 8,
-                };
-                source['size'] = sizeMap[source['size'].toLowerCase()] ?? 4;
+                source['size'] = sizeNameToInt(source['size']);
             } else {
-                const sizeInt = this._toInt(source['size']);
-                source['size'] = sizeInt < 1 ? 1 : sizeInt > 10 ? 10 : sizeInt;
+                source['size'] = clampSize(this._toInt(source['size']));
             }
         }
     }
@@ -776,15 +749,7 @@ export default class CreatureTemplate extends CommonTemplate {
     static #cleanWounds(source: RawSource): void {
         const wounds = asRawSource(source['wounds']);
         if (!wounds) return;
-        if (wounds['max'] !== undefined) {
-            wounds['max'] = this._toInt(wounds['max'], 0);
-        }
-        if (wounds['value'] !== undefined) {
-            wounds['value'] = this._toInt(wounds['value'], 0);
-        }
-        if (wounds['critical'] !== undefined) {
-            wounds['critical'] = this._toInt(wounds['critical'], 0);
-        }
+        coerceIntFields(wounds, ['max', 'value', 'critical']);
     }
 
     /**
@@ -794,12 +759,7 @@ export default class CreatureTemplate extends CommonTemplate {
     static #cleanFatigue(source: RawSource): void {
         const fatigue = asRawSource(source['fatigue']);
         if (!fatigue) return;
-        if (fatigue['max'] !== undefined) {
-            fatigue['max'] = this._toInt(fatigue['max'], 0);
-        }
-        if (fatigue['value'] !== undefined) {
-            fatigue['value'] = this._toInt(fatigue['value'], 0);
-        }
+        coerceIntFields(fatigue, ['max', 'value']);
     }
 
     /**
@@ -809,12 +769,7 @@ export default class CreatureTemplate extends CommonTemplate {
     static #cleanFate(source: RawSource): void {
         const fate = asRawSource(source['fate']);
         if (!fate) return;
-        if (fate['max'] !== undefined) {
-            fate['max'] = this._toInt(fate['max'], 0);
-        }
-        if (fate['value'] !== undefined) {
-            fate['value'] = this._toInt(fate['value'], 0);
-        }
+        coerceIntFields(fate, ['max', 'value']);
     }
 
     /**
@@ -824,15 +779,7 @@ export default class CreatureTemplate extends CommonTemplate {
     static #cleanPsy(source: RawSource): void {
         const psy = asRawSource(source['psy']);
         if (!psy) return;
-        if (psy['rating'] !== undefined) {
-            psy['rating'] = this._toInt(psy['rating'], 0);
-        }
-        if (psy['sustained'] !== undefined) {
-            psy['sustained'] = this._toInt(psy['sustained'], 0);
-        }
-        if (psy['defaultPR'] !== undefined) {
-            psy['defaultPR'] = this._toInt(psy['defaultPR'], 0);
-        }
+        coerceIntFields(psy, ['rating', 'sustained', 'defaultPR']);
     }
 
     /** Map characteristic short names to full keys (shared superset, includes Influence). */
