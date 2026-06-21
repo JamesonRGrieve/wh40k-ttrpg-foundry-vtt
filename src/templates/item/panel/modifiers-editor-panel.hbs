@@ -70,10 +70,7 @@
         </div>
         {{/each}}
 
-        <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start tw-cursor-pointer tw-rounded-md tw-border tw-border-dashed tw-border-[var(--color-border-secondary,#444)] tw-bg-transparent tw-px-2.5 tw-py-1.5 tw-text-xs tw-text-[var(--color-text-light-primary,#f0f0f0)] hover:tw-border-[var(--wh40k-accent-gold)] hover:tw-text-[var(--wh40k-accent-gold)]" data-action="addSkillModifier">
-          <i class="fas fa-plus"></i>
-          Add Skill Modifier
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs action="addSkillModifier" iconClass="fas fa-plus" labelKey="WH40K.TalentEditor.AddSkillModifier" accentClass="tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start tw-cursor-pointer tw-rounded-md tw-border tw-border-dashed tw-border-[var(--color-border-secondary,#444)] tw-bg-transparent tw-px-2.5 tw-py-1.5 tw-text-xs tw-text-[var(--color-text-light-primary,#f0f0f0)] hover:tw-border-[var(--wh40k-accent-gold)] hover:tw-text-[var(--wh40k-accent-gold)]"}}
       </div>
     </div>
 
@@ -223,13 +220,7 @@
         </div>
         {{/each}}
 
-        <button type="button"
-                class="tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start tw-cursor-pointer tw-rounded-md tw-border tw-border-dashed tw-border-[var(--color-border-secondary,#444)] tw-bg-transparent tw-px-2.5 tw-py-1.5 tw-text-xs tw-text-[var(--color-text-light-primary,#f0f0f0)] hover:tw-border-[var(--wh40k-accent-gold)] hover:tw-text-[var(--wh40k-accent-gold)]"
-                data-action="addSituationalModifier"
-                data-type="characteristics">
-          <i class="fas fa-plus"></i>
-          Add Conditional Characteristic Bonus
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs action="addSituationalModifier" type="characteristics" iconClass="fas fa-plus" labelKey="WH40K.ModifiersEditor.AddConditionalCharacteristicBonus" accentClass="tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start tw-cursor-pointer tw-rounded-md tw-border tw-border-dashed tw-border-[var(--color-border-secondary,#444)] tw-bg-transparent tw-px-2.5 tw-py-1.5 tw-text-xs tw-text-[var(--color-text-light-primary,#f0f0f0)] hover:tw-border-[var(--wh40k-accent-gold)] hover:tw-text-[var(--wh40k-accent-gold)]"}}
       </div>
     </div>
 
@@ -285,12 +276,7 @@
         </div>
         {{/each}}
 
-        <button type="button"
-                class="tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start tw-cursor-pointer tw-rounded-md tw-border tw-border-dashed tw-border-[var(--color-border-secondary,#444)] tw-bg-transparent tw-px-2.5 tw-py-1.5 tw-text-xs tw-text-[var(--color-text-light-primary,#f0f0f0)] hover:tw-border-[var(--wh40k-accent-gold)] hover:tw-text-[var(--wh40k-accent-gold)]"
-                data-action="addOtherModifier">
-          <i class="fas fa-plus"></i>
-          Add Custom Modifier
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs action="addOtherModifier" iconClass="fas fa-plus" labelKey="WH40K.ModifiersEditor.AddCustomModifier" accentClass="tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start tw-cursor-pointer tw-rounded-md tw-border tw-border-dashed tw-border-[var(--color-border-secondary,#444)] tw-bg-transparent tw-px-2.5 tw-py-1.5 tw-text-xs tw-text-[var(--color-text-light-primary,#f0f0f0)] hover:tw-border-[var(--wh40k-accent-gold)] hover:tw-text-[var(--wh40k-accent-gold)]"}}
       </div>
     </div>
   </div>

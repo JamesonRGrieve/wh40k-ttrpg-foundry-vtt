@@ -76,9 +76,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold hover:tw-shadow-[0_0_10px_rgba(201,162,39,0.15)] [&>i]:tw-text-[0.85em]" data-action="addItem" data-category="prerequisites" data-type="characteristics">
-          <i class="fa-solid fa-plus"></i> Add Characteristic Requirement
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="prerequisites" type="characteristics" labelKey="WH40K.TalentEditor.AddCharacteristicRequirement" extraClass="hover:tw-shadow-[0_0_10px_rgba(201,162,39,0.15)] [&>i]:tw-text-[0.85em]"}}
       </div>
 
       {{!-- Skill Prerequisites --}}
@@ -95,9 +93,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="prerequisites" data-type="skills">
-          <i class="fa-solid fa-plus"></i> Add Skill Requirement
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="prerequisites" type="skills" labelKey="WH40K.TalentEditor.AddSkillRequirement"}}
       </div>
 
       {{!-- Talent Prerequisites --}}
@@ -114,9 +110,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="prerequisites" data-type="talents">
-          <i class="fa-solid fa-plus"></i> Add Talent Requirement
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="prerequisites" type="talents" labelKey="WH40K.TalentEditor.AddTalentRequirement"}}
       </div>
     </div>
 
@@ -150,9 +144,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="modifiers" data-type="characteristics">
-          <i class="fa-solid fa-plus"></i> Add Characteristic Modifier
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="modifiers" type="characteristics" labelKey="WH40K.TalentEditor.AddCharacteristicModifier"}}
       </div>
 
       {{!-- Skill Modifiers --}}
@@ -175,9 +167,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="modifiers" data-type="skills">
-          <i class="fa-solid fa-plus"></i> Add Skill Modifier
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="modifiers" type="skills" labelKey="WH40K.TalentEditor.AddSkillModifier"}}
       </div>
 
       {{!-- Combat Modifiers --}}
@@ -200,9 +190,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="modifiers" data-type="combat">
-          <i class="fa-solid fa-plus"></i> Add Combat Modifier
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="modifiers" type="combat" labelKey="WH40K.TalentEditor.AddCombatModifier"}}
       </div>
 
       {{!-- Resource Modifiers --}}
@@ -225,9 +213,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="modifiers" data-type="resources">
-          <i class="fa-solid fa-plus"></i> Add Resource Modifier
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="modifiers" type="resources" labelKey="WH40K.TalentEditor.AddResourceModifier"}}
       </div>
 
       {{!-- Other Modifiers --}}
@@ -251,9 +237,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="modifiers" data-type="other">
-          <i class="fa-solid fa-plus"></i> Add Other Modifier
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="modifiers" type="other" labelKey="WH40K.TalentEditor.AddOtherModifier"}}
       </div>
     </div>
 
@@ -290,9 +274,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="situational" data-type="characteristics">
-          <i class="fa-solid fa-plus"></i> Add Situational Characteristic Modifier
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="situational" type="characteristics" labelKey="WH40K.TalentEditor.AddSituationalCharacteristicModifier"}}
       </div>
 
       {{!-- Situational Skill Modifiers --}}
@@ -318,9 +300,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="situational" data-type="skills">
-          <i class="fa-solid fa-plus"></i> Add Situational Skill Modifier
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="situational" type="skills" labelKey="WH40K.TalentEditor.AddSituationalSkillModifier"}}
       </div>
 
       {{!-- Situational Combat Modifiers --}}
@@ -346,9 +326,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="situational" data-type="combat">
-          <i class="fa-solid fa-plus"></i> Add Situational Combat Modifier
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="situational" type="combat" labelKey="WH40K.TalentEditor.AddSituationalCombatModifier"}}
       </div>
     </div>
 
@@ -382,9 +360,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="grants" data-type="skills">
-          <i class="fa-solid fa-plus"></i> Add Granted Skill
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="grants" type="skills" labelKey="WH40K.TalentEditor.AddGrantedSkill"}}
       </div>
 
       {{!-- Granted Talents --}}
@@ -403,9 +379,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="grants" data-type="talents">
-          <i class="fa-solid fa-plus"></i> Add Granted Talent
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="grants" type="talents" labelKey="WH40K.TalentEditor.AddGrantedTalent"}}
       </div>
 
       {{!-- Granted Traits --}}
@@ -424,9 +398,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="grants" data-type="traits">
-          <i class="fa-solid fa-plus"></i> Add Granted Trait
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="grants" type="traits" labelKey="WH40K.TalentEditor.AddGrantedTrait"}}
       </div>
 
       {{!-- Special Abilities --}}
@@ -444,9 +416,7 @@
           </div>
           {{/each}}
         </div>
-        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="grants" data-type="specialAbilities">
-          <i class="fa-solid fa-plus"></i> Add Special Ability
-        </button>
+        {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs category="grants" type="specialAbilities" labelKey="WH40K.TalentEditor.AddSpecialAbility"}}
       </div>
     </div>
 
