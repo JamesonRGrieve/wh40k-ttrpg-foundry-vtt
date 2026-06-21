@@ -34,9 +34,10 @@
  *   node scripts/gen-icons.mjs            # regenerate
  *   node scripts/gen-icons.mjs --check    # exit non-zero if stale
  */
-import { readdirSync, readFileSync, statSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { createRequire } from 'node:module';
+import { walkFiles } from './lib/walk.mjs';
 
 // CommonJS shim for require() inside an .mjs file.
 const require = createRequire(import.meta.url);
@@ -122,15 +123,7 @@ function resolveLucide(name) {
 }
 
 // Walk a directory yielding files matching one of the suffixes.
-function* walk(dir, suffixes) {
-    if (!existsSync(dir)) return;
-    for (const name of readdirSync(dir)) {
-        const full = `${dir}/${name}`;
-        const st = statSync(full);
-        if (st.isDirectory()) yield* walk(full, suffixes);
-        else if (st.isFile() && suffixes.some((s) => name.endsWith(s))) yield full;
-    }
-}
+const walk = (dir, suffixes) => walkFiles(dir, { ext: suffixes });
 
 // Scan source for icon references. Returns Set<"family:name">.
 function scanReferences() {

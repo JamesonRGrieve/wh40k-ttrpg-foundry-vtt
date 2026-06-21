@@ -25,8 +25,9 @@
  *   node scripts/css-coverage.mjs --json     # JSON only on stdout
  *   node scripts/css-coverage.mjs --quiet    # write report, no stdout
  */
-import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, relative, sep } from 'node:path';
+import { walkFiles } from './lib/walk.mjs';
 
 const ROOT = resolve(process.cwd(), 'src/templates');
 const OUT = resolve(process.cwd(), '.css-coverage.json');
@@ -34,14 +35,7 @@ const args = new Set(process.argv.slice(2));
 const jsonOnly = args.has('--json');
 const quiet = args.has('--quiet');
 
-function* walk(dir) {
-    for (const name of readdirSync(dir)) {
-        const full = `${dir}/${name}`;
-        const st = statSync(full);
-        if (st.isDirectory()) yield* walk(full);
-        else if (st.isFile() && name.endsWith('.hbs')) yield full;
-    }
-}
+const walk = (dir) => walkFiles(dir, { ext: '.hbs' });
 
 const CLASS_ATTR_RE = /class(?:Name)?\s*=\s*"([^"]*)"|class(?:Name)?\s*=\s*'([^']*)'/g;
 

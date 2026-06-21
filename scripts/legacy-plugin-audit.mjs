@@ -20,8 +20,9 @@
  * regression at write time.
  */
 import { readdirSync, readFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { createRequire } from 'node:module';
+import { walkFiles } from './lib/walk.mjs';
 
 const require = createRequire(import.meta.url);
 
@@ -31,15 +32,7 @@ const PLUGINS = readdirSync(resolve(ROOT, 'tailwind'))
     .map((f) => f.replace(/\.js$/, ''))
     .sort();
 
-function walk(dir, exts) {
-    const out = [];
-    for (const e of readdirSync(dir, { withFileTypes: true })) {
-        const full = join(dir, e.name);
-        if (e.isDirectory()) out.push(...walk(full, exts));
-        else if (exts.some((x) => e.name.endsWith(x))) out.push(full);
-    }
-    return out;
-}
+const walk = (dir, exts) => [...walkFiles(dir, { ext: exts })];
 
 const sources = [
     ...walk(resolve(ROOT, 'src/templates'), ['.hbs']),

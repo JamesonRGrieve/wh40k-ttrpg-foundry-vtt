@@ -3,19 +3,12 @@
 // Run after a deliberate reduction (template port from monolith animation rule
 // to `tw-animate-<name>`) to update the gate.
 
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { walkFiles } from './lib/walk.mjs';
 
-function walk(dir) {
-    const out = [];
-    for (const entry of readdirSync(dir, { withFileTypes: true })) {
-        const full = join(dir, entry.name);
-        if (entry.isDirectory()) out.push(...walk(full));
-        else if (entry.name.endsWith('.css')) out.push(full);
-    }
-    return out;
-}
-const SOURCES = walk('src/css').filter((p) => p !== 'src/css/entry.css').sort();
+const SOURCES = [...walkFiles('src/css', { ext: '.css' })]
+    .filter((p) => p !== 'src/css/entry.css')
+    .sort();
 
 let current = 0;
 for (const path of SOURCES) {
