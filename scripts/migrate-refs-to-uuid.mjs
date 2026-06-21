@@ -35,6 +35,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const { iterPackJson } = require('./lib/iter-pack-json.cjs');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -213,29 +217,6 @@ function visitPrerequisites(prereq, resolver, gameSystem, sourcePath) {
   return changed;
 }
 
-function* iterPackJson() {
-  for (const group of fs.readdirSync(PACK_SRC)) {
-    if (group.startsWith('.') || group.startsWith('_')) continue;
-    const groupPath = path.join(PACK_SRC, group);
-    if (!fs.statSync(groupPath).isDirectory()) continue;
-    for (const pack of fs.readdirSync(groupPath)) {
-      const packPath = path.join(groupPath, pack);
-      if (!fs.statSync(packPath).isDirectory()) continue;
-      if (pack.includes('.backup')) continue;
-      const sourceDir = path.join(packPath, '_source');
-      if (!fs.existsSync(sourceDir)) continue;
-      for (const file of fs.readdirSync(sourceDir)) {
-        if (!file.endsWith('.json')) continue;
-        yield {
-          filePath: path.join(sourceDir, file),
-          relPath: path.relative(REPO_ROOT, path.join(sourceDir, file)),
-          packName: pack,
-        };
-      }
-    }
-  }
-}
-
 function main() {
   const index = loadIndex();
   const resolver = new Resolver(index);
@@ -243,7 +224,7 @@ function main() {
   let filesChanged = 0;
   const changedPaths = [];
 
-  for (const entry of iterPackJson()) {
+  for (const entry of iterPackJson(PACK_SRC, { repoRoot: REPO_ROOT })) {
     let raw;
     try {
       raw = fs.readFileSync(entry.filePath, 'utf8');

@@ -31,6 +31,7 @@ try {
   };
 }
 const { buildUuidIndex, resolveAdventure } = require("./scripts/resolve-adventures.cjs");
+const { iterPackJson } = require("./scripts/lib/iter-pack-json.cjs");
 
 const util = require('util');
 if (!util.isDate) {
@@ -122,20 +123,20 @@ async function compilePacks() {
     console.warn(`pack schema validation skipped: ${err.message}`);
   }
 
-  // Collect all pack directories: src/packs/{group}/{pack-name}/_source
-  const packEntries = [];
-  for (const group of fs.readdirSync(PACK_SRC)) {
-    const groupPath = path.join(PACK_SRC, group);
-    if (!fs.statSync(groupPath).isDirectory()) continue;
-    for (const pack of fs.readdirSync(groupPath)) {
-      const packPath = path.join(groupPath, pack);
-      if (!fs.statSync(packPath).isDirectory()) continue;
-      const sourceDir = path.join(packPath, "_source");
-      if (fs.existsSync(sourceDir)) {
-        packEntries.push({ group, pack, sourceDir, relPath: path.join(group, pack) });
-      }
-    }
+  // Collect all pack directories: src/packs/{group}/{pack-name}/_source.
+  // Group the shared per-file iterator's yields back into one entry per pack.
+  const packEntryByKey = new Map();
+  for (const { filePath, packName, group } of iterPackJson(PACK_SRC)) {
+    const relPath = path.join(group, packName);
+    if (packEntryByKey.has(relPath)) continue;
+    packEntryByKey.set(relPath, {
+      group,
+      pack: packName,
+      sourceDir: path.dirname(filePath),
+      relPath,
+    });
   }
+  const packEntries = [...packEntryByKey.values()];
 
   // Build a global UUID -> source-document index so the adventure resolver can
   // embed COPIES of referenced actors/items/scenes/tables into compiled
