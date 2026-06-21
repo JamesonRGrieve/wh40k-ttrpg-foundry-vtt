@@ -1,6 +1,7 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import { renameKeys } from '../shared/migrate-rename.ts';
 import { normalizeToArray } from '../shared/normalize-to-array.ts';
 
 /**
@@ -88,46 +89,12 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel._migrateData receives raw unknown source data before schema validation
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
-        ShipWeaponData.#migratePowerUsage(source);
-        ShipWeaponData.#migrateSpaceUsage(source);
-        ShipWeaponData.#migrateSpCost(source);
-        ShipWeaponData.#migrateCritRating(source);
+        // Legacy field renames (rename iff target unset): powerUsage→power,
+        // spaceUsage→space, spCost→shipPoints, critRating→crit.
+        renameKeys(source, { powerUsage: 'power', spaceUsage: 'space', spCost: 'shipPoints', critRating: 'crit' });
         ShipWeaponData.#migrateType(source);
         ShipWeaponData.#migrateNumericFields(source);
         ShipWeaponData.#migrateHullType(source);
-    }
-
-    // TODO(dry): these 4 #migrate* helpers are the same field-rename idiom. Replace with a table-driven renameKeys(source, { powerUsage: 'power', ... }).
-    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
-    static #migratePowerUsage(source: Record<string, unknown>): void {
-        if ('powerUsage' in source && source['power'] === undefined) {
-            source['power'] = source['powerUsage'];
-            delete source['powerUsage'];
-        }
-    }
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
-    static #migrateSpaceUsage(source: Record<string, unknown>): void {
-        if ('spaceUsage' in source && source['space'] === undefined) {
-            source['space'] = source['spaceUsage'];
-            delete source['spaceUsage'];
-        }
-    }
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
-    static #migrateSpCost(source: Record<string, unknown>): void {
-        if ('spCost' in source && source['shipPoints'] === undefined) {
-            source['shipPoints'] = source['spCost'];
-            delete source['spCost'];
-        }
-    }
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
-    static #migrateCritRating(source: Record<string, unknown>): void {
-        if ('critRating' in source && source['crit'] === undefined) {
-            source['crit'] = source['critRating'];
-            delete source['critRating'];
-        }
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
