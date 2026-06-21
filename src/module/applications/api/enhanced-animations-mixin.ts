@@ -1,13 +1,30 @@
 /**
  * @file EnhancedAnimationsMixin - Advanced animations for stat changes
- * Provides smooth counter animations, wounds bar filling, bonus pulses
- * Extends the basic VisualFeedbackMixin with more sophisticated animations
+ * Provides smooth counter animations, wounds bar filling, bonus pulses.
+ *
+ * This mixin is the single home of the sheet animation engine: it absorbed the
+ * former VisualFeedbackMixin (#276), which is now a thin alias of this class
+ * (see `visual-feedback-mixin.ts`). It therefore exposes both the change-tracking
+ * / stat-flash API (`_flashStatChange`, `visualizeChanges`, `animateStatChange`,
+ * `_findFieldElement`, …) and the richer counter / wounds-bar / XP animations.
  */
 
 import type { WH40KBaseActorDocument, WH40KWounds } from '../../types/global.d.ts';
-import { flashElement, rafTween } from './animation-utils.ts';
+import { flashElement, rafTween, showBriefNotification } from './animation-utils.ts';
 import type { ApplicationV2Ctor } from './application-types.ts';
 import type { EnhancedAnimationsMixinAPI } from './sheet-mixin-types.js';
+
+/** CSS animation classes cleared before (re-)applying a stat-change animation. */
+const STAT_ANIMATION_CLASSES = [
+    'tw-animate-stat-increase',
+    'tw-animate-stat-decrease',
+    'tw-animate-flash-update',
+    'tw-animate-stat-heal',
+    'tw-animate-stat-damage',
+    'tw-animate-stat-advance',
+    'pulse-gold',
+    'pulse-glow',
+] as const;
 
 interface AnimationSnapshot {
     wounds?: number;
@@ -67,6 +84,9 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
         /** MutationObserver for dynamic content. */
         _mutationObserver: MutationObserver | null = null;
 
+        /** Flat previous document values for change tracking (absorbed VisualFeedback API). */
+        _previousValues: Map<string, number | string> = new Map();
+
         declare document: WH40KBaseActorDocument;
 
         /* -------------------------------------------- */
@@ -78,11 +98,32 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
         override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
+            // Capture flat values for change tracking
+            this._captureCurrentValues();
+
             // Capture current state for comparison
             this._captureAnimationState();
 
             // Setup mutation observer for dynamic content
             this._setupMutationObserver();
+        }
+
+        /* -------------------------------------------- */
+
+        /**
+         * Capture current document values for change tracking (flat map).
+         * @protected
+         */
+        _captureCurrentValues(): void {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- defensive: document may be unset early in lifecycle
+            if (!this.document) return;
+
+            const data = foundry.utils.flattenObject(this.document.toObject());
+            Object.entries(data).forEach(([key, value]) => {
+                if (typeof value === 'number' || typeof value === 'string') {
+                    this._previousValues.set(key, value);
+                }
+            });
         }
 
         /* -------------------------------------------- */
@@ -405,35 +446,186 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
 
         /* -------------------------------------------- */
 
+        /**
+         * Show a brief toast notification anchored to the right of an element.
+         * @param {HTMLElement} element     Element to anchor the toast to
+         * @param {string} message          Message to display
+         * @param {string} type             Type: "success", "warning", "error", "info"
+         * @protected
+         */
         _showBriefNotification(element: HTMLElement, message: string, type: string = 'info'): void {
-            const notification = document.createElement('div');
-            notification.className = `wh40k-brief-notification wh40k-notification-${type}`;
-            notification.textContent = message;
+            showBriefNotification(element, message, type, { position: 'right' });
+        }
 
-            const rect = element.getBoundingClientRect();
-            notification.style.cssText = `
-                position: fixed;
-                left: ${rect.right + 10}px;
-                top: ${rect.top}px;
-                z-index: 10000;
-                pointer-events: none;
-                opacity: 0;
-                transform: translateX(-10px);
-                transition: opacity 0.2s ease, transform 0.2s ease;
-            `;
+        /* -------------------------------------------- */
+        /*  Stat-Change Feedback (absorbed VisualFeedback) */
+        /* -------------------------------------------- */
 
-            document.body.appendChild(notification);
+        /**
+         * Flash visual feedback when a stat changes.
+         * @param {string} fieldName    The field name that changed (e.g., "system.wounds.value")
+         * @param {number|string} oldValue  The previous value
+         * @param {number|string} newValue  The new value
+         * @protected
+         */
+        _flashStatChange(fieldName: string, oldValue: number | string, newValue: number | string): void {
+            const element = this._findFieldElement(fieldName);
+            if (!element) return;
 
-            requestAnimationFrame(() => {
-                notification.style.opacity = '1';
-                notification.style.transform = 'translateX(0)';
+            const animationClass = this._getAnimationClass(fieldName, oldValue, newValue);
+            this._applyAnimation(element, animationClass);
+        }
+
+        /* -------------------------------------------- */
+
+        /**
+         * Find the DOM element for a field via a name → data-attr → class selector cascade.
+         * @param {string} fieldName    The field name
+         * @returns {HTMLElement|null}
+         * @protected
+         */
+        _findFieldElement(fieldName: string): HTMLElement | null {
+            let element = this.element.querySelector(`[name="${fieldName}"]`);
+            if (element) return element as HTMLElement;
+
+            const dataAttr = fieldName.replace(/^system\./, '').replace(/\./g, '-');
+            element = this.element.querySelector(`[data-field="${dataAttr}"]`);
+            if (element) return element as HTMLElement;
+
+            element = this.element.querySelector(`[data-stat="${dataAttr}"]`);
+            if (element) return element as HTMLElement;
+
+            const patterns = [`.stat-${dataAttr}`, `.${dataAttr}-value`, `#${dataAttr}`, `[data-tooltip*="${dataAttr}"]`];
+
+            for (const pattern of patterns) {
+                element = this.element.querySelector(pattern);
+                if (element) return element as HTMLElement;
+            }
+
+            return null;
+        }
+
+        /* -------------------------------------------- */
+
+        /**
+         * Determine the appropriate animation class for a given value change.
+         * @param {string} fieldName    Field that changed
+         * @param {number|string} oldValue  Previous value
+         * @param {number|string} newValue  New value
+         * @returns {string}    Animation class name
+         * @protected
+         */
+        _getAnimationClass(fieldName: string, oldValue: number | string, newValue: number | string): string {
+            if (fieldName.includes('wounds') && fieldName.includes('value')) {
+                return Number(newValue) > Number(oldValue) ? 'tw-animate-stat-heal' : 'tw-animate-stat-damage';
+            }
+
+            if (fieldName.includes('experience.total') || fieldName.includes('advance')) {
+                return 'tw-animate-stat-advance';
+            }
+
+            if (typeof oldValue === 'number' && typeof newValue === 'number') {
+                if (newValue > oldValue) return 'tw-animate-stat-increase';
+                if (newValue < oldValue) return 'tw-animate-stat-decrease';
+            }
+
+            return 'tw-animate-flash-update';
+        }
+
+        /* -------------------------------------------- */
+
+        /**
+         * Apply a stat-change animation class to an element (clearing the prior set first).
+         * @param {HTMLElement} element     Element to animate
+         * @param {string} animationClass   CSS animation class
+         * @protected
+         */
+        _applyAnimation(element: HTMLElement, animationClass: string): void {
+            flashElement(element, animationClass, 1000, STAT_ANIMATION_CLASSES);
+        }
+
+        /* -------------------------------------------- */
+
+        /**
+         * Animate derived stat changes (like characteristic bonuses) with a glow pulse.
+         * @param {string} selector     CSS selector for element
+         * @protected
+         */
+        _animateDerivedStat(selector: string): void {
+            const element = this.element.querySelector<HTMLElement>(selector);
+            if (!element) return;
+            flashElement(element, 'tw-animate-pulse-glow', 1000);
+        }
+
+        /* -------------------------------------------- */
+
+        /**
+         * Animate a numeric counter from one value to another (simple variant; no
+         * skip/cancel bookkeeping — see {@link animateCounter} for the richer engine).
+         * @param {HTMLElement} element     Element containing the number
+         * @param {number} fromValue        Starting value
+         * @param {number} toValue          Ending value
+         * @param {number} duration         Animation duration in ms
+         * @protected
+         */
+        _animateCounter(element: HTMLElement, fromValue: number, toValue: number, duration: number = 500): void {
+            rafTween({
+                from: fromValue,
+                to: toValue,
+                duration,
+                onFrame: (value) => {
+                    element.textContent = Math.round(value).toString();
+                },
+                onComplete: () => {
+                    element.textContent = toValue.toString();
+                },
+            });
+        }
+
+        /* -------------------------------------------- */
+
+        /**
+         * Public API: flash a stat field by animation kind.
+         * @param {string} fieldName        Field to animate
+         * @param {string} animationType    "increase" | "decrease" | "heal" | "damage" | "flash"
+         */
+        animateStatChange(fieldName: string, animationType: string = 'flash'): void {
+            const element = this._findFieldElement(fieldName);
+            if (!element) return;
+
+            const animationClass =
+                animationType === 'increase'
+                    ? 'tw-animate-stat-increase'
+                    : animationType === 'decrease'
+                    ? 'tw-animate-stat-decrease'
+                    : animationType === 'heal'
+                    ? 'tw-animate-stat-heal'
+                    : animationType === 'damage'
+                    ? 'tw-animate-stat-damage'
+                    : 'tw-animate-flash-update';
+
+            this._applyAnimation(element, animationClass);
+        }
+
+        /* -------------------------------------------- */
+
+        /**
+         * Public API: diff a changes payload against the captured previous values and
+         * flash each changed field, then re-capture.
+         * @param {Record<string, unknown>} changes    Foundry update payload
+         */
+        // eslint-disable-next-line no-restricted-syntax -- Foundry API boundary: flattenObject input is untyped
+        visualizeChanges(changes: Record<string, unknown>): void {
+            const flattened = foundry.utils.flattenObject(changes);
+
+            Object.entries(flattened).forEach(([key, newValue]) => {
+                const oldValue = this._previousValues.get(key);
+                if (oldValue !== undefined && oldValue !== newValue) {
+                    this._flashStatChange(key, oldValue, newValue as number | string);
+                }
             });
 
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transform = 'translateX(10px)';
-                setTimeout(() => notification.remove(), 200);
-            }, 1500);
+            this._captureCurrentValues();
         }
 
         /* -------------------------------------------- */
