@@ -1,7 +1,13 @@
 {{! Armour Modification Sheet Header }}
 <header class="tw-relative tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0 tw-border-b-2 tw-border-[rgba(212,175,55,0.3)]" style="background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(44,36,23,0.95) 100%)">
     <div class="tw-relative">
-        <img class="tw-w-full tw-h-full tw-object-cover" src="{{item.img}}" data-action="editImage" alt="{{item.name}}" title="{{item.name}}" />
+        {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs
+            imgOnly=true
+            src=item.img
+            alt=item.name
+            title=item.name
+            sizeClass="tw-w-full tw-h-full"
+            roundedClass=""}}
         <div class="tw-absolute tw-bottom-[-8px] tw-right-[-8px] tw-w-9 tw-h-9 tw-flex tw-items-center tw-justify-center tw-rounded-full tw-border-2 tw-border-[#2c2417] tw-shadow-[0_2px_8px_rgba(0,0,0,0.4)]" style="background: linear-gradient(135deg, var(--wh40k-color-gold) 0%, #b8962f 100%)">
             <i class="fas {{icon}} tw-text-xl tw-text-[#2c2417]"></i>
         </div>
