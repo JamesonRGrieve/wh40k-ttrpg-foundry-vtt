@@ -35,18 +35,13 @@
     </div>
 
     {{!-- Action buttons --}}
-    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(80,140,80,0.25)]">
-        <button type="button"
-                data-action="apply"
-                {{#unless canApply}}disabled{{/unless}}
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br dh2:tw-from-green-700 dh2:tw-to-green-900 tw-from-[#3e6b3e] tw-to-[#1f3a1f] tw-text-[#e8e4d9] tw-shadow-[0_4px_12px_rgba(60,120,60,0.35)]">
-            <i class="fas fa-dna"></i> {{localize "WH40K.MutantBackground.ApplyButton"}}
-        </button>
-        <button type="button"
-                data-action="cancel"
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
-            <i class="fas fa-times"></i> {{localize "WH40K.MutantBackground.Cancel"}}
-        </button>
-    </div>
+    {{> systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs
+        rootClass="tw-border-[rgba(80,140,80,0.25)]"
+        confirmAction="apply"
+        confirmIcon="fa-dna"
+        confirmLabelKey="WH40K.MutantBackground.ApplyButton"
+        confirmClass="tw-border-none tw-bg-gradient-to-br dh2:tw-from-green-700 dh2:tw-to-green-900 tw-from-[#3e6b3e] tw-to-[#1f3a1f] tw-text-[#e8e4d9] tw-shadow-[0_4px_12px_rgba(60,120,60,0.35)]"
+        confirmDisabled=(eq canApply false)
+        cancelLabelKey="WH40K.MutantBackground.Cancel"}}
 
 </div>

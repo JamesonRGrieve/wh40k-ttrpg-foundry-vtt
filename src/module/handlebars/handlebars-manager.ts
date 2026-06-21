@@ -63,6 +63,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/effect-row.hbs',
             'systems/wh40k-rpg/templates/actor/partial/empty-state.hbs',
             'systems/wh40k-rpg/templates/actor/partial/dropzone.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/effect-dropzone.hbs',
             'systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs',
             'systems/wh40k-rpg/templates/actor/partial/item-table.hbs',
             'systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs',
@@ -84,12 +85,16 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs',
             'systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs',
             'systems/wh40k-rpg/templates/chat/partial/extended-test-progress.hbs',
+            'systems/wh40k-rpg/templates/chat/partial/wounds-callout.hbs',
+            'systems/wh40k-rpg/templates/chat/partial/wounds-action-button.hbs',
+            'systems/wh40k-rpg/templates/chat/partial/result-callout.hbs',
             'systems/wh40k-rpg/templates/shared/field-row.hbs',
             'systems/wh40k-rpg/templates/shared/editable-portrait.hbs',
             'systems/wh40k-rpg/templates/shared/sheet-action-button.hbs',
             'systems/wh40k-rpg/templates/shared/accent-heading.hbs',
 
             // Acolyte sheet templates
+            'systems/wh40k-rpg/templates/actor/player/header-sidebar.hbs',
             'systems/wh40k-rpg/templates/actor/player/header-dh.hbs',
             'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
             'systems/wh40k-rpg/templates/actor/player/body.hbs',
@@ -196,6 +201,7 @@ export class HandlebarManager {
 
             // NPC Template sheet templates
             'systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs',
+            'systems/wh40k-rpg/templates/item/partial/item-name-input.hbs',
             'systems/wh40k-rpg/templates/item/npc-template/header.hbs',
             'systems/wh40k-rpg/templates/item/npc-template/tabs.hbs',
             'systems/wh40k-rpg/templates/item/npc-template/tab-basics.hbs',
@@ -236,6 +242,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/force-field-prompt.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs',
+            'systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs',
             'systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs',
             'systems/wh40k-rpg/templates/prompt/daemon-weapon-attribute-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/daemon-weapon-attribute-chat.hbs',

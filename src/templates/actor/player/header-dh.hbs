@@ -1,20 +1,8 @@
 {{!-- Dark Heresy 2e Character Sheet Header — sidebar layout for PC + NPC.
-     Composes the shared `header-base` block partial in sidebar variant.
-     Body renders the canonical `sidebar-header` (name, portrait, divination,
-     origin bubbles) followed by the bio fields panel.
+     Per-system entry file (referenced by the `headerFile` mapping in
+     `game-system-sheets.ts`). Delegates to the shared `header-sidebar`
+     partial, which is the single source of truth for the sidebar header
+     body shared with RT (and the BC/DW/OW/DH1/IM systems that also map
+     their `headerFile` here). --}}
 
-     The per-system Tailwind border variants on the inner column preserve this
-     template in the theme-coverage manifest; identical variants live on
-     `header-base.hbs`'s outer wrapper, so the rendered DOM shows the
-     accent border once at the actual visual edge. --}}
-
-{{#> systems/wh40k-rpg/templates/actor/partial/header-base.hbs
-    cardClass="wh40k-character-header wh40k-npc-sidebar-header"
-    innerClass="tw-flex tw-flex-col tw-items-center tw-gap-3 tw-border-0 dh2:tw-border-bronze rt:tw-border-accent-dynasty bc:tw-border-crimson dw:tw-border-bronze ow:tw-border-brass im:tw-border-crimson-light dh1:tw-border-gold-raw"}}
-    {{> systems/wh40k-rpg/templates/actor/partial/sidebar-header.hbs}}
-    {{> systems/wh40k-rpg/templates/actor/partial/origin-path-bubbles.hbs}}
-    {{#if isDaemonic}}
-    {{> systems/wh40k-rpg/templates/actor/partial/daemonic-immunities-badge.hbs}}
-    {{/if}}
-    {{> systems/wh40k-rpg/templates/actor/partial/sidebar-fields-panel.hbs}}
-{{/systems/wh40k-rpg/templates/actor/partial/header-base.hbs}}
+{{> systems/wh40k-rpg/templates/actor/player/header-sidebar.hbs}}

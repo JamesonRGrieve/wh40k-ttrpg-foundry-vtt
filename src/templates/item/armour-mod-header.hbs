@@ -1,20 +1,20 @@
 {{! Armour Modification Sheet Header }}
 <header class="tw-relative tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0 tw-border-b-2 tw-border-[rgba(212,175,55,0.3)]" style="background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(44,36,23,0.95) 100%)">
     <div class="tw-relative">
-        <img class="tw-w-full tw-h-full tw-object-cover" src="{{item.img}}" data-action="editImage" alt="{{item.name}}" title="{{item.name}}" />
+        {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs
+            imgOnly=true
+            src=item.img
+            alt=item.name
+            title=item.name
+            sizeClass="tw-w-full tw-h-full"
+            roundedClass=""}}
         <div class="tw-absolute tw-bottom-[-8px] tw-right-[-8px] tw-w-9 tw-h-9 tw-flex tw-items-center tw-justify-center tw-rounded-full tw-border-2 tw-border-[#2c2417] tw-shadow-[0_2px_8px_rgba(0,0,0,0.4)]" style="background: linear-gradient(135deg, var(--wh40k-color-gold) 0%, #b8962f 100%)">
             <i class="fas {{icon}} tw-text-xl tw-text-[#2c2417]"></i>
         </div>
     </div>
 
     <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
-        <input
-            class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1"
-            name="name"
-            type="text"
-            value="{{item.name}}"
-            placeholder="{{localize 'WH40K.Modification.NamePlaceholder'}}"
-        />
+        {{> systems/wh40k-rpg/templates/item/partial/item-name-input.hbs placeholderKey="WH40K.Modification.NamePlaceholder"}}
 
         <div class="tw-inline-flex tw-items-center tw-gap-1 tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">
             <i class="fas fa-wrench"></i>

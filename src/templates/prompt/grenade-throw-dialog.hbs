@@ -51,18 +51,13 @@
     {{/if}}
 
     {{!-- Action buttons --}}
-    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(201,162,39,0.2)]">
-        <button type="button"
-                data-action="throw"
-                {{#unless selectedGrenade}}disabled{{/unless}}
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] dh2:tw-from-bronze tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]">
-            <i class="fas fa-bomb"></i> {{localize "WH40K.WithinGrenade.ThrowButton"}}
-        </button>
-        <button type="button"
-                data-action="cancel"
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
-            <i class="fas fa-times"></i> {{localize "WH40K.Daemonhost.Cancel"}}
-        </button>
-    </div>
+    {{> systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs
+        rootClass="tw-border-[rgba(201,162,39,0.2)]"
+        confirmAction="throw"
+        confirmIcon="fa-bomb"
+        confirmLabelKey="WH40K.WithinGrenade.ThrowButton"
+        confirmClass="tw-border-none tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] dh2:tw-from-bronze tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]"
+        confirmDisabled=(eq selectedGrenade null)
+        cancelLabelKey="WH40K.Daemonhost.Cancel"}}
 
 </div>
