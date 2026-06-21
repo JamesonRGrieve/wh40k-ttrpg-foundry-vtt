@@ -113,8 +113,10 @@ export interface StaunchResolution {
  */
 export function resolveBloodLossStaunch(medicaeTarget: number, rollTotal: number): StaunchResolution {
     const target = medicaeTarget + MEDICAE_MECHADENDRITE.medicaeBonus;
-    const success = rollTotal === 1 || (rollTotal <= target && rollTotal !== 100);
-    const degrees = success ? Math.floor((target - rollTotal) / 10) : -Math.floor((rollTotal - target) / 10);
+    const success = isD100Success(rollTotal, target);
+    // Degrees route through the shared engine (gen-2 tens-digit method, the DH2
+    // default) instead of a hand-rolled margin calculation; sign marks success.
+    const degrees = success ? getDegreeForMode('gen2', target, rollTotal) : -getDegreeForMode('gen2', rollTotal, target);
     return { roll: rollTotal, target, success, degrees };
 }
 
