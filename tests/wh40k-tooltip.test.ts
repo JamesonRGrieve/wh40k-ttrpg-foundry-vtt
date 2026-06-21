@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { TooltipsWH40K, prepareSkillTooltipData } from '../src/module/applications/components/wh40k-tooltip.ts';
 import type { WH40KBaseActor } from '../src/module/documents/base-actor.ts';
 import type { WH40KCharacteristic, WH40KSkill } from '../src/module/types/global.d.ts';
+import { localizeKey } from '../stories/mocks/lang-localize.ts';
 
 // Subset of the SkillTooltipPayload contract returned by prepareSkillTooltipData()
 // (which writes JSON). The interface is not exported from wh40k-tooltip.ts so
@@ -40,20 +41,13 @@ const ORIGINAL_GAME = G.game;
 const ORIGINAL_FROM_UUID = G.fromUuid;
 
 beforeAll(() => {
-    const i18nMap: Record<string, string> = {
-        'WH40K.Skills.Untrained': 'Untrained',
-        'WH40K.Skills.Training': 'Training',
-        'WH40K.Tooltip.Skill.BasicUntrained': 'Basic (Untrained)',
-        'WH40K.Tooltip.Skill.CharacteristicValue': 'Characteristic Total',
-        'WH40K.Tooltip.Skill.UntrainedBase': 'Untrained Test Base (Characteristic ÷ 2)',
-        'WH40K.Tooltip.Skill.Modifiers': 'Modifiers',
-        'WH40K.Tooltip.Skill.TrainingProgression': 'Training Progression',
-        'WH40K.Tooltip.Skill.ClickNameToRoll': 'Use the die button to roll',
-    };
+    // Resolve tooltip labels through the shared {@link localizeKey} (flattens
+    // en.json once) rather than a hand-copied key→string map, so a langpack
+    // reword can't pass these tests against a stale string (#364).
     G.game = {
         i18n: {
-            localize: (key: string): string => i18nMap[key] ?? key,
-            format: (key: string): string => key,
+            localize: (key: string): string => localizeKey(key),
+            format: (key: string): string => localizeKey(key),
         },
     };
 });
