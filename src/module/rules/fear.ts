@@ -19,10 +19,20 @@ import { nonNegInt } from './_num.ts';
 /** Maximum canonical Fear rating per RAW (Fear 4 is the highest tier). */
 export const MAX_FEAR_RATING = 4;
 
+/**
+ * Clamp an arbitrary numeric input to a canonical Fear rating in
+ * `[0, MAX_FEAR_RATING]`, truncating fractions and treating non-finite
+ * input as 0. Single source of the Fear-range clamp so a range change
+ * lands in one place (the penalty, the test target, and the Crusader
+ * Smite-the-Unholy rider all route through it).
+ */
+export function clampFearRating(rating: number): number {
+    return Math.max(0, Math.min(MAX_FEAR_RATING, Math.trunc(Number.isFinite(rating) ? rating : 0)));
+}
+
 /** Per-rating WP penalty: Fear (X) imposes −10 × X on the resist test. */
 export function getFearTestPenalty(rating: number): number {
-    const r = Math.max(0, Math.min(MAX_FEAR_RATING, Math.trunc(Number.isFinite(rating) ? rating : 0)));
-    return r * 10;
+    return clampFearRating(rating) * 10;
 }
 
 export interface FearTestInput {
@@ -41,7 +51,7 @@ export interface FearTestResult {
 
 /** Compose the Fear-test target. RAW: target = WP − (10 × rating). */
 export function resolveFearTest(input: FearTestInput): FearTestResult {
-    const rating = Math.max(0, Math.min(MAX_FEAR_RATING, Math.trunc(Number.isFinite(input.fearRating) ? input.fearRating : 0)));
+    const rating = clampFearRating(input.fearRating);
     if (rating === 0) return { target: input.willpowerTotal, isNoOp: true };
     const wp = nonNegInt(input.willpowerTotal);
     return { target: Math.max(0, wp - getFearTestPenalty(rating)), isNoOp: false };

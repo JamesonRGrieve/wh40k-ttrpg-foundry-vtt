@@ -14,7 +14,7 @@
  * the chat card. `rng` is injectable so stories/tests stay deterministic.
  */
 
-import type { Rng } from './_dice.ts';
+import { type Rng, rollDie } from './_dice.ts';
 
 /** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
 export type { Rng };
@@ -131,8 +131,8 @@ export function listDisordersBySeverity(severity: DisorderSeverity): DisorderDef
 export function rollDisorder(severity: DisorderSeverity, rng: Rng = Math.random): DisorderDef | null {
     const pool = listDisordersBySeverity(severity);
     if (pool.length === 0) return null;
-    const raw = Number(rng());
-    const r = Number.isFinite(raw) ? Math.min(0.9999999, Math.max(0, raw)) : 0;
-    const idx = Math.floor(r * pool.length);
+    // `rollDie` returns a 1-based die result over `pool.length` faces with the
+    // same finite/clamp guard; shift to a 0-based array index.
+    const idx = rollDie(pool.length, rng) - 1;
     return pool[idx] ?? null;
 }

@@ -1,9 +1,30 @@
 import { describe, expect, it } from 'vitest';
-import { getFearTestPenalty, getShockTableRollModifier, MAX_FEAR_RATING, resolveFearTest } from './fear';
+import { clampFearRating, getFearTestPenalty, getShockTableRollModifier, MAX_FEAR_RATING, resolveFearTest } from './fear';
 
 describe('Fear constants (#65)', () => {
     it('MAX_FEAR_RATING is 4', () => {
         expect(MAX_FEAR_RATING).toBe(4);
+    });
+});
+
+describe('clampFearRating (#369 — single-sourced Fear-range clamp)', () => {
+    it('passes through canonical ratings 0..4 unchanged', () => {
+        expect(clampFearRating(0)).toBe(0);
+        expect(clampFearRating(1)).toBe(1);
+        expect(clampFearRating(4)).toBe(4);
+    });
+    it('caps above MAX_FEAR_RATING and floors below 0', () => {
+        expect(clampFearRating(10)).toBe(MAX_FEAR_RATING);
+        expect(clampFearRating(-3)).toBe(0);
+    });
+    it('truncates fractions toward zero', () => {
+        expect(clampFearRating(2.9)).toBe(2);
+        expect(clampFearRating(-0.9)).toBe(0);
+    });
+    it('treats non-finite input as 0 (NaN and both infinities)', () => {
+        expect(clampFearRating(Number.NaN)).toBe(0);
+        expect(clampFearRating(Number.POSITIVE_INFINITY)).toBe(0);
+        expect(clampFearRating(Number.NEGATIVE_INFINITY)).toBe(0);
     });
 });
 
