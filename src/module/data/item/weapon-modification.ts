@@ -175,10 +175,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
 
     /** @override */
     get chatProperties(): string[] {
-        // eslint-disable-next-line @typescript-eslint/unbound-method -- intentionally invoke the prototype getter via .call
-        const inheritedGetter = Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get;
-        const inheritedProps = (inheritedGetter?.call(this) ?? []) as string[];
-        const props: string[] = [...inheritedProps, this.restrictionsLabel];
+        const props: string[] = [...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate), this.restrictionsLabel];
 
         const mods = this.modifiers;
         if (mods.damage !== 0) props.push(`Damage: ${formatSigned(mods.damage)}`);

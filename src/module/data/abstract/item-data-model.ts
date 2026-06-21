@@ -293,6 +293,25 @@ export default class ItemDataModel extends SystemDataModel {
     }
 
     /**
+     * Invoke a mixin template's `chatProperties` getter against `self` and
+     * return its result (or an empty array when the template doesn't define
+     * one). DataModels assembled via `ItemDataModel.mixin(...)` lose normal
+     * `super` access to a mixin's getter, so the only way to reach a template's
+     * `chatProperties` is to pull the getter off its prototype and `.call` it
+     * with the live `this`. Centralizing that descriptor walk here makes the
+     * `?? []` fallback uniform — previously `ritual.ts` and `navigator-power.ts`
+     * omitted it, a latent crash when the template's getter is absent.
+     *
+     * @param self      The DataModel instance whose state the getter reads.
+     * @param template  The mixin template class whose `chatProperties` to invoke.
+     * @returns The template's chat properties, or `[]` when undefined.
+     */
+    static inheritedChatProperties(self: object, template: { prototype: object }): string[] {
+        const getter = Object.getOwnPropertyDescriptor(template.prototype, 'chatProperties')?.get;
+        return (getter?.call(self) as string[] | undefined) ?? [];
+    }
+
+    /**
      * Generate chat data for this item.
      * @param {object} htmlOptions   Options passed to enrichHTML.
      * @returns {Promise<object>}

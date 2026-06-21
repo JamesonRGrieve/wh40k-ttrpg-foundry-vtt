@@ -213,10 +213,12 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @override */
     get chatProperties(): string[] {
-        // eslint-disable-next-line @typescript-eslint/unbound-method -- intentionally invoke the prototype getter via .call
-        const inheritedGetter = Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get;
-        const inheritedProps = (inheritedGetter?.call(this) ?? []) as string[];
-        const props = [...inheritedProps, `Protection: ${this.protectionRating}%`, `Overload: ${this.overloadRangeLabel}`, this.statusLabel];
+        const props = [
+            ...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate),
+            `Protection: ${this.protectionRating}%`,
+            `Overload: ${this.overloadRangeLabel}`,
+            this.statusLabel,
+        ];
 
         return props;
     }

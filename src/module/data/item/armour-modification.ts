@@ -389,9 +389,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /** @override */
     get chatProperties(): string[] {
-        // eslint-disable-next-line @typescript-eslint/unbound-method -- boundary: mixin prototype access; calling getter with explicit this binding
-        const parentGet = Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get;
-        const props = [...((parentGet?.call(this) as string[] | undefined) ?? [])];
+        const props = [...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate)];
 
         // Restrictions
         props.push(this.restrictionsLabelEnhanced);

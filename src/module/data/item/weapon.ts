@@ -906,9 +906,9 @@ export default class WeaponData extends ItemDataModel.mixin(
     /** @override */
     get chatProperties(): string[] {
         const props = [
-            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []),
-            ...((Object.getOwnPropertyDescriptor(AttackTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []),
-            ...((Object.getOwnPropertyDescriptor(DamageTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []),
+            ...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate),
+            ...ItemDataModel.inheritedChatProperties(this, AttackTemplate),
+            ...ItemDataModel.inheritedChatProperties(this, DamageTemplate),
         ];
 
         props.unshift(`${this.classLabel} (${this.typeLabel})`);
