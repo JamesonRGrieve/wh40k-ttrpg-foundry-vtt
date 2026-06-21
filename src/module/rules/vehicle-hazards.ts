@@ -10,6 +10,8 @@
  * difficulty modifier — input to the standard d100 test target.
  */
 
+import { clampRoll, findBand } from './_dice.ts';
+
 export type HazardKind = 'outOfControl' | 'crash' | 'onFire';
 
 export interface HazardEntry {
@@ -89,8 +91,11 @@ function getHazardTable(kind: HazardKind): HazardTable {
 
 export function resolveHazardRoll(kind: HazardKind, rollTotal: number): HazardEntry | undefined {
     const table = getHazardTable(kind);
-    const t = Math.max(1, Math.min(table.dieSize, Math.trunc(rollTotal)));
-    return table.entries.find((e) => t >= e.range[0] && t <= e.range[1]);
+    const t = clampRoll(rollTotal, { max: table.dieSize });
+    // `clamp: false` matches the original `.find` returning undefined for a roll
+    // that lands outside every band (the tables are exhaustive over 1..dieSize,
+    // so this only fires defensively).
+    return findBand(table.entries, t, { clamp: false });
 }
 
 /**

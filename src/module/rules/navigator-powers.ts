@@ -42,6 +42,8 @@
  * (Document layer in `documents/item.ts`).
  */
 
+import { clampRoll, degreesOfFailure, degreesOfSuccess } from './_dice.ts';
+
 /**
  * Three canonical Navigator-power mastery tiers (core.md L8366–L8370).
  * Stored on the compendium document under `system.levels.<tier>`.
@@ -146,10 +148,13 @@ export function navigatorPowerTarget(input: Omit<NavigatorTestInput, 'roll'>): n
 export function resolveNavigatorPower(input: NavigatorTestInput): NavigatorTestResult {
     const levelBonus = NAVIGATOR_LEVEL_BONUS[input.level];
     const target = navigatorPowerTarget(input);
-    const roll = clampRoll(input.roll);
+    const roll = clampRoll(input.roll, { nonFinite: 1 });
     const success = roll <= target;
-    const dos = success ? Math.floor((target - roll) / 10) + 1 : 0;
-    const dof = success ? 0 : Math.floor((roll - target - 1) / 10) + 1;
+    const dos = degreesOfSuccess(roll, target);
+    // Navigator powers count DoF from the first point *past* the target
+    // (the off-by-one variant), so `{ inclusive: false }` reproduces the
+    // original `floor((roll - target - 1) / 10) + 1` exactly.
+    const dof = degreesOfFailure(roll, target, { inclusive: false });
     return Object.freeze({
         target,
         roll,
@@ -172,10 +177,10 @@ export function resolveNavigatorPower(input: NavigatorTestInput): NavigatorTestR
 export function resolveOpposedNavigatorPower(input: NavigatorOpposedInput): NavigatorOpposedResult {
     const navResult = resolveNavigatorPower(input.navigator);
     const opponentTarget = clampTarget(input.opponent.characteristic + (input.opponent.difficultyModifier ?? 0) + (input.opponent.situationalModifier ?? 0));
-    const opponentRoll = clampRoll(input.opponent.roll);
+    const opponentRoll = clampRoll(input.opponent.roll, { nonFinite: 1 });
     const opponentSuccess = opponentRoll <= opponentTarget;
-    const opponentDos = opponentSuccess ? Math.floor((opponentTarget - opponentRoll) / 10) + 1 : 0;
-    const opponentDof = opponentSuccess ? 0 : Math.floor((opponentRoll - opponentTarget - 1) / 10) + 1;
+    const opponentDos = degreesOfSuccess(opponentRoll, opponentTarget);
+    const opponentDof = degreesOfFailure(opponentRoll, opponentTarget, { inclusive: false });
     const opponent: NavigatorTestResult = Object.freeze({
         target: opponentTarget,
         roll: opponentRoll,
@@ -252,13 +257,6 @@ export function isNavigatorPowerLevel(value: unknown): value is NavigatorPowerLe
 function clampTarget(raw: number): number {
     if (!Number.isFinite(raw)) return 0;
     if (raw < 0) return 0;
-    if (raw > 100) return 100;
-    return Math.trunc(raw);
-}
-
-function clampRoll(raw: number): number {
-    if (!Number.isFinite(raw)) return 1;
-    if (raw < 1) return 1;
     if (raw > 100) return 100;
     return Math.trunc(raw);
 }

@@ -11,6 +11,8 @@
  * chat-card surface remain follow-up.
  */
 
+import { nonNegInt } from './_num.ts';
+
 /** Canonical Cover types per Table 7-4 (core.md p.229). */
 export type CoverType =
     /** Armour-glass, thin metal, wooden planks (AP 4). */
@@ -66,8 +68,8 @@ export interface CoverHitResult {
  * damage absorbed reduces the cover's AP by 1.
  */
 export function resolveCoverHit(input: CoverHitInput): CoverHitResult {
-    const dmg = Math.max(0, Math.trunc(Number.isFinite(input.incomingDamage) ? input.incomingDamage : 0));
-    const ap = Math.max(0, Math.trunc(Number.isFinite(input.coverAP) ? input.coverAP : 0));
+    const dmg = nonNegInt(input.incomingDamage);
+    const ap = nonNegInt(input.coverAP);
 
     const absorbed = Math.min(dmg, ap);
     const overflow = dmg - absorbed;

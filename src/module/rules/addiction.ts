@@ -11,6 +11,7 @@
  */
 
 import { stepLadder } from './_ladder.ts';
+import { nonNegInt } from './_num.ts';
 
 export type AddictionTier = 'none' | 'mild' | 'moderate' | 'severe';
 
@@ -56,8 +57,8 @@ export interface AddictionCheckResult {
  * failure (none → mild → moderate → severe, capped at severe).
  */
 export function resolveAddictionCheck(input: AddictionCheckInput): AddictionCheckResult {
-    const wp = Math.max(0, Math.trunc(input.willpowerTotal));
-    const rating = Math.max(0, Math.trunc(input.substanceRating));
+    const wp = nonNegInt(input.willpowerTotal);
+    const rating = nonNegInt(input.substanceRating);
     const target = Math.max(0, wp - rating);
 
     // One tier worse per failure, clamped at the top of the ladder (severe).

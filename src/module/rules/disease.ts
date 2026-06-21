@@ -11,6 +11,8 @@
  * dialog remain follow-up scope for #123.
  */
 
+import { nonNegInt } from './_num.ts';
+
 export interface DiseaseProfile {
     id: string;
     label: string;
@@ -34,8 +36,8 @@ export interface DiseaseExposureInput {
  * out the actor's Toughness entirely.
  */
 export function resolveDiseaseExposure(input: DiseaseExposureInput): { target: number } {
-    const tgh = Math.max(0, Math.trunc(input.toughnessTotal));
-    const rating = Math.max(0, Math.trunc(input.diseaseRating));
+    const tgh = nonNegInt(input.toughnessTotal);
+    const rating = nonNegInt(input.diseaseRating);
     return { target: Math.max(0, tgh - rating) };
 }
 
@@ -53,10 +55,10 @@ export interface InfectionDailyTick {
  */
 export function applyInfectionDailyTick(opts: { profile: DiseaseProfile; cumulativeSoFar: number; treatmentSucceeded?: boolean }): InfectionDailyTick {
     if (opts.treatmentSucceeded === true) {
-        return { damage: 0, cumulative: Math.max(0, Math.trunc(opts.cumulativeSoFar)) };
+        return { damage: 0, cumulative: nonNegInt(opts.cumulativeSoFar) };
     }
-    const damage = Math.max(0, Math.trunc(opts.profile.damagePerDay));
-    const cumulative = Math.max(0, Math.trunc(opts.cumulativeSoFar)) + damage;
+    const damage = nonNegInt(opts.profile.damagePerDay);
+    const cumulative = nonNegInt(opts.cumulativeSoFar) + damage;
     return { damage, cumulative };
 }
 
@@ -66,6 +68,6 @@ export function applyInfectionDailyTick(opts: { profile: DiseaseProfile; cumulat
  */
 export function isTreatmentComplete(profile: DiseaseProfile, accumulatedMedicaeDoS: number): boolean {
     const threshold = Math.max(1, Math.trunc(profile.treatmentThreshold));
-    const dos = Math.max(0, Math.trunc(accumulatedMedicaeDoS));
+    const dos = nonNegInt(accumulatedMedicaeDoS);
     return dos >= threshold;
 }
