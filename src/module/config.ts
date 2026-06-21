@@ -5,6 +5,7 @@
 
 import { getWeaponQualityHasLevel, getWeaponQualityMechanics, weaponQualityDescKey, weaponQualityLabelKey } from './rules/weapon-quality-payloads.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod } from './rolls/roll-helpers.ts';
+import { capitalize } from './utils/format.ts';
 
 /* -------------------------------------------- */
 /*  Config Type Definitions                     */
@@ -987,7 +988,7 @@ WH40K.getSkillIcon = function (skillKey) {
             .map((part, index) => {
                 const lower = part.toLowerCase();
                 if (index === 0) return lower;
-                return lower.charAt(0).toUpperCase() + lower.slice(1);
+                return capitalize(lower);
             })
             .join('');
         const normalizedIcon = this.skillIcons[normalized];
