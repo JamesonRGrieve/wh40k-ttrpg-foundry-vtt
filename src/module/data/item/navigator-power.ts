@@ -129,10 +129,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [
-            `Test: ${this.testLabel}`,
-            ...(Object.getOwnPropertyDescriptor(ActivationTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]),
-        ];
+        const props = [`Test: ${this.testLabel}`, ...ItemDataModel.inheritedChatProperties(this, ActivationTemplate)];
 
         return props;
     }

@@ -132,4 +132,36 @@ describe('ItemDataModel', () => {
         expect(meta.hasEffects).toBe(false);
         expect(meta.singleton).toBe(false);
     });
+
+    describe('inheritedChatProperties', () => {
+        it('invokes a template prototype chatProperties getter with the live `this`', async () => {
+            const mod = await importModelOrSkip(import('./item-data-model.ts'));
+            // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+            if (mod === undefined) return;
+            const ItemDataModel = mod.default;
+
+            // A stand-in mixin template exposing a `chatProperties` getter that
+            // reads instance state, mirroring how PhysicalItemTemplate behaves.
+            class Template {
+                label = 'unused';
+                get chatProperties(): string[] {
+                    return [`label: ${this.label}`];
+                }
+            }
+            const self = { label: 'plasma' };
+            expect(ItemDataModel.inheritedChatProperties(self, Template)).toEqual(['label: plasma']);
+        });
+
+        it('falls back to an empty array when the template defines no chatProperties getter', async () => {
+            const mod = await importModelOrSkip(import('./item-data-model.ts'));
+            // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+            if (mod === undefined) return;
+            const ItemDataModel = mod.default;
+
+            class NoGetter {}
+            // This is the latent-crash case ritual.ts / navigator-power.ts hit
+            // before the helper made the `?? []` fallback uniform.
+            expect(ItemDataModel.inheritedChatProperties({}, NoGetter)).toEqual([]);
+        });
+    });
 });

@@ -1,14 +1,15 @@
-import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import VehicleStatModifiersTemplate, { type VehicleStatModifiers } from '../shared/vehicle-stat-modifiers-template.ts';
 
 /**
  * Data model for Vehicle Upgrade items.
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
+ * @mixes VehicleStatModifiersTemplate
  */
-export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionTemplate) {
+export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionTemplate, VehicleStatModifiersTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare upgradeType: string;
@@ -18,7 +19,8 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
     declare availability: string;
     declare source: string;
     declare installCost: number;
-    declare modifiers: { speed: number; manoeuvrability: number; armour: number; integrity: number };
+    // modifiers (vehicle-stat block + hasModifiers/modifiersList) from VehicleStatModifiersTemplate.
+    declare modifiers: VehicleStatModifiers;
     declare notes: string;
 
     /** @inheritdoc */
@@ -76,13 +78,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
                 label: 'WH40K.VehicleUpgrade.InstallCost',
             }),
 
-            // Stat modifiers
-            modifiers: new fields.SchemaField({
-                speed: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                manoeuvrability: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                armour: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                integrity: new fields.NumberField({ required: true, initial: 0, integer: true }),
-            }),
+            // Stat modifiers (4-field block) come from VehicleStatModifiersTemplate.
 
             // Notes
             notes: new fields.StringField({ required: false, initial: '', blank: true }),
@@ -93,33 +89,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    /**
-     * Has any non-zero modifiers?
-     * @type {boolean}
-     */
-    get hasModifiers(): boolean {
-        return Object.values(this.modifiers).some((v) => v !== 0);
-    }
-
-    /**
-     * Get modifiers as a formatted list.
-     * @type {object[]}
-     */
-    get modifiersList(): Array<{ key: string; label: string; value: number; formatted: string }> {
-        const list: Array<{ key: string; label: string; value: number; formatted: string }> = [];
-        for (const [key, value] of Object.entries(this.modifiers)) {
-            if (value !== 0) {
-                const label = game.i18n.localize(`WH40K.VehicleStat.${key.charAt(0).toUpperCase()}${key.slice(1)}`);
-                list.push({
-                    key,
-                    label,
-                    value,
-                    formatted: `${formatSigned(value)}`,
-                });
-            }
-        }
-        return list;
-    }
+    // hasModifiers / modifiersList are inherited from VehicleStatModifiersTemplate.
 
     /**
      * Render modifiers as inline HTML for table-cell display. Negative values

@@ -1,10 +1,16 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
+import { simpleEffectItemSchema } from '../shared/simple-effect-item.ts';
 
 /**
  * Data model for Special Ability items.
+ *
+ * A "simple effect" item — its identifier / HTML field / notes schema is
+ * shared with {@link ../item/malignancy.ts MalignancyData} through
+ * {@link simpleEffectItemSchema}; the only divergence is the HTML field name
+ * (`benefit` here, `effect` there).
+ *
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
@@ -17,18 +23,9 @@ export default class SpecialAbilityData extends ItemDataModel.mixin(DescriptionT
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
-
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends `any`; the as-unknown chain satisfies DataField.Any brand without runtime effect
-            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
-
-            // Benefit/effect description
-            benefit: new fields.HTMLField({ required: true, blank: true }),
-
-            // Notes
-            notes: new fields.StringField({ required: false, blank: true }),
+            ...simpleEffectItemSchema('benefit'),
         };
     }
 

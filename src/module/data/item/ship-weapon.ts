@@ -1,6 +1,7 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import { normalizeToArray } from '../shared/normalize-to-array.ts';
 
 /**
  * Data model for Ship Weapon items.
@@ -188,28 +189,12 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} options    Additional options
      * @protected
      */
-    // TODO(dry): the Set/string→array _cleanData normalization here is copy-pasted across armour-modification.ts, weapon-modification.ts, ship-component.ts, armour.ts, damage-template.ts. Extract normalizeToArray(source, key).
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel._cleanData receives raw source before schema validation; options is a Foundry framework type
     static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData(source, options);
-        // Ensure hullType is array
-        if (source?.['hullType'] !== null && source?.['hullType'] !== undefined && !Array.isArray(source['hullType'])) {
-            if (typeof source['hullType'] === 'string') {
-                source['hullType'] = [source['hullType']];
-            } else if (source['hullType'] instanceof Set) {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: SetField stores unknown elements; cast is safe here as we're converting to array before schema validation
-                source['hullType'] = Array.from(source['hullType'] as Set<unknown>);
-            }
-        }
-        // Ensure special is array
-        if (source?.['special'] !== null && source?.['special'] !== undefined && !Array.isArray(source['special'])) {
-            if (typeof source['special'] === 'string') {
-                source['special'] = source['special'].split(',').map((s) => s.trim());
-            } else if (source['special'] instanceof Set) {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: SetField stores unknown elements; cast is safe here as we're converting to array before schema validation
-                source['special'] = Array.from(source['special'] as Set<unknown>);
-            }
-        }
+        // Convert SetFields to arrays before Foundry serializes (see normalize-to-array.ts).
+        normalizeToArray(source, 'hullType', { stringMode: 'wrap' });
+        normalizeToArray(source, 'special', { stringMode: 'split' });
     }
 
     /* -------------------------------------------- */
