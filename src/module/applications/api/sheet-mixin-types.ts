@@ -97,28 +97,15 @@ export interface TooltipMixinAPI {
 
 /* -------------------------------------------- */
 
-/** API surface added by VisualFeedbackMixin */
-export interface VisualFeedbackMixinAPI {
-    /** Store previous values for comparison. */
-    _previousValues: Map<string, number | string>;
-    /** Track the last form submission time to prevent animation spam. */
-    _lastSubmitTime: number;
-
-    _captureCurrentValues: () => void;
-    _flashStatChange: (fieldName: string, oldValue: number | string, newValue: number | string) => void;
-    _findFieldElement: (fieldName: string) => HTMLElement | null;
-    _getAnimationClass: (fieldName: string, oldValue: number | string, newValue: number | string) => string;
-    _applyAnimation: (element: HTMLElement, animationClass: string) => void;
-    _animateDerivedStat: (selector: string) => void;
-    _animateCounter: (element: HTMLElement, fromValue: number, toValue: number, duration?: number) => void;
-    _showBriefNotification: (element: HTMLElement, message: string, type?: string) => void;
-    animateStatChange: (fieldName: string, animationType?: string) => void;
-    visualizeChanges: (changes: Record<string, unknown>) => void;
-}
-
-/* -------------------------------------------- */
-
-/** API surface added by EnhancedAnimationsMixin */
+/**
+ * API surface added by EnhancedAnimationsMixin.
+ *
+ * Since #276 this is the single home of the sheet animation engine: it absorbed
+ * the former VisualFeedbackMixin (now a thin alias — see `visual-feedback-mixin.ts`),
+ * so this interface is the superset of both former surfaces. The change-tracking /
+ * stat-flash members below were formerly declared on the now-removed
+ * `VisualFeedbackMixinAPI` interface.
+ */
 export interface EnhancedAnimationsMixinAPI {
     /** Animation configuration settings. */
     _animationConfig: {
@@ -134,6 +121,8 @@ export interface EnhancedAnimationsMixinAPI {
     _previousState: unknown;
     /** MutationObserver for dynamic content. */
     _mutationObserver: MutationObserver | null;
+    /** Flat previous document values for change tracking (absorbed VisualFeedback API). */
+    _previousValues: Map<string, number | string>;
 
     _captureAnimationState: () => void;
     _setupMutationObserver: () => void;
@@ -147,6 +136,18 @@ export interface EnhancedAnimationsMixinAPI {
     _flashElement: (element: HTMLElement, animClass: string, duration?: number) => void;
     _shouldSkipAnimation: () => boolean;
     close: (options: Record<string, unknown>) => Promise<unknown>;
+
+    // ---- Absorbed VisualFeedback change-tracking / stat-flash surface (#276) ----
+    _captureCurrentValues: () => void;
+    _flashStatChange: (fieldName: string, oldValue: number | string, newValue: number | string) => void;
+    _findFieldElement: (fieldName: string) => HTMLElement | null;
+    _getAnimationClass: (fieldName: string, oldValue: number | string, newValue: number | string) => string;
+    _applyAnimation: (element: HTMLElement, animationClass: string) => void;
+    _animateDerivedStat: (selector: string) => void;
+    _animateCounter: (element: HTMLElement, fromValue: number, toValue: number, duration?: number) => void;
+    _showBriefNotification: (element: HTMLElement, message: string, type?: string) => void;
+    animateStatChange: (fieldName: string, animationType?: string) => void;
+    visualizeChanges: (changes: Record<string, unknown>) => void;
 }
 
 /* -------------------------------------------- */
@@ -290,9 +291,9 @@ export type ItemPreviewMixinAPI = object;
  *
  * This captures the union of all public/protected members contributed by:
  *   ApplicationV2Mixin, PrimarySheetMixin (incl. DragDropMixin), TooltipMixin,
- *   VisualFeedbackMixin, EnhancedAnimationsMixin, CollapsiblePanelMixin,
- *   ContextMenuMixin, EnhancedDragDropMixin, WhatIfMixin, StatBreakdownMixin,
- *   ActiveModifiersMixin, ItemPreviewMixin
+ *   EnhancedAnimationsMixin (which absorbed VisualFeedbackMixin — #276),
+ *   CollapsiblePanelMixin, ContextMenuMixin, EnhancedDragDropMixin, WhatIfMixin,
+ *   StatBreakdownMixin, ActiveModifiersMixin, ItemPreviewMixin
  *
  * Plus Foundry base ApplicationV2 / ActorSheetV2 properties.
  */
@@ -300,8 +301,7 @@ export interface BaseActorSheetMixins
     extends Omit<ApplicationV2MixinAPI, 'animateStatChange' | '_onFirstRender' | '_onRender'>,
         Omit<PrimarySheetMixinAPI, 'animateStatChange' | '_onFirstRender' | '_onRender'>,
         TooltipMixinAPI,
-        Omit<VisualFeedbackMixinAPI, 'animateStatChange'>,
-        Omit<EnhancedAnimationsMixinAPI, 'close'>,
+        Omit<EnhancedAnimationsMixinAPI, 'close' | 'animateStatChange'>,
         CollapsiblePanelMixinAPI,
         ContextMenuMixinAPI,
         EnhancedDragDropMixinAPI,
