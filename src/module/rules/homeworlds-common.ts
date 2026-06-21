@@ -1,55 +1,35 @@
 /**
- * Shared shapes + lookup for the DH2 supplement homeworld registries (#302).
+ * Shared shapes + lookup for the DH2 supplement homeworld registries (#302, #338).
  *
- * The Without and Beyond supplement tables are structural twins: identical
- * characteristic-mod / fate-threshold / wounds sub-shapes and the same nine
- * base `Def` fields, differing only by their `id` union and their
- * supplement-specific riders. This module is the single source of those shared
- * shapes; each supplement file extends {@link HomeworldDefBase} and appends its
+ * Per Direction #7 (#338) the basic mechanical VALUES (characteristic mods, Fate
+ * threshold, wounds, aptitude) are authored once in the compendium packs and read
+ * at render time via `src/module/rules/homeworld-compendium.ts`. The registries in
+ * this directory keep ONLY the supplement-specific data the compendium does not
+ * carry: the structured riders plus the per-supplement key-talent /
+ * recommended-background / mechanical-hook prose.
+ *
+ * The Without and Beyond supplement tables are structural twins for the slimmed
+ * portion: the same four base `Def` fields, differing only by their `id` union and
+ * their supplement-specific riders. This module is the single source of that shared
+ * base shape; each supplement file extends {@link HomeworldDefBase} and appends its
  * own riders.
- *
- * The Within supplement uses a deliberately different `Def` shape (bonuses named
- * `positive` / `negative`, an `emperorsBlessingMin` trigger, a `flat`/`dice`/
- * `faces` wounds roll, a named `homeWorldBonus` instead of `mechanicalHook`), so
- * it does NOT extend the base — but it shares the generic {@link lookupById}
- * accessor. Keeping the riders (and Within's distinct shape) separate is
- * deliberate; do not collapse them into the base.
  *
  * Pure data/util — no Foundry imports, system-agnostic (a future RT/BC
  * homeworld-supplement table is a trivial `extends HomeworldDefBase`).
  */
 
-/** Characteristic-mod tuple: the bonus and penalty characteristic-id lists. */
-interface HomeworldCharacteristicMods {
-    readonly bonuses: readonly string[];
-    readonly penalties: readonly string[];
-}
-
-/** Fate-threshold rule: base value + Emperor's Blessing trigger (`d10 >= N`). */
-interface HomeworldFateThreshold {
-    readonly base: number;
-    readonly emperorsBlessing: number;
-}
-
-/** Starting wounds — `<base> + 1d<dieFaces>` form (a d5 across current tables). */
-interface HomeworldWounds {
-    readonly base: number;
-    readonly dieFaces: 5;
-}
-
 /**
- * The nine fields every supplement homeworld `Def` shares. Supplements extend
- * this, narrowing `id` to their own union and appending their riders.
+ * The fields every supplement homeworld `Def` shares AFTER the compendium-sourced
+ * basics were removed (#338). Supplements extend this, narrowing `id` to their own
+ * union and appending their riders. The characteristic mods / Fate threshold /
+ * wounds / aptitude now live in the compendium and are joined at render time by the
+ * info dialogs.
  */
 export interface HomeworldDefBase {
-    /** Registry key (stable id used by other modules). */
+    /** Registry key (stable camelCase id matching the supplement's union). */
     readonly id: string;
     /** Display label (a `WH40K.*Homeworld.*` langpack key, localized at render time). */
     readonly label: string;
-    readonly characteristicMods: HomeworldCharacteristicMods;
-    readonly fateThreshold: HomeworldFateThreshold;
-    readonly wounds: HomeworldWounds;
-    readonly aptitude: string;
     /** Key talents and skills granted at character creation. */
     readonly keyTalents: readonly string[];
     /** Recommended backgrounds per RAW. */

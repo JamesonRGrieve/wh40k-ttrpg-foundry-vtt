@@ -2,51 +2,38 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/within-homeworld-info-dialog.hbs?raw';
 import { renderSheet } from '../../../../stories/test-helpers';
-import { WITHIN_HOMEWORLDS, WITHIN_HOMEWORLD_IDS } from '../../rules/within-homeworlds.ts';
+
+/**
+ * Storybook stories for WithinHomeworldInfoDialog (GitHub #139 / #338).
+ *
+ * The dialog reads its mechanical values from the compendium pack
+ * `dh2-within-origins-homeworlds` at render time. Stories don't run the
+ * Foundry compendium stack, so we build a static view-model here that
+ * mirrors what `_prepareContext` emits — the values are the projected
+ * compendium basics for Agri / Feudal / Frontier.
+ */
 
 interface Args {
     showAll: boolean;
 }
 
-/* Pure-data accent palette parallel to the dialog's runtime accent map.
- * Stories don't share the Foundry localization stack, so we build a
- * static view-model here that mirrors what _prepareContext emits. */
 const accent = {
-    agriWorld: {
+    'agri-world': {
         border: 'tw-border-amber-600',
         accentText: 'tw-text-amber-300',
         accentBg: 'tw-bg-amber-900/30',
     },
-    feudalWorld: {
+    'feudal-world': {
         border: 'tw-border-emerald-600',
         accentText: 'tw-text-emerald-300',
         accentBg: 'tw-bg-emerald-900/30',
     },
-    frontierWorld: {
+    'frontier-world': {
         border: 'tw-border-yellow-700',
         accentText: 'tw-text-yellow-200',
         accentBg: 'tw-bg-yellow-900/30',
     },
 } as const;
-
-const CHAR_LABEL: Record<string, string> = {
-    weaponSkill: 'Weapon Skill',
-    ballisticSkill: 'Ballistic Skill',
-    strength: 'Strength',
-    toughness: 'Toughness',
-    agility: 'Agility',
-    intelligence: 'Intelligence',
-    perception: 'Perception',
-    willpower: 'Willpower',
-    fellowship: 'Fellowship',
-};
-
-function modsLabel(id: keyof typeof WITHIN_HOMEWORLDS): string {
-    const def = WITHIN_HOMEWORLDS[id];
-    const pos = def.characteristicMods.positive.map((c) => `+${CHAR_LABEL[c] ?? c}`);
-    const neg = def.characteristicMods.negative.map((c) => `−${CHAR_LABEL[c] ?? c}`);
-    return [...pos, ...neg].join(', ');
-}
 
 interface WithinHomeworldCardCtx {
     id: keyof typeof accent;
@@ -56,30 +43,51 @@ interface WithinHomeworldCardCtx {
     characteristicModsLabel: string;
     fateThresholdLabel: string;
     woundsLabel: string;
-    keyAptitudes: string[];
+    keyAptitudes: readonly string[];
     accent: (typeof accent)[keyof typeof accent];
 }
 
-function buildCards(): WithinHomeworldCardCtx[] {
-    return WITHIN_HOMEWORLD_IDS.map((id) => {
-        const def = WITHIN_HOMEWORLDS[id];
-        return {
-            id,
-            label: def.label,
-            bonusName: def.homeWorldBonus.name,
-            bonusDescription: def.homeWorldBonus.description,
-            characteristicModsLabel: modsLabel(id),
-            fateThresholdLabel: `${String(def.fateThreshold.base)} (${String(def.fateThreshold.emperorsBlessingMin)}+)`,
-            woundsLabel: `${String(def.wounds.flat)} + ${String(def.wounds.dice)}d${String(def.wounds.faces)}`,
-            keyAptitudes: def.keyAptitudes.map((c) => CHAR_LABEL[c] ?? c),
-            accent: accent[id],
-        };
-    });
-}
+/** The projected compendium basics, mirroring `readHomeworldMechanics` output. */
+const CARDS: WithinHomeworldCardCtx[] = [
+    {
+        id: 'agri-world',
+        label: 'Agri World',
+        bonusName: 'Strength from the Land',
+        bonusDescription: 'An agri-world character starts with the Brutal Charge (2) trait.',
+        characteristicModsLabel: '+Fellowship, +Strength, −Agility',
+        fateThresholdLabel: '2 (7+)',
+        woundsLabel: '8 + 1d5',
+        keyAptitudes: ['Strength'],
+        accent: accent['agri-world'],
+    },
+    {
+        id: 'feudal-world',
+        label: 'Feudal World',
+        bonusName: 'At Home in Armour',
+        bonusDescription: 'A feudal world character ignores the maximum Agility value imposed by any armour he is wearing.',
+        characteristicModsLabel: '+Perception, +Weapon Skill, −Intelligence',
+        fateThresholdLabel: '3 (6+)',
+        woundsLabel: '9 + 1d5',
+        keyAptitudes: ['Weapon Skill'],
+        accent: accent['feudal-world'],
+    },
+    {
+        id: 'frontier-world',
+        label: 'Frontier World',
+        bonusName: 'Rely on None but Yourself',
+        bonusDescription:
+            'A frontier world character gains a +20 bonus to Tech-Use tests when applying personal weapon modifications, and a +10 bonus when repairing damaged items.',
+        characteristicModsLabel: '+Ballistic Skill, +Perception, −Fellowship',
+        fateThresholdLabel: '3 (7+)',
+        woundsLabel: '7 + 1d5',
+        keyAptitudes: ['Ballistic Skill'],
+        accent: accent['frontier-world'],
+    },
+];
 
 const meta = {
     title: 'Dialogs/WithinHomeworldInfoDialog',
-    render: (_args) => renderSheet(templateSrc, { cards: buildCards() }),
+    render: (_args) => renderSheet(templateSrc, { cards: CARDS }),
     args: { showAll: true },
 } satisfies Meta<Args>;
 export default meta;
@@ -101,7 +109,7 @@ export const RendersThreeHomeworldCards: Story = {
 
 export const AgriWorldShowsBrutalCharge: Story = {
     play: ({ canvasElement }) => {
-        const agri = canvasElement.querySelector('[data-homeworld="agriWorld"]');
+        const agri = canvasElement.querySelector('[data-homeworld="agri-world"]');
         void expect(agri).toBeTruthy();
         void expect(agri?.textContent).toMatch(/Brutal Charge/);
         void expect(agri?.textContent).toMatch(/Strength from the Land/);
@@ -110,7 +118,7 @@ export const AgriWorldShowsBrutalCharge: Story = {
 
 export const FrontierWorldShowsTechUseBonus: Story = {
     play: ({ canvasElement }) => {
-        const frontier = canvasElement.querySelector('[data-homeworld="frontierWorld"]');
+        const frontier = canvasElement.querySelector('[data-homeworld="frontier-world"]');
         void expect(frontier).toBeTruthy();
         void expect(frontier?.textContent).toMatch(/Tech-Use/);
         void expect(frontier?.textContent).toMatch(/Rely on None but Yourself/);

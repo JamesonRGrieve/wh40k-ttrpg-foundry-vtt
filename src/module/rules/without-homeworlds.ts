@@ -1,10 +1,16 @@
 /**
- * Without-supplement new home-world traits (without.md p. 27-32).
+ * Without-supplement new home-world riders (without.md p. 27-32).
  *
- * Three new home-worlds — Death World, Garden World, Research Station —
- * each provides characteristic modifiers, a Fate-threshold tuple, a wounds
- * starting value, an aptitude, a list of key talents / skills, and a
- * mechanical-hook description that runtime systems consume.
+ * Three new home-worlds — Death World, Garden World, Research Station.
+ * Per Direction #7 (#338), the basic mechanical VALUES (characteristic
+ * modifiers, Fate threshold, starting wounds, aptitude, the named
+ * home-world bonus) are authored once in the compendium pack
+ * `dh2-without-origins-homeworlds` and read at render time via
+ * `src/module/rules/homeworld-compendium.ts`. This registry keeps ONLY
+ * the supplement-specific data the compendium does not carry: the
+ * structured riders plus the key-talent / recommended-background /
+ * mechanical-hook prose, and the `compendiumId` that joins each entry to
+ * its `originPath` document.
  *
  *   - Death World's "Survivor's Paranoia" hook composes with the surprise
  *     attack pipeline: while the death-world character is Surprised,
@@ -65,6 +71,8 @@ interface WithoutPursuitOfDataRider {
 
 export interface WithoutHomeworldDef extends HomeworldDefBase {
     readonly id: 'deathWorld' | 'gardenWorld' | 'researchStation';
+    /** Compendium `system.identifier` (kebab-case) joining this entry to its `originPath` doc. */
+    readonly compendiumId: string;
     /** Surprise-bonus suppression rider (Death World only). */
     readonly surpriseBonusSuppression?: WithoutSurpriseBonusSuppression;
     /** Shock / Trauma + Insanity rider (Garden World only). */
@@ -80,21 +88,16 @@ export interface WithoutHomeworldDef extends HomeworldDefBase {
 /**
  * Death World (without.md p. 27-28).
  *
- * +Ag, +Per, -Fel. Fate 2 / Emperor's Blessing on 5+. Wounds 9+1d5.
- * "Survivor's Paranoia": while a death-world character is Surprised,
- * non-Surprised attackers do not gain the normal +30 bonus to their
- * Weapon Skill and Ballistic Skill tests when targeting them.
+ * Compendium basics: +Ag, +Per, -Fel. Fate 2 / Emperor's Blessing on 5+.
+ * Wounds 9+1d5. Fieldcraft aptitude. "Survivor's Paranoia": while a
+ * death-world character is Surprised, non-Surprised attackers do not gain
+ * the normal +30 bonus to their Weapon Skill and Ballistic Skill tests
+ * when targeting them.
  */
 const DEATH_WORLD: WithoutHomeworldDef = {
     id: 'deathWorld',
+    compendiumId: 'death-world',
     label: 'WH40K.WithoutHomeworld.DeathWorld',
-    characteristicMods: {
-        bonuses: ['agility', 'perception'],
-        penalties: ['fellowship'],
-    },
-    fateThreshold: { base: 2, emperorsBlessing: 5 },
-    wounds: { base: 9, dieFaces: 5 },
-    aptitude: 'Fieldcraft',
     keyTalents: ["Survivor's Paranoia (suppresses Surprised +30 WS/BS bonus)"],
     recommendedBackgrounds: ['Adeptus Arbites', 'Adeptus Mechanicus', 'Adeptus Ministorum', 'Imperial Guard'],
     mechanicalHook:
@@ -108,21 +111,15 @@ const DEATH_WORLD: WithoutHomeworldDef = {
 /**
  * Garden World (without.md p. 29-30).
  *
- * +Fel, +Ag, -T. Fate 2 / Emperor's Blessing on 4+. Wounds 7+1d5.
- * "Serenity of the Green": halves (rounded up) the duration of any
- * Shock or Mental Trauma result, and the XP cost to remove Insanity
- * points drops from 100 to 50 per point.
+ * Compendium basics: +Fel, +Ag, -T. Fate 2 / Emperor's Blessing on 4+.
+ * Wounds 7+1d5. Social aptitude. "Serenity of the Green": halves (rounded
+ * up) the duration of any Shock or Mental Trauma result, and the XP cost
+ * to remove Insanity points drops from 100 to 50 per point.
  */
 const GARDEN_WORLD: WithoutHomeworldDef = {
     id: 'gardenWorld',
+    compendiumId: 'garden-world',
     label: 'WH40K.WithoutHomeworld.GardenWorld',
-    characteristicMods: {
-        bonuses: ['fellowship', 'agility'],
-        penalties: ['toughness'],
-    },
-    fateThreshold: { base: 2, emperorsBlessing: 4 },
-    wounds: { base: 7, dieFaces: 5 },
-    aptitude: 'Social',
     keyTalents: ['Serenity of the Green (Shock/Trauma halved, Insanity removal 50xp)'],
     recommendedBackgrounds: ['Adeptus Administratum', 'Adeptus Astra Telepathica', 'Adeptus Ministorum', 'Rogue Trader Fleet'],
     mechanicalHook:
@@ -138,22 +135,16 @@ const GARDEN_WORLD: WithoutHomeworldDef = {
 /**
  * Research Station (without.md p. 31-32).
  *
- * +Int, +Per, -Fel. Fate 3 / Emperor's Blessing on 8+. Wounds 8+1d5.
- * "Pursuit of Data": whenever the character reaches Rank 2 (Trained)
- * in a Scholastic Lore skill, they also gain Rank 1 (Known) in one
- * related or identical Forbidden Lore specialisation of their choice
- * (GM is final arbiter of relatedness).
+ * Compendium basics: +Int, +Per, -Fel. Fate 3 / Emperor's Blessing on 8+.
+ * Wounds 8+1d5. Knowledge aptitude. "Pursuit of Data": whenever the
+ * character reaches Rank 2 (Trained) in a Scholastic Lore skill, they also
+ * gain Rank 1 (Known) in one related or identical Forbidden Lore
+ * specialisation of their choice (GM is final arbiter of relatedness).
  */
 const RESEARCH_STATION: WithoutHomeworldDef = {
     id: 'researchStation',
+    compendiumId: 'research-station',
     label: 'WH40K.WithoutHomeworld.ResearchStation',
-    characteristicMods: {
-        bonuses: ['intelligence', 'perception'],
-        penalties: ['fellowship'],
-    },
-    fateThreshold: { base: 3, emperorsBlessing: 8 },
-    wounds: { base: 8, dieFaces: 5 },
-    aptitude: 'Knowledge',
     keyTalents: ['Pursuit of Data (Scholastic Lore Rank 2 grants Forbidden Lore Rank 1)'],
     recommendedBackgrounds: ['Adeptus Administratum', 'Adeptus Astra Telepathica', 'Adeptus Mechanicus', 'Mutant'],
     mechanicalHook:

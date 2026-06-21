@@ -24,9 +24,12 @@ export interface InfoCardDialogConfig {
     template: string;
     /** Context key the template iterates (e.g. `'homeworlds'`). */
     contextKey: string;
-    /** Builds the card view-models injected under `contextKey` on each render. */
+    /**
+     * Builds the card view-models injected under `contextKey` on each render.
+     * May be async — compendium-sourced dialogs read `game.packs` at render time.
+     */
     // eslint-disable-next-line no-restricted-syntax -- boundary: card view-models are heterogeneous Handlebars context objects with no single shared shape
-    cards: () => readonly unknown[];
+    cards: () => readonly unknown[] | Promise<readonly unknown[]>;
     /** Extra root classes beyond `['wh40k-rpg', 'dialog', id]`. */
     extraClasses?: readonly string[];
     /** Scrollable selectors for the cards PART (default `['.{id}__scroll']`). */
@@ -58,7 +61,7 @@ export function defineInfoCardDialog(config: InfoCardDialogConfig): ApplicationV
         // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns a free-form Handlebars context bag
         override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             const context = await super._prepareContext(options);
-            return { ...context, [config.contextKey]: config.cards() };
+            return { ...context, [config.contextKey]: await config.cards() };
         }
     }
 
