@@ -2,30 +2,17 @@
 // Ratchet for `animation:` declarations remaining in the CSS monolith.
 //
 // Reads `.animation-baseline` and `.animation-coverage.json` (regenerated
-// by `pnpm animation:coverage`). Fails if the count has risen above the
-// baseline. Run `pnpm animation:ratchet:update` to lower the baseline after
-// genuine reductions.
+// here via the shared scan in scripts/lib/scan-animation.mjs). Fails if the
+// count has risen above the baseline. Run `pnpm animation:ratchet:update` to
+// lower the baseline after genuine reductions.
 
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { walkFiles } from './lib/walk.mjs';
+import { existsSync, readFileSync } from 'node:fs';
+import { writeReport } from './lib/scan-animation.mjs';
 
 const COVERAGE = '.animation-coverage.json';
 const BASELINE = '.animation-baseline';
 
-const SOURCES = [...walkFiles('src/css', { ext: '.css' })]
-    .filter((p) => p !== 'src/css/entry.css')
-    .sort();
-
-let current = 0;
-for (const path of SOURCES) {
-    const text = readFileSync(path, 'utf8');
-    current += (text.match(/^\s*animation(?:-name)?\s*:/gm) ?? []).length;
-}
-writeFileSync(COVERAGE, JSON.stringify({
-    generatedAt: new Date().toISOString(),
-    sources: SOURCES,
-    animationDeclarations: current,
-}, null, 2) + '\n');
+const { animationDeclarations: current } = writeReport();
 
 if (!existsSync(BASELINE)) {
     console.error(`No ${BASELINE} found. Run \`pnpm animation:ratchet:update\` once to seed it.`);
