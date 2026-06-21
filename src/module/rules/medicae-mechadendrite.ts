@@ -24,8 +24,9 @@
  */
 
 import type { WH40KItem } from '../documents/item.ts';
-import { applyRollModeWhispers, roll1d100 } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate, getDegreeForMode, isD100Success, roll1d100 } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument, WH40KSkill } from '../types/global.d.ts';
+import { type Rng, rollD100 } from './_dice.ts';
 import { removeEffects } from './active-effects.ts';
 
 export const MEDICAE_MECHADENDRITE = {
@@ -180,20 +181,12 @@ export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: Rng)
         gameSystem,
     };
 
-    const html = await foundry.applications.handlebars.renderTemplate(
+    await emitChatFromTemplate(
         'systems/wh40k-rpg/templates/chat/medicae-mechadendrite-chat.hbs',
         // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate accepts an untyped Handlebars context bag
         templateData as unknown as Record<string, unknown>,
+        { applyWhispers: true },
     );
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const chatData: Record<string, unknown> = {
-        user: game.user.id,
-        content: html,
-    };
-    applyRollModeWhispers(chatData);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts untyped Foundry data
-    await ChatMessage.create(chatData);
 
     return resolution;
 }

@@ -1,5 +1,5 @@
 import { t } from '../i18n/t.ts';
-import { applyRollModeWhispers, roll1d100 } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate, isD100Success, roll1d100 } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 type ActiveEffectChatContext = {
@@ -90,16 +90,13 @@ export async function handleOnFire(actor: WH40KBaseActorDocument): Promise<void>
 }
 
 export async function sendActiveEffectMessage(activeContext: ActiveEffectChatContext): Promise<void> {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate accepts untyped context; cast to match Handlebars signature
-    const html = await foundry.applications.handlebars.renderTemplate(activeContext.template, activeContext as unknown as Record<string, unknown>);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts untyped data; chatData keys are Foundry API fields
-    const chatData: Record<string, unknown> = {
-        user: game.user.id,
-        rollMode: game.settings.get('core', 'rollMode'),
-        content: html,
-    };
-    applyRollModeWhispers(chatData);
-    await ChatMessage.create(chatData);
+    await emitChatFromTemplate(
+        activeContext.template,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate accepts untyped context; cast to match Handlebars signature
+        activeContext as unknown as Record<string, unknown>,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get('core', 'rollMode') is typed as the open core-settings value
+        { rollMode: game.settings.get('core', 'rollMode') as string, applyWhispers: true },
+    );
 }
 
 /* -------------------------------------------- */

@@ -14,6 +14,7 @@
  */
 
 import { SISTER_OF_BATTLE_TALENTS, type SisterOfBattleTalent } from '../../rules/sister-of-battle.ts';
+import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
@@ -110,11 +111,7 @@ export default class SisterOfBattleDialog extends ApplicationV2Mixin(Application
             gameSystem: 'dh2',
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/sister-of-battle-chat.hbs', templateData);
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-        const payload = { user: game.user.id, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
-        await ChatMessage.create(payload);
+        await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/sister-of-battle-chat.hbs', templateData);
         await this.close();
     }
 
