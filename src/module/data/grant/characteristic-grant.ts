@@ -115,21 +115,18 @@ export default class CharacteristicGrantData extends BaseGrantData {
         await this._applyUpdates(actor, updates, options);
     }
 
-    // TODO(dry): reverse/restore here mirror resource-grant.ts. Lift a BaseGrantData _reverseDeltaMap()/_restoreDeltaMap() taking the update-path template.
     /** @inheritDoc */
     override async reverse(actor: WH40KBaseActor, appliedState: Record<string, CharacteristicAppliedState>): Promise<CharacteristicRestoreData> {
+        // Per-field delta mapper: revert each characteristic's advance to its
+        // captured previous value. The shared merge/apply/guard tail lives in
+        // BaseGrantData._reverseWithDeltaMap (#345).
+        const restores = await this._reverseWithDeltaMap(actor, appliedState, (key, state) => ({
+            deltas: { [`system.characteristics.${key}.advance`]: state.previousValue },
+            restore: { key, state },
+        }));
+
         const restoreData: CharacteristicRestoreData = { characteristics: {} };
-        const updates: Record<string, number> = {};
-
-        for (const [key, state] of Object.entries(appliedState)) {
-            updates[`system.characteristics.${key}.advance`] = state.previousValue;
-            restoreData.characteristics[key] = state;
-        }
-
-        if (Object.keys(updates).length > 0) {
-            await actor.update(updates);
-        }
-
+        for (const { key, state } of restores) restoreData.characteristics[key] = state;
         return restoreData;
     }
 

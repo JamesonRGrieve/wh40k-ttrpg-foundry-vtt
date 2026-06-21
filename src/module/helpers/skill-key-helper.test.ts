@@ -1,11 +1,20 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+    SKILL_DEFINITIONS,
+    skillAdvancedMap,
+    skillCharacteristicShortMap,
+    skillNameToKeyMap,
+    specialistSkillKeys,
+} from '../data/shared/skill-definitions.ts';
 import { SkillKeyHelper } from './skill-key-helper.ts';
 
 /**
  * Coverage for the pure SkillKeyHelper lookups (previously untested). validateKey
  * takes an actor and is excluded. The characteristic map also pins the current
- * (known-drifted) assignments for `security` / `survival` so any future change
- * is deliberate.
+ * assignments for `security` / `survival` so any future change is deliberate.
+ *
+ * The four lookup maps are derived from the SKILL_DEFINITIONS catalog (#273); the
+ * `derived from SKILL_DEFINITIONS` block below is the no-drift guard.
  */
 
 afterEach(() => {
@@ -64,6 +73,15 @@ describe('isAdvanced', () => {
         expect(SkillKeyHelper.isAdvanced('athletics')).toBe(false);
     });
 
+    it('classifies the DH2e/BC/OW skills the old hand-maintained table got wrong (#273)', () => {
+        // The pre-derivation literal SKILL_TYPES omitted linguistics/navigate/operate
+        // entirely (→ false) and had parry as basic. The catalog corrects all four.
+        expect(SkillKeyHelper.isAdvanced('parry')).toBe(true);
+        expect(SkillKeyHelper.isAdvanced('linguistics')).toBe(true);
+        expect(SkillKeyHelper.isAdvanced('navigate')).toBe(true);
+        expect(SkillKeyHelper.isAdvanced('operate')).toBe(true);
+    });
+
     it('returns false for an unknown skill', () => {
         expect(SkillKeyHelper.isAdvanced('nonsense')).toBe(false);
     });
@@ -103,5 +121,32 @@ describe('getSkillMetadata', () => {
 
     it('returns null for an unknown skill', () => {
         expect(SkillKeyHelper.getSkillMetadata('nonsense')).toBeNull();
+    });
+});
+
+describe('derived from SKILL_DEFINITIONS (#273)', () => {
+    it('SKILL_NAME_TO_KEY equals the catalog name→key map', () => {
+        expect(SkillKeyHelper.SKILL_NAME_TO_KEY).toEqual(skillNameToKeyMap());
+    });
+
+    it('SPECIALIST_KEYS equals the catalog hasEntries set', () => {
+        expect(SkillKeyHelper.SPECIALIST_KEYS).toEqual(specialistSkillKeys());
+    });
+
+    it('SKILL_CHARACTERISTICS equals the catalog char map', () => {
+        expect(SkillKeyHelper.SKILL_CHARACTERISTICS).toEqual(skillCharacteristicShortMap());
+    });
+
+    it('SKILL_TYPES equals the catalog advanced map', () => {
+        expect(SkillKeyHelper.SKILL_TYPES).toEqual(skillAdvancedMap());
+    });
+
+    it('covers every catalog skill in all four maps', () => {
+        for (const [key, def] of Object.entries(SKILL_DEFINITIONS)) {
+            expect(SkillKeyHelper.SKILL_NAME_TO_KEY[def.label]).toBe(key);
+            expect(SkillKeyHelper.getCharacteristic(key)).toBe(def.char);
+            expect(SkillKeyHelper.isAdvanced(key)).toBe(def.advanced);
+            expect(SkillKeyHelper.isSpecialist(key)).toBe(def.hasEntries);
+        }
     });
 });
