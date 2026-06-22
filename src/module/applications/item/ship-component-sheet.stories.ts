@@ -4,13 +4,24 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockItem } from '../../../../stories/mocks';
-import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/ship-component-sheet.hbs?raw';
 
 initializeStoryHandlebars();
 const rng = seedRandom(0x5c0a200);
+
+/**
+ * Render the sheet and stamp `data-wh40k-system="<id>"` on the wrapper so the
+ * per-system Tailwind variants in the template (`dh2:tw-text-gold-raw`,
+ * `rt:tw-text-gold`, `im:tw-text-failure`, …) cascade for that game line.
+ */
+function renderForSystem(ctx: ShipComponentCtx, systemId: SystemId): HTMLElement {
+    const el = renderSheet(templateSrc, ctx);
+    el.dataset['wh40kSystem'] = systemId;
+    return el;
+}
 
 interface TabEntry {
     id: string;
@@ -103,5 +114,63 @@ export const RendersDetailsTab: Story = {
         const tab = canvasElement.querySelector('[data-tab="details"]');
         await expect(tab).toBeTruthy();
         await expect(tab?.classList.contains('active')).toBe(true);
+    },
+};
+
+// ── Per-system homologation ───────────────────────────────────────────────────
+//
+// One story per game line. Each renders the same component context but stamps a
+// different `data-wh40k-system` on the wrapper so the template's per-system
+// Tailwind variant chains (`bc:tw-text-crimson-light … im:tw-text-failure`)
+// resolve for that system. Confirms the sheet renders identically across all
+// seven lines (DH2-only assumptions would surface as a render break here).
+
+export const HomologationDH2: Story = {
+    render: () => renderForSystem(makeCtx(), 'dh2'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="dh2"]')).toBeTruthy();
+        await expect(within(canvasElement).getByDisplayValue('Jovian Pattern Drive')).toBeTruthy();
+    },
+};
+
+export const HomologationDH1: Story = {
+    render: () => renderForSystem(makeCtx(), 'dh1'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="dh1"]')).toBeTruthy();
+    },
+};
+
+export const HomologationRT: Story = {
+    render: () => renderForSystem(makeCtx(), 'rt'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).toBeTruthy();
+    },
+};
+
+export const HomologationBC: Story = {
+    render: () => renderForSystem(makeCtx(), 'bc'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="bc"]')).toBeTruthy();
+    },
+};
+
+export const HomologationOW: Story = {
+    render: () => renderForSystem(makeCtx(), 'ow'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="ow"]')).toBeTruthy();
+    },
+};
+
+export const HomologationDW: Story = {
+    render: () => renderForSystem(makeCtx(), 'dw'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="dw"]')).toBeTruthy();
+    },
+};
+
+export const HomologationIM: Story = {
+    render: () => renderForSystem(makeCtx(), 'im'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="im"]')).toBeTruthy();
     },
 };

@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { mockActor } from '../../../../stories/mocks';
-import { seedRandom, randomId, withSystem } from '../../../../stories/mocks/extended';
+import { seedRandom, randomId, withSystem, type SystemId } from '../../../../stories/mocks/extended';
 import { mockStarshipSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, assertField, renderSheetParts } from '../../../../stories/test-helpers';
@@ -152,6 +152,47 @@ export const BlackCruisadeVariant: Story = {
         await expect(storyCanvas.getByDisplayValue('Despoiler-class Battleship')).toBeVisible();
     },
 };
+
+// ── Per-system homologation: all seven game lines ─────────────────────────────
+//
+// Voidcraft (ship-scale) is RT-canonical, but the sheet chrome is shared across
+// every game line. Each variant flips the actor's system tag (via `withSystem`)
+// so RT-only assumptions in the header / stats tab surface, and stamps
+// `data-wh40k-system` (through `renderVoidcraftSheet`) so per-system theme
+// variants cascade in visual review.
+
+function makePerSystemVoidcraftStory(systemId: SystemId, shipName: string): Story {
+    const base = mockActor({
+        _id: randomId(`${systemId}-starship`, rng),
+        name: shipName,
+        type: 'rt-starship',
+    });
+    const systemActor = withSystem(base, systemId, 'vehicle');
+    return {
+        name: `Per-system — ${systemId.toUpperCase()} (${shipName})`,
+        args: {
+            ...defaultCtxWithSource,
+            actor: systemActor as SheetContextLike['actor'],
+            system: systemActor.system,
+        },
+        render: (args) => renderVoidcraftSheet(args),
+        play: async ({ canvasElement }) => {
+            const storyCanvas = within(canvasElement);
+            // Header keeps the ship name and the stats tab keeps its fields
+            // regardless of which game line owns the actor.
+            await expect(storyCanvas.getByDisplayValue(shipName)).toBeVisible();
+            assertField(canvasElement, 'system.speed', 8);
+        },
+    };
+}
+
+export const SystemDH2: Story = makePerSystemVoidcraftStory('dh2', 'Aquila Lander');
+export const SystemDH1: Story = makePerSystemVoidcraftStory('dh1', 'Hellebore-class Frigate');
+export const SystemRT: Story = makePerSystemVoidcraftStory('rt', 'Sword-class Frigate');
+export const SystemBC: Story = makePerSystemVoidcraftStory('bc', 'Despoiler-class Battleship');
+export const SystemOW: Story = makePerSystemVoidcraftStory('ow', 'Carrack-class Transport');
+export const SystemDW: Story = makePerSystemVoidcraftStory('dw', 'Strike Cruiser');
+export const SystemIM: Story = makePerSystemVoidcraftStory('im', 'Vagabond-class Merchantman');
 
 // ── Issue #186 — Starship Extended Actions panel ─────────────────────────────
 //

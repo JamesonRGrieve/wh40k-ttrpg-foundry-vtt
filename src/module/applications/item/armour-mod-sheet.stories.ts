@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import HbsStory from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { mockItem, renderTemplate as renderStoryTemplate } from '../../../../stories/mocks';
-import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheetParts } from '../../../../stories/test-helpers';
 import effectSrc from '../../../templates/item/armour-mod-effect.hbs?raw';
@@ -81,6 +81,24 @@ function makeCtx(overrides: Partial<ArmourModCtx> = {}): ArmourModCtx {
     return { ...makeBaseCtx(), ...overrides };
 }
 
+const FULL_SHEET_PARTS = [
+    { template: headerSrc, partClass: 'wh40k-part-header' },
+    { template: restrictionsSrc, partClass: 'wh40k-part-restrictions' },
+    { template: modifiersSrc, partClass: 'wh40k-part-modifiers' },
+    { template: propertiesSrc, partClass: 'wh40k-part-properties' },
+    { template: effectSrc, partClass: 'wh40k-part-effect' },
+];
+
+/**
+ * Compose the full armour-mod sheet under a `data-wh40k-system="<id>"` ancestor.
+ * The restrictions / modifiers / properties / effect partials gate their accent
+ * colour with `<id>:tw-*` variant chains that only fire when that attribute is
+ * present, so passing `systemId` exercises every game line's palette.
+ */
+function renderFullSheetForSystem(systemId?: SystemId): HTMLElement {
+    return renderSheetParts(FULL_SHEET_PARTS, makeCtx(), systemId === undefined ? {} : { systemId });
+}
+
 const meta: Meta = {
     title: 'Item Sheets/ArmourModSheet',
 };
@@ -101,17 +119,7 @@ export const Modifiers: Story = {
 };
 
 export const FullSheet: Story = {
-    render: () =>
-        renderSheetParts(
-            [
-                { template: headerSrc, partClass: 'wh40k-part-header' },
-                { template: restrictionsSrc, partClass: 'wh40k-part-restrictions' },
-                { template: modifiersSrc, partClass: 'wh40k-part-modifiers' },
-                { template: propertiesSrc, partClass: 'wh40k-part-properties' },
-                { template: effectSrc, partClass: 'wh40k-part-effect' },
-            ],
-            makeCtx(),
-        ),
+    render: () => renderFullSheetForSystem(),
 };
 
 export const RendersItemName: Story = {
@@ -128,5 +136,38 @@ export const RendersEditImageAction: Story = {
         const btn = canvasElement.querySelector('[data-action="editImage"]');
         await expect(btn).toBeTruthy();
         btn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    },
+};
+
+// ── Per-system homologation ───────────────────────────────────────────────────
+//
+// The restrictions / modifiers / properties / effect partials gate their accent
+// colour with `<id>:tw-*` variant chains (`bc:tw-text-crimson-light
+// dh1:tw-text-gold-raw-l5 …`) that only fire when an ancestor carries
+// `data-wh40k-system="<id>"`. Rendering the composed full sheet under each of the
+// seven game lines exercises every variant — catching a "works in DH2 but not the
+// other six" regression. One FullSheet export per system keeps the composed-tree
+// (CSS-composition) coverage symmetric across systems.
+
+const ALL_SYSTEMS: readonly SystemId[] = ['dh2', 'dh1', 'rt', 'bc', 'ow', 'dw', 'im'];
+
+export const FullSheetDh2: Story = { name: 'Per-system — DH2e', render: () => renderFullSheetForSystem('dh2') };
+export const FullSheetDh1: Story = { name: 'Per-system — DH1', render: () => renderFullSheetForSystem('dh1') };
+export const FullSheetRt: Story = { name: 'Per-system — Rogue Trader', render: () => renderFullSheetForSystem('rt') };
+export const FullSheetBc: Story = { name: 'Per-system — Black Crusade', render: () => renderFullSheetForSystem('bc') };
+export const FullSheetOw: Story = { name: 'Per-system — Only War', render: () => renderFullSheetForSystem('ow') };
+export const FullSheetDw: Story = { name: 'Per-system — Deathwatch', render: () => renderFullSheetForSystem('dw') };
+export const FullSheetIm: Story = { name: 'Per-system — Imperium Maledictum', render: () => renderFullSheetForSystem('im') };
+
+export const PerSystemAllRenderName: Story = {
+    name: 'Per-system — every line renders the mod name',
+    render: () => renderFullSheetForSystem('dh2'),
+    play: () => {
+        for (const systemId of ALL_SYSTEMS) {
+            const root = renderFullSheetForSystem(systemId);
+            void expect(root.dataset['wh40kSystem']).toBe(systemId);
+            const view = within(root);
+            void expect(view.getByDisplayValue('Ceramite Plating')).toBeTruthy();
+        }
     },
 };

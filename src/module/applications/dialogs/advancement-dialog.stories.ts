@@ -10,6 +10,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/advancement-dialog.hbs?raw';
+import type { SystemId } from '../../../../stories/mocks/extended';
 import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 
 interface Tab {
@@ -137,3 +138,45 @@ export const AptitudeSystem: Story = {
         clickAction(canvasElement, 'switchTab');
     },
 };
+
+// ── Per-system homologation ───────────────────────────────────────────────────
+//
+// The dialog root carries `data-wh40k-system="{{_gameSystemId}}"`, which gates
+// the per-system `<id>:tw-text-*` accent variants on the XP-summary heading.
+// One story per game line keeps the seven palettes under visual review so a
+// DH2-only assumption in the header treatment surfaces (CLAUDE.md "Per-system
+// homologation in stories"). The shared career context is reused unchanged; only
+// the active system id (and a representative career label) differs per line.
+
+const SYSTEM_CAREER: Record<SystemId, string> = {
+    dh2: 'Adept',
+    dh1: 'Scribe',
+    rt: 'Seneschal',
+    bc: 'Apostate',
+    ow: 'Operator',
+    dw: 'Tactical Marine',
+    im: 'Savant',
+};
+
+function perSystemStory(systemId: SystemId): Story {
+    return {
+        name: `Per-system — ${systemId.toUpperCase()}`,
+        args: {
+            _gameSystemId: systemId,
+            originCareerName: SYSTEM_CAREER[systemId],
+        },
+        play: async ({ canvasElement }) => {
+            // The dialog root must surface the active system so the variants cascade.
+            const root = canvasElement.querySelector<HTMLElement>(`[data-wh40k-system="${systemId}"]`);
+            await expect(root).not.toBeNull();
+        },
+    };
+}
+
+export const SystemDH2 = perSystemStory('dh2');
+export const SystemDH1 = perSystemStory('dh1');
+export const SystemRT = perSystemStory('rt');
+export const SystemBC = perSystemStory('bc');
+export const SystemOW = perSystemStory('ow');
+export const SystemDW = perSystemStory('dw');
+export const SystemIM = perSystemStory('im');

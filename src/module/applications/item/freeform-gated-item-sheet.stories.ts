@@ -7,9 +7,16 @@
  * four concrete sheets cover the per-type field rendering.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import Hbs from 'handlebars';
 import { expect } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-content-block-sheet.hbs?raw';
+import type { SystemId } from '../../../../stories/mocks/extended';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
+
+initializeStoryHandlebars();
+
+const contentBlockTpl = Hbs.compile(templateSrc);
 
 interface ContentField {
     name: string;
@@ -77,3 +84,47 @@ export const EditMode: Story = {
         await expect(canvasElement.textContent).toContain('edits here only affect this world item');
     },
 };
+
+// ── Per-system homologation: all 7 game lines ────────────────────────────────
+//
+// The content-block sheet's name heading and section headings carry per-system
+// Tailwind variant classes (`bc:tw-text-crimson-light dh1:… dh2:… dw:… ow:…
+// rt:… im:…`) gated on a `data-wh40k-system` ancestor. The default `renderSheet`
+// wrapper hardcodes `dh2`; these stories stamp the other six lines so DH2-only
+// theming assumptions surface (CLAUDE.md homologation rule + "Adaptation
+// procedure 3a"). Rendered in the read-only gate state so the heading surface
+// is the focus.
+
+/**
+ * Render the content-block sheet under a `.wh40k-rpg` + `data-wh40k-system`
+ * ancestor for the given game line.
+ */
+function renderGatedForSystem(args: GatedArgs, systemId: SystemId): HTMLElement {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'wh40k-rpg theme-dark sheet';
+    wrapper.setAttribute('data-wh40k-system', systemId);
+    wrapper.innerHTML = contentBlockTpl(args);
+    return wrapper;
+}
+
+/** Build a per-system story (explicit named exports keep Storybook's static scan happy). */
+function perSystemStory(systemId: SystemId): Story {
+    return {
+        name: `Per-system — ${systemId.toUpperCase()}`,
+        args: baseArgs(false, false),
+        render: (args) => renderGatedForSystem(args, systemId),
+        play: async ({ canvasElement }) => {
+            await expect(canvasElement.textContent).toContain('Gated Content Item');
+            const root = canvasElement.querySelector(`[data-wh40k-system="${systemId}"]`);
+            await expect(root).not.toBeNull();
+        },
+    };
+}
+
+export const PerSystemDh2: Story = perSystemStory('dh2');
+export const PerSystemDh1: Story = perSystemStory('dh1');
+export const PerSystemRt: Story = perSystemStory('rt');
+export const PerSystemBc: Story = perSystemStory('bc');
+export const PerSystemOw: Story = perSystemStory('ow');
+export const PerSystemDw: Story = perSystemStory('dw');
+export const PerSystemIm: Story = perSystemStory('im');

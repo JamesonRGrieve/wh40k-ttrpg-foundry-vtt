@@ -8,6 +8,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/fate-uses.hbs?raw';
+import type { SystemId } from '../../../../stories/mocks/extended';
 import { renderSheet } from '../../../../stories/test-helpers';
 
 interface FateUse {
@@ -64,3 +65,32 @@ export const ImperiumMaledictumVariant: Story = {
     name: 'Per-system — Imperium Maledictum',
     args: { gameSystem: 'im' },
 };
+
+// ── Per-system homologation ───────────────────────────────────────────────────
+//
+// The dialog root carries `data-wh40k-system="{{gameSystem}}"`, which gates the
+// `<id>:tw-border-l-*` burn-marker accents and the `<id>:tw-text-*` use-icon
+// accents. The IM variant above is kept verbatim; these cover the other six
+// lines so all seven accent palettes stay under visual review (CLAUDE.md
+// "Per-system homologation in stories"). The use list is reused unchanged — only
+// `gameSystem` differs per line.
+
+function perSystemStory(systemId: SystemId): Story {
+    return {
+        name: `Per-system — ${systemId.toUpperCase()}`,
+        args: { gameSystem: systemId },
+        play: async ({ canvasElement }) => {
+            // The dialog root must surface the active system so the variants cascade.
+            const root = canvasElement.querySelector<HTMLElement>(`[data-wh40k-system="${systemId}"]`);
+            await expect(root).not.toBeNull();
+        },
+    };
+}
+
+// IM is the existing `ImperiumMaledictumVariant`; these add the other six lines.
+export const SystemDH2 = perSystemStory('dh2');
+export const SystemDH1 = perSystemStory('dh1');
+export const SystemRT = perSystemStory('rt');
+export const SystemBC = perSystemStory('bc');
+export const SystemOW = perSystemStory('ow');
+export const SystemDW = perSystemStory('dw');

@@ -8,7 +8,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/inventory-generator-dialog.hbs?raw';
-import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 
 const rng = seedRandom(0x1_9e_70);
@@ -113,3 +113,42 @@ export const ImperiumMaledictumVariant: Story = {
     name: 'Per-system — Imperium Maledictum',
     args: { gameSystem: 'im', actorName: 'Maledictum Fixer' },
 };
+
+// ── Per-system homologation ───────────────────────────────────────────────────
+//
+// The dialog root carries `data-wh40k-system="{{gameSystem}}"`, gating the
+// `<id>:tw-text-*` / `<id>:tw-border-*` variants on the title and the active
+// tab indicator. The IM variant above is kept verbatim; these cover the other
+// six lines so the seven palettes all stay under visual review (CLAUDE.md
+// "Per-system homologation in stories"). Only `gameSystem` (and a flavoured
+// quartermaster name) differs per line — the staged pool is reused unchanged.
+
+const SYSTEM_QUARTERMASTER: Record<SystemId, string> = {
+    dh2: 'Hive Quartermaster',
+    dh1: 'Calixis Provisioner',
+    rt: 'Voidship Seneschal',
+    bc: 'Warband Reaver',
+    ow: 'Regimental Quartermaster',
+    dw: 'Fortress Armourer',
+    im: 'Maledictum Fixer',
+};
+
+function perSystemStory(systemId: SystemId): Story {
+    return {
+        name: `Per-system — ${systemId.toUpperCase()}`,
+        args: { gameSystem: systemId, actorName: SYSTEM_QUARTERMASTER[systemId] },
+        play: async ({ canvasElement }) => {
+            // The dialog root must surface the active system so the variants cascade.
+            const root = canvasElement.querySelector<HTMLElement>(`[data-wh40k-system="${systemId}"]`);
+            await expect(root).not.toBeNull();
+        },
+    };
+}
+
+// IM is the existing `ImperiumMaledictumVariant`; these add the other six lines.
+export const SystemDH2 = perSystemStory('dh2');
+export const SystemDH1 = perSystemStory('dh1');
+export const SystemRT = perSystemStory('rt');
+export const SystemBC = perSystemStory('bc');
+export const SystemOW = perSystemStory('ow');
+export const SystemDW = perSystemStory('dw');

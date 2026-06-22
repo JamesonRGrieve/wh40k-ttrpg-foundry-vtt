@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import Hbs from 'handlebars';
 import { expect } from 'storybook/test';
 import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
-import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheetParts } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/item/npc-template/header.hbs?raw';
@@ -124,3 +124,47 @@ export const RendersTabButtons: Story = {
         basicBtn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     },
 };
+
+// ── Per-system homologation (all 7 game lines) ──────────────────────────────
+//
+// The header border, tab strip, tag input, and section headings across the
+// NPC-template tabs carry per-system Tailwind tints (`bc:tw-border-crimson-light`,
+// `dh2:tw-text-gold-raw`, `rt:tw-text-gold`, `im:tw-text-failure`, …). Those
+// variants only fire under a `data-wh40k-system="<id>"` ancestor —
+// `renderSheetParts({ systemId })` stamps it on the composed tree (matching the
+// craft / voidcraft exemplars). One full-sheet story per game line so DH2-only
+// theme assumptions surface across all seven.
+
+/** Compose the header + tabs + basics tree under a specific game-line ancestor. */
+function renderNpcTemplateForSystem(systemId: SystemId): HTMLElement {
+    return renderSheetParts(
+        [
+            { template: headerSrc, partClass: 'wh40k-part-header' },
+            { template: tabsSrc, partClass: 'wh40k-part-tabs' },
+            { template: basicsSrc, partClass: 'wh40k-part-basics' },
+        ],
+        makeCtx(),
+        { systemId },
+    );
+}
+
+/** Build a per-system homologation full-sheet story for one game line. */
+function systemStory(systemId: SystemId): Story {
+    return {
+        render: () => renderNpcTemplateForSystem(systemId),
+        play: async ({ canvasElement }) => {
+            const nameField = canvasElement.querySelector<HTMLInputElement>('[name="name"]');
+            await expect(nameField?.value).toBe('Hive Ganger');
+            const root = canvasElement.querySelector<HTMLElement>('[data-wh40k-system]');
+            await expect(root?.dataset['wh40kSystem']).toBe(systemId);
+        },
+    };
+}
+
+export const HomologationDH2: Story = systemStory('dh2');
+export const HomologationDH1: Story = systemStory('dh1');
+export const HomologationRT: Story = systemStory('rt');
+export const HomologationBC: Story = systemStory('bc');
+export const HomologationOW: Story = systemStory('ow');
+export const HomologationDW: Story = systemStory('dw');
+export const HomologationIM: Story = systemStory('im');

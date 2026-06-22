@@ -6,6 +6,7 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { randomId, seedRandom, type SystemId } from '../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { renderSheet } from '../../../stories/test-helpers';
 import type { RenownRank } from '../../module/rules/dw-renown';
@@ -13,6 +14,8 @@ import { getSupportRange, type DwMode } from '../../module/rules/dw-squad-mode';
 import chatSrc from './dw-mode-chat.hbs?raw';
 
 initializeStoryHandlebars();
+
+const rng = seedRandom(0xd_3a4_b1c);
 
 interface DwModeChatCtx {
     gameSystem: string;
@@ -73,4 +76,42 @@ export const LeaveSquad: Story = {
         supportRange: getSupportRange('respected'),
     },
     render: (args) => renderChat(args),
+};
+
+// ── Per-system homologation ──────────────────────────────────────────────────
+//
+// Squad Mode is a Deathwatch mechanic, but the card's `data-wh40k-system`
+// anchor (`{{gameSystem}}`) is what activates the per-system Tailwind variants
+// on the frame. Render the SAME Solo → Squad transition under each of the seven
+// system ids so the card chrome is proven to cascade correctly for all lines —
+// "renders correctly for dw but breaks under the other six" regressions surface
+// here. Seeded ids keep the screenshot diff deterministic.
+
+const ALL_SYSTEM_IDS: readonly SystemId[] = ['dh2', 'dh1', 'rt', 'bc', 'ow', 'dw', 'im'];
+
+function perSystemModeArgs(gameSystem: SystemId): DwModeChatCtx {
+    return {
+        gameSystem,
+        actorName: `Brother ${randomId('voracius', rng)}`,
+        previousMode: 'solo',
+        newMode: 'squad',
+        previousModeKey: 'WH40K.DW.Mode.Solo',
+        newModeKey: 'WH40K.DW.Mode.Squad',
+        transitionMessageKey: 'WH40K.DW.Mode.Enter.FullAction',
+        viaKey: 'WH40K.DW.Mode.Enter.FullAction',
+        renownRankKey: rankKey('respected'),
+        supportRange: getSupportRange('respected'),
+    };
+}
+
+export const PerSystemFrames: Story = {
+    name: 'Per-system — Solo → Squad card frame across all 7 lines',
+    render: () => {
+        const container = document.createElement('div');
+        container.className = 'tw-flex tw-flex-col tw-gap-3';
+        for (const systemId of ALL_SYSTEM_IDS) {
+            container.appendChild(renderChat(perSystemModeArgs(systemId)));
+        }
+        return container;
+    },
 };

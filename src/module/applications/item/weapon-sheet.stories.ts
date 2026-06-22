@@ -4,6 +4,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockWeaponSheetContext } from '../../../../stories/mocks';
+import type { SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-weapon-sheet.hbs?raw';
@@ -12,6 +13,18 @@ initializeStoryHandlebars();
 
 interface Args {
     overrides?: Parameters<typeof mockWeaponSheetContext>[0];
+}
+
+/**
+ * Render the weapon sheet (body expanded so the per-system mod/effect count
+ * badges render) and stamp the active game-system id. The weapon template gates
+ * those badges per game line (`bc:tw-bg-crimson-light … im:tw-bg-failure`), and
+ * those variants only fire under a `data-wh40k-system="<id>"` ancestor.
+ */
+function renderForSystem(systemId: SystemId): HTMLElement {
+    const el = renderSheet(templateSrc, mockWeaponSheetContext({ bodyCollapsed: false }));
+    el.dataset['wh40kSystem'] = systemId;
+    return el;
 }
 
 const meta = {
@@ -88,5 +101,63 @@ export const RendersToggleBodyAction: Story = {
         await expect(btn).toBeTruthy();
         // Dispatch click — verifies event wires without Foundry runtime
         btn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    },
+};
+
+// ── Per-system homologation (dh2 / dh1 / rt / bc / ow / dw / im) ──────────────
+//
+// One story per game line — the weapon sheet is rendered under each system's
+// `data-wh40k-system` id so the template's per-system count-badge variants
+// activate and visual review catches a DH2-only assumption.
+
+export const HomologationDH2: Story = {
+    render: () => renderForSystem('dh2'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="dh2"]')).toBeTruthy();
+    },
+};
+
+export const HomologationDH1: Story = {
+    render: () => renderForSystem('dh1'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="dh1"]')).toBeTruthy();
+    },
+};
+
+export const HomologationRT: Story = {
+    render: () => renderForSystem('rt'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).toBeTruthy();
+    },
+};
+
+export const HomologationBC: Story = {
+    render: () => renderForSystem('bc'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="bc"]')).toBeTruthy();
+    },
+};
+
+export const HomologationOW: Story = {
+    render: () => renderForSystem('ow'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="ow"]')).toBeTruthy();
+    },
+};
+
+export const HomologationDW: Story = {
+    render: () => renderForSystem('dw'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="dw"]')).toBeTruthy();
+    },
+};
+
+export const HomologationIM: Story = {
+    render: () => renderForSystem('im'),
+    play: async ({ canvasElement }) => {
+        // Weapon name still renders under the IM identity, and the id is stamped.
+        const withinCanvas = within(canvasElement);
+        await expect(withinCanvas.getByDisplayValue('Godwyn-Deaz Boltgun')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-system="im"]')).toBeTruthy();
     },
 };

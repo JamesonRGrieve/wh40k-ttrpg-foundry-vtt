@@ -8,9 +8,12 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { randomId, seedRandom, type SystemId } from '../../../stories/mocks/extended';
 import { renderSheet } from '../../../stories/test-helpers';
 import { applyComradeHit, type ComradeState, healComrade, replaceComrade, transfersToComrade } from '../../module/rules/ow-comrade';
 import chatSrc from './ow-comrade-chat.hbs?raw';
+
+const rng = seedRandom(0xc03ade5);
 
 const meta: Meta = {
     title: 'Rules / OW Comrade Chat (#152)',
@@ -131,4 +134,35 @@ export const StateHealWoundedToUnharmed: Story = {
 export const StateReplaceDeadToUnharmed: Story = {
     name: 'State change — dead → unharmed (replacement enters play)',
     render: () => renderSheet(chatSrc, { ...stateChangeContext('dead', 'replace') }),
+};
+
+// ── Per-system homologation ──────────────────────────────────────────────────
+//
+// The Comrade rules are Only War content, but the card renders through the
+// shared `modern-card-shell` whose frame carries a per-system border / title
+// variant chain gated on `data-wh40k-system="{{gameSystem}}"`. Render the same
+// unharmed → wounded transition under each of the seven system ids so the shared
+// chat-card chrome is proven to cascade for every line, not just `ow`. Seeded
+// ids keep the screenshot diff deterministic.
+
+const ALL_SYSTEM_IDS: readonly SystemId[] = ['dh2', 'dh1', 'rt', 'bc', 'ow', 'dw', 'im'];
+
+function perSystemComradeContext(gameSystem: SystemId): ComradeChatContext {
+    return {
+        ...stateChangeContext('unharmed', 'hit'),
+        gameSystem,
+        comradeName: `Comrade ${randomId('jaeger', rng)}`,
+    };
+}
+
+export const PerSystemFrames: Story = {
+    name: 'Per-system — Comrade card frame across all 7 lines',
+    render: () => {
+        const container = document.createElement('div');
+        container.className = 'tw-flex tw-flex-col tw-gap-3';
+        for (const systemId of ALL_SYSTEM_IDS) {
+            container.appendChild(renderSheet(chatSrc, { ...perSystemComradeContext(systemId) }));
+        }
+        return container;
+    },
 };

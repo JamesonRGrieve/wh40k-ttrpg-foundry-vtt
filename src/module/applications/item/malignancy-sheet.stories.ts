@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-content-block-sheet.hbs?raw';
+import type { SystemId } from '../../../../stories/mocks/extended';
 import { renderSheet } from '../../../../stories/test-helpers';
 
 interface ContentField {
@@ -75,13 +76,29 @@ export const EditMode: Story = {
     },
 };
 
+// ── Per-system homologation ───────────────────────────────────────────────────
+//
+// Every section heading and the item title carry a seven-system Tailwind variant
+// chain (`<id>:tw-text-*`). Re-stamp `data-wh40k-system` per game line so all
+// seven palettes render and a "works in DH2 but not the other six" regression
+// surfaces in visual review — `renderSheet` defaults the attribute to `dh2`.
+
+function renderMalignancyForSystem(systemId: SystemId, args: MalignancyArgs): HTMLElement {
+    const el = renderSheet(templateSrc, args);
+    el.dataset['wh40kSystem'] = systemId;
+    return el;
+}
+
+export const HomologationDH2: Story = { args: baseArgs(true, true), render: (args) => renderMalignancyForSystem('dh2', args) };
+export const HomologationDH1: Story = { args: baseArgs(true, true), render: (args) => renderMalignancyForSystem('dh1', args) };
+export const HomologationRT: Story = { args: baseArgs(true, true), render: (args) => renderMalignancyForSystem('rt', args) };
+export const HomologationBC: Story = { args: baseArgs(true, true), render: (args) => renderMalignancyForSystem('bc', args) };
+export const HomologationOW: Story = { args: baseArgs(true, true), render: (args) => renderMalignancyForSystem('ow', args) };
+export const HomologationDW: Story = { args: baseArgs(true, true), render: (args) => renderMalignancyForSystem('dw', args) };
+
 export const HomologationIM: Story = {
     args: baseArgs(true, true),
-    render: (args) => {
-        const el = renderSheet(templateSrc, args);
-        el.dataset['wh40kSystem'] = 'im';
-        return el;
-    },
+    render: (args) => renderMalignancyForSystem('im', args),
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('.wh40k-story-editor')).not.toBeNull();
     },

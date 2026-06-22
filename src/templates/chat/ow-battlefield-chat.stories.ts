@@ -9,12 +9,15 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { randomId, seedRandom, type SystemId } from '../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { renderSheet } from '../../../stories/test-helpers';
 import { requestSupport, type SupportAssetDef, type SupportAssetKind } from '../../module/rules/ow-battlefield-support';
 import cardSrc from './ow-battlefield-chat.hbs?raw';
 
 initializeStoryHandlebars();
+
+const rng = seedRandom(0xba771e);
 
 const ASSET_NAME_KEY: Readonly<Record<SupportAssetKind, string>> = {
     'artillery': 'WH40K.OW.Battlefield.Support.Asset.Artillery',
@@ -128,4 +131,58 @@ export const AwardRevoked: Story = {
     name: 'Award — Purgation Cross revoked',
     args: awardContext({ awardId: 'award-purgation-cross', toggledOn: false, rosterSize: 1 }),
     render: (args) => renderCard(args),
+};
+
+// ── Per-system homologation ──────────────────────────────────────────────────
+//
+// The Battlefield Awareness rules are Only War content, but the card renders
+// through the shared `modern-card-shell` whose frame carries a per-system
+// border / title variant chain gated on `data-wh40k-system="{{gameSystem}}"`.
+// Render the same successful Artillery request under each of the seven system
+// ids so the shared chat-card chrome is proven to cascade for every line, not
+// just `ow`. Seeded ids keep the screenshot diff deterministic.
+//
+// `BaseCtx.gameSystem` is locked to the literal `'ow'` for the OW-content
+// stories above; the per-system frame variant carries its own context shape
+// with a widened `gameSystem` so those stories keep their precise type.
+
+interface PerSystemBattlefieldCtx {
+    gameSystem: SystemId;
+    actor: { name: string };
+    event: BattlefieldChatCtx['event'];
+}
+
+function renderPerSystemCard(ctx: PerSystemBattlefieldCtx): HTMLElement {
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('wh40k-rpg');
+    wrapper.dataset['wh40kSystem'] = ctx.gameSystem;
+    wrapper.appendChild(renderSheet(cardSrc, ctx));
+    return wrapper;
+}
+
+const ALL_SYSTEM_IDS: readonly SystemId[] = ['dh2', 'dh1', 'rt', 'bc', 'ow', 'dw', 'im'];
+
+function perSystemRequestCtx(gameSystem: SystemId): PerSystemBattlefieldCtx {
+    const base = requestContext({
+        asset: { id: randomId('asset-arty', rng), kind: 'artillery', logisticsModifier: -10, cooldownTurns: 4 },
+        currentLogisticsTarget: 50,
+        roll: 35,
+    });
+    return {
+        gameSystem,
+        actor: base.actor,
+        event: base.event,
+    };
+}
+
+export const PerSystemFrames: Story = {
+    name: 'Per-system — Battlefield card frame across all 7 lines',
+    render: () => {
+        const container = document.createElement('div');
+        container.className = 'tw-flex tw-flex-col tw-gap-3';
+        for (const systemId of ALL_SYSTEM_IDS) {
+            container.appendChild(renderPerSystemCard(perSystemRequestCtx(systemId)));
+        }
+        return container;
+    },
 };

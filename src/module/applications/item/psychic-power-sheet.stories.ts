@@ -4,7 +4,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockItem } from '../../../../stories/mocks';
-import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-psychic-power-sheet.hbs?raw';
@@ -81,5 +81,63 @@ export const RendersDisciplineBadge: Story = {
     play: ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         void expect(storyCanvas.getByText('Biomancy Power')).toBeTruthy();
+    },
+};
+
+// ── Per-system homologation ─────────────────────────────────────────────────
+//
+// The template gates its accent colours through per-system Tailwind variants
+// (`bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw …`),
+// which only fire when an ancestor carries `data-wh40k-system="<id>"`. The
+// default `renderSheet` wrapper stamps `dh2`; these variants re-stamp it per
+// game line so all seven palettes are exercised. One story per system keeps the
+// pattern compact and matches the file's existing one-export-per-case style.
+
+function renderPsychicForSystem(systemId: SystemId): HTMLElement {
+    const el = renderSheet(templateSrc, makeCtx());
+    el.dataset['wh40kSystem'] = systemId;
+    return el;
+}
+
+export const PerSystemDH2: Story = {
+    name: 'Per-system — DH2e',
+    render: () => renderPsychicForSystem('dh2'),
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        void expect(storyCanvas.getByDisplayValue('Smite')).toBeTruthy();
+    },
+};
+
+export const PerSystemDH1: Story = {
+    name: 'Per-system — DH1',
+    render: () => renderPsychicForSystem('dh1'),
+};
+
+export const PerSystemRT: Story = {
+    name: 'Per-system — Rogue Trader',
+    render: () => renderPsychicForSystem('rt'),
+};
+
+export const PerSystemBC: Story = {
+    name: 'Per-system — Black Crusade',
+    render: () => renderPsychicForSystem('bc'),
+};
+
+export const PerSystemOW: Story = {
+    name: 'Per-system — Only War',
+    render: () => renderPsychicForSystem('ow'),
+};
+
+export const PerSystemDW: Story = {
+    name: 'Per-system — Deathwatch',
+    render: () => renderPsychicForSystem('dw'),
+};
+
+export const PerSystemIM: Story = {
+    name: 'Per-system — Imperium Maledictum',
+    render: () => renderPsychicForSystem('im'),
+    play: ({ canvasElement }) => {
+        const el = canvasElement.querySelector<HTMLElement>('[data-wh40k-system]');
+        void expect(el?.dataset['wh40kSystem']).toBe('im');
     },
 };

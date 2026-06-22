@@ -10,7 +10,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockActor } from '../../../../stories/mocks';
-import { seedRandom, randomId, withSystem } from '../../../../stories/mocks/extended';
+import { seedRandom, randomId, withSystem, type SystemId } from '../../../../stories/mocks/extended';
 import { mockVehicleSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { assertField, submitForm, renderSheetParts } from '../../../../stories/test-helpers';
@@ -169,3 +169,44 @@ export const OnlyWarVariant: Story = {
         await expect(view.getByDisplayValue('Leman Russ Battle Tank')).toBeVisible();
     },
 };
+
+// ── Per-system homologation: all seven game lines ─────────────────────────────
+//
+// The craft sheet is shared chrome; every game line renders the same speed /
+// manoeuverability / size fields. Each variant flips the actor's system tag
+// (via `withSystem`) so DH2-only assumptions in the header / overview surface,
+// and stamps `data-wh40k-system` (through `renderCraftSheet`) so per-system
+// theme variants cascade in visual review.
+
+function makePerSystemCraftStory(systemId: SystemId, craftName: string): Story {
+    const base = mockActor({
+        _id: randomId(`${systemId}-terracraft`, rng),
+        name: craftName,
+        type: 'terracraft',
+    });
+    const systemActor = withSystem(base, systemId, 'vehicle');
+    return {
+        name: `Per-system — ${systemId.toUpperCase()} (${craftName})`,
+        args: {
+            ...defaultCraftCtx,
+            actor: systemActor as SheetContextLike['actor'],
+            system: systemActor.system,
+        },
+        render: (args) => renderCraftSheet(args),
+        play: async ({ canvasElement }) => {
+            const view = within(canvasElement);
+            // Header renders the craft name and the overview tab keeps its fields
+            // regardless of which game line owns the actor.
+            await expect(view.getByDisplayValue(craftName)).toBeVisible();
+            assertField(canvasElement, 'system.manoeuverability', 5);
+        },
+    };
+}
+
+export const SystemDH2: Story = makePerSystemCraftStory('dh2', 'Chimera APC');
+export const SystemDH1: Story = makePerSystemCraftStory('dh1', 'Salamander Scout');
+export const SystemRT: Story = makePerSystemCraftStory('rt', 'Arvus Lighter');
+export const SystemBC: Story = makePerSystemCraftStory('bc', 'Hellblade Skiff');
+export const SystemOW: Story = makePerSystemCraftStory('ow', 'Leman Russ Battle Tank');
+export const SystemDW: Story = makePerSystemCraftStory('dw', 'Land Raider Crusader');
+export const SystemIM: Story = makePerSystemCraftStory('im', 'Goliath Truck');
