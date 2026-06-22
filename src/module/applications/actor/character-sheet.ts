@@ -525,8 +525,8 @@ type OwMissionGearPanelContext = {
 };
 
 type OwVehicleMovementPanelContext = {
-    actions: Array<{ id: string; nameKey: string; timingKey: string; descriptionKey: string }>;
-    chase: { active: boolean; pursuerDistance: number; dangerZone: boolean; turnCount: number };
+    actions: Array<{ actionId: string; timing: string; nameKey: string; timingKey: string; descriptionKey: string }>;
+    chaseState: { pursuerDistance: number; dangerZone: boolean; turnCount: number } | null;
 };
 
 type OwComradeHealingPanelContext = {
@@ -2135,17 +2135,18 @@ export default class CharacterSheet extends BaseActorSheet {
             { id: 'jink', timing: 'reaction' },
             { id: 'tactical-manoeuvring', timing: 'half' },
         ].map((a) => ({
-            id: a.id,
+            actionId: a.id,
+            timing: a.timing,
             nameKey: `WH40K.OW.VehicleMovement.Action.${titleCase(a.id)}`,
             timingKey: `WH40K.OW.VehicleMovement.Timing.${a.timing.charAt(0).toUpperCase()}${a.timing.slice(1)}`,
             descriptionKey: `WH40K.OW.VehicleMovement.Description.${titleCase(a.id)}`,
         }));
         return {
             actions,
-            chase:
-                chase === null
-                    ? { active: false, pursuerDistance: 0, dangerZone: false, turnCount: 0 }
-                    : { active: true, pursuerDistance: chase.pursuerDistance, dangerZone: chase.dangerZone, turnCount: chase.turnCount },
+            // Template gates the chase readout on `chaseState` being non-null and
+            // reads pursuerDistance/dangerZone/turnCount off it; pass the live
+            // tracker straight through (null when no chase is active).
+            chaseState: chase === null ? null : { pursuerDistance: chase.pursuerDistance, dangerZone: chase.dangerZone, turnCount: chase.turnCount },
         };
     }
 
