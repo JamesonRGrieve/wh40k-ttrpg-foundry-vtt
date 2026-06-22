@@ -61,15 +61,18 @@ export default defineConfig({
         viewport: { width: 1440, height: 900 },
         launchOptions: {
             executablePath: process.env.CHROMIUM_PATH ?? '/usr/bin/chromium',
-            // GPU acceleration (E2E_GPU=1): render Foundry's PIXI canvas on the
-            // host GPU via ANGLE-on-Vulkan instead of software SwiftShader, which
-            // otherwise burns ~10 CPU cores per worker. The angle-vulkan backend
-            // is the only one that reaches the NVIDIA device headlessly here.
-            // Defaults OFF until validated; flip on for the big CPU win.
+            // GPU acceleration (default ON; set E2E_GPU=0 to force software):
+            // render Foundry's PIXI canvas on the host GPU via ANGLE-on-Vulkan
+            // instead of software SwiftShader, which otherwise burns ~10 CPU
+            // cores per worker. Validated: a 4-worker run dropped CPU load from
+            // ~41 to ~14 and finished ~2x faster (15.6m vs 30m) with no
+            // regressions. The angle-vulkan backend is the only one that reaches
+            // the NVIDIA device headlessly here; on a GPU-less box chromium
+            // falls back to SwiftShader automatically, so this stays safe in CI.
             args: [
                 '--no-sandbox',
                 '--disable-dev-shm-usage',
-                ...(process.env.E2E_GPU === '1'
+                ...(process.env.E2E_GPU !== '0'
                     ? ['--ignore-gpu-blocklist', '--enable-features=Vulkan', '--use-gl=angle', '--use-angle=vulkan', '--enable-gpu-rasterization']
                     : []),
             ],
