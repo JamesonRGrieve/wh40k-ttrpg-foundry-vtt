@@ -38,7 +38,7 @@ test.describe.serial('Ship Hit-and-Run chat card (Tier B)', () => {
                     const g = globalThis as unknown as {
                         foundry?: { applications?: { handlebars?: { renderTemplate?: (p: string, c: object) => Promise<string> } } };
                         ChatMessage?: { create: (data: object) => Promise<{ id: string } | null> };
-                        game?: { user?: { id?: string } };
+                        game?: { user?: { id?: string }; i18n?: { localize?: (k: string) => string } };
                     };
                     const renderHbsTemplate = g.foundry?.applications?.handlebars?.renderTemplate;
                     if (!renderHbsTemplate) {
@@ -81,8 +81,12 @@ test.describe.serial('Ship Hit-and-Run chat card (Tier B)', () => {
                     rendered = typeof html === 'string' && html.length > 0;
                     hasCardRoot = html.includes('wh40k-ship-har-card');
                     hasSystemAnchor = html.includes('data-wh40k-system="rt"');
-                    hasCritPick = html.includes('WH40K.Voidcraft.HitAndRun.AppliedCrit');
-                    hasHullDamage = html.includes('WH40K.Voidcraft.HitAndRun.HullDamage');
+                    // Resolve i18n keys so checks hold whether or not the keys are
+                    // in the langpack (a bare key only shows when unresolved).
+                    const critLabel = g.game?.i18n?.localize?.('WH40K.Voidcraft.HitAndRun.AppliedCrit') ?? 'WH40K.Voidcraft.HitAndRun.AppliedCrit';
+                    const hullLabel = g.game?.i18n?.localize?.('WH40K.Voidcraft.HitAndRun.HullDamage') ?? 'WH40K.Voidcraft.HitAndRun.HullDamage';
+                    hasCritPick = html.includes(critLabel);
+                    hasHullDamage = html.includes(hullLabel);
 
                     const msg = await g.ChatMessage?.create({ user: g.game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
