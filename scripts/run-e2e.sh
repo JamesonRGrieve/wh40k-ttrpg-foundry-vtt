@@ -75,8 +75,14 @@ fi
 if [[ -z "${E2E_WORKERS:-}" ]]; then
     _cores="$(nproc 2>/dev/null || echo 4)"
     _avail_gb="$(free -g 2>/dev/null | awk 'NR==2{print $7}' || echo 8)"
-    _by_mem=$(( _avail_gb / 7 ))
-    _by_cpu=$(( _cores / 3 ))
+    # GPU on (default) offloads rendering to the host GPU/VRAM, so each worker is
+    # light on both CPU (~3 load) and system RAM (~3-4G) — measured at 4 workers:
+    # load ~12, avail steady. Target ~cores/3 workers to push CPU toward
+    # saturation, bounded by RAM (avail/4). Software mode stays CPU-heavy
+    # (cores/3) and RAM-bound (avail/7).
+    if [[ "${E2E_GPU:-1}" != "0" ]]; then _mem_div=4; _cpu_div=3; else _mem_div=7; _cpu_div=3; fi
+    _by_mem=$(( _avail_gb / _mem_div ))
+    _by_cpu=$(( _cores / _cpu_div ))
     _w=$(( _by_mem < _by_cpu ? _by_mem : _by_cpu ))
     (( _w < 1 )) && _w=1
     (( _w > 8 )) && _w=8
