@@ -368,3 +368,175 @@ describe('WH40KSettings — warband Subtlety pool (#64)', () => {
         }).not.toThrow();
     });
 });
+
+/**
+ * Parameterized coverage for every WH40KSettings value-space accessor — the
+ * "system parameters" (homebrew toggle, combat/automation flags, generation
+ * tunables, primary game line). Each accessor is confirmed across its FULL
+ * value space: every valid stored value, invalid input, and the
+ * pre-registration safe default (no `game` global) that every accessor
+ * guarantees so DataModel prep can read it during early boot.
+ */
+describe('WH40KSettings — system-parameter value spaces (parameterized)', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    /** The value space a stored setting can take across these accessors. */
+    type StoredSettingValue = boolean | number | string | undefined;
+
+    /** Stub game.settings.get to return `value` for any setting key. */
+    function stubSetting(value: StoredSettingValue): void {
+        vi.stubGlobal('game', { settings: { get: (): StoredSettingValue => value } });
+    }
+
+    // --- Booleans ON by default (read as `!== false`) ---
+    const defaultOnBooleans: ReadonlyArray<readonly [string, () => boolean]> = [
+        ['isAutoRollDamageEnabled', () => WH40KSettings.isAutoRollDamageEnabled()],
+        ['isCombatRequiredToAttack', () => WH40KSettings.isCombatRequiredToAttack()],
+        ['isOriginPathPromptEnabled', () => WH40KSettings.isOriginPathPromptEnabled()],
+    ];
+    describe.each(defaultOnBooleans)('%s — default-on (!== false)', (_name, read) => {
+        const cases: ReadonlyArray<readonly [boolean | undefined, boolean]> = [
+            [true, true],
+            [false, false],
+            [undefined, true],
+        ];
+        it.each(cases)('stored %p → %p', (stored, expected) => {
+            stubSetting(stored);
+            expect(read()).toBe(expected);
+        });
+        it('pre-registration (no game) → true', () => {
+            expect(read()).toBe(true);
+        });
+    });
+
+    // --- Booleans OFF by default (read as `=== true`) ---
+    const defaultOffBooleans: ReadonlyArray<readonly [string, () => boolean]> = [
+        ['isAutoApplyDamageEnabled', () => WH40KSettings.isAutoApplyDamageEnabled()],
+        ['isMultipleFateBurnAllowed', () => WH40KSettings.isMultipleFateBurnAllowed()],
+        ['isFreeformCharactersEnabled', () => WH40KSettings.isFreeformCharactersEnabled()],
+    ];
+    describe.each(defaultOffBooleans)('%s — default-off (=== true)', (_name, read) => {
+        const cases: ReadonlyArray<readonly [boolean | undefined, boolean]> = [
+            [true, true],
+            [false, false],
+            [undefined, false],
+        ];
+        it.each(cases)('stored %p → %p', (stored, expected) => {
+            stubSetting(stored);
+            expect(read()).toBe(expected);
+        });
+        it('pre-registration (no game) → false', () => {
+            expect(read()).toBe(false);
+        });
+    });
+
+    // --- Enum: movement automation (full | display | none) ---
+    describe('getMovementAutomation', () => {
+        const cases: ReadonlyArray<readonly [string, 'full' | 'display' | 'none']> = [
+            ['full', 'full'],
+            ['display', 'display'],
+            ['none', 'none'],
+            ['nonsense', 'full'],
+            ['', 'full'],
+        ];
+        it.each(cases)('stored %p → %p', (stored, expected) => {
+            stubSetting(stored);
+            expect(WH40KSettings.getMovementAutomation()).toBe(expected);
+        });
+        it('pre-registration → full', () => {
+            expect(WH40KSettings.getMovementAutomation()).toBe('full');
+        });
+    });
+
+    // --- Enum: degrees-of-success mode (gen1 | gen2 | raw) ---
+    describe('getDegreesMode', () => {
+        const cases: ReadonlyArray<readonly [string, 'gen1' | 'gen2' | 'raw']> = [
+            ['gen1', 'gen1'],
+            ['gen2', 'gen2'],
+            ['raw', 'raw'],
+            ['nonsense', 'raw'],
+        ];
+        it.each(cases)('stored %p → %p', (stored, expected) => {
+            stubSetting(stored);
+            expect(WH40KSettings.getDegreesMode()).toBe(expected);
+        });
+        it('pre-registration → raw', () => {
+            expect(WH40KSettings.getDegreesMode()).toBe('raw');
+        });
+    });
+
+    // --- The homebrew toggle: ruleset (raw | homebrew) + isHomebrew ---
+    describe('getRuleset / isHomebrew (homebrew toggle)', () => {
+        const cases: ReadonlyArray<readonly [string, 'raw' | 'homebrew', boolean]> = [
+            ['raw', 'raw', false],
+            ['homebrew', 'homebrew', true],
+            ['nonsense', 'homebrew', true],
+        ];
+        it.each(cases)('stored %p → ruleset %p, isHomebrew %p', (stored, ruleset, homebrew) => {
+            stubSetting(stored);
+            expect(WH40KSettings.getRuleset()).toBe(ruleset);
+            expect(WH40KSettings.isHomebrew()).toBe(homebrew);
+        });
+        it('pre-registration → homebrew (the safe default)', () => {
+            expect(WH40KSettings.getRuleset()).toBe('homebrew');
+            expect(WH40KSettings.isHomebrew()).toBe(true);
+        });
+    });
+
+    // --- Number: characteristic offset → base (25 + offset), truncated ---
+    describe('getCharacteristicOffset / getCharacteristicBase', () => {
+        const cases: ReadonlyArray<readonly [number | string, number, number]> = [
+            [0, 0, 25],
+            [5, 5, 30],
+            [-5, -5, 20],
+            [2.9, 2, 27],
+            ['nonsense', 0, 25],
+        ];
+        it.each(cases)('stored %p → offset %p, base %p', (stored, offset, base) => {
+            stubSetting(stored);
+            expect(WH40KSettings.getCharacteristicOffset()).toBe(offset);
+            expect(WH40KSettings.getCharacteristicBase()).toBe(base);
+        });
+        it('pre-registration → offset 0, base 25', () => {
+            expect(WH40KSettings.getCharacteristicOffset()).toBe(0);
+            expect(WH40KSettings.getCharacteristicBase()).toBe(25);
+        });
+    });
+
+    // --- Number: point-buy pool (non-negative integer, default 60) ---
+    describe('getCharacteristicPointBuyPool', () => {
+        const cases: ReadonlyArray<readonly [number | string, number]> = [
+            [60, 60],
+            [0, 0],
+            [-10, 0],
+            [80.9, 80],
+            ['nonsense', 60],
+        ];
+        it.each(cases)('stored %p → %p', (stored, expected) => {
+            stubSetting(stored);
+            expect(WH40KSettings.getCharacteristicPointBuyPool()).toBe(expected);
+        });
+        it('pre-registration → 60', () => {
+            expect(WH40KSettings.getCharacteristicPointBuyPool()).toBe(60);
+        });
+    });
+
+    // --- Primary game line: every one of the 7 systems + invalid → dh2 ---
+    describe('getPrimaryGameSystem (per game line)', () => {
+        const lines: ReadonlyArray<readonly [string]> = [['dh2'], ['dh1'], ['rt'], ['bc'], ['ow'], ['dw'], ['im']];
+        it.each(lines)('stored %p resolves to itself', (id) => {
+            stubSetting(id);
+            expect(WH40KSettings.getPrimaryGameSystem()).toBe(id);
+        });
+        const invalid: ReadonlyArray<readonly [string]> = [['nonsense'], ['']];
+        it.each(invalid)('invalid %p → dh2', (id) => {
+            stubSetting(id);
+            expect(WH40KSettings.getPrimaryGameSystem()).toBe('dh2');
+        });
+        it('pre-registration → dh2', () => {
+            expect(WH40KSettings.getPrimaryGameSystem()).toBe('dh2');
+        });
+    });
+});
