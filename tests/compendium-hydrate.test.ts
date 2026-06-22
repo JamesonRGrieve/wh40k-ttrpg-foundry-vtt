@@ -88,7 +88,9 @@ describe('hydration wiring (source pins)', () => {
         // not the sibling grantDefaultItemsToActor one (which is correctly userId-gated).
         const block = hooks.match(/hooksOn\('createActor',\s*\(actor: Parameters<typeof hydrateActorInMemory>\[0\]\) => \{[\s\S]*?\}\);/);
         expect(block).not.toBeNull();
-        expect(block?.[0]).toMatch(/void hydrateActorInMemory\(actor\)/);
+        // Fire-and-forget, but the rejection MUST be handled (`.catch`), not voided —
+        // an unhandled rejection here surfaces as an uncaught page error on create.
+        expect(block?.[0]).toMatch(/hydrateActorInMemory\(actor\)\.catch\(/);
         // In-memory join must run on every client, so it must NOT gate on the triggering userId.
         expect(block?.[0]).not.toMatch(/game\.user\.id !== userId/);
     });
