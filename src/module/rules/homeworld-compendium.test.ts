@@ -183,6 +183,19 @@ describe('readHomeworldMechanics', () => {
         expect(map.size).toBe(0);
     });
 
+    it('returns an empty Map (no uncaught error) when getDocuments throws', async () => {
+        // A pack whose documentClass isn't ready throws inside getDocuments
+        // ("...reading 'database'"); the dialog must degrade to an empty grid, not crash.
+        const failingPack: FakePack = {
+            getDocuments: vi.fn<() => Promise<RawDoc[]>>().mockRejectedValue(new Error("Cannot read properties of undefined (reading 'database')")),
+        };
+        vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        G.game = { packs: { get: () => failingPack } };
+        const map = await readHomeworldMechanics('wh40k-rpg.dh2-within-origins-homeworlds');
+        expect(map.size).toBe(0);
+        vi.restoreAllMocks();
+    });
+
     it('keys each projected mechanics by the document identifier', async () => {
         installPack('wh40k-rpg.dh2-within-origins-homeworlds', WITHIN_DOCS);
         const map = await readHomeworldMechanics('wh40k-rpg.dh2-within-origins-homeworlds');

@@ -210,7 +210,12 @@ export class HooksManager {
         // (unlike a DB write, which only one client should perform).
         // eslint-disable-next-line no-restricted-syntax -- boundary: createActor hook payload is framework-typed; narrowed inside compendium-hydrate.ts
         hooksOn('createActor', (actor: Parameters<typeof hydrateActorInMemory>[0]) => {
-            void hydrateActorInMemory(actor);
+            // Fire-and-forget, but the rejection MUST be handled: an unhandled
+            // rejection here surfaces as an uncaught page error during creation.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+            hydrateActorInMemory(actor).catch((err: unknown) => {
+                console.error('compendium-hydrate: createActor hydration failed', err);
+            });
         });
     }
 

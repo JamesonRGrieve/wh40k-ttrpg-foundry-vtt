@@ -105,8 +105,18 @@ export async function buildHydrationPatches(actor: HydratableActor): Promise<Arr
 
         let source = cache.get(uuid);
         if (source === undefined) {
-            // eslint-disable-next-line no-await-in-loop -- sequential is intentional: the shared per-actor cache dedupes pack fetches across this actor's items
-            source = (await fromUuid(uuid)) as SourceLike | null;
+            try {
+                // eslint-disable-next-line no-await-in-loop -- sequential is intentional: the shared per-actor cache dedupes pack fetches across this actor's items
+                source = (await fromUuid(uuid)) as SourceLike | null;
+            } catch (err) {
+                // The join is best-effort enrichment on a hot prep/render path. A
+                // compendium ref that can't resolve (pack not loaded, renamed, or a
+                // not-yet-ready documentClass) must NOT throw: it would surface as an
+                // unhandled rejection (the `createActor` hook voids this promise) or
+                // crash the sheet render. Skip the item — it stays its lean self.
+                console.warn(`compendium-hydrate: could not resolve ${uuid}; leaving item lean`, err);
+                source = null;
+            }
             cache.set(uuid, source);
         }
         if (source === null) continue;
