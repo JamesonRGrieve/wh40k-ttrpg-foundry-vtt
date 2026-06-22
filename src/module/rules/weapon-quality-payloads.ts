@@ -140,7 +140,11 @@ export async function buildWeaponQualityPayloadIndex(): Promise<void> {
     for (const pack of packs) {
         const name = pack.metadata?.name;
         if (name === undefined || pack.getDocuments === undefined) continue;
-        sources.push({ systemId: systemIdFromPackName(name), getDocuments: pack.getDocuments });
+        // Bind to the owning pack: `getDocuments` reads `this.documentClass`
+        // internally, so a detached reference (called as `source.getDocuments()`)
+        // would run with `this` = the plain `source` literal and throw
+        // "Cannot read properties of undefined (reading 'database')".
+        sources.push({ systemId: systemIdFromPackName(name), getDocuments: pack.getDocuments.bind(pack) });
     }
     const perPack = await Promise.all(sources.map(async (source) => ({ systemId: source.systemId, packDocs: await source.getDocuments() })));
 
