@@ -184,7 +184,7 @@ async function probeGrantsSkill(page: Page, actorId: string): Promise<FlowResult
             const talent = {
                 id: 'probe-skill-grant-stub',
                 _id: 'probe-skill-grant-stub',
-                uuid: `Actor.${actorId}.Item.probe-skill-grant-stub`,
+                uuid: `Actor.${aid}.Item.probe-skill-grant-stub`,
                 name: 'probe-skill-grant-stub',
                 type: 'talent',
                 system: {
@@ -218,7 +218,7 @@ async function probeGrantsSkill(page: Page, actorId: string): Promise<FlowResult
                 // (or seeding the originPath rank) instead. So we can't observe
                 // the trained flag post-apply; the grant pipeline ran without
                 // errors which IS the manager-flow coverage signal.
-                const refreshed = g.game?.actors?.get?.(actorId) ?? actor;
+                const refreshed = g.game?.actors?.get?.(aid) ?? actor;
                 const flagSet = Mgr.hasAppliedGrants(refreshed, talent.uuid);
                 if (!flagSet) return { ok: false, error: `applied-grants flag not stored after apply (before=${before})` };
                 return { ok: true, error: null };
@@ -394,7 +394,7 @@ async function probeGrantsRevoke(page: Page, actorId: string): Promise<FlowResul
                     return { ok: false, error: `reverse failed: ${(reverseResult.errors ?? []).join('; ')}` };
                 }
 
-                const refreshed = g.game?.actors?.get?.(actorId) ?? actor;
+                const refreshed = g.game?.actors?.get?.(aid) ?? actor;
                 const hasFlagAfter = Mgr.hasAppliedGrants(refreshed, sourceKey);
                 if (hasFlagAfter) return { ok: false, error: 'applied-grants flag still set after reverse' };
                 // See skill-grant probe for why `awareness.trained` is not
@@ -526,8 +526,8 @@ async function probeAcquire(page: Page, buyerId: string, sourceId: string): Prom
 
             try {
                 await TM.commitTransaction({
-                    buyerActorId: buyerId,
-                    sourceActorId: sourceId,
+                    buyerActorId: bid,
+                    sourceActorId: sid,
                     itemId: item.id,
                     quantity: 1,
                     influenceBurn: 0,
@@ -536,7 +536,7 @@ async function probeAcquire(page: Page, buyerId: string, sourceId: string): Prom
                 return { ok: false, error: `commitTransaction threw: ${err instanceof Error ? err.message : String(err)}` };
             }
 
-            const refreshedBuyer = g.game?.actors?.get?.(buyerId);
+            const refreshedBuyer = g.game?.actors?.get?.(bid);
             const acquired = refreshedBuyer?.items?.contents?.find((i) => i.name === 'probe-acquire-gear');
 
             const ok = acquired !== undefined;
@@ -591,8 +591,8 @@ async function probeSell(page: Page, buyerId: string, sourceId: string): Promise
 
             try {
                 await TM.commitTransaction({
-                    buyerActorId: sourceId,
-                    sourceActorId: buyerId,
+                    buyerActorId: sid,
+                    sourceActorId: bid,
                     itemId: item.id,
                     quantity: 1,
                     influenceBurn: 0,
@@ -601,8 +601,8 @@ async function probeSell(page: Page, buyerId: string, sourceId: string): Promise
                 return { ok: false, error: `commitTransaction threw: ${err instanceof Error ? err.message : String(err)}` };
             }
 
-            const refreshedBuyer = g.game?.actors?.get?.(buyerId);
-            const refreshedSource = g.game?.actors?.get?.(sourceId);
+            const refreshedBuyer = g.game?.actors?.get?.(bid);
+            const refreshedSource = g.game?.actors?.get?.(sid);
             const itemGone = refreshedBuyer?.items?.contents?.some((i) => i.name === 'probe-sell-gear') !== true;
             const itemArrived = refreshedSource?.items?.contents?.some((i) => i.name === 'probe-sell-gear') === true;
 
@@ -647,7 +647,7 @@ async function probeListSources(page: Page, buyerId: string, sourceId: string): 
             const sources = TM.listSourcesForBuyer(buyer);
             if (!Array.isArray(sources)) return { ok: false, error: 'listSourcesForBuyer did not return an array' };
 
-            const includesConfiguredSource = sources.some((s) => s.id === sourceId);
+            const includesConfiguredSource = sources.some((s) => s.id === sid);
             if (!includesConfiguredSource) {
                 const ids = sources.map((s) => s.id).join(', ');
                 return { ok: false, error: `configured source missing from list (got ids: ${ids || '(empty)'})` };
