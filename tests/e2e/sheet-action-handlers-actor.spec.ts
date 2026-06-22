@@ -54,11 +54,10 @@ const SHEET_ACTION_ACTOR_FLOWS = [
     'npc-sheet::removeTag',
     'npc-sheet::adjustInteractionCount',
     'npc-sheet::scaleToThreat-im',
-    // VehicleSheet (dh2-vehicle) — structure/crew/component handlers
-    'vehicle-sheet::adjustStructure',
+    // CraftActorSheet (dh2-vehicle) — integrity/repair handlers (crew rating/
+    // morale actions were removed in the vehicle/voidcraft refactor)
+    'vehicle-sheet::adjustIntegrity',
     'vehicle-sheet::repairDamage',
-    'vehicle-sheet::modifyCrew',
-    'vehicle-sheet::adjustCrewMorale',
     // StarshipSheet (rt-starship) — RT-only shield + extended-action + build
     'starship-sheet::raiseVoidShield',
     'starship-sheet::lowerVoidShield',
@@ -98,14 +97,12 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
             }
             // Concrete union of every actor/item system path the probes read.
             interface ProbeSystem {
-                equipped?: boolean;
-                inBackpack?: boolean;
-                inShipStorage?: boolean;
+                state?: { equipped?: boolean; inBackpack?: boolean; inShipStorage?: boolean };
                 horde?: { active?: boolean; magnitude?: number };
                 trainedSkills?: Record<string, { trained?: boolean } | undefined>;
                 tags?: string[];
                 wounds?: { value?: number; max?: number; critical?: number };
-                crew?: { rating?: number; morale?: number };
+                integrity?: { value?: number; max?: number };
                 voidShields?: number;
                 voidShieldsStatus?: { active?: number; exhausted?: number };
             }
@@ -294,7 +291,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             {
                                 name: 'probe-gear-belt',
                                 type: 'gear',
-                                system: { equipped: false, inBackpack: false, inShipStorage: false },
+                                system: { state: { equipped: false, inBackpack: false, inShipStorage: false } },
                             },
                         ]),
                         5_000,
@@ -314,10 +311,10 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     } else if (gear == null) {
                         notes['character-sheet::toggleEquip'] = 'gear missing';
                     } else {
-                        const before = gear.system?.equipped === true;
+                        const before = gear.system?.state?.equipped === true;
                         await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'toggleEquip');
                         const fresh = livePc()?.items?.get?.(gear.id ?? '');
-                        const after = fresh?.system?.equipped === true;
+                        const after = fresh?.system?.state?.equipped === true;
                         if (after !== before) {
                             fired['character-sheet::toggleEquip'] = true;
                             notes['character-sheet::toggleEquip'] = `equipped ${before} → ${after}`;
@@ -339,8 +336,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     } else {
                         await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'stowItem');
                         const fresh = livePc()?.items?.get?.(gear.id ?? '');
-                        const inBackpack = fresh?.system?.inBackpack === true;
-                        const equipped = fresh?.system?.equipped === true;
+                        const inBackpack = fresh?.system?.state?.inBackpack === true;
+                        const equipped = fresh?.system?.state?.equipped === true;
                         if (inBackpack && !equipped) {
                             fired['character-sheet::stowItem'] = true;
                             notes['character-sheet::stowItem'] = `inBackpack=true equipped=false`;
@@ -362,7 +359,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     } else {
                         await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'unstowItem');
                         const fresh = livePc()?.items?.get?.(gear.id ?? '');
-                        const inBackpack = fresh?.system?.inBackpack === true;
+                        const inBackpack = fresh?.system?.state?.inBackpack === true;
                         if (!inBackpack) {
                             fired['character-sheet::unstowItem'] = true;
                             notes['character-sheet::unstowItem'] = `inBackpack cleared`;
@@ -724,11 +721,10 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
              * ================================================================= */
             async function probeVehicleFlows(): Promise<void> {
                 const vehicle = await makeActor('dh2-vehicle', 'dh2', {
-                    wounds: { max: 20, value: 10 },
-                    crew: { rating: 30, morale: 50 },
+                    integrity: { max: 20, value: 10 },
                 });
                 if (vehicle?.id == null) {
-                    notes['vehicle-sheet::adjustStructure'] = 'Vehicle create returned null';
+                    notes['vehicle-sheet::adjustIntegrity'] = 'Vehicle create returned null';
                     return;
                 }
                 await new Promise<void>((r) => {
@@ -737,7 +733,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 const liveV = (): ProbeActor | undefined => (vehicle.id != null ? gameCtx?.actors?.get?.(vehicle.id) : undefined);
                 const sheet = liveV()?.sheet;
                 if (sheet == null) {
-                    notes['vehicle-sheet::adjustStructure'] = 'Vehicle sheet undefined';
+                    notes['vehicle-sheet::adjustIntegrity'] = 'Vehicle sheet undefined';
                     return;
                 }
                 try {
@@ -757,24 +753,26 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 });
                 const actions = sheet.options?.actions ?? {};
 
-                // ---- vehicle-sheet::adjustStructure ----
+                // ---- vehicle-sheet::adjustIntegrity ----
+                // Conventional craft's structural field is `integrity` (was
+                // `wounds`); the handler was renamed adjustStructure → adjustIntegrity.
                 try {
-                    const handler = actions.adjustStructure;
+                    const handler = actions.adjustIntegrity;
                     if (typeof handler !== 'function') {
-                        notes['vehicle-sheet::adjustStructure'] = 'handler missing';
+                        notes['vehicle-sheet::adjustIntegrity'] = 'handler missing';
                     } else {
-                        const before = liveV()?.system?.wounds?.value ?? -1;
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-3' })), 5_000, 'adjustStructure');
-                        const after = liveV()?.system?.wounds?.value ?? -1;
+                        const before = liveV()?.system?.integrity?.value ?? -1;
+                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-3' })), 5_000, 'adjustIntegrity');
+                        const after = liveV()?.system?.integrity?.value ?? -1;
                         if (after === Math.max(0, before - 3)) {
-                            fired['vehicle-sheet::adjustStructure'] = true;
-                            notes['vehicle-sheet::adjustStructure'] = `wounds ${before} → ${after}`;
+                            fired['vehicle-sheet::adjustIntegrity'] = true;
+                            notes['vehicle-sheet::adjustIntegrity'] = `integrity ${before} → ${after}`;
                         } else {
-                            notes['vehicle-sheet::adjustStructure'] = `expected ${Math.max(0, before - 3)}, got ${after}`;
+                            notes['vehicle-sheet::adjustIntegrity'] = `expected ${Math.max(0, before - 3)}, got ${after}`;
                         }
                     }
                 } catch (err) {
-                    notes['vehicle-sheet::adjustStructure'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+                    notes['vehicle-sheet::adjustIntegrity'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
 
                 // ---- vehicle-sheet::repairDamage ----
@@ -783,13 +781,13 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     if (typeof handler !== 'function') {
                         notes['vehicle-sheet::repairDamage'] = 'handler missing';
                     } else {
-                        const before = liveV()?.system?.wounds?.value ?? -1;
-                        const max = liveV()?.system?.wounds?.max ?? before;
+                        const before = liveV()?.system?.integrity?.value ?? -1;
+                        const max = liveV()?.system?.integrity?.max ?? before;
                         await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '2' })), 5_000, 'repairDamage');
-                        const after = liveV()?.system?.wounds?.value ?? -1;
+                        const after = liveV()?.system?.integrity?.value ?? -1;
                         if (after === Math.min(max, before + 2)) {
                             fired['vehicle-sheet::repairDamage'] = true;
-                            notes['vehicle-sheet::repairDamage'] = `wounds ${before} → ${after}`;
+                            notes['vehicle-sheet::repairDamage'] = `integrity ${before} → ${after}`;
                         } else {
                             notes['vehicle-sheet::repairDamage'] = `expected ${Math.min(max, before + 2)}, got ${after}`;
                         }
@@ -797,46 +795,10 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['vehicle-sheet::repairDamage'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
-
-                // ---- vehicle-sheet::modifyCrew ----
-                try {
-                    const handler = actions.modifyCrew;
-                    if (typeof handler !== 'function') {
-                        notes['vehicle-sheet::modifyCrew'] = 'handler missing';
-                    } else {
-                        const before = liveV()?.system?.crew?.rating ?? 30;
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '5' })), 5_000, 'modifyCrew');
-                        const after = liveV()?.system?.crew?.rating ?? 30;
-                        if (after === Math.max(1, Math.min(100, before + 5))) {
-                            fired['vehicle-sheet::modifyCrew'] = true;
-                            notes['vehicle-sheet::modifyCrew'] = `crew.rating ${before} → ${after}`;
-                        } else {
-                            notes['vehicle-sheet::modifyCrew'] = `expected ${Math.max(1, Math.min(100, before + 5))}, got ${after}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['vehicle-sheet::modifyCrew'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- vehicle-sheet::adjustCrewMorale ----
-                try {
-                    const handler = actions.adjustCrewMorale;
-                    if (typeof handler !== 'function') {
-                        notes['vehicle-sheet::adjustCrewMorale'] = 'handler missing';
-                    } else {
-                        const before = liveV()?.system?.crew?.morale ?? 50;
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-10' })), 5_000, 'adjustCrewMorale');
-                        const after = liveV()?.system?.crew?.morale ?? 50;
-                        if (after === Math.max(0, Math.min(100, before - 10))) {
-                            fired['vehicle-sheet::adjustCrewMorale'] = true;
-                            notes['vehicle-sheet::adjustCrewMorale'] = `crew.morale ${before} → ${after}`;
-                        } else {
-                            notes['vehicle-sheet::adjustCrewMorale'] = `expected ${Math.max(0, Math.min(100, before - 10))}, got ${after}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['vehicle-sheet::adjustCrewMorale'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
+                // NOTE: vehicle-sheet::modifyCrew / adjustCrewMorale were removed —
+                // conventional craft crew is now { required, notes } only (no
+                // rating/morale), and CraftActorSheet exposes no such actions. The
+                // flow keys are dropped from SHEET_ACTION_ACTOR_FLOWS accordingly.
             }
 
             /* =================================================================
