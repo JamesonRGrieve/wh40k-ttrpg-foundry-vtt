@@ -31,7 +31,11 @@ export const test = base.extend({
             const entries = await page.coverage.stopJSCoverage();
             const filtered = entries.filter((e) => e.url.includes('/systems/wh40k-rpg/module/') && e.url.endsWith('.js'));
             if (filtered.length === 0) return;
-            const id = `${String(++runCounter).padStart(4, '0')}-${testInfo.title.replace(/[^a-z0-9]/gi, '_').slice(0, 60)}`;
+            // Prefix with the parallel slot so concurrent workers (each a
+            // separate process with its own runCounter) never collide on a
+            // shared filename when two specs share a title.
+            const slot = String(testInfo.parallelIndex).padStart(2, '0');
+            const id = `w${slot}-${String(++runCounter).padStart(4, '0')}-${testInfo.title.replace(/[^a-z0-9]/gi, '_').slice(0, 60)}`;
             writeFileSync(resolve(RAW_DIR, `${id}.json`), JSON.stringify(filtered));
         } catch {
             // ignore — coverage capture is best-effort
