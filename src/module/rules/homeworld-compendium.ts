@@ -186,9 +186,18 @@ export async function readHomeworldMechanics(packName: string): Promise<Map<stri
     const out = new Map<string, HomeworldMechanics>();
     if (pack?.getDocuments === undefined) return out;
 
-    // Call as a method (not a detached reference) so Foundry's CompendiumCollection
-    // keeps its `this` binding inside getDocuments().
-    const docs = await pack.getDocuments();
+    let docs: readonly RawHomeworldDoc[];
+    try {
+        // Call as a method (not a detached reference) so Foundry's CompendiumCollection
+        // keeps its `this` binding inside getDocuments().
+        docs = await pack.getDocuments();
+    } catch (err) {
+        // A pack whose documentClass isn't ready yet throws inside getDocuments
+        // ("...reading 'database'"). Degrade to an empty grid rather than letting
+        // an uncaught error escape the dialog's render.
+        console.warn(`readHomeworldMechanics: ${packName} getDocuments failed`, err);
+        return out;
+    }
     for (const doc of docs) {
         const mechanics = projectDoc(doc);
         if (mechanics !== null) out.set(mechanics.id, mechanics);
