@@ -2,14 +2,33 @@
  * Stories for TalentSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { mockItem } from '../../../../stories/mocks';
-import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/talent-sheet.hbs?raw';
 
 initializeStoryHandlebars();
+
+const talentTpl = Hbs.compile(templateSrc);
+
+/**
+ * Render the talent sheet under a `.wh40k-rpg` + `data-wh40k-system` ancestor
+ * for the given game line. The talent header/benefit headings carry per-system
+ * Tailwind variant classes (`bc:tw-text-crimson-light dh1:… dh2:… dw:… ow:…
+ * rt:… im:…`) which only fire when an ancestor stamps the system id — the
+ * default `renderSheet` wrapper hardcodes `dh2`, so a per-system wrapper is
+ * needed to exercise the other six lines (CLAUDE.md "Adaptation procedure 3a").
+ */
+function renderTalentForSystem(ctx: TalentCtx, systemId: SystemId): HTMLElement {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'wh40k-rpg theme-dark sheet';
+    wrapper.setAttribute('data-wh40k-system', systemId);
+    wrapper.innerHTML = talentTpl(ctx);
+    return wrapper;
+}
 // Issue #201: opening a talent in a compendium previously threw a Handlebars
 // parse error because `{{#if (eq activeTab"overview")}}` was missing the space
 // between the variable and the literal. Compiling at module load asserts the
@@ -241,3 +260,34 @@ export const CompendiumRender: Story = {
         }
     },
 };
+
+// ── Per-system homologation: all 7 game lines ────────────────────────────────
+//
+// The talent header/benefit headings carry per-system Tailwind variant classes
+// gated on a `data-wh40k-system` ancestor. One story per game line stamps that
+// ancestor so DH2-only theming assumptions surface across DH1 / RT / BC / OW /
+// DW / IM (CLAUDE.md homologation rule). The rendered content is identical; the
+// variant only changes which colour token cascades onto the heading.
+
+/** Build a per-system story (explicit named exports keep Storybook's static scan happy). */
+function perSystemStory(systemId: SystemId): Story {
+    return {
+        name: `Per-system — ${systemId.toUpperCase()}`,
+        render: () => renderTalentForSystem(makeCtx(), systemId),
+        play: ({ canvasElement }) => {
+            const storyCanvas = within(canvasElement);
+            void expect(storyCanvas.getByRole('heading', { name: 'Mighty Shot' })).toBeTruthy();
+            // The system-stamped ancestor must be present for the variant to fire.
+            const root = canvasElement.querySelector(`[data-wh40k-system="${systemId}"]`);
+            void expect(root, `wrapper carries data-wh40k-system="${systemId}"`).toBeTruthy();
+        },
+    };
+}
+
+export const PerSystemDh2: Story = perSystemStory('dh2');
+export const PerSystemDh1: Story = perSystemStory('dh1');
+export const PerSystemRt: Story = perSystemStory('rt');
+export const PerSystemBc: Story = perSystemStory('bc');
+export const PerSystemOw: Story = perSystemStory('ow');
+export const PerSystemDw: Story = perSystemStory('dw');
+export const PerSystemIm: Story = perSystemStory('im');

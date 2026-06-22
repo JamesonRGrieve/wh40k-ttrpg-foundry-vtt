@@ -238,3 +238,69 @@ export const ComposedSheetAndDialogRT: Story = {
         return wrapper;
     },
 };
+
+// ── Per-system homologation: the remaining four game lines (BC, DH1, OW, DW) ──
+//
+// The Manacled pill and the −40 BS/WS situational-modifier rows are shared
+// surfaces across every game line. The DH2 / IM / RT composed stories above
+// cover three lines; these complete the seven by flipping the wrapper
+// `data-wh40k-system` so each line's `<system>:tw-*` theme variants fire and a
+// regression in any one shows up in visual review.
+
+function renderComposedForSystem(systemId: string): HTMLElement {
+    const wrapper = renderSheetParts(
+        [
+            {
+                template: actorActiveEffectsPanelSrc,
+                context: {
+                    effects: [manaclesEffect()],
+                    actor: { flags: { 'wh40k-rpg': { expanded: { effects_details: true } } } },
+                },
+            },
+            {
+                template: unifiedModifiersSrc,
+                context: {
+                    hasSituationalModifiers: true,
+                    situationalModifiers: [manaclesSituationalRow()],
+                    assistantCount: 0,
+                    canDecrementAssistant: false,
+                    canIncrementAssistant: true,
+                    assistanceBonus: 0,
+                    extended: false,
+                    extendedThreshold: 0,
+                    showCustomModifier: false,
+                    customMod: 0,
+                    tryAgainAdvice: null,
+                    isForceField: false,
+                },
+            },
+        ],
+        {},
+    );
+    wrapper.dataset.wh40kSystem = systemId;
+    return wrapper;
+}
+
+/** Per-system homologation: Black Crusade. */
+export const ComposedSheetAndDialogBC: Story = {
+    name: 'Composed / Sheet + Roll Dialog (BC)',
+    render: () => renderComposedForSystem('bc'),
+};
+
+/** Per-system homologation: Dark Heresy 1e. */
+export const ComposedSheetAndDialogDH1: Story = {
+    name: 'Composed / Sheet + Roll Dialog (DH1e)',
+    render: () => renderComposedForSystem('dh1'),
+};
+
+/** Per-system homologation: Only War. */
+export const ComposedSheetAndDialogOW: Story = {
+    name: 'Composed / Sheet + Roll Dialog (OW)',
+    render: () => renderComposedForSystem('ow'),
+};
+
+/** Per-system homologation: Deathwatch. */
+export const ComposedSheetAndDialogDW: Story = {
+    name: 'Composed / Sheet + Roll Dialog (DW)',
+    render: () => renderComposedForSystem('dw'),
+};

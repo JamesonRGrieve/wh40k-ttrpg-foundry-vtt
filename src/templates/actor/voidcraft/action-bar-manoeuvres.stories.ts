@@ -130,6 +130,32 @@ export const ThemeIM: Story = {
     },
 };
 
+/**
+ * Per-system homologation: the remaining four game lines (BC, DH1, OW, DW).
+ *
+ * Voidcraft Manoeuvre Actions are RT-canonical, but the partial respects every
+ * game line's theme tokens so a sibling ship surface inherits the common visual
+ * treatment. Each variant flips the wrapper `data-wh40k-system` so the
+ * `<system>:tw-*` theme variants fire and homologation regressions surface in
+ * visual review. `buildContext` reseeds the default RNG, keeping the rendered
+ * catalogue deterministic per story.
+ */
+function makeThemeStory(systemId: string, name: string, opts: { pilot: number; helmsman: string }): Story {
+    return {
+        name,
+        render: () => {
+            const wrapper = renderSheetParts([{ template: actionBarSrc, context: buildContext(opts) }], {});
+            wrapper.dataset.wh40kSystem = systemId;
+            return wrapper;
+        },
+    };
+}
+
+export const ThemeBC: Story = makeThemeStory('bc', 'Theme / Black Crusade', { pilot: 38, helmsman: 'Heretek Vol' });
+export const ThemeDH1: Story = makeThemeStory('dh1', 'Theme / Dark Heresy 1e', { pilot: 42, helmsman: 'Arbitrator Senn' });
+export const ThemeOW: Story = makeThemeStory('ow', 'Theme / Only War', { pilot: 36, helmsman: 'Sergeant Dray' });
+export const ThemeDW: Story = makeThemeStory('dw', 'Theme / Deathwatch', { pilot: 48, helmsman: 'Brother Cassian' });
+
 /** Hazard-tier helmsman — negative ship Manoeuvrability composes correctly. */
 export const HighDifficulty: Story = {
     name: 'Hazard / Hard tier (Adjust Speed & Bearing)',

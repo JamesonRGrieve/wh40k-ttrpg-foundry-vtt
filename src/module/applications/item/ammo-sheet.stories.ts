@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import HbsStory from 'handlebars';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-ammo-sheet.hbs?raw';
+import type { SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 
@@ -85,5 +86,67 @@ export const RendersTabs: Story = {
         await expect(view.getByDisplayValue('Bolt Rounds (Standard)')).toBeTruthy();
         await expect(canvasElement.querySelector('[data-tab="modifiers"]')).toBeTruthy();
         await expect(canvasElement.querySelector('[data-tab="qualities"]')).toBeTruthy();
+    },
+};
+
+// ── Per-system homologation ─────────────────────────────────────────────────
+//
+// The ammo sheet gates its section-heading accent colour through per-system
+// Tailwind variants (`bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 …`),
+// which only fire when an ancestor carries `data-wh40k-system="<id>"`. The
+// default `renderSheet` wrapper stamps `dh2`; these stories re-stamp it per game
+// line so all seven palettes render. One story per system matches the file's
+// existing one-export-per-case style.
+
+function renderAmmoForSystem(systemId: SystemId): HTMLElement {
+    const el = renderSheet(templateSrc, {
+        item: { name: 'Bolt Rounds (Standard)', img: 'icons/svg/bullet.svg', system: baseSystem() },
+        system: baseSystem(),
+        CONFIG: { WH40K: { weaponTypes: {} } },
+    } satisfies AmmoArgs);
+    el.dataset['wh40kSystem'] = systemId;
+    return el;
+}
+
+export const PerSystemDH2: Story = {
+    name: 'Per-system — DH2e',
+    render: () => renderAmmoForSystem('dh2'),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(view.getByDisplayValue('Bolt Rounds (Standard)')).toBeTruthy();
+    },
+};
+
+export const PerSystemDH1: Story = {
+    name: 'Per-system — DH1',
+    render: () => renderAmmoForSystem('dh1'),
+};
+
+export const PerSystemRT: Story = {
+    name: 'Per-system — Rogue Trader',
+    render: () => renderAmmoForSystem('rt'),
+};
+
+export const PerSystemBC: Story = {
+    name: 'Per-system — Black Crusade',
+    render: () => renderAmmoForSystem('bc'),
+};
+
+export const PerSystemOW: Story = {
+    name: 'Per-system — Only War',
+    render: () => renderAmmoForSystem('ow'),
+};
+
+export const PerSystemDW: Story = {
+    name: 'Per-system — Deathwatch',
+    render: () => renderAmmoForSystem('dw'),
+};
+
+export const PerSystemIM: Story = {
+    name: 'Per-system — Imperium Maledictum',
+    render: () => renderAmmoForSystem('im'),
+    play: async ({ canvasElement }) => {
+        const el = canvasElement.querySelector<HTMLElement>('[data-wh40k-system]');
+        await expect(el?.dataset['wh40kSystem']).toBe('im');
     },
 };
