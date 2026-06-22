@@ -185,7 +185,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: forwarded into Foundry's Actor.create document-creation payload (documented Record boundary in CLAUDE.md "Casting policy")
                     system: Record<string, unknown>,
                 ): Promise<ProbeActor | null> => {
-                    const create = ActorCls.create;
+                    const create = ActorCls.create?.bind(ActorCls);
                     if (create == null) return null;
                     const created = await withTimeout(
                         create({ name: `data-actor-model-${gameSystem}`, type, system: { gameSystem, ...system } }),

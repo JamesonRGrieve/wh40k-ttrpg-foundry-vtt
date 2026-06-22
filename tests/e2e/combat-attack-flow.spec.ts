@@ -107,7 +107,7 @@ async function probeAttackFlow(page: Page, systemIds: readonly string[]): Promis
                 /* ---- Flow 1: rollWeaponAttack defined across all 7 systems ---- */
                 async function probeRollWeaponAttackDefined(): Promise<void> {
                     if (ActorCls?.create == null) return;
-                    const create = ActorCls.create;
+                    const create = ActorCls.create.bind(ActorCls);
                     // Create the 7 probe actors in parallel (independent of each other).
                     const checks = await Promise.all(
                         sysIds.map(async (sys): Promise<string | null> => {

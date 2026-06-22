@@ -822,7 +822,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                      * ============================================================ */
                     try {
                         const cls = FoundryConfig?.ChatMessage?.documentClass as ChatDocClass | undefined;
-                        const createMsg = ChatMessageCls.create;
+                        const createMsg = ChatMessageCls.create?.bind(ChatMessageCls);
                         if (typeof cls?.onChatCardAction !== 'function' || typeof createMsg !== 'function') {
                             notes['chat-message-onChatCardAction-routes'] = 'onChatCardAction static is not a function';
                         } else {

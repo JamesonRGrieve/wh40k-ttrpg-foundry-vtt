@@ -148,7 +148,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
             // Capture the narrowed (non-undefined) creator so the nested probe
             // closures can call it without re-checking — the outer guard's
             // narrowing does not propagate into them.
-            const createActor = browserActor.create;
+            const createActor = browserActor.create.bind(browserActor);
 
             // Wrap any awaitable with a 5s timeout so a blocking dialog or
             // socket-wait can't hang the spec (mirrors combat.spec.ts).

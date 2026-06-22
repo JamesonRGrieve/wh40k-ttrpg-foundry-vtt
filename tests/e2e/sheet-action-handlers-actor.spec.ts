@@ -218,7 +218,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
             // per-type seed payload spread into the Foundry `Actor.create` data.
             // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create seed payload is an open Foundry document-data shape
             async function makeActor(type: string, gameSystem: string, system: Record<string, unknown> = {}): Promise<ProbeActor | null> {
-                const createActor = ActorClass?.create;
+                const createActor = ActorClass?.create?.bind(ActorClass);
                 if (createActor == null) return null;
                 try {
                     const actor = await withTimeout(

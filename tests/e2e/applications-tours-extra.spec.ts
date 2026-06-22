@@ -561,7 +561,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
              * ============================================================ */
             async function probeSharedPc(): Promise<void> {
                 try {
-                    const createPc = ActorCls?.create;
+                    const createPc = ActorCls?.create?.bind(ActorCls);
                     if (createPc != null) {
                         pc = await withTimeout(
                             createPc({ name: 'app-tours-extra-pc', type: 'dh2-character', system: { gameSystem: 'dh2' } }),
