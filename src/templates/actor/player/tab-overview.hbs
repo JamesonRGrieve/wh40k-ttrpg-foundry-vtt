@@ -96,6 +96,16 @@
                             <i class="fas fa-redo"></i>
                         </button>
                     {{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}
+                    {{!-- Burn Threshold (#63) — surfaces system.fate.threshold; hidden when 0.
+                         The dedicated fate-panel.hbs partial is unused; this overview tab is
+                         what renders, so the threshold line lives here too. --}}
+                    {{#if (gt system.fate.threshold 0)}}
+                        <div class="wh40k-fate-threshold tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-mt-1 tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-medium)] tw-uppercase tw-tracking-[0.05em]"
+                             title="{{localize 'WH40K.VitalEditBody.FateThresholdLabel'}}">
+                            <i class="fas fa-fire tw-text-[color:var(--wh40k-wounds-secondary)] tw-text-[0.65rem]"></i>
+                            <span>{{localize "WH40K.VitalEditBody.FateThresholdLabel"}}: <strong class="tw-text-[color:var(--wh40k-text-bright)]">{{system.fate.threshold}}</strong></span>
+                        </div>
+                    {{/if}}
                     {{/if}}
                     {{/unless}}
                 </div>
