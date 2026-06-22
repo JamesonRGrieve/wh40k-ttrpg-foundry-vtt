@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-content-block-sheet.hbs?raw';
+import type { SystemId } from '../../../../stories/mocks/extended';
 import { renderSheet } from '../../../../stories/test-helpers';
 
 interface ContentField {
@@ -107,6 +108,62 @@ export const EditMode: Story = {
     },
 };
 
+// ── Per-system homologation (dh2 / dh1 / rt / bc / ow / dw / im) ──────────────
+//
+// The mutation content-block template colours its section headings per game
+// line (`bc:tw-text-crimson-light … im:tw-text-failure`); those variants fire
+// only under a `data-wh40k-system="<id>"` ancestor. Each story re-stamps the
+// rendered wrapper with its system id so visual review exercises all seven.
+
+/** Render the edit-mode mutation sheet, then stamp the active game-system id. */
+function renderForSystem(systemId: SystemId): HTMLElement {
+    const el = renderSheet(templateSrc, baseArgs(true, true));
+    el.dataset['wh40kSystem'] = systemId;
+    return el;
+}
+
+export const HomologationDH2: Story = {
+    render: () => renderForSystem('dh2'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="dh2"]')).not.toBeNull();
+    },
+};
+
+export const HomologationDH1: Story = {
+    render: () => renderForSystem('dh1'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="dh1"]')).not.toBeNull();
+    },
+};
+
+export const HomologationRT: Story = {
+    render: () => renderForSystem('rt'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).not.toBeNull();
+    },
+};
+
+export const HomologationBC: Story = {
+    render: () => renderForSystem('bc'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="bc"]')).not.toBeNull();
+    },
+};
+
+export const HomologationOW: Story = {
+    render: () => renderForSystem('ow'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="ow"]')).not.toBeNull();
+    },
+};
+
+export const HomologationDW: Story = {
+    render: () => renderForSystem('dw'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="dw"]')).not.toBeNull();
+    },
+};
+
 export const HomologationIM: Story = {
     args: baseArgs(true, true),
     render: (args) => {
@@ -116,5 +173,6 @@ export const HomologationIM: Story = {
     },
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('.wh40k-story-editor')).not.toBeNull();
+        await expect(canvasElement.querySelector('[data-wh40k-system="im"]')).not.toBeNull();
     },
 };

@@ -11,7 +11,7 @@
  * pass that array directly so the partial works without a full sheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { randomId, seedRandom } from '../../../../stories/mocks/extended';
+import { randomId, seedRandom, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/actor/panel/endeavour-panel.hbs?raw';
@@ -40,7 +40,7 @@ interface EndeavourLike {
     };
 }
 
-function makeEndeavour(overrides: Partial<EndeavourLike> & { system?: Partial<EndeavourLike['system']> } = {}): EndeavourLike {
+function makeEndeavour(overrides: Omit<Partial<EndeavourLike>, 'system'> & { system?: Partial<EndeavourLike['system']> } = {}): EndeavourLike {
     const id = overrides.id ?? randomId('endeavour', rng);
     const { system: sysOverrideRaw = {} } = overrides;
     const sysOverride: Partial<EndeavourLike['system']> = sysOverrideRaw;
@@ -91,7 +91,6 @@ export const InProgress: Story = {
             makeCtx([
                 makeEndeavour({
                     name: 'Recover the Lathe Records',
-                    // @ts-expect-error -- TS narrowing on literal-typed objectives doesn't match Partial<system> exactly; the runtime shape is correct
                     system: {
                         objectives: [
                             { name: 'Establish a foothold on Solenne Minoris', description: 'Acquire a hab', complete: true, ap: 1 },
@@ -114,7 +113,6 @@ export const Completed: Story = {
             makeCtx([
                 makeEndeavour({
                     name: 'Cleanse the Sump Cell',
-                    // @ts-expect-error -- TS narrowing on literal-typed objectives doesn't match Partial<system> exactly; the runtime shape is correct
                     system: {
                         objectives: [
                             { name: 'Identify the heretic broker', description: '', complete: true, ap: 2 },
@@ -127,3 +125,59 @@ export const Completed: Story = {
             ]),
         ),
 };
+
+// ── Per-system homologation (all 7 game lines) ──────────────────────────────
+//
+// The Endeavour tracker is a Rogue Trader Dynasty feature; its card border,
+// progress fill, and flag accents carry `rt:tw-*` variants that only fire under
+// a `data-wh40k-system="rt"` ancestor. `renderSheet`'s wrapper defaults to
+// `dh2`, so the RT tints never activate in the stories above. Rendering the
+// same in-progress endeavour under each of the seven game-line ancestors
+// surfaces that RT-vs-base divergence and confirms the panel still composes
+// cleanly everywhere the system is loaded into a shared-actor surface.
+
+/** A single deterministic in-progress endeavour reused across every system. */
+const homologationEndeavour = makeEndeavour({
+    name: 'Recover the Lathe Records',
+    system: {
+        objectives: [
+            { name: 'Establish a foothold on Solenne Minoris', description: 'Acquire a hab', complete: true, ap: 1 },
+            { name: 'Bribe the harbourmaster', description: '', complete: true, ap: 1 },
+            { name: 'Infiltrate the archive', description: '', complete: false, ap: 1 },
+            { name: 'Escape with the cipher', description: '', complete: false, ap: 1 },
+        ],
+        reward: { profitFactor: 3, narrative: 'Acolyte favour with the Mechanicus contact at Outpost 7.' },
+    },
+});
+
+/** Render the endeavour panel under a specific game-line theme ancestor. */
+function renderPanelForSystem(systemId: SystemId): HTMLElement {
+    const el = renderSheet(templateSrc, makeCtx([homologationEndeavour]));
+    el.dataset['wh40kSystem'] = systemId;
+    return el;
+}
+
+/** Build a per-system homologation story for one game line. */
+function systemStory(systemId: SystemId): Story {
+    return {
+        render: () => renderPanelForSystem(systemId),
+        play: ({ canvasElement }) => {
+            // The card renders under every system ancestor, and the rt: variants
+            // only activate when systemId === 'rt'.
+            const root = canvasElement.querySelector<HTMLElement>('[data-wh40k-system]');
+            if (root?.dataset['wh40kSystem'] !== systemId) {
+                throw new Error(`endeavour-panel: expected data-wh40k-system="${systemId}"`);
+            }
+            const card = canvasElement.querySelector('[data-testid="endeavour-card"]');
+            if (!card) throw new Error('endeavour-panel: expected an endeavour card to render');
+        },
+    };
+}
+
+export const HomologationDH2: Story = systemStory('dh2');
+export const HomologationDH1: Story = systemStory('dh1');
+export const HomologationRT: Story = systemStory('rt');
+export const HomologationBC: Story = systemStory('bc');
+export const HomologationOW: Story = systemStory('ow');
+export const HomologationDW: Story = systemStory('dw');
+export const HomologationIM: Story = systemStory('im');

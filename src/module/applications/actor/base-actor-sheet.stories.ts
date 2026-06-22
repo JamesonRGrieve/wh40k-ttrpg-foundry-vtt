@@ -8,7 +8,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
-import { mockPlayerSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
+import { mockPlayerSheetContext, type GameSystemId, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, renderSheetParts } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/actor/player/header-dh.hbs?raw';
@@ -111,3 +111,37 @@ export const RogueTrader: Story = {
         await expect(cv.getByDisplayValue('Acolyte Vex')).toBeVisible();
     },
 };
+
+// ── Per-system homologation: all seven game lines ─────────────────────────────
+//
+// The base actor chrome is shared across every game line. Each variant builds a
+// system-aware player context (`mockPlayerSheetContext` flips the actor type tag
+// and pulls per-system header fields from the system config) and stamps
+// `data-wh40k-system` (through `renderBaseActorSheet`) so per-system theme
+// variants cascade in visual review. The default actor name is system-aware
+// (`Interrogator Hale` for IM, `Acolyte Vex` otherwise), so the assertion keys
+// off the value the factory chose.
+
+function makePerSystemBaseActorStory(systemId: GameSystemId): Story {
+    // mockPlayerSheetContext names the IM actor differently; mirror its choice.
+    const expectedName = systemId === 'im' ? 'Interrogator Hale' : 'Acolyte Vex';
+    return {
+        name: `Per-system — ${systemId.toUpperCase()}`,
+        args: mockPlayerSheetContext({ systemId, activeTab: 'biography' }),
+        render: (args) => renderBaseActorSheet(args),
+        play: async ({ canvasElement }) => {
+            const cv = within(canvasElement);
+            // Sidebar header renders the actor name and the biography tab is present.
+            await expect(cv.getByDisplayValue(expectedName)).toBeVisible();
+            await expect(cv.getByText('Biography')).toBeVisible();
+        },
+    };
+}
+
+export const SystemDH2: Story = makePerSystemBaseActorStory('dh2');
+export const SystemDH1: Story = makePerSystemBaseActorStory('dh1');
+export const SystemRT: Story = makePerSystemBaseActorStory('rt');
+export const SystemBC: Story = makePerSystemBaseActorStory('bc');
+export const SystemOW: Story = makePerSystemBaseActorStory('ow');
+export const SystemDW: Story = makePerSystemBaseActorStory('dw');
+export const SystemIM: Story = makePerSystemBaseActorStory('im');

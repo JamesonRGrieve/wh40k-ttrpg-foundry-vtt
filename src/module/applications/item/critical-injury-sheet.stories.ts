@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-critical-injury-sheet.hbs?raw';
+import type { SystemId } from '../../../../stories/mocks/extended';
 import { renderSheet } from '../../../../stories/test-helpers';
 
 interface CritArgs {
@@ -88,3 +89,39 @@ export const RendersHeader: Story = {
         await expect(withinCanvas.getByText(/Severity 4/)).toBeTruthy();
     },
 };
+
+// ── Per-system homologation (all 7 game lines) ──────────────────────────────
+//
+// The severity-icon and effect-label rows carry per-system tints
+// (`bc:tw-text-crimson-light`, `dh2:tw-text-gold-raw`, `rt:tw-text-gold`,
+// `im:tw-text-failure`, …). Those variants only fire under a
+// `data-wh40k-system="<id>"` ancestor — `renderSheet`'s wrapper defaults to
+// `dh2`, so stamping each id surfaces the others. One story per game line.
+
+/** Render the critical-injury sheet under a specific game-line theme ancestor. */
+function renderCritForSystem(args: CritArgs, systemId: SystemId): HTMLElement {
+    const el = renderSheet(templateSrc, { ...args });
+    el.dataset['wh40kSystem'] = systemId;
+    return el;
+}
+
+/** Build a per-system homologation story for one game line. */
+function systemStory(systemId: SystemId): Story {
+    return {
+        render: (args) => renderCritForSystem(args, systemId),
+        play: async ({ canvasElement }) => {
+            const withinCanvas = within(canvasElement);
+            await expect(withinCanvas.getByDisplayValue('Cauterised Arm')).toBeTruthy();
+            const root = canvasElement.querySelector<HTMLElement>('[data-wh40k-system]');
+            await expect(root?.dataset['wh40kSystem']).toBe(systemId);
+        },
+    };
+}
+
+export const HomologationDH2: Story = systemStory('dh2');
+export const HomologationDH1: Story = systemStory('dh1');
+export const HomologationRT: Story = systemStory('rt');
+export const HomologationBC: Story = systemStory('bc');
+export const HomologationOW: Story = systemStory('ow');
+export const HomologationDW: Story = systemStory('dw');
+export const HomologationIM: Story = systemStory('im');

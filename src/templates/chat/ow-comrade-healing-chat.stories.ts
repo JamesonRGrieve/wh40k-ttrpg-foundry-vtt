@@ -9,6 +9,8 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect, within } from 'storybook/test';
+import type { SystemId } from '../../../stories/mocks/extended';
 import { renderSheet } from '../../../stories/test-helpers';
 import { applyMedicaeAttempt, OW_COMRADE_AUTO_RECOVERY_DAYS, processReplacement, tickComradeRecovery } from '../../module/rules/ow-comrade-healing';
 import chatSrc from './ow-comrade-healing-chat.hbs?raw';
@@ -130,3 +132,41 @@ export const ReplaceBlockedNotDead: Story = {
     name: 'Replacement — refused, Comrade is still alive',
     render: () => renderSheet(chatSrc, { ...replaceContext({ stateAtCamp: 'wounded', refitAvailable: true }) }),
 };
+
+// ── Per-system homologation ───────────────────────────────────────────────────
+//
+// Comrade Healing is an Only War rule, but the card body is wrapped in the
+// shared `modern-card-shell.hbs`, whose frame border and title carry per-system
+// `<id>:tw-border-*` / `<id>:tw-text-*` variants gated by the
+// `data-wh40k-system="{{gameSystem}}"` it emits. Rendering one representative
+// tick event under each of the seven `gameSystem` frames keeps that shared shell
+// divergence under visual review across all lines (CLAUDE.md "Per-system
+// homologation in stories"). Only `gameSystem` differs — the recovery payload is
+// the canonical-rules output reused unchanged.
+
+function perSystemFrameStory(systemId: SystemId): Story {
+    return {
+        name: `Per-system frame — ${systemId.toUpperCase()}`,
+        render: () =>
+            renderSheet(chatSrc, {
+                ...tickContext({ startingDays: OW_COMRADE_AUTO_RECOVERY_DAYS, daysElapsed: 1 }),
+                gameSystem: systemId,
+            }),
+        play: async ({ canvasElement }) => {
+            // The shell must surface the active system on its frame so the variants cascade.
+            const root = canvasElement.querySelector<HTMLElement>(`[data-wh40k-system="${systemId}"]`);
+            await expect(root).not.toBeNull();
+            // The tick body renders regardless of the framing system.
+            const scope = within(canvasElement);
+            await expect(scope.getByText(/WH40K\.OW\.ComradeHealing\.Chat\.TickTitle|Rest/)).toBeTruthy();
+        },
+    };
+}
+
+export const SystemFrameDH2 = perSystemFrameStory('dh2');
+export const SystemFrameDH1 = perSystemFrameStory('dh1');
+export const SystemFrameRT = perSystemFrameStory('rt');
+export const SystemFrameBC = perSystemFrameStory('bc');
+export const SystemFrameOW = perSystemFrameStory('ow');
+export const SystemFrameDW = perSystemFrameStory('dw');
+export const SystemFrameIM = perSystemFrameStory('im');

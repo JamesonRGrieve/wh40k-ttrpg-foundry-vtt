@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-content-block-sheet.hbs?raw';
+import type { SystemId } from '../../../../stories/mocks/extended';
 import { renderSheet } from '../../../../stories/test-helpers';
 
 interface ContentField {
@@ -73,6 +74,17 @@ const baseArgs = (canEdit: boolean, inEditMode: boolean): MentalDisorderArgs => 
     dh: { characteristics: { willpower: { label: 'Willpower', short: 'WP' } } },
 });
 
+/**
+ * Render the sheet and stamp `data-wh40k-system="<id>"` on the wrapper so the
+ * template's per-system Tailwind variant chains (`bc:tw-text-crimson-light …
+ * im:tw-text-failure` on every section heading) cascade for that game line.
+ */
+function renderForSystem(args: MentalDisorderArgs, systemId: SystemId): HTMLElement {
+    const el = renderSheet(templateSrc, args);
+    el.dataset['wh40kSystem'] = systemId;
+    return el;
+}
+
 const meta = {
     title: 'Item Sheets/MentalDisorderSheet',
     render: (args) => renderSheet(templateSrc, args),
@@ -103,14 +115,73 @@ export const EditMode: Story = {
     },
 };
 
+// ── Per-system homologation ───────────────────────────────────────────────────
+//
+// One story per game line. Each renders the content-block sheet in edit mode
+// (so the ProseMirror editors surface) and stamps a different
+// `data-wh40k-system` on the wrapper so the template's per-system Tailwind
+// variant chains resolve for that system. Confirms the shared content-block
+// sheet renders across all seven lines.
+
+export const HomologationDH2: Story = {
+    args: baseArgs(true, true),
+    render: (args) => renderForSystem(args, 'dh2'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="dh2"]')).not.toBeNull();
+        await expect(canvasElement.querySelector('.wh40k-story-editor')).not.toBeNull();
+    },
+};
+
+export const HomologationDH1: Story = {
+    args: baseArgs(true, true),
+    render: (args) => renderForSystem(args, 'dh1'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="dh1"]')).not.toBeNull();
+        await expect(canvasElement.querySelector('.wh40k-story-editor')).not.toBeNull();
+    },
+};
+
+export const HomologationRT: Story = {
+    args: baseArgs(true, true),
+    render: (args) => renderForSystem(args, 'rt'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).not.toBeNull();
+        await expect(canvasElement.querySelector('.wh40k-story-editor')).not.toBeNull();
+    },
+};
+
+export const HomologationBC: Story = {
+    args: baseArgs(true, true),
+    render: (args) => renderForSystem(args, 'bc'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="bc"]')).not.toBeNull();
+        await expect(canvasElement.querySelector('.wh40k-story-editor')).not.toBeNull();
+    },
+};
+
+export const HomologationOW: Story = {
+    args: baseArgs(true, true),
+    render: (args) => renderForSystem(args, 'ow'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="ow"]')).not.toBeNull();
+        await expect(canvasElement.querySelector('.wh40k-story-editor')).not.toBeNull();
+    },
+};
+
+export const HomologationDW: Story = {
+    args: baseArgs(true, true),
+    render: (args) => renderForSystem(args, 'dw'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="dw"]')).not.toBeNull();
+        await expect(canvasElement.querySelector('.wh40k-story-editor')).not.toBeNull();
+    },
+};
+
 export const HomologationIM: Story = {
     args: baseArgs(true, true),
-    render: (args) => {
-        const el = renderSheet(templateSrc, args);
-        el.dataset['wh40kSystem'] = 'im';
-        return el;
-    },
+    render: (args) => renderForSystem(args, 'im'),
     play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-system="im"]')).not.toBeNull();
         await expect(canvasElement.querySelector('.wh40k-story-editor')).not.toBeNull();
     },
 };
