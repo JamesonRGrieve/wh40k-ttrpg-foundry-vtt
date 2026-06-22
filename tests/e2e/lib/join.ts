@@ -1,14 +1,45 @@
 import type { Page } from '@playwright/test';
 
 /**
- * Join the test world as the auto-created Gamemaster user. Returns true on
- * success, false if the join select isn't populated (test should skip).
+ * Base TCP port for the e2e Foundry servers. Worker N talks to its own
+ * isolated world on `E2E_PORT_BASE + N` (see {@link e2ePortForWorker}).
+ */
+const E2E_PORT_BASE = Number(process.env.FOUNDRY_TEST_PORT ?? 30001);
+
+/**
+ * The parallel slot for the current worker. Playwright's `TEST_PARALLEL_INDEX`
+ * is the stable 0..(workers-1) slot (reused when a worker restarts), unlike
+ * `TEST_WORKER_INDEX` which grows monotonically. Defaults to 0 for single-worker
+ * runs.
+ */
+function currentParallelSlot(): number {
+    const raw = process.env.TEST_PARALLEL_INDEX;
+    const n = raw === undefined ? 0 : Number.parseInt(raw, 10);
+    return Number.isFinite(n) && n >= 0 ? n : 0;
+}
+
+/**
+ * The Foundry server port for the current worker — one isolated world+server
+ * per parallel slot, so concurrent workers never share a world (no websocket
+ * cross-broadcast races).
+ */
+function e2ePortForWorker(): number {
+    return E2E_PORT_BASE + currentParallelSlot();
+}
+
+/**
+ * Join this worker's own isolated test world as its single auto-created
+ * `Gamemaster`. Returns true on success, false if the join select isn't
+ * populated (test should skip).
  *
  * This is the single canonical entry point for any Tier B spec that needs to
  * be in /game. Adding a new spec? Use this — do not re-implement the flow.
+ * Uses an absolute per-worker base URL rather than the config `baseURL`, since
+ * each worker targets a different port.
  */
 export async function joinAsGM(page: Page): Promise<boolean> {
-    await page.goto('/join');
+    const origin = `http://127.0.0.1:${e2ePortForWorker()}`;
+    await page.goto(`${origin}/join`);
     await page.waitForLoadState('networkidle');
     try {
         await page.locator('select[name="userid"] option', { hasText: /\S/ }).first().waitFor({ state: 'attached', timeout: 30_000 });

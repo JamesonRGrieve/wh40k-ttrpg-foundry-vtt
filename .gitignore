@@ -8,6 +8,7 @@ Thumbs.db
 src/module/foundry-core
 .foundry-release/
 .foundry-test-data/
+.foundry-test-data-*/
 
 ## Build Output
 node_modules

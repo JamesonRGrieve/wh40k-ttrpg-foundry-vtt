@@ -19,11 +19,13 @@ SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 : "${FOUNDRY_RELEASE_DIR:=${SCRIPT_DIR}/.foundry-release}"
 : "${SYSTEM_ID:=wh40k-rpg}"
 : "${SEED_WORLD_NAME:=wh40k-e2e}"
-: "${FOUNDRY_TEST_PORT:=30001}"
+# Port may be passed as $1 (per-worker isolated world) or via env; defaults to 30001.
+FOUNDRY_TEST_PORT="${1:-${FOUNDRY_TEST_PORT:-30001}}"
 
 # Must live OUTSIDE .foundry-release/ — Foundry refuses dataPath located
-# inside the application root.
-DATA_DIR="${SCRIPT_DIR}/.foundry-test-data"
+# inside the application root. One data dir per port so each worker gets a
+# fully isolated world (no shared websocket broadcasts between workers).
+DATA_DIR="${SCRIPT_DIR}/.foundry-test-data-${FOUNDRY_TEST_PORT}"
 DATA_DATA="${DATA_DIR}/Data"
 CONFIG_DIR="${DATA_DIR}/Config"
 SYSTEMS_DIR="${DATA_DATA}/systems"
@@ -41,15 +43,36 @@ fi
 
 mkdir -p "${SYSTEMS_DIR}" "${WORLDS_DIR}" "${CONFIG_DIR}"
 
-# Symlink the working tree dist/ as the system. Re-create if pointing
-# somewhere stale.
-SYSTEM_LINK="${SYSTEMS_DIR}/${SYSTEM_ID}"
-if [[ -L "${SYSTEM_LINK}" ]] && [[ "$(readlink "${SYSTEM_LINK}")" != "${SCRIPT_DIR}/dist" ]]; then
-    rm -f "${SYSTEM_LINK}"
+# Install the working-tree dist/ as the system. The static, lock-free assets
+# (module / icons / images / templates / css / lang / system.json) are
+# symlinked so each world tracks the live build, but the LevelDB compendium
+# packs are COPIED per world: LevelDB takes a single-process directory LOCK on
+# open, so multiple isolated Foundry instances symlinking one dist/packs would
+# fail with "Database failed to open". Packs are small (~34M); copy is fast.
+SYSTEM_DIR="${SYSTEMS_DIR}/${SYSTEM_ID}"
+# Drop any legacy whole-dir symlink from the pre-isolation setup.
+if [[ -L "${SYSTEM_DIR}" ]]; then
+    rm -f "${SYSTEM_DIR}"
 fi
-if [[ ! -e "${SYSTEM_LINK}" ]]; then
-    ln -s "${SCRIPT_DIR}/dist" "${SYSTEM_LINK}"
-fi
+mkdir -p "${SYSTEM_DIR}"
+for entry in "${SCRIPT_DIR}/dist"/*; do
+    base="$(basename "${entry}")"
+    target="${SYSTEM_DIR}/${base}"
+    if [[ "${base}" == "packs" ]]; then
+        # Per-world copy so this instance owns its pack LevelDBs. Re-copy each
+        # run so a rebuilt dist's packs are reflected.
+        rm -rf "${target}"
+        cp -r "${entry}" "${target}"
+    else
+        # Static asset — symlink, re-pointing if stale.
+        if [[ -L "${target}" ]] && [[ "$(readlink "${target}")" != "${entry}" ]]; then
+            rm -f "${target}"
+        fi
+        if [[ ! -e "${target}" ]]; then
+            ln -s "${entry}" "${target}"
+        fi
+    fi
+done
 
 # Copy seed world (idempotent rsync).
 SEED_SRC="${SCRIPT_DIR}/tests/e2e/fixtures/seed-world"

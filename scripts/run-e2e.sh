@@ -45,4 +45,44 @@ if [[ "${E2E_SKIP_BUILD:-}" != "1" ]]; then
     (cd "${SCRIPT_DIR}" && pnpm build)
 fi
 
-exec playwright test -c "${SCRIPT_DIR}/playwright.foundry.config.ts" "$@"
+CONFIG="${SCRIPT_DIR}/playwright.foundry.config.ts"
+
+# Resolve the Playwright CLI explicitly so the script works whether invoked via
+# `pnpm test:e2e` (node_modules/.bin on PATH) or directly as `bash run-e2e.sh`.
+PLAYWRIGHT="${SCRIPT_DIR}/node_modules/.bin/playwright"
+if [[ ! -x "${PLAYWRIGHT}" ]]; then PLAYWRIGHT="playwright"; fi
+
+# Targeted/debug run (any args = filter): keep it serial (workers=1) so a
+# focused run is deterministic and cheap.
+if [[ "$#" -gt 0 ]]; then
+    export E2E_WORKERS="${E2E_WORKERS:-1}"
+    echo "[integration] Targeted run (workers=${E2E_WORKERS}): $*"
+    exec "${PLAYWRIGHT}" test -c "${CONFIG}" --project=all "$@"
+fi
+
+# Full run: fan out across E2E_WORKERS fully-isolated worlds (one Foundry
+# server+world+port each → zero cross-worker contention). One Playwright
+# invocation → one .e2e-results.json + one coverage stream (so e2e:coverage /
+# e2e:ratchet see every spec). Clear accumulated coverage artifacts so the
+# report reflects only this run (nothing else truncates them).
+#
+# Default auto-scales to the box's CURRENT headroom: each worker needs ~6.3G
+# RAM (chromium under software-WebGL) and is CPU-heavy but await-bound, so we
+# cap by AVAILABLE RAM (avail/7, leaving a worker's slack) and by CPU (cores/3),
+# clamp to [1,8]. Keying off *available* (not total) memory adapts to other
+# workloads sharing the box. Override with E2E_WORKERS (E2E_WORKERS=1 forces the
+# historical serial run).
+if [[ -z "${E2E_WORKERS:-}" ]]; then
+    _cores="$(nproc 2>/dev/null || echo 4)"
+    _avail_gb="$(free -g 2>/dev/null | awk 'NR==2{print $7}' || echo 8)"
+    _by_mem=$(( _avail_gb / 7 ))
+    _by_cpu=$(( _cores / 3 ))
+    _w=$(( _by_mem < _by_cpu ? _by_mem : _by_cpu ))
+    (( _w < 1 )) && _w=1
+    (( _w > 8 )) && _w=8
+    export E2E_WORKERS="${_w}"
+    echo "[integration] auto-scaled workers=${_w} (cores=${_cores}, avail=${_avail_gb}G)"
+fi
+echo "[integration] Full run (isolated worlds, workers=${E2E_WORKERS})…"
+rm -rf "${SCRIPT_DIR}/.e2e-raw-coverage" "${SCRIPT_DIR}/.e2e-runtime-coverage.jsonl"
+exec "${PLAYWRIGHT}" test -c "${CONFIG}" --project=all
