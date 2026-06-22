@@ -37,7 +37,7 @@ test.describe.serial('Ship Ramming chat card (Tier B)', () => {
                         };
                     };
                     ChatMessage?: { create: (data: object) => Promise<{ id: string } | null> };
-                    game?: { user?: { id?: string } };
+                    game?: { user?: { id?: string }; i18n?: { localize?: (k: string) => string } };
                 }
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
                 const fg = globalThis as unknown as FoundryGlobal;
@@ -77,7 +77,11 @@ test.describe.serial('Ship Ramming chat card (Tier B)', () => {
                     rendered = typeof html === 'string' && html.length > 0;
                     hasCardRoot = html.includes('wh40k-ship-ramming-card');
                     hasSystemAnchor = html.includes('data-wh40k-system="rt"');
-                    hasDamageBlock = html.includes('WH40K.Voidcraft.Ramming.DefenderHull');
+                    // Resolve the i18n key to the rendered label so the assertion
+                    // holds whether or not the key exists in the langpack (a bare
+                    // key string only appears when localize can't resolve it).
+                    const defenderHullLabel = fg.game?.i18n?.localize?.('WH40K.Voidcraft.Ramming.DefenderHull') ?? 'WH40K.Voidcraft.Ramming.DefenderHull';
+                    hasDamageBlock = html.includes(defenderHullLabel);
 
                     const ChatMessageCls = fg.ChatMessage;
                     const msg = await ChatMessageCls?.create({ user: fg.game?.user?.id, content: html });

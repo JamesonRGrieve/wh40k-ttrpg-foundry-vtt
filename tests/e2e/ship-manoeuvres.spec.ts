@@ -69,7 +69,7 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
                         };
                     }
 
-                    const template = 'systems/wh40k-rpg/templates/actor/starship/action-bar-manoeuvres.hbs';
+                    const template = 'systems/wh40k-rpg/templates/actor/voidcraft/action-bar-manoeuvres.hbs';
                     // Mirror the shape `starship-sheet#_prepareManoeuvreActions`
                     // will hand the partial: one row per RAW entry with the
                     // pre-resolved combined-test target.
@@ -131,15 +131,17 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
 
                     const html = await renderTemplateFn(template, context);
                     rendered = typeof html === 'string' && html.length > 0;
-                    hasBarRoot = html.includes('wh40k-starship-manoeuvre-bar');
+                    hasBarRoot = html.includes('wh40k-voidcraft-manoeuvre-bar');
                     hasAdjustBearing = html.includes('data-manoeuvre-id="adjust-bearing"');
                     hasAdjustSpeed = html.includes('data-manoeuvre-id="adjust-speed"');
                     hasAdjustSpeedAndBearing = html.includes('data-manoeuvre-id="adjust-speed-and-bearing"');
                     hasComeToNewHeading = html.includes('data-manoeuvre-id="come-to-new-heading"');
                     hasDisengage = html.includes('data-manoeuvre-id="disengage"');
                     hasEvasive = html.includes('data-manoeuvre-id="evasive-manoeuvres"');
-                    hasOpposedBadge = html.includes('wh40k-starship-manoeuvre-tile__opposed');
-                    tileCount = (html.match(/wh40k-starship-manoeuvre-tile"/g) ?? []).length;
+                    hasOpposedBadge = html.includes('wh40k-voidcraft-manoeuvre-tile__opposed');
+                    // Match the root tile class followed by a space or quote so
+                    // BEM modifiers (…-tile__name/__difficulty) aren't counted.
+                    tileCount = (html.match(/wh40k-voidcraft-manoeuvre-tile[ "]/g) ?? []).length;
 
                     const msg = await g.ChatMessage?.create({ user: g.game?.user?.id, content: html });
                     messageId = msg?.id ?? null;
@@ -180,7 +182,7 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
 
             expect(result.error, `partial probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.rendered, 'action-bar partial did not render').toBe(true);
-            expect(result.hasBarRoot, 'action-bar root .wh40k-starship-manoeuvre-bar missing').toBe(true);
+            expect(result.hasBarRoot, 'action-bar root .wh40k-voidcraft-manoeuvre-bar missing').toBe(true);
             expect(result.hasAdjustBearing, 'Adjust Bearing tile missing').toBe(true);
             expect(result.hasAdjustSpeed, 'Adjust Speed tile missing').toBe(true);
             expect(result.hasAdjustSpeedAndBearing, 'Adjust Speed & Bearing tile missing').toBe(true);
