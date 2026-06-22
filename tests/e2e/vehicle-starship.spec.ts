@@ -146,13 +146,17 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
                 }
             };
 
-            // ---- create dh2-vehicle ----
+            // ---- create dh2-aircraft ----
+            // Aircraft (extends ConventionalCraft) carries integrity/crew/
+            // passengers/armour AND the `altitude` tier; plain dh2-vehicle
+            // (terracraft) has no altitude, so the altitude-profile flow needs
+            // the aircraft model.
             let vehicleActor: ActorLike | null = null;
             try {
                 vehicleActor = await withTimeout(
                     ActorCls.create({
                         name: 'vehicle-spec-dh2',
-                        type: 'dh2-vehicle',
+                        type: 'dh2-aircraft',
                         system: {
                             gameSystem: 'dh2',
                             type: 'flyer',
