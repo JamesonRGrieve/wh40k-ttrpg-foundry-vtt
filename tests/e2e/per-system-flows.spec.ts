@@ -51,7 +51,7 @@ interface ActorSystem {
     chaosAlignment?: string;
     corruption?: number;
     insanity?: number;
-    originPath?: { chapter?: string; chapterUuid?: string; regiment?: string; speciality?: string };
+    originPath?: { chapter?: string; chapterUuid?: string; regiment?: string; regimentUuid?: string; speciality?: string; specialityUuid?: string };
     rogueTrader?: {
         profitFactor?: { current?: number; starting?: number; modifier?: number };
         endeavour?: { name?: string; achievementCurrent?: number; achievementRequired?: number; reward?: number };
@@ -211,20 +211,20 @@ test.describe.serial('per-system flows (Tier B)', () => {
             const actor = foundryGame?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
+                // chapter (label) is derived from the owned chapter origin item at
+                // prep time, not a persisted schema field — only chapterUuid persists.
                 await actor.update?.({
-                    'system.originPath.chapter': 'Ultramarines',
                     'system.originPath.chapterUuid': 'Compendium.wh40k-rpg.dw-core-chapters.Item.placeholder',
                 });
             } catch (err) {
                 return { error: `set chapter: ${err instanceof Error ? err.message : String(err)}` };
             }
             const after = foundryGame?.actors?.get?.(actorId)?.system?.originPath;
-            return { afterChapter: after?.chapter ?? null, afterChapterUuid: after?.chapterUuid ?? null, error: null };
+            return { afterChapterUuid: after?.chapterUuid ?? null, error: null };
         }, created.id);
 
         if (result.error !== null) failures.push(result.error);
         else {
-            if (result.afterChapter !== 'Ultramarines') failures.push(`chapter after set was ${result.afterChapter}, expected 'Ultramarines'`);
             if (result.afterChapterUuid !== 'Compendium.wh40k-rpg.dw-core-chapters.Item.placeholder')
                 failures.push(`chapterUuid after set was ${result.afterChapterUuid}, expected the placeholder UUID`);
             if (failures.length === 0) recordCoverage('per-system.flow', 'dw-renown-and-chapter');
@@ -256,19 +256,25 @@ test.describe.serial('per-system flows (Tier B)', () => {
             const actor = foundryGame?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
-                await actor.update?.({ 'system.originPath.regiment': 'Cadian Shock Troopers', 'system.originPath.speciality': 'Heavy Gunner' });
+                // regiment/speciality (labels) are derived from owned origin items
+                // at prep time, not persisted schema fields — only the Uuids persist.
+                await actor.update?.({
+                    'system.originPath.regimentUuid': 'Compendium.wh40k-rpg.ow-core-regiments.Item.placeholder',
+                    'system.originPath.specialityUuid': 'Compendium.wh40k-rpg.ow-core-specialities.Item.placeholder',
+                });
             } catch (err) {
                 return { error: `set regiment+speciality: ${err instanceof Error ? err.message : String(err)}` };
             }
             const after = foundryGame?.actors?.get?.(actorId)?.system?.originPath;
-            return { afterRegiment: after?.regiment ?? null, afterSpeciality: after?.speciality ?? null, error: null };
+            return { afterRegimentUuid: after?.regimentUuid ?? null, afterSpecialityUuid: after?.specialityUuid ?? null, error: null };
         }, created.id);
 
         if (result.error !== null) failures.push(result.error);
         else {
-            if (result.afterRegiment !== 'Cadian Shock Troopers')
-                failures.push(`regiment after set was ${result.afterRegiment}, expected 'Cadian Shock Troopers'`);
-            if (result.afterSpeciality !== 'Heavy Gunner') failures.push(`speciality after set was ${result.afterSpeciality}, expected 'Heavy Gunner'`);
+            if (result.afterRegimentUuid !== 'Compendium.wh40k-rpg.ow-core-regiments.Item.placeholder')
+                failures.push(`regimentUuid after set was ${result.afterRegimentUuid}, expected the placeholder UUID`);
+            if (result.afterSpecialityUuid !== 'Compendium.wh40k-rpg.ow-core-specialities.Item.placeholder')
+                failures.push(`specialityUuid after set was ${result.afterSpecialityUuid}, expected the placeholder UUID`);
             if (failures.length === 0) recordCoverage('per-system.flow', 'ow-comrades-and-regiment');
         }
 

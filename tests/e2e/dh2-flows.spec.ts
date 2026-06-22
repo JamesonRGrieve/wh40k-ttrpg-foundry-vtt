@@ -287,7 +287,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
         const result = await page.evaluate(async () => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
             const { game: gameObj } = globalThis as unknown as PageWindow;
-            const pack = gameObj?.packs?.get?.('wh40k-rpg.dh2-core-stats-elite-advances');
+            const pack = gameObj?.packs?.get?.('wh40k-rpg.dh2-core-origins-elite-advances');
             if (!pack) return { error: 'pack not found' };
             const packType = pack.metadata?.type ?? null;
             let docs: FoundryPackDoc[] = [];

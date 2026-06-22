@@ -83,7 +83,7 @@ test.describe.serial('WithinHomeworldInfoDialog (#139)', () => {
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.rendered, 'dialog did not render').toBe(true);
             expect(result.cardCount, 'expected 3 homeworld cards').toBe(3);
-            expect(result.ids.sort()).toEqual(['agriWorld', 'feudalWorld', 'frontierWorld']);
+            expect(result.ids.sort()).toEqual(['agri-world', 'feudal-world', 'frontier-world']);
             expect(result.hasCloseButton, 'expected close action button').toBe(true);
             expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
 
