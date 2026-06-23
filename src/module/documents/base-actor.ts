@@ -412,10 +412,10 @@ export class WH40KBaseActor extends Actor {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's Actor.getRollData returns the untyped system object; the per-system DataModel adds the @-key enrichment via its own getRollData
     override getRollData(): Record<string, unknown> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.system is Foundry's untyped document data; narrow to detect the per-system DataModel's own getRollData
         const system = this.system as { getRollData?: () => Record<string, unknown> };
         if (typeof system.getRollData === 'function') return system.getRollData();
-        // eslint-disable-next-line no-restricted-syntax -- boundary: super.getRollData() returns Foundry's untyped this.system
-        return super.getRollData() as Record<string, unknown>;
+        return super.getRollData();
     }
 
     get wounds(): { value: number; max: number; critical: number } {
