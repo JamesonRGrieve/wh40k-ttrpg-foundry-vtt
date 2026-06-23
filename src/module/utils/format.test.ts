@@ -48,4 +48,9 @@ describe('capitalize (#358)', () => {
         expect(capitalize('a')).toBe('A');
         expect(capitalize('1abc')).toBe('1abc');
     });
+
+    it('is null-safe (template helper is fed undefined/null values)', () => {
+        expect(capitalize(undefined)).toBe('');
+        expect(capitalize(null)).toBe('');
+    });
 });
