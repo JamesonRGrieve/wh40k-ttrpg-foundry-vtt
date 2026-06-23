@@ -88,7 +88,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             // constructed instance is opaque (each flow casts it to a per-flow
             // interface below); the schema/migrate maps are Foundry DataField
             // collections with no shipped types.
-            type Ctor = (new (source: SchemaMap, options?: { parent: object }) => object) & {
+            type Ctor = (new (source: SchemaMap, options?: { parent: object | null }) => object) & {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel.defineSchema returns a DataField map with no shipped types; only key membership is read
                 defineSchema: () => SchemaMap;
                 _migrateData?: (source: SchemaMap) => void;
@@ -361,15 +361,22 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             // We extend it once with a marker `extra` field so we can confirm
             // the subclass's schema correctly composes with the template's
             // contributed fields, then call defineSchema()/getters/methods
-            // directly. The instance is constructed via `new T(source)` with
-            // schema-valid sample data; many of these mixins also call
-            // prepareBaseData which expects a Foundry parent — we pass a
-            // minimal stub via the second-arg `{ parent }` option so the
-            // line-variant resolution branch finds a usable shape.
-            const makeParent = (lineKey: string = 'dh2'): { _source: { system: { gameSystem: string } }; actor: null } => ({
-                _source: { system: { gameSystem: lineKey } },
-                actor: null,
-            });
+            // directly. The instance is constructed via `new T(source, { parent })`
+            // with schema-valid sample data.
+            //
+            // V14 requires `options.parent` to be a real DataModel instance — a
+            // plain object throws "The provided parent must be a DataModel
+            // instance". The template instances are item `.system` models, so the
+            // correct parent is a real (unowned, in-memory) Item document. The
+            // line-variant resolver (`inferActiveGameLine`) only reads
+            // `parent.actor?.system.gameSystem`, which is undefined for an unowned
+            // item → falls back to the world / 'rt' line, exactly as the previous
+            // plain-object stub did (that stub set `actor: null`, so its
+            // `gameSystem` was never actually consumed).
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side Item global is injected by the licensed app; no shipped constructor types
+            const ItemCls = (globalThis as unknown as { Item?: new (data: SchemaMap, ctx?: SchemaMap) => object }).Item;
+            const sharedParent: object | null = typeof ItemCls === 'function' ? new ItemCls({ name: 'shared-template-probe', type: 'gear' }) : null;
+            const makeParent = (): object | null => sharedParent;
 
             // ---------- activation-template.ts ----------
             const activationMod = await loadModule('activation-template');
@@ -486,8 +493,17 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                         { parent: makeParent() },
                     ) as ActivationInstance;
                     if (!empty.usesExhausted) return 'empty.usesExhausted false';
-                    // consume/recover with a stub update parent
+                    // consume/recover with a real Item parent (V14 requires a
+                    // DataModel parent) whose update() is overridden to capture calls.
                     const calls: SchemaMap[] = [];
+                    const updParent = typeof ItemCls === 'function' ? new ItemCls({ name: 'uses-probe', type: 'gear' }) : null;
+                    if (updParent != null) {
+                        (updParent as { update: (data: SchemaMap) => Promise<object> }).update = async (data: SchemaMap): Promise<object> => {
+                            calls.push(data);
+                            await Promise.resolve();
+                            return {};
+                        };
+                    }
                     const withParent = new T(
                         {
                             activation: { type: 'action', cost: 1, condition: '' },
@@ -495,17 +511,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                             duration: { value: 0, units: 'instant', sustained: false },
                             uses: { value: 2, max: 4, per: 'encounter', recovery: '' },
                         },
-                        {
-                            parent: {
-                                _source: { system: {} },
-                                actor: null,
-                                update: async (data: SchemaMap): Promise<object> => {
-                                    calls.push(data);
-                                    await Promise.resolve();
-                                    return {};
-                                },
-                            },
-                        },
+                        { parent: updParent },
                     ) as ActivationInstance;
                     withParent.consumeUse();
                     withParent.recoverUses(5);
@@ -742,13 +748,17 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                     if (instance.description.value !== '<p>Rich text</p>') return `desc.value ${instance.description.value}`;
                     if (instance.source.book !== 'Core Rulebook') return `source.book ${instance.source.book}`;
 
-                    // _migrateData branches: flat string -> object form.
+                    // _migrateData branches: flat string -> object form. The source
+                    // schema is now { provenance, book, page, url, derivedFrom, errata }
+                    // (the legacy `custom` field was removed); a flat non-homebrew
+                    // string migrates into `book` under provenance 'raw'.
                     const legacy: SchemaMap = { description: 'flat legacy desc', source: 'flat legacy source' };
                     DescriptionTemplate._migrateData?.(legacy);
                     const migratedDesc = legacy.description as { value: string; chat: string; summary: string };
-                    const migratedSrc = legacy.source as { book: string; page: string; custom: string };
+                    const migratedSrc = legacy.source as { provenance: string; book: string; page: string };
                     if (migratedDesc.value !== 'flat legacy desc') return 'desc string-form migration failed';
-                    if (migratedSrc.custom !== 'flat legacy source') return 'source string-form migration failed';
+                    if (migratedSrc.book !== 'flat legacy source') return 'source string-form migration failed';
+                    if (migratedSrc.provenance !== 'raw') return `source provenance ${migratedSrc.provenance}`;
 
                     // _migrateData branches: object with missing chat/summary, custom defaults filled.
                     const partial: SchemaMap = { description: { value: 'half' }, source: { book: 'b' } };
@@ -814,32 +824,41 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                 }
                 guarded('equippable-schema-roundtrip', () => {
                     const schema = T.defineSchema();
-                    for (const k of ['equipped', 'inBackpack', 'inShipStorage', 'container', 'extra']) {
-                        if (!(k in schema)) return `equippable schema missing ${k}`;
+                    // Equippable nests its transient runtime flags under a single
+                    // `state` SchemaField (system.state — see equippable-template.ts).
+                    if (!('state' in schema)) return 'equippable schema missing state';
+                    if (!('extra' in schema)) return 'equippable schema missing extra';
+                    const stateField = schema['state'] as { fields?: SchemaMap } | undefined;
+                    const stateSub = stateField?.fields ?? {};
+                    for (const k of ['equipped', 'inBackpack', 'inShipStorage', 'container']) {
+                        if (!(k in stateSub)) return `equippable state schema missing ${k}`;
                     }
-                    const carried = new T({ equipped: true, inBackpack: false, inShipStorage: false, container: '' }) as EquippableInstance;
+                    const carried = new T({ state: { equipped: true, inBackpack: false, inShipStorage: false, container: '' } }) as EquippableInstance;
                     if (!carried.isCarried) return 'carried.isCarried false';
                     if (carried.isInShipStorage) return 'carried.isInShipStorage true';
 
-                    const stowed = new T({ equipped: false, inBackpack: true, inShipStorage: false, container: '' }) as EquippableInstance;
+                    const stowed = new T({ state: { equipped: false, inBackpack: true, inShipStorage: false, container: '' } }) as EquippableInstance;
                     if (stowed.isCarried) return 'stowed.isCarried true';
 
-                    const shipStored = new T({ equipped: false, inBackpack: false, inShipStorage: true, container: '' }) as EquippableInstance;
+                    const shipStored = new T({ state: { equipped: false, inBackpack: false, inShipStorage: true, container: '' } }) as EquippableInstance;
                     if (!shipStored.isInShipStorage) return 'shipStored.isInShipStorage false';
                     if (shipStored.isCarried) return 'shipStored.isCarried true';
 
-                    const contained = new T({ equipped: false, inBackpack: false, inShipStorage: false, container: 'pouch' }) as EquippableInstance;
+                    const contained = new T({ state: { equipped: false, inBackpack: false, inShipStorage: false, container: 'pouch' } }) as EquippableInstance;
                     if (contained.isCarried) return 'contained.isCarried true';
 
-                    // _migrateData: non-boolean equipped coerced to boolean.
+                    // _migrateData: legacy flat fields relocate into system.state and
+                    // non-boolean values coerce to boolean.
                     const legacy: SchemaMap = { equipped: 1, inBackpack: 'yes', inShipStorage: 0 };
                     EquippableTemplate._migrateData?.(legacy);
-                    if (legacy.equipped !== true) return 'equipped not coerced to true';
-                    if (legacy.inBackpack !== true) return 'inBackpack not coerced to true';
-                    if (legacy.inShipStorage !== false) return 'inShipStorage not coerced to false';
+                    const migratedState = legacy['state'] as { equipped: boolean; inBackpack: boolean; inShipStorage: boolean } | undefined;
+                    if (migratedState?.equipped !== true) return 'state.equipped not coerced to true';
+                    if (migratedState.inBackpack !== true) return 'state.inBackpack not coerced to true';
+                    if (migratedState.inShipStorage !== false) return 'state.inShipStorage not coerced to false';
+                    if ('equipped' in legacy) return 'legacy flat equipped not removed after relocation';
 
                     // Mutation helpers should be safe to call with no parent (returns undefined).
-                    const noParent = new T({ equipped: false, inBackpack: false, inShipStorage: false, container: '' }) as EquippableInstance;
+                    const noParent = new T({ state: { equipped: false, inBackpack: false, inShipStorage: false, container: '' } }) as EquippableInstance;
                     const r1 = noParent.toggleEquipped();
                     const r2 = noParent.stowInBackpack();
                     const r3 = noParent.removeFromBackpack();
