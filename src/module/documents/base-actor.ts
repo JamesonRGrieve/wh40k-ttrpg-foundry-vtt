@@ -218,7 +218,13 @@ export class WH40KBaseActor extends Actor {
             }
         }
         if (delta === 0) return;
-        const next = Math.max(0, Math.min(subtlety.max, subtlety.value + delta));
+        // Base the new pool on the LIVE world setting, not system.subtlety.value:
+        // that field is a per-actor mirror only re-synced on prep, so two
+        // applySubtlety calls within a single tick (no re-prep between) would both
+        // compute from the same stale baseline and lose one delta. The setting is
+        // the source of truth and reflects the prior call immediately.
+        const current = WH40KSettings.getWarbandSubtlety();
+        const next = Math.max(0, Math.min(subtlety.max, current + delta));
         // Persist to the shared world setting: it propagates to every connected
         // client and its onChange re-renders open sheets so all acolytes show the
         // same pool. Attribution stays on the acting actor's flag for the

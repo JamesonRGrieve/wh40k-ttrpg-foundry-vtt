@@ -77,6 +77,7 @@ interface ProbeActor {
 
 interface ProbeGame {
     actors?: { get?: (id: string) => ProbeActor | undefined };
+    settings?: { get?: (scope: string, key: string) => number | undefined; set?: (scope: string, key: string, value: number) => Promise<void> };
 }
 
 interface ProbeActorClass {
@@ -84,29 +85,35 @@ interface ProbeActorClass {
 }
 
 /**
- * Read the actor's current `system.subtlety.value` after re-fetching from the
- * world collection so post-update derived data is observed.
+ * Read the current Subtlety pool. Subtlety is a warband-wide world setting
+ * ('warband-subtlety'); applySubtlety writes it via setWarbandSubtlety, while
+ * the per-actor `system.subtlety.value` is only a mirror re-synced on the next
+ * actor prep (so it is stale immediately after a setting write). Read the
+ * setting — the source of truth — so post-applySubtlety assertions observe the
+ * real pool. `actorId` is retained for signature compatibility.
  */
-async function readSubtlety(page: Page, actorId: string): Promise<number | null> {
-    return page.evaluate((id: string): number | null => {
+async function readSubtlety(page: Page, _actorId: string): Promise<number | null> {
+    return page.evaluate((): number | null => {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
         const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
-        const v = gameGlobal?.actors?.get?.(id)?.system?.subtlety?.value;
+        const v = gameGlobal?.settings?.get?.('wh40k-rpg', 'warband-subtlety');
         return typeof v === 'number' ? v : null;
-    }, actorId);
+    });
 }
 
 /**
- * Reset the actor's subtlety pool back to a known baseline before the next
- * probe. Avoids cross-probe contamination on the shared parent actor.
+ * Reset the Subtlety pool back to a known baseline before the next probe.
+ * Subtlety lives on the warband-subtlety world setting (the per-actor value is a
+ * mirror overwritten on prep), so reset the SETTING — writing system.subtlety.value
+ * would be discarded next prep. Avoids cross-probe contamination.
  */
 async function resetSubtlety(page: Page, actorId: string, value: number): Promise<void> {
     await page.evaluate(
         async ({ id, v }) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
             const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
+            await gameGlobal?.settings?.set?.('wh40k-rpg', 'warband-subtlety', v);
             const actor = gameGlobal?.actors?.get?.(id);
-            await actor?.update?.({ 'system.subtlety.value': v });
             try {
                 await actor?.unsetFlag?.('wh40k-rpg', 'lastSubtletySource');
             } catch {
@@ -123,10 +130,12 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
         const ActorCls = (globalThis as unknown as { Actor?: ProbeActorClass }).Actor;
         if (!ActorCls?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
+            // Subtlety adjustment is a DH2 warband mechanic — base-actor.applySubtlety
+            // only acts when gameSystem === 'dh2', so the parent must be dh2.
             const actor = await ActorCls.create({
                 name: 'probe-subtlety-parent',
-                type: 'bc-character',
-                system: { gameSystem: 'bc' },
+                type: 'dh2-character',
+                system: { gameSystem: 'dh2' },
             });
             if (!actor) return { id: null, error: 'Actor.create returned null' };
             return { id: actor.id ?? null, error: null };
@@ -320,7 +329,13 @@ async function probeTalentDeltaApplies(page: Page, actorId: string): Promise<Flo
                 // Drive the template getter directly.
                 const itemEffect = actor.items?.get?.(iId)?.system?.subtletyAdjusterEffect;
                 if (itemEffect == null) return { ok: false, error: 'item.system.subtletyAdjusterEffect getter returned null' };
-                const before = actor.system?.subtlety?.value ?? null;
+                // Read the warband-subtlety setting (source of truth) — the per-actor
+                // system.subtlety.value mirror is only re-synced on the next prep.
+                const readPool = (): number | null => {
+                    const raw = gameGlobal?.settings?.get?.('wh40k-rpg', 'warband-subtlety');
+                    return typeof raw === 'number' ? raw : null;
+                };
+                const before = readPool();
                 if (before === null) return { ok: false, error: 'subtlety missing before delta apply' };
                 if (!actor.applySubtlety) return { ok: false, error: 'applySubtlety unavailable' };
                 try {
@@ -328,8 +343,7 @@ async function probeTalentDeltaApplies(page: Page, actorId: string): Promise<Flo
                 } catch (err) {
                     return { ok: false, error: `applySubtlety threw: ${err instanceof Error ? err.message : String(err)}` };
                 }
-                const live = gameGlobal?.actors?.get?.(aId);
-                const after = live?.system?.subtlety?.value ?? null;
+                const after = readPool();
                 if (after === null) return { ok: false, error: 'subtlety missing after delta apply' };
                 if (after !== before - 5) return { ok: false, error: `expected ${before - 5}, got ${after}` };
                 return { ok: true, error: null };
@@ -414,7 +428,13 @@ async function probeMinAbsoluteDeltaFloors(page: Page, actorId: string): Promise
             const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
             const actor = gameGlobal?.actors?.get?.(id);
             if (!actor?.applySubtlety) return { ok: false, error: 'applySubtlety unavailable' };
-            const before = actor.system?.subtlety?.value ?? null;
+            // Read the warband-subtlety setting (source of truth), not the per-actor
+            // mirror which is only re-synced on the next prep.
+            const readPool = (): number | null => {
+                const raw = gameGlobal?.settings?.get?.('wh40k-rpg', 'warband-subtlety');
+                return typeof raw === 'number' ? raw : null;
+            };
+            const before = readPool();
             if (before === null) return { ok: false, error: 'subtlety missing before clamp test' };
             try {
                 await actor.applySubtlety(-5);
@@ -422,7 +442,7 @@ async function probeMinAbsoluteDeltaFloors(page: Page, actorId: string): Promise
             } catch (err) {
                 return { ok: false, error: `clamped applySubtlety threw: ${err instanceof Error ? err.message : String(err)}` };
             }
-            const after = gameGlobal?.actors?.get?.(id)?.system?.subtlety?.value ?? null;
+            const after = readPool();
             if (after === null) return { ok: false, error: 'subtlety missing after clamp test' };
             const expected = before - 2; // two -1 clamped losses
             if (after !== expected) return { ok: false, error: `expected ${expected} (two -1 clamps), got ${after}` };

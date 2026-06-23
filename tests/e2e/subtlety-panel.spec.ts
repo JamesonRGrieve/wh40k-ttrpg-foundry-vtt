@@ -41,11 +41,17 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                 }
                 interface ProbeGlobals {
                     Actor?: { create?: (data: object) => Promise<ProbeActor | null> };
+                    game?: { settings?: { set?: (scope: string, key: string, value: number) => Promise<void> } };
                     __c9subtlety?: ProbeActor;
                 }
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
                 const g = globalThis as unknown as ProbeGlobals;
                 const ActorCls = g.Actor;
+                // Subtlety is a warband-wide world setting (#…): system.subtlety.value
+                // is a per-actor mirror that _syncWarbandSubtlety overwrites from the
+                // 'warband-subtlety' setting every prep. Drive the panel value through
+                // the world setting, not the actor seed.
+                await g.game?.settings?.set?.('wh40k-rpg', 'warband-subtlety', 45);
                 let error: string | null = null;
                 let rendered = false;
                 let valueText = '';
@@ -167,10 +173,20 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                 }
                 interface CleanupGlobals {
                     __c9subtlety?: CleanupActor;
-                    game?: { actors?: { getName?: (name: string) => CleanupActor | undefined } };
+                    game?: {
+                        actors?: { getName?: (name: string) => CleanupActor | undefined };
+                        settings?: { set?: (scope: string, key: string, value: number) => Promise<void> };
+                    };
                 }
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
                 const g = globalThis as unknown as CleanupGlobals;
+                // Restore the warband-subtlety world setting so a sibling spec on
+                // this worker's world sees the default baseline (60).
+                try {
+                    await g.game?.settings?.set?.('wh40k-rpg', 'warband-subtlety', 60);
+                } catch {
+                    /* ignore */
+                }
                 const a = g.__c9subtlety ?? g.game?.actors?.getName?.('subtlety-panel-probe');
                 try {
                     await a?.sheet?.close?.();
