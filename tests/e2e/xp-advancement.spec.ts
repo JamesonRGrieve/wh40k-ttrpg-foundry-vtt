@@ -129,8 +129,12 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
-                await actor.update?.({ 'system.experience.total': 1000, 'system.experience.used': 0 });
-                await actor.update?.({ 'system.experience.used': 250 });
+                // experience.used is fully derived from purchased advancements
+                // (_computeExperienceSpent mirrors calculatedTotal onto used, #240/#224),
+                // so a direct write is overwritten on prep — spend XP by embedding a
+                // costed talent instead.
+                await actor.update?.({ 'system.experience.total': 1000 });
+                await actor.createEmbeddedDocuments?.('Item', [{ name: 'xp-spent-probe-talent', type: 'talent', system: { cost: 250 } }]);
             } catch (err) {
                 return { error: `set used: ${String(err instanceof Error ? err.message : err)}` };
             }
@@ -140,7 +144,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
 
         if (result.error != null) failures.push(result.error);
         else {
-            if (result.after !== 250) failures.push(`experience.used after set was ${result.after}, expected 250`);
+            if (result.after !== 250) failures.push(`experience.used after purchasing a 250-XP talent was ${result.after}, expected 250`);
             if (failures.length === 0) recordCoverage('xp.flow', 'xp-spent-tracks');
         }
 
@@ -166,7 +170,10 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             const actor = gameObj?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
             try {
-                await actor.update?.({ 'system.experience.total': 800, 'system.experience.used': 300 });
+                // used is derived from purchased advancements, not directly settable
+                // (#240/#224) — spend 300 via a costed talent so available = 800 - 300.
+                await actor.update?.({ 'system.experience.total': 800 });
+                await actor.createEmbeddedDocuments?.('Item', [{ name: 'xp-remaining-probe-talent', type: 'talent', system: { cost: 300 } }]);
             } catch (err) {
                 return { error: `set total/used: ${String(err instanceof Error ? err.message : err)}` };
             }
