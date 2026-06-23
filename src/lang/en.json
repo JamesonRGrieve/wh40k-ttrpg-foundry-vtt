@@ -2627,7 +2627,20 @@
             "Header": "Navigator Powers",
             "Name": "Power",
             "Range": "Range",
-            "Test": "Test"
+            "Test": "Test",
+            "Subtitle": "Navigator Power",
+            "Manifested": "Power Manifested!",
+            "Failed": "Power Failed!",
+            "Degrees": "Degrees",
+            "OpposedTest": "Opposed Test",
+            "NavigatorRoll": "Navigator",
+            "OpponentRoll": "Opponent",
+            "NetDoS": "Net DoS",
+            "RollVsTarget": "Roll vs Target",
+            "EffectByLevel": "Effect by Level",
+            "Sustained": "Sustained",
+            "SideEffects": "Side Effects",
+            "CheckMutation": "Check Navigator Mutation"
         },
         "ShipRole": {
             "Header": "Ship Role",
