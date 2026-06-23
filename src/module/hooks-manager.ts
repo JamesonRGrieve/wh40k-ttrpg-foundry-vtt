@@ -492,6 +492,10 @@ export class HooksManager {
             'aircraft': documents.VehicleDocBase,
             'starship': documents.VoidcraftDocBase,
             'voidcraft': documents.VoidcraftDocBase,
+            // Loot piles are minimal inventory actors with no kind-specific document
+            // behaviour — map to the base (matches the proxy's unmapped-type fallback,
+            // now explicit so the type is a registered concrete class like every other).
+            'loot': documents.WH40KBaseActor,
         };
         CONFIG.Item.documentClass = WH40KItem;
         CONFIG.ActiveEffect.documentClass = documents.WH40KActiveEffect;
