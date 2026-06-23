@@ -13,6 +13,7 @@ import { SYSTEM_ID } from '../constants.ts';
 /** Minimal feature-detected view of the Item Piles API we call. */
 interface ItemPilesApiLike {
     addSystemIntegration?: (data: object) => void;
+    createItemPile?: (options: { sceneId?: string | undefined; position?: { x: number; y: number }; items?: object[] }) => Promise<void>;
 }
 
 /** Item Piles attribute-backed currency entry. */
@@ -69,4 +70,31 @@ export function registerItemPilesValuation(): void {
             console.warn(`${SYSTEM_ID} | Item Piles integration failed; configure manually per docs/VALUATION.md.`, err);
         }
     });
+}
+
+/** Resolve the Item Piles API when the module is active, else undefined. */
+function itemPilesApi(): ItemPilesApiLike | undefined {
+    if (game.modules.get('item-piles')?.active !== true) return undefined;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: item-piles is a third-party module global not present in our type surface
+    return (game as unknown as { itempiles?: { API?: ItemPilesApiLike } }).itempiles?.API;
+}
+
+/**
+ * Drop an item onto the scene as an Item Piles pile when that module is present.
+ * Returns true when Item Piles created the pile (so the caller skips the
+ * loot-actor fallback), false when Item Piles is absent or the call fails. Item
+ * Piles owns its own pile actors, so this keeps a "Dropped: X" actor out of the
+ * Actors sidebar; feature-detected + guarded, so a missing/changed API simply
+ * degrades to the loot-actor method.
+ */
+export async function dropItemAsItemPile(itemData: object, position: { x: number; y: number }, sceneId: string | undefined): Promise<boolean> {
+    const api = itemPilesApi();
+    if (typeof api?.createItemPile !== 'function') return false;
+    try {
+        await api.createItemPile({ sceneId, position, items: [itemData] });
+        return true;
+    } catch (err) {
+        console.warn(`${SYSTEM_ID} | Item Piles createItemPile failed; falling back to the loot-actor method.`, err);
+        return false;
+    }
 }
