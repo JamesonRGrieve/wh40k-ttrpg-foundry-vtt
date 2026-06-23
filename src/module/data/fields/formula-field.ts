@@ -15,9 +15,15 @@ export default class FormulaField extends foundry.data.fields.StringField {
 
     /**
      * Is this formula field deterministic (no dice, just math)?
+     *
+     * `declare` (not `!:`) is required: the base DataField constructor assigns
+     * `this.deterministic` from `_defaults`/options, but a non-`declare` field
+     * declaration emits `this.deterministic = undefined` under
+     * useDefineForClassFields AFTER super() runs, clobbering that value and
+     * silently disabling deterministic enforcement.
      * @type {boolean}
      */
-    deterministic!: boolean;
+    declare deterministic: boolean;
 
     /* -------------------------------------------- */
 
