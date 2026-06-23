@@ -190,14 +190,21 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
                     const pile = await g.Actor.create({ type: 'loot', name: 'Dropped: Bolt Pistol' });
                     const pileId = pile.id;
                     await pile.createEmbeddedDocuments?.('Item', [{ name: 'Bolt Pistol', type: 'weapon', system: { weight: 5, quantity: 1 } }]);
-                    const before = receiver.items?.size ?? 0;
                     const ok = await M.pickupLoot(receiver, pile);
-                    const transferred = (receiver.items?.size ?? 0) === before + 1;
+                    const liveReceiver = (receiver.id != null ? g.game.actors.get(receiver.id) : null) ?? receiver;
+                    // A fresh dh2-character may carry default-grant items, so assert the
+                    // SPECIFIC transferred item landed (exactly once) rather than a fragile
+                    // size delta — this still catches a double-transfer regression.
+                    const receiverItems = Array.from((liveReceiver.items as Iterable<{ name?: string }> | undefined) ?? []);
+                    const boltPistols = receiverItems.filter((i) => i.name === 'Bolt Pistol').length;
+                    const transferred = boltPistols === 1;
                     const pileGone = pileId == null || g.game.actors.get(pileId) == null;
                     record(
                         'pickup-transfers-items',
                         ok && transferred && pileGone,
-                        `ok=${String(ok)} transferred=${String(transferred)} pileGone=${String(pileGone)}`,
+                        `ok=${String(ok)} transferred=${String(transferred)} pileGone=${String(pileGone)} | dbg boltPistols=${String(
+                            boltPistols,
+                        )} totalItems=${String(receiverItems.length)}`,
                     );
                 } catch (err) {
                     record('pickup-transfers-items', false, String((err as Error).message));
