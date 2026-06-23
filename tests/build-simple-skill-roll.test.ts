@@ -166,6 +166,7 @@ interface RollDataShape {
     modifiers: {
         modifier: number;
         situational?: number;
+        [key: string]: number | undefined;
     };
 }
 
@@ -536,6 +537,35 @@ describe('SimpleSkillData.sourceFatePoints — gates the chat-card Fate controls
         const actor = makeActor({ name: 'Cultist' });
         const result = buildRoll(actor, { key: 'awareness', type: 'skill', label: 'Awareness Test', target: 45 });
         expect(result.sourceFatePoints).toBe(0);
+    });
+});
+
+describe('_buildSimpleSkillRoll — extraModifiers fold named modifiers onto rollData', () => {
+    it('writes each non-zero extra modifier under its key (e.g. a Fear-rating penalty)', () => {
+        const actor = makeActor({ name: 'Acolyte Vex' });
+        const result = buildRoll(actor, {
+            key: 'willpower',
+            type: 'characteristic',
+            label: 'Fear (2) Test',
+            target: 40,
+            situationalKey: 'willpower',
+            extraModifiers: { fear: -20 },
+        });
+        expect(rollDataOf(result).modifiers['fear']).toBe(-20);
+    });
+
+    it('skips zero-valued extra modifiers but keeps non-zero ones', () => {
+        const actor = makeActor({ name: 'Acolyte Vex' });
+        const result = buildRoll(actor, {
+            key: 'willpower',
+            type: 'characteristic',
+            label: 'Test',
+            target: 40,
+            extraModifiers: { fear: 0, pinning: 5 },
+        });
+        const mods = rollDataOf(result).modifiers;
+        expect(mods['fear']).toBeUndefined();
+        expect(mods['pinning']).toBe(5);
     });
 });
 

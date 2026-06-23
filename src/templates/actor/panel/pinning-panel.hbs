@@ -1,0 +1,34 @@
+{{!--
+    Pinning panel (DH2 — core.md §"Pinning").
+
+    Two quick-test buttons rendered as a compact vital ROW (the same
+    `vital-pip-row` chrome Shock uses), so Pinning sits among the vital rows.
+    "Pinning Test" rolls a Challenging +0 Willpower resist test; "Escape Pinning"
+    rolls the end-of-turn auto-escape test (+30 if in cover OR not being shot at,
+    non-stacking). Both dispatch through CharacterSheet actions
+    (`rollPinningTest` / `escapePinning`) → the actor's unified-roll methods, so
+    Willpower talents/traits surface as situational modifiers before resolving.
+
+    Render gate (parent template): only DH2 actors include this row. The
+    `wh40k-pinning-panel` row class and the `wh40k-pinning-test-btn` /
+    `wh40k-pinning-escape-btn` selectors are pinned for the e2e/story coverage.
+--}}
+{{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
+        icon="fa-crosshairs" label=(localize "WH40K.Pinning.Pinned") rowClass="wh40k-pinning-panel"}}
+    <div class="tw-flex tw-items-center tw-gap-1.5 tw-ml-auto">
+        <button type="button"
+                class="wh40k-pinning-test-btn tw-px-2 tw-h-[20px] tw-flex tw-items-center tw-gap-1 tw-bg-transparent tw-border tw-border-[color:var(--color-border-light-tertiary)] tw-rounded-[3px] tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-bright)]"
+                data-action="rollPinningTest"
+                title="{{localize 'WH40K.Pinning.TestLabel'}}">
+            <i class="fas fa-crosshairs"></i>
+            <span>{{localize "WH40K.Pinning.TestLabel"}}</span>
+        </button>
+        <button type="button"
+                class="wh40k-pinning-escape-btn tw-px-2 tw-h-[20px] tw-flex tw-items-center tw-gap-1 tw-bg-transparent tw-border tw-border-[color:var(--color-border-light-tertiary)] tw-rounded-[3px] tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-bright)]"
+                data-action="escapePinning"
+                title="{{localize 'WH40K.Pinning.EscapeLabel'}}">
+            <i class="fas fa-person-running"></i>
+            <span>{{localize "WH40K.Pinning.EscapeLabel"}}</span>
+        </button>
+    </div>
+{{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}

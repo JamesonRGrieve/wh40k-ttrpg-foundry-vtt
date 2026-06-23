@@ -116,6 +116,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/corruption-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/insanity-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/shock-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/pinning-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/possession-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/npc-interactions-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/experience-panel.hbs',
