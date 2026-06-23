@@ -153,28 +153,28 @@ test.describe.serial('psychic push selector', () => {
             });
             const push1 = snap(root, 'push-1');
 
-            const inc = root.querySelector<HTMLElement>('[data-testid="psy-push-increment"]');
-            inc?.click();
-            await new Promise((r) => {
-                setTimeout(r, 50);
-            });
+            // The context panel re-renders (ApplicationV2 partial render) on every
+            // push-level change, which DETACHES the stepper buttons — a reference
+            // captured once would go stale and subsequent clicks would no-op. Re-query
+            // the button from `root` before each click, and poll for the rendered
+            // level value to settle rather than racing a fixed delay.
+            const clickStep = async (testid: string, expectLevel: string): Promise<void> => {
+                root.querySelector<HTMLElement>(`[data-testid="${testid}"]`)?.click();
+                for (let i = 0; i < 20; i++) {
+                    await new Promise((r) => {
+                        setTimeout(r, 25);
+                    });
+                    if (root.querySelector('[data-testid="psy-push-level-value"]')?.textContent?.trim() === expectLevel) break;
+                }
+            };
+            await clickStep('psy-push-increment', '2');
             const push2 = snap(root, 'push-2');
-            inc?.click();
-            await new Promise((r) => {
-                setTimeout(r, 50);
-            });
+            await clickStep('psy-push-increment', '3');
             const push3 = snap(root, 'push-3');
-            inc?.click(); // should clamp at 3
-            await new Promise((r) => {
-                setTimeout(r, 50);
-            });
+            await clickStep('psy-push-increment', '3'); // clamps at 3
             const push3Clamped = snap(root, 'push-3-clamped');
 
-            const dec = root.querySelector<HTMLElement>('[data-testid="psy-push-decrement"]');
-            dec?.click();
-            await new Promise((r) => {
-                setTimeout(r, 50);
-            });
+            await clickStep('psy-push-decrement', '2');
             const push2Back = snap(root, 'push-2-back');
 
             try {
