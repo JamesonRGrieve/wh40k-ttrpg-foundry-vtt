@@ -3700,6 +3700,7 @@ export type I18nKey =
     | 'WH40K.Warning.LootNoToken'
     | 'WH40K.Warning.LootNotDroppable'
     | 'WH40K.Warning.LootPickupDenied'
+    | 'WH40K.Warning.LootTokenLocked'
     | 'WH40K.Warning.NoActiveCombatEncounter'
     | 'WH40K.Warning.NoAmmunitionLoaded'
     | 'WH40K.Warning.RangeFormulaFailed'

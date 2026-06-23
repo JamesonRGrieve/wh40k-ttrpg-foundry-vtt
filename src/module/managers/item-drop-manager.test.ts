@@ -152,3 +152,27 @@ describe('ItemDropManager.blocksLootTokenMove', () => {
         expect(ItemDropManager.blocksLootTokenMove(null, { x: 200 }, false)).toBe(false);
     });
 });
+
+describe('ItemDropManager.tokenIdsForActor', () => {
+    it('returns ids of tokens backed by the given actor', () => {
+        const tokens = [
+            { id: 't1', actorId: 'loot1' },
+            { id: 't2', actorId: 'other' },
+            { id: 't3', actorId: 'loot1' },
+        ];
+        expect(ItemDropManager.tokenIdsForActor(tokens, 'loot1')).toEqual(['t1', 't3']);
+    });
+
+    it('returns an empty array when no token matches', () => {
+        expect(ItemDropManager.tokenIdsForActor([{ id: 't1', actorId: 'a' }], 'loot1')).toEqual([]);
+    });
+
+    it('skips tokens with a null or empty id', () => {
+        const tokens = [
+            { id: null, actorId: 'loot1' },
+            { id: '', actorId: 'loot1' },
+            { id: 't9', actorId: 'loot1' },
+        ];
+        expect(ItemDropManager.tokenIdsForActor(tokens, 'loot1')).toEqual(['t9']);
+    });
+});
