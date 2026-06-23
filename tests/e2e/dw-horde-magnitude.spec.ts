@@ -27,6 +27,7 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
         try {
             const result = await page.evaluate(async () => {
                 interface HordeData {
+                    enabled?: boolean;
                     toHitBonus?: number;
                     bonusDamageDice?: number;
                     sizeKeyword?: string;
@@ -44,7 +45,9 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                 interface HordeActor {
                     id?: string;
                     system?: HordeSystem;
+                    _source?: { system?: { horde?: { magnitude?: { current?: number } } } };
                     sheet?: HordeSheet;
+                    update?: (data: Record<string, unknown>) => Promise<unknown>;
                     delete?: () => Promise<void>;
                 }
                 interface FoundryActorGlobal {
@@ -62,6 +65,8 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                 let magnitudeBefore: number | null = null;
                 let magnitudeAfter: number | null = null;
                 let actorId: string | null = null;
+                let hordeEnabled: boolean | null = null;
+                let sourceMagnitude: number | null = null;
 
                 try {
                     const ActorCls = gt.Actor;
@@ -74,6 +79,8 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                             magnitudeBefore,
                             magnitudeAfter,
                             actorId,
+                            hordeEnabled,
+                            sourceMagnitude,
                             error: 'Actor.create unavailable',
                         };
                     }
@@ -100,10 +107,20 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                             magnitudeBefore,
                             magnitudeAfter,
                             actorId,
+                            hordeEnabled,
+                            sourceMagnitude,
                             error: 'Actor.create returned null',
                         };
                     }
                     actorId = actor.id ?? null;
+
+                    // Setting nested horde.magnitude through the create payload doesn't
+                    // reliably persist (Foundry nested-create merge); set it via update()
+                    // with dotted paths — the canonical sheet-mutation path — so the
+                    // derived toHitBonus reflects Magnitude 90.
+                    if (typeof actor.update === 'function') {
+                        await actor.update({ 'system.horde.enabled': true, 'system.horde.magnitude.max': 90, 'system.horde.magnitude.current': 90 });
+                    }
 
                     // Probe the prepared horde fields (populated by the mixin).
                     const horde = actor.system?.horde;
@@ -111,6 +128,9 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                     bonusDamageDice = typeof horde?.bonusDamageDice === 'number' ? horde.bonusDamageDice : null;
                     sizeKeyword = typeof horde?.sizeKeyword === 'string' ? horde.sizeKeyword : null;
                     magnitudeBefore = typeof horde?.magnitude?.current === 'number' ? horde.magnitude.current : null;
+                    hordeEnabled = typeof horde?.enabled === 'boolean' ? horde.enabled : null;
+                    sourceMagnitude =
+                        typeof actor._source?.system?.horde?.magnitude?.current === 'number' ? actor._source.system.horde.magnitude.current : null;
 
                     // Drive one RAW magnitude loss (single damaging hit).
                     if (typeof actor.system?.applyMagnitudeDamage === 'function') {
@@ -140,6 +160,8 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                     magnitudeBefore,
                     magnitudeAfter,
                     actorId,
+                    hordeEnabled,
+                    sourceMagnitude,
                     error,
                 };
             });
@@ -181,7 +203,12 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
             expect(result.error, `horde probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.actorId, 'actor must have been created').not.toBeNull();
             // RAW TABLE 13-1: Magnitude 90 → Monumental / +50 to hit.
-            expect(result.toHitBonus, 'Magnitude 90 to-hit bonus').toBe(50);
+            expect(
+                result.toHitBonus,
+                `Magnitude 90 to-hit bonus (enabled=${String(result.hordeEnabled)} magBefore=${String(result.magnitudeBefore)} src=${String(
+                    result.sourceMagnitude,
+                )})`,
+            ).toBe(50);
             // RAW: bonus damage dice = floor(M/10), capped +2 → 2.
             expect(result.bonusDamageDice, 'Magnitude 90 bonus damage dice (capped +2d10)').toBe(2);
             expect(result.sizeKeyword, 'size keyword at Magnitude 90').toBe('Monumental');
