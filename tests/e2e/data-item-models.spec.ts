@@ -420,8 +420,8 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
 
                 /* ============================================================
                  * Flow 4: armour-stealth-penalty
-                 * Power armour with AP 8 everywhere → some location > 7 →
-                 * imposesStealthPenalty true, stealthPenalty -30.
+                 * Power armour with AP 9 everywhere → AP > 7 → imposesStealthPenalty
+                 * true, stealthPenalty -30, and avgAP > 8 → protectionLevel 'power'.
                  * ============================================================ */
                 try {
                     const armour = await embed('armour-stealth-penalty', {
@@ -431,7 +431,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                             identifier: 'probe-armour-stealth',
                             type: 'power',
                             craftsmanship: 'common',
-                            armourPoints: { head: 8, leftArm: 8, rightArm: 8, body: 8, leftLeg: 8, rightLeg: 8 },
+                            armourPoints: { head: 9, leftArm: 9, rightArm: 9, body: 9, leftLeg: 9, rightLeg: 9 },
                             coverage: ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg'],
                         },
                     });
@@ -443,7 +443,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         const protLevel = armour.system?.protectionLevel;
                         if (imposes === true && penalty === -30 && protLevel === 'power') {
                             fired['armour-stealth-penalty'] = true;
-                            notes['armour-stealth-penalty'] = `AP 8 everywhere → imposesStealthPenalty=true stealthPenalty=-30 protectionLevel=power`;
+                            notes['armour-stealth-penalty'] = `AP 9 everywhere → imposesStealthPenalty=true stealthPenalty=-30 protectionLevel=power`;
                         } else {
                             notes['armour-stealth-penalty'] = `expected imposes=true penalty=-30 level=power, got imposes=${String(
                                 imposes,
@@ -644,7 +644,10 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         const hasSpec = talent.system?.hasSpecialization;
                         const fullName = talent.system?.fullName;
                         const rollable = talent.system?.isRollable;
-                        if (hasSpec === true && fullName === 'probe-talent (X) (Las) x3' && rollable === true) {
+                        // The "(X)" placeholder is stripped before composing (SPEC
+                        // philosophy — see src/packs/CLAUDE.md), so the spec name is
+                        // "probe-talent (Las) x3", never the doubled "(X) (Las)".
+                        if (hasSpec === true && fullName === 'probe-talent (Las) x3' && rollable === true) {
                             fired['talent-specialization-fullname'] = true;
                             notes[
                                 'talent-specialization-fullname'
@@ -652,7 +655,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         } else {
                             notes[
                                 'talent-specialization-fullname'
-                            ] = `expected hasSpec=true fullName="probe-talent (X) (Las) x3" rollable=true, got hasSpec=${String(
+                            ] = `expected hasSpec=true fullName="probe-talent (Las) x3" rollable=true, got hasSpec=${String(
                                 hasSpec,
                             )} fullName=${JSON.stringify(fullName)} rollable=${String(rollable)}`;
                         }
