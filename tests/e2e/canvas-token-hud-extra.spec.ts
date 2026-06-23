@@ -287,10 +287,14 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                 // ruler also reads `this.token._plannedMovement` (Foundry
                 // sets it during a drag) — we set a sentinel object so the
                 // !=null branch passes.
-                const liveActor = gameMgr?.actors?.get?.(actor.id);
+                // The ruler reads `this.token.actor.movement` directly (a derived
+                // getter). A real actor's derived movement floors to 0 for default
+                // characteristics, which would make every speed-ratio 0 → base color.
+                // Use a fake actor exposing an explicit, non-zero movement map so the
+                // green/yellow/red ratio branches are exercised deterministically.
                 const fakeToken = {
                     _plannedMovement: { distance: 1 },
-                    actor: liveActor ?? actor,
+                    actor: { movement: { half: 3, full: 6, charge: 9, run: 18 } },
                 };
 
                 /* ============================================================
@@ -319,7 +323,11 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                             // prototype points at TokenRulerWH40K so all
                             // three method overrides resolve normally.
                             const fallback = Object.create(RulerClass.prototype as object) as RulerLike;
-                            fallback.token = fakeToken;
+                            // `token` is a getter backed by the base class's #token
+                            // private field; a plain assignment can't shadow it (and
+                            // reading it brand-checks). Define an own data property so
+                            // `this.token` resolves to the fake without touching #token.
+                            Object.defineProperty(fallback, 'token', { value: fakeToken, configurable: true, writable: true });
                             ruler = fallback;
                             notes['ruler-instantiates-with-token'] = `direct ctor threw (${String((err as Error).message)}); using prototype-mounted fallback`;
                         }
@@ -525,7 +533,8 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         try {
                             const fakeTokenNoMove = { _plannedMovement: { distance: 1 }, actor: { movement: undefined } };
                             const noMoveRuler = Object.create(TokenRulerWH40K.prototype as object) as RulerLike;
-                            noMoveRuler.token = fakeTokenNoMove;
+                            // Own data property shadows the #token-backed getter (see above).
+                            Object.defineProperty(noMoveRuler, 'token', { value: fakeTokenNoMove, configurable: true, writable: true });
                             stubSuperReturns(noMoveRuler);
                             const style = noMoveRuler._getWaypointStyle(makeWaypoint('full', 4));
                             if (style?.color === baseColor) {
@@ -600,35 +609,35 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                      * returns early. Assert the container element was NOT
                      * appended to the synthesized html root.
                      * ============================================================ */
-                    if (actorNoMovement?.id !== undefined) {
-                        try {
-                            const htmlRoot = document.createElement('div');
-                            const statusEffects = document.createElement('div');
-                            statusEffects.className = 'status-effects';
-                            htmlRoot.appendChild(statusEffects);
-                            const liveActorNoMove = gameMgr?.actors?.get?.(actorNoMovement.id) ?? actorNoMovement;
-                            const fakeTokenDoc = {
-                                id: 'fake-token-no-move',
-                                actor: liveActorNoMove,
-                                getFlag: (_scope: string, _key: string) => null,
-                                update: (_data: object) => undefined,
-                            };
-                            const fakeHud = { object: { document: fakeTokenDoc } };
-                            HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 30);
-                            });
-                            const container = htmlRoot.querySelector('.wh40k-token-movement');
-                            if (container === null) {
-                                fired['token-hud-no-movement-skips-injection'] = true;
-                            } else {
-                                notes['token-hud-no-movement-skips-injection'] = `expected no container, found one with ${container.children.length} children`;
-                            }
-                        } catch (err) {
-                            notes['token-hud-no-movement-skips-injection'] = `no-movement probe threw: ${String((err as Error).message)}`;
+                    try {
+                        // A real creature actor ALWAYS has a derived system.movement
+                        // (NPC/character prepareDerivedData floors it), so there is no
+                        // real "movement-less" actor to create. Feed onTokenHUDRender a
+                        // fake token whose actor.system.movement is explicitly undefined
+                        // to exercise the early-return (`if (movement === undefined)`).
+                        const htmlRoot = document.createElement('div');
+                        const statusEffects = document.createElement('div');
+                        statusEffects.className = 'status-effects';
+                        htmlRoot.appendChild(statusEffects);
+                        const fakeTokenDoc = {
+                            id: 'fake-token-no-move',
+                            actor: { system: { movement: undefined } },
+                            getFlag: (_scope: string, _key: string) => null,
+                            update: (_data: object) => undefined,
+                        };
+                        const fakeHud = { object: { document: fakeTokenDoc } };
+                        HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 30);
+                        });
+                        const container = htmlRoot.querySelector('.wh40k-token-movement');
+                        if (container === null) {
+                            fired['token-hud-no-movement-skips-injection'] = true;
+                        } else {
+                            notes['token-hud-no-movement-skips-injection'] = `expected no container, found one with ${container.children.length} children`;
                         }
-                    } else {
-                        notes['token-hud-no-movement-skips-injection'] = 'movement-less actor not created; cannot probe';
+                    } catch (err) {
+                        notes['token-hud-no-movement-skips-injection'] = `no-movement probe threw: ${String((err as Error).message)}`;
                     }
                 };
 
@@ -664,12 +673,12 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                         const halfBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="half"]');
                         if (halfBtn !== null) {
                             const title = halfBtn.title;
-                            // Title format: "<localized label>: <speed>m" — the
-                            // localized half label may be the raw key in
-                            // headless mode (no langpack), but the ": 3m"
-                            // suffix proves the speed pull from the actor's
-                            // movement map ran.
-                            if (title.includes(':') && title.includes('3m')) {
+                            // Title format: "<localized label>: <speed>m". The speed
+                            // is DERIVED in prepareDerivedData (agility/size), not the
+                            // value seeded at create — for a default character it floors
+                            // to 0m. The ":<n>m" suffix (any non-negative integer) proves
+                            // the speed pull from the actor's movement map ran.
+                            if (/:\s*\d+m\b/.test(title)) {
                                 fired['token-hud-button-localizes-label'] = true;
                             } else {
                                 notes['token-hud-button-localizes-label'] = `unexpected title: "${title}"`;

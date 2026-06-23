@@ -15,7 +15,7 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
     /** @inheritDoc */
     override _getWaypointStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint): foundry.canvas.interaction.Ruler.WaypointStyle {
         const style = super._getWaypointStyle(waypoint);
-        return this.#getSpeedBasedStyle(waypoint, style);
+        return this._getSpeedBasedStyle(waypoint, style);
     }
 
     /* -------------------------------------------- */
@@ -23,7 +23,7 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
     /** @override */
     override _getSegmentStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint): foundry.canvas.interaction.Ruler.SegmentStyle {
         const style = super._getSegmentStyle(waypoint);
-        return this.#getSpeedBasedStyle(waypoint, style);
+        return this._getSpeedBasedStyle(waypoint, style);
     }
 
     /* -------------------------------------------- */
@@ -31,7 +31,7 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
     /** @override */
     override _getGridHighlightStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint, offset: foundry.grid.BaseGrid.Offset3D): StyleWithColor {
         const style = super._getGridHighlightStyle(waypoint, offset) as StyleWithColor;
-        return this.#getSpeedBasedStyle(waypoint, style);
+        return this._getSpeedBasedStyle(waypoint, style);
     }
 
     /* -------------------------------------------- */
@@ -43,7 +43,9 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
      * @param {T} style - The default styling
      * @returns {T} The adjusted style
      */
-    #getSpeedBasedStyle<T extends StyleWithColor>(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint, style: T): T {
+    // Underscore-protected (not #-private) so headless e2e can exercise the
+    // speed-based styling on a prototype-mounted ruler; only called internally.
+    _getSpeedBasedStyle<T extends StyleWithColor>(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint, style: T): T {
         // Only apply to the local user's movement
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Token class internals not in shipped types
         const token = this.token as unknown as RulerToken;

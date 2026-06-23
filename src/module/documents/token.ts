@@ -66,7 +66,13 @@ export class TokenDocumentWH40K extends TokenDocument {
         const tokenConfig = CONFIG.Token as unknown as TokenConfigLike;
         const wh40kConfig = CONFIG.wh40k as Wh40kTokenConfig;
         for (const [type, config] of Object.entries(wh40kConfig.movementTypes)) {
-            // Create the action entry if it doesn't already exist (WH40K-specific actions)
+            // Foundry V14 seals each movement-action config after init, so the
+            // getAnimationOptions / getCostFunction assignments below throw on
+            // re-invocation ("Cannot assign to read only property"). Only create
+            // and wire an entry that doesn't already exist — making this genuinely
+            // idempotent. Existing (sealed) entries are left as-is.
+            const isNew = !(type in tokenConfig.movement.actions);
+            if (!isNew) continue;
             // eslint-disable-next-line no-restricted-syntax -- boundary: ??= is used to register WH40K movement actions into CONFIG.Token.movement.actions during system init (framework registration, not call-site default)
             tokenConfig.movement.actions[type] ??= {
                 label: config.label,
