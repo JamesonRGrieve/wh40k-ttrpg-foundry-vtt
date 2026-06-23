@@ -51,18 +51,18 @@ test.describe.serial('trying again warning (#62)', () => {
             interface ActorStub {
                 name: string;
                 img: string;
-                flags: { wh40k: { 'try-again': TryAgainBag } };
+                flags: { 'wh40k-rpg': { 'try-again': TryAgainBag } };
                 getFlag: (scope: string, key: string) => number | TryAgainBag | null;
                 getSituationalModifiers: () => never[];
             }
             const actorStub: ActorStub = {
                 name: 'Probe Acolyte',
                 img: '',
-                flags: { wh40k: { 'try-again': { inquiry: 1 } } },
+                flags: { 'wh40k-rpg': { 'try-again': { inquiry: 1 } } },
                 getFlag(scope: string, key: string): number | TryAgainBag | null {
-                    if (scope !== 'wh40k') return null;
-                    if (key === 'try-again') return this.flags.wh40k['try-again'];
-                    return this.flags.wh40k['try-again'][key] ?? null;
+                    if (scope !== 'wh40k-rpg') return null;
+                    if (key === 'try-again') return this.flags['wh40k-rpg']['try-again'];
+                    return this.flags['wh40k-rpg']['try-again'][key] ?? null;
                 },
                 getSituationalModifiers(): never[] {
                     return [];
