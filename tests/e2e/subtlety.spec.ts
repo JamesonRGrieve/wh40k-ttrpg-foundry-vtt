@@ -509,6 +509,12 @@ test.describe.serial('subtlety / Direction #7 adjusters (Tier B)', () => {
         const failures: string[] = [];
 
         try {
+            // The warband-subtlety pool is a single world-scoped setting shared
+            // across the worker's world; a sibling spec (subtlety-panel) mutates it
+            // and may not restore the 60 default before this spec runs. Reset it
+            // explicitly so probeBaseline measures the canonical baseline rather
+            // than another spec's leftover value.
+            await resetSubtlety(page, actorId, 60);
             const baseline = await probeBaseline(page, actorId);
             if (baseline.ok) recordCoverage('subtlety.flow', FLOW_BASELINE);
             else failures.push(`${FLOW_BASELINE}: ${baseline.error ?? 'unknown error'}`);
