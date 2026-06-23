@@ -853,8 +853,8 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                     EquippableTemplate._migrateData?.(legacy);
                     const migratedState = legacy['state'] as { equipped: boolean; inBackpack: boolean; inShipStorage: boolean } | undefined;
                     if (migratedState?.equipped !== true) return 'state.equipped not coerced to true';
-                    if (migratedState.inBackpack !== true) return 'state.inBackpack not coerced to true';
-                    if (migratedState.inShipStorage !== false) return 'state.inShipStorage not coerced to false';
+                    if (!migratedState.inBackpack) return 'state.inBackpack not coerced to true';
+                    if (migratedState.inShipStorage) return 'state.inShipStorage not coerced to false';
                     if ('equipped' in legacy) return 'legacy flat equipped not removed after relocation';
 
                     // Mutation helpers should be safe to call with no parent (returns undefined).

@@ -66,6 +66,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: synthetic item-system shape for the probe is an open record of arbitrary fields
             type SyntheticSystem = Record<string, unknown>;
             interface SyntheticItem {
                 id: string;
