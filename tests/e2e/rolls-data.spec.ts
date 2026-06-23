@@ -115,7 +115,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                 total?: number;
             }
             interface D100RollClass {
-                test: (options: { target: number; flavor: string; fastForward: boolean }) => Promise<D100RollResult | null>;
+                test: (options: { target: number; flavor: string; configure: boolean }) => Promise<D100RollResult | null>;
             }
 
             const out: FlowResult[] = [];
