@@ -180,6 +180,19 @@ export class ItemDropManager {
         return change.x !== undefined || change.y !== undefined;
     }
 
+    /**
+     * Ids of a scene's tokens backed by the given actor — the pile's token(s) to
+     * remove when it is picked up, so deleting the loot Actor doesn't leave an
+     * orphaned (actor-less) token on the canvas. Pure — plain projections only.
+     */
+    static tokenIdsForActor(tokens: ReadonlyArray<{ id?: string | null; actorId?: string | null }>, actorId: string): string[] {
+        const ids: string[] = [];
+        for (const token of tokens) {
+            if (token.actorId === actorId && token.id != null && token.id !== '') ids.push(token.id);
+        }
+        return ids;
+    }
+
     /* -------------------------------------------- */
     /*  Orchestration                               */
     /* -------------------------------------------- */
@@ -333,6 +346,22 @@ export class ItemDropManager {
         }
 
         const pileName = lootActor.name;
+        // Remove the pile's scene token(s) too — deleting the loot Actor alone
+        // leaves an orphaned (actor-less) token on the canvas. Wrapped per scene
+        // so a permission failure degrades to the prior behaviour (actor removed,
+        // token left) rather than aborting the whole pickup.
+        const lootId = lootActor.id;
+        if (lootId != null) {
+            const deletions = Array.from(game.scenes).flatMap((scene) => {
+                const tokenIds = ItemDropManager.tokenIdsForActor(Array.from(scene.tokens), lootId);
+                return tokenIds.length > 0 ? [scene.deleteEmbeddedDocuments('Token', tokenIds)] : [];
+            });
+            try {
+                await Promise.all(deletions);
+            } catch (err) {
+                console.warn('WH40K | pickupLoot: could not delete loot token(s)', err);
+            }
+        }
         await lootActor.delete();
         ui.notifications.info(t('WH40K.Loot.PickedUpAll', { actor: receivingActor.name, pile: pileName }));
         return true;
