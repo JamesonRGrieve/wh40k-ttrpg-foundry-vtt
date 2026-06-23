@@ -13,6 +13,7 @@
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { t } from '../i18n/t.ts';
+import { dropItemAsItemPile } from '../integrations/item-piles.ts';
 
 /** Minimal position shape used by the pure placement helpers. */
 interface GridPoint {
@@ -257,6 +258,16 @@ export class ItemDropManager {
         const itemData = item.toObject();
         // eslint-disable-next-line no-restricted-syntax -- boundary: toObject() returns untyped document source; _id is stripped before re-create
         delete (itemData as { _id?: unknown })._id;
+
+        // Prefer Item Piles when installed: it owns its own pile actors, so the
+        // dropped pile doesn't add a "Dropped: X" actor to the Actors sidebar
+        // (#385). Feature-detected + guarded, so without the module (or on an API
+        // mismatch) this is skipped and the loot-actor method below runs unchanged.
+        if (await dropItemAsItemPile(itemData, target, scene.id)) {
+            if (item.id != null) await sourceActor.deleteEmbeddedDocuments('Item', [item.id]);
+            ui.notifications.info(t('WH40K.Loot.Dropped', { actor: sourceActor.name, item: item.name }));
+            return null;
+        }
 
         let lootActor: WH40KBaseActor | null = null;
         if (mergeIndex >= 0) {
