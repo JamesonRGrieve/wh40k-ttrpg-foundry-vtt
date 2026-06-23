@@ -403,6 +403,21 @@ export class WH40KBaseActor extends Actor {
         return this.system.initiative;
     }
 
+    /**
+     * Foundry's default `Actor.getRollData()` returns the raw `this.system`;
+     * delegate to the system DataModel's enriched `getRollData()` so characteristic
+     * short-keys (`@WS`), bonuses (`@WSB`), full keys (`@weaponSkill`) and `@pr`
+     * resolve in roll formulas and enriched HTML wherever actor roll data is
+     * consumed (e.g. ProseMirror enrichment in the sheet).
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's Actor.getRollData returns the untyped system object; the per-system DataModel adds the @-key enrichment via its own getRollData
+    override getRollData(): Record<string, unknown> {
+        const system = this.system as { getRollData?: () => Record<string, unknown> };
+        if (typeof system.getRollData === 'function') return system.getRollData();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: super.getRollData() returns Foundry's untyped this.system
+        return super.getRollData() as Record<string, unknown>;
+    }
+
     get wounds(): { value: number; max: number; critical: number } {
         return this.system.wounds;
     }
