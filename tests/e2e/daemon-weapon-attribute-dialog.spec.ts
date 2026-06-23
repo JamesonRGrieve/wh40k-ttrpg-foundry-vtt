@@ -40,7 +40,12 @@ test.describe('DaemonWeaponAttributeDialog (#142)', () => {
                 const actions = DialogCtor.DEFAULT_OPTIONS.actions;
                 await actions.roll.call(dialog, new Event('click'), document.createElement('button'));
                 const afterEl = dialog.element;
-                const hasResult = !!(afterEl && /Attribute\s*1/i.test(afterEl.textContent));
+                // After a successful roll the template renders the result section:
+                // a Post action button and one <li> per rolled attribute pick. The
+                // old numbered "Attribute 1" label no longer exists in the markup.
+                const postBtn = afterEl?.querySelector('[data-action="post"]') ?? null;
+                const pickCount = afterEl?.querySelectorAll('section ul > li').length ?? 0;
+                const hasResult = postBtn !== null && pickCount >= 1;
                 await dialog.close();
                 return { rendered, hasSelects, hasResult, error: null };
             } catch (error) {
