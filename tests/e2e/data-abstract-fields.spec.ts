@@ -133,7 +133,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
             // its pre- and post-migration shapes.
             interface ItemMigrateSource {
                 description?: string | { value?: string; chat?: string; summary?: string };
-                source?: string | { book?: string; page?: string; custom?: string };
+                source?: string | { provenance?: string; book?: string; page?: string };
                 coverage?: string[] | Set<string>;
                 properties?: string[] | Set<string>;
                 img?: string;
@@ -141,6 +141,12 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
             }
             interface ItemDataModelCtor {
                 metadata: ItemMetadata & FrozenObject;
+                _migrateData: (source: ItemMigrateSource) => void;
+            }
+            // The flat-string → object description/source migration lives in the
+            // DescriptionTemplate mixin, not bare ItemDataModel (whose _schemaTemplates
+            // is empty, so it only migrates img/coverage/lineVariants).
+            interface DescriptionTemplateCtor {
                 _migrateData: (source: ItemMigrateSource) => void;
             }
             interface ActorDataModelCtor {
@@ -273,21 +279,31 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                 for (const k of itemFlowKeys) record(k, false, idmMod.__importError);
             } else {
                 const ItemDataModel = idmMod.default;
+                // DescriptionTemplate owns the flat-string → object migration for
+                // description/source; load it so those two flows test the real owner.
+                const descTmplMod = await loadModule<DescriptionTemplateCtor>('shared/description-template');
+                const DescriptionTemplate =
+                    descTmplMod.__importError === undefined ? descTmplMod.default : (ItemDataModel as unknown as DescriptionTemplateCtor);
                 guarded('item-data-model-metadata-merged', () => {
                     const meta = ItemDataModel.metadata;
                     return !meta.enchantable && !meta.hasEffects && !meta.singleton && meta.systemFlagsModel === null && Object.isFrozen(meta);
                 });
                 guarded('item-data-model-migrate-description-promotion', () => {
+                    // Flat-string → {value, chat, summary} migration lives in DescriptionTemplate.
                     const source: ItemMigrateSource = { description: 'A plain string description.' };
-                    ItemDataModel._migrateData(source);
+                    DescriptionTemplate._migrateData(source);
                     const desc = source.description;
                     return typeof desc === 'object' && desc.value === 'A plain string description.' && desc.chat === '' && desc.summary === '';
                 });
                 guarded('item-data-model-migrate-source-promotion', () => {
+                    // The source schema is now { provenance, book, page, url, derivedFrom,
+                    // errata } (the legacy `custom` field was removed); a flat non-homebrew
+                    // string migrates into `book` under provenance 'raw'. Owned by
+                    // DescriptionTemplate, not bare ItemDataModel.
                     const source: ItemMigrateSource = { source: 'Dark Heresy 2e, p.123' };
-                    ItemDataModel._migrateData(source);
+                    DescriptionTemplate._migrateData(source);
                     const src = source.source;
-                    return typeof src === 'object' && src.custom === 'Dark Heresy 2e, p.123' && src.book === '' && src.page === '';
+                    return typeof src === 'object' && src.provenance === 'raw' && src.book === 'Dark Heresy 2e, p.123' && src.page === '';
                 });
                 guarded('item-data-model-migrate-coverage-array-to-set', () => {
                     const source: ItemMigrateSource = { coverage: ['head', 'body'], properties: ['reliable', 'tearing'] };
@@ -351,12 +367,22 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                     } catch {
                         validOk = false;
                     }
-                    // Branch 3: malformed formula throws "Invalid formula: ...".
+                    // Branch 3: a formula that throws in the Roll constructor is wrapped
+                    // as "Invalid formula: ...". Foundry's parser is lenient (bare words
+                    // become string terms), so try several genuinely-malformed formulas
+                    // and accept if any trips the wrapper.
                     let invalidThrew = false;
-                    try {
-                        field._validateType('this is not a roll formula @@@');
-                    } catch (err) {
-                        invalidThrew = String(err instanceof Error ? err.message : err).includes('Invalid formula');
+                    let invalidProbed = '';
+                    for (const bad of ['1d10 + (2 *', ')(', '1d10 ++ 5', '1d', '/2', '* 5', '1d10 )']) {
+                        try {
+                            field._validateType(bad);
+                        } catch (err) {
+                            if (String(err instanceof Error ? err.message : err).includes('Invalid formula')) {
+                                invalidThrew = true;
+                                invalidProbed = bad;
+                                break;
+                            }
+                        }
                     }
                     // Branch 4: deterministic=true rejects dice expressions.
                     let detRejected = false;
@@ -369,7 +395,22 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                         const msg = String(err instanceof Error ? err.message : err);
                         detRejected = msg.includes('deterministic') || msg.includes('Invalid formula');
                     }
-                    return validOk && invalidThrew && detRejected;
+                    if (!validOk) return 'branch2: valid formula 1d10+5 threw unexpectedly';
+                    if (!invalidThrew) return 'branch3: no malformed formula tripped the Invalid-formula wrapper';
+                    if (!detRejected) {
+                        const detFlag = (detField as unknown as { deterministic?: boolean }).deterministic;
+                        let rollDet = 'n/a';
+                        try {
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's Roll global is injected by the licensed app; no shipped type in the page context
+                            const RollCls = (globalThis as unknown as { Roll?: new (f: string) => { isDeterministic: boolean } }).Roll;
+                            if (RollCls !== undefined) rollDet = String(new RollCls('1d10').isDeterministic);
+                        } catch {
+                            rollDet = 'roll-threw';
+                        }
+                        return `branch4: deterministic field did not reject 1d10 (field.deterministic=${String(detFlag)} roll.isDeterministic=${rollDet})`;
+                    }
+                    void invalidProbed;
+                    return true;
                 });
             }
 
