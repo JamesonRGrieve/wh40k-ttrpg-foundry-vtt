@@ -86,12 +86,20 @@ export default class VehicleData extends ActorDataModel {
     declare traitsText: string;
     declare availability: string;
     declare source: string;
+    declare gameSystem: 'rt' | 'dh1' | 'dh2' | 'bc' | 'ow' | 'dw' | 'im';
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
+
+            // === Game system (drives per-system economy gating, e.g. RT crew/morale) ===
+            gameSystem: new fields.StringField({
+                required: true,
+                initial: 'rt',
+                choices: ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'],
+            }),
 
             // === Locomotion (propulsion adjective) ===
             locomotion: locomotionField('wheeled'),

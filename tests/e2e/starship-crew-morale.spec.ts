@@ -37,6 +37,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                 interface StarshipSystem {
                     hullIntegrity?: { value?: number; max?: number };
                     crew?: StarshipCrew;
+                    gameSystem?: string;
                 }
                 interface StarshipSheet {
                     render?: (opts: { force: boolean }) => Promise<void>;
@@ -47,6 +48,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                 interface StarshipActor {
                     id?: string;
                     system?: StarshipSystem;
+                    usesRTCrewEconomy?: boolean;
                     applyHullDamage?: (n: number) => Promise<void>;
                     cancelPriorTurnDamage?: () => Promise<void>;
                     replenishBetweenCombat?: () => Promise<void>;
@@ -59,14 +61,25 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.create accepts arbitrary creation data
                     create?: (data: Record<string, unknown>) => Promise<StarshipActor | null | undefined>;
                 }
+                interface CombatLike {
+                    activate?: () => Promise<unknown>;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Combat.update accepts arbitrary partial-update payloads
+                    update?: (data: Record<string, unknown>) => Promise<unknown>;
+                    delete?: () => Promise<unknown>;
+                }
+                interface CombatClass {
+                    create?: (data: Record<string, never>) => Promise<CombatLike | null>;
+                }
                 interface FoundryGame {
                     combats?: { active?: { round?: number } | null };
                 }
                 interface FoundryGlobal {
                     Actor?: ActorClass;
+                    Combat?: CombatClass;
                     game?: FoundryGame;
                     __c9starship?: StarshipActor | undefined;
                     __c9starshipDh?: StarshipActor | undefined;
+                    __c9combat?: CombatLike | undefined;
                 }
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
                 const fg = globalThis as unknown as FoundryGlobal;
@@ -78,6 +91,8 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                 let hullAfter = 0;
                 let crewBefore = 0;
                 let crewAfter = 0;
+                let dbgGameSystem: string | null = null;
+                let dbgRtEconomy: boolean | null = null;
                 let moraleBefore = 0;
                 let moraleAfter = 0;
                 let cancelRestored = false;
@@ -99,6 +114,8 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                             cancelRestored,
                             replenishedMorale,
                             nonRtCrewUnchanged,
+                            dbgGameSystem,
+                            dbgRtEconomy,
                             error: 'Actor.create not available',
                         };
                     }
@@ -116,12 +133,51 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     });
                     actorCreated = actor !== undefined && actor !== null;
 
+                    // Nested create values don't reliably persist (Foundry nested-create
+                    // merge); set hull + crew via update() — the canonical mutation path
+                    // the void-combat flow uses — so applyHullDamage operates on the
+                    // intended baseline (hull 35, crew 100).
+                    if (typeof actor?.update === 'function') {
+                        await actor.update({
+                            'system.gameSystem': 'rt',
+                            'system.hullIntegrity.value': 35,
+                            'system.hullIntegrity.max': 35,
+                            'system.crew.population': 100,
+                            'system.crew.crewRating': 30,
+                            'system.crew.morale.value': 100,
+                            'system.crew.morale.max': 100,
+                        });
+                    }
+
+                    dbgGameSystem = actor?.system?.gameSystem ?? null;
+                    dbgRtEconomy = typeof actor?.usesRTCrewEconomy === 'boolean' ? actor.usesRTCrewEconomy : null;
                     hullBefore = Number(actor?.system?.hullIntegrity?.value ?? 0);
                     crewBefore = Number(actor?.system?.crew?.population ?? 0);
                     moraleBefore = Number(actor?.system?.crew?.morale?.value ?? 0);
 
+                    // Create + activate a real Combat at round 1 so the document's
+                    // `_currentStrategicTurn()` reads a genuine strategic round.
+                    // The active-combat `round` getter is read-only, so assigning
+                    // `combats.active` is a silent no-op — a live Combat is the only
+                    // reliable way to drive the strategic turn under Tier B.
+                    let combat: CombatLike | null = null;
+                    try {
+                        const CombatCls = fg.Combat;
+                        if (typeof CombatCls?.create === 'function') {
+                            combat = (await CombatCls.create({})) ?? null;
+                            if (combat != null) {
+                                if (typeof combat.activate === 'function') await combat.activate();
+                                if (typeof combat.update === 'function') await combat.update({ round: 1 });
+                            }
+                        }
+                    } catch {
+                        /* ignore — falls back to the no-combat turn=1 path */
+                    }
+                    fg.__c9combat = combat ?? undefined;
+
                     // Drive the document method directly — this is what
                     // void-combat hits route through via `#fireShipWeapon`.
+                    // Recorded against strategic turn 1 (the active combat round).
                     if (typeof actor?.applyHullDamage === 'function') {
                         await actor.applyHullDamage(5);
                     } else {
@@ -132,21 +188,15 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     crewAfter = Number(actor?.system?.crew?.population ?? 0);
                     moraleAfter = Number(actor?.system?.crew?.morale?.value ?? 0);
 
-                    // Stub the active combat round so cancelPriorTurnDamage
-                    // sees a strictly-prior turn relative to the snapshot.
-                    const foundryGame = fg.game;
-                    const realActive = foundryGame?.combats?.active ?? null;
-                    if (foundryGame?.combats != null) {
-                        foundryGame.combats.active = { round: (foundryGame.combats.active?.round ?? 0) + 2 };
+                    // Advance the strategic turn so cancelPriorTurnDamage sees a
+                    // strictly-prior snapshot (snapshot.turn 1 < currentTurn 2).
+                    if (combat != null && typeof combat.update === 'function') {
+                        await combat.update({ round: 2 });
                     }
-                    try {
-                        if (typeof actor?.cancelPriorTurnDamage === 'function') {
-                            await actor.cancelPriorTurnDamage();
-                            cancelRestored =
-                                Number(actor.system?.crew?.population ?? 0) === crewBefore && Number(actor.system?.crew?.morale?.value ?? 0) === moraleBefore;
-                        }
-                    } finally {
-                        if (foundryGame?.combats != null) foundryGame.combats.active = realActive;
+                    if (typeof actor?.cancelPriorTurnDamage === 'function') {
+                        await actor.cancelPriorTurnDamage();
+                        cancelRestored =
+                            Number(actor.system?.crew?.population ?? 0) === crewBefore && Number(actor.system?.crew?.morale?.value ?? 0) === moraleBefore;
                     }
 
                     // Drop morale, then replenishBetweenCombat → morale back to max.
@@ -167,6 +217,21 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                             crew: { population: 50, crewRating: 30, morale: { value: 50, max: 50 } },
                         },
                     });
+                    // Same nested-create-merge quirk: set the deep crew/hull fields via
+                    // update() with dotted paths so the gating assertion measures the
+                    // intended baseline (hull 30, crew 50, morale 50) rather than schema
+                    // defaults.
+                    if (typeof dhActor?.update === 'function') {
+                        await dhActor.update({
+                            'system.gameSystem': 'dh2',
+                            'system.hullIntegrity.value': 30,
+                            'system.hullIntegrity.max': 30,
+                            'system.crew.population': 50,
+                            'system.crew.crewRating': 30,
+                            'system.crew.morale.value': 50,
+                            'system.crew.morale.max': 50,
+                        });
+                    }
                     if (typeof dhActor?.applyHullDamage === 'function') {
                         await dhActor.applyHullDamage(4);
                         nonRtCrewUnchanged =
@@ -217,6 +282,8 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     cancelRestored,
                     replenishedMorale,
                     nonRtCrewUnchanged,
+                    dbgGameSystem,
+                    dbgRtEconomy,
                     error,
                 };
             });
@@ -234,14 +301,19 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     delete?: () => Promise<void>;
                     sheet?: StarshipSheet;
                 }
+                interface CombatLike {
+                    delete?: () => Promise<unknown>;
+                }
                 interface FoundryGlobal {
                     __c9starship?: StarshipActor | undefined;
                     __c9starshipDh?: StarshipActor | undefined;
+                    __c9combat?: CombatLike | undefined;
                 }
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
                 const fg = globalThis as unknown as FoundryGlobal;
                 const a = fg.__c9starship;
                 const dh = fg.__c9starshipDh;
+                const combat = fg.__c9combat;
                 try {
                     await a?.sheet?.close?.();
                 } catch {
@@ -257,15 +329,23 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                 } catch {
                     /* ignore */
                 }
+                try {
+                    await combat?.delete?.();
+                } catch {
+                    /* ignore */
+                }
                 fg.__c9starship = undefined;
                 fg.__c9starshipDh = undefined;
+                fg.__c9combat = undefined;
             });
 
             expect(result.error, `probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.actorCreated, 'RT starship actor should be created').toBe(true);
             // Hull damage propagated.
             expect(result.hullAfter, 'hull should drop by exactly 5').toBe(result.hullBefore - 5);
-            expect(result.crewAfter, 'crew population should drop by exactly 5').toBe(result.crewBefore - 5);
+            expect(result.crewAfter, `crew drop by 5 (gameSystem=${String(result.dbgGameSystem)} rtEconomy=${String(result.dbgRtEconomy)})`).toBe(
+                result.crewBefore - 5,
+            );
             expect(result.moraleAfter, 'morale should drop by exactly 5').toBe(result.moraleBefore - 5);
             // Cancel reverted the prior turn's losses.
             expect(result.cancelRestored, 'Hold Fast! / Triage cancel should restore crew + morale').toBe(true);
