@@ -5678,17 +5678,22 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Open dialog to add a new specialist skill.
-     * Single-page dialog with cascading dropdowns populated from compendium indexes.
+     * Add a specialist-skill specialization via the advancement menu.
+     * Specializations are XP-purchased, so the "+" routes to the AdvancementDialog
+     * ('__new' specialist-add path charges XP) rather than a free add (#387).
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      * @this {CharacterSheet}
      */
-    static async #openAddSpecialistDialog(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        const { prepareCreateSpecialistSkillPrompt } = await import('../prompts/specialist-skill-dialog.ts');
-        prepareCreateSpecialistSkillPrompt({
-            actor: this.actor,
-        });
+    static #openAddSpecialistDialog(this: CharacterSheet, event: Event, _target: HTMLElement): void {
+        event.preventDefault();
+        // Specialist specializations are XP-purchased: route through the advancement
+        // menu (its '__new' specialist-add path charges XP and records the cost) rather
+        // than the free SpecialistSkillDialog, which added them untrained at no cost (#387).
+        // The free dialog is retained for NPC sheets, where the GM edits skills directly
+        // and there is no XP economy.
+        const careerKey = this.actor.originPath['career'];
+        AdvancementDialog.open(this.actor, { careerKey });
     }
 
     /* -------------------------------------------- */
