@@ -49,7 +49,7 @@ interface ProbeResult {
     pageErrors: string[];
 }
 
-const TALENT_PACK = 'wh40k-rpg.dh2-core-stats-talents';
+const TALENT_PACK = 'wh40k-rpg.dh2-core-items-talents';
 
 async function probeSheetMixins(page: Page): Promise<ProbeResult> {
     const pageErrors: string[] = [];
@@ -94,6 +94,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
             }
             interface GameManager {
                 packs?: { get?: (id: string) => CompendiumPack | undefined };
+                settings?: { get?: (scope: string, key: string) => unknown; set?: (scope: string, key: string, value: unknown) => Promise<unknown> };
             }
             interface FoundryGlobal {
                 Actor?: ActorCtorShape;
@@ -229,6 +230,13 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                 ownedItem = null;
                 record('owned-item-sheet-canEdit', false, `createEmbeddedDocuments threw: ${String(err instanceof Error ? err.message : err)}`);
             }
+
+            // Item-sheet editing is now gated behind the `freeform-items` world
+            // setting (read-only by default — BaseItemSheet.canEdit). Enable it so the
+            // owned-item canEdit + edit-mode-toggle flows below exercise the editable
+            // path; the prior value is restored before the compendium-readonly flows.
+            const priorFreeform = gameMgr?.settings?.get?.('wh40k-rpg', 'freeform-items') === true;
+            await gameMgr?.settings?.set?.('wh40k-rpg', 'freeform-items', true);
 
             /* ---------- flow 3: owned-item-sheet-canEdit ---------- */
             if (ownedItem != null) {
@@ -385,6 +393,9 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
             } catch (err) {
                 record('drop-event-on-sheet', false, String(err instanceof Error ? err.message : err));
             }
+
+            // Restore the freeform-items setting before the read-only flows.
+            await gameMgr?.settings?.set?.('wh40k-rpg', 'freeform-items', priorFreeform);
 
             /* ---------- flow 4: compendium-item-sheet-readonly ---------- */
             /* ---------- flow 7: prosemirror-gated-in-readonly --------- */
