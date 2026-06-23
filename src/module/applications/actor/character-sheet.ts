@@ -91,6 +91,7 @@ import {
 import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
 import { combatMovementView } from '../../rules/movement-budget.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
+import { MOUNTED_ACTIONS } from '../../rules/ow-mount.ts';
 import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
 import {
     applyMismanifest,
@@ -106,6 +107,7 @@ import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/glob
 import { errorMessage } from '../../utils/error-message.ts';
 import { formatSigned } from '../../utils/format.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
+import { uuidNameCache } from '../../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { DialogV2Like, TextEditorImplementationLike } from '../api/application-types.ts';
 import * as EffectActions from '../api/effect-actions.ts';
@@ -205,7 +207,7 @@ type CharacterSheetContextDeclaredFields = {
     vehicleMovementPanel?: OwVehicleMovementPanelContext;
     comradeHealingPanel?: OwComradeHealingPanelContext;
     craftsmanshipPanel?: OwCraftsmanshipPanelContext;
-    mountPanel?: Record<string, unknown>;
+    mountPanel?: OwMountPanelContext;
     drawbackPanel?: Record<string, unknown>;
     battlefieldPanel?: Record<string, unknown>;
     hideThroneGelt?: boolean;
@@ -529,6 +531,11 @@ type OwVehicleMovementPanelContext = {
     chaseState: { pursuerDistance: number; dangerZone: boolean; turnCount: number } | null;
 };
 
+type OwMountPanelContext = {
+    mount: { mountId: string; mountName: string; traits: Array<{ id: string; labelKey: string }> } | null;
+    actions: Array<{ actionId: string; timing: string; nameKey: string; descriptionKey: string; timingKey: string }>;
+};
+
 type OwComradeHealingPanelContext = {
     recoveryDays: number;
     refitAvailable: boolean;
@@ -642,7 +649,7 @@ const PANEL_BUILDERS: Partial<Record<GameSystemId, readonly PanelBuilder[]>> = {
         { key: 'vehicleMovementPanel', build: (s) => s._prepareOwVehicleMovementPanel() },
         { key: 'comradeHealingPanel', build: (s) => s._prepareOwComradeHealingPanel() },
         { key: 'craftsmanshipPanel', build: (s) => buildOwCraftsmanshipPanel(Array.from(s.actor.items.values())) },
-        { key: 'mountPanel', build: (s) => ({ mountedOn: owSystemRecord(s)['mountedOn'] ?? null }) },
+        { key: 'mountPanel', build: (s) => s._prepareOwMountPanel() },
         {
             key: 'drawbackPanel',
             build: (s) => ({ drawbacks: owSystemRecord(s)['regimentDrawbacks'] ?? [], multiComradeRoster: owSystemRecord(s)['multiComradeRoster'] ?? null }),
@@ -2148,6 +2155,29 @@ export default class CharacterSheet extends BaseActorSheet {
             // tracker straight through (null when no chase is active).
             chaseState: chase === null ? null : { pursuerDistance: chase.pursuerDistance, dangerZone: chase.dangerZone, turnCount: chase.turnCount },
         };
+    }
+
+    /** OW Mount panel (#155). Surfaces the rider's mount link (resolved name +
+     *  trait badges) and the four RAW mounted special actions. The template gates
+     *  the readout and the Issue buttons on `mount` being non-null. */
+    _prepareOwMountPanel(): OwMountPanelContext {
+        const mountedOn = owSystemRecord(this)['mountedOn'] as { mountId?: string; traits?: string[] } | null | undefined;
+        const mount =
+            mountedOn != null && typeof mountedOn.mountId === 'string' && mountedOn.mountId !== ''
+                ? {
+                      mountId: mountedOn.mountId,
+                      mountName: uuidNameCache.getName(mountedOn.mountId),
+                      traits: (mountedOn.traits ?? []).map((id) => ({ id, labelKey: `WH40K.OW.Mount.Trait.${titleCase(id)}` })),
+                  }
+                : null;
+        const actions = MOUNTED_ACTIONS.map((a) => ({
+            actionId: a.id,
+            timing: a.timing,
+            nameKey: `WH40K.OW.Mount.Action.${titleCase(a.id)}`,
+            descriptionKey: `WH40K.OW.Mount.Description.${titleCase(a.id)}`,
+            timingKey: `WH40K.OW.Mount.Timing.${titleCase(a.timing)}`,
+        }));
+        return { mount, actions };
     }
 
     /** OW Comrade Healing panel (#157). */
