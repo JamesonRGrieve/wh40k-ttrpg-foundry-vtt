@@ -1057,16 +1057,20 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (rollKey === null) return [];
         // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a heterogeneous actor handle; per-system skill item schema is read structurally
         const sourceActor = (rd.sourceActor ?? rd['actor']) as
-            | { items?: Iterable<{ type?: string; name?: string; system?: { identifier?: string; variants?: SkillVariant[] } }> }
+            | {
+                  items?: {
+                      find?: (
+                          cb: (i: { type?: string; name?: string; system?: { identifier?: string; variants?: SkillVariant[] } }) => boolean,
+                      ) => { system?: { variants?: SkillVariant[] } } | undefined;
+                  };
+              }
             | null
             | undefined;
-        let variants: SkillVariant[] = [];
-        for (const item of sourceActor?.items ?? []) {
-            if (item.type === 'skill' && (item.system?.identifier === rollKey || item.name === rollKey)) {
-                if (Array.isArray(item.system?.variants)) variants = item.system.variants;
-                break;
-            }
-        }
+        // Read via items.find (matching the alt-characteristics path above and the
+        // Foundry Collection API) rather than for..of, so a non-iterable items
+        // handle can't crash render with "object is not iterable".
+        const skillItem = sourceActor?.items?.find?.((item) => item.type === 'skill' && (item.system?.identifier === rollKey || item.name === rollKey));
+        const variants: SkillVariant[] = Array.isArray(skillItem?.system?.variants) ? skillItem.system.variants : [];
         return availableSkillVariants(variants, WH40KSettings.isHomebrew());
     }
 
@@ -1144,7 +1148,20 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     static async #onFormSubmit(this: UnifiedRollDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: FormDataExtended.object is typed loosely by Foundry; cast is the documented pattern
-        const data = foundry.utils.expandObject((formData as unknown as { object: Record<string, unknown> }).object);
+        const formObject = (formData as unknown as { object: Record<string, unknown> }).object;
+        const data = foundry.utils.expandObject(formObject);
+        // Sync the <select> dialog-state pickers. ApplicationV2 binds [data-action]
+        // to click only, so the climbSurface / characteristicOverride selects'
+        // change events arrive HERE via submitOnChange — not via the (dead)
+        // #onSetClimbSurface / #onSetCharacteristicOverride action handlers.
+        const climbSurface = formObject['climbSurface'];
+        if (typeof climbSurface === 'string') {
+            this._climbSurface = climbSurface === 'sheer' || climbSurface === 'easy' ? climbSurface : 'standard';
+        }
+        if ('characteristicOverride' in formObject) {
+            const override = formObject['characteristicOverride'];
+            this._charOverride = typeof override === 'string' && override !== '' ? override : null;
+        }
         // Update roll data fields from form
         const rd = this.rollData;
         foundry.utils.mergeObject(rd, data, { recursive: true });
