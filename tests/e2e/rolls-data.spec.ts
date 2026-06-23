@@ -328,12 +328,16 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                 if (d100Mod != null) {
                     try {
                         // D100Roll.test() runs a simple d100 check + posts to chat.
-                        // Suppress any dialog opening by passing fastForward.
+                        // Suppress the configuration dialog with `configure: false`
+                        // (the flag `build()` actually honors — see basic-roll.ts and
+                        // acolyte.ts). `fastForward` is NOT a recognised skip flag, so
+                        // passing it leaves the dialog open awaiting a click that never
+                        // comes in headless → the run hangs to the Playwright timeout.
                         const D100Roll = d100Mod.default ?? d100Mod.D100Roll;
                         if (typeof D100Roll?.test !== 'function') {
                             record('d100-roll-test', false, `D100Roll.test missing (keys: ${Object.keys(d100Mod).join(',')})`);
                         } else {
-                            const result = await D100Roll.test({ target: 50, flavor: 'rolls-data-probe', fastForward: true });
+                            const result = await D100Roll.test({ target: 50, flavor: 'rolls-data-probe', configure: false });
                             // Accept any non-throwing result (null is fine — chat may
                             // not post in headless). The coverage win is the path
                             // executed up to the chat-create boundary.
