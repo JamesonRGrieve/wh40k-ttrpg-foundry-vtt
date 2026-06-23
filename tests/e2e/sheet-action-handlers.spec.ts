@@ -66,7 +66,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
     page.on('pageerror', listener);
     try {
         const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            type SyntheticSystem = Record<string, boolean | number | string>;
+            type SyntheticSystem = Record<string, unknown>;
             interface SyntheticItem {
                 id: string;
                 type: string;
@@ -119,8 +119,10 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
                         record('quick-actions-weapon', false, err instanceof Error ? err.message : String(err));
                     }
                     try {
-                        const equipped = QAB.getActionsForItem(synthetic('armour', { equipped: true }));
-                        const unequipped = QAB.getActionsForItem(synthetic('armour', { equipped: false }));
+                        // Equippable flags are nested under system.state (equippable-template.ts);
+                        // getActionsForItem reads system.state.equipped.
+                        const equipped = QAB.getActionsForItem(synthetic('armour', { state: { equipped: true } }));
+                        const unequipped = QAB.getActionsForItem(synthetic('armour', { state: { equipped: false } }));
                         // Equipped armour reports the "Unequip" label; unequipped reports "Equip".
                         const ok = equipped[0]?.label === 'Unequip' && unequipped[0]?.label === 'Equip';
                         record('quick-actions-armour', ok, `equipped=${String(equipped[0]?.label)} unequipped=${String(unequipped[0]?.label)}`);
