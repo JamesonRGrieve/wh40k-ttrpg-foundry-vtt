@@ -377,8 +377,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // the cumulative penalty for CUMULATIVE_PENALTY_SKILLS.
         let tryAgainAdvice: RetryAdvice | null = null;
         let tryAgainPenalty = 0;
-        if (!isForceField && rollData['type'] === 'Skill') {
-            const skillKey = (rollData['rollKey'] as string | null | undefined) ?? null;
+        if (!isForceField && rollData.type === 'Skill') {
+            const skillKey = (rollData.rollKey as string | null | undefined) ?? null;
             // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a heterogeneous actor handle (sourceActor or legacy 'actor'); getFlag is Foundry Document API
             const actorRef = (rollData.sourceActor ?? rollData['actor']) as { getFlag?: (scope: string, key: string) => unknown } | null | undefined;
             if (skillKey !== null && typeof actorRef?.getFlag === 'function') {
@@ -409,7 +409,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             untrainedAdvanced: boolean;
         } | null = null;
         let skillBaseOverride: number | null = null;
-        if (this.rollType === 'simple' && rollData['type'] === 'Skill') {
+        if (this.rollType === 'simple' && rollData.type === 'Skill') {
             const sourceActor = (rollData.sourceActor ?? rollData['actor']) as
                 | {
                       // eslint-disable-next-line no-restricted-syntax -- boundary: per-actor skill / characteristic bags are typed loosely on WH40KBaseActor; structural read suffices
@@ -420,7 +420,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                   }
                 | null
                 | undefined;
-            const rollKey = (rollData['rollKey'] as string | null | undefined) ?? null;
+            const rollKey = (rollData.rollKey as string | null | undefined) ?? null;
             const actorSkill = rollKey !== null ? sourceActor?.skills?.[rollKey] : undefined;
             const listedChar = actorSkill?.characteristic ?? '';
             // Specialist-skill rolls target one entry; the document passes that entry's
@@ -524,8 +524,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             : 0;
 
         // Climbing surface modifier (#146 — errata L113). Only applied on Athletics rolls.
-        const rollKeyValue = (rollData['rollKey'] as string | null | undefined) ?? null;
-        const isAthletics = this.rollType === 'simple' && rollData['type'] === 'Skill' && rollKeyValue === 'athletics';
+        const rollKeyValue = (rollData.rollKey as string | null | undefined) ?? null;
+        const isAthletics = this.rollType === 'simple' && rollData.type === 'Skill' && rollKeyValue === 'athletics';
         const climbMod = isAthletics ? getClimbingModifier({ surfaceType: this._climbSurface }) : 0;
 
         const finalTarget = Math.max(
@@ -623,7 +623,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         /* eslint-disable @typescript-eslint/no-unnecessary-condition -- rollData.action may be absent at runtime on uninitialised roll data despite its type */
         const rollSubtitle = isForceField
             ? 'Force Field Activation'
-            : (typeof rollData['type'] === 'string' && rollData['type'].length > 0 ? rollData['type'] : null) ?? rollData.action ?? '';
+            : (typeof rollData.type === 'string' && rollData.type.length > 0 ? rollData.type : null) ?? rollData.action ?? '';
         /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
         return {
@@ -1037,8 +1037,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (typeof (actor as { getSituationalModifiers?: unknown })?.getSituationalModifiers !== 'function') return [];
         /* eslint-enable no-restricted-syntax */
         const rd = this.rollData;
-        const type = rd['type'] === 'Skill' ? 'skills' : rd['type'] === 'Characteristic' ? 'characteristics' : 'combat';
-        const key = (rd['rollKey'] as string | null) ?? null;
+        const type = rd.type === 'Skill' ? 'skills' : rd.type === 'Characteristic' ? 'characteristics' : 'combat';
+        const key = (rd.rollKey as string | null) ?? null;
         return (
             actor as {
                 getSituationalModifiers: (
@@ -1056,8 +1056,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      */
     _getSkillVariants(): SkillVariant[] {
         const rd = this.rollData;
-        if (rd['type'] !== 'Skill') return [];
-        const rollKey = (rd['rollKey'] as string | null | undefined) ?? null;
+        if (rd.type !== 'Skill') return [];
+        const rollKey = (rd.rollKey as string | null | undefined) ?? null;
         if (rollKey === null) return [];
         // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a heterogeneous actor handle; per-system skill item schema is read structurally
         const sourceActor = (rd.sourceActor ?? rd['actor']) as

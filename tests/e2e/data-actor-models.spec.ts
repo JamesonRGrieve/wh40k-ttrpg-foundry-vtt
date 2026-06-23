@@ -138,6 +138,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                 }
                 interface GameGlobal {
                     actors?: { get?: (id: string) => ProbeActor | undefined };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's game.settings.get returns the untyped stored setting value
                     settings?: { get?: (scope: string, key: string) => unknown };
                 }
                 interface FoundryGlobal {

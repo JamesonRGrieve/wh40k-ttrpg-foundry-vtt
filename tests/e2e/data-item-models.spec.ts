@@ -655,9 +655,9 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         } else {
                             notes[
                                 'talent-specialization-fullname'
-                            ] = `expected hasSpec=true fullName="probe-talent (Las) x3" rollable=true, got hasSpec=${String(
-                                hasSpec,
-                            )} fullName=${JSON.stringify(fullName)} rollable=${String(rollable)}`;
+                            ] = `expected hasSpec=true fullName="probe-talent (Las) x3" rollable=true, got hasSpec=${String(hasSpec)} fullName=${JSON.stringify(
+                                fullName,
+                            )} rollable=${String(rollable)}`;
                         }
                     }
                 } catch (err) {
