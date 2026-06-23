@@ -287,12 +287,15 @@ export default class D100Roll extends BasicRollWH40K {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: target derives from configuration['target'] which may be absent at runtime even though the getter returns number
         if (target === undefined) return html;
 
-        // Parse the HTML and add our summary
+        // Parse the HTML and add our summary. `getTooltip()` returns the dice
+        // TOOLTIP markup (templates/dice/tooltip.hbs, rooted at `.dice-tooltip`);
+        // `.dice-total` lives only in the full roll render (roll.hbs), so we append
+        // the summary to the tooltip root rather than after a node that isn't here.
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
-        const diceTotal = doc.querySelector('.dice-total');
+        const tooltipRoot = doc.querySelector('.dice-tooltip');
 
-        if (diceTotal !== null) {
+        if (tooltipRoot !== null) {
             const summary = document.createElement('div');
             summary.className =
                 'wh40k-dice-summary tw-mt-2 tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-text-[0.85rem] tw-leading-relaxed';
@@ -334,7 +337,7 @@ export default class D100Roll extends BasicRollWH40K {
                 summary.appendChild(doublesDiv);
             }
 
-            diceTotal.after(summary);
+            tooltipRoot.appendChild(summary);
         }
 
         return doc.body.innerHTML;
