@@ -532,19 +532,22 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             const before = backpackItem.getNested?.() ?? [];
                             const firstId = before[0]?._id;
                             if (typeof firstId === 'string' && firstId.length > 0) {
+                                // Merge a REAL schema field (`name`): nested entries are
+                                // validated documents now, so an arbitrary non-schema key
+                                // would be stripped on clean — `name` survives + proves merge.
                                 await withTimeout(
-                                    backpackItem.updateNestedDocuments?.([{ _id: firstId, addedField: 'merged-value' }]) ?? Promise.resolve(),
+                                    backpackItem.updateNestedDocuments?.([{ _id: firstId, name: 'merged-name' }]) ?? Promise.resolve(),
                                     5_000,
                                     'updateNestedDocuments',
                                 );
                                 const after = backpackItem.getNested?.() ?? [];
                                 const updated = after.find((e) => e._id === firstId);
-                                const has = updated?.addedField === 'merged-value';
+                                const has = updated?.name === 'merged-name';
                                 if (has) {
                                     fired['item-container-updateNestedDocuments-merges'] = true;
-                                    notes['item-container-updateNestedDocuments-merges'] = `merged addedField='merged-value' onto id=${firstId}`;
+                                    notes['item-container-updateNestedDocuments-merges'] = `merged name='merged-name' onto id=${firstId}`;
                                 } else {
-                                    notes['item-container-updateNestedDocuments-merges'] = `merge missing addedField; entry=${JSON.stringify(updated)}`;
+                                    notes['item-container-updateNestedDocuments-merges'] = `merge missing name; entry=${JSON.stringify(updated)}`;
                                 }
                             } else {
                                 notes['item-container-updateNestedDocuments-merges'] = `no first id to merge into (before=${JSON.stringify(before)})`;
@@ -795,10 +798,12 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                                 });
                             }
                             const dos = msg.calculateDegrees?.();
-                            // DH2e (gen2): 1 base DoS + 1 per full 10 under target = 1 + floor((50-35)/10) = 2 (#335).
-                            if (dos?.success === true && dos.degrees === 2) {
+                            // DH2e (gen2) uses the tens-digit method: degrees = 1 + (tens of
+                            // target − tens of roll) = 1 + (5 − 3) = 3 (matches the
+                            // calculateDegrees unit test + getDegreeForMode 'gen2').
+                            if (dos?.success === true && dos.degrees === 3) {
                                 fired['chat-message-calculateDegrees-real-roll'] = true;
-                                notes['chat-message-calculateDegrees-real-roll'] = `total=35 target=50 -> success=true degrees=2`;
+                                notes['chat-message-calculateDegrees-real-roll'] = `total=35 target=50 -> success=true degrees=3`;
                             } else {
                                 notes['chat-message-calculateDegrees-real-roll'] = `unexpected dos=${JSON.stringify(dos)}`;
                             }
