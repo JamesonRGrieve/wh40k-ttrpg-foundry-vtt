@@ -149,3 +149,35 @@ export const AthleticsClimb: Story = {
         await expect(canvasElement.querySelector('.wh40k-climb-surface-picker__sheer-indicator')).toBeTruthy();
     },
 };
+
+/** Weapon attack with the #250 combatant target dropdown (active combat present). */
+export const WeaponTargetDropdown: Story = {
+    args: baseContext({
+        rollName: 'Ballistic Skill Test',
+        rollSubtitle: 'Hand Cannon',
+        hasContextPanel: true,
+        isWeapon: true,
+        contextExpanded: true,
+        weapon: { name: 'Hand Cannon', img: 'icons/svg/item-bag.svg', isRanged: true },
+        hasCombat: true,
+        hasTarget: true,
+        targetName: 'Cultist Alpha',
+        combatants: [
+            { id: 'c1', name: 'Cultist Alpha', isSelected: true },
+            { id: 'c2', name: 'Cultist Beta', isSelected: false },
+            { id: 'c3', name: 'Hybrid Aberrant', isSelected: false },
+        ],
+        attackModes: [],
+        aimOptions: [],
+        rangeBrackets: [],
+        sizeOptions: [],
+        combatSituationals: [],
+    }),
+    play: async ({ canvasElement }) => {
+        const select = canvasElement.querySelector<HTMLSelectElement>('select[name="targetCombatantId"]');
+        await expect(select).toBeTruthy();
+        const options = canvasElement.querySelectorAll('select[name="targetCombatantId"] option');
+        await expect(options.length).toBe(4);
+        await expect(select?.value).toBe('c1');
+    },
+};
