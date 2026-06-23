@@ -167,6 +167,19 @@ export class ItemDropManager {
         return null;
     }
 
+    /**
+     * Whether a token position update must be vetoed. Loot piles are dropped in
+     * place; a non-GM player may select, inspect, and pick one up, but must not
+     * drag it around the scene. A change touching `x`/`y` on a `loot`-actor token
+     * from a non-GM is blocked; rotation/other updates and all GM updates pass.
+     * Pure — operates on plain projections only.
+     */
+    static blocksLootTokenMove(actorType: string | null | undefined, change: { x?: number; y?: number }, isGM: boolean): boolean {
+        if (isGM) return false;
+        if (actorType !== 'loot') return false;
+        return change.x !== undefined || change.y !== undefined;
+    }
+
     /* -------------------------------------------- */
     /*  Orchestration                               */
     /* -------------------------------------------- */

@@ -90,7 +90,8 @@
             "LootNotDroppable": "{item} cannot be dropped.",
             "LootNoReceiver": "Select the token that should pick this up first.",
             "LootPickupDenied": "You do not have permission to pick this up.",
-            "LootDropDenied": "You do not have permission to drop this item."
+            "LootDropDenied": "You do not have permission to drop this item.",
+            "LootTokenLocked": "Loot piles can't be moved. Pick it up from the Token HUD instead."
         },
         "Confirm": "Confirm",
         "Cancel": "Cancel",

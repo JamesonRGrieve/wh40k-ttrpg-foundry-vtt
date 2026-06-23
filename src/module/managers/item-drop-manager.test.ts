@@ -124,3 +124,31 @@ describe('ItemDropManager.resolveReceivingActor', () => {
         expect(ItemDropManager.resolveReceivingActor([], null)).toBeNull();
     });
 });
+
+describe('ItemDropManager.blocksLootTokenMove', () => {
+    it('blocks a non-GM dragging a loot pile (x change)', () => {
+        expect(ItemDropManager.blocksLootTokenMove('loot', { x: 200 }, false)).toBe(true);
+    });
+
+    it('blocks a non-GM dragging a loot pile (y change)', () => {
+        expect(ItemDropManager.blocksLootTokenMove('loot', { y: 300 }, false)).toBe(true);
+    });
+
+    it('blocks a combined x/y move of a loot pile by a non-GM', () => {
+        expect(ItemDropManager.blocksLootTokenMove('loot', { x: 100, y: 100 }, false)).toBe(true);
+    });
+
+    it('allows a non-GM to update a loot pile without moving it (no x/y in the change)', () => {
+        expect(ItemDropManager.blocksLootTokenMove('loot', {}, false)).toBe(false);
+    });
+
+    it('allows the GM to move a loot pile', () => {
+        expect(ItemDropManager.blocksLootTokenMove('loot', { x: 200, y: 200 }, true)).toBe(false);
+    });
+
+    it('never blocks moves of non-loot tokens', () => {
+        expect(ItemDropManager.blocksLootTokenMove('character', { x: 200 }, false)).toBe(false);
+        expect(ItemDropManager.blocksLootTokenMove('npc', { x: 200 }, false)).toBe(false);
+        expect(ItemDropManager.blocksLootTokenMove(null, { x: 200 }, false)).toBe(false);
+    });
+});
