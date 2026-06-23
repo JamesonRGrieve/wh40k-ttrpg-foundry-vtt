@@ -138,6 +138,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                 }
                 interface GameGlobal {
                     actors?: { get?: (id: string) => ProbeActor | undefined };
+                    settings?: { get?: (scope: string, key: string) => unknown };
                 }
                 interface FoundryGlobal {
                     Actor?: ActorConstructor;
@@ -568,22 +569,24 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                 };
 
                 /* ============================================================
-                 * Experience available = total - used.
-                 * total 1000, used 350 → available 650.
+                 * Experience available = total − used, where `used` is DERIVED by
+                 * _computeExperienceSpent from the actor's actual advancements (it
+                 * overwrites any stored `used`). With no advancements used=0, so
+                 * available === total. (XP spending is exercised in xp-advancement.)
                  * ============================================================ */
                 const probeExperience = async (): Promise<void> => {
                     try {
                         const pc = await createPc('dh2-character', 'dh2', {
-                            experience: { total: 1000, used: 350 },
+                            experience: { total: 1000 },
                         });
                         if (pc == null) {
                             note('experience-available-derived::dh2', 'create returned null');
                         } else {
                             const available = pc.system?.experience?.available ?? -999;
-                            if (available === 650) {
+                            if (available === 1000) {
                                 fired['experience-available-derived::dh2'] = true;
                             } else {
-                                note('experience-available-derived::dh2', `expected available=650 (1000-350), got ${available}`);
+                                note('experience-available-derived::dh2', `expected available=1000 (total 1000, derived used=0), got ${available}`);
                             }
                         }
                     } catch (err) {
@@ -655,9 +658,10 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                 };
 
                 /* ============================================================
-                 * Subtlety + influence SchemaField round-trip.
-                 * subtlety { value 40, max 80 }, influence 55 all persist
-                 * (none clamped — within range).
+                 * Subtlety + influence SchemaField round-trip. `subtlety.max` and
+                 * `influence` persist from source; `subtlety.value` is a MIRROR of
+                 * the warband-subtlety world setting (re-synced every prep in
+                 * character.ts), so it equals the live setting, not the stored value.
                  * ============================================================ */
                 const probeSubtletyAndInfluence = async (): Promise<void> => {
                     try {
@@ -670,12 +674,13 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         } else {
                             const sub = pc.system?.subtlety;
                             const inf = pc.system?.influence ?? -1;
-                            if (sub?.value === 40 && sub.max === 80 && inf === 55) {
+                            const warband = Number(gameGlobal?.settings?.get?.('wh40k-rpg', 'warband-subtlety') ?? sub?.value);
+                            if (sub?.value === warband && sub.max === 80 && inf === 55) {
                                 fired['subtlety-and-influence-roundtrip::dh2'] = true;
                             } else {
                                 note(
                                     'subtlety-and-influence-roundtrip::dh2',
-                                    `expected subtlety 40/80 influence 55, got subtlety ${sub?.value}/${sub?.max} influence ${inf}`,
+                                    `expected subtlety value=${warband} (warband mirror) max=80 influence=55, got subtlety ${sub?.value}/${sub?.max} influence ${inf}`,
                                 );
                             }
                         }
@@ -726,8 +731,9 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                         } else if (typeof pc.getRollData !== 'function') {
                             note('roll-data-exposes-characteristic-keys::dh2', 'actor.getRollData missing');
                         } else {
-                            const getRollData = pc.getRollData;
-                            const data = await withTimeout(Promise.resolve(getRollData()), 5_000, 'getRollData');
+                            // Call on the actor (NOT a detached reference) — getRollData
+                            // reads `this.system`, so a bare `getRollData()` loses `this`.
+                            const data = await withTimeout(Promise.resolve(pc.getRollData()), 5_000, 'getRollData');
                             const ws = data['WS'];
                             const wsb = data['WSB'];
                             const full = data['weaponSkill'];
