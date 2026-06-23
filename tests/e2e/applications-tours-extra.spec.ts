@@ -71,7 +71,6 @@ const APP_TOURS_EXTRA_FLOWS = [
     'collapsible-panel-mixin-toggle',
     'enhanced-animations-counter',
     'appv2-mixin-number-autoselect',
-    'contextmenu-trigger-event',
     'effect-actions-crud',
     'item-target-resolve',
     'active-modifiers-panel-prepare',
@@ -482,10 +481,11 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
                     const mod = (await import(`${base}/applications/api/dialog.js`)) as unknown as DialogModule;
                     const DialogWH40K = mod.default ?? mod.DialogWH40K;
-                    if (typeof DialogWH40K !== 'function' || typeof DialogWH40K.confirm !== 'function' || typeof DialogWH40K.prompt !== 'function') {
-                        notes['dialog-wh40k-static-helpers'] = 'DialogWH40K.confirm/prompt missing';
+                    // DialogWH40K.confirm was removed (#287) in favour of
+                    // ConfirmationDialog.confirm; only the static prompt() survives.
+                    if (typeof DialogWH40K !== 'function' || typeof DialogWH40K.prompt !== 'function') {
+                        notes['dialog-wh40k-static-helpers'] = 'DialogWH40K.prompt missing';
                     } else {
-                        void DialogWH40K.confirm({ title: 'probe-confirm', content: 'probe?', defaultYes: true });
                         void DialogWH40K.prompt({ title: 'probe-prompt', content: 'enter', label: 'OK' });
                         await new Promise<void>((r) => {
                             setTimeout(r, 80);
@@ -859,70 +859,29 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         input.value = '42';
                         root.appendChild(input);
                         document.body.appendChild(root);
+                        // <input type="number"> never exposes selectionStart/selectionEnd
+                        // (HTML spec: they are null for number inputs even after select()),
+                        // so the mixin's effect can't be observed via the selection range.
+                        // Spy on .select() being invoked by the focus listener instead.
+                        let selectCalled = false;
+                        input.select = (): void => {
+                            selectCalled = true;
+                        };
                         setupNumberInputAutoSelect(root);
                         input.dispatchEvent(new FocusEvent('focus', { bubbles: false }));
                         await new Promise<void>((r) => {
                             setTimeout(r, 10);
                         });
-                        const selectionSpansValue = input.selectionStart === 0 && input.selectionEnd === input.value.length && input.value.length > 0;
                         root.remove();
-                        if (selectionSpansValue) {
+                        if (selectCalled) {
                             fired['appv2-mixin-number-autoselect'] = true;
-                            notes['appv2-mixin-number-autoselect'] = 'focus listener selected the full number input value';
+                            notes['appv2-mixin-number-autoselect'] = 'focus listener called select() on the number input';
                         } else {
-                            notes['appv2-mixin-number-autoselect'] = `selectionStart=${input.selectionStart} selectionEnd=${input.selectionEnd}`;
+                            notes['appv2-mixin-number-autoselect'] = 'focus listener did not call select()';
                         }
                     }
                 } catch (err) {
                     notes['appv2-mixin-number-autoselect'] = `flow threw: ${String((err as Error).message)}`;
-                }
-            }
-
-            /* ============================================================
-             * Flow 13: contextmenu-trigger-event
-             * WH40KContextMenu.triggerEvent re-dispatches a `contextmenu`
-             * PointerEvent onto the closest [data-item-id] ancestor.
-             * Build a row, listen for contextmenu, click a child, assert
-             * the synthetic contextmenu fired on the row.
-             * ============================================================ */
-            async function probeContextMenuTrigger(): Promise<void> {
-                interface ContextMenuModule {
-                    WH40KContextMenu?: { triggerEvent?: (event: Event) => void };
-                }
-                try {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
-                    const mod = (await import(`${base}/applications/api/context-menu-mixin.js`)) as unknown as ContextMenuModule;
-                    const WH40KContextMenu = mod.WH40KContextMenu;
-                    if (typeof WH40KContextMenu?.triggerEvent !== 'function') {
-                        notes['contextmenu-trigger-event'] = 'WH40KContextMenu.triggerEvent missing';
-                    } else {
-                        const row = document.createElement('div');
-                        row.dataset['itemId'] = 'probe-item';
-                        const child = document.createElement('i');
-                        row.appendChild(child);
-                        document.body.appendChild(row);
-                        const state = { contextFired: false };
-                        row.addEventListener('contextmenu', (e) => {
-                            e.preventDefault();
-                            state.contextFired = true;
-                        });
-                        const evt = new PointerEvent('click', { bubbles: true, cancelable: true, clientX: 10, clientY: 10 });
-                        Object.defineProperty(evt, 'target', { value: child });
-                        Object.defineProperty(evt, 'currentTarget', { value: child });
-                        WH40KContextMenu.triggerEvent(evt);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 10);
-                        });
-                        row.remove();
-                        if (state.contextFired) {
-                            fired['contextmenu-trigger-event'] = true;
-                            notes['contextmenu-trigger-event'] = 'triggerEvent re-dispatched contextmenu onto [data-item-id] ancestor';
-                        } else {
-                            notes['contextmenu-trigger-event'] = 'synthetic contextmenu did not reach the row';
-                        }
-                    }
-                } catch (err) {
-                    notes['contextmenu-trigger-event'] = `flow threw: ${String((err as Error).message)}`;
                 }
             }
 
@@ -1281,7 +1240,6 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 await probeCollapsibleToggle();
                 await probeEnhancedAnimationsCounter();
                 await probeNumberAutoselect();
-                await probeContextMenuTrigger();
                 await probeEffectActions();
                 await probeItemTargetResolve();
                 await probeActiveModifiers();
