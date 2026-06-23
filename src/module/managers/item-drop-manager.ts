@@ -193,6 +193,22 @@ export class ItemDropManager {
         return ids;
     }
 
+    /**
+     * Classify an item dropped onto an actor sheet (the caller has already
+     * confirmed the drop target is owned):
+     *   - `sort`     — the item already lives on the target actor (reorder).
+     *   - `transfer` — the item came from another actor the user owns: copy to the
+     *                  target, then delete from the source (a real hand-off / give).
+     *   - `copy`     — a fresh item (compendium / world), or a cross-actor drop whose
+     *                  source isn't owned (so the source can't be cleared).
+     * Pure — plain flags only.
+     */
+    static classifyItemDrop(flags: { sameActorHasItem: boolean; crossActor: boolean; sourceOwned: boolean }): 'sort' | 'transfer' | 'copy' {
+        if (flags.sameActorHasItem) return 'sort';
+        if (flags.crossActor && flags.sourceOwned) return 'transfer';
+        return 'copy';
+    }
+
     /* -------------------------------------------- */
     /*  Orchestration                               */
     /* -------------------------------------------- */

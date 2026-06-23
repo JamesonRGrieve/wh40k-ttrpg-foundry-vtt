@@ -176,3 +176,21 @@ describe('ItemDropManager.tokenIdsForActor', () => {
         expect(ItemDropManager.tokenIdsForActor(tokens, 'loot1')).toEqual(['t9']);
     });
 });
+
+describe('ItemDropManager.classifyItemDrop', () => {
+    it('sorts when the item already lives on the target actor', () => {
+        expect(ItemDropManager.classifyItemDrop({ sameActorHasItem: true, crossActor: false, sourceOwned: false })).toBe('sort');
+    });
+
+    it('transfers a cross-actor drop from an owned source', () => {
+        expect(ItemDropManager.classifyItemDrop({ sameActorHasItem: false, crossActor: true, sourceOwned: true })).toBe('transfer');
+    });
+
+    it('copies a fresh compendium/world item (no source actor)', () => {
+        expect(ItemDropManager.classifyItemDrop({ sameActorHasItem: false, crossActor: false, sourceOwned: false })).toBe('copy');
+    });
+
+    it('copies a cross-actor drop whose source is not owned (cannot clear the source)', () => {
+        expect(ItemDropManager.classifyItemDrop({ sameActorHasItem: false, crossActor: true, sourceOwned: false })).toBe('copy');
+    });
+});
