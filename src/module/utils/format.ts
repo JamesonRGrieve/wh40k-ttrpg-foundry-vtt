@@ -23,8 +23,12 @@ export function formatSigned(n: number): string {
  * from Foundry's `String.prototype.capitalize`: this is a plain function so
  * non-string-prototype call sites and pure modules can share it. An empty
  * string returns empty.
+ *
+ * Null-safe: the `{{capitalize ...}}` Handlebars helper is fed raw template
+ * values that can be `undefined` (e.g. an unset enum on a freshly-created item),
+ * which would otherwise crash the sheet render at `.charAt(0)`.
  */
-export function capitalize(text: string): string {
-    if (text === '') return '';
+export function capitalize(text: string | null | undefined): string {
+    if (text == null || text === '') return '';
     return text.charAt(0).toUpperCase() + text.slice(1);
 }
