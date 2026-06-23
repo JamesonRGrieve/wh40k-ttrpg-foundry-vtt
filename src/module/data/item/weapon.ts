@@ -42,7 +42,7 @@ const WEAPON_TYPE_CHOICES = [
 
 // Valid `reload` choices — keep in sync with the `reload` StringField schema
 // (see defineSchema). Used by #coerceEnums to normalise legacy/typographic values.
-const WEAPON_RELOAD_CHOICES = ['-', 'free', 'half', 'full', '2-full', '3-full'] as const;
+const WEAPON_RELOAD_CHOICES = ['-', 'free', 'half', 'full', '2-full', '3-full', '4-full', '5-full', '6-full'] as const;
 
 // Loose dictionary used as a structural shape for both pre-migration source data
 // and the data dictionaries passed to Foundry's update/create APIs.
@@ -241,7 +241,7 @@ export default class WeaponData extends ItemDataModel.mixin(
             reload: new fields.StringField({
                 required: true,
                 initial: '-',
-                choices: ['-', 'free', 'half', 'full', '2-full', '3-full'],
+                choices: ['-', 'free', 'half', 'full', '2-full', '3-full', '4-full', '5-full', '6-full'],
             }),
 
             // Loaded ammunition (reference to ammunition item)
@@ -356,13 +356,24 @@ export default class WeaponData extends ItemDataModel.mixin(
         if (typeof source['type'] === 'string' && !(WEAPON_TYPE_CHOICES as readonly string[]).includes(source['type'])) {
             source['type'] = 'primitive';
         }
-        // `reload` is a strict choice field. Legacy/compendium data may carry a
-        // typographic en/em dash (– or —) or other non-choice value where the
-        // schema expects the ASCII hyphen '-' default; an invalid value fails
-        // validation and drops the whole weapon from its owning actor (and breaks
-        // token/ActorDelta creation on drop). Normalise any non-choice to '-'.
-        if (typeof source['reload'] === 'string' && !(WEAPON_RELOAD_CHOICES as readonly string[]).includes(source['reload'])) {
-            source['reload'] = '-';
+        // `reload` is a strict choice field, but legacy/compendium data is messy:
+        // typographic dashes (–, —), capitalised/spaced spellings ("Full", "2 Full",
+        // "2Full"), "Rld …" prefixes, etc. An out-of-choice value fails validation
+        // and drops the whole weapon from its owning actor (and breaks token/
+        // ActorDelta creation on drop). Normalise the recoverable forms to their
+        // canonical choice, falling back to the '-' default for anything unparseable
+        // (prose, "N/A", "Special", bare numbers, fractional/dice reloads).
+        if (typeof source['reload'] === 'string') {
+            let v = source['reload']
+                .trim()
+                .toLowerCase()
+                .replace(/[‒–—―−]/g, '-') // figure/en/em/horizontal-bar/minus → hyphen
+                .replace(/^(?:rld|reload)\s+/, '') // strip "Rld "/"Reload " prefix
+                .replace(/\s+/g, '-') // "2 full" → "2-full"
+                .replace(/(\d)-?full/, '$1-full'); // "2full" → "2-full"
+            if (v === '1-full' || v === '1') v = 'full'; // 1 full action == full
+            if (!(WEAPON_RELOAD_CHOICES as readonly string[]).includes(v)) v = '-';
+            source['reload'] = v;
         }
     }
 
