@@ -71,12 +71,15 @@ export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T): Dra
             // eslint-disable-next-line no-restricted-syntax -- boundary: mixin sees `this` typed as ApplicationV2 but document is bound by sheet subclass
             const doc = (this as unknown as { document: { uuid: string } }).document;
             const t = foundry.utils.parseUuid(doc.uuid);
-            const base = d.embedded.length > 0 ? 'document' : 'primary';
-            const dId = d[`${base}Id`] as string;
-            const tId = t[`${base}Id`] as string;
-            const dType = d[`${base}Type`] as string;
-            const tType = t[`${base}Type`] as string;
-            return d.collection === t.collection && dId === tId && dType === tType ? 'move' : 'copy';
+            // Compare via documentId/documentType, NOT primaryId/primaryType:
+            // parseUuid sets primaryId/primaryType to `undefined` for a *primary*
+            // document (e.g. "Actor.<id>") and only populates them for embedded
+            // UUIDs. documentId/documentType resolve to `primaryId ?? id` — the
+            // owning primary document for an embedded drop, or the document itself
+            // for a primary drop — so the same-owner check works in both cases.
+            // (Reading primaryId here made every primary-document drop resolve to
+            // undefined===undefined → always "move".)
+            return d.collection === t.collection && d.documentId === t.documentId && d.documentType === t.documentType ? 'move' : 'copy';
         }
 
         /* -------------------------------------------- */
