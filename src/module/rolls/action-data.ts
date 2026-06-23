@@ -2,6 +2,7 @@ import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
+import type { RerollOption } from '../rules/reroll.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
@@ -36,6 +37,23 @@ export class ActionData {
     get sourceFatePoints(): number {
         const fate = (this.rollData.sourceActor?.system as { fate?: { value?: number } } | undefined)?.fate;
         return fate?.value ?? 0;
+    }
+
+    /**
+     * Re-roll options for THIS resolved roll — each applicable talent/trait
+     * re-roll variant (e.g. Keen Intuition), any `wh40k.collectRerollOptions`
+     * hook contributions, and the global Spend-Fate re-roll. Surfaced to chat
+     * templates via {@link resolveGettersForTemplate} so the card renders one
+     * button per source. Empty when there is no source actor.
+     */
+    get rerollOptions(): RerollOption[] {
+        const actor = this.rollData.sourceActor;
+        if (actor === null) return [];
+        return actor.getRerollOptions({
+            success: this.rollData.success,
+            type: this.rollData.type,
+            rollKey: this.rollData.rollKey,
+        });
     }
 
     reset(): void {
