@@ -30,14 +30,27 @@
          game.user.targets and feeds effective-damage + auto-range. --}}
     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2 tw-py-1.5 tw-px-2.5 tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md {{#if hasTarget}}tw-border-gold-raw{{else}}tw-border-[rgba(255,255,255,0.08)]{{/if}}">
         <i class="fas fa-crosshairs tw-text-gold-raw bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-text-sm tw-shrink-0"></i>
+        <span class="tw-text-[#7a7a6a] tw-text-2xs tw-uppercase tw-tracking-wide tw-shrink-0">{{localize "WH40K.Roll.TargetLabel"}}</span>
+        {{#if hasCombat}}
+        {{!-- #250: pick the defender from the active Combat roster (dropdown). Change
+             routes through #onFormSubmit (submitOnChange) → #applyTargetCombatant. --}}
+        <select class="tw-flex-1 tw-min-w-0 tw-min-h-8 tw-py-1 tw-px-2 tw-pr-7 tw-bg-[rgba(0,0,0,0.3)] tw-bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Cpath%20fill%3D%27%23c9a227%27%20d%3D%27M6%208L1%203h10z%27/%3E%3C/svg%3E')] tw-bg-no-repeat tw-bg-[right_8px_center] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm tw-cursor-pointer tw-appearance-none focus:tw-outline-none focus:tw-border-gold-raw" name="targetCombatantId" data-tooltip="{{localize 'WH40K.Roll.SelectTarget'}}">
+            <option value="">{{localize "WH40K.Roll.NoTargetSelected"}}</option>
+            {{#each combatants as |c|}}
+            <option value="{{c.id}}" {{#if c.isSelected}}selected{{/if}}>{{c.name}}</option>
+            {{/each}}
+        </select>
+        {{else}}
+        {{!-- No active combat: fall back to canvas token-targeting. --}}
         {{#if hasTarget}}
-        <span class="tw-flex-1 tw-min-w-0 tw-text-sm tw-text-[#e8e4d9] tw-font-medium tw-truncate"><span class="tw-text-[#7a7a6a] tw-text-2xs tw-uppercase tw-tracking-wide tw-mr-1">{{localize "WH40K.Roll.TargetLabel"}}</span>{{targetName}}</span>
+        <span class="tw-flex-1 tw-min-w-0 tw-text-sm tw-text-[#e8e4d9] tw-font-medium tw-truncate">{{targetName}}</span>
         {{else}}
         <span class="tw-flex-1 tw-min-w-0 tw-text-sm tw-text-[#9a9a8a] tw-italic tw-truncate">{{localize "WH40K.Roll.NoTargetSelected"}}</span>
         {{/if}}
         <button type="button" class="tw-flex-none tw-py-0.5 tw-px-2 tw-text-2xs tw-font-ui tw-text-[#9a9a8a] tw-bg-[rgba(255,255,255,0.04)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-sm tw-cursor-pointer tw-transition-all hover:tw-text-[#e8e4d9] hover:tw-border-gold-raw hover:tw-bg-[rgba(201,162,39,0.08)] [&>i]:tw-mr-0.5" data-action="selectTarget" data-tooltip="{{localize 'WH40K.Roll.TargetFirst'}}">
             <i class="fas fa-crosshairs"></i> {{localize "WH40K.Roll.SelectTarget"}}
         </button>
+        {{/if}}
     </div>
 
     {{!-- Ammo Info --}}

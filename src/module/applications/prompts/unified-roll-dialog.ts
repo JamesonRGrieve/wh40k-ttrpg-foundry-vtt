@@ -926,9 +926,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             ? { label: currentSizeOption.label, modifier: currentSizeOption.modifier, modifierLabel: currentSizeOption.modifierLabel }
             : { label: 'Average (4)', modifier: 0, modifierLabel: '+0' };
 
-        // Current Foundry-native target (#250) — surfaced so the attacker can see
-        // and pick the defender; `selectTarget` reads game.user.targets.
+        // Target picker (#250): pick the defender from the active Combat's roster
+        // (dropdown) rather than canvas token-targeting. Falls back to the native
+        // selectTarget button (game.user.targets) when there is no active combat.
         const targetActorForDisplay = rd.targetActor as { name?: string } | null | undefined;
+        const combatantTargets = this.#getCombatantTargets();
 
         return {
             weapons: Array.isArray(rd['weapons']) ? rd['weapons'] : [],
@@ -938,6 +940,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             isMelee: !isRanged,
             targetName: targetActorForDisplay?.name ?? null,
             hasTarget: targetActorForDisplay != null,
+            combatants: combatantTargets,
+            hasCombat: combatantTargets.length > 0,
             // Card data
             attackModes,
             meleeSpecialOptions,
@@ -1161,6 +1165,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if ('characteristicOverride' in formObject) {
             const override = formObject['characteristicOverride'];
             this._charOverride = typeof override === 'string' && override !== '' ? override : null;
+        }
+        // Target combatant dropdown (#250) — bind the chosen defender + recompute range.
+        if ('targetCombatantId' in formObject) {
+            const combatantId = formObject['targetCombatantId'];
+            this.#applyTargetCombatant(typeof combatantId === 'string' ? combatantId : '');
         }
         // Update roll data fields from form
         const rd = this.rollData;
@@ -1471,6 +1480,62 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         rd.distance = calculateTokenDistance(sourceToken, targetToken);
         rd.targetActor = targetToken.actor;
         return true;
+    }
+
+    /**
+     * Bind the combatant chosen from the #250 target dropdown as the attack
+     * target, computing range from the source token to the combatant's token.
+     * An empty id clears the target. Sources the defender from the active Combat
+     * roster rather than canvas token-targeting.
+     */
+    #applyTargetCombatant(combatantId: string): void {
+        const rd = this.rollData;
+        if (combatantId === '') {
+            rd.targetActor = null;
+            return;
+        }
+        const combatant = game.combat?.combatants.get(combatantId);
+        if (combatant == null) return;
+        rd.targetActor = combatant.actor ?? null;
+        const actor = rd.sourceActor;
+        const targetToken = combatant.token?.object ?? null;
+        if (actor != null && targetToken != null) {
+            type ActorToken = foundry.canvas.placeables.Token;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor exposes loose token accessors not yet in typings.
+            const actorWithTokens = actor as unknown as { token?: ActorToken | null; getActiveTokens: () => ActorToken[] };
+            const sourceToken = actorWithTokens.token ?? actorWithTokens.getActiveTokens()[0];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- parser mismatch: noUncheckedIndexedAccess (tsconfig.json) makes getActiveTokens()[0] possibly undefined; the lint parser disagrees
+            if (sourceToken != null) {
+                rd.distance = calculateTokenDistance(sourceToken, targetToken);
+                this._selectedRangeBracket = null;
+            }
+        }
+    }
+
+    /**
+     * Build the #250 target-dropdown rows from the active Combat's combatants:
+     * every non-empty-id entry, with the currently-targeted actor marked
+     * selected. Pure — plain projections only (unit-tested).
+     */
+    static buildCombatantTargets(
+        combatants: ReadonlyArray<{ id: string | null | undefined; name: string | null | undefined; actorId: string | null | undefined }>,
+        targetActorId: string | null,
+    ): Array<{ id: string; name: string; isSelected: boolean }> {
+        const rows: Array<{ id: string; name: string; isSelected: boolean }> = [];
+        for (const c of combatants) {
+            const id = c.id ?? '';
+            if (id === '') continue;
+            rows.push({ id, name: c.name ?? '', isSelected: c.actorId != null && c.actorId === targetActorId });
+        }
+        return rows;
+    }
+
+    /** Resolve the active Combat's combatants into #250 target-dropdown rows,
+     *  marking the currently-targeted actor selected. Empty when no combat. */
+    #getCombatantTargets(): Array<{ id: string; name: string; isSelected: boolean }> {
+        const targetActorId = (this.rollData.targetActor as { id?: string } | null | undefined)?.id ?? null;
+        const combat = game.combat;
+        return combat ? UnifiedRollDialog.buildCombatantTargets(Array.from(combat.combatants), targetActorId) : [];
     }
 
     static async #onSelectTarget(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
