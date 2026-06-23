@@ -746,6 +746,11 @@ export default class CharacterSheet extends BaseActorSheet {
             // Shock / Snap-Out-Of-It (#66 — core.md §"Shock And Snapping Out Of It")
             'snapOutOfShock': CharacterSheet.#snapOutOfShock,
 
+            // Pinning resist / escape (core.md §"Pinning") — route through the unified
+            // roll so Willpower talents/traits surface as situational modifiers.
+            'rollPinningTest': CharacterSheet.#rollPinningTest,
+            'escapePinning': CharacterSheet.#escapePinning,
+
             // Fanatic role: Death to All Who Oppose Me (#93 — within.md p.34)
             'deathToAllWhoOpposeMe': CharacterSheet.#deathToAllWhoOpposeMe,
 
@@ -5068,6 +5073,48 @@ export default class CharacterSheet extends BaseActorSheet {
             this._notify('error', `Failed to snap out of shock: ${errorMessage(error)}`, { duration: 5000 });
             console.error('Snap Out of It error:', error);
         }
+    }
+
+    /**
+     * Roll a Pinning resist test (Challenging +0 Willpower). Routes through the
+     * actor's unified-roll method so Willpower talents/traits surface as
+     * situational modifiers before resolving (core.md §"Pinning").
+     * @this {CharacterSheet}
+     */
+    static #rollPinningTest(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
+        this.actor.rollPinningTest();
+    }
+
+    /**
+     * Roll the end-of-turn escape-from-pinning test. Prompts for the favourable
+     * condition (in cover OR not being shot at grants +30, non-stacking) then
+     * routes through the actor's unified-roll method.
+     * @this {CharacterSheet}
+     */
+    static async #escapePinning(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        const DialogV2 = (foundry.applications.api as { DialogV2?: typeof foundry.applications.api.DialogV2 }).DialogV2;
+        let favourable = false;
+        if (DialogV2 !== undefined) {
+            const result = await DialogV2.prompt({
+                window: { title: 'WH40K.Pinning.EscapeLabel' },
+                content: `<div class="form-group"><label><input type="checkbox" name="favourable" /> ${game.i18n.localize(
+                    'WH40K.Pinning.FavourableBonus',
+                )}</label></div>`,
+                ok: {
+                    label: 'WH40K.Common.Roll',
+                    callback: (_evt: Event, button: HTMLButtonElement): boolean => {
+                        const form = button.form ?? null;
+                        return (form?.elements.namedItem('favourable') as HTMLInputElement | null)?.checked === true;
+                    },
+                },
+                rejectClose: false,
+            });
+            if (result === null) return;
+            // DialogV2.prompt types the resolved value as string|null; our ok-callback
+            // returns the checkbox boolean, so coerce the runtime value.
+            favourable = Boolean(result);
+        }
+        this.actor.rollEscapePinningTest({ inCover: favourable, notBeingShotAt: false });
     }
 
     /* -------------------------------------------- */

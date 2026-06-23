@@ -8,6 +8,8 @@ import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { t } from '../i18n/t.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
 import { clampDisposition } from '../rules/disposition.ts';
+import { clampFearRating, getFearTestPenalty } from '../rules/fear.ts';
+import { resolveEscapePinningTest, resolvePinningTest } from '../rules/pinning.ts';
 import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type SubtletySourceRef } from '../rules/subtlety-adjusters.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
@@ -30,7 +32,7 @@ type RollDataLike = Record<string, unknown> & {
      * advance (which is ~0 for specialist skills). See #225.
      */
     skillRank?: number;
-    modifiers: { modifier: number; situational?: number };
+    modifiers: { modifier: number; situational?: number; [key: string]: number | undefined };
 };
 
 type CharacteristicLike = Record<string, unknown> & WH40KCharacteristic;
@@ -496,6 +498,80 @@ export class WH40KBaseActor extends Actor {
         prepareUnifiedRoll(simpleSkillData);
     }
 
+    /**
+     * Roll a Fear (X) resist test for this actor (the observer). Routes through the
+     * unified roll pipeline (`type='Characteristic'`, `rollKey='willpower'`,
+     * `situationalKey='willpower'`) so conditional Willpower talents/traits —
+     * Resistance(Fear), Jaded, etc. — surface as selectable situational modifiers
+     * BEFORE the test resolves. The Fear-rating penalty (−10 × X) is applied as a
+     * visible named modifier on the card. No-op at rating 0 (no Fear trait).
+     */
+    rollFearTest(fearRating: number): void {
+        const rating = clampFearRating(fearRating);
+        if (rating === 0) return;
+        const willpower = this.characteristics['willpower'];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
+        if (willpower === undefined) return;
+
+        const simpleSkillData = this._buildSimpleSkillRoll({
+            key: 'willpower',
+            type: 'characteristic',
+            label: t('WH40K.Fear.TestLabel', { rating }),
+            target: willpower.total,
+            situationalKey: 'willpower',
+            extraModifiers: { fear: -getFearTestPenalty(rating) },
+        });
+        prepareUnifiedRoll(simpleSkillData);
+    }
+
+    /**
+     * Roll a Pinning resist test (Challenging +0 Willpower, plus an optional trigger
+     * modifier from the source — e.g. Suppressing Fire). Routes through the unified
+     * pipeline with `situationalKey='willpower'` so Willpower talents/traits surface
+     * before resolving. `resolvePinningTest` composes the WP target (the previously
+     * orphaned rule now has a live caller).
+     */
+    rollPinningTest(triggerModifier = 0): void {
+        const willpower = this.characteristics['willpower'];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
+        if (willpower === undefined) return;
+
+        const { target } = resolvePinningTest({ willpowerTotal: willpower.total, triggerModifier });
+        const simpleSkillData = this._buildSimpleSkillRoll({
+            key: 'willpower',
+            type: 'characteristic',
+            label: t('WH40K.Pinning.TestLabel'),
+            target,
+            situationalKey: 'willpower',
+        });
+        prepareUnifiedRoll(simpleSkillData);
+    }
+
+    /**
+     * Roll the end-of-turn auto-escape-from-pinning test (+30 favourable bonus if in
+     * cover OR not shot at this round). Routes through the unified pipeline so
+     * Willpower talents/traits surface before resolving.
+     */
+    rollEscapePinningTest(opts: { notBeingShotAt: boolean; inCover: boolean }): void {
+        const willpower = this.characteristics['willpower'];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
+        if (willpower === undefined) return;
+
+        const { target } = resolveEscapePinningTest({
+            willpowerTotal: willpower.total,
+            notBeingShotAt: opts.notBeingShotAt,
+            inCover: opts.inCover,
+        });
+        const simpleSkillData = this._buildSimpleSkillRoll({
+            key: 'willpower',
+            type: 'characteristic',
+            label: t('WH40K.Pinning.EscapeLabel'),
+            target,
+            situationalKey: 'willpower',
+        });
+        prepareUnifiedRoll(simpleSkillData);
+    }
+
     /* -------------------------------------------- */
     /*  Roll Builders                               */
     /* -------------------------------------------- */
@@ -519,6 +595,13 @@ export class WH40KBaseActor extends Actor {
         skillRank?: number | undefined;
         /** Free-form flavor for `rollData.type` (e.g. a weapon name), overriding the per-`type` literal. */
         typeOverride?: string | undefined;
+        /**
+         * Extra named modifiers folded into `rollData.modifiers` (e.g. a Fear-rating
+         * penalty or a Pinning trigger modifier). Each key surfaces on the chat-card
+         * breakdown and is summed into the final target alongside the dialog-managed
+         * difficulty / situational modifiers. Zero-valued entries are skipped.
+         */
+        extraModifiers?: Record<string, number> | undefined;
     }): SimpleSkillData {
         const TYPE_LITERAL: Record<typeof opts.type, string> = {
             characteristic: 'Characteristic',
@@ -541,6 +624,12 @@ export class WH40KBaseActor extends Actor {
         if (opts.situationalKey !== undefined) {
             const sitMod = this._collectSituationalModifierTotal(opts.type, opts.situationalKey);
             if (sitMod !== 0) rollData.modifiers.situational = sitMod;
+        }
+
+        if (opts.extraModifiers !== undefined) {
+            for (const [key, value] of Object.entries(opts.extraModifiers)) {
+                if (value !== 0) rollData.modifiers[key] = value;
+            }
         }
 
         return simpleSkillData;
