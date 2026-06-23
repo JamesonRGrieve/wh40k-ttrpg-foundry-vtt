@@ -51,6 +51,7 @@ interface ActorStatic {
 interface ProbeResult {
     created: number;
     liveCount: number;
+    allNamedPresent: boolean;
     weaponLowTechType: string | undefined;
     weaponBlobType: string | undefined;
     weaponReload: string | undefined;
@@ -133,6 +134,10 @@ async function probe(page: Page): Promise<ProbeResult> {
         const out: Omit<ProbeResult, 'pageErrors'> = {
             created: created.length,
             liveCount: actor.items?.size ?? 0,
+            // The drop regression manifests as a created item VANISHING; a valid
+            // item may legitimately spawn a companion (e.g. ammo for a ranged
+            // weapon), so assert "every source name survives", not an exact count.
+            allNamedPresent: sources.every((s) => byName(s.name) !== undefined),
             weaponLowTechType: byName('LowTech Blade')?.system?.type,
             weaponBlobType: byName('Blob Laspistol')?.system?.type,
             weaponReload: byName('EnDash Pistol')?.system?.reload,
@@ -154,7 +159,8 @@ test('corrupt-enum / multi-system-blob items load and render (not dropped)', asy
 
     // None of the 6 items may be dropped — this is the empty-inventory regression.
     expect(r.created, 'all 6 items created').toBe(6);
-    expect(r.liveCount, 'all 6 items present in the actor collection (none dropped)').toBe(6);
+    expect(r.allNamedPresent, 'every created item still present (none dropped)').toBe(true);
+    expect(r.liveCount, 'collection not emptied').toBeGreaterThanOrEqual(6);
 
     // Invalid enums coerced to valid scalars.
     expect(VALID_WEAPON_TYPES, 'invalid weapon type coerced').toContain(r.weaponLowTechType);
