@@ -2432,7 +2432,17 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's _onDropItem returns Promise<unknown>; the concrete return is Document[] or undefined.
     async _onDropItem(event: DragEvent, item: WH40KItem): Promise<unknown> {
-        if (!this.actor.isOwner) return undefined;
+        // Resolve the source actor for cross-actor "give" semantics (null for a
+        // fresh compendium / world item).
+        const sourceActor = item.actor;
+        const crossActor = sourceActor != null && sourceActor.id !== this.actor.id;
+
+        if (!this.actor.isOwner) {
+            // A give to an actor the user doesn't own can't be performed from here —
+            // surface it rather than silently doing nothing (#384).
+            if (crossActor) ui.notifications.warn(game.i18n.localize('WH40K.Warning.GiveTargetNotOwned'));
+            return undefined;
+        }
 
         // Conditions are GM-imposed game state. Block players from dropping new conditions
         // onto an actor; only the GM may add them.
@@ -2453,18 +2463,29 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             return false;
         }
 
-        // Check if item already exists on actor (for move operations)
         if (item.id === null || item.id === '') return false;
-        if (this.actor.items.get(item.id) !== undefined) {
-            return this._onSortItem(event, item);
-        }
 
-        // Create the item. Surface validation/creation failures instead of
-        // letting them fail silently — e.g. armour whose coverage resolves
-        // empty throws in _validateJoint, which otherwise looks to the user
-        // like the drop did nothing. See issue #218.
+        const action = ItemDropManager.classifyItemDrop({
+            sameActorHasItem: this.actor.items.get(item.id) !== undefined,
+            crossActor,
+            sourceOwned: sourceActor?.isOwner ?? false,
+        });
+
+        // Reorder within the same actor.
+        if (action === 'sort') return this._onSortItem(event, item);
+
+        // Create on the receiver. Surface validation/creation failures instead of
+        // letting them fail silently — e.g. armour whose coverage resolves empty
+        // throws in _validateJoint, which otherwise looks like the drop did
+        // nothing (issue #218). For a transfer (give), remove the item from the
+        // source actor after it lands on the receiver so it moves rather than
+        // duplicating (#384).
         try {
-            return await this.actor.createEmbeddedDocuments('Item', [item.toObject()]);
+            const created = await this.actor.createEmbeddedDocuments('Item', [item.toObject()]);
+            if (action === 'transfer' && sourceActor != null) {
+                await sourceActor.deleteEmbeddedDocuments('Item', [item.id]);
+            }
+            return created;
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
             ui.notifications.error(game.i18n.format('WH40K.Item.DropFailed', { name: item.name, error: message }));

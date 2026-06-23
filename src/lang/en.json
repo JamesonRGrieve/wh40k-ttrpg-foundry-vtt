@@ -91,7 +91,8 @@
             "LootNoReceiver": "Select the token that should pick this up first.",
             "LootPickupDenied": "You do not have permission to pick this up.",
             "LootDropDenied": "You do not have permission to drop this item.",
-            "LootTokenLocked": "Loot piles can't be moved. Pick it up from the Token HUD instead."
+            "LootTokenLocked": "Loot piles can't be moved. Pick it up from the Token HUD instead.",
+            "GiveTargetNotOwned": "You can't give items to a character you don't control."
         },
         "Confirm": "Confirm",
         "Cancel": "Cancel",
