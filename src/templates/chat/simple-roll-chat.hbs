@@ -46,26 +46,22 @@
                 {{> systems/wh40k-rpg/templates/chat/partial/extended-test-progress.hbs extendedTest=extendedTest}}
             {{/if}}
 
-            {{!-- Fate-point controls. SimpleSkillData is stored like every action,
-                 so the shared roll-control handlers in basic-action-manager re-run
-                 THIS test (reroll) or add a Degree of Success. Shown only for a
-                 resolved, auto-rolled test whose actor has a Fate Point to spend —
-                 so non-fate systems, spent-out actors, target-only posts, and
-                 manually-entered physical rolls get no dead button. --}}
+            {{!-- Re-roll + Fate controls. One button per available re-roll variant
+                 (talent/trait re-rolls + global Spend Fate, from rerollOptions),
+                 plus the Fate +1-DoS control. Shown for a resolved, auto-rolled
+                 test that has at least one re-roll variant — so non-fate / spent-out
+                 / target-only / manual rolls get no dead button. --}}
             {{#unless isTargetOnly}}
             {{#unless isManualRoll}}
-            {{#if @root.sourceFatePoints}}
-            <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
-                {{#if success}}
+            {{#if @root.rerollOptions.length}}
+            <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
+                {{#if success}}{{#if @root.sourceFatePoints}}
                 <button class="roll-control__fate-add-dos tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-powers-bg)] tw-border tw-border-[var(--wh40k-powers-border)] tw-rounded-md tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(106,32,144,0.2)] hover:tw-border-[var(--wh40k-powers-primary)] hover:tw-shadow-[0_0_12px_rgba(106,32,144,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
                     <span class="material-icons tw-text-[14px]">add_circle</span>
                     <span>{{localize "WH40K.FateAddDoS"}}</span>
                 </button>
-                {{/if}}
-                <button class="roll-control__fate-reroll tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-powers-bg)] tw-border tw-border-[var(--wh40k-powers-border)] tw-rounded-md tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(106,32,144,0.2)] hover:tw-border-[var(--wh40k-powers-primary)] hover:tw-shadow-[0_0_12px_rgba(106,32,144,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
-                    <span class="material-icons tw-text-[14px]">casino</span>
-                    <span>{{localize "WH40K.FateReroll"}}</span>
-                </button>
+                {{/if}}{{/if}}
+                {{> systems/wh40k-rpg/templates/chat/partial/reroll-controls.hbs rerollOptions=@root.rerollOptions rollId=@root.id}}
             </div>
             {{/if}}
             {{/unless}}

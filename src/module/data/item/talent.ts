@@ -4,6 +4,7 @@ import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
+import RerollTemplate from '../shared/reroll-template.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
 
@@ -13,12 +14,23 @@ import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  * @mixes SubtletyAdjusterTemplate
+ * @mixes RerollTemplate
  */
-export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate, SubtletyAdjusterTemplate) {
+export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate, SubtletyAdjusterTemplate, RerollTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     // From SubtletyAdjusterTemplate (mixin static type does not surface it).
     declare subtletyAdjuster?: { kind: SubtletyAdjusterKind; delta: number; minAbsoluteDelta: number; requiresEquipped: boolean };
+    // From RerollTemplate (mixin static type does not surface it).
+    declare reroll: {
+        enabled: boolean;
+        modifier: number;
+        condition: 'failed' | 'success' | 'any';
+        appliesTo: { mode: 'any' | 'types' | 'keys'; types: string[]; keys: string[] };
+        frequency: 'at-will' | 'per-encounter' | 'per-session';
+        uses: number;
+        label: string;
+    };
     declare category: string;
     declare tier: number;
     // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites.characteristics is a free-form record from migration source

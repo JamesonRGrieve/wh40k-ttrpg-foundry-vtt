@@ -532,6 +532,19 @@
         "FateAddDoSConfirmTitle": "Spend Fate: Add Degree of Success",
         "FateAddDoSConfirmContent": "Spend a Fate Point to add one Degree of Success to this test?",
         "FateAddDoSChat": "<strong>{name}</strong> spent a Fate Point to add a Degree of Success (now {dos} DoS).",
+        "Reroll": {
+            "FateSource": "Fate",
+            "Button": "Re-roll",
+            "WithModifier": "{label} ({modifier})",
+            "ConfirmTitle": "Re-roll",
+            "ConfirmContent": "Re-roll this test using {source}?",
+            "Exhausted": "This re-roll has already been used this {frequency}.",
+            "UsedChat": "<strong>{name}</strong> re-rolled via {source}.",
+            "Frequency": {
+                "PerEncounter": "encounter",
+                "PerSession": "session"
+            }
+        },
         "DamageDieReplacement": {
             "ButtonLabel": "Replace die with DoS",
             "ButtonTooltip": "DH2 core rules (p. 247): replace one damage die with the attack's Degrees of Success ({dos}).",

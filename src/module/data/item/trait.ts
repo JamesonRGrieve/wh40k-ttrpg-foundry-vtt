@@ -3,16 +3,28 @@ import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
+import RerollTemplate from '../shared/reroll-template.ts';
 
 /**
  * Data model for Trait items.
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
+ * @mixes RerollTemplate
  */
-export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
+export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate, RerollTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
+    // From RerollTemplate (mixin static type does not surface it).
+    declare reroll: {
+        enabled: boolean;
+        modifier: number;
+        condition: 'failed' | 'success' | 'any';
+        appliesTo: { mode: 'any' | 'types' | 'keys'; types: string[]; keys: string[] };
+        frequency: 'at-will' | 'per-encounter' | 'per-session';
+        uses: number;
+        label: string;
+    };
     declare category: string;
     declare requirements: string;
     declare benefit: string;

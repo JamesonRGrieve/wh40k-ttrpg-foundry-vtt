@@ -61,6 +61,13 @@ export class RollData {
     baseTarget: number = 0;
     baseChar: string = '';
 
+    // Unified-roll metadata (set by `WH40KBaseActor._buildSimpleSkillRoll`): the
+    // displayed roll category ('Characteristic' | 'Skill' | 'Attack' | …) and the
+    // underlying stat key ('willpower' | 'awareness' | …). Read by the situational-
+    // modifier and re-roll-variant collectors to scope options to this test.
+    type: string = '';
+    rollKey: string = '';
+
     isOpposed: boolean = false;
     opposedTarget: number = 0;
     opposedChar: string = '';

@@ -10,6 +10,7 @@ import { SimpleSkillData } from '../rolls/action-data.ts';
 import { clampDisposition } from '../rules/disposition.ts';
 import { clampFearRating, getFearTestPenalty } from '../rules/fear.ts';
 import { resolveEscapePinningTest, resolvePinningTest } from '../rules/pinning.ts';
+import { type RerollOption, type RerollRollContext, type RerollSpec, rerollApplies, rerollLedgerKey, rerollUseAvailable } from '../rules/reroll.ts';
 import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type SubtletySourceRef } from '../rules/subtlety-adjusters.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
@@ -570,6 +571,98 @@ export class WH40KBaseActor extends Actor {
             situationalKey: 'willpower',
         });
         prepareUnifiedRoll(simpleSkillData);
+    }
+
+    /* -------------------------------------------- */
+    /*  Re-roll variants                            */
+    /* -------------------------------------------- */
+
+    /**
+     * Collect the re-roll options for a just-resolved roll: every owned
+     * talent/trait whose `reroll` block applies (by test type/key + success
+     * state) and still has uses left, plus any variant a
+     * `wh40k.collectRerollOptions` hook listener contributes, plus the global
+     * Spend-Fate re-roll. Surfaced on the roll-result chat card as buttons
+     * SEPARATE from Spend Fate. `this` is the source (rolling) actor.
+     */
+    getRerollOptions(rollData: RerollRollContext): RerollOption[] {
+        const options: RerollOption[] = [];
+        const ledger = this._rerollLedger();
+
+        for (const item of this.items) {
+            if (!(item.isTalent || item.isTrait)) continue;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: the `reroll` block is declared on the talent/trait DataModel templates; the item.system union does not surface it here
+            const spec = (item.system as { reroll?: RerollSpec }).reroll;
+            if (spec === undefined || !rerollApplies(spec, rollData)) continue;
+            const id = rerollLedgerKey(item.id, spec.frequency);
+            options.push({
+                id,
+                kind: 'item',
+                label: spec.label !== '' ? spec.label : item.name,
+                modifier: spec.modifier,
+                source: item.name,
+                disabled: !rerollUseAvailable(spec, ledger[id] ?? 0),
+                frequency: spec.frequency,
+            });
+        }
+
+        // Let modules / external code contribute variants before the global Fate option.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Hooks.callAll accepts arbitrary variadic args; the custom hook name is outside fvtt-types' HookConfig keyof constraint
+        (Hooks as { callAll: (hook: string, ...args: unknown[]) => boolean }).callAll('wh40k.collectRerollOptions', { actor: this, rollData, options });
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fate pool is optional on the typed system union; cast through a narrow shape is necessary
+        const fate = (this.system as { fate?: { value?: number } }).fate?.value ?? 0;
+        if (fate > 0) {
+            options.push({
+                id: 'fate',
+                kind: 'fate',
+                label: t('WH40K.FateReroll'),
+                modifier: 0,
+                source: t('WH40K.Reroll.FateSource'),
+                disabled: false,
+                frequency: 'at-will',
+            });
+        }
+
+        return options;
+    }
+
+    /** Read the per-actor windowed re-roll-use ledger (variant id → uses consumed). */
+    private _rerollLedger(): Record<string, number> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry getFlag returns unknown; the reroll-uses ledger is a number map keyed by variant id
+        const raw = this.getFlag(SYSTEM_ID, 'rerollUses') as Record<string, number> | undefined;
+        return raw ?? {};
+    }
+
+    /**
+     * Consume one use of a windowed re-roll variant (no-op for `at-will`/`fate`).
+     * Persists to the actor flag ledger reset by the per-encounter / per-session
+     * hooks.
+     */
+    async consumeRerollUse(variantId: string): Promise<void> {
+        if (variantId === 'fate' || variantId.endsWith(':at-will')) return;
+        const ledger = this._rerollLedger();
+        await this.setFlag(SYSTEM_ID, `rerollUses.${variantId}`, (ledger[variantId] ?? 0) + 1);
+    }
+
+    /**
+     * Clear windowed re-roll uses whose variant id ends with the given frequency
+     * suffix (`:per-encounter` on combat end, `:per-session` on the session
+     * marker). Other windows are left untouched.
+     */
+    async resetRerollUses(frequency: 'per-encounter' | 'per-session'): Promise<void> {
+        const ledger = this._rerollLedger();
+        const suffix = `:${frequency}`;
+        const next: Record<string, number> = {};
+        let changed = false;
+        for (const [key, value] of Object.entries(ledger)) {
+            if (key.endsWith(suffix)) {
+                changed = true;
+                continue;
+            }
+            next[key] = value;
+        }
+        if (changed) await this.setFlag(SYSTEM_ID, 'rerollUses', next);
     }
 
     /* -------------------------------------------- */

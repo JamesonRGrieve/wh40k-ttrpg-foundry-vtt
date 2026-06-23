@@ -45,9 +45,9 @@ export class BasicActionManager {
                     void this._refundResources(ev);
                 });
             });
-            html.querySelectorAll('.roll-control__fate-reroll').forEach((el) => {
+            html.querySelectorAll('.roll-control__variant-reroll').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
-                    void this._fateReroll(ev);
+                    void this._variantReroll(ev);
                 });
             });
             html.querySelectorAll('.roll-control__fate-add-dos').forEach((el) => {
@@ -435,6 +435,67 @@ export class BasicActionManager {
             // Run it back
             await actionData.performActionAndSendToChat();
         }
+    }
+
+    /**
+     * Generalized re-roll handler for the per-variant card buttons. The global
+     * Fate variant (`kind === 'fate'`) delegates to `_fateReroll` (preserving the
+     * single-spend fate logic); talent/trait variants apply their declared
+     * modifier to the re-rolled test, consume one windowed use, and re-run.
+     * Availability is re-derived from the live actor so a stale/duplicated card
+     * cannot double-spend a windowed use.
+     */
+    async _variantReroll(event: Event): Promise<void> {
+        event.preventDefault();
+        const div = event.currentTarget as HTMLElement;
+
+        if ((div.dataset['variantKind'] ?? '') === 'fate') {
+            await this._fateReroll(event);
+            return;
+        }
+
+        const variantId = div.dataset['variantId'] ?? '';
+        const modifier = Number.parseInt(div.dataset['variantModifier'] ?? '0', 10) || 0;
+
+        const actionData = this.#resolveStoredAction(div, game.i18n.localize('WH40K.FateActionExpired'));
+        if (actionData == null) return;
+        const sourceActor = actionData.rollData.sourceActor;
+        if (sourceActor == null) return;
+
+        const option = sourceActor
+            .getRerollOptions({ success: actionData.rollData.success, type: actionData.rollData.type, rollKey: actionData.rollData.rollKey })
+            .find((o) => o.id === variantId);
+        if (option === undefined || option.disabled) {
+            const freq =
+                option?.frequency === 'per-session'
+                    ? game.i18n.localize('WH40K.Reroll.Frequency.PerSession')
+                    : game.i18n.localize('WH40K.Reroll.Frequency.PerEncounter');
+            ui.notifications.warn(game.i18n.format('WH40K.Reroll.Exhausted', { frequency: freq }));
+            return;
+        }
+
+        const confirmed = await ConfirmationDialog.confirm({
+            title: game.i18n.localize('WH40K.Reroll.ConfirmTitle'),
+            content: game.i18n.format('WH40K.Reroll.ConfirmContent', { source: option.source }),
+            confirmLabel: game.i18n.localize('WH40K.Reroll.Button'),
+            cancelLabel: game.i18n.localize('WH40K.Cancel'),
+        });
+        if (!confirmed) return;
+
+        // Inject the variant modifier into the re-rolled test: survives reset() and
+        // is summed into modifiedTarget + surfaced on the card's modifier breakdown.
+        if (modifier !== 0) actionData.rollData.modifiers['reroll'] = modifier;
+        actionData.id = uuid();
+        await actionData.refundResources();
+        actionData.reset();
+        await sourceActor.consumeRerollUse(variantId);
+
+        const announcement = game.i18n.format('WH40K.Reroll.UsedChat', { name: sourceActor.name, source: option.source });
+        await postChatCard(
+            `<div class="wh40k-rpg tw-font-ui tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-[var(--wh40k-powers-border)] tw-bg-[var(--wh40k-powers-bg)] tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.85rem]">${announcement}</div>`,
+        );
+
+        await actionData.performActionAndSendToChat();
     }
 
     async _fateAddDoS(event: Event): Promise<void> {
