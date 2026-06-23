@@ -47,6 +47,7 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
                     system?: HordeSystem;
                     _source?: { system?: { horde?: { magnitude?: { current?: number } } } };
                     sheet?: HordeSheet;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.update accepts arbitrary partial-update payloads and returns the untyped document
                     update?: (data: Record<string, unknown>) => Promise<unknown>;
                     delete?: () => Promise<void>;
                 }

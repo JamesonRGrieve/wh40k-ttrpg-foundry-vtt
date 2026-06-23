@@ -164,7 +164,7 @@ test.describe.serial('psychic push selector', () => {
                     await new Promise((r) => {
                         setTimeout(r, 25);
                     });
-                    if (root.querySelector('[data-testid="psy-push-level-value"]')?.textContent?.trim() === expectLevel) break;
+                    if (root.querySelector('[data-testid="psy-push-level-value"]')?.textContent.trim() === expectLevel) break;
                 }
             };
             await clickStep('psy-push-increment', '2');

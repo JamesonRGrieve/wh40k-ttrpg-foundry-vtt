@@ -784,9 +784,12 @@ export class HooksManager {
         await backfillOriginPathUuids();
         await reconcileWorldOriginGrants();
 
-        // Initialize rich tooltip system.
-        game.wh40k.tooltips = new TooltipsWH40K();
-        await game.wh40k.tooltips.initialize();
+        // Initialize rich tooltip system. Capture game.wh40k after the awaits above
+        // so the assignment target is the current namespace, not a pre-await read.
+        const tooltips = new TooltipsWH40K();
+        const wh40k = game.wh40k;
+        wh40k.tooltips = tooltips;
+        await tooltips.initialize();
         TransactionManager.initialize();
 
         if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.processActiveEffectsDuringCombat) === false) {

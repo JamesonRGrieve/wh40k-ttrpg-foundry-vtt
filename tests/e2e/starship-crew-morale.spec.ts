@@ -62,9 +62,11 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     create?: (data: Record<string, unknown>) => Promise<StarshipActor | null | undefined>;
                 }
                 interface CombatLike {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Combat.activate returns the untyped document
                     activate?: () => Promise<unknown>;
                     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Combat.update accepts arbitrary partial-update payloads
                     update?: (data: Record<string, unknown>) => Promise<unknown>;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Combat.delete returns the untyped document
                     delete?: () => Promise<unknown>;
                 }
                 interface CombatClass {
@@ -302,6 +304,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                     sheet?: StarshipSheet;
                 }
                 interface CombatLike {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Combat.delete returns the untyped document
                     delete?: () => Promise<unknown>;
                 }
                 interface FoundryGlobal {

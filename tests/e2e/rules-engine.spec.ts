@@ -107,7 +107,12 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
             interface FakeAmmoRollData {
                 weapon: {
                     usesAmmo: boolean;
-                    system: { loadedAmmo?: { name: string }; clip: { value: number }; effectiveClipMax?: number; attack?: { rateOfFire?: { full?: number; semi?: number } } };
+                    system: {
+                        loadedAmmo?: { name: string };
+                        clip: { value: number };
+                        effectiveClipMax?: number;
+                        attack?: { rateOfFire?: { full?: number; semi?: number } };
+                    };
                 };
                 action: string;
                 hasAttackSpecial: (name: string) => boolean;
@@ -243,7 +248,11 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
                         // the lookup + fuzzy-match attempt, so accept null (or a string).
                         const head = await cd.getCriticalDamage('Impact', 'head', 5);
                         const missing = await cd.getCriticalDamage('Impact', 'leg', 5);
-                        record('critical-damage-getFuzzy', (head === null || typeof head === 'string') && (missing === null || typeof missing === 'string'), null);
+                        record(
+                            'critical-damage-getFuzzy',
+                            (head === null || typeof head === 'string') && (missing === null || typeof missing === 'string'),
+                            null,
+                        );
                     } catch (err) {
                         record('critical-damage-getFuzzy', false, err instanceof Error ? err.message : String(err));
                     }
