@@ -74,9 +74,9 @@ export const RANGED_ATTACK_MODES: AttackModeOption[] = [
         label: 'Standard Attack',
         actionName: 'Standard Attack',
         actionCost: 'Half',
-        modifier: 10,
+        modifier: 0,
         icon: 'fas fa-crosshairs',
-        tooltip: 'Single shot. +10 to BS. Jam on 96+.',
+        tooltip: 'Single shot. +0 to BS. Jam on 96+.',
         default: true,
     },
     {
@@ -138,9 +138,9 @@ export const MELEE_ATTACK_MODES: AttackModeOption[] = [
         label: 'Standard Attack',
         actionName: 'Standard Attack',
         actionCost: 'Half',
-        modifier: 10,
+        modifier: 0,
         icon: 'fas fa-sword',
-        tooltip: 'Basic melee strike. +10 to WS.',
+        tooltip: 'Basic melee strike. +0 to WS.',
         default: true,
     },
     {

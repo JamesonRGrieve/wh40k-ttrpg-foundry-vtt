@@ -92,8 +92,10 @@ describe('attack-options situational modifiers', () => {
 describe('ranged Rate-of-Fire to-hit modifiers (#231)', () => {
     const findRanged = (key: string): (typeof RANGED_ATTACK_MODES)[number] | undefined => RANGED_ATTACK_MODES.find((m) => m.key === key);
 
-    it('uses RAW values: single shot +10, semi-auto +0, full-auto -10', () => {
-        expect(findRanged('standard')?.modifier).toBe(10);
+    it('uses RAW values: single shot +0, semi-auto +0, full-auto -10', () => {
+        // Standard Attack has no inherent to-hit bonus in DH2e RAW (#383 — the
+        // #231 +10 single-shot bonus was incorrect); semi +0, full -10 stand.
+        expect(findRanged('standard')?.modifier).toBe(0);
         expect(findRanged('semiAuto')?.modifier).toBe(0);
         expect(findRanged('fullAuto')?.modifier).toBe(-10);
     });
@@ -104,7 +106,7 @@ describe('ranged Rate-of-Fire to-hit modifiers (#231)', () => {
     });
 
     it('tooltips agree with the numeric modifier (no stale +10/+20 text)', () => {
-        expect(findRanged('standard')?.tooltip).toContain('+10 to BS');
+        expect(findRanged('standard')?.tooltip).toContain('+0 to BS');
         expect(findRanged('semiAuto')?.tooltip).toContain('+0 BS');
         expect(findRanged('fullAuto')?.tooltip).toContain('-10 BS');
     });
