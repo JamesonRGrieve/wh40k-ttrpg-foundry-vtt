@@ -479,11 +479,17 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                         fired['drag-drop-visual-ghost-and-split'] = true;
                                         notes['drag-drop-visual-ghost-and-split'] = 'ghost contains name + ×qty; split allowed only for qty>1 stackable types';
                                     } else {
+                                        const sDbg = stack as unknown as { name?: string; type?: string; system?: { quantity?: unknown } };
+                                        const siDbg = single as unknown as { system?: { quantity?: unknown } };
                                         notes['drag-drop-visual-ghost-and-split'] = `ghostHasName=${String(ghostHasName)} ghostHasQty=${String(
                                             ghostHasQty,
                                         )} stackSplittable=${String(stackSplittable)} singleNotSplittable=${String(
                                             singleNotSplittable,
-                                        )} talentNotSplittable=${String(talentNotSplittable)}`;
+                                        )} talentNotSplittable=${String(talentNotSplittable)} | dbg stackName=${String(sDbg.name)} stackType=${String(
+                                            sDbg.type,
+                                        )} stackQty=${String(sDbg.system?.quantity)} singleQty=${String(siDbg.system?.quantity)} ghostHtml=${ghostInnerHtml
+                                            .replace(/\s+/g, ' ')
+                                            .slice(0, 120)}`;
                                     }
                                 }
                             }
@@ -905,12 +911,17 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         } else {
                             const root = document.createElement('div');
                             root.innerHTML = `<input name="system.wounds.value" value="5" />`;
+                            // _captureCurrentValues reads this.document.toObject() (NOT the
+                            // DOM), so the re-capture inside visualizeChanges reflects the
+                            // document's CURRENT data. Back toObject() by a mutable value and
+                            // bump it to 8 before visualizeChanges, mirroring a real
+                            // post-update document state.
+                            let docWounds = 5;
                             class StubBase {
                                 element = root;
-                                // Minimal toObject shape that flattenObject can walk.
                                 document = {
                                     toObject: (): { system: { wounds: { value: number }; name: string } } => ({
-                                        system: { wounds: { value: 5 }, name: 'alice' },
+                                        system: { wounds: { value: docWounds }, name: 'alice' },
                                     }),
                                 };
                             }
@@ -918,6 +929,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             const inst = new Mixed();
                             inst._captureCurrentValues();
                             const seededWounds = inst._previousValues.get('system.wounds.value') === 5;
+                            docWounds = 8;
                             inst.visualizeChanges({ system: { wounds: { value: 8 } } });
                             const woundsUpdated = inst._previousValues.get('system.wounds.value') === 8;
                             // Apply animation class directly to assert _applyAnimation works.
@@ -1358,16 +1370,16 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                 /* ============================================================
                  * Flow 17: dialog-wait-and-resolve
                  * DialogWH40K.wait() returns a Promise resolved via the
-                 * instance's `resolve(value)` helper which flips `_submitted`
-                 * to true. Fire wait + resolve in sequence; assert the
-                 * Promise settles with the passed value and `_submitted` is true.
+                 * instance's `resolve(value)` helper (backed by the private
+                 * #resolution tracker — there is no public `_submitted` flag).
+                 * Fire wait + resolve in sequence; assert the Promise settles
+                 * with the passed value.
                  * ============================================================ */
                 async function probeDialogWaitResolve(): Promise<void> {
                     try {
                         interface DialogInst {
                             wait: () => Promise<string>;
                             resolve: (value: string) => void;
-                            _submitted: boolean;
                             close?: () => Promise<void>;
                         }
                         type DialogCtor = new (config: { window: { title: string }; content: string; buttons: never[] }) => DialogInst;
@@ -1391,13 +1403,12 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                 setTimeout(resolve, 30);
                             });
                             dialog.resolve('probe-value');
-                            const submittedFlag = dialog._submitted;
                             const settled = await withTimeout(waitPromise, 5_000, 'DialogWH40K.wait');
-                            if (settled === 'probe-value' && submittedFlag) {
+                            if (settled === 'probe-value') {
                                 fired['dialog-wait-and-resolve'] = true;
-                                notes['dialog-wait-and-resolve'] = 'wait() resolved with the resolve(value) payload; _submitted=true';
+                                notes['dialog-wait-and-resolve'] = 'wait() resolved with the resolve(value) payload';
                             } else {
-                                notes['dialog-wait-and-resolve'] = `settled=${String(settled)} submittedFlag=${String(submittedFlag)}`;
+                                notes['dialog-wait-and-resolve'] = `settled=${String(settled)}`;
                             }
                             try {
                                 await dialog.close?.();
