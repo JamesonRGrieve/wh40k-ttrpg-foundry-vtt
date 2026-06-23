@@ -324,7 +324,10 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                                 const tiers = cfg?.getCharacteristicTiers() ?? [];
                                 const order = cfg?.characteristicTierOrder ?? [];
                                 const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
-                                const expectedCount = isAptitude ? 5 : 4;
+                                // Aptitude systems use the 5-tier DH2 ladder, EXCEPT BC which
+                                // overrides to a 4-tier ladder (Simple/Intermediate/Trained/
+                                // Expert — core.md :2581); career systems use 4.
+                                const expectedCount = id === 'bc' ? 4 : isAptitude ? 5 : 4;
                                 const countOk = Array.isArray(tiers) && tiers.length === expectedCount;
                                 const orderOk = Array.isArray(order) && order.length === expectedCount && order.every((k, i) => k === tiers[i]?.key);
                                 const labelsOk = countOk && tiers.every((t) => typeof t.label === 'string' && t.label.startsWith('WH40K.'));

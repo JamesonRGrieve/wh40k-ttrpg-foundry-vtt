@@ -528,13 +528,15 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
 
                 // Drive every bucket in _getDifficultyRating. Each call
                 // covers one branch arm.
+                // Bands (threat-utils DIFFICULTY_BANDS, ascending maxRatio): trivial ≤0.5,
+                // easy ≤0.8, moderate ≤1.2, dangerous ≤1.6, deadly ≤2.0, else apocalyptic.
                 const buckets = [
-                    { ratio: 0.1, expected: 'trivial' },
-                    { ratio: 0.4, expected: 'easy' },
-                    { ratio: 0.6, expected: 'moderate' },
-                    { ratio: 0.85, expected: 'dangerous' },
-                    { ratio: 1.2, expected: 'deadly' },
-                    { ratio: 2.0, expected: 'apocalyptic' },
+                    { ratio: 0.3, expected: 'trivial' },
+                    { ratio: 0.7, expected: 'easy' },
+                    { ratio: 1.0, expected: 'moderate' },
+                    { ratio: 1.5, expected: 'dangerous' },
+                    { ratio: 1.9, expected: 'deadly' },
+                    { ratio: 2.5, expected: 'apocalyptic' },
                 ];
                 for (const b of buckets) {
                     const result = dialog._getDifficultyRating(b.ratio);
