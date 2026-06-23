@@ -142,9 +142,9 @@ export function allCombatActions(): CombatAction[] {
             name: 'Standard Attack',
             type: ['Half'],
             subtype: ['Attack', 'Melee', 'Ranged'],
-            description: 'Make one melee or ranged attack; +10 to WS/BS; jam on 96+ result.',
+            description: 'Make one melee or ranged attack; jam on 96+ result.',
             attack: {
-                modifier: 10,
+                modifier: 0,
             },
         },
         {
