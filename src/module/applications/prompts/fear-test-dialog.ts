@@ -182,6 +182,20 @@ export default class FearTestDialog extends ApplicationV2Mixin(ApplicationV2 as 
     static async #onRollTest(this: FearTestDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
+        // Prefer the real observer Actor so the Fear test routes through the unified
+        // roll pipeline — surfacing conditional Willpower talents/traits (Resistance
+        // (Fear), Jaded, …) as situational modifiers before resolving. Falls back to
+        // the inline manual-WP roll when no actor is selected (no owning actor means
+        // no situational talent/trait modifiers exist to consult).
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `game` global is untyped on globalThis; only the actor lookup + rollFearTest surface are read
+        const g = globalThis as unknown as { game?: { actors?: { get?: (id: string) => { rollFearTest?: (rating: number) => void } | undefined } } };
+        const observerActor = this.selectedObserverId !== null ? g.game?.actors?.get?.(this.selectedObserverId) : undefined;
+        if (observerActor?.rollFearTest !== undefined) {
+            observerActor.rollFearTest(this.fearRating);
+            await this.close();
+            return;
+        }
+
         const observer = findObserver(this.selectedObserverId);
         const observerName = observer?.name ?? game.i18n.localize('WH40K.Fear.ObserverLabel');
 
