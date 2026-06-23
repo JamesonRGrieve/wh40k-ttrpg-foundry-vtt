@@ -40,6 +40,10 @@ const WEAPON_TYPE_CHOICES = [
     'xenos',
 ] as const;
 
+// Valid `reload` choices — keep in sync with the `reload` StringField schema
+// (see defineSchema). Used by #coerceEnums to normalise legacy/typographic values.
+const WEAPON_RELOAD_CHOICES = ['-', 'free', 'half', 'full', '2-full', '3-full'] as const;
+
 // Loose dictionary used as a structural shape for both pre-migration source data
 // and the data dictionaries passed to Foundry's update/create APIs.
 type DataDict = { [key: string]: SerializableValue };
@@ -351,6 +355,14 @@ export default class WeaponData extends ItemDataModel.mixin(
         }
         if (typeof source['type'] === 'string' && !(WEAPON_TYPE_CHOICES as readonly string[]).includes(source['type'])) {
             source['type'] = 'primitive';
+        }
+        // `reload` is a strict choice field. Legacy/compendium data may carry a
+        // typographic en/em dash (– or —) or other non-choice value where the
+        // schema expects the ASCII hyphen '-' default; an invalid value fails
+        // validation and drops the whole weapon from its owning actor (and breaks
+        // token/ActorDelta creation on drop). Normalise any non-choice to '-'.
+        if (typeof source['reload'] === 'string' && !(WEAPON_RELOAD_CHOICES as readonly string[]).includes(source['reload'])) {
+            source['reload'] = '-';
         }
     }
 
