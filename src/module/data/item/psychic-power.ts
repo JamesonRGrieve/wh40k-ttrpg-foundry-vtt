@@ -6,6 +6,15 @@ import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
+ * Canonical psychic-discipline choices. Shared between defineSchema() and the
+ * `_migrateData` coercion so a corrupt/legacy value (e.g. an imported
+ * `"Telepathy"` with title-case, or a stray surrounding space) is normalised to
+ * a valid choice instead of failing strict V14 validation — which would drop the
+ * power from its owning actor and break token/ActorDelta creation on drop.
+ */
+const PSYCHIC_DISCIPLINE_CHOICES = ['telepathy', 'telekinesis', 'divination', 'pyromancy', 'biomancy', 'daemonology', 'malefic', 'sanctic', 'minor'] as const;
+
+/**
  * Data model for Psychic Power items.
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
@@ -44,7 +53,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             discipline: new fields.StringField({
                 required: true,
                 initial: 'telepathy',
-                choices: ['telepathy', 'telekinesis', 'divination', 'pyromancy', 'biomancy', 'daemonology', 'malefic', 'sanctic', 'minor'],
+                choices: [...PSYCHIC_DISCIPLINE_CHOICES],
             }),
 
             // Psy Rating cost
@@ -88,6 +97,26 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             // no power-tree dependency (still gated on prCost vs PR).
             requires: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
         };
+    }
+
+    /* -------------------------------------------- */
+    /*  Migration                                   */
+    /* -------------------------------------------- */
+
+    /** @inheritdoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; source mirrors parent _migrateData signature
+    static override _migrateData(source: Record<string, unknown>): void {
+        super._migrateData(source);
+        // `discipline` is a strict choice field, but legacy/compendium data is
+        // messy: title-case spellings ("Telepathy"), surrounding whitespace, etc.
+        // An out-of-choice value fails V14 validation and drops the whole power
+        // from its owning actor (breaking token/ActorDelta creation on drop).
+        // Normalise the recoverable forms; fall back to 'minor' (the "no tree"
+        // bucket) for anything unrecognised.
+        if (typeof source['discipline'] === 'string') {
+            const v = source['discipline'].trim().toLowerCase();
+            source['discipline'] = (PSYCHIC_DISCIPLINE_CHOICES as readonly string[]).includes(v) ? v : 'minor';
+        }
     }
 
     /* -------------------------------------------- */

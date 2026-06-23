@@ -18,6 +18,8 @@ import { expect, test } from './lib/test';
 interface ItemSystem {
     class?: string;
     type?: string;
+    reload?: string;
+    discipline?: string;
 }
 interface ItemDoc {
     id?: string;
@@ -51,7 +53,9 @@ interface ProbeResult {
     liveCount: number;
     weaponLowTechType: string | undefined;
     weaponBlobType: string | undefined;
+    weaponReload: string | undefined;
     armourBasicType: string | undefined;
+    psychicDiscipline: string | undefined;
     backpackRows: number;
     pageErrors: string[];
 }
@@ -103,6 +107,10 @@ async function probe(page: Page): Promise<ProbeResult> {
             { name: 'Blob Laspistol', type: 'weapon', system: { class: { dh2: 'pistol' }, type: { dh2: 'las' } } },
             // invalid armour type — must be coerced to a valid choice
             { name: 'Ragged Robes', type: 'armour', system: { type: 'basic' } },
+            // typographic reload (en-dash) — production token-drop crash, must coerce
+            { name: 'EnDash Pistol', type: 'weapon', system: { class: 'ranged', type: 'las', reload: '–' } },
+            // title-case psychic discipline — production token-drop crash, must coerce
+            { name: 'TitleCase Power', type: 'psychicPower', system: { discipline: 'Telepathy' } },
             // control: a plain valid item
             { name: 'Plain Sack', type: 'gear', system: {} },
         ];
@@ -127,7 +135,9 @@ async function probe(page: Page): Promise<ProbeResult> {
             liveCount: actor.items?.size ?? 0,
             weaponLowTechType: byName('LowTech Blade')?.system?.type,
             weaponBlobType: byName('Blob Laspistol')?.system?.type,
+            weaponReload: byName('EnDash Pistol')?.system?.reload,
             armourBasicType: byName('Ragged Robes')?.system?.type,
+            psychicDiscipline: byName('TitleCase Power')?.system?.discipline,
             backpackRows,
         };
         await actor.delete?.();
@@ -142,9 +152,9 @@ test('corrupt-enum / multi-system-blob items load and render (not dropped)', asy
 
     const r = await probe(page);
 
-    // None of the 4 items may be dropped — this is the empty-inventory regression.
-    expect(r.created, 'all 4 items created').toBe(4);
-    expect(r.liveCount, 'all 4 items present in the actor collection (none dropped)').toBe(4);
+    // None of the 6 items may be dropped — this is the empty-inventory regression.
+    expect(r.created, 'all 6 items created').toBe(6);
+    expect(r.liveCount, 'all 6 items present in the actor collection (none dropped)').toBe(6);
 
     // Invalid enums coerced to valid scalars.
     expect(VALID_WEAPON_TYPES, 'invalid weapon type coerced').toContain(r.weaponLowTechType);
@@ -153,9 +163,13 @@ test('corrupt-enum / multi-system-blob items load and render (not dropped)', asy
     expect(r.weaponBlobType, 'per-system blob flattened to active line').toBe('las');
     expect(VALID_ARMOUR_TYPES, 'invalid armour type coerced').toContain(r.armourBasicType);
     expect(r.armourBasicType, 'basic coerced to flak').toBe('flak');
+    // Typographic reload (en-dash) normalised to the '-' choice, not dropped.
+    expect(r.weaponReload, 'en-dash reload coerced to "-"').toBe('-');
+    // Title-case psychic discipline lower-cased to its valid choice, not dropped.
+    expect(r.psychicDiscipline, 'Telepathy coerced to telepathy').toBe('telepathy');
 
-    // Equipment tab renders rows for the loaded items (weapon+weapon+armour+gear).
-    expect(r.backpackRows, 'inventory renders rows, not empty').toBeGreaterThanOrEqual(4);
+    // Equipment tab renders rows for the loaded items (3 weapons + armour + gear).
+    expect(r.backpackRows, 'inventory renders rows, not empty').toBeGreaterThanOrEqual(5);
 
     expect(r.pageErrors, 'no client-side render errors').toEqual([]);
 });
