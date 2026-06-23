@@ -94,6 +94,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
             }
             interface GameManager {
                 packs?: { get?: (id: string) => CompendiumPack | undefined };
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's game.settings.get/set are untyped over the stored setting value
                 settings?: { get?: (scope: string, key: string) => unknown; set?: (scope: string, key: string, value: unknown) => Promise<unknown> };
             }
             interface FoundryGlobal {
