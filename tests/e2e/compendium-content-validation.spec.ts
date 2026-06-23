@@ -45,26 +45,26 @@ import { expect, test } from './lib/test';
 const COMPENDIUM_CONTENT_FLOWS = [
     'bc-core-items-talents::validated',
     'bc-core-items-weapons::validated',
-    'bc-core-archetypes::validated',
+    'bc-core-origins-archetypes::validated',
     'dh1-core-items-talents::validated',
     'dh1-core-items-weapons::validated',
-    'dh2-core-stats-talents::validated',
+    'dh2-core-items-talents::validated',
     'dh2-core-items-weapons::validated',
-    'dh2-core-stats-skills::validated',
-    'dh2-core-stats-conditions::validated',
-    'dh2-core-stats-traits::validated',
-    'dh2-core-stats-homeworlds::validated',
-    'dh2-actors-bestiary::validated',
+    'dh2-core-items-skills::validated',
+    'dh2-core-items-conditions::validated',
+    'dh2-core-items-traits::validated',
+    'dh2-core-origins-homeworlds::validated',
+    'dh2-core-actors-bestiary::validated',
     'dh2-core-rolltables::validated',
     'dh2-core-journals::validated',
     'dw-core-items-talents::validated',
     'dw-core-items-weapons::validated',
-    'dw-core-chapters::validated',
+    'dw-core-origins-chapters::validated',
     'hb-items-weapons::validated',
     'hb-items-actors::validated',
     'ow-core-items-talents::validated',
     'ow-core-items-weapons::validated',
-    'ow-core-homeworlds::validated',
+    'ow-core-origins-homeworlds::validated',
     'rt-core-items-talents::validated',
     'rt-core-items-weapons::validated',
     'rt-core-vehicles-voidcraft::validated',
@@ -119,6 +119,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                 name?: string;
                 type?: string;
                 system?: RawSystem | null;
+                documentName?: string;
             }
             interface RawSystem {
                 // _source and toObject() expose raw DataModel JSON whose shape is
@@ -323,6 +324,15 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
                 const failures: string[] = [];
                 let perDocFailures = 0;
                 const docLabel = doc.name ?? doc.id ?? '<unnamed>';
+
+                // RollTable / JournalEntry documents carry NO per-doc DataModel
+                // `system` (their content is results[] / pages[]), so the
+                // system-object / schema / round-trip assertions below don't apply.
+                // Skip them for those kinds (consistent with the validator's
+                // identity-type exemption — see src/packs/CLAUDE.md).
+                if (doc.documentName === 'RollTable' || doc.documentName === 'JournalEntry') {
+                    return { failures, brokenRefs: 0, uuidRefsSeen: 0, perDocFailures: 0 };
+                }
 
                 // Assertion 1: doc.system is a non-null object.
                 if (doc.system === null || doc.system === undefined || typeof doc.system !== 'object') {
