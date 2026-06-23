@@ -217,6 +217,29 @@ export class HooksManager {
                 console.error('compendium-hydrate: createActor hydration failed', err);
             });
         });
+
+        // Per-encounter re-roll uses (talent/trait `reroll` variants with
+        // frequency 'per-encounter') reset when the encounter Combat is deleted.
+        // First active GM only — clearing the ledger writes a flag to the DB and
+        // must run once. Per-session uses reset manually via
+        // `actor.resetRerollUses('per-session')` (no native session-end hook).
+        // eslint-disable-next-line no-restricted-syntax -- boundary: deleteCombat hook payload is framework-typed; we read only combatants → actor
+        hooksOn('deleteCombat', (combat: { combatants?: { contents?: Array<{ actor?: WH40KBaseActor | null }> } }) => {
+            const firstGM = game.users.contents.find((u) => u.active && u.isGM)?.id;
+            if (game.user.id !== firstGM) return;
+            const seen = new Set<string>();
+            for (const combatant of combat.combatants?.contents ?? []) {
+                const actor = combatant.actor;
+                if (actor == null) continue;
+                const id = actor.id;
+                if (id === null || seen.has(id)) continue;
+                seen.add(id);
+                // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+                actor.resetRerollUses('per-encounter').catch((err: unknown) => {
+                    console.error('reroll-reset: deleteCombat per-encounter reset failed', err);
+                });
+            }
+        });
     }
 
     /**
