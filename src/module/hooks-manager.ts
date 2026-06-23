@@ -130,6 +130,11 @@ interface LootTokenHUDLike {
     };
 }
 
+/** Minimal TokenDocument shape needed by the loot-move veto (preUpdateToken). */
+interface LootMoveTokenLike {
+    actor?: { type?: string } | null;
+}
+
 // biome-ignore lint/complexity/noStaticOnlyClass: stable system-bootstrap API surface with many callers
 export class HooksManager {
     static registerHooks(): void {
@@ -161,6 +166,8 @@ export class HooksManager {
         /* eslint-enable no-restricted-syntax, @typescript-eslint/no-deprecated */
         hooksOn('getActorDirectoryEntryContext', (_html: JQuery, options: DirectoryContextOption[]) => HooksManager.getActorDirectoryEntryContext(options));
         hooksOn('renderTokenHUD', (app: LootTokenHUDLike, html: HTMLElement | JQuery) => HooksManager.onLootTokenHUD(app, html));
+        // Loot piles are dropped in place — non-GM players can't drag them around.
+        hooksOn('preUpdateToken', (doc: LootMoveTokenLike, change: { x?: number; y?: number }) => HooksManager.onPreUpdateToken(doc, change));
         // Runtime circular busts from plain portraits (flags.wh40k-rpg.tokenFrame)
         hooksOn('refreshToken', (token: Parameters<typeof onRefreshToken>[0]) => onRefreshToken(token));
         hooksOn('getActorSheetClass', (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
@@ -370,6 +377,22 @@ export class HooksManager {
 
         const leftCol = root.querySelector('.col.left') ?? root.querySelector('.col.middle') ?? root;
         leftCol.appendChild(btn);
+    }
+
+    /**
+     * Veto drag-moves of loot pile tokens by non-GM players. Loot is dropped in
+     * place; players may select, inspect, and pick a pile up via the Token HUD
+     * control, but may not reposition it. The decision lives in the pure
+     * {@link ItemDropManager.blocksLootTokenMove} helper; returning false aborts
+     * the position update.
+     */
+    static onPreUpdateToken(doc: LootMoveTokenLike, change: { x?: number; y?: number }): boolean {
+        const actorType = doc.actor?.type ?? null;
+        if (ItemDropManager.blocksLootTokenMove(actorType, change, game.user.isGM)) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Warning.LootTokenLocked'));
+            return false;
+        }
+        return true;
     }
 
     static init(): void {
