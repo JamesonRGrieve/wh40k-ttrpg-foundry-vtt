@@ -117,8 +117,8 @@
   ],
   "total": 117,
   "byRule": {
-    "complexity": 35,
+    "complexity": 34,
     "max-depth": 2,
-    "no-await-in-loop": 80
+    "no-await-in-loop": 81
   }
 }

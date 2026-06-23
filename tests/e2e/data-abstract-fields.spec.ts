@@ -283,6 +283,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                 // description/source; load it so those two flows test the real owner.
                 const descTmplMod = await loadModule<DescriptionTemplateCtor>('shared/description-template');
                 const DescriptionTemplate =
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: fall back to ItemDataModel when the description-template module failed to import in the probe
                     descTmplMod.__importError === undefined ? descTmplMod.default : (ItemDataModel as unknown as DescriptionTemplateCtor);
                 guarded('item-data-model-metadata-merged', () => {
                     const meta = ItemDataModel.metadata;
@@ -398,6 +399,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
                     if (!validOk) return 'branch2: valid formula 1d10+5 threw unexpectedly';
                     if (!invalidThrew) return 'branch3: no malformed formula tripped the Invalid-formula wrapper';
                     if (!detRejected) {
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: read the deterministic flag off an opaque FormulaField probe instance
                         const detFlag = (detField as unknown as { deterministic?: boolean }).deterministic;
                         let rollDet = 'n/a';
                         try {

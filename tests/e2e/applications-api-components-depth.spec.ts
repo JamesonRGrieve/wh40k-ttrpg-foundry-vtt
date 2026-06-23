@@ -479,7 +479,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                         fired['drag-drop-visual-ghost-and-split'] = true;
                                         notes['drag-drop-visual-ghost-and-split'] = 'ghost contains name + ×qty; split allowed only for qty>1 stackable types';
                                     } else {
+                                        // eslint-disable-next-line no-restricted-syntax -- boundary: debug-only narrowing of an opaque drag-probe fixture to read name/type/quantity
                                         const sDbg = stack as unknown as { name?: string; type?: string; system?: { quantity?: unknown } };
+                                        // eslint-disable-next-line no-restricted-syntax -- boundary: debug-only narrowing of an opaque drag-probe fixture to read quantity
                                         const siDbg = single as unknown as { system?: { quantity?: unknown } };
                                         notes['drag-drop-visual-ghost-and-split'] = `ghostHasName=${String(ghostHasName)} ghostHasQty=${String(
                                             ghostHasQty,

@@ -863,9 +863,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         // (HTML spec: they are null for number inputs even after select()),
                         // so the mixin's effect can't be observed via the selection range.
                         // Spy on .select() being invoked by the focus listener instead.
-                        let selectCalled = false;
+                        const selectSpy = { called: false };
                         input.select = (): void => {
-                            selectCalled = true;
+                            selectSpy.called = true;
                         };
                         setupNumberInputAutoSelect(root);
                         input.dispatchEvent(new FocusEvent('focus', { bubbles: false }));
@@ -873,7 +873,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             setTimeout(r, 10);
                         });
                         root.remove();
-                        if (selectCalled) {
+                        if (selectSpy.called) {
                             fired['appv2-mixin-number-autoselect'] = true;
                             notes['appv2-mixin-number-autoselect'] = 'focus listener called select() on the number input';
                         } else {
