@@ -1,29 +1,53 @@
 {{! Navigator Power Chat Card }}
 {{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
-    cardClass=""
+    cardClass="wh40k-navpwr-card"
     outerExtraClass="tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-bronze bc:tw-border-crimson-light dh1:tw-border-gold-raw-l5 dh2:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure"
     image=item.img
     imageAlt=item.name
     title=item.name
-    subtitle="Navigator Power"
+    subtitle=(localize "WH40K.NavigatorPowers.Subtitle")
     gameSystem=gameSystem
     footerLabel=actor
 }}
     <div class="tw-p-7 tw-rounded-md tw-border-2 tw-border-gold tw-bg-[var(--wh40k-panel-bg-solid)] tw-shadow-[0_0_20px_rgba(201,162,39,0.3)] tw-text-center {{#if success}}tw-border-success{{else}}tw-border-failure{{/if}}">
+        <div class="tw-text-xs tw-uppercase tw-opacity-70">{{localize "WH40K.NavigatorPowers.RollVsTarget"}}</div>
         <div class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-2xl tw-font-bold">
             <span>{{roll.total}}</span>
-            <span class="tw-text-sm tw-uppercase tw-opacity-70">vs</span>
+            <span class="tw-text-sm tw-opacity-70">/</span>
             <span>{{targetValue}}</span>
+            {{#if levelBonusLabel}}<span class="tw-text-sm tw-opacity-70">({{levelBonusLabel}})</span>{{/if}}
         </div>
         <div class="tw-mt-2">
             {{#if success}}
-            <span class="tw-text-success-l20 tw-font-bold"><i class="fas fa-eye"></i> Power Manifested!</span>
+            <span class="tw-text-success-l20 tw-font-bold"><i class="fas fa-eye"></i> {{localize "WH40K.NavigatorPowers.Manifested"}}</span>
             {{else}}
-            <span class="tw-text-failure-l10 tw-font-bold"><i class="fas fa-eye-slash"></i> Power Failed!</span>
+            <span class="tw-text-failure-l10 tw-font-bold"><i class="fas fa-eye-slash"></i> {{localize "WH40K.NavigatorPowers.Failed"}}</span>
             {{/if}}
-            <span class="tw-text-sm tw-opacity-80">({{degrees}} Degrees)</span>
+            <span class="tw-text-sm tw-opacity-80">({{degrees}} {{localize "WH40K.NavigatorPowers.Degrees"}})</span>
         </div>
     </div>
+
+    {{#if opposed}}
+    <div class="tw-mt-2">
+        <div class="tw-text-xs tw-uppercase tw-opacity-70 tw-mb-1">{{localize "WH40K.NavigatorPowers.OpposedTest"}}</div>
+        <ul class="wh40k-navpwr-card__opposed tw-text-sm tw-list-none tw-m-0 tw-p-0">
+            <li>{{localize "WH40K.NavigatorPowers.NavigatorRoll"}}: {{opposed.navigatorRoll}} / {{opposed.navigatorTarget}} ({{opposed.navigatorDos}})</li>
+            <li>{{localize "WH40K.NavigatorPowers.OpponentRoll"}}: {{opposed.opponentRoll}} / {{opposed.opponentTarget}} ({{opposed.opponentDos}})</li>
+            <li>{{localize "WH40K.NavigatorPowers.NetDoS"}}: {{opposed.netDos}}</li>
+        </ul>
+    </div>
+    {{/if}}
+
+    {{#if effectTiers}}
+    <div class="tw-mt-2">
+        <div class="tw-text-xs tw-uppercase tw-opacity-70 tw-mb-1">{{localize "WH40K.NavigatorPowers.EffectByLevel"}}</div>
+        <ul class="wh40k-navpwr-card__tiers tw-text-sm tw-list-none tw-m-0 tw-p-0">
+            {{#each effectTiers}}
+            <li><strong>{{localize this.levelLabelKey}}:</strong> {{this.effect}}</li>
+            {{/each}}
+        </ul>
+    </div>
+    {{/if}}
 
     {{#if item.system.description.value}}
     <div class="tw-mt-2 tw-text-sm">
@@ -31,16 +55,22 @@
     </div>
     {{/if}}
 
+    {{#if sustainText}}
+    <div class="tw-mt-2 tw-text-sm">
+        <strong>{{localize "WH40K.NavigatorPowers.Sustained"}}:</strong> {{sustainText}}
+    </div>
+    {{/if}}
+
     {{#if item.system.sideEffects}}
     <div class="tw-mt-2 tw-text-sm">
-        <strong>Side Effects:</strong> {{{item.system.sideEffects}}}
+        <strong>{{localize "WH40K.NavigatorPowers.SideEffects"}}:</strong> {{{item.system.sideEffects}}}
     </div>
     {{/if}}
 
     {{#unless success}}
     <div class="tw-mt-3 tw-pt-2 tw-border-t tw-border-black/10 tw-text-right">
         <button class="tw-px-2 tw-py-1 tw-rounded tw-text-xs" data-action="rollNavigatorMutation">
-            <i class="fas fa-dna"></i> Check Navigator Mutation
+            <i class="fas fa-dna"></i> {{localize "WH40K.NavigatorPowers.CheckMutation"}}
         </button>
     </div>
     {{/unless}}
