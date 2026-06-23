@@ -1339,7 +1339,6 @@ const APP_TOURS_EXTRA_FLOWS = [
     'collapsible-panel-mixin-toggle',
     'enhanced-animations-counter',
     'appv2-mixin-number-autoselect',
-    'contextmenu-trigger-event',
     'effect-actions-crud',
     'item-target-resolve',
     'active-modifiers-panel-prepare',
