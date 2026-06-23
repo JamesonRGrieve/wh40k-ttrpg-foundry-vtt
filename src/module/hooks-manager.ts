@@ -772,6 +772,11 @@ export class HooksManager {
     }
 
     static async ready(): Promise<void> {
+        // Register the guided tour first — it is synchronous and independent of
+        // the world-data steps below, so registering it up front guarantees it
+        // lands even if a later await throws on a minimal/seed world.
+        game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
+
         await checkAndMigrateWorld();
         await HooksManager.hydrateWorldActorsOnReady();
         await uuidNameCache.build();
@@ -783,8 +788,6 @@ export class HooksManager {
         game.wh40k.tooltips = new TooltipsWH40K();
         await game.wh40k.tooltips.initialize();
         TransactionManager.initialize();
-
-        game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
 
         if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.processActiveEffectsDuringCombat) === false) {
             DHCombatActionManager.disableHooks();
