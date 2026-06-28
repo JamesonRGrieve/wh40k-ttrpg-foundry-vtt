@@ -1,12 +1,21 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
     applyQualityModifiers,
     calculateRangeBracket,
     calculateRangeModifier,
+    calculateTokenDistance,
     formatRangeDisplay,
     isAtMeltaRange,
     isOutOfRange,
 } from '../src/module/utils/range-calculator';
+
+/** Minimal Token-placeable projection the distance helper reads. */
+type TokenArg = Parameters<typeof calculateTokenDistance>[0];
+function fakeToken(elevation: number | undefined, hasDocument = true): TokenArg {
+    const token = hasDocument ? { document: elevation === undefined ? {} : { elevation } } : { document: undefined };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: a real Foundry Token placeable cannot be constructed in a unit test; calculateTokenDistance only reads token.document.elevation, which this projection supplies
+    return token as unknown as TokenArg;
+}
 
 describe('calculateRangeBracket', () => {
     it('returns melee for weapons with range <= 1', () => {
@@ -149,5 +158,44 @@ describe('isOutOfRange', () => {
 
     it('returns false at exactly 3x weapon range', () => {
         expect(isOutOfRange(90, 30)).toBe(false);
+    });
+});
+
+describe('calculateTokenDistance (#233)', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    function stubGrid(measured: number): void {
+        vi.stubGlobal('canvas', { grid: { measurePath: () => measured } });
+    }
+
+    it('returns 0 when either token is null/undefined', () => {
+        stubGrid(10);
+        expect(calculateTokenDistance(null, fakeToken(0))).toBe(0);
+        expect(calculateTokenDistance(fakeToken(0), undefined)).toBe(0);
+    });
+
+    it('does NOT throw when a token document is missing — defaults elevation to 0', () => {
+        stubGrid(10);
+        // The regression: a placeable mid-teardown / preview has no `.document`.
+        expect(() => calculateTokenDistance(fakeToken(0, false), fakeToken(0))).not.toThrow();
+        expect(calculateTokenDistance(fakeToken(0, false), fakeToken(0))).toBe(10);
+    });
+
+    it('returns the flat grid distance when elevations match', () => {
+        stubGrid(12);
+        expect(calculateTokenDistance(fakeToken(5), fakeToken(5))).toBe(12);
+    });
+
+    it('applies a 3D (Pythagorean) distance when elevations differ', () => {
+        stubGrid(3); // horizontal 3, vertical 4 -> hypotenuse 5
+        expect(calculateTokenDistance(fakeToken(0), fakeToken(4))).toBe(5);
+    });
+
+    it('treats an absent elevation field the same as ground level (0)', () => {
+        stubGrid(3);
+        // token2 has a document but no elevation key -> 0, matching token1 at 0.
+        expect(calculateTokenDistance(fakeToken(0), fakeToken(undefined))).toBe(3);
     });
 });

@@ -256,6 +256,23 @@ export function calculateRangeModifier(options: RangeCalculationOptions): RangeC
 }
 
 /**
+ * Read a token's elevation defensively. `Token#document` is typed non-null by
+ * fvtt-types, but a placeable can be an unplaced preview or mid-teardown at
+ * draw / target-select time, leaving `.document` undefined — reading
+ * `.elevation` then throws ("Cannot read properties of undefined (reading
+ * 'elevation')" when selecting an attack target, #233). Ground level (0) is the
+ * safe default.
+ */
+function tokenElevation(token: foundry.canvas.placeables.Token): number {
+    // fvtt-types asserts Token#document is non-null, but an unplaced preview /
+    // teardown placeable leaves it undefined at target-select time. Widen
+    // `document` to optional (a structural view, not a value change) so the
+    // guard below is type-checked rather than reported as a dead branch.
+    const doc = (token as { document?: { elevation?: number } }).document;
+    return typeof doc?.elevation === 'number' ? doc.elevation : 0;
+}
+
+/**
  * Calculate distance between two tokens in combat.
  * Accounts for elevation differences (3D distance).
  *
@@ -275,9 +292,10 @@ export function calculateTokenDistance(
     const pathDistance = grid.measurePath([token1, token2], {});
     let distance = typeof pathDistance === 'number' ? pathDistance : pathDistance.distance;
 
-    // Account for elevation difference (3D distance)
-    const elevation1 = token1.document.elevation;
-    const elevation2 = token2.document.elevation;
+    // Account for elevation difference (3D distance). Guarded against a missing
+    // token document (preview / teardown) via tokenElevation (#233).
+    const elevation1 = tokenElevation(token1);
+    const elevation2 = tokenElevation(token2);
 
     if (elevation1 !== elevation2) {
         const elevationDiff = Math.abs(elevation2 - elevation1);
