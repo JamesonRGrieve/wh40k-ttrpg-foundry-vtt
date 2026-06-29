@@ -11,22 +11,13 @@ import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
 import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
 import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
+import { aggregateRollTarget, clampModifierToCap } from './aggregate-target.ts';
 import { evaluateFormula } from './evaluate-formula.ts';
 
-/** Maximum total bonus / penalty allowed on a single test target.
- *  Per DH2 core.md L1050: "no accumulated bonus exceeds +60 and no
- *  accumulated penalty exceeds -60". */
-export const ROLL_MODIFIER_CAP = 60;
-
-/** Apply the ±ROLL_MODIFIER_CAP clamp to a raw modifier sum.
- *  Returns the clamped value, the original raw value, and whether
- *  the cap actually fired (useful for chat-card surfacing). */
-export function clampModifierToCap(rawTotal: number): { clamped: number; raw: number; capFired: boolean } {
-    const raw = Number.isFinite(rawTotal) ? rawTotal : 0;
-    if (raw > ROLL_MODIFIER_CAP) return { clamped: ROLL_MODIFIER_CAP, raw, capFired: true };
-    if (raw < -ROLL_MODIFIER_CAP) return { clamped: -ROLL_MODIFIER_CAP, raw, capFired: true };
-    return { clamped: raw, raw, capFired: false };
-}
+// Re-exported for existing consumers (chat-card cap surfacing, tests) that
+// import the cap primitives from this module. The canonical definitions now
+// live in `aggregate-target.ts` alongside the pure target-sum helpers.
+export { clampModifierToCap, ROLL_MODIFIER_CAP } from './aggregate-target.ts';
 
 /**
  * Base class for all roll-related data
@@ -282,6 +273,15 @@ export class WeaponRollData extends RollData {
     ammoUsed: number = 0;
     weaponModifiers: Record<string, number> = {};
 
+    /**
+     * Live aggregate test target shown at the top of the attack dialog:
+     * base characteristic + every active modifier (weapon, training, combat
+     * action, difficulty, aim, range, attack-mode, …) with the ±60 cap applied.
+     * Recomputed on every `update()` so changing any modifier moves the number,
+     * and equal to `modifiedTarget` once `finalize()` commits the roll (#382).
+     */
+    displayTarget: number = 0;
+
     canAim: boolean = true;
     isKnockDown: boolean = false;
     isFeint: boolean = false;
@@ -360,6 +360,12 @@ export class WeaponRollData extends RollData {
         }
         calculateWeaponRange(this);
         this.updateBaseTarget();
+
+        // Refresh the displayed aggregate target so the top number reflects
+        // every active modifier on every render / form change (#382). Uses the
+        // same modifier assembly the committed roll runs in `finalize()`, so the
+        // displayed value matches `modifiedTarget` exactly.
+        this.displayTarget = aggregateRollTarget(this.baseTarget, this.assembleFinalModifiers());
     }
 
     initialize(): void {
@@ -422,28 +428,42 @@ export class WeaponRollData extends RollData {
         }
     }
 
-    async finalize(): Promise<void> {
+    /**
+     * Assemble the full modifier record the roll target is summed from: the
+     * dialog-managed modifiers merged with the context-dependent attack bonuses
+     * (ammo, attack specials, weapon modifications) and the range bonus, with
+     * the Suppressing Fire override applied. Pure with respect to
+     * `this.modifiers` — it reads but never reassigns it — so it can be called
+     * every render to refresh `displayTarget` without disturbing the user's
+     * selected modifier inputs. The attack-bonus calculators it invokes each
+     * reset their own scratch map (`specialModifiers` / `weaponModifiers`)
+     * before recomputing, so repeated calls are idempotent.
+     */
+    assembleFinalModifiers(): Record<string, number> {
         calculateAmmoAttackBonuses(this as Parameters<typeof calculateAmmoAttackBonuses>[0]);
         calculateAttackSpecialAttackBonuses(this);
         calculateWeaponModifiersAttackBonuses(this);
-        this.modifiers = {
+
+        // Suppressing Fire ignores other modifiers
+        if (this.action.includes('Suppressing Fire')) {
+            return { attack: -20 };
+        }
+
+        return {
             ...this.modifiers,
             ...this.specialModifiers,
             ...this.weaponModifiers,
             range: this.rangeBonus,
         };
+    }
+
+    async finalize(): Promise<void> {
+        this.modifiers = this.assembleFinalModifiers();
 
         // Unselect Weapon -- UI issues if it's selected on start
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- defensive: weapon may be unset before initialize() runs
         if (this.weapon) {
             RollData.setSelected(this.weapon, false);
-        }
-
-        // Suppressing Fire ignores other modifiers
-        if (this.action.includes('Suppressing Fire')) {
-            this.modifiers = {
-                attack: -20,
-            };
         }
 
         await this.calculateTotalModifiers();
