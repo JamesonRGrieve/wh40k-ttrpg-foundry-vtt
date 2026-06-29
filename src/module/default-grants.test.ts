@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isCreatureActorType, itemKey, selectGrantsToAdd } from './default-grants.ts';
+import { applyDefaultGrantPolicy, isCreatureActorType, itemKey, selectGrantsToAdd } from './default-grants.ts';
 
 describe('default-grants', () => {
     describe('isCreatureActorType', () => {
@@ -65,6 +65,42 @@ describe('default-grants', () => {
             const knife = { name: 'Knife', type: 'weapon' };
             const existing = new Set([itemKey('Unarmed', 'weapon')]);
             expect(selectGrantsToAdd([unarmed, knife], existing)).toEqual([knife]);
+        });
+    });
+
+    describe('applyDefaultGrantPolicy', () => {
+        it('forces system.bound = true on a source that lacks a bound flag', () => {
+            const [out] = applyDefaultGrantPolicy([{ name: 'Unarmed', type: 'weapon', system: { damage: '1d10' } }]);
+            expect((out?.system as { bound?: boolean }).bound).toBe(true);
+        });
+
+        it('overrides an existing system.bound = false', () => {
+            const [out] = applyDefaultGrantPolicy([{ name: 'Unarmed', type: 'weapon', system: { bound: false } }]);
+            expect((out?.system as { bound?: boolean }).bound).toBe(true);
+        });
+
+        it('binds a source with no system block at all', () => {
+            const [out] = applyDefaultGrantPolicy([{ name: 'Unarmed', type: 'weapon' }]);
+            expect((out?.system as { bound?: boolean }).bound).toBe(true);
+        });
+
+        it('preserves the rest of the system payload (per-line variant fields untouched)', () => {
+            const [out] = applyDefaultGrantPolicy([{ name: 'Unarmed', type: 'weapon', system: { damage: '1d10', penetration: 0 } }]);
+            expect(out?.system).toEqual({ damage: '1d10', penetration: 0, bound: true });
+        });
+
+        it('does not mutate the input sources (cached scan results stay clean)', () => {
+            const source = { name: 'Unarmed', type: 'weapon', system: { bound: false } };
+            applyDefaultGrantPolicy([source]);
+            expect(source.system.bound).toBe(false);
+        });
+
+        it('binds every source when several are granted', () => {
+            const out = applyDefaultGrantPolicy([
+                { name: 'Unarmed', type: 'weapon', system: {} },
+                { name: 'Bite', type: 'weapon', system: {} },
+            ]);
+            expect(out.every((s) => (s.system as { bound?: boolean }).bound === true)).toBe(true);
         });
     });
 });

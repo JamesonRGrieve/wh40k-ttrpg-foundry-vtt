@@ -2507,12 +2507,19 @@ export default class CharacterSheet extends BaseActorSheet {
 
         for (const item of this.actor.items) {
             const itemType = item.type as string;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is Foundry DataModel; transient flags not on the typed schema yet; bracket access needs Record cast
-            const sysState = (item.system as Record<string, unknown>)['state'] as Record<string, unknown> | undefined;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is a Foundry DataModel; transient flags (state) and the default-grant flag are not on the typed schema yet; bracket access needs Record cast
+            const sys = item.system as Record<string, unknown>;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is an untyped transient-flag bag on the DataModel; bracket access needs Record cast
+            const sysState = sys['state'] as Record<string, unknown> | undefined;
             const inShip = sysState?.['inShipStorage'] === true;
+            // Default-granted fallback items (e.g. the bound Unarmed strike, #228)
+            // are the combat fallback, not inventory loot — keep them out of the
+            // carried/backpack/ship inventory lists (they still flow into the
+            // combat `weapons` category below).
+            const isDefaultGrant = sys['grantedByDefault'] === true;
 
             // Add all equipment to "all" for display
-            if (equipmentTypes.includes(itemType)) {
+            if (equipmentTypes.includes(itemType) && !isDefaultGrant) {
                 categories.all.push(item);
 
                 // Split into carried vs ship storage
