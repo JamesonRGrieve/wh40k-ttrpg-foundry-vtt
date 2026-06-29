@@ -14,6 +14,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { t } from '../i18n/t.ts';
 import { dropItemAsItemPile } from '../integrations/item-piles.ts';
+import { NON_DROPPABLE_TYPES } from './non-droppable-types.ts';
 
 /** Minimal position shape used by the pure placement helpers. */
 interface GridPoint {
@@ -45,31 +46,6 @@ interface StackMergePlan {
 }
 
 const OWNERSHIP_OWNER = 3;
-
-/**
- * Item types that represent ownership facts rather than physical objects and
- * therefore can never be dropped on the ground. Content-agnostic: these are
- * system mechanics, not compendium content (Direction #7).
- */
-const NON_DROPPABLE_TYPES: ReadonlySet<string> = new Set([
-    'skill',
-    'talent',
-    'trait',
-    'aptitude',
-    'condition',
-    'criticalInjury',
-    'mutation',
-    'malignancy',
-    'mentalDisorder',
-    'originPath',
-    'peer',
-    'enemy',
-    'specialAbility',
-    'psychicPower',
-    'navigatorPower',
-    'ritual',
-    'order',
-]);
 
 // biome-ignore lint/complexity/noStaticOnlyClass: stable system API surface with many call sites (sheet action, token HUD, integration + e2e tiers)
 export class ItemDropManager {

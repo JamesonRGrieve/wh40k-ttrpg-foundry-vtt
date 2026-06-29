@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { dropItemAsItemPile } from './item-piles.ts';
+import { dropItemAsItemPile, isItemPilesPile, registerItemPilesValuation } from './item-piles.ts';
 
 /**
  * Unit coverage for the #385 Item Piles drop routing. Exercises the
@@ -52,5 +52,72 @@ describe('dropItemAsItemPile (#385)', () => {
         const createItemPile = vi.fn().mockRejectedValue(new Error('boom'));
         stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: { createItemPile } } });
         expect(await dropItemAsItemPile({ name: 'X' }, POS, 'scene1')).toBe(false);
+    });
+});
+
+describe('isItemPilesPile', () => {
+    it('is true for an actor flagged as an enabled Item Piles pile', () => {
+        expect(isItemPilesPile({ flags: { 'item-piles': { data: { enabled: true } } } })).toBe(true);
+    });
+
+    it('is false when the pile flag is disabled, absent, or malformed', () => {
+        expect(isItemPilesPile({ flags: { 'item-piles': { data: { enabled: false } } } })).toBe(false);
+        expect(isItemPilesPile({ flags: { 'item-piles': { data: {} } } })).toBe(false);
+        expect(isItemPilesPile({ flags: { 'item-piles': 'not-an-object' } })).toBe(false);
+        expect(isItemPilesPile({ flags: {} })).toBe(false);
+    });
+
+    it('is false for null/undefined or a non-flaggable actor', () => {
+        expect(isItemPilesPile(null)).toBe(false);
+        expect(isItemPilesPile(undefined)).toBe(false);
+        expect(isItemPilesPile({})).toBe(false);
+    });
+});
+
+describe('registerItemPilesValuation — system integration payload', () => {
+    interface CapturedConfig {
+        VERSION: string;
+        ACTOR_CLASS_TYPE: string;
+        ITEM_QUANTITY_ATTRIBUTE: string;
+        ITEM_PRICE_ATTRIBUTE: string;
+        ITEM_FILTERS: Array<{ path: string; filters: string }>;
+        CURRENCIES: object[];
+    }
+
+    it('registers a complete payload (pile actor type + quantity + filters) on item-piles-ready', () => {
+        let captured: CapturedConfig | undefined;
+        const addSystemIntegration = vi.fn((config: CapturedConfig): void => {
+            captured = config;
+        });
+        let readyCb: (() => void) | undefined;
+        vi.stubGlobal('Hooks', {
+            once: (event: string, cb: () => void) => {
+                if (event === 'item-piles-ready') readyCb = cb;
+            },
+        });
+        vi.stubGlobal('game', { modules: { get: () => ({ active: true }) }, itempiles: { API: { addSystemIntegration } } });
+
+        registerItemPilesValuation();
+        expect(readyCb).toBeTypeOf('function');
+        readyCb?.();
+
+        expect(captured).toBeDefined();
+        const cfg = captured as CapturedConfig;
+        // The bug that broke drops: ACTOR_CLASS_TYPE was empty -> "type may not be undefined".
+        expect(cfg.ACTOR_CLASS_TYPE).toBe('loot');
+        expect(cfg.ITEM_QUANTITY_ATTRIBUTE).toBe('system.quantity');
+        expect(cfg.ITEM_PRICE_ATTRIBUTE).toBe('system.price.value');
+        expect(cfg.VERSION).toBeTruthy();
+        // Non-physical items (talents etc.) are filtered out of pile contents.
+        expect(cfg.ITEM_FILTERS.some((f) => f.path === 'type' && f.filters.includes('talent'))).toBe(true);
+        // Currencies come from the static WH40K.currencies registry.
+        expect(cfg.CURRENCIES.length).toBeGreaterThan(0);
+    });
+
+    it('no-ops (no throw, no hook) when Item Piles is not active', () => {
+        vi.stubGlobal('game', { modules: { get: () => undefined } });
+        expect(() => {
+            registerItemPilesValuation();
+        }).not.toThrow();
     });
 });
