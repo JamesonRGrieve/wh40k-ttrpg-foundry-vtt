@@ -102,7 +102,6 @@ import {
     spendUnleashDaemon,
     type PossessionSlot,
 } from '../../rules/possession.ts';
-import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
 import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
 import { errorMessage } from '../../utils/error-message.ts';
@@ -118,7 +117,6 @@ import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import FateUsesDialog from '../dialogs/fate-uses-dialog.ts';
-import TransactionRequestDialog from '../dialogs/transaction-request-dialog.ts';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import ColonyGrowthDialog from '../prompts/colony-growth-dialog.ts';
 import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
@@ -261,7 +259,6 @@ type CharacterSheetContextDeclaredFields = {
     equippedCount?: number;
     encumbrancePercent?: number;
     backpackPercent?: number;
-    transactionSourceCount?: number;
     hasPenitent?: boolean;
     hasFanatic?: boolean;
     hasCrusader?: boolean;
@@ -886,7 +883,6 @@ export default class CharacterSheet extends BaseActorSheet {
             'addAcquisition': CharacterSheet.#addAcquisition,
             'removeAcquisition': CharacterSheet.#removeAcquisition,
             'openAcquisitionDialog': CharacterSheet.#openAcquisitionDialog,
-            'openTransactionDialog': CharacterSheet.#openTransactionDialog,
 
             // Dark Pact actions (Enemies Beyond p. 72, #84)
             'adjustPactDisposition': CharacterSheet.#adjustPactDisposition,
@@ -3372,9 +3368,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     _prepareEquipmentContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
-        const ctx = context as CharacterSheetContext;
-        // Equipment data already prepared in _prepareLoadoutData
-        ctx.transactionSourceCount = TransactionManager.listSourcesForBuyer(this.actor).length;
+        // Equipment data is prepared in _prepareLoadoutData; nothing further here.
         return context;
     }
 
@@ -4512,26 +4506,6 @@ export default class CharacterSheet extends BaseActorSheet {
         event.preventDefault();
         if (this._resolveGameSystemId() !== 'rt') return;
         ColonyGrowthDialog.show(this.actor);
-    }
-
-    /**
-     * Open the barter / requisition dialog from the equipment page.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #openTransactionDialog(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
-        event.preventDefault();
-
-        const sourceCount = TransactionManager.listSourcesForBuyer(this.actor).length;
-        if (!sourceCount) {
-            this._notify('warning', 'No barter or requisition sources are currently available.', {
-                duration: 4000,
-            });
-            return;
-        }
-
-        await TransactionRequestDialog.show(this.actor);
     }
 
     /* -------------------------------------------- */

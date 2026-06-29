@@ -106,8 +106,6 @@ import { WH40K } from './rules/config.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
 import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.ts';
 import { DHTourMain } from './tours/main-tour.ts';
-import { registerTradeProximityHud } from './transactions/trade-proximity.ts';
-import { TransactionManager } from './transactions/transaction-manager.ts';
 import type { WH40KGameSystem } from './types/global.d.ts';
 import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
 import { backfillOriginPathUuids } from './utils/origin-path-uuid-backfill.ts';
@@ -449,7 +447,6 @@ export class HooksManager {
             savePreset: async (actor: WH40KBaseActor) => Promise.resolve(npcApplications.CombatPresetDialog.savePreset(actor as never)),
             loadPreset: async (actor: WH40KBaseActor) => Promise.resolve(npcApplications.CombatPresetDialog.loadPreset(actor as never)),
             openPresetLibrary: async () => Promise.resolve(npcApplications.CombatPresetDialog.showLibrary()),
-            transaction: TransactionManager,
             // Dice/Roll classes
             dice: dice,
             BasicRollWH40K: dice.BasicRollWH40K,
@@ -746,7 +743,6 @@ export class HooksManager {
         // Register movement actions and Token HUD hooks (after settings are available)
         documents.TokenDocumentWH40K.registerMovementActions();
         documents.TokenDocumentWH40K.registerHUDListeners();
-        registerTradeProximityHud();
         // eslint-disable-next-line no-restricted-syntax -- boundary: costAggregator callback signature is untyped in fvtt-types; unknown[] is the correct boundary type
         CONFIG.Token.movement.costAggregator = (results: unknown[], _distance: unknown, _segment: unknown) => {
             return Math.max(...results.map((i) => (i as { cost: number }).cost));
@@ -795,7 +791,6 @@ export class HooksManager {
         const wh40k = game.wh40k;
         wh40k.tooltips = tooltips;
         await tooltips.initialize();
-        TransactionManager.initialize();
 
         if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.processActiveEffectsDuringCombat) === false) {
             DHCombatActionManager.disableHooks();
