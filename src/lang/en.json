@@ -4422,7 +4422,6 @@
         },
         "FateUses": {
             "DialogTitle": "Uses of Fate Points",
-            "ViewLinkLabel": "View Fate Uses",
             "Intro": "A Fate Point may be spent at any time to invoke the Emperor's favor. Each entry below describes one canonical use. Spending a Fate Point normally returns at the start of the next session; burning a Fate Point removes it permanently.",
             "BurnTag": "burn",
             "BonusAttributesTitle": "Additional Fate Effects",
