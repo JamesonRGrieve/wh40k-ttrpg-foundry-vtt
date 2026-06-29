@@ -4,8 +4,8 @@
     Rendered as a compact vital ROW (the same `vital-pip-row` chrome Fatigue
     uses), so Shock sits immediately under Fatigue inside the Vitals card and
     reads as one of the vital rows rather than a separate panel. Shock has no
-    derived max (it is an open accumulator), so it shows a value readout +
-    GM −/+ steppers instead of a pip strip, plus the "Snap Out of It" action.
+    derived max (it is an open accumulator), so it shows one greyed tile per
+    accumulated point plus the "Snap Out of It" action and ± steppers.
 
     Surfaces `system.shock.{value,max}`. The brain button dispatches the
     `snapOutOfShock` action on CharacterSheet (Willpower test, Challenging +0;
@@ -19,42 +19,48 @@
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
         icon="fa-bolt" label=(localize "WH40K.Shock.Header") rowClass="wh40k-shock-panel"}}
-    <div class="tw-flex tw-items-center tw-gap-1.5 tw-ml-auto" data-shock-value="{{system.shock.value}}">
-        {{!-- Lightning strip (#315): one bolt per accumulated Shock point. Shock is an
-             open accumulator (no fixed max), so this is a display strip — the value
-             readout and ± steppers remain the way to change it. --}}
-        {{#if (gt system.shock.value 0)}}
-        <span class="tw-flex tw-items-center tw-gap-0.5">
-            {{#each (range 1 system.shock.value)}}
-            <i class="fas fa-bolt tw-text-[0.7rem] tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
-            {{/each}}
-        </span>
-        {{/if}}
-        <span class="wh40k-shock-value tw-text-[1.1rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-min-w-[20px] tw-text-center">{{system.shock.value}}</span>
-        {{#if (gt system.shock.max 0)}}
-        <span class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)]">/&nbsp;<span class="wh40k-shock-max">{{system.shock.max}}</span></span>
-        {{/if}}
-        <button type="button"
-                class="wh40k-shock-stepper-minus tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-medium)]"
-                data-action="decrement"
-                data-field="system.shock.value"
-                data-min="0"
-                title="{{localize 'WH40K.Shock.Value'}} −1">
-            <i class="fas fa-minus"></i>
-        </button>
-        <button type="button"
-                class="wh40k-shock-stepper-plus tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-medium)]"
-                data-action="increment"
-                data-field="system.shock.value"
-                title="{{localize 'WH40K.Shock.Value'}} +1">
-            <i class="fas fa-plus"></i>
-        </button>
-        <button type="button"
-                class="wh40k-shock-snap-btn tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-bright)] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
-                data-action="snapOutOfShock"
-                title="{{localize 'WH40K.Shock.SnapOutTooltip'}}"
-                {{#if (lte system.shock.value 0)}}disabled{{/if}}>
-            <i class="fas fa-brain"></i>
-        </button>
+    {{!-- Snap Out of It — sits immediately to the right of the "Shock" label,
+         mirroring Fate's reset button placement next to "Fate". Placing it as the
+         first flex child in the block puts it adjacent to the label span in the
+         vital-pip-row's flex row, with no auto-margin push. Disabled at zero. --}}
+    <button type="button"
+            class="wh40k-shock-snap-btn tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-bright)] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+            data-action="snapOutOfShock"
+            title="{{localize 'WH40K.Shock.SnapOutTooltip'}}"
+            {{#if (lte system.shock.value 0)}}disabled{{/if}}>
+        <i class="fas fa-brain"></i>
+    </button>
+
+    {{!-- Tile strip: one greyed tile per accumulated Shock point. Shock is an open
+         accumulator (no fixed max), so all tiles render identically as inactive/greyed —
+         there is no available vs spent distinction as in Fate or Fatigue. The ml-auto
+         wrapper pushes the cluster to the trailing edge of the row.
+
+         The tw-sr-only span inside wh40k-shock-value preserves the numeric text so the
+         e2e spec's .wh40k-shock-value.textContent.trim() === String(value) assertion
+         still holds after the visible numeric readout is replaced by tiles. --}}
+    <div class="wh40k-shock-value tw-flex tw-flex-wrap tw-items-center tw-gap-0.5 tw-ml-auto tw-max-w-[10rem]"
+         data-shock-value="{{system.shock.value}}">
+        <span class="tw-sr-only">{{system.shock.value}}</span>
+        {{#each (range 1 system.shock.value)}}
+        <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-4 tw-h-4 tw-border tw-border-solid tw-rounded-[3px] tw-text-[color:var(--wh40k-text-muted)] tw-opacity-50 tw-border-[color:var(--wh40k-text-muted)] tw-bg-transparent"></span>
+        {{/each}}
     </div>
+
+    {{!-- ± steppers — the canonical way to change the shock value. --}}
+    <button type="button"
+            class="wh40k-shock-stepper-minus tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-medium)]"
+            data-action="decrement"
+            data-field="system.shock.value"
+            data-min="0"
+            title="{{localize 'WH40K.Shock.Value'}} −1">
+        <i class="fas fa-minus"></i>
+    </button>
+    <button type="button"
+            class="wh40k-shock-stepper-plus tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-medium)]"
+            data-action="increment"
+            data-field="system.shock.value"
+            title="{{localize 'WH40K.Shock.Value'}} +1">
+        <i class="fas fa-plus"></i>
+    </button>
 {{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}
