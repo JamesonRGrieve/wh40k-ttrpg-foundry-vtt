@@ -23,3 +23,20 @@ export function isEffectSuppressedByEquipState(itemSystem: { state?: { equipped?
     if (state === undefined) return false;
     return state.equipped !== true;
 }
+
+/**
+ * Whether a weapon's combat action must be refused because the weapon is not
+ * equipped (#265). A combat action (attack roll) requires the weapon to be
+ * drawn/equipped; a stowed weapon cannot be fired or swung until it is drawn.
+ * Enforcement is gated by `enforce` so PCs (whose weapons are explicitly
+ * equipped) require the equipped state, while NPCs — who attack with intrinsic
+ * profiles and don't track per-weapon draw state — opt out by passing `false`.
+ *
+ * @param itemSystem  The weapon's `system` data (only `state.equipped` is read).
+ * @param enforce     Whether the equipped requirement applies (PCs: `true`).
+ * @returns           `true` when the attack should be refused.
+ */
+export function isWeaponAttackBlockedByEquip(itemSystem: { state?: { equipped?: boolean } } | null | undefined, enforce: boolean): boolean {
+    if (!enforce) return false;
+    return isEffectSuppressedByEquipState(itemSystem);
+}

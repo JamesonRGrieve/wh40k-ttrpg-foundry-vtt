@@ -414,8 +414,12 @@ export default class WeaponData extends ItemDataModel.mixin(
     override prepareDerivedData(): void {
         super.prepareDerivedData();
 
-        // Weapons are always equipped unless stowed in ship storage
-        this.state.equipped = !this.state.inShipStorage;
+        // #265: `state.equipped` is authoritative persisted state — a weapon must be
+        // drawn/equipped before it can make a combat action, and the Combat tab marks
+        // the equipped set. Do NOT force-derive it here; doing so clobbered the stored
+        // toggle on every prepare, leaving every weapon permanently "equipped" (uniform
+        // highlight, dead attack gate). Ship-storage stow is handled by the
+        // EquippableTemplate stow helpers, which already clear `state.equipped`.
 
         // Auto-derive twoHanded for heavy weapons (if not explicitly set)
         // This provides a sensible default while allowing manual override

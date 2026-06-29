@@ -1,7 +1,7 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { computeCharacteristicTotals } from '../data/shared/characteristic-math.ts';
-import { isEffectSuppressedByEquipState } from '../data/shared/equip-state.ts';
+import { isEffectSuppressedByEquipState, isWeaponAttackBlockedByEquip } from '../data/shared/equip-state.ts';
 import { computeMovement } from '../data/shared/movement-math.ts';
 import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shared/subtlety-adjuster.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
@@ -778,9 +778,8 @@ export class WH40KBaseActor extends Actor {
      */
     protected async _dispatchItemRoll(item: WH40KItem, { enforceEquipped }: { enforceEquipped: boolean }): Promise<void> {
         if (item.type === 'weapon') {
-            if (enforceEquipped && item.system.state.equipped !== true) {
-                // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Actor.WeaponNotEquipped localization key not yet in en.json
-                ui.notifications.warn('Actor must have weapon equipped!');
+            if (isWeaponAttackBlockedByEquip(item.system, enforceEquipped)) {
+                ui.notifications.warn(t('WH40K.Warning.WeaponNotEquipped'));
                 return;
             }
             if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls) === true) {
