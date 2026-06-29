@@ -2693,7 +2693,9 @@
             "AdjusterList": "Active adjusters",
             "EmptyAdjusters": "No adjusters active.",
             "Clamped": "min loss {value}",
-            "BreakdownTitle": "Subtlety adjuster breakdown"
+            "BreakdownTitle": "Subtlety adjuster breakdown",
+            "EffectClampDescription": "Resists Warband Subtlety loss (minimum retained loss {value}).",
+            "EffectPassiveDescription": "Standing Warband Subtlety modifier ({value})."
         },
         "DarkPact": {
             "Header": "Dark Pacts",
