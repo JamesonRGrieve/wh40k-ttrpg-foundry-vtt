@@ -12,6 +12,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     declare availability: string;
     declare craftsmanship: string;
     declare quantity: number;
+    declare bound: boolean;
     declare variantOf: string;
     declare homebrew: {
         inventory: {
@@ -95,6 +96,11 @@ export default class PhysicalItemTemplate extends SystemDataModel {
                 min: 0,
                 integer: true,
             }),
+            // Bound (undroppable / untradable) flag. Content-agnostic primitive:
+            // when true the item cannot be dropped to the scene or transferred to
+            // another actor (#390) — used for the default Unarmed weapon (#228),
+            // quest items, and bound gear. GM-editable on the item sheet.
+            bound: new fields.BooleanField({ required: true, initial: false }),
             // Variant linkage (see src/packs/CLAUDE.md "Variants"). `variantOf`
             // is the Foundry UUID of the standard / most-vanilla variant this
             // item is a variant of — '' when this item IS that base variant.

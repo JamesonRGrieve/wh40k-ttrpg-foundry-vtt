@@ -194,3 +194,21 @@ describe('ItemDropManager.classifyItemDrop', () => {
         expect(ItemDropManager.classifyItemDrop({ sameActorHasItem: false, crossActor: true, sourceOwned: false })).toBe('copy');
     });
 });
+
+describe('ItemDropManager.isBound (#390)', () => {
+    it('is true when system.bound is true', () => {
+        expect(ItemDropManager.isBound({ system: { bound: true } })).toBe(true);
+    });
+
+    it('is false when system.bound is false, null, or absent', () => {
+        expect(ItemDropManager.isBound({ system: { bound: false } })).toBe(false);
+        expect(ItemDropManager.isBound({ system: { bound: null } })).toBe(false);
+        expect(ItemDropManager.isBound({ system: {} })).toBe(false);
+        expect(ItemDropManager.isBound({ system: null })).toBe(false);
+    });
+
+    it('is false for null/undefined items', () => {
+        expect(ItemDropManager.isBound(null)).toBe(false);
+        expect(ItemDropManager.isBound(undefined)).toBe(false);
+    });
+});
