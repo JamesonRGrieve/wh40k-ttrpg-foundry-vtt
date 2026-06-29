@@ -33,6 +33,15 @@ interface OriginChoiceOption {
 }
 
 /**
+ * Aptitude-derivation surface (#381). The pure logic lives in the Foundry-free
+ * sibling `aptitude-derivation.ts` (directly unit-testable, importable by the
+ * character actor DataModel without dragging in this heavy class cascade);
+ * re-exported here so the origin path stays the discoverable home for "how the
+ * origin path's aptitudes are derived".
+ */
+export { type AptitudeDerivation, type AptitudeGrantSource, collectGrantedAptitudes, deriveAptitudes, extractLegacyElectives } from './aptitude-derivation.ts';
+
+/**
  * Data model for Origin Path items (homeworld, birthright, career, etc).
  * @extends ItemDataModel
  * @mixes DescriptionTemplate

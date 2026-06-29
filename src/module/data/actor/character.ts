@@ -1,6 +1,7 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import { psyRatingTotalCost, psychicPowerCost } from '../../rules/xp-costs.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
+import { type AptitudeDerivation, type AptitudeGrantSource, collectGrantedAptitudes, deriveAptitudes, extractLegacyElectives } from '../item/origin-path.ts';
 import { parseCharacteristicBonusTerm } from '../shared/characteristic-formula.ts';
 import { originStepLabel } from '../shared/origin-steps.ts';
 import { bcDaemonPrinceSchemaFields, type BcDaemonPrinceDeclarations } from './mixins/bc-daemon-prince-template.ts';
@@ -40,24 +41,8 @@ interface ActorParent {
     };
 }
 
-/** Option in a grant choice. */
-interface GrantChoiceOption {
-    value?: string;
-    name?: string;
-}
-
-/** A single choice entry in a grant. */
-interface GrantChoice {
-    label?: string;
-    name?: string;
-    type?: string;
-    options?: GrantChoiceOption[];
-}
-
-/** Shape of origin-path grants data object. */
+/** Shape of origin-path grants data object (the slice `_computeWoundsMax` reads). */
 interface OriginPathGrants {
-    aptitudes?: string[];
-    choices?: GrantChoice[];
     woundsFormula?: string;
 }
 
@@ -244,7 +229,32 @@ export default class CharacterData extends CreatureTemplate {
     declare subtlety: { value: number; max: number };
     declare insanity: number;
     declare corruption: number;
+    /**
+     * Aptitude set used for XP-cost matching. DERIVED at prep time from the
+     * origin path (home world / background / role / elite / divination grants +
+     * resolved choices) unioned with the validated {@link electiveAptitudes}.
+     * The schema slot persists, but `_computeOriginPathEffects` overwrites it on
+     * every prepare — editing or clearing the stored array has no lasting effect
+     * (#381). The universal General aptitude is injected by consumers
+     * (`AptitudeBasedSystemConfig`), not stored here.
+     */
     declare aptitudes: string[];
+    /**
+     * The ONLY persisted aptitude state: the player's elective double-up picks
+     * (DH2 Core p.79). When the origin path would grant the same aptitude twice,
+     * the player instead picks a Characteristic aptitude they do not already
+     * have; that genuine choice cannot be derived, so it lives here. Validated
+     * by {@link aptitudeValidation}: exactly one Characteristic elective per
+     * double-up, none already granted.
+     */
+    declare electiveAptitudes: string[];
+    /**
+     * Derived aptitude validation summary (#381/#205/#216). Populated by
+     * `_computeOriginPathEffects`; NOT persisted. The builder/sheet read this to
+     * surface a single-source-of-truth double-up warning instead of ad-hoc UI
+     * logic.
+     */
+    declare aptitudeValidation: AptitudeDerivation;
     declare chaosAlignment: 'unaligned' | 'khorne' | 'nurgle' | 'slaanesh' | 'tzeentch';
     /**
      * Per-advance log used by BC's Alignment derivation (see
@@ -503,9 +513,18 @@ export default class CharacterData extends CreatureTemplate {
             // corruptionBonus: new NumberField({ required: true, initial: 0, min: 0, integer: true }), // Derived
 
             // ===== APTITUDES (DH2e/BC/OW) =====
-            // Collected at runtime from origin path items during prepareEmbeddedData.
-            // Used by aptitude-based systems for XP cost calculation.
+            // DERIVED at runtime from origin path items during prepareEmbeddedData
+            // (`_computeOriginPathEffects`), then unioned with electiveAptitudes.
+            // The slot persists for back-compat / NPC reuse but is overwritten on
+            // every prepare — stored values do not survive (#381). Used by
+            // aptitude-based systems for XP cost calculation.
             aptitudes: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
+
+            // Player's elective double-up picks (DH2 Core p.79) — the ONLY
+            // persisted aptitude state. Each entry resolves one origin-path
+            // double-up by choosing a Characteristic aptitude the player does not
+            // already have. Validated in _computeOriginPathEffects; see #381.
+            electiveAptitudes: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
             // ===== BLACK CRUSADE =====
             chaosAlignment: new fields.StringField({
@@ -831,45 +850,36 @@ export default class CharacterData extends CreatureTemplate {
         preserveFreeTextStepNames(stepNames, this.originPath);
         Object.assign(this.originPath, stepNames);
 
-        // Collect aptitudes from origin path (DH2e/BC/OW use aptitudes for XP costs).
-        // Sources: fixed grants.aptitudes + resolved grants.choices[type=aptitude].
-        // Per DH2 Core p.79, characteristic-named aptitudes (Weapon Skill, etc.) are
-        // NOT auto-granted — a character only has aptitudes granted by home world,
-        // background, role, and elite advances.
-        const allAptitudes = new Set<string>();
-
+        // Collect aptitudes from the origin path (DH2e/BC/OW use aptitudes for XP
+        // costs). Aptitudes are 1:1 with origin (#381): every origin item carries
+        // fixed grants.aptitudes + resolved grants.choices[type=aptitude]. Per DH2
+        // Core p.79 the characteristic-named aptitudes are NOT auto-granted, and
+        // General (universal) is injected by consumers — neither is stored here.
+        //
+        // Per-item grants are deduped within the item, then concatenated so a
+        // cross-origin duplicate ("double-up") survives to be counted. The only
+        // non-derivable state is the player's elective pick for each double-up —
+        // persisted in `electiveAptitudes`. Legacy actors that hand-stored their
+        // full aptitude array have those electives recovered on first prepare
+        // (the stored value is still in `this.aptitudes` here, pre-overwrite).
+        const grantedAptitudes: string[] = [];
         for (const item of originItems) {
-            const grants = item.system.grants as OriginPathGrants | undefined;
-            if (grants === undefined) continue;
-
-            // Fixed aptitudes
-            if (Array.isArray(grants.aptitudes)) {
-                for (const apt of grants.aptitudes) {
-                    if (apt !== '') allAptitudes.add(apt);
-                }
-            }
-
-            // Resolved aptitude choices — mirrors the key logic in origin-path-builder._prepareChoices
-            const choices: GrantChoice[] = Array.isArray(grants.choices) ? grants.choices : [];
+            const grants = item.system.grants as AptitudeGrantSource | undefined;
             // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.selectedChoices is a dynamic field not in the typed schema; keyed by choice label
             const selectedChoices = (item.system['selectedChoices'] ?? {}) as Record<string, string[]>;
-            const labelCounts: Partial<Record<string, number>> = {};
-            for (const choice of choices) {
-                const baseLabel = choice.label ?? choice.name ?? '';
-                labelCounts[baseLabel] = (labelCounts[baseLabel] ?? 0) + 1;
-                const suffix = (labelCounts[baseLabel] ?? 0) > 1 ? ` (${labelCounts[baseLabel]})` : '';
-                const choiceKey = `${baseLabel}${suffix}`;
-                if (choice.type !== 'aptitude') continue;
-                const picks = selectedChoices[choiceKey];
-                if (!Array.isArray(picks)) continue;
-                for (const pick of picks) {
-                    const option = choice.options?.find((o: GrantChoiceOption) => o.value === pick || o.name === pick);
-                    const value = option?.value ?? option?.name ?? pick;
-                    if (value !== '') allAptitudes.add(value);
-                }
-            }
+            grantedAptitudes.push(...collectGrantedAptitudes(grants, selectedChoices));
         }
-        this.aptitudes = [...allAptitudes];
+
+        // Establish the computed set first, then resolve the electives: prefer the
+        // persisted picks; fall back to recovering them from the legacy stored
+        // array when none are persisted yet (migration).
+        const computed = deriveAptitudes(grantedAptitudes, []).computed;
+        const persistedElectives = this.electiveAptitudes.filter((apt) => apt.trim() !== '');
+        const electives = persistedElectives.length > 0 ? persistedElectives : extractLegacyElectives(this.aptitudes, computed);
+
+        const derivation = deriveAptitudes(grantedAptitudes, electives);
+        this.aptitudeValidation = derivation;
+        this.aptitudes = derivation.aptitudes;
 
         // Derive gameSystem: prefer the concrete DataModel's static identifier
         // (set per actor type, e.g. dh2-character → 'dh2') and fall back to
