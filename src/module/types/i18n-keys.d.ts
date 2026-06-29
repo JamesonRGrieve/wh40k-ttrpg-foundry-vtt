@@ -3012,6 +3012,7 @@ export type I18nKey =
     | 'WH40K.Skills.RemoveFromFavorites'
     | 'WH40K.Skills.RollSkillTitle'
     | 'WH40K.Skills.RollSpecializationTitle'
+    | 'WH40K.Skills.RollUntrainedTitle'
     | 'WH40K.Skills.Skill'
     | 'WH40K.Skills.SpecialistHeader'
     | 'WH40K.Skills.Specialization'
