@@ -281,8 +281,11 @@ export class WH40KBaseActor extends Actor {
         const desired = desiredSubtletyAdjusterEffects(this.collectSubtletyAdjusters());
         const existing: ExistingSubtletyAdjusterEffect[] = [];
         for (const effect of this.effects) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect.getFlag returns unknown; narrow to the stored shape
-            const flag = effect.getFlag(SUBTLETY_EFFECT_FLAG_SCOPE, SUBTLETY_EFFECT_FLAG_KEY) as { sourceKey?: string } | undefined;
+            // ActiveEffect#getFlag's scope union excludes our system id, so read the
+            // per-module flag bag directly (boundary: effect.flags is untyped).
+            const flag = (effect.flags as { 'wh40k-rpg'?: { subtletyAdjuster?: { sourceKey?: string } } })[SUBTLETY_EFFECT_FLAG_SCOPE]?.[
+                SUBTLETY_EFFECT_FLAG_KEY
+            ];
             if (typeof flag?.sourceKey === 'string' && typeof effect.id === 'string') {
                 existing.push({ id: effect.id, sourceKey: flag.sourceKey });
             }
@@ -300,7 +303,15 @@ export class WH40KBaseActor extends Actor {
     }
 
     /** Build the Foundry ActiveEffect create payload for a derived descriptor. */
-    static #subtletyEffectCreateData(descriptor: DesiredSubtletyAdjusterEffect): Record<string, unknown> {
+    static #subtletyEffectCreateData(descriptor: DesiredSubtletyAdjusterEffect): {
+        name: string;
+        icon: string;
+        description: string;
+        changes: never[];
+        disabled: boolean;
+        transfer: boolean;
+        flags: { 'wh40k-rpg': { subtletyAdjuster: { sourceKey: string } } };
+    } {
         const description =
             descriptor.kind === 'clamp'
                 ? t('WH40K.SubtletyPanel.EffectClampDescription', { value: descriptor.minAbsoluteDelta })

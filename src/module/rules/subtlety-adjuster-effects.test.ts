@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import type { CollectedAdjuster } from './subtlety-adjusters';
 import {
     desiredSubtletyAdjusterEffects,
     type ExistingSubtletyAdjusterEffect,
     planSubtletyAdjusterEffects,
     subtletyAdjusterSourceKey,
 } from './subtlety-adjuster-effects';
+import type { CollectedAdjuster } from './subtlety-adjusters';
 
 /**
  * Pure-derivation coverage for surfacing standing Subtlety adjusters as
@@ -59,8 +59,7 @@ describe('desiredSubtletyAdjusterEffects', () => {
         const [effect] = desiredSubtletyAdjusterEffects([
             adjuster({ sourceUuid: 'uuid-passive', label: 'Hidden Network', kind: 'passive', delta: -2, minAbsoluteDelta: 0 }),
         ]);
-        expect(effect?.kind).toBe('passive');
-        expect(effect?.delta).toBe(-2);
+        expect(effect).toMatchObject({ kind: 'passive', delta: -2 });
     });
 
     it('excludes one-shot event adjusters (not standing effects)', () => {
@@ -83,7 +82,7 @@ describe('planSubtletyAdjusterEffects', () => {
 
     it('is a no-op when the existing effect still matches the source (idempotent)', () => {
         const desired = desiredSubtletyAdjusterEffects([adjuster()]);
-        const existing: ExistingSubtletyAdjusterEffect[] = [{ id: 'ae1', sourceKey: desired[0]!.sourceKey }];
+        const existing: ExistingSubtletyAdjusterEffect[] = [{ id: 'ae1', sourceKey: subtletyAdjusterSourceKey(adjuster()) }];
         const plan = planSubtletyAdjusterEffects(desired, existing);
         expect(plan.toCreate).toEqual([]);
         expect(plan.toDeleteIds).toEqual([]);
@@ -98,7 +97,7 @@ describe('planSubtletyAdjusterEffects', () => {
 
     it('deletes duplicate effects for the same source, keeping one', () => {
         const desired = desiredSubtletyAdjusterEffects([adjuster()]);
-        const key = desired[0]!.sourceKey;
+        const key = subtletyAdjusterSourceKey(adjuster());
         const existing: ExistingSubtletyAdjusterEffect[] = [
             { id: 'keep', sourceKey: key },
             { id: 'dup', sourceKey: key },
