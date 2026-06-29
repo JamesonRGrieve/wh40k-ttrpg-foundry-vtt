@@ -19,9 +19,9 @@
 
 import HbsStory from 'handlebars';
 import { describe, expect, it } from 'vitest';
+import specialistPanelSrc from '../src/templates/actor/panel/skills-specialist-panel.hbs?raw';
 import panelHeaderSrc from '../src/templates/actor/partial/panel-header.hbs?raw';
 import panelSrc from '../src/templates/actor/partial/panel.hbs?raw';
-import specialistPanelSrc from '../src/templates/actor/panel/skills-specialist-panel.hbs?raw';
 import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
@@ -34,7 +34,7 @@ interface SpecEntry {
     skillKey: string;
     entryIndex: number;
     current: number;
-    trainingIndicators: unknown[];
+    trainingIndicators: readonly object[];
 }
 interface SpecGroup {
     label: string;
