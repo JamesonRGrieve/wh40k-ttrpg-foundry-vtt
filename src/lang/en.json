@@ -88,6 +88,7 @@
             "UnknownCondition": "Unknown condition: {condition}",
             "LootNoToken": "Place {actor}'s token on the scene before dropping items.",
             "LootNotDroppable": "{item} cannot be dropped.",
+            "LootBound": "{item} is bound and cannot be dropped or traded.",
             "LootNoReceiver": "Select the token that should pick this up first.",
             "LootPickupDenied": "You do not have permission to pick this up.",
             "LootDropDenied": "You do not have permission to drop this item.",

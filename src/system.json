@@ -8,6 +8,19 @@
         "verified": "14.349",
         "maximum": 14
     },
+    "relationships": {
+        "requires": [
+            {
+                "id": "item-piles",
+                "type": "module",
+                "manifest": "https://github.com/fantasycalendar/FoundryVTT-ItemPiles/releases/latest/download/module.json",
+                "compatibility": {
+                    "minimum": "3.0.0",
+                    "verified": "3.3.2"
+                }
+            }
+        ]
+    },
     "authors": [
         {
             "name": "JamesonRGrieve"
@@ -300,7 +313,7 @@
     "packs": [
         {
             "name": "bc-binding-items-traits",
-            "label": "Binding Contracts Traits",
+            "label": "BC: Binding Contracts, Traits",
             "path": "packs/black-crusade/bc-binding-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -312,7 +325,7 @@
         },
         {
             "name": "bc-blood-items-armour",
-            "label": "Tome of Blood Armour",
+            "label": "BC: Tome of Blood, Armour",
             "path": "packs/black-crusade/bc-blood-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -324,7 +337,7 @@
         },
         {
             "name": "bc-blood-items-armor-mods",
-            "label": "Tome of Blood Armour Customisations",
+            "label": "BC: Tome of Blood, Armour Customisations",
             "path": "packs/black-crusade/bc-blood-items-armor-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -336,7 +349,7 @@
         },
         {
             "name": "bc-blood-items-gear",
-            "label": "Tome of Blood Gear",
+            "label": "BC: Tome of Blood, Gear",
             "path": "packs/black-crusade/bc-blood-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -348,7 +361,7 @@
         },
         {
             "name": "bc-blood-items-rituals",
-            "label": "Tome of Blood Rituals",
+            "label": "BC: Tome of Blood, Rituals",
             "path": "packs/black-crusade/bc-blood-items-rituals",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -360,7 +373,7 @@
         },
         {
             "name": "bc-blood-items-weapons",
-            "label": "Tome of Blood Weapons",
+            "label": "BC: Tome of Blood, Weapons",
             "path": "packs/black-crusade/bc-blood-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -372,7 +385,7 @@
         },
         {
             "name": "bc-core-items-ammo",
-            "label": "Core Rulebook Ammunition",
+            "label": "BC: Core Rulebook, Ammunition",
             "path": "packs/black-crusade/bc-core-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -384,7 +397,7 @@
         },
         {
             "name": "bc-core-items-armour",
-            "label": "Core Rulebook Armour",
+            "label": "BC: Core Rulebook, Armour",
             "path": "packs/black-crusade/bc-core-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -396,7 +409,7 @@
         },
         {
             "name": "bc-core-items-armor-mods",
-            "label": "Core Rulebook Armour Customisations",
+            "label": "BC: Core Rulebook, Armour Customisations",
             "path": "packs/black-crusade/bc-core-items-armor-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -408,7 +421,7 @@
         },
         {
             "name": "bc-core-items-gear",
-            "label": "Core Rulebook Gear",
+            "label": "BC: Core Rulebook, Gear",
             "path": "packs/black-crusade/bc-core-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -420,7 +433,7 @@
         },
         {
             "name": "bc-core-items-psychic-powers",
-            "label": "Core Rulebook Psychic Powers",
+            "label": "BC: Core Rulebook, Psychic Powers",
             "path": "packs/black-crusade/bc-core-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -432,7 +445,7 @@
         },
         {
             "name": "bc-core-items-rituals",
-            "label": "Core Rulebook Rituals",
+            "label": "BC: Core Rulebook, Rituals",
             "path": "packs/black-crusade/bc-core-items-rituals",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -444,7 +457,7 @@
         },
         {
             "name": "bc-core-items-talents",
-            "label": "Core Rulebook Talents",
+            "label": "BC: Core Rulebook, Talents",
             "path": "packs/black-crusade/bc-core-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -456,7 +469,7 @@
         },
         {
             "name": "bc-core-items-traits",
-            "label": "Core Rulebook Traits",
+            "label": "BC: Core Rulebook, Traits",
             "path": "packs/black-crusade/bc-core-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -468,7 +481,7 @@
         },
         {
             "name": "bc-core-items-weapons",
-            "label": "Core Rulebook Weapons",
+            "label": "BC: Core Rulebook, Weapons",
             "path": "packs/black-crusade/bc-core-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -480,7 +493,7 @@
         },
         {
             "name": "bc-decay-items-ammo",
-            "label": "Tome of Decay Ammunition",
+            "label": "BC: Tome of Decay, Ammunition",
             "path": "packs/black-crusade/bc-decay-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -492,7 +505,7 @@
         },
         {
             "name": "bc-decay-items-gear",
-            "label": "Tome of Decay Gear",
+            "label": "BC: Tome of Decay, Gear",
             "path": "packs/black-crusade/bc-decay-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -504,7 +517,7 @@
         },
         {
             "name": "bc-decay-items-rituals",
-            "label": "Tome of Decay Rituals",
+            "label": "BC: Tome of Decay, Rituals",
             "path": "packs/black-crusade/bc-decay-items-rituals",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -516,7 +529,7 @@
         },
         {
             "name": "bc-decay-items-weapons",
-            "label": "Tome of Decay Weapons",
+            "label": "BC: Tome of Decay, Weapons",
             "path": "packs/black-crusade/bc-decay-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -528,7 +541,7 @@
         },
         {
             "name": "bc-excess-items-ammo",
-            "label": "Tome of Excess Ammunition",
+            "label": "BC: Tome of Excess, Ammunition",
             "path": "packs/black-crusade/bc-excess-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -540,7 +553,7 @@
         },
         {
             "name": "bc-excess-items-armor-mods",
-            "label": "Tome of Excess Armour Customisations",
+            "label": "BC: Tome of Excess, Armour Customisations",
             "path": "packs/black-crusade/bc-excess-items-armor-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -552,7 +565,7 @@
         },
         {
             "name": "bc-excess-items-gear",
-            "label": "Tome of Excess Gear",
+            "label": "BC: Tome of Excess, Gear",
             "path": "packs/black-crusade/bc-excess-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -564,7 +577,7 @@
         },
         {
             "name": "bc-excess-items-rituals",
-            "label": "Tome of Excess Rituals",
+            "label": "BC: Tome of Excess, Rituals",
             "path": "packs/black-crusade/bc-excess-items-rituals",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -576,7 +589,7 @@
         },
         {
             "name": "bc-excess-items-talents",
-            "label": "Tome of Excess Talents",
+            "label": "BC: Tome of Excess, Talents",
             "path": "packs/black-crusade/bc-excess-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -588,7 +601,7 @@
         },
         {
             "name": "bc-excess-items-weapons",
-            "label": "Tome of Excess Weapons",
+            "label": "BC: Tome of Excess, Weapons",
             "path": "packs/black-crusade/bc-excess-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -600,7 +613,7 @@
         },
         {
             "name": "bc-fate-items-ammo",
-            "label": "Tome of Fate Ammunition",
+            "label": "BC: Tome of Fate, Ammunition",
             "path": "packs/black-crusade/bc-fate-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -612,7 +625,7 @@
         },
         {
             "name": "bc-fate-items-armour",
-            "label": "Tome of Fate Armour",
+            "label": "BC: Tome of Fate, Armour",
             "path": "packs/black-crusade/bc-fate-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -624,7 +637,7 @@
         },
         {
             "name": "bc-fate-items-gear",
-            "label": "Tome of Fate Gear",
+            "label": "BC: Tome of Fate, Gear",
             "path": "packs/black-crusade/bc-fate-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -636,7 +649,7 @@
         },
         {
             "name": "bc-fate-items-psychic-powers",
-            "label": "Tome of Fate Psychic Powers",
+            "label": "BC: Tome of Fate, Psychic Powers",
             "path": "packs/black-crusade/bc-fate-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -648,7 +661,7 @@
         },
         {
             "name": "bc-fate-items-rituals",
-            "label": "Tome of Fate Rituals",
+            "label": "BC: Tome of Fate, Rituals",
             "path": "packs/black-crusade/bc-fate-items-rituals",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -660,7 +673,7 @@
         },
         {
             "name": "bc-fate-items-traits",
-            "label": "Tome of Fate Traits",
+            "label": "BC: Tome of Fate, Traits",
             "path": "packs/black-crusade/bc-fate-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -672,7 +685,7 @@
         },
         {
             "name": "bc-fate-items-weapons",
-            "label": "Tome of Fate Weapons",
+            "label": "BC: Tome of Fate, Weapons",
             "path": "packs/black-crusade/bc-fate-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -684,7 +697,7 @@
         },
         {
             "name": "bc-core-origins-races",
-            "label": "Races",
+            "label": "BC: Core Rulebook, Races",
             "path": "packs/black-crusade/bc-core-origins-races",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -696,7 +709,7 @@
         },
         {
             "name": "bc-core-origins-archetypes",
-            "label": "Archetypes",
+            "label": "BC: Core Rulebook, Archetypes",
             "path": "packs/black-crusade/bc-core-origins-archetypes",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -708,7 +721,7 @@
         },
         {
             "name": "bc-blood-origins-archetypes",
-            "label": "Tome of Blood Archetypes",
+            "label": "BC: Tome of Blood, Archetypes",
             "path": "packs/black-crusade/bc-blood-origins-archetypes",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -720,7 +733,7 @@
         },
         {
             "name": "bc-decay-origins-archetypes",
-            "label": "Tome of Decay Archetypes",
+            "label": "BC: Tome of Decay, Archetypes",
             "path": "packs/black-crusade/bc-decay-origins-archetypes",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -732,7 +745,7 @@
         },
         {
             "name": "bc-excess-origins-archetypes",
-            "label": "Tome of Excess Archetypes",
+            "label": "BC: Tome of Excess, Archetypes",
             "path": "packs/black-crusade/bc-excess-origins-archetypes",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -744,7 +757,7 @@
         },
         {
             "name": "bc-fate-origins-archetypes",
-            "label": "Tome of Fate Archetypes",
+            "label": "BC: Tome of Fate, Archetypes",
             "path": "packs/black-crusade/bc-fate-origins-archetypes",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -756,7 +769,7 @@
         },
         {
             "name": "bc-core-origins-prides",
-            "label": "Prides",
+            "label": "BC: Core Rulebook, Prides",
             "path": "packs/black-crusade/bc-core-origins-prides",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -768,7 +781,7 @@
         },
         {
             "name": "bc-core-origins-disgraces",
-            "label": "Disgraces",
+            "label": "BC: Core Rulebook, Disgraces",
             "path": "packs/black-crusade/bc-core-origins-disgraces",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -780,7 +793,7 @@
         },
         {
             "name": "bc-core-origins-motivations",
-            "label": "Motivations",
+            "label": "BC: Core Rulebook, Motivations",
             "path": "packs/black-crusade/bc-core-origins-motivations",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -792,7 +805,7 @@
         },
         {
             "name": "dh1-core-items-armour",
-            "label": "Core Rulebook Armour",
+            "label": "DH1: Core Rulebook, Armour",
             "path": "packs/dark-heresy-1/dh1-core-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -804,7 +817,7 @@
         },
         {
             "name": "dh1-core-items-gear",
-            "label": "Core Rulebook Gear",
+            "label": "DH1: Core Rulebook, Gear",
             "path": "packs/dark-heresy-1/dh1-core-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -816,7 +829,7 @@
         },
         {
             "name": "dh1-core-items-psychic-powers",
-            "label": "Core Rulebook Psychic Powers",
+            "label": "DH1: Core Rulebook, Psychic Powers",
             "path": "packs/dark-heresy-1/dh1-core-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -828,7 +841,7 @@
         },
         {
             "name": "dh1-core-items-talents",
-            "label": "Core Rulebook Talents",
+            "label": "DH1: Core Rulebook, Talents",
             "path": "packs/dark-heresy-1/dh1-core-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -840,7 +853,7 @@
         },
         {
             "name": "dh1-core-items-weapons",
-            "label": "Core Rulebook Weapons",
+            "label": "DH1: Core Rulebook, Weapons",
             "path": "packs/dark-heresy-1/dh1-core-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -852,7 +865,7 @@
         },
         {
             "name": "dh1-core-items-ammo",
-            "label": "DH1: Core Rulebook — Ammunition",
+            "label": "DH1: Core Rulebook, Ammunition",
             "path": "packs/dark-heresy-1/dh1-core-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -864,7 +877,7 @@
         },
         {
             "name": "dh1-inquisitor-items-ammo",
-            "label": "Inquisitor's Handbook Ammunition",
+            "label": "DH1: Inquisitor's Handbook, Ammunition",
             "path": "packs/dark-heresy-1/dh1-inquisitor-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -876,7 +889,7 @@
         },
         {
             "name": "dh1-inquisitor-items-armour",
-            "label": "Inquisitor's Handbook Armour",
+            "label": "DH1: Inquisitor's Handbook, Armour",
             "path": "packs/dark-heresy-1/dh1-inquisitor-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -888,7 +901,7 @@
         },
         {
             "name": "dh1-inquisitor-items-armor-mods",
-            "label": "Inquisitor's Handbook Armour Customisations",
+            "label": "DH1: Inquisitor's Handbook, Armour Customisations",
             "path": "packs/dark-heresy-1/dh1-inquisitor-items-armor-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -900,7 +913,7 @@
         },
         {
             "name": "dh1-inquisitor-items-gear",
-            "label": "Inquisitor's Handbook Gear",
+            "label": "DH1: Inquisitor's Handbook, Gear",
             "path": "packs/dark-heresy-1/dh1-inquisitor-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -912,7 +925,7 @@
         },
         {
             "name": "dh1-inquisitor-items-talents",
-            "label": "Inquisitor's Handbook Talents",
+            "label": "DH1: Inquisitor's Handbook, Talents",
             "path": "packs/dark-heresy-1/dh1-inquisitor-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -924,7 +937,7 @@
         },
         {
             "name": "dh1-inquisitor-items-traits",
-            "label": "Inquisitor's Handbook Traits",
+            "label": "DH1: Inquisitor's Handbook, Traits",
             "path": "packs/dark-heresy-1/dh1-inquisitor-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -936,7 +949,7 @@
         },
         {
             "name": "dh1-inquisitor-items-weapons",
-            "label": "Inquisitor's Handbook Weapons",
+            "label": "DH1: Inquisitor's Handbook, Weapons",
             "path": "packs/dark-heresy-1/dh1-inquisitor-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -948,7 +961,7 @@
         },
         {
             "name": "dh1-inquisitor-origins-backgrounds",
-            "label": "DH1: Inquisitor's Handbook — Backgrounds",
+            "label": "DH1: Inquisitor's Handbook, Backgrounds",
             "path": "packs/dark-heresy-1/dh1-inquisitor-origins-backgrounds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -960,7 +973,7 @@
         },
         {
             "name": "dh1-inquisitor-origins-homeworlds",
-            "label": "DH1: Inquisitor's Handbook — Home Worlds",
+            "label": "DH1: Inquisitor's Handbook, Home Worlds",
             "path": "packs/dark-heresy-1/dh1-inquisitor-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -972,7 +985,7 @@
         },
         {
             "name": "dh1-core-origins-homeworlds",
-            "label": "DH1: Core Rulebook — Home Worlds",
+            "label": "DH1: Core Rulebook, Home Worlds",
             "path": "packs/dark-heresy-1/dh1-core-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -984,7 +997,7 @@
         },
         {
             "name": "dh1-core-origins-careers",
-            "label": "DH1: Core Rulebook — Career Paths",
+            "label": "DH1: Core Rulebook, Career Paths",
             "path": "packs/dark-heresy-1/dh1-core-origins-careers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -996,7 +1009,7 @@
         },
         {
             "name": "dh1-core-origins-divinations",
-            "label": "DH1: Core Rulebook — Imperial Divinations",
+            "label": "DH1: Core Rulebook, Imperial Divinations",
             "path": "packs/dark-heresy-1/dh1-core-origins-divinations",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1008,7 +1021,7 @@
         },
         {
             "name": "dh1-core-actors-bestiary",
-            "label": "DH1: Core Rulebook — Bestiary",
+            "label": "DH1: Core Rulebook, Bestiary",
             "path": "packs/dark-heresy-1/dh1-core-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -1020,7 +1033,7 @@
         },
         {
             "name": "dh1-core-actors-npcs",
-            "label": "DH1: Core Rulebook — Named Individuals",
+            "label": "DH1: Core Rulebook, Named Individuals",
             "path": "packs/dark-heresy-1/dh1-core-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -1032,7 +1045,7 @@
         },
         {
             "name": "dh1-core-journals",
-            "label": "DH1: Core Rulebook — Journals",
+            "label": "DH1: Core Rulebook, Journals",
             "path": "packs/dark-heresy-1/dh1-core-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -1044,7 +1057,7 @@
         },
         {
             "name": "dh1-core-rolltables",
-            "label": "DH1: Core Rulebook — Roll Tables",
+            "label": "DH1: Core Rulebook, Roll Tables",
             "path": "packs/dark-heresy-1/dh1-core-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -1056,7 +1069,7 @@
         },
         {
             "name": "dh2-beyond-items-ammo",
-            "label": "Enemies Beyond Ammunition",
+            "label": "DH2: Enemies Beyond, Ammunition",
             "path": "packs/dark-heresy-2/dh2-beyond-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1068,7 +1081,7 @@
         },
         {
             "name": "dh2-beyond-items-armour",
-            "label": "Enemies Beyond Armour",
+            "label": "DH2: Enemies Beyond, Armour",
             "path": "packs/dark-heresy-2/dh2-beyond-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1080,7 +1093,7 @@
         },
         {
             "name": "dh2-beyond-items-armor-mods",
-            "label": "Enemies Beyond Armour Customisations",
+            "label": "DH2: Enemies Beyond, Armour Customisations",
             "path": "packs/dark-heresy-2/dh2-beyond-items-armor-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1092,7 +1105,7 @@
         },
         {
             "name": "dh2-beyond-origins-homeworlds",
-            "label": "Enemies Beyond Homeworlds",
+            "label": "DH2: Enemies Beyond, Homeworlds",
             "path": "packs/dark-heresy-2/dh2-beyond-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1104,7 +1117,7 @@
         },
         {
             "name": "dh2-beyond-origins-backgrounds",
-            "label": "Enemies Beyond Backgrounds",
+            "label": "DH2: Enemies Beyond, Backgrounds",
             "path": "packs/dark-heresy-2/dh2-beyond-origins-backgrounds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1116,7 +1129,7 @@
         },
         {
             "name": "dh2-beyond-origins-roles",
-            "label": "Enemies Beyond Roles",
+            "label": "DH2: Enemies Beyond, Roles",
             "path": "packs/dark-heresy-2/dh2-beyond-origins-roles",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1128,7 +1141,7 @@
         },
         {
             "name": "dh2-beyond-items-tools",
-            "label": "Enemies Beyond Tools",
+            "label": "DH2: Enemies Beyond, Tools",
             "path": "packs/dark-heresy-2/dh2-beyond-items-tools",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1140,7 +1153,7 @@
         },
         {
             "name": "dh2-beyond-items-psychic-powers",
-            "label": "Enemies Beyond Psychic Powers",
+            "label": "DH2: Enemies Beyond, Psychic Powers",
             "path": "packs/dark-heresy-2/dh2-beyond-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1152,7 +1165,7 @@
         },
         {
             "name": "dh2-beyond-items-talents",
-            "label": "Enemies Beyond Talents",
+            "label": "DH2: Enemies Beyond, Talents",
             "path": "packs/dark-heresy-2/dh2-beyond-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1164,7 +1177,7 @@
         },
         {
             "name": "dh2-beyond-items-weapons",
-            "label": "Enemies Beyond Weapons",
+            "label": "DH2: Enemies Beyond, Weapons",
             "path": "packs/dark-heresy-2/dh2-beyond-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1176,7 +1189,7 @@
         },
         {
             "name": "dh2-beyond-items-gear",
-            "label": "Enemies Beyond Gear",
+            "label": "DH2: Enemies Beyond, Gear",
             "path": "packs/dark-heresy-2/dh2-beyond-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1188,7 +1201,7 @@
         },
         {
             "name": "dh2-beyond-items-weapon-mods",
-            "label": "Enemies Beyond Weapon Modifications",
+            "label": "DH2: Enemies Beyond, Weapon Modifications",
             "path": "packs/dark-heresy-2/dh2-beyond-items-weapon-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1200,7 +1213,7 @@
         },
         {
             "name": "dh2-beyond-actors-npcs",
-            "label": "Enemies Beyond NPCs",
+            "label": "DH2: Enemies Beyond, NPCs",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -1212,7 +1225,7 @@
         },
         {
             "name": "dh2-beyond-actors-bestiary",
-            "label": "Enemies Beyond Bestiary",
+            "label": "DH2: Enemies Beyond, Bestiary",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -1224,7 +1237,7 @@
         },
         {
             "name": "dh2-core-actors-bestiary",
-            "label": "Core Rulebook Bestiary",
+            "label": "DH2: Core Rulebook, Bestiary",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -1236,7 +1249,7 @@
         },
         {
             "name": "dh2-core-actors-npcs",
-            "label": "Core Rulebook NPCs",
+            "label": "DH2: Core Rulebook, NPCs",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -1248,7 +1261,7 @@
         },
         {
             "name": "dh2-core-actors-reinforcements",
-            "label": "Core Rulebook Reinforcement Characters",
+            "label": "DH2: Core Rulebook, Reinforcement Characters",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -1260,7 +1273,7 @@
         },
         {
             "name": "dh2-core-actors-mounts",
-            "label": "Core Rulebook Mounts",
+            "label": "DH2: Core Rulebook, Mounts",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -1272,7 +1285,7 @@
         },
         {
             "name": "dh2-forgotten-actors-bestiary",
-            "label": "Forgotten Gods Bestiary",
+            "label": "DH2: Forgotten Gods, Bestiary",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -1284,7 +1297,7 @@
         },
         {
             "name": "dh2-forgotten-actors-npcs",
-            "label": "Forgotten Gods NPCs",
+            "label": "DH2: Forgotten Gods, NPCs",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -1296,7 +1309,7 @@
         },
         {
             "name": "dh2-core-items-ammo",
-            "label": "Core Rulebook Ammunition",
+            "label": "DH2: Core Rulebook, Ammunition",
             "path": "packs/dark-heresy-2/dh2-core-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1308,7 +1321,7 @@
         },
         {
             "name": "dh2-core-items-armour",
-            "label": "Core Rulebook Armour",
+            "label": "DH2: Core Rulebook, Armour",
             "path": "packs/dark-heresy-2/dh2-core-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1320,7 +1333,7 @@
         },
         {
             "name": "dh2-core-items-conditions",
-            "label": "Core Rulebook Conditions",
+            "label": "DH2: Core Rulebook, Conditions",
             "path": "packs/dark-heresy-2/dh2-core-items-conditions",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1332,7 +1345,7 @@
         },
         {
             "name": "dh2-core-items-critical-injuries",
-            "label": "Core Rulebook Critical Injuries",
+            "label": "DH2: Core Rulebook, Critical Injuries",
             "path": "packs/dark-heresy-2/dh2-core-items-critical-injuries",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1344,7 +1357,7 @@
         },
         {
             "name": "dh2-core-items-cybernetics",
-            "label": "Core Rulebook Cybernetics",
+            "label": "DH2: Core Rulebook, Cybernetics",
             "path": "packs/dark-heresy-2/dh2-core-items-cybernetics",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1356,7 +1369,7 @@
         },
         {
             "name": "dh2-core-items-wearables",
-            "label": "Core Rulebook Wearables",
+            "label": "DH2: Core Rulebook, Wearables",
             "path": "packs/dark-heresy-2/dh2-core-items-wearables",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1368,7 +1381,7 @@
         },
         {
             "name": "dh2-core-items-tools",
-            "label": "Core Rulebook Tools",
+            "label": "DH2: Core Rulebook, Tools",
             "path": "packs/dark-heresy-2/dh2-core-items-tools",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1380,7 +1393,7 @@
         },
         {
             "name": "dh2-adventures",
-            "label": "Dark Heresy 2 Adventures",
+            "label": "DH2: Dark Heresy 2 Adventures",
             "path": "packs/dark-heresy-2/dh2-adventures",
             "system": "wh40k-rpg",
             "type": "Adventure",
@@ -1392,7 +1405,7 @@
         },
         {
             "name": "dh2-core-items-consumables",
-            "label": "Core Rulebook Consumables",
+            "label": "DH2: Core Rulebook, Consumables",
             "path": "packs/dark-heresy-2/dh2-core-items-consumables",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1404,7 +1417,7 @@
         },
         {
             "name": "dh2-core-items-psychic-powers",
-            "label": "Core Rulebook Psychic Powers",
+            "label": "DH2: Core Rulebook, Psychic Powers",
             "path": "packs/dark-heresy-2/dh2-core-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1416,7 +1429,7 @@
         },
         {
             "name": "dh2-core-items-skills",
-            "label": "Core Rulebook Skills",
+            "label": "DH2: Core Rulebook, Skills",
             "path": "packs/dark-heresy-2/dh2-core-items-skills",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1428,7 +1441,7 @@
         },
         {
             "name": "dh2-core-items-talents",
-            "label": "Core Rulebook Talents",
+            "label": "DH2: Core Rulebook, Talents",
             "path": "packs/dark-heresy-2/dh2-core-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1440,7 +1453,7 @@
         },
         {
             "name": "dh2-core-items-traits",
-            "label": "Core Rulebook Traits",
+            "label": "DH2: Core Rulebook, Traits",
             "path": "packs/dark-heresy-2/dh2-core-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1452,7 +1465,7 @@
         },
         {
             "name": "dh2-core-items-weapons",
-            "label": "Core Rulebook Weapons",
+            "label": "DH2: Core Rulebook, Weapons",
             "path": "packs/dark-heresy-2/dh2-core-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1464,7 +1477,7 @@
         },
         {
             "name": "dh2-core-rolltables",
-            "label": "Core Rulebook Tables",
+            "label": "DH2: Core Rulebook, Tables",
             "path": "packs/dark-heresy-2/dh2-core-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -1476,7 +1489,7 @@
         },
         {
             "name": "dh2-within-rolltables",
-            "label": "Enemies Within Tables",
+            "label": "DH2: Enemies Within, Tables",
             "path": "packs/dark-heresy-2/dh2-within-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -1488,7 +1501,7 @@
         },
         {
             "name": "dh2-without-rolltables",
-            "label": "Enemies Without Tables",
+            "label": "DH2: Enemies Without, Tables",
             "path": "packs/dark-heresy-2/dh2-without-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -1500,7 +1513,7 @@
         },
         {
             "name": "dh2-beyond-rolltables",
-            "label": "Enemies Beyond Tables",
+            "label": "DH2: Enemies Beyond, Tables",
             "path": "packs/dark-heresy-2/dh2-beyond-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -1512,7 +1525,7 @@
         },
         {
             "name": "dh2-forgotten-rolltables",
-            "label": "Forgotten Gods Tables",
+            "label": "DH2: Forgotten Gods, Tables",
             "path": "packs/dark-heresy-2/dh2-forgotten-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -1524,7 +1537,7 @@
         },
         {
             "name": "dh2-forgotten-journals",
-            "label": "Forgotten Gods Journals",
+            "label": "DH2: Forgotten Gods, Journals",
             "path": "packs/dark-heresy-2/dh2-forgotten-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -1536,7 +1549,7 @@
         },
         {
             "name": "dh2-gmkit-actors-bestiary",
-            "label": "Game Master's Kit Bestiary",
+            "label": "DH2: Game Master's Kit, Bestiary",
             "path": "packs/dark-heresy-2/dh2-gmkit-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -1548,7 +1561,7 @@
         },
         {
             "name": "dh2-gmkit-journals",
-            "label": "Game Master's Kit Journals",
+            "label": "DH2: Game Master's Kit, Journals",
             "path": "packs/dark-heresy-2/dh2-gmkit-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -1560,7 +1573,7 @@
         },
         {
             "name": "dh2-gmscreen-journals",
-            "label": "Game Master's Screen Journals",
+            "label": "DH2: Game Master's Screen, Journals",
             "path": "packs/dark-heresy-2/dh2-gmscreen-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -1572,7 +1585,7 @@
         },
         {
             "name": "dh2-gmscreen-rolltables",
-            "label": "Game Master's Screen Tables",
+            "label": "DH2: Game Master's Screen, Tables",
             "path": "packs/dark-heresy-2/dh2-gmscreen-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -1584,7 +1597,7 @@
         },
         {
             "name": "dh2-chargen-journals",
-            "label": "Character Creation Supplements",
+            "label": "DH2: Character Creation Supplements, Journals",
             "path": "packs/dark-heresy-2/dh2-chargen-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -1596,7 +1609,7 @@
         },
         {
             "name": "dh2-chargen-rolltables",
-            "label": "Character Creation Supplement Tables",
+            "label": "DH2: Character Creation Supplements, Tables",
             "path": "packs/dark-heresy-2/dh2-chargen-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -1608,7 +1621,7 @@
         },
         {
             "name": "dh2-errata-journals",
-            "label": "Living Errata",
+            "label": "DH2: Living Errata",
             "path": "packs/dark-heresy-2/dh2-errata-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -1620,7 +1633,7 @@
         },
         {
             "name": "dh2-scenes",
-            "label": "Dark Heresy 2 Scenes",
+            "label": "DH2: Dark Heresy 2 Scenes",
             "path": "packs/dark-heresy-2/dh2-scenes",
             "system": "wh40k-rpg",
             "type": "Scene",
@@ -1632,7 +1645,7 @@
         },
         {
             "name": "dh2-core-origins-homeworlds",
-            "label": "Homeworlds",
+            "label": "DH2: Core Rulebook, Homeworlds",
             "path": "packs/dark-heresy-2/dh2-core-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1644,7 +1657,7 @@
         },
         {
             "name": "dh2-core-origins-backgrounds",
-            "label": "Backgrounds",
+            "label": "DH2: Core Rulebook, Backgrounds",
             "path": "packs/dark-heresy-2/dh2-core-origins-backgrounds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1656,7 +1669,7 @@
         },
         {
             "name": "dh2-core-origins-roles",
-            "label": "Roles",
+            "label": "DH2: Core Rulebook, Roles",
             "path": "packs/dark-heresy-2/dh2-core-origins-roles",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1668,7 +1681,7 @@
         },
         {
             "name": "dh2-core-origins-divinations",
-            "label": "Divinations",
+            "label": "DH2: Core Rulebook, Divinations",
             "path": "packs/dark-heresy-2/dh2-core-origins-divinations",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1680,7 +1693,7 @@
         },
         {
             "name": "dh2-core-journals",
-            "label": "Core Rulebook Journals",
+            "label": "DH2: Core Rulebook, Journals",
             "path": "packs/dark-heresy-2/dh2-core-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -1692,7 +1705,7 @@
         },
         {
             "name": "dh2-within-items-ammo",
-            "label": "Enemies Within Ammunition",
+            "label": "DH2: Enemies Within, Ammunition",
             "path": "packs/dark-heresy-2/dh2-within-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1704,7 +1717,7 @@
         },
         {
             "name": "dh2-within-items-armour",
-            "label": "Enemies Within Armour",
+            "label": "DH2: Enemies Within, Armour",
             "path": "packs/dark-heresy-2/dh2-within-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1716,7 +1729,7 @@
         },
         {
             "name": "dh2-within-items-armor-mods",
-            "label": "Enemies Within Armour Customisations",
+            "label": "DH2: Enemies Within, Armour Customisations",
             "path": "packs/dark-heresy-2/dh2-within-items-armor-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1728,7 +1741,7 @@
         },
         {
             "name": "dh2-within-origins-backgrounds",
-            "label": "Enemies Within Backgrounds",
+            "label": "DH2: Enemies Within, Backgrounds",
             "path": "packs/dark-heresy-2/dh2-within-origins-backgrounds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1740,7 +1753,7 @@
         },
         {
             "name": "dh2-within-origins-roles",
-            "label": "Enemies Within Roles",
+            "label": "DH2: Enemies Within, Roles",
             "path": "packs/dark-heresy-2/dh2-within-origins-roles",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1752,7 +1765,7 @@
         },
         {
             "name": "dh2-within-items-relics",
-            "label": "Enemies Within Relics",
+            "label": "DH2: Enemies Within, Relics",
             "path": "packs/dark-heresy-2/dh2-within-items-relics",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1764,7 +1777,7 @@
         },
         {
             "name": "dh2-within-items-services",
-            "label": "Enemies Within Services",
+            "label": "DH2: Enemies Within, Services",
             "path": "packs/dark-heresy-2/dh2-within-items-services",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1776,7 +1789,7 @@
         },
         {
             "name": "dh2-within-items-weapon-mods",
-            "label": "Enemies Within Weapon Mods",
+            "label": "DH2: Enemies Within, Weapon Mods",
             "path": "packs/dark-heresy-2/dh2-within-items-weapon-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1788,7 +1801,7 @@
         },
         {
             "name": "dh2-within-items-psychic-powers",
-            "label": "Enemies Within Psychic Powers",
+            "label": "DH2: Enemies Within, Psychic Powers",
             "path": "packs/dark-heresy-2/dh2-within-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1800,7 +1813,7 @@
         },
         {
             "name": "dh2-within-items-talents",
-            "label": "Enemies Within Talents",
+            "label": "DH2: Enemies Within, Talents",
             "path": "packs/dark-heresy-2/dh2-within-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1812,7 +1825,7 @@
         },
         {
             "name": "dh2-within-items-weapons",
-            "label": "Enemies Within Weapons",
+            "label": "DH2: Enemies Within, Weapons",
             "path": "packs/dark-heresy-2/dh2-within-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1824,7 +1837,7 @@
         },
         {
             "name": "dh2-without-items-ammo",
-            "label": "Enemies Without Ammunition",
+            "label": "DH2: Enemies Without, Ammunition",
             "path": "packs/dark-heresy-2/dh2-without-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1836,7 +1849,7 @@
         },
         {
             "name": "dh2-without-items-armour",
-            "label": "Enemies Without Armour",
+            "label": "DH2: Enemies Without, Armour",
             "path": "packs/dark-heresy-2/dh2-without-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1848,7 +1861,7 @@
         },
         {
             "name": "dh2-without-origins-homeworlds",
-            "label": "Enemies Without Homeworlds",
+            "label": "DH2: Enemies Without, Homeworlds",
             "path": "packs/dark-heresy-2/dh2-without-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1860,7 +1873,7 @@
         },
         {
             "name": "dh2-without-origins-backgrounds",
-            "label": "Enemies Without Backgrounds",
+            "label": "DH2: Enemies Without, Backgrounds",
             "path": "packs/dark-heresy-2/dh2-without-origins-backgrounds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1872,7 +1885,7 @@
         },
         {
             "name": "dh2-without-origins-roles",
-            "label": "Enemies Without Roles",
+            "label": "DH2: Enemies Without, Roles",
             "path": "packs/dark-heresy-2/dh2-without-origins-roles",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1884,7 +1897,7 @@
         },
         {
             "name": "dh2-without-items-armor-mods",
-            "label": "Enemies Without Armor Mods",
+            "label": "DH2: Enemies Without, Armor Mods",
             "path": "packs/dark-heresy-2/dh2-without-items-armor-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1896,7 +1909,7 @@
         },
         {
             "name": "dh2-without-items-consumables",
-            "label": "Enemies Without Consumables",
+            "label": "DH2: Enemies Without, Consumables",
             "path": "packs/dark-heresy-2/dh2-without-items-consumables",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1908,7 +1921,7 @@
         },
         {
             "name": "dh2-without-items-relics",
-            "label": "Enemies Without Relics",
+            "label": "DH2: Enemies Without, Relics",
             "path": "packs/dark-heresy-2/dh2-without-items-relics",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1920,7 +1933,7 @@
         },
         {
             "name": "dh2-without-items-services",
-            "label": "Enemies Without Services",
+            "label": "DH2: Enemies Without, Services",
             "path": "packs/dark-heresy-2/dh2-without-items-services",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1932,7 +1945,7 @@
         },
         {
             "name": "dh2-without-items-tools",
-            "label": "Enemies Without Tools",
+            "label": "DH2: Enemies Without, Tools",
             "path": "packs/dark-heresy-2/dh2-without-items-tools",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1944,7 +1957,7 @@
         },
         {
             "name": "dh2-without-items-weapon-mods",
-            "label": "Enemies Without Weapon Mods",
+            "label": "DH2: Enemies Without, Weapon Mods",
             "path": "packs/dark-heresy-2/dh2-without-items-weapon-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1956,7 +1969,7 @@
         },
         {
             "name": "dh2-without-items-talents",
-            "label": "Enemies Without Talents",
+            "label": "DH2: Enemies Without, Talents",
             "path": "packs/dark-heresy-2/dh2-without-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1968,7 +1981,7 @@
         },
         {
             "name": "dh2-without-items-weapons",
-            "label": "Enemies Without Weapons",
+            "label": "DH2: Enemies Without, Weapons",
             "path": "packs/dark-heresy-2/dh2-without-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1980,7 +1993,7 @@
         },
         {
             "name": "dw-core-items-ammo",
-            "label": "Core Rulebook Ammunition",
+            "label": "DW: Core Rulebook, Ammunition",
             "path": "packs/deathwatch/dw-core-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -1992,7 +2005,7 @@
         },
         {
             "name": "dw-core-items-armour",
-            "label": "Core Rulebook Armour",
+            "label": "DW: Core Rulebook, Armour",
             "path": "packs/deathwatch/dw-core-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2004,7 +2017,7 @@
         },
         {
             "name": "dw-core-items-gear",
-            "label": "Core Rulebook Gear",
+            "label": "DW: Core Rulebook, Gear",
             "path": "packs/deathwatch/dw-core-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2016,7 +2029,7 @@
         },
         {
             "name": "dw-core-items-skills",
-            "label": "Core Rulebook Skills",
+            "label": "DW: Core Rulebook, Skills",
             "path": "packs/deathwatch/dw-core-items-skills",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2028,7 +2041,7 @@
         },
         {
             "name": "dw-core-items-talents",
-            "label": "Core Rulebook Talents",
+            "label": "DW: Core Rulebook, Talents",
             "path": "packs/deathwatch/dw-core-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2040,7 +2053,7 @@
         },
         {
             "name": "dw-core-items-weapons",
-            "label": "Core Rulebook Weapons",
+            "label": "DW: Core Rulebook, Weapons",
             "path": "packs/deathwatch/dw-core-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2052,7 +2065,7 @@
         },
         {
             "name": "dw-founding-items-gear",
-            "label": "First Founding Gear",
+            "label": "DW: First Founding, Gear",
             "path": "packs/deathwatch/dw-founding-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2064,7 +2077,7 @@
         },
         {
             "name": "dw-founding-items-weapons",
-            "label": "First Founding Weapons",
+            "label": "DW: First Founding, Weapons",
             "path": "packs/deathwatch/dw-founding-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2076,7 +2089,7 @@
         },
         {
             "name": "dw-honour-items-armour",
-            "label": "Honour the Chapter Armour",
+            "label": "DW: Honour the Chapter, Armour",
             "path": "packs/deathwatch/dw-honour-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2088,7 +2101,7 @@
         },
         {
             "name": "dw-honour-items-gear",
-            "label": "Honour the Chapter Gear",
+            "label": "DW: Honour the Chapter, Gear",
             "path": "packs/deathwatch/dw-honour-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2100,7 +2113,7 @@
         },
         {
             "name": "dw-honour-items-weapons",
-            "label": "Honour the Chapter Weapons",
+            "label": "DW: Honour the Chapter, Weapons",
             "path": "packs/deathwatch/dw-honour-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2112,7 +2125,7 @@
         },
         {
             "name": "dw-honour-origins-chapters",
-            "label": "DW: Honour the Chapter — Chapters",
+            "label": "DW: Honour the Chapter, Chapters",
             "path": "packs/deathwatch/dw-honour-origins-chapters",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2124,7 +2137,7 @@
         },
         {
             "name": "dw-honour-items-talents",
-            "label": "DW: Honour the Chapter — Talents",
+            "label": "DW: Honour the Chapter, Talents",
             "path": "packs/deathwatch/dw-honour-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2136,7 +2149,7 @@
         },
         {
             "name": "dw-rites-items-ammo",
-            "label": "Rites of Battle Ammunition",
+            "label": "DW: Rites of Battle, Ammunition",
             "path": "packs/deathwatch/dw-rites-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2148,7 +2161,7 @@
         },
         {
             "name": "dw-rites-items-armour",
-            "label": "Rites of Battle Armour",
+            "label": "DW: Rites of Battle, Armour",
             "path": "packs/deathwatch/dw-rites-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2160,7 +2173,7 @@
         },
         {
             "name": "dw-rites-items-gear",
-            "label": "Rites of Battle Gear",
+            "label": "DW: Rites of Battle, Gear",
             "path": "packs/deathwatch/dw-rites-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2172,7 +2185,7 @@
         },
         {
             "name": "dw-rites-items-weapons",
-            "label": "Rites of Battle Weapons",
+            "label": "DW: Rites of Battle, Weapons",
             "path": "packs/deathwatch/dw-rites-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2184,7 +2197,7 @@
         },
         {
             "name": "dw-xenos-items-weapons",
-            "label": "Mark of the Xenos Weapons",
+            "label": "DW: Mark of the Xenos, Weapons",
             "path": "packs/deathwatch/dw-xenos-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2196,7 +2209,7 @@
         },
         {
             "name": "dw-xenos-actors-bestiary",
-            "label": "DW: Mark of the Xenos — Bestiary",
+            "label": "DW: Mark of the Xenos, Bestiary",
             "path": "packs/deathwatch/dw-xenos-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2208,7 +2221,7 @@
         },
         {
             "name": "dw-xenos-actors-npcs",
-            "label": "DW: Mark of the Xenos — Named Individuals",
+            "label": "DW: Mark of the Xenos, Named Individuals",
             "path": "packs/deathwatch/dw-xenos-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2280,7 +2293,7 @@
         },
         {
             "name": "ow-core-items-ammo",
-            "label": "Core Rulebook Ammunition",
+            "label": "OW: Core Rulebook, Ammunition",
             "path": "packs/only-war/ow-core-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2292,7 +2305,7 @@
         },
         {
             "name": "ow-core-items-armour",
-            "label": "Core Rulebook Armour",
+            "label": "OW: Core Rulebook, Armour",
             "path": "packs/only-war/ow-core-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2304,7 +2317,7 @@
         },
         {
             "name": "ow-core-items-gear",
-            "label": "Core Rulebook Gear",
+            "label": "OW: Core Rulebook, Gear",
             "path": "packs/only-war/ow-core-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2316,7 +2329,7 @@
         },
         {
             "name": "ow-core-items-orders",
-            "label": "Core Rulebook Orders",
+            "label": "OW: Core Rulebook, Orders",
             "path": "packs/only-war/ow-core-items-orders",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2328,7 +2341,7 @@
         },
         {
             "name": "ow-core-items-psychic-powers",
-            "label": "Core Rulebook Psychic Powers",
+            "label": "OW: Core Rulebook, Psychic Powers",
             "path": "packs/only-war/ow-core-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2340,7 +2353,7 @@
         },
         {
             "name": "ow-core-items-talents",
-            "label": "Core Rulebook Talents",
+            "label": "OW: Core Rulebook, Talents",
             "path": "packs/only-war/ow-core-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2352,7 +2365,7 @@
         },
         {
             "name": "ow-core-items-traits",
-            "label": "Core Rulebook Traits",
+            "label": "OW: Core Rulebook, Traits",
             "path": "packs/only-war/ow-core-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2364,7 +2377,7 @@
         },
         {
             "name": "ow-core-items-weapons",
-            "label": "Core Rulebook Weapons",
+            "label": "OW: Core Rulebook, Weapons",
             "path": "packs/only-war/ow-core-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2376,7 +2389,7 @@
         },
         {
             "name": "ow-enemies-items-armour",
-            "label": "Enemies of the Imperium Armour",
+            "label": "OW: Enemies of the Imperium, Armour",
             "path": "packs/only-war/ow-enemies-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2388,7 +2401,7 @@
         },
         {
             "name": "ow-enemies-vehicles-aircraft",
-            "label": "Enemies of the Imperium Aircraft",
+            "label": "OW: Enemies of the Imperium, Aircraft",
             "path": "packs/only-war/ow-enemies-vehicles-aircraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2400,7 +2413,7 @@
         },
         {
             "name": "ow-enemies-vehicles-terracraft",
-            "label": "Enemies of the Imperium Vehicles",
+            "label": "OW: Enemies of the Imperium, Vehicles",
             "path": "packs/only-war/ow-enemies-vehicles-terracraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2412,7 +2425,7 @@
         },
         {
             "name": "ow-enemies-actors-bestiary",
-            "label": "Enemies of the Imperium Bestiary",
+            "label": "OW: Enemies of the Imperium, Bestiary",
             "path": "packs/only-war/ow-enemies-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2424,7 +2437,7 @@
         },
         {
             "name": "ow-enemies-journals",
-            "label": "Enemies of the Imperium Reference",
+            "label": "OW: Enemies of the Imperium, Reference",
             "path": "packs/only-war/ow-enemies-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -2436,7 +2449,7 @@
         },
         {
             "name": "ow-enemies-items-gear",
-            "label": "Enemies of the Imperium Gear",
+            "label": "OW: Enemies of the Imperium, Gear",
             "path": "packs/only-war/ow-enemies-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2448,7 +2461,7 @@
         },
         {
             "name": "ow-enemies-items-talents",
-            "label": "Enemies of the Imperium Talents",
+            "label": "OW: Enemies of the Imperium, Talents",
             "path": "packs/only-war/ow-enemies-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2460,7 +2473,7 @@
         },
         {
             "name": "ow-hammer-items-ammo",
-            "label": "Hammer of the Emperor Ammunition",
+            "label": "OW: Hammer of the Emperor, Ammunition",
             "path": "packs/only-war/ow-hammer-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2472,7 +2485,7 @@
         },
         {
             "name": "ow-hammer-items-gear",
-            "label": "Hammer of the Emperor Gear",
+            "label": "OW: Hammer of the Emperor, Gear",
             "path": "packs/only-war/ow-hammer-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2484,7 +2497,7 @@
         },
         {
             "name": "ow-hammer-items-orders",
-            "label": "Hammer of the Emperor Orders",
+            "label": "OW: Hammer of the Emperor, Orders",
             "path": "packs/only-war/ow-hammer-items-orders",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2496,7 +2509,7 @@
         },
         {
             "name": "ow-hammer-items-talents",
-            "label": "Hammer of the Emperor Talents",
+            "label": "OW: Hammer of the Emperor, Talents",
             "path": "packs/only-war/ow-hammer-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2508,7 +2521,7 @@
         },
         {
             "name": "ow-hammer-items-traits",
-            "label": "Hammer of the Emperor Traits",
+            "label": "OW: Hammer of the Emperor, Traits",
             "path": "packs/only-war/ow-hammer-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2520,7 +2533,7 @@
         },
         {
             "name": "ow-hammer-items-weapons",
-            "label": "Hammer of the Emperor Weapons",
+            "label": "OW: Hammer of the Emperor, Weapons",
             "path": "packs/only-war/ow-hammer-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2532,7 +2545,7 @@
         },
         {
             "name": "ow-shield-items-ammo",
-            "label": "Shield of Humanity Ammunition",
+            "label": "OW: Shield of Humanity, Ammunition",
             "path": "packs/only-war/ow-shield-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2544,7 +2557,7 @@
         },
         {
             "name": "ow-shield-items-armour",
-            "label": "Shield of Humanity Armour",
+            "label": "OW: Shield of Humanity, Armour",
             "path": "packs/only-war/ow-shield-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2556,7 +2569,7 @@
         },
         {
             "name": "ow-shield-items-gear",
-            "label": "Shield of Humanity Gear",
+            "label": "OW: Shield of Humanity, Gear",
             "path": "packs/only-war/ow-shield-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2568,7 +2581,7 @@
         },
         {
             "name": "ow-shield-items-orders",
-            "label": "Shield of Humanity Orders",
+            "label": "OW: Shield of Humanity, Orders",
             "path": "packs/only-war/ow-shield-items-orders",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2580,7 +2593,7 @@
         },
         {
             "name": "ow-shield-items-talents",
-            "label": "Shield of Humanity Talents",
+            "label": "OW: Shield of Humanity, Talents",
             "path": "packs/only-war/ow-shield-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2592,7 +2605,7 @@
         },
         {
             "name": "ow-shield-items-traits",
-            "label": "Shield of Humanity Traits",
+            "label": "OW: Shield of Humanity, Traits",
             "path": "packs/only-war/ow-shield-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2604,7 +2617,7 @@
         },
         {
             "name": "ow-shield-items-vehicle-upgrades",
-            "label": "Shield of Humanity Vehicle Upgrades",
+            "label": "OW: Shield of Humanity, Vehicle Upgrades",
             "path": "packs/only-war/ow-shield-items-vehicle-upgrades",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2616,7 +2629,7 @@
         },
         {
             "name": "ow-shield-items-weapons",
-            "label": "Shield of Humanity Weapons",
+            "label": "OW: Shield of Humanity, Weapons",
             "path": "packs/only-war/ow-shield-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2628,7 +2641,7 @@
         },
         {
             "name": "ow-hammer-actors-mounts",
-            "label": "Hammer of the Emperor Mounts",
+            "label": "OW: Hammer of the Emperor, Mounts",
             "path": "packs/only-war/ow-hammer-actors-mounts",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2640,7 +2653,7 @@
         },
         {
             "name": "ow-surrender-actors-bestiary",
-            "label": "No Surrender Bestiary",
+            "label": "OW: No Surrender, Bestiary",
             "path": "packs/only-war/ow-surrender-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2652,7 +2665,7 @@
         },
         {
             "name": "ow-surrender-journals",
-            "label": "No Surrender Reference",
+            "label": "OW: No Surrender, Reference",
             "path": "packs/only-war/ow-surrender-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -2664,7 +2677,7 @@
         },
         {
             "name": "ow-surrender-vehicles-aircraft",
-            "label": "No Surrender Aircraft",
+            "label": "OW: No Surrender, Aircraft",
             "path": "packs/only-war/ow-surrender-vehicles-aircraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2676,7 +2689,7 @@
         },
         {
             "name": "ow-surrender-vehicles-terracraft",
-            "label": "No Surrender Vehicles",
+            "label": "OW: No Surrender, Vehicles",
             "path": "packs/only-war/ow-surrender-vehicles-terracraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2688,7 +2701,7 @@
         },
         {
             "name": "ow-core-origins-homeworlds",
-            "label": "Homeworlds",
+            "label": "OW: Core Rulebook, Homeworlds",
             "path": "packs/only-war/ow-core-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2700,7 +2713,7 @@
         },
         {
             "name": "ow-core-origins-commanding-officers",
-            "label": "Commanding Officers",
+            "label": "OW: Core Rulebook, Commanding Officers",
             "path": "packs/only-war/ow-core-origins-commanding-officers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2712,7 +2725,7 @@
         },
         {
             "name": "ow-core-origins-regiment-types",
-            "label": "Regiment Types",
+            "label": "OW: Core Rulebook, Regiment Types",
             "path": "packs/only-war/ow-core-origins-regiment-types",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2724,7 +2737,7 @@
         },
         {
             "name": "ow-core-origins-training-doctrines",
-            "label": "Training Doctrines",
+            "label": "OW: Core Rulebook, Training Doctrines",
             "path": "packs/only-war/ow-core-origins-training-doctrines",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2736,7 +2749,7 @@
         },
         {
             "name": "ow-core-origins-special-equipment-doctrines",
-            "label": "Special Equipment Doctrines",
+            "label": "OW: Core Rulebook, Special Equipment Doctrines",
             "path": "packs/only-war/ow-core-origins-special-equipment-doctrines",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2748,7 +2761,7 @@
         },
         {
             "name": "ow-hammer-origins-homeworlds",
-            "label": "Hammer Homeworlds",
+            "label": "OW: Hammer of the Emperor, Homeworlds",
             "path": "packs/only-war/ow-hammer-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2760,7 +2773,7 @@
         },
         {
             "name": "ow-hammer-origins-regiment-types",
-            "label": "Hammer Regiment Types",
+            "label": "OW: Hammer of the Emperor, Regiment Types",
             "path": "packs/only-war/ow-hammer-origins-regiment-types",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2772,7 +2785,7 @@
         },
         {
             "name": "ow-hammer-origins-training-doctrines",
-            "label": "Hammer Training Doctrines",
+            "label": "OW: Hammer of the Emperor, Training Doctrines",
             "path": "packs/only-war/ow-hammer-origins-training-doctrines",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2784,7 +2797,7 @@
         },
         {
             "name": "ow-hammer-origins-special-equipment-doctrines",
-            "label": "Hammer Special Equipment Doctrines",
+            "label": "OW: Hammer of the Emperor, Special Equipment Doctrines",
             "path": "packs/only-war/ow-hammer-origins-special-equipment-doctrines",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2796,7 +2809,7 @@
         },
         {
             "name": "ow-hammer-origins-regimental-drawbacks",
-            "label": "Hammer Regimental Drawbacks",
+            "label": "OW: Hammer of the Emperor, Regimental Drawbacks",
             "path": "packs/only-war/ow-hammer-origins-regimental-drawbacks",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2808,7 +2821,7 @@
         },
         {
             "name": "ow-shield-origins-homeworlds",
-            "label": "Shield Homeworlds",
+            "label": "OW: Shield of Humanity, Homeworlds",
             "path": "packs/only-war/ow-shield-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2820,7 +2833,7 @@
         },
         {
             "name": "ow-shield-origins-regiment-types",
-            "label": "Shield Regiment Types",
+            "label": "OW: Shield of Humanity, Regiment Types",
             "path": "packs/only-war/ow-shield-origins-regiment-types",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2832,7 +2845,7 @@
         },
         {
             "name": "ow-shield-origins-training-doctrines",
-            "label": "Shield Training Doctrines",
+            "label": "OW: Shield of Humanity, Training Doctrines",
             "path": "packs/only-war/ow-shield-origins-training-doctrines",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2844,7 +2857,7 @@
         },
         {
             "name": "ow-shield-origins-special-equipment-doctrines",
-            "label": "Shield Special Equipment Doctrines",
+            "label": "OW: Shield of Humanity, Special Equipment Doctrines",
             "path": "packs/only-war/ow-shield-origins-special-equipment-doctrines",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2856,7 +2869,7 @@
         },
         {
             "name": "ow-shield-origins-regimental-drawbacks",
-            "label": "Shield Regimental Drawbacks",
+            "label": "OW: Shield of Humanity, Regimental Drawbacks",
             "path": "packs/only-war/ow-shield-origins-regimental-drawbacks",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2868,7 +2881,7 @@
         },
         {
             "name": "ow-core-origins-specialities",
-            "label": "Specialities",
+            "label": "OW: Core Rulebook, Specialities",
             "path": "packs/only-war/ow-core-origins-specialities",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2880,7 +2893,7 @@
         },
         {
             "name": "rt-abyss-items-gear",
-            "label": "Edge of the Abyss Gear",
+            "label": "RT: Edge of the Abyss, Gear",
             "path": "packs/rogue-trader/rt-abyss-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -2892,7 +2905,7 @@
         },
         {
             "name": "rt-abyss-vehicles-voidcraft",
-            "label": "Edge of the Abyss Voidships",
+            "label": "RT: Edge of the Abyss, Voidships",
             "path": "packs/rogue-trader/rt-abyss-vehicles-voidcraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2904,7 +2917,7 @@
         },
         {
             "name": "rt-abyss-vehicles-terracraft",
-            "label": "Edge of the Abyss Vehicles",
+            "label": "RT: Edge of the Abyss, Vehicles",
             "path": "packs/rogue-trader/rt-abyss-vehicles-terracraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2916,7 +2929,7 @@
         },
         {
             "name": "rt-tau-vehicles-terracraft",
-            "label": "Tau Character Guide Vehicles",
+            "label": "RT: Tau Character Guide, Vehicles",
             "path": "packs/rogue-trader/rt-tau-vehicles-terracraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2928,7 +2941,7 @@
         },
         {
             "name": "rt-koronus-vehicles-aircraft",
-            "label": "Battlefleet Koronus Aircraft",
+            "label": "RT: Battlefleet Koronus, Aircraft",
             "path": "packs/rogue-trader/rt-koronus-vehicles-aircraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2940,7 +2953,7 @@
         },
         {
             "name": "rt-storm-vehicles-aircraft",
-            "label": "Into the Storm Aircraft",
+            "label": "RT: Into the Storm, Aircraft",
             "path": "packs/rogue-trader/rt-storm-vehicles-aircraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2952,7 +2965,7 @@
         },
         {
             "name": "rt-storm-vehicles-terracraft",
-            "label": "Into the Storm Vehicles",
+            "label": "RT: Into the Storm, Vehicles",
             "path": "packs/rogue-trader/rt-storm-vehicles-terracraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2964,7 +2977,7 @@
         },
         {
             "name": "rt-abyss-actors-bestiary",
-            "label": "Edge of the Abyss Bestiary",
+            "label": "RT: Edge of the Abyss, Bestiary",
             "path": "packs/rogue-trader/rt-abyss-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -2976,7 +2989,7 @@
         },
         {
             "name": "rt-abyss-journals",
-            "label": "Edge of the Abyss Reference",
+            "label": "RT: Edge of the Abyss, Reference",
             "path": "packs/rogue-trader/rt-abyss-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -2988,7 +3001,7 @@
         },
         {
             "name": "rt-abyss-items-psychic-powers",
-            "label": "Edge of the Abyss Psychic Powers",
+            "label": "RT: Edge of the Abyss, Psychic Powers",
             "path": "packs/rogue-trader/rt-abyss-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3000,7 +3013,7 @@
         },
         {
             "name": "rt-abyss-items-talents",
-            "label": "Edge of the Abyss Talents",
+            "label": "RT: Edge of the Abyss, Talents",
             "path": "packs/rogue-trader/rt-abyss-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3012,7 +3025,7 @@
         },
         {
             "name": "rt-abyss-items-weapons",
-            "label": "Edge of the Abyss Weapons",
+            "label": "RT: Edge of the Abyss, Weapons",
             "path": "packs/rogue-trader/rt-abyss-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3024,7 +3037,7 @@
         },
         {
             "name": "rt-core-actors-bestiary",
-            "label": "Core Rulebook Bestiary",
+            "label": "RT: Core Rulebook, Bestiary",
             "path": "packs/rogue-trader/rt-core-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -3036,7 +3049,7 @@
         },
         {
             "name": "rt-core-vehicles-voidcraft",
-            "label": "Core Rulebook Voidships",
+            "label": "RT: Core Rulebook, Voidships",
             "path": "packs/rogue-trader/rt-core-vehicles-voidcraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -3048,7 +3061,7 @@
         },
         {
             "name": "rt-core-items-ammo",
-            "label": "Core Rulebook Ammunition",
+            "label": "RT: Core Rulebook, Ammunition",
             "path": "packs/rogue-trader/rt-core-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3060,7 +3073,7 @@
         },
         {
             "name": "rt-core-items-armour",
-            "label": "Core Rulebook Armour",
+            "label": "RT: Core Rulebook, Armour",
             "path": "packs/rogue-trader/rt-core-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3072,7 +3085,7 @@
         },
         {
             "name": "rt-core-items-armor-mods",
-            "label": "Core Rulebook Armour Customisations",
+            "label": "RT: Core Rulebook, Armour Customisations",
             "path": "packs/rogue-trader/rt-core-items-armor-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3084,7 +3097,7 @@
         },
         {
             "name": "rt-core-items-conditions",
-            "label": "Core Rulebook Conditions",
+            "label": "RT: Core Rulebook, Conditions",
             "path": "packs/rogue-trader/rt-core-items-conditions",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3096,7 +3109,7 @@
         },
         {
             "name": "rt-core-items-critical-injuries",
-            "label": "Core Rulebook Critical Injuries",
+            "label": "RT: Core Rulebook, Critical Injuries",
             "path": "packs/rogue-trader/rt-core-items-critical-injuries",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3108,7 +3121,7 @@
         },
         {
             "name": "rt-core-items-cybernetics",
-            "label": "Core Rulebook Cybernetics",
+            "label": "RT: Core Rulebook, Cybernetics",
             "path": "packs/rogue-trader/rt-core-items-cybernetics",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3120,7 +3133,7 @@
         },
         {
             "name": "rt-core-items-gear",
-            "label": "Core Rulebook Gear",
+            "label": "RT: Core Rulebook, Gear",
             "path": "packs/rogue-trader/rt-core-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3132,7 +3145,7 @@
         },
         {
             "name": "rt-core-items-navigator-powers",
-            "label": "Core Rulebook Navigator Powers",
+            "label": "RT: Core Rulebook, Navigator Powers",
             "path": "packs/rogue-trader/rt-core-items-navigator-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3144,7 +3157,7 @@
         },
         {
             "name": "rt-core-origins-homeworlds",
-            "label": "Core Rulebook Homeworlds",
+            "label": "RT: Core Rulebook, Homeworlds",
             "path": "packs/rogue-trader/rt-core-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3156,7 +3169,7 @@
         },
         {
             "name": "rt-core-origins-birthrights",
-            "label": "Core Rulebook Birthrights",
+            "label": "RT: Core Rulebook, Birthrights",
             "path": "packs/rogue-trader/rt-core-origins-birthrights",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3168,7 +3181,7 @@
         },
         {
             "name": "rt-core-origins-lure-of-the-void",
-            "label": "Core Rulebook Lure of the Void",
+            "label": "RT: Core Rulebook, Lure of the Void",
             "path": "packs/rogue-trader/rt-core-origins-lure-of-the-void",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3180,7 +3193,7 @@
         },
         {
             "name": "rt-core-origins-trials-and-travails",
-            "label": "Core Rulebook Trials and Travails",
+            "label": "RT: Core Rulebook, Trials and Travails",
             "path": "packs/rogue-trader/rt-core-origins-trials-and-travails",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3192,7 +3205,7 @@
         },
         {
             "name": "rt-core-origins-motivations",
-            "label": "Core Rulebook Motivations",
+            "label": "RT: Core Rulebook, Motivations",
             "path": "packs/rogue-trader/rt-core-origins-motivations",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3204,7 +3217,7 @@
         },
         {
             "name": "rt-core-origins-careers",
-            "label": "Core Rulebook Careers",
+            "label": "RT: Core Rulebook, Careers",
             "path": "packs/rogue-trader/rt-core-origins-careers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3216,7 +3229,7 @@
         },
         {
             "name": "rt-core-items-psychic-powers",
-            "label": "Core Rulebook Psychic Powers",
+            "label": "RT: Core Rulebook, Psychic Powers",
             "path": "packs/rogue-trader/rt-core-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3228,7 +3241,7 @@
         },
         {
             "name": "rt-core-items-ship-components",
-            "label": "Core Rulebook Ship Components",
+            "label": "RT: Core Rulebook, Ship Components",
             "path": "packs/rogue-trader/rt-core-items-ship-components",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3240,7 +3253,7 @@
         },
         {
             "name": "rt-core-items-ship-weapons",
-            "label": "Core Rulebook Ship Weapons",
+            "label": "RT: Core Rulebook, Ship Weapons",
             "path": "packs/rogue-trader/rt-core-items-ship-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3252,7 +3265,7 @@
         },
         {
             "name": "rt-core-items-skills",
-            "label": "Core Rulebook Skills",
+            "label": "RT: Core Rulebook, Skills",
             "path": "packs/rogue-trader/rt-core-items-skills",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3264,7 +3277,7 @@
         },
         {
             "name": "rt-core-items-talents",
-            "label": "Core Rulebook Talents",
+            "label": "RT: Core Rulebook, Talents",
             "path": "packs/rogue-trader/rt-core-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3276,7 +3289,7 @@
         },
         {
             "name": "rt-core-items-traits",
-            "label": "Core Rulebook Traits",
+            "label": "RT: Core Rulebook, Traits",
             "path": "packs/rogue-trader/rt-core-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3288,7 +3301,7 @@
         },
         {
             "name": "rt-core-items-vehicle-traits",
-            "label": "Core Rulebook Vehicle Traits",
+            "label": "RT: Core Rulebook, Vehicle Traits",
             "path": "packs/rogue-trader/rt-core-items-vehicle-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3300,7 +3313,7 @@
         },
         {
             "name": "rt-core-items-weapon-qualities",
-            "label": "Core Rulebook Weapon Qualities",
+            "label": "RT: Core Rulebook, Weapon Qualities",
             "path": "packs/rogue-trader/rt-core-items-weapon-qualities",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3312,7 +3325,7 @@
         },
         {
             "name": "bc-core-items-weapon-qualities",
-            "label": "Core Rulebook Weapon Qualities",
+            "label": "BC: Core Rulebook, Weapon Qualities",
             "path": "packs/black-crusade/bc-core-items-weapon-qualities",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3324,7 +3337,7 @@
         },
         {
             "name": "dh1-core-items-weapon-qualities",
-            "label": "Core Rulebook Weapon Qualities",
+            "label": "DH1: Core Rulebook, Weapon Qualities",
             "path": "packs/dark-heresy-1/dh1-core-items-weapon-qualities",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3336,7 +3349,7 @@
         },
         {
             "name": "dh2-core-items-weapon-qualities",
-            "label": "Core Rulebook Weapon Qualities",
+            "label": "DH2: Core Rulebook, Weapon Qualities",
             "path": "packs/dark-heresy-2/dh2-core-items-weapon-qualities",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3348,7 +3361,7 @@
         },
         {
             "name": "dw-core-items-weapon-qualities",
-            "label": "Core Rulebook Weapon Qualities",
+            "label": "DW: Core Rulebook, Weapon Qualities",
             "path": "packs/deathwatch/dw-core-items-weapon-qualities",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3360,7 +3373,7 @@
         },
         {
             "name": "ow-core-items-weapon-qualities",
-            "label": "Core Rulebook Weapon Qualities",
+            "label": "OW: Core Rulebook, Weapon Qualities",
             "path": "packs/only-war/ow-core-items-weapon-qualities",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3372,7 +3385,7 @@
         },
         {
             "name": "im-core-items-weapon-qualities",
-            "label": "Core Rulebook Weapon Qualities",
+            "label": "IM: Core Rulebook, Weapon Qualities",
             "path": "packs/imperium-maledictum/im-core-items-weapon-qualities",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3384,7 +3397,7 @@
         },
         {
             "name": "rt-core-items-weapons",
-            "label": "Core Rulebook Weapons",
+            "label": "RT: Core Rulebook, Weapons",
             "path": "packs/rogue-trader/rt-core-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3396,7 +3409,7 @@
         },
         {
             "name": "rt-core-rolltables",
-            "label": "Rogue Trader Psychic Phenomena Tables",
+            "label": "RT: Core Rulebook, Psychic Phenomena Tables",
             "path": "packs/rogue-trader/rt-core-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -3408,7 +3421,7 @@
         },
         {
             "name": "rt-core-rolltables-ship-combat",
-            "label": "Rogue Trader Ship Combat Tables",
+            "label": "RT: Core Rulebook, Ship Combat Tables",
             "path": "packs/rogue-trader/rt-core-rolltables-ship-combat",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -3420,7 +3433,7 @@
         },
         {
             "name": "rt-faith-items-ammo",
-            "label": "Faith and Coin Ammunition",
+            "label": "RT: Faith and Coin, Ammunition",
             "path": "packs/rogue-trader/rt-faith-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3432,7 +3445,7 @@
         },
         {
             "name": "rt-faith-items-armour",
-            "label": "Faith and Coin Armour",
+            "label": "RT: Faith and Coin, Armour",
             "path": "packs/rogue-trader/rt-faith-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3444,7 +3457,7 @@
         },
         {
             "name": "rt-faith-items-gear",
-            "label": "Faith and Coin Gear",
+            "label": "RT: Faith and Coin, Gear",
             "path": "packs/rogue-trader/rt-faith-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3456,7 +3469,7 @@
         },
         {
             "name": "rt-faith-items-ship-components",
-            "label": "Faith and Coin Ship Components",
+            "label": "RT: Faith and Coin, Ship Components",
             "path": "packs/rogue-trader/rt-faith-items-ship-components",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3468,7 +3481,7 @@
         },
         {
             "name": "rt-faith-items-talents",
-            "label": "Faith and Coin Talents",
+            "label": "RT: Faith and Coin, Talents",
             "path": "packs/rogue-trader/rt-faith-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3480,7 +3493,7 @@
         },
         {
             "name": "rt-faith-items-traits",
-            "label": "Faith and Coin Traits",
+            "label": "RT: Faith and Coin, Traits",
             "path": "packs/rogue-trader/rt-faith-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3492,7 +3505,7 @@
         },
         {
             "name": "rt-faith-items-weapons",
-            "label": "Faith and Coin Weapons",
+            "label": "RT: Faith and Coin, Weapons",
             "path": "packs/rogue-trader/rt-faith-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3504,7 +3517,7 @@
         },
         {
             "name": "rt-hostile-items-ammo",
-            "label": "Hostile Acquisitions Ammunition",
+            "label": "RT: Hostile Acquisitions, Ammunition",
             "path": "packs/rogue-trader/rt-hostile-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3516,7 +3529,7 @@
         },
         {
             "name": "rt-hostile-items-armour",
-            "label": "Hostile Acquisitions Armour",
+            "label": "RT: Hostile Acquisitions, Armour",
             "path": "packs/rogue-trader/rt-hostile-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3528,7 +3541,7 @@
         },
         {
             "name": "rt-hostile-items-armor-mods",
-            "label": "Hostile Acquisitions Armour Customisations",
+            "label": "RT: Hostile Acquisitions, Armour Customisations",
             "path": "packs/rogue-trader/rt-hostile-items-armor-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3540,7 +3553,7 @@
         },
         {
             "name": "rt-hostile-items-gear",
-            "label": "Hostile Acquisitions Gear",
+            "label": "RT: Hostile Acquisitions, Gear",
             "path": "packs/rogue-trader/rt-hostile-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3552,7 +3565,7 @@
         },
         {
             "name": "rt-hostile-items-ship-components",
-            "label": "Hostile Acquisitions Ship Components",
+            "label": "RT: Hostile Acquisitions, Ship Components",
             "path": "packs/rogue-trader/rt-hostile-items-ship-components",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3564,7 +3577,7 @@
         },
         {
             "name": "rt-hostile-items-talents",
-            "label": "Hostile Acquisitions Talents",
+            "label": "RT: Hostile Acquisitions, Talents",
             "path": "packs/rogue-trader/rt-hostile-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3576,7 +3589,7 @@
         },
         {
             "name": "rt-hostile-items-traits",
-            "label": "Hostile Acquisitions Traits",
+            "label": "RT: Hostile Acquisitions, Traits",
             "path": "packs/rogue-trader/rt-hostile-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3588,7 +3601,7 @@
         },
         {
             "name": "rt-hostile-items-weapons",
-            "label": "Hostile Acquisitions Weapons",
+            "label": "RT: Hostile Acquisitions, Weapons",
             "path": "packs/rogue-trader/rt-hostile-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3600,7 +3613,7 @@
         },
         {
             "name": "rt-items-ship-extended-actions",
-            "label": "Ship Extended Actions",
+            "label": "RT: Ship Extended Actions",
             "path": "packs/rogue-trader/rt-items-ship-extended-actions",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3612,7 +3625,7 @@
         },
         {
             "name": "rt-core-items-ship-roles",
-            "label": "Ship Roles",
+            "label": "RT: Core Rulebook, Ship Roles",
             "path": "packs/rogue-trader/rt-core-items-ship-roles",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3624,7 +3637,7 @@
         },
         {
             "name": "rt-core-items-ship-orders",
-            "label": "Core Rulebook Ship Orders",
+            "label": "RT: Core Rulebook, Ship Orders",
             "path": "packs/rogue-trader/rt-core-items-ship-orders",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3636,7 +3649,7 @@
         },
         {
             "name": "rt-core-journals-character-actions",
-            "label": "Character Actions",
+            "label": "RT: Core Rulebook, Character Actions",
             "path": "packs/rogue-trader/rt-core-journals-character-actions",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -3648,7 +3661,7 @@
         },
         {
             "name": "rt-core-journals-character-creation",
-            "label": "Character Creation",
+            "label": "RT: Core Rulebook, Character Creation",
             "path": "packs/rogue-trader/rt-core-journals-character-creation",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -3660,7 +3673,7 @@
         },
         {
             "name": "dh2-beyond-journals-daemon-binding",
-            "label": "Enemies Beyond Daemon Binding",
+            "label": "DH2: Enemies Beyond, Daemon Binding",
             "path": "packs/dark-heresy-2/dh2-beyond-journals-daemon-binding",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -3672,7 +3685,7 @@
         },
         {
             "name": "dh2-core-journals-daemon-binding",
-            "label": "Core Rulebook Daemon Binding",
+            "label": "DH2: Core Rulebook, Daemon Binding",
             "path": "packs/dark-heresy-2/dh2-core-journals-daemon-binding",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -3696,7 +3709,7 @@
         },
         {
             "name": "rt-navis-journals-navigation",
-            "label": "The Navis Primer Navigation",
+            "label": "RT: The Navis Primer, Navigation",
             "path": "packs/rogue-trader/rt-navis-journals-navigation",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -3708,7 +3721,7 @@
         },
         {
             "name": "rt-core-journals-navigation",
-            "label": "Core Rulebook Navigation",
+            "label": "RT: Core Rulebook, Navigation",
             "path": "packs/rogue-trader/rt-core-journals-navigation",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -3720,7 +3733,7 @@
         },
         {
             "name": "rt-inequity-journals-colonies",
-            "label": "Colonies",
+            "label": "RT: Stars of Inequity, Colonies",
             "path": "packs/rogue-trader/rt-inequity-journals-colonies",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -3732,7 +3745,7 @@
         },
         {
             "name": "rt-core-journals-fear-insanity-corruption",
-            "label": "Fear, Insanity & Corruption",
+            "label": "RT: Fear, Insanity & Corruption",
             "path": "packs/rogue-trader/rt-core-journals-fear-insanity-corruption",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -3744,7 +3757,7 @@
         },
         {
             "name": "rt-core-journals-ship-vehicle-actions",
-            "label": "Ship & Vehicle Actions",
+            "label": "RT: Core Rulebook, Ship & Vehicle Actions",
             "path": "packs/rogue-trader/rt-core-journals-ship-vehicle-actions",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -3756,7 +3769,7 @@
         },
         {
             "name": "rt-koronus-vehicles-voidcraft",
-            "label": "Koronus Bestiary Voidships",
+            "label": "RT: Koronus Bestiary, Voidships",
             "path": "packs/rogue-trader/rt-koronus-vehicles-voidcraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -3768,7 +3781,7 @@
         },
         {
             "name": "rt-koronus-actors-bestiary",
-            "label": "Koronus Bestiary Bestiary",
+            "label": "RT: Koronus Bestiary, Bestiary",
             "path": "packs/rogue-trader/rt-koronus-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -3780,7 +3793,7 @@
         },
         {
             "name": "rt-koronus-journals",
-            "label": "Koronus Bestiary Reference",
+            "label": "RT: Koronus Bestiary, Reference",
             "path": "packs/rogue-trader/rt-koronus-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -3792,7 +3805,7 @@
         },
         {
             "name": "rt-koronus-items-gear",
-            "label": "Koronus Bestiary Gear",
+            "label": "RT: Koronus Bestiary, Gear",
             "path": "packs/rogue-trader/rt-koronus-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3804,7 +3817,7 @@
         },
         {
             "name": "rt-koronus-items-ship-components",
-            "label": "Koronus Bestiary Ship Components",
+            "label": "RT: Koronus Bestiary, Ship Components",
             "path": "packs/rogue-trader/rt-koronus-items-ship-components",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3816,7 +3829,7 @@
         },
         {
             "name": "rt-koronus-items-ship-weapons",
-            "label": "Koronus Bestiary Ship Weapons",
+            "label": "RT: Koronus Bestiary, Ship Weapons",
             "path": "packs/rogue-trader/rt-koronus-items-ship-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3828,7 +3841,7 @@
         },
         {
             "name": "rt-koronus-items-weapons",
-            "label": "Koronus Bestiary Weapons",
+            "label": "RT: Koronus Bestiary, Weapons",
             "path": "packs/rogue-trader/rt-koronus-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3840,7 +3853,7 @@
         },
         {
             "name": "rt-navis-items-armour",
-            "label": "The Navis Primer Armour",
+            "label": "RT: The Navis Primer, Armour",
             "path": "packs/rogue-trader/rt-navis-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3852,7 +3865,7 @@
         },
         {
             "name": "rt-navis-items-gear",
-            "label": "The Navis Primer Gear",
+            "label": "RT: The Navis Primer, Gear",
             "path": "packs/rogue-trader/rt-navis-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3864,7 +3877,7 @@
         },
         {
             "name": "rt-navis-items-navigator-powers",
-            "label": "The Navis Primer Navigator Powers",
+            "label": "RT: The Navis Primer, Navigator Powers",
             "path": "packs/rogue-trader/rt-navis-items-navigator-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3876,7 +3889,7 @@
         },
         {
             "name": "rt-navis-items-psychic-powers",
-            "label": "The Navis Primer Psychic Powers",
+            "label": "RT: The Navis Primer, Psychic Powers",
             "path": "packs/rogue-trader/rt-navis-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3888,7 +3901,7 @@
         },
         {
             "name": "rt-navis-items-talents",
-            "label": "The Navis Primer Talents",
+            "label": "RT: The Navis Primer, Talents",
             "path": "packs/rogue-trader/rt-navis-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3900,7 +3913,7 @@
         },
         {
             "name": "rt-navis-items-traits",
-            "label": "The Navis Primer Traits",
+            "label": "RT: The Navis Primer, Traits",
             "path": "packs/rogue-trader/rt-navis-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3912,7 +3925,7 @@
         },
         {
             "name": "rt-navis-items-weapons",
-            "label": "The Navis Primer Weapons",
+            "label": "RT: The Navis Primer, Weapons",
             "path": "packs/rogue-trader/rt-navis-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3924,7 +3937,7 @@
         },
         {
             "name": "rt-reaver-items-armour",
-            "label": "The Soul Reaver Armour",
+            "label": "RT: The Soul Reaver, Armour",
             "path": "packs/rogue-trader/rt-reaver-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3936,7 +3949,7 @@
         },
         {
             "name": "rt-reaver-items-gear",
-            "label": "The Soul Reaver Gear",
+            "label": "RT: The Soul Reaver, Gear",
             "path": "packs/rogue-trader/rt-reaver-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3948,7 +3961,7 @@
         },
         {
             "name": "rt-reaver-items-talents",
-            "label": "The Soul Reaver Talents",
+            "label": "RT: The Soul Reaver, Talents",
             "path": "packs/rogue-trader/rt-reaver-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3960,7 +3973,7 @@
         },
         {
             "name": "rt-reaver-items-traits",
-            "label": "The Soul Reaver Traits",
+            "label": "RT: The Soul Reaver, Traits",
             "path": "packs/rogue-trader/rt-reaver-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3972,7 +3985,7 @@
         },
         {
             "name": "rt-reaver-items-weapons",
-            "label": "The Soul Reaver Weapons",
+            "label": "RT: The Soul Reaver, Weapons",
             "path": "packs/rogue-trader/rt-reaver-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -3984,7 +3997,7 @@
         },
         {
             "name": "rt-rolltables-fear-insanity-corruption",
-            "label": "Fear & Corruption Tables",
+            "label": "RT: Fear & Corruption Tables",
             "path": "packs/rogue-trader/rt-rolltables-fear-insanity-corruption",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -3996,7 +4009,7 @@
         },
         {
             "name": "rt-stars-items-armour",
-            "label": "Stars of Inequity Armour",
+            "label": "RT: Stars of Inequity, Armour",
             "path": "packs/rogue-trader/rt-stars-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4008,7 +4021,7 @@
         },
         {
             "name": "rt-stars-items-armor-mods",
-            "label": "Stars of Inequity Armour Customisations",
+            "label": "RT: Stars of Inequity, Armour Customisations",
             "path": "packs/rogue-trader/rt-stars-items-armor-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4020,7 +4033,7 @@
         },
         {
             "name": "rt-stars-items-gear",
-            "label": "Stars of Inequity Gear",
+            "label": "RT: Stars of Inequity, Gear",
             "path": "packs/rogue-trader/rt-stars-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4032,7 +4045,7 @@
         },
         {
             "name": "rt-stars-items-cybernetics",
-            "label": "Stars of Inequity Cybernetics",
+            "label": "RT: Stars of Inequity, Cybernetics",
             "path": "packs/rogue-trader/rt-stars-items-cybernetics",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4044,7 +4057,7 @@
         },
         {
             "name": "rt-stars-items-weapons",
-            "label": "Stars of Inequity Weapons",
+            "label": "RT: Stars of Inequity, Weapons",
             "path": "packs/rogue-trader/rt-stars-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4056,7 +4069,7 @@
         },
         {
             "name": "rt-stars-actors-npcs",
-            "label": "Stars of Inequity NPCs",
+            "label": "RT: Stars of Inequity, NPCs",
             "path": "packs/rogue-trader/rt-stars-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4068,7 +4081,7 @@
         },
         {
             "name": "rt-stars-actors-bestiary",
-            "label": "Stars of Inequity Bestiary",
+            "label": "RT: Stars of Inequity, Bestiary",
             "path": "packs/rogue-trader/rt-stars-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4080,7 +4093,7 @@
         },
         {
             "name": "rt-storm-vehicles-voidcraft",
-            "label": "Into the Storm Voidships",
+            "label": "RT: Into the Storm, Voidships",
             "path": "packs/rogue-trader/rt-storm-vehicles-voidcraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4092,7 +4105,7 @@
         },
         {
             "name": "rt-storm-items-ammo",
-            "label": "Into the Storm Ammunition",
+            "label": "RT: Into the Storm, Ammunition",
             "path": "packs/rogue-trader/rt-storm-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4104,7 +4117,7 @@
         },
         {
             "name": "rt-storm-items-armour",
-            "label": "Into the Storm Armour",
+            "label": "RT: Into the Storm, Armour",
             "path": "packs/rogue-trader/rt-storm-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4116,7 +4129,7 @@
         },
         {
             "name": "rt-storm-items-gear",
-            "label": "Into the Storm Gear",
+            "label": "RT: Into the Storm, Gear",
             "path": "packs/rogue-trader/rt-storm-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4128,7 +4141,7 @@
         },
         {
             "name": "rt-storm-items-navigator-powers",
-            "label": "Into the Storm Navigator Powers",
+            "label": "RT: Into the Storm, Navigator Powers",
             "path": "packs/rogue-trader/rt-storm-items-navigator-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4140,7 +4153,7 @@
         },
         {
             "name": "rt-storm-origins-homeworlds",
-            "label": "Into the Storm Homeworlds",
+            "label": "RT: Into the Storm, Homeworlds",
             "path": "packs/rogue-trader/rt-storm-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4152,7 +4165,7 @@
         },
         {
             "name": "rt-storm-origins-birthrights",
-            "label": "Into the Storm Birthrights",
+            "label": "RT: Into the Storm, Birthrights",
             "path": "packs/rogue-trader/rt-storm-origins-birthrights",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4164,7 +4177,7 @@
         },
         {
             "name": "rt-storm-origins-lure-of-the-void",
-            "label": "Into the Storm Lure of the Void",
+            "label": "RT: Into the Storm, Lure of the Void",
             "path": "packs/rogue-trader/rt-storm-origins-lure-of-the-void",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4176,7 +4189,7 @@
         },
         {
             "name": "rt-storm-origins-trials-and-travails",
-            "label": "Into the Storm Trials and Travails",
+            "label": "RT: Into the Storm, Trials and Travails",
             "path": "packs/rogue-trader/rt-storm-origins-trials-and-travails",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4188,7 +4201,7 @@
         },
         {
             "name": "rt-storm-origins-motivations",
-            "label": "Into the Storm Motivations",
+            "label": "RT: Into the Storm, Motivations",
             "path": "packs/rogue-trader/rt-storm-origins-motivations",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4200,7 +4213,7 @@
         },
         {
             "name": "rt-storm-origins-lineages",
-            "label": "Into the Storm Lineages",
+            "label": "RT: Into the Storm, Lineages",
             "path": "packs/rogue-trader/rt-storm-origins-lineages",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4212,7 +4225,7 @@
         },
         {
             "name": "rt-storm-items-psychic-powers",
-            "label": "Into the Storm Psychic Powers",
+            "label": "RT: Into the Storm, Psychic Powers",
             "path": "packs/rogue-trader/rt-storm-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4224,7 +4237,7 @@
         },
         {
             "name": "rt-storm-items-ship-components",
-            "label": "Into the Storm Ship Components",
+            "label": "RT: Into the Storm, Ship Components",
             "path": "packs/rogue-trader/rt-storm-items-ship-components",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4236,7 +4249,7 @@
         },
         {
             "name": "rt-storm-items-ship-upgrades",
-            "label": "Into the Storm Ship Upgrades",
+            "label": "RT: Into the Storm, Ship Upgrades",
             "path": "packs/rogue-trader/rt-storm-items-ship-upgrades",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4248,7 +4261,7 @@
         },
         {
             "name": "rt-storm-items-ship-weapons",
-            "label": "Into the Storm Ship Weapons",
+            "label": "RT: Into the Storm, Ship Weapons",
             "path": "packs/rogue-trader/rt-storm-items-ship-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4260,7 +4273,7 @@
         },
         {
             "name": "rt-storm-items-talents",
-            "label": "Into the Storm Talents",
+            "label": "RT: Into the Storm, Talents",
             "path": "packs/rogue-trader/rt-storm-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4272,7 +4285,7 @@
         },
         {
             "name": "rt-storm-items-traits",
-            "label": "Into the Storm Traits",
+            "label": "RT: Into the Storm, Traits",
             "path": "packs/rogue-trader/rt-storm-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4284,7 +4297,7 @@
         },
         {
             "name": "rt-storm-items-weapons",
-            "label": "Into the Storm Weapons",
+            "label": "RT: Into the Storm, Weapons",
             "path": "packs/rogue-trader/rt-storm-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4296,7 +4309,7 @@
         },
         {
             "name": "rt-tau-items-ammo",
-            "label": "Tau Character Guide Ammunition",
+            "label": "RT: Tau Character Guide, Ammunition",
             "path": "packs/rogue-trader/rt-tau-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4308,7 +4321,7 @@
         },
         {
             "name": "rt-tau-items-armour",
-            "label": "Tau Character Guide Armour",
+            "label": "RT: Tau Character Guide, Armour",
             "path": "packs/rogue-trader/rt-tau-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4320,7 +4333,7 @@
         },
         {
             "name": "rt-tau-items-gear",
-            "label": "Tau Character Guide Gear",
+            "label": "RT: Tau Character Guide, Gear",
             "path": "packs/rogue-trader/rt-tau-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4332,7 +4345,7 @@
         },
         {
             "name": "rt-tau-items-talents",
-            "label": "Tau Character Guide Talents",
+            "label": "RT: Tau Character Guide, Talents",
             "path": "packs/rogue-trader/rt-tau-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4344,7 +4357,7 @@
         },
         {
             "name": "rt-tau-items-traits",
-            "label": "Tau Character Guide Traits",
+            "label": "RT: Tau Character Guide, Traits",
             "path": "packs/rogue-trader/rt-tau-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4356,7 +4369,7 @@
         },
         {
             "name": "rt-tau-items-weapons",
-            "label": "Tau Character Guide Weapons",
+            "label": "RT: Tau Character Guide, Weapons",
             "path": "packs/rogue-trader/rt-tau-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4368,7 +4381,7 @@
         },
         {
             "name": "dh2-beyond-journals",
-            "label": "Enemies Beyond Rules",
+            "label": "DH2: Enemies Beyond, Rules",
             "path": "packs/dark-heresy-2/dh2-beyond-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -4380,7 +4393,7 @@
         },
         {
             "name": "dh2-within-actors-bestiary",
-            "label": "Enemies Within Bestiary",
+            "label": "DH2: Enemies Within, Bestiary",
             "path": "packs/dark-heresy-2/dh2-within-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4392,7 +4405,7 @@
         },
         {
             "name": "dh2-within-actors-reinforcements",
-            "label": "Enemies Within Reinforcement Characters",
+            "label": "DH2: Enemies Within, Reinforcement Characters",
             "path": "packs/dark-heresy-2/dh2-within-actors-reinforcements",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4404,7 +4417,7 @@
         },
         {
             "name": "dh2-within-journals",
-            "label": "Enemies Within Rules",
+            "label": "DH2: Enemies Within, Rules",
             "path": "packs/dark-heresy-2/dh2-within-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -4416,7 +4429,7 @@
         },
         {
             "name": "dh2-within-origins-homeworlds",
-            "label": "Enemies Within Home Worlds",
+            "label": "DH2: Enemies Within, Home Worlds",
             "path": "packs/dark-heresy-2/dh2-within-origins-homeworlds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4428,7 +4441,7 @@
         },
         {
             "name": "dh2-without-actors-bestiary",
-            "label": "Enemies Without Bestiary",
+            "label": "DH2: Enemies Without, Bestiary",
             "path": "packs/dark-heresy-2/dh2-without-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4440,7 +4453,7 @@
         },
         {
             "name": "dh2-without-actors-npcs",
-            "label": "Enemies Without NPCs",
+            "label": "DH2: Enemies Without, NPCs",
             "path": "packs/dark-heresy-2/dh2-without-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4452,7 +4465,7 @@
         },
         {
             "name": "dh2-without-journals",
-            "label": "Enemies Without Rules",
+            "label": "DH2: Enemies Without, Rules",
             "path": "packs/dark-heresy-2/dh2-without-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -4632,7 +4645,7 @@
         },
         {
             "name": "dh2-beyond-actors-reinforcements",
-            "label": "Enemies Beyond Reinforcement Characters",
+            "label": "DH2: Enemies Beyond, Reinforcement Characters",
             "path": "packs/dark-heresy-2/dh2-beyond-actors-reinforcements",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4644,7 +4657,7 @@
         },
         {
             "name": "dh2-core-origins-elite-advances",
-            "label": "Dark Heresy 2E Elite Advances",
+            "label": "DH2: Core Rulebook, Elite Advances",
             "path": "packs/dark-heresy-2/dh2-core-origins-elite-advances",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4656,7 +4669,7 @@
         },
         {
             "name": "dh2-core-items-weapon-mods",
-            "label": "Core Rulebook Weapon Modifications",
+            "label": "DH2: Core Rulebook, Weapon Modifications",
             "path": "packs/dark-heresy-2/dh2-core-items-weapon-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4668,7 +4681,7 @@
         },
         {
             "name": "dh2-core-items-talents-specializations",
-            "label": "Core Rulebook Talent Specializations",
+            "label": "DH2: Core Rulebook, Talent Specializations",
             "path": "packs/dark-heresy-2/dh2-core-items-talents-specializations",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4680,7 +4693,7 @@
         },
         {
             "name": "dh2-core-locations",
-            "label": "Core Rulebook Locations",
+            "label": "DH2: Core Rulebook, Locations",
             "path": "packs/dark-heresy-2/dh2-core-locations",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4692,7 +4705,7 @@
         },
         {
             "name": "dh2-within-locations",
-            "label": "Enemies Within Locations",
+            "label": "DH2: Enemies Within, Locations",
             "path": "packs/dark-heresy-2/dh2-within-locations",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4704,7 +4717,7 @@
         },
         {
             "name": "dh2-within-vehicles-terracraft",
-            "label": "Enemies Within Vehicles",
+            "label": "DH2: Enemies Within, Vehicles",
             "path": "packs/dark-heresy-2/dh2-within-vehicles-terracraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4716,7 +4729,7 @@
         },
         {
             "name": "dh2-without-actors-reinforcements",
-            "label": "Enemies Without Reinforcement Characters",
+            "label": "DH2: Enemies Without, Reinforcement Characters",
             "path": "packs/dark-heresy-2/dh2-without-actors-reinforcements",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4728,7 +4741,7 @@
         },
         {
             "name": "dh2-without-vehicles-aircraft",
-            "label": "Enemies Without Aircraft",
+            "label": "DH2: Enemies Without, Aircraft",
             "path": "packs/dark-heresy-2/dh2-without-vehicles-aircraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4740,7 +4753,7 @@
         },
         {
             "name": "dh2-without-vehicles-terracraft",
-            "label": "Enemies Without Vehicles",
+            "label": "DH2: Enemies Without, Vehicles",
             "path": "packs/dark-heresy-2/dh2-without-vehicles-terracraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4752,7 +4765,7 @@
         },
         {
             "name": "dw-achilus-journals",
-            "label": "The Achilus Assault Reference",
+            "label": "DW: The Achilus Assault, Reference",
             "path": "packs/deathwatch/dw-achilus-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -4764,7 +4777,7 @@
         },
         {
             "name": "dw-achilus-actors-bestiary",
-            "label": "The Achilus Assault Bestiary",
+            "label": "DW: The Achilus Assault, Bestiary",
             "path": "packs/deathwatch/dw-achilus-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4776,7 +4789,7 @@
         },
         {
             "name": "dw-chosen-journals",
-            "label": "The Emperor's Chosen Reference",
+            "label": "DW: The Emperor's Chosen, Reference",
             "path": "packs/deathwatch/dw-chosen-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -4788,7 +4801,7 @@
         },
         {
             "name": "dw-chosen-items-armour",
-            "label": "The Emperor's Chosen Armour",
+            "label": "DW: The Emperor's Chosen, Armour",
             "path": "packs/deathwatch/dw-chosen-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4800,7 +4813,7 @@
         },
         {
             "name": "dw-chosen-items-gear",
-            "label": "The Emperor's Chosen Gear",
+            "label": "DW: The Emperor's Chosen, Gear",
             "path": "packs/deathwatch/dw-chosen-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4812,7 +4825,7 @@
         },
         {
             "name": "dw-chosen-items-weapons",
-            "label": "The Emperor's Chosen Weapons",
+            "label": "DW: The Emperor's Chosen, Weapons",
             "path": "packs/deathwatch/dw-chosen-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4824,7 +4837,7 @@
         },
         {
             "name": "dw-jericho-journals",
-            "label": "The Jericho Reach Reference",
+            "label": "DW: The Jericho Reach, Reference",
             "path": "packs/deathwatch/dw-jericho-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -4836,7 +4849,7 @@
         },
         {
             "name": "dw-jericho-actors-bestiary",
-            "label": "The Jericho Reach Bestiary",
+            "label": "DW: The Jericho Reach, Bestiary",
             "path": "packs/deathwatch/dw-jericho-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4848,7 +4861,7 @@
         },
         {
             "name": "dw-outer-journals",
-            "label": "The Outer Reach Reference",
+            "label": "DW: The Outer Reach, Reference",
             "path": "packs/deathwatch/dw-outer-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -4860,7 +4873,7 @@
         },
         {
             "name": "dw-outer-vehicles-aircraft",
-            "label": "The Outer Reach Aircraft",
+            "label": "DW: The Outer Reach, Aircraft",
             "path": "packs/deathwatch/dw-outer-vehicles-aircraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4872,7 +4885,7 @@
         },
         {
             "name": "dw-outer-actors-bestiary",
-            "label": "The Outer Reach Bestiary",
+            "label": "DW: The Outer Reach, Bestiary",
             "path": "packs/deathwatch/dw-outer-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4884,7 +4897,7 @@
         },
         {
             "name": "dw-outer-actors-npcs",
-            "label": "The Outer Reach NPCs",
+            "label": "DW: The Outer Reach, NPCs",
             "path": "packs/deathwatch/dw-outer-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4896,7 +4909,7 @@
         },
         {
             "name": "dw-achilus-actors-npcs",
-            "label": "The Achilus Assault NPCs",
+            "label": "DW: The Achilus Assault, NPCs",
             "path": "packs/deathwatch/dw-achilus-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4908,7 +4921,7 @@
         },
         {
             "name": "dw-jericho-actors-npcs",
-            "label": "The Jericho Reach NPCs",
+            "label": "DW: The Jericho Reach, NPCs",
             "path": "packs/deathwatch/dw-jericho-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4920,7 +4933,7 @@
         },
         {
             "name": "bc-core-items-cybernetics",
-            "label": "BC: Core Cybernetics",
+            "label": "BC: Core Rulebook, Cybernetics",
             "path": "packs/black-crusade/bc-core-items-cybernetics",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4932,7 +4945,7 @@
         },
         {
             "name": "ow-shield-vehicles-terracraft",
-            "label": "OW: Shield of Humanity Vehicles",
+            "label": "OW: Shield of Humanity, Vehicles",
             "path": "packs/only-war/ow-shield-vehicles-terracraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4944,7 +4957,7 @@
         },
         {
             "name": "ow-surrender-actors-npcs",
-            "label": "OW: No Surrender NPCs",
+            "label": "OW: No Surrender, NPCs",
             "path": "packs/only-war/ow-surrender-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4956,7 +4969,7 @@
         },
         {
             "name": "rt-core-actors-npcs",
-            "label": "RT: Core NPCs",
+            "label": "RT: Core Rulebook, NPCs",
             "path": "packs/rogue-trader/rt-core-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -4968,7 +4981,7 @@
         },
         {
             "name": "rt-kin-items-weapons",
-            "label": "RT: The Dark Kin Weapons",
+            "label": "RT: The Dark Kin, Weapons",
             "path": "packs/rogue-trader/rt-kin-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4980,7 +4993,7 @@
         },
         {
             "name": "rt-kin-items-talents",
-            "label": "RT: The Dark Kin Talents",
+            "label": "RT: The Dark Kin, Talents",
             "path": "packs/rogue-trader/rt-kin-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -4992,7 +5005,7 @@
         },
         {
             "name": "rt-kin-items-traits",
-            "label": "RT: The Dark Kin Traits",
+            "label": "RT: The Dark Kin, Traits",
             "path": "packs/rogue-trader/rt-kin-items-traits",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5004,7 +5017,7 @@
         },
         {
             "name": "rt-kin-origins-careers",
-            "label": "RT: The Dark Kin Careers",
+            "label": "RT: The Dark Kin, Careers",
             "path": "packs/rogue-trader/rt-kin-origins-careers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5016,7 +5029,7 @@
         },
         {
             "name": "rt-reaver-actors-bestiary",
-            "label": "RT: The Soul Reaver Bestiary",
+            "label": "RT: The Soul Reaver, Bestiary",
             "path": "packs/rogue-trader/rt-reaver-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5028,7 +5041,7 @@
         },
         {
             "name": "rt-reaver-actors-npcs",
-            "label": "RT: The Soul Reaver NPCs",
+            "label": "RT: The Soul Reaver, NPCs",
             "path": "packs/rogue-trader/rt-reaver-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5040,7 +5053,7 @@
         },
         {
             "name": "rt-reaver-vehicles-voidcraft",
-            "label": "RT: The Soul Reaver Voidships",
+            "label": "RT: The Soul Reaver, Voidships",
             "path": "packs/rogue-trader/rt-reaver-vehicles-voidcraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5052,7 +5065,7 @@
         },
         {
             "name": "rt-reaver-vehicles-aircraft",
-            "label": "RT: The Soul Reaver Aircraft",
+            "label": "RT: The Soul Reaver, Aircraft",
             "path": "packs/rogue-trader/rt-reaver-vehicles-aircraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5064,7 +5077,7 @@
         },
         {
             "name": "rt-reaver-vehicles-terracraft",
-            "label": "RT: The Soul Reaver Vehicles",
+            "label": "RT: The Soul Reaver, Vehicles",
             "path": "packs/rogue-trader/rt-reaver-vehicles-terracraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5076,7 +5089,7 @@
         },
         {
             "name": "rt-faith-items-weapon-mods",
-            "label": "RT: Faith and Coin Weapon Modifications",
+            "label": "RT: Faith and Coin, Weapon Modifications",
             "path": "packs/rogue-trader/rt-faith-items-weapon-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5088,7 +5101,7 @@
         },
         {
             "name": "dw-core-origins-chapters",
-            "label": "Chapters",
+            "label": "DW: Core Rulebook, Chapters",
             "path": "packs/deathwatch/dw-core-origins-chapters",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5100,7 +5113,7 @@
         },
         {
             "name": "dw-core-origins-specialities",
-            "label": "Specialities",
+            "label": "DW: Core Rulebook, Specialities",
             "path": "packs/deathwatch/dw-core-origins-specialities",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5112,7 +5125,7 @@
         },
         {
             "name": "rt-kin-journals",
-            "label": "The Dark Kin Reference",
+            "label": "RT: The Dark Kin, Reference",
             "path": "packs/rogue-trader/rt-kin-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -5124,7 +5137,7 @@
         },
         {
             "name": "dw-rites-origins-chapters",
-            "label": "Rites of Battle Chapters",
+            "label": "DW: Rites of Battle, Chapters",
             "path": "packs/deathwatch/dw-rites-origins-chapters",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5136,7 +5149,7 @@
         },
         {
             "name": "dw-founding-origins-chapters",
-            "label": "First Founding Chapters",
+            "label": "DW: First Founding, Chapters",
             "path": "packs/deathwatch/dw-founding-origins-chapters",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5148,7 +5161,7 @@
         },
         {
             "name": "dh1-ascension-items-talents",
-            "label": "DH1: Ascension — Talents",
+            "label": "DH1: Ascension, Talents",
             "path": "packs/dark-heresy-1/dh1-ascension-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5160,7 +5173,7 @@
         },
         {
             "name": "dh1-ascension-origins-careers",
-            "label": "DH1: Ascension — Career Paths",
+            "label": "DH1: Ascension, Career Paths",
             "path": "packs/dark-heresy-1/dh1-ascension-origins-careers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5172,7 +5185,7 @@
         },
         {
             "name": "dh1-ascension-actors-bestiary",
-            "label": "DH1: Ascension — Bestiary",
+            "label": "DH1: Ascension, Bestiary",
             "path": "packs/dark-heresy-1/dh1-ascension-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5184,7 +5197,7 @@
         },
         {
             "name": "dh1-ascension-actors-npcs",
-            "label": "DH1: Ascension — Named Individuals",
+            "label": "DH1: Ascension, Named Individuals",
             "path": "packs/dark-heresy-1/dh1-ascension-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5196,7 +5209,7 @@
         },
         {
             "name": "dh1-ascension-items-ammo",
-            "label": "DH1: Ascension — Ammunition",
+            "label": "DH1: Ascension, Ammunition",
             "path": "packs/dark-heresy-1/dh1-ascension-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5208,7 +5221,7 @@
         },
         {
             "name": "dh1-ascension-items-armour",
-            "label": "DH1: Ascension — Armour",
+            "label": "DH1: Ascension, Armour",
             "path": "packs/dark-heresy-1/dh1-ascension-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5220,7 +5233,7 @@
         },
         {
             "name": "dh1-ascension-items-cybernetics",
-            "label": "DH1: Ascension — Cybernetics",
+            "label": "DH1: Ascension, Cybernetics",
             "path": "packs/dark-heresy-1/dh1-ascension-items-cybernetics",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5232,7 +5245,7 @@
         },
         {
             "name": "dh1-ascension-items-gear",
-            "label": "DH1: Ascension — Gear",
+            "label": "DH1: Ascension, Gear",
             "path": "packs/dark-heresy-1/dh1-ascension-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5244,7 +5257,7 @@
         },
         {
             "name": "dh1-ascension-items-psychic-powers",
-            "label": "DH1: Ascension — Psychic Powers",
+            "label": "DH1: Ascension, Psychic Powers",
             "path": "packs/dark-heresy-1/dh1-ascension-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5256,7 +5269,7 @@
         },
         {
             "name": "dh1-ascension-items-weapons",
-            "label": "DH1: Ascension — Weapons",
+            "label": "DH1: Ascension, Weapons",
             "path": "packs/dark-heresy-1/dh1-ascension-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5280,7 +5293,7 @@
         },
         {
             "name": "ow-eleventh-actors-bestiary",
-            "label": "OW: Eleventh Hour — Bestiary",
+            "label": "OW: Eleventh Hour, Bestiary",
             "path": "packs/only-war/ow-eleventh-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5292,7 +5305,7 @@
         },
         {
             "name": "ow-eleventh-actors-npcs",
-            "label": "OW: Eleventh Hour — NPCs",
+            "label": "OW: Eleventh Hour, NPCs",
             "path": "packs/only-war/ow-eleventh-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5304,7 +5317,7 @@
         },
         {
             "name": "ow-gmkit-actors-bestiary",
-            "label": "OW: Game Master’s Kit — Bestiary",
+            "label": "OW: Game Master’s Kit, Bestiary",
             "path": "packs/only-war/ow-gmkit-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5316,7 +5329,7 @@
         },
         {
             "name": "ow-gmkit-actors-npcs",
-            "label": "OW: Game Master’s Kit — NPCs",
+            "label": "OW: Game Master’s Kit, NPCs",
             "path": "packs/only-war/ow-gmkit-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5328,7 +5341,7 @@
         },
         {
             "name": "ow-gmkit-vehicles-terracraft",
-            "label": "OW: Game Master’s Kit — Vehicles",
+            "label": "OW: Game Master’s Kit, Vehicles",
             "path": "packs/only-war/ow-gmkit-vehicles-terracraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5340,7 +5353,7 @@
         },
         {
             "name": "ow-testament-actors-bestiary",
-            "label": "OW: Final Testament — Bestiary",
+            "label": "OW: Final Testament, Bestiary",
             "path": "packs/only-war/ow-testament-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5352,7 +5365,7 @@
         },
         {
             "name": "ow-testament-actors-mounts",
-            "label": "OW: Final Testament — Mounts",
+            "label": "OW: Final Testament, Mounts",
             "path": "packs/only-war/ow-testament-actors-mounts",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5364,7 +5377,7 @@
         },
         {
             "name": "ow-testament-actors-npcs",
-            "label": "OW: Final Testament — NPCs",
+            "label": "OW: Final Testament, NPCs",
             "path": "packs/only-war/ow-testament-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5376,7 +5389,7 @@
         },
         {
             "name": "ow-testament-vehicles-aircraft",
-            "label": "OW: Final Testament — Aircraft",
+            "label": "OW: Final Testament, Aircraft",
             "path": "packs/only-war/ow-testament-vehicles-aircraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5388,7 +5401,7 @@
         },
         {
             "name": "ow-testament-vehicles-terracraft",
-            "label": "OW: Final Testament — Vehicles",
+            "label": "OW: Final Testament, Vehicles",
             "path": "packs/only-war/ow-testament-vehicles-terracraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5400,7 +5413,7 @@
         },
         {
             "name": "ow-testament-journals",
-            "label": "OW: Final Testament — Journals",
+            "label": "OW: Final Testament, Journals",
             "path": "packs/only-war/ow-testament-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -5424,7 +5437,7 @@
         },
         {
             "name": "im-chemical-actors-bestiary",
-            "label": "IM: Chemical Burn — Bestiary",
+            "label": "IM: Chemical Burn, Bestiary",
             "path": "packs/imperium-maledictum/im-chemical-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5436,7 +5449,7 @@
         },
         {
             "name": "im-chemical-actors-npcs",
-            "label": "IM: Chemical Burn — NPCs",
+            "label": "IM: Chemical Burn, NPCs",
             "path": "packs/imperium-maledictum/im-chemical-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5448,7 +5461,7 @@
         },
         {
             "name": "im-chemical-items-gear",
-            "label": "IM: Chemical Burn — Gear",
+            "label": "IM: Chemical Burn, Gear",
             "path": "packs/imperium-maledictum/im-chemical-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5460,7 +5473,7 @@
         },
         {
             "name": "im-chemical-items-weapons",
-            "label": "IM: Chemical Burn — Weapons",
+            "label": "IM: Chemical Burn, Weapons",
             "path": "packs/imperium-maledictum/im-chemical-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5472,7 +5485,7 @@
         },
         {
             "name": "im-core-actors-bestiary",
-            "label": "IM: Core Rulebook — Bestiary",
+            "label": "IM: Core Rulebook, Bestiary",
             "path": "packs/imperium-maledictum/im-core-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5484,7 +5497,7 @@
         },
         {
             "name": "im-core-endeavours",
-            "label": "IM: Core Rulebook — Endeavours",
+            "label": "IM: Core Rulebook, Endeavours",
             "path": "packs/imperium-maledictum/im-core-endeavours",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -5496,7 +5509,7 @@
         },
         {
             "name": "im-core-items-ammo",
-            "label": "IM: Core Rulebook — Ammunition",
+            "label": "IM: Core Rulebook, Ammunition",
             "path": "packs/imperium-maledictum/im-core-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5508,7 +5521,7 @@
         },
         {
             "name": "im-core-items-armour",
-            "label": "IM: Core Rulebook — Armour",
+            "label": "IM: Core Rulebook, Armour",
             "path": "packs/imperium-maledictum/im-core-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5520,7 +5533,7 @@
         },
         {
             "name": "im-core-items-conditions",
-            "label": "IM: Core Rulebook — Conditions",
+            "label": "IM: Core Rulebook, Conditions",
             "path": "packs/imperium-maledictum/im-core-items-conditions",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5532,7 +5545,7 @@
         },
         {
             "name": "im-core-items-critical-injuries",
-            "label": "IM: Core Rulebook — Critical Injuries",
+            "label": "IM: Core Rulebook, Critical Injuries",
             "path": "packs/imperium-maledictum/im-core-items-critical-injuries",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5544,7 +5557,7 @@
         },
         {
             "name": "im-core-items-cybernetics",
-            "label": "IM: Core Rulebook — Cybernetics",
+            "label": "IM: Core Rulebook, Cybernetics",
             "path": "packs/imperium-maledictum/im-core-items-cybernetics",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5556,7 +5569,7 @@
         },
         {
             "name": "im-core-items-gear",
-            "label": "IM: Core Rulebook — Gear",
+            "label": "IM: Core Rulebook, Gear",
             "path": "packs/imperium-maledictum/im-core-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5568,7 +5581,7 @@
         },
         {
             "name": "im-core-items-psychic-powers",
-            "label": "IM: Core Rulebook — Psychic Powers",
+            "label": "IM: Core Rulebook, Psychic Powers",
             "path": "packs/imperium-maledictum/im-core-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5580,7 +5593,7 @@
         },
         {
             "name": "im-core-items-skills",
-            "label": "IM: Core Rulebook — Skills",
+            "label": "IM: Core Rulebook, Skills",
             "path": "packs/imperium-maledictum/im-core-items-skills",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5592,7 +5605,7 @@
         },
         {
             "name": "im-core-items-talents",
-            "label": "IM: Core Rulebook — Talents",
+            "label": "IM: Core Rulebook, Talents",
             "path": "packs/imperium-maledictum/im-core-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5604,7 +5617,7 @@
         },
         {
             "name": "im-core-items-weapon-mods",
-            "label": "IM: Core Rulebook — Weapon Mods",
+            "label": "IM: Core Rulebook, Weapon Mods",
             "path": "packs/imperium-maledictum/im-core-items-weapon-mods",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5616,7 +5629,7 @@
         },
         {
             "name": "im-core-items-weapons",
-            "label": "IM: Core Rulebook — Weapons",
+            "label": "IM: Core Rulebook, Weapons",
             "path": "packs/imperium-maledictum/im-core-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5628,7 +5641,7 @@
         },
         {
             "name": "im-core-journals",
-            "label": "IM: Core Rulebook — Journals",
+            "label": "IM: Core Rulebook, Journals",
             "path": "packs/imperium-maledictum/im-core-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -5640,7 +5653,7 @@
         },
         {
             "name": "im-core-origins-factions",
-            "label": "IM: Core Rulebook — Factions",
+            "label": "IM: Core Rulebook, Factions",
             "path": "packs/imperium-maledictum/im-core-origins-factions",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5652,7 +5665,7 @@
         },
         {
             "name": "im-core-origins-roles",
-            "label": "IM: Core Rulebook — Roles",
+            "label": "IM: Core Rulebook, Roles",
             "path": "packs/imperium-maledictum/im-core-origins-roles",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5664,7 +5677,7 @@
         },
         {
             "name": "im-core-origins-worlds",
-            "label": "IM: Core Rulebook — Origins (Worlds)",
+            "label": "IM: Core Rulebook, Origins (Worlds)",
             "path": "packs/imperium-maledictum/im-core-origins-worlds",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5676,7 +5689,7 @@
         },
         {
             "name": "im-core-patrons",
-            "label": "IM: Core Rulebook — Patrons",
+            "label": "IM: Core Rulebook, Patrons",
             "path": "packs/imperium-maledictum/im-core-patrons",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -5688,7 +5701,7 @@
         },
         {
             "name": "im-core-rolltables",
-            "label": "IM: Core Rulebook — Roll Tables",
+            "label": "IM: Core Rulebook, Roll Tables",
             "path": "packs/imperium-maledictum/im-core-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -5700,7 +5713,7 @@
         },
         {
             "name": "im-inquisition-actors-bestiary",
-            "label": "IM: Inquisition Player’s Guide — Bestiary",
+            "label": "IM: Inquisition Player’s Guide, Bestiary",
             "path": "packs/imperium-maledictum/im-inquisition-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5712,7 +5725,7 @@
         },
         {
             "name": "im-inquisition-items-ammo",
-            "label": "IM: Inquisition Player’s Guide — Ammunition",
+            "label": "IM: Inquisition Player’s Guide, Ammunition",
             "path": "packs/imperium-maledictum/im-inquisition-items-ammo",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5724,7 +5737,7 @@
         },
         {
             "name": "im-inquisition-items-armour",
-            "label": "IM: Inquisition Player’s Guide — Armour",
+            "label": "IM: Inquisition Player’s Guide, Armour",
             "path": "packs/imperium-maledictum/im-inquisition-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5736,7 +5749,7 @@
         },
         {
             "name": "im-inquisition-items-gear",
-            "label": "IM: Inquisition Player’s Guide — Gear",
+            "label": "IM: Inquisition Player’s Guide, Gear",
             "path": "packs/imperium-maledictum/im-inquisition-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5748,7 +5761,7 @@
         },
         {
             "name": "im-inquisition-items-psychic-powers",
-            "label": "IM: Inquisition Player’s Guide — Psychic Powers",
+            "label": "IM: Inquisition Player’s Guide, Psychic Powers",
             "path": "packs/imperium-maledictum/im-inquisition-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5760,7 +5773,7 @@
         },
         {
             "name": "im-inquisition-items-talents",
-            "label": "IM: Inquisition Player’s Guide — Talents",
+            "label": "IM: Inquisition Player’s Guide, Talents",
             "path": "packs/imperium-maledictum/im-inquisition-items-talents",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5772,7 +5785,7 @@
         },
         {
             "name": "im-inquisition-items-weapons",
-            "label": "IM: Inquisition Player’s Guide — Weapons",
+            "label": "IM: Inquisition Player’s Guide, Weapons",
             "path": "packs/imperium-maledictum/im-inquisition-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5784,7 +5797,7 @@
         },
         {
             "name": "im-inquisition-journals",
-            "label": "IM: Inquisition Player’s Guide — Journals",
+            "label": "IM: Inquisition Player’s Guide, Journals",
             "path": "packs/imperium-maledictum/im-inquisition-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -5796,7 +5809,7 @@
         },
         {
             "name": "im-inquisition-origins-factions",
-            "label": "IM: Inquisition Player’s Guide — Factions",
+            "label": "IM: Inquisition Player’s Guide, Factions",
             "path": "packs/imperium-maledictum/im-inquisition-origins-factions",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5808,7 +5821,7 @@
         },
         {
             "name": "im-inquisition-origins-inquisition",
-            "label": "IM: Inquisition Player’s Guide — Origins (Inquisition)",
+            "label": "IM: Inquisition Player’s Guide, Origins (Inquisition)",
             "path": "packs/imperium-maledictum/im-inquisition-origins-inquisition",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5820,7 +5833,7 @@
         },
         {
             "name": "im-inquisition-origins-roles",
-            "label": "IM: Inquisition Player’s Guide — Roles",
+            "label": "IM: Inquisition Player’s Guide, Roles",
             "path": "packs/imperium-maledictum/im-inquisition-origins-roles",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5832,7 +5845,7 @@
         },
         {
             "name": "im-inquisition-rolltables",
-            "label": "IM: Inquisition Player’s Guide — Roll Tables",
+            "label": "IM: Inquisition Player’s Guide, Roll Tables",
             "path": "packs/imperium-maledictum/im-inquisition-rolltables",
             "system": "wh40k-rpg",
             "type": "RollTable",
@@ -5856,7 +5869,7 @@
         },
         {
             "name": "bc-chains-actors-bestiary",
-            "label": "BC: Broken Chains — Bestiary",
+            "label": "BC: Broken Chains, Bestiary",
             "path": "packs/black-crusade/bc-chains-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5868,7 +5881,7 @@
         },
         {
             "name": "bc-chains-actors-npcs",
-            "label": "BC: Broken Chains — NPCs",
+            "label": "BC: Broken Chains, NPCs",
             "path": "packs/black-crusade/bc-chains-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5880,7 +5893,7 @@
         },
         {
             "name": "bc-chains-items-armour",
-            "label": "BC: Broken Chains — Armour",
+            "label": "BC: Broken Chains, Armour",
             "path": "packs/black-crusade/bc-chains-items-armour",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5892,7 +5905,7 @@
         },
         {
             "name": "bc-chains-items-psychic-powers",
-            "label": "BC: Broken Chains — Psychic Powers",
+            "label": "BC: Broken Chains, Psychic Powers",
             "path": "packs/black-crusade/bc-chains-items-psychic-powers",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5904,7 +5917,7 @@
         },
         {
             "name": "bc-chains-items-weapons",
-            "label": "BC: Broken Chains — Weapons",
+            "label": "BC: Broken Chains, Weapons",
             "path": "packs/black-crusade/bc-chains-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5916,7 +5929,7 @@
         },
         {
             "name": "bc-corruption-actors-bestiary",
-            "label": "BC: Hand of Corruption — Bestiary",
+            "label": "BC: Hand of Corruption, Bestiary",
             "path": "packs/black-crusade/bc-corruption-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5928,7 +5941,7 @@
         },
         {
             "name": "bc-corruption-actors-npcs",
-            "label": "BC: Hand of Corruption — NPCs",
+            "label": "BC: Hand of Corruption, NPCs",
             "path": "packs/black-crusade/bc-corruption-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5940,7 +5953,7 @@
         },
         {
             "name": "bc-corruption-items-gear",
-            "label": "BC: Hand of Corruption — Gear",
+            "label": "BC: Hand of Corruption, Gear",
             "path": "packs/black-crusade/bc-corruption-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5952,7 +5965,7 @@
         },
         {
             "name": "bc-gmkit-actors-bestiary",
-            "label": "BC: Game Master’s Kit — Bestiary",
+            "label": "BC: Game Master’s Kit, Bestiary",
             "path": "packs/black-crusade/bc-gmkit-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5964,7 +5977,7 @@
         },
         {
             "name": "bc-gmkit-actors-npcs",
-            "label": "BC: Game Master’s Kit — NPCs",
+            "label": "BC: Game Master’s Kit, NPCs",
             "path": "packs/black-crusade/bc-gmkit-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -5976,7 +5989,7 @@
         },
         {
             "name": "bc-gmkit-items-gear",
-            "label": "BC: Game Master’s Kit — Gear",
+            "label": "BC: Game Master’s Kit, Gear",
             "path": "packs/black-crusade/bc-gmkit-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -5988,7 +6001,7 @@
         },
         {
             "name": "bc-gmkit-items-weapons",
-            "label": "BC: Game Master’s Kit — Weapons",
+            "label": "BC: Game Master’s Kit, Weapons",
             "path": "packs/black-crusade/bc-gmkit-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -6000,7 +6013,7 @@
         },
         {
             "name": "dw-ark-actors-bestiary",
-            "label": "DW: Ark of Lost Souls — Bestiary",
+            "label": "DW: Ark of Lost Souls, Bestiary",
             "path": "packs/deathwatch/dw-ark-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -6012,7 +6025,7 @@
         },
         {
             "name": "dw-ark-actors-npcs",
-            "label": "DW: Ark of Lost Souls — NPCs",
+            "label": "DW: Ark of Lost Souls, NPCs",
             "path": "packs/deathwatch/dw-ark-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -6024,7 +6037,7 @@
         },
         {
             "name": "dw-ark-items-weapons",
-            "label": "DW: Ark of Lost Souls — Weapons",
+            "label": "DW: Ark of Lost Souls, Weapons",
             "path": "packs/deathwatch/dw-ark-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
@@ -6036,7 +6049,7 @@
         },
         {
             "name": "dw-gmkit-actors-bestiary",
-            "label": "DW: Game Master’s Kit — Bestiary",
+            "label": "DW: Game Master’s Kit, Bestiary",
             "path": "packs/deathwatch/dw-gmkit-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -6048,7 +6061,7 @@
         },
         {
             "name": "dw-gmkit-actors-npcs",
-            "label": "DW: Game Master’s Kit — NPCs",
+            "label": "DW: Game Master’s Kit, NPCs",
             "path": "packs/deathwatch/dw-gmkit-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -6060,7 +6073,7 @@
         },
         {
             "name": "dw-gmkit-vehicles-aircraft",
-            "label": "DW: Game Master’s Kit — Aircraft",
+            "label": "DW: Game Master’s Kit, Aircraft",
             "path": "packs/deathwatch/dw-gmkit-vehicles-aircraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -6072,7 +6085,7 @@
         },
         {
             "name": "dw-gmkit-vehicles-terracraft",
-            "label": "DW: Game Master’s Kit — Vehicles",
+            "label": "DW: Game Master’s Kit, Vehicles",
             "path": "packs/deathwatch/dw-gmkit-vehicles-terracraft",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -6084,7 +6097,7 @@
         },
         {
             "name": "dw-knownofear-journals",
-            "label": "DW: Know No Fear — Journals",
+            "label": "DW: Know No Fear, Journals",
             "path": "packs/deathwatch/dw-knownofear-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
@@ -6096,7 +6109,7 @@
         },
         {
             "name": "dw-tempest-actors-bestiary",
-            "label": "DW: Rising Tempest — Bestiary",
+            "label": "DW: Rising Tempest, Bestiary",
             "path": "packs/deathwatch/dw-tempest-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -6108,7 +6121,7 @@
         },
         {
             "name": "dw-tempest-actors-npcs",
-            "label": "DW: Rising Tempest — NPCs",
+            "label": "DW: Rising Tempest, NPCs",
             "path": "packs/deathwatch/dw-tempest-actors-npcs",
             "system": "wh40k-rpg",
             "type": "Actor",
@@ -6120,7 +6133,7 @@
         },
         {
             "name": "rt-epoch-journals",
-            "label": "RT: Epoch Koronus — Journals",
+            "label": "RT: Epoch Koronus, Journals",
             "path": "packs/rogue-trader/rt-epoch-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",

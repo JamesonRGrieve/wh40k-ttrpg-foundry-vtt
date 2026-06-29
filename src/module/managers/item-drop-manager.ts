@@ -59,6 +59,18 @@ export class ItemDropManager {
     }
 
     /**
+     * Whether a specific item is bound to its owner — the undroppable / untradable
+     * flag (#390). A bound item cannot be dropped to the scene or transferred to
+     * another actor regardless of its type. Pure — reads only `system.bound`.
+     * Accepts any item-like object (the concrete `item.system` is a polymorphic
+     * DataModel union); `bound` lives on the physical-item template.
+     */
+    static isBound(item: object | null | undefined): boolean {
+        if (item == null) return false;
+        return (item as { system?: { bound?: boolean } }).system?.bound === true;
+    }
+
+    /**
      * Snap a raw pixel coordinate to the top-left of its grid cell so dropped
      * piles land tidily on the grid (and so merge detection is exact).
      */
@@ -206,6 +218,10 @@ export class ItemDropManager {
         }
         if (!ItemDropManager.isDroppable(item.type)) {
             ui.notifications.warn(t('WH40K.Warning.LootNotDroppable', { item: item.name }));
+            return null;
+        }
+        if (ItemDropManager.isBound(item)) {
+            ui.notifications.warn(t('WH40K.Warning.LootBound', { item: item.name }));
             return null;
         }
 

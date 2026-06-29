@@ -2471,6 +2471,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             sourceOwned: sourceActor?.isOwner ?? false,
         });
 
+        // A bound item (#390) cannot be given/transferred to another actor.
+        if (action === 'transfer' && ItemDropManager.isBound(item)) {
+            ui.notifications.warn(game.i18n.format('WH40K.Warning.LootBound', { item: item.name }));
+            return false;
+        }
+
         // Reorder within the same actor.
         if (action === 'sort') return this._onSortItem(event, item);
 
