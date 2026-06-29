@@ -1769,6 +1769,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @protected
      */
     async _onPanelToggle(event: Event): Promise<void> {
+        // A click on an interactive control inside the header (e.g. the Fate-uses
+        // label button, #35) fires its own data-action and must NOT also toggle
+        // the panel's collapse state.
+        if (event.target instanceof Element && event.target.closest('[data-action]') !== null) return;
         event.preventDefault();
         const target = (event.currentTarget as HTMLElement).dataset['toggle'];
         if (target === undefined || target === '') return;

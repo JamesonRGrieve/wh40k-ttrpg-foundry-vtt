@@ -17,7 +17,7 @@ describe('sumModifierValues', () => {
     });
 
     it('sums mixed positive and negative modifiers', () => {
-        expect(sumModifierValues({ attack: 10, range: -10, cover: -20, 'weapon-training': 10 })).toBe(-10);
+        expect(sumModifierValues({ 'attack': 10, 'range': -10, 'cover': -20, 'weapon-training': 10 })).toBe(-10);
     });
 
     it('treats non-finite values as zero rather than poisoning the total', () => {
