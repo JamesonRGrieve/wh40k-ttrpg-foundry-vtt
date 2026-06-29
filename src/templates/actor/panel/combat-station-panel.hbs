@@ -2,12 +2,15 @@
 {{!-- Streamlined combat interface --}}
 
 <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-flex-1 tw-min-h-0" style="container-type: inline-size;">
-    {{!-- Main Combat Layout: Left (vitals + armour + weapons) | Right (actions) --}}
-    <div class="tw-grid tw-grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] tw-gap-3 tw-w-full tw-items-stretch tw-flex-1 tw-min-h-0">
-        <div class="tw-flex tw-flex-col tw-gap-3 tw-min-h-0">
-            {{!-- Row 1: Vitals left, armour right --}}
-            <div class="tw-grid tw-grid-cols-[minmax(280px,1.1fr)_minmax(280px,1fr)] tw-gap-3 tw-items-stretch">
-                {{!-- Left: Unified Vitals panel --}}
+    {{!-- Main Combat Layout (#394): the left column stacks Vitals then Armour
+         directly beneath it; the former Armour slot (Row-1 right) now holds the
+         Combat Actions; Weapons span full width beneath. --}}
+    <div class="tw-flex tw-flex-col tw-gap-3 tw-w-full tw-flex-1 tw-min-h-0">
+        {{!-- Row 1: [Vitals → Armour stacked] | [Combat Actions] --}}
+        <div class="tw-grid tw-grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] tw-gap-3 tw-items-start">
+            {{!-- Left column: Vitals with Armour directly beneath (#394) --}}
+            <div class="tw-flex tw-flex-col tw-gap-3 tw-min-w-0">
+                {{!-- Unified Vitals panel --}}
                 <div class="tw-flex tw-flex-col tw-gap-2">
                     <div class="wh40k-panel">
                         <div class="wh40k-panel-header">
@@ -234,10 +237,16 @@
                         </div>
                         {{/unless}}
 
-                        {{!-- Movement — the consolidated move-mode cluster (movement-panel-compact):
-                             Half/Full/Charge/Run/Disengage toggles that set the move mode, gate the
-                             per-turn budget, and grey out off-turn for players. #235 --}}
-                        {{> systems/wh40k-rpg/templates/actor/panel/movement-panel-compact.hbs}}
+                        {{!-- Movement (#394) — consolidated move-mode cluster
+                             (movement-panel-compact): Half/Full/Charge/Run/Disengage
+                             toggles that set the move mode, gate the per-turn budget,
+                             and grey out off-turn for players (#235). Wrapped to size
+                             to its content — self-start + drop the nested panel's
+                             default block margin so it hugs its rows instead of
+                             dominating the Vitals card. --}}
+                        <div class="tw-self-start [&_.wh40k-panel]:tw-mb-0">
+                            {{> systems/wh40k-rpg/templates/actor/panel/movement-panel-compact.hbs}}
+                        </div>
                         </div>
 
                         </div>
@@ -269,7 +278,12 @@
                     {{/if}}
                 </div>
             </div>
-            {{!-- Row 2: Weapons (full width) --}}
+            {{!-- Right column — the former Armour slot (#394) now holds Combat Actions. --}}
+            <div class="tw-flex tw-flex-col tw-gap-2 tw-min-w-0">
+                {{> systems/wh40k-rpg/templates/actor/panel/combat-actions-panel.hbs}}
+            </div>
+        </div>
+        {{!-- Row 2: Weapons (full width) --}}
             <div class="wh40k-panel tw-flex-1 tw-min-h-0" data-drop-zone="general" data-accepts="weapon">
                 <div class="wh40k-panel-header tw-order-[-1] tw-shrink-0">
                     {{> systems/wh40k-rpg/templates/actor/partial/panel-header.hbs label="Weapons" icon="fa-fist-raised"}}
@@ -315,10 +329,4 @@
                 </div>
             </div>
         </div>
-
-        {{!-- RIGHT COLUMN: Combat Actions --}}
-        <div class="tw-flex tw-flex-col tw-gap-2 tw-min-w-0 tw-min-h-full">
-            {{> systems/wh40k-rpg/templates/actor/panel/combat-actions-panel.hbs}}
-        </div>
-    </div>
 </div>
