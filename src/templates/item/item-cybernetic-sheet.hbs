@@ -285,12 +285,22 @@
                   {{/select}}
                 </select>
               </div>
+              {{!-- #390: Bound toggle — GM only, only visible in edit mode --}}
+              {{#if inEditMode}}
+              <div class="tw-col-span-2 tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]" title="{{localize "WH40K.Item.BoundHint"}}">
+                  <input type="checkbox" name="system.bound" {{checked system.bound}} class="tw-w-3.5 tw-h-3.5 [accent-color:var(--wh40k-gold)]" />
+                  <i class="fas fa-lock"></i>
+                  {{localize "WH40K.Item.Bound"}}
+                </label>
+              </div>
+              {{/if}}
             </div>
           </div>
         </div>
-        
+
       </div>
-      
+
       {{!-- EFFECTS TAB --}}
       <div class="tab" data-tab="effects" data-group="primary">
         

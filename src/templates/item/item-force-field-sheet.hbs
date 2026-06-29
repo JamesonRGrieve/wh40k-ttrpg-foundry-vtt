@@ -214,6 +214,16 @@
               </select>
             </div>
           </div>
+          {{!-- #390: Bound toggle — GM only, only visible in edit mode --}}
+          {{#if inEditMode}}
+          <div class="tw-mt-2">
+            <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm tw-font-medium" title="{{localize "WH40K.Item.BoundHint"}}">
+              <input type="checkbox" name="system.bound" {{checked system.bound}} class="tw-w-3.5 tw-h-3.5 [accent-color:var(--wh40k-gold)]" />
+              <i class="fas fa-lock"></i>
+              {{localize "WH40K.Item.Bound"}}
+            </label>
+          </div>
+          {{/if}}
         </div>
       </div>
 
