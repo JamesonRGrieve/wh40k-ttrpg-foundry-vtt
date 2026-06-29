@@ -174,7 +174,9 @@ const actorSheetOverrides = {
             display: 'flex !important',
             flexDirection: 'column !important',
             gap: 'var(--wh40k-space-md) !important',
-            padding: '12px !important',
+            // No top padding: tab content top-aligns with the header/sidebar column
+            // top (#398); keep horizontal + bottom breathing room.
+            padding: '0 12px 12px !important',
         },
         '& .wh40k-body section.tab-combat.active, & #tab-body section.tab-combat.active': {
             minHeight: '100% !important',
