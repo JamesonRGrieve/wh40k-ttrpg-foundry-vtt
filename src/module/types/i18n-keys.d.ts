@@ -3709,6 +3709,7 @@ export type I18nKey =
     | 'WH40K.Warning.InvalidAmmunition'
     | 'WH40K.Warning.InvalidCharacteristic'
     | 'WH40K.Warning.InvalidItem'
+    | 'WH40K.Warning.LootBound'
     | 'WH40K.Warning.LootDropDenied'
     | 'WH40K.Warning.LootNoReceiver'
     | 'WH40K.Warning.LootNoToken'

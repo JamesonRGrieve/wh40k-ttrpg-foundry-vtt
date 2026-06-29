@@ -8,4 +8,3 @@ export { default as CharacteristicSetupDialog } from './characteristic-setup-dia
 export { default as ConfirmationDialog } from './confirmation-dialog.ts';
 export { default as FateUsesDialog } from './fate-uses-dialog.ts';
 export { default as RollConfigurationDialog } from './roll-configuration-dialog.ts';
-export { default as TransactionRequestDialog } from './transaction-request-dialog.ts';

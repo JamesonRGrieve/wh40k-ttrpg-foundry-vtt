@@ -8,19 +8,6 @@
         "verified": "14.349",
         "maximum": 14
     },
-    "relationships": {
-        "requires": [
-            {
-                "id": "item-piles",
-                "type": "module",
-                "manifest": "https://github.com/fantasycalendar/FoundryVTT-ItemPiles/releases/latest/download/module.json",
-                "compatibility": {
-                    "minimum": "3.0.0",
-                    "verified": "3.3.2"
-                }
-            }
-        ]
-    },
     "authors": [
         {
             "name": "JamesonRGrieve"
@@ -6902,6 +6889,17 @@
     "license": "LICENSE.txt",
     "bugs": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/issues",
     "relationships": {
+        "requires": [
+            {
+                "id": "item-piles",
+                "type": "module",
+                "manifest": "https://github.com/fantasycalendar/FoundryVTT-ItemPiles/releases/latest/download/module.json",
+                "compatibility": {
+                    "minimum": "3.0.0",
+                    "verified": "3.3.2"
+                }
+            }
+        ],
         "recommends": [
             {
                 "id": "game-icons-net",

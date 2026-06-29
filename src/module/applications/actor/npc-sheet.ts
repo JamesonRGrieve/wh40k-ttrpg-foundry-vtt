@@ -11,7 +11,6 @@ import type { WH40KNPC } from '../../documents/npc.ts';
 import { characteristicFromAbbrev } from '../../helpers/characteristic-labels.ts';
 import { hasDaemonic } from '../../rules/daemonic-immunities.ts';
 import { getInteractionCap } from '../../rules/disposition.ts';
-import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import InventoryGeneratorDialog from '../dialogs/inventory-generator-dialog.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
@@ -296,7 +295,6 @@ export default class NPCSheet extends CharacterSheet {
             toggleEditMode: NPCSheet.#toggleEditMode,
             toggleGMTools: NPCSheet.#toggleGMTools,
             toggleAbilityDesc: NPCSheet.#toggleAbilityDesc,
-            setTransactionMode: NPCSheet.#setTransactionMode,
             generateInventory: NPCSheet.#generateInventory,
             // Interaction tally (DH2 errata p.125, #145)
             adjustInteractionCount: NPCSheet.#adjustInteractionCount,
@@ -397,7 +395,6 @@ export default class NPCSheet extends CharacterSheet {
             heavy: 'Heavy',
             thrown: 'Thrown',
         };
-        context['transactionProfile'] = TransactionManager.getProfile(this.actor);
 
         // NPC-flavoured preparation on top of the PC context.
         this._prepareCharacteristicsContext(context);
@@ -1648,19 +1645,6 @@ export default class NPCSheet extends CharacterSheet {
         // Rotate chevron
         const icon = target.querySelector('i');
         if (icon) icon.classList.toggle('fa-rotate-180');
-    }
-
-    /**
-     * Configure the actor as a barter or requisition source.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static async #setTransactionMode(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        const mode = (target.dataset['mode'] as 'none' | 'barter' | 'requisition' | undefined) ?? 'none';
-        await TransactionManager.setMode(this.npcActor, mode);
-        ui.notifications.info(`${this.npcActor.name} source mode set to ${mode}.`);
-        await this.render(false);
     }
 
     /* -------------------------------------------- */
