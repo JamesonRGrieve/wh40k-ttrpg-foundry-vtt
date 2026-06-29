@@ -47,6 +47,7 @@ export class WH40KSettings {
         degreesMode: 'degrees-mode',
         promptIncompleteOriginPath: 'prompt-incomplete-origin-path',
         freeformCharacters: 'freeform-characters',
+        freeformCreation: 'freeform-creation',
         characteristicOffset: 'characteristic-offset',
         pointBuyPool: 'point-buy-pool',
         resyncOnReady: 'resync-on-ready',
@@ -236,6 +237,19 @@ export class WH40KSettings {
         }
     }
 
+    /** When true, the "Drop to Add" dropzone on the Talents and Traits panels is
+     *  shown, permitting talents/traits to be added by drag-and-drop outside the
+     *  advancement/XP flow (#396). Defaults to false so the dropzone is hidden
+     *  by default and talents/traits go through the structured advancement path.
+     *  Safe to call before the setting is registered (returns false). */
+    static isFreeformCreation(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.freeformCreation) === true;
+        } catch {
+            return false;
+        }
+    }
+
     static getRuleset(): DH2Ruleset {
         try {
             return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.dh2Ruleset) === 'raw' ? 'raw' : 'homebrew';
@@ -400,6 +414,20 @@ export class WH40KSettings {
                 key: S.freeformCharacters,
                 name: 'WH40K.SETTINGS.FreeformCharacters.Name',
                 hint: 'WH40K.SETTINGS.FreeformCharacters.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: false,
+                default: false,
+                type: Boolean,
+            },
+            {
+                // Gates the "Drop to Add" dropzone on the Talents and Traits panels
+                // (#396). When disabled (default) those panels hide the dropzone so
+                // talents/traits go through the structured advancement/XP flow rather
+                // than being added by free drag-and-drop.
+                key: S.freeformCreation,
+                name: 'WH40K.SETTINGS.FreeformCreation.Name',
+                hint: 'WH40K.SETTINGS.FreeformCreation.Hint',
                 scope: 'world',
                 config: true,
                 requiresReload: false,

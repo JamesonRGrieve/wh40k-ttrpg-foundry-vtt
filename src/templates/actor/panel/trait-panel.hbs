@@ -95,9 +95,13 @@
     </div>
     {{/if}}
 
-    {{!-- Dropzone --}}
+    {{!-- Dropzone — only shown when the world's freeform-creation setting is
+         enabled (#396). By default traits must go through the advancement/XP
+         flow; the dropzone is hidden to avoid mis-clicks. --}}
+    {{#if (isFreeformCreation)}}
     <div class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-m-2 tw-cursor-pointer tw-transition-all tw-border-2 tw-border-dashed tw-border-[var(--wh40k-border-color-light)] tw-rounded {{#if traits.length}}tw-flex-row tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-min-h-0{{else}}tw-flex-col tw-p-4 tw-min-h-[80px]{{/if}}" data-action="itemCreate" data-type="trait">
         <i class="{{concat 'fas fa-shield-alt'}} tw-text-[var(--wh40k-text-muted)] {{#if traits.length}}tw-text-[0.9rem]{{else}}tw-text-[2rem]{{/if}}"></i>
         <span data-dropzone-text class="tw-text-[var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.05em] tw-text-center {{#if traits.length}}tw-text-[0.7rem]{{else}}tw-text-[0.75rem]{{/if}}">{{#if traits.length}}Drop to add{{else}}Drop Trait or Click to Create{{/if}}</span>
     </div>
+    {{/if}}
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

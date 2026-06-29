@@ -709,6 +709,10 @@
                 "Name": "Freeform Character Editing",
                 "Hint": "When enabled, content items (special abilities, malignancies, mutations, mental disorders) and world origin paths can be edited directly in Foundry, and items such as origin paths may be dragged onto an actor to build a character outside the Origin Path Builder. When disabled (default), these surfaces are read-only and the builder is the supported path. To make changes that persist across worlds and updates, edit the source in its compendium instead."
             },
+            "FreeformCreation": {
+                "Name": "Freeform Talent and Trait Creation",
+                "Hint": "When enabled, the drop-to-add zone on the Talents and Traits panels is shown, allowing talents and traits to be added by dragging them onto a character sheet. When disabled (default), the dropzone is hidden and talents and traits must be granted through the advancement and XP flow."
+            },
             "FreeformItems": {
                 "Name": "Freeform Item Editing",
                 "Hint": "When enabled, equipment item sheets (weapons, armour, gear, ammunition, cybernetics, and other gear) can be edited directly in Foundry, allowing in-world item creation and tweaks. When disabled (default), these surfaces are read-only. To make changes that persist across worlds and updates, edit the source in its compendium instead."

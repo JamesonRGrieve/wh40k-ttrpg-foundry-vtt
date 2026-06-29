@@ -225,6 +225,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
             {
               "choices": undefined,
               "config": true,
+              "default": "false",
+              "key": "freeform-creation",
+              "requiresReload": false,
+              "scope": "world",
+              "type": "Boolean",
+            },
+            {
+              "choices": undefined,
+              "config": true,
               "default": "0",
               "key": "characteristic-offset",
               "requiresReload": undefined,
@@ -416,6 +425,7 @@ describe('WH40KSettings — system-parameter value spaces (parameterized)', () =
         ['isAutoApplyDamageEnabled', () => WH40KSettings.isAutoApplyDamageEnabled()],
         ['isMultipleFateBurnAllowed', () => WH40KSettings.isMultipleFateBurnAllowed()],
         ['isFreeformCharactersEnabled', () => WH40KSettings.isFreeformCharactersEnabled()],
+        ['isFreeformCreation', () => WH40KSettings.isFreeformCreation()],
     ];
     describe.each(defaultOffBooleans)('%s — default-off (=== true)', (_name, read) => {
         const cases: ReadonlyArray<readonly [boolean | undefined, boolean]> = [

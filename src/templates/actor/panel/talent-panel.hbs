@@ -51,5 +51,11 @@
         </div>
         {{/if}}
 
+        {{!-- Drop-to-add zone is only shown when the world's freeform-creation
+             setting is enabled (#396). By default talents must go through the
+             advancement/XP flow; the dropzone invites mis-clicks when it appears
+             unconditionally. --}}
+        {{#if (isFreeformCreation)}}
         {{> systems/wh40k-rpg/templates/actor/partial/dropzone.hbs type="talent" iconClass="fa-star" hasItems=talentsCount label="Drop Talent to Add" compactLabel="Drop to add" clickToCreate=false}}
+        {{/if}}
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
