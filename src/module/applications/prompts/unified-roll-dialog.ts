@@ -29,6 +29,7 @@ import {
 import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import { availableSkillVariants, filterModifiersByVariant, type SkillVariant } from '../../rules/skill-variants.ts';
+import { deriveTargetSituationalKeys, targetCombatStateFromConditions } from '../../rules/target-situationals.ts';
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
 import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
@@ -53,6 +54,18 @@ type AttackOptionWeaponLike = WH40KItemDocument & {
         };
     };
 };
+
+/**
+ * The slice of a target actor read when auto-selecting situational modifiers
+ * from its state (#393). Both members are optional Foundry framework surfaces:
+ * `effects` is the actor's Active-Effect collection; `statuses` is the V11+ set
+ * of active status ids (not declared on the system's actor type, hence read
+ * through this structural shape).
+ */
+interface ConditionSource {
+    statuses?: Iterable<string> | null;
+    effects?: Iterable<{ name?: string | null; disabled?: boolean }> | null;
+}
 
 /**
  * Shared scroll-region container for the dialog's body parts. Grouping the body
@@ -99,6 +112,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _selectedSkillVariant: string | null;
     declare _aimModeKey: string;
     declare _activeCombatSituationals: Set<string>;
+    /** Situational keys auto-selected from the target's state (#393). Tracked
+     *  separately from {@link _activeCombatSituationals} so a target change can
+     *  refresh its own picks without clobbering keys the player toggled by hand;
+     *  a manual toggle drops the key from this set, taking ownership of it. */
+    declare _autoSituationals: Set<string>;
     declare _sizeModifierKey: string | null;
     declare _specialOptionsExpanded: boolean;
     declare _sizeExpanded: boolean;
@@ -146,6 +164,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._selectedSkillVariant = null;
         this._aimModeKey = 'none';
         this._activeCombatSituationals = new Set();
+        this._autoSituationals = new Set();
         this._sizeModifierKey = null; // null = use target actor size, string = user override
         this._specialOptionsExpanded = false;
         this._sizeExpanded = false;
@@ -344,6 +363,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 if (isRanged) {
                     this.#applyTargetDistance(false);
                 }
+
+                // Auto-select situational modifiers from the target's state (#393):
+                // if a weapon roll opens with a target already selected, pre-tick the
+                // Prone / Stunned / Unaware / Helpless rows so they flow into the
+                // aggregate target (#382). No-ops when nothing is targeted.
+                this.#applyTargetSituationals();
             }
         }
 
@@ -1398,6 +1423,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     static async #onToggleCombatSituational(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['situationalKey'];
         if (key === undefined) return;
+        // A manual toggle takes ownership of the key: drop it from the
+        // auto-selected set so a later target change won't recycle it (#393).
+        this._autoSituationals.delete(key);
         if (this._activeCombatSituationals.has(key)) {
             this._activeCombatSituationals.delete(key);
         } else {
@@ -1483,6 +1511,56 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     /**
+     * Read the active, non-disabled condition tokens off the target actor —
+     * Active-Effect names and Foundry status ids — normalised to lower-case so
+     * the pure {@link targetCombatStateFromConditions} mapping can consume them.
+     * Both surfaces are optional: `statuses` / `effects` are loosely-typed
+     * Foundry framework collections not declared on the system's actor type.
+     */
+    static #collectConditionTokens(actor: ConditionSource): Set<string> {
+        const tokens = new Set<string>();
+        if (actor.statuses != null) {
+            for (const status of actor.statuses) tokens.add(status.toLowerCase());
+        }
+        if (actor.effects != null) {
+            for (const effect of actor.effects) {
+                if (effect.disabled === true) continue;
+                const name = effect.name;
+                if (name != null && name !== '') tokens.add(name.toLowerCase());
+            }
+        }
+        return tokens;
+    }
+
+    /**
+     * Auto-select the situational modifiers the current target's state implies
+     * (#393). Drops the previous auto-picks first so a target change refreshes
+     * cleanly, then re-derives from the target's active conditions and the
+     * attack variant (ranged/melee). Keys the player toggled by hand are left
+     * untouched — only this method's own picks are recycled. Weapon rolls only.
+     */
+    #applyTargetSituationals(): void {
+        if (this.rollType !== 'weapon') return;
+
+        // Recycle the prior auto-picks; a manual toggle already removed its key
+        // from `_autoSituationals`, so those survive.
+        for (const key of this._autoSituationals) this._activeCombatSituationals.delete(key);
+        this._autoSituationals.clear();
+
+        const rd = this.rollData;
+        const target = rd.targetActor;
+        if (target === null) return;
+
+        const isRanged = rd.weapon?.isRanged === true;
+        const conditions = UnifiedRollDialog.#collectConditionTokens(target);
+        const state = targetCombatStateFromConditions(conditions, isRanged);
+        for (const key of deriveTargetSituationalKeys(state)) {
+            this._activeCombatSituationals.add(key);
+            this._autoSituationals.add(key);
+        }
+    }
+
+    /**
      * Bind the combatant chosen from the #250 target dropdown as the attack
      * target, computing range from the source token to the combatant's token.
      * An empty id clears the target. Sources the defender from the active Combat
@@ -1492,11 +1570,15 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const rd = this.rollData;
         if (combatantId === '') {
             rd.targetActor = null;
+            // Clearing the target drops its auto-selected situationals (#393).
+            this.#applyTargetSituationals();
             return;
         }
         const combatant = game.combat?.combatants.get(combatantId);
         if (combatant == null) return;
         rd.targetActor = combatant.actor ?? null;
+        // Refresh auto-selected situational modifiers for the new target (#393).
+        this.#applyTargetSituationals();
         const actor = rd.sourceActor;
         const targetToken = combatant.token?.object ?? null;
         if (actor != null && targetToken != null) {
@@ -1545,6 +1627,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // override so the calculated bracket takes effect.
         if (typeof rd['update'] === 'function') await (rd['update'] as () => Promise<void>)();
         this._selectedRangeBracket = null;
+        // Refresh auto-selected situational modifiers for the new target (#393).
+        this.#applyTargetSituationals();
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
