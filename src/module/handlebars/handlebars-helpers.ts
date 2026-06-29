@@ -2,6 +2,7 @@ import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeCla
 import WH40K, { buildQualityLabel, parseQualityLevel } from '../config.ts';
 import { capitalize, formatSigned } from '../utils/format.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
 import { formatSourceLabel, type SourceInput } from './source-label.ts';
 
@@ -253,6 +254,14 @@ export function registerHandlebarsHelpers(): void {
         const expandedList = wh40kConfig.ui?.expanded;
         return Array.isArray(expandedList) && expandedList.includes(field);
     });
+
+    /**
+     * Returns true when the world-level "freeform creation" setting (#396) is
+     * enabled, false otherwise. Use as a subexpression guard to conditionally
+     * render drop-to-add zones that bypass the XP/advancement flow:
+     *   {{#if (isFreeformCreation)}}…{{/if}}
+     */
+    Handlebars.registerHelper('isFreeformCreation', (): boolean => WH40KSettings.isFreeformCreation());
 
     Handlebars.registerHelper('toLowerCase', (str: string) => {
         return str.toLowerCase();
