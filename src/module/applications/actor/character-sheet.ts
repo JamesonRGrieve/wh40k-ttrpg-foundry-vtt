@@ -104,6 +104,7 @@ import {
 } from '../../rules/possession.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
+import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
 import { errorMessage } from '../../utils/error-message.ts';
 import { formatSigned } from '../../utils/format.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
@@ -3161,12 +3162,11 @@ export default class CharacterSheet extends BaseActorSheet {
             }
         }
 
-        return [...aptitudes]
-            .sort((a, b) => a.localeCompare(b))
-            .map((apt) => ({
-                aptitude: apt,
-                sources: sourcesOf.get(apt) ?? ['Unknown'],
-            }));
+        // General (the universal aptitude) sorts to the front, then alphabetical (#395).
+        return orderAptitudesGeneralFirst(aptitudes, new Set(universal)).map((apt) => ({
+            aptitude: apt,
+            sources: sourcesOf.get(apt) ?? ['Unknown'],
+        }));
     }
 
     /* -------------------------------------------- */
