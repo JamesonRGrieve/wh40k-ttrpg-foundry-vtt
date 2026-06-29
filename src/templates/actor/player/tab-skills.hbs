@@ -76,8 +76,11 @@
     {{!-- Talents & Traits side by side, collapsing to a single stacked column when the
          sheet is too narrow (#267). auto-fit follows the panel width (not the viewport);
          with only two panels the empty third track collapses, so it never exceeds two
-         columns and drops to one below ~48rem. --}}
-    <div class="tw-grid tw-gap-3 tw-w-full tw-items-stretch" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));">
+         columns and drops to one below ~36rem. Floor reduced to 18rem (down from 24rem)
+         so the two-panel side-by-side layout collapses earlier, giving each panel its
+         full width at narrower sheet sizes — consistent with the lower per-entry floors
+         in talent-panel.hbs and trait-panel.hbs. --}}
+    <div class="tw-grid tw-gap-3 tw-w-full tw-items-stretch" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));">
         <div class="tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{> systems/wh40k-rpg/templates/actor/panel/talent-panel.hbs}}
         </div>

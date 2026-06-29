@@ -11,8 +11,11 @@
         {{!-- Talents flow into 1–3 width-responsive columns (#267): auto-fit follows the
              panel width and collapses to a single column when the panel is narrow (e.g.
              while sharing the Statistics tab two-up with Traits), capping at three
-             (gap-x = 0.75rem ⇒ 1.5rem subtracted at the 3-column breakpoint). --}}
-        <div class="tw-grid tw-gap-x-3 tw-gap-y-[2px] tw-items-start" style="grid-template-columns: repeat(auto-fit, minmax(max(14rem, calc((100% - 1.5rem) / 3)), 1fr));" data-drop-zone="talents" data-accepts="talent">
+             (gap-x = 0.75rem ⇒ 1.5rem subtracted at the 3-column breakpoint). Floor
+             reduced to 10rem (down from 14rem) so columns reflow before text truncates —
+             talent rows use tw-truncate on the name, so narrowing the floor lets the
+             grid drop a column while entries still have a readable minimum. --}}
+        <div class="tw-grid tw-gap-x-3 tw-gap-y-[2px] tw-items-start" style="grid-template-columns: repeat(auto-fit, minmax(max(10rem, calc((100% - 1.5rem) / 3)), 1fr));" data-drop-zone="talents" data-accepts="talent">
             {{#each talents as |talent|}}
             <div class="{{concat 'wh40k-tp_row'}} tw-group tw-relative tw-flex tw-items-center tw-rounded-md tw-min-h-[28px] tw-select-none tw-gap-[6px] tw-px-[6px] tw-py-[3px] tw-transition-colors" data-tooltip="{{talent.tooltipText}}">
                 <img class="tw-shrink-0 tw-w-[22px] tw-h-[22px] tw-object-cover tw-rounded-[3px] tw-border tw-border-[var(--wh40k-border-color-light)]" src="{{talent.img}}" alt="{{talent.name}}" />

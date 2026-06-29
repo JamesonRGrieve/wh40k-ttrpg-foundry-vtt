@@ -19,8 +19,11 @@
 
             {{!-- Traits in a category flow into 1–3 width-responsive columns (#267):
                  auto-fit follows the panel width and collapses to a single column when
-                 narrow, capping at three (gap-x = 0.75rem ⇒ 1.5rem at the breakpoint). --}}
-            <div class="tw-grid tw-gap-x-3 tw-gap-y-[2px] tw-items-start" style="grid-template-columns: repeat(auto-fit, minmax(max(14rem, calc((100% - 1.5rem) / 3)), 1fr));" data-category="{{group.category}}">
+                 narrow, capping at three (gap-x = 0.75rem ⇒ 1.5rem at the breakpoint).
+                 Floor reduced to 10rem (down from 14rem) so columns reflow before trait
+                 names are truncated; the icon + text + level-stepper + action buttons
+                 use tw-min-w-0 / tw-overflow-hidden and stay functional at 10rem. --}}
+            <div class="tw-grid tw-gap-x-3 tw-gap-y-[2px] tw-items-start" style="grid-template-columns: repeat(auto-fit, minmax(max(10rem, calc((100% - 1.5rem) / 3)), 1fr));" data-category="{{group.category}}">
                 {{#each group.traits as |trait|}}
                 <div class="tw-flex tw-items-center tw-gap-2 tw-overflow-hidden tw-min-h-[40px] tw-cursor-grab tw-py-[6px] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg-solid)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-equipment)] tw-rounded-md tw-transition-all"
                      data-item-id="{{trait.id}}"
