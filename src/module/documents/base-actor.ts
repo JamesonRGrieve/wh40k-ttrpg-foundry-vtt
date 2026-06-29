@@ -11,6 +11,16 @@ import { clampDisposition } from '../rules/disposition.ts';
 import { clampFearRating, getFearTestPenalty } from '../rules/fear.ts';
 import { resolveEscapePinningTest, resolvePinningTest } from '../rules/pinning.ts';
 import { type RerollOption, type RerollRollContext, type RerollSpec, rerollApplies, rerollLedgerKey, rerollUseAvailable } from '../rules/reroll.ts';
+import {
+    type DesiredSubtletyAdjusterEffect,
+    desiredSubtletyAdjusterEffects,
+    type ExistingSubtletyAdjusterEffect,
+    planSubtletyAdjusterEffects,
+    type SubtletyAdjusterEffectPlan,
+    SUBTLETY_EFFECT_FLAG_KEY,
+    SUBTLETY_EFFECT_FLAG_SCOPE,
+    SUBTLETY_EFFECT_ICON,
+} from '../rules/subtlety-adjuster-effects.ts';
 import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type SubtletySourceRef } from '../rules/subtlety-adjusters.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
@@ -253,6 +263,62 @@ export class WH40KBaseActor extends Actor {
     }
 
     /**
+     * Reconcile the actor's standing Subtlety adjusters into display-only
+     * Foundry ActiveEffects so they appear in the sheet's Active Effects
+     * section (DH2-only — issue #391). One effect per governing source (e.g.
+     * the Quarantine World loss clamp); each carries NO `changes`, so the pool
+     * math stays single-sourced in `applySubtlety` / `clampSubtletyLoss` and is
+     * never double-applied.
+     *
+     * Idempotent: effects whose source is still owned are left untouched,
+     * effects whose source is gone are removed, and missing ones are created.
+     * Called from the owned-item descendant hooks under a single-writer guard.
+     */
+    async syncSubtletyAdjusterEffects(): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: gameSystem lives on character.ts only
+        if ((this.system as { gameSystem?: string }).gameSystem !== 'dh2') return;
+
+        const desired = desiredSubtletyAdjusterEffects(this.collectSubtletyAdjusters());
+        const existing: ExistingSubtletyAdjusterEffect[] = [];
+        for (const effect of this.effects) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect.getFlag returns unknown; narrow to the stored shape
+            const flag = effect.getFlag(SUBTLETY_EFFECT_FLAG_SCOPE, SUBTLETY_EFFECT_FLAG_KEY) as { sourceKey?: string } | undefined;
+            if (typeof flag?.sourceKey === 'string' && typeof effect.id === 'string') {
+                existing.push({ id: effect.id, sourceKey: flag.sourceKey });
+            }
+        }
+
+        const plan: SubtletyAdjusterEffectPlan = planSubtletyAdjusterEffects(desired, existing);
+        if (plan.toDeleteIds.length > 0) {
+            await this.deleteEmbeddedDocuments('ActiveEffect', plan.toDeleteIds);
+        }
+        if (plan.toCreate.length > 0) {
+            const data = plan.toCreate.map((descriptor) => WH40KBaseActor.#subtletyEffectCreateData(descriptor));
+            // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts Foundry's untyped embedded-document create schema
+            await this.createEmbeddedDocuments('ActiveEffect', data as unknown as Parameters<typeof this.createEmbeddedDocuments<'ActiveEffect'>>[1]);
+        }
+    }
+
+    /** Build the Foundry ActiveEffect create payload for a derived descriptor. */
+    static #subtletyEffectCreateData(descriptor: DesiredSubtletyAdjusterEffect): Record<string, unknown> {
+        const description =
+            descriptor.kind === 'clamp'
+                ? t('WH40K.SubtletyPanel.EffectClampDescription', { value: descriptor.minAbsoluteDelta })
+                : t('WH40K.SubtletyPanel.EffectPassiveDescription', { value: descriptor.delta });
+        return {
+            name: descriptor.name,
+            icon: SUBTLETY_EFFECT_ICON,
+            description,
+            // No `changes`: this effect is display-only, so it never modifies the
+            // Subtlety pool — the math stays sourced from applySubtlety.
+            changes: [],
+            disabled: false,
+            transfer: false,
+            flags: { [SUBTLETY_EFFECT_FLAG_SCOPE]: { [SUBTLETY_EFFECT_FLAG_KEY]: { sourceKey: descriptor.sourceKey } } },
+        };
+    }
+
+    /**
      * Adjust an NPC's disposition toward the warband (core.md §"Disposition").
      * Clamps at the −3..+3 range. The reason is informational only; an
      * audit log would be a separate sheet feature.
@@ -289,6 +355,9 @@ export class WH40KBaseActor extends Actor {
                         setTimeout(() => void processTalentGrants(item, this), 100);
                     }
                 }
+                // Surface any standing Subtlety adjuster the new item carries
+                // (e.g. the Quarantine World loss clamp) as an ActiveEffect (#391).
+                void this.syncSubtletyAdjusterEffects();
             }
         }
     }
@@ -299,9 +368,14 @@ export class WH40KBaseActor extends Actor {
      */
     protected override _onUpdateDescendantDocuments(...args: Actor.OnUpdateDescendantDocumentsArgs): void {
         super._onUpdateDescendantDocuments(...args);
-        const [, collection] = args;
+        const [, collection, , , , userId] = args;
         if (collection === 'items') {
             this._onItemsChanged();
+            // An equip toggle can switch a `requiresEquipped` passive adjuster
+            // on or off, so re-reconcile its display-only effect (#391).
+            if (game.user.id === userId) {
+                void this.syncSubtletyAdjusterEffects();
+            }
         }
     }
 
@@ -324,6 +398,11 @@ export class WH40KBaseActor extends Actor {
         super._onDeleteDescendantDocuments(...args);
         if (collection === 'items') {
             this._onItemsChanged();
+            // Removing the source item (e.g. a home-world origin step) must
+            // retire its display-only Subtlety effect (#391).
+            if (game.user.id === userId) {
+                void this.syncSubtletyAdjusterEffects();
+            }
         }
     }
 

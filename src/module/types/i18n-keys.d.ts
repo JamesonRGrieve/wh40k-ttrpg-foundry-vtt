@@ -3131,6 +3131,8 @@ export type I18nKey =
     | 'WH40K.SubtletyPanel.AdjusterList'
     | 'WH40K.SubtletyPanel.BreakdownTitle'
     | 'WH40K.SubtletyPanel.Clamped'
+    | 'WH40K.SubtletyPanel.EffectClampDescription'
+    | 'WH40K.SubtletyPanel.EffectPassiveDescription'
     | 'WH40K.SubtletyPanel.EmptyAdjusters'
     | 'WH40K.SubtletyPanel.Header'
     | 'WH40K.SubtletyPanel.ManualMinus'
