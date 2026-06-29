@@ -3339,6 +3339,8 @@
             "Properties": "Item Properties",
             "DropFailed": "Could not add \"{name}\": {error}",
             "PersistenceFootnote": "Tip: edits here only affect this world item. For changes that persist across worlds and updates, edit the source in its compendium instead.",
+            "Bound": "Bound (cannot drop/trade)",
+            "BoundHint": "Item is bound to its owner — cannot be dropped or traded",
             "Tabs": {
                 "Details": "Details",
                 "Effects": "Effects",

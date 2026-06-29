@@ -378,6 +378,13 @@
               <span class="wh40k-toggle-switch__slider"></span>
               <span class="wh40k-toggle-switch__label"><i class="fa-solid fa-eye"></i> {{localize "WH40K.Weapon.Identified"}}</span>
             </label>
+            {{!-- #390: GM marks weapon as bound — cannot be dropped or traded. --}}
+            <label class="wh40k-toggle-switch {{#unless inEditMode}}wh40k-toggle-switch--readonly{{/unless}}" title="{{localize "WH40K.Item.BoundHint"}}">
+              <input type="checkbox" name="system.bound" {{checked system.bound}}
+                     {{#unless inEditMode}}disabled{{/unless}} />
+              <span class="wh40k-toggle-switch__slider"></span>
+              <span class="wh40k-toggle-switch__label"><i class="fa-solid fa-lock"></i> {{localize "WH40K.Item.Bound"}}</span>
+            </label>
           </div>
         </div>
       </section>
