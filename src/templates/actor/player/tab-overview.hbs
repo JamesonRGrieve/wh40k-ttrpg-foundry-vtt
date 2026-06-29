@@ -2,16 +2,14 @@
 {{!-- At-a-glance view of all critical information --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
-    {{!-- Column sizing rationale (issue #15): the Overview is a TWO-column layout.
-         Col 1 (Vitals/Mental/Subtlety → Active Effects) and col 2 (Favourites →
-         Progression → Resources) are short-row panels that gain nothing from extra
-         width, so both columns are capped at 360px and the grid is NOT given a third
-         1fr track to stretch into — the old three-column grid let Favourites sprawl
-         with an empty centre while Resources crammed in the wide col 3. Resources now
-         sits under Progression in col 2 and fits via its internal min-w-0 steppers
-         (#236). Column 3 was emptied by #318 (Equipped Weapons & Armour) and #317
+    {{!-- Column sizing rationale (issue #15 follow-up): the Overview is a TWO-column layout.
+         Col 1 (Vitals/Mental/Subtlety → Active Effects → Resources) and col 2
+         (Favourites → Progression) each grow to fill the available width via
+         minmax(0,1fr) tracks — the old fixed 360px cap left a dead gutter at wider
+         sheet widths. Resources moved to under Active Effects in col 1 (#15).
+         Column 3 was emptied by #318 (Equipped Weapons & Armour) and #317
          (Subtlety → under Insanity in col 1). --}}
-    <div class="tw-grid tw-grid-cols-[minmax(280px,360px)_minmax(280px,360px)] tw-grid-rows-[auto_auto] tw-items-start tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1:tw-border-t-gold-raw-l5 dh2:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure">
+    <div class="tw-grid tw-grid-cols-[minmax(0,1fr)_minmax(0,1fr)] tw-grid-rows-[auto_auto] tw-items-start tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1:tw-border-t-gold-raw-l5 dh2:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure">
 
         {{!-- COLUMN 1: Vitals → Active Effects --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
@@ -182,6 +180,79 @@
                     </div>
                     {{/if}}
             {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
+
+            {{#unless isNPC}}
+            {{!-- Resources (Influence / Requisition / Gelt) — PC-only; sits under Active
+                 Effects in col 1 (#15). In DH2 RAW mode Influence is a Statistics
+                 characteristic, not an economy stat, so it (and Throne Gelt) drop out
+                 of this panel and the grid collapses. --}}
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Resources" icon="fa-coins" zoneClass="tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]" contentClass="tw-p-2 tw-flex-1 tw-w-full"}}
+                    {{!-- Fixed column count keeps Influence / Requisition / Throne Gelt side by side
+                         (horizontal) rather than wrapping to a vertical stack (#236). The number inputs
+                         carry min-w-0 below so they shrink to share the row with the fixed steppers
+                         instead of clipping. RAW: only Requisition (1 col); hidden Gelt: 2 cols. --}}
+                    <div class="tw-grid {{#if isRaw}}tw-grid-cols-1{{else if hideThroneGelt}}tw-grid-cols-2{{else}}tw-grid-cols-3{{/if}} tw-gap-2 tw-w-full">
+                        {{#unless isRaw}}
+                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                            <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal" data-tooltip="Social and political pull — calling in favours, securing audiences, persuading officials. Not bought with coin.">Influence</span>
+                            <div class="tw-flex tw-items-center tw-gap-1">
+                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="system.influence" data-min="0" title="-1">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-0 tw-max-w-[150px]" name="system.influence" value="{{system.influence}}" min="0" max="100" />
+                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="system.influence" data-max="100" title="+1">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                {{#if isHomebrew}}
+                                {{!-- Issue #13 follow-up: Influence is not solely an economy stat
+                                     (it gates social manipulation, audiences, Requisition tests).
+                                     In Homebrew mode Influence lives here rather than Statistics,
+                                     so surface a roll button that reuses the same `roll` action
+                                     dispatch as the RAW characteristic row (rollType=characteristic,
+                                     rollTarget=influence → actor.rollCharacteristic('influence')). --}}
+                                <button type="button"
+                                    class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap tw-ml-1"
+                                    data-action="roll"
+                                    data-roll-type="characteristic"
+                                    data-roll-target="influence"
+                                    data-characteristic="influence"
+                                    data-tooltip="{{localize 'WH40K.CharacteristicSetup.RollInfluence'}}"
+                                    aria-label="{{localize 'WH40K.CharacteristicSetup.RollInfluence'}}">
+                                    <i class="fas fa-dice-d10"></i>
+                                </button>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/unless}}
+                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                            <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal" data-tooltip="Drawing on Inquisitorial resources — weapons from the armoury, specialist equipment, transport, and backup.">Requisition</span>
+                            <div class="tw-flex tw-items-center tw-gap-1">
+                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="system.requisition" data-min="0" title="-1">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-0 tw-max-w-[150px]" name="system.requisition" value="{{system.requisition}}" min="0" />
+                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="system.requisition" title="+1">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {{#unless hideThroneGelt}}
+                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                            <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal" data-tooltip="Hard currency for street-level transactions — food, lodging, bribes, and black market purchases.">Throne Gelt</span>
+                            <div class="tw-flex tw-items-center tw-gap-1">
+                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="system.throneGelt" data-min="0" title="-1">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-0 tw-max-w-[150px]" name="system.throneGelt" value="{{system.throneGelt}}" min="0" />
+                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="system.throneGelt" title="+1">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {{/unless}}
+                    </div>
+            {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
+            {{/unless}}
         </div>
 
         {{!-- COLUMN 2: Favourite Skills → Favourite Talents → Progression --}}
@@ -333,82 +404,6 @@
             </div>
             {{/if}}
 
-            {{!-- Resources relocated here, under Progression, when the Overview
-                 collapsed to two columns (#15). Equipped Weapons & Armour (the old
-                 col-3 occupants) were removed in #318; Movement moved to Combat
-                 (#266). The armour-zone / equippedWeapons / armourDisplay prep is
-                 still consumed by the Combat tab, so it is intentionally NOT removed. --}}
-            {{#unless isNPC}}
-            {{!-- Resources (Influence / Requisition / Gelt) — PC-only.
-                 In DH2 RAW mode Influence is a Statistics characteristic, not an economy stat,
-                 so it (and Throne Gelt) drop out of this panel and the grid collapses. --}}
-            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Resources" icon="fa-coins" zoneClass="tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]" contentClass="tw-p-2 tw-flex-1 tw-w-full"}}
-                    {{!-- Fixed column count keeps Influence / Requisition / Throne Gelt side by side
-                         (horizontal) rather than wrapping to a vertical stack (#236). The number inputs
-                         carry min-w-0 below so they shrink to share the row with the fixed steppers
-                         instead of clipping. RAW: only Requisition (1 col); hidden Gelt: 2 cols. --}}
-                    <div class="tw-grid {{#if isRaw}}tw-grid-cols-1{{else if hideThroneGelt}}tw-grid-cols-2{{else}}tw-grid-cols-3{{/if}} tw-gap-2 tw-w-full">
-                        {{#unless isRaw}}
-                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
-                            <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal" data-tooltip="Social and political pull — calling in favours, securing audiences, persuading officials. Not bought with coin.">Influence</span>
-                            <div class="tw-flex tw-items-center tw-gap-1">
-                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="system.influence" data-min="0" title="-1">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-0 tw-max-w-[150px]" name="system.influence" value="{{system.influence}}" min="0" max="100" />
-                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="system.influence" data-max="100" title="+1">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                {{#if isHomebrew}}
-                                {{!-- Issue #13 follow-up: Influence is not solely an economy stat
-                                     (it gates social manipulation, audiences, Requisition tests).
-                                     In Homebrew mode Influence lives here rather than Statistics,
-                                     so surface a roll button that reuses the same `roll` action
-                                     dispatch as the RAW characteristic row (rollType=characteristic,
-                                     rollTarget=influence → actor.rollCharacteristic('influence')). --}}
-                                <button type="button"
-                                    class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap tw-ml-1"
-                                    data-action="roll"
-                                    data-roll-type="characteristic"
-                                    data-roll-target="influence"
-                                    data-characteristic="influence"
-                                    data-tooltip="{{localize 'WH40K.CharacteristicSetup.RollInfluence'}}"
-                                    aria-label="{{localize 'WH40K.CharacteristicSetup.RollInfluence'}}">
-                                    <i class="fas fa-dice-d10"></i>
-                                </button>
-                                {{/if}}
-                            </div>
-                        </div>
-                        {{/unless}}
-                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
-                            <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal" data-tooltip="Drawing on Inquisitorial resources — weapons from the armoury, specialist equipment, transport, and backup.">Requisition</span>
-                            <div class="tw-flex tw-items-center tw-gap-1">
-                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="system.requisition" data-min="0" title="-1">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-0 tw-max-w-[150px]" name="system.requisition" value="{{system.requisition}}" min="0" />
-                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="system.requisition" title="+1">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        {{#unless hideThroneGelt}}
-                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
-                            <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal" data-tooltip="Hard currency for street-level transactions — food, lodging, bribes, and black market purchases.">Throne Gelt</span>
-                            <div class="tw-flex tw-items-center tw-gap-1">
-                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="system.throneGelt" data-min="0" title="-1">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-0 tw-max-w-[150px]" name="system.throneGelt" value="{{system.throneGelt}}" min="0" />
-                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="system.throneGelt" title="+1">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        {{/unless}}
-                    </div>
-            {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
-            {{/unless}}
         </div>
 
         {{!-- Per-game-system overview panels (batch-1 + batch-2 integration).
