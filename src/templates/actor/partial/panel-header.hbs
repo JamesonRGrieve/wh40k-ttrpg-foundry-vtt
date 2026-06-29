@@ -10,14 +10,20 @@
     differ by interaction model — this partial owns only the title span itself.
 
     Hash arguments:
-        label       — header title text (required).
-        icon        — Font Awesome class (e.g. "fa-shield-alt"). Optional; omitted
-                      icons leave the title text flush.
-        iconAccent  — optional CSS color string applied inline to the icon, used
-                      by collapsible panels that pass a per-panel accent colour.
-        titleClass  — optional extra utility classes appended to the title span
-                      (e.g. "tw-tracking-[0.02em] tw-min-w-0").
+        label             — header title text (required).
+        icon              — Font Awesome class (e.g. "fa-shield-alt"). Optional; omitted
+                            icons leave the title text flush.
+        iconAccent        — optional CSS color string applied inline to the icon, used
+                            by collapsible panels that pass a per-panel accent colour.
+        titleClass        — optional extra utility classes appended to the title span
+                            (e.g. "tw-tracking-[0.02em] tw-min-w-0").
+        labelAction       — optional data-action name. When present the label text is
+                            wrapped in a button that fires the named action on click.
+                            The button stops click propagation so the parent header's
+                            data-toggle is NOT triggered alongside the action (#35).
+        labelActionTitle  — optional tooltip for the label-action button (localised
+                            string passed from the caller).
 --}}
 <span class="wh40k-panel-title tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis{{#if titleClass}} {{titleClass}}{{/if}}">
-    {{#if icon}}<i class="fas {{icon}} tw-text-[color:var(--panel-accent,var(--wh40k-accent-gold))] bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-flex-shrink-0"{{#if iconAccent}} style="color: {{iconAccent}};"{{/if}}></i> {{/if}}{{label}}
+    {{#if icon}}<i class="fas {{icon}} tw-text-[color:var(--panel-accent,var(--wh40k-accent-gold))] bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-flex-shrink-0"{{#if iconAccent}} style="color: {{iconAccent}};"{{/if}}></i> {{/if}}{{#if labelAction}}<button type="button" class="tw-bg-transparent tw-border-0 tw-p-0 tw-[font:inherit] tw-text-inherit tw-cursor-pointer hover:tw-opacity-80" data-action="{{labelAction}}"{{#if labelActionTitle}} title="{{labelActionTitle}}"{{/if}} onclick="event.stopPropagation()">{{label}}</button>{{else}}{{label}}{{/if}}
 </span>

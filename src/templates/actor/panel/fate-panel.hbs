@@ -1,6 +1,10 @@
 {{!-- Fate Panel — vital meter with Inquisitorial rosette pips (no bar). --}}
+{{!-- labelAction="viewFateUses" wires the FATE header label as the trigger for the
+     Fate-uses reference popout (#35), eliminating the need for a separate icon button. --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="fate" label="Fate" icon="fa-skull" actor=actor
-    rootStateClass=(iff (eq system.fate.value 0) "wh40k-fate-empty-state")}}
+    rootStateClass=(iff (eq system.fate.value 0) "wh40k-fate-empty-state")
+    labelAction="viewFateUses"
+    labelActionTitle=(localize "WH40K.FateUses.DialogTitle")}}
 
     {{!-- Main Display: Rosette Pips + Counter --}}
     <div class="tw-flex tw-flex-col tw-gap-1 tw-items-center">
@@ -53,15 +57,6 @@
         {{> systems/wh40k-rpg/templates/actor/partial/stat-breakdown-button.hbs
             statKey="fate"
             position="absolute"}}
-
-        {{!-- Fate Uses reference (issue #35) — opens a popout listing every spend option. --}}
-        <button type="button"
-                class="wh40k-fate-uses-trigger tw-mt-1 tw-px-2 tw-py-1 tw-flex tw-items-center tw-gap-1.5 tw-bg-transparent tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded tw-text-[0.72rem] tw-text-[color:var(--color-text-secondary)] tw-cursor-pointer tw-transition-colors hover:tw-text-[color:var(--wh40k-text-medium)]"
-                data-action="viewFateUses"
-                title="{{localize 'WH40K.FateUses.DialogTitle'}}">
-            <i class="fas fa-circle-info"></i>
-            <span>{{localize "WH40K.FateUses.ViewLinkLabel"}}</span>
-        </button>
     </div>
 
     {{!-- Edit Mode (Expandable) --}}
