@@ -37,10 +37,10 @@
                     </div>
                 </div>
 
-                {{!-- Target Display --}}
+                {{!-- Target Display: live aggregate (base characteristic + every active modifier), recomputed each render (#382) --}}
                 <div class="tw-flex tw-items-center tw-justify-between tw-py-2">
                     <span class="tw-text-[0.85rem]">Target ({{baseChar}})</span>
-                    <span class="tw-font-bold tw-text-[1.5rem] tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{baseTarget}}</span>
+                    <span class="tw-font-bold tw-text-[1.5rem] tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{displayTarget}}</span>
                     <span class="tw-text-[0.85rem]">%</span>
                 </div>
 

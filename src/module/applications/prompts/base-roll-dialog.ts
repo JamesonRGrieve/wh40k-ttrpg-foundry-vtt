@@ -139,6 +139,12 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
         if (typeof this.rollData['update'] === 'function') {
             await (this.rollData['update'] as () => Promise<void>)();
         }
+
+        // Re-render so the recomputed aggregate target and modifier lines reflect
+        // the change. `submitOnChange` runs this handler but ApplicationV2 does
+        // not re-render after a form submit on its own, so without this the
+        // displayed target would stay stale when a modifier changes (#382).
+        void this.render();
     }
 
     /* -------------------------------------------- */

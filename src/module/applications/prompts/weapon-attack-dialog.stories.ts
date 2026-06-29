@@ -24,6 +24,7 @@ interface AttackArgs {
     sourceActor?: { name: string };
     baseChar?: string;
     baseTarget?: number;
+    displayTarget?: number;
     ammoText?: string;
     fireRate?: number;
     actions?: Record<string, string>;
@@ -62,6 +63,8 @@ const meta = {
         sourceActor: { name: 'Interrogator Vane' },
         baseChar: 'BS',
         baseTarget: 48,
+        // Live aggregate shown at the top: base BS 48 + Short Range +10 = 58 (#382).
+        displayTarget: 58,
         ammoText: 'Bolt Shells (24)',
         fireRate: 3,
         actions: ACTIONS,
@@ -84,7 +87,8 @@ export const RangedAttack: Story = {
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         await expect(view.getByText('Godwyn-Pattern Bolter')).toBeTruthy();
-        await expect(view.getByText('48')).toBeTruthy();
+        // Top target is the aggregate (base 48 + Short Range +10), not the bare characteristic.
+        await expect(view.getByText('58')).toBeTruthy();
         await expect(view.getByText(/Short Range/)).toBeTruthy();
         assertField(canvasElement, 'distance', 20);
     },
@@ -96,6 +100,8 @@ export const MeltaShortRange: Story = {
         weapon: { name: 'Inferno Pistol', img: 'icons/weapons/guns/gun-pistol-flintlock.webp', usesAmmo: true, isRanged: true },
         baseChar: 'BS',
         baseTarget: 42,
+        // base BS 42 + Point Blank +30 = 72 (#382).
+        displayTarget: 72,
         ammoText: 'Melta Charge (3)',
         distance: 4,
         rangeName: 'Point Blank',
