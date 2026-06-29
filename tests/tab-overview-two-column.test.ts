@@ -8,6 +8,7 @@
  * stretching third column), and relocates the Resources panel into COLUMN 1
  * directly under Active Effects. Column 1 stack: Vitals → Active Effects →
  * Resources; column 2: Favourite Skills → Favourite Talents → Progression.
+ * Subtlety lives in its own full-width Party Overview section below the grid (#317).
  *
  * Source-scan rather than runtime: rendering the tab requires Foundry's sheet
  * context, and the contract here is a literal one on the grid track + panel order.

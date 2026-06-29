@@ -2681,8 +2681,11 @@
             "ManualAdjustment": "GM adjustment",
             "Inquest": "Inquest pursued openly"
         },
+        "PartyOverview": {
+            "Header": "Party Overview"
+        },
         "SubtletyPanel": {
-            "Header": "Warband Subtlety",
+            "Header": "Subtlety",
             "Value": "Current",
             "Max": "Maximum",
             "ManualPlus": "Increase by 1 (GM)",

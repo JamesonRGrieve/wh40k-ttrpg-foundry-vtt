@@ -2466,6 +2466,7 @@ export type I18nKey =
     | 'WH40K.OriginPath.WorldSourcedWarning'
     | 'WH40K.OriginPath.YourJourney'
     | 'WH40K.OtherBonuses'
+    | 'WH40K.PartyOverview.Header'
     | 'WH40K.Pinning.EscapeLabel'
     | 'WH40K.Pinning.FavourableBonus'
     | 'WH40K.Pinning.Pinned'

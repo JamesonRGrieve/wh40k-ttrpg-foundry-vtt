@@ -2,13 +2,13 @@
 {{!-- At-a-glance view of all critical information --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
-    {{!-- Column sizing rationale (issue #15 follow-up): the Overview is a TWO-column layout.
-         Col 1 (Vitals/Mental/Subtlety → Active Effects → Resources) and col 2
-         (Favourites → Progression) each grow to fill the available width via
-         minmax(0,1fr) tracks — the old fixed 360px cap left a dead gutter at wider
-         sheet widths. Resources moved to under Active Effects in col 1 (#15).
-         Column 3 was emptied by #318 (Equipped Weapons & Armour) and #317
-         (Subtlety → under Insanity in col 1). --}}
+    {{!-- Column sizing rationale (#15): the Overview is a TWO-column layout.
+         Col 1 (Vitals/Mental → Active Effects → Resources) and col 2 (Favourites
+         → Progression) each grow to fill the available width via minmax(0,1fr)
+         tracks — the old fixed 360px cap left a dead gutter at wider sheet widths.
+         Resources sits under Active Effects in col 1 (#15). Column 3 was emptied
+         by #318 (Equipped Weapons & Armour) and #317 (Subtlety → its own
+         full-width Party Overview section below the grid). --}}
     <div class="tw-grid tw-grid-cols-[minmax(0,1fr)_minmax(0,1fr)] tw-grid-rows-[auto_auto] tw-items-start tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1:tw-border-t-gold-raw-l5 dh2:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure">
 
         {{!-- COLUMN 1: Vitals → Active Effects --}}
@@ -138,13 +138,6 @@
                         valueClass="wh40k-mental-value"
                         stateClass=(insanityDegreeClass system.insanity)
                         degreeText=(insanityDegree system.insanity)}}
-
-                    {{!-- Warband Subtlety (#317) — DH2-only; sits directly under the
-                         Insanity row, styled to match the mental rows. No-op on the
-                         other six systems. Shared-pool data model tracked in #64. --}}
-                    {{#if isDH2}}
-                        {{> systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs}}
-                    {{/if}}
                 </div>
                 {{/unless}}
             </div>
@@ -473,6 +466,25 @@
         {{/if}}
 
     </div>
+
+    {{!-- ══ Party Overview (#317 revision) ══
+         Warband-wide pools shared across the acolyte cell, lifted out of the
+         column-1 Mental State block into a dedicated full-width section so the
+         Subtlety pool reads as party state rather than a personal mental stat.
+         DH2-only today (Subtlety — #64 shared pool, #87 adjusters); no-op on the
+         other six systems. The section supplies the card chrome, so the inner
+         subtlety panel carries no pale parchment border of its own (#323). --}}
+    {{#if isDH2}}
+    <section class="wh40k-party-overview tw-flex tw-flex-col tw-overflow-hidden tw-mt-2 tw-bg-[var(--color-bg-secondary)] tw-rounded-[6px] tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]">
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.12)_0%,var(--color-bg-tertiary)_100%)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] [&>i]:tw-text-[color:var(--wh40k-color-gold)]">
+            <i class="fas fa-users"></i>
+            <span>{{localize "WH40K.PartyOverview.Header"}}</span>
+        </div>
+        <div class="tw-p-2">
+            {{> systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs}}
+        </div>
+    </section>
+    {{/if}}
 
     {{!-- Status-tab action panels relocated full-width (#263). --}}
     {{!-- Dark Pacts (Enemies Beyond p.72, #84) — renders only when a pact is active. --}}
