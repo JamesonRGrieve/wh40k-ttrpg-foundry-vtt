@@ -10,7 +10,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { isEffectSuppressedByEquipState } from './equip-state.ts';
+import { isEffectSuppressedByEquipState, isWeaponAttackBlockedByEquip } from './equip-state.ts';
 
 describe('isEffectSuppressedByEquipState (#333)', () => {
     it('does not suppress when the item system is absent (no carrier)', () => {
@@ -28,5 +28,24 @@ describe('isEffectSuppressedByEquipState (#333)', () => {
 
     it('suppresses an equippable item that is not equipped', () => {
         expect(isEffectSuppressedByEquipState({ state: { equipped: false } })).toBe(true);
+    });
+});
+
+describe('isWeaponAttackBlockedByEquip (#265)', () => {
+    it('blocks an attack with an un-equipped weapon when enforcing (PCs)', () => {
+        expect(isWeaponAttackBlockedByEquip({ state: { equipped: false } }, true)).toBe(true);
+    });
+
+    it('allows an attack with an equipped weapon when enforcing (PCs)', () => {
+        expect(isWeaponAttackBlockedByEquip({ state: { equipped: true } }, true)).toBe(false);
+    });
+
+    it('never blocks when enforcement is off (NPCs attack with intrinsic profiles)', () => {
+        expect(isWeaponAttackBlockedByEquip({ state: { equipped: false } }, false)).toBe(false);
+        expect(isWeaponAttackBlockedByEquip({ state: { equipped: true } }, false)).toBe(false);
+    });
+
+    it('blocks a weapon missing its equipped flag when enforcing (defaults to not-drawn)', () => {
+        expect(isWeaponAttackBlockedByEquip({ state: {} }, true)).toBe(true);
     });
 });

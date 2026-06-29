@@ -3725,6 +3725,7 @@ export type I18nKey =
     | 'WH40K.Warning.SkillNotSpecified'
     | 'WH40K.Warning.SkillsCompendiumNotFound'
     | 'WH40K.Warning.UnknownCondition'
+    | 'WH40K.Warning.WeaponNotEquipped'
     | 'WH40K.WarpTravel.BeaconLostNote'
     | 'WH40K.WarpTravel.Button.Cancel'
     | 'WH40K.WarpTravel.Button.PostChat'

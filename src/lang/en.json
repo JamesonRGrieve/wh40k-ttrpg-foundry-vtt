@@ -82,6 +82,7 @@
             "SkillsCompendiumNotFound": "Skills compendium not found.",
             "InvalidItem": "{itemType} cannot be dropped on a {actorType}.",
             "NoActiveCombatEncounter": "No active combat encounter.",
+            "WeaponNotEquipped": "This weapon must be equipped before it can be used to attack. Equip it from the Combat tab first.",
             "RangeFormulaFailed": "Range formula failed — setting to 0",
             "InvalidAmmunition": "Invalid ammunition item",
             "NoAmmunitionLoaded": "No ammunition loaded",
