@@ -50,7 +50,9 @@ export function aptitudeIdentity(name: string): string {
 
 /** Minimal structural view of one origin item's `grants` block for aptitude collection. */
 export interface AptitudeGrantSource {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: origin-path `grants` is heterogeneous untyped JSON from the DataModel; `aptitudes` is narrowed (Array.isArray + string filter) before use
     aptitudes?: unknown;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: origin-path `grants` is heterogeneous untyped JSON from the DataModel; `choices` is narrowed before use
     choices?: unknown;
 }
 
