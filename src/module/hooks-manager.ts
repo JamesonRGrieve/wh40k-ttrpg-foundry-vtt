@@ -90,7 +90,7 @@ import { WH40KActorProxy } from './documents/actor-proxy.ts';
 import type { WH40KBaseActor } from './documents/base-actor.ts';
 import { WH40KItem } from './documents/item.ts';
 import { HandlebarManager } from './handlebars/handlebars-manager.ts';
-import { registerItemPilesValuation } from './integrations/item-piles.ts';
+import { type FlaggableActor, isItemPilesPile, registerItemPilesValuation } from './integrations/item-piles.ts';
 import {
     createCharacteristicMacro,
     createItemMacro,
@@ -132,7 +132,7 @@ interface LootTokenHUDLike {
 
 /** Minimal TokenDocument shape needed by the loot-move veto (preUpdateToken). */
 interface LootMoveTokenLike {
-    actor?: { type?: string } | null;
+    actor?: (FlaggableActor & { type?: string }) | null;
 }
 
 // biome-ignore lint/complexity/noStaticOnlyClass: stable system-bootstrap API surface with many callers
@@ -343,6 +343,9 @@ export class HooksManager {
     static onLootTokenHUD(app: LootTokenHUDLike, html: HTMLElement | JQuery): void {
         const lootActor = app.object?.document?.actor ?? null;
         if (lootActor == null || (lootActor.type as string) !== 'loot') return;
+        // Item Piles owns interaction for its own piles (double-click to open) —
+        // don't add our pickup control on top, or it conflicts with theirs.
+        if (isItemPilesPile(lootActor)) return;
 
         let root: HTMLElement | undefined;
         if (html instanceof HTMLElement) {
@@ -387,6 +390,8 @@ export class HooksManager {
      * the position update.
      */
     static onPreUpdateToken(doc: LootMoveTokenLike, change: { x?: number; y?: number }): boolean {
+        // Item Piles applies its own movement lock to its piles; defer to it.
+        if (isItemPilesPile(doc.actor)) return true;
         const actorType = doc.actor?.type ?? null;
         if (ItemDropManager.blocksLootTokenMove(actorType, change, game.user.isGM)) {
             ui.notifications.warn(game.i18n.localize('WH40K.Warning.LootTokenLocked'));
