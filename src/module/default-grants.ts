@@ -46,6 +46,23 @@ export function selectGrantsToAdd<T extends { name: string; type: string }>(sour
     return sources.filter((source) => !existingKeys.has(itemKey(source.name, source.type)));
 }
 
+/**
+ * Grant policy: auto-granted intrinsic fallback items (the Unarmed strike, any
+ * future `grantedByDefault` content) are bound — not droppable, not tradable —
+ * because they are the system's fallback when nothing is equipped, not loot the
+ * player manipulates. Forces `system.bound = true` (honoured by
+ * `ItemDropManager.isBound` / #390) on every payload, returning fresh source
+ * objects so the cached scan results are never mutated. Pure and
+ * content-agnostic — keyed off the grant decision, no name/UUID hardcoding.
+ */
+export function applyDefaultGrantPolicy(sources: readonly ItemSourceData[]): ItemSourceData[] {
+    return sources.map((source) => {
+        const system = source['system'];
+        const systemBase = typeof system === 'object' && system !== null ? system : {};
+        return { ...source, system: { ...systemBase, bound: true } };
+    });
+}
+
 /** Minimal compendium-pack surface this module touches (Foundry boundary). */
 interface DefaultGrantPack {
     metadata: { type: string; packageName: string };
@@ -134,7 +151,10 @@ export async function grantDefaultItemsToActor(actor: GrantableActor): Promise<v
         const toAdd = selectGrantsToAdd(typedSources, existingKeys);
         if (toAdd.length === 0) return;
 
-        await actor.createEmbeddedDocuments('Item', toAdd);
+        // Bind every default-granted item before embedding: intrinsic fallbacks
+        // can't be dropped or traded (#228 / #390).
+        const boundToAdd = applyDefaultGrantPolicy(toAdd);
+        await actor.createEmbeddedDocuments('Item', boundToAdd);
     } catch (error) {
         console.error(`${SYSTEM_ID} | default-grants: failed granting default items to actor`, error);
     }
