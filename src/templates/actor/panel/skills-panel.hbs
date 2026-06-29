@@ -3,10 +3,12 @@
          auto-fit makes the grid track count follow the PANEL width (not the
          viewport): it collapses to a single column on a narrow sheet and caps
          at three via the max(min-col, container/3) idiom (gap = 0.5rem ⇒ two
-         gaps subtracted at the 3-column breakpoint). Skills render from the flat
-         `standard` list in row-major order rather than the old fixed two-array
-         column split. --}}
-    <div class="tw-grid tw-gap-2 tw-relative" style="grid-template-columns: repeat(auto-fit, minmax(max(14rem, calc((100% - 1rem) / 3)), 1fr));">
+         gaps subtracted at the 3-column breakpoint). Floor is 10rem (down from
+         14rem): the narrower floor lets columns reflow before text truncates —
+         padding shrinks first as columns narrow, then the track count drops.
+         Skills render from the flat `standard` list in row-major order rather
+         than the old fixed two-array column split. --}}
+    <div class="tw-grid tw-gap-2 tw-relative" style="grid-template-columns: repeat(auto-fit, minmax(max(10rem, calc((100% - 1rem) / 3)), 1fr));">
         {{#each skillLists.standard as |entry|}}
             {{> systems/wh40k-rpg/templates/actor/partial/skill-row.hbs entry=entry}}
         {{/each}}

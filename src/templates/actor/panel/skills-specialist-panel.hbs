@@ -12,8 +12,12 @@
             {{!-- Specialist skill groups flow into 1–3 width-responsive columns (#267):
                  auto-fit follows the panel width, collapses to one column when narrow,
                  caps at three (gap = 0.5rem). items-start keeps variable-height group
-                 cards from stretching to the tallest in their row. --}}
-            <div class="tw-grid tw-gap-2 tw-items-start" style="grid-template-columns: repeat(auto-fit, minmax(max(16rem, calc((100% - 1rem) / 3)), 1fr));">
+                 cards from stretching to the tallest in their row. Floor reduced to
+                 11rem (down from 16rem): specialist group cards carry more fixed-width
+                 chrome (training badges + score column) than plain skill rows, so a
+                 slightly larger floor than skills (10rem) keeps entries viable while
+                 still letting columns reflow before text is truncated. --}}
+            <div class="tw-grid tw-gap-2 tw-items-start" style="grid-template-columns: repeat(auto-fit, minmax(max(11rem, calc((100% - 1rem) / 3)), 1fr));">
             {{#each skillLists.specialist as |entry|}}
                 {{#if entry.[1].entries.length}}
                 <div class="{{#if entry.[1].advanced}}tw-border-l-2 tw-border-l-[rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.5)]{{/if}} tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-lg tw-overflow-hidden" data-skill="{{entry.[0]}}">
