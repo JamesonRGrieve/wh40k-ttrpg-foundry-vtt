@@ -415,6 +415,7 @@
             "RemoveFromFavorites": "Remove from favorites",
             "RollSkillTitle": "Roll {0}",
             "RollSpecializationTitle": "Roll specialization",
+            "RollUntrainedTitle": "Attempt untrained",
             "AddSpecializationTitle": "Add {0} specialization"
         },
         "Tooltip": {
