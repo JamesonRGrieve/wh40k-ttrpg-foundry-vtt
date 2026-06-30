@@ -761,20 +761,15 @@ recordDimension('compendium-browser.flow', covered['compendium-browser.flow'], C
 // `src/module/managers/grants-manager.ts` (applyItemGrants /
 // reverseAppliedGrants / loadAppliedState / hasAppliedGrants paths via
 // talent items declaring `system.grantsV2` skill + item grants, plus the
-// legacy `system.grants.specialAbilities` round-trip on TalentData) and
-// `src/module/transactions/transaction-manager.ts` (setMode /
-// listSourcesForBuyer / listItemsForSource / prepareQuote /
-// commitTransaction / #transferItem against a buyer + source actor pair
-// in barter mode). Keys MUST match the recordCoverage('managers.flow', ...)
-// calls in the spec.
+// legacy `system.grants.specialAbilities` round-trip on TalentData). Keys
+// MUST match the recordCoverage('managers.flow', ...) calls in the spec.
+// (The native transaction-manager flows were removed with the Item Piles
+// trading consolidation.)
 const MANAGER_FLOWS = [
     'grants-talent-grants-skill',
     'grants-talent-grants-talent',
     'grants-revoke-on-item-delete',
     'grants-special-ability-on-actor',
-    'transaction-acquire-item-from-source',
-    'transaction-sell-item',
-    'transaction-list-sources-for-buyer',
 ];
 recordDimension('managers.flow', covered['managers.flow'], MANAGER_FLOWS);
 
@@ -1876,7 +1871,6 @@ const FOUNDRY_CONFIG_FLOWS = [
     'config::game.wh40k.OriginPathBuilder',
     'config::game.wh40k.openOriginPathBuilder',
     'config::game.wh40k.npc',
-    'config::game.wh40k.transaction',
     'config::game.wh40k.dice',
     'config::game.wh40k.BasicRollWH40K',
     'config::game.wh40k.D100Roll',
