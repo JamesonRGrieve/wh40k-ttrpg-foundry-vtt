@@ -231,6 +231,12 @@ async function probeWeaponAE(page: Page, actorId: string): Promise<FlowResult> {
         {
             name: 'probe-weapon-ae',
             type: 'weapon',
+            // Since #265, PC weapons are no longer blanket force-equipped in
+            // prepareDerivedData — state.equipped is the player's authoritative
+            // draw-state. A transferred AE on an equippable item is suppressed
+            // while unequipped (base-actor item-AE equip gate), so the carrier
+            // must be explicitly equipped for the +3 to reach the actor.
+            system: { state: { equipped: true } },
             effects: [
                 {
                     name: 'probe-weapon-bonus',
