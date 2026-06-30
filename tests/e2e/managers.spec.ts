@@ -9,10 +9,6 @@ import { expect, test } from './lib/test';
  *     reverseAppliedGrants / loadAppliedState / hasAppliedGrants /
  *     _extractGrants — exercised against talent items that declare
  *     `system.grantsV2` skill / item grants).
- *   - `src/module/transactions/transaction-manager.ts` (getProfile /
- *     setMode / listSourcesForBuyer / listItemsForSource / prepareQuote /
- *     commitTransaction — exercised against a buyer + source actor pair
- *     where the source is configured as a barter shopfront).
  *
  * Each flow seeds isolated fixture documents, performs the manager
  * operation, asserts on the resulting actor / item state, then cleans up.
@@ -20,14 +16,9 @@ import { expect, test } from './lib/test';
  * broken flow doesn't mask issues with the others.
  *
  * Strategy notes:
- *   - Both managers live under `/systems/wh40k-rpg/module/...`. The spec
- *     imports them inside `page.evaluate(...)` via dynamic import, the
+ *   - The grants manager lives under `/systems/wh40k-rpg/module/...`. The
+ *     spec imports it inside `page.evaluate(...)` via dynamic import, the
  *     same pattern dialogs.spec.ts uses.
- *   - The `transaction-acquire-item-from-source` and
- *     `transaction-sell-item` flows skip the dialog / socket / GM-approval
- *     path entirely and call `TransactionManager.commitTransaction(...)`
- *     directly with a pre-built request payload. The dialog surface is
- *     covered by `dialogs.spec.ts`; this spec is about the manager.
  *   - The `grants-special-ability-on-actor` flow exercises the legacy
  *     talent-level `system.grants.specialAbilities` shape (not the
  *     `grantsV2` pipeline) because the GrantsManager has no `specialAbility`
@@ -43,15 +34,11 @@ import { expect, test } from './lib/test';
  * Foundry's runtime dist paths — same pattern dialogs.spec.ts uses.
  */
 const GRANTS_MODULE_URL = '/systems/wh40k-rpg/module/managers/grants-manager.js';
-const TRANSACTION_MODULE_URL = '/systems/wh40k-rpg/module/transactions/transaction-manager.js';
 
 const FLOW_TALENT_SKILL = 'grants-talent-grants-skill';
 const FLOW_TALENT_TALENT = 'grants-talent-grants-talent';
 const FLOW_REVOKE = 'grants-revoke-on-item-delete';
 const FLOW_SPECIAL_ABILITY = 'grants-special-ability-on-actor';
-const FLOW_ACQUIRE = 'transaction-acquire-item-from-source';
-const FLOW_SELL = 'transaction-sell-item';
-const FLOW_LIST_SOURCES = 'transaction-list-sources-for-buyer';
 
 interface FlowResult {
     ok: boolean;
@@ -149,13 +136,6 @@ interface GrantsManagerLike {
     reverseAppliedGrants: (actor: object, sourceKey: string) => Promise<GrantsResult>;
     hasAppliedGrants: (actor: object, sourceKey: string) => boolean;
     clearAppliedState?: (actor: object, sourceKey: string) => Promise<void>;
-}
-
-interface TransactionManagerLike {
-    commitTransaction: (request: object) => Promise<void>;
-    setMode: (actor: object, mode: string) => Promise<void>;
-    listSourcesForBuyer: (buyer: object) => Array<{ id?: string }>;
-    listItemsForSource: (source: object) => object[];
 }
 
 interface ActorCtor {
@@ -478,210 +458,15 @@ async function probeSpecialAbility(page: Page, actorId: string): Promise<FlowRes
     }, actorId);
 }
 
-/**
- * TransactionManager flow: with a buyer + a barter-mode source carrying a
- * gear item with cost + quantity, `commitTransaction` should
- *   - debit buyer.system.throneGelt by finalCost,
- *   - drop a copy of the item onto buyer.items.
- */
-async function probeAcquire(page: Page, buyerId: string, sourceId: string): Promise<FlowResult> {
-    return page.evaluate(
-        async ({ buyerId: bid, sourceId: sid, moduleUrl }): Promise<FlowResult> => {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to ProbeGlobal
-            const g = globalThis as unknown as ProbeGlobal;
-            const buyer = g.game?.actors?.get?.(bid);
-            const source = g.game?.actors?.get?.(sid);
-            if (buyer == null || source == null) return { ok: false, error: 'buyer/source missing' };
-
-            const mod = (await import(moduleUrl)) as { TransactionManager?: TransactionManagerLike };
-            const TM = mod.TransactionManager;
-            if (typeof TM?.commitTransaction !== 'function') {
-                return { ok: false, error: 'TransactionManager.commitTransaction unavailable' };
-            }
-
-            // Configure source as a barter shop and stock it. Source bug to
-            // flag: TransactionManager.prepareQuote reads `cost.value` off
-            // item.system, but the PhysicalItemTemplate's cost field is a
-            // nested SchemaField with per-system slots (dh1.throneGelt,
-            // dh2.influence, etc.) — there is no `cost.value` on any item
-            // type today, so baseCost always resolves to 0 and no gelt is
-            // ever debited. The flow still drives prepareQuote +
-            // commitTransaction + #transferItem end-to-end; we just don't
-            // assert on the debited amount.
-            await TM.setMode(source, 'barter');
-            const itemCreated = await source.createEmbeddedDocuments('Item', [
-                {
-                    name: 'probe-acquire-gear',
-                    type: 'gear',
-                    system: { quantity: 3 },
-                },
-            ]);
-            const item = itemCreated.at(0);
-            if (item == null) return { ok: false, error: 'source item create failed' };
-
-            // Give buyer enough throneGelt for the path to consider
-            // `canAfford` true (any non-zero buffer is enough since
-            // baseCost is 0).
-            await buyer.update({ 'system.throneGelt': 100 });
-
-            try {
-                await TM.commitTransaction({
-                    buyerActorId: bid,
-                    sourceActorId: sid,
-                    itemId: item.id,
-                    quantity: 1,
-                    influenceBurn: 0,
-                });
-            } catch (err) {
-                return { ok: false, error: `commitTransaction threw: ${err instanceof Error ? err.message : String(err)}` };
-            }
-
-            const refreshedBuyer = g.game?.actors?.get?.(bid);
-            const acquired = refreshedBuyer?.items?.contents?.find((i) => i.name === 'probe-acquire-gear');
-
-            const ok = acquired !== undefined;
-            return {
-                ok,
-                error: ok ? null : `item did not transfer to buyer (commitTransaction completed but #transferItem produced no result)`,
-            };
-        },
-        { buyerId, sourceId, moduleUrl: TRANSACTION_MODULE_URL },
-    );
-}
-
-/**
- * TransactionManager flow (sell direction): the manager has no
- * dedicated "sell" entry point — selling is modelled as the same
- * commitTransaction call with buyer + source swapped (the PC becomes
- * the source if they were configured as one). To exercise the symmetric
- * code path without bending the data model, we run a second
- * commitTransaction in the OPPOSITE direction: source actor (still in
- * barter mode) buys an item back from the buyer-turned-source. This
- * verifies that the item-transfer + currency-update path is bidirectional.
- */
-async function probeSell(page: Page, buyerId: string, sourceId: string): Promise<FlowResult> {
-    return page.evaluate(
-        async ({ buyerId: bid, sourceId: sid, moduleUrl }): Promise<FlowResult> => {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to ProbeGlobal
-            const g = globalThis as unknown as ProbeGlobal;
-            const buyer = g.game?.actors?.get?.(bid);
-            const source = g.game?.actors?.get?.(sid);
-            if (buyer == null || source == null) return { ok: false, error: 'buyer/source missing' };
-
-            const mod = (await import(moduleUrl)) as { TransactionManager?: TransactionManagerLike };
-            const TM = mod.TransactionManager;
-            if (typeof TM?.commitTransaction !== 'function') return { ok: false, error: 'TransactionManager.commitTransaction unavailable' };
-
-            // Flip roles: buyer becomes the source (configure as barter),
-            // original source becomes the buyer. Source bug — same as the
-            // acquire probe: `cost.value` does not exist on the cost
-            // SchemaField so baseCost is 0; we don't assert on gold movement.
-            await TM.setMode(buyer, 'barter');
-            const stocked = await buyer.createEmbeddedDocuments('Item', [
-                {
-                    name: 'probe-sell-gear',
-                    type: 'gear',
-                    system: { quantity: 1 },
-                },
-            ]);
-            const item = stocked.at(0);
-            if (item == null) return { ok: false, error: 'item create on buyer-as-source failed' };
-
-            await source.update({ 'system.throneGelt': 50 });
-
-            try {
-                await TM.commitTransaction({
-                    buyerActorId: sid,
-                    sourceActorId: bid,
-                    itemId: item.id,
-                    quantity: 1,
-                    influenceBurn: 0,
-                });
-            } catch (err) {
-                return { ok: false, error: `commitTransaction threw: ${err instanceof Error ? err.message : String(err)}` };
-            }
-
-            const refreshedBuyer = g.game?.actors?.get?.(bid);
-            const refreshedSource = g.game?.actors?.get?.(sid);
-            const itemGone = refreshedBuyer?.items?.contents?.some((i) => i.name === 'probe-sell-gear') !== true;
-            const itemArrived = refreshedSource?.items?.contents?.some((i) => i.name === 'probe-sell-gear') === true;
-
-            // Reset the original buyer's mode so other flows aren't affected.
-            try {
-                await TM.setMode(buyer, 'none');
-            } catch {
-                /* best-effort */
-            }
-
-            const ok = itemGone && itemArrived;
-            return {
-                ok,
-                error: ok ? null : `sell flow: itemGone=${itemGone}, itemArrived=${itemArrived}`,
-            };
-        },
-        { buyerId, sourceId, moduleUrl: TRANSACTION_MODULE_URL },
-    );
-}
-
-/**
- * TransactionManager flow: listSourcesForBuyer should return the
- * configured source actor when called from the buyer side.
- */
-async function probeListSources(page: Page, buyerId: string, sourceId: string): Promise<FlowResult> {
-    return page.evaluate(
-        async ({ buyerId: bid, sourceId: sid, moduleUrl }): Promise<FlowResult> => {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to ProbeGlobal
-            const g = globalThis as unknown as ProbeGlobal;
-            const buyer = g.game?.actors?.get?.(bid);
-            const source = g.game?.actors?.get?.(sid);
-            if (buyer == null || source == null) return { ok: false, error: 'buyer/source missing' };
-
-            const mod = (await import(moduleUrl)) as { TransactionManager?: TransactionManagerLike };
-            const TM = mod.TransactionManager;
-            if (typeof TM?.setMode !== 'function') return { ok: false, error: 'TransactionManager unavailable' };
-
-            // Ensure source is in barter mode (it might have been reset by
-            // the sell probe).
-            await TM.setMode(source, 'barter');
-
-            const sources = TM.listSourcesForBuyer(buyer);
-            if (!Array.isArray(sources)) return { ok: false, error: 'listSourcesForBuyer did not return an array' };
-
-            const includesConfiguredSource = sources.some((s) => s.id === sid);
-            if (!includesConfiguredSource) {
-                const ids = sources.map((s) => s.id).join(', ');
-                return { ok: false, error: `configured source missing from list (got ids: ${ids || '(empty)'})` };
-            }
-
-            // listItemsForSource should also be callable and return an array.
-            const items = TM.listItemsForSource(source);
-            if (!Array.isArray(items)) return { ok: false, error: 'listItemsForSource did not return an array' };
-
-            return { ok: true, error: null };
-        },
-        { buyerId, sourceId, moduleUrl: TRANSACTION_MODULE_URL },
-    );
-}
-
-test.describe.serial('grants-manager + transaction-manager (Tier B)', () => {
+test.describe.serial('grants-manager (Tier B)', () => {
     test('every manager flow lands the expected state mutation', async ({ page }) => {
         const joined = await joinAsGM(page);
         test.skip(!joined, 'GM join failed');
 
-        // Single fixture pair reused across flows where possible. Grants
-        // flows operate on `grantsActor`; transaction flows operate on the
-        // buyer + source pair.
+        // Single fixture actor reused across the grants flows.
         const grantsParent = await createCharacterActor(page, 'probe-managers-grants-parent');
         expect('id' in grantsParent, `grants parent create failed: ${'error' in grantsParent ? grantsParent.error : 'unknown'}`).toBe(true);
         const grantsActorId = (grantsParent as ActorRef).id;
-
-        const buyer = await createCharacterActor(page, 'probe-managers-buyer');
-        expect('id' in buyer, `buyer create failed: ${'error' in buyer ? buyer.error : 'unknown'}`).toBe(true);
-        const buyerId = (buyer as ActorRef).id;
-
-        const source = await createCharacterActor(page, 'probe-managers-source');
-        expect('id' in source, `source create failed: ${'error' in source ? source.error : 'unknown'}`).toBe(true);
-        const sourceId = (source as ActorRef).id;
 
         const failures: string[] = [];
         try {
@@ -690,11 +475,6 @@ test.describe.serial('grants-manager + transaction-manager (Tier B)', () => {
                 { flow: FLOW_TALENT_TALENT, run: async () => probeGrantsTalentGrantsTalent(page) },
                 { flow: FLOW_REVOKE, run: async () => probeGrantsRevoke(page, grantsActorId) },
                 { flow: FLOW_SPECIAL_ABILITY, run: async () => probeSpecialAbility(page, grantsActorId) },
-                { flow: FLOW_LIST_SOURCES, run: async () => probeListSources(page, buyerId, sourceId) },
-                { flow: FLOW_ACQUIRE, run: async () => probeAcquire(page, buyerId, sourceId) },
-                // probeSell mutates buyer/source modes; run last so it
-                // doesn't affect FLOW_LIST_SOURCES / FLOW_ACQUIRE.
-                { flow: FLOW_SELL, run: async () => probeSell(page, buyerId, sourceId) },
             ];
             for (const probe of probes) {
                 const result = await probe.run();
@@ -706,8 +486,6 @@ test.describe.serial('grants-manager + transaction-manager (Tier B)', () => {
             }
         } finally {
             await deleteActor(page, grantsActorId);
-            await deleteActor(page, buyerId);
-            await deleteActor(page, sourceId);
         }
 
         expect(failures, `${failures.length} manager flow(s) failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);

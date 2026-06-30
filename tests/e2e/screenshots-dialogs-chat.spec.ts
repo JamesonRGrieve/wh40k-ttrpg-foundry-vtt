@@ -24,7 +24,6 @@ const DIALOG_CLASSES = [
     'WH40KCreateActorDialog',
     'FateUsesDialog',
     'RollConfigurationDialog',
-    'TransactionRequestDialog',
     // prompts/
     'AddXPDialog',
     'AssignDamageDialog',
@@ -95,7 +94,6 @@ const DIALOGS_DIR = new Set([
     'WH40KCreateActorDialog',
     'FateUsesDialog',
     'RollConfigurationDialog',
-    'TransactionRequestDialog',
 ]);
 
 const KEBAB_OVERRIDES: Partial<Record<string, string>> = {
