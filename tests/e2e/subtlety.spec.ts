@@ -197,7 +197,11 @@ async function embedSubtletyTalent(
                                 minAbsoluteDelta: embedArgs.minAbsoluteDelta,
                                 requiresEquipped: embedArgs.requiresEquipped,
                             },
-                            equipped: embedArgs.equipped === true,
+                            // Equip toggle lives at system.state.equipped on EquippableTemplate
+                            // (weapons); the gate in base-actor.collectSubtletyAdjusters reads
+                            // `system.state.equipped === true`. Talents lack a state.equipped
+                            // slot, so cleanData drops this on a talent embed (harmless).
+                            state: { equipped: embedArgs.equipped === true },
                         },
                     },
                 ]);
@@ -357,52 +361,79 @@ async function probeTalentDeltaApplies(page: Page, actorId: string): Promise<Flo
 }
 
 /**
- * `requiresEquipped` gate probe: a `passive` weapon-shaped item with
- * `requiresEquipped: true` should still surface in
- * `collectSubtletyAdjusters()` because weapons are intrinsically equipped
- * (WeaponData.prepareDerivedData forces `this.equipped = !this.inShipStorage`).
- * Drives the `effect.kind === 'passive' && effect.requiresEquipped && sys?.equipped !== true` branch
- * in `base-actor.ts:130` along the equipped-true / continue-false path.
+ * `requiresEquipped` gate probe — both arms. A `passive` weapon-shaped item
+ * with `requiresEquipped: true` surfaces in `collectSubtletyAdjusters()` only
+ * while the carrier weapon is equipped. The weapon mixes EquippableTemplate, so
+ * `system.state.equipped` is the real togglable gate the base-actor reads
+ * (`base-actor.ts:161`: `... && !('equipped' in state && state.equipped === true)`).
  *
- * Note on the inverse arm: no item DataModel in this codebase mixes
- * `SubtletyAdjusterTemplate` with a togglable `EquippableTemplate.equipped`
- * field — talents lack `equipped` entirely, weapons force `equipped=true` in
- * prepareDerivedData, and the only other adjuster carrier (origin-path)
- * also lacks `equipped`. The "gated passive NOT visible while unequipped"
- * arm can therefore not be observed against any real item type today and is
- * covered conceptually here via the positive case + the unit test in
- * `src/module/documents/base-actor.test.ts`. Source improvement candidate:
- * add `EquippableTemplate` to the talent mixin so a Daemon Talent / Daemon
- * Cyber-Familiar can be modelled as a real gated passive.
+ * Since #265, weapons are NO LONGER blanket force-equipped in
+ * WeaponData.prepareDerivedData for PCs — `state.equipped` is the player's
+ * authoritative draw-state (only NPCs auto-equip their intrinsic weapons). That
+ * makes a PC weapon the first real item that mixes `SubtletyAdjusterTemplate`
+ * with a genuinely togglable `equipped`, so BOTH gate branches are now
+ * observable end-to-end (the inverse "suppressed while unequipped" arm was
+ * previously coverable only by the unit test in `base-actor.test.ts`):
+ *   - equipped  → the gated passive surfaces (equipped-true / continue-false),
+ *   - unequipped → the gated passive is suppressed (continue-true).
  */
 async function probeRequiresEquipped(page: Page, actorId: string): Promise<FlowResult> {
-    const created = await embedSubtletyTalent(page, actorId, {
+    // Arm 1 — equipped carrier: the gated passive must surface.
+    const equippedCarrier = await embedSubtletyTalent(page, actorId, {
         name: 'probe-subtlety-passive-gated',
         kind: 'passive',
         delta: -2,
         minAbsoluteDelta: 0,
         requiresEquipped: true,
-        // Weapon forces equipped=true via prepareDerivedData (see weapon.ts:336).
+        equipped: true,
         itemType: 'weapon',
     });
-    if (created.id === null) return { ok: false, error: `embed failed: ${created.error}` };
+    if (equippedCarrier.id === null) return { ok: false, error: `embed failed (equipped arm): ${equippedCarrier.error}` };
     try {
-        return await page.evaluate((id: string): FlowResult => {
+        const equippedResult = await page.evaluate((id: string): FlowResult => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
             const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
             const actor = gameGlobal?.actors?.get?.(id);
             if (!actor?.collectSubtletyAdjusters) return { ok: false, error: 'collectSubtletyAdjusters unavailable' };
             const present = actor.collectSubtletyAdjusters().find((a) => a.label === 'probe-subtlety-passive-gated');
             if (!present) {
-                return { ok: false, error: 'gated passive did not surface on intrinsically-equipped weapon carrier' };
+                return { ok: false, error: 'gated passive did not surface on equipped weapon carrier' };
             }
             if (present.kind !== 'passive' || present.delta !== -2) {
                 return { ok: false, error: `gated passive shape wrong: ${JSON.stringify(present)}` };
             }
             return { ok: true, error: null };
         }, actorId);
+        if (!equippedResult.ok) return equippedResult;
     } finally {
-        await deleteItem(page, actorId, created.id);
+        await deleteItem(page, actorId, equippedCarrier.id);
+    }
+
+    // Arm 2 — unequipped carrier: the same gated passive must be suppressed.
+    const unequippedCarrier = await embedSubtletyTalent(page, actorId, {
+        name: 'probe-subtlety-passive-gated-off',
+        kind: 'passive',
+        delta: -2,
+        minAbsoluteDelta: 0,
+        requiresEquipped: true,
+        equipped: false,
+        itemType: 'weapon',
+    });
+    if (unequippedCarrier.id === null) return { ok: false, error: `embed failed (unequipped arm): ${unequippedCarrier.error}` };
+    try {
+        return await page.evaluate((id: string): FlowResult => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry injects `game` onto the page globalThis
+            const gameGlobal = (globalThis as unknown as { game?: ProbeGame }).game;
+            const actor = gameGlobal?.actors?.get?.(id);
+            if (!actor?.collectSubtletyAdjusters) return { ok: false, error: 'collectSubtletyAdjusters unavailable' };
+            const leaked = actor.collectSubtletyAdjusters().find((a) => a.label === 'probe-subtlety-passive-gated-off');
+            if (leaked) {
+                return { ok: false, error: 'gated passive surfaced on UNEQUIPPED weapon carrier (gate not suppressing)' };
+            }
+            return { ok: true, error: null };
+        }, actorId);
+    } finally {
+        await deleteItem(page, actorId, unequippedCarrier.id);
     }
 }
 
