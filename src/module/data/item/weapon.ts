@@ -414,12 +414,24 @@ export default class WeaponData extends ItemDataModel.mixin(
     override prepareDerivedData(): void {
         super.prepareDerivedData();
 
-        // #265: `state.equipped` is authoritative persisted state — a weapon must be
-        // drawn/equipped before it can make a combat action, and the Combat tab marks
-        // the equipped set. Do NOT force-derive it here; doing so clobbered the stored
-        // toggle on every prepare, leaving every weapon permanently "equipped" (uniform
-        // highlight, dead attack gate). Ship-storage stow is handled by the
+        // #265: for PCs, `state.equipped` is authoritative persisted state — a weapon
+        // must be drawn/equipped before it can make a combat action, and the Combat tab
+        // marks the equipped set. Do NOT force-derive it for them; doing so clobbered the
+        // stored toggle on every prepare, leaving every weapon permanently "equipped"
+        // (uniform highlight, dead attack gate). Ship-storage stow is handled by the
         // EquippableTemplate stow helpers, which already clear `state.equipped`.
+        //
+        // NPCs, however, wield intrinsic weapons and have no per-weapon draw-state UI, so
+        // their weapons are ALWAYS equipped. Without this, removing the blanket auto-derive
+        // left NPC weapons unequipped and silently dropped their equip-conditional
+        // contributions — item Active Effects (#333) and `requiresEquipped` Subtlety
+        // passives (#391) no longer surfaced for NPC carriers. There is no stored toggle to
+        // clobber on an NPC, so deriving equipped here is safe.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.parent is the untyped Foundry Item; its `.actor.type` is runtime-only and not on the DataModel surface
+        const ownerType = (this.parent as { actor?: { type?: string } } | null | undefined)?.actor?.type;
+        if (typeof ownerType === 'string' && ownerType.endsWith('-npc')) {
+            this.state.equipped = true;
+        }
 
         // Auto-derive twoHanded for heavy weapons (if not explicitly set)
         // This provides a sensible default while allowing manual override
