@@ -45,7 +45,7 @@ import { expect, test } from './lib/test';
  *   - `CONFIG.statusEffects` (the homologated condition list)
  *   - `game.wh40k.*` namespace surface (logging, macro proxies, roll-table
  *     utilities, compendium browser, origin-path builder, NPC tooling,
- *     transactions, dice classes)
+ *     dice classes)
  *
  * Each assertion records one flow key. Flow keys MUST match the
  * FOUNDRY_CONFIG_FLOWS constant in scripts/e2e-coverage.mjs — that is the
@@ -113,7 +113,6 @@ const FOUNDRY_CONFIG_FLOWS = [
     'config::game.wh40k.OriginPathBuilder',
     'config::game.wh40k.openOriginPathBuilder',
     'config::game.wh40k.npc',
-    'config::game.wh40k.transaction',
     'config::game.wh40k.dice',
     'config::game.wh40k.BasicRollWH40K',
     'config::game.wh40k.D100Roll',
@@ -439,10 +438,6 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
                 guarded('config::game.wh40k.npc', () => {
                     const npc = wh40k?.['npc'];
                     return npc !== null && npc !== undefined && typeof npc === 'object';
-                });
-                guarded('config::game.wh40k.transaction', () => {
-                    const tx = wh40k?.['transaction'];
-                    return tx !== null && tx !== undefined && (typeof tx === 'object' || typeof tx === 'function');
                 });
                 guarded('config::game.wh40k.dice', () => {
                     const d = wh40k?.['dice'];

@@ -76,12 +76,6 @@ const DIALOG_PROBES = [
         kind: 'configCtor',
         ctor: 'default',
     },
-    {
-        className: 'TransactionRequestDialog',
-        moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/transaction-request-dialog.js',
-        kind: 'actorCtor',
-        ctor: 'default',
-    },
 
     // ── src/module/applications/prompts ──
     { className: 'AddXPDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/add-xp-dialog.js', kind: 'actorCtor', ctor: 'default' },
@@ -278,7 +272,6 @@ async function probeDialogs(page: Page): Promise<{
                             id.includes('ammo') ||
                             id.includes('characteristic') ||
                             id.includes('fate') ||
-                            id.includes('transaction') ||
                             id.includes('add-xp') ||
                             id.includes('damage') ||
                             id.includes('effect') ||

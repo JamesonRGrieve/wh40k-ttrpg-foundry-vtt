@@ -6,7 +6,7 @@ import { expect, test } from './lib/test';
 /**
  * Tier B extra coverage of the three `src/module/managers/*` classes that
  * are NOT already exercised by `managers.spec.ts` (which covers
- * grants-manager + transaction-manager). This spec drives the constructors,
+ * grants-manager). This spec drives the constructors,
  * public methods, pure helpers, and document-layer flows of:
  *
  *   - src/module/managers/event-tracker.ts
