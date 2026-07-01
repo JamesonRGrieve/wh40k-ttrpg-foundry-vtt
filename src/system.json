@@ -4487,6 +4487,30 @@
             "flags": {}
         },
         {
+            "name": "hb-dh2-items-psychic-powers",
+            "label": "Homebrew DH2 Psychic Powers",
+            "path": "packs/homebrew/hb-dh2-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-conditions",
+            "label": "Homebrew DH2 Conditions",
+            "path": "packs/homebrew/hb-dh2-items-conditions",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "hb-dh2-items-armour",
             "label": "Homebrew DH2 Armour",
             "path": "packs/homebrew/hb-dh2-items-armour",
@@ -4583,6 +4607,30 @@
             "flags": {}
         },
         {
+            "name": "hb-rt-actors-bestiary",
+            "label": "Homebrew RT Bestiary",
+            "path": "packs/homebrew/hb-rt-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-actors-npcs",
+            "label": "Homebrew RT NPCs",
+            "path": "packs/homebrew/hb-rt-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "hb-rt-items-talents",
             "label": "Homebrew RT Talents",
             "path": "packs/homebrew/hb-rt-items-talents",
@@ -4646,6 +4694,30 @@
             "name": "dh2-core-origins-elite-advances",
             "label": "DH2: Core Rulebook, Elite Advances",
             "path": "packs/dark-heresy-2/dh2-core-origins-elite-advances",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-within-origins-elite-advances",
+            "label": "DH2: Enemies Within, Elite Advances",
+            "path": "packs/dark-heresy-2/dh2-within-origins-elite-advances",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-beyond-origins-elite-advances",
+            "label": "DH2: Enemies Beyond, Elite Advances",
+            "path": "packs/dark-heresy-2/dh2-beyond-origins-elite-advances",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -6319,6 +6391,8 @@
                         "dh2-core-origins-backgrounds",
                         "dh2-core-origins-divinations",
                         "dh2-core-origins-elite-advances",
+                        "dh2-within-origins-elite-advances",
+                        "dh2-beyond-origins-elite-advances",
                         "dh2-core-origins-homeworlds",
                         "dh2-core-origins-roles",
                         "dh2-core-rolltables"
@@ -6502,7 +6576,9 @@
                     "packs": [
                         "hb-bc-items-traits",
                         "hb-dh2-items-armour",
+                        "hb-dh2-items-conditions",
                         "hb-dh2-items-misc",
+                        "hb-dh2-items-psychic-powers",
                         "hb-dh2-items-talents",
                         "hb-dh2-items-weapons",
                         "hb-generic-items-consumables",
@@ -6515,6 +6591,8 @@
                         "hb-items-gear",
                         "hb-items-weapons",
                         "hb-psychic-powers",
+                        "hb-rt-actors-bestiary",
+                        "hb-rt-actors-npcs",
                         "hb-rt-items-armour",
                         "hb-rt-items-talents",
                         "hb-rt-items-traits",
