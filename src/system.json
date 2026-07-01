@@ -3251,6 +3251,18 @@
             "flags": {}
         },
         {
+            "name": "rt-hostile-items-ship-weapons",
+            "label": "RT Hostile Acquisitions Ship Weapons",
+            "path": "packs/rogue-trader/rt-hostile-items-ship-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-core-items-skills",
             "label": "RT: Core Rulebook, Skills",
             "path": "packs/rogue-trader/rt-core-items-skills",
@@ -3278,18 +3290,6 @@
             "name": "rt-core-items-traits",
             "label": "RT: Core Rulebook, Traits",
             "path": "packs/rogue-trader/rt-core-items-traits",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "rt-core-items-vehicle-traits",
-            "label": "RT: Core Rulebook, Vehicle Traits",
-            "path": "packs/rogue-trader/rt-core-items-vehicle-traits",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3623,9 +3623,33 @@
             "flags": {}
         },
         {
+            "name": "rt-storm-items-ship-roles",
+            "label": "RT Into the Storm Ship Roles",
+            "path": "packs/rogue-trader/rt-storm-items-ship-roles",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-core-items-ship-orders",
             "label": "RT: Core Rulebook, Ship Orders",
             "path": "packs/rogue-trader/rt-core-items-ship-orders",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-items-ship-orders",
+            "label": "Homebrew RT Ship Orders",
+            "path": "packs/homebrew/hb-rt-items-ship-orders",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -4538,6 +4562,18 @@
             "name": "hb-generic-items-wearables",
             "label": "Generic Homebrew Wearables",
             "path": "packs/homebrew/hb-generic-items-wearables",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-vehicle-traits",
+            "label": "Generic Homebrew Vehicle Traits",
+            "path": "packs/homebrew/hb-generic-items-vehicle-traits",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -6597,7 +6633,9 @@
                         "hb-rt-items-talents",
                         "hb-rt-items-traits",
                         "hb-rt-journals-navigation",
-                        "hb-rt-vehicles-terracraft"
+                        "hb-rt-vehicles-terracraft",
+                        "hb-generic-items-vehicle-traits",
+                        "hb-rt-items-ship-orders"
                     ]
                 }
             ]
@@ -6812,7 +6850,8 @@
                         "rt-hostile-items-ship-components",
                         "rt-hostile-items-talents",
                         "rt-hostile-items-traits",
-                        "rt-hostile-items-weapons"
+                        "rt-hostile-items-weapons",
+                        "rt-hostile-items-ship-weapons"
                     ]
                 },
                 {
@@ -6837,7 +6876,8 @@
                         "rt-storm-origins-trials-and-travails",
                         "rt-storm-vehicles-aircraft",
                         "rt-storm-vehicles-terracraft",
-                        "rt-storm-vehicles-voidcraft"
+                        "rt-storm-vehicles-voidcraft",
+                        "rt-storm-items-ship-roles"
                     ]
                 },
                 {
@@ -6930,7 +6970,6 @@
                         "rt-core-items-skills",
                         "rt-core-items-talents",
                         "rt-core-items-traits",
-                        "rt-core-items-vehicle-traits",
                         "rt-core-items-weapon-qualities",
                         "rt-core-items-weapons",
                         "rt-core-journals-character-actions",
