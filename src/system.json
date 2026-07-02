@@ -2927,9 +2927,9 @@
             "flags": {}
         },
         {
-            "name": "rt-koronus-vehicles-aircraft",
+            "name": "rt-battlefleet-vehicles-aircraft",
             "label": "RT: Battlefleet Koronus, Aircraft",
-            "path": "packs/rogue-trader/rt-koronus-vehicles-aircraft",
+            "path": "packs/rogue-trader/rt-battlefleet-vehicles-aircraft",
             "system": "wh40k-rpg",
             "type": "Actor",
             "ownership": {
@@ -3779,9 +3779,9 @@
             "flags": {}
         },
         {
-            "name": "rt-koronus-vehicles-voidcraft",
-            "label": "RT: Koronus Bestiary, Voidships",
-            "path": "packs/rogue-trader/rt-koronus-vehicles-voidcraft",
+            "name": "rt-battlefleet-vehicles-voidcraft",
+            "label": "RT: Battlefleet Koronus, Voidships",
+            "path": "packs/rogue-trader/rt-battlefleet-vehicles-voidcraft",
             "system": "wh40k-rpg",
             "type": "Actor",
             "ownership": {
@@ -3791,9 +3791,9 @@
             "flags": {}
         },
         {
-            "name": "rt-koronus-actors-bestiary",
+            "name": "rt-bestiary-actors-bestiary",
             "label": "RT: Koronus Bestiary, Bestiary",
-            "path": "packs/rogue-trader/rt-koronus-actors-bestiary",
+            "path": "packs/rogue-trader/rt-bestiary-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
             "ownership": {
@@ -3803,9 +3803,9 @@
             "flags": {}
         },
         {
-            "name": "rt-koronus-journals",
+            "name": "rt-bestiary-journals",
             "label": "RT: Koronus Bestiary, Reference",
-            "path": "packs/rogue-trader/rt-koronus-journals",
+            "path": "packs/rogue-trader/rt-bestiary-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
             "ownership": {
@@ -3815,9 +3815,9 @@
             "flags": {}
         },
         {
-            "name": "rt-koronus-items-gear",
+            "name": "rt-bestiary-items-gear",
             "label": "RT: Koronus Bestiary, Gear",
-            "path": "packs/rogue-trader/rt-koronus-items-gear",
+            "path": "packs/rogue-trader/rt-bestiary-items-gear",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3827,9 +3827,9 @@
             "flags": {}
         },
         {
-            "name": "rt-koronus-items-ship-components",
-            "label": "RT: Koronus Bestiary, Ship Components",
-            "path": "packs/rogue-trader/rt-koronus-items-ship-components",
+            "name": "rt-battlefleet-items-ship-components",
+            "label": "RT: Battlefleet Koronus, Ship Components",
+            "path": "packs/rogue-trader/rt-battlefleet-items-ship-components",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3839,9 +3839,9 @@
             "flags": {}
         },
         {
-            "name": "rt-koronus-items-ship-weapons",
-            "label": "RT: Koronus Bestiary, Ship Weapons",
-            "path": "packs/rogue-trader/rt-koronus-items-ship-weapons",
+            "name": "rt-battlefleet-items-ship-weapons",
+            "label": "RT: Battlefleet Koronus, Ship Weapons",
+            "path": "packs/rogue-trader/rt-battlefleet-items-ship-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3851,9 +3851,9 @@
             "flags": {}
         },
         {
-            "name": "rt-koronus-items-weapons",
+            "name": "rt-bestiary-items-weapons",
             "label": "RT: Koronus Bestiary, Weapons",
-            "path": "packs/rogue-trader/rt-koronus-items-weapons",
+            "path": "packs/rogue-trader/rt-bestiary-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -6913,15 +6913,15 @@
                 },
                 {
                     "name": "Koronus Bestiary",
+                    "packs": ["rt-bestiary-actors-bestiary", "rt-bestiary-items-weapons", "rt-bestiary-items-gear", "rt-bestiary-journals"]
+                },
+                {
+                    "name": "Battlefleet Koronus",
                     "packs": [
-                        "rt-koronus-actors-bestiary",
-                        "rt-koronus-items-gear",
-                        "rt-koronus-items-ship-components",
-                        "rt-koronus-items-ship-weapons",
-                        "rt-koronus-items-weapons",
-                        "rt-koronus-journals",
-                        "rt-koronus-vehicles-aircraft",
-                        "rt-koronus-vehicles-voidcraft"
+                        "rt-battlefleet-vehicles-voidcraft",
+                        "rt-battlefleet-vehicles-aircraft",
+                        "rt-battlefleet-items-ship-weapons",
+                        "rt-battlefleet-items-ship-components"
                     ]
                 },
                 {
