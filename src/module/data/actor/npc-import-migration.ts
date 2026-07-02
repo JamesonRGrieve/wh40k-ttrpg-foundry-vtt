@@ -218,3 +218,51 @@ export function migrateSkills(source: JsonObject): void {
     }
     if (Object.keys(trained).length > 0) source['trainedSkills'] = trained;
 }
+
+/**
+ * Migrate the legacy flat `armourPoints` string ("H7 AR7 AL7 B7 LR7 LL7") into the
+ * structured `armour.locations` map. Without this every NPC's soak silently defaults
+ * to 0. DH2 hit-location prefixes: H=head, AR=right arm, AL=left arm, B=body,
+ * LR=right leg, LL=left leg. Idempotent — deletes the legacy key once mapped, and
+ * only fires when the flat string is present (authored `armour` objects are untouched).
+ * @param {JsonObject} source - The source system data (mutated in place)
+ */
+export function migrateArmourPoints(source: JsonObject): void {
+    const raw = source['armourPoints'];
+    if (typeof raw !== 'string' || raw.trim() === '') return;
+    delete source['armourPoints'];
+    const m = /H\s*(\d+)\s+AR\s*(\d+)\s+AL\s*(\d+)\s+B\s*(\d+)\s+LR\s*(\d+)\s+LL\s*(\d+)/i.exec(raw);
+    if (m === null) return;
+    source['armour'] = {
+        mode: 'locations',
+        total: toInt(m[4]),
+        locations: {
+            head: toInt(m[1]),
+            body: toInt(m[4]),
+            leftArm: toInt(m[3]),
+            rightArm: toInt(m[2]),
+            leftLeg: toInt(m[6]),
+            rightLeg: toInt(m[5]),
+        },
+    };
+}
+
+/**
+ * Migrate the legacy flat `move` string ("3/6/9/18" = half/full/charge/run) into the
+ * structured `movement` object, flagged `movementManual: true` so the printed line is
+ * NOT overwritten by the Agility-bonus recompute (many creatures deviate from the AgB
+ * formula — fast beasts, flyers, slow constructs). Idempotent — deletes the legacy key.
+ * @param {JsonObject} source - The source system data (mutated in place)
+ */
+export function migrateMove(source: JsonObject): void {
+    const raw = source['move'];
+    if (typeof raw !== 'string' || raw.trim() === '') return;
+    delete source['move'];
+    const parts = raw
+        .trim()
+        .split('/')
+        .map((x) => toInt(x.trim(), Number.NaN));
+    if (parts.length < 4 || parts.some((n) => Number.isNaN(n))) return;
+    source['movement'] = { half: parts[0], full: parts[1], charge: parts[2], run: parts[3] };
+    source['movementManual'] = true;
+}
