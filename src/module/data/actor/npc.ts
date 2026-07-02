@@ -14,7 +14,9 @@ import {
     CHARACTERISTIC_SHORT_TO_FULL,
     type Json,
     type JsonObject,
+    migrateArmourPoints,
     migrateCharacteristics,
+    migrateMove,
     migrateSkills,
     migrateWeapons,
     toInt,
@@ -108,6 +110,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         charge: number;
         run: number;
     };
+    declare movementManual: boolean;
     declare size: number;
     declare initiative: {
         characteristic: string;
@@ -309,6 +312,10 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
 
             // === MOVEMENT ===
             movement: movementField({ half: 3, full: 6, charge: 9, run: 18, withLeap: false }),
+            // When true, `movement` holds the printed statblock line and is NOT
+            // recomputed from Agility bonus + size (many creatures deviate from the
+            // AgB formula — fast beasts, flyers, slow constructs).
+            movementManual: new BooleanField({ required: true, initial: false }),
 
             size: sizeField({ nullable: true }),
 
@@ -1022,6 +1029,9 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @protected
      */
     _prepareMovement(): void {
+        // Respect a printed statblock movement line; only auto-derive when the NPC
+        // has no authored movement (migrated from the legacy `move` string sets this).
+        if (this.movementManual) return;
         const ab = this.characteristics.agility.bonus;
         const { half, full, charge, run } = computeMovement(ab, this.size, true);
         this.movement.half = half;
@@ -1091,9 +1101,31 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         NPCData.#migrateSize(source);
         NPCData.#migrateWounds(source);
         NPCData.#migrateThreatLevel(source);
+        NPCData.#migrateArmourPoints(source);
+        NPCData.#migrateMove(source);
         NPCData.#migrateCharacteristics(source);
         NPCData.#migrateWeapons(source);
         NPCData.#migrateSkills(source);
+    }
+
+    /**
+     * Migrate the legacy flat `armourPoints` string into structured `armour.locations`.
+     * Delegates to the pure, happy-dom-importable helper (see npc-import-migration.ts).
+     * @param {object} source - The source system data
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
+    static #migrateArmourPoints(source: Record<string, unknown>): void {
+        migrateArmourPoints(source as JsonObject);
+    }
+
+    /**
+     * Migrate the legacy flat `move` string into structured `movement` (+ movementManual).
+     * Delegates to the pure, happy-dom-importable helper (see npc-import-migration.ts).
+     * @param {object} source - The source system data
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
+    static #migrateMove(source: Record<string, unknown>): void {
+        migrateMove(source as JsonObject);
     }
 
     /**

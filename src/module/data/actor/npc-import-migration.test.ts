@@ -12,7 +12,18 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { isJsonArray, isJsonObject, type Json, type JsonObject, migrateCharacteristics, migrateSkills, migrateWeapons, toInt } from './npc-import-migration.ts';
+import {
+    isJsonArray,
+    isJsonObject,
+    type Json,
+    type JsonObject,
+    migrateArmourPoints,
+    migrateCharacteristics,
+    migrateMove,
+    migrateSkills,
+    migrateWeapons,
+    toInt,
+} from './npc-import-migration.ts';
 
 /** Narrow a JSON-parse result (the one true boundary) to an object, throwing on mismatch. */
 // eslint-disable-next-line no-restricted-syntax -- boundary: argument is the raw JSON.parse() result before any validation
@@ -265,4 +276,65 @@ describe('real bestiary pack data migrates to a usable shape', () => {
             }
         });
     }
+});
+
+describe('migrateArmourPoints', () => {
+    it('maps the flat "H# AR# AL# B# LR# LL#" string onto armour.locations', () => {
+        const source: JsonObject = { armourPoints: 'H5 AR8 AL8 B10 LR7 LL7' };
+        migrateArmourPoints(source);
+        expect(source['armourPoints']).toBeUndefined();
+        const armour = asObject(source['armour'], 'armour');
+        expect(armour['mode']).toBe('locations');
+        expect(armour['total']).toBe(10); // body
+        const loc = asObject(armour['locations'], 'locations');
+        expect(loc).toEqual({ head: 5, body: 10, leftArm: 8, rightArm: 8, leftLeg: 7, rightLeg: 7 });
+    });
+
+    it('maps left/right arm and leg to the correct DH2 hit-location slots', () => {
+        // Asymmetric values prove AR→rightArm, AL→leftArm, LR→rightLeg, LL→leftLeg.
+        const source: JsonObject = { armourPoints: 'H1 AR2 AL3 B4 LR5 LL6' };
+        migrateArmourPoints(source);
+        const loc = asObject(asObject(source['armour'], 'armour')['locations'], 'locations');
+        expect(loc).toEqual({ head: 1, rightArm: 2, leftArm: 3, body: 4, rightLeg: 5, leftLeg: 6 });
+    });
+
+    it('is idempotent and leaves authored armour objects untouched', () => {
+        const already: JsonObject = {
+            armour: { mode: 'locations', total: 4, locations: { head: 4, body: 4, leftArm: 4, rightArm: 4, leftLeg: 4, rightLeg: 4 } },
+        };
+        migrateArmourPoints(already);
+        expect(asObject(already['armour'], 'armour')['total']).toBe(4); // no armourPoints → no-op
+    });
+
+    it('drops an unparseable armourPoints string without inventing armour', () => {
+        const source: JsonObject = { armourPoints: 'None' };
+        migrateArmourPoints(source);
+        expect(source['armourPoints']).toBeUndefined();
+        expect(source['armour']).toBeUndefined();
+    });
+});
+
+describe('migrateMove', () => {
+    it('maps "half/full/charge/run" onto movement and flags it manual', () => {
+        const source: JsonObject = { move: '3/6/9/18' };
+        migrateMove(source);
+        expect(source['move']).toBeUndefined();
+        expect(source['movement']).toEqual({ half: 3, full: 6, charge: 9, run: 18 });
+        expect(source['movementManual']).toBe(true);
+    });
+
+    it('preserves a printed move that deviates from the Agility-bonus formula', () => {
+        const source: JsonObject = { move: '9/27/27/54' };
+        migrateMove(source);
+        expect(source['movement']).toEqual({ half: 9, full: 27, charge: 27, run: 54 });
+        expect(source['movementManual']).toBe(true);
+    });
+
+    it('ignores a malformed move string', () => {
+        const source: JsonObject = { move: '3/6' };
+        migrateMove(source);
+        expect(source['move']).toBeUndefined();
+        expect(source['movement']).toBeUndefined();
+        expect(source['movementManual']).toBeUndefined();
+    });
 });

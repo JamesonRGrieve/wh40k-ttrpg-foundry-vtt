@@ -507,7 +507,9 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @type {boolean}
      */
     get isRangedWeapon(): boolean {
-        return ['pistol', 'basic', 'heavy', 'launcher'].includes(this.class);
+        // `launcher` is a weapon *type*, not a class — grenade/missile launchers are
+        // class basic/heavy (already covered). The old 'launcher' class-check was dead.
+        return ['pistol', 'basic', 'heavy'].includes(this.class);
     }
 
     /**
@@ -857,6 +859,9 @@ export default class WeaponData extends ItemDataModel.mixin(
             'full': game.i18n.localize('WH40K.Reload.Full'),
             '2-full': game.i18n.localize('WH40K.Reload.2Full'),
             '3-full': game.i18n.localize('WH40K.Reload.3Full'),
+            '4-full': game.i18n.localize('WH40K.Reload.4Full'),
+            '5-full': game.i18n.localize('WH40K.Reload.5Full'),
+            '6-full': game.i18n.localize('WH40K.Reload.6Full'),
         };
         // Access schema field via the typed helper — at runtime the instance property
         // (schema field) shadows the prototype method, but TS sees the method.
@@ -903,6 +908,9 @@ export default class WeaponData extends ItemDataModel.mixin(
             'full': game.i18n.localize('WH40K.Reload.Full'),
             '2-full': game.i18n.localize('WH40K.Reload.2Full'),
             '3-full': game.i18n.localize('WH40K.Reload.3Full'),
+            '4-full': game.i18n.localize('WH40K.Reload.4Full'),
+            '5-full': game.i18n.localize('WH40K.Reload.5Full'),
+            '6-full': game.i18n.localize('WH40K.Reload.6Full'),
         };
         return labels[this.effectiveReloadTime] ?? this.effectiveReloadTime;
     }

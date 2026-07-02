@@ -23,7 +23,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
     declare clipModifier: number;
     declare effect: string;
     declare notes: string;
-    declare source: { book: string; page: string; custom: string };
+    // `source` (structured per-line provenance) is inherited from DescriptionTemplate.
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -61,9 +61,10 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
             // Effect description
             effect: new fields.HTMLField({ required: false, blank: true }),
 
-            // Notes & source
+            // Notes (structured `source` is inherited from DescriptionTemplate — do
+            // NOT override it with a bare string; that reintroduces the deprecated
+            // {book,page,custom} shape and blocks per-line RAW provenance).
             notes: new fields.StringField({ required: false, blank: true }),
-            source: new fields.StringField({ required: false, blank: true }),
         };
     }
 
@@ -126,12 +127,8 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         this.effect = (resolveLineVariant(this.effect as unknown, lineKey) as string) ?? '';
         // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: resolveLineVariant may return undefined at runtime when variant key is absent
         this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
-        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: resolveLineVariant may return undefined at runtime when variant key is absent
-        this.source = (resolveLineVariant(this.source as unknown, lineKey) as { book: string; page: string; custom: string }) ?? {
-            book: '',
-            page: '',
-            custom: '',
-        };
+        // `source` is resolved per-line by DescriptionTemplate.prepareBaseData (via
+        // super); do not re-resolve it here into the legacy {book,page,custom} shape.
     }
 
     /* -------------------------------------------- */
