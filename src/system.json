@@ -4823,6 +4823,30 @@
             "flags": {}
         },
         {
+            "name": "dh2-core-vehicles-terracraft",
+            "label": "DH2: Core Rulebook, Vehicles",
+            "path": "packs/dark-heresy-2/dh2-core-vehicles-terracraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-forgotten-vehicles-terracraft",
+            "label": "DH2: Forgotten Gods, Vehicles",
+            "path": "packs/dark-heresy-2/dh2-forgotten-vehicles-terracraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-without-actors-reinforcements",
             "label": "DH2: Enemies Without, Reinforcement Characters",
             "path": "packs/dark-heresy-2/dh2-without-actors-reinforcements",
@@ -6431,7 +6455,8 @@
                         "dh2-beyond-origins-elite-advances",
                         "dh2-core-origins-homeworlds",
                         "dh2-core-origins-roles",
-                        "dh2-core-rolltables"
+                        "dh2-core-rolltables",
+                        "dh2-core-vehicles-terracraft"
                     ]
                 },
                 {
@@ -6511,7 +6536,13 @@
                 },
                 {
                     "name": "Forgotten Gods",
-                    "packs": ["dh2-forgotten-actors-bestiary", "dh2-forgotten-actors-npcs", "dh2-forgotten-journals", "dh2-forgotten-rolltables"]
+                    "packs": [
+                        "dh2-forgotten-actors-bestiary",
+                        "dh2-forgotten-actors-npcs",
+                        "dh2-forgotten-journals",
+                        "dh2-forgotten-rolltables",
+                        "dh2-forgotten-vehicles-terracraft"
+                    ]
                 },
                 {
                     "name": "Game Master's Kit",
