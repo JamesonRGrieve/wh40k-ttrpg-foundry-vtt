@@ -263,7 +263,7 @@ export function calculateRangeModifier(options: RangeCalculationOptions): RangeC
  * 'elevation')" when selecting an attack target, #233). Ground level (0) is the
  * safe default.
  */
-function tokenElevation(token: foundry.canvas.placeables.Token): number {
+export function tokenElevation(token: foundry.canvas.placeables.Token): number {
     // fvtt-types asserts Token#document is non-null, but an unplaced preview /
     // teardown placeable leaves it undefined at target-select time. Widen
     // `document` to optional (a structural view, not a value change) so the
