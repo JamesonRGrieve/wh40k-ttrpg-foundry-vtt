@@ -11,10 +11,15 @@ type CombatAction = {
     };
 };
 
+/** The slice of {@link WeaponRollData} that {@link calculateCombatActionModifier}
+ *  reads/writes — narrowed so callers (and structural test mocks) satisfy it
+ *  without fabricating a whole WeaponRollData. */
+export type CombatActionModifierInput = Pick<WeaponRollData, 'actions' | 'action' | 'isCalledShot' | 'calledShotLocation' | 'modifiers'>;
+
 /**
  * @param rollData {WeaponRollData}
  */
-export function calculateCombatActionModifier(rollData: WeaponRollData): void {
+export function calculateCombatActionModifier(rollData: CombatActionModifierInput): void {
     // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.actions stores per-system action name→name map; values are strings at runtime
     const actions = rollData.actions as Record<string, string>;
     const currentAction = actions[rollData.action];
@@ -29,12 +34,12 @@ export function calculateCombatActionModifier(rollData: WeaponRollData): void {
         rollData.isCalledShot = false;
     }
 
+    // The combat-action modifier (Called Shot −20, Charge +20, All Out Attack
+    // +30, …) gets its OWN key so it does not clobber the weapon's attackBonus,
+    // which also writes modifiers['attack'] in RollData.update(). Previously
+    // whichever ran last won, silently dropping the Called Shot −20 (#408).
     const actionInfo = allCombatActions().find((action: CombatAction) => action.name === currentAction);
-    if (actionInfo?.attack?.modifier !== undefined && actionInfo.attack.modifier !== 0) {
-        rollData.modifiers['attack'] = actionInfo.attack.modifier;
-    } else {
-        rollData.modifiers['attack'] = 0;
-    }
+    rollData.modifiers['combat-action'] = actionInfo?.attack?.modifier ?? 0;
 }
 
 /**

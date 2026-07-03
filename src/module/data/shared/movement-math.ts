@@ -13,6 +13,16 @@ export interface MovementRates {
 }
 
 /**
+ * Sum the values of collected movement-modifier sources (#409). The total is
+ * folded into the base move rate (added to the agility bonus passed to
+ * {@link computeMovement}) so a +N movement bonus scales through all four rates
+ * and they stay consistent multiples. Pure.
+ */
+export function sumMovementModifiers(sources: ReadonlyArray<{ value: number }>): number {
+    return sources.reduce((total, src) => total + src.value, 0);
+}
+
+/**
  * Compute half/full/charge/run from agility bonus + size. When `applyFloors` is
  * true (NPCs) the rates are clamped to the 1/2/3/6 minimums; PCs pass `false`
  * for the raw values.
