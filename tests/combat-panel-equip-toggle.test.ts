@@ -35,6 +35,29 @@ describe('Combat-tab weapon equip toggle (#265)', () => {
     });
 });
 
+describe('Combat-tab Draw / Holster weapon action (#404)', () => {
+    it('surfaces the equip control as an explicit Draw / Holster action', () => {
+        // The DH2 Ready halves: Draw a stowed weapon, Holster a drawn one.
+        expect(COMBAT).toContain('WH40K.Weapon.DrawWeapon');
+        expect(COMBAT).toContain('WH40K.Weapon.HolsterWeapon');
+        // Both labels hang off the equipped-state conditional on the toggleEquip control
+        // (Holster when drawn, Draw when holstered), with an accessible label.
+        const idx = COMBAT.indexOf('data-action="toggleEquip"');
+        const control = COMBAT.slice(idx, idx + 500);
+        expect(control).toContain('HolsterWeapon');
+        expect(control).toContain('DrawWeapon');
+        expect(control).toContain('aria-label=');
+    });
+
+    it('is no longer hidden behind hover — the toggleEquip control is persistently visible', () => {
+        // #404: the old control was opacity-0 until group-hover; the delete button beside it
+        // stays hover-only, so scope the check to the toggleEquip control's own markup.
+        const idx = COMBAT.indexOf('data-action="toggleEquip"');
+        const control = COMBAT.slice(Math.max(0, idx - 600), idx);
+        expect(control).not.toContain('tw-opacity-0');
+    });
+});
+
 describe('Combat action gated to equipped weapons (#265, reopened)', () => {
     it('refuses a weapon roll via the shared equip gate with a localized warning', () => {
         expect(BASE_ACTOR).toContain('isWeaponAttackBlockedByEquip(item.system, enforceEquipped)');
