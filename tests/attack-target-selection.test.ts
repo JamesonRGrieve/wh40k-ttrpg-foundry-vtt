@@ -35,4 +35,12 @@ describe('attack target selection (#250)', () => {
         expect(panel).toContain('data-action="selectTarget"');
         expect(panel).toContain('{{localize "WH40K.Roll.SelectTarget"}}');
     });
+
+    it('clears the canvas target reticle when a roll resolves (#401)', () => {
+        // Both roll paths clear the reticle immediately before closing, so a
+        // resolved attack drops the on-map target indicator.
+        expect(dialog).toContain('UnifiedRollDialog.#clearCanvasTargets();\n        await this.close();');
+        // The reticle is cleared by dropping the user's token targets.
+        expect(dialog).toContain('updateTokenTargets([])');
+    });
 });

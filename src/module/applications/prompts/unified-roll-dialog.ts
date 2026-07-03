@@ -1757,6 +1757,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             await this._submitSimpleRoll(manualTotal);
         }
 
+        // #401: the attack resolved — drop the target reticle from the canvas.
+        UnifiedRollDialog.#clearCanvasTargets();
         await this.close();
     }
 
@@ -1784,6 +1786,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             await sendActionDataToChat(this.actionData);
         }
 
+        // #401: the roll resolved — drop the target reticle from the canvas.
+        UnifiedRollDialog.#clearCanvasTargets();
         await this.close();
     }
 
