@@ -36,10 +36,13 @@ const ITEM_CLASS_LOOT_TYPE = 'gear';
 const ITEM_CLASS_WEAPON_TYPE = 'weapon';
 const ITEM_CLASS_EQUIPMENT_TYPE = 'armour';
 
-/** Minimal feature-detected view of the Item Piles API we call. */
+/** Minimal feature-detected view of the Item Piles API we call. `createItemPile`
+ *  resolves to the created pile's UUID; `addItems` resolves only once the items
+ *  are actually in the pile (unlike createItemPile's fire-and-forget item attach). */
 interface ItemPilesApiLike {
     addSystemIntegration?: (data: object) => void;
-    createItemPile?: (options: { sceneId?: string | undefined; position?: { x: number; y: number }; items?: object[] }) => Promise<void>;
+    createItemPile?: (options: { sceneId?: string | undefined; position?: { x: number; y: number }; items?: object[] }) => Promise<string>;
+    addItems?: (target: object, items: object[], options?: object) => Promise<void>;
 }
 
 /** Item Piles attribute-backed currency entry. */
@@ -185,12 +188,23 @@ function itemPilesApi(): ItemPilesApiLike | undefined {
  */
 export async function dropItemAsItemPile(itemData: object, position: { x: number; y: number }, sceneId: string | undefined): Promise<boolean> {
     const api = itemPilesApi();
-    if (typeof api?.createItemPile !== 'function') return false;
+    if (typeof api?.createItemPile !== 'function' || typeof api.addItems !== 'function') return false;
     try {
-        await api.createItemPile({ sceneId, position, items: [itemData] });
+        // Create the pile EMPTY, then add the item in an AWAITED call (#405).
+        // createItemPile attaches a passed `items` array on a fire-and-forget
+        // ~250ms timer it never awaits, so populating there and deleting the source
+        // on return races the attach — an empty pile plus a lost item. addItems
+        // resolves only once the item is really in the pile, so the caller can
+        // delete the source safely afterwards.
+        const pileUuid = await api.createItemPile({ sceneId, position });
+        if (typeof pileUuid !== 'string' || pileUuid === '') return false;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid is a Foundry global; it resolves the pile as an untyped Document union.
+        const pile = (await fromUuid(pileUuid)) as object | null;
+        if (pile === null) return false;
+        await api.addItems(pile, [itemData]);
         return true;
     } catch (err) {
-        console.warn(`${SYSTEM_ID} | Item Piles createItemPile failed; falling back to the loot-actor method.`, err);
+        console.warn(`${SYSTEM_ID} | Item Piles pile creation failed; falling back to the loot-actor method.`, err);
         return false;
     }
 }
