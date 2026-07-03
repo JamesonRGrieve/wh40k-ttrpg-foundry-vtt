@@ -29,7 +29,15 @@ import {
 import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import { availableSkillVariants, filterModifiersByVariant, type SkillVariant } from '../../rules/skill-variants.ts';
-import { deriveTargetSituationalKeys, targetCombatStateFromConditions } from '../../rules/target-situationals.ts';
+import {
+    deriveTargetSituationalKeys,
+    shouldSkipSelfTargetDefenderMods,
+    TARGET_GROUP_COLOR_CLASS,
+    TARGET_GROUP_ORDER,
+    targetCombatStateFromConditions,
+    type TargetDispositionGroup,
+    targetDispositionGroup,
+} from '../../rules/target-situationals.ts';
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
 import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
@@ -1009,6 +1017,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: rd is heterogeneous weapon roll data bag passed from Handlebars context
     _getDefaultSizeKey(rd: Record<string, unknown>): string {
+        // #393: homebrew self-target skips the target-size defender modifier (a
+        // size band against yourself is meaningless) — default to Average (0).
+        if (this.#isHomebrewSelfTarget()) return '4';
         const targetActor = rd['targetActor'] as { system?: { size?: string | number | null } } | null | undefined;
         const size = targetActor?.system?.size;
         if (typeof size === 'string') return size;
@@ -1551,6 +1562,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const target = rd.targetActor;
         if (target === null) return;
 
+        // #393: homebrew self-target uses point-blank range (from the zero
+        // self-distance) and skips the enemy-defence situationals — target size,
+        // cover, and target-state — because they don't apply to oneself.
+        if (this.#isHomebrewSelfTarget()) return;
+
         const isRanged = rd.weapon?.isRanged === true;
         const conditions = UnifiedRollDialog.#collectConditionTokens(target);
         const state = targetCombatStateFromConditions(conditions, isRanged);
@@ -1558,6 +1574,41 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             this._activeCombatSituationals.add(key);
             this._autoSituationals.add(key);
         }
+    }
+
+    /**
+     * Whether the homebrew self-target treatment applies (#393): the world
+     * setting is on and the chosen target actor is the attacker themselves. When
+     * true the dialog skips the enemy-defence situationals and the target-size
+     * modifier — point-blank range still follows naturally from the zero
+     * self-distance.
+     */
+    #isHomebrewSelfTarget(): boolean {
+        return shouldSkipSelfTargetDefenderMods(
+            WH40KSettings.isHomebrewSelfTargeting(),
+            (this.rollData.targetActor as { id?: string } | null | undefined)?.id ?? null,
+            (this.rollData.sourceActor as { id?: string } | null | undefined)?.id ?? null,
+        );
+    }
+
+    /**
+     * Reticle a chosen combatant's token on the canvas for the current user
+     * (releasing any prior target), so the dropdown selection is visible on the
+     * map (#401). No-op when the token has no canvas placeable (off-scene) or the
+     * setTarget API is unavailable (headless).
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: receives the loose combatant token handle (Token | null from combatant.token?.object); narrowed to the setTarget surface below.
+    static #highlightCanvasTarget(token: unknown): void {
+        const placeable = token as { setTarget?: (targeted: boolean, options?: { releaseOthers?: boolean }) => void } | null;
+        if (typeof placeable?.setTarget === 'function') placeable.setTarget(true, { releaseOthers: true });
+    }
+
+    /** Drop the current user's canvas targets when the dropdown target is cleared,
+     *  keeping the map reticle in sync with the dialog (#401). */
+    static #clearCanvasTargets(): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: User#updateTokenTargets is not surfaced on the fvtt-types game.user handle at this layer.
+        const user = game.user as unknown as { updateTokenTargets?: (ids: string[]) => void } | null;
+        if (typeof user?.updateTokenTargets === 'function') user.updateTokenTargets([]);
     }
 
     /**
@@ -1570,8 +1621,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const rd = this.rollData;
         if (combatantId === '') {
             rd.targetActor = null;
-            // Clearing the target drops its auto-selected situationals (#393).
+            // Clearing the target drops its auto-selected situationals (#393)…
             this.#applyTargetSituationals();
+            // …and its canvas reticle (#401).
+            UnifiedRollDialog.#clearCanvasTargets();
             return;
         }
         const combatant = game.combat?.combatants.get(combatantId);
@@ -1581,6 +1634,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this.#applyTargetSituationals();
         const actor = rd.sourceActor;
         const targetToken = combatant.token?.object ?? null;
+        // #401: reticle the chosen defender on the canvas so the player sees who
+        // they're attacking; keeps game.user.targets in sync with the dropdown.
+        UnifiedRollDialog.#highlightCanvasTarget(targetToken);
         if (actor != null && targetToken != null) {
             type ActorToken = foundry.canvas.placeables.Token;
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor exposes loose token accessors not yet in typings.
@@ -1597,27 +1653,56 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /**
      * Build the #250 target-dropdown rows from the active Combat's combatants:
      * every non-empty-id entry, with the currently-targeted actor marked
-     * selected. Pure — plain projections only (unit-tested).
+     * selected. Rows are ordered by disposition — hostile → neutral → friendly →
+     * self (the attacker's own token, always last) — and each carries the group's
+     * text-colour class (red / white / green / yellow, #400). Pure, order-stable
+     * within a group (unit-tested).
      */
     static buildCombatantTargets(
-        combatants: ReadonlyArray<{ id: string | null | undefined; name: string | null | undefined; actorId: string | null | undefined }>,
+        combatants: ReadonlyArray<{
+            id: string | null | undefined;
+            name: string | null | undefined;
+            actorId: string | null | undefined;
+            disposition?: number | null | undefined;
+        }>,
         targetActorId: string | null,
-    ): Array<{ id: string; name: string; isSelected: boolean }> {
-        const rows: Array<{ id: string; name: string; isSelected: boolean }> = [];
+        sourceActorId: string | null,
+    ): Array<{ id: string; name: string; isSelected: boolean; group: TargetDispositionGroup; colorClass: string }> {
+        const rows: Array<{ id: string; name: string; isSelected: boolean; group: TargetDispositionGroup; colorClass: string }> = [];
         for (const c of combatants) {
             const id = c.id ?? '';
             if (id === '') continue;
-            rows.push({ id, name: c.name ?? '', isSelected: c.actorId != null && c.actorId === targetActorId });
+            const isSelf = c.actorId != null && sourceActorId != null && c.actorId === sourceActorId;
+            const group = targetDispositionGroup(c.disposition, isSelf);
+            rows.push({
+                id,
+                name: c.name ?? '',
+                isSelected: c.actorId != null && c.actorId === targetActorId,
+                group,
+                colorClass: TARGET_GROUP_COLOR_CLASS[group],
+            });
         }
-        return rows;
+        // Stable sort by disposition group (Array.prototype.sort is stable), so
+        // combat order is preserved within each hostile/neutral/friendly/self band.
+        return rows.sort((a, b) => TARGET_GROUP_ORDER[a.group] - TARGET_GROUP_ORDER[b.group]);
     }
 
     /** Resolve the active Combat's combatants into #250 target-dropdown rows,
-     *  marking the currently-targeted actor selected. Empty when no combat. */
-    #getCombatantTargets(): Array<{ id: string; name: string; isSelected: boolean }> {
+     *  disposition-ordered and colour-tagged, marking the currently-targeted
+     *  actor selected. Empty when no combat. */
+    #getCombatantTargets(): Array<{ id: string; name: string; isSelected: boolean; group: TargetDispositionGroup; colorClass: string }> {
         const targetActorId = (this.rollData.targetActor as { id?: string } | null | undefined)?.id ?? null;
+        const sourceActorId = (this.rollData.sourceActor as { id?: string } | null | undefined)?.id ?? null;
         const combat = game.combat;
-        return combat ? UnifiedRollDialog.buildCombatantTargets(Array.from(combat.combatants), targetActorId) : [];
+        if (!combat) return [];
+        const combatants = Array.from(combat.combatants).map((c) => ({
+            id: c.id,
+            name: c.name,
+            actorId: c.actorId,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Combatant#token is a TokenDocument whose numeric `disposition` is not surfaced on the fvtt-types Combatant handle.
+            disposition: (c as { token?: { disposition?: number | null } | null }).token?.disposition ?? null,
+        }));
+        return UnifiedRollDialog.buildCombatantTargets(combatants, targetActorId, sourceActorId);
     }
 
     static async #onSelectTarget(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { dropItemAsItemPile, isItemPilesPile, registerItemPilesValuation } from './item-piles.ts';
+import { dropItemAsItemPile, isItemPilesPile, registerItemPilesValuation, shouldSeedPileActorType } from './item-piles.ts';
 
 /**
  * Unit coverage for the #385 Item Piles drop routing. Exercises the
@@ -95,7 +95,8 @@ describe('registerItemPilesValuation — system integration payload', () => {
                 if (event === 'item-piles-ready') readyCb = cb;
             },
         });
-        vi.stubGlobal('game', { modules: { get: () => ({ active: true }) }, itempiles: { API: { addSystemIntegration } } });
+        // isGM:false → the async seed step returns early, so this test isolates the payload.
+        vi.stubGlobal('game', { modules: { get: () => ({ active: true }) }, itempiles: { API: { addSystemIntegration } }, user: { isGM: false } });
 
         registerItemPilesValuation();
         expect(readyCb).toBeTypeOf('function');
@@ -119,5 +120,59 @@ describe('registerItemPilesValuation — system integration payload', () => {
         expect(() => {
             registerItemPilesValuation();
         }).not.toThrow();
+    });
+
+    /** Stub Item Piles as active with a GM user and a settings store seeded with
+     *  the given actorClassType, capturing the ready callback and the set spy. */
+    function stubItemPilesWithSetting(current: string): { readyCb: (() => void) | undefined; set: ReturnType<typeof vi.fn> } {
+        const store = new Map<string, string>([['item-piles.actorClassType', current]]);
+        const set = vi.fn().mockResolvedValue(undefined);
+        const ref: { readyCb: (() => void) | undefined; set: ReturnType<typeof vi.fn> } = { readyCb: undefined, set };
+        vi.stubGlobal('Hooks', {
+            once: (event: string, cb: () => void) => {
+                if (event === 'item-piles-ready') ref.readyCb = cb;
+            },
+        });
+        vi.stubGlobal('game', {
+            modules: { get: () => ({ active: true }) },
+            itempiles: { API: { addSystemIntegration: vi.fn() } },
+            user: { isGM: true },
+            settings: { settings: store, get: (namespace: string, key: string) => store.get(`${namespace}.${key}`), set },
+        });
+        return ref;
+    }
+
+    it('seeds the item-piles actorClassType setting to loot when the GM left it empty (#402)', async () => {
+        // `stub` is a live ref: registerItemPilesValuation assigns stub.readyCb via the Hooks stub.
+        const stub = stubItemPilesWithSetting('');
+        registerItemPilesValuation();
+        stub.readyCb?.();
+        // The seed runs on the fire-and-forget async chain; flush the microtask queue.
+        await Promise.resolve();
+        await Promise.resolve();
+        expect(stub.set).toHaveBeenCalledWith('item-piles', 'actorClassType', 'loot');
+    });
+
+    it('does not overwrite an actorClassType a GM has already set (#402)', async () => {
+        const stub = stubItemPilesWithSetting('npc');
+        registerItemPilesValuation();
+        stub.readyCb?.();
+        await Promise.resolve();
+        await Promise.resolve();
+        expect(stub.set).not.toHaveBeenCalled();
+    });
+});
+
+describe('shouldSeedPileActorType (#402)', () => {
+    it('needs seeding when the setting is unset or blank (Actor.create would get type: undefined)', () => {
+        expect(shouldSeedPileActorType(undefined)).toBe(true);
+        expect(shouldSeedPileActorType(null)).toBe(true);
+        expect(shouldSeedPileActorType('')).toBe(true);
+        expect(shouldSeedPileActorType('   ')).toBe(true);
+    });
+
+    it('does not re-seed once a pile actor type is set (respects a GM override)', () => {
+        expect(shouldSeedPileActorType('loot')).toBe(false);
+        expect(shouldSeedPileActorType('npc')).toBe(false);
     });
 });

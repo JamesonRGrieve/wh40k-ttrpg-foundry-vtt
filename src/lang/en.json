@@ -158,6 +158,7 @@
             "NoTokenForActor": "No token found for the attacking actor.",
             "TargetFirst": "Target a token first, then click Select Target.",
             "SelectTarget": "Select Target",
+            "SelectATarget": "Select a Target",
             "NoTargetSelected": "No target — target a token, then Select Target",
             "TargetLabel": "Target",
             "TestVariant": "Test Variant",
@@ -706,6 +707,10 @@
             "PromptIncompleteOriginPath": {
                 "Name": "Prompt to Build Unfinished Characters",
                 "Hint": "When a character or NPC sheet is opened and its origin path has never been completed, show a prompt offering to open the origin-path builder. Players can dismiss it per-character."
+            },
+            "HomebrewSelfTargeting": {
+                "Name": "Homebrew Self-Targeting",
+                "Hint": "When enabled, targeting yourself in an attack or roll uses the homebrew treatment: point-blank range, and the enemy-defence situational modifiers (target size, cover, target state) are skipped because they do not apply to yourself. When disabled (default), self-targeting follows the rulebook."
             },
             "FreeformCharacters": {
                 "Name": "Freeform Character Editing",

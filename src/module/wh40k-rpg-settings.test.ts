@@ -234,6 +234,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
             {
               "choices": undefined,
               "config": true,
+              "default": "false",
+              "key": "homebrew-self-targeting",
+              "requiresReload": false,
+              "scope": "world",
+              "type": "Boolean",
+            },
+            {
+              "choices": undefined,
+              "config": true,
               "default": "0",
               "key": "characteristic-offset",
               "requiresReload": undefined,

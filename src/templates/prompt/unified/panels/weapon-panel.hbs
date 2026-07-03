@@ -35,9 +35,11 @@
         {{!-- #250: pick the defender from the active Combat roster (dropdown). Change
              routes through #onFormSubmit (submitOnChange) → #applyTargetCombatant. --}}
         <select class="tw-flex-1 tw-min-w-0 tw-min-h-8 tw-py-1 tw-px-2 tw-pr-7 tw-bg-[rgba(0,0,0,0.3)] tw-bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Cpath%20fill%3D%27%23c9a227%27%20d%3D%27M6%208L1%203h10z%27/%3E%3C/svg%3E')] tw-bg-no-repeat tw-bg-[right_8px_center] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm tw-cursor-pointer tw-appearance-none focus:tw-outline-none focus:tw-border-gold-raw" name="targetCombatantId" data-tooltip="{{localize 'WH40K.Roll.SelectTarget'}}">
-            <option value="">{{localize "WH40K.Roll.NoTargetSelected"}}</option>
+            <option value="">{{localize "WH40K.Roll.SelectATarget"}}</option>
+            {{!-- #400: rows are pre-ordered hostile→neutral→friendly→self and carry a
+                 disposition colour class (red / white / green / yellow). --}}
             {{#each combatants as |c|}}
-            <option value="{{c.id}}" {{#if c.isSelected}}selected{{/if}}>{{c.name}}</option>
+            <option value="{{c.id}}" class="{{c.colorClass}}" {{#if c.isSelected}}selected{{/if}}>{{c.name}}</option>
             {{/each}}
         </select>
         {{else}}

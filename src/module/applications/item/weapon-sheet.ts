@@ -8,6 +8,8 @@ import type { default as WeaponData } from '../../data/item/weapon.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
@@ -559,8 +561,13 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         const identifier = target.dataset['identifier'];
         if (identifier === undefined || identifier === '') return;
 
-        // Try to find the quality in the weapon qualities compendium
-        const pack = game.packs.get('wh40k-rpg.wh40k-items-weapon-qualities');
+        // The weapon-qualities pack is per game system (dh2-core-items-weapon-qualities,
+        // rt-core-items-weapon-qualities, …); resolve it by the owning actor's system,
+        // falling back to the world's primary line for an unowned/world weapon (#403).
+        // The previous hardcoded 'wh40k-rpg.wh40k-items-weapon-qualities' id never existed.
+        const gameSystem = (this.item.actor?.system as { gameSystem?: string } | undefined)?.gameSystem ?? WH40KSettings.getPrimaryGameSystem();
+        const packName = `${gameSystemPackPrefix(gameSystem)}-core-items-weapon-qualities`;
+        const pack = game.packs.find((p) => p.metadata.name === packName && p.documentName === 'Item');
         if (pack === undefined) {
             ui.notifications.warn(game.i18n.localize('WH40K.WeaponSheet.QualitiesCompendiumMissing'));
             return;

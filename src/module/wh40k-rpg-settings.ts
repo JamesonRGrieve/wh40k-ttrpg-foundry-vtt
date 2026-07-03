@@ -58,6 +58,7 @@ export class WH40KSettings {
         autoApplyDamage: 'auto-apply-damage',
         requireCombatToAttack: 'require-combat-to-attack',
         warbandSubtlety: 'warband-subtlety',
+        homebrewSelfTargeting: 'homebrew-self-targeting',
     };
 
     /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
@@ -262,6 +263,19 @@ export class WH40KSettings {
         return WH40KSettings.getRuleset() === 'homebrew';
     }
 
+    /** When true, targeting yourself in the attack/roll dialog uses the homebrew
+     *  self-target treatment: point-blank range, and the enemy-defence situational
+     *  modifiers (target size, cover, target-state) are skipped since they don't
+     *  apply to oneself (#393). When false, self-targeting is left to RAW. Defaults
+     *  to false. Safe to call before the setting is registered (returns false). */
+    static isHomebrewSelfTargeting(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.homebrewSelfTargeting) === true;
+        } catch {
+            return false;
+        }
+    }
+
     /** The world's primary 40K RPG line; default dh2. Safe to call before settings init. */
     static getPrimaryGameSystem(): GameSystemId {
         try {
@@ -428,6 +442,19 @@ export class WH40KSettings {
                 key: S.freeformCreation,
                 name: 'WH40K.SETTINGS.FreeformCreation.Name',
                 hint: 'WH40K.SETTINGS.FreeformCreation.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: false,
+                default: false,
+                type: Boolean,
+            },
+            {
+                // Homebrew self-target treatment (#393): point-blank range + skip
+                // enemy-defence situationals (size/cover/target-state) when you target
+                // yourself. Off = RAW self-targeting.
+                key: S.homebrewSelfTargeting,
+                name: 'WH40K.SETTINGS.HomebrewSelfTargeting.Name',
+                hint: 'WH40K.SETTINGS.HomebrewSelfTargeting.Hint',
                 scope: 'world',
                 config: true,
                 requiresReload: false,
