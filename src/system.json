@@ -1343,6 +1343,42 @@
             "flags": {}
         },
         {
+            "name": "dh2-core-items-malignancies",
+            "label": "DH2: Core Rulebook, Malignancies",
+            "path": "packs/dark-heresy-2/dh2-core-items-malignancies",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-core-items-mutations",
+            "label": "DH2: Core Rulebook, Mutations",
+            "path": "packs/dark-heresy-2/dh2-core-items-mutations",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-core-items-mental-disorders",
+            "label": "DH2: Core Rulebook, Mental Disorders",
+            "path": "packs/dark-heresy-2/dh2-core-items-mental-disorders",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-core-items-cybernetics",
             "label": "DH2: Core Rulebook, Cybernetics",
             "path": "packs/dark-heresy-2/dh2-core-items-cybernetics",
@@ -2224,6 +2260,18 @@
             "path": "packs/homebrew/hb-items-backgrounds",
             "system": "wh40k-rpg",
             "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-actors-ships",
+            "label": "Homebrew: DH2 Campaign Ships",
+            "path": "packs/homebrew/hb-dh2-actors-ships",
+            "system": "wh40k-rpg",
+            "type": "Actor",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -6445,6 +6493,9 @@
                         "dh2-core-items-weapon-qualities",
                         "dh2-core-items-weapons",
                         "dh2-core-items-wearables",
+                        "dh2-core-items-malignancies",
+                        "dh2-core-items-mutations",
+                        "dh2-core-items-mental-disorders",
                         "dh2-core-journals",
                         "dh2-core-journals-daemon-binding",
                         "dh2-core-locations",
@@ -6652,6 +6703,7 @@
                         "hb-generic-items-gear",
                         "hb-generic-items-tools",
                         "hb-generic-items-wearables",
+                        "hb-dh2-actors-ships",
                         "hb-items-actors",
                         "hb-items-armour",
                         "hb-items-backgrounds",
