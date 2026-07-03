@@ -4068,6 +4068,8 @@
             "Equipped": "Equipped",
             "Stowed": "Stowed",
             "ToggleEquipped": "Toggle Equipped",
+            "DrawWeapon": "Draw Weapon",
+            "HolsterWeapon": "Holster Weapon",
             "Identified": "Identified",
             "Unidentified": "Unidentified",
             "ConcealedStat": "???",
