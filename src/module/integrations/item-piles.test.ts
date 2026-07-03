@@ -10,7 +10,8 @@ import { dropItemAsItemPile, isItemPilesPile, registerItemPilesValuation, should
  */
 
 interface ApiStub {
-    createItemPile?: (options: { sceneId?: string; position?: { x: number; y: number }; items?: object[] }) => Promise<void>;
+    createItemPile?: (options: { sceneId?: string; position?: { x: number; y: number }; items?: object[] }) => Promise<string>;
+    addItems?: (target: object, items: object[], options?: object) => Promise<void>;
 }
 interface GameStub {
     modules: { get: (id: string) => { active: boolean } | undefined };
@@ -34,23 +35,40 @@ describe('dropItemAsItemPile (#385)', () => {
         expect(await dropItemAsItemPile({ name: 'X' }, POS, 'scene1')).toBe(false);
     });
 
-    it('returns false when Item Piles is active but exposes no createItemPile API', async () => {
+    it('returns false when Item Piles is active but exposes no createItemPile/addItems API', async () => {
         stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: {} } });
         expect(await dropItemAsItemPile({ name: 'X' }, POS, 'scene1')).toBe(false);
     });
 
-    it('routes the item through createItemPile and returns true when Item Piles is present', async () => {
-        const createItemPile = vi.fn().mockResolvedValue(undefined);
-        stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: { createItemPile } } });
+    it('creates the pile empty then populates it via an AWAITED addItems, returning true (#405)', async () => {
+        const createItemPile = vi.fn().mockResolvedValue('Scene.s1.Token.t1');
+        const addItems = vi.fn().mockResolvedValue([]);
+        const pile = { id: 't1' };
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue(pile));
+        stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: { createItemPile, addItems } } });
         const item = { name: 'Hand Cannon', type: 'weapon' };
         expect(await dropItemAsItemPile(item, POS, 'scene1')).toBe(true);
-        expect(createItemPile).toHaveBeenCalledWith({ sceneId: 'scene1', position: POS, items: [item] });
+        // Pile is created WITHOUT items (so createItemPile's fire-and-forget attach never runs)…
+        expect(createItemPile).toHaveBeenCalledWith({ sceneId: 'scene1', position: POS });
+        // …and the item is added through the awaited addItems, which resolves only once
+        // the item is really in the pile — so the caller can delete the source safely.
+        expect(addItems).toHaveBeenCalledWith(pile, [item]);
     });
 
-    it('falls back (returns false) when createItemPile rejects, so the caller uses the loot-actor path', async () => {
+    it('returns false (no addItems, so the caller keeps the source) when the pile uuid will not resolve (#405)', async () => {
+        const createItemPile = vi.fn().mockResolvedValue('bad-uuid');
+        const addItems = vi.fn();
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue(null));
+        stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: { createItemPile, addItems } } });
+        expect(await dropItemAsItemPile({ name: 'X' }, POS, 'scene1')).toBe(false);
+        expect(addItems).not.toHaveBeenCalled();
+    });
+
+    it('falls back (returns false) when pile creation throws, so the caller uses the loot-actor path', async () => {
         vi.spyOn(console, 'warn').mockImplementation((): void => {});
         const createItemPile = vi.fn().mockRejectedValue(new Error('boom'));
-        stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: { createItemPile } } });
+        const addItems = vi.fn();
+        stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: { createItemPile, addItems } } });
         expect(await dropItemAsItemPile({ name: 'X' }, POS, 'scene1')).toBe(false);
     });
 });
