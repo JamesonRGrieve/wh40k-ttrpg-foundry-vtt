@@ -203,9 +203,12 @@ interface SkillDescriptionLookup {
     getSkillDescription?: (key: string) => CachedSkillInfo | null;
 }
 
-/** Foundry CONFIG bag — Rogue Trader extension used by the quality builder. */
-interface RogueTraderConfigBag {
-    ROGUE_TRADER?: {
+/** Foundry CONFIG bag — the system's `wh40k` namespace (attached at init in
+ *  hooks-manager) exposes the weapon-quality lookup the quality tooltip uses.
+ *  Previously read `CONFIG.ROGUE_TRADER`, which is never assigned, so quality
+ *  tooltips rendered empty (#403). */
+interface WH40KConfigBag {
+    wh40k?: {
         getQualityDefinition?: (id: string) => QualityDefinition | null;
     };
 }
@@ -215,9 +218,9 @@ function getTooltipManager(): TooltipManager {
     return (game as unknown as { tooltip: TooltipManager }).tooltip;
 }
 
-function getRogueTraderConfig(): RogueTraderConfigBag['ROGUE_TRADER'] {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG is Foundry's untyped runtime bag; per-system extensions are opaque to fvtt-types.
-    return (CONFIG as unknown as RogueTraderConfigBag).ROGUE_TRADER;
+function getQualityConfig(): WH40KConfigBag['wh40k'] {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG is Foundry's untyped runtime bag; the system's wh40k namespace is attached after init.
+    return (CONFIG as unknown as WH40KConfigBag).wh40k;
 }
 
 function getSkillDescriptionLookup(): SkillDescriptionLookup | undefined {
@@ -952,7 +955,7 @@ export function prepareModifierTooltipData(title: string, sources: ModifierToolt
 }
 
 export function prepareQualityTooltipData(identifier: string, level: number | null = null): string {
-    const config = getRogueTraderConfig();
+    const config = getQualityConfig();
     if (config === undefined) return '{}';
     const def = config.getQualityDefinition?.(identifier) ?? null;
     if (def === null) return '{}';

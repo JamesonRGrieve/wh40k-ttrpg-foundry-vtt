@@ -23,6 +23,14 @@ import { NON_DROPPABLE_TYPES } from '../managers/non-droppable-types.ts';
  */
 const PILE_ACTOR_TYPE = 'loot';
 const ITEM_QUANTITY_ATTRIBUTE = 'system.quantity';
+// Item Piles' own world setting (SETTINGS.ACTOR_CLASS_TYPE = "actorClassType")
+// that its PrivateAPI._createItemPile reads to type the pile Actor. Item Piles
+// seeds this from a system's config only during its OWN init — before our
+// runtime addSystemIntegration on `item-piles-ready` — so for us it stays empty
+// and _createItemPile calls Actor.create({ type: undefined }), which our schema
+// rejects ("type may not be undefined"). We seed it ourselves (#402).
+const ITEM_PILES_MODULE_ID = 'item-piles';
+const ITEM_PILES_ACTOR_TYPE_SETTING = 'actorClassType';
 const ITEM_PRICE_ATTRIBUTE = 'system.price.value';
 const ITEM_CLASS_LOOT_TYPE = 'gear';
 const ITEM_CLASS_WEAPON_TYPE = 'weapon';
@@ -104,21 +112,60 @@ export function registerItemPilesValuation(): void {
     const hooksOnce = Hooks.once.bind(Hooks) as (event: string, fn: (...args: any[]) => unknown) => number;
     /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-deprecated, no-restricted-syntax */
     hooksOnce('item-piles-ready', () => {
-        try {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item-piles is a third-party module global not present in our type surface
-            const api = (game as unknown as { itempiles?: { API?: ItemPilesApiLike } }).itempiles?.API;
-            const config = buildItemPilesConfig();
-            if (typeof api?.addSystemIntegration === 'function') {
-                api.addSystemIntegration(config);
-            } else {
-                console.warn(
-                    `${SYSTEM_ID} | Item Piles present but API.addSystemIntegration is unavailable; configure ITEM_PRICE_ATTRIBUTE='system.price.value' and the currencies manually (docs/VALUATION.md).`,
-                );
-            }
-        } catch (err) {
-            console.warn(`${SYSTEM_ID} | Item Piles integration failed; configure manually per docs/VALUATION.md.`, err);
-        }
+        void applyItemPilesReady();
     });
+}
+
+/**
+ * Whether Item Piles' pile-actor-type setting needs seeding — true when it is
+ * unset or blank (the state that makes `_createItemPile` build an actor with an
+ * undefined `type`). Pure; unit-tested (#402).
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: validates Foundry's untyped ClientSettings value; narrowed by the typeof guard on the next line.
+export function shouldSeedPileActorType(current: unknown): boolean {
+    return typeof current !== 'string' || current.trim() === '';
+}
+
+/**
+ * Seed Item Piles' `actorClassType` world setting to our `loot` pile type when
+ * Item Piles left it empty, so `PrivateAPI._createItemPile` types the pile Actor
+ * validly instead of `undefined` (#402). Only the GM may write a world setting,
+ * and seeding it once is enough for every client; guarded on the setting being
+ * registered so an Item Piles key rename degrades to a no-op.
+ */
+async function ensurePileActorType(): Promise<void> {
+    if (!game.user.isGM) return;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: item-piles is a third-party module; its settings namespace/keys are outside fvtt-types' ClientSettings registry.
+    const settings = game.settings as unknown as {
+        settings: { has: (key: string) => boolean };
+        get: (namespace: string, key: string) => string | undefined;
+        set: (namespace: string, key: string, value: string) => Promise<void>;
+    };
+    if (!settings.settings.has(`${ITEM_PILES_MODULE_ID}.${ITEM_PILES_ACTOR_TYPE_SETTING}`)) return;
+    if (!shouldSeedPileActorType(settings.get(ITEM_PILES_MODULE_ID, ITEM_PILES_ACTOR_TYPE_SETTING))) return;
+    await settings.set(ITEM_PILES_MODULE_ID, ITEM_PILES_ACTOR_TYPE_SETTING, PILE_ACTOR_TYPE);
+}
+
+/**
+ * Apply the wh40k-rpg ↔ Item Piles integration once Item Piles is ready: register
+ * the system config, then seed the pile actor type so canvas item drops create a
+ * valid `loot` pile (#402). No-op on API mismatch (manual config in VALUATION.md).
+ */
+async function applyItemPilesReady(): Promise<void> {
+    try {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item-piles is a third-party module global not present in our type surface
+        const api = (game as unknown as { itempiles?: { API?: ItemPilesApiLike } }).itempiles?.API;
+        if (typeof api?.addSystemIntegration !== 'function') {
+            console.warn(
+                `${SYSTEM_ID} | Item Piles present but API.addSystemIntegration is unavailable; configure ITEM_PRICE_ATTRIBUTE='system.price.value' and the currencies manually (docs/VALUATION.md).`,
+            );
+            return;
+        }
+        api.addSystemIntegration(buildItemPilesConfig());
+        await ensurePileActorType();
+    } catch (err) {
+        console.warn(`${SYSTEM_ID} | Item Piles integration failed; configure manually per docs/VALUATION.md.`, err);
+    }
 }
 
 /** Resolve the Item Piles API when the module is active, else undefined. */
