@@ -2783,6 +2783,8 @@ export type I18nKey =
     | 'WH40K.Roll.WeaponAttack'
     | 'WH40K.SETTINGS.AutoApplyDamage.Hint'
     | 'WH40K.SETTINGS.AutoApplyDamage.Name'
+    | 'WH40K.SETTINGS.AutoCoverLos.Hint'
+    | 'WH40K.SETTINGS.AutoCoverLos.Name'
     | 'WH40K.SETTINGS.AutoPsychicPhenomena.Hint'
     | 'WH40K.SETTINGS.AutoPsychicPhenomena.Name'
     | 'WH40K.SETTINGS.AutoRollDamage.Hint'

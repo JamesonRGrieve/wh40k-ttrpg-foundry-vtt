@@ -42,6 +42,7 @@ import {
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
 import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import { detectTargetVisibility } from '../../utils/cover-geometry.ts';
 import { buildDifficultyPresets, type DifficultyPreset } from '../../utils/difficulty-presets.ts';
 import { formatSigned } from '../../utils/format.ts';
 import { calculateTokenDistance, RANGE_BRACKETS, tokenElevation } from '../../utils/range-calculator.ts';
@@ -1584,6 +1585,17 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             this._activeCombatSituationals.add(highGround);
             this._autoSituationals.add(highGround);
         }
+
+        // #406: opt-in auto line-of-sight + cover from the scene's walls. Off by
+        // default (the canvas geometry needs live/e2e verification), so this is a
+        // no-op unless the GM enables the setting.
+        if (WH40KSettings.isAutoCoverLos()) {
+            const coverKey = this.#detectTargetCoverKey();
+            if (coverKey !== null) {
+                this._activeCombatSituationals.add(coverKey);
+                this._autoSituationals.add(coverKey);
+            }
+        }
     }
 
     /**
@@ -1593,18 +1605,41 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      * level/below the target, or the wrong attack type for the mode).
      */
     #deriveHighGroundKey(isRanged: boolean): 'higherGround' | 'highGround' | null {
-        const rd = this.rollData;
-        const mode = highGroundMode((rd.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
+        const mode = highGroundMode((this.rollData.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
         if (mode === 'none') return null;
-        type ActorToken = foundry.canvas.placeables.Token;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor exposes loose token accessors not yet in the fvtt-types surface here.
-        const source = rd.sourceActor as unknown as { token?: ActorToken | null; getActiveTokens: () => ActorToken[] } | null;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor exposes loose token accessors not yet in the fvtt-types surface here.
-        const targetActor = rd.targetActor as unknown as { token?: ActorToken | null; getActiveTokens: () => ActorToken[] } | null;
-        const sourceToken = source?.token ?? source?.getActiveTokens()[0];
-        const targetToken = targetActor?.token ?? targetActor?.getActiveTokens()[0];
-        if (sourceToken == null || targetToken == null) return null;
+        const { sourceToken, targetToken } = this.#activeTokenPair();
+        if (sourceToken === null || targetToken === null) return null;
         return appliesHighGround(mode, isRanged, tokenElevation(sourceToken), tokenElevation(targetToken)) ? highGroundKey(mode) : null;
+    }
+
+    /**
+     * Auto-detect the target's cover situational key from the attacker→target
+     * wall geometry (#406, opt-in). Returns the coverMedium/coverHeavy key, or
+     * null when there is no cover, either token is off-scene, or the canvas
+     * collision backend is unavailable (graceful degradation).
+     */
+    #detectTargetCoverKey(): 'coverMedium' | 'coverHeavy' | null {
+        const { sourceToken, targetToken } = this.#activeTokenPair();
+        if (sourceToken === null || targetToken === null) return null;
+        return detectTargetVisibility(sourceToken, targetToken)?.coverKey ?? null;
+    }
+
+    /**
+     * Resolve the attacker's and target's placed tokens (linked or first active),
+     * or nulls when either is off-scene. Shared by the elevation (#407) and cover
+     * (#406) geometry checks.
+     */
+    #activeTokenPair(): { sourceToken: foundry.canvas.placeables.Token | null; targetToken: foundry.canvas.placeables.Token | null } {
+        const rd = this.rollData;
+        type ActorToken = foundry.canvas.placeables.Token;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor exposes loose token accessors not on the fvtt-types surface here.
+        const source = rd.sourceActor as unknown as { token?: ActorToken | null; getActiveTokens: () => ActorToken[] } | null;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor exposes loose token accessors not on the fvtt-types surface here.
+        const targetActor = rd.targetActor as unknown as { token?: ActorToken | null; getActiveTokens: () => ActorToken[] } | null;
+        return {
+            sourceToken: source?.token ?? source?.getActiveTokens()[0] ?? null,
+            targetToken: targetActor?.token ?? targetActor?.getActiveTokens()[0] ?? null,
+        };
     }
 
     /**

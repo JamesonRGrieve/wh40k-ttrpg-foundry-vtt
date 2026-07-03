@@ -59,6 +59,7 @@ export class WH40KSettings {
         requireCombatToAttack: 'require-combat-to-attack',
         warbandSubtlety: 'warband-subtlety',
         homebrewSelfTargeting: 'homebrew-self-targeting',
+        autoCoverLos: 'auto-cover-los',
     };
 
     /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
@@ -276,6 +277,19 @@ export class WH40KSettings {
         }
     }
 
+    /** When true, the attack dialog auto-detects line of sight + full/half cover
+     *  by ray-casting the attacker→target geometry against the scene's walls, and
+     *  auto-selects the cover situational (#406). Off by default: the canvas
+     *  geometry needs verification on real scenes before it should drive rolls.
+     *  Safe to call before the setting is registered (returns false). */
+    static isAutoCoverLos(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.autoCoverLos) === true;
+        } catch {
+            return false;
+        }
+    }
+
     /** The world's primary 40K RPG line; default dh2. Safe to call before settings init. */
     static getPrimaryGameSystem(): GameSystemId {
         try {
@@ -455,6 +469,18 @@ export class WH40KSettings {
                 key: S.homebrewSelfTargeting,
                 name: 'WH40K.SETTINGS.HomebrewSelfTargeting.Name',
                 hint: 'WH40K.SETTINGS.HomebrewSelfTargeting.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: false,
+                default: false,
+                type: Boolean,
+            },
+            {
+                // Auto line-of-sight + full/half cover from scene walls (#406).
+                // Off by default until the canvas geometry is verified on real scenes.
+                key: S.autoCoverLos,
+                name: 'WH40K.SETTINGS.AutoCoverLos.Name',
+                hint: 'WH40K.SETTINGS.AutoCoverLos.Hint',
                 scope: 'world',
                 config: true,
                 requiresReload: false,
