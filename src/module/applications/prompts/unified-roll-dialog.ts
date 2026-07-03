@@ -27,6 +27,7 @@ import {
     isMeleeSpecialOption,
 } from '../../rules/attack-options.ts';
 import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
+import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/high-ground.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import { availableSkillVariants, filterModifiersByVariant, type SkillVariant } from '../../rules/skill-variants.ts';
 import {
@@ -43,7 +44,7 @@ import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { buildDifficultyPresets, type DifficultyPreset } from '../../utils/difficulty-presets.ts';
 import { formatSigned } from '../../utils/format.ts';
-import { calculateTokenDistance, RANGE_BRACKETS } from '../../utils/range-calculator.ts';
+import { calculateTokenDistance, RANGE_BRACKETS, tokenElevation } from '../../utils/range-calculator.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
@@ -1574,6 +1575,36 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             this._activeCombatSituationals.add(key);
             this._autoSituationals.add(key);
         }
+
+        // #407: RAW Higher Ground — when the attacker's token is above the
+        // target's and the line's high-ground mode matches the attack type,
+        // auto-select the +10 (melee `higherGround` / ranged `highGround`).
+        const highGround = this.#deriveHighGroundKey(isRanged);
+        if (highGround !== null) {
+            this._activeCombatSituationals.add(highGround);
+            this._autoSituationals.add(highGround);
+        }
+    }
+
+    /**
+     * Resolve the RAW Higher Ground situational key (#407) from the attacker's
+     * and target's token elevations and the active line's high-ground mode, or
+     * null when it doesn't apply (line without the rule, missing tokens, attacker
+     * level/below the target, or the wrong attack type for the mode).
+     */
+    #deriveHighGroundKey(isRanged: boolean): 'higherGround' | 'highGround' | null {
+        const rd = this.rollData;
+        const mode = highGroundMode((rd.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
+        if (mode === 'none') return null;
+        type ActorToken = foundry.canvas.placeables.Token;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor exposes loose token accessors not yet in the fvtt-types surface here.
+        const source = rd.sourceActor as unknown as { token?: ActorToken | null; getActiveTokens: () => ActorToken[] } | null;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor exposes loose token accessors not yet in the fvtt-types surface here.
+        const targetActor = rd.targetActor as unknown as { token?: ActorToken | null; getActiveTokens: () => ActorToken[] } | null;
+        const sourceToken = source?.token ?? source?.getActiveTokens()[0];
+        const targetToken = targetActor?.token ?? targetActor?.getActiveTokens()[0];
+        if (sourceToken == null || targetToken == null) return null;
+        return appliesHighGround(mode, isRanged, tokenElevation(sourceToken), tokenElevation(targetToken)) ? highGroundKey(mode) : null;
     }
 
     /**
