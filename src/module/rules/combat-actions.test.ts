@@ -1,5 +1,16 @@
-import { describe, expect, it } from 'vitest';
-import { allCombatActions } from './combat-actions';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { allCombatActions, calculateCombatActionModifier, type CombatActionModifierInput } from './combat-actions';
+
+function mockRollData(action: string, weaponAttackBonus: number): CombatActionModifierInput {
+    return {
+        actions: { [action]: action },
+        action,
+        isCalledShot: false,
+        calledShotLocation: '',
+        // The weapon's own attackBonus lives on modifiers['attack'] (set by RollData.update()).
+        modifiers: { attack: weaponAttackBonus },
+    };
+}
 
 /**
  * Combat actions registry coverage (#119) — core.md §"Actions in Combat"
@@ -110,5 +121,46 @@ describe('combat-actions registry (#119)', () => {
                 expect(validTypes.has(t), `unexpected type "${t}" on ${action.name}`).toBe(true);
             }
         }
+    });
+});
+
+describe('calculateCombatActionModifier — combat-action modifier keying (#408)', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    function stubGame(): void {
+        vi.stubGlobal('game', { wh40k: { log: (): void => {} } });
+    }
+
+    it('Called Shot applies -20 via its OWN key without clobbering the weapon attackBonus', () => {
+        stubGame();
+        const rd = mockRollData('Called Shot', 5); // weapon carries +5 attackBonus
+        calculateCombatActionModifier(rd);
+        // The Called Shot -20 lands on combat-action, the +5 weapon bonus survives on attack —
+        // previously they shared modifiers['attack'] and the -20 was silently dropped.
+        expect(rd.modifiers['combat-action']).toBe(-20);
+        expect(rd.modifiers['attack']).toBe(5);
+        expect(rd.isCalledShot).toBe(true);
+    });
+
+    it('Standard Attack keys 0 on combat-action and leaves the weapon attackBonus intact', () => {
+        stubGame();
+        const rd = mockRollData('Standard Attack', 5);
+        calculateCombatActionModifier(rd);
+        expect(rd.modifiers['combat-action']).toBe(0);
+        expect(rd.modifiers['attack']).toBe(5);
+        expect(rd.isCalledShot).toBe(false);
+    });
+
+    it('Charge (+20) and All Out Attack (+30) key their bonus on combat-action', () => {
+        stubGame();
+        const charge = mockRollData('Charge', 0);
+        calculateCombatActionModifier(charge);
+        expect(charge.modifiers['combat-action']).toBe(20);
+
+        const allOut = mockRollData('All Out Attack', 0);
+        calculateCombatActionModifier(allOut);
+        expect(allOut.modifiers['combat-action']).toBe(30);
     });
 });

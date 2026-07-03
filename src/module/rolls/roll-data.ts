@@ -371,6 +371,7 @@ export class WeaponRollData extends RollData {
     initialize(): void {
         this.baseTarget = 0;
         this.modifiers['attack'] = 0;
+        this.modifiers['combat-action'] = 0;
         this.modifiers['difficulty'] = 0;
         this.modifiers['aim'] = 0;
         this.modifiers['modifier'] = 0;

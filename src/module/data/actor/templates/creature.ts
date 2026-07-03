@@ -8,7 +8,7 @@ import { coerceInt } from '../../fields/coerce.ts';
 import { applyCharacteristicRollData, computeCharacteristicTotals } from '../../shared/characteristic-math.ts';
 import { CHARACTERISTIC_SHORT_TO_FULL } from '../../shared/characteristics.ts';
 import { clampSize, coerceIntFields, sizeNameToInt } from '../../shared/field-coercion.ts';
-import { computeMovement } from '../../shared/movement-math.ts';
+import { computeMovement, sumMovementModifiers } from '../../shared/movement-math.ts';
 import { asRawSource, type RawSource } from '../../shared/raw-source.ts';
 import { SKILL_DEFINITIONS } from '../../shared/skill-definitions.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../../shared/stat-fields.ts';
@@ -1476,8 +1476,15 @@ export default class CreatureTemplate extends CommonTemplate {
         const ab = agility.bonus;
         const sb = strength.bonus;
 
+        // #409: fold collected movement modifiers (e.g. a stim/drug granting +N
+        // movement — key 'movement' on an item/effect) into the base move rate, so
+        // all four rates (half/full/charge/run) scale together and stay consistent
+        // multiples (×1/×2/×3/×6). Previously these were gathered into
+        // modifierSources.movement but never applied.
+        const moveMod = sumMovementModifiers(this.modifierSources.movement);
+
         // Movement based on AB + Size adjustment (PCs take raw values, no floors).
-        const { half, full, charge, run } = computeMovement(ab, this.size, false);
+        const { half, full, charge, run } = computeMovement(ab + moveMod, this.size, false);
         this.movement.half = half;
         this.movement.full = full;
         this.movement.charge = charge;
