@@ -243,6 +243,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
             {
               "choices": undefined,
               "config": true,
+              "default": "false",
+              "key": "auto-cover-los",
+              "requiresReload": false,
+              "scope": "world",
+              "type": "Boolean",
+            },
+            {
+              "choices": undefined,
+              "config": true,
               "default": "0",
               "key": "characteristic-offset",
               "requiresReload": undefined,
