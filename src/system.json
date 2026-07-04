@@ -26,273 +26,494 @@
             "path": "lang/en.json"
         }
     ],
-    "esmodules": ["module/wh40k-rpg.js"],
-    "styles": ["css/entry.css"],
+    "esmodules": [
+        "module/wh40k-rpg.js"
+    ],
+    "styles": [
+        "css/entry.css"
+    ],
     "scripts": [],
     "documentTypes": {
         "Actor": {
             "dh2-character": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "dh2-npc": {
-                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+                "htmlFields": [
+                    "description",
+                    "tactics",
+                    "specialAbilities",
+                    "quickNotes"
+                ]
             },
             "dh2-vehicle": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "dh1-character": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "dh1-npc": {
-                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+                "htmlFields": [
+                    "description",
+                    "tactics",
+                    "specialAbilities",
+                    "quickNotes"
+                ]
             },
             "dh1-vehicle": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "rt-character": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "rt-npc": {
-                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+                "htmlFields": [
+                    "description",
+                    "tactics",
+                    "specialAbilities",
+                    "quickNotes"
+                ]
             },
             "rt-vehicle": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "rt-starship": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "bc-character": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "bc-npc": {
-                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+                "htmlFields": [
+                    "description",
+                    "tactics",
+                    "specialAbilities",
+                    "quickNotes"
+                ]
             },
             "bc-vehicle": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "ow-character": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "ow-npc": {
-                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+                "htmlFields": [
+                    "description",
+                    "tactics",
+                    "specialAbilities",
+                    "quickNotes"
+                ]
             },
             "ow-vehicle": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "dw-character": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "dw-npc": {
-                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+                "htmlFields": [
+                    "description",
+                    "tactics",
+                    "specialAbilities",
+                    "quickNotes"
+                ]
             },
             "dw-vehicle": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "im-character": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "im-npc": {
-                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+                "htmlFields": [
+                    "description",
+                    "tactics",
+                    "specialAbilities",
+                    "quickNotes"
+                ]
             },
             "im-vehicle": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "character": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "npc": {
-                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+                "htmlFields": [
+                    "description",
+                    "tactics",
+                    "specialAbilities",
+                    "quickNotes"
+                ]
             },
             "vehicle": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "starship": {
-                "htmlFields": ["details.biography"]
+                "htmlFields": [
+                    "details.biography"
+                ]
             },
             "loot": {
-                "htmlFields": ["description"]
+                "htmlFields": [
+                    "description"
+                ]
             },
             "dh2-terracraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "dh2-aircraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "dh1-terracraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "rt-terracraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "rt-aircraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "rt-voidcraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "bc-terracraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "ow-terracraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "ow-aircraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "dw-terracraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "dw-aircraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "im-terracraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "terracraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "aircraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "watercraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             },
             "voidcraft": {
-                "htmlFields": ["weapons", "specialRules"]
+                "htmlFields": [
+                    "weapons",
+                    "specialRules"
+                ]
             }
         },
         "Item": {
             "ammunition": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "aptitude": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "armour": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "armourModification": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "attackSpecial": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "backpack": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "condition": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "consumable": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "criticalInjury": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "cybernetic": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "drug": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "endeavour": {
-                "htmlFields": ["description.value", "reward.narrative"]
+                "htmlFields": [
+                    "description.value",
+                    "reward.narrative"
+                ]
             },
             "enemy": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "forceField": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "gear": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "journalEntry": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "lead": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "malignancy": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "mentalDisorder": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "miscellaneous": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "mutation": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "navigatorPower": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "npcTemplate": {
-                "htmlFields": ["description", "tactics", "specialAbilities"]
+                "htmlFields": [
+                    "description",
+                    "tactics",
+                    "specialAbilities"
+                ]
             },
             "order": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "originPath": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "peer": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "psychicPower": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "ritual": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "shipComponent": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "shipRole": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "shipUpgrade": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "shipWeapon": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "skill": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "specialAbility": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "storageLocation": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "talent": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "tool": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "trait": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "vehicleTrait": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "vehicleUpgrade": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "weapon": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "weaponModification": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "weaponQuality": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             },
             "location": {
-                "htmlFields": ["description.value"]
+                "htmlFields": [
+                    "description.value"
+                ]
             }
         },
         "JournalEntryPage": {}
@@ -2231,6 +2452,30 @@
             "flags": {}
         },
         {
+            "name": "dw-core-actors-bestiary",
+            "label": "DW: Core Rulebook, Bestiary",
+            "path": "packs/deathwatch/dw-core-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-core-actors-npcs",
+            "label": "DW: Core Rulebook, Named Individuals",
+            "path": "packs/deathwatch/dw-core-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dw-xenos-actors-bestiary",
             "label": "DW: Mark of the Xenos, Bestiary",
             "path": "packs/deathwatch/dw-xenos-actors-bestiary",
@@ -2260,6 +2505,18 @@
             "path": "packs/homebrew/hb-items-backgrounds",
             "system": "wh40k-rpg",
             "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-actors-bestiary",
+            "label": "Homebrew: DH2 Bestiary",
+            "path": "packs/homebrew/hb-dh2-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -3412,6 +3669,42 @@
             "path": "packs/only-war/ow-core-items-weapon-qualities",
             "system": "wh40k-rpg",
             "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "ow-core-actors-bestiary",
+            "label": "OW: Core Rulebook, Bestiary",
+            "path": "packs/only-war/ow-core-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "ow-core-actors-npcs",
+            "label": "OW: Core Rulebook, NPCs",
+            "path": "packs/only-war/ow-core-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "ow-core-vehicles-terracraft",
+            "label": "OW: Core Rulebook, Vehicles (Terracraft)",
+            "path": "packs/only-war/ow-core-vehicles-terracraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -6309,6 +6602,102 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "rt-hostile-actors-bestiary",
+            "label": "RT: Hostile Acquisitions, Bestiary",
+            "path": "packs/rogue-trader/rt-hostile-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-hostile-actors-npcs",
+            "label": "RT: Hostile Acquisitions, NPCs",
+            "path": "packs/rogue-trader/rt-hostile-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-faith-actors-bestiary",
+            "label": "RT: Faith and Coin, Bestiary",
+            "path": "packs/rogue-trader/rt-faith-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-faith-actors-npcs",
+            "label": "RT: Faith and Coin, NPCs",
+            "path": "packs/rogue-trader/rt-faith-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-tau-actors-bestiary",
+            "label": "RT: Tau Character Guide, Bestiary",
+            "path": "packs/rogue-trader/rt-tau-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-navis-actors-bestiary",
+            "label": "RT: The Navis Primer, Bestiary",
+            "path": "packs/rogue-trader/rt-navis-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-navis-actors-npcs",
+            "label": "RT: The Navis Primer, NPCs",
+            "path": "packs/rogue-trader/rt-navis-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-shedding-actors-bestiary",
+            "label": "RT: Shedding Light, Bestiary",
+            "path": "packs/rogue-trader/rt-shedding-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
@@ -6319,7 +6708,9 @@
             "folders": [
                 {
                     "name": "Binding Contracts",
-                    "packs": ["bc-binding-items-traits"]
+                    "packs": [
+                        "bc-binding-items-traits"
+                    ]
                 },
                 {
                     "name": "Broken Chains",
@@ -6354,11 +6745,20 @@
                 },
                 {
                     "name": "Game Master's Kit",
-                    "packs": ["bc-gmkit-actors-bestiary", "bc-gmkit-actors-npcs", "bc-gmkit-items-gear", "bc-gmkit-items-weapons"]
+                    "packs": [
+                        "bc-gmkit-actors-bestiary",
+                        "bc-gmkit-actors-npcs",
+                        "bc-gmkit-items-gear",
+                        "bc-gmkit-items-weapons"
+                    ]
                 },
                 {
                     "name": "Hand of Corruption",
-                    "packs": ["bc-corruption-actors-bestiary", "bc-corruption-actors-npcs", "bc-corruption-items-gear"]
+                    "packs": [
+                        "bc-corruption-actors-bestiary",
+                        "bc-corruption-actors-npcs",
+                        "bc-corruption-items-gear"
+                    ]
                 },
                 {
                     "name": "Tome of Blood",
@@ -6373,7 +6773,13 @@
                 },
                 {
                     "name": "Tome of Decay",
-                    "packs": ["bc-decay-items-ammo", "bc-decay-items-gear", "bc-decay-items-rituals", "bc-decay-items-weapons", "bc-decay-origins-archetypes"]
+                    "packs": [
+                        "bc-decay-items-ammo",
+                        "bc-decay-items-gear",
+                        "bc-decay-items-rituals",
+                        "bc-decay-items-weapons",
+                        "bc-decay-origins-archetypes"
+                    ]
                 },
                 {
                     "name": "Tome of Excess",
@@ -6402,7 +6808,9 @@
                 },
                 {
                     "name": "General",
-                    "packs": ["bc-adventures"]
+                    "packs": [
+                        "bc-adventures"
+                    ]
                 }
             ]
         },
@@ -6468,7 +6876,10 @@
             "folders": [
                 {
                     "name": "Character Creation Supplements",
-                    "packs": ["dh2-chargen-journals", "dh2-chargen-rolltables"]
+                    "packs": [
+                        "dh2-chargen-journals",
+                        "dh2-chargen-rolltables"
+                    ]
                 },
                 {
                     "name": "Core Rulebook",
@@ -6483,6 +6894,9 @@
                         "dh2-core-items-consumables",
                         "dh2-core-items-critical-injuries",
                         "dh2-core-items-cybernetics",
+                        "dh2-core-items-malignancies",
+                        "dh2-core-items-mental-disorders",
+                        "dh2-core-items-mutations",
                         "dh2-core-items-psychic-powers",
                         "dh2-core-items-skills",
                         "dh2-core-items-talents",
@@ -6493,17 +6907,12 @@
                         "dh2-core-items-weapon-qualities",
                         "dh2-core-items-weapons",
                         "dh2-core-items-wearables",
-                        "dh2-core-items-malignancies",
-                        "dh2-core-items-mutations",
-                        "dh2-core-items-mental-disorders",
                         "dh2-core-journals",
                         "dh2-core-journals-daemon-binding",
                         "dh2-core-locations",
                         "dh2-core-origins-backgrounds",
                         "dh2-core-origins-divinations",
                         "dh2-core-origins-elite-advances",
-                        "dh2-within-origins-elite-advances",
-                        "dh2-beyond-origins-elite-advances",
                         "dh2-core-origins-homeworlds",
                         "dh2-core-origins-roles",
                         "dh2-core-rolltables",
@@ -6528,6 +6937,7 @@
                         "dh2-beyond-journals",
                         "dh2-beyond-journals-daemon-binding",
                         "dh2-beyond-origins-backgrounds",
+                        "dh2-beyond-origins-elite-advances",
                         "dh2-beyond-origins-homeworlds",
                         "dh2-beyond-origins-roles",
                         "dh2-beyond-rolltables"
@@ -6550,6 +6960,7 @@
                         "dh2-within-journals",
                         "dh2-within-locations",
                         "dh2-within-origins-backgrounds",
+                        "dh2-within-origins-elite-advances",
                         "dh2-within-origins-homeworlds",
                         "dh2-within-origins-roles",
                         "dh2-within-rolltables",
@@ -6583,7 +6994,9 @@
                 },
                 {
                     "name": "Errata",
-                    "packs": ["dh2-errata-journals"]
+                    "packs": [
+                        "dh2-errata-journals"
+                    ]
                 },
                 {
                     "name": "Forgotten Gods",
@@ -6597,15 +7010,24 @@
                 },
                 {
                     "name": "Game Master's Kit",
-                    "packs": ["dh2-gmkit-actors-bestiary", "dh2-gmkit-journals", "dh2-gmscreen-journals", "dh2-gmscreen-rolltables"]
+                    "packs": [
+                        "dh2-gmkit-actors-bestiary",
+                        "dh2-gmkit-journals",
+                        "dh2-gmscreen-journals",
+                        "dh2-gmscreen-rolltables"
+                    ]
                 },
                 {
                     "name": "Scenes",
-                    "packs": ["dh2-scenes"]
+                    "packs": [
+                        "dh2-scenes"
+                    ]
                 },
                 {
                     "name": "General",
-                    "packs": ["dh2-adventures"]
+                    "packs": [
+                        "dh2-adventures"
+                    ]
                 }
             ]
         },
@@ -6616,11 +7038,17 @@
             "folders": [
                 {
                     "name": "Ark of Lost Souls",
-                    "packs": ["dw-ark-actors-bestiary", "dw-ark-actors-npcs", "dw-ark-items-weapons"]
+                    "packs": [
+                        "dw-ark-actors-bestiary",
+                        "dw-ark-actors-npcs",
+                        "dw-ark-items-weapons"
+                    ]
                 },
                 {
                     "name": "Core Rulebook",
                     "packs": [
+                        "dw-core-actors-bestiary",
+                        "dw-core-actors-npcs",
                         "dw-core-items-ammo",
                         "dw-core-items-armour",
                         "dw-core-items-gear",
@@ -6634,11 +7062,20 @@
                 },
                 {
                     "name": "First Founding",
-                    "packs": ["dw-founding-items-gear", "dw-founding-items-weapons", "dw-founding-origins-chapters"]
+                    "packs": [
+                        "dw-founding-items-gear",
+                        "dw-founding-items-weapons",
+                        "dw-founding-origins-chapters"
+                    ]
                 },
                 {
                     "name": "Game Master's Kit",
-                    "packs": ["dw-gmkit-actors-bestiary", "dw-gmkit-actors-npcs", "dw-gmkit-vehicles-aircraft", "dw-gmkit-vehicles-terracraft"]
+                    "packs": [
+                        "dw-gmkit-actors-bestiary",
+                        "dw-gmkit-actors-npcs",
+                        "dw-gmkit-vehicles-aircraft",
+                        "dw-gmkit-vehicles-terracraft"
+                    ]
                 },
                 {
                     "name": "Honour the Chapter",
@@ -6652,35 +7089,68 @@
                 },
                 {
                     "name": "Know No Fear",
-                    "packs": ["dw-knownofear-journals"]
+                    "packs": [
+                        "dw-knownofear-journals"
+                    ]
                 },
                 {
                     "name": "Mark of the Xenos",
-                    "packs": ["dw-xenos-actors-bestiary", "dw-xenos-actors-npcs", "dw-xenos-items-weapons"]
+                    "packs": [
+                        "dw-xenos-actors-bestiary",
+                        "dw-xenos-actors-npcs",
+                        "dw-xenos-items-weapons"
+                    ]
                 },
                 {
                     "name": "Rising Tempest",
-                    "packs": ["dw-tempest-actors-bestiary", "dw-tempest-actors-npcs"]
+                    "packs": [
+                        "dw-tempest-actors-bestiary",
+                        "dw-tempest-actors-npcs"
+                    ]
                 },
                 {
                     "name": "Rites of Battle",
-                    "packs": ["dw-rites-items-ammo", "dw-rites-items-armour", "dw-rites-items-gear", "dw-rites-items-weapons", "dw-rites-origins-chapters"]
+                    "packs": [
+                        "dw-rites-items-ammo",
+                        "dw-rites-items-armour",
+                        "dw-rites-items-gear",
+                        "dw-rites-items-weapons",
+                        "dw-rites-origins-chapters"
+                    ]
                 },
                 {
                     "name": "The Achilus Assault",
-                    "packs": ["dw-achilus-actors-bestiary", "dw-achilus-actors-npcs", "dw-achilus-journals"]
+                    "packs": [
+                        "dw-achilus-actors-bestiary",
+                        "dw-achilus-actors-npcs",
+                        "dw-achilus-journals"
+                    ]
                 },
                 {
                     "name": "The Emperor's Chosen",
-                    "packs": ["dw-chosen-items-armour", "dw-chosen-items-gear", "dw-chosen-items-weapons", "dw-chosen-journals"]
+                    "packs": [
+                        "dw-chosen-items-armour",
+                        "dw-chosen-items-gear",
+                        "dw-chosen-items-weapons",
+                        "dw-chosen-journals"
+                    ]
                 },
                 {
                     "name": "The Jericho Reach",
-                    "packs": ["dw-jericho-actors-bestiary", "dw-jericho-actors-npcs", "dw-jericho-journals"]
+                    "packs": [
+                        "dw-jericho-actors-bestiary",
+                        "dw-jericho-actors-npcs",
+                        "dw-jericho-journals"
+                    ]
                 },
                 {
                     "name": "The Outer Reach",
-                    "packs": ["dw-outer-actors-bestiary", "dw-outer-actors-npcs", "dw-outer-journals", "dw-outer-vehicles-aircraft"]
+                    "packs": [
+                        "dw-outer-actors-bestiary",
+                        "dw-outer-actors-npcs",
+                        "dw-outer-journals",
+                        "dw-outer-vehicles-aircraft"
+                    ]
                 }
             ]
         },
@@ -6693,6 +7163,8 @@
                     "name": "Homebrew",
                     "packs": [
                         "hb-bc-items-traits",
+                        "hb-dh2-actors-bestiary",
+                        "hb-dh2-actors-ships",
                         "hb-dh2-items-armour",
                         "hb-dh2-items-conditions",
                         "hb-dh2-items-misc",
@@ -6702,8 +7174,8 @@
                         "hb-generic-items-consumables",
                         "hb-generic-items-gear",
                         "hb-generic-items-tools",
+                        "hb-generic-items-vehicle-traits",
                         "hb-generic-items-wearables",
-                        "hb-dh2-actors-ships",
                         "hb-items-actors",
                         "hb-items-armour",
                         "hb-items-backgrounds",
@@ -6713,12 +7185,11 @@
                         "hb-rt-actors-bestiary",
                         "hb-rt-actors-npcs",
                         "hb-rt-items-armour",
+                        "hb-rt-items-ship-orders",
                         "hb-rt-items-talents",
                         "hb-rt-items-traits",
                         "hb-rt-journals-navigation",
-                        "hb-rt-vehicles-terracraft",
-                        "hb-generic-items-vehicle-traits",
-                        "hb-rt-items-ship-orders"
+                        "hb-rt-vehicles-terracraft"
                     ]
                 }
             ]
@@ -6730,7 +7201,12 @@
             "folders": [
                 {
                     "name": "Chemical Burn",
-                    "packs": ["im-chemical-actors-bestiary", "im-chemical-actors-npcs", "im-chemical-items-gear", "im-chemical-items-weapons"]
+                    "packs": [
+                        "im-chemical-actors-bestiary",
+                        "im-chemical-actors-npcs",
+                        "im-chemical-items-gear",
+                        "im-chemical-items-weapons"
+                    ]
                 },
                 {
                     "name": "Core Rulebook",
@@ -6776,7 +7252,9 @@
                 },
                 {
                     "name": "General",
-                    "packs": ["im-adventures"]
+                    "packs": [
+                        "im-adventures"
+                    ]
                 }
             ]
         },
@@ -6788,6 +7266,8 @@
                 {
                     "name": "Core Rulebook",
                     "packs": [
+                        "ow-core-actors-bestiary",
+                        "ow-core-actors-npcs",
                         "ow-core-items-ammo",
                         "ow-core-items-armour",
                         "ow-core-items-gear",
@@ -6802,12 +7282,16 @@
                         "ow-core-origins-regiment-types",
                         "ow-core-origins-special-equipment-doctrines",
                         "ow-core-origins-specialities",
-                        "ow-core-origins-training-doctrines"
+                        "ow-core-origins-training-doctrines",
+                        "ow-core-vehicles-terracraft"
                     ]
                 },
                 {
                     "name": "Eleventh Hour",
-                    "packs": ["ow-eleventh-actors-bestiary", "ow-eleventh-actors-npcs"]
+                    "packs": [
+                        "ow-eleventh-actors-bestiary",
+                        "ow-eleventh-actors-npcs"
+                    ]
                 },
                 {
                     "name": "Enemies of the Imperium",
@@ -6834,7 +7318,11 @@
                 },
                 {
                     "name": "Game Master's Kit",
-                    "packs": ["ow-gmkit-actors-bestiary", "ow-gmkit-actors-npcs", "ow-gmkit-vehicles-terracraft"]
+                    "packs": [
+                        "ow-gmkit-actors-bestiary",
+                        "ow-gmkit-actors-npcs",
+                        "ow-gmkit-vehicles-terracraft"
+                    ]
                 },
                 {
                     "name": "Hammer of the Emperor",
@@ -6884,7 +7372,9 @@
                 },
                 {
                     "name": "General",
-                    "packs": ["ow-adventures"]
+                    "packs": [
+                        "ow-adventures"
+                    ]
                 }
             ]
         },
@@ -6893,6 +7383,15 @@
             "color": "#7a5c00",
             "sorting": "a",
             "folders": [
+                {
+                    "name": "Battlefleet Koronus",
+                    "packs": [
+                        "rt-battlefleet-items-ship-components",
+                        "rt-battlefleet-items-ship-weapons",
+                        "rt-battlefleet-vehicles-aircraft",
+                        "rt-battlefleet-vehicles-voidcraft"
+                    ]
+                },
                 {
                     "name": "Edge of the Abyss",
                     "packs": [
@@ -6908,7 +7407,9 @@
                 },
                 {
                     "name": "Epoch Koronus",
-                    "packs": ["rt-epoch-journals"]
+                    "packs": [
+                        "rt-epoch-journals"
+                    ]
                 },
                 {
                     "name": "Faith and Coin",
@@ -6931,10 +7432,10 @@
                         "rt-hostile-items-armour",
                         "rt-hostile-items-gear",
                         "rt-hostile-items-ship-components",
+                        "rt-hostile-items-ship-weapons",
                         "rt-hostile-items-talents",
                         "rt-hostile-items-traits",
-                        "rt-hostile-items-weapons",
-                        "rt-hostile-items-ship-weapons"
+                        "rt-hostile-items-weapons"
                     ]
                 },
                 {
@@ -6946,6 +7447,7 @@
                         "rt-storm-items-navigator-powers",
                         "rt-storm-items-psychic-powers",
                         "rt-storm-items-ship-components",
+                        "rt-storm-items-ship-roles",
                         "rt-storm-items-ship-upgrades",
                         "rt-storm-items-ship-weapons",
                         "rt-storm-items-talents",
@@ -6959,21 +7461,16 @@
                         "rt-storm-origins-trials-and-travails",
                         "rt-storm-vehicles-aircraft",
                         "rt-storm-vehicles-terracraft",
-                        "rt-storm-vehicles-voidcraft",
-                        "rt-storm-items-ship-roles"
+                        "rt-storm-vehicles-voidcraft"
                     ]
                 },
                 {
                     "name": "Koronus Bestiary",
-                    "packs": ["rt-bestiary-actors-bestiary", "rt-bestiary-items-weapons", "rt-bestiary-items-gear", "rt-bestiary-journals"]
-                },
-                {
-                    "name": "Battlefleet Koronus",
                     "packs": [
-                        "rt-battlefleet-vehicles-voidcraft",
-                        "rt-battlefleet-vehicles-aircraft",
-                        "rt-battlefleet-items-ship-weapons",
-                        "rt-battlefleet-items-ship-components"
+                        "rt-bestiary-actors-bestiary",
+                        "rt-bestiary-items-gear",
+                        "rt-bestiary-items-weapons",
+                        "rt-bestiary-journals"
                     ]
                 },
                 {
@@ -7002,7 +7499,13 @@
                 },
                 {
                     "name": "The Dark Kin",
-                    "packs": ["rt-kin-items-talents", "rt-kin-items-traits", "rt-kin-items-weapons", "rt-kin-journals", "rt-kin-origins-careers"]
+                    "packs": [
+                        "rt-kin-items-talents",
+                        "rt-kin-items-traits",
+                        "rt-kin-items-weapons",
+                        "rt-kin-journals",
+                        "rt-kin-origins-careers"
+                    ]
                 },
                 {
                     "name": "The Navis Primer",
