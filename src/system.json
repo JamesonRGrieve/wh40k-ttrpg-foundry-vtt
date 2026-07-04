@@ -2452,6 +2452,30 @@
             "flags": {}
         },
         {
+            "name": "dw-core-rolltables",
+            "label": "DW: Core Rulebook, Tables",
+            "path": "packs/deathwatch/dw-core-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-core-journals",
+            "label": "DW: Core Rulebook, Rules & Lore",
+            "path": "packs/deathwatch/dw-core-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dw-core-actors-bestiary",
             "label": "DW: Core Rulebook, Bestiary",
             "path": "packs/deathwatch/dw-core-actors-bestiary",
@@ -6698,6 +6722,78 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "rt-hostile-vehicles-voidcraft",
+            "label": "RT: Hostile Acquisitions, Voidships",
+            "path": "packs/rogue-trader/rt-hostile-vehicles-voidcraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-gmkit-vehicles-voidcraft",
+            "label": "RT: Game Master's Kit, Voidships",
+            "path": "packs/rogue-trader/rt-gmkit-vehicles-voidcraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-lure-vehicles-voidcraft",
+            "label": "RT: Lure of the Expanse, Voidships",
+            "path": "packs/rogue-trader/rt-lure-vehicles-voidcraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-citadel-vehicles-voidcraft",
+            "label": "RT: Citadel of Skulls, Voidships",
+            "path": "packs/rogue-trader/rt-citadel-vehicles-voidcraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-frozen-vehicles-voidcraft",
+            "label": "RT: The Frozen Reaches, Voidships",
+            "path": "packs/rogue-trader/rt-frozen-vehicles-voidcraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-fallen-vehicles-voidcraft",
+            "label": "RT: Fallen Suns, Voidships",
+            "path": "packs/rogue-trader/rt-fallen-vehicles-voidcraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
@@ -7049,6 +7145,8 @@
                     "packs": [
                         "dw-core-actors-bestiary",
                         "dw-core-actors-npcs",
+                        "dw-core-journals",
+                        "dw-core-rolltables",
                         "dw-core-items-ammo",
                         "dw-core-items-armour",
                         "dw-core-items-gear",
