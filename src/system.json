@@ -6794,6 +6794,30 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "rt-frozen-vehicles-terracraft",
+            "label": "RT: The Frozen Reaches, Vehicles",
+            "path": "packs/rogue-trader/rt-frozen-vehicles-terracraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-citadel-vehicles-aircraft",
+            "label": "RT: Citadel of Skulls, Aircraft",
+            "path": "packs/rogue-trader/rt-citadel-vehicles-aircraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
