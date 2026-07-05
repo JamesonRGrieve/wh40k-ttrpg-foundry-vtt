@@ -6830,6 +6830,222 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "rt-reaver-journals",
+            "label": "RT: The Soul Reaver, Journals",
+            "path": "packs/rogue-trader/rt-reaver-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-stars-journals",
+            "label": "RT: Stars of Inequity, Journals",
+            "path": "packs/rogue-trader/rt-stars-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-navis-journals",
+            "label": "RT: The Navis Primer, Journals",
+            "path": "packs/rogue-trader/rt-navis-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-shedding-journals",
+            "label": "RT: Shedding Light, Journals",
+            "path": "packs/rogue-trader/rt-shedding-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-tau-journals",
+            "label": "RT: Tau Character Guide, Journals",
+            "path": "packs/rogue-trader/rt-tau-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-faith-journals",
+            "label": "RT: Faith and Coin, Journals",
+            "path": "packs/rogue-trader/rt-faith-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-battlefleet-journals",
+            "label": "RT: Battlefleet Koronus, Journals",
+            "path": "packs/rogue-trader/rt-battlefleet-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-hostile-journals",
+            "label": "RT: Hostile Acquisitions, Journals",
+            "path": "packs/rogue-trader/rt-hostile-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-storm-journals",
+            "label": "RT: Into the Storm, Journals",
+            "path": "packs/rogue-trader/rt-storm-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-reaver-rolltables",
+            "label": "RT: The Soul Reaver, Roll Tables",
+            "path": "packs/rogue-trader/rt-reaver-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-stars-rolltables",
+            "label": "RT: Stars of Inequity, Roll Tables",
+            "path": "packs/rogue-trader/rt-stars-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-bestiary-rolltables",
+            "label": "RT: The Koronus Bestiary, Roll Tables",
+            "path": "packs/rogue-trader/rt-bestiary-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-navis-rolltables",
+            "label": "RT: The Navis Primer, Roll Tables",
+            "path": "packs/rogue-trader/rt-navis-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-tau-rolltables",
+            "label": "RT: Tau Character Guide, Roll Tables",
+            "path": "packs/rogue-trader/rt-tau-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-faith-rolltables",
+            "label": "RT: Faith and Coin, Roll Tables",
+            "path": "packs/rogue-trader/rt-faith-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-battlefleet-rolltables",
+            "label": "RT: Battlefleet Koronus, Roll Tables",
+            "path": "packs/rogue-trader/rt-battlefleet-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-hostile-rolltables",
+            "label": "RT: Hostile Acquisitions, Roll Tables",
+            "path": "packs/rogue-trader/rt-hostile-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-storm-rolltables",
+            "label": "RT: Into the Storm, Roll Tables",
+            "path": "packs/rogue-trader/rt-storm-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
