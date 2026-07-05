@@ -6818,6 +6818,18 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "rt-adventures",
+            "label": "RT: Rogue Trader Adventures",
+            "path": "packs/rogue-trader/rt-adventures",
+            "system": "wh40k-rpg",
+            "type": "Adventure",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
