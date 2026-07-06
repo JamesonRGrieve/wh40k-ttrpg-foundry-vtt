@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeFrameTransform, parseTokenFrameFlag } from './token-mask.ts';
+import { computeFrameTransform, type FrameFlagSource, parseTokenFrameFlag, resolveTokenFrameFlag } from './token-mask.ts';
 
 describe('computeFrameTransform', () => {
     it('spans the content circle with the short side of portrait art', () => {
@@ -54,5 +54,34 @@ describe('parseTokenFrameFlag', () => {
             cy: 0.3,
             content: 0,
         });
+    });
+});
+
+describe('resolveTokenFrameFlag', () => {
+    const src = (ownFlag: object | boolean | undefined, protoFlag: object | boolean | undefined): FrameFlagSource => ({
+        document: { getFlag: (_s: string, _k: string) => ownFlag },
+        actor: { prototypeToken: { getFlag: (_s: string, _k: string) => protoFlag } },
+    });
+
+    it("uses the token's own flag when present", () => {
+        expect(resolveTokenFrameFlag(src({ cx: 0.4 }, { cx: 0.9 }))).toEqual({ cx: 0.4 });
+    });
+
+    it('honours an explicit false on the token (opt-out) without falling back', () => {
+        // A token deliberately set to tokenFrame=false must NOT inherit the actor's frame.
+        expect(resolveTokenFrameFlag(src(false, { cx: 0.9 }))).toBe(false);
+    });
+
+    it('falls back to the actor prototype flag when the token has none', () => {
+        // The bug: a token placed before the actor gained its portrait framing has
+        // no own flag (undefined) and must inherit the prototype's frame on refresh.
+        expect(resolveTokenFrameFlag(src(undefined, { cx: 0.6, cy: 0.25 }))).toEqual({ cx: 0.6, cy: 0.25 });
+        expect(resolveTokenFrameFlag(src(undefined, true))).toBe(true);
+    });
+
+    it('returns undefined when neither the token nor the prototype carries a flag', () => {
+        expect(resolveTokenFrameFlag(src(undefined, undefined))).toBeUndefined();
+        expect(resolveTokenFrameFlag({ document: { getFlag: () => undefined }, actor: null })).toBeUndefined();
+        expect(resolveTokenFrameFlag({ document: { getFlag: () => undefined } })).toBeUndefined();
     });
 });

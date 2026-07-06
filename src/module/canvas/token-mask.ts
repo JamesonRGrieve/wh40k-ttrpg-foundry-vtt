@@ -73,11 +73,37 @@ export function parseTokenFrameFlag(value: object | boolean | undefined | null):
     };
 }
 
+/** Minimal shape needed to resolve a token's frame flag: the token's own
+ *  document plus its actor's prototype token. */
+export interface FrameFlagSource {
+    document: { getFlag: (scope: string, key: string) => object | boolean | undefined };
+    actor?: { prototypeToken?: { getFlag?: (scope: string, key: string) => object | boolean | undefined } | null } | null;
+}
+
+/**
+ * Resolve the `tokenFrame` flag for a placed token. The token's OWN document
+ * flag wins — including an explicit `false`, which opts a specific token out of
+ * the circular bust. Only when the document carries no flag at all (`undefined`)
+ * do we fall back to the actor's prototype-token flag.
+ *
+ * The fallback fixes tokens dropped on a scene BEFORE the actor gained its
+ * portrait framing: Foundry copies `prototypeToken.flags` onto a token only at
+ * creation time, so those pre-existing tokens never receive the flag and would
+ * render the full rectangular portrait forever after. Reading through to the
+ * prototype makes them pick up the bust on the next refresh, matching a
+ * freshly-dragged token — no per-token document migration required.
+ */
+export function resolveTokenFrameFlag(token: FrameFlagSource): object | boolean | undefined {
+    const own = token.document.getFlag(SYSTEM_ID, 'tokenFrame');
+    if (own !== undefined) return own;
+    return token.actor?.prototypeToken?.getFlag?.(SYSTEM_ID, 'tokenFrame');
+}
+
 interface MeshLike {
     texture: PIXI.Texture;
 }
 
-interface MaskableToken {
+interface MaskableToken extends FrameFlagSource {
     document: {
         getFlag: (scope: string, key: string) => object | boolean | undefined;
         texture: { src: string | null };
@@ -119,7 +145,7 @@ function buildBustTexture(source: PIXI.Texture, frame: Required<TokenFrameFlag>,
  * each refresh and is a no-op when the mesh already shows our bust.
  */
 export function onRefreshToken(token: MaskableToken): void {
-    const frame = parseTokenFrameFlag(token.document.getFlag(SYSTEM_ID, 'tokenFrame'));
+    const frame = parseTokenFrameFlag(resolveTokenFrameFlag(token));
     if (frame === null) return;
     const mesh = token.mesh;
     if (mesh?.texture.valid !== true) return;
