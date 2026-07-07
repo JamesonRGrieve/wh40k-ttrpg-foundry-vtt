@@ -6,6 +6,14 @@
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
   <div>
 
+    {{!-- ═══ VITALS — FATIGUE (#420) ═══
+          Fatigue lives in the shared creature DataModel (system.fatigue), but the
+          NPC body never surfaced it, so it couldn't be set on aberrants etc. Reuse
+          the self-contained fatigue vital panel (steppers + Rest/Clear + edit body)
+          so fatigue is editable on NPCs alongside wounds. System-agnostic: the panel
+          renders identically for all seven game systems. --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/fatigue-panel.hbs}}
+
     {{!-- ═══ WEAPONS (#254) — surfaces the NPC's simple weapons + any embedded weapon items. ═══ --}}
     {{#if (or system.weapons.simple.length embeddedWeapons.length)}}
     <div class="wh40k-panel">

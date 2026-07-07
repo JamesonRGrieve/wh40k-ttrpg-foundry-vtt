@@ -12,6 +12,12 @@
 
 {{> systems/wh40k-rpg/templates/actor/partial/actor-identity.hbs withOriginBuilder=true}}
 
+{{!-- Divination line (#389). When the divination step carries a compendium
+     reference (system.originPath.divinationUuid — the structured bonus grant
+     from #316), render the omen quote as a clickable link that opens the
+     compendium entry via the shared `openUuid` action. Falls back to plain
+     text when no UUID is stored (legacy PCs / NPCs without a divination item).
+     Per-system safe: the UUID resolves against the actor's own game system. --}}
 {{#if system.originPath.divination}}
-<p class="tw-italic tw-opacity-60 tw-m-0 tw-text-center tw-text-xs tw-leading-snug tw-text-[var(--wh40k-text-muted)]">{{system.originPath.divination}}</p>
+<p class="tw-italic tw-opacity-60 tw-m-0 tw-text-center tw-text-xs tw-leading-snug tw-text-[var(--wh40k-text-muted)]">{{#if system.originPath.divinationUuid}}<a data-action="openUuid" data-uuid="{{system.originPath.divinationUuid}}" role="button" tabindex="0" class="tw-text-inherit tw-italic tw-underline tw-decoration-dotted tw-cursor-pointer hover:tw-opacity-100" data-tooltip="{{localize 'WH40K.OriginPath.OpenDivinationTooltip'}}" aria-label="{{localize 'WH40K.OriginPath.OpenDivinationTooltip'}}">{{system.originPath.divination}}</a>{{else}}{{system.originPath.divination}}{{/if}}</p>
 {{/if}}

@@ -706,6 +706,9 @@ export default class CharacterSheet extends BaseActorSheet {
         actions: {
             ...(BaseActorSheet.DEFAULT_OPTIONS.actions ?? {}),
             'viewFateUses': CharacterSheet.#viewFateUses,
+            // Open a compendium/world document from a clicked reference (#389 —
+            // divination line under the portrait; reusable for any data-uuid link).
+            'openUuid': CharacterSheet.#openUuid,
             // Combat actions
             'attack': CharacterSheet.#attack,
             'dodge': CharacterSheet.#dodge,
@@ -5203,6 +5206,35 @@ export default class CharacterSheet extends BaseActorSheet {
         FateUsesDialog.open({
             gameSystem: this._resolveGameSystemId(),
         });
+    }
+
+    /**
+     * Open a compendium/world document's sheet from a clicked reference control
+     * (#389). Reads the target UUID from `data-uuid`, resolves it via `fromUuid`,
+     * and renders the linked document's sheet. Used by the divination line under
+     * the portrait (the divination's compendium entry carries the mechanical
+     * bonus authored in #316); generic enough to back any `data-uuid` link.
+     * @this {CharacterSheet}
+     */
+    static async #openUuid(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const uuid = target.dataset['uuid'];
+        if (uuid === undefined || uuid === '') return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.fromUuid is loosely typed in fvtt-types
+        const fromUuidFn = (globalThis as unknown as { fromUuid?: (uuid: string) => Promise<unknown> }).fromUuid;
+        if (fromUuidFn === undefined) return;
+        let doc: { sheet?: { render: (force: boolean) => unknown } } | null = null;
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid resolves to unknown; the cast narrows to the render surface
+            doc = (await fromUuidFn(uuid)) as { sheet?: { render: (force: boolean) => unknown } } | null;
+        } catch {
+            doc = null;
+        }
+        const sheet = doc?.sheet;
+        if (sheet === undefined || sheet === null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.DivinationEntryMissing'));
+            return;
+        }
+        void sheet.render(true);
     }
 
     /**
