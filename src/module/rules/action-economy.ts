@@ -43,8 +43,10 @@ export function readActionsSpent(combatant: LooseCombatant | null | undefined): 
 
 /** Persist a combatant's spent-actions budget (no-op when setFlag is unavailable). */
 function writeActionsSpent(combatant: LooseCombatant | null | undefined, spent: ActionsSpent): void {
-    const setFlag = (combatant as FlagAccessor | null | undefined)?.setFlag;
-    if (typeof setFlag === 'function') void setFlag(SYSTEM_ID, ACTIONS_SPENT_FLAG, spent);
+    // Call ON the combatant so `this` binds — a detached `setFlag(...)` runs with
+    // this=undefined and throws inside Foundry ("reading 'constructor' of undefined").
+    const target = combatant as FlagAccessor | null | undefined;
+    if (typeof target?.setFlag === 'function') void target.setFlag(SYSTEM_ID, ACTIONS_SPENT_FLAG, spent);
 }
 
 /** Locate the combatant for an actor id in the active combat. */

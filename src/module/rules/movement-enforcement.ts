@@ -66,8 +66,10 @@ function readMovedMetres(combatant: LooseCombatant | null | undefined): number {
 
 /** Persist the per-turn moved-metres flag (no-op when setFlag is unavailable). */
 function writeMovedMetres(combatant: LooseCombatant | null | undefined, metres: number): void {
-    const setFlag = (combatant as FlagAccessor | null | undefined)?.setFlag;
-    if (typeof setFlag === 'function') void setFlag(SYSTEM_ID, MOVED_FLAG, metres);
+    // Call ON the combatant so `this` binds — a detached `setFlag(...)` runs with
+    // this=undefined and throws inside Foundry ("reading 'constructor' of undefined").
+    const target = combatant as FlagAccessor | null | undefined;
+    if (typeof target?.setFlag === 'function') void target.setFlag(SYSTEM_ID, MOVED_FLAG, metres);
 }
 
 /** The token's selected move mode (the move-mode toggle flag); undefined when unset/invalid → full move. */
