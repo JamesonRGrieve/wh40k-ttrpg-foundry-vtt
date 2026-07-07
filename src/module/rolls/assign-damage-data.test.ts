@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { invalidateCriticalDamageCache } from '../rules/critical-damage';
 import { AssignDamageData, type ActorLike } from './assign-damage-data';
 
 function buildActor(overrides: Partial<ActorLike['system']> = {}): ActorLike {
@@ -308,5 +309,41 @@ describe('AssignDamageData.previewReducedDamage (#247)', () => {
         const p = data.previewReducedDamage();
         expect(p.armour).toBe(10); // armour 4 + cover 6
         expect(p.effective).toBe(7); // 20 - (10 + 3 TB)
+    });
+});
+
+describe('Critical Damage record capture (#108)', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        invalidateCriticalDamageCache();
+    });
+
+    it('populates criticalRecord when damage overflows wounds into critical', async () => {
+        // No content pack installed → the record still resolves with empty effect
+        // + riders, proving the capture wiring runs off the same lookup.
+        vi.stubGlobal('game', { packs: { get: () => undefined } });
+        invalidateCriticalDamageCache();
+        const actor = buildActor({ wounds: { value: 2, critical: 0 } });
+        // Body armour 4 (pen 10 → 0) + TB 3 = 3 reduction; 20 - 3 = 17 damage.
+        // 2 lands as wounds, 15 as critical → the crit lookup fires.
+        const data = new AssignDamageData(actor, { location: 'Body', damageType: 'Impact', totalDamage: 20, totalPenetration: 10, totalFatigue: 0 });
+        data.update();
+        await data.finalize();
+        expect(data.hasCriticalDamage).toBe(true);
+        expect(data.criticalDamageTaken).toBe(15);
+        expect(data.criticalRecord).not.toBeNull();
+        expect(data.criticalRecord?.effect).toBe('');
+        expect(data.criticalRecord?.riders.stunned).toBe(false);
+    });
+
+    it('leaves criticalRecord null when the hit deals no critical damage', async () => {
+        vi.stubGlobal('game', { packs: { get: () => undefined } });
+        invalidateCriticalDamageCache();
+        const actor = buildActor(); // wounds 10
+        const data = new AssignDamageData(actor, { location: 'Body', damageType: 'Impact', totalDamage: 10, totalPenetration: 0, totalFatigue: 0 });
+        data.update();
+        await data.finalize();
+        expect(data.hasCriticalDamage).toBe(false);
+        expect(data.criticalRecord).toBeNull();
     });
 });

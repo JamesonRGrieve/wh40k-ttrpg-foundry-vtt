@@ -1,6 +1,7 @@
 import { t } from '../i18n/t.ts';
 import { emitChatFromTemplate, isD100Success, roll1d100 } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import { type CriticalDamageRecord, criticalRiderConditionIds } from './critical-damage.ts';
 
 type ActiveEffectChatContext = {
     template: string;
@@ -232,6 +233,15 @@ export async function createCombatEffect(actor: WH40KBaseActorDocument, type: st
 export async function createConditionEffect(actor: WH40KBaseActorDocument, condition: string, options: EffectOptions = {}): Promise<unknown> {
     // Predefined conditions with their effects
     const conditions: Record<string, ConditionDefinition> = {
+        burning: {
+            // Set on fire (#108). No static stat change — the per-turn tick is
+            // driven by the combat turn-hook, which matches on the `Burning`
+            // name (combat-action-manager.ts → handleOnFire).
+            name: 'Burning',
+            icon: 'icons/svg/fire.svg',
+            changes: [],
+            flags: { 'wh40k-rpg': { nature: 'harmful', onFire: true } },
+        },
         stunned: {
             name: 'Stunned',
             icon: 'icons/svg/daze.svg',
@@ -375,6 +385,31 @@ export async function createConditionEffect(actor: WH40KBaseActorDocument, condi
         changes: options.changes ?? conditionData.changes,
         flags: foundry.utils.mergeObject(conditionData.flags, options.flags ?? {}),
     });
+}
+
+/**
+ * Apply the conditions / ActiveEffects a Critical Damage result inflicts (#108).
+ * Walks the classified riders (Stunned, Burning, Blood Loss, Prone, Blinded,
+ * Deafened, Fatigue, lost limb) and creates the matching condition Active Effect
+ * on the target. Persistent tick conditions (Burning, Blood Loss) are then
+ * processed at the turn boundary by the combat turn-hook (#413).
+ *
+ * Each crit-sourced condition is stamped with a `criticalConditionId` flag so a
+ * later Critical does not stack a second copy of a per-turn-tick condition
+ * (which would double the Burning / Blood Loss damage). The rider classifier and
+ * id mapping are content-agnostic, so the same application holds across systems
+ * that share the condition registry. The `fatal` rider is intentionally not
+ * applied — instant death is surfaced on the chat card for GM adjudication.
+ */
+export async function applyCriticalDamageConditions(actor: WH40KBaseActorDocument, record: CriticalDamageRecord): Promise<void> {
+    const ids = criticalRiderConditionIds(record.riders);
+    for (const id of ids) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect.getFlag returns unknown; the collection element is loosely typed
+        const already = actor.effects.find((e) => (e as unknown as ActiveEffect).getFlag('wh40k-rpg', 'criticalConditionId') === id);
+        if (already !== undefined) continue;
+        // eslint-disable-next-line no-await-in-loop -- sequential: each create mutates the actor's effects collection the next dedupe reads
+        await createConditionEffect(actor, id, { flags: { 'wh40k-rpg': { criticalConditionId: id } } });
+    }
 }
 
 /**

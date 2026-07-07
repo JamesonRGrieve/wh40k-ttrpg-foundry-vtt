@@ -1,5 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { classifyCriticalEffect, clampCriticalSeverity, getCriticalDamageRecord, invalidateCriticalDamageCache } from './critical-damage';
+import {
+    classifyCriticalEffect,
+    clampCriticalSeverity,
+    type CriticalDamageRiders,
+    criticalRiderConditionIds,
+    getCriticalDamageRecord,
+    invalidateCriticalDamageCache,
+} from './critical-damage';
 import { normalizeBodyPart, normalizeDamageType } from './damage-type';
 
 /**
@@ -342,5 +349,43 @@ describe('getCriticalDamageRecord (#108)', () => {
         const rec = await getCriticalDamageRecord('Energy', 'Right Arm', -3);
         expect(rec?.severity).toBe(1);
         expect(rec?.effect).toContain('grazes the arm');
+    });
+});
+
+describe('criticalRiderConditionIds (#108 — riders → condition registry ids)', () => {
+    const noRiders: CriticalDamageRiders = {
+        stunned: false,
+        burning: false,
+        bloodLoss: false,
+        prone: false,
+        blinded: false,
+        deafened: false,
+        fatigue: false,
+        lostLimb: false,
+        fatal: false,
+    };
+
+    it('returns no ids when no riders fire', () => {
+        expect(criticalRiderConditionIds(noRiders)).toEqual([]);
+    });
+
+    it('maps each rider to its condition-registry id', () => {
+        expect(criticalRiderConditionIds({ ...noRiders, stunned: true })).toEqual(['stunned']);
+        expect(criticalRiderConditionIds({ ...noRiders, burning: true })).toEqual(['burning']);
+        expect(criticalRiderConditionIds({ ...noRiders, bloodLoss: true })).toEqual(['bloodloss']);
+        expect(criticalRiderConditionIds({ ...noRiders, prone: true })).toEqual(['prone']);
+        expect(criticalRiderConditionIds({ ...noRiders, blinded: true })).toEqual(['blinded']);
+        expect(criticalRiderConditionIds({ ...noRiders, deafened: true })).toEqual(['deafened']);
+        expect(criticalRiderConditionIds({ ...noRiders, fatigue: true })).toEqual(['fatigued']);
+        expect(criticalRiderConditionIds({ ...noRiders, lostLimb: true })).toEqual(['uselessLimb']);
+    });
+
+    it('never maps the fatal rider — instant death is GM-adjudicated, not an auto-applied AE', () => {
+        expect(criticalRiderConditionIds({ ...noRiders, fatal: true })).toEqual([]);
+    });
+
+    it('combines multiple riders in registry order', () => {
+        const ids = criticalRiderConditionIds({ ...noRiders, stunned: true, burning: true, bloodLoss: true, lostLimb: true });
+        expect(ids).toEqual(['stunned', 'burning', 'bloodloss', 'uselessLimb']);
     });
 });

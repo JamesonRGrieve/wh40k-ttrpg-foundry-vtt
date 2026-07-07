@@ -15,6 +15,7 @@ describe('active-effects condition registry', () => {
         // Each entry below appears as `<key>: {` in the conditions registry.
         for (const key of [
             'stunned',
+            'burning',
             'prone',
             'blinded',
             'deafened',

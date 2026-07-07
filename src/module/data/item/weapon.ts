@@ -142,6 +142,9 @@ export default class WeaponData extends ItemDataModel.mixin(
      */
     declare grantedByDefault: boolean;
     declare clip: { max: number; value: number; type: string };
+    // Per-weapon jam state (#411). May be undefined at runtime when the schema
+    // fails to initialise (mirrors loadedAmmo), so consumers guard via isJammed.
+    declare jammed: boolean | undefined;
     // Note: 'reload' schema field accessed via [key: string]: any; to avoid conflict with reload() method
     // May be undefined at runtime when the schema fails to initialize (e.g. an
     // upstream validation error on a sibling field — Foundry leaves later fields
@@ -243,6 +246,15 @@ export default class WeaponData extends ItemDataModel.mixin(
                 initial: '-',
                 choices: ['-', 'free', 'half', 'full', '2-full', '3-full', '4-full', '5-full', '6-full'],
             }),
+
+            // Jam state (#411). Persisted PER-WEAPON transient runtime state, not
+            // per-combatant: a jam belongs to this specific weapon instance and
+            // travels with the item. Set when the firing-resolution path detects a
+            // jam (rules/weapon-jam.ts trigger); a jammed weapon cannot fire until
+            // cleared via the Unjam action (`clearJam()`). Like `clip.value`, it is
+            // written to the owned item's per-actor overlay so it survives across
+            // turns and the compendium→world resync.
+            jammed: new fields.BooleanField({ required: false, initial: false }),
 
             // Loaded ammunition (reference to ammunition item)
             loadedAmmo: new fields.SchemaField(
@@ -565,6 +577,17 @@ export default class WeaponData extends ItemDataModel.mixin(
     /** Alias of {@link isOutOfAmmo} — the conceptual name used by chat / sheet templates. */
     get isEmpty(): boolean {
         return this.isOutOfAmmo;
+    }
+
+    /**
+     * Is this weapon currently jammed (#411)? A jammed weapon cannot fire until
+     * cleared with the Unjam action ({@link clearJam}). Melee weapons never jam.
+     * Guards the (schema-optional) `jammed` field, which may be undefined if the
+     * schema failed to initialise.
+     * @type {boolean}
+     */
+    get isJammed(): boolean {
+        return this.jammed === true && !this.isMeleeWeapon;
     }
 
     /**
@@ -955,6 +978,11 @@ export default class WeaponData extends ItemDataModel.mixin(
             props.push(`Reload: ${this.reloadLabel}`);
         }
 
+        // Surface the jam state (#411) so the weapon card shows it needs clearing.
+        if (this.isJammed) {
+            props.push(game.i18n.localize('WH40K.Weapon.Jammed'));
+        }
+
         // Show effective qualities (including craftsmanship)
         if (this.effectiveSpecial.size > 0) {
             props.push(`Qualities: ${Array.from(this.effectiveSpecial).join(', ')}`);
@@ -1188,6 +1216,35 @@ export default class WeaponData extends ItemDataModel.mixin(
         if (!this.usesAmmo) return this.parent;
         const newValue = Math.max(0, this.clip.value - shots);
         return this.parent.update({ 'system.clip.value': newValue });
+    }
+
+    /**
+     * Mark this weapon as jammed (#411). Persisted on the item so the jam is
+     * per-weapon and survives across turns. Called from the firing-resolution
+     * path when the rulebook jam trigger fires (rules/weapon-jam.ts).
+     * @returns {Promise<Item>}
+     */
+    jam(): Promise<WH40KItem | undefined> {
+        return this.parent.update({ 'system.jammed': true });
+    }
+
+    /**
+     * Clear a jam (#411 — the Unjam action). Per DH2 RAW the Unjam action is a
+     * Full Action + BS test; on success the jam clears but any loaded rounds are
+     * lost and the weapon must be reloaded. The action-economy spend + skill
+     * test are owned by the action-economy layer (#264) — this method performs
+     * only the state mutation it should call once the action resolves.
+     *
+     * @param {object} [options]
+     * @param {boolean} [options.loseAmmo=true]  Empty the clip on clear (DH2 RAW).
+     *   Systems whose unjam rules retain the loaded rounds pass `false`.
+     * @returns {Promise<Item>}
+     */
+    clearJam({ loseAmmo = true }: { loseAmmo?: boolean } = {}): Promise<WH40KItem | undefined> {
+        if (loseAmmo && this.usesAmmo) {
+            return this.parent.update({ 'system.jammed': false, 'system.clip.value': 0 });
+        }
+        return this.parent.update({ 'system.jammed': false });
     }
 
     /**

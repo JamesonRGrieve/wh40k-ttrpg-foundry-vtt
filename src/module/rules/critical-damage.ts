@@ -281,3 +281,24 @@ export async function getCriticalDamageRecord(
         riders: classifyCriticalEffect(effect),
     };
 }
+
+/**
+ * Map the content-agnostic Critical Effects riders to the condition-registry
+ * ids applied by `active-effects.ts` `createConditionEffect` (#108). Pure and
+ * ordered; the `fatal` rider is intentionally NOT mapped — instant death is a
+ * GM adjudication surfaced on the chat card, not an auto-applied ActiveEffect.
+ * The returned ids are keys of the shared condition registry, so any system
+ * that shares that registry gets the same effect application.
+ */
+export function criticalRiderConditionIds(riders: CriticalDamageRiders): string[] {
+    const ids: string[] = [];
+    if (riders.stunned) ids.push('stunned');
+    if (riders.burning) ids.push('burning');
+    if (riders.bloodLoss) ids.push('bloodloss');
+    if (riders.prone) ids.push('prone');
+    if (riders.blinded) ids.push('blinded');
+    if (riders.deafened) ids.push('deafened');
+    if (riders.fatigue) ids.push('fatigued');
+    if (riders.lostLimb) ids.push('uselessLimb');
+    return ids;
+}
