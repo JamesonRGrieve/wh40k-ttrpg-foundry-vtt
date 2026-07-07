@@ -139,10 +139,12 @@ export class ItemDropManager {
     }
 
     /**
-     * Pick which actor receives a pickup. The picker's controlled token wins
-     * (excluding the loot pile itself); failing that, the user's assigned
-     * character. Returns null when the choice is ambiguous or absent so the
-     * caller can prompt.
+     * Pick which actor receives a pickup, resolving silently so pickup never
+     * prompts the user to select a token. A single controlled non-loot token
+     * (the loot pile itself is excluded) is the unambiguous receiver; failing
+     * that — no controlled token, or several — the user's assigned character is
+     * used. Only when there is neither a single controlled token nor an assigned
+     * character is there genuinely no receiver (returns null so the caller warns).
      */
     static resolveReceivingActor<A extends { type?: string }>(controlled: ReadonlyArray<{ actor?: A | null }>, userCharacter: A | null | undefined): A | null {
         const candidates = controlled.map((tk) => tk.actor).filter((a): a is A => a != null && a.type !== 'loot');
@@ -152,8 +154,9 @@ export class ItemDropManager {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess makes the destructured element possibly undefined under strict TS, but eslint's plain rule disagrees
             return only ?? null;
         }
-        if (unique.size === 0 && userCharacter != null) return userCharacter;
-        return null;
+        // No single controlled receiver (none, or an ambiguous several): fall back
+        // to the picker's assigned character so pickup resolves without a prompt.
+        return userCharacter ?? null;
     }
 
     /**
@@ -365,23 +368,31 @@ export class ItemDropManager {
         }
 
         const pileName = lootActor.name;
-        // Remove the pile's scene token(s) too — deleting the loot Actor alone
-        // leaves an orphaned (actor-less) token on the canvas. Wrapped per scene
-        // so a permission failure degrades to the prior behaviour (actor removed,
-        // token left) rather than aborting the whole pickup.
         const lootId = lootActor.id;
-        if (lootId != null) {
-            const deletions = Array.from(game.scenes).flatMap((scene) => {
-                const tokenIds = ItemDropManager.tokenIdsForActor(Array.from(scene.tokens), lootId);
-                return tokenIds.length > 0 ? [scene.deleteEmbeddedDocuments('Token', tokenIds)] : [];
-            });
-            try {
+        // Tear the pile down idempotently. Delete the loot Actor FIRST: when the
+        // Item Piles module is active it owns the pile's token and removes it via
+        // its own actor-deletion hooks, so deleting the token here too would
+        // double-delete the same Token UUID and the second delete throws
+        // ("id [X] does not exist in the EmbeddedCollection", #385). Only after the
+        // actor is gone do we sweep any token that is STILL present — the
+        // no-Item-Piles case, where deleting a loot Actor leaves its unlinked
+        // token orphaned on the canvas (the original #385 symptom). Re-reading
+        // scene.tokens after the delete means a token another handler already
+        // removed is simply absent, so we never re-delete it. The whole teardown
+        // is wrapped so a token that vanished underneath us degrades gracefully
+        // instead of escaping as an uncaught rejection.
+        try {
+            await lootActor.delete();
+            if (lootId != null) {
+                const deletions = Array.from(game.scenes).flatMap((scene) => {
+                    const tokenIds = ItemDropManager.tokenIdsForActor(Array.from(scene.tokens), lootId);
+                    return tokenIds.length > 0 ? [scene.deleteEmbeddedDocuments('Token', tokenIds)] : [];
+                });
                 await Promise.all(deletions);
-            } catch (err) {
-                console.warn('WH40K | pickupLoot: could not delete loot token(s)', err);
             }
+        } catch (err) {
+            console.warn('WH40K | pickupLoot: loot pile teardown degraded (token/actor already removed)', err);
         }
-        await lootActor.delete();
         ui.notifications.info(t('WH40K.Loot.PickedUpAll', { actor: receivingActor.name, pile: pileName }));
         return true;
     }

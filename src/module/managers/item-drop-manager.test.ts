@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { ItemDropManager, type StackProjection, type TokenLike } from './item-drop-manager.ts';
 
 /**
@@ -114,10 +115,24 @@ describe('ItemDropManager.resolveReceivingActor', () => {
         expect(result).toBe(character);
     });
 
-    it('returns null when several distinct tokens are controlled', () => {
+    it('returns null when several distinct tokens are controlled and there is no user character', () => {
         const a = { type: 'character' };
         const b = { type: 'npc' };
         expect(ItemDropManager.resolveReceivingActor([{ actor: a }, { actor: b }], null)).toBeNull();
+    });
+
+    it('falls back to the assigned character when several tokens are controlled (silent, no prompt)', () => {
+        // #385: an ambiguous multi-selection must not prompt for a token — the
+        // picker's assigned character is a valid silent receiver.
+        const a = { type: 'character' };
+        const b = { type: 'npc' };
+        const mine = { type: 'character' };
+        expect(ItemDropManager.resolveReceivingActor([{ actor: a }, { actor: b }], mine)).toBe(mine);
+    });
+
+    it('falls back to the assigned character when only the loot pile is controlled', () => {
+        const mine = { type: 'character' };
+        expect(ItemDropManager.resolveReceivingActor([{ actor: { type: 'loot' } }], mine)).toBe(mine);
     });
 
     it('returns null when nothing is controlled and there is no user character', () => {
@@ -210,5 +225,135 @@ describe('ItemDropManager.isBound (#390)', () => {
     it('is false for null/undefined items', () => {
         expect(ItemDropManager.isBound(null)).toBe(false);
         expect(ItemDropManager.isBound(undefined)).toBe(false);
+    });
+});
+
+/**
+ * Teardown coverage for {@link ItemDropManager.pickupLoot} (#385 reopen). The
+ * pickup orchestration touches Foundry globals, so the actors, scenes, and
+ * notifications are stubbed to the narrow surface the method reaches into.
+ * The regression under test: when the pile's scene token is already gone (the
+ * Item Piles module double-deletes it via its own actor-deletion hooks), the
+ * teardown must NOT throw an uncaught rejection — it degrades gracefully and
+ * pickup still succeeds.
+ */
+describe('ItemDropManager.pickupLoot (#385 teardown)', () => {
+    interface PileItemStub {
+        toObject: () => StackProjection & { _id?: unknown };
+    }
+    interface ReceiverStub {
+        isOwner: boolean;
+        name: string;
+        items: PileItemStub[];
+        createEmbeddedDocuments: (type: string, data: unknown[]) => Promise<unknown>;
+        updateEmbeddedDocuments: (type: string, data: unknown[]) => Promise<unknown>;
+    }
+    interface PileStub {
+        id: string | null;
+        name: string;
+        items: PileItemStub[];
+        delete: () => Promise<unknown>;
+    }
+    interface SceneStub {
+        tokens: Array<{ id: string | null; actorId: string | null }>;
+        deleteEmbeddedDocuments: (type: string, ids: string[]) => Promise<unknown>;
+    }
+
+    const pileItem = (name: string, type: string): PileItemStub => ({
+        toObject: () => ({ _id: `src-${name}`, name, type, system: null }),
+    });
+
+    const makeReceiver = (overrides: Partial<ReceiverStub> = {}): ReceiverStub => ({
+        isOwner: true,
+        name: 'Kael',
+        items: [],
+        createEmbeddedDocuments: vi.fn().mockResolvedValue([]),
+        updateEmbeddedDocuments: vi.fn().mockResolvedValue([]),
+        ...overrides,
+    });
+
+    const makePile = (overrides: Partial<PileStub> = {}): PileStub => ({
+        id: 'loot1',
+        name: 'Dropped: Hand Cannon',
+        items: [pileItem('Hand Cannon', 'weapon')],
+        delete: vi.fn().mockResolvedValue(undefined),
+        ...overrides,
+    });
+
+    const stubWorld = (scenes: SceneStub[]): void => {
+        vi.stubGlobal('game', {
+            scenes,
+            i18n: { localize: (k: string): string => k, format: (k: string): string => k },
+        });
+        vi.stubGlobal('ui', { notifications: { info: vi.fn(), warn: vi.fn() } });
+    };
+
+    const pickup = (receiver: ReceiverStub, pile: PileStub): Promise<boolean> =>
+        ItemDropManager.pickupLoot(receiver as unknown as WH40KBaseActor, pile as unknown as WH40KBaseActor);
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        vi.restoreAllMocks();
+    });
+
+    it('does not throw when the pile token is already gone (deleteEmbeddedDocuments rejects)', async () => {
+        vi.spyOn(console, 'warn').mockImplementation((): void => {});
+        // The scene still lists the pile's token, but deleting it rejects the way
+        // Foundry does when Item Piles has already removed the same Token UUID.
+        const deleteEmbeddedDocuments = vi
+            .fn()
+            .mockRejectedValue(new Error('undefined id [TGMEaMGcfFbkdhsb] does not exist in the EmbeddedCollection collection'));
+        const scene: SceneStub = { tokens: [{ id: 'tok1', actorId: 'loot1' }], deleteEmbeddedDocuments };
+        stubWorld([scene]);
+        const receiver = makeReceiver();
+        const pile = makePile();
+
+        await expect(pickup(receiver, pile)).resolves.toBe(true);
+        // Items still transferred and the actor still deleted despite the token fault.
+        expect(receiver.createEmbeddedDocuments).toHaveBeenCalledTimes(1);
+        expect(pile.delete).toHaveBeenCalledTimes(1);
+    });
+
+    it('sweeps the orphaned token after deleting the actor (no Item Piles present)', async () => {
+        const deleteEmbeddedDocuments = vi.fn().mockResolvedValue([]);
+        const scene: SceneStub = { tokens: [{ id: 'tok1', actorId: 'loot1' }], deleteEmbeddedDocuments };
+        stubWorld([scene]);
+        const receiver = makeReceiver();
+        const pile = makePile();
+
+        await expect(pickup(receiver, pile)).resolves.toBe(true);
+        expect(pile.delete).toHaveBeenCalledTimes(1);
+        expect(deleteEmbeddedDocuments).toHaveBeenCalledWith('Token', ['tok1']);
+    });
+
+    it('deletes no token when none remains after the actor is gone (Item Piles cascade)', async () => {
+        const deleteEmbeddedDocuments = vi.fn().mockResolvedValue([]);
+        // Item Piles removed the token as part of the actor deletion; the scene
+        // no longer lists a token backed by the pile, so nothing is re-deleted.
+        const scene: SceneStub = { tokens: [{ id: 'tok1', actorId: 'other' }], deleteEmbeddedDocuments };
+        stubWorld([scene]);
+        const receiver = makeReceiver();
+        const pile = makePile();
+
+        await expect(pickup(receiver, pile)).resolves.toBe(true);
+        expect(deleteEmbeddedDocuments).not.toHaveBeenCalled();
+    });
+
+    it('warns and does nothing when the receiver is not an owner', async () => {
+        stubWorld([]);
+        const receiver = makeReceiver({ isOwner: false });
+        const pile = makePile();
+
+        await expect(pickup(receiver, pile)).resolves.toBe(false);
+        expect(pile.delete).not.toHaveBeenCalled();
+    });
+
+    it('warns and does nothing when the pile is empty', async () => {
+        stubWorld([]);
+        const receiver = makeReceiver();
+        const pile = makePile({ items: [] });
+
+        await expect(pickup(receiver, pile)).resolves.toBe(false);
+        expect(pile.delete).not.toHaveBeenCalled();
     });
 });
