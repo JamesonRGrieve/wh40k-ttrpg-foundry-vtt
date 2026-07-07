@@ -149,6 +149,35 @@
                             {{/if}}
                             {{> systems/wh40k-rpg/templates/chat/partial/reroll-controls.hbs rerollOptions=@root.rerollOptions rollId=@root.id}}
                         </div>
+                        {{!-- Defender reactions (#414): on a hit against a target, let the
+                              defender Attempt Dodge (any attack) or Parry (melee), rolling
+                              their own reaction test and spending their Reaction for the round. --}}
+                        {{#if success}}
+                            {{#if targetActor}}
+                                <div class="tw-flex tw-gap-1.5">
+                                    <button
+                                        class="roll-control__attempt-dodge tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_var(--wh40k-gold-glow)] hover:-tw-translate-y-px active:tw-translate-y-0 disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                                        data-roll-id="{{@root.id}}"
+                                        title="{{localize 'WH40K.Combat.AttemptDodgeTooltip'}}"
+                                    >
+                                        <i class="fas fa-wind tw-text-[0.75rem]"></i>
+                                        <span>{{localize "WH40K.Combat.AttemptDodge"}}</span>
+                                    </button>
+                                    {{#if weapon}}
+                                        {{#unless weapon.system.isRangedWeapon}}
+                                            <button
+                                                class="roll-control__attempt-parry tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_var(--wh40k-gold-glow)] hover:-tw-translate-y-px active:tw-translate-y-0 disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                                                data-roll-id="{{@root.id}}"
+                                                title="{{localize 'WH40K.Combat.AttemptParryTooltip'}}"
+                                            >
+                                                <i class="fas fa-hand-paper tw-text-[0.75rem]"></i>
+                                                <span>{{localize "WH40K.Combat.AttemptParry"}}</span>
+                                            </button>
+                                        {{/unless}}
+                                    {{/if}}
+                                </div>
+                            {{/if}}
+                        {{/if}}
                         {{!-- Assassin's Strike post-attack Acrobatics + Half Move (#149 — DH2 errata L75) --}}
                         {{#if @root.hasAssassinsStrike}}
                             {{#if success}}

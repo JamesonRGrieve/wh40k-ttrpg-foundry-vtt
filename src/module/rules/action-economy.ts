@@ -1,8 +1,10 @@
 /**
  * Per-turn action-economy tracking (#264). Stores each combatant's spent
- * actions on a combatant flag, resets it when the turn/round advances (mirroring
- * the movement-enforcement turn-budget pattern, #235), and exposes a spend API
- * the combat HUD calls. The pure budget model lives in {@link ./action-budget.ts}.
+ * actions on a combatant flag and resets it at the combatant's turn-start
+ * boundary — subscribed through the shared turn-hook wrapper (#413), the single
+ * place downstream features derive the turn boundary. Exposes the spend / view /
+ * reset API the combat HUD, combat tab, and tracker sidebar call. The pure
+ * budget model lives in {@link ./action-budget.ts}.
  *
  * Conservative: every read/write is guarded and resolves to a fresh budget on
  * error, so a flag quirk can never wedge combat.
@@ -18,6 +20,7 @@ import {
     EMPTY_ACTIONS_SPENT,
     spendAction,
 } from './action-budget.ts';
+import { onTurnStart, type TurnCombatant } from './combat-turn-hooks.ts';
 
 const ACTIONS_SPENT_FLAG = 'actionsSpentThisTurn';
 
@@ -95,18 +98,17 @@ export function resetActionsForActor(actorId: string): void {
     }
 }
 
-/** Reset the now-active combatant's budget when the turn/round advances. */
-function onUpdateCombat(combat: LooseCombat, changes: { turn?: number | null | undefined; round?: number | null | undefined }): void {
+/** Reset the starting combatant's budget (Full/Half/Free + Reaction) for a fresh turn. */
+function resetOnTurnStart(combatant: TurnCombatant | null): void {
     try {
-        if (!('turn' in changes) && !('round' in changes)) return;
-        writeActionsSpent(combat.combatant, { ...EMPTY_ACTIONS_SPENT });
+        if (combatant !== null) writeActionsSpent(combatant, { ...EMPTY_ACTIONS_SPENT });
     } catch (err) {
         console.error('WH40K | action economy (turn reset) — ignoring', err);
     }
 }
 /* eslint-enable no-restricted-syntax */
 
-/** Register the per-turn action-economy reset hook. */
+/** Register the per-turn action-economy reset via the shared turn-start hook (#413). */
 export function registerActionEconomy(): void {
-    Hooks.on('updateCombat', onUpdateCombat);
+    onTurnStart(resetOnTurnStart);
 }

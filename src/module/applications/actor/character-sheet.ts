@@ -89,6 +89,8 @@ import {
     type GrappleState,
     type OpposedStrengthInput,
 } from '../../rules/grapple.ts';
+import type { ActionKind } from '../../rules/action-budget.ts';
+import { actionBudgetForActor, resetActionsForActor, spendActionForActor } from '../../rules/action-economy.ts';
 import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
 import { combatMovementView } from '../../rules/movement-budget.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
@@ -169,6 +171,14 @@ type CharacterSheetContext = Record<string, unknown> & {
     dh?: Record<string, unknown> & { combatActions?: { attacks?: Array<{ subtypes?: string[] }> } };
     /** Combat move-mode cluster state (#235) — drives the movement panel toggles. */
     combatMovement?: { inCombat: boolean; disabled: boolean; selectedMode: string | undefined; remaining: number };
+    /** Per-turn action-economy readout (#264) — null when this actor is not in combat. */
+    actionBudget?: {
+        fullAvailable: boolean;
+        halfRemaining: number;
+        reactionRemaining: number;
+        freeSpent: number;
+        usedPoints: number;
+    } | null;
     // Explicit declarations to avoid TS4111 (noPropertyAccessFromIndexSignature) on the
     // intersected Record<string, unknown> for all known sheet-context fields written by
     // _prepareContext / _preparePartContext / _prepareCombatData / _prepareLoadoutData / ...
@@ -739,6 +749,9 @@ export default class CharacterSheet extends BaseActorSheet {
             'combatTalentDescribe': CharacterSheet.#combatTalentDescribe,
             'vocalizeMovement': CharacterSheet.#vocalizeMovement,
             'setMovementMode': CharacterSheet.#setMovementMode,
+            // Per-turn action economy (#264) — spend/reset from the combat tab readout.
+            'spendAction': CharacterSheet.#spendAction,
+            'resetActions': CharacterSheet.#resetActions,
 
             // Stat adjustment actions — extracted to api/stat-adjustment-actions.ts
             'adjustStat': StatActions.adjustStat,
@@ -2695,8 +2708,8 @@ export default class CharacterSheet extends BaseActorSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: TokenDocument.getFlag returns Foundry's untyped flag payload
         const token = this.actor.getActiveTokens()[0]?.document as { getFlag?: (s: string, k: string) => unknown } | undefined;
         const rawMode = token?.getFlag?.('wh40k-rpg', 'movementAction');
-        const selectedMode =
-            rawMode === 'half' || rawMode === 'full' || rawMode === 'charge' || rawMode === 'run' || rawMode === 'disengage' ? rawMode : undefined;
+        // Disengage is a Half Action, not a move mode (#416) — no longer a valid selection here.
+        const selectedMode = rawMode === 'half' || rawMode === 'full' || rawMode === 'charge' || rawMode === 'run' ? rawMode : undefined;
         const combatant = combat?.combatant;
         const moved = Number(combatant?.getFlag?.('wh40k-rpg', 'movedThisTurnMetres') ?? 0);
         return combatMovementView({
@@ -2773,6 +2786,9 @@ export default class CharacterSheet extends BaseActorSheet {
         this.#prepareCombatVitals(sheetContext, system);
         this.#prepareCombatReactionTargets(sheetContext);
         sheetContext.combatMovement = this.#computeCombatMovement();
+        // Per-turn action economy (#264) — null when this actor isn't in combat.
+        const actorId = this.actor.id;
+        sheetContext.actionBudget = actorId !== null ? actionBudgetForActor(actorId) : null;
 
         // Critical injuries
         sheetContext.criticalInjuries = categorized.criticalInjury;
@@ -3850,7 +3866,9 @@ export default class CharacterSheet extends BaseActorSheet {
         const actionDescription = game.i18n.localize(actionConfig.description);
         const actionSubtypes = actionConfig.subtypes !== undefined && actionConfig.subtypes.length > 0 ? ` (${actionConfig.subtypes.join(', ')})` : '';
 
-        // Shift+Click is the explicit opt-in to vocalize into chat.
+        // Shift+Click is the explicit opt-in to actually perform the action:
+        // vocalize it to chat AND spend its cost from the action economy (#264).
+        // Disengage, now a Half Action (#416), spends a half action this way.
         const isShiftClick = event instanceof MouseEvent && event.shiftKey;
         if (isShiftClick) {
             const chatData = {
@@ -3866,6 +3884,16 @@ export default class CharacterSheet extends BaseActorSheet {
                 }),
             };
             await ChatMessage.create(chatData);
+
+            // Spend the action's economy cost when it maps cleanly to one action
+            // kind. Compound / variable costs ('half-full', 'varies', …) are left
+            // for the player to spend manually via the action-economy readout.
+            const kind = CharacterSheet.#actionKindFor(actionConfig.type);
+            const actorId = this.actor.id;
+            if (kind !== null && actorId !== null) {
+                spendActionForActor(actorId, kind);
+                void this.render(false);
+            }
             return;
         }
 
@@ -4014,12 +4042,50 @@ export default class CharacterSheet extends BaseActorSheet {
             | undefined;
         const movementConfig = config?.[movementType];
         const label = movementConfig ? game.i18n.localize(movementConfig.label ?? movementType) : movementType;
-        // Disengage moves at the Half rate (full action, no reactions provoked) and has no own movement entry.
-        const speed =
-            movementType === 'disengage'
-                ? this.actor.system.movement.half
-                : this.actor.system.movement[movementType as keyof typeof this.actor.system.movement];
+        // Disengage is a Half Action, not a move mode (#416); only real movement
+        // speeds are selectable here.
+        const speed = this.actor.system.movement[movementType as keyof typeof this.actor.system.movement];
         ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Spend one action of the kind named in the button's `data-kind` (#264) for
+     * this actor's combatant, then re-render so the combat-tab readout updates.
+     * @this {CharacterSheet}
+     */
+    static #spendAction(this: CharacterSheet, _event: Event, target: HTMLElement): void {
+        const actorId = this.actor.id;
+        const kind = target.dataset['kind'] as ActionKind | undefined;
+        if (actorId === null || kind === undefined) return;
+        spendActionForActor(actorId, kind);
+        void this.render(false);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Reset this actor's combatant action budget to a fresh turn (#264).
+     * @this {CharacterSheet}
+     */
+    static #resetActions(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
+        const actorId = this.actor.id;
+        if (actorId === null) return;
+        resetActionsForActor(actorId);
+        void this.render(false);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Map a combat-action config `type` to a single action-economy kind, or null
+     * when the cost is compound / variable ('half-full', 'varies', …) and should
+     * be spent manually. Content-agnostic — a pure enum mapping, no content data.
+     */
+    static #actionKindFor(type: string | undefined): ActionKind | null {
+        if (type === 'full' || type === 'half' || type === 'free' || type === 'reaction') return type;
+        return null;
     }
 
     /* -------------------------------------------- */

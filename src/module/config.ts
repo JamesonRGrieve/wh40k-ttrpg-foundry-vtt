@@ -1248,8 +1248,11 @@ WH40K.combatActions = {
         },
         {
             key: 'disengage',
+            // DH2 core p.219: Disengage is a HALF Action — a Half Move that
+            // provokes no reaction. It is a combat action (spends a half action),
+            // not a movement speed/mode (#416).
             label: 'WH40K.Combat.Action.Disengage',
-            type: 'full',
+            type: 'half',
             description: 'WH40K.Combat.Action.DisengageDesc',
             icon: 'fa-undo',
             subtypes: ['Movement'],

@@ -59,8 +59,12 @@ export function evaluateCombatMovement(input: MovementEvaluationInput): Movement
     return { allowed: true, reason: 'ok', remaining: Math.max(0, remaining - requested) };
 }
 
-/** The combat move modes a player selects (the move-mode toggle / token flag). */
-export type MovementMode = 'half' | 'full' | 'charge' | 'run' | 'disengage';
+/** The combat move modes a player selects (the move-mode toggle / token flag).
+ *
+ * Disengage is NOT a move mode / speed — in DH2 it is a Half Action (#416): a
+ * Half Move that provokes no reaction, spent through the action economy, so it
+ * lives with the combat actions, not in this movement-rate list. */
+export type MovementMode = 'half' | 'full' | 'charge' | 'run';
 
 /** Movement rates derived on the actor (metres). */
 export interface MovementRates {
@@ -73,15 +77,13 @@ export interface MovementRates {
 /**
  * The metres a combatant may move this turn for the **selected move mode** — the
  * in-combat move-mode toggle (persisted as the token's `movementAction` flag).
- * Half is the half-action move; Full/Charge/Run/Disengage are full-action moves —
- * Charge/Run raise the allowance to their larger rate, Disengage moves at the Half
- * rate (no reactions provoked). Falls back to the full move when the mode is unset
- * or its rate is unknown; 0 when no rate is known (caller treats 0 as "unknown" →
- * budget not enforced).
+ * Half is the half-action move; Full/Charge/Run are full-action moves — Charge/Run
+ * raise the allowance to their larger rate. Falls back to the full move when the
+ * mode is unset or its rate is unknown; 0 when no rate is known (caller treats 0
+ * as "unknown" → budget not enforced).
  */
 export function turnMovementAllowance(rates: MovementRates | undefined, mode: MovementMode | undefined): number {
     if (rates === undefined) return 0;
-    if (mode === 'disengage') return typeof rates.half === 'number' ? rates.half : rates.full ?? 0;
     if (mode !== undefined && typeof rates[mode] === 'number') return rates[mode];
     return typeof rates.full === 'number' ? rates.full : 0;
 }

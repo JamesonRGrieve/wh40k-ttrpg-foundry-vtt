@@ -1,5 +1,5 @@
 {{! Combat movement cluster (#235) — the single in-combat move-mode selector. }}
-{{! Half / Full / Charge / Run / Disengage toggles: each shows its distance + action }}
+{{! Half / Full / Charge / Run toggles: each shows its distance + action }}
 {{! cost, the selected mode is highlighted, and the whole cluster greys out (turn-gated) }}
 {{! when it is not this player's turn. Selecting a mode sets the token's move mode, which }}
 {{! the preUpdateToken enforcement reads to budget the turn (Charge/Run raise the allowance). }}
@@ -50,13 +50,8 @@
             iconBgGrad="linear-gradient(135deg,rgba(from var(--wh40k-accent-red,#c0392b) r g b/0.15) 0%,rgba(from var(--wh40k-accent-red,#c0392b) r g b/0.05) 100%)"
             iconColor="#c0392b"}}
 
-        {{> systems/wh40k-rpg/templates/actor/partial/movement-stat-row.hbs
-            label=(localize "WH40K.MOVEMENT.Stat.Disengage") value=system.movement.half icon="fa-right-from-bracket" fillPercent=25
-            action="setMovementMode" movementType="disengage" actionCost="1"
-            active=(eq combatMovement.selectedMode "disengage") disabled=combatMovement.disabled
-            title=(localize "WH40K.MOVEMENT.Tooltip.Disengage")
-            iconBgGrad="linear-gradient(135deg,rgba(from var(--wh40k-accent-purple,#8e44ad) r g b/0.15) 0%,rgba(from var(--wh40k-accent-purple,#8e44ad) r g b/0.05) 100%)"
-            iconColor="#8e44ad"}}
+        {{! Disengage is NOT a movement speed — it is a Half Action (#416). It now
+            lives with the combat actions (spends a half action), not here. }}
     </div>
 
     {{!-- Carrying Capacity (Lift / Push) — relocated here from the Overview Vitals card. --}}
