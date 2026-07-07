@@ -55,6 +55,29 @@ describe('action-economy combat glue (#264)', () => {
         expect(readActionsSpent(c)).toMatchObject({ half: 2 });
     });
 
+    it('calls setFlag bound to the combatant (regression: detached this crashes Foundry)', () => {
+        // Foundry's real setFlag reads `this` internally; a detached `const f = c.setFlag; f(...)`
+        // runs with this=undefined and throws "reading 'constructor' of undefined". The old mock's
+        // arrow setFlag closed over `c`, hiding the bug — use a this-dependent method so binding is tested.
+        const c = {
+            actorId: 'a1',
+            flag: undefined as ActionsSpent | undefined,
+            bound: false,
+            getFlag(_s: string, _k: string): ActionsSpent | undefined {
+                return this.flag;
+            },
+            setFlag(_s: string, _k: string, v: ActionsSpent): void {
+                this.bound = true; // unreachable (TypeError) if `this` is undefined — the bug
+                this.flag = v;
+            },
+        };
+        vi.stubGlobal('game', { combat: { started: true, combatant: c, combatants: [c] } });
+        vi.stubGlobal('console', { ...console, error: vi.fn() });
+        spendActionForActor('a1', 'half');
+        expect(c.bound).toBe(true);
+        expect(c.flag).toMatchObject({ half: 1 });
+    });
+
     it('returns null for an actor with no combatant', () => {
         stubCombat(makeCombatant('other'));
         expect(spendActionForActor('missing', 'full')).toBeNull();
