@@ -2578,6 +2578,8 @@
             "RollTooltip": "Roll using the formula",
             "ManualTooltip": "Enter a value manually",
             "DivinationTableUnavailable": "The Divination table is unavailable — rolled {roll} on 1d100. Record the corresponding maxim from the rulebook by hand.",
+            "OpenDivinationTooltip": "Open the divination's compendium entry",
+            "DivinationEntryMissing": "The divination's compendium entry could not be found.",
             "SelectThisOrigin": "Select This Origin",
             "AlreadySelected": "Already Selected",
             "ItemNotFound": "Item not found",

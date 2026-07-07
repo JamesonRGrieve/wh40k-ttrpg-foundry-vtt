@@ -166,6 +166,13 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         return args.reduce<number>((sum, value) => sum + Number(value ?? 0), 0);
     });
     HandlebarsLib.registerHelper('multiply', (a: HbsValue, b: HbsValue) => Number(a ?? 0) * Number(b ?? 0));
+    HandlebarsLib.registerHelper('subtract', (a: HbsValue, b: HbsValue) => Number(a ?? 0) - Number(b ?? 0));
+    HandlebarsLib.registerHelper('percent', (value: HbsValue, max: HbsValue) => {
+        const v = Number(value);
+        const m = Number(max);
+        if (!Number.isFinite(m) || m <= 0) return 0;
+        return Math.min(100, Math.max(0, ((Number.isFinite(v) ? v : 0) / m) * 100));
+    });
     HandlebarsLib.registerHelper('inc', (value: HbsValue) => Number(value) + 1);
     HandlebarsLib.registerHelper('iff', (cond: HbsValue, ifTrue: HbsValue, ifFalse: HbsValue) => {
         const b = Boolean(cond);

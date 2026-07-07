@@ -154,3 +154,28 @@ export const RogueTraderNPC: Story = {
         await expect(view.getByText('GM Tools')).toBeVisible();
     },
 };
+
+// ── Fatigue panel (#420) ────────────────────────────────────────────────────
+// The NPC body never surfaced fatigue; the shared fatigue vital panel now
+// renders here so fatigue is editable on NPCs (aberrants etc.) alongside wounds.
+
+/** NPC context with a partial fatigue load so the panel shows the meter + controls. */
+function fatiguedNpcContext(): SheetContextLike {
+    const ctx = mockNpcSheetContext({ systemId: 'dh2', actorOverrides: { name: 'Broodkin Aberrant' } });
+    ctx.system.fatigue = { value: 3, max: 6 };
+    return ctx;
+}
+
+export const FatiguePanel: Story = {
+    name: 'Fatigue panel — editable on NPC body (#420)',
+    args: fatiguedNpcContext(),
+    render: (args) => renderNPCSheet(args),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        // The fatigue vital panel is surfaced on the NPC tab with working controls.
+        await expect(view.getByText('Fatigue')).toBeVisible();
+        await expect(view.getByText('Rest (-1)')).toBeVisible();
+        // Clear-All appears only while fatigue > 0 (value 3 here).
+        await expect(view.getByText('Clear All')).toBeVisible();
+    },
+};

@@ -30,7 +30,7 @@
     {{#if (gt system.fatigue.value system.fatigue.max)}}
     <div class="tw-text-crimson bc:tw-text-crimson-light dh1:tw-text-gold-raw dh2:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-mt-1">
         <i class="{{concat 'fas fa-dizzy'}}"></i>
-        <span>{{localize "WH40K.Status.Fatigue.Unconscious" minutes=(sub 10 characteristics.toughness.bonus)}}</span>
+        <span>{{localize "WH40K.Status.Fatigue.Unconscious" minutes=(subtract 10 system.characteristics.toughness.bonus)}}</span>
     </div>
     {{else if (gt system.fatigue.value 0)}}
     <div class="tw-text-warning tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-mt-1">
@@ -53,7 +53,9 @@
         {{#if (gt system.fatigue.value 0)}}
         <button type="button"
                 class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1 tw-bg-gray-700 tw-px-2 tw-py-1 tw-rounded-lg tw-border-2 tw-border-warning/40 tw-text-warning tw-text-xs tw-font-bold tw-cursor-pointer"
-                data-action="clear-fatigue"
+                data-action="adjustStat"
+                data-field="system.fatigue.value"
+                data-stat-action="clear-fatigue"
                 title="{{localize 'WH40K.Status.Fatigue.ClearTitle'}}">
             <i class="{{concat 'fas fa-broom'}}"></i>
             <span>{{localize "WH40K.Status.Fatigue.ClearLabel"}}</span>
