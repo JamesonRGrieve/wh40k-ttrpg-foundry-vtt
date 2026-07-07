@@ -64,11 +64,16 @@ describe('decideTokenMove', () => {
 describe('movement enforcement wiring (#235)', () => {
     const src = readRepoFile('src/module/rules/movement-enforcement.ts');
     const hooks = readRepoFile('src/module/hooks-manager.ts');
+    const turnHooks = readRepoFile('src/module/rules/combat-turn-hooks.ts');
 
-    it('registers preUpdateToken / updateToken / updateCombat hooks', () => {
+    it('registers the token move-gate hooks and resets via the shared turn-start boundary', () => {
         expect(src).toContain("Hooks.on('preUpdateToken'");
         expect(src).toContain("Hooks.on('updateToken'");
-        expect(src).toContain("Hooks.on('updateCombat'");
+        // The per-turn budget reset moved onto the shared turn-start hook (#413):
+        // movement-enforcement subscribes to onTurnStart instead of registering
+        // its own updateCombat listener; combat-turn-hooks owns the updateCombat wiring.
+        expect(src).toContain('onTurnStart(resetMovementOnTurnStart)');
+        expect(turnHooks).toContain("Hooks.on('updateCombat'");
     });
 
     it('is conservative: GM bypass and allow-on-error', () => {

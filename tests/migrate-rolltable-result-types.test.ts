@@ -106,9 +106,7 @@ describe('migrateResult — legacy document / compendium type', () => {
 
     it('buildDocumentUuid distinguishes world documents from compendium packs', () => {
         expect(buildDocumentUuid('Item', 'x1')).toBe('Item.x1');
-        expect(buildDocumentUuid('wh40k-rpg.dh2-core-items', 'x2')).toBe(
-            'Compendium.wh40k-rpg.dh2-core-items.x2',
-        );
+        expect(buildDocumentUuid('wh40k-rpg.dh2-core-items', 'x2')).toBe('Compendium.wh40k-rpg.dh2-core-items.x2');
         expect(buildDocumentUuid('Actor', '')).toBeNull();
         expect(buildDocumentUuid(null, 'x3')).toBeNull();
     });
@@ -160,7 +158,7 @@ describe('migrateRollTable and detectors', () => {
 
         expect(changed).toBe(true);
         expect(resultsMigrated).toBe(2);
-        expect((migrated.results as Array<{ type: unknown }>).every((r) => r.type === 'text')).toBe(true);
+        expect((migrated.results as Array<{ type: string }>).every((r) => r.type === 'text')).toBe(true);
         // pure: original doc untouched.
         expect(doc.results[0].type).toBe(0);
     });

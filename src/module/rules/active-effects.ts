@@ -404,8 +404,10 @@ export async function createConditionEffect(actor: WH40KBaseActorDocument, condi
 export async function applyCriticalDamageConditions(actor: WH40KBaseActorDocument, record: CriticalDamageRecord): Promise<void> {
     const ids = criticalRiderConditionIds(record.riders);
     for (const id of ids) {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect.getFlag returns unknown; the collection element is loosely typed
-        const already = actor.effects.find((e) => (e as unknown as ActiveEffect).getFlag('wh40k-rpg', 'criticalConditionId') === id);
+        const already = actor.effects.find(
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.effects elements are loosely typed; read getFlag off a minimal shape
+            (e) => (e as unknown as { getFlag: (scope: string, key: string) => unknown }).getFlag('wh40k-rpg', 'criticalConditionId') === id,
+        );
         if (already !== undefined) continue;
         // eslint-disable-next-line no-await-in-loop -- sequential: each create mutates the actor's effects collection the next dedupe reads
         await createConditionEffect(actor, id, { flags: { 'wh40k-rpg': { criticalConditionId: id } } });

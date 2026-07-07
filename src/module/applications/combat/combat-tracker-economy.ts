@@ -31,7 +31,7 @@ interface TrackerCombatant {
 function resolveRoot(html: HTMLElement | JQuery | undefined): HTMLElement | null {
     if (html === undefined) return null;
     if (html instanceof HTMLElement) return html;
-    const first = (html as JQuery)[0];
+    const first = html[0];
     return first instanceof HTMLElement ? first : null;
 }
 

@@ -40,6 +40,8 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
+import type { ActionKind } from '../../rules/action-budget.ts';
+import { actionBudgetForActor, resetActionsForActor, spendActionForActor } from '../../rules/action-economy.ts';
 import {
     deriveAlignmentFromTally,
     nextAlignmentCheckpoint,
@@ -65,7 +67,6 @@ import {
 } from '../../rules/bc-supplement-mechanics.ts';
 import { DEATH_TO_OPPOSE_DURATION_ROUNDS, MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
 import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
-import { canEquipWeapon, computeHandBudget, handsForWeapon, resolveAvailableHands, type HandBudget } from '../../rules/hand-budget.ts';
 import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
 import {
     ASTARTES_IMPLANTS,
@@ -89,8 +90,7 @@ import {
     type GrappleState,
     type OpposedStrengthInput,
 } from '../../rules/grapple.ts';
-import type { ActionKind } from '../../rules/action-budget.ts';
-import { actionBudgetForActor, resetActionsForActor, spendActionForActor } from '../../rules/action-economy.ts';
+import { canEquipWeapon, computeHandBudget, handsForWeapon, resolveAvailableHands, type HandBudget } from '../../rules/hand-budget.ts';
 import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
 import { combatMovementView } from '../../rules/movement-budget.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
@@ -4124,13 +4124,17 @@ export default class CharacterSheet extends BaseActorSheet {
             const available = this.#availableHands();
             if (!canEquipWeapon(available, otherEquippedCosts, cost)) {
                 const remaining = Math.max(0, available - otherEquippedCosts.reduce((sum, c) => sum + c, 0));
-                this._notify('warning', game.i18n.format('WH40K.Combat.HandBudgetExceeded', {
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
-                    weapon: item.name ?? '',
-                    cost: String(cost),
-                    remaining: String(remaining),
-                    available: String(available),
-                }), { duration: 5000 });
+                this._notify(
+                    'warning',
+                    game.i18n.format('WH40K.Combat.HandBudgetExceeded', {
+                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
+                        weapon: item.name ?? '',
+                        cost: String(cost),
+                        remaining: String(remaining),
+                        available: String(available),
+                    }),
+                    { duration: 5000 },
+                );
                 return;
             }
         }
@@ -5394,17 +5398,17 @@ export default class CharacterSheet extends BaseActorSheet {
         const uuid = target.dataset['uuid'];
         if (uuid === undefined || uuid === '') return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.fromUuid is loosely typed in fvtt-types
-        const fromUuidFn = (globalThis as unknown as { fromUuid?: (uuid: string) => Promise<unknown> }).fromUuid;
+        const fromUuidFn = (globalThis as unknown as { fromUuid?: (uuid: string) => Promise<object | null> }).fromUuid;
         if (fromUuidFn === undefined) return;
-        let doc: { sheet?: { render: (force: boolean) => unknown } } | null = null;
+        let doc: { sheet?: { render: (force: boolean) => void } } | null = null;
         try {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid resolves to unknown; the cast narrows to the render surface
-            doc = (await fromUuidFn(uuid)) as { sheet?: { render: (force: boolean) => unknown } } | null;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid resolves to a Foundry document; the cast narrows to the render surface
+            doc = (await fromUuidFn(uuid)) as { sheet?: { render: (force: boolean) => void } } | null;
         } catch {
             doc = null;
         }
         const sheet = doc?.sheet;
-        if (sheet === undefined || sheet === null) {
+        if (sheet === undefined) {
             ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.DivinationEntryMissing'));
             return;
         }

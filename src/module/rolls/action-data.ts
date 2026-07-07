@@ -426,8 +426,8 @@ export class ActionData {
         // has a single source. On a refund the ammo is already restored by
         // refundAmmo, so only the flag is cleared (loseAmmo: false).
         const weaponSystem = this.rollData.weapon.system as {
-            jam?: () => Promise<unknown>;
-            clearJam?: (opts?: { loseAmmo?: boolean }) => Promise<unknown>;
+            jam?: () => Promise<void>;
+            clearJam?: (opts?: { loseAmmo?: boolean }) => Promise<void>;
         };
         if (jammed) {
             await weaponSystem.jam?.();

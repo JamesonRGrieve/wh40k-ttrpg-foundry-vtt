@@ -33,8 +33,26 @@ interface PsychicPanelContext {
 
 const POWERS: PsychicPowerRow[] = [
     { id: 'pwr-smite', name: 'Smite', img: null, disciplineLabel: 'Telekinesis', focusTestLabel: 'Willpower', prCost: 4, isAttack: true, identified: true },
-    { id: 'pwr-fearful', name: 'Fearful Aura', img: null, disciplineLabel: 'Divination', focusTestLabel: 'Willpower +10', prCost: 2, isAttack: false, identified: true },
-    { id: 'pwr-precog', name: 'Precognition', img: null, disciplineLabel: 'Divination', focusTestLabel: 'Perception', prCost: 1, isAttack: false, identified: true },
+    {
+        id: 'pwr-fearful',
+        name: 'Fearful Aura',
+        img: null,
+        disciplineLabel: 'Divination',
+        focusTestLabel: 'Willpower +10',
+        prCost: 2,
+        isAttack: false,
+        identified: true,
+    },
+    {
+        id: 'pwr-precog',
+        name: 'Precognition',
+        img: null,
+        disciplineLabel: 'Divination',
+        focusTestLabel: 'Perception',
+        prCost: 1,
+        isAttack: false,
+        identified: true,
+    },
 ];
 
 function renderPanel(ctx: PsychicPanelContext): HTMLElement {
@@ -53,13 +71,13 @@ export const Default: Story = {
     name: 'Known powers with invoke controls',
     args: { psychicPowers: POWERS, psyRating: 4, showPsychicPanel: true, isGM: true },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const body = within(canvasElement);
         // Every power surfaces a row with an invoke (rollPower) control.
         const invokeButtons = canvasElement.querySelectorAll('[data-action="rollPower"]');
-        expect(invokeButtons.length).toBe(POWERS.length);
+        await expect(invokeButtons.length).toBe(POWERS.length);
         // Focus test + discipline are visible.
-        expect(canvas.getByText('Smite')).toBeTruthy();
-        expect(canvas.getAllByText('Willpower').length).toBeGreaterThan(0);
+        await expect(body.getByText('Smite')).toBeTruthy();
+        await expect(body.getAllByText('Willpower').length).toBeGreaterThan(0);
     },
 };
 
@@ -67,14 +85,14 @@ export const NoPowers: Story = {
     name: 'Empty state (psyker without powers)',
     args: { psychicPowers: [], psyRating: 3, showPsychicPanel: true, isGM: true },
     play: async ({ canvasElement }) => {
-        expect(canvasElement.querySelectorAll('[data-action="rollPower"]').length).toBe(0);
+        await expect(canvasElement.querySelectorAll('[data-action="rollPower"]').length).toBe(0);
     },
 };
 
 export const UnidentifiedForPlayer: Story = {
     name: 'Unidentified power hides Focus/PR from players',
     args: {
-        psychicPowers: [{ ...POWERS[0]!, identified: false }],
+        psychicPowers: [{ ...POWERS[0], identified: false }],
         psyRating: 4,
         showPsychicPanel: true,
         isGM: false,
@@ -112,8 +130,8 @@ export const WithHandBudget: Story = {
         ),
     play: async ({ canvasElement }) => {
         const badge = canvasElement.querySelector('[data-testid="hand-budget"]');
-        expect(badge?.textContent).toContain('1/2');
-        expect(canvasElement.querySelectorAll('[data-action="rollPower"]').length).toBe(POWERS.length);
+        await expect(badge?.textContent).toContain('1/2');
+        await expect(canvasElement.querySelectorAll('[data-action="rollPower"]').length).toBe(POWERS.length);
     },
 };
 
@@ -121,14 +139,12 @@ export const HandBudgetOverCommitted: Story = {
     name: 'Arsenal hand budget over-committed (red)',
     args: { psychicPowers: [], psyRating: 4, showPsychicPanel: false, isGM: true },
     render: (args) =>
-        renderSheetParts(
-            [{ template: HAND_BUDGET_HEADER, context: { handBudget: { available: 2, used: 4, remaining: 0, overCommitted: true } } }],
-            args,
-            { systemId: 'rt' },
-        ),
+        renderSheetParts([{ template: HAND_BUDGET_HEADER, context: { handBudget: { available: 2, used: 4, remaining: 0, overCommitted: true } } }], args, {
+            systemId: 'rt',
+        }),
     play: async ({ canvasElement }) => {
         const badge = canvasElement.querySelector('[data-testid="hand-budget"]');
-        expect(badge?.textContent).toContain('0/2');
-        expect(badge?.className).toContain('accent-combat');
+        await expect(badge?.textContent).toContain('0/2');
+        await expect(badge?.className).toContain('accent-combat');
     },
 };

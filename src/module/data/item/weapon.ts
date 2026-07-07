@@ -1224,7 +1224,7 @@ export default class WeaponData extends ItemDataModel.mixin(
      * path when the rulebook jam trigger fires (rules/weapon-jam.ts).
      * @returns {Promise<Item>}
      */
-    jam(): Promise<WH40KItem | undefined> {
+    async jam(): Promise<WH40KItem | undefined> {
         return this.parent.update({ 'system.jammed': true });
     }
 
@@ -1240,7 +1240,7 @@ export default class WeaponData extends ItemDataModel.mixin(
      *   Systems whose unjam rules retain the loaded rounds pass `false`.
      * @returns {Promise<Item>}
      */
-    clearJam({ loseAmmo = true }: { loseAmmo?: boolean } = {}): Promise<WH40KItem | undefined> {
+    async clearJam({ loseAmmo = true }: { loseAmmo?: boolean } = {}): Promise<WH40KItem | undefined> {
         if (loseAmmo && this.usesAmmo) {
             return this.parent.update({ 'system.jammed': false, 'system.clip.value': 0 });
         }
