@@ -31,6 +31,10 @@ export interface TokenFrameFlag {
     cx?: number;
     cy?: number;
     content?: number;
+    /** Subject zoom, decoupled from the content circle: the source is scaled by
+     *  `content * zoom`, so `zoom > 1` fills the bust with a face on portraits
+     *  where the head is only a fraction of the frame. Default 1. */
+    zoom?: number;
 }
 
 export interface FrameTransform {
@@ -48,11 +52,13 @@ const RING_CONTENT = 0.75;
 /**
  * Pure geometry: place a `srcWidth`x`srcHeight` portrait into a `size`-px
  * square frame so the point (`cx`, `cy`) (source-fraction coordinates) sits
- * at the frame centre and the source's short side spans the content circle.
+ * at the frame centre. The source's short side spans `content * zoom` of the
+ * frame — `content` is the ring content circle (mask radius); `zoom` scales the
+ * subject INSIDE it, so a face can fill the bust without enlarging the mask.
  */
-export function computeFrameTransform(srcWidth: number, srcHeight: number, size: number, content: number, cx: number, cy: number): FrameTransform {
+export function computeFrameTransform(srcWidth: number, srcHeight: number, size: number, content: number, cx: number, cy: number, zoom = 1): FrameTransform {
     const side = Math.min(srcWidth, srcHeight);
-    const scale = (size * content) / side;
+    const scale = (size * content * zoom) / side;
     return {
         scale,
         x: size / 2 - cx * srcWidth * scale,
@@ -66,10 +72,14 @@ export function parseTokenFrameFlag(value: object | boolean | undefined | null):
     if (value === undefined || value === null || value === false) return null;
     const raw: TokenFrameFlag = value === true ? {} : value;
     const clamp = (v: number | undefined, fallback: number): number => (typeof v === 'number' && Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : fallback);
+    // zoom is a subject multiplier (may exceed 1), clamped to a sane [0.25, 4].
+    const clampZoom = (v: number | undefined, fallback: number): number =>
+        typeof v === 'number' && Number.isFinite(v) ? Math.min(4, Math.max(0.25, v)) : fallback;
     return {
         cx: clamp(raw.cx, 0.5),
         cy: clamp(raw.cy, 0.3),
         content: clamp(raw.content, 0),
+        zoom: clampZoom(raw.zoom, 1),
     };
 }
 
@@ -122,7 +132,7 @@ const generated = new Map<string, PIXI.RenderTexture>();
 const ours = new WeakSet<PIXI.Texture>();
 
 function buildBustTexture(source: PIXI.Texture, frame: Required<TokenFrameFlag>, content: number, renderer: PIXI.IRenderer): PIXI.RenderTexture {
-    const t = computeFrameTransform(source.width, source.height, RT_SIZE, content, frame.cx, frame.cy);
+    const t = computeFrameTransform(source.width, source.height, RT_SIZE, content, frame.cx, frame.cy, frame.zoom);
     const sprite = new PIXI.Sprite(source);
     sprite.scale.set(t.scale);
     sprite.position.set(t.x, t.y);
@@ -151,7 +161,7 @@ export function onRefreshToken(token: MaskableToken): void {
     if (mesh?.texture.valid !== true) return;
     if (ours.has(mesh.texture)) return; // already showing the generated bust
     const content = frame.content > 0 ? frame.content : token.document.ring.enabled ? RING_CONTENT : 1.0;
-    const key = `${token.document.texture.src ?? ''}|${frame.cx}|${frame.cy}|${content}`;
+    const key = `${token.document.texture.src ?? ''}|${frame.cx}|${frame.cy}|${content}|${frame.zoom}`;
     // strict tsc types canvas.app as possibly undefined (pre-boot); the hook
     // only fires with a live canvas, but guard rather than assert.
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- fvtt-types and strict tsc disagree on canvas.app nullability
