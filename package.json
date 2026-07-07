@@ -59,6 +59,8 @@
     "packs:audit": "node scripts/build-compendium-uuid-index.mjs",
     "packs:audit:strict": "node scripts/build-compendium-uuid-index.mjs --strict",
     "packs:validate": "node src/packs/validate-schema.cjs",
+    "packs:validate:rolltables": "node scripts/validate-rolltable-types.mjs",
+    "packs:migrate:rolltables": "node scripts/migrate-rolltable-result-types.mjs 'src/packs/**/*rolltables*/_source'",
     "packs:folders": "node scripts/gen-pack-folders.mjs",
     "packs:folders:check": "node scripts/gen-pack-folders.mjs --check",
     "i18n:gen": "node scripts/gen-i18n-types.mjs",
