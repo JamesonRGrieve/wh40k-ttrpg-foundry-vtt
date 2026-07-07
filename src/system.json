@@ -592,6 +592,30 @@
             "flags": {}
         },
         {
+            "name": "bc-core-actors-bestiary",
+            "label": "BC: Core Rulebook, Bestiary",
+            "path": "packs/black-crusade/bc-core-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-core-actors-npcs",
+            "label": "BC: Core Rulebook, NPCs",
+            "path": "packs/black-crusade/bc-core-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "bc-core-items-ammo",
             "label": "BC: Core Rulebook, Ammunition",
             "path": "packs/black-crusade/bc-core-items-ammo",
@@ -2539,6 +2563,18 @@
             "name": "hb-dh2-actors-bestiary",
             "label": "Homebrew: DH2 Bestiary",
             "path": "packs/homebrew/hb-dh2-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-actors-reinforcements",
+            "label": "Homebrew: DH2 Reinforcements",
+            "path": "packs/homebrew/hb-dh2-actors-reinforcements",
             "system": "wh40k-rpg",
             "type": "Actor",
             "ownership": {
@@ -7073,6 +7109,8 @@
                 {
                     "name": "Core Rulebook",
                     "packs": [
+                        "bc-core-actors-bestiary",
+                        "bc-core-actors-npcs",
                         "bc-core-items-ammo",
                         "bc-core-items-armor-mods",
                         "bc-core-items-armour",
@@ -7397,8 +7435,6 @@
                     "packs": [
                         "dw-core-actors-bestiary",
                         "dw-core-actors-npcs",
-                        "dw-core-journals",
-                        "dw-core-rolltables",
                         "dw-core-items-ammo",
                         "dw-core-items-armour",
                         "dw-core-items-gear",
@@ -7406,8 +7442,10 @@
                         "dw-core-items-talents",
                         "dw-core-items-weapon-qualities",
                         "dw-core-items-weapons",
+                        "dw-core-journals",
                         "dw-core-origins-chapters",
-                        "dw-core-origins-specialities"
+                        "dw-core-origins-specialities",
+                        "dw-core-rolltables"
                     ]
                 },
                 {
@@ -7514,6 +7552,7 @@
                     "packs": [
                         "hb-bc-items-traits",
                         "hb-dh2-actors-bestiary",
+                        "hb-dh2-actors-reinforcements",
                         "hb-dh2-actors-ships",
                         "hb-dh2-items-armour",
                         "hb-dh2-items-conditions",
@@ -7738,8 +7777,17 @@
                     "packs": [
                         "rt-battlefleet-items-ship-components",
                         "rt-battlefleet-items-ship-weapons",
+                        "rt-battlefleet-journals",
+                        "rt-battlefleet-rolltables",
                         "rt-battlefleet-vehicles-aircraft",
                         "rt-battlefleet-vehicles-voidcraft"
+                    ]
+                },
+                {
+                    "name": "Citadel",
+                    "packs": [
+                        "rt-citadel-vehicles-aircraft",
+                        "rt-citadel-vehicles-voidcraft"
                     ]
                 },
                 {
@@ -7764,6 +7812,8 @@
                 {
                     "name": "Faith and Coin",
                     "packs": [
+                        "rt-faith-actors-bestiary",
+                        "rt-faith-actors-npcs",
                         "rt-faith-items-ammo",
                         "rt-faith-items-armour",
                         "rt-faith-items-gear",
@@ -7771,12 +7821,35 @@
                         "rt-faith-items-talents",
                         "rt-faith-items-traits",
                         "rt-faith-items-weapon-mods",
-                        "rt-faith-items-weapons"
+                        "rt-faith-items-weapons",
+                        "rt-faith-journals",
+                        "rt-faith-rolltables"
+                    ]
+                },
+                {
+                    "name": "Fallen",
+                    "packs": [
+                        "rt-fallen-vehicles-voidcraft"
+                    ]
+                },
+                {
+                    "name": "Frozen",
+                    "packs": [
+                        "rt-frozen-vehicles-terracraft",
+                        "rt-frozen-vehicles-voidcraft"
+                    ]
+                },
+                {
+                    "name": "Game Master's Kit",
+                    "packs": [
+                        "rt-gmkit-vehicles-voidcraft"
                     ]
                 },
                 {
                     "name": "Hostile Acquisitions",
                     "packs": [
+                        "rt-hostile-actors-bestiary",
+                        "rt-hostile-actors-npcs",
                         "rt-hostile-items-ammo",
                         "rt-hostile-items-armor-mods",
                         "rt-hostile-items-armour",
@@ -7785,7 +7858,10 @@
                         "rt-hostile-items-ship-weapons",
                         "rt-hostile-items-talents",
                         "rt-hostile-items-traits",
-                        "rt-hostile-items-weapons"
+                        "rt-hostile-items-weapons",
+                        "rt-hostile-journals",
+                        "rt-hostile-rolltables",
+                        "rt-hostile-vehicles-voidcraft"
                     ]
                 },
                 {
@@ -7803,12 +7879,14 @@
                         "rt-storm-items-talents",
                         "rt-storm-items-traits",
                         "rt-storm-items-weapons",
+                        "rt-storm-journals",
                         "rt-storm-origins-birthrights",
                         "rt-storm-origins-homeworlds",
                         "rt-storm-origins-lineages",
                         "rt-storm-origins-lure-of-the-void",
                         "rt-storm-origins-motivations",
                         "rt-storm-origins-trials-and-travails",
+                        "rt-storm-rolltables",
                         "rt-storm-vehicles-aircraft",
                         "rt-storm-vehicles-terracraft",
                         "rt-storm-vehicles-voidcraft"
@@ -7820,7 +7898,21 @@
                         "rt-bestiary-actors-bestiary",
                         "rt-bestiary-items-gear",
                         "rt-bestiary-items-weapons",
-                        "rt-bestiary-journals"
+                        "rt-bestiary-journals",
+                        "rt-bestiary-rolltables"
+                    ]
+                },
+                {
+                    "name": "Lure",
+                    "packs": [
+                        "rt-lure-vehicles-voidcraft"
+                    ]
+                },
+                {
+                    "name": "Shedding",
+                    "packs": [
+                        "rt-shedding-actors-bestiary",
+                        "rt-shedding-journals"
                     ]
                 },
                 {
@@ -7832,18 +7924,23 @@
                         "rt-stars-items-armour",
                         "rt-stars-items-cybernetics",
                         "rt-stars-items-gear",
-                        "rt-stars-items-weapons"
+                        "rt-stars-items-weapons",
+                        "rt-stars-journals",
+                        "rt-stars-rolltables"
                     ]
                 },
                 {
                     "name": "Tau Character Guide",
                     "packs": [
+                        "rt-tau-actors-bestiary",
                         "rt-tau-items-ammo",
                         "rt-tau-items-armour",
                         "rt-tau-items-gear",
                         "rt-tau-items-talents",
                         "rt-tau-items-traits",
                         "rt-tau-items-weapons",
+                        "rt-tau-journals",
+                        "rt-tau-rolltables",
                         "rt-tau-vehicles-terracraft"
                     ]
                 },
@@ -7860,6 +7957,8 @@
                 {
                     "name": "The Navis Primer",
                     "packs": [
+                        "rt-navis-actors-bestiary",
+                        "rt-navis-actors-npcs",
                         "rt-navis-items-armour",
                         "rt-navis-items-gear",
                         "rt-navis-items-navigator-powers",
@@ -7867,7 +7966,9 @@
                         "rt-navis-items-talents",
                         "rt-navis-items-traits",
                         "rt-navis-items-weapons",
-                        "rt-navis-journals-navigation"
+                        "rt-navis-journals",
+                        "rt-navis-journals-navigation",
+                        "rt-navis-rolltables"
                     ]
                 },
                 {
@@ -7880,6 +7981,8 @@
                         "rt-reaver-items-talents",
                         "rt-reaver-items-traits",
                         "rt-reaver-items-weapons",
+                        "rt-reaver-journals",
+                        "rt-reaver-rolltables",
                         "rt-reaver-vehicles-aircraft",
                         "rt-reaver-vehicles-terracraft",
                         "rt-reaver-vehicles-voidcraft"
@@ -7888,6 +7991,7 @@
                 {
                     "name": "General",
                     "packs": [
+                        "rt-adventures",
                         "rt-core-actors-bestiary",
                         "rt-core-actors-npcs",
                         "rt-core-items-ammo",
