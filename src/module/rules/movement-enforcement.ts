@@ -14,6 +14,7 @@
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { onTurnStart } from './combat-turn-hooks.ts';
 import { evaluateCombatMovement, type MovementEvaluation, type MovementMode, turnMovementAllowance } from './movement-budget.ts';
 
 const MOVED_FLAG = 'movedThisTurnMetres';
@@ -75,7 +76,7 @@ function writeMovedMetres(combatant: LooseCombatant | null | undefined, metres: 
 /** The token's selected move mode (the move-mode toggle flag); undefined when unset/invalid → full move. */
 function readMovementMode(token: LooseToken): MovementMode | undefined {
     const raw = (token as FlagAccessor | null | undefined)?.getFlag?.(SYSTEM_ID, MOVEMENT_MODE_FLAG);
-    return raw === 'half' || raw === 'full' || raw === 'charge' || raw === 'run' || raw === 'disengage' ? raw : undefined;
+    return raw === 'half' || raw === 'full' || raw === 'charge' || raw === 'run' ? raw : undefined;
 }
 
 /** Metres a token move covers, from the position delta and the scene grid. */
@@ -136,11 +137,10 @@ function onUpdateToken(tokenDoc: LooseToken, changes: { x?: number | null | unde
     }
 }
 
-/** Reset the per-turn moved distance when the turn/round advances. */
-function onUpdateCombat(combat: LooseCombat, changes: { turn?: number | null | undefined; round?: number | null | undefined }): void {
+/** Reset the starting combatant's per-turn moved distance at the turn-start boundary. */
+function resetMovementOnTurnStart(combatant: LooseCombatant | null): void {
     try {
-        if (!('turn' in changes) && !('round' in changes)) return;
-        writeMovedMetres(combat.combatant, 0);
+        if (combatant !== null) writeMovedMetres(combatant, 0);
     } catch (err) {
         console.error('WH40K | movement enforcement (turn reset) — ignoring', err);
     }
@@ -151,5 +151,7 @@ function onUpdateCombat(combat: LooseCombat, changes: { turn?: number | null | u
 export function registerMovementEnforcement(): void {
     Hooks.on('preUpdateToken', onPreUpdateToken);
     Hooks.on('updateToken', onUpdateToken);
-    Hooks.on('updateCombat', onUpdateCombat);
+    // Per-turn budget resets via the shared turn-start hook (#413), the single
+    // place the combatant turn boundary is derived.
+    onTurnStart(resetMovementOnTurnStart);
 }

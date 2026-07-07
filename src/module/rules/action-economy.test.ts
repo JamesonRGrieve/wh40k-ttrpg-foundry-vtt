@@ -5,8 +5,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { type ActionsSpent, EMPTY_ACTIONS_SPENT } from './action-budget.ts';
 import { actionBudgetForActor, readActionsSpent, registerActionEconomy, resetActionsForActor, spendActionForActor } from './action-economy.ts';
+import { clearTurnSubscribers, registerCombatTurnHooks, type TurnCombat } from './combat-turn-hooks.ts';
 
 interface FakeCombatant {
+    id: string;
     actorId: string;
     flag: ActionsSpent | undefined;
     getFlag: (scope: string, key: string) => ActionsSpent | undefined;
@@ -16,6 +18,7 @@ interface FakeCombatant {
 
 function makeCombatant(actorId: string, initial: ActionsSpent | undefined = undefined): FakeCombatant {
     const c: FakeCombatant = {
+        id: `combatant-${actorId}`,
         actorId,
         flag: initial,
         getFlag: (_s, _k) => c.flag,
@@ -97,10 +100,26 @@ describe('action-economy combat glue (#264)', () => {
         expect(readActionsSpent(c)).toEqual(EMPTY_ACTIONS_SPENT);
     });
 
-    it('registers the updateCombat reset hook', () => {
-        const on = vi.fn();
-        vi.stubGlobal('Hooks', { on });
+    it('resets the starting combatant budget on a turn-start boundary (#413 wiring)', () => {
+        clearTurnSubscribers();
+        // Capture the updateCombat handler registerCombatTurnHooks installs.
+        let updateCombatHandler: ((combat: TurnCombat, changes: { turn?: number }) => void) | undefined;
+        vi.stubGlobal('Hooks', {
+            on: (event: string, fn: (combat: TurnCombat, changes: { turn?: number }) => void) => {
+                if (event === 'updateCombat') updateCombatHandler = fn;
+            },
+        });
+        vi.stubGlobal('console', { ...console, error: vi.fn() });
+
+        const started = makeCombatant('a1', { full: 0, half: 2, free: 3, reaction: 1 });
+        registerCombatTurnHooks();
         registerActionEconomy();
-        expect(on).toHaveBeenCalledWith('updateCombat', expect.any(Function));
+        expect(updateCombatHandler).toBeTypeOf('function');
+
+        // Advance the turn so `started` becomes the active combatant.
+        updateCombatHandler?.({ combatant: started, combatants: [started], previous: { combatantId: 'combatant-a0' } }, { turn: 1 });
+
+        expect(started.flag).toEqual(EMPTY_ACTIONS_SPENT);
+        clearTurnSubscribers();
     });
 });

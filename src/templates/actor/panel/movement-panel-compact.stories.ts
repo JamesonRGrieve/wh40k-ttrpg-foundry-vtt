@@ -1,7 +1,7 @@
 /**
  * Storybook stories for the combat movement cluster (#235 / #234). This Combat-tab
- * panel is the single in-combat move-mode selector: Half/Full/Charge/Run/Disengage
- * toggles (`data-action="setMovementMode"`), each showing its distance + action
+ * panel is the single in-combat move-mode selector: Half/Full/Charge/Run toggles
+ * (`data-action="setMovementMode"`), each showing its distance + action
  * cost, the selected mode highlighted, and the whole cluster greyed/turn-gated when
  * it is not the player's turn. The `combatMovement` context (selectedMode / disabled
  * / remaining / inCombat) drives those states; the sheet computes it from combat

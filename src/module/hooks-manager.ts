@@ -39,6 +39,7 @@ import {
 } from './applications/actor/game-system-sheets.ts';
 import LootActorSheet from './applications/actor/loot-sheet.ts';
 import * as characterCreation from './applications/character-creation/_module.ts';
+import { registerCombatTrackerEconomy } from './applications/combat/combat-tracker-economy.ts';
 import { RTCompendiumBrowser } from './applications/compendium-browser.ts';
 import { TooltipsWH40K } from './applications/components/_module.ts';
 import { ConvertActorSystemDialog } from './applications/dialogs/convert-actor-system-dialog.ts';
@@ -102,6 +103,7 @@ import {
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
 import { registerActionEconomy } from './rules/action-economy.ts';
+import { registerCombatTurnHooks } from './rules/combat-turn-hooks.ts';
 import { WH40K } from './rules/config.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
 import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.ts';
@@ -176,11 +178,19 @@ export class HooksManager {
         DHBasicActionManager.initializeHooks();
         DHCombatActionManager.initializeHooks();
 
+        // Single system-level turn-start / turn-end boundary derivation (#413);
+        // downstream features subscribe through it (must register before them).
+        registerCombatTurnHooks();
+
         // Turn-gate + rate-limit token movement during combat (#235).
         registerMovementEnforcement();
 
         // Per-turn action-economy reset (Full/Half/Free/Reaction) during combat (#264).
         registerActionEconomy();
+
+        // Surface each combatant's action budget on the combat-tracker sidebar
+        // and keep open combat tabs live (#264).
+        registerCombatTrackerEconomy();
 
         // Keep the UUID → display-name cache warm as world docs change.
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document hook payloads carry framework-typed loose shapes

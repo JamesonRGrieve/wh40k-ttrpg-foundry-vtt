@@ -1,0 +1,47 @@
+{{! Per-turn action-economy readout (#264) — combat-tab surface. }}
+{{! Shows the combatant's remaining Full / Half / Reaction and Free-spent count with }}
+{{! click-to-spend buttons (auto-disabled when exhausted) and a reset-to-fresh-turn }}
+{{! control. Only rendered while this actor is in an active combat (actionBudget set). }}
+{{#if actionBudget}}
+<div class="wh40k-panel-section tw-mb-[var(--wh40k-space-md)]">
+    <div class="tw-flex tw-items-center tw-justify-between tw-mb-[var(--wh40k-space-sm)]">
+        <span class="tw-flex tw-items-center tw-gap-1 tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+            <i class="fas fa-hourglass-half"></i> {{localize "WH40K.Combat.ActionEconomy"}}
+        </span>
+        <button type="button"
+                class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-cursor-pointer tw-text-[0.65rem] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-bg-[var(--wh40k-bg-paper)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgba(212,175,55,0.15)] tw-transition-all"
+                data-action="resetActions" title="{{localize 'WH40K.Combat.ResetActions'}}" aria-label="{{localize 'WH40K.Combat.ResetActions'}}">
+            <i class="fas fa-rotate-left"></i>
+        </button>
+    </div>
+    <div class="tw-grid tw-grid-cols-2 tw-gap-[var(--wh40k-space-sm)]">
+        <button type="button"
+                class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-p-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-bg-[var(--wh40k-bg-paper)] tw-cursor-pointer tw-transition-all hover:not-disabled:tw-border-[color:var(--wh40k-accent-gold)] hover:not-disabled:tw-bg-[rgba(212,175,55,0.15)] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                data-action="spendAction" data-kind="full" {{#unless actionBudget.fullAvailable}}disabled{{/unless}}>
+            <i class="fas fa-circle tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-combat)]"></i>
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[color:var(--wh40k-text-primary)]">{{localize "WH40K.Combat.FullAction"}}</span>
+        </button>
+        <button type="button"
+                class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-p-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-bg-[var(--wh40k-bg-paper)] tw-cursor-pointer tw-transition-all hover:not-disabled:tw-border-[color:var(--wh40k-accent-gold)] hover:not-disabled:tw-bg-[rgba(212,175,55,0.15)] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                data-action="spendAction" data-kind="half" {{#unless actionBudget.halfRemaining}}disabled{{/unless}}>
+            <i class="fas fa-adjust tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-combat)]"></i>
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[color:var(--wh40k-text-primary)]">{{localize "WH40K.Combat.HalfAction"}}</span>
+            <span class="tw-text-[0.7rem] tw-font-bold tw-text-[color:var(--wh40k-accent-gold)]">{{actionBudget.halfRemaining}}</span>
+        </button>
+        <button type="button"
+                class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-p-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-bg-[var(--wh40k-bg-paper)] tw-cursor-pointer tw-transition-all hover:not-disabled:tw-border-[color:var(--wh40k-accent-gold)] hover:not-disabled:tw-bg-[rgba(212,175,55,0.15)] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                data-action="spendAction" data-kind="reaction" {{#unless actionBudget.reactionRemaining}}disabled{{/unless}}>
+            <i class="fas fa-shield-alt tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-skills)]"></i>
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[color:var(--wh40k-text-primary)]">{{localize "WH40K.Combat.ReactionAction"}}</span>
+            <span class="tw-text-[0.7rem] tw-font-bold tw-text-[color:var(--wh40k-accent-gold)]">{{actionBudget.reactionRemaining}}</span>
+        </button>
+        <button type="button"
+                class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-p-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-bg-[var(--wh40k-bg-paper)] tw-cursor-pointer tw-transition-all hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgba(212,175,55,0.15)]"
+                data-action="spendAction" data-kind="free">
+            <i class="fas fa-feather tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-talents)]"></i>
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[color:var(--wh40k-text-primary)]">{{localize "WH40K.Combat.FreeAction"}}</span>
+            <span class="tw-text-[0.7rem] tw-font-bold tw-text-[color:var(--wh40k-accent-gold)]">{{actionBudget.freeSpent}}</span>
+        </button>
+    </div>
+</div>
+{{/if}}

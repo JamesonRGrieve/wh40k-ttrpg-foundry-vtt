@@ -59,10 +59,8 @@ describe('turnMovementAllowance', () => {
         expect(turnMovementAllowance(rates, 'run')).toBe(24);
     });
 
-    it('treats Disengage as a half-rate move', () => {
-        expect(turnMovementAllowance(rates, 'disengage')).toBe(4);
-        expect(turnMovementAllowance({ full: 8 }, 'disengage')).toBe(8); // no half rate → full fallback
-    });
+    // Disengage is no longer a move mode / speed — it is a Half Action (#416),
+    // spent through the action economy, not selected here.
 
     it('falls back to the full move when the selected mode has no rate', () => {
         expect(turnMovementAllowance({ full: 8 }, 'charge')).toBe(8);

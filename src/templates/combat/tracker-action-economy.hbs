@@ -1,0 +1,17 @@
+{{! Compact per-turn action-economy readout (#264) injected into each combat-tracker
+    row. Receives `budget` (the ActionBudgetView for the row's combatant). Shows Full
+    availability, Half remaining, Reaction remaining, and Free spent as tiny badges. }}
+<div class="wh40k-tracker-economy tw-flex tw-items-center tw-gap-1.5 tw-mt-0.5 tw-text-[0.6rem] tw-font-semibold tw-text-[color:var(--wh40k-bone,#e8dcc8)]" role="group" aria-label="{{localize 'WH40K.Combat.ActionEconomy'}}">
+    <span class="tw-inline-flex tw-items-center tw-gap-0.5 {{#unless budget.fullAvailable}}tw-opacity-40{{/unless}}" title="{{localize 'WH40K.Combat.FullAction'}}">
+        <i class="fas fa-circle"></i>
+    </span>
+    <span class="tw-inline-flex tw-items-center tw-gap-0.5 {{#unless budget.halfRemaining}}tw-opacity-40{{/unless}}" title="{{localize 'WH40K.Combat.HalfAction'}}">
+        <i class="fas fa-adjust"></i>{{budget.halfRemaining}}
+    </span>
+    <span class="tw-inline-flex tw-items-center tw-gap-0.5 {{#unless budget.reactionRemaining}}tw-opacity-40{{/unless}}" title="{{localize 'WH40K.Combat.ReactionAction'}}">
+        <i class="fas fa-shield-alt"></i>{{budget.reactionRemaining}}
+    </span>
+    <span class="tw-inline-flex tw-items-center tw-gap-0.5" title="{{localize 'WH40K.Combat.FreeAction'}}">
+        <i class="fas fa-feather"></i>{{budget.freeSpent}}
+    </span>
+</div>

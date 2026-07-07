@@ -4,6 +4,7 @@ import type { ActionData } from '../rolls/action-data.ts';
 import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';
 import { Hit } from '../rolls/damage-data.ts';
 import { uuid, postChatCard } from '../rolls/roll-helpers.ts';
+import { actionBudgetForActor, spendActionForActor } from '../rules/action-economy.ts';
 import { ASSASSINS_STRIKE_TEST } from '../rules/assassins-strike.ts';
 import { weaponHasQuality } from '../rules/weapon-quality-effects.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
@@ -83,6 +84,16 @@ export class BasicActionManager {
             html.querySelectorAll('.roll-control__horde-break-test').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._hordeBreakTest(ev);
+                });
+            });
+            html.querySelectorAll('.roll-control__attempt-dodge').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    void this._attemptReaction(ev, 'dodge');
+                });
+            });
+            html.querySelectorAll('.roll-control__attempt-parry').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    void this._attemptReaction(ev, 'parry');
                 });
             });
         });
@@ -373,6 +384,52 @@ export class BasicActionManager {
         } catch {
             btn.disabled = false;
         }
+    }
+
+    /**
+     * Chat-card defender reaction (#414): the target of a resolved attack rolls
+     * their own Dodge (any attack) or Parry (melee) test and spends their
+     * Reaction for the round via the action economy (#264). The evasion skill is
+     * the defender's own, resolved through their roll pipeline — scoped to their
+     * game line, never hardcoded (Direction #7). The button disables once used; a
+     * defender with no Reaction left this round is blocked with a notice. Out of
+     * combat (no action budget) the test still rolls, spending nothing.
+     */
+    async _attemptReaction(event: Event, skill: 'dodge' | 'parry'): Promise<void> {
+        event.preventDefault();
+        const btn = event.currentTarget as HTMLButtonElement;
+        const actionData = this.#resolveStoredAction(btn, game.i18n.localize('WH40K.FateActionExpired'));
+        if (actionData == null) return;
+
+        const defender = actionData.rollData.targetActor as (WithRollSkill & { id?: string | null }) | null;
+        if (defender == null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Combat.NoDefender'));
+            return;
+        }
+
+        // If the defender is in combat, a Reaction must be available this round.
+        const defenderId = defender.id ?? null;
+        if (defenderId !== null) {
+            const budget = actionBudgetForActor(defenderId);
+            if (budget !== null && budget.reactionRemaining <= 0) {
+                ui.notifications.warn(game.i18n.localize('WH40K.Combat.ReactionUsed'));
+                return;
+            }
+        }
+
+        // Disable immediately so the same card cannot double-spend the reaction.
+        btn.disabled = true;
+        try {
+            await defender.rollSkill?.(skill);
+        } catch {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dev-only fallback when the defender's rollSkill API throws (e.g., missing skill on legacy data)
+            ui.notifications.warn('Unable to roll the defender reaction test.');
+            btn.disabled = false;
+            return;
+        }
+
+        // Spend the Reaction once the test has been dispatched.
+        if (defenderId !== null) spendActionForActor(defenderId, 'reaction');
     }
 
     async _refundResources(event: Event): Promise<void> {
