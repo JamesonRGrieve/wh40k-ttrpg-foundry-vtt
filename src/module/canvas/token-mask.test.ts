@@ -39,13 +39,20 @@ describe('parseTokenFrameFlag', () => {
     });
 
     it('fills head-biased defaults for a bare enable', () => {
-        expect(parseTokenFrameFlag(true)).toEqual({ cx: 0.5, cy: 0.3, content: 0 });
-        expect(parseTokenFrameFlag({})).toEqual({ cx: 0.5, cy: 0.3, content: 0 });
+        expect(parseTokenFrameFlag(true)).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1 });
+        expect(parseTokenFrameFlag({})).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1 });
     });
 
     it('keeps explicit coordinates and clamps out-of-range values', () => {
-        expect(parseTokenFrameFlag({ cx: 0.7, cy: 0.2, content: 0.8 })).toEqual({ cx: 0.7, cy: 0.2, content: 0.8 });
-        expect(parseTokenFrameFlag({ cx: 4, cy: -1 })).toEqual({ cx: 1, cy: 0, content: 0 });
+        expect(parseTokenFrameFlag({ cx: 0.7, cy: 0.2, content: 0.8 })).toEqual({ cx: 0.7, cy: 0.2, content: 0.8, zoom: 1 });
+        expect(parseTokenFrameFlag({ cx: 4, cy: -1 })).toEqual({ cx: 1, cy: 0, content: 0, zoom: 1 });
+    });
+
+    it('keeps an explicit zoom and clamps it to [0.25, 4]', () => {
+        expect(parseTokenFrameFlag({ zoom: 1.8 })?.zoom).toBe(1.8);
+        expect(parseTokenFrameFlag({ zoom: 10 })?.zoom).toBe(4);
+        expect(parseTokenFrameFlag({ zoom: 0 })?.zoom).toBe(0.25);
+        expect(parseTokenFrameFlag({ zoom: Number.NaN })?.zoom).toBe(1);
     });
 
     it('ignores non-finite garbage', () => {
@@ -53,7 +60,18 @@ describe('parseTokenFrameFlag', () => {
             cx: 0.5,
             cy: 0.3,
             content: 0,
+            zoom: 1,
         });
+    });
+});
+
+describe('computeFrameTransform zoom', () => {
+    it('zoom>1 scales the subject up without enlarging the mask radius', () => {
+        const base = computeFrameTransform(512, 512, 512, 0.75, 0.5, 0.5, 1);
+        const zoomed = computeFrameTransform(512, 512, 512, 0.75, 0.5, 0.5, 2);
+        expect(zoomed.scale).toBeCloseTo(base.scale * 2);
+        // the content circle (mask) is unchanged — only the subject grows
+        expect(zoomed.radius).toBe(base.radius);
     });
 });
 
