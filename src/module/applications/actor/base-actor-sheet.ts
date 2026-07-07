@@ -12,6 +12,7 @@ import { ItemDropManager } from '../../managers/item-drop-manager.ts';
 import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KWounds, WH40KInitiative, WH40KMovement } from '../../types/global.d.ts';
 import { formatSigned } from '../../utils/format.ts';
 import { sortByDisplayName } from '../../utils/talent-trait-sort.ts';
+import { openInteriorScene, vehicleInteriorHeaderControls, type SceneLookup, type VehicleActorLike } from '../../vehicle/vehicle-interior.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
 import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 import CollapsiblePanelMixin from '../api/collapsible-panel-mixin.ts';
@@ -260,7 +261,17 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const proto = Object.getPrototypeOf(BaseActorSheet.prototype) as {
             _getHeaderControls?: (this: BaseActorSheet) => foundry.applications.api.ApplicationV2.HeaderControlsEntry[];
         };
-        return proto._getHeaderControls?.call(this) ?? [];
+        const base = proto._getHeaderControls?.call(this) ?? [];
+        // Vehicles with a linked interior Scene gain a "Board Interior" control.
+        return [...base, ...vehicleInteriorHeaderControls(this.actor as VehicleActorLike, game.scenes as SceneLookup)];
+    }
+
+    /**
+     * Header control: open (view) the vehicle's linked interior Scene.
+     * @this {BaseActorSheet}
+     */
+    static async #openVehicleInterior(this: BaseActorSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        await openInteriorScene(this.actor as VehicleActorLike, game.scenes as SceneLookup);
     }
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._onFirstRender signature uses Record<string,unknown> for context/options per Foundry's mixin-erased contract.
     override async _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
@@ -319,6 +330,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             spendXPAdvance: BaseActorSheet.#spendXPAdvance,
             editCharacteristic: BaseActorSheet.#editCharacteristic,
             toggleEditMode: BaseActorSheet.#toggleEditMode,
+            openVehicleInterior: BaseActorSheet.#openVehicleInterior,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
         classes: ['wh40k-rpg', 'sheet', 'actor'],

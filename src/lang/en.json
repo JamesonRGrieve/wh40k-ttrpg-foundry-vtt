@@ -3685,6 +3685,8 @@
             "Apocalyptic": "Apocalyptic"
         },
         "Vehicle": {
+            "OpenInterior": "Board Interior",
+            "NoInterior": "This vehicle has no linked interior scene.",
             "Name": "Vehicle Name",
             "Type": "Vehicle Type",
             "Class": "Vehicle Class",
