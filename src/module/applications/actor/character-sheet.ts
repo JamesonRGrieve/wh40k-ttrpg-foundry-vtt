@@ -65,6 +65,7 @@ import {
 } from '../../rules/bc-supplement-mechanics.ts';
 import { DEATH_TO_OPPOSE_DURATION_ROUNDS, MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
 import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
+import { canEquipWeapon, computeHandBudget, handsForWeapon, resolveAvailableHands, type HandBudget } from '../../rules/hand-budget.ts';
 import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
 import {
     ASTARTES_IMPLANTS,
@@ -243,6 +244,10 @@ type CharacterSheetContextDeclaredFields = {
     armourDisplay?: Record<string, unknown>;
     equippedGear?: Array<{ id: string | null; name: string; img: string | null }>;
     equippedWeapons?: unknown[];
+    handBudget?: HandBudget;
+    psychicPowers?: PsychicPowerRow[];
+    showPsychicPanel?: boolean;
+    psyRating?: number;
     primaryWeapon?: unknown;
     secondaryWeapon?: unknown;
     sidearm?: unknown;
@@ -578,10 +583,23 @@ type WeaponLike = WH40KItem & {
         clip: { max: number; value: number };
         ammoPercentage: number;
         effectiveClipMax: number;
+        isTwoHanded: boolean;
         [key: string]: unknown;
     };
     ammoPercent: number;
     [key: string]: unknown;
+};
+
+/** One psychic-power row rendered on the combat-station panel (#412). */
+type PsychicPowerRow = {
+    id: string | null;
+    name: string;
+    img: string | null;
+    disciplineLabel: string;
+    focusTestLabel: string;
+    prCost: number;
+    isAttack: boolean;
+    identified: boolean;
 };
 
 type TalentLike = WH40KItem & {
@@ -2692,6 +2710,54 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
+     * The actor's available hands for wielding weapons (#418). Reads the optional
+     * `system.hands` count (creatures with a non-standard anatomy set their own);
+     * a missing/invalid value resolves to the standard two hands.
+     */
+    #availableHands(): number {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: `hands` is an optional per-line actor field absent from the shared system union; narrowed inline
+        const raw = (this.actor.system as { hands?: number }).hands;
+        return resolveAvailableHands(raw);
+    }
+
+    /**
+     * Build the combat-panel psychic-power rows (#412). Any owned `psychicPower`
+     * item surfaces a row; the panel is shown only when the actor knows at least
+     * one power. The actor's effective Psy Rating is surfaced on the header. The
+     * roll (targeting + Fettered/Unfettered/Push level + effective PR) is served
+     * by the existing per-line psychic roll path via the `rollPower` action.
+     */
+    #prepareCombatPsychicPowers(sheetContext: CharacterSheetContext): void {
+        const powers = this.actor.items.filter((i) => (i.type as string) === 'psychicPower');
+        sheetContext.psychicPowers = powers.map((power) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: psychicPower system fields (disciplineLabel/focusTestLabel getters, prCost, isAttack, state) are not on the shared system union; narrowed inline
+            const sys = power.system as {
+                disciplineLabel?: string;
+                focusTestLabel?: string;
+                prCost?: number;
+                isAttack?: boolean;
+                state?: { identified?: boolean };
+            };
+            return {
+                id: power.id,
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
+                name: power.name ?? '',
+                img: power.img,
+                disciplineLabel: sys.disciplineLabel ?? '',
+                focusTestLabel: sys.focusTestLabel ?? '',
+                prCost: sys.prCost ?? 0,
+                isAttack: sys.isAttack === true,
+                identified: sys.state?.identified !== false,
+            };
+        });
+        sheetContext.showPsychicPanel = powers.length > 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: `psy` is an FFG-line actor field (currentRating/rating); `psyRating` is the BC-line field; neither is on the shared system union
+        const psySystem = this.actor.system as { psy?: { currentRating?: number; rating?: number }; psyRating?: number };
+        const psyRating = psySystem.psy?.currentRating ?? psySystem.psy?.rating ?? psySystem.psyRating;
+        if (psyRating !== undefined) sheetContext.psyRating = psyRating;
+    }
+
+    /**
      * Prepare combat tab data for the template.
      * @param {object} context      The template render context.
      * @param {object} categorized  Categorized items.
@@ -2741,6 +2807,20 @@ export default class CharacterSheet extends BaseActorSheet {
         // Weapon slots - categorize by class and equipped status
         const equippedWeapons = weapons.filter((w) => w.system.state.equipped);
         sheetContext.equippedWeapons = equippedWeapons;
+
+        // Hand budget (#418): sum the hands consumed by equipped weapons against
+        // the actor's available hands (non-standard anatomies expose their own
+        // count via `system.hands`; unrecorded actors default to two). Surfaced
+        // on the arsenal header and enforced in the draw/holster action.
+        sheetContext.handBudget = computeHandBudget(
+            this.#availableHands(),
+            equippedWeapons.map((w) => handsForWeapon(w.system.isTwoHanded)),
+        );
+
+        // Psychic powers (#412): mirror the weapon rows. Ownership of any
+        // psychicPower item is the per-system-neutral gate — the roll itself
+        // dispatches through the actor's per-line psychic path.
+        this.#prepareCombatPsychicPowers(sheetContext);
         const rangedWeapons = equippedWeapons.filter((w) => w.system.class !== 'Melee');
         const meleeWeapons = equippedWeapons.filter((w) => w.system.class === 'Melee');
 
@@ -3961,7 +4041,35 @@ export default class CharacterSheet extends BaseActorSheet {
         const item = this._resolveItemFromTarget(target);
         if (!item) return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is Foundry DataModel; equipped not on base type; bracket access needs Record cast
-        await item.update({ 'system.state.equipped': ((item.system as Record<string, unknown>)['state'] as Record<string, unknown>)['equipped'] !== true });
+        const currentlyEquipped = ((item.system as Record<string, unknown>)['state'] as Record<string, unknown>)['equipped'] === true;
+
+        // Drawing a weapon (#418): block it when the hands it needs would push the
+        // actor past their available-hand budget. Holstering is always allowed.
+        if (!currentlyEquipped && (item.type as string) === 'weapon') {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: weapon `isTwoHanded` getter and `state.equipped` are not on the shared item system union; narrowed inline
+            const weaponSystem = item.system as { isTwoHanded?: boolean; state?: { equipped?: boolean } };
+            const cost = handsForWeapon(weaponSystem.isTwoHanded === true);
+            const otherEquippedCosts = this.actor.items
+                .filter((i) => (i.type as string) === 'weapon' && i !== item)
+                // eslint-disable-next-line no-restricted-syntax -- boundary: per-weapon `isTwoHanded`/`state` fields are not on the shared item system union; narrowed inline
+                .filter((i) => (i.system as { state?: { equipped?: boolean } }).state?.equipped === true)
+                // eslint-disable-next-line no-restricted-syntax -- boundary: per-weapon `isTwoHanded` getter is not on the shared item system union; narrowed inline
+                .map((i) => handsForWeapon((i.system as { isTwoHanded?: boolean }).isTwoHanded === true));
+            const available = this.#availableHands();
+            if (!canEquipWeapon(available, otherEquippedCosts, cost)) {
+                const remaining = Math.max(0, available - otherEquippedCosts.reduce((sum, c) => sum + c, 0));
+                this._notify('warning', game.i18n.format('WH40K.Combat.HandBudgetExceeded', {
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
+                    weapon: item.name ?? '',
+                    cost: String(cost),
+                    remaining: String(remaining),
+                    available: String(available),
+                }), { duration: 5000 });
+                return;
+            }
+        }
+
+        await item.update({ 'system.state.equipped': !currentlyEquipped });
     }
 
     /* -------------------------------------------- */

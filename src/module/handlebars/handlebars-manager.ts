@@ -126,6 +126,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/active-effects-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/active-effects-compact.hbs',
             'systems/wh40k-rpg/templates/actor/panel/combat-station-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/combat-psychic-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/weapon-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/combat-controls-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/combat-actions-panel.hbs',

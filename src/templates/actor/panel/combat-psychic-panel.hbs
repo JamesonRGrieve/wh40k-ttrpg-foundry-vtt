@@ -1,0 +1,73 @@
+{{!--
+    Combat-panel Psychic Powers list (#412).
+
+    Mirrors the arsenal weapon-row pattern: one row per known psychic power,
+    each surfacing its discipline, Focus Power test, and PR cost, with a roll
+    control that invokes the existing per-line psychic roll path (the `rollPower`
+    action → actor.rollItem → the unified roll dialog, which serves targeting,
+    the Fettered / Unfettered / Push power level, and the effective Psy Rating).
+
+    Rendered only when `showPsychicPanel` is true (the actor knows at least one
+    power). Homologates across all seven systems — the roll dispatch is
+    per-system; this template only lists the owned power items.
+
+    Context:
+        psychicPowers  — [{ id, name, img, disciplineLabel, focusTestLabel,
+                            prCost, isAttack, identified }]
+        psyRating      — effective Psy Rating for the header badge (optional).
+        isGM           — GM sees concealed (unidentified) power stats.
+--}}
+<div class="wh40k-panel tw-flex-1 tw-min-h-0" data-drop-zone="general" data-accepts="psychicPower">
+    <div class="wh40k-panel-header tw-order-[-1] tw-shrink-0 tw-flex tw-items-center">
+        {{> systems/wh40k-rpg/templates/actor/partial/panel-header.hbs label=(localize "WH40K.Combat.PsychicPowers") icon="fa-brain"}}
+        {{#if psyRating}}
+        <span class="tw-ml-auto tw-shrink-0 tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-full tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-wide tw-bg-[rgb(from_var(--wh40k-accent-info)_r_g_b_/_0.12)] tw-text-[color:var(--wh40k-accent-info)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-info)_r_g_b_/_0.3)]"
+              title="{{localize "WH40K.Combat.PsyRating"}}">
+            <i class="fas fa-bolt tw-text-[0.7rem]"></i>
+            {{localize "WH40K.Combat.PsyRating"}} {{psyRating}}
+        </span>
+        {{/if}}
+    </div>
+    <div class="wh40k-panel-body tw-flex-1 tw-min-h-0 tw-overflow-y-auto tw-overflow-x-hidden">
+        {{#if psychicPowers.length}}
+        <div class="tw-flex tw-flex-col">
+            <div class="tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-px-2 tw-py-1 tw-bg-[rgb(from_var(--wh40k-accent-info)_r_g_b_/_0.08)] tw-border-b-2 tw-border-b-[rgb(from_var(--wh40k-accent-info)_r_g_b_/_0.2)] tw-text-[color:var(--wh40k-text-secondary)]">
+                <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.Combat.PsychicPowers"}}</span>
+                <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-12">{{localize "WH40K.Combat.FocusTest"}}</span>
+                <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-12">{{localize "WH40K.Combat.PsyRatingShort"}}</span>
+            </div>
+            {{#each psychicPowers as |power|}}
+            <div class="tw-group tw-relative tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer tw-border-b tw-border-b-[rgba(0,0,0,0.08)] tw-transition-[background] hover:tw-bg-[rgb(from_var(--wh40k-accent-info)_r_g_b_/_0.04)] item-drag item-edit" data-item-id="{{power.id}}" data-item-type="psychicPower">
+                <span class="tw-flex tw-items-center tw-gap-1 tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-text-sm">
+                    {{#if power.isAttack}}<i class="fas fa-burst tw-text-[color:var(--wh40k-accent-combat)] tw-mr-[var(--wh40k-space-xs)] tw-text-[0.8em]" title="{{localize "WH40K.Combat.AttackPower"}}"></i>{{/if}}
+                    {{power.name}}
+                    {{#if power.disciplineLabel}}<span class="tw-ml-1 tw-text-[0.65rem] tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-wide">{{power.disciplineLabel}}</span>{{/if}}
+                </span>
+                {{!-- Unidentified powers hide Focus/PR from players; GM always sees them. --}}
+                <span class="tw-text-sm tw-text-center tw-min-w-12">{{#if (or power.identified @root.isGM)}}{{power.focusTestLabel}}{{else}}{{localize "WH40K.Weapon.ConcealedStat"}}{{/if}}</span>
+                <span class="tw-text-sm tw-text-center tw-min-w-12">{{#if (or power.identified @root.isGM)}}{{power.prCost}}{{else}}{{localize "WH40K.Weapon.ConcealedStat"}}{{/if}}</span>
+                {{!-- Invoke: opens the per-line psychic roll (targeting + power level + effective PR). --}}
+                <button type="button"
+                        class="tw-absolute tw-right-8 tw-top-1/2 -tw-translate-y-1/2 tw-w-5 tw-h-5 tw-p-0 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border tw-border-solid tw-border-[color:var(--wh40k-accent-info)] tw-text-[color:var(--wh40k-accent-info)] tw-rounded tw-text-[0.7rem] tw-opacity-0 tw-pointer-events-none tw-cursor-pointer tw-group-hover:tw-opacity-100 tw-group-hover:tw-pointer-events-auto tw-focus:tw-opacity-100 tw-focus:tw-pointer-events-auto tw-transition-opacity"
+                        data-action="rollPower"
+                        data-item-id="{{power.id}}"
+                        title="{{localize "WH40K.Combat.InvokePower"}}">
+                    <i class="fas fa-dice-d20"></i>
+                </button>
+                <button type="button"
+                        class="tw-absolute tw-right-1 tw-top-1/2 -tw-translate-y-1/2 tw-w-5 tw-h-5 tw-p-0 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border tw-border-solid tw-border-[var(--wh40k-border-medium)] tw-rounded tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)] tw-opacity-0 tw-pointer-events-none tw-cursor-pointer hover:tw-text-[color:var(--wh40k-accent-combat)] hover:tw-border-[color:var(--wh40k-accent-combat)] tw-group-hover:tw-opacity-100 tw-group-hover:tw-pointer-events-auto tw-focus:tw-opacity-100 tw-focus:tw-pointer-events-auto tw-transition-opacity"
+                        data-action="itemDelete"
+                        data-item-id="{{power.id}}"
+                        title="{{localize "WH40K.Common.Delete"}}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            {{/each}}
+        </div>
+        {{else}}
+        <div class="tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-px-2 tw-py-2">
+            <span>{{localize "WH40K.Combat.NoPsychicPowers"}}</span>
+        </div>
+        {{/if}}
+    </div>
+</div>
