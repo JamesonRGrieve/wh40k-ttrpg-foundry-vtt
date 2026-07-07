@@ -285,8 +285,16 @@
         </div>
         {{!-- Row 2: Weapons (full width) --}}
             <div class="wh40k-panel tw-flex-1 tw-min-h-0" data-drop-zone="general" data-accepts="weapon">
-                <div class="wh40k-panel-header tw-order-[-1] tw-shrink-0">
-                    {{> systems/wh40k-rpg/templates/actor/partial/panel-header.hbs label="Weapons" icon="fa-fist-raised"}}
+                <div class="wh40k-panel-header tw-order-[-1] tw-shrink-0 tw-flex tw-items-center">
+                    {{> systems/wh40k-rpg/templates/actor/partial/panel-header.hbs label=(localize "WH40K.Combat.Weapons") icon="fa-fist-raised"}}
+                    {{!-- Hand budget (#418): remaining / available hands for equipped weapons. --}}
+                    {{#if handBudget}}
+                    <span class="tw-ml-auto tw-shrink-0 tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-full tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-wide tw-border tw-border-solid {{#if handBudget.overCommitted}}tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.12)] tw-text-[color:var(--wh40k-accent-combat)] tw-border-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.3)]{{else}}tw-bg-[rgba(0,0,0,0.06)] tw-text-[color:var(--wh40k-text-secondary)] tw-border-[rgba(0,0,0,0.15)]{{/if}}"
+                          title="{{localize "WH40K.Combat.HandBudgetTooltip"}}">
+                        <i class="fas fa-hand-paper tw-text-[0.7rem]"></i>
+                        {{localize "WH40K.Combat.Hands"}} {{handBudget.remaining}}/{{handBudget.available}}
+                    </span>
+                    {{/if}}
                 </div>
                 <div class="wh40k-panel-body tw-flex-1 tw-min-h-0 tw-overflow-y-auto tw-overflow-x-hidden">
                     {{#if actor.items}}
@@ -331,5 +339,9 @@
                     {{/if}}
                 </div>
             </div>
+            {{!-- Row 3: Psychic Powers (#412) — shown only for psykers with known powers. --}}
+            {{#if showPsychicPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/combat-psychic-panel.hbs psychicPowers=psychicPowers psyRating=psyRating}}
+            {{/if}}
         </div>
 </div>
