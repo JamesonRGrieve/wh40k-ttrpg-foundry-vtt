@@ -36,6 +36,12 @@ export interface WH40KCharacteristic {
     unnatural: number;
     total: number;
     bonus: number;
+    /** Effective (post-modifier) characteristic value — alias of `total` (#415). */
+    effectiveValue?: number;
+    /** Sum of bonus-only modifiers ("+X Bonus" effects), 0 when none (#415). */
+    bonusModifier?: number;
+    /** Effective bonus = base bonus + bonusModifier; read by damage / carry / movement (#415). */
+    effectiveBonus?: number;
 }
 
 /** Skill data structure */

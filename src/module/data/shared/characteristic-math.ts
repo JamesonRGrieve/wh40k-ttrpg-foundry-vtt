@@ -9,6 +9,49 @@ export interface CharacteristicLike {
     short: string;
     total: number;
     bonus: number;
+    /**
+     * Post-modifier characteristic value used by outcome math (#415). Equals
+     * `total`; a named alias so the base-vs-effective split reads explicitly at
+     * consumer sites. Optional so NPC/vehicle projections that don't populate it
+     * fall back to `total`.
+     */
+    effectiveValue?: number;
+    /**
+     * Effective characteristic bonus = base bonus (tens digit of the effective
+     * value) + bonus-only modifiers ("+X Strength Bonus"). Damage / carry /
+     * movement read this (#415). Optional; falls back to `bonus` when absent.
+     */
+    effectiveBonus?: number;
+}
+
+/**
+ * The base-vs-effective projection a prepared characteristic carries (#415).
+ * `total`/`bonus` remain the effective value and base bonus; the added fields
+ * name the split explicitly and open a bonus-only modifier channel.
+ */
+export interface EffectiveCharacteristicFields {
+    total: number;
+    bonus: number;
+    /** Alias of `total` — the post-modifier characteristic value. */
+    effectiveValue: number;
+    /** Sum of bonus-only modifiers ("+X Bonus" effects); 0 when none. */
+    bonusModifier: number;
+    /** `bonus` + `bonusModifier`. */
+    effectiveBonus: number;
+}
+
+/**
+ * Populate the derived base-vs-effective fields on a prepared characteristic
+ * from its already-computed `total`/`bonus` (#415). `effectiveValue` mirrors the
+ * effective `total`; `effectiveBonus` adds the bonus-only modifier channel on top
+ * of the base bonus. Shared by the creature (item-modifier), NPC, and vehicle
+ * prepare passes so the split stays homologated. `bonusModifier` defaults to 0
+ * for models with no bonus-only channel.
+ */
+export function applyEffectiveCharacteristicFields(char: EffectiveCharacteristicFields, bonusModifier = 0): void {
+    char.effectiveValue = char.total;
+    char.bonusModifier = bonusModifier;
+    char.effectiveBonus = char.bonus + bonusModifier;
 }
 
 /**
@@ -34,14 +77,18 @@ export function computeCharacteristicTotals(
 }
 
 /**
- * Spread characteristics into a roll-data bag: `<short>` and `<key>` → total,
- * `<short>B` → bonus. The identical loop in both models' `getRollData()`.
+ * Spread characteristics into a roll-data bag: `<short>` and `<key>` → effective
+ * value, `<short>B` → effective bonus. The identical loop in both models'
+ * `getRollData()`. Outcome formulas read the effective value/bonus (#415), so a
+ * fatigue / trait / drug modifier flows in implicitly; models that don't populate
+ * the effective fields fall back to `total`/`bonus` (behaviour-preserving).
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry roll-data is a free-form Record<string, unknown> bag the consumer mutates
 export function applyCharacteristicRollData(data: Record<string, unknown>, characteristics: Record<string, CharacteristicLike>): void {
     for (const [key, char] of Object.entries(characteristics)) {
-        data[char.short] = char.total;
-        data[`${char.short}B`] = char.bonus;
-        data[key] = char.total;
+        const value = char.effectiveValue ?? char.total;
+        data[char.short] = value;
+        data[`${char.short}B`] = char.effectiveBonus ?? char.bonus;
+        data[key] = value;
     }
 }

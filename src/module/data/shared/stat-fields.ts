@@ -59,9 +59,17 @@ export function characteristicField(label: string, short: string, opts: Characte
         schema['damage'] = new NumberField({ required: true, initial: 0, min: 0, integer: true });
     }
 
-    // Derived values
+    // Derived values. `total`/`bonus` are the effective value and base bonus;
+    // the effective* fields name the base-vs-effective split explicitly (#415)
+    // and carry the bonus-only modifier channel. All are recomputed each prepare.
     schema['total'] = new NumberField({ required: true, initial: opts.total, integer: true });
     schema['bonus'] = new NumberField({ required: true, initial: opts.bonus, integer: true });
+    // Post-modifier characteristic value (alias of `total`), read by outcome math.
+    schema['effectiveValue'] = new NumberField({ required: true, initial: opts.total, integer: true });
+    // Sum of bonus-only modifiers ("+X Bonus" effects); 0 unless an item adds one.
+    schema['bonusModifier'] = new NumberField({ required: true, initial: 0, integer: true });
+    // base bonus + bonusModifier — the bonus damage / carry / movement consume.
+    schema['effectiveBonus'] = new NumberField({ required: true, initial: opts.bonus, integer: true });
 
     return new SchemaField(schema);
 }

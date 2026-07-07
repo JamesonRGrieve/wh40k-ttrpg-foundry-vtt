@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyCharacteristicRollData, computeCharacteristicTotals } from './characteristic-math.ts';
+import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from './characteristic-math.ts';
 
 describe('computeCharacteristicTotals (#271)', () => {
     it('NPC path: total = base + modifier, bonus = tens digit', () => {
@@ -62,5 +62,38 @@ describe('applyCharacteristicRollData (#271)', () => {
         expect(data['WS']).toBe(45);
         expect(data['WSB']).toBe(4);
         expect(data['weaponSkill']).toBe(45);
+    });
+
+    it('prefers the effective value/bonus when present (#415)', () => {
+        const data: Record<string, number> = {};
+        applyCharacteristicRollData(data, {
+            strength: { short: 'S', total: 40, bonus: 4, effectiveValue: 40, effectiveBonus: 6 },
+        });
+        // Effective bonus (+2 bonus-only) flows into the roll-data bag.
+        expect(data['SB']).toBe(6);
+        expect(data['S']).toBe(40);
+        expect(data['strength']).toBe(40);
+    });
+});
+
+describe('applyEffectiveCharacteristicFields (#415)', () => {
+    it('mirrors total into effectiveValue and adds no bonus by default', () => {
+        const char = { total: 42, bonus: 4, effectiveValue: 0, bonusModifier: 0, effectiveBonus: 0 };
+        applyEffectiveCharacteristicFields(char);
+        expect(char).toEqual({ total: 42, bonus: 4, effectiveValue: 42, bonusModifier: 0, effectiveBonus: 4 });
+    });
+
+    it('folds a bonus-only modifier into the effective bonus without touching the value', () => {
+        const char = { total: 40, bonus: 4, effectiveValue: 0, bonusModifier: 0, effectiveBonus: 0 };
+        applyEffectiveCharacteristicFields(char, 2);
+        expect(char.effectiveValue).toBe(40); // value unchanged by a bonus-only modifier
+        expect(char.bonusModifier).toBe(2);
+        expect(char.effectiveBonus).toBe(6); // 4 base + 2 bonus-only
+    });
+
+    it('supports a negative bonus-only modifier', () => {
+        const char = { total: 50, bonus: 5, effectiveValue: 0, bonusModifier: 0, effectiveBonus: 0 };
+        applyEffectiveCharacteristicFields(char, -1);
+        expect(char.effectiveBonus).toBe(4);
     });
 });

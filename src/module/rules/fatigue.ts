@@ -89,6 +89,23 @@ export function isCharacteristicHalvedByFatigue(characteristicBonus: number, fat
     return bonus < level;
 }
 
+/** Flat test penalty applied per accumulated fatigue level (#415, #114). */
+export const FATIGUE_TEST_PENALTY_PER_LEVEL = 10;
+
+/**
+ * The flat penalty accumulated fatigue imposes on every Test (#415). Fatigue is
+ * the first concrete consumer of the base-vs-effective split: rather than
+ * reducing a characteristic's value/bonus (which would wrongly shrink damage,
+ * carry, and movement), it subtracts a flat `perLevelPenalty` (default −10) per
+ * fatigue level from the roll target so every characteristic / skill / weapon
+ * test degrades uniformly. Returns a non-positive number (0 when unfatigued).
+ * Pure.
+ */
+export function getFatigueTestPenalty(fatigueLevel: number, perLevelPenalty: number = FATIGUE_TEST_PENALTY_PER_LEVEL): number {
+    const level = nonNegInt(fatigueLevel);
+    return -nonNegInt(perLevelPenalty) * level;
+}
+
 /**
  * Recovery: how many fatigue levels are removed after a given number of
  * hours of rest. 1 level per hour, capped at 6 (which removes any
