@@ -401,7 +401,7 @@ export class BasicActionManager {
         const actionData = this.#resolveStoredAction(btn, game.i18n.localize('WH40K.FateActionExpired'));
         if (actionData == null) return;
 
-        const defender = actionData.rollData.targetActor as (WithRollSkill & { id?: string | null }) | null;
+        const defender = actionData.rollData.targetActor;
         if (defender == null) {
             ui.notifications.warn(game.i18n.localize('WH40K.Combat.NoDefender'));
             return;
@@ -420,7 +420,7 @@ export class BasicActionManager {
         // Disable immediately so the same card cannot double-spend the reaction.
         btn.disabled = true;
         try {
-            await defender.rollSkill?.(skill);
+            await (defender as { rollSkill?: (skill: string) => Promise<void> }).rollSkill?.(skill);
         } catch {
             // eslint-disable-next-line no-restricted-syntax -- boundary: dev-only fallback when the defender's rollSkill API throws (e.g., missing skill on legacy data)
             ui.notifications.warn('Unable to roll the defender reaction test.');

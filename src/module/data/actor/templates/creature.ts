@@ -240,6 +240,12 @@ export default class CreatureTemplate extends CommonTemplate {
         [key: string]: CharacteristicData;
     };
     declare size: number;
+    /**
+     * Hands available to wield weapons. Standard bipedal actors have two;
+     * creatures with a non-standard anatomy (extra arms, tentacles, none)
+     * set their own count. Drives the equipped-weapon hand budget (#418).
+     */
+    declare hands: number;
     declare wounds: {
         max: number;
         value: number;
@@ -486,6 +492,10 @@ export default class CreatureTemplate extends CommonTemplate {
             }),
 
             size: sizeField({ nullable: false }),
+
+            // Hands available to wield weapons (#418). Two for a standard biped;
+            // non-standard anatomies override. Drives the equipped-weapon budget.
+            hands: new NumberField({ required: true, initial: 2, min: 0, integer: true }),
 
             wounds: woundsField({ max: 0, value: 0, critical: 0, nullable: false }),
 

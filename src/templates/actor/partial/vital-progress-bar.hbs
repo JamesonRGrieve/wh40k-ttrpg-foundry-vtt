@@ -27,9 +27,9 @@
          to shape the fill. The fill width is set inline so it works whether or
          not the surrounding cascade resolves the CSS var. --}}
     <div class="{{cssPrefix}}-bar {{barClass}}"
-         data-percent="{{percent}}"
-         style="--{{#if cssVarName}}{{cssVarName}}{{else}}{{cssPrefix}}-percent{{/if}}: {{percent}}%">
-        <div class="{{cssPrefix}}-bar-fill {{fillExtraClass}}" style="width: {{percent}}%"></div>
+         data-percent="{{this.percent}}"
+         style="--{{#if cssVarName}}{{cssVarName}}{{else}}{{cssPrefix}}-percent{{/if}}: {{this.percent}}%">
+        <div class="{{cssPrefix}}-bar-fill {{fillExtraClass}}" style="width: {{this.percent}}%"></div>
 
         {{#each thresholds}}
         <div class="wh40k-threshold-marker tw-absolute tw-top-[-2px] tw-h-4 tw-flex tw-flex-col tw-items-center tw-pointer-events-none tw-z-[2]" style="left: {{this.at}}%;" title="{{this.title}}">
@@ -39,6 +39,6 @@
         {{/each}}
     </div>
     {{#if showPercentText}}
-    <span class="{{cssPrefix}}-percent {{percentTextClass}}">{{#if percentText}}{{percentText}}{{else}}{{percent}}%{{/if}}</span>
+    <span class="{{cssPrefix}}-percent {{percentTextClass}}">{{#if percentText}}{{percentText}}{{else}}{{this.percent}}%{{/if}}</span>
     {{/if}}
 </div>

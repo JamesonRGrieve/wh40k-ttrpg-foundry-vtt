@@ -4091,6 +4091,7 @@
             "OneHanded": "One-Handed",
             "Jammed": "Jammed",
             "ClearJam": "Clear Jam",
+            "ClearJamNotice": "{name} jam cleared — the weapon must be reloaded.",
             "CanMelee": "Can Melee",
             "Equipped": "Equipped",
             "Stowed": "Stowed",

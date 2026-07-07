@@ -95,6 +95,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
             removeModification: WeaponSheet.#removeModification,
             loadAmmo: WeaponSheet.#loadAmmo,
             ejectAmmo: WeaponSheet.#ejectAmmo,
+            clearJam: WeaponSheet.#clearJam,
             toggleFab: WeaponSheet.#toggleFab,
             toggleSection: WeaponSheet.#toggleSection,
             toggleBody: WeaponSheet.#toggleBody,
@@ -248,6 +249,9 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
 
         // Convenience flags
         context['hasActions'] = this.isEditable && this.item.actor !== null;
+
+        // Jam state (#411) — surfaces the Clear Jam control when the weapon is jammed.
+        context['isJammed'] = system.isJammed;
 
         // FAB state
         context['fabExpanded'] = this.#fabExpanded;
@@ -886,6 +890,24 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
      */
     static async #ejectAmmo(this: WeaponSheet, _event: Event, _target: HTMLElement): Promise<void> {
         await this.item.system.ejectAmmo();
+        void this.render();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Clear a weapon jam (#411 — the Unjam action). Routes through the
+     * WeaponData.clearJam API so the persisted mutation has a single source.
+     * Per DH2 RAW the Unjam action loses the loaded rounds, so the weapon must
+     * be reloaded afterward; `loseAmmo` defaults to true in the DataModel.
+     * @this {WeaponSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #clearJam(this: WeaponSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        if (!this.item.system.isJammed) return;
+        await this.item.system.clearJam();
+        ui.notifications.info(game.i18n.format('WH40K.Weapon.ClearJamNotice', { name: this.item.name }));
         void this.render();
     }
 

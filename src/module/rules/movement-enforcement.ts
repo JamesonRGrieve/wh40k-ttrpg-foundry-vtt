@@ -14,7 +14,7 @@
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
-import { onTurnStart } from './combat-turn-hooks.ts';
+import { onTurnStart, type TurnCombatant } from './combat-turn-hooks.ts';
 import { evaluateCombatMovement, type MovementEvaluation, type MovementMode, turnMovementAllowance } from './movement-budget.ts';
 
 const MOVED_FLAG = 'movedThisTurnMetres';
@@ -66,7 +66,7 @@ function readMovedMetres(combatant: LooseCombatant | null | undefined): number {
 }
 
 /** Persist the per-turn moved-metres flag (no-op when setFlag is unavailable). */
-function writeMovedMetres(combatant: LooseCombatant | null | undefined, metres: number): void {
+function writeMovedMetres(combatant: LooseCombatant | TurnCombatant | null | undefined, metres: number): void {
     // Call ON the combatant so `this` binds — a detached `setFlag(...)` runs with
     // this=undefined and throws inside Foundry ("reading 'constructor' of undefined").
     const target = combatant as FlagAccessor | null | undefined;
@@ -138,7 +138,7 @@ function onUpdateToken(tokenDoc: LooseToken, changes: { x?: number | null | unde
 }
 
 /** Reset the starting combatant's per-turn moved distance at the turn-start boundary. */
-function resetMovementOnTurnStart(combatant: LooseCombatant | null): void {
+function resetMovementOnTurnStart(combatant: TurnCombatant | null): void {
     try {
         if (combatant !== null) writeMovedMetres(combatant, 0);
     } catch (err) {

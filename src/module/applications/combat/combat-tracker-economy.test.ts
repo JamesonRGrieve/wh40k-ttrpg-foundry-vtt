@@ -8,6 +8,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { registerCombatTrackerEconomy } from './combat-tracker-economy.ts';
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Hooks.on callback args are untyped by the framework
 type Handler = (...args: unknown[]) => void;
 
 interface CapturedHooks {

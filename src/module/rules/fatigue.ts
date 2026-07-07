@@ -90,7 +90,7 @@ export function isCharacteristicHalvedByFatigue(characteristicBonus: number, fat
 }
 
 /** Flat test penalty applied per accumulated fatigue level (#415, #114). */
-export const FATIGUE_TEST_PENALTY_PER_LEVEL = 10;
+const FATIGUE_TEST_PENALTY_PER_LEVEL = 10;
 
 /**
  * The flat penalty accumulated fatigue imposes on every Test (#415). Fatigue is
@@ -102,8 +102,10 @@ export const FATIGUE_TEST_PENALTY_PER_LEVEL = 10;
  * Pure.
  */
 export function getFatigueTestPenalty(fatigueLevel: number, perLevelPenalty: number = FATIGUE_TEST_PENALTY_PER_LEVEL): number {
-    const level = nonNegInt(fatigueLevel);
-    return -nonNegInt(perLevelPenalty) * level;
+    const magnitude = nonNegInt(perLevelPenalty) * nonNegInt(fatigueLevel);
+    // Negate only a non-zero magnitude so an unfatigued / zero-penalty result is
+    // +0, not -0 (Object.is distinguishes them; callers expect a clean 0).
+    return magnitude === 0 ? 0 : -magnitude;
 }
 
 /**

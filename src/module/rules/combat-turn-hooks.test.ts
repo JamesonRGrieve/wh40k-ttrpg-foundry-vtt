@@ -4,7 +4,15 @@
  */
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { clearTurnSubscribers, deriveTurnBoundary, onTurnEnd, onTurnStart, registerCombatTurnHooks, type TurnCombat, type TurnCombatant } from './combat-turn-hooks.ts';
+import {
+    clearTurnSubscribers,
+    deriveTurnBoundary,
+    onTurnEnd,
+    onTurnStart,
+    registerCombatTurnHooks,
+    type TurnCombat,
+    type TurnCombatant,
+} from './combat-turn-hooks.ts';
 
 afterEach(() => {
     clearTurnSubscribers();

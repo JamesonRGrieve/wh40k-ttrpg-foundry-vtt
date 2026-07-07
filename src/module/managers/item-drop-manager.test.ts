@@ -239,24 +239,24 @@ describe('ItemDropManager.isBound (#390)', () => {
  */
 describe('ItemDropManager.pickupLoot (#385 teardown)', () => {
     interface PileItemStub {
-        toObject: () => StackProjection & { _id?: unknown };
+        toObject: () => StackProjection & { _id?: string };
     }
     interface ReceiverStub {
         isOwner: boolean;
         name: string;
         items: PileItemStub[];
-        createEmbeddedDocuments: (type: string, data: unknown[]) => Promise<unknown>;
-        updateEmbeddedDocuments: (type: string, data: unknown[]) => Promise<unknown>;
+        createEmbeddedDocuments: (type: string, data: object[]) => Promise<void>;
+        updateEmbeddedDocuments: (type: string, data: object[]) => Promise<void>;
     }
     interface PileStub {
         id: string | null;
         name: string;
         items: PileItemStub[];
-        delete: () => Promise<unknown>;
+        delete: () => Promise<void>;
     }
     interface SceneStub {
         tokens: Array<{ id: string | null; actorId: string | null }>;
-        deleteEmbeddedDocuments: (type: string, ids: string[]) => Promise<unknown>;
+        deleteEmbeddedDocuments: (type: string, ids: string[]) => Promise<void>;
     }
 
     const pileItem = (name: string, type: string): PileItemStub => ({
@@ -288,7 +288,8 @@ describe('ItemDropManager.pickupLoot (#385 teardown)', () => {
         vi.stubGlobal('ui', { notifications: { info: vi.fn(), warn: vi.fn() } });
     };
 
-    const pickup = (receiver: ReceiverStub, pile: PileStub): Promise<boolean> =>
+    const pickup = async (receiver: ReceiverStub, pile: PileStub): Promise<boolean> =>
+        // eslint-disable-next-line no-restricted-syntax -- boundary: test stubs bridged to the WH40KBaseActor params of the method under test
         ItemDropManager.pickupLoot(receiver as unknown as WH40KBaseActor, pile as unknown as WH40KBaseActor);
 
     afterEach(() => {

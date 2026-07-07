@@ -1,11 +1,6 @@
+import { describe, expect, it } from 'vitest';
 import { ALL_SYSTEM_IDS } from '../config/game-systems/types.ts';
-import {
-    computeGangUpModifier,
-    countMeleeAttackers,
-    gangUpConfigFor,
-    tokensEngagedInMelee,
-    type GangUpTokenLike,
-} from './gang-up.ts';
+import { computeGangUpModifier, countMeleeAttackers, gangUpConfigFor, tokensEngagedInMelee, type GangUpTokenLike } from './gang-up.ts';
 
 const GRID = 100;
 
@@ -116,15 +111,8 @@ describe('computeGangUpModifier (#417)', () => {
     it('caps the bonus at the per-line maximum (+30 for DH2)', () => {
         const target = tok('T', 2, 2, -1);
         // Surround the target on all four orthogonal + four diagonal cells with allies.
-        const allies = [
-            tok('A', 1, 2, 1),
-            tok('B', 3, 2, 1),
-            tok('C', 2, 1, 1),
-            tok('D', 2, 3, 1),
-            tok('E', 1, 1, 1),
-            tok('F', 3, 3, 1),
-        ];
-        const attacker = allies[0]!;
+        const allies = [tok('A', 1, 2, 1), tok('B', 3, 2, 1), tok('C', 2, 1, 1), tok('D', 2, 3, 1), tok('E', 1, 1, 1), tok('F', 3, 3, 1)];
+        const attacker = allies[0];
         const result = computeGangUpModifier({ attacker, target, tokens: [target, ...allies], gridSize: GRID, config });
         expect(result.attackerCount).toBe(6);
         expect(result.bonus).toBe(30); // 5 additional × 10 = 50, capped at 30
