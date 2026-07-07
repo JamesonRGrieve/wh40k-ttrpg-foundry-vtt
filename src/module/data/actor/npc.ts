@@ -2,7 +2,7 @@ import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
-import { applyCharacteristicRollData, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
+import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
 import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
 import { computeMovement } from '../shared/movement-math.ts';
 import { skillCharacteristicMap } from '../shared/skill-definitions.ts';
@@ -46,6 +46,12 @@ interface NPCCharacteristicData {
     unnatural: number;
     total: number;
     bonus: number;
+    /** Effective (post-modifier) value — alias of `total` (#415). */
+    effectiveValue: number;
+    /** Sum of bonus-only modifiers; 0 for NPCs (no bonus-only channel) (#415). */
+    bonusModifier: number;
+    /** Effective bonus = base bonus + bonusModifier (#415). */
+    effectiveBonus: number;
 }
 
 /** Shape of a simple weapon entry for NPC V2. */
@@ -1021,6 +1027,9 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             const { total, bonus } = computeCharacteristicTotals(char.base, char.modifier, char.unnatural || 0);
             char.total = total;
             char.bonus = bonus;
+            // Base-vs-effective split (#415): NPCs have no bonus-only channel, so
+            // effectiveValue === total and effectiveBonus === bonus.
+            applyEffectiveCharacteristicFields(char);
         }
     }
 
@@ -1032,7 +1041,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         // Respect a printed statblock movement line; only auto-derive when the NPC
         // has no authored movement (migrated from the legacy `move` string sets this).
         if (this.movementManual) return;
-        const ab = this.characteristics.agility.bonus;
+        const ab = this.characteristics.agility.effectiveBonus;
         const { half, full, charge, run } = computeMovement(ab, this.size, true);
         this.movement.half = half;
         this.movement.full = full;
@@ -1047,7 +1056,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     _prepareInitiative(): void {
         const initChar = this.characteristics[this.initiative.characteristic];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: dynamic key access on characteristics may return undefined at runtime
-        this.initiative.bonus = initChar?.bonus ?? 0;
+        this.initiative.bonus = initChar?.effectiveBonus ?? 0;
     }
 
     /* -------------------------------------------- */

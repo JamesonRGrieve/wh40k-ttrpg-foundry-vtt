@@ -5,7 +5,7 @@ import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
 import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
 import { coerceInt } from '../../fields/coerce.ts';
-import { applyCharacteristicRollData, computeCharacteristicTotals } from '../../shared/characteristic-math.ts';
+import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../../shared/characteristic-math.ts';
 import { CHARACTERISTIC_SHORT_TO_FULL } from '../../shared/characteristics.ts';
 import { clampSize, coerceIntFields, sizeNameToInt } from '../../shared/field-coercion.ts';
 import { computeMovement, sumMovementModifiers } from '../../shared/movement-math.ts';
@@ -32,8 +32,19 @@ interface CharacteristicData {
     cost: number;
     /** Recoverable characteristic damage (subtracted from effective value/bonus during data prep). */
     damage: number;
+    /** Effective (post-modifier) characteristic value = base + advances + all value modifiers. */
     total: number;
+    /** Base bonus — the unnatural-adjusted tens digit of the effective value. */
     bonus: number;
+    /**
+     * Alias of {@link total}: the effective (post-modifier) characteristic value.
+     * Outcome math reads this so fatigue / trait / drug modifiers apply implicitly (#415).
+     */
+    effectiveValue: number;
+    /** Sum of bonus-only modifiers ("+X Bonus" effects), 0 unless an item adds one (#415). */
+    bonusModifier: number;
+    /** Effective bonus = base {@link bonus} + {@link bonusModifier}; consumed by damage / carry / movement (#415). */
+    effectiveBonus: number;
     /** Set during _applyModifiersToCharacteristics */
     originPathModifier?: number;
     itemModifier?: number;
@@ -117,6 +128,11 @@ function compendiumSourceUuidOf(item: WH40KItem): string | null {
 /** Shape of an item's modifiers block (accessed via item.system.modifiers). */
 interface ItemModifiersBlock {
     characteristics?: Record<string, number>;
+    /**
+     * Bonus-only characteristic modifiers ("+X Strength Bonus" effects, #415):
+     * added to the effective BONUS, not the underlying characteristic value.
+     */
+    characteristicBonuses?: Record<string, number>;
     skills?: Record<string, number>;
     combat?: Record<string, number>;
     resources?: { wounds?: number; fate?: number };
@@ -365,6 +381,8 @@ export default class CreatureTemplate extends CommonTemplate {
     };
     declare modifierSources: {
         characteristics: Partial<Record<string, ModifierSource[]>>;
+        /** Bonus-only characteristic modifiers ("+X Bonus" effects, #415). */
+        characteristicBonuses: Partial<Record<string, ModifierSource[]>>;
         skills: Partial<Record<string, ModifierSource[]>>;
         combat: {
             toHit: ModifierSource[];
@@ -545,6 +563,7 @@ export default class CreatureTemplate extends CommonTemplate {
             // Modifier tracking for transparency
             modifierSources: new SchemaField({
                 characteristics: new ObjectField({ required: true, initial: {} }),
+                characteristicBonuses: new ObjectField({ required: true, initial: {} }),
                 skills: new ObjectField({ required: true, initial: {} }),
                 combat: new SchemaField({
                     toHit: new ArrayField(new ObjectField(), { required: true, initial: [] }),
@@ -830,6 +849,7 @@ export default class CreatureTemplate extends CommonTemplate {
     _initializeModifierTracking(): void {
         this.modifierSources = {
             characteristics: {},
+            characteristicBonuses: {},
             skills: {},
             combat: {
                 toHit: [], // Matches schema: modifiers.combat.attack / toHit
@@ -883,9 +903,12 @@ export default class CreatureTemplate extends CommonTemplate {
 
     /**
      * Prepare characteristic totals and bonuses.
-     * Fatigue does NOT affect characteristics - it only applies -10 to all Tests.
-     * Formula: total = base + (advance * 5) + modifier
-     * Bonus = floor(total / 10), modified by unnatural multiplier
+     * Formula: total = base + (advance * 5) + modifier - damage (the effective value).
+     * Bonus = floor(total / 10), modified by unnatural multiplier (the base bonus).
+     * The base-vs-effective split (#415) is finalised in _applyModifiersToCharacteristics
+     * once item modifiers are known; this pre-item pass seeds the effective fields so
+     * they are always populated. Fatigue is a flat per-Test penalty (applied in the roll
+     * path), not a characteristic modifier, so it does NOT reduce these values.
      * @protected
      */
     _prepareCharacteristics(): void {
@@ -894,6 +917,8 @@ export default class CreatureTemplate extends CommonTemplate {
             const { total, bonus } = computeCharacteristicTotals(char.base, char.modifier, char.unnatural || 0, char.advance * 5 - char.damage);
             char.total = total;
             char.bonus = bonus;
+            // Seed the effective fields (no item bonus-only modifiers known yet).
+            applyEffectiveCharacteristicFields(char);
         }
 
         // Update initiative bonus from characteristic
@@ -1002,7 +1027,7 @@ export default class CreatureTemplate extends CommonTemplate {
     _prepareFatigue(): void {
         if (this.fatigue.max <= 0) {
             const toughness = this.characteristics.toughness;
-            this.fatigue.max = toughness.bonus;
+            this.fatigue.max = toughness.effectiveBonus;
         }
     }
 
@@ -1056,6 +1081,18 @@ export default class CreatureTemplate extends CommonTemplate {
                     const list = this.modifierSources.characteristics[charKey] ?? [];
                     list.push({ ...source, value });
                     this.modifierSources.characteristics[charKey] = list;
+                }
+            }
+        }
+
+        // Bonus-only characteristic modifiers ("+X Strength Bonus", #415): raise
+        // the effective BONUS without changing the underlying characteristic value.
+        if (mods.characteristicBonuses !== undefined) {
+            for (const [charKey, value] of Object.entries(mods.characteristicBonuses)) {
+                if (typeof value === 'number') {
+                    const list = this.modifierSources.characteristicBonuses[charKey] ?? [];
+                    list.push({ ...source, value });
+                    this.modifierSources.characteristicBonuses[charKey] = list;
                 }
             }
         }
@@ -1136,12 +1173,19 @@ export default class CreatureTemplate extends CommonTemplate {
             );
             char.total = total;
             char.bonus = bonus;
+
+            // Finalise the base-vs-effective split (#415): effectiveValue mirrors the
+            // post-modifier total; effectiveBonus adds the bonus-only modifier channel
+            // ("+X Bonus" effects) on top of the base bonus.
+            const bonusModifier = this._getTotalCharacteristicBonusModifier(name);
+            applyEffectiveCharacteristicFields(char, bonusModifier);
         }
 
-        // Update initiative bonus from characteristic (recalculate from base)
+        // Update initiative bonus from characteristic (recalculate from base). Read the
+        // effective bonus so a bonus-only modifier on the initiative characteristic flows in.
         const initChar = this.characteristics[this.initiative.characteristic];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: dynamic key access on characteristics may return undefined at runtime
-        const baseInitBonus = initChar?.bonus ?? 0;
+        const baseInitBonus = initChar?.effectiveBonus ?? 0;
 
         // Apply combat modifiers from items
         const initMod = this._getTotalCombatModifier('initiative');
@@ -1213,6 +1257,18 @@ export default class CreatureTemplate extends CommonTemplate {
      */
     _getTotalCharacteristicModifier(charKey: string): number {
         const sources = this.modifierSources.characteristics[charKey] ?? [];
+        return sources.reduce((total, src) => total + (src.value || 0), 0);
+    }
+
+    /**
+     * Total bonus-only characteristic modifier from all item sources (#415) — the
+     * sum of "+X Bonus" effects that raise the effective BONUS without changing the
+     * characteristic value.
+     * @param {string} charKey - The characteristic key
+     * @returns {number}
+     */
+    _getTotalCharacteristicBonusModifier(charKey: string): number {
+        const sources = this.modifierSources.characteristicBonuses[charKey] ?? [];
         return sources.reduce((total, src) => total + (src.value || 0), 0);
     }
 
@@ -1473,8 +1529,10 @@ export default class CreatureTemplate extends CommonTemplate {
         const agility = this.characteristics.agility;
         const strength = this.characteristics.strength;
 
-        const ab = agility.bonus;
-        const sb = strength.bonus;
+        // Read the effective bonus so bonus-only modifiers ("+X Agility/Strength
+        // Bonus", #415) scale movement, leap, and carry alongside the base bonus.
+        const ab = agility.effectiveBonus;
+        const sb = strength.effectiveBonus;
 
         // #409: fold collected movement modifiers (e.g. a stim/drug granting +N
         // movement — key 'movement' on an item/effect) into the base move rate, so

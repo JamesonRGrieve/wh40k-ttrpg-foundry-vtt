@@ -27,6 +27,8 @@ import {
     isMeleeSpecialOption,
 } from '../../rules/attack-options.ts';
 import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
+import { getFatigueTestPenalty } from '../../rules/fatigue.ts';
+import { computeGangUpModifier, gangUpConfigFor, type GangUpTokenLike } from '../../rules/gang-up.ts';
 import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/high-ground.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import { availableSkillVariants, filterModifiersByVariant, type SkillVariant } from '../../rules/skill-variants.ts';
@@ -406,6 +408,17 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 : 0;
         const assistanceMod = isForceField ? 0 : getAssistanceBonus(this._assistantCount);
 
+        // Fatigue (#415) — a flat penalty applied to EVERY test (characteristic /
+        // skill / weapon), the first concrete consumer of the effective-value split.
+        // Read from the source actor's fatigue level; force-field activations aren't
+        // Tests, so they're exempt.
+        const fatigueMod = isForceField ? 0 : this._calculateFatigueModifier();
+
+        // Ganging Up (#417) — melee outnumbering: +10 to hit per additional ally
+        // engaged with the target, capped per game line (auto-computed from token
+        // adjacency, so it shows on the breakdown without a manual toggle).
+        const gangUpMod = !isForceField && this.rollType === 'weapon' ? this._calculateGangUpModifier() : 0;
+
         // Try-Again advisory (#62) — only for Skill rolls with a known rollKey.
         // Reads actor.flags.wh40k['try-again'][rollKey] (a Record<string, number>)
         // populated by chat-card emission. Surfaces a soft warning and pre-applies
@@ -565,7 +578,18 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         const finalTarget = Math.max(
             0,
-            baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + tryAgainPenalty + climbMod,
+            baseTarget +
+                weaponModSum +
+                difficultyMod +
+                situationalMod +
+                customMod +
+                combatSitMod +
+                psyMod +
+                assistanceMod +
+                fatigueMod +
+                gangUpMod +
+                tryAgainPenalty +
+                climbMod,
         );
 
         // Build target breakdown tooltip
@@ -577,6 +601,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (combatSitMod !== 0) tooltipParts.push(`Combat Mods: ${formatSigned(combatSitMod)}`);
         if (psyMod !== 0) tooltipParts.push(`Psy Mode: ${formatSigned(psyMod)}`);
         if (assistanceMod !== 0) tooltipParts.push(`Assistance: +${assistanceMod}`);
+        if (fatigueMod !== 0) tooltipParts.push(`Fatigue: ${formatSigned(fatigueMod)}`);
+        if (gangUpMod !== 0) tooltipParts.push(`Gang Up: ${formatSigned(gangUpMod)}`);
         if (tryAgainPenalty !== 0) tooltipParts.push(`Try-Again: ${tryAgainPenalty}`);
         if (climbMod !== 0) tooltipParts.push(`Climb Surface: ${formatSigned(climbMod)}`);
         tooltipParts.push(`= ${finalTarget}`);
@@ -637,7 +663,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const skillVariants = this._getSkillVariants();
 
         // Modifier aggregate
-        const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + tryAgainPenalty + climbMod;
+        const modifierAggregate =
+            difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + fatigueMod + gangUpMod + tryAgainPenalty + climbMod;
 
         // Roll type specific data
         const isWeapon = this.rollType === 'weapon';
@@ -1143,6 +1170,80 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             }
         }
         return total;
+    }
+
+    /**
+     * Flat fatigue penalty for the active roll (#415): −10 per fatigue level read
+     * from the source actor's `system.fatigue.value`. Applies to every test, so a
+     * status that should make you worse at everything flows in implicitly. Returns
+     * 0 when the actor is unfatigued or has no fatigue track.
+     * @returns {number}
+     */
+    _calculateFatigueModifier(): number {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a heterogeneous actor handle (sourceActor or legacy 'actor'); system.fatigue is read structurally
+        const actor = (this.rollData.sourceActor ?? this.rollData['actor']) as { system?: { fatigue?: { value?: number } } } | null | undefined;
+        const fatigueLevel = Number(actor?.system?.fatigue?.value ?? 0);
+        return getFatigueTestPenalty(fatigueLevel);
+    }
+
+    /**
+     * Ganging Up melee bonus for the active weapon roll (#417). Melee only:
+     * resolves the attacker and target tokens plus the scene roster, then defers
+     * to the pure {@link computeGangUpModifier} to count engaged allies and apply
+     * the per-line +10/ally cap. Returns 0 for ranged attacks, when either token
+     * is off-scene, or when the line has no Ganging Up rule (IM).
+     * @returns {number}
+     */
+    _calculateGangUpModifier(): number {
+        const rd = this.rollData;
+        if (rd.weapon?.isRanged === true) return 0;
+        const attacker = UnifiedRollDialog.#tokenLikeFor(rd.sourceActor);
+        const target = UnifiedRollDialog.#tokenLikeFor(rd.targetActor);
+        if (attacker === null || target === null) return 0;
+        const gridSize = canvas.grid?.size ?? 0;
+        if (gridSize <= 0) return 0;
+        const config = gangUpConfigFor((rd.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
+        const tokens: GangUpTokenLike[] = [];
+        for (const placeable of canvas.tokens?.placeables ?? []) {
+            const like = UnifiedRollDialog.#tokenLikeFromPlaceable(placeable);
+            if (like !== null) tokens.push(like);
+        }
+        return computeGangUpModifier({ attacker, target, tokens, gridSize, config }).bonus;
+    }
+
+    /**
+     * Reduce an actor's placed token to a {@link GangUpTokenLike}, or null when the
+     * actor is off-scene. Prefers the linked token, falling back to the first
+     * active token.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a loose actor handle; Foundry Actor token accessors are not on the fvtt-types surface here
+    static #tokenLikeFor(actor: unknown): GangUpTokenLike | null {
+        type ActorToken = foundry.canvas.placeables.Token;
+        const withTokens = actor as { token?: ActorToken | null; getActiveTokens?: () => ActorToken[] } | null | undefined;
+        const token = withTokens?.token ?? withTokens?.getActiveTokens?.()[0] ?? null;
+        return UnifiedRollDialog.#tokenLikeFromPlaceable(token);
+    }
+
+    /**
+     * Reduce a Foundry Token placeable to a {@link GangUpTokenLike}, reading its
+     * document geometry (grid origin, footprint) and disposition. Returns null
+     * when the placeable or its document is unavailable (preview / teardown).
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Token#document geometry is loosely typed here (preview/teardown placeables leave it undefined)
+    static #tokenLikeFromPlaceable(token: unknown): GangUpTokenLike | null {
+        const doc = (token as { id?: string | null; document?: { x?: number; y?: number; width?: number; height?: number; disposition?: number } } | null)
+            ?.document;
+        const id = (token as { id?: string | null } | null)?.id;
+        if (doc === undefined || typeof id !== 'string' || id === '') return null;
+        if (typeof doc.x !== 'number' || typeof doc.y !== 'number') return null;
+        return {
+            id,
+            x: doc.x,
+            y: doc.y,
+            width: typeof doc.width === 'number' ? doc.width : 1,
+            height: typeof doc.height === 'number' ? doc.height : 1,
+            disposition: typeof doc.disposition === 'number' ? doc.disposition : 0,
+        };
     }
 
     _stepDifficulty(direction: number): void {

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
     getFatigueRecoveredAfterRest,
+    getFatigueTestPenalty,
     getFatigueThreshold,
     getFatigueUnconsciousMinutes,
     isCharacteristicHalvedByFatigue,
@@ -61,6 +62,23 @@ describe('isCharacteristicHalvedByFatigue (#114)', () => {
     it('NOT halved when characteristic bonus ≥ fatigue level', () => {
         expect(isCharacteristicHalvedByFatigue(4, 4)).toBe(false);
         expect(isCharacteristicHalvedByFatigue(5, 4)).toBe(false);
+    });
+});
+
+describe('getFatigueTestPenalty (#415)', () => {
+    it('is 0 when unfatigued', () => {
+        expect(getFatigueTestPenalty(0)).toBe(0);
+    });
+    it('is -10 per fatigue level by default', () => {
+        expect(getFatigueTestPenalty(1)).toBe(-10);
+        expect(getFatigueTestPenalty(3)).toBe(-30);
+    });
+    it('honours a custom per-level penalty', () => {
+        expect(getFatigueTestPenalty(2, 5)).toBe(-10);
+    });
+    it('clamps negative inputs to a non-positive penalty', () => {
+        expect(getFatigueTestPenalty(-4)).toBe(0);
+        expect(getFatigueTestPenalty(2, -10)).toBe(0);
     });
 });
 
