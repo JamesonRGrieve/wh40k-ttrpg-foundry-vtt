@@ -22,6 +22,7 @@ import {
     SUBTLETY_EFFECT_ICON,
 } from '../rules/subtlety-adjuster-effects.ts';
 import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type SubtletySourceRef } from '../rules/subtlety-adjusters.ts';
+import { weaponFireBlockReason } from '../rules/weapon-jam.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
@@ -870,6 +871,24 @@ export class WH40KBaseActor extends Actor {
         if (item.type === 'weapon') {
             if (isWeaponAttackBlockedByEquip(item.system, enforceEquipped)) {
                 ui.notifications.warn(t('WH40K.Warning.WeaponNotEquipped'));
+                return;
+            }
+            // Gate firing on jam / empty state (#410, #411). A jammed weapon can't
+            // fire until cleared; a dry weapon can't fire until reloaded. Reasons
+            // are resolved from the weapon DataModel getters via the pure,
+            // system-agnostic classifier so the gate holds across all 7 lines.
+            const weaponState = item.system as { isMeleeWeapon?: boolean; isJammed?: boolean; isOutOfAmmo?: boolean };
+            const fireBlock = weaponFireBlockReason({
+                isMelee: weaponState.isMeleeWeapon === true,
+                jammed: weaponState.isJammed === true,
+                outOfAmmo: weaponState.isOutOfAmmo === true,
+            });
+            if (fireBlock === 'jammed') {
+                ui.notifications.warn(game.i18n.localize('WH40K.Warning.WeaponJammed'));
+                return;
+            }
+            if (fireBlock === 'empty') {
+                ui.notifications.warn(game.i18n.localize('WH40K.Warning.WeaponEmpty'));
                 return;
             }
             if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls) === true) {

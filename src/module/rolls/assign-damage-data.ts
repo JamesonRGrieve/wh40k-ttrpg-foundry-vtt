@@ -1,8 +1,10 @@
 import type { HordeTrait } from '../data/actor/mixins/horde-template.ts';
-import { getCriticalDamage } from '../rules/critical-damage.ts';
+import { applyCriticalDamageConditions } from '../rules/active-effects.ts';
+import { type CriticalDamageRecord, getCriticalDamageRecord } from '../rules/critical-damage.ts';
 import { damageTypeDropdown } from '../rules/damage-type.ts';
 import { type BreakCheck, magnitudeLossForHit, resolveBreakCheck } from '../rules/dw-horde-magnitude.ts';
 import { hitDropdown } from '../rules/hit-locations.ts';
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { postChatCard, resolveGettersForTemplate } from './roll-helpers.ts';
 
 /**
@@ -80,6 +82,12 @@ export class AssignDamageData {
     hasCriticalDamage = false;
     criticalDamageTaken = 0;
     criticalEffect = '';
+    /**
+     * Structured Critical Damage result for the resolved hit (#108) — carries the
+     * classified riders that drive condition / ActiveEffect application. Populated
+     * in {@link finalize} whenever critical damage is taken; null otherwise.
+     */
+    criticalRecord: CriticalDamageRecord | null = null;
 
     /** True when this hit resolved against a DW horde (#166). */
     hasHordeDamage = false;
@@ -264,8 +272,12 @@ export class AssignDamageData {
                 this.criticalDamageTaken = this.criticalDamageTaken - this.tb < 1 ? 1 : this.criticalDamageTaken - this.tb;
             }
 
-            this.criticalEffect =
-                (await getCriticalDamage(this.hit.damageType, this.hit.location, this.actor.system.wounds.critical + this.criticalDamageTaken)) ?? '';
+            // Resolve the structured Critical Damage record (effect prose + the
+            // classified riders) so the applied conditions (#108) come from the
+            // same lookup as the chat-card effect text.
+            const criticalValue = this.actor.system.wounds.critical + this.criticalDamageTaken;
+            this.criticalRecord = await getCriticalDamageRecord(this.hit.damageType, this.hit.location, criticalValue);
+            this.criticalEffect = this.criticalRecord?.effect ?? '';
         }
 
         if (this.hit.totalFatigue > 0) {
@@ -297,6 +309,15 @@ export class AssignDamageData {
         // Create critical injury item if critical damage was taken
         if (this.hasCriticalDamage && this.criticalEffect) {
             await this._createCriticalInjuryItem();
+        }
+
+        // Apply the crit result's conditions / ActiveEffects (#108): Burning,
+        // Blood Loss, Stunned, Prone, Blinded, Deafened, Fatigue, lost limb. Runs
+        // whenever critical damage was taken; with no content pack the riders are
+        // empty and nothing is applied.
+        if (this.hasCriticalDamage && this.criticalRecord !== null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ActorLike is the damage-apply narrowing of the real target document; the condition applicator needs the full actor surface (effects, createEmbeddedDocuments)
+            await applyCriticalDamageConditions(this.actor as unknown as WH40KBaseActorDocument, this.criticalRecord);
         }
 
         const html = await foundry.applications.handlebars.renderTemplate(

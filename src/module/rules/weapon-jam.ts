@@ -46,3 +46,20 @@ export function shouldJamRoll(opts: { action: string; rollTotal: number; success
     if (opts.hasUnreliable) return opts.rollTotal >= UNRELIABLE_JAM_FLOOR;
     return opts.rollTotal >= getJamFloor(opts.action);
 }
+
+/**
+ * Why a weapon may not be fired right now, or `null` when it can fire.
+ *   - `'jammed'` — the weapon is jammed and must be cleared first (#411).
+ *   - `'empty'`  — the weapon uses ammunition and its clip is dry (#410).
+ * Melee weapons never gate on either (they don't jam or run dry), so a melee
+ * weapon always returns `null`. Pure and system-agnostic: the caller supplies
+ * the already-resolved weapon state, so the same gate holds across all 7 lines.
+ */
+export type WeaponFireBlockReason = 'jammed' | 'empty' | null;
+
+export function weaponFireBlockReason(opts: { isMelee: boolean; jammed: boolean; outOfAmmo: boolean }): WeaponFireBlockReason {
+    if (opts.isMelee) return null;
+    if (opts.jammed) return 'jammed';
+    if (opts.outOfAmmo) return 'empty';
+    return null;
+}

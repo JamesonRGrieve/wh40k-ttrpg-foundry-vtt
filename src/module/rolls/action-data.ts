@@ -401,15 +401,47 @@ export class ActionData {
         // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔useAmmo's expected parameter type are duck-typed siblings
         await useAmmo(this as unknown as Parameters<typeof useAmmo>[0]);
 
+        // A jam still cycles/wastes the round(s) fired, so the ammo spend above
+        // runs unconditionally first (#410 playtest note: the jam path must NOT
+        // skip the spend). Then persist the jam onto the weapon item so it is
+        // per-weapon and survives across turns (#411).
+        await this._persistWeaponJam(true);
+
         if (this.rollData.eyeOfVengeance) {
             const sourceActor = this.rollData.sourceActor;
             await sourceActor?.spendFate();
         }
     }
 
+    /**
+     * Persist (or clear) the resolved attack's jam state onto the weapon item.
+     * Keeps the ammo spend and the jam flag atomic on the jamming shot (#410/#411)
+     * and lets a Fate re-roll / manual refund undo the jam alongside the ammo.
+     * No-op for non-weapon rolls or when the roll did not jam.
+     */
+    private async _persistWeaponJam(jammed: boolean): Promise<void> {
+        if (!this.effects.includes('jam')) return;
+        if (!(this.rollData instanceof WeaponRollData)) return;
+        // Route through the WeaponData jam/clearJam API so the persisted mutation
+        // has a single source. On a refund the ammo is already restored by
+        // refundAmmo, so only the flag is cleared (loseAmmo: false).
+        const weaponSystem = this.rollData.weapon.system as {
+            jam?: () => Promise<unknown>;
+            clearJam?: (opts?: { loseAmmo?: boolean }) => Promise<unknown>;
+        };
+        if (jammed) {
+            await weaponSystem.jam?.();
+        } else {
+            await weaponSystem.clearJam?.({ loseAmmo: false });
+        }
+    }
+
     async refundResources(): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔refundAmmo's expected parameter type are duck-typed siblings
         await refundAmmo(this as unknown as Parameters<typeof refundAmmo>[0]);
+
+        // Undo a persisted jam alongside the refunded ammo (re-roll / manual refund).
+        await this._persistWeaponJam(false);
 
         if (this.rollData.eyeOfVengeance) {
             const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument;

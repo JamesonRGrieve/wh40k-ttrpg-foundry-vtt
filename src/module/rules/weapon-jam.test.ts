@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getJamFloor, shouldJamRoll } from './weapon-jam';
+import { getJamFloor, shouldJamRoll, weaponFireBlockReason } from './weapon-jam';
 
 describe('getJamFloor', () => {
     it('returns 96 for a Standard Attack', () => {
@@ -65,5 +65,24 @@ describe('shouldJamRoll', () => {
             expect(shouldJamRoll({ action: 'Semi-Auto Burst', rollTotal: 91, success: false, ...unreliable })).toBe(true);
             expect(shouldJamRoll({ action: 'Full Auto Burst', rollTotal: 93, success: false, ...unreliable })).toBe(true);
         });
+    });
+});
+
+describe('weaponFireBlockReason (#410/#411 firing gate)', () => {
+    it('a melee weapon never blocks, whatever its jam/ammo state', () => {
+        expect(weaponFireBlockReason({ isMelee: true, jammed: true, outOfAmmo: true })).toBeNull();
+        expect(weaponFireBlockReason({ isMelee: true, jammed: false, outOfAmmo: false })).toBeNull();
+    });
+    it('a ready ranged weapon does not block', () => {
+        expect(weaponFireBlockReason({ isMelee: false, jammed: false, outOfAmmo: false })).toBeNull();
+    });
+    it('a jammed ranged weapon blocks with "jammed"', () => {
+        expect(weaponFireBlockReason({ isMelee: false, jammed: true, outOfAmmo: false })).toBe('jammed');
+    });
+    it('a dry ranged weapon blocks with "empty"', () => {
+        expect(weaponFireBlockReason({ isMelee: false, jammed: false, outOfAmmo: true })).toBe('empty');
+    });
+    it('jam takes precedence over empty when both are true', () => {
+        expect(weaponFireBlockReason({ isMelee: false, jammed: true, outOfAmmo: true })).toBe('jammed');
     });
 });
