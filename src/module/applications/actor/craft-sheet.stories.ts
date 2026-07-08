@@ -15,6 +15,7 @@ import { mockVehicleSheetContext, type SheetContextLike } from '../../../../stor
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { assertField, submitForm, renderSheetParts } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/actor/craft/header.hbs?raw';
+import combatTabSrc from '../../../templates/actor/craft/tab-combat.hbs?raw';
 import overviewTabSrc from '../../../templates/actor/craft/tab-overview.hbs?raw';
 import tabsSrc from '../../../templates/actor/craft/tabs.hbs?raw';
 
@@ -33,6 +34,30 @@ function renderCraftSheet(ctx: SheetContextLike): HTMLElement {
         systemId: systemIdOf(ctx),
     });
 }
+
+/** Render the combat tab (holds the animate-craft characteristics profile grid). */
+function renderCraftCombat(ctx: SheetContextLike): HTMLElement {
+    return renderSheetParts([{ template: headerSrc }, { template: tabsSrc }, { template: combatTabSrc, partClass: 'wh40k-body tw-p-2' }], ctx, {
+        systemId: systemIdOf(ctx),
+    });
+}
+
+/**
+ * A daemon-engine characteristics profile in the derived shape the sheet reads
+ * (base = printed value, total/bonus computed). Defiler (OW Core p.355):
+ * WS/BS 25, S 75 with Unnatural Strength (7) → SB 49, T — (0).
+ */
+const daemonEngineCharacteristics = {
+    weaponSkill: { label: 'Weapon Skill', short: 'WS', base: 25, modifier: 0, unnatural: 0, total: 25, bonus: 2 },
+    ballisticSkill: { label: 'Ballistic Skill', short: 'BS', base: 25, modifier: 0, unnatural: 0, total: 25, bonus: 2 },
+    strength: { label: 'Strength', short: 'S', base: 75, modifier: 0, unnatural: 7, total: 75, bonus: 49 },
+    toughness: { label: 'Toughness', short: 'T', base: 0, modifier: 0, unnatural: 0, total: 0, bonus: 0 },
+    agility: { label: 'Agility', short: 'Ag', base: 35, modifier: 0, unnatural: 0, total: 35, bonus: 3 },
+    intelligence: { label: 'Intelligence', short: 'Int', base: 10, modifier: 0, unnatural: 0, total: 10, bonus: 1 },
+    perception: { label: 'Perception', short: 'Per', base: 40, modifier: 0, unnatural: 0, total: 40, bonus: 4 },
+    willpower: { label: 'Willpower', short: 'WP', base: 40, modifier: 0, unnatural: 0, total: 40, bonus: 4 },
+    fellowship: { label: 'Fellowship', short: 'Fel', base: 1, modifier: 0, unnatural: 0, total: 1, bonus: 0 },
+};
 
 const meta: Meta<SheetContextLike> = {
     title: 'Actor/CraftActorSheet',
@@ -143,6 +168,28 @@ export const AircraftVariant: Story = {
     play: ({ canvasElement }) => {
         // The aircraft-only ceiling field renders when isAircraft is true.
         assertField(canvasElement, 'system.ceiling', 30000);
+    },
+};
+
+// ── Animate craft (daemon-engine profile) ────────────────────────────────────
+
+export const DaemonEngine: Story = {
+    name: 'Daemon-engine — OW Defiler (characteristics profile)',
+    args: {
+        ...defaultCraftCtx,
+        characteristics: daemonEngineCharacteristics,
+        profileAbilities: [
+            { _id: 'ab-str', name: 'Unnatural Strength (7)' },
+            { _id: 'ab-swift', name: 'Swift Attack' },
+            { _id: 'ab-twm', name: 'Two-Weapon Wielder (Melee)' },
+        ],
+    },
+    render: (args) => renderCraftCombat(args),
+    play: async ({ canvasElement }) => {
+        // The profile grid renders the Strength base (75) and the abilities list.
+        assertField(canvasElement, 'system.characteristics.strength.base', 75);
+        const view = within(canvasElement);
+        await expect(view.getByText('Unnatural Strength (7)')).toBeVisible();
     },
 };
 

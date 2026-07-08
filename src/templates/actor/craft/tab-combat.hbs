@@ -2,6 +2,39 @@
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
     <div class="tw-flex tw-flex-col tw-gap-4">
 
+        {{!-- Creature profile — animate craft only (daemon-engines / walkers / Dreadnoughts). --}}
+        {{#if characteristics}}
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-dharmachakra tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
+                {{localize "WH40K.Characteristics"}}
+            </h3>
+            <div class="tw-grid tw-grid-cols-3 sm:tw-grid-cols-5 lg:tw-grid-cols-9 tw-gap-2">
+                {{#each characteristics}}
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px] tw-p-2">
+                    <button type="button" class="tw-text-[0.75rem] tw-uppercase tw-text-[#aaa] hover:tw-text-gold tw-bg-transparent tw-border-0 tw-cursor-pointer" data-action="rollCharacteristic" data-characteristic="{{@key}}" title="{{this.label}}">{{this.short}}</button>
+                    <input type="number" name="system.characteristics.{{@key}}.base" value="{{this.base}}" class="tw-w-full tw-text-center tw-bg-transparent tw-border-0 tw-text-[1.1rem] tw-font-bold tw-text-[#f0f0f0]" />
+                    <span class="tw-text-[0.7rem] tw-text-[#888]">{{localize "WH40K.Skills.Bonus"}} {{this.bonus}}</span>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        {{#if profileAbilities.length}}
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-scroll tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
+                {{localize "WH40K.Abilities"}}
+            </h3>
+            <div class="tw-flex tw-flex-wrap tw-gap-2">
+                {{#each profileAbilities}}
+                <span class="tw-px-3 tw-py-1 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px] tw-text-[0.85rem] tw-cursor-pointer hover:tw-text-gold" data-action="itemEdit" data-item-id="{{this._id}}">{{this.name}}</span>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+        {{/if}}
+
         {{!-- Directional Armour --}}
         <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
             <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
