@@ -616,6 +616,30 @@
             "flags": {}
         },
         {
+            "name": "bc-core-journals",
+            "label": "BC: Core Rulebook, Journals",
+            "path": "packs/black-crusade/bc-core-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-core-rolltables",
+            "label": "BC: Core Rulebook, Roll Tables",
+            "path": "packs/black-crusade/bc-core-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "bc-core-items-ammo",
             "label": "BC: Core Rulebook, Ammunition",
             "path": "packs/black-crusade/bc-core-items-ammo",
@@ -7111,6 +7135,8 @@
                     "packs": [
                         "bc-core-actors-bestiary",
                         "bc-core-actors-npcs",
+                        "bc-core-journals",
+                        "bc-core-rolltables",
                         "bc-core-items-ammo",
                         "bc-core-items-armor-mods",
                         "bc-core-items-armour",
