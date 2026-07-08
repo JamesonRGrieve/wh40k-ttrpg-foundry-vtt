@@ -1,4 +1,41 @@
 import ActorDataModel from '../abstract/actor-data-model.ts';
+import { applyCharacteristicRollData, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
+import { characteristicField } from '../shared/stat-fields.ts';
+import { migrateCharacteristics } from './npc-import-migration.ts';
+
+/**
+ * A single derived characteristic on a vehicle profile — same shape the NPC /
+ * creature models use (see {@link characteristicField}). Present only on
+ * animate craft (daemon-engines, walkers, Dreadnoughts) that roll attacks off a
+ * creature-style profile; `null` on ordinary crewed vehicles.
+ */
+interface VehicleCharacteristic {
+    label: string;
+    short: string;
+    base: number;
+    modifier: number;
+    unnatural: number;
+    total: number;
+    bonus: number;
+}
+
+/**
+ * The nine-characteristic profile carried by animate craft (or `null`). The
+ * index signature mirrors {@link NPCData}'s characteristics so the shared
+ * roll-data helper (`applyCharacteristicRollData`) accepts it directly.
+ */
+export interface VehicleCharacteristics {
+    weaponSkill: VehicleCharacteristic;
+    ballisticSkill: VehicleCharacteristic;
+    strength: VehicleCharacteristic;
+    toughness: VehicleCharacteristic;
+    agility: VehicleCharacteristic;
+    intelligence: VehicleCharacteristic;
+    perception: VehicleCharacteristic;
+    willpower: VehicleCharacteristic;
+    fellowship: VehicleCharacteristic;
+    [key: string]: VehicleCharacteristic;
+}
 
 /**
  * Data models for Vehicle actors.
@@ -215,12 +252,43 @@ export class ConventionalCraftData extends VehicleData {
         value: number;
         critical: number;
     };
+    /**
+     * Optional creature-style characteristics profile. Populated only on animate
+     * craft — daemon-engines (Defiler, Soul Grinder), Chaos walkers, Imperial
+     * Dreadnoughts / Penitent Engines — which roll attacks (WS claws, BS cannons)
+     * off a profile while retaining the vehicle durability model (facing armour +
+     * Structural Integrity). `null` on ordinary crewed vehicles, whose crew roll
+     * their own characteristics. Its associated talents / traits (Unnatural
+     * Strength (X), Swift Attack, Fear (X), …) ride as embedded items.
+     */
+    declare characteristics: VehicleCharacteristics | null;
+
+    /** A single vehicle-profile characteristic sub-field (base 0; no advancement). */
+    static _CharacteristicField(label: string, short: string): foundry.data.fields.DataField.Any {
+        return characteristicField(label, short, { base: 0, total: 0, bonus: 0, advancement: false });
+    }
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
+
+            // === Optional creature-style profile (animate craft only; null otherwise) ===
+            characteristics: new fields.SchemaField(
+                {
+                    weaponSkill: this._CharacteristicField('Weapon Skill', 'WS'),
+                    ballisticSkill: this._CharacteristicField('Ballistic Skill', 'BS'),
+                    strength: this._CharacteristicField('Strength', 'S'),
+                    toughness: this._CharacteristicField('Toughness', 'T'),
+                    agility: this._CharacteristicField('Agility', 'Ag'),
+                    intelligence: this._CharacteristicField('Intelligence', 'Int'),
+                    perception: this._CharacteristicField('Perception', 'Per'),
+                    willpower: this._CharacteristicField('Willpower', 'WP'),
+                    fellowship: this._CharacteristicField('Fellowship', 'Fel'),
+                },
+                { required: false, nullable: true, initial: null },
+            ),
 
             // === Vehicle Classification ===
             vehicleClass: new fields.StringField({
@@ -280,6 +348,22 @@ export class ConventionalCraftData extends VehicleData {
     }
 
     /* -------------------------------------------- */
+    /*  Migration                                   */
+    /* -------------------------------------------- */
+
+    /**
+     * Expand a legacy/authoring flat-int characteristics block
+     * (`{ ws: 25, bs: 25, … }`) into the rich per-characteristic shape, exactly
+     * as {@link NPCData} does. No-op when `characteristics` is absent (ordinary
+     * vehicles) — {@link migrateCharacteristics} guards on presence.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData receives untyped Foundry source data before schema validation
+    static override _migrateData(source: Record<string, unknown>): void {
+        super._migrateData(source);
+        migrateCharacteristics(source as Parameters<typeof migrateCharacteristics>[0]);
+    }
+
+    /* -------------------------------------------- */
     /*  Data Preparation                            */
     /* -------------------------------------------- */
 
@@ -297,6 +381,22 @@ export class ConventionalCraftData extends VehicleData {
     override prepareDerivedData(): void {
         super.prepareDerivedData();
         this._applyVehicleTraitModifiers();
+        this._prepareCharacteristics();
+    }
+
+    /**
+     * Derive each characteristic's `total` / `bonus` from its `base` / `modifier`
+     * / `unnatural` — identical math to the NPC path (no advancement term).
+     * No-op when the craft carries no profile (`characteristics === null`).
+     */
+    _prepareCharacteristics(): void {
+        if (this.characteristics === null) return;
+        for (const char of Object.values(this.characteristics)) {
+            // total = base + modifier; bonus = unnatural-adjusted tens digit (no advance term).
+            const { total, bonus } = computeCharacteristicTotals(char.base, char.modifier, char.unnatural || 0);
+            char.total = total;
+            char.bonus = bonus;
+        }
     }
 
     /**
@@ -423,6 +523,12 @@ export class ConventionalCraftData extends VehicleData {
         data['size'] = this.size;
         data['integrity'] = this.integrity.value;
         data['integrityMax'] = this.integrity.max;
+
+        // Animate craft (daemon-engines / walkers) expose their profile so claw
+        // (WS) and cannon (BS) attacks can roll off it, like any creature.
+        if (this.characteristics !== null) {
+            applyCharacteristicRollData(data, this.characteristics);
+        }
 
         return data;
     }

@@ -10,6 +10,7 @@
  * VoidcraftActorSheet instead.
  */
 
+import type { VehicleCharacteristics } from '../../data/actor/vehicle.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 
@@ -52,6 +53,12 @@ interface CraftSystemData {
         value: number;
         critical: number;
     };
+    /**
+     * Creature-style profile — an object on animate craft (daemon-engines /
+     * walkers / Dreadnoughts), `null` on ordinary vehicles. Always present
+     * (the DataModel defaults it to `null`), so never `undefined`.
+     */
+    characteristics: VehicleCharacteristics | null;
     /** Aircraft-only altitude tier + service ceiling. */
     altitude?: string;
     ceiling?: number;
@@ -107,6 +114,10 @@ interface CraftSheetContext extends Record<string, unknown> {
     isWatercraft?: boolean;
     craftStats?: PreparedCraftStats;
     crew?: PreparedCraftCrew;
+    /** Animate-craft profile (daemon-engines / walkers); `null` on ordinary vehicles. */
+    characteristics?: VehicleCharacteristics | null;
+    /** Talents / traits carried by an animate craft (Unnatural Strength (X), Swift Attack, …). */
+    profileAbilities?: WH40KItem[];
     weapons?: WH40KItem[];
     vehicleTraits?: WH40KItem[];
     vehicleUpgrades?: WH40KItem[];
@@ -225,6 +236,8 @@ export default class CraftActorSheet extends BaseActorSheet {
 
         context.craftStats = this._prepareCraftStats();
         context.crew = this._prepareCrew();
+        // Animate craft (daemon-engines / walkers) expose a creature profile; ordinary vehicles are null.
+        context.characteristics = this.actor.system.characteristics;
 
         // Categorize items
         this._prepareItems(context);
@@ -298,6 +311,7 @@ export default class CraftActorSheet extends BaseActorSheet {
         const weapons: WH40KItem[] = [];
         const vehicleTraits: WH40KItem[] = [];
         const vehicleUpgrades: WH40KItem[] = [];
+        const profileAbilities: WH40KItem[] = [];
         const components: WH40KItem[] = [];
         const other: WH40KItem[] = [];
 
@@ -305,6 +319,9 @@ export default class CraftActorSheet extends BaseActorSheet {
             weapon: weapons,
             vehicleTrait: vehicleTraits,
             vehicleUpgrade: vehicleUpgrades,
+            // Animate craft (daemon-engines / walkers) carry creature talents/traits.
+            talent: profileAbilities,
+            trait: profileAbilities,
         };
         for (const item of context.items ?? []) {
             (buckets[item.type] ?? other).push(item);
@@ -313,6 +330,7 @@ export default class CraftActorSheet extends BaseActorSheet {
         context.weapons = weapons;
         context.vehicleTraits = vehicleTraits;
         context.vehicleUpgrades = vehicleUpgrades;
+        context.profileAbilities = profileAbilities;
         context.components = components;
         context.otherItems = other;
     }
