@@ -1727,11 +1727,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             this.animateXPGain(previous.experience ?? 0, currentExperienceTotal ?? 0);
         }
 
-        // Check characteristics — absent on actor types that don't define them
-        // (vehicles, starships). Guard the iterate so render doesn't blow up.
+        // Check characteristics — null on ordinary craft/vehicles (the animate-craft
+        // creature profile defaults the field to null) and absent on other types that
+        // don't define it. Guard both null and undefined so render doesn't blow up on
+        // Object.entries.
         const characteristics = current.characteristics;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: characteristics absent on vehicle/starship system schemas
-        if (characteristics !== undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: characteristics is null on craft/vehicles and absent on some system schemas; the static type doesn't capture the runtime null
+        if (characteristics != null) {
             for (const [key, char] of Object.entries(characteristics)) {
                 const prevChar = previous.characteristics?.[key];
                 if (prevChar === undefined) continue;
