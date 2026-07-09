@@ -596,6 +596,8 @@ WH40K.sizes = {
     6: { label: 'WH40K.Size.Enormous', modifier: 20 },
     7: { label: 'WH40K.Size.Massive', modifier: 30 },
     8: { label: 'WH40K.Size.Immense', modifier: 40 },
+    9: { label: 'WH40K.Size.Monumental', modifier: 50 },
+    10: { label: 'WH40K.Size.Titanic', modifier: 60 },
 };
 
 /* -------------------------------------------- */
