@@ -5402,8 +5402,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (fromUuidFn === undefined) return;
         let doc: { sheet?: { render: (force: boolean) => void } } | null = null;
         try {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid resolves to a Foundry document; the cast narrows to the render surface
-            doc = (await fromUuidFn(uuid)) as { sheet?: { render: (force: boolean) => void } } | null;
+            doc = await fromUuidFn(uuid);
         } catch {
             doc = null;
         }
@@ -5412,7 +5411,7 @@ export default class CharacterSheet extends BaseActorSheet {
             ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.DivinationEntryMissing'));
             return;
         }
-        void sheet.render(true);
+        sheet.render(true);
     }
 
     /**

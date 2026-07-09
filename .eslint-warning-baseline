@@ -115,9 +115,9 @@
     "prettier/prettier",
     "require-atomic-updates"
   ],
-  "total": 117,
+  "total": 118,
   "byRule": {
-    "complexity": 34,
+    "complexity": 35,
     "max-depth": 2,
     "no-await-in-loop": 81
   }

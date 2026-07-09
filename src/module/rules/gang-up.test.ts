@@ -111,8 +111,8 @@ describe('computeGangUpModifier (#417)', () => {
     it('caps the bonus at the per-line maximum (+30 for DH2)', () => {
         const target = tok('T', 2, 2, -1);
         // Surround the target on all four orthogonal + four diagonal cells with allies.
-        const allies = [tok('A', 1, 2, 1), tok('B', 3, 2, 1), tok('C', 2, 1, 1), tok('D', 2, 3, 1), tok('E', 1, 1, 1), tok('F', 3, 3, 1)];
-        const attacker = allies[0];
+        const attacker = tok('A', 1, 2, 1);
+        const allies = [attacker, tok('B', 3, 2, 1), tok('C', 2, 1, 1), tok('D', 2, 3, 1), tok('E', 1, 1, 1), tok('F', 3, 3, 1)];
         const result = computeGangUpModifier({ attacker, target, tokens: [target, ...allies], gridSize: GRID, config });
         expect(result.attackerCount).toBe(6);
         expect(result.bonus).toBe(30); // 5 additional × 10 = 50, capped at 30
