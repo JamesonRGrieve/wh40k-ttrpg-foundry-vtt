@@ -12,7 +12,7 @@ import { ItemDropManager } from '../../managers/item-drop-manager.ts';
 import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KWounds, WH40KInitiative, WH40KMovement } from '../../types/global.d.ts';
 import { formatSigned } from '../../utils/format.ts';
 import { sortByDisplayName } from '../../utils/talent-trait-sort.ts';
-import { openInteriorScene, vehicleInteriorHeaderControls, type SceneLookup, type VehicleActorLike } from '../../vehicle/vehicle-interior.ts';
+import { openInteriorScene, vehicleInteriorHeaderControls, type SceneLookup } from '../../vehicle/vehicle-interior.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
 import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 import CollapsiblePanelMixin from '../api/collapsible-panel-mixin.ts';
@@ -263,7 +263,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         };
         const base = proto._getHeaderControls?.call(this) ?? [];
         // Vehicles with a linked interior Scene gain a "Board Interior" control.
-        return [...base, ...vehicleInteriorHeaderControls(this.actor as VehicleActorLike, game.scenes as SceneLookup)];
+        return [...base, ...vehicleInteriorHeaderControls(this.actor, game.scenes as SceneLookup)];
     }
 
     /**
@@ -271,7 +271,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @this {BaseActorSheet}
      */
     static async #openVehicleInterior(this: BaseActorSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        await openInteriorScene(this.actor as VehicleActorLike, game.scenes as SceneLookup);
+        await openInteriorScene(this.actor, game.scenes as SceneLookup);
     }
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._onFirstRender signature uses Record<string,unknown> for context/options per Foundry's mixin-erased contract.
     override async _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
@@ -484,9 +484,11 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     // eslint-disable-next-line no-restricted-syntax -- boundary: _context is the mixin-erased sheet→template payload Record<string,unknown>.
     _prepareCharacteristicsHUD(_context: Record<string, unknown>): void {
         // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is a DataModel field typed as a known-key object; cast to Record needed to iterate with string keys and HUD-augmented values
-        const characteristics = this.actor.system.characteristics as Record<string, HudCharacteristic> | undefined;
-        // Craft / voidcraft extend the vehicle base directly and have no characteristics block.
-        if (characteristics === undefined) return;
+        const characteristics = this.actor.system.characteristics as Record<string, HudCharacteristic> | null | undefined;
+        // Ordinary craft / voidcraft have no creature profile: the vehicle DataModel
+        // defaults `characteristics` to null (animate craft populate it), and simpler
+        // craft omit the block entirely (undefined). Guard both before iterating.
+        if (characteristics == null) return;
 
         for (const [key, char] of Object.entries(characteristics)) {
             // Calculate advancement progress (0-5)
