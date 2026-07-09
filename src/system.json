@@ -1576,6 +1576,18 @@
             "flags": {}
         },
         {
+            "name": "dh1-adventures",
+            "label": "DH1: Dark Heresy Adventures",
+            "path": "packs/dark-heresy-1/dh1-adventures",
+            "system": "wh40k-rpg",
+            "type": "Adventure",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-beyond-items-ammo",
             "label": "DH2: Enemies Beyond, Ammunition",
             "path": "packs/dark-heresy-2/dh2-beyond-items-ammo",
@@ -7540,7 +7552,8 @@
                         "dh1-core-origins-careers",
                         "dh1-core-origins-divinations",
                         "dh1-core-origins-homeworlds",
-                        "dh1-core-rolltables"
+                        "dh1-core-rolltables",
+                        "dh1-adventures"
                     ]
                 },
                 {
