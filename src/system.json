@@ -856,6 +856,114 @@
             "flags": {}
         },
         {
+            "name": "bc-gmkit-journals",
+            "label": "BC: Game Master's Kit, Journals",
+            "path": "packs/black-crusade/bc-gmkit-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-gmkit-rolltables",
+            "label": "BC: Game Master's Kit, Roll Tables",
+            "path": "packs/black-crusade/bc-gmkit-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-corruption-journals",
+            "label": "BC: Hand of Corruption, Journals",
+            "path": "packs/black-crusade/bc-corruption-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-corruption-rolltables",
+            "label": "BC: Hand of Corruption, Roll Tables",
+            "path": "packs/black-crusade/bc-corruption-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-chains-journals",
+            "label": "BC: Broken Chains, Journals",
+            "path": "packs/black-crusade/bc-chains-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-chains-rolltables",
+            "label": "BC: Broken Chains, Roll Tables",
+            "path": "packs/black-crusade/bc-chains-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-binding-actors-bestiary",
+            "label": "BC: Binding Contracts, Bestiary",
+            "path": "packs/black-crusade/bc-binding-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-binding-items-weapons",
+            "label": "BC: Binding Contracts, Weapons",
+            "path": "packs/black-crusade/bc-binding-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-binding-items-gear",
+            "label": "BC: Binding Contracts, Gear",
+            "path": "packs/black-crusade/bc-binding-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "bc-core-items-ammo",
             "label": "BC: Core Rulebook, Ammunition",
             "path": "packs/black-crusade/bc-core-items-ammo",
@@ -7741,7 +7849,10 @@
                 {
                     "name": "Binding Contracts",
                     "packs": [
-                        "bc-binding-items-traits"
+                        "bc-binding-items-traits",
+                        "bc-binding-actors-bestiary",
+                        "bc-binding-items-weapons",
+                        "bc-binding-items-gear"
                     ]
                 },
                 {
@@ -7751,7 +7862,9 @@
                         "bc-chains-actors-npcs",
                         "bc-chains-items-armour",
                         "bc-chains-items-psychic-powers",
-                        "bc-chains-items-weapons"
+                        "bc-chains-items-weapons",
+                        "bc-chains-journals",
+                        "bc-chains-rolltables"
                     ]
                 },
                 {
@@ -7785,7 +7898,9 @@
                         "bc-gmkit-actors-bestiary",
                         "bc-gmkit-actors-npcs",
                         "bc-gmkit-items-gear",
-                        "bc-gmkit-items-weapons"
+                        "bc-gmkit-items-weapons",
+                        "bc-gmkit-journals",
+                        "bc-gmkit-rolltables"
                     ]
                 },
                 {
@@ -7793,7 +7908,9 @@
                     "packs": [
                         "bc-corruption-actors-bestiary",
                         "bc-corruption-actors-npcs",
-                        "bc-corruption-items-gear"
+                        "bc-corruption-items-gear",
+                        "bc-corruption-journals",
+                        "bc-corruption-rolltables"
                     ]
                 },
                 {
