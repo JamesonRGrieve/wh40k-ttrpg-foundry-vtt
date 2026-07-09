@@ -7406,6 +7406,330 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "dw-chosen-actors-bestiary",
+            "label": "DW: The Emperor's Chosen, Bestiary",
+            "path": "packs/deathwatch/dw-chosen-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-chosen-actors-npcs",
+            "label": "DW: The Emperor's Chosen, NPCs",
+            "path": "packs/deathwatch/dw-chosen-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-chosen-rolltables",
+            "label": "DW: The Emperor's Chosen, Tables",
+            "path": "packs/deathwatch/dw-chosen-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-founding-actors-mounts",
+            "label": "DW: First Founding, Mounts",
+            "path": "packs/deathwatch/dw-founding-actors-mounts",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-founding-actors-npcs",
+            "label": "DW: First Founding, NPCs",
+            "path": "packs/deathwatch/dw-founding-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-founding-items-psychic-powers",
+            "label": "DW: First Founding, Psychic Powers",
+            "path": "packs/deathwatch/dw-founding-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-founding-items-talents",
+            "label": "DW: First Founding, Talents",
+            "path": "packs/deathwatch/dw-founding-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-founding-journals",
+            "label": "DW: First Founding, Rules & Lore",
+            "path": "packs/deathwatch/dw-founding-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-founding-origins-specialities",
+            "label": "DW: First Founding, Specialities",
+            "path": "packs/deathwatch/dw-founding-origins-specialities",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-founding-rolltables",
+            "label": "DW: First Founding, Tables",
+            "path": "packs/deathwatch/dw-founding-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-honour-journals",
+            "label": "DW: Honour the Chapter, Rules & Lore",
+            "path": "packs/deathwatch/dw-honour-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-honour-rolltables",
+            "label": "DW: Honour the Chapter, Tables",
+            "path": "packs/deathwatch/dw-honour-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-rites-actors-bestiary",
+            "label": "DW: Rites of Battle, Bestiary",
+            "path": "packs/deathwatch/dw-rites-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-rites-items-psychic-powers",
+            "label": "DW: Rites of Battle, Psychic Powers",
+            "path": "packs/deathwatch/dw-rites-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-rites-items-talents",
+            "label": "DW: Rites of Battle, Talents",
+            "path": "packs/deathwatch/dw-rites-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-rites-journals",
+            "label": "DW: Rites of Battle, Rules & Lore",
+            "path": "packs/deathwatch/dw-rites-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-rites-origins-specialities",
+            "label": "DW: Rites of Battle, Specialities",
+            "path": "packs/deathwatch/dw-rites-origins-specialities",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-rites-rolltables",
+            "label": "DW: Rites of Battle, Tables",
+            "path": "packs/deathwatch/dw-rites-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-rites-vehicles-aircraft",
+            "label": "DW: Rites of Battle, Vehicles (Air)",
+            "path": "packs/deathwatch/dw-rites-vehicles-aircraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-rites-vehicles-terracraft",
+            "label": "DW: Rites of Battle, Vehicles (Ground)",
+            "path": "packs/deathwatch/dw-rites-vehicles-terracraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-items-gear",
+            "label": "DW Homebrew (Index Astartes Vol.1), Gear",
+            "path": "packs/homebrew/hb-dw-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-items-psychic-powers",
+            "label": "DW Homebrew (Index Astartes Vol.1), Psychic Powers",
+            "path": "packs/homebrew/hb-dw-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-items-talents",
+            "label": "DW Homebrew (Index Astartes Vol.1), Talents",
+            "path": "packs/homebrew/hb-dw-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-items-weapons",
+            "label": "DW Homebrew (Index Astartes Vol.1), Weapons",
+            "path": "packs/homebrew/hb-dw-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-journals",
+            "label": "DW Homebrew (Index Astartes Vol.1), Rules & Lore",
+            "path": "packs/homebrew/hb-dw-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-origins-chapters",
+            "label": "DW Homebrew (Index Astartes Vol.1), Chapters",
+            "path": "packs/homebrew/hb-dw-origins-chapters",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-rolltables",
+            "label": "DW Homebrew (Index Astartes Vol.1), Tables",
+            "path": "packs/homebrew/hb-dw-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
