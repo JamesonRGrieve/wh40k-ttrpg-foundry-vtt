@@ -7838,6 +7838,30 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "dw-adventures",
+            "label": "DW: Adventures",
+            "path": "packs/deathwatch/dw-adventures",
+            "system": "wh40k-rpg",
+            "type": "Adventure",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-xenos-journals",
+            "label": "DW: Mark of the Xenos, Rules & Lore",
+            "path": "packs/deathwatch/dw-xenos-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
