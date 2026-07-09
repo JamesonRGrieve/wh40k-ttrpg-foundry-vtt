@@ -640,6 +640,18 @@
             "flags": {}
         },
         {
+            "name": "bc-errata-journals",
+            "label": "BC: Living Errata",
+            "path": "packs/black-crusade/bc-errata-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "bc-core-items-ammo",
             "label": "BC: Core Rulebook, Ammunition",
             "path": "packs/black-crusade/bc-core-items-ammo",
@@ -7258,6 +7270,12 @@
                     "name": "General",
                     "packs": [
                         "bc-adventures"
+                    ]
+                },
+                {
+                    "name": "Errata",
+                    "packs": [
+                        "bc-errata-journals"
                     ]
                 }
             ]
