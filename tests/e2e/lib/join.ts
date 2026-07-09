@@ -37,15 +37,39 @@ function e2ePortForWorker(): number {
  * Uses an absolute per-worker base URL rather than the config `baseURL`, since
  * each worker targets a different port.
  */
-export async function joinAsGM(page: Page): Promise<boolean> {
-    const origin = `http://127.0.0.1:${e2ePortForWorker()}`;
+/**
+ * One attempt to reach /join and confirm the world's user list is populated.
+ * `backoff` inserts a short wait first (used on retries) to let a slow world boot
+ * catch up. Returns true when the Gamemaster <option> is attached.
+ */
+async function joinSelectPopulated(page: Page, origin: string, backoff: boolean): Promise<boolean> {
+    if (backoff) await page.waitForTimeout(2_000);
     await page.goto(`${origin}/join`);
     await page.waitForLoadState('networkidle');
     try {
-        await page.locator('select[name="userid"] option', { hasText: /\S/ }).first().waitFor({ state: 'attached', timeout: 30_000 });
+        await page.locator('select[name="userid"] option', { hasText: /\S/ }).first().waitFor({ state: 'attached', timeout: 15_000 });
+        return true;
     } catch {
         return false;
     }
+}
+
+export async function joinAsGM(page: Page): Promise<boolean> {
+    const origin = `http://127.0.0.1:${e2ePortForWorker()}`;
+    // The first spec to reach /join can beat the world's boot: the user list
+    // (the Gamemaster <option>) isn't populated until the world finishes loading.
+    // A single wait then races that startup and fails intermittently — which, for
+    // the coverage-tracker spec (_aa_inventory), corrupts the whole run's coverage,
+    // and elsewhere skips otherwise-green specs. Retry with reloads so a slow boot
+    // is tolerated rather than fatal.
+    const JOIN_ATTEMPTS = 5;
+    let populated = false;
+    for (let attempt = 0; attempt < JOIN_ATTEMPTS; attempt++) {
+        // eslint-disable-next-line no-await-in-loop -- sequential retry: each attempt must fully resolve (and fail) before the next reload; parallelizing defeats the world-boot backoff
+        populated = await joinSelectPopulated(page, origin, attempt > 0);
+        if (populated) break;
+    }
+    if (!populated) return false;
     await page.selectOption('select[name="userid"]', { label: 'Gamemaster' });
     await page.click('button[name="join"]');
     await page.waitForURL(/\/game/, { timeout: 30_000 });

@@ -305,8 +305,12 @@ async function probeFullEncounter(page: Page): Promise<EncounterProbe> {
 
                 await step('end-combat', async () => {
                     const c = combat;
-                    if (c?.endCombat == null) throw new Error('combat.endCombat unavailable');
-                    await withTimeout(c.endCombat(), 5_000, 'endCombat');
+                    // NB: Combat.endCombat() opens a modal DialogV2.confirm whose "yes"
+                    // callback calls this.delete(); headless e2e has no one to confirm it,
+                    // so it hangs (5s timeout). Drive the real end-of-encounter state
+                    // change — deleting the combat — directly.
+                    if (c?.delete == null) throw new Error('combat.delete unavailable');
+                    await withTimeout(c.delete(), 5_000, 'end-combat');
                     return 'encounter ended';
                 });
             } finally {
