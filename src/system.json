@@ -652,6 +652,210 @@
             "flags": {}
         },
         {
+            "name": "bc-blood-journals",
+            "label": "BC: Tome of Blood, Journals",
+            "path": "packs/black-crusade/bc-blood-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-blood-rolltables",
+            "label": "BC: Tome of Blood, Roll Tables",
+            "path": "packs/black-crusade/bc-blood-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-blood-actors-bestiary",
+            "label": "BC: Tome of Blood, Bestiary",
+            "path": "packs/black-crusade/bc-blood-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-blood-actors-npcs",
+            "label": "BC: Tome of Blood, NPCs",
+            "path": "packs/black-crusade/bc-blood-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-decay-journals",
+            "label": "BC: Tome of Decay, Journals",
+            "path": "packs/black-crusade/bc-decay-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-decay-rolltables",
+            "label": "BC: Tome of Decay, Roll Tables",
+            "path": "packs/black-crusade/bc-decay-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-decay-actors-bestiary",
+            "label": "BC: Tome of Decay, Bestiary",
+            "path": "packs/black-crusade/bc-decay-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-decay-actors-npcs",
+            "label": "BC: Tome of Decay, NPCs",
+            "path": "packs/black-crusade/bc-decay-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-excess-journals",
+            "label": "BC: Tome of Excess, Journals",
+            "path": "packs/black-crusade/bc-excess-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-excess-rolltables",
+            "label": "BC: Tome of Excess, Roll Tables",
+            "path": "packs/black-crusade/bc-excess-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-excess-actors-bestiary",
+            "label": "BC: Tome of Excess, Bestiary",
+            "path": "packs/black-crusade/bc-excess-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-excess-actors-npcs",
+            "label": "BC: Tome of Excess, NPCs",
+            "path": "packs/black-crusade/bc-excess-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-excess-actors-mounts",
+            "label": "BC: Tome of Excess, Mounts",
+            "path": "packs/black-crusade/bc-excess-actors-mounts",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-fate-journals",
+            "label": "BC: Tome of Fate, Journals",
+            "path": "packs/black-crusade/bc-fate-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-fate-rolltables",
+            "label": "BC: Tome of Fate, Roll Tables",
+            "path": "packs/black-crusade/bc-fate-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-fate-actors-bestiary",
+            "label": "BC: Tome of Fate, Bestiary",
+            "path": "packs/black-crusade/bc-fate-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-fate-actors-npcs",
+            "label": "BC: Tome of Fate, NPCs",
+            "path": "packs/black-crusade/bc-fate-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "bc-core-items-ammo",
             "label": "BC: Core Rulebook, Ammunition",
             "path": "packs/black-crusade/bc-core-items-ammo",
@@ -7228,7 +7432,11 @@
                         "bc-blood-items-gear",
                         "bc-blood-items-rituals",
                         "bc-blood-items-weapons",
-                        "bc-blood-origins-archetypes"
+                        "bc-blood-origins-archetypes",
+                        "bc-blood-journals",
+                        "bc-blood-rolltables",
+                        "bc-blood-actors-bestiary",
+                        "bc-blood-actors-npcs"
                     ]
                 },
                 {
@@ -7238,7 +7446,11 @@
                         "bc-decay-items-gear",
                         "bc-decay-items-rituals",
                         "bc-decay-items-weapons",
-                        "bc-decay-origins-archetypes"
+                        "bc-decay-origins-archetypes",
+                        "bc-decay-journals",
+                        "bc-decay-rolltables",
+                        "bc-decay-actors-bestiary",
+                        "bc-decay-actors-npcs"
                     ]
                 },
                 {
@@ -7250,7 +7462,12 @@
                         "bc-excess-items-rituals",
                         "bc-excess-items-talents",
                         "bc-excess-items-weapons",
-                        "bc-excess-origins-archetypes"
+                        "bc-excess-origins-archetypes",
+                        "bc-excess-journals",
+                        "bc-excess-rolltables",
+                        "bc-excess-actors-bestiary",
+                        "bc-excess-actors-npcs",
+                        "bc-excess-actors-mounts"
                     ]
                 },
                 {
@@ -7263,7 +7480,11 @@
                         "bc-fate-items-rituals",
                         "bc-fate-items-traits",
                         "bc-fate-items-weapons",
-                        "bc-fate-origins-archetypes"
+                        "bc-fate-origins-archetypes",
+                        "bc-fate-journals",
+                        "bc-fate-rolltables",
+                        "bc-fate-actors-bestiary",
+                        "bc-fate-actors-npcs"
                     ]
                 },
                 {
