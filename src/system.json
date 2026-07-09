@@ -1132,6 +1132,42 @@
             "flags": {}
         },
         {
+            "name": "dh1-core-items-cybernetics",
+            "label": "DH1: Core Rulebook, Cybernetics",
+            "path": "packs/dark-heresy-1/dh1-core-items-cybernetics",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-core-items-traits",
+            "label": "DH1: Core Rulebook, Traits",
+            "path": "packs/dark-heresy-1/dh1-core-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-core-items-weapon-mods",
+            "label": "DH1: Core Rulebook, Weapon Modifications",
+            "path": "packs/dark-heresy-1/dh1-core-items-weapon-mods",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh1-inquisitor-items-ammo",
             "label": "DH1: Inquisitor's Handbook, Ammunition",
             "path": "packs/dark-heresy-1/dh1-inquisitor-items-ammo",
@@ -7253,9 +7289,12 @@
                         "dh1-core-actors-npcs",
                         "dh1-core-items-ammo",
                         "dh1-core-items-armour",
+                        "dh1-core-items-cybernetics",
                         "dh1-core-items-gear",
                         "dh1-core-items-psychic-powers",
                         "dh1-core-items-talents",
+                        "dh1-core-items-traits",
+                        "dh1-core-items-weapon-mods",
                         "dh1-core-items-weapon-qualities",
                         "dh1-core-items-weapons",
                         "dh1-core-journals",
