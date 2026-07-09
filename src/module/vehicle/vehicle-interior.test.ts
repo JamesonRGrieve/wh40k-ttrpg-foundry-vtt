@@ -16,12 +16,11 @@ import {
     type VehicleActorLike,
 } from './vehicle-interior.ts';
 
-/** Build a stub actor whose flag store returns `sceneId` for the interior link. */
+/** Build a stub actor whose raw flags bag carries `sceneId` under the interior link. */
 function actor(type: string, sceneId?: string): VehicleActorLike {
     return {
         type,
-        // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors Foundry Document.getFlag's unknown return
-        getFlag: (scope: string, key: string): unknown => (scope === KANKA_FOUNDRY_SCOPE && key === INTERIOR_SCENE_FLAG ? sceneId : undefined),
+        flags: sceneId === undefined ? {} : { [KANKA_FOUNDRY_SCOPE]: { [INTERIOR_SCENE_FLAG]: sceneId } },
     };
 }
 
@@ -58,6 +57,18 @@ describe('getInteriorSceneId', () => {
     it('returns null when the flag is missing or empty', () => {
         expect(getInteriorSceneId(actor('dh2-aircraft'))).toBeNull();
         expect(getInteriorSceneId(actor('dh2-aircraft', ''))).toBeNull();
+    });
+    // Regression: reads the raw flags bag, never actor.getFlag(scope) — V14's getFlag
+    // throws "Flag scope not valid or not currently active" when kanka-foundry is
+    // inactive, which previously crashed vehicle rendering in un-imported worlds.
+    it('never calls the throwing getFlag, even when the actor exposes one', () => {
+        const getFlag = vi.fn(() => {
+            throw new Error('Flag scope "kanka-foundry" is not valid or not currently active');
+        });
+        const withThrowingGetFlag = { type: 'rt-voidcraft', flags: {}, getFlag } as VehicleActorLike;
+        expect(() => getInteriorSceneId(withThrowingGetFlag)).not.toThrow();
+        expect(getInteriorSceneId(withThrowingGetFlag)).toBeNull();
+        expect(getFlag).not.toHaveBeenCalled();
     });
 });
 

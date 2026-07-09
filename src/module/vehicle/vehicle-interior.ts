@@ -28,8 +28,14 @@ const VEHICLE_TYPE_SUFFIXES = ['terracraft', 'aircraft', 'watercraft', 'voidcraf
 /** Minimal actor surface this module reads — kept structural so it unit-tests without Foundry. */
 export interface VehicleActorLike {
     readonly type: string;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.getFlag is typed to return unknown
-    getFlag: (scope: string, key: string) => unknown;
+    /**
+     * Raw flags bag. Read directly — NOT via `actor.getFlag(scope, key)`: Foundry
+     * V14's `getFlag` throws `Flag scope "…" is not valid or not currently active`
+     * when the scope's module (kanka-foundry) isn't active, which would crash every
+     * vehicle sheet render in any world without the importer installed.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flags bag holds untyped module-scoped data
+    readonly flags?: Record<string, Record<string, unknown> | undefined>;
 }
 
 /** Minimal Scene surface: a viewable/activatable Foundry Scene. */
@@ -51,7 +57,9 @@ export function isVehicleActor(actor: VehicleActorLike | null | undefined): bool
 /** The linked interior Scene id stamped on the vehicle, or null when none. */
 export function getInteriorSceneId(actor: VehicleActorLike | null | undefined): string | null {
     if (!isVehicleActor(actor)) return null;
-    const raw = actor?.getFlag(KANKA_FOUNDRY_SCOPE, INTERIOR_SCENE_FLAG);
+    // Read the raw flags bag rather than actor.getFlag(scope, key): V14's getFlag
+    // throws when the kanka-foundry module isn't active (see VehicleActorLike.flags).
+    const raw = actor?.flags?.[KANKA_FOUNDRY_SCOPE]?.[INTERIOR_SCENE_FLAG];
     return typeof raw === 'string' && raw !== '' ? raw : null;
 }
 
