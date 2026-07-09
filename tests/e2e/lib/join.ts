@@ -42,12 +42,15 @@ function e2ePortForWorker(): number {
  * `backoff` inserts a short wait first (used on retries) to let a slow world boot
  * catch up. Returns true when the Gamemaster <option> is attached.
  */
+/** Per-attempt wait for the user <select> to populate. */
+const JOIN_ATTEMPT_TIMEOUT_MS = 20_000;
+
 async function joinSelectPopulated(page: Page, origin: string, backoff: boolean): Promise<boolean> {
     if (backoff) await page.waitForTimeout(2_000);
     await page.goto(`${origin}/join`);
     await page.waitForLoadState('networkidle');
     try {
-        await page.locator('select[name="userid"] option', { hasText: /\S/ }).first().waitFor({ state: 'attached', timeout: 15_000 });
+        await page.locator('select[name="userid"] option', { hasText: /\S/ }).first().waitFor({ state: 'attached', timeout: JOIN_ATTEMPT_TIMEOUT_MS });
         return true;
     } catch {
         return false;
@@ -61,8 +64,12 @@ export async function joinAsGM(page: Page): Promise<boolean> {
     // A single wait then races that startup and fails intermittently — which, for
     // the coverage-tracker spec (_aa_inventory), corrupts the whole run's coverage,
     // and elsewhere skips otherwise-green specs. Retry with reloads so a slow boot
-    // is tolerated rather than fatal.
-    const JOIN_ATTEMPTS = 5;
+    // is tolerated rather than fatal. The world boot loads a per-world copy of every
+    // compendium pack (LevelDB single-process lock), so the FIRST spec's cold boot
+    // under simultaneous multi-worker startup can take well over a minute; budget
+    // ~180s total (≈ the webServer readiness timeout). Warm joins early-exit on the
+    // first attempt, so only a genuine cold boot / failure pays the full budget.
+    const JOIN_ATTEMPTS = 8;
     let populated = false;
     for (let attempt = 0; attempt < JOIN_ATTEMPTS; attempt++) {
         // eslint-disable-next-line no-await-in-loop -- sequential retry: each attempt must fully resolve (and fail) before the next reload; parallelizing defeats the world-boot backoff
