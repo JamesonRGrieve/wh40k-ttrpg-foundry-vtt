@@ -1,3 +1,4 @@
+import { flattenSourceLineVariants } from '../../utils/item-variant-utils.ts';
 import SystemDataModel from './system-data-model.ts';
 
 /**
@@ -40,6 +41,22 @@ export default class ActorDataModel extends SystemDataModel {
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return this.mergeSchema(super.defineSchema(), {});
+    }
+
+    /* -------------------------------------------- */
+    /*  Migration                                   */
+    /* -------------------------------------------- */
+
+    /** @inheritdoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData receives untyped Foundry source before schema validation
+    static override _migrateData(source: Record<string, unknown>): void {
+        super._migrateData(source);
+        // The actor mirror of ItemDataModel's flatten step: a homologated canonical
+        // carrying per-line variant containers (e.g. `characteristics: { dw: {...},
+        // dh2: {...} }`) must resolve to the world's active line, or Foundry strips
+        // the unknown line keys and falls back to schema initials (the "all zeros"
+        // blank). On-disk JSON is untouched — only the in-memory source is flattened.
+        flattenSourceLineVariants(source);
     }
 
     /* -------------------------------------------- */

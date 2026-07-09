@@ -1,7 +1,18 @@
-import type { WH40KItem } from '../documents/item.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
 type SupportedLineKey = 'dh1' | 'dh2' | 'rt' | 'dw' | 'bc' | 'ow' | 'im';
+
+/**
+ * Minimal item surface the variant helpers read. Structural (not the `WH40KItem`
+ * Document) on purpose: a util importing a Document would form an import cycle
+ * (documents → data → utils → documents). A `WH40KItem` satisfies this shape.
+ */
+interface VariantItemLike {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry item system payload
+    system?: unknown;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry parent actor context
+    actor?: unknown;
+}
 
 /** A document's untyped Foundry `system` payload (variant resolution boundary). */
 // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry item system data
@@ -174,8 +185,26 @@ export function materializeItemVariants(
     return source;
 }
 
+/**
+ * Flatten per-game-line variant containers on a raw `_migrateData` source payload
+ * down to the world's active game line, in place. Handles both shapes Foundry
+ * passes: the inner `system` payload, or the whole document (with `system` nested).
+ * The on-disk JSON is untouched — only the in-memory source is flattened. Shared by
+ * {@link ItemDataModel} and {@link ActorDataModel} `_migrateData`: a homologated
+ * canonical carrying per-line variant containers must resolve to the current line,
+ * or Foundry strips the unknown line keys and falls back to schema initials
+ * ("all zeros"). No parent context at migration time, so the line is the world's
+ * primary game system.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData source is untyped Foundry payload before schema validation
+export function flattenSourceLineVariants(source: Record<string, unknown>): void {
+    const lineKey = inferActiveGameLine();
+    const systemContainer = source['system'];
+    materializeItemVariants(isPlainObject(systemContainer) ? systemContainer : source, lineKey);
+}
+
 // eslint-disable-next-line no-restricted-syntax -- boundary: item system data is untyped Foundry DataModel; return type is narrow at call sites
-export function getMaterializedItemSource(item: WH40KItem): Record<string, unknown> {
+export function getMaterializedItemSource(item: VariantItemLike): Record<string, unknown> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
     const rawSystem = item.system as Record<string, unknown> | undefined;
     // eslint-disable-next-line no-restricted-syntax -- boundary: item._source is untyped Foundry DataModel source data
@@ -186,7 +215,7 @@ export function getMaterializedItemSource(item: WH40KItem): Record<string, unkno
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: submitData is untyped form submission data
-export function remapSubmitDataToVariantPaths(item: WH40KItem, submitData: Record<string, unknown>): Record<string, unknown> {
+export function remapSubmitDataToVariantPaths(item: VariantItemLike, submitData: Record<string, unknown>): Record<string, unknown> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
     const systemSource = (item.system as Record<string, unknown> | undefined)?.['_source'];
     if (!isPlainObject(systemSource)) return submitData;
