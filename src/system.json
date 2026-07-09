@@ -1408,6 +1408,18 @@
             "flags": {}
         },
         {
+            "name": "dh1-inquisitor-items-force-fields",
+            "label": "DH1: Inquisitor's Handbook, Force Fields",
+            "path": "packs/dark-heresy-1/dh1-inquisitor-items-force-fields",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh1-inquisitor-items-armor-mods",
             "label": "DH1: Inquisitor's Handbook, Armour Customisations",
             "path": "packs/dark-heresy-1/dh1-inquisitor-items-armor-mods",
@@ -1843,6 +1855,18 @@
             "name": "dh2-core-items-armour",
             "label": "DH2: Core Rulebook, Armour",
             "path": "packs/dark-heresy-2/dh2-core-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-core-items-force-fields",
+            "label": "DH2: Core Rulebook, Force Fields",
+            "path": "packs/dark-heresy-2/dh2-core-items-force-fields",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -4828,6 +4852,18 @@
             "flags": {}
         },
         {
+            "name": "rt-storm-items-force-fields",
+            "label": "RT: Into the Storm, Force Fields",
+            "path": "packs/rogue-trader/rt-storm-items-force-fields",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-storm-items-gear",
             "label": "RT: Into the Storm, Gear",
             "path": "packs/rogue-trader/rt-storm-items-gear",
@@ -7562,6 +7598,7 @@
                         "dh1-inquisitor-items-ammo",
                         "dh1-inquisitor-items-armor-mods",
                         "dh1-inquisitor-items-armour",
+                        "dh1-inquisitor-items-force-fields",
                         "dh1-inquisitor-items-gear",
                         "dh1-inquisitor-items-talents",
                         "dh1-inquisitor-items-traits",
@@ -7593,6 +7630,7 @@
                         "dh2-core-actors-reinforcements",
                         "dh2-core-items-ammo",
                         "dh2-core-items-armour",
+                        "dh2-core-items-force-fields",
                         "dh2-core-items-conditions",
                         "dh2-core-items-consumables",
                         "dh2-core-items-critical-injuries",
@@ -8186,6 +8224,7 @@
                     "packs": [
                         "rt-storm-items-ammo",
                         "rt-storm-items-armour",
+                        "rt-storm-items-force-fields",
                         "rt-storm-items-gear",
                         "rt-storm-items-navigator-powers",
                         "rt-storm-items-psychic-powers",
