@@ -410,6 +410,13 @@
                     "specialAbilities"
                 ]
             },
+            "oath": {
+                "htmlFields": [
+                    "description.value",
+                    "requirement",
+                    "effect"
+                ]
+            },
             "order": {
                 "htmlFields": [
                     "description.value"
@@ -931,6 +938,18 @@
             "name": "bc-binding-actors-bestiary",
             "label": "BC: Binding Contracts, Bestiary",
             "path": "packs/black-crusade/bc-binding-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "bc-binding-actors-characters",
+            "label": "BC: Binding Contracts, Characters",
+            "path": "packs/black-crusade/bc-binding-actors-characters",
             "system": "wh40k-rpg",
             "type": "Actor",
             "ownership": {
@@ -7875,6 +7894,7 @@
                     "packs": [
                         "bc-binding-items-traits",
                         "bc-binding-actors-bestiary",
+                        "bc-binding-actors-characters",
                         "bc-binding-items-weapons",
                         "bc-binding-items-gear"
                     ]

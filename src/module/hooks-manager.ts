@@ -620,6 +620,7 @@ export class HooksManager {
             peer: dataModels.PeerEnemyData,
             enemy: dataModels.PeerEnemyData,
             condition: dataModels.ConditionData,
+            oath: dataModels.OathData,
             // Powers
             psychicPower: dataModels.PsychicPowerData,
             navigatorPower: dataModels.NavigatorPowerData,
