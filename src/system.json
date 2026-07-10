@@ -7917,6 +7917,18 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "dw-founding-items-oaths",
+            "label": "DW: First Founding, Oaths",
+            "path": "packs/deathwatch/dw-founding-items-oaths",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
