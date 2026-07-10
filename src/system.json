@@ -7991,6 +7991,30 @@
             "flags": {}
         },
         {
+            "name": "dw-emperor-actors-bestiary",
+            "label": "DW: The Emperor Protects, Bestiary",
+            "path": "packs/deathwatch/dw-emperor-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-emperor-actors-npcs",
+            "label": "DW: The Emperor Protects, NPCs",
+            "path": "packs/deathwatch/dw-emperor-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh1-anathema-actors-bestiary",
             "label": "DH1: Creatures Anathema, Bestiary",
             "path": "packs/dark-heresy-1/dh1-anathema-actors-bestiary",
