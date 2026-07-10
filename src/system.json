@@ -7941,6 +7941,30 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "dw-falling-actors-bestiary",
+            "label": "DW: Falling Star, Bestiary",
+            "path": "packs/deathwatch/dw-falling-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-falling-actors-npcs",
+            "label": "DW: Falling Star, NPCs",
+            "path": "packs/deathwatch/dw-falling-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
