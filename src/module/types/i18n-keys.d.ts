@@ -52,6 +52,7 @@ export type I18nKey =
     | 'TYPES.Item.mutation'
     | 'TYPES.Item.navigatorPower'
     | 'TYPES.Item.npcTemplate'
+    | 'TYPES.Item.oath'
     | 'TYPES.Item.order'
     | 'TYPES.Item.originPath'
     | 'TYPES.Item.peer'

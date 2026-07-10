@@ -58,6 +58,7 @@ import type {
     MutationData,
     NavigatorPowerData,
     NPCTemplateData,
+    OathData,
     OrderData,
     OriginPathData,
     PeerEnemyData,
@@ -191,6 +192,7 @@ declare module 'fvtt-types/configuration' {
             psychicPower: typeof PsychicPowerData;
             navigatorPower: typeof NavigatorPowerData;
             ritual: typeof RitualData;
+            oath: typeof OathData;
             shipComponent: typeof ShipComponentData;
             shipWeapon: typeof ShipWeaponData;
             shipUpgrade: typeof ShipUpgradeData;
