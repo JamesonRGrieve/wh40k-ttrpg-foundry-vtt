@@ -7965,6 +7965,30 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "dw-oblivion-actors-bestiary",
+            "label": "DW: Oblivion's Edge, Bestiary",
+            "path": "packs/deathwatch/dw-oblivion-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-oblivion-actors-npcs",
+            "label": "DW: Oblivion's Edge, NPCs",
+            "path": "packs/deathwatch/dw-oblivion-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
