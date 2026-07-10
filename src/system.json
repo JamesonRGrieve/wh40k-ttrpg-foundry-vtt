@@ -7929,6 +7929,18 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "dw-sanction-actors-bestiary",
+            "label": "DW: Final Sanction, Bestiary",
+            "path": "packs/deathwatch/dw-sanction-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
