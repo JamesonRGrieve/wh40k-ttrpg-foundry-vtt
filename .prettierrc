@@ -15,6 +15,13 @@
             "options": {
                 "singleQuote": false
             }
+        },
+        {
+            "comment": "Expand JSON arrays/objects one entry per line instead of collapsing short ones; printWidth 1 forces prettier to break every array/object member onto its own line, preserving the authored multi-line manifest style.",
+            "files": ["**/*.json"],
+            "options": {
+                "printWidth": 1
+            }
         }
     ]
 }
