@@ -7989,6 +7989,1542 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "dh1-anathema-actors-bestiary",
+            "label": "DH1: Creatures Anathema, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-anathema-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-anathema-actors-npcs",
+            "label": "DH1: Creatures Anathema, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-anathema-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-anathema-items-armour",
+            "label": "DH1: Creatures Anathema, Armour",
+            "path": "packs/dark-heresy-1/dh1-anathema-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-anathema-items-traits",
+            "label": "DH1: Creatures Anathema, Traits",
+            "path": "packs/dark-heresy-1/dh1-anathema-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-anathema-items-weapons",
+            "label": "DH1: Creatures Anathema, Weapons",
+            "path": "packs/dark-heresy-1/dh1-anathema-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-anathema-journals",
+            "label": "DH1: Creatures Anathema, Journals",
+            "path": "packs/dark-heresy-1/dh1-anathema-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-anathema-rolltables",
+            "label": "DH1: Creatures Anathema, Roll Tables",
+            "path": "packs/dark-heresy-1/dh1-anathema-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-ascension-origins-elite-advances",
+            "label": "DH1: Ascension, Elite Advances",
+            "path": "packs/dark-heresy-1/dh1-ascension-origins-elite-advances",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-church-actors-bestiary",
+            "label": "DH1: Church of the Damned, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-church-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-church-actors-npcs",
+            "label": "DH1: Church of the Damned, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-church-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-church-items-gear",
+            "label": "DH1: Church of the Damned, Gear",
+            "path": "packs/dark-heresy-1/dh1-church-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-commandment-actors-bestiary",
+            "label": "DH1: The Chaos Commandment, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-commandment-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-commandment-actors-npcs",
+            "label": "DH1: The Chaos Commandment, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-commandment-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-commandment-items-gear",
+            "label": "DH1: The Chaos Commandment, Gear",
+            "path": "packs/dark-heresy-1/dh1-commandment-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-core-items-armor-mods",
+            "label": "DH1: Core Rulebook, Armour Modifications",
+            "path": "packs/dark-heresy-1/dh1-core-items-armor-mods",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-core-origins-backgrounds",
+            "label": "DH1: Core Rulebook, Backgrounds",
+            "path": "packs/dark-heresy-1/dh1-core-origins-backgrounds",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-daemonhunter-actors-bestiary",
+            "label": "DH1: Daemon Hunter, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-daemonhunter-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-daemonhunter-actors-npcs",
+            "label": "DH1: Daemon Hunter, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-daemonhunter-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-daemonhunter-items-ammo",
+            "label": "DH1: Daemon Hunter, Ammunition",
+            "path": "packs/dark-heresy-1/dh1-daemonhunter-items-ammo",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-daemonhunter-items-armour",
+            "label": "DH1: Daemon Hunter, Armour",
+            "path": "packs/dark-heresy-1/dh1-daemonhunter-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-daemonhunter-items-force-fields",
+            "label": "DH1: Daemon Hunter, Force Fields",
+            "path": "packs/dark-heresy-1/dh1-daemonhunter-items-force-fields",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-daemonhunter-items-gear",
+            "label": "DH1: Daemon Hunter, Gear",
+            "path": "packs/dark-heresy-1/dh1-daemonhunter-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-daemonhunter-items-psychic-powers",
+            "label": "DH1: Daemon Hunter, Psychic Powers",
+            "path": "packs/dark-heresy-1/dh1-daemonhunter-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-daemonhunter-items-talents",
+            "label": "DH1: Daemon Hunter, Talents",
+            "path": "packs/dark-heresy-1/dh1-daemonhunter-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-daemonhunter-items-traits",
+            "label": "DH1: Daemon Hunter, Traits",
+            "path": "packs/dark-heresy-1/dh1-daemonhunter-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-daemonhunter-items-weapons",
+            "label": "DH1: Daemon Hunter, Weapons",
+            "path": "packs/dark-heresy-1/dh1-daemonhunter-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-daemonhunter-journals",
+            "label": "DH1: Daemon Hunter, Journals",
+            "path": "packs/dark-heresy-1/dh1-daemonhunter-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-daemonhunter-rolltables",
+            "label": "DH1: Daemon Hunter, Roll Tables",
+            "path": "packs/dark-heresy-1/dh1-daemonhunter-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-damned-actors-bestiary",
+            "label": "DH1: Damned Cities, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-damned-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-damned-actors-npcs",
+            "label": "DH1: Damned Cities, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-damned-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-dataslate-actors-bestiary",
+            "label": "DH1: The Lost Dataslate, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-dataslate-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-dataslate-items-ammo",
+            "label": "DH1: The Lost Dataslate, Ammunition",
+            "path": "packs/dark-heresy-1/dh1-dataslate-items-ammo",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-dataslate-items-cybernetics",
+            "label": "DH1: The Lost Dataslate, Cybernetics",
+            "path": "packs/dark-heresy-1/dh1-dataslate-items-cybernetics",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-dataslate-items-gear",
+            "label": "DH1: The Lost Dataslate, Gear",
+            "path": "packs/dark-heresy-1/dh1-dataslate-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-dataslate-items-weapons",
+            "label": "DH1: The Lost Dataslate, Weapons",
+            "path": "packs/dark-heresy-1/dh1-dataslate-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-dataslate-origins-homeworlds",
+            "label": "DH1: The Lost Dataslate, Home Worlds",
+            "path": "packs/dark-heresy-1/dh1-dataslate-origins-homeworlds",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-deadstars-actors-bestiary",
+            "label": "DH1: Dead Stars, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-deadstars-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-deadstars-actors-npcs",
+            "label": "DH1: Dead Stars, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-deadstars-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-deadstars-items-talents",
+            "label": "DH1: Dead Stars, Talents",
+            "path": "packs/dark-heresy-1/dh1-deadstars-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-deadstars-items-traits",
+            "label": "DH1: Dead Stars, Traits",
+            "path": "packs/dark-heresy-1/dh1-deadstars-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-disciples-actors-bestiary",
+            "label": "DH1: Disciples of the Dark Gods, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-disciples-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-disciples-actors-npcs",
+            "label": "DH1: Disciples of the Dark Gods, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-disciples-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-disciples-items-armour",
+            "label": "DH1: Disciples of the Dark Gods, Armour",
+            "path": "packs/dark-heresy-1/dh1-disciples-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-disciples-items-gear",
+            "label": "DH1: Disciples of the Dark Gods, Gear",
+            "path": "packs/dark-heresy-1/dh1-disciples-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-disciples-items-psychic-powers",
+            "label": "DH1: Disciples of the Dark Gods, Psychic Powers",
+            "path": "packs/dark-heresy-1/dh1-disciples-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-disciples-items-talents",
+            "label": "DH1: Disciples of the Dark Gods, Talents",
+            "path": "packs/dark-heresy-1/dh1-disciples-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-disciples-items-traits",
+            "label": "DH1: Disciples of the Dark Gods, Traits",
+            "path": "packs/dark-heresy-1/dh1-disciples-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-disciples-items-weapons",
+            "label": "DH1: Disciples of the Dark Gods, Weapons",
+            "path": "packs/dark-heresy-1/dh1-disciples-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-disciples-journals",
+            "label": "DH1: Disciples of the Dark Gods, Journals",
+            "path": "packs/dark-heresy-1/dh1-disciples-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-disciples-rolltables",
+            "label": "DH1: Disciples of the Dark Gods, Roll Tables",
+            "path": "packs/dark-heresy-1/dh1-disciples-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-disciplesweb-journals",
+            "label": "DH1: Disciples Web Enhancement, Journals",
+            "path": "packs/dark-heresy-1/dh1-disciplesweb-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-edge-actors-bestiary",
+            "label": "DH1: Edge of Darkness, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-edge-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-edge-actors-npcs",
+            "label": "DH1: Edge of Darkness, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-edge-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-gmkit-actors-bestiary",
+            "label": "DH1: Game Master's Kit, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-gmkit-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-gmkit-items-consumables",
+            "label": "DH1: Game Master's Kit, Consumables",
+            "path": "packs/dark-heresy-1/dh1-gmkit-items-consumables",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-gmkit-journals",
+            "label": "DH1: Game Master's Kit, Journals",
+            "path": "packs/dark-heresy-1/dh1-gmkit-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-gmkit-rolltables",
+            "label": "DH1: Game Master's Kit, Roll Tables",
+            "path": "packs/dark-heresy-1/dh1-gmkit-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-heed-journals",
+            "label": "DH1: Heed the Higher Call, Journals",
+            "path": "packs/dark-heresy-1/dh1-heed-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-heed-origins-careers",
+            "label": "DH1: Heed the Higher Call, Careers",
+            "path": "packs/dark-heresy-1/dh1-heed-origins-careers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-heresy-items-armour",
+            "label": "DH1: Heresy Begets Retribution, Armour",
+            "path": "packs/dark-heresy-1/dh1-heresy-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-heresy-items-talents",
+            "label": "DH1: Heresy Begets Retribution, Talents",
+            "path": "packs/dark-heresy-1/dh1-heresy-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-heresy-items-traits",
+            "label": "DH1: Heresy Begets Retribution, Traits",
+            "path": "packs/dark-heresy-1/dh1-heresy-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-heresy-items-weapons",
+            "label": "DH1: Heresy Begets Retribution, Weapons",
+            "path": "packs/dark-heresy-1/dh1-heresy-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-heresy-origins-careers",
+            "label": "DH1: Heresy Begets Retribution, Careers",
+            "path": "packs/dark-heresy-1/dh1-heresy-origins-careers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-heresy-origins-elite-advances",
+            "label": "DH1: Heresy Begets Retribution, Elite Advances",
+            "path": "packs/dark-heresy-1/dh1-heresy-origins-elite-advances",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-inquisitor-actors-bestiary",
+            "label": "DH1: The Inquisitor's Handbook, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-inquisitor-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-inquisitor-items-weapon-mods",
+            "label": "DH1: The Inquisitor's Handbook, Weapon Modifications",
+            "path": "packs/dark-heresy-1/dh1-inquisitor-items-weapon-mods",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-judgement-actors-bestiary",
+            "label": "DH1: Book of Judgement, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-judgement-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-judgement-actors-npcs",
+            "label": "DH1: Book of Judgement, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-judgement-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-judgement-items-armour",
+            "label": "DH1: Book of Judgement, Armour",
+            "path": "packs/dark-heresy-1/dh1-judgement-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-judgement-items-cybernetics",
+            "label": "DH1: Book of Judgement, Cybernetics",
+            "path": "packs/dark-heresy-1/dh1-judgement-items-cybernetics",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-judgement-items-gear",
+            "label": "DH1: Book of Judgement, Gear",
+            "path": "packs/dark-heresy-1/dh1-judgement-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-judgement-items-talents",
+            "label": "DH1: Book of Judgement, Talents",
+            "path": "packs/dark-heresy-1/dh1-judgement-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-judgement-items-traits",
+            "label": "DH1: Book of Judgement, Traits",
+            "path": "packs/dark-heresy-1/dh1-judgement-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-judgement-items-weapons",
+            "label": "DH1: Book of Judgement, Weapons",
+            "path": "packs/dark-heresy-1/dh1-judgement-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-judgement-journals",
+            "label": "DH1: Book of Judgement, Journals",
+            "path": "packs/dark-heresy-1/dh1-judgement-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-judgement-rolltables",
+            "label": "DH1: Book of Judgement, Roll Tables",
+            "path": "packs/dark-heresy-1/dh1-judgement-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-lathe-actors-bestiary",
+            "label": "DH1: The Lathe Worlds, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-lathe-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-lathe-actors-npcs",
+            "label": "DH1: The Lathe Worlds, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-lathe-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-lathe-items-ammo",
+            "label": "DH1: The Lathe Worlds, Ammunition",
+            "path": "packs/dark-heresy-1/dh1-lathe-items-ammo",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-lathe-items-armour",
+            "label": "DH1: The Lathe Worlds, Armour",
+            "path": "packs/dark-heresy-1/dh1-lathe-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-lathe-items-cybernetics",
+            "label": "DH1: The Lathe Worlds, Cybernetics",
+            "path": "packs/dark-heresy-1/dh1-lathe-items-cybernetics",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-lathe-items-gear",
+            "label": "DH1: The Lathe Worlds, Gear",
+            "path": "packs/dark-heresy-1/dh1-lathe-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-lathe-items-talents",
+            "label": "DH1: The Lathe Worlds, Talents",
+            "path": "packs/dark-heresy-1/dh1-lathe-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-lathe-items-traits",
+            "label": "DH1: The Lathe Worlds, Traits",
+            "path": "packs/dark-heresy-1/dh1-lathe-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-lathe-items-weapon-mods",
+            "label": "DH1: The Lathe Worlds, Weapon Modifications",
+            "path": "packs/dark-heresy-1/dh1-lathe-items-weapon-mods",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-lathe-items-weapons",
+            "label": "DH1: The Lathe Worlds, Weapons",
+            "path": "packs/dark-heresy-1/dh1-lathe-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-lathe-journals",
+            "label": "DH1: The Lathe Worlds, Journals",
+            "path": "packs/dark-heresy-1/dh1-lathe-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-lathe-rolltables",
+            "label": "DH1: The Lathe Worlds, Roll Tables",
+            "path": "packs/dark-heresy-1/dh1-lathe-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-martyrs-actors-bestiary",
+            "label": "DH1: Blood of Martyrs, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-martyrs-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-martyrs-actors-npcs",
+            "label": "DH1: Blood of Martyrs, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-martyrs-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-martyrs-items-armour",
+            "label": "DH1: Blood of Martyrs, Armour",
+            "path": "packs/dark-heresy-1/dh1-martyrs-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-martyrs-items-gear",
+            "label": "DH1: Blood of Martyrs, Gear",
+            "path": "packs/dark-heresy-1/dh1-martyrs-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-martyrs-items-relics",
+            "label": "DH1: Blood of Martyrs, Relics",
+            "path": "packs/dark-heresy-1/dh1-martyrs-items-relics",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-martyrs-items-services",
+            "label": "DH1: Blood of Martyrs, Services",
+            "path": "packs/dark-heresy-1/dh1-martyrs-items-services",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-martyrs-items-talents",
+            "label": "DH1: Blood of Martyrs, Talents",
+            "path": "packs/dark-heresy-1/dh1-martyrs-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-martyrs-items-weapons",
+            "label": "DH1: Blood of Martyrs, Weapons",
+            "path": "packs/dark-heresy-1/dh1-martyrs-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-martyrs-journals",
+            "label": "DH1: Blood of Martyrs, Journals",
+            "path": "packs/dark-heresy-1/dh1-martyrs-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-martyrs-rolltables",
+            "label": "DH1: Blood of Martyrs, Roll Tables",
+            "path": "packs/dark-heresy-1/dh1-martyrs-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-purge-actors-bestiary",
+            "label": "DH1: Purge the Unclean, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-purge-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-purge-actors-npcs",
+            "label": "DH1: Purge the Unclean, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-purge-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-purge-items-weapons",
+            "label": "DH1: Purge the Unclean, Weapons",
+            "path": "packs/dark-heresy-1/dh1-purge-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-actors-bestiary",
+            "label": "DH1: The Radical's Handbook, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-radical-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-items-ammo",
+            "label": "DH1: The Radical's Handbook, Ammunition",
+            "path": "packs/dark-heresy-1/dh1-radical-items-ammo",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-items-armor-mods",
+            "label": "DH1: The Radical's Handbook, Armour Modifications",
+            "path": "packs/dark-heresy-1/dh1-radical-items-armor-mods",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-items-armour",
+            "label": "DH1: The Radical's Handbook, Armour",
+            "path": "packs/dark-heresy-1/dh1-radical-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-items-cybernetics",
+            "label": "DH1: The Radical's Handbook, Cybernetics",
+            "path": "packs/dark-heresy-1/dh1-radical-items-cybernetics",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-items-gear",
+            "label": "DH1: The Radical's Handbook, Gear",
+            "path": "packs/dark-heresy-1/dh1-radical-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-items-psychic-powers",
+            "label": "DH1: The Radical's Handbook, Psychic Powers",
+            "path": "packs/dark-heresy-1/dh1-radical-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-items-talents",
+            "label": "DH1: The Radical's Handbook, Talents",
+            "path": "packs/dark-heresy-1/dh1-radical-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-items-traits",
+            "label": "DH1: The Radical's Handbook, Traits",
+            "path": "packs/dark-heresy-1/dh1-radical-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-items-weapon-mods",
+            "label": "DH1: The Radical's Handbook, Weapon Modifications",
+            "path": "packs/dark-heresy-1/dh1-radical-items-weapon-mods",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-items-weapons",
+            "label": "DH1: The Radical's Handbook, Weapons",
+            "path": "packs/dark-heresy-1/dh1-radical-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-journals",
+            "label": "DH1: The Radical's Handbook, Journals",
+            "path": "packs/dark-heresy-1/dh1-radical-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-origins-elite-advances",
+            "label": "DH1: The Radical's Handbook, Elite Advances",
+            "path": "packs/dark-heresy-1/dh1-radical-origins-elite-advances",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-radical-rolltables",
+            "label": "DH1: The Radical's Handbook, Roll Tables",
+            "path": "packs/dark-heresy-1/dh1-radical-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-salvation-items-talents",
+            "label": "DH1: Salvation Demands Sacrifice, Talents",
+            "path": "packs/dark-heresy-1/dh1-salvation-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-salvation-items-traits",
+            "label": "DH1: Salvation Demands Sacrifice, Traits",
+            "path": "packs/dark-heresy-1/dh1-salvation-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-salvation-journals",
+            "label": "DH1: Salvation Demands Sacrifice, Journals",
+            "path": "packs/dark-heresy-1/dh1-salvation-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-salvation-origins-elite-advances",
+            "label": "DH1: Salvation Demands Sacrifice, Elite Advances",
+            "path": "packs/dark-heresy-1/dh1-salvation-origins-elite-advances",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-sepulchre-actors-bestiary",
+            "label": "DH1: The Black Sepulchre, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-sepulchre-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-sepulchre-actors-npcs",
+            "label": "DH1: The Black Sepulchre, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-sepulchre-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-sepulchre-items-talents",
+            "label": "DH1: The Black Sepulchre, Talents",
+            "path": "packs/dark-heresy-1/dh1-sepulchre-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-sepulchre-items-weapons",
+            "label": "DH1: The Black Sepulchre, Weapons",
+            "path": "packs/dark-heresy-1/dh1-sepulchre-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-tattered-actors-bestiary",
+            "label": "DH1: Tattered Fates, Bestiary",
+            "path": "packs/dark-heresy-1/dh1-tattered-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-tattered-actors-npcs",
+            "label": "DH1: Tattered Fates, Named NPCs",
+            "path": "packs/dark-heresy-1/dh1-tattered-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-tattered-items-talents",
+            "label": "DH1: Tattered Fates, Talents",
+            "path": "packs/dark-heresy-1/dh1-tattered-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh1-tattered-items-traits",
+            "label": "DH1: Tattered Fates, Traits",
+            "path": "packs/dark-heresy-1/dh1-tattered-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
@@ -8148,6 +9684,30 @@
             "sorting": "a",
             "folders": [
                 {
+                    "name": "Core Rulebook",
+                    "packs": [
+                        "dh1-core-actors-bestiary",
+                        "dh1-core-actors-npcs",
+                        "dh1-core-items-ammo",
+                        "dh1-core-items-armor-mods",
+                        "dh1-core-items-armour",
+                        "dh1-core-items-cybernetics",
+                        "dh1-core-items-gear",
+                        "dh1-core-items-psychic-powers",
+                        "dh1-core-items-talents",
+                        "dh1-core-items-traits",
+                        "dh1-core-items-weapon-mods",
+                        "dh1-core-items-weapon-qualities",
+                        "dh1-core-items-weapons",
+                        "dh1-core-journals",
+                        "dh1-core-origins-backgrounds",
+                        "dh1-core-origins-careers",
+                        "dh1-core-origins-divinations",
+                        "dh1-core-origins-homeworlds",
+                        "dh1-core-rolltables"
+                    ]
+                },
+                {
                     "name": "Ascension",
                     "packs": [
                         "dh1-ascension-actors-bestiary",
@@ -8159,35 +9719,14 @@
                         "dh1-ascension-items-psychic-powers",
                         "dh1-ascension-items-talents",
                         "dh1-ascension-items-weapons",
-                        "dh1-ascension-origins-careers"
-                    ]
-                },
-                {
-                    "name": "Core Rulebook",
-                    "packs": [
-                        "dh1-core-actors-bestiary",
-                        "dh1-core-actors-npcs",
-                        "dh1-core-items-ammo",
-                        "dh1-core-items-armour",
-                        "dh1-core-items-cybernetics",
-                        "dh1-core-items-gear",
-                        "dh1-core-items-psychic-powers",
-                        "dh1-core-items-talents",
-                        "dh1-core-items-traits",
-                        "dh1-core-items-weapon-mods",
-                        "dh1-core-items-weapon-qualities",
-                        "dh1-core-items-weapons",
-                        "dh1-core-journals",
-                        "dh1-core-origins-careers",
-                        "dh1-core-origins-divinations",
-                        "dh1-core-origins-homeworlds",
-                        "dh1-core-rolltables",
-                        "dh1-adventures"
+                        "dh1-ascension-origins-careers",
+                        "dh1-ascension-origins-elite-advances"
                     ]
                 },
                 {
                     "name": "Inquisitor's Handbook",
                     "packs": [
+                        "dh1-inquisitor-actors-bestiary",
                         "dh1-inquisitor-items-ammo",
                         "dh1-inquisitor-items-armor-mods",
                         "dh1-inquisitor-items-armour",
@@ -8195,9 +9734,244 @@
                         "dh1-inquisitor-items-gear",
                         "dh1-inquisitor-items-talents",
                         "dh1-inquisitor-items-traits",
+                        "dh1-inquisitor-items-weapon-mods",
                         "dh1-inquisitor-items-weapons",
                         "dh1-inquisitor-origins-backgrounds",
                         "dh1-inquisitor-origins-homeworlds"
+                    ]
+                },
+                {
+                    "name": "Creatures Anathema",
+                    "packs": [
+                        "dh1-anathema-actors-bestiary",
+                        "dh1-anathema-actors-npcs",
+                        "dh1-anathema-items-armour",
+                        "dh1-anathema-items-traits",
+                        "dh1-anathema-items-weapons",
+                        "dh1-anathema-journals",
+                        "dh1-anathema-rolltables"
+                    ]
+                },
+                {
+                    "name": "Disciples of the Dark Gods",
+                    "packs": [
+                        "dh1-disciples-actors-bestiary",
+                        "dh1-disciples-actors-npcs",
+                        "dh1-disciples-items-armour",
+                        "dh1-disciples-items-gear",
+                        "dh1-disciples-items-psychic-powers",
+                        "dh1-disciples-items-talents",
+                        "dh1-disciples-items-traits",
+                        "dh1-disciples-items-weapons",
+                        "dh1-disciples-journals",
+                        "dh1-disciples-rolltables"
+                    ]
+                },
+                {
+                    "name": "Disciples Web Enhancement",
+                    "packs": [
+                        "dh1-disciplesweb-journals"
+                    ]
+                },
+                {
+                    "name": "The Radical's Handbook",
+                    "packs": [
+                        "dh1-radical-actors-bestiary",
+                        "dh1-radical-items-ammo",
+                        "dh1-radical-items-armor-mods",
+                        "dh1-radical-items-armour",
+                        "dh1-radical-items-cybernetics",
+                        "dh1-radical-items-gear",
+                        "dh1-radical-items-psychic-powers",
+                        "dh1-radical-items-talents",
+                        "dh1-radical-items-traits",
+                        "dh1-radical-items-weapon-mods",
+                        "dh1-radical-items-weapons",
+                        "dh1-radical-journals",
+                        "dh1-radical-origins-elite-advances",
+                        "dh1-radical-rolltables"
+                    ]
+                },
+                {
+                    "name": "Salvation Demands Sacrifice",
+                    "packs": [
+                        "dh1-salvation-items-talents",
+                        "dh1-salvation-items-traits",
+                        "dh1-salvation-journals",
+                        "dh1-salvation-origins-elite-advances"
+                    ]
+                },
+                {
+                    "name": "The Lathe Worlds",
+                    "packs": [
+                        "dh1-lathe-actors-bestiary",
+                        "dh1-lathe-actors-npcs",
+                        "dh1-lathe-items-ammo",
+                        "dh1-lathe-items-armour",
+                        "dh1-lathe-items-cybernetics",
+                        "dh1-lathe-items-gear",
+                        "dh1-lathe-items-talents",
+                        "dh1-lathe-items-traits",
+                        "dh1-lathe-items-weapon-mods",
+                        "dh1-lathe-items-weapons",
+                        "dh1-lathe-journals",
+                        "dh1-lathe-rolltables"
+                    ]
+                },
+                {
+                    "name": "The Lost Dataslate",
+                    "packs": [
+                        "dh1-dataslate-actors-bestiary",
+                        "dh1-dataslate-items-ammo",
+                        "dh1-dataslate-items-cybernetics",
+                        "dh1-dataslate-items-gear",
+                        "dh1-dataslate-items-weapons",
+                        "dh1-dataslate-origins-homeworlds"
+                    ]
+                },
+                {
+                    "name": "Book of Judgement",
+                    "packs": [
+                        "dh1-judgement-actors-bestiary",
+                        "dh1-judgement-actors-npcs",
+                        "dh1-judgement-items-armour",
+                        "dh1-judgement-items-cybernetics",
+                        "dh1-judgement-items-gear",
+                        "dh1-judgement-items-talents",
+                        "dh1-judgement-items-traits",
+                        "dh1-judgement-items-weapons",
+                        "dh1-judgement-journals",
+                        "dh1-judgement-rolltables"
+                    ]
+                },
+                {
+                    "name": "Blood of Martyrs",
+                    "packs": [
+                        "dh1-martyrs-actors-bestiary",
+                        "dh1-martyrs-actors-npcs",
+                        "dh1-martyrs-items-armour",
+                        "dh1-martyrs-items-gear",
+                        "dh1-martyrs-items-relics",
+                        "dh1-martyrs-items-services",
+                        "dh1-martyrs-items-talents",
+                        "dh1-martyrs-items-weapons",
+                        "dh1-martyrs-journals",
+                        "dh1-martyrs-rolltables"
+                    ]
+                },
+                {
+                    "name": "Heresy Begets Retribution",
+                    "packs": [
+                        "dh1-heresy-items-armour",
+                        "dh1-heresy-items-talents",
+                        "dh1-heresy-items-traits",
+                        "dh1-heresy-items-weapons",
+                        "dh1-heresy-origins-careers",
+                        "dh1-heresy-origins-elite-advances"
+                    ]
+                },
+                {
+                    "name": "Heed the Higher Call",
+                    "packs": [
+                        "dh1-heed-journals",
+                        "dh1-heed-origins-careers"
+                    ]
+                },
+                {
+                    "name": "Daemon Hunter",
+                    "packs": [
+                        "dh1-daemonhunter-actors-bestiary",
+                        "dh1-daemonhunter-actors-npcs",
+                        "dh1-daemonhunter-items-ammo",
+                        "dh1-daemonhunter-items-armour",
+                        "dh1-daemonhunter-items-force-fields",
+                        "dh1-daemonhunter-items-gear",
+                        "dh1-daemonhunter-items-psychic-powers",
+                        "dh1-daemonhunter-items-talents",
+                        "dh1-daemonhunter-items-traits",
+                        "dh1-daemonhunter-items-weapons",
+                        "dh1-daemonhunter-journals",
+                        "dh1-daemonhunter-rolltables"
+                    ]
+                },
+                {
+                    "name": "Game Master's Kit",
+                    "packs": [
+                        "dh1-gmkit-actors-bestiary",
+                        "dh1-gmkit-items-consumables",
+                        "dh1-gmkit-journals",
+                        "dh1-gmkit-rolltables"
+                    ]
+                },
+                {
+                    "name": "Edge of Darkness",
+                    "packs": [
+                        "dh1-edge-actors-bestiary",
+                        "dh1-edge-actors-npcs"
+                    ]
+                },
+                {
+                    "name": "Purge the Unclean",
+                    "packs": [
+                        "dh1-purge-actors-bestiary",
+                        "dh1-purge-actors-npcs",
+                        "dh1-purge-items-weapons"
+                    ]
+                },
+                {
+                    "name": "Apostasy Gambit I: The Black Sepulchre",
+                    "packs": [
+                        "dh1-sepulchre-actors-bestiary",
+                        "dh1-sepulchre-actors-npcs",
+                        "dh1-sepulchre-items-talents",
+                        "dh1-sepulchre-items-weapons"
+                    ]
+                },
+                {
+                    "name": "Apostasy Gambit II: Church of the Damned",
+                    "packs": [
+                        "dh1-church-actors-bestiary",
+                        "dh1-church-actors-npcs",
+                        "dh1-church-items-gear"
+                    ]
+                },
+                {
+                    "name": "Apostasy Gambit III: The Chaos Commandment",
+                    "packs": [
+                        "dh1-commandment-actors-bestiary",
+                        "dh1-commandment-actors-npcs",
+                        "dh1-commandment-items-gear"
+                    ]
+                },
+                {
+                    "name": "Haarlock's Legacy I: Tattered Fates",
+                    "packs": [
+                        "dh1-tattered-actors-bestiary",
+                        "dh1-tattered-actors-npcs",
+                        "dh1-tattered-items-talents",
+                        "dh1-tattered-items-traits"
+                    ]
+                },
+                {
+                    "name": "Haarlock's Legacy II: Damned Cities",
+                    "packs": [
+                        "dh1-damned-actors-bestiary",
+                        "dh1-damned-actors-npcs"
+                    ]
+                },
+                {
+                    "name": "Haarlock's Legacy III: Dead Stars",
+                    "packs": [
+                        "dh1-deadstars-actors-bestiary",
+                        "dh1-deadstars-actors-npcs",
+                        "dh1-deadstars-items-talents",
+                        "dh1-deadstars-items-traits"
+                    ]
+                },
+                {
+                    "name": "Adventures",
+                    "packs": [
+                        "dh1-adventures"
                     ]
                 }
             ]
