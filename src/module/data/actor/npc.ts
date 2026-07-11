@@ -14,6 +14,7 @@ import {
     CHARACTERISTIC_SHORT_TO_FULL,
     type Json,
     type JsonObject,
+    migrateArmour,
     migrateArmourPoints,
     migrateCharacteristics,
     migrateMove,
@@ -1111,6 +1112,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         NPCData.#migrateWounds(source);
         NPCData.#migrateThreatLevel(source);
         NPCData.#migrateArmourPoints(source);
+        NPCData.#migrateArmour(source);
         NPCData.#migrateMove(source);
         NPCData.#migrateCharacteristics(source);
         NPCData.#migrateWeapons(source);
@@ -1125,6 +1127,17 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateArmourPoints(source: Record<string, unknown>): void {
         migrateArmourPoints(source as JsonObject);
+    }
+
+    /**
+     * Migrate an Imperium Maledictum flat scalar `armour` value into the structured
+     * `{ mode: 'simple', total }` shape. Delegates to the pure, happy-dom-importable
+     * helper (see npc-import-migration.ts).
+     * @param {object} source - The source system data
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
+    static #migrateArmour(source: Record<string, unknown>): void {
+        migrateArmour(source as JsonObject);
     }
 
     /**

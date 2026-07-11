@@ -248,6 +248,21 @@ export function migrateArmourPoints(source: JsonObject): void {
 }
 
 /**
+ * Migrate an Imperium Maledictum flat scalar `armour` value into the structured
+ * `{ mode: 'simple', total }` shape the schema expects. IM statblocks print a
+ * single Armour rating (e.g. `2`) rather than the FFG per-location `armourPoints`
+ * string, so without this the flat number fails validation and armour resolves to
+ * 0 in `getArmourAt`. Guarded on `typeof number` so already-structured FFG armour
+ * objects are left untouched; idempotent.
+ * @param {object} source - The source system data
+ */
+export function migrateArmour(source: JsonObject): void {
+    const raw = source['armour'];
+    if (typeof raw !== 'number') return;
+    source['armour'] = { mode: 'simple', total: raw < 0 ? 0 : Math.floor(raw) };
+}
+
+/**
  * Migrate the legacy flat `move` string ("3/6/9/18" = half/full/charge/run) into the
  * structured `movement` object, flagged `movementManual: true` so the printed line is
  * NOT overwritten by the Agility-bonus recompute (many creatures deviate from the AgB
