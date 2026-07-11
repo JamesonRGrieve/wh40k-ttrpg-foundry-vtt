@@ -6,6 +6,7 @@
  */
 
 import type { WH40KItem } from '../../documents/item.ts';
+import { capitalize } from '../../utils/format.ts';
 import { getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
 
@@ -319,7 +320,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      */
     _getStepLabel(step: string): string {
         if (step === '') return '';
-        const key = step.charAt(0).toUpperCase() + step.slice(1);
+        const key = capitalize(step);
         return game.i18n.localize(`WH40K.OriginPath.${key}`);
     }
 

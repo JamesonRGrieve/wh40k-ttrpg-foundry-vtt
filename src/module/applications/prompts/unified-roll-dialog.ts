@@ -46,7 +46,7 @@ import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { detectTargetVisibility } from '../../utils/cover-geometry.ts';
 import { buildDifficultyPresets, type DifficultyPreset } from '../../utils/difficulty-presets.ts';
-import { formatSigned } from '../../utils/format.ts';
+import { capitalize, formatSigned } from '../../utils/format.ts';
 import { calculateTokenDistance, RANGE_BRACKETS, tokenElevation } from '../../utils/range-calculator.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
@@ -533,7 +533,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
             const charLabel = (c: string): string => {
                 if (c === '') return '';
-                const key = `WH40K.Characteristic.${c.charAt(0).toUpperCase()}${c.slice(1)}`;
+                const key = `WH40K.Characteristic.${capitalize(c)}`;
                 const localized = game.i18n.localize(key);
                 return localized === key ? c : localized;
             };

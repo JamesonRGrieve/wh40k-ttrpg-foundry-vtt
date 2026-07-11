@@ -15,6 +15,7 @@ import VoidcraftData, {
 } from '../../data/actor/voidcraft.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
+import { capitalize } from '../../utils/format.ts';
 import { RollTableUtils } from '../../utils/roll-table-utils.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 
@@ -628,7 +629,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
                 weaponTypeLabel: game.i18n.localize(
                     `WH40K.ShipWeapon.Type.${weaponType
                         .split('-')
-                        .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+                        .map((s) => capitalize(s))
                         .join('')}`,
                 ),
                 location: sys.location ?? 'dorsal',

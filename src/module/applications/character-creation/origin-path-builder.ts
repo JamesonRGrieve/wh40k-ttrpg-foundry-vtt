@@ -19,6 +19,7 @@ import { GrantsManager, generateDeterministicId } from '../../managers/grants-ma
 import { deltaFromModifiers, originDeltaFlagPath, originIdentityKey, type OriginModifierBag } from '../../origin-grant-ledger.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import { resolvePack } from '../../utils/compendium-query.ts';
+import { capitalize } from '../../utils/format.ts';
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { iterateResolvedChoices } from '../../utils/origin-choices.ts';
 import { getAllCharacteristicDisplayInfo, getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
@@ -1161,7 +1162,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (key === 'characteristics') {
             return game.i18n.localize('WH40K.CharacteristicSetup.Title');
         }
-        const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
+        const capitalizedKey = capitalize(key);
         return game.i18n.localize(`WH40K.OriginPath.${capitalizedKey}`);
     }
 
@@ -4128,7 +4129,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (formula === undefined || formula === '') return;
 
         const raw = await this._promptForValue({
-            title: game.i18n.localize(`WH40K.OriginPath.Enter${statType.charAt(0).toUpperCase() + statType.slice(1)}`),
+            title: game.i18n.localize(`WH40K.OriginPath.Enter${capitalize(statType)}`),
             label: game.i18n.localize('WH40K.OriginPath.ManualValue'),
             name: 'value',
             type: 'number',

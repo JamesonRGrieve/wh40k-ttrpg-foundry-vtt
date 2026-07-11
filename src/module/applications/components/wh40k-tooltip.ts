@@ -8,7 +8,7 @@ import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KArmourLocation } from '../../types/global.d.ts';
-import { formatSigned } from '../../utils/format.ts';
+import { capitalize, formatSigned } from '../../utils/format.ts';
 
 /** Minimal typed interface for the Foundry tooltip manager. */
 interface TooltipManager {
@@ -729,7 +729,7 @@ export class TooltipsWH40K {
                 ? 'Damage Modifier'
                 : category
                       .split('-')
-                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                      .map((w) => capitalize(w))
                       .join(' ');
 
         html += `

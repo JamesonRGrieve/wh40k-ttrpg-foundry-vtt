@@ -3,6 +3,7 @@
  * Extends BaseItemSheet for proper V13 ApplicationV2 integration
  */
 
+import { capitalize } from '../../utils/format.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
@@ -236,7 +237,7 @@ export default class OriginPathSheet extends BaseItemSheet {
             lineage: 'Lineage',
             eliteAdvance: 'Elite Advance',
         };
-        const key = step.charAt(0).toUpperCase() + step.slice(1);
+        const key = capitalize(step);
         const localizationKey = `WH40K.OriginPath.${key}`;
         return game.i18n.has(localizationKey) ? game.i18n.localize(localizationKey) : labels[step] ?? step;
     }
