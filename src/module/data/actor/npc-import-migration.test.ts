@@ -17,6 +17,7 @@ import {
     isJsonObject,
     type Json,
     type JsonObject,
+    migrateArmour,
     migrateArmourPoints,
     migrateCharacteristics,
     migrateMove,
@@ -297,6 +298,38 @@ describe('real bestiary pack data migrates to a usable shape', () => {
             }
         });
     }
+});
+
+describe('migrateArmour (IM flat scalar)', () => {
+    it('wraps an Imperium Maledictum flat armour number into { mode: simple, total }', () => {
+        const source: JsonObject = { armour: 2 };
+        migrateArmour(source);
+        expect(source['armour']).toEqual({ mode: 'simple', total: 2 });
+    });
+
+    it('floors a fractional value and clamps negatives to 0', () => {
+        const a: JsonObject = { armour: 3.7 };
+        migrateArmour(a);
+        expect(asObject(a['armour'], 'armour')['total']).toBe(3);
+        const b: JsonObject = { armour: -1 };
+        migrateArmour(b);
+        expect(asObject(b['armour'], 'armour')['total']).toBe(0);
+    });
+
+    it('leaves an already-structured armour object untouched (FFG NPCs)', () => {
+        const source: JsonObject = {
+            armour: { mode: 'locations', total: 4, locations: { head: 4, body: 4, leftArm: 4, rightArm: 4, leftLeg: 4, rightLeg: 4 } },
+        };
+        migrateArmour(source);
+        expect(asObject(source['armour'], 'armour')['mode']).toBe('locations');
+        expect(asObject(source['armour'], 'armour')['total']).toBe(4);
+    });
+
+    it('is a no-op when armour is absent', () => {
+        const source: JsonObject = {};
+        migrateArmour(source);
+        expect(source['armour']).toBeUndefined();
+    });
 });
 
 describe('migrateArmourPoints', () => {
