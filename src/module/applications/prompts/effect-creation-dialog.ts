@@ -5,12 +5,12 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { capitalize } from '../../utils/format.ts';
+import DialogResolution from '../dialogs/dialog-resolution.ts';
 
 const { DialogV2 } = foundry.applications.api;
 
 interface EffectCreationDialogOptions {
     actor: WH40KBaseActor;
-    resolve: (value: ActiveEffect | null) => void;
 }
 
 /**
@@ -58,10 +58,12 @@ interface CustomEffectPayload {
 
 export default class EffectCreationDialog extends DialogV2 {
     declare actor: WH40KBaseActor;
-    declare resolve: (value: ActiveEffect | null) => void;
     declare selectedCategory: string;
     declare element: HTMLElement;
     declare submit: () => Promise<void>;
+
+    /** Promise-resolution plumbing (#287); dismissal without a submit resolves null. */
+    readonly #resolution = new DialogResolution<ActiveEffect | null>(null);
 
     /** @override */
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
@@ -122,17 +124,18 @@ export default class EffectCreationDialog extends DialogV2 {
      * @returns {Promise<ActiveEffect|null>}
      */
     static async show(actor: WH40KBaseActor): Promise<ActiveEffect | null> {
-        return new Promise((resolve) => {
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises -- render returns a Promise but the dialog lifecycle is managed via the resolve callback
-            new this({ actor, resolve }).render(true);
-        });
+        const dialog = new this({ actor });
+        // Track resolution before rendering; resolved on submit, or null via close()→resolveDefault() on dismiss.
+        const result = dialog.#resolution.track();
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises -- render returns a Promise but the dialog lifecycle is awaited via #resolution
+        dialog.render(true);
+        return result;
     }
 
     constructor(options: EffectCreationDialogOptions) {
         // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 constructor accepts Record<string,unknown>; EffectCreationDialogOptions is structurally compatible
         super(options as unknown as Record<string, unknown>);
         this.actor = options.actor;
-        this.resolve = options.resolve;
         this.selectedCategory = 'custom';
     }
 
@@ -252,14 +255,30 @@ export default class EffectCreationDialog extends DialogV2 {
         if (effectData === null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: WH40K.ActiveEffect.InvalidData is a localization key, not a hardcoded string; lint rule cannot distinguish
             ui.notifications.warn('WH40K.ActiveEffect.InvalidData');
-            return this.resolve(null);
+            this.#resolution.resolve(null);
+            return;
         }
 
         // Create the effect
         // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect.createEmbeddedDocuments accepts Record<string,unknown>; EffectPayload/CustomEffectPayload are structurally valid creation payloads but the framework method is untyped
         const effects = await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData as unknown as Record<string, unknown> & { name: string }]);
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess: effects[0] is Document|undefined; cast to ActiveEffect|null after null-coalescing guard
-        return this.resolve((effects[0] ?? null) as ActiveEffect | null);
+        this.#resolution.resolve((effects[0] ?? null) as ActiveEffect | null);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Resolve the pending promise with the cancelled default (null) if no submit
+     * fired first, so a dismissed dialog never leaves `show()` awaiting forever.
+     * `DialogResolution` guards against a double-resolve after a submit.
+     * @override
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2.close() accepts untyped options; signature must match the framework override
+    override async close(options: Record<string, unknown> = {}): Promise<this> {
+        this.#resolution.resolveDefault();
+        await super.close(options);
+        return this;
     }
 
     /* -------------------------------------------- */

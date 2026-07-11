@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { importModelOrSkip } from '../../testing/model-import.ts';
 import type { EffectCreationData, EffectPayload } from './effect-creation-dialog.ts';
 
@@ -197,5 +198,143 @@ describe('EffectCreationDialog payload builders (#341)', () => {
         expect(effect.duration).toEqual({ rounds: 2, startRound: 3, startTurn: 1 });
 
         expect(Builders._createConditionData({ effectType: 'condition', conditionId: 'nonexistent' })).toBeNull();
+    });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  DialogResolution wiring (#287)                                            */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The dialog now composes the shared `DialogResolution` helper (#287) instead of a
+ * passed-in `resolve` callback: `show()` tracks the resolution, `formHandler`
+ * resolves it with the created effect, and the `close()` override resolves the
+ * default (null) on dismissal — with the helper guarding against a double-resolve.
+ *
+ * The dialog `extends DialogV2` (evaluated at module load), so DialogV2 is stubbed
+ * with a no-op that records the constructed instance via `render()` — letting us
+ * drive the resolution paths without booting ApplicationV2.
+ */
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- types the module that loadDialog() imports dynamically at runtime; a static import would be unused as a value
+type EffectModule = typeof import('./effect-creation-dialog.ts');
+/** The dialog instance type, derived from the module's default export (a single static import). */
+type EffectCreationDialog = InstanceType<EffectModule['default']>;
+
+/** The most recently rendered dialog instance, captured by the stubbed `render()`. */
+let capturedDialog: EffectCreationDialog | undefined;
+
+/** A stand-in ActiveEffect the mocked actor "creates"; identity is all the tests assert on. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: structural stub of the Foundry ActiveEffect document; tests assert only on identity
+const createdEffect = { id: 'ae-created' } as unknown as ActiveEffect;
+
+function installResolutionGlobals(): void {
+    capturedDialog = undefined;
+
+    class DialogV2Stub {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: stub of Foundry DialogV2's untyped options bag
+        constructor(_options?: Record<string, unknown>) {}
+        // `this` is the EffectCreationDialog subclass instance at call time (this.render()).
+        render(this: EffectCreationDialog, _force?: boolean): void {
+            // eslint-disable-next-line @typescript-eslint/no-this-alias -- intentional: capture the rendered dialog instance so the test can drive its form handler
+            capturedDialog = this;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: stub of Foundry DialogV2.close()'s untyped options bag
+        async close(_options?: Record<string, unknown>): Promise<this> {
+            await Promise.resolve();
+            return this;
+        }
+    }
+
+    Object.assign(globalThis, {
+        ui: { notifications: { warn: vi.fn() } },
+        game: { combat: null },
+        CONST: { ACTIVE_EFFECT_MODES: { ADD: 2 } },
+        CONFIG: { WH40K: { characteristics: {} } },
+        foundry: {
+            applications: { api: { DialogV2: DialogV2Stub } },
+            utils: { deepClone: <T>(o: T): T => structuredClone(o) },
+        },
+    });
+}
+
+async function loadDialog(): Promise<EffectModule | undefined> {
+    return importModelOrSkip(import('./effect-creation-dialog.ts'));
+}
+
+/** A mocked actor exposing only the `createEmbeddedDocuments` surface `formHandler` reaches. */
+function mockActor(createEmbeddedDocuments: ReturnType<typeof vi.fn>): WH40KBaseActor {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: structural stub of the WH40KBaseActor surface (only createEmbeddedDocuments) that show()/formHandler reach into
+    return { createEmbeddedDocuments } as unknown as WH40KBaseActor;
+}
+
+/** Invoke the static form handler on a captured dialog with a valid custom-effect payload. */
+async function submitCustom(Mod: EffectModule, dialog: EffectCreationDialog, customName: string): Promise<void> {
+    const formData = { object: { effectType: 'custom', customName } as EffectCreationData };
+    await Mod.default.formHandler.call(
+        dialog,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: SubmitEvent is a DOM framework type the handler never reads here
+        new Event('submit') as unknown as SubmitEvent,
+        document.createElement('form'),
+        // eslint-disable-next-line no-restricted-syntax -- boundary: FormDataExtended is a Foundry framework type; the handler reads formData.object only
+        formData as unknown as FormDataExtended,
+    );
+}
+
+describe('EffectCreationDialog resolution wiring (#287)', () => {
+    beforeEach(() => {
+        vi.resetModules();
+        installResolutionGlobals();
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        vi.resetModules();
+    });
+
+    it('show() resolves the created effect on a successful submit', async () => {
+        const Mod = await loadDialog();
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: fail loudly if the stub could not load the dialog, never skip silently
+        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the DialogV2 stub');
+
+        const create = vi.fn().mockResolvedValue([createdEffect]);
+        const result = Mod.default.show(mockActor(create));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: render() must have captured the instance
+        if (capturedDialog === undefined) throw new Error('render() did not capture the dialog instance');
+
+        await submitCustom(Mod, capturedDialog, 'Aura');
+
+        await expect(result).resolves.toBe(createdEffect);
+        expect(create).toHaveBeenCalledOnce();
+    });
+
+    it('show() resolves null when the dialog is dismissed via close()', async () => {
+        const Mod = await loadDialog();
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: fail loudly if the stub could not load the dialog, never skip silently
+        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the DialogV2 stub');
+
+        const result = Mod.default.show(mockActor(vi.fn()));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: render() must have captured the instance
+        if (capturedDialog === undefined) throw new Error('render() did not capture the dialog instance');
+
+        await capturedDialog.close();
+
+        await expect(result).resolves.toBeNull();
+    });
+
+    it('never double-resolves: a close() after a submit does not overwrite the effect with null', async () => {
+        const Mod = await loadDialog();
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: fail loudly if the stub could not load the dialog, never skip silently
+        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the DialogV2 stub');
+
+        const result = Mod.default.show(mockActor(vi.fn().mockResolvedValue([createdEffect])));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: render() must have captured the instance
+        if (capturedDialog === undefined) throw new Error('render() did not capture the dialog instance');
+
+        await submitCustom(Mod, capturedDialog, 'Aura');
+        // Dismissal after a resolved submit must be a guarded no-op, not a second resolution.
+        await capturedDialog.close();
+
+        await expect(result).resolves.toBe(createdEffect);
     });
 });

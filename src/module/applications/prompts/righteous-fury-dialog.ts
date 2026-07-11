@@ -4,6 +4,7 @@
 
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import DialogResolution from '../dialogs/dialog-resolution.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -23,6 +24,9 @@ interface RighteousFuryDialogOptions {
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2Mixin requires a constructor type; Foundry's ApplicationV2 class does not match the ctor constraint directly
 export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+    /** Promise-resolution plumbing (#287); dismissal without a resolved roll yields false. */
+    readonly #resolution = new DialogResolution<boolean>(false);
+
     /**
      * @param {RighteousFuryDialogOptions} options - Dialog options
      */
@@ -127,13 +131,13 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      * Was the confirmation successful?
      * @type {boolean}
      */
-    success;
+    success: boolean;
 
     /**
      * Degrees of success
      * @type {number}
      */
-    dos;
+    dos: number;
 
     /* -------------------------------------------- */
     /*  Rendering                                   */
@@ -195,12 +199,35 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      * @param {HTMLElement} target - Button that was clicked
      */
     static async #onCancel(this: RighteousFuryDialog, _event: Event, _target: HTMLElement): Promise<void> {
-        if (this.confirmationRoll && this.success && this.onConfirm) {
-            await this.onConfirm();
-        } else if (this.confirmationRoll && !this.success && this.onFail) {
-            await this.onFail();
+        const rolled = this.confirmationRoll !== null;
+        // Preserve the dual-callback adapter: onConfirm on a successful confirmation
+        // roll, onFail on a failed one, neither when the dialog is cancelled unrolled.
+        if (rolled && this.success) {
+            await this.onConfirm?.();
+        } else if (rolled) {
+            await this.onFail?.();
         }
+        // Route the boolean outcome through the shared resolver (#287). An unrolled
+        // cancel resolves false, matching the close-dismissal default.
+        this.#resolution.resolve(rolled && this.success);
         await this.close();
+    }
+
+    /* -------------------------------------------- */
+    /*  Public API                                  */
+    /* -------------------------------------------- */
+
+    /**
+     * Render the dialog and await its boolean outcome: true on a successful
+     * confirmation roll, false on a failed one or a dismissal. Shares the
+     * {@link DialogResolution} plumbing used by the other #287 dialogs.
+     */
+    async wait(): Promise<boolean> {
+        const result = this.#resolution.track();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 mixes EventTarget at runtime but TypeScript doesn't know; cast needed for addEventListener
+        (this as unknown as EventTarget).addEventListener('close', () => this.#resolution.resolveDefault(), { once: true });
+        void this.render({ force: true });
+        return result;
     }
 }
 
@@ -214,12 +241,5 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
  * @returns {Promise<boolean>} - True if confirmed, false if failed
  */
 export async function promptRighteousFury(options: RighteousFuryDialogOptions): Promise<boolean> {
-    return new Promise<boolean>((resolve) => {
-        const dialog = new RighteousFuryDialog({
-            ...options,
-            onConfirm: () => resolve(true),
-            onFail: () => resolve(false),
-        });
-        void dialog.render({ force: true });
-    });
+    return new RighteousFuryDialog(options).wait();
 }
