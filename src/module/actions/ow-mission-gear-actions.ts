@@ -21,7 +21,8 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
-import { postChatCard, roll1d100 } from '../rolls/roll-helpers.ts';
+import { isD100Success, postChatCard, roll1d100 } from '../rolls/roll-helpers.ts';
+import { degreesOfFailure as diceDegreesOfFailure, degreesOfSuccess as diceDegreesOfSuccess } from '../rules/_dice.ts';
 import { type GearOutcome, ORDINARY_BONUS_KEY, applyTable63Modifiers, resolveGearOutcome, rollRandomIssueGear } from '../rules/ow-mission-gear.ts';
 import { isActorOfSystem } from './action-host.ts';
 
@@ -104,6 +105,39 @@ function parseModifierDialogForm(form: HTMLFormElement | null): ModifierDialogRe
     };
 }
 
+/** Pass/fail and Table 6-4 degrees derived from the underlying Logistics roll. */
+export interface GearDegrees {
+    /** True when the Logistics Test succeeds per the shared d100 rule. */
+    readonly passed: boolean;
+    /** Degrees of Success (0 on a failure). */
+    readonly degreesOfSuccess: number;
+    /** Degrees of Failure (0 on a success). */
+    readonly degreesOfFailure: number;
+}
+
+/**
+ * Derive the gear roll's pass/fail and degrees from the d100 total and the
+ * composed effective target, routing every decision through the shared
+ * SSOTs instead of re-inlining them.
+ *
+ * Pass/fail is `isD100Success`, so a natural 01 ALWAYS succeeds and a natural
+ * 100 ALWAYS fails — even when Table 6-3 modifiers push the effective target
+ * to ≥100, where the old hand-rolled `margin >= 0` wrongly passed a natural
+ * 100. Degrees follow the canonical `1 + extra` idiom shared with the roll
+ * engine (`WH40K.calculateDegrees`): a bare pass/fail scores one degree and
+ * each further ten of margin adds another, so a natural-100 failure still
+ * reports at least one Degree of Failure despite its zero (or negative)
+ * margin.
+ */
+export function deriveGearDegrees(rollTotal: number, target: number): GearDegrees {
+    const passed = isD100Success(rollTotal, target);
+    return {
+        passed,
+        degreesOfSuccess: passed ? 1 + diceDegreesOfSuccess(rollTotal, target, { extra: true }) : 0,
+        degreesOfFailure: passed ? 0 : 1 + diceDegreesOfFailure(rollTotal, target, { extra: true }),
+    };
+}
+
 /**
  * Open a DialogV2 prompting the GM for Table 6-3 modifiers, then resolve
  * the gear roll (`data-action="owRequestGear"`).
@@ -177,12 +211,10 @@ export async function owRequestGear(this: MissionGearActionHost, event: Event, _
     // eslint-disable-next-line no-restricted-syntax -- boundary: Roll.total is typed loosely on Foundry's surface; the 1d100 evaluator yields a finite integer
     const rollTotal = Math.trunc(Number(roll.total ?? 0));
 
-    // Derive degrees of success / failure from the Logistics convention:
-    // each 10 points over the target is a DoS, each 10 under is a DoF.
-    const margin = composed.target - rollTotal;
-    const success = margin >= 0;
-    const degreesOfSuccess = success ? Math.floor(margin / 10) + 1 : 0;
-    const degreesOfFailure = success ? 0 : Math.floor(-margin / 10) + 1;
+    // Pass/fail and degrees route through the shared d100 SSOTs so the
+    // natural-01-always-succeeds / natural-100-always-fails rule holds even
+    // when Table 6-3 modifiers push the effective target to ≥100.
+    const { passed: success, degreesOfSuccess, degreesOfFailure } = deriveGearDegrees(rollTotal, composed.target);
 
     const resolution = resolveGearOutcome({ degreesOfSuccess, degreesOfFailure });
 
