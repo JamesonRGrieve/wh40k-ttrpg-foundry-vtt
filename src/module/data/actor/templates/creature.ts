@@ -11,6 +11,7 @@ import { clampSize, coerceIntFields, sizeNameToInt } from '../../shared/field-co
 import { computeMovement, sumMovementModifiers } from '../../shared/movement-math.ts';
 import { asRawSource, type RawSource } from '../../shared/raw-source.ts';
 import { SKILL_DEFINITIONS } from '../../shared/skill-definitions.ts';
+import { computeSkillTarget } from '../../shared/skill-math.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../../shared/stat-fields.ts';
 import CommonTemplate from './common.ts';
 
@@ -964,25 +965,22 @@ export default class CreatureTemplate extends CommonTemplate {
             const originRank = this._getOriginPathSkillRank(key);
             const effectiveRank = Math.min(originRank + (skill.advance || 0), 4);
 
+            // Rank flags + target: full characteristic once trained, flat -20 in
+            // DH2e / half characteristic for career systems when untrained, plus the
+            // rank>=4?30:rank>=3?20:rank>=2?10:0 training ladder and skill.bonus (#423).
+            const skillTarget = computeSkillTarget(charTotal, effectiveRank, skill.bonus || 0, systemConfig?.usesAptitudes === true);
+
             // Store rank data for display and advancement dialog
-            skill.rank = effectiveRank;
+            skill.rank = skillTarget.rank;
             skill.originRank = originRank;
 
             // Derive boolean flags from effective rank (template backward compat)
-            skill.trained = effectiveRank >= 1;
-            skill.plus10 = effectiveRank >= 2;
-            skill.plus20 = effectiveRank >= 3;
-            skill.plus30 = effectiveRank >= 4;
+            skill.trained = skillTarget.trained;
+            skill.plus10 = skillTarget.plus10;
+            skill.plus20 = skillTarget.plus20;
+            skill.plus30 = skillTarget.plus30;
 
-            // Base value: full characteristic if rank >= 1.
-            // Untrained uses flat -20 in DH2e (Known/Trained/Experienced/Veteran ladder);
-            // half characteristic for career-based systems.
-            const baseValue = effectiveRank > 0 ? charTotal : systemConfig?.usesAptitudes === true ? charTotal - 20 : Math.floor(charTotal / 2);
-
-            // Training bonus: rank 2 = +10, rank 3 = +20, rank 4 = +30
-            const trainingBonus = effectiveRank >= 4 ? 30 : effectiveRank >= 3 ? 20 : effectiveRank >= 2 ? 10 : 0;
-
-            skill.current = baseValue + trainingBonus + (skill.bonus || 0);
+            skill.current = skillTarget.current;
 
             // Process specialist entries
             if (Array.isArray(skill.entries)) {
@@ -1000,17 +998,15 @@ export default class CreatureTemplate extends CommonTemplate {
                     const entryOriginRank = this._getOriginPathSkillRank(key, entry.name || entry.specialization);
                     const entryEffectiveRank = Math.min(entryOriginRank + (entry.advance || 0), 4);
 
-                    entry.rank = entryEffectiveRank;
-                    entry.originRank = entryOriginRank;
-                    entry.trained = entryEffectiveRank >= 1;
-                    entry.plus10 = entryEffectiveRank >= 2;
-                    entry.plus20 = entryEffectiveRank >= 3;
-                    entry.plus30 = entryEffectiveRank >= 4;
+                    const entryTarget = computeSkillTarget(entryCharTotal, entryEffectiveRank, entry.bonus || 0, systemConfig?.usesAptitudes === true);
 
-                    const entryBaseValue =
-                        entryEffectiveRank > 0 ? entryCharTotal : systemConfig?.usesAptitudes === true ? entryCharTotal - 20 : Math.floor(entryCharTotal / 2);
-                    const entryTrainingBonus = entryEffectiveRank >= 4 ? 30 : entryEffectiveRank >= 3 ? 20 : entryEffectiveRank >= 2 ? 10 : 0;
-                    entry.current = entryBaseValue + entryTrainingBonus + (entry.bonus || 0);
+                    entry.rank = entryTarget.rank;
+                    entry.originRank = entryOriginRank;
+                    entry.trained = entryTarget.trained;
+                    entry.plus10 = entryTarget.plus10;
+                    entry.plus20 = entryTarget.plus20;
+                    entry.plus30 = entryTarget.plus30;
+                    entry.current = entryTarget.current;
                 }
             }
         }
