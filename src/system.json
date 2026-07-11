@@ -3359,18 +3359,6 @@
             "flags": {}
         },
         {
-            "name": "ow-shield-items-gear",
-            "label": "OW: Shield of Humanity, Gear",
-            "path": "packs/only-war/ow-shield-items-gear",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
             "name": "ow-shield-items-orders",
             "label": "OW: Shield of Humanity, Orders",
             "path": "packs/only-war/ow-shield-items-orders",
@@ -9609,6 +9597,102 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "ow-core-journals",
+            "label": "OW: Core Rulebook, Reference",
+            "path": "packs/only-war/ow-core-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "ow-core-rolltables",
+            "label": "OW: Core Rulebook, Tables",
+            "path": "packs/only-war/ow-core-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-ow-items-psychic-powers",
+            "label": "Homebrew OW Psychic Powers",
+            "path": "packs/homebrew/hb-ow-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-ow-items-ammo",
+            "label": "Homebrew OW Ammunition",
+            "path": "packs/homebrew/hb-ow-items-ammo",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "ow-shield-items-cybernetics",
+            "label": "OW: Shield of Humanity, Cybernetics",
+            "path": "packs/only-war/ow-shield-items-cybernetics",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "ow-shield-actors-bestiary",
+            "label": "OW: Shield of Humanity, Bestiary",
+            "path": "packs/only-war/ow-shield-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "ow-eleventh-items-weapons",
+            "label": "OW: Eleventh Hour, Weapons",
+            "path": "packs/only-war/ow-eleventh-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "ow-testament-items-weapons",
+            "label": "OW: Final Testament, Weapons",
+            "path": "packs/only-war/ow-testament-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
@@ -9620,11 +9704,11 @@
                 {
                     "name": "Binding Contracts",
                     "packs": [
-                        "bc-binding-items-traits",
                         "bc-binding-actors-bestiary",
                         "bc-binding-actors-characters",
-                        "bc-binding-items-weapons",
-                        "bc-binding-items-gear"
+                        "bc-binding-items-gear",
+                        "bc-binding-items-traits",
+                        "bc-binding-items-weapons"
                     ]
                 },
                 {
@@ -9644,8 +9728,6 @@
                     "packs": [
                         "bc-core-actors-bestiary",
                         "bc-core-actors-npcs",
-                        "bc-core-journals",
-                        "bc-core-rolltables",
                         "bc-core-items-ammo",
                         "bc-core-items-armor-mods",
                         "bc-core-items-armour",
@@ -9657,11 +9739,19 @@
                         "bc-core-items-traits",
                         "bc-core-items-weapon-qualities",
                         "bc-core-items-weapons",
+                        "bc-core-journals",
                         "bc-core-origins-archetypes",
                         "bc-core-origins-disgraces",
                         "bc-core-origins-motivations",
                         "bc-core-origins-prides",
-                        "bc-core-origins-races"
+                        "bc-core-origins-races",
+                        "bc-core-rolltables"
+                    ]
+                },
+                {
+                    "name": "Errata",
+                    "packs": [
+                        "bc-errata-journals"
                     ]
                 },
                 {
@@ -9688,52 +9778,54 @@
                 {
                     "name": "Tome of Blood",
                     "packs": [
+                        "bc-blood-actors-bestiary",
+                        "bc-blood-actors-npcs",
                         "bc-blood-items-armor-mods",
                         "bc-blood-items-armour",
                         "bc-blood-items-gear",
                         "bc-blood-items-rituals",
                         "bc-blood-items-weapons",
-                        "bc-blood-origins-archetypes",
                         "bc-blood-journals",
-                        "bc-blood-rolltables",
-                        "bc-blood-actors-bestiary",
-                        "bc-blood-actors-npcs"
+                        "bc-blood-origins-archetypes",
+                        "bc-blood-rolltables"
                     ]
                 },
                 {
                     "name": "Tome of Decay",
                     "packs": [
+                        "bc-decay-actors-bestiary",
+                        "bc-decay-actors-npcs",
                         "bc-decay-items-ammo",
                         "bc-decay-items-gear",
                         "bc-decay-items-rituals",
                         "bc-decay-items-weapons",
-                        "bc-decay-origins-archetypes",
                         "bc-decay-journals",
-                        "bc-decay-rolltables",
-                        "bc-decay-actors-bestiary",
-                        "bc-decay-actors-npcs"
+                        "bc-decay-origins-archetypes",
+                        "bc-decay-rolltables"
                     ]
                 },
                 {
                     "name": "Tome of Excess",
                     "packs": [
+                        "bc-excess-actors-bestiary",
+                        "bc-excess-actors-mounts",
+                        "bc-excess-actors-npcs",
                         "bc-excess-items-ammo",
                         "bc-excess-items-armor-mods",
                         "bc-excess-items-gear",
                         "bc-excess-items-rituals",
                         "bc-excess-items-talents",
                         "bc-excess-items-weapons",
-                        "bc-excess-origins-archetypes",
                         "bc-excess-journals",
-                        "bc-excess-rolltables",
-                        "bc-excess-actors-bestiary",
-                        "bc-excess-actors-npcs",
-                        "bc-excess-actors-mounts"
+                        "bc-excess-origins-archetypes",
+                        "bc-excess-rolltables"
                     ]
                 },
                 {
                     "name": "Tome of Fate",
                     "packs": [
+                        "bc-fate-actors-bestiary",
+                        "bc-fate-actors-npcs",
                         "bc-fate-items-ammo",
                         "bc-fate-items-armour",
                         "bc-fate-items-gear",
@@ -9741,23 +9833,15 @@
                         "bc-fate-items-rituals",
                         "bc-fate-items-traits",
                         "bc-fate-items-weapons",
-                        "bc-fate-origins-archetypes",
                         "bc-fate-journals",
-                        "bc-fate-rolltables",
-                        "bc-fate-actors-bestiary",
-                        "bc-fate-actors-npcs"
+                        "bc-fate-origins-archetypes",
+                        "bc-fate-rolltables"
                     ]
                 },
                 {
                     "name": "General",
                     "packs": [
                         "bc-adventures"
-                    ]
-                },
-                {
-                    "name": "Errata",
-                    "packs": [
-                        "bc-errata-journals"
                     ]
                 }
             ]
@@ -9767,6 +9851,83 @@
             "color": "#8B0000",
             "sorting": "a",
             "folders": [
+                {
+                    "name": "Apostasy Gambit I: The Black Sepulchre",
+                    "packs": [
+                        "dh1-sepulchre-actors-bestiary",
+                        "dh1-sepulchre-actors-npcs",
+                        "dh1-sepulchre-items-talents",
+                        "dh1-sepulchre-items-weapons"
+                    ]
+                },
+                {
+                    "name": "Apostasy Gambit II: Church of the Damned",
+                    "packs": [
+                        "dh1-church-actors-bestiary",
+                        "dh1-church-actors-npcs",
+                        "dh1-church-items-gear"
+                    ]
+                },
+                {
+                    "name": "Apostasy Gambit III: The Chaos Commandment",
+                    "packs": [
+                        "dh1-commandment-actors-bestiary",
+                        "dh1-commandment-actors-npcs",
+                        "dh1-commandment-items-gear"
+                    ]
+                },
+                {
+                    "name": "Ascension",
+                    "packs": [
+                        "dh1-ascension-actors-bestiary",
+                        "dh1-ascension-actors-npcs",
+                        "dh1-ascension-items-ammo",
+                        "dh1-ascension-items-armour",
+                        "dh1-ascension-items-cybernetics",
+                        "dh1-ascension-items-gear",
+                        "dh1-ascension-items-psychic-powers",
+                        "dh1-ascension-items-talents",
+                        "dh1-ascension-items-weapons",
+                        "dh1-ascension-origins-careers",
+                        "dh1-ascension-origins-elite-advances"
+                    ]
+                },
+                {
+                    "name": "Blood of Martyrs",
+                    "packs": [
+                        "dh1-martyrs-actors-bestiary",
+                        "dh1-martyrs-actors-npcs",
+                        "dh1-martyrs-items-armour",
+                        "dh1-martyrs-items-gear",
+                        "dh1-martyrs-items-relics",
+                        "dh1-martyrs-items-services",
+                        "dh1-martyrs-items-talents",
+                        "dh1-martyrs-items-weapons",
+                        "dh1-martyrs-journals",
+                        "dh1-martyrs-rolltables"
+                    ]
+                },
+                {
+                    "name": "Book of Judgement",
+                    "packs": [
+                        "dh1-judgement-actors-bestiary",
+                        "dh1-judgement-actors-npcs",
+                        "dh1-judgement-items-armour",
+                        "dh1-judgement-items-cybernetics",
+                        "dh1-judgement-items-gear",
+                        "dh1-judgement-items-talents",
+                        "dh1-judgement-items-traits",
+                        "dh1-judgement-items-weapons",
+                        "dh1-judgement-journals",
+                        "dh1-judgement-rolltables"
+                    ]
+                },
+                {
+                    "name": "Calixis Timeline",
+                    "packs": [
+                        "dh1-timeline-journals"
+                    ]
+                },
                 {
                     "name": "Core Rulebook",
                     "packs": [
@@ -9792,39 +9953,6 @@
                     ]
                 },
                 {
-                    "name": "Ascension",
-                    "packs": [
-                        "dh1-ascension-actors-bestiary",
-                        "dh1-ascension-actors-npcs",
-                        "dh1-ascension-items-ammo",
-                        "dh1-ascension-items-armour",
-                        "dh1-ascension-items-cybernetics",
-                        "dh1-ascension-items-gear",
-                        "dh1-ascension-items-psychic-powers",
-                        "dh1-ascension-items-talents",
-                        "dh1-ascension-items-weapons",
-                        "dh1-ascension-origins-careers",
-                        "dh1-ascension-origins-elite-advances"
-                    ]
-                },
-                {
-                    "name": "Inquisitor's Handbook",
-                    "packs": [
-                        "dh1-inquisitor-actors-bestiary",
-                        "dh1-inquisitor-items-ammo",
-                        "dh1-inquisitor-items-armor-mods",
-                        "dh1-inquisitor-items-armour",
-                        "dh1-inquisitor-items-force-fields",
-                        "dh1-inquisitor-items-gear",
-                        "dh1-inquisitor-items-talents",
-                        "dh1-inquisitor-items-traits",
-                        "dh1-inquisitor-items-weapon-mods",
-                        "dh1-inquisitor-items-weapons",
-                        "dh1-inquisitor-origins-backgrounds",
-                        "dh1-inquisitor-origins-homeworlds"
-                    ]
-                },
-                {
                     "name": "Creatures Anathema",
                     "packs": [
                         "dh1-anathema-actors-bestiary",
@@ -9834,6 +9962,23 @@
                         "dh1-anathema-items-weapons",
                         "dh1-anathema-journals",
                         "dh1-anathema-rolltables"
+                    ]
+                },
+                {
+                    "name": "Daemon Hunter",
+                    "packs": [
+                        "dh1-daemonhunter-actors-bestiary",
+                        "dh1-daemonhunter-actors-npcs",
+                        "dh1-daemonhunter-items-ammo",
+                        "dh1-daemonhunter-items-armour",
+                        "dh1-daemonhunter-items-force-fields",
+                        "dh1-daemonhunter-items-gear",
+                        "dh1-daemonhunter-items-psychic-powers",
+                        "dh1-daemonhunter-items-talents",
+                        "dh1-daemonhunter-items-traits",
+                        "dh1-daemonhunter-items-weapons",
+                        "dh1-daemonhunter-journals",
+                        "dh1-daemonhunter-rolltables"
                     ]
                 },
                 {
@@ -9858,22 +10003,99 @@
                     ]
                 },
                 {
-                    "name": "The Radical's Handbook",
+                    "name": "Edge of Darkness",
                     "packs": [
-                        "dh1-radical-actors-bestiary",
-                        "dh1-radical-items-ammo",
-                        "dh1-radical-items-armor-mods",
-                        "dh1-radical-items-armour",
-                        "dh1-radical-items-cybernetics",
-                        "dh1-radical-items-gear",
-                        "dh1-radical-items-psychic-powers",
-                        "dh1-radical-items-talents",
-                        "dh1-radical-items-traits",
-                        "dh1-radical-items-weapon-mods",
-                        "dh1-radical-items-weapons",
-                        "dh1-radical-journals",
-                        "dh1-radical-origins-elite-advances",
-                        "dh1-radical-rolltables"
+                        "dh1-edge-actors-bestiary",
+                        "dh1-edge-actors-npcs"
+                    ]
+                },
+                {
+                    "name": "Game Master's Kit",
+                    "packs": [
+                        "dh1-gmkit-actors-bestiary",
+                        "dh1-gmkit-items-consumables",
+                        "dh1-gmkit-journals",
+                        "dh1-gmkit-rolltables"
+                    ]
+                },
+                {
+                    "name": "Haarlock's Legacy I: Tattered Fates",
+                    "packs": [
+                        "dh1-tattered-actors-bestiary",
+                        "dh1-tattered-actors-npcs",
+                        "dh1-tattered-items-talents",
+                        "dh1-tattered-items-traits"
+                    ]
+                },
+                {
+                    "name": "Haarlock's Legacy II: Damned Cities",
+                    "packs": [
+                        "dh1-damned-actors-bestiary",
+                        "dh1-damned-actors-npcs"
+                    ]
+                },
+                {
+                    "name": "Haarlock's Legacy III: Dead Stars",
+                    "packs": [
+                        "dh1-deadstars-actors-bestiary",
+                        "dh1-deadstars-actors-npcs",
+                        "dh1-deadstars-items-talents",
+                        "dh1-deadstars-items-traits"
+                    ]
+                },
+                {
+                    "name": "Heed the Higher Call",
+                    "packs": [
+                        "dh1-heed-journals",
+                        "dh1-heed-origins-careers"
+                    ]
+                },
+                {
+                    "name": "Heresy Begets Retribution",
+                    "packs": [
+                        "dh1-heresy-items-armour",
+                        "dh1-heresy-items-talents",
+                        "dh1-heresy-items-traits",
+                        "dh1-heresy-items-weapons",
+                        "dh1-heresy-origins-careers",
+                        "dh1-heresy-origins-elite-advances"
+                    ]
+                },
+                {
+                    "name": "Inquisitor's Handbook",
+                    "packs": [
+                        "dh1-inquisitor-actors-bestiary",
+                        "dh1-inquisitor-items-ammo",
+                        "dh1-inquisitor-items-armor-mods",
+                        "dh1-inquisitor-items-armour",
+                        "dh1-inquisitor-items-force-fields",
+                        "dh1-inquisitor-items-gear",
+                        "dh1-inquisitor-items-talents",
+                        "dh1-inquisitor-items-traits",
+                        "dh1-inquisitor-items-weapon-mods",
+                        "dh1-inquisitor-items-weapons",
+                        "dh1-inquisitor-origins-backgrounds",
+                        "dh1-inquisitor-origins-homeworlds"
+                    ]
+                },
+                {
+                    "name": "Living Errata",
+                    "packs": [
+                        "dh1-errata-journals"
+                    ]
+                },
+                {
+                    "name": "Mementos",
+                    "packs": [
+                        "dh1-mementos-rolltables"
+                    ]
+                },
+                {
+                    "name": "Purge the Unclean",
+                    "packs": [
+                        "dh1-purge-actors-bestiary",
+                        "dh1-purge-actors-npcs",
+                        "dh1-purge-items-weapons"
                     ]
                 },
                 {
@@ -9883,6 +10105,13 @@
                         "dh1-salvation-items-traits",
                         "dh1-salvation-journals",
                         "dh1-salvation-origins-elite-advances"
+                    ]
+                },
+                {
+                    "name": "Shattered Hope",
+                    "packs": [
+                        "dh1-shattered-actors-bestiary",
+                        "dh1-shattered-actors-reinforcements"
                     ]
                 },
                 {
@@ -9914,171 +10143,26 @@
                     ]
                 },
                 {
-                    "name": "Book of Judgement",
+                    "name": "The Radical's Handbook",
                     "packs": [
-                        "dh1-judgement-actors-bestiary",
-                        "dh1-judgement-actors-npcs",
-                        "dh1-judgement-items-armour",
-                        "dh1-judgement-items-cybernetics",
-                        "dh1-judgement-items-gear",
-                        "dh1-judgement-items-talents",
-                        "dh1-judgement-items-traits",
-                        "dh1-judgement-items-weapons",
-                        "dh1-judgement-journals",
-                        "dh1-judgement-rolltables"
+                        "dh1-radical-actors-bestiary",
+                        "dh1-radical-items-ammo",
+                        "dh1-radical-items-armor-mods",
+                        "dh1-radical-items-armour",
+                        "dh1-radical-items-cybernetics",
+                        "dh1-radical-items-gear",
+                        "dh1-radical-items-psychic-powers",
+                        "dh1-radical-items-talents",
+                        "dh1-radical-items-traits",
+                        "dh1-radical-items-weapon-mods",
+                        "dh1-radical-items-weapons",
+                        "dh1-radical-journals",
+                        "dh1-radical-origins-elite-advances",
+                        "dh1-radical-rolltables"
                     ]
                 },
                 {
-                    "name": "Blood of Martyrs",
-                    "packs": [
-                        "dh1-martyrs-actors-bestiary",
-                        "dh1-martyrs-actors-npcs",
-                        "dh1-martyrs-items-armour",
-                        "dh1-martyrs-items-gear",
-                        "dh1-martyrs-items-relics",
-                        "dh1-martyrs-items-services",
-                        "dh1-martyrs-items-talents",
-                        "dh1-martyrs-items-weapons",
-                        "dh1-martyrs-journals",
-                        "dh1-martyrs-rolltables"
-                    ]
-                },
-                {
-                    "name": "Heresy Begets Retribution",
-                    "packs": [
-                        "dh1-heresy-items-armour",
-                        "dh1-heresy-items-talents",
-                        "dh1-heresy-items-traits",
-                        "dh1-heresy-items-weapons",
-                        "dh1-heresy-origins-careers",
-                        "dh1-heresy-origins-elite-advances"
-                    ]
-                },
-                {
-                    "name": "Heed the Higher Call",
-                    "packs": [
-                        "dh1-heed-journals",
-                        "dh1-heed-origins-careers"
-                    ]
-                },
-                {
-                    "name": "Daemon Hunter",
-                    "packs": [
-                        "dh1-daemonhunter-actors-bestiary",
-                        "dh1-daemonhunter-actors-npcs",
-                        "dh1-daemonhunter-items-ammo",
-                        "dh1-daemonhunter-items-armour",
-                        "dh1-daemonhunter-items-force-fields",
-                        "dh1-daemonhunter-items-gear",
-                        "dh1-daemonhunter-items-psychic-powers",
-                        "dh1-daemonhunter-items-talents",
-                        "dh1-daemonhunter-items-traits",
-                        "dh1-daemonhunter-items-weapons",
-                        "dh1-daemonhunter-journals",
-                        "dh1-daemonhunter-rolltables"
-                    ]
-                },
-                {
-                    "name": "Game Master's Kit",
-                    "packs": [
-                        "dh1-gmkit-actors-bestiary",
-                        "dh1-gmkit-items-consumables",
-                        "dh1-gmkit-journals",
-                        "dh1-gmkit-rolltables"
-                    ]
-                },
-                {
-                    "name": "Edge of Darkness",
-                    "packs": [
-                        "dh1-edge-actors-bestiary",
-                        "dh1-edge-actors-npcs"
-                    ]
-                },
-                {
-                    "name": "Purge the Unclean",
-                    "packs": [
-                        "dh1-purge-actors-bestiary",
-                        "dh1-purge-actors-npcs",
-                        "dh1-purge-items-weapons"
-                    ]
-                },
-                {
-                    "name": "Apostasy Gambit I: The Black Sepulchre",
-                    "packs": [
-                        "dh1-sepulchre-actors-bestiary",
-                        "dh1-sepulchre-actors-npcs",
-                        "dh1-sepulchre-items-talents",
-                        "dh1-sepulchre-items-weapons"
-                    ]
-                },
-                {
-                    "name": "Apostasy Gambit II: Church of the Damned",
-                    "packs": [
-                        "dh1-church-actors-bestiary",
-                        "dh1-church-actors-npcs",
-                        "dh1-church-items-gear"
-                    ]
-                },
-                {
-                    "name": "Apostasy Gambit III: The Chaos Commandment",
-                    "packs": [
-                        "dh1-commandment-actors-bestiary",
-                        "dh1-commandment-actors-npcs",
-                        "dh1-commandment-items-gear"
-                    ]
-                },
-                {
-                    "name": "Haarlock's Legacy I: Tattered Fates",
-                    "packs": [
-                        "dh1-tattered-actors-bestiary",
-                        "dh1-tattered-actors-npcs",
-                        "dh1-tattered-items-talents",
-                        "dh1-tattered-items-traits"
-                    ]
-                },
-                {
-                    "name": "Haarlock's Legacy II: Damned Cities",
-                    "packs": [
-                        "dh1-damned-actors-bestiary",
-                        "dh1-damned-actors-npcs"
-                    ]
-                },
-                {
-                    "name": "Haarlock's Legacy III: Dead Stars",
-                    "packs": [
-                        "dh1-deadstars-actors-bestiary",
-                        "dh1-deadstars-actors-npcs",
-                        "dh1-deadstars-items-talents",
-                        "dh1-deadstars-items-traits"
-                    ]
-                },
-                {
-                    "name": "Shattered Hope",
-                    "packs": [
-                        "dh1-shattered-actors-bestiary",
-                        "dh1-shattered-actors-reinforcements"
-                    ]
-                },
-                {
-                    "name": "Living Errata",
-                    "packs": [
-                        "dh1-errata-journals"
-                    ]
-                },
-                {
-                    "name": "Mementos",
-                    "packs": [
-                        "dh1-mementos-rolltables"
-                    ]
-                },
-                {
-                    "name": "Calixis Timeline",
-                    "packs": [
-                        "dh1-timeline-journals"
-                    ]
-                },
-                {
-                    "name": "Adventures",
+                    "name": "General",
                     "packs": [
                         "dh1-adventures"
                     ]
@@ -10106,11 +10190,11 @@
                         "dh2-core-actors-reinforcements",
                         "dh2-core-items-ammo",
                         "dh2-core-items-armour",
-                        "dh2-core-items-force-fields",
                         "dh2-core-items-conditions",
                         "dh2-core-items-consumables",
                         "dh2-core-items-critical-injuries",
                         "dh2-core-items-cybernetics",
+                        "dh2-core-items-force-fields",
                         "dh2-core-items-malignancies",
                         "dh2-core-items-mental-disorders",
                         "dh2-core-items-mutations",
@@ -10280,11 +10364,33 @@
                     ]
                 },
                 {
+                    "name": "Emperor",
+                    "packs": [
+                        "dw-emperor-actors-bestiary",
+                        "dw-emperor-actors-npcs"
+                    ]
+                },
+                {
+                    "name": "Falling",
+                    "packs": [
+                        "dw-falling-actors-bestiary",
+                        "dw-falling-actors-npcs"
+                    ]
+                },
+                {
                     "name": "First Founding",
                     "packs": [
+                        "dw-founding-actors-mounts",
+                        "dw-founding-actors-npcs",
                         "dw-founding-items-gear",
+                        "dw-founding-items-oaths",
+                        "dw-founding-items-psychic-powers",
+                        "dw-founding-items-talents",
                         "dw-founding-items-weapons",
-                        "dw-founding-origins-chapters"
+                        "dw-founding-journals",
+                        "dw-founding-origins-chapters",
+                        "dw-founding-origins-specialities",
+                        "dw-founding-rolltables"
                     ]
                 },
                 {
@@ -10303,7 +10409,9 @@
                         "dw-honour-items-gear",
                         "dw-honour-items-talents",
                         "dw-honour-items-weapons",
-                        "dw-honour-origins-chapters"
+                        "dw-honour-journals",
+                        "dw-honour-origins-chapters",
+                        "dw-honour-rolltables"
                     ]
                 },
                 {
@@ -10317,7 +10425,15 @@
                     "packs": [
                         "dw-xenos-actors-bestiary",
                         "dw-xenos-actors-npcs",
-                        "dw-xenos-items-weapons"
+                        "dw-xenos-items-weapons",
+                        "dw-xenos-journals"
+                    ]
+                },
+                {
+                    "name": "Oblivion",
+                    "packs": [
+                        "dw-oblivion-actors-bestiary",
+                        "dw-oblivion-actors-npcs"
                     ]
                 },
                 {
@@ -10330,11 +10446,25 @@
                 {
                     "name": "Rites of Battle",
                     "packs": [
+                        "dw-rites-actors-bestiary",
                         "dw-rites-items-ammo",
                         "dw-rites-items-armour",
                         "dw-rites-items-gear",
+                        "dw-rites-items-psychic-powers",
+                        "dw-rites-items-talents",
                         "dw-rites-items-weapons",
-                        "dw-rites-origins-chapters"
+                        "dw-rites-journals",
+                        "dw-rites-origins-chapters",
+                        "dw-rites-origins-specialities",
+                        "dw-rites-rolltables",
+                        "dw-rites-vehicles-aircraft",
+                        "dw-rites-vehicles-terracraft"
+                    ]
+                },
+                {
+                    "name": "Sanction",
+                    "packs": [
+                        "dw-sanction-actors-bestiary"
                     ]
                 },
                 {
@@ -10342,16 +10472,20 @@
                     "packs": [
                         "dw-achilus-actors-bestiary",
                         "dw-achilus-actors-npcs",
+                        "dw-achilus-items-weapons",
                         "dw-achilus-journals"
                     ]
                 },
                 {
                     "name": "The Emperor's Chosen",
                     "packs": [
+                        "dw-chosen-actors-bestiary",
+                        "dw-chosen-actors-npcs",
                         "dw-chosen-items-armour",
                         "dw-chosen-items-gear",
                         "dw-chosen-items-weapons",
-                        "dw-chosen-journals"
+                        "dw-chosen-journals",
+                        "dw-chosen-rolltables"
                     ]
                 },
                 {
@@ -10359,7 +10493,9 @@
                     "packs": [
                         "dw-jericho-actors-bestiary",
                         "dw-jericho-actors-npcs",
-                        "dw-jericho-journals"
+                        "dw-jericho-items-talents",
+                        "dw-jericho-journals",
+                        "dw-jericho-rolltables"
                     ]
                 },
                 {
@@ -10369,6 +10505,12 @@
                         "dw-outer-actors-npcs",
                         "dw-outer-journals",
                         "dw-outer-vehicles-aircraft"
+                    ]
+                },
+                {
+                    "name": "General",
+                    "packs": [
+                        "dw-adventures"
                     ]
                 }
             ]
@@ -10391,6 +10533,13 @@
                         "hb-dh2-items-psychic-powers",
                         "hb-dh2-items-talents",
                         "hb-dh2-items-weapons",
+                        "hb-dw-items-gear",
+                        "hb-dw-items-psychic-powers",
+                        "hb-dw-items-talents",
+                        "hb-dw-items-weapons",
+                        "hb-dw-journals",
+                        "hb-dw-origins-chapters",
+                        "hb-dw-rolltables",
                         "hb-generic-items-consumables",
                         "hb-generic-items-gear",
                         "hb-generic-items-tools",
@@ -10401,6 +10550,8 @@
                         "hb-items-backgrounds",
                         "hb-items-gear",
                         "hb-items-weapons",
+                        "hb-ow-items-ammo",
+                        "hb-ow-items-psychic-powers",
                         "hb-psychic-powers",
                         "hb-rt-actors-bestiary",
                         "hb-rt-actors-npcs",
@@ -10497,12 +10648,14 @@
                         "ow-core-items-traits",
                         "ow-core-items-weapon-qualities",
                         "ow-core-items-weapons",
+                        "ow-core-journals",
                         "ow-core-origins-commanding-officers",
                         "ow-core-origins-homeworlds",
                         "ow-core-origins-regiment-types",
                         "ow-core-origins-special-equipment-doctrines",
                         "ow-core-origins-specialities",
                         "ow-core-origins-training-doctrines",
+                        "ow-core-rolltables",
                         "ow-core-vehicles-terracraft"
                     ]
                 },
@@ -10510,7 +10663,8 @@
                     "name": "Eleventh Hour",
                     "packs": [
                         "ow-eleventh-actors-bestiary",
-                        "ow-eleventh-actors-npcs"
+                        "ow-eleventh-actors-npcs",
+                        "ow-eleventh-items-weapons"
                     ]
                 },
                 {
@@ -10531,6 +10685,7 @@
                         "ow-testament-actors-bestiary",
                         "ow-testament-actors-mounts",
                         "ow-testament-actors-npcs",
+                        "ow-testament-items-weapons",
                         "ow-testament-journals",
                         "ow-testament-vehicles-aircraft",
                         "ow-testament-vehicles-terracraft"
@@ -10574,9 +10729,10 @@
                 {
                     "name": "Shield of Humanity",
                     "packs": [
+                        "ow-shield-actors-bestiary",
                         "ow-shield-items-ammo",
                         "ow-shield-items-armour",
-                        "ow-shield-items-gear",
+                        "ow-shield-items-cybernetics",
                         "ow-shield-items-orders",
                         "ow-shield-items-talents",
                         "ow-shield-items-traits",
