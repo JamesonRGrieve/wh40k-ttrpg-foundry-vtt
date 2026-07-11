@@ -73,6 +73,27 @@ describe('migrateCharacteristics', () => {
         });
     });
 
+    it('remaps the Imperium Maledictum Str/Tgh/Wil abbreviations to the shared full-name keys', () => {
+        // IM (Cubicle 7) abbreviates Strength/Toughness/Willpower as Str/Tgh/Wil
+        // rather than the FFG S/T/WP; they must map to the same schema keys or
+        // IM statblock Strength/Toughness/Willpower silently default to 30.
+        const source: JsonObject = {
+            characteristics: { ws: 50, bs: 30, str: 30, tgh: 30, ag: 30, int: 30, per: 30, wil: 25, fel: 25 },
+        };
+        migrateCharacteristics(source);
+        expect(source['characteristics']).toEqual({
+            weaponSkill: { base: 50, total: 50, bonus: 5, advancement: false },
+            ballisticSkill: { base: 30, total: 30, bonus: 3, advancement: false },
+            strength: { base: 30, total: 30, bonus: 3, advancement: false },
+            toughness: { base: 30, total: 30, bonus: 3, advancement: false },
+            agility: { base: 30, total: 30, bonus: 3, advancement: false },
+            intelligence: { base: 30, total: 30, bonus: 3, advancement: false },
+            perception: { base: 30, total: 30, bonus: 3, advancement: false },
+            willpower: { base: 25, total: 25, bonus: 2, advancement: false },
+            fellowship: { base: 25, total: 25, bonus: 2, advancement: false },
+        });
+    });
+
     it('wraps a full-name scalar characteristic (no key remap needed)', () => {
         const source: JsonObject = { characteristics: { weaponSkill: '45' } };
         migrateCharacteristics(source);

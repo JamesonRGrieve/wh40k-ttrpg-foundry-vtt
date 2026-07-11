@@ -17,4 +17,10 @@ export const CHARACTERISTIC_SHORT_TO_FULL: Record<string, string> = {
     WP: 'willpower',
     Fel: 'fellowship',
     Inf: 'influence',
+    // Imperium Maledictum (Cubicle 7) abbreviates the same 9 characteristics
+    // differently (Str/Tgh/Wil vs the FFG S/T/WP); map them to the same full
+    // schema keys so IM statblock Strength/Toughness/Willpower are not dropped.
+    Str: 'strength',
+    Tgh: 'toughness',
+    Wil: 'willpower',
 };
