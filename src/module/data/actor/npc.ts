@@ -6,6 +6,7 @@ import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, comput
 import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
 import { computeMovement } from '../shared/movement-math.ts';
 import { skillCharacteristicMap } from '../shared/skill-definitions.ts';
+import { untrainedSkillBase } from '../shared/skill-math.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
@@ -698,8 +699,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             target += skill.bonus !== 0 ? skill.bonus : 0;
         } else {
             // Untrained: flat -20 in DH2e (Known/Trained/Experienced/Veteran ladder),
-            // half characteristic for career-based systems.
-            target = systemConfig?.usesAptitudes === true ? char.total - 20 : Math.floor(char.total / 2);
+            // half characteristic for career-based systems (#423).
+            target = untrainedSkillBase(char.total, systemConfig?.usesAptitudes === true);
         }
 
         // Apply custom override if enabled
