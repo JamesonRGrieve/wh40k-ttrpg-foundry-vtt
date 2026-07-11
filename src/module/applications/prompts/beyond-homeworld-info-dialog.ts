@@ -19,6 +19,7 @@
 
 import { listBeyondHomeworlds, type BeyondHomeworldDef } from '../../rules/beyond-homeworlds.ts';
 import { readHomeworldMechanics, type HomeworldMechanics } from '../../rules/homeworld-compendium.ts';
+import { capitalize } from '../../utils/format.ts';
 import { defineInfoCardDialog } from './define-info-card-dialog.ts';
 
 /** Fully-qualified compendium pack id holding the Beyond home-world `originPath` documents. */
@@ -50,11 +51,11 @@ interface BeyondHomeworldCardContext {
 }
 
 function formatBonuses(bonuses: readonly string[]): string {
-    return bonuses.map((b) => `+${b.charAt(0).toUpperCase()}${b.slice(1)}`).join(', ');
+    return bonuses.map((b) => `+${capitalize(b)}`).join(', ');
 }
 
 function formatPenalties(penalties: readonly string[]): string {
-    return penalties.map((p) => `-${p.charAt(0).toUpperCase()}${p.slice(1)}`).join(', ');
+    return penalties.map((p) => `-${capitalize(p)}`).join(', ');
 }
 
 /** Join a slimmed registry entry with its compendium-sourced mechanical basics. */

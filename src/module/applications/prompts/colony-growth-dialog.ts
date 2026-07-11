@@ -27,6 +27,7 @@ import {
     resolveColonyGrowth,
     tierForSize,
 } from '../../rules/rt-colony.ts';
+import { capitalize } from '../../utils/format.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
@@ -161,7 +162,7 @@ export default class ColonyGrowthDialog extends ApplicationV2Mixin(ApplicationV2
         return {
             ...baseCtx,
             characteristics: rows,
-            tierKey: `WH40K.RT.Colony.Tier.${tierForSize(this.colonyState.size).charAt(0).toUpperCase()}${tierForSize(this.colonyState.size).slice(1)}`,
+            tierKey: `WH40K.RT.Colony.Tier.${capitalize(tierForSize(this.colonyState.size))}`,
             growthModifier: this.growthModifier,
             agriculturalSoftener: this.agriculturalSoftener,
             ecclesiasticalOrderSwap: this.ecclesiasticalOrderSwap,
@@ -226,21 +227,18 @@ export default class ColonyGrowthDialog extends ApplicationV2Mixin(ApplicationV2
         }
 
         const templateData = {
-            outcomeKey: `WH40K.RT.Colony.Outcome.${result.outcome.charAt(0).toUpperCase()}${result.outcome.slice(1)}`,
+            outcomeKey: `WH40K.RT.Colony.Outcome.${capitalize(result.outcome)}`,
             growthRoll: result.growthRoll,
             growthTotal: result.growthTotal,
             modifier: result.modifier,
             stateBefore: this.colonyState,
             stateAfter: result.nextState,
             deltas: result.deltas,
-            decreasedStatKey:
-                result.decreasedStat === null
-                    ? null
-                    : `WH40K.RT.Colony.Characteristic.${result.decreasedStat.charAt(0).toUpperCase()}${result.decreasedStat.slice(1)}`,
+            decreasedStatKey: result.decreasedStat === null ? null : `WH40K.RT.Colony.Characteristic.${capitalize(result.decreasedStat)}`,
             softenerRoll: result.softenerRoll,
-            activeEffectKeys: result.activeEffects.map((id) => `WH40K.RT.Colony.Effect.${id.charAt(0).toUpperCase()}${id.slice(1)}`),
-            tierBeforeKey: `WH40K.RT.Colony.Tier.${tierForSize(this.colonyState.size).charAt(0).toUpperCase()}${tierForSize(this.colonyState.size).slice(1)}`,
-            tierAfterKey: `WH40K.RT.Colony.Tier.${tierForSize(result.nextState.size).charAt(0).toUpperCase()}${tierForSize(result.nextState.size).slice(1)}`,
+            activeEffectKeys: result.activeEffects.map((id) => `WH40K.RT.Colony.Effect.${capitalize(id)}`),
+            tierBeforeKey: `WH40K.RT.Colony.Tier.${capitalize(tierForSize(this.colonyState.size))}`,
+            tierAfterKey: `WH40K.RT.Colony.Tier.${capitalize(tierForSize(result.nextState.size))}`,
             gameSystem: 'rt',
         };
 

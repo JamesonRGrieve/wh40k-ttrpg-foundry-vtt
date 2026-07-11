@@ -10,7 +10,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
 import { ItemDropManager } from '../../managers/item-drop-manager.ts';
 import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KWounds, WH40KInitiative, WH40KMovement } from '../../types/global.d.ts';
-import { formatSigned } from '../../utils/format.ts';
+import { capitalize, formatSigned } from '../../utils/format.ts';
 import { sortByDisplayName } from '../../utils/talent-trait-sort.ts';
 import { openInteriorScene, vehicleInteriorHeaderControls, type SceneLookup } from '../../vehicle/vehicle-interior.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
@@ -2164,7 +2164,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const itemType = target.dataset['type'] ?? 'gear';
         // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments expects opaque Record shape; typed via Parameters cast below.
         const data: Record<string, unknown> = {
-            name: `New ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`,
+            name: `New ${capitalize(itemType)}`,
             type: itemType,
         };
 

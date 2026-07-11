@@ -108,7 +108,7 @@ import {
 import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
 import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
 import { errorMessage } from '../../utils/error-message.ts';
-import { formatSigned } from '../../utils/format.ts';
+import { capitalize, formatSigned } from '../../utils/format.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
 import { uuidNameCache } from '../../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
@@ -1762,7 +1762,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const sys = this.actor.system;
         const mode = sys.combatMode;
         const renownRank = getRenownRank(sys.renown);
-        const renownRankKey = renownRank.charAt(0).toUpperCase() + renownRank.slice(1);
+        const renownRankKey = capitalize(renownRank);
         const supportRange = getSupportRange(renownRank);
         const sustainedAbilities = sys.sustainedAbilities.map((id) => ({ id, label: id }));
         return {
@@ -1789,9 +1789,9 @@ export default class CharacterSheet extends BaseActorSheet {
         const nextRank: RenownRank | null = RENOWN_RANK_ORDER[rankIdx + 1] ?? null;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser narrows nextRank to RenownRank by missing the union; strict tsconfig retains the | null branch
         const nextRankMin = nextRank != null ? RENOWN_THRESHOLDS[nextRank].min : null;
-        const rankLabel = game.i18n.localize(`WH40K.DW.Renown.Rank.${rank.charAt(0).toUpperCase()}${rank.slice(1)}`);
+        const rankLabel = game.i18n.localize(`WH40K.DW.Renown.Rank.${capitalize(rank)}`);
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser narrows nextRank to RenownRank by missing the union; strict tsconfig retains the | null branch
-        const nextRankLabel = nextRank != null ? game.i18n.localize(`WH40K.DW.Renown.Rank.${nextRank.charAt(0).toUpperCase()}${nextRank.slice(1)}`) : null;
+        const nextRankLabel = nextRank != null ? game.i18n.localize(`WH40K.DW.Renown.Rank.${capitalize(nextRank)}`) : null;
         const progressPercent =
             nextRankMin === null ? 100 : Math.max(0, Math.min(100, Math.round(((value - rankRange.min) / (nextRankMin - rankRange.min)) * 100)));
         return {
@@ -2184,7 +2184,7 @@ export default class CharacterSheet extends BaseActorSheet {
             actionId: a.id,
             timing: a.timing,
             nameKey: `WH40K.OW.VehicleMovement.Action.${titleCase(a.id)}`,
-            timingKey: `WH40K.OW.VehicleMovement.Timing.${a.timing.charAt(0).toUpperCase()}${a.timing.slice(1)}`,
+            timingKey: `WH40K.OW.VehicleMovement.Timing.${capitalize(a.timing)}`,
             descriptionKey: `WH40K.OW.VehicleMovement.Description.${titleCase(a.id)}`,
         }));
         return {
@@ -2355,7 +2355,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (stepConfig.optionalStep) allSteps.push(stepConfig.optionalStep);
 
         const steps = allSteps.map((step) => {
-            const labelKey = `WH40K.OriginPath.${step.key.charAt(0).toUpperCase()}${step.key.slice(1)}`;
+            const labelKey = `WH40K.OriginPath.${capitalize(step.key)}`;
             const label = game.i18n.localize(labelKey);
             return {
                 key: step.key,
@@ -3548,7 +3548,7 @@ export default class CharacterSheet extends BaseActorSheet {
             if (disc !== undefined && disc !== '' && !disciplines.has(disc)) {
                 disciplines.set(disc, {
                     id: disc,
-                    label: sys.disciplineLabel !== undefined && sys.disciplineLabel !== '' ? sys.disciplineLabel : disc.charAt(0).toUpperCase() + disc.slice(1),
+                    label: sys.disciplineLabel !== undefined && sys.disciplineLabel !== '' ? sys.disciplineLabel : capitalize(disc),
                 });
             }
         }
@@ -3562,7 +3562,7 @@ export default class CharacterSheet extends BaseActorSheet {
             if (cat !== undefined && cat !== '' && !categories.has(cat)) {
                 categories.set(cat, {
                     id: cat,
-                    label: sys.categoryLabel !== undefined && sys.categoryLabel !== '' ? sys.categoryLabel : cat.charAt(0).toUpperCase() + cat.slice(1),
+                    label: sys.categoryLabel !== undefined && sys.categoryLabel !== '' ? sys.categoryLabel : capitalize(cat),
                 });
             }
         }
@@ -5576,7 +5576,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /** Capitalize a ChaosAlignment string for use in the langpack key suffix. */
     #capitalizeAlignment(alignment: ChaosAlignment): string {
-        return alignment.charAt(0).toUpperCase() + alignment.slice(1);
+        return capitalize(alignment);
     }
 
     /**

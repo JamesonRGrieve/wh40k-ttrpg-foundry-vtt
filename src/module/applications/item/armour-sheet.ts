@@ -4,6 +4,7 @@
 
 import type ArmourData from '../../data/item/armour.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import { capitalize } from '../../utils/format.ts';
 import SetFieldActionsMixin from '../api/set-field-actions-mixin.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
 
@@ -113,7 +114,7 @@ export default class ArmourSheet extends SetFieldActionsMixin(ContainerItemSheet
 
             const pascalCase = id
                 .split('-')
-                .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+                .map((s) => capitalize(s))
                 .join('');
             props[id] = {
                 label: game.i18n.localize(`WH40K.ArmourProperty.${pascalCase}`),

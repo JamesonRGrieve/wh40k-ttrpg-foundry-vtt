@@ -5,6 +5,7 @@
 
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import { capitalize } from '../../utils/format.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
@@ -253,7 +254,7 @@ export default class ContainerItemSheet<TItem extends WH40KItemDocument = WH40KI
     static async #nestedItemCreate(this: ContainerItemSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemType = target.dataset['type'] ?? 'gear';
         const data = {
-            name: `New ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`,
+            name: `New ${capitalize(itemType)}`,
             type: itemType,
         };
         await this.item.createNestedDocuments([data]);

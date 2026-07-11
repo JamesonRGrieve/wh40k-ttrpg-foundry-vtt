@@ -13,6 +13,7 @@
 
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { type DisorderDef, type DisorderSeverity, rollDisorder } from '../../rules/disorders-table.ts';
+import { capitalize } from '../../utils/format.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
@@ -108,7 +109,7 @@ export default class DisorderRollDialog extends ApplicationV2Mixin(ApplicationV2
 
         const templateData = {
             severity: this.severity,
-            severityKey: `WH40K.DisorderRoll.${this.severity.charAt(0).toUpperCase()}${this.severity.slice(1)}`,
+            severityKey: `WH40K.DisorderRoll.${capitalize(this.severity)}`,
             disorderName: disorder.name,
             disorderKey: disorder.key,
             effect: disorder.effect,

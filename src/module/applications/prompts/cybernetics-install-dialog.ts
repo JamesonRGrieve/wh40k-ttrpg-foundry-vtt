@@ -23,6 +23,7 @@
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { type CyberneticCraftsmanship, type CyberneticInstallSite, composeInstallTest, resolveInstall, rollRecoveryTime } from '../../rules/cybernetics.ts';
 import { rollDifficulties } from '../../rules/difficulties.ts';
+import { capitalize } from '../../utils/format.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
@@ -213,8 +214,8 @@ export default class CyberneticsInstallDialog extends ApplicationV2Mixin(Applica
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's `game` global is not typed on globalThis
         const g = globalThis as unknown as { game?: AnyGame };
         const localize = g.game?.i18n?.localize?.bind(g.game.i18n);
-        const craftLabel = localize?.(`WH40K.Craftsmanship.${this.craftsmanship.charAt(0).toUpperCase()}${this.craftsmanship.slice(1)}`) ?? this.craftsmanship;
-        const siteLabel = localize?.(`WH40K.Cybernetics.Site${this.site.charAt(0).toUpperCase()}${this.site.slice(1)}`) ?? this.site;
+        const craftLabel = localize?.(`WH40K.Craftsmanship.${capitalize(this.craftsmanship)}`) ?? this.craftsmanship;
+        const siteLabel = localize?.(`WH40K.Cybernetics.Site${capitalize(this.site)}`) ?? this.site;
 
         const templateData = {
             deviceName: this.deviceName,

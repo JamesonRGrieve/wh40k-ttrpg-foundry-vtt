@@ -14,6 +14,7 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { psychicPowerCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
+import { capitalize } from '../../utils/format.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { canAfford, getAvailableXP, spendXP } from '../../utils/xp-transaction.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
@@ -1032,7 +1033,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 name: entry.name,
                 displayName: entry.name,
                 discipline,
-                disciplineLabel: discipline.charAt(0).toUpperCase() + discipline.slice(1),
+                disciplineLabel: capitalize(discipline),
                 prCost,
                 cost,
                 owned,

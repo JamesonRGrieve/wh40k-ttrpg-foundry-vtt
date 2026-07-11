@@ -4,6 +4,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { capitalize } from '../../utils/format.ts';
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -424,7 +425,7 @@ export default class EffectCreationDialog extends DialogV2 {
         const charLabel =
             (CONFIG as unknown as { WH40K?: { characteristics?: Record<string, { label?: string }> } }).WH40K?.characteristics?.[characteristic]?.label ??
             /* eslint-enable no-restricted-syntax */
-            characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
+            capitalize(characteristic);
 
         return this._buildEffectData({
             label: charLabel,
@@ -447,7 +448,7 @@ export default class EffectCreationDialog extends DialogV2 {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- skill is string|undefined from EffectCreationData; falsy check covers both undefined and ''
         if (!skill || value === 0) return null;
 
-        const skillLabel = skill.charAt(0).toUpperCase() + skill.slice(1);
+        const skillLabel = capitalize(skill);
 
         return this._buildEffectData({
             label: skillLabel,
@@ -470,7 +471,7 @@ export default class EffectCreationDialog extends DialogV2 {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- combatType is string|undefined from EffectCreationData; falsy check covers both undefined and ''
         if (!combatType || value === 0) return null;
 
-        const typeLabel = combatType.charAt(0).toUpperCase() + combatType.slice(1);
+        const typeLabel = capitalize(combatType);
 
         return this._buildEffectData({
             label: typeLabel,
