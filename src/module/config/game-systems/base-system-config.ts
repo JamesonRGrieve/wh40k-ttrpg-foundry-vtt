@@ -125,6 +125,19 @@ export abstract class BaseSystemConfig {
         return false;
     }
 
+    /**
+     * Whether the actor owns an origin-path item at `step` whose name matches
+     * `name` case-insensitively. Centralizes the psyker-unlock predicate the
+     * aptitude systems share (DH2 'Psyker' elite, OW 'Sanctioned Psyker'
+     * speciality, BC 'Psyker' archetype) — each supplies its own step + name.
+     * The single `system.step` narrowing lives here rather than at every
+     * `isPsyker` call site.
+     */
+    protected ownsOriginPathItem(actor: WH40KBaseActor, step: string, name: string): boolean {
+        const target = name.toLowerCase();
+        return actor.items.some((i) => i.isOriginPath && (i.system as { step?: string }).step === step && i.name.toLowerCase() === target);
+    }
+
     // ── Skill Visibility ─────────────────────────────────────────
 
     /**

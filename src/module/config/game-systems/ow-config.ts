@@ -58,7 +58,7 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      * Compendium item: ow-core-specialities/sanctioned-psyker.
      */
     override isPsyker(actor: WH40KBaseActor): boolean {
-        return actor.items.some((i) => i.isOriginPath && (i.system as { step?: string }).step === 'speciality' && i.name.toLowerCase() === 'sanctioned psyker');
+        return this.ownsOriginPathItem(actor, 'speciality', 'sanctioned psyker');
     }
 
     // Characteristic + skill aptitude tables are inherited from AptitudeBasedSystemConfig (#298) — OW shares the DH2e values.

@@ -106,6 +106,38 @@ describe('DH2eSystemConfig advance cost matrix (#126)', () => {
     // it — otherwise advances that list General (most basic skills/talents) are
     // mispriced as 0-match. Lives on the shared AptitudeBasedSystemConfig, so the
     // DH2 config exercises the behaviour BC/DW/OW/IM inherit.
+    // isPsyker delegates to the shared BaseSystemConfig.ownsOriginPathItem helper
+    // (#424): DH2's unlock is the 'Psyker' elite advance. Exercises the DH2 branch
+    // of the de-duplicated predicate — step match + case-insensitive name match.
+    describe('isPsyker() — shared origin-path predicate', () => {
+        const actorWithItem = (step: string, name: string): ReturnType<typeof asBaseActor> =>
+            asBaseActor({ items: [{ isOriginPath: true, system: { step }, name }] });
+
+        it('detects the Psyker elite advance', () => {
+            expect(cfg.isPsyker(actorWithItem('elite', 'Psyker'))).toBe(true);
+        });
+
+        it('is case-insensitive on the item name', () => {
+            expect(cfg.isPsyker(actorWithItem('elite', 'psyker'))).toBe(true);
+        });
+
+        it('rejects a Psyker-named item on the wrong step', () => {
+            expect(cfg.isPsyker(actorWithItem('role', 'Psyker'))).toBe(false);
+        });
+
+        it('rejects a non-Psyker elite advance', () => {
+            expect(cfg.isPsyker(actorWithItem('elite', 'Chirurgeon'))).toBe(false);
+        });
+
+        it('ignores non-origin-path items with a matching name', () => {
+            expect(cfg.isPsyker(asBaseActor({ items: [{ isOriginPath: false, system: { step: 'elite' }, name: 'Psyker' }] }))).toBe(false);
+        });
+
+        it('returns false with no items', () => {
+            expect(cfg.isPsyker(asBaseActor({ items: [] }))).toBe(false);
+        });
+    });
+
     describe('getCharacterAptitudes() — universal General aptitude', () => {
         const actorWith = (aptitudes: string[] | undefined): ReturnType<typeof asBaseActor> => asBaseActor({ system: { aptitudes } });
 

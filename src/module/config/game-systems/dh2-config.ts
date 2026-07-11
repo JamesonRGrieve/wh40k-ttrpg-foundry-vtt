@@ -85,7 +85,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
      * Compendium item: dh2-core-origins-elite-advances/psyker.
      */
     override isPsyker(actor: WH40KBaseActor): boolean {
-        return actor.items.some((i) => i.isOriginPath && (i.system as { step?: string }).step === 'elite' && i.name.toLowerCase() === 'psyker');
+        return this.ownsOriginPathItem(actor, 'elite', 'psyker');
     }
 
     getHeaderFields(_actor: WH40KBaseActor): SidebarHeaderField[] {
