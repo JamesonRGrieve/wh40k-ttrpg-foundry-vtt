@@ -39,6 +39,7 @@ import {
 } from './applications/actor/game-system-sheets.ts';
 import LootActorSheet from './applications/actor/loot-sheet.ts';
 import * as characterCreation from './applications/character-creation/_module.ts';
+import { CogitatorTerminal, type CogitatorTerminalOptions } from './applications/cogitator/cogitator-terminal.ts';
 import { registerCombatTrackerEconomy } from './applications/combat/combat-tracker-economy.ts';
 import { RTCompendiumBrowser } from './applications/compendium-browser.ts';
 import { TooltipsWH40K } from './applications/components/_module.ts';
@@ -433,6 +434,8 @@ export class HooksManager {
             showRollTableDialog: async () => Promise.resolve(RollTableUtils.showRollTableDialog()),
             // Compendium browser
             openCompendiumBrowser: async (options: Record<string, unknown> = {}) => Promise.resolve(RTCompendiumBrowser.open(options)),
+            // Cogitator terminal — browse a curated set of record Items as cross-linked, permission-gated pages
+            openCogitator: async (options: CogitatorTerminalOptions = {}) => Promise.resolve(CogitatorTerminal.open(options)),
             // Character creation
             OriginPathBuilder: characterCreation.OriginPathBuilder,
             openOriginPathBuilder: async (actor: WH40KBaseActor, options: Record<string, unknown> = {}) =>

@@ -77,6 +77,17 @@
         }
     },
     "WH40K": {
+        "Cogitator": {
+            "Title": "Cogitator Terminal",
+            "Boot": "++ Cogitator Online ++",
+            "Index": "Records",
+            "Restricted": "▓ RESTRICTED ▓",
+            "RestrictedTip": "Access denied — insufficient authorisation.",
+            "Redacted": "++ Record sealed — access denied ++",
+            "NoRecords": "No records on file.",
+            "SelectPrompt": "Select a record to view.",
+            "Footer": "++ By order of the Holy Ordos — unauthorised access is heresy ++"
+        },
         "Warning": {
             "InvalidCharacteristic": "Invalid characteristic.",
             "SkillNotSpecified": "Skill not specified.",

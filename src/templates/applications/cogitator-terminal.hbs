@@ -1,0 +1,65 @@
+{{!--
+  Cogitator Terminal body. Rendered by CogitatorTerminal (ApplicationV2). The app
+  root carries `wh40k-rpg` (so tw-* utilities resolve) and `data-wh40k-system`
+  (so `<id>:tw-*` accent variants fire). Content-agnostic: `index` / `bodyHtml`
+  come from the curated record set. See docs/cogitator-terminal.md.
+--}}
+<div class="wh40k-cog tw-flex tw-flex-col tw-h-full tw-bg-[#0a0f0a] tw-text-[#8fdc7a] tw-font-mono tw-text-sm">
+
+    {{!-- Boot / title bar --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[#1e3b1e] tw-uppercase tw-tracking-widest tw-text-xs">
+        <span class="tw-text-[#4e7a4e]">{{localize "WH40K.Cogitator.Boot"}}</span>
+        <span class="wh40k-cog-title tw-font-bold tw-text-[#c6ffb0] dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold bc:tw-text-crimson-light im:tw-text-failure tw-truncate">{{terminalTitle}}</span>
+    </header>
+
+    <div class="tw-flex tw-flex-1 tw-min-h-0">
+
+        {{!-- Record index (left rail) --}}
+        <nav class="wh40k-cog-index tw-w-56 tw-shrink-0 tw-overflow-y-auto tw-border-r tw-border-[#1e3b1e] tw-p-2">
+            <div class="tw-text-xs tw-uppercase tw-tracking-widest tw-text-[#4e7a4e] tw-mb-2">{{localize "WH40K.Cogitator.Index"}}</div>
+            {{#if hasRecords}}
+            <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-0.5">
+                {{#each index}}
+                <li>
+                    {{#if this.accessible}}
+                    <button type="button" data-action="selectRecord" data-uuid="{{this.uuid}}"
+                        class="tw-block tw-w-full tw-text-left tw-px-2 tw-py-1 tw-bg-transparent tw-border-0 tw-cursor-pointer tw-truncate hover:tw-bg-[#123312]/25 hover:tw-text-[#c6ffb0] {{#if this.active}}tw-bg-[#124412]/30 tw-text-[#e6ffd9]{{else}}tw-text-[#8fdc7a]{{/if}}">
+                        <span aria-hidden="true">&gt;</span> {{this.label}}
+                    </button>
+                    {{else}}
+                    <span class="tw-block tw-px-2 tw-py-1 tw-italic tw-text-[#5a6b5a] tw-cursor-not-allowed tw-truncate" title="{{localize "WH40K.Cogitator.RestrictedTip"}}">
+                        <span aria-hidden="true">▓</span> {{this.label}}
+                    </span>
+                    {{/if}}
+                </li>
+                {{/each}}
+            </ul>
+            {{else}}
+            <p class="tw-text-[#5a6b5a] tw-italic">{{localize "WH40K.Cogitator.NoRecords"}}</p>
+            {{/if}}
+        </nav>
+
+        {{!-- Record body (right pane) --}}
+        <section class="wh40k-cog-body tw-flex-1 tw-overflow-y-auto tw-p-4">
+            {{#if activeName}}
+            <h2 class="tw-text-lg tw-uppercase tw-tracking-wide tw-text-[#c6ffb0] tw-border-b tw-border-[#1e3b1e] tw-pb-1 tw-mb-3">{{activeName}}</h2>
+                {{#if restricted}}
+                <div class="tw-border tw-border-[#5a2a2a] tw-bg-[#2a1010]/25 tw-text-[#d98a8a] tw-p-4 tw-uppercase tw-tracking-widest tw-text-center">
+                    {{localize "WH40K.Cogitator.Redacted"}}
+                </div>
+                {{else}}
+                <div class="wh40k-cog-content tw-leading-relaxed">{{{bodyHtml}}}</div>
+                {{/if}}
+            {{else}}
+            <div class="tw-h-full tw-flex tw-items-center tw-justify-center tw-text-[#4e7a4e] tw-uppercase tw-tracking-widest tw-text-center">
+                {{localize "WH40K.Cogitator.SelectPrompt"}}
+            </div>
+            {{/if}}
+        </section>
+    </div>
+
+    {{!-- Status line --}}
+    <footer class="tw-px-3 tw-py-1 tw-border-t tw-border-[#1e3b1e] tw-text-xs tw-text-[#4e7a4e] tw-uppercase tw-tracking-widest">
+        {{localize "WH40K.Cogitator.Footer"}}
+    </footer>
+</div>

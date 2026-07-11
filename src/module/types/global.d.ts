@@ -10,6 +10,7 @@
  */
 
 import type * as characterCreation from '../applications/character-creation/_module.ts';
+import type { CogitatorTerminal, CogitatorTerminalOptions } from '../applications/cogitator/cogitator-terminal.ts';
 import type { RTCompendiumBrowser } from '../applications/compendium-browser.ts';
 import type * as npcApplications from '../applications/npc/_module.ts';
 import type { WH40KSystemConfig } from '../config.ts';
@@ -382,6 +383,7 @@ export interface WH40KGameSystem {
     showRollTableDialog: () => Promise<unknown>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 render-options bag (`game.wh40k.openCompendiumBrowser`)
     openCompendiumBrowser: (options?: Record<string, unknown>) => Promise<RTCompendiumBrowser>;
+    openCogitator: (options?: CogitatorTerminalOptions) => Promise<CogitatorTerminal>;
     OriginPathBuilder: typeof characterCreation.OriginPathBuilder;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 render-options bag + heterogeneous result (`game.wh40k.openOriginPathBuilder`)
     openOriginPathBuilder: (actor: WH40KBaseActor, options?: Record<string, unknown>) => Promise<unknown>;
