@@ -190,6 +190,7 @@ type CharacterSheetContextDeclaredFields = {
     isBC?: boolean;
     isOW?: boolean;
     isDW?: boolean;
+    isIM?: boolean;
     isHomebrew?: boolean;
     isRaw?: boolean;
     alignmentPanel?: BcAlignmentPanelContext;
@@ -1191,12 +1192,14 @@ export default class CharacterSheet extends BaseActorSheet {
         const isBC = activeGameSystem === 'bc';
         const isOW = activeGameSystem === 'ow';
         const isDW = activeGameSystem === 'dw';
+        const isIM = activeGameSystem === 'im';
         const ruleset = WH40KSettings.getRuleset();
         context.ruleset = ruleset;
         context.isDH2 = isDH2;
         context.isBC = isBC;
         context.isOW = isOW;
         context.isDW = isDW;
+        context.isIM = isIM;
 
         // Per-system overview panels — table-driven (#282). Each system's entries
         // (see PANEL_BUILDERS above) are written into the context under their exact

@@ -120,6 +120,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/pinning-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/possession-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/npc-interactions-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/im-statblock-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/experience-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/movement-panel-full.hbs',
             'systems/wh40k-rpg/templates/actor/panel/movement-panel-compact.hbs',

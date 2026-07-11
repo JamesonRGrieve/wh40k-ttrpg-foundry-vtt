@@ -1,0 +1,60 @@
+{{!-- IM statblock panel — surfaces the Imperium Maledictum-native NPC fields that
+      the shared FFG NPC body does not render: Resolve, Critical Wounds, the
+      Encounter rating (familiars), Speed/Species, the flat skill-target map, and
+      the inline Traits, Attacks, and Possessions. Included from tab-npc.hbs when
+      the active game system is IM (`isIM`). Read-only display; the values are
+      authored on the actor / imported from a statblock. --}}
+<div class="wh40k-panel">
+  <div class="wh40k-panel-header">
+    <i class="fa-solid fa-skull"></i>
+    <span class="im:tw-text-failure">Imperium Maledictum Statblock</span>
+    {{#if system.species}}<span class="tw-ml-auto tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)] tw-italic">{{system.species}}</span>{{/if}}
+  </div>
+  <div class="wh40k-panel-body">
+
+    {{!-- Resolve / Critical Wounds / Speed / Encounter --}}
+    <div class="tw-flex tw-flex-wrap tw-gap-4 tw-mb-3 tw-text-[0.8rem]">
+      <span><b class="tw-uppercase tw-text-[0.6rem] tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Resolve</b> {{system.resolve.value}}/{{system.resolve.max}}</span>
+      <span><b class="tw-uppercase tw-text-[0.6rem] tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Critical Wounds</b> {{system.criticalWounds.value}}/{{system.criticalWounds.max}}</span>
+      {{#if system.speed}}<span><b class="tw-uppercase tw-text-[0.6rem] tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Speed</b> {{system.speed}}</span>{{/if}}
+      {{#if system.encounter}}<span><b class="tw-uppercase tw-text-[0.6rem] tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Encounter</b> {{system.encounter}}</span>{{/if}}
+    </div>
+
+    {{!-- Skills (flat targets) — @first/@last bracket the wrapper so nothing renders when empty. --}}
+    {{#each system.skills as |target key|}}
+    {{#if @first}}<div class="tw-mb-3"><div class="tw-uppercase tw-text-[0.6rem] tw-font-bold tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-mb-1">Skills</div><div class="tw-flex tw-flex-wrap tw-gap-x-3 tw-gap-y-0.5 tw-text-[0.8rem]">{{/if}}
+    <span><span class="tw-text-[color:var(--wh40k-text-primary)]">{{key}}</span> {{target}}</span>
+    {{#if @last}}</div></div>{{/if}}
+    {{/each}}
+
+    {{!-- Attacks --}}
+    {{#if system.attacks.length}}
+    <div class="tw-mb-3">
+      <div class="tw-uppercase tw-text-[0.6rem] tw-font-bold tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-mb-1">Attacks</div>
+      <div class="tw-grid tw-grid-cols-[1fr_auto_auto] tw-gap-x-4 tw-gap-y-1 tw-text-[0.8rem] tw-items-baseline">
+        {{#each system.attacks as |atk|}}
+        <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{atk.name}}</span>
+        <span>{{atk.skill}}</span>
+        <span>{{atk.damage}}{{#if atk.range}} · {{atk.range}}{{/if}}{{#if atk.traits}} <span class="tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)]">({{atk.traits}})</span>{{/if}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Traits --}}
+    {{#if system.traits.length}}
+    <div class="tw-mb-3">
+      <div class="tw-uppercase tw-text-[0.6rem] tw-font-bold tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-mb-1">Traits</div>
+      {{#each system.traits as |trait|}}
+      <div class="tw-text-[0.8rem] tw-mb-1"><b class="tw-text-[color:var(--wh40k-text-primary)]">{{trait.name}}:</b> {{{trait.description}}}</div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{!-- Possessions --}}
+    {{#if system.possessions}}
+    <div class="tw-text-[0.8rem]"><b class="tw-uppercase tw-text-[0.6rem] tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Possessions</b> {{system.possessions}}</div>
+    {{/if}}
+
+  </div>
+</div>

@@ -44,6 +44,11 @@
     </div>
     {{/if}}
 
+    {{!-- ═══ IM STATBLOCK (#im) — resolve / crit wounds / encounter / skills / attacks / traits / possessions ═══ --}}
+    {{#if isIM}}
+    {{> systems/wh40k-rpg/templates/actor/panel/im-statblock-panel.hbs}}
+    {{/if}}
+
     {{!-- ═══ HORDE ═══ --}}
     <div class="wh40k-panel">
       <div class="wh40k-panel-header">
