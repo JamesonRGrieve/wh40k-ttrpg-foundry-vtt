@@ -5,26 +5,16 @@
     <div class="tw-flex tw-flex-col tw-gap-4">
 
         {{!-- Crew Stats --}}
-        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
-            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
-                <i class="fas fa-users tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
-                {{localize "WH40K.Vehicle.CrewInformation"}}
-            </h3>
+        {{#> systems/wh40k-rpg/templates/actor/partial/craft-section.hbs icon="fa-users" titleKey="WH40K.Vehicle.CrewInformation"}}
             <div class="tw-grid tw-grid-cols-[repeat(auto-fit,minmax(200px,1fr))] tw-gap-4">
-                <div class="tw-flex tw-flex-col tw-gap-1">
-                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.CrewRequired"}}</label>
-                    <input type="number" name="system.crew.required" value="{{crew.required}}" min="0" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
-                </div>
-                <div class="tw-flex tw-flex-col tw-gap-1">
-                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.Passengers"}}</label>
-                    <input type="number" name="system.passengers" value="{{craftStats.passengers}}" min="0" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
-                </div>
+                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.CrewRequired" name="system.crew.required" value=crew.required min="0"}}
+                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.Passengers" name="system.passengers" value=craftStats.passengers min="0"}}
                 <div class="tw-flex tw-flex-col tw-gap-1 tw-col-span-2">
                     <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.CrewNotes"}}</label>
                     <textarea name="system.crew.notes" rows="3" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]">{{crew.notes}}</textarea>
                 </div>
             </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/actor/partial/craft-section.hbs}}
 
     </div>
 </section>

@@ -1,0 +1,27 @@
+{{!--
+    Craft field — a dark labelled input, the labelled-value cell repeated across
+    the craft-sheet tabs (terracraft / aircraft / watercraft). One uppercase-muted
+    label above a translucent-black bordered input, wrapped in a flex column.
+
+    The input `name` is bound directly to the DataModel schema path — callers pass
+    it verbatim; do NOT reshape it.
+
+    Usage:
+        {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs
+            labelKey="WH40K.Vehicle.SpeedCruising"
+            name="system.speed.cruising"
+            value=craftStats.speed.cruising
+            min="0"}}
+
+    Hash arguments:
+        labelKey — i18n key for the field label (required).
+        name     — DataModel schema path for the input's name= binding (required).
+        value    — current field value (required).
+        type     — input type; defaults to "number".
+        min      — optional `min` attribute.
+        max      — optional `max` attribute.
+--}}
+<div class="tw-flex tw-flex-col tw-gap-1">
+    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize labelKey}}</label>
+    <input type="{{#if type}}{{type}}{{else}}number{{/if}}" name="{{name}}" value="{{value}}"{{#if min}} min="{{min}}"{{/if}}{{#if max}} max="{{max}}"{{/if}} class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
+</div>
