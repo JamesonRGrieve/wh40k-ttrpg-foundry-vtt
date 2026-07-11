@@ -4,36 +4,14 @@
     <div class="tw-flex tw-flex-col tw-gap-4">
 
         {{!-- Craft Stats Grid --}}
-        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
-            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
-                <i class="fas fa-tachometer-alt tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
-                {{localize "WH40K.Vehicle.Statistics"}}
-            </h3>
+        {{#> systems/wh40k-rpg/templates/actor/partial/craft-section.hbs icon="fa-tachometer-alt" titleKey="WH40K.Vehicle.Statistics"}}
             <div class="tw-grid tw-grid-cols-[repeat(auto-fit,minmax(150px,1fr))] tw-gap-4">
-                <div class="tw-flex tw-flex-col tw-gap-1">
-                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.SpeedCruising"}}</label>
-                    <input type="number" name="system.speed.cruising" value="{{craftStats.speed.cruising}}" min="0" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
-                </div>
-                <div class="tw-flex tw-flex-col tw-gap-1">
-                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.SpeedTactical"}}</label>
-                    <input type="number" name="system.speed.tactical" value="{{craftStats.speed.tactical}}" min="0" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
-                </div>
-                <div class="tw-flex tw-flex-col tw-gap-1">
-                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.Manoeuverability"}}</label>
-                    <input type="number" name="system.manoeuverability" value="{{craftStats.manoeuverability}}" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
-                </div>
-                <div class="tw-flex tw-flex-col tw-gap-1">
-                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.Passengers"}}</label>
-                    <input type="number" name="system.passengers" value="{{craftStats.passengers}}" min="0" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
-                </div>
-                <div class="tw-flex tw-flex-col tw-gap-1">
-                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.CarryingCapacity"}}</label>
-                    <input type="number" name="system.carryingCapacity" value="{{craftStats.carryingCapacity}}" min="0" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
-                </div>
-                <div class="tw-flex tw-flex-col tw-gap-1">
-                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.Size"}}</label>
-                    <input type="number" name="system.size" value="{{craftStats.size}}" min="1" max="10" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
-                </div>
+                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.SpeedCruising" name="system.speed.cruising" value=craftStats.speed.cruising min="0"}}
+                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.SpeedTactical" name="system.speed.tactical" value=craftStats.speed.tactical min="0"}}
+                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.Manoeuverability" name="system.manoeuverability" value=craftStats.manoeuverability}}
+                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.Passengers" name="system.passengers" value=craftStats.passengers min="0"}}
+                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.CarryingCapacity" name="system.carryingCapacity" value=craftStats.carryingCapacity min="0"}}
+                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.Size" name="system.size" value=craftStats.size min="1" max="10"}}
             </div>
 
             {{!-- Aircraft-only: altitude tier + service ceiling --}}
@@ -48,24 +26,17 @@
                         <option value="orbital" {{#if (eq craftStats.altitude "orbital")}}selected{{/if}}>{{localize "WH40K.Vehicle.AltitudeTier.Orbital"}}</option>
                     </select>
                 </div>
-                <div class="tw-flex tw-flex-col tw-gap-1">
-                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.Ceiling"}}</label>
-                    <input type="number" name="system.ceiling" value="{{craftStats.ceiling}}" min="0" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
-                </div>
+                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.Ceiling" name="system.ceiling" value=craftStats.ceiling min="0"}}
             </div>
             {{/if}}
-        </div>
+        {{/systems/wh40k-rpg/templates/actor/partial/craft-section.hbs}}
 
         {{!-- Description --}}
-        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
-            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
-                <i class="fas fa-file-alt tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
-                {{localize "WH40K.Vehicle.Description"}}
-            </h3>
+        {{#> systems/wh40k-rpg/templates/actor/partial/craft-section.hbs icon="fa-file-alt" titleKey="WH40K.Vehicle.Description"}}
             <div class="editor-content" data-edit="system.description">
                 {{{system.description}}}
             </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/actor/partial/craft-section.hbs}}
 
     </div>
 </section>

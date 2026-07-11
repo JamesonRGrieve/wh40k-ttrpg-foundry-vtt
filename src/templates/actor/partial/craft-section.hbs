@@ -1,0 +1,30 @@
+{{!--
+    Craft section panel — the framed translucent panel + optional gold-gothic
+    icon heading shared by every craft-sheet tab (terracraft / aircraft /
+    watercraft; one vehicle-sheet family, NOT per-system variants). Body content
+    is provided by the caller via {{> @partial-block}}.
+
+    The 7-system accent chain on the heading + icon is kept INLINE here on
+    purpose — its migration to `themeClassFor` is tracked separately (#422); this
+    partial only de-duplicates the STRUCTURE, not the colour tokens.
+
+    Block-partial usage:
+        {{#> systems/wh40k-rpg/templates/actor/partial/craft-section.hbs
+             icon="fa-tachometer-alt" titleKey="WH40K.Vehicle.Statistics"}}
+            ... body markup ...
+        {{/systems/wh40k-rpg/templates/actor/partial/craft-section.hbs}}
+
+    Hash arguments:
+        titleKey — i18n key for the heading. When omitted, no heading renders
+                   (the panel is just the framed body).
+        icon     — Font Awesome class (e.g. "fa-tachometer-alt"). Optional; only
+                   meaningful when titleKey is present.
+--}}
+<div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+    {{#if titleKey}}
+    <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
+        {{#if icon}}<i class="fas {{icon}} tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{/if}}{{localize titleKey}}
+    </h3>
+    {{/if}}
+    {{> @partial-block}}
+</div>

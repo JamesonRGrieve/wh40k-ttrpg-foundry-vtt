@@ -3,11 +3,7 @@
     <div class="tw-flex tw-flex-col tw-gap-4">
 
         {{!-- Components/Upgrades List --}}
-        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
-            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
-                <i class="fas fa-cog tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
-                {{localize "WH40K.Vehicle.ComponentsAndUpgrades"}}
-            </h3>
+        {{#> systems/wh40k-rpg/templates/actor/partial/craft-section.hbs icon="fa-cog" titleKey="WH40K.Vehicle.ComponentsAndUpgrades"}}
             <div class="tw-flex tw-flex-col tw-gap-3">
                 {{#each components}}
                 <div class="tw-px-3 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px]" data-item-id="{{this._id}}">
@@ -44,7 +40,7 @@
                 <div class="tw-py-8 tw-text-center tw-text-[#888] tw-italic">{{localize "WH40K.Vehicle.NoComponents"}}</div>
                 {{/unless}}
             </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/actor/partial/craft-section.hbs}}
 
     </div>
 </section>
