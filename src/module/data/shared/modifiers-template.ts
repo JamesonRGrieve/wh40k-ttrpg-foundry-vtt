@@ -1,6 +1,27 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
 
 /**
+ * One situational-modifier channel: an `ArrayField` of conditional
+ * `{ key, value, condition, icon }` entries. The `situational.characteristics`,
+ * `situational.skills`, and `situational.combat` channels are structurally
+ * identical, so they share this factory instead of repeating the sub-schema
+ * three times (#427). The field types, options, and the `fa-exclamation-triangle`
+ * icon default are reproduced exactly, so the emitted schema is unchanged.
+ */
+function situationalEntrySchema(): foundry.data.fields.DataField.Any {
+    const fields = foundry.data.fields;
+    return new fields.ArrayField(
+        new fields.SchemaField({
+            key: new fields.StringField({ required: true }),
+            value: new fields.NumberField({ required: true, initial: 0 }),
+            condition: new fields.StringField({ required: true }),
+            icon: new fields.StringField({ required: false, initial: 'fa-exclamation-triangle' }),
+        }),
+        { required: true, initial: [] },
+    );
+}
+
+/**
  * MODIFIER SYSTEM DOCUMENTATION
  *
  * This template provides two types of modifiers for items that affect actor statistics:
@@ -213,33 +234,9 @@ export default class ModifiersTemplate extends SystemDataModel {
                     { required: true, initial: [] },
                 ),
                 situational: new fields.SchemaField({
-                    characteristics: new fields.ArrayField(
-                        new fields.SchemaField({
-                            key: new fields.StringField({ required: true }),
-                            value: new fields.NumberField({ required: true, initial: 0 }),
-                            condition: new fields.StringField({ required: true }),
-                            icon: new fields.StringField({ required: false, initial: 'fa-exclamation-triangle' }),
-                        }),
-                        { required: true, initial: [] },
-                    ),
-                    skills: new fields.ArrayField(
-                        new fields.SchemaField({
-                            key: new fields.StringField({ required: true }),
-                            value: new fields.NumberField({ required: true, initial: 0 }),
-                            condition: new fields.StringField({ required: true }),
-                            icon: new fields.StringField({ required: false, initial: 'fa-exclamation-triangle' }),
-                        }),
-                        { required: true, initial: [] },
-                    ),
-                    combat: new fields.ArrayField(
-                        new fields.SchemaField({
-                            key: new fields.StringField({ required: true }),
-                            value: new fields.NumberField({ required: true, initial: 0 }),
-                            condition: new fields.StringField({ required: true }),
-                            icon: new fields.StringField({ required: false, initial: 'fa-exclamation-triangle' }),
-                        }),
-                        { required: true, initial: [] },
-                    ),
+                    characteristics: situationalEntrySchema(),
+                    skills: situationalEntrySchema(),
+                    combat: situationalEntrySchema(),
                 }),
             }),
         };
