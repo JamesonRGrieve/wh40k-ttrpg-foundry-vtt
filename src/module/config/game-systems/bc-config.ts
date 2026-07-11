@@ -25,6 +25,7 @@ import {
     tallyAdvancesByAlignment,
     type AlignmentTally,
 } from '../../rules/bc-alignment-derivation.ts';
+import { capitalize } from '../../utils/format.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import {
     BC_CHARACTERISTIC_TIERS,
@@ -37,7 +38,7 @@ import {
     skillAdvanceCost,
     talentAdvanceCost,
 } from './bc-advancement-config.ts';
-import type { AdvanceCostResult, CharacteristicTierDef, ChaosAlignment, OriginStepConfig, SidebarHeaderField, SkillRankDef } from './types.ts';
+import type { AdvanceCostResult, CharacteristicTierDef, ChaosAlignment, OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 /** Subset of system.* that BC config reads off the actor. Avoids `any` casts. */
 interface BcCharacterSystem {
@@ -105,39 +106,23 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     override getCharacteristicTiers(): CharacteristicTierDef[] {
         return BC_CHARACTERISTIC_TIERS.map((key) => ({
             key,
-            label: `WH40K.BC.Advancement.Tier.${key.charAt(0).toUpperCase()}${key.slice(1)}`,
+            label: `WH40K.BC.Advancement.Tier.${capitalize(key)}`,
         }));
     }
 
     /**
-     * BC uses a 4-rank skill ladder
-     * (Known / Trained / Experienced / Veteran — `core.md` :2677). Schema
-     * slot keys (trained / plus10 / plus20 / plus30) are inherited DH2-
-     * style so the form parser keeps writing into the same backing fields;
-     * RAW label terminology matches DH2 byte-for-byte.
-     */
-    override getSkillRanks(): SkillRankDef[] {
-        return [
-            { level: 1, key: 'trained', label: 'Kn', tooltip: 'Known', bonus: 0 },
-            { level: 2, key: 'plus10', label: 'Tr', tooltip: 'Trained', bonus: 10 },
-            { level: 3, key: 'plus20', label: 'Ex', tooltip: 'Experienced', bonus: 20 },
-            { level: 4, key: 'plus30', label: 'Ve', tooltip: 'Veteran', bonus: 30 },
-        ];
-    }
-
-    /**
+     * BC uses a 4-rank skill ladder (Known / Trained / Experienced / Veteran
+     * — `core.md` :2677) with DH2-style schema slot keys and RAW labels that
+     * match DH2 byte-for-byte, so `getSkillRanks` is inherited unchanged from
+     * `AptitudeBasedSystemConfig`.
+     *
      * BC psyker unlock is the "Psyker" archetype. Aligned-to-Khorne
      * characters lose Psyker Trait counts even while owning the archetype
      * (`core.md` :2750-2754).
      */
     override isPsyker(actor: WH40KBaseActor): boolean {
-        const hasArchetype = actor.items.some(
-            (i) => i.isOriginPath && (i.system as { step?: string }).step === 'archetype' && i.name.toLowerCase() === 'psyker',
-        );
-        if (!hasArchetype) return false;
-        const alignment = this.getCharacterAlignment(actor);
-        if (psykerLockedByAlignment(alignment)) return false;
-        return true;
+        if (!this.ownsOriginPathItem(actor, 'archetype', 'psyker')) return false;
+        return !psykerLockedByAlignment(this.getCharacterAlignment(actor));
     }
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
