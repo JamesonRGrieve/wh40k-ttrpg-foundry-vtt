@@ -9693,6 +9693,18 @@
                 "ASSISTANT": "OWNER"
             },
             "flags": {}
+        },
+        {
+            "name": "ow-enemies-items-weapons",
+            "label": "OW: Enemies of the Imperium, Weapons",
+            "path": "packs/only-war/ow-enemies-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
@@ -10674,6 +10686,7 @@
                         "ow-enemies-items-armour",
                         "ow-enemies-items-gear",
                         "ow-enemies-items-talents",
+                        "ow-enemies-items-weapons",
                         "ow-enemies-journals",
                         "ow-enemies-vehicles-aircraft",
                         "ow-enemies-vehicles-terracraft"
