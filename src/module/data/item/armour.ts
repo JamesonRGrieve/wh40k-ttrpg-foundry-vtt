@@ -26,6 +26,9 @@ const ARMOUR_TYPE_CHOICES = [
     'void',
     'enforcer',
     'hostile-environment',
+    // Imperium Maledictum force fields are worn like armour (own item entries);
+    // `force-field` types them so the IM `forceField` protection block applies.
+    'force-field',
 ] as const;
 
 /**
@@ -39,6 +42,13 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare type: string;
+    /**
+     * Imperium Maledictum force-field protection. IM force fields (Refractor,
+     * Conversion, …) roll a die and subtract that much Damage, and overload on a
+     * roll range — a different mechanic from armour points. Empty on ordinary
+     * armour (`type !== 'force-field'`).
+     */
+    declare forceField: { protectionDice: string; overloadRange: string };
     declare armourPoints: { head: number; leftArm: number; rightArm: number; body: number; leftLeg: number; rightLeg: number; [key: string]: number };
     declare coverage: Set<string>;
     declare maxAgility: number | null;
@@ -72,6 +82,18 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData receives untyped Foundry source data; Record<string,unknown> is the documented DataModel pattern
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
+        // Imperium Maledictum armour was authored with the mis-named `type_im`
+        // key (a per-line `{ im: … }` container at that), so the real `type`
+        // field defaulted and armour-tier classification was dead data. Lift the
+        // value onto `type`. Guarded on the wrong key so other lines are untouched.
+        const typeIm = source['type_im'];
+        if (typeIm !== undefined && source['type'] === undefined) {
+            source['type'] =
+                typeof typeIm === 'object' && typeIm !== null && 'im' in typeIm
+                    ? (typeIm as Record<string, unknown>)['im']
+                    : typeIm;
+            delete source['type_im'];
+        }
         // Coerce an invalid/legacy `type` to the schema default so a corrupt
         // value (e.g. an imported "basic") doesn't fail strict validation and
         // drop the whole item from its owning actor. Runs after super (which
@@ -190,6 +212,12 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
                 required: true,
                 initial: 'flak',
                 choices: [...ARMOUR_TYPE_CHOICES],
+            }),
+
+            // Imperium Maledictum force-field protection (empty on ordinary armour).
+            forceField: new fields.SchemaField({
+                protectionDice: new fields.StringField({ required: false, initial: '', blank: true }),
+                overloadRange: new fields.StringField({ required: false, initial: '', blank: true }),
             }),
 
             // Armour points per location

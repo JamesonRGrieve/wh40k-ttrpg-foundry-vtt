@@ -21,6 +21,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
     declare addedQualities: Set<string>;
     declare removedQualities: Set<string>;
     declare clipModifier: number;
+    declare costMultiplier: number | null;
     declare effect: string;
     declare notes: string;
     // `source` (structured per-line provenance) is inherited from DescriptionTemplate.
@@ -57,6 +58,11 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
 
             // Clip size modifier
             clipModifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+
+            // Imperium Maledictum prices custom ammunition as a MULTIPLE of the
+            // linked weapon's cost (e.g. ×2, ×3) rather than a flat currency
+            // value; `costMultiplier` holds that factor (null when priced flat).
+            costMultiplier: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
 
             // Effect description
             effect: new fields.HTMLField({ required: false, blank: true }),
