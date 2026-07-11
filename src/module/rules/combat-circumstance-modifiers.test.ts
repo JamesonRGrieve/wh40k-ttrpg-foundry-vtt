@@ -46,7 +46,7 @@ describe('COMBAT_CIRCUMSTANCE_MODIFIERS registry (#121)', () => {
         expect(getCombatModifier('unaware-target')?.value).toBe(30);
     });
 
-    it('pins the full size ladder (Table 4-6)', () => {
+    it('pins the full 1–10 size ladder (Table 4-6, #421)', () => {
         expect(getCombatModifier('size-miniscule')?.value).toBe(-30);
         expect(getCombatModifier('size-puny')?.value).toBe(-20);
         expect(getCombatModifier('size-scrawny')?.value).toBe(-10);
@@ -54,6 +54,11 @@ describe('COMBAT_CIRCUMSTANCE_MODIFIERS registry (#121)', () => {
         expect(getCombatModifier('size-hulking')?.value).toBe(10);
         expect(getCombatModifier('size-enormous')?.value).toBe(20);
         expect(getCombatModifier('size-massive')?.value).toBe(30);
+        // Size 8–10 were previously absent here, capping the dialog at +30
+        // while the auto-modifier already gave +40/+50/+60 (#421).
+        expect(getCombatModifier('size-immense')?.value).toBe(40);
+        expect(getCombatModifier('size-monumental')?.value).toBe(50);
+        expect(getCombatModifier('size-titanic')?.value).toBe(60);
     });
 });
 

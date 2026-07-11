@@ -8,6 +8,7 @@ import { WH40K } from '../rules/config.ts';
 import { rollDifficulties } from '../rules/difficulties.ts';
 import { hitDropdown } from '../rules/hit-locations.ts';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.ts';
+import { targetSizeModifier } from '../rules/target-size.ts';
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
 import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
 import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
@@ -381,7 +382,7 @@ export class WeaponRollData extends RollData {
         if (this.targetActor && targetActorSystem.size !== undefined && targetActorSystem.size !== '' && targetActorSystem.size !== 0) {
             try {
                 const size = Number.parseInt(targetActorSystem.size.toString(), 10);
-                this.modifiers['target-size'] = (size - 4) * 10;
+                this.modifiers['target-size'] = targetSizeModifier(size);
             } catch {
                 // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.RollData.TargetSizeNotANumber localization key not yet in en.json
                 ui.notifications.warn('Target size is not a number. Unexpected error.');

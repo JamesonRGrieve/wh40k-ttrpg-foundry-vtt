@@ -34,24 +34,12 @@ WH40K['originPath'] = {
     compendium: 'wh40k-rpg.rt-items-origin-path',
 };
 
-WH40K['bio'] = {
-    primary: [],
-    size: {
-        4: 'Average (4)',
-        1: 'Minuscule (1)',
-        2: 'Puny (2)',
-        3: 'Scrawny (3)',
-        5: 'Hulking (5)',
-        6: 'Enormous (6)',
-        7: 'Massive (7)',
-        8: 'Immense (8)',
-        9: 'Monumental (9)',
-        10: 'Titanic (10)',
-    },
-};
-
-// Sizes object for selectOptions helper (matches bio.size structure)
-WH40K['sizes'] = {
+// Ordered creature size labels (RAW Table 4-6). Single source of truth for the
+// size dropdown (#426): both the standalone `sizes` config entry and the
+// `bio.size` map derive from this one definition. Keys run 1..10 in order
+// because `sizes` is consumed via `Object.entries` where display order matters
+// (the unified-roll-dialog size dropdown).
+const SIZE_LABELS: Readonly<Record<number, string>> = {
     1: 'Minuscule (1)',
     2: 'Puny (2)',
     3: 'Scrawny (3)',
@@ -63,6 +51,14 @@ WH40K['sizes'] = {
     9: 'Monumental (9)',
     10: 'Titanic (10)',
 };
+
+WH40K['bio'] = {
+    primary: [],
+    size: SIZE_LABELS,
+};
+
+// Sizes object for the selectOptions helper — the same ordered map as bio.size.
+WH40K['sizes'] = SIZE_LABELS;
 
 WH40K['items'] = {
     availability: ['Ubiquitous', 'Abundant', 'Plentiful', 'Common', 'Average', 'Scarce', 'Rare', 'Very Rare', 'Extremely Rare', 'Near Unique', 'Unique'],
