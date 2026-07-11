@@ -16,6 +16,8 @@
  * `appliesTo` field for each row.
  */
 
+import { targetSizeModifier } from './target-size.ts';
+
 /** Which roll the modifier targets. */
 export type CombatModifierTarget =
     /** Ballistic Skill (ranged attack). */
@@ -43,6 +45,39 @@ export interface CombatCircumstanceModifier {
     /** Optional human-readable description / caveat. */
     note?: string;
 }
+
+/**
+ * Target-size rows (RAW Table 4-6, p.138). Each row's identity (`id` + `label`)
+ * is pinned here; its numeric `value` is derived from the shared
+ * `targetSizeModifier` SSOT so this dialog path can never diverge from the
+ * auto-modifier in `rolls/roll-data.ts` (#421). The ladder runs the full RAW
+ * range 1–10 — Size 8–10 (Immense / Monumental / Titanic) were previously
+ * missing here, capping the dialog at +30 while the auto-modifier already gave
+ * +40/+50/+60.
+ */
+const TARGET_SIZE_ROW_IDENTITIES: readonly { size: number; id: string; label: string }[] = [
+    { size: 1, id: 'size-miniscule', label: 'Target Size: Miniscule (1)' },
+    { size: 2, id: 'size-puny', label: 'Target Size: Puny (2)' },
+    { size: 3, id: 'size-scrawny', label: 'Target Size: Scrawny (3)' },
+    { size: 4, id: 'size-average', label: 'Target Size: Average (4)' },
+    { size: 5, id: 'size-hulking', label: 'Target Size: Hulking (5)' },
+    { size: 6, id: 'size-enormous', label: 'Target Size: Enormous (6)' },
+    { size: 7, id: 'size-massive', label: 'Target Size: Massive (7)' },
+    { size: 8, id: 'size-immense', label: 'Target Size: Immense (8)' },
+    { size: 9, id: 'size-monumental', label: 'Target Size: Monumental (9)' },
+    { size: 10, id: 'size-titanic', label: 'Target Size: Titanic (10)' },
+];
+
+/** Size ladder rows, values derived from the shared formula (#421). */
+const SIZE_CIRCUMSTANCE_MODIFIERS: readonly CombatCircumstanceModifier[] = TARGET_SIZE_ROW_IDENTITIES.map(
+    ({ size, id, label }): CombatCircumstanceModifier => ({
+        id,
+        label,
+        value: targetSizeModifier(size),
+        appliesTo: 'bs-or-ws',
+        source: 'core.md p.138, Table 4-6',
+    }),
+);
 
 /**
  * Canonical DH2 combat circumstance modifiers. Indexed by `id`.
@@ -121,15 +156,10 @@ export const COMBAT_CIRCUMSTANCE_MODIFIERS: readonly CombatCircumstanceModifier[
     { id: 'stunned-target', label: 'Stunned Target', value: 20, appliesTo: 'bs-or-ws', source: 'core.md p.230' },
     { id: 'unaware-target', label: 'Unaware / Surprised Target', value: 30, appliesTo: 'bs-or-ws', source: 'core.md p.231' },
     // Size modifiers are a lookup-table (Table 4-6 p.138), not a single
-    // constant. Surface the placeholder entries here so the dialog can
-    // render a Size dropdown that selects the appropriate row.
-    { id: 'size-miniscule', label: 'Target Size: Miniscule (1)', value: -30, appliesTo: 'bs-or-ws', source: 'core.md p.138, Table 4-6' },
-    { id: 'size-puny', label: 'Target Size: Puny (2)', value: -20, appliesTo: 'bs-or-ws', source: 'core.md p.138, Table 4-6' },
-    { id: 'size-scrawny', label: 'Target Size: Scrawny (3)', value: -10, appliesTo: 'bs-or-ws', source: 'core.md p.138, Table 4-6' },
-    { id: 'size-average', label: 'Target Size: Average (4)', value: 0, appliesTo: 'bs-or-ws', source: 'core.md p.138, Table 4-6' },
-    { id: 'size-hulking', label: 'Target Size: Hulking (5)', value: 10, appliesTo: 'bs-or-ws', source: 'core.md p.138, Table 4-6' },
-    { id: 'size-enormous', label: 'Target Size: Enormous (6)', value: 20, appliesTo: 'bs-or-ws', source: 'core.md p.138, Table 4-6' },
-    { id: 'size-massive', label: 'Target Size: Massive (7)', value: 30, appliesTo: 'bs-or-ws', source: 'core.md p.138, Table 4-6' },
+    // constant. The rows are generated from the shared `targetSizeModifier`
+    // SSOT so the dialog Size dropdown and the auto-modifier never diverge
+    // (#421).
+    ...SIZE_CIRCUMSTANCE_MODIFIERS,
 ];
 
 /** O(1) lookup by id. Frozen at module load. */
