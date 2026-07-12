@@ -88,10 +88,8 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         // value onto `type`. Guarded on the wrong key so other lines are untouched.
         const typeIm = source['type_im'];
         if (typeIm !== undefined && source['type'] === undefined) {
-            source['type'] =
-                typeof typeIm === 'object' && typeIm !== null && 'im' in typeIm
-                    ? (typeIm as Record<string, unknown>)['im']
-                    : typeIm;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: type_im is an untyped per-line `{ im: … }` variant container in raw _migrateData source (pre-schema-validation)
+            source['type'] = typeof typeIm === 'object' && typeIm !== null && 'im' in typeIm ? (typeIm as Record<string, unknown>)['im'] : typeIm;
             delete source['type_im'];
         }
         // Coerce an invalid/legacy `type` to the schema default so a corrupt
