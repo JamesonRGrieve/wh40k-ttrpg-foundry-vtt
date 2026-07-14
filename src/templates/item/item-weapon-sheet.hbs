@@ -49,6 +49,24 @@
         </div>
       </header>
 
+      {{!-- FIRING MODE SELECTOR (#430) — for weapons with multiple firing profiles
+           (e.g. a mining melta's Focused vs Broad beam). Writes system.activeMode;
+           the effective attack/damage/range/qualities follow the active mode. --}}
+      {{#if system.modes.length}}
+      <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-3 tw-pt-2">
+        <span class="tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">
+          <i class="fa-solid fa-sliders"></i> {{localize "WH40K.Weapon.FiringMode"}}
+        </span>
+        <select name="system.activeMode"
+                class="tw-flex-1 tw-bg-[rgba(14,18,26,0.6)] tw-border tw-border-[rgba(212,175,55,0.25)] tw-rounded-[6px] tw-text-[rgba(240,232,220,0.95)] tw-text-[0.85rem] tw-py-1 tw-px-2"
+                {{#unless (or isOwnedByActor inEditMode)}}disabled{{/unless}}>
+          {{#each system.modes as |mode i|}}
+          <option value="{{i}}" {{#if (eq @root.system.activeMode i)}}selected{{/if}}>{{mode.label}}</option>
+          {{/each}}
+        </select>
+      </div>
+      {{/if}}
+
       {{!-- ICONIC STAT MOSAIC --}}
       <div class="tw-grid tw-grid-cols-6 tw-auto-rows-[minmax(60px,auto)] [grid-auto-flow:dense] tw-gap-[var(--wh40k-space-sm)] tw-p-3">
         {{!-- Attack Action Card (if owned by actor) --}}

@@ -3820,6 +3820,7 @@ export type I18nKey =
     | 'WH40K.Weapon.Damage'
     | 'WH40K.Weapon.DrawWeapon'
     | 'WH40K.Weapon.Equipped'
+    | 'WH40K.Weapon.FiringMode'
     | 'WH40K.Weapon.HideDetails'
     | 'WH40K.Weapon.HolsterWeapon'
     | 'WH40K.Weapon.Identified'

@@ -4140,7 +4140,8 @@
             "Special": "Special",
             "RollDamage": "Roll Damage",
             "ShowDetails": "Show Details",
-            "HideDetails": "Hide Details"
+            "HideDetails": "Hide Details",
+            "FiringMode": "Firing Mode"
         },
         "Reload": {
             "Free": "Free Action",

@@ -95,6 +95,45 @@ export const NotActivatableHasNoToggle: Story = {
     },
 };
 
+export const WithFiringModes: Story = {
+    args: {
+        overrides: {
+            system: {
+                modes: [
+                    { label: 'Focused', damage: '', damageBonus: null, penetration: null, range: null, addedQualities: [], removedQualities: [] },
+                    {
+                        label: 'Broad',
+                        damage: '2d10',
+                        damageBonus: 4,
+                        penetration: 11,
+                        range: 10,
+                        addedQualities: ['scatter'],
+                        removedQualities: ['overheats'],
+                    },
+                ],
+                activeMode: 1,
+            },
+        },
+    },
+    play: async ({ canvasElement }) => {
+        const select = canvasElement.querySelector<HTMLSelectElement>('select[name="system.activeMode"]');
+        await expect(select).toBeTruthy();
+        const options = select?.querySelectorAll('option') ?? [];
+        await expect(options.length).toBe(2);
+        await expect(options[0]?.textContent).toContain('Focused');
+        await expect(options[1]?.textContent).toContain('Broad');
+        // activeMode = 1 → the Broad option is pre-selected.
+        await expect((options[1] as HTMLOptionElement | undefined)?.selected).toBe(true);
+    },
+};
+
+export const NoFiringModeSelectorWhenSingleProfile: Story = {
+    play: async ({ canvasElement }) => {
+        // A weapon with no authored modes shows no firing-mode selector (single profile).
+        await expect(canvasElement.querySelector('select[name="system.activeMode"]')).toBeNull();
+    },
+};
+
 export const RendersToggleBodyAction: Story = {
     play: async ({ canvasElement }) => {
         const btn = canvasElement.querySelector('[data-action="toggleBody"]');
