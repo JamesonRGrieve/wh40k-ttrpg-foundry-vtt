@@ -113,6 +113,43 @@ export interface SystemTheme {
 export type SystemThemeRole = keyof SystemTheme;
 
 /**
+ * Which fatigue mechanic a game line uses (#114). The seven FFG/C7 lines split
+ * three ways at RAW:
+ *   - `halving`   — DH1/DH2: each characteristic whose bonus < fatigue level
+ *                   counts as half value (round up); threshold TB+WPB; death at 2×.
+ *   - `flat`      — RT/DW/OW/BC: a single flat penalty for *any* fatigue (extra
+ *                   levels add nothing); threshold TB; no death.
+ *   - `condition` — IM: a two-tier Fatigued Condition (Minor/Major), no levels.
+ */
+export type FatigueModel = 'halving' | 'flat' | 'condition';
+
+/** How a line derives its fatigue threshold. `none` = no numeric threshold (IM). */
+type FatigueThresholdFormula = 'tb' | 'tb+wpb' | 'none';
+
+/** What happens to a character's fatigue level when they wake from fatigue-unconsciousness. */
+type FatigueWakeBehavior = 'revert-to-tb' | 'drop-one-level' | 'none';
+
+/**
+ * The per-line fatigue rule set (#114). A game-system config returns its RAW
+ * default via `getFatigueModel()`; the world "fatigue mode" setting can override
+ * the active model to any of the three (so any table can run any mode).
+ */
+export interface FatigueModelDef {
+    /** The effect mechanic. */
+    model: FatigueModel;
+    /** Threshold formula for unconsciousness / death. */
+    threshold: FatigueThresholdFormula;
+    /** Flat test penalty while fatigued (used by the `flat` model, e.g. -10). */
+    flatPenalty: number;
+    /** Whether exceeding 2× threshold kills the character (halving-model RAW). */
+    deathAtDoubleThreshold: boolean;
+    /** Fatigue level on waking from fatigue-unconsciousness. */
+    wakeBehavior: FatigueWakeBehavior;
+    /** Hours of continuous rest that clears ALL fatigue. */
+    fullRecoveryHours: number;
+}
+
+/**
  * A canonical Fate Point spend option as surfaced by the Fate Uses reference
  * dialog. Each entry's `label` and `description` are localization keys under
  * the `WH40K.*` namespace, resolved by the dialog at render time.

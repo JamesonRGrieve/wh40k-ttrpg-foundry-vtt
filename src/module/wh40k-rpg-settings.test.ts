@@ -205,6 +205,20 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
               "type": "String",
             },
             {
+              "choices": [
+                "auto",
+                "halving",
+                "flat",
+                "condition",
+              ],
+              "config": true,
+              "default": ""auto"",
+              "key": "fatigue-mode",
+              "requiresReload": false,
+              "scope": "world",
+              "type": "String",
+            },
+            {
               "choices": undefined,
               "config": true,
               "default": "true",

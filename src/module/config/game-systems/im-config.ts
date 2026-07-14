@@ -4,8 +4,9 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
+import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'im' as const;
@@ -16,6 +17,11 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
         accent: 'failure',
         border: 'failure-l10',
     } as const;
+
+    /** IM uses the two-tier Fatigued Condition model (Minor/Major), not levels — #114. */
+    override getFatigueModel(): FatigueModelDef {
+        return FATIGUE_MODES.condition;
+    }
 
     getOriginStepConfig(): OriginStepConfig {
         return {

@@ -4,8 +4,9 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
-import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
+import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 export class DH1eSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dh1' as const;
@@ -16,6 +17,11 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
         accent: 'gold-raw-l5',
         border: 'gold-raw-d15',
     } as const;
+
+    /** DH1 uses the halving fatigue model (errata: TB+WPB threshold, 2× death) — #114. */
+    override getFatigueModel(): FatigueModelDef {
+        return FATIGUE_MODES.halving;
+    }
 
     /**
      * Dark Heresy characters receive 1000 XP at character generation in addition to the

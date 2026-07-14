@@ -352,9 +352,12 @@ export async function createConditionEffect(actor: WH40KBaseActorDocument, condi
             flags: { 'wh40k-rpg': { nature: 'harmful' } },
         },
         fatigued: {
-            // core.md §"Fatigue": each level adds -10 to all tests. The
-            // applicator should be `applyFatigue(n)` on the actor; this AE
-            // surfaces the impact in a player-readable way.
+            // The manually-applied "Fatigued" status condition — a flat −10 to all
+            // characteristics while present. This is DISTINCT from the per-system
+            // fatigue TRACK (`system.fatigue.value`), whose effect is resolved by
+            // game line in `rules/fatigue.ts` (#114): halving for DH1/DH2, a
+            // roll-time flat penalty for RT/DW/OW/BC, IM's condition tiers. This AE
+            // surfaces the condition's impact in a player-readable way.
             name: 'Fatigued',
             icon: 'icons/svg/sleep.svg',
             changes: [

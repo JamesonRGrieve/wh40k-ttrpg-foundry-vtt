@@ -4,8 +4,9 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
-import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
+import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dw' as const;
@@ -16,6 +17,15 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
         accent: 'accent-combat',
         border: 'accent-combat-d10',
     } as const;
+
+    /**
+     * DW uses the flat fatigue model, but recovers far faster (a full hour of
+     * rest removes all; RAW 1 level per 10 min) and wakes regaining only one
+     * level rather than reverting to TB — #114.
+     */
+    override getFatigueModel(): FatigueModelDef {
+        return { ...FATIGUE_MODES.flat, wakeBehavior: 'drop-one-level', fullRecoveryHours: 1 };
+    }
 
     getOriginStepConfig(): OriginStepConfig {
         return {

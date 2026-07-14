@@ -4,11 +4,13 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type {
     GameSystemId,
     SkillRankDef,
     CharacteristicTierDef,
     FatePointUseDef,
+    FatigueModelDef,
     OriginStepConfig,
     AdvanceCostResult,
     AdvanceOption,
@@ -256,6 +258,20 @@ export abstract class BaseSystemConfig {
             { key: 'recoverStun', label: 'WH40K.FateUses.RecoverStunTitle', description: 'WH40K.FateUses.RecoverStunDesc', icon: 'fa-bolt' },
             { key: 'survive', label: 'WH40K.FateUses.SurviveTitle', description: 'WH40K.FateUses.SurviveDesc', icon: 'fa-skull', burn: true },
         ];
+    }
+
+    // ── Fatigue Model (#114) ─────────────────────────────────────
+
+    /**
+     * The line's RAW fatigue rule set. The default is the `flat` model
+     * (RT / OW / BC — a single −10 for any fatigue, threshold TB, no death,
+     * 6-hour full recovery). DH1/DH2 override to `halving`, IM to `condition`,
+     * DW to the flat model with faster recovery + drop-one-level waking. The
+     * active model can be overridden at runtime by the world "fatigue mode"
+     * setting via `resolveFatigueModel`.
+     */
+    getFatigueModel(): FatigueModelDef {
+        return FATIGUE_MODES.flat;
     }
 
     // ── Skill Level Mapping ──────────────────────────────────────

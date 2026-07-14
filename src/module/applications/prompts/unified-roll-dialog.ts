@@ -27,7 +27,6 @@ import {
     isMeleeSpecialOption,
 } from '../../rules/attack-options.ts';
 import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
-import { getFatigueTestPenalty } from '../../rules/fatigue.ts';
 import { computeGangUpModifier, gangUpConfigFor, type GangUpTokenLike } from '../../rules/gang-up.ts';
 import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/high-ground.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
@@ -1173,17 +1172,18 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     /**
-     * Flat fatigue penalty for the active roll (#415): −10 per fatigue level read
-     * from the source actor's `system.fatigue.value`. Applies to every test, so a
-     * status that should make you worse at everything flows in implicitly. Returns
-     * 0 when the actor is unfatigued or has no fatigue track.
+     * Fatigue test modifier for the active roll (#114). The per-system model
+     * (halving / flat / condition, plus the world "fatigue mode" override) is
+     * resolved once in the creature DataModel, which stores the flat/condition
+     * penalty as the derived `system.fatigue.testModifier`; this reads it. It is 0
+     * for the halving model (that effect lives in the effective characteristic
+     * values), and 0 when the actor is unfatigued or has no fatigue track (NPCs).
      * @returns {number}
      */
     _calculateFatigueModifier(): number {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a heterogeneous actor handle (sourceActor or legacy 'actor'); system.fatigue is read structurally
-        const actor = (this.rollData.sourceActor ?? this.rollData['actor']) as { system?: { fatigue?: { value?: number } } } | null | undefined;
-        const fatigueLevel = Number(actor?.system?.fatigue?.value ?? 0);
-        return getFatigueTestPenalty(fatigueLevel);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a heterogeneous actor handle (sourceActor or legacy 'actor'); the derived fatigue.testModifier is read structurally
+        const actor = (this.rollData.sourceActor ?? this.rollData['actor']) as { system?: { fatigue?: { testModifier?: number } } } | null | undefined;
+        return Number(actor?.system?.fatigue?.testModifier ?? 0);
     }
 
     /**
