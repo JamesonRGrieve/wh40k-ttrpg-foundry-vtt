@@ -3,6 +3,16 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { capitalize } from '../../handlebars/handlebars-helpers.ts';
 import { t } from '../../i18n/t.ts';
 import { applyDeactivationQualities, deactivationStatDeltas, isDeactivated, type WeaponActivationConfig } from '../../rules/weapon-activation.ts';
+import {
+    activeFiringMode,
+    applyModeQualities,
+    hasFiringModes,
+    modeDamageBonus,
+    modeDamageFormula,
+    modePenetration,
+    modeRange,
+    type WeaponFiringMode,
+} from '../../rules/weapon-modes.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -186,6 +196,8 @@ export default class WeaponData extends ItemDataModel.mixin(
     // Properties from DamageTemplate
     declare damage: { formula: string; type: string; bonus: number; penetration: number };
     declare special: Set<string>;
+    declare modes: WeaponFiringMode[];
+    declare activeMode: number;
 
     // Properties from AttackTemplate
     declare attack: {
@@ -255,6 +267,27 @@ export default class WeaponData extends ItemDataModel.mixin(
             // written to the owned item's per-actor overlay so it survives across
             // turns and the compendium→world resync.
             jammed: new fields.BooleanField({ required: false, initial: false }),
+
+            // Firing modes (#430) — multiple named firing profiles on ONE weapon
+            // (e.g. a mining melta's Focused vs Broad beam), each overriding a
+            // subset of the base stats; empty/null fields inherit the base attack.
+            // Line-authored content (variantizable). A weapon with no modes behaves
+            // exactly as before (the base attack IS the single profile). Distinct
+            // from the RoF `availableFireModes` (single/semi/full) axis.
+            modes: new fields.ArrayField(
+                new fields.SchemaField({
+                    label: new fields.StringField({ required: true, blank: false }),
+                    damage: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    damageBonus: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
+                    penetration: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
+                    range: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
+                    addedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
+                    removedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
+                }),
+                { required: false, initial: [] },
+            ),
+            // Live selected firing-mode index — per-weapon transient state, like `jammed`.
+            activeMode: new fields.NumberField({ required: false, initial: 0, min: 0, integer: true }),
 
             // Loaded ammunition (reference to ammunition item)
             loadedAmmo: new fields.SchemaField(
@@ -553,6 +586,16 @@ export default class WeaponData extends ItemDataModel.mixin(
         return this.activation?.activatable === true;
     }
 
+    /** True when this weapon has more than one authored firing mode (#430). */
+    get hasFiringModes(): boolean {
+        return hasFiringModes(this.modes);
+    }
+
+    /** The active firing mode's profile, or null when the weapon has no modes (#430). */
+    get activeFiringModeProfile(): WeaponFiringMode | null {
+        return activeFiringMode(this.modes, this.activeMode);
+    }
+
     /** True when the weapon is currently powered/active. Always true for a weapon with no toggle. */
     get powered(): boolean {
         return !isDeactivated(this.activation, this.state.activated);
@@ -643,7 +686,11 @@ export default class WeaponData extends ItemDataModel.mixin(
 
         // Apply the deactivated-mode quality profile (powered ↔ off). No-op for
         // non-activatable or currently-active weapons (rules/weapon-activation.ts).
-        return applyDeactivationQualities(qualities, this.activation, this.state.activated);
+        const powered = applyDeactivationQualities(qualities, this.activation, this.state.activated);
+
+        // Apply the active firing mode's quality add/remove (#430). No-op when the
+        // weapon has no modes.
+        return applyModeQualities(powered, this.activeFiringModeProfile);
     }
 
     /**
@@ -711,8 +758,8 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @type {string}
      */
     get effectiveDamageFormula(): string {
-        const baseDamage = this.damage.formula || '1d10';
-        const baseBonus = this.damage.bonus || 0;
+        const baseDamage = modeDamageFormula(this.activeFiringModeProfile, this.damage.formula || '1d10');
+        const baseBonus = modeDamageBonus(this.activeFiringModeProfile, this.damage.bonus || 0);
         const craftBonus = this.craftsmanshipModifiers.damage;
         const modBonus = this._modificationModifiers.damage;
         const deactBonus = deactivationStatDeltas(this.activation, this.state.activated).damage;
@@ -744,7 +791,7 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @type {number}
      */
     get effectivePenetration(): number {
-        const basePen = this.damage.penetration || 0;
+        const basePen = modePenetration(this.activeFiringModeProfile, this.damage.penetration || 0);
         const modPen = this._modificationModifiers.penetration;
         return basePen + modPen + deactivationStatDeltas(this.activation, this.state.activated).penetration;
     }
@@ -765,7 +812,7 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @type {object}
      */
     get effectiveRange(): { value: number; units: string; special: string } {
-        const baseRange = this.attack.range.value || 0;
+        const baseRange = modeRange(this.activeFiringModeProfile, this.attack.range.value || 0);
         const rangeModifier = this._modificationModifiers.range;
 
         return {
@@ -1245,6 +1292,26 @@ export default class WeaponData extends ItemDataModel.mixin(
             return this.parent.update({ 'system.jammed': false, 'system.clip.value': 0 });
         }
         return this.parent.update({ 'system.jammed': false });
+    }
+
+    /**
+     * Select the active firing mode by index (#430). Clamps to a valid mode;
+     * no-op for a weapon without modes or when already active. The chosen mode's
+     * stats flow through the effective getters into attack, damage, and range.
+     * @param {number} index - Firing-mode index
+     */
+    async setActiveMode(index: number): Promise<WH40KItem | undefined> {
+        if (!this.hasFiringModes) return undefined;
+        const clamped = Math.min(Math.max(Math.trunc(index), 0), this.modes.length - 1);
+        if (clamped === this.activeMode) return undefined;
+        return this.parent.update({ 'system.activeMode': clamped });
+    }
+
+    /** Advance to the next firing mode, wrapping around (#430). */
+    async cycleFiringMode(): Promise<WH40KItem | undefined> {
+        if (!this.hasFiringModes) return undefined;
+        const next = (this.activeMode + 1) % this.modes.length;
+        return this.parent.update({ 'system.activeMode': next });
     }
 
     /**
