@@ -718,6 +718,16 @@
                     "Gen2": "Gen 2 — tens-digit difference, +1"
                 }
             },
+            "FatigueMode": {
+                "Name": "Fatigue Model",
+                "Hint": "Which fatigue mechanic to use. Auto follows each game line's RAW rules: Halving (Dark Heresy 1e/2e) — a characteristic whose bonus is below the fatigue level counts as half its value, threshold is Toughness + Willpower bonus, death at double threshold. Flat (Rogue Trader, Deathwatch, Only War, Black Crusade) — a single −10 to all tests for any fatigue, threshold is Toughness bonus. Condition (Imperium Maledictum) — a two-tier Fatigued condition (Minor: Disadvantage; Major: all tests Very Hard). Choosing a specific model forces it for every actor regardless of game line.",
+                "Choices": {
+                    "Auto": "Auto (per game system)",
+                    "Halving": "Halving — fatigued characteristics count as half (DH1/DH2)",
+                    "Flat": "Flat — −10 to all tests while fatigued (RT/DW/OW/BC)",
+                    "Condition": "Condition — two-tier Fatigued condition (IM)"
+                }
+            },
             "PromptIncompleteOriginPath": {
                 "Name": "Prompt to Build Unfinished Characters",
                 "Hint": "When a character or NPC sheet is opened and its origin path has never been completed, show a prompt offering to open the origin-path builder. Players can dismiss it per-character."

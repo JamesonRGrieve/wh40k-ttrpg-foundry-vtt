@@ -5,10 +5,11 @@
 
 // Import the consolidated RT career registry
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { CAREER_TABLES } from '../advancements/career-tables.ts';
 import { getCareerKeyFromName } from '../advancements/index.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
-import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
+import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: career tables are structurally CareerEntry but typed as unknown at the registry boundary
 const RT_CAREER_REGISTRY: Record<string, unknown> = CAREER_TABLES;
@@ -22,6 +23,11 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
         accent: 'gold',
         border: 'gold-dark',
     } as const;
+
+    /** RT uses the flat fatigue model; full recovery takes 8 hours of rest — #114. */
+    override getFatigueModel(): FatigueModelDef {
+        return { ...FATIGUE_MODES.flat, fullRecoveryHours: 8 };
+    }
 
     getOriginStepConfig(): OriginStepConfig {
         return {

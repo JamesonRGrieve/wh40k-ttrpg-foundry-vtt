@@ -1,5 +1,6 @@
 import { ALL_SYSTEM_IDS, type GameSystemId } from './config/game-systems/types.ts';
 import { SYSTEM_ID } from './constants.ts';
+import type { FatigueMode } from './rules/fatigue.ts';
 
 export type DH2Ruleset = 'raw' | 'homebrew';
 
@@ -60,6 +61,7 @@ export class WH40KSettings {
         warbandSubtlety: 'warband-subtlety',
         homebrewSelfTargeting: 'homebrew-self-targeting',
         autoCoverLos: 'auto-cover-los',
+        fatigueMode: 'fatigue-mode',
     };
 
     /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
@@ -214,6 +216,19 @@ export class WH40KSettings {
             return value === 'gen1' || value === 'gen2' ? value : 'raw';
         } catch {
             return 'raw';
+        }
+    }
+
+    /** Active fatigue-model override (#114). `auto` = each game line's RAW default
+     *  (halving for DH1/DH2, flat for RT/DW/OW/BC, condition for IM); otherwise the
+     *  chosen model is forced for every actor. Safe before registration (returns
+     *  `auto`). */
+    static getFatigueMode(): FatigueMode {
+        try {
+            const value = String(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.fatigueMode));
+            return value === 'halving' || value === 'flat' || value === 'condition' ? value : 'auto';
+        } catch {
+            return 'auto';
         }
     }
 
@@ -426,6 +441,22 @@ export class WH40KSettings {
                     raw: 'WH40K.SETTINGS.DegreesMode.Choices.Raw',
                     gen1: 'WH40K.SETTINGS.DegreesMode.Choices.Gen1',
                     gen2: 'WH40K.SETTINGS.DegreesMode.Choices.Gen2',
+                },
+            },
+            {
+                key: S.fatigueMode,
+                name: 'WH40K.SETTINGS.FatigueMode.Name',
+                hint: 'WH40K.SETTINGS.FatigueMode.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: false,
+                default: 'auto',
+                type: String,
+                choices: {
+                    auto: 'WH40K.SETTINGS.FatigueMode.Choices.Auto',
+                    halving: 'WH40K.SETTINGS.FatigueMode.Choices.Halving',
+                    flat: 'WH40K.SETTINGS.FatigueMode.Choices.Flat',
+                    condition: 'WH40K.SETTINGS.FatigueMode.Choices.Condition',
                 },
             },
             {

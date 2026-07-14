@@ -1,9 +1,12 @@
 import { BaseSystemConfig } from '../../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../../config/game-systems/index.ts';
+import type { FatigueModelDef } from '../../../config/game-systems/types.ts';
 import type { WH40KItem } from '../../../documents/item.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
+import { FATIGUE_MODES, getFatigueHalvedCharacteristic, getFatigueTestModifier, getFatigueThreshold, resolveFatigueModel } from '../../../rules/fatigue.ts';
 import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
+import { WH40KSettings } from '../../../wh40k-rpg-settings.ts';
 import { coerceInt } from '../../fields/coerce.ts';
 import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../../shared/characteristic-math.ts';
 import { CHARACTERISTIC_SHORT_TO_FULL } from '../../shared/characteristics.ts';
@@ -255,6 +258,11 @@ export default class CreatureTemplate extends CommonTemplate {
     declare fatigue: {
         max: number;
         value: number;
+        /** Derived (#114): the flat/condition-model test modifier for the current
+         *  fatigue level, computed each prep so the roll dialog reads it without
+         *  resolving the game-system config itself. 0 for the halving model (its
+         *  effect is in the effective characteristic values) and when unfatigued. */
+        testModifier: number;
     };
     declare fate: {
         max: number;
@@ -503,6 +511,8 @@ export default class CreatureTemplate extends CommonTemplate {
             fatigue: new SchemaField({
                 max: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 value: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                // Derived each prep (#114); non-negative min omitted as it is a penalty.
+                testModifier: new NumberField({ required: true, initial: 0, integer: true }),
             }),
 
             fate: new SchemaField({
@@ -1021,20 +1031,39 @@ export default class CreatureTemplate extends CommonTemplate {
     }
 
     /**
-     * Prepare fatigue threshold.
-     * Per core rules: threshold = Toughness Bonus. We treat that as the default
-     * floor — if the stored `fatigue.max` is unset (0), derive it from TB so
-     * new actors come up with a sensible value. A non-zero stored value is a
-     * deliberate user override (talents, homebrew, special traits) and is
-     * preserved so the field remains editable on the sheet.
-     * Any fatigue imposes -10 to all Tests.
+     * Resolve the active fatigue rule set for this actor (#114): the game line's
+     * RAW model (halving / flat / condition) unless the world "fatigue mode"
+     * setting forces one. Falls back to the flat model when the system is unknown.
+     * @protected
+     */
+    _resolveFatigueModel(): FatigueModelDef {
+        const gameSystem = (this as { gameSystem?: string }).gameSystem;
+        const config = gameSystem !== undefined ? SystemConfigRegistry.getOrNull(gameSystem) : null;
+        return resolveFatigueModel(config?.getFatigueModel() ?? FATIGUE_MODES.flat, WH40KSettings.getFatigueMode());
+    }
+
+    /**
+     * Prepare the fatigue threshold (#114). Per the active model this is the
+     * Toughness bonus (flat model), Toughness + Willpower bonus (halving model),
+     * or 0 (IM condition model, which has no numeric threshold). Only derived when
+     * `fatigue.max` is unset (0); a non-zero stored value is a deliberate override
+     * (talents, homebrew) and is preserved so the field stays editable on the sheet.
      * @protected
      */
     _prepareFatigue(): void {
+        const def = this._resolveFatigueModel();
         if (this.fatigue.max <= 0) {
-            const toughness = this.characteristics.toughness;
-            this.fatigue.max = toughness.effectiveBonus;
+            this.fatigue.max = getFatigueThreshold(
+                {
+                    toughnessBonus: this.characteristics.toughness.effectiveBonus,
+                    willpowerBonus: this.characteristics.willpower.effectiveBonus,
+                },
+                def,
+            );
         }
+        // Derived flat/condition test modifier the roll dialog reads (#114); 0 for
+        // the halving model (its effect lives in the effective characteristic values).
+        this.fatigue.testModifier = getFatigueTestModifier(this.fatigue.value, def);
     }
 
     /**
@@ -1155,6 +1184,13 @@ export default class CreatureTemplate extends CommonTemplate {
         // Collect origin path modifier sources for tooltip transparency
         this._registerOriginPathModifierSources();
 
+        // Fatigue halving (#114): under the halving model (DH1/DH2) a fatigued
+        // characteristic (natural bonus < fatigue level) counts as half its value.
+        // Resolve the active model + level once; 0 disables halving for the flat /
+        // condition models (their effect is a roll-time modifier, not a stat change).
+        const fatigueDef = this._resolveFatigueModel();
+        const fatigueLevel = fatigueDef.model === 'halving' ? Math.max(0, Math.trunc(this.fatigue.value)) : 0;
+
         for (const [name, char] of Object.entries(this.characteristics)) {
             const originPathMod = this._getOriginPathCharacteristicModifier(name);
             const itemMod = this._getTotalCharacteristicModifier(name);
@@ -1185,6 +1221,18 @@ export default class CreatureTemplate extends CommonTemplate {
             // ("+X Bonus" effects) on top of the base bonus.
             const bonusModifier = this._getTotalCharacteristicBonusModifier(name);
             applyEffectiveCharacteristicFields(char, bonusModifier);
+
+            // Halve the effective value/bonus of a fatigued characteristic (#114),
+            // after the base-vs-effective split so damage / carry / movement — which
+            // read the effective fields — degrade with it. Non-halving models skip
+            // this (fatigueLevel is 0) and apply their penalty at roll time instead.
+            if (fatigueLevel > 0) {
+                const halved = getFatigueHalvedCharacteristic(char.effectiveValue, char.bonus, char.unnatural || 0, bonusModifier, fatigueLevel);
+                if (halved) {
+                    char.effectiveValue = halved.effectiveValue;
+                    char.effectiveBonus = halved.effectiveBonus;
+                }
+            }
         }
 
         // Update initiative bonus from characteristic (recalculate from base). Read the

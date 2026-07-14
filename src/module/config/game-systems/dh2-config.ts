@@ -4,8 +4,9 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
+import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'dh2' as const;
@@ -16,6 +17,11 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
         accent: 'gold-raw',
         border: 'gold-raw-d10',
     } as const;
+
+    /** DH2 uses the halving fatigue model (TB+WPB threshold, 2× death) — #114. */
+    override getFatigueModel(): FatigueModelDef {
+        return FATIGUE_MODES.halving;
+    }
 
     override get startingXP(): number {
         return 1000;
