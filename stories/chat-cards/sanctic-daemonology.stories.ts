@@ -11,6 +11,11 @@ import { renderSheet } from '../test-helpers';
  * always-zero corruption contrast and the Phenomena / Soul-Binding /
  * Emperor's-Anathema mitigation states the `resolveSancticManifestation`
  * resolver produces.
+ *
+ * The power display name is compendium content (a `psychicPower` item in
+ * `dh2-beyond-items-psychic-powers`); at runtime it is resolved from the
+ * compendium via the power's UUID. Storybook has no live `game.packs`, so
+ * the story supplies the name as mock render data.
  */
 initializeStoryHandlebars();
 
@@ -32,11 +37,11 @@ interface SancticChatContext {
     canFateNegate: boolean;
 }
 
-function cardContext(input: SancticManifestInput): SancticChatContext {
+function cardContext(powerName: string, input: SancticManifestInput): SancticChatContext {
     const r = resolveSancticManifestation(input);
     return {
         gameSystem: 'dh2',
-        powerName: r.power.name,
+        powerName,
         modeKey: MODE_KEYS[input.mode],
         effectivePR: r.effectivePR,
         focusModifier: r.focusModifier >= 0 ? `+${r.focusModifier}` : `${r.focusModifier}`,
@@ -57,7 +62,7 @@ type Story = StoryObj;
 
 export const UnfetteredNoPhenomena: Story = {
     name: 'Unfettered Banishment — no corruption, no phenomena',
-    render: () => renderSheet(sancticChatSrc, cardContext({ powerId: 'banishment', mode: 'unfettered', basePR: 4, success: true })),
+    render: () => renderSheet(sancticChatSrc, cardContext('Banishment', { powerId: 'banishment', mode: 'unfettered', basePR: 4, success: true })),
     play: async ({ canvasElement }) => {
         const withinCanvas = within(canvasElement);
         await expect(withinCanvas.getByText(/Banishment/i)).toBeTruthy();
@@ -70,12 +75,13 @@ export const UnfetteredNoPhenomena: Story = {
 
 export const FetteredHolocaust: Story = {
     name: 'Fettered Holocaust — half PR, +10 focus',
-    render: () => renderSheet(sancticChatSrc, cardContext({ powerId: 'holocaust', mode: 'fettered', basePR: 5, success: true })),
+    render: () => renderSheet(sancticChatSrc, cardContext('Holocaust', { powerId: 'holocaust', mode: 'fettered', basePR: 5, success: true })),
 };
 
 export const PushPhenomena: Story = {
     name: 'Pushed Cleansing Flame — Phenomena fires (no corruption)',
-    render: () => renderSheet(sancticChatSrc, cardContext({ powerId: 'cleansing-flame', mode: 'push', basePR: 4, pushLevel: 2, success: true })),
+    render: () =>
+        renderSheet(sancticChatSrc, cardContext('Cleansing Flame', { powerId: 'cleansing-flame', mode: 'push', basePR: 4, pushLevel: 2, success: true })),
     play: async ({ canvasElement }) => {
         // Phenomena block renders on a pushed success.
         await expect(canvasElement.querySelector('.tw-text-red-300')).toBeTruthy();
@@ -87,7 +93,7 @@ export const PushWithSoulBinding: Story = {
     render: () =>
         renderSheet(
             sancticChatSrc,
-            cardContext({
+            cardContext('Sanctuary', {
                 powerId: 'sanctuary',
                 mode: 'push',
                 basePR: 6,
@@ -103,7 +109,7 @@ export const PushWithEmperorsAnathema: Story = {
     render: () =>
         renderSheet(
             sancticChatSrc,
-            cardContext({
+            cardContext('Sanctuary', {
                 powerId: 'sanctuary',
                 mode: 'push',
                 basePR: 6,

@@ -1337,7 +1337,8 @@
             "EffectLabel": "Effect",
             "NoMutation": "No mutation (re-roll)",
             "VisibleFlag": "Visible",
-            "HiddenFlag": "Hidden"
+            "HiddenFlag": "Hidden",
+            "TableMissing": "Mutations table not found."
         },
         "DisorderRoll": {
             "DialogTitle": "Roll Mental Disorder",

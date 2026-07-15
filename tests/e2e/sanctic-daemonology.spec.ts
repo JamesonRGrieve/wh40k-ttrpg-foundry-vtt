@@ -28,9 +28,10 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
 
         try {
             const result = await page.evaluate(async () => {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry` global is injected by the licensed app; no shipped types
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry` global + `fromUuid` are injected by the licensed app; no shipped types
                 const g = globalThis as unknown as {
                     foundry?: { applications?: { handlebars?: { renderTemplate?: (path: string, ctx: object) => Promise<string> } } };
+                    fromUuid?: (uuid: string) => Promise<{ name?: string } | null>;
                 };
                 let error: string | null = null;
                 let rendered = false;
@@ -41,7 +42,7 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                 let hasWh40kClass = false;
 
                 interface SancticResult {
-                    power: { name: string };
+                    powerId: string;
                     effectivePR: number;
                     focusModifier: number;
                     corruption: number;
@@ -71,8 +72,12 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                         };
                     }
 
+                    // Identify the power by its compendium UUID; the resolver
+                    // echoes it back and the display name is read from the
+                    // compendium at runtime (the migrated content home).
+                    const cleansingFlameUuid = 'Compendium.wh40k-rpg.dh2-beyond-items-psychic-powers.Item.HoHmYJ5qyQq6h5r2';
                     const r = resolve({
-                        powerId: 'cleansing-flame',
+                        powerId: cleansingFlameUuid,
                         mode: 'push',
                         basePR: 4,
                         pushLevel: 2,
@@ -82,6 +87,9 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                     corruption = r.corruption;
                     phenomenaFires = r.phenomenaFires;
                     canFateNegate = r.canFateNegate;
+
+                    const powerDoc = g.fromUuid ? await g.fromUuid(r.powerId) : null;
+                    const powerName = powerDoc?.name ?? r.powerId;
 
                     const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
                     if (typeof renderTemplateFn !== 'function') {
@@ -98,7 +106,7 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
 
                     const html = await renderTemplateFn('systems/wh40k-rpg/templates/chat/sanctic-daemonology-chat.hbs', {
                         gameSystem: 'dh2',
-                        powerName: r.power.name,
+                        powerName,
                         modeKey: 'WH40K.SancticDaemonology.Mode.Push',
                         effectivePR: r.effectivePR,
                         focusModifier: r.focusModifier >= 0 ? `+${r.focusModifier}` : `${r.focusModifier}`,

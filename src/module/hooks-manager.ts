@@ -82,6 +82,7 @@ import * as npcApplications from './applications/npc/_module.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { onRefreshToken } from './canvas/token-mask.ts';
 import { hydrateActorInMemory } from './compendium-hydrate.ts';
+import { buildCareerAdvancementIndex } from './config/advancements/career-advancement-cache.ts';
 import type { WH40KSystemConfig } from './config.ts';
 import { SYSTEM_ID } from './constants.ts';
 import * as dataModels from './data/_module.ts';
@@ -796,6 +797,7 @@ export class HooksManager {
         await HooksManager.hydrateWorldActorsOnReady();
         await uuidNameCache.build();
         await buildWeaponQualityPayloadIndex();
+        await buildCareerAdvancementIndex();
         await backfillOriginPathUuids();
         await reconcileWorldOriginGrants();
 

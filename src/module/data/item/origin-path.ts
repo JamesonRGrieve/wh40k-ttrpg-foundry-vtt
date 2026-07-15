@@ -42,6 +42,17 @@ interface OriginChoiceOption {
 export { type AptitudeDerivation, type AptitudeGrantSource, collectGrantedAptitudes, deriveAptitudes, extractLegacyElectives } from './aptitude-derivation.ts';
 
 /**
+ * A single prerequisite gating a career Rank-1 advance. `type` is one of
+ * `characteristic` / `skill` / `talent` / `trait`; `value` is present for
+ * characteristic thresholds.
+ */
+interface CareerAdvancePrerequisite {
+    type: string;
+    key: string;
+    value?: number;
+}
+
+/**
  * Data model for Origin Path items (homeworld, birthright, career, etc).
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
@@ -77,6 +88,20 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         specialAbilities: Array<{ name: string; description: string }>;
         choices: Array<{ type: string; label: string; name?: string; options: OriginChoiceOption[]; count: number; xpCost: number }>;
     };
+    // Career advancement tables (RT careers only; null on every other origin step).
+    // Content lives here on the compendium doc, indexed at `ready` by the career
+    // advancement boot cache — see `config/advancements/career-advancement-cache.ts`.
+    declare careerAdvancement: {
+        characteristicCosts: Record<string, { simple: number; intermediate: number; trained: number; expert: number }>;
+        rank1Advances: Array<{
+            name: string;
+            cost: number;
+            type: string;
+            specialization?: string;
+            multiplier?: number;
+            prerequisites: CareerAdvancePrerequisite[];
+        }>;
+    } | null;
     declare effectText: string;
     declare notes: string;
     declare selectedChoices: Record<string, string[]>;
@@ -271,6 +296,29 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     { required: true, initial: [] },
                 ),
             }),
+
+            // Career advancement tables (RT careers only). Content authored on the
+            // compendium doc; the career advancement boot cache reads it at `ready`.
+            // Null on every non-career origin step (only careers populate it).
+            careerAdvancement: new fields.SchemaField(
+                {
+                    // characteristic key → { simple, intermediate, trained, expert } cost tiers.
+                    characteristicCosts: new fields.ObjectField({ required: false, initial: {} }),
+                    // Rank 1 skill/talent advance options.
+                    rank1Advances: new fields.ArrayField(
+                        new fields.SchemaField({
+                            name: new fields.StringField({ required: true }),
+                            cost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                            type: new fields.StringField({ required: true, choices: ['skill', 'talent'] }),
+                            specialization: new fields.StringField({ required: false, blank: true }),
+                            multiplier: new fields.NumberField({ required: false, initial: null, min: 1, integer: true }),
+                            prerequisites: new fields.ArrayField(new fields.ObjectField({ required: true }), { required: false, initial: [] }),
+                        }),
+                        { required: false, initial: [] },
+                    ),
+                },
+                { required: false, nullable: true, initial: null },
+            ),
 
             // Effect/flavor text
             effectText: new fields.HTMLField({ required: false, blank: true }),

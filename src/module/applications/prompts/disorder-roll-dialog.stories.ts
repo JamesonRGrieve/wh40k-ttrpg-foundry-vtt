@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/disorder-roll-dialog.hbs?raw';
 import { renderSheet } from '../../../../stories/test-helpers';
-import type { DisorderSeverity } from '../../rules/disorders-table.ts';
+import type { DisorderSeverity } from './disorder-roll-dialog.ts';
 
 interface Args {
     severity: DisorderSeverity;

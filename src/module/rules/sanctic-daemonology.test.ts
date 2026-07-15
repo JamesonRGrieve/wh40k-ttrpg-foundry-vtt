@@ -1,86 +1,28 @@
 /**
- * Sanctic Daemonology discipline tests (#130 — beyond.md L1813–2090).
+ * Sanctic Daemonology manifestation-mechanics tests (#130).
  *
- * Covers the issue's acceptance criteria:
+ * Covers the discipline's content-agnostic plumbing:
  *   - Sanctic power use does NOT increment corruption.
  *   - The Malefic comparison still charges PR-worth of corruption
  *     (the defining contrast is asserted from both sides).
- *   - The discipline registry surfaces Sanctic alongside Malefic.
  *   - Composition with the shared Push/Fettered/Unfettered selector
  *     and the Soul Binding / Sanctic Purity Phenomena interactions
  *     (#86 Astropath, #131 Emperor's Anathema).
+ *
+ * The Sanctic power content (names, XP costs, Psy-Rating gates, effect
+ * prose) is NOT tested here — it lives as `psychicPower` compendium
+ * items in `dh2-beyond-items-psychic-powers` (`discipline` =
+ * "Sanctic Daemonology"). The resolver treats `powerId` as opaque; the
+ * display name is resolved from the compendium at render time (exercised
+ * by `tests/e2e/sanctic-daemonology.spec.ts`).
  */
 
 import { describe, expect, it } from 'vitest';
 import { getMaleficCorruptionCost } from './malefic-corruption.ts';
-import {
-    DAEMONOLOGY_DISCIPLINES,
-    SANCTIC_POWERS,
-    getDaemonologyDiscipline,
-    getSancticCorruptionCost,
-    getSancticPower,
-    isSancticDiscipline,
-    resolveSancticManifestation,
-} from './sanctic-daemonology.ts';
+import { getSancticCorruptionCost, isSancticDiscipline, resolveSancticManifestation } from './sanctic-daemonology.ts';
 
-describe('DAEMONOLOGY_DISCIPLINES registry (#130 — surfaces Sanctic alongside Malefic)', () => {
-    it('contains exactly the two opposed disciplines', () => {
-        expect(DAEMONOLOGY_DISCIPLINES.map((d) => d.id)).toEqual(['sanctic', 'malefic']);
-    });
-
-    it('marks Sanctic as the sanctified, zero-corruption discipline', () => {
-        const sanctic = getDaemonologyDiscipline('sanctic');
-        expect(sanctic).not.toBeNull();
-        expect(sanctic?.isSanctified).toBe(true);
-        expect(sanctic?.corruptionPerPR).toBe(0);
-    });
-
-    it('marks Malefic as the heretical, 1×PR-corruption discipline', () => {
-        const malefic = getDaemonologyDiscipline('malefic');
-        expect(malefic?.isSanctified).toBe(false);
-        expect(malefic?.corruptionPerPR).toBe(1);
-    });
-
-    it('returns null for an unknown discipline id', () => {
-        // @ts-expect-error -- intentionally passing an out-of-union id
-        expect(getDaemonologyDiscipline('biomancy')).toBeNull();
-    });
-
-    it('freezes the registry and its entries', () => {
-        expect(Object.isFrozen(DAEMONOLOGY_DISCIPLINES)).toBe(true);
-        expect(Object.isFrozen(DAEMONOLOGY_DISCIPLINES[0])).toBe(true);
-    });
-});
-
-describe('SANCTIC_POWERS registry', () => {
-    it('lists the nine canonical Sanctic powers', () => {
-        expect(SANCTIC_POWERS.map((p) => p.id)).toEqual([
-            'banishment',
-            'cleansing-flame',
-            'exorcism',
-            'hammerhand',
-            'holocaust',
-            'psychic-communion',
-            'purge-soul',
-            'sanctuary',
-            'word-of-the-emperor',
-        ]);
-    });
-
-    it('matches the beyond.md XP / PR gates for sampled powers', () => {
-        expect(getSancticPower('banishment')).toMatchObject({ xp: 300, prMinimum: 3, isAttack: true });
-        expect(getSancticPower('holocaust')).toMatchObject({ xp: 500, prMinimum: 5, isAttack: true });
-        expect(getSancticPower('psychic-communion')).toMatchObject({ xp: 100, prMinimum: 0, isAttack: false });
-        expect(getSancticPower('exorcism')).toMatchObject({ xp: 200, isAttack: true });
-        expect(getSancticPower('hammerhand')).toMatchObject({ isAttack: false });
-    });
-
-    it('returns null for an unknown power id', () => {
-        // @ts-expect-error -- intentionally passing an out-of-union id
-        expect(getSancticPower('not-a-power')).toBeNull();
-    });
-
-    it('isSancticDiscipline recognises only the sanctic tree', () => {
+describe('isSancticDiscipline', () => {
+    it('recognises only the sanctic tree', () => {
         expect(isSancticDiscipline('sanctic')).toBe(true);
         expect(isSancticDiscipline('malefic')).toBe(false);
         expect(isSancticDiscipline('telepathy')).toBe(false);
@@ -117,7 +59,7 @@ describe('resolveSancticManifestation (composition with psychic-push + mitigatio
             basePR: 4,
             success: true,
         });
-        expect(r.power.id).toBe('banishment');
+        expect(r.powerId).toBe('banishment');
         expect(r.effectivePR).toBe(4);
         expect(r.focusModifier).toBe(0);
         expect(r.corruption).toBe(0);
@@ -208,15 +150,14 @@ describe('resolveSancticManifestation (composition with psychic-push + mitigatio
         expect(r.canFateNegate).toBe(false);
     });
 
-    it('throws on an unknown power id', () => {
-        expect(() =>
-            resolveSancticManifestation({
-                // @ts-expect-error -- intentionally invalid power id
-                powerId: 'not-a-power',
-                mode: 'unfettered',
-                basePR: 3,
-                success: true,
-            }),
-        ).toThrow(/Unknown Sanctic power/);
+    it('echoes an opaque powerId (compendium UUID) untouched', () => {
+        const uuid = 'Compendium.wh40k-rpg.dh2-beyond-items-psychic-powers.Item.EB2Bnshmnt000001';
+        const r = resolveSancticManifestation({
+            powerId: uuid,
+            mode: 'unfettered',
+            basePR: 3,
+            success: true,
+        });
+        expect(r.powerId).toBe(uuid);
     });
 });

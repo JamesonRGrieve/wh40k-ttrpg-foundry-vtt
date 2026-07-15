@@ -3,16 +3,13 @@
  * Career-based advancement with 3 skill ranks.
  */
 
-// Import the consolidated RT career registry
+// The RT career registry is read from the compendium-backed boot cache.
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
-import { CAREER_TABLES } from '../advancements/career-tables.ts';
+import { type CareerTable, getCareerAdvancementRegistry } from '../advancements/career-advancement-cache.ts';
 import { getCareerKeyFromName } from '../advancements/index.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: career tables are structurally CareerEntry but typed as unknown at the registry boundary
-const RT_CAREER_REGISTRY: Record<string, unknown> = CAREER_TABLES;
 
 export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'rt' as const;
@@ -57,9 +54,8 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
         };
     }
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: returns the opaque career registry; cast to concrete type at usage site
-    getCareerRegistry(): Record<string, unknown> {
-        return RT_CAREER_REGISTRY;
+    getCareerRegistry(): Record<string, CareerTable> {
+        return getCareerAdvancementRegistry();
     }
 
     resolveCareerKey(actor: WH40KBaseActor): string | null {

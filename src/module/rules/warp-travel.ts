@@ -27,9 +27,10 @@
  *
  * Perils of the Warp (Table 6-3, p. 161) is a separate d100 lookup table
  * triggered when a Gellar field breach / catastrophic stage failure occurs
- * during a journey. The lookup is exposed as `rollPeril()` so it can be
- * invoked independently (e.g. from a Psychic Phenomena chat card on a
- * roll of 75+).
+ * during a journey. Its reproduced content (entry names + effect prose) lives
+ * in the `dh2-core-rolltables` compendium as the "Perils of the Warp (Rogue
+ * Trader)" RollTable; `warp-travel-dialog.ts` draws it at runtime and splits
+ * each drawn result into a name/effect pair via `parsePerilText()`.
  *
  * RT-gated: every helper is callable from any game system, but
  * `isWarpTravelAvailable(systemId)` returns true only for `'rt'` — the
@@ -45,10 +46,7 @@
  */
 
 import type { GameSystemId } from '../config/game-systems/types.ts';
-import { degreesOfFailure as computeDegreesOfFailure, degreesOfSuccess as computeDegreesOfSuccess, findBandBy, type Rng, rollD100 } from './_dice.ts';
-
-/** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
-export type { Rng };
+import { degreesOfFailure as computeDegreesOfFailure, degreesOfSuccess as computeDegreesOfSuccess } from './_dice.ts';
 
 // ---------------------------------------------------------------------------
 // Per-stage primitives
@@ -356,169 +354,52 @@ export function resolveLeaveWarp(input: LeaveWarpInput): LeaveWarpResult {
 
 // ---------------------------------------------------------------------------
 // Perils of the Warp (Table 6-3, p. 161)
+//
+// The reproduced d100 content table (entry names + rulebook effect prose) is no
+// longer a literal here — per Direction #7 it lives in the `dh2-core-rolltables`
+// compendium as the "Perils of the Warp (Rogue Trader)" RollTable.
+// `warp-travel-dialog.ts` loads that table at runtime, resolves the band for a
+// rolled d100, and splits each drawn result's HTML into the name/effect pair
+// below via `parsePerilText`. Only this content-agnostic shape + parser stay in
+// the system code; the data itself is content.
 // ---------------------------------------------------------------------------
 
-/** Stable identifiers for the canonical Perils of the Warp entries. */
-type PerilId =
-    | 'the-gibbering'
-    | 'warp-burn'
-    | 'psychic-concussion'
-    | 'psy-blast'
-    | 'soul-sear'
-    | 'locked-in'
-    | 'chronological-incontinence'
-    | 'psychic-mirror'
-    | 'warp-whispers'
-    | 'dark-summoning'
-    | 'rending-the-veil'
-    | 'blood-rain'
-    | 'cataclysmic-blast'
-    | 'mass-possession'
-    | 'reality-quake'
-    | 'lost-to-the-warp'
-    | 'destruction';
-
-/** Single Perils-of-the-Warp table entry. */
-export interface PerilDef {
-    readonly id: PerilId;
-    /** Inclusive d100 range lower bound. */
-    readonly rangeMin: number;
-    /** Inclusive d100 range upper bound (00 is treated as 100). */
-    readonly rangeMax: number;
-    /** i18n key under `WH40K.WarpTravel.Peril.<key>.Name`. */
-    readonly key: string;
-    /** English fallback display name. */
+/** A single resolved Perils-of-the-Warp outcome, split for the chat card. */
+export interface PerilResult {
+    /** Display name of the peril (the bolded lead of the table entry). */
     readonly name: string;
-    /** Short prose effect summary (English fallback). */
+    /** Rulebook effect prose (the remainder of the entry). */
     readonly effect: string;
 }
 
-/** Table 6-3 — Perils of the Warp (full RT/DH d100 lookup). */
-export const PERILS_OF_THE_WARP: ReadonlyArray<PerilDef> = Object.freeze([
-    {
-        id: 'the-gibbering',
-        rangeMin: 1,
-        rangeMax: 5,
-        key: 'TheGibbering',
-        name: 'The Gibbering',
-        effect: 'Challenging Willpower test or 1d5+1 Insanity and Stunned 1d5 rounds.',
-    },
-    { id: 'warp-burn', rangeMin: 6, rangeMax: 9, key: 'WarpBurn', name: 'Warp Burn', effect: '1d5 Wounds and Stunned 1d5 rounds.' },
-    {
-        id: 'psychic-concussion',
-        rangeMin: 10,
-        rangeMax: 13,
-        key: 'PsychicConcussion',
-        name: 'Psychic Concussion',
-        effect: 'Psyker unconscious 1d5 rounds; bystanders within 3d10m Routine Willpower or Stunned 1 round.',
-    },
-    { id: 'psy-blast', rangeMin: 14, rangeMax: 18, key: 'PsyBlast', name: 'Psy-Blast', effect: 'Psyker thrown 1d10m into the air (falling damage).' },
-    { id: 'soul-sear', rangeMin: 19, rangeMax: 24, key: 'SoulSear', name: 'Soul Sear', effect: 'No psychic powers for one hour; 5 Corruption.' },
-    { id: 'locked-in', rangeMin: 25, rangeMax: 30, key: 'LockedIn', name: 'Locked In', effect: 'Catatonic; each round full-action Willpower test to recover.' },
-    {
-        id: 'chronological-incontinence',
-        rangeMin: 31,
-        rangeMax: 38,
-        key: 'ChronologicalIncontinence',
-        name: 'Chronological Incontinence',
-        effect: 'Vanishes 1d10 rounds; 1d5 Insanity and 1d5 permanent Toughness damage.',
-    },
-    {
-        id: 'psychic-mirror',
-        rangeMin: 39,
-        rangeMax: 46,
-        key: 'PsychicMirror',
-        name: 'Psychic Mirror',
-        effect: 'Power reflected on the psyker; beneficial powers deal 1d10+5 Energy ignoring non-warded armour.',
-    },
-    {
-        id: 'warp-whispers',
-        rangeMin: 47,
-        rangeMax: 55,
-        key: 'WarpWhispers',
-        name: 'Warp Whispers',
-        effect: 'Everyone within 4d10m Hard Willpower or 1d10 Corruption.',
-    },
-    {
-        id: 'dark-summoning',
-        rangeMin: 59,
-        rangeMax: 67,
-        key: 'DarkSummoning',
-        name: 'Dark Summoning',
-        effect: 'A Warp Predator manifests within 3d10m for 1d10 rounds; attacks the psyker.',
-    },
-    {
-        id: 'rending-the-veil',
-        rangeMin: 68,
-        rangeMax: 72,
-        key: 'RendingTheVeil',
-        name: 'Rending the Veil',
-        effect: 'All within 1d100m must test against Fear (3) Warp Shock for 1d5 rounds.',
-    },
-    {
-        id: 'blood-rain',
-        rangeMin: 73,
-        rangeMax: 78,
-        key: 'BloodRain',
-        name: 'Blood Rain',
-        effect: 'Within 5d10m: Challenging Strength or knocked down; further Perils auto-invoked 1d5 rounds.',
-    },
-    {
-        id: 'cataclysmic-blast',
-        rangeMin: 79,
-        rangeMax: 82,
-        key: 'CataclysmicBlast',
-        name: 'Cataclysmic Blast',
-        effect: 'Anyone within 1d10m takes 1d10+5 Energy; psyker stripped naked; no powers 1d5 hours.',
-    },
-    {
-        id: 'mass-possession',
-        rangeMin: 83,
-        rangeMax: 86,
-        key: 'MassPossession',
-        name: 'Mass Possession',
-        effect: 'All within 1d100m resist Puppet Master at 60/60/60; possession lasts 2d10 rounds.',
-    },
-    {
-        id: 'reality-quake',
-        rangeMin: 87,
-        rangeMax: 90,
-        key: 'RealityQuake',
-        name: 'Reality Quake',
-        effect: 'Within 3d10m all take 2d10 Rending; warded objects/Untouchables halve.',
-    },
-    {
-        id: 'lost-to-the-warp',
-        rangeMin: 91,
-        rangeMax: 99,
-        key: 'LostToTheWarp',
-        name: 'Lost to the Warp',
-        effect: 'Very Hard Willpower or dragged into the warp; reappear 1d10 weeks later with 4d10 Corruption.',
-    },
-    {
-        id: 'destruction',
-        rangeMin: 100,
-        rangeMax: 100,
-        key: 'Destruction',
-        name: 'Destruction',
-        effect: 'Irrevocably destroyed; 50% chance a daemonic entity takes his place.',
-    },
-]);
-
-/** Find the Peril entry covering the given d100 roll (1-100; 00 → 100). */
-export function getPerilForRoll(d100: number): PerilDef | null {
-    const normalized = d100 === 0 ? 100 : d100;
-    // `clamp: false` preserves the intentional 56-58 table gap (and any
-    // out-of-range roll) returning null instead of snapping to an edge row.
-    return findBandBy(PERILS_OF_THE_WARP, normalized, (p) => [p.rangeMin, p.rangeMax], { clamp: false }) ?? null;
+/** Strip every HTML tag from a fragment, leaving its text content. */
+function stripTags(html: string): string {
+    return html.replace(/<[^>]*>/g, '');
 }
 
-/** Roll a fresh d100 and return the matching Peril. Returns null only when
- * the table has a gap (the canonical RT table has a 56-58 gap reserved for
- * "Vice Versa", which is intentionally omitted here). */
-export function rollPeril(rng: Rng = Math.random): { rolled: number; peril: PerilDef | null } {
-    const rolled = rollD100(rng);
-    return { rolled, peril: getPerilForRoll(rolled) };
+/** Matches the first bold run — the authored form leads with `<b>`/`<strong>`. */
+const PERIL_NAME_RE = /<(?:strong|b)>([\s\S]*?)<\/(?:strong|b)>/i;
+
+/**
+ * Split a Perils-of-the-Warp RollTable result's HTML into its display name and
+ * effect prose. The canonical authored form is `<p><b>{name}</b>: {effect}</p>`:
+ * the first bold run is the name, and the remainder (minus a leading separator)
+ * is the effect. Content-agnostic — it carries no rulebook data itself, only
+ * the shape the compendium content is projected onto. Falls back to the whole
+ * stripped text as the name (empty effect) when no bold run is present.
+ */
+export function parsePerilText(html: string): PerilResult {
+    const match = PERIL_NAME_RE.exec(html);
+    const captured = match?.[1];
+    if (match === null || captured === undefined) {
+        return { name: stripTags(html).trim(), effect: '' };
+    }
+    const name = stripTags(captured).trim();
+    const remainder = html.slice(match.index + match[0].length);
+    const effect = stripTags(remainder)
+        .replace(/^[\s:—–-]+/, '')
+        .trim();
+    return { name, effect };
 }
 
 // ---------------------------------------------------------------------------
