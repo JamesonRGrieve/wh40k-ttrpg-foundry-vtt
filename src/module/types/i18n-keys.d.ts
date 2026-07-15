@@ -1732,6 +1732,7 @@ export type I18nKey =
     | 'WH40K.MutationRoll.MutationLabel'
     | 'WH40K.MutationRoll.NoMutation'
     | 'WH40K.MutationRoll.RollButton'
+    | 'WH40K.MutationRoll.TableMissing'
     | 'WH40K.MutationRoll.VisibleFlag'
     | 'WH40K.NPC.AddSkill'
     | 'WH40K.NPC.AddTag'

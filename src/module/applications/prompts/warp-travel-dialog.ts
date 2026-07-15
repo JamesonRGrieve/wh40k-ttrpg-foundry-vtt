@@ -17,11 +17,42 @@
  */
 
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
-import { type WarpJourneyResult, resolveWarpJourney, rollPeril } from '../../rules/warp-travel.ts';
+import { type PerilResult, type WarpJourneyResult, parsePerilText, resolveWarpJourney } from '../../rules/warp-travel.ts';
+import { RollTableUtils } from '../../utils/roll-table-utils.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
+
+/**
+ * Compendium coordinates of the RT Perils-of-the-Warp content table. The
+ * reproduced table lives in `dh2-core-rolltables` (Direction #7); the dialog
+ * draws it at runtime rather than embedding the rulebook text in `src/`.
+ */
+const PERILS_TABLE_NAME = 'Perils of the Warp (Rogue Trader)';
+const PERILS_PACK_ID = 'wh40k-rpg.dh2-core-rolltables';
+
+/** Structural view of a Foundry RollTable result row (untyped Collection). */
+interface PerilTableRow {
+    readonly range: readonly [number, number];
+    readonly text: string;
+}
+
+/**
+ * Resolve the Perils-of-the-Warp band covering a rolled d100 from the
+ * compendium table. Returns `null` when the table is missing or the roll lands
+ * in a gap (the RT table reserves 56-58) — preserving the pre-migration
+ * behaviour where a gap produced no peril and the chat card shows the gap note.
+ */
+async function drawPeril(rolled: number): Promise<PerilResult | null> {
+    const table = await RollTableUtils.findTableInCompendiums(PERILS_TABLE_NAME, PERILS_PACK_ID);
+    if (table === null) return null;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: RollTable.results is Foundry's untyped Collection; the structural [{range,text}] view satisfies it at runtime
+    const rows = Array.from(table.results as Iterable<PerilTableRow>);
+    const match = rows.find((row) => rolled >= row.range[0] && rolled <= row.range[1]);
+    if (match === undefined) return null;
+    return parsePerilText(match.text);
+}
 
 interface JourneyInputs {
     baseDays: number;
@@ -148,7 +179,10 @@ export default class WarpTravelDialog extends ApplicationV2Mixin(ApplicationV2 a
 
     static async #onRollPeril(this: WarpTravelDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const { rolled, peril } = rollPeril();
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        const rolled = roll.total ?? 1;
+        const peril = await drawPeril(rolled);
         await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/warp-travel-peril-chat.hbs', {
             rolled,
             peril,

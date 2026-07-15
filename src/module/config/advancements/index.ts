@@ -4,12 +4,14 @@
  * Central registry for all career advancement configurations.
  * Provides helper functions to access career-specific data.
  *
- * The per-career tables live in a single consolidated module
- * (`./career-tables.ts`) — see that file for the DRY-consolidation /
- * Direction #7 follow-up note. This module's exported API is unchanged.
+ * The per-career tables are content and live on the `rt-core-origins-careers`
+ * compendium `originPath` documents (`system.careerAdvancement`), indexed at
+ * `ready` into an in-memory boot cache (`./career-advancement-cache.ts`) keyed
+ * by the camelCase career key. This module reads that cache; its exported API
+ * is unchanged (Direction #7 — no in-`src/` content table).
  */
 
-import { CAREER_TABLES } from './career-tables.ts';
+import { getCareerAdvancementRegistry } from './career-advancement-cache.ts';
 
 /**
  * Registry of all career advancement configurations
@@ -32,14 +34,17 @@ type CareerModule = {
     RANK_1_ADVANCES?: RankAdvance[];
 };
 
-// CareerTable's CHARACTERISTIC_COSTS uses a named-tier interface
-// (CharacteristicCostTier) that's structurally similar but not directly
-// assignable to CareerModule's Record<string, number>. Cast through
-// unknown — the runtime shape is identical (named-tier keys ARE strings,
-// values ARE numbers) but TS's structural check rejects the named-vs-index
-// signature mismatch.
-// eslint-disable-next-line no-restricted-syntax -- boundary: cross-module structural-vs-named-key typing mismatch; runtime shape is identical.
-const CAREER_REGISTRY: Record<string, CareerModule> = CAREER_TABLES as unknown as Record<string, CareerModule>;
+// The boot cache exposes the strict CareerTable shape; its CHARACTERISTIC_COSTS
+// uses a named-tier interface that's structurally similar but not directly
+// assignable to CareerModule's Record<string, number>. Cast through unknown —
+// the runtime shape is identical (named-tier keys ARE strings, values ARE
+// numbers) but TS's structural check rejects the named-vs-index mismatch. Read
+// via a function (not a module-level const) so each call reflects the current
+// cache state, which is empty until the `ready`-time index build runs.
+function careerRegistry(): Record<string, CareerModule> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: cross-module structural-vs-named-key typing mismatch; runtime shape is identical.
+    return getCareerAdvancementRegistry() as unknown as Record<string, CareerModule>;
+}
 
 /**
  * Tier labels for characteristic advances
@@ -64,11 +69,12 @@ export const TIER_ORDER = ['simple', 'intermediate', 'trained', 'expert'];
  * @returns {Object|null} Career advancement configuration or null if not found
  */
 export function getCareerAdvancements(careerKey: string): CareerModule | null {
-    if (!Object.hasOwn(CAREER_REGISTRY, careerKey)) {
+    const registry = careerRegistry();
+    if (!Object.hasOwn(registry, careerKey)) {
         console.warn(`Career '${careerKey}' not found in advancement registry`);
         return null;
     }
-    return CAREER_REGISTRY[careerKey] ?? null;
+    return registry[careerKey] ?? null;
 }
 
 /**
@@ -127,7 +133,7 @@ export function getNextCharacteristicCost(careerKey: string, characteristicKey: 
  * @returns {Array<{key: string, name: string}>} List of career keys and names
  */
 export function getAvailableCareers(): { key: string; name: string }[] {
-    return Object.entries(CAREER_REGISTRY).map(([key, career]) => ({
+    return Object.entries(careerRegistry()).map(([key, career]) => ({
         key,
         name: career.CAREER_INFO?.name ?? key,
     }));
@@ -167,7 +173,7 @@ export function getCareerKeyFromName(careerName: string): string | null {
     }
 
     // Fallback: check if it matches a key directly
-    if (Object.hasOwn(CAREER_REGISTRY, careerName)) {
+    if (Object.hasOwn(careerRegistry(), careerName)) {
         return careerName;
     }
 
@@ -180,5 +186,5 @@ export function getCareerKeyFromName(careerName: string): string | null {
  * @returns {boolean}
  */
 export function hasCareer(careerKey: string): boolean {
-    return careerKey in CAREER_REGISTRY;
+    return careerKey in careerRegistry();
 }

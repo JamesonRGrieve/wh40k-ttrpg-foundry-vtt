@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/mutation-roll-dialog.hbs?raw';
 import { renderSheet } from '../../../../stories/test-helpers';
-import { TRACK_RANGES, type MutationTrack } from '../../rules/mutation-table.ts';
+import type { MutationTrack } from '../../rules/mutation-roll.ts';
 
 interface Args {
     track: MutationTrack;
@@ -16,8 +16,16 @@ interface MutationRollCtx {
     rangeMax: number;
 }
 
+// The live dialog derives these bands from the "Mutations" compendium table;
+// the story renders the template in isolation, so the representative DH2 bands
+// (minor rows end at 54, the full table at 100) are supplied as mock context.
+const TRACK_RANGE_MOCK: Record<MutationTrack, { min: number; max: number }> = {
+    minor: { min: 1, max: 54 },
+    major: { min: 1, max: 100 },
+};
+
 function buildContext(args: Args): MutationRollCtx {
-    const range = TRACK_RANGES[args.track];
+    const range = TRACK_RANGE_MOCK[args.track];
     return {
         track: args.track,
         trackIsMinor: args.track === 'minor',

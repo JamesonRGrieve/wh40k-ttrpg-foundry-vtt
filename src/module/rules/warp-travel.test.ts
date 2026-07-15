@@ -1,17 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
     durationMultiplierFor,
-    getPerilForRoll,
     isOffCourseRoll,
     isWarpTravelAvailable,
-    PERILS_OF_THE_WARP,
+    parsePerilText,
     resolveChartCourse,
     resolveD100Test,
     resolveLeaveWarp,
     resolveLocateAstronomican,
     resolveSteerVessel,
     resolveWarpJourney,
-    rollPeril,
     STAGE_DIFFICULTY,
     STAGE_LABEL_KEYS,
 } from './warp-travel';
@@ -207,72 +205,29 @@ describe('resolveLeaveWarp (#193)', () => {
     });
 });
 
-describe('PERILS_OF_THE_WARP (#193)', () => {
-    it('has unique ids', () => {
-        const ids = new Set(PERILS_OF_THE_WARP.map((p) => p.id));
-        expect(ids.size).toBe(PERILS_OF_THE_WARP.length);
+describe('parsePerilText (#193)', () => {
+    it('splits a bold-led entry (the authored `<b>name</b>: effect` form) into name and effect', () => {
+        const r = parsePerilText('<p><b>The Gibbering</b>: Challenging Willpower test or 1d5+1 Insanity and Stunned 1d5 rounds.</p>');
+        expect(r.name).toBe('The Gibbering');
+        expect(r.effect).toBe('Challenging Willpower test or 1d5+1 Insanity and Stunned 1d5 rounds.');
     });
 
-    it('entries have rangeMin ≤ rangeMax and stay within 1..100', () => {
-        for (const p of PERILS_OF_THE_WARP) {
-            expect(p.rangeMin).toBeLessThanOrEqual(p.rangeMax);
-            expect(p.rangeMin).toBeGreaterThanOrEqual(1);
-            expect(p.rangeMax).toBeLessThanOrEqual(100);
-        }
+    it('accepts <strong> as the name delimiter and an em-dash separator', () => {
+        const r = parsePerilText('<p><strong>Destruction</strong> — Irrevocably destroyed; 50% chance a daemonic entity takes his place.</p>');
+        expect(r.name).toBe('Destruction');
+        expect(r.effect).toBe('Irrevocably destroyed; 50% chance a daemonic entity takes his place.');
     });
 
-    it('includes canonical bookend entries', () => {
-        const ids = new Set(PERILS_OF_THE_WARP.map((p) => p.id));
-        expect(ids.has('the-gibbering')).toBe(true);
-        expect(ids.has('destruction')).toBe(true);
-    });
-});
-
-describe('getPerilForRoll (#193)', () => {
-    it('finds the first bucket on a 1', () => {
-        expect(getPerilForRoll(1)?.id).toBe('the-gibbering');
+    it('strips inline markup inside the effect prose', () => {
+        const r = parsePerilText('<p><b>Warp Burn</b>: 1d5 <em>Wounds</em> and Stunned 1d5 rounds.</p>');
+        expect(r.name).toBe('Warp Burn');
+        expect(r.effect).toBe('1d5 Wounds and Stunned 1d5 rounds.');
     });
 
-    it('finds the boundary entry on roll 5 (1-5 The Gibbering)', () => {
-        expect(getPerilForRoll(5)?.id).toBe('the-gibbering');
-    });
-
-    it('transitions to Warp Burn at 6', () => {
-        expect(getPerilForRoll(6)?.id).toBe('warp-burn');
-    });
-
-    it('finds Destruction on 100', () => {
-        expect(getPerilForRoll(100)?.id).toBe('destruction');
-    });
-
-    it('normalizes 0 to 100', () => {
-        expect(getPerilForRoll(0)?.id).toBe('destruction');
-    });
-});
-
-describe('rollPeril (#193)', () => {
-    it('is deterministic given a seeded rng', () => {
-        const a = rollPeril(() => 0);
-        const b = rollPeril(() => 0);
-        expect(a.rolled).toBe(b.rolled);
-        expect(a.peril?.id).toBe(b.peril?.id);
-    });
-
-    it('rolled = 1 at rng = 0', () => {
-        const r = rollPeril(() => 0);
-        expect(r.rolled).toBe(1);
-        expect(r.peril?.id).toBe('the-gibbering');
-    });
-
-    it('handles non-finite rng output as 0', () => {
-        const r = rollPeril(() => Number.NaN);
-        expect(r.rolled).toBe(1);
-    });
-
-    it('rolled = 100 at rng near 1', () => {
-        const r = rollPeril(() => 0.9999999);
-        expect(r.rolled).toBe(100);
-        expect(r.peril?.id).toBe('destruction');
+    it('falls back to the stripped text as the name (empty effect) when no bold run is present', () => {
+        const r = parsePerilText('<p>Unnamed peril</p>');
+        expect(r.name).toBe('Unnamed peril');
+        expect(r.effect).toBe('');
     });
 });
 

@@ -4,11 +4,50 @@ import dialogSrc from '../../../../src/templates/prompt/daemon-weapon-attribute-
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import type { ChaosAlignment } from '../../config/game-systems/types.ts';
-import { rollDaemonWeaponAttributes, type DaemonWeaponAttributeRollResult } from '../../rules/daemon-weapon-attributes.ts';
+import {
+    DAEMON_WEAPON_ATTRIBUTE_TABLE_KEYS,
+    type DaemonWeaponAttribute,
+    type DaemonWeaponAttributeRollResult,
+    type DaemonWeaponAttributeTable,
+    type DaemonWeaponAttributeTables,
+    rollDaemonWeaponAttributes,
+} from '../../rules/daemon-weapon-attribute-tables.ts';
 import { BINDING_STRENGTH_PROFILES, type BindingStrength } from '../../rules/daemon-weapon.ts';
 import { ALIGNMENT_ACCENT_CLASS } from './daemon-weapon-attribute-dialog.ts';
 
 initializeStoryHandlebars();
+
+/**
+ * Mock stand-in for the compendium-hosted Attribute tables. The real content
+ * (GW-copyrighted names + effects) lives only in the packs submodule and is
+ * loaded at runtime via `readDaemonWeaponAttributeTables`; Storybook has no
+ * `game.packs`, so these placeholder entries exercise the render path without
+ * reproducing the rulebook text.
+ */
+const FIXTURE_RANGES: readonly (readonly [number, number])[] = [
+    [1, 2],
+    [3, 4],
+    [5, 6],
+    [7, 8],
+    [9, 9],
+    [10, 10],
+];
+
+function makeFixtureTables(): DaemonWeaponAttributeTables {
+    const tables = new Map<DaemonWeaponAttributeTable, readonly DaemonWeaponAttribute[]>();
+    for (const table of DAEMON_WEAPON_ATTRIBUTE_TABLE_KEYS) {
+        const entries: DaemonWeaponAttribute[] = FIXTURE_RANGES.map((range, index) => ({
+            id: `${table}.attribute-${index + 1}`,
+            roll: range,
+            label: `${table} Attribute ${index + 1}`,
+            effect: `Sample ${table} effect ${index + 1} for layout preview.`,
+        }));
+        tables.set(table, entries);
+    }
+    return tables;
+}
+
+const FIXTURE_TABLES = makeFixtureTables();
 
 interface Args {
     alignment: ChaosAlignment;
@@ -50,7 +89,7 @@ interface DaemonWeaponChatContext {
 }
 
 function buildDialogContext(args: Args): DaemonWeaponDialogContext {
-    const result = args.rolled ? rollDaemonWeaponAttributes(args.alignment, args.bindingStrength, seededRng(args.seed)) : null;
+    const result = args.rolled ? rollDaemonWeaponAttributes(args.alignment, args.bindingStrength, FIXTURE_TABLES, seededRng(args.seed)) : null;
     return {
         alignment: args.alignment,
         bindingStrength: args.bindingStrength,
@@ -66,7 +105,7 @@ function buildDialogContext(args: Args): DaemonWeaponDialogContext {
 }
 
 function buildChatContext(args: Args): DaemonWeaponChatContext {
-    const result = rollDaemonWeaponAttributes(args.alignment, args.bindingStrength, seededRng(args.seed));
+    const result = rollDaemonWeaponAttributes(args.alignment, args.bindingStrength, FIXTURE_TABLES, seededRng(args.seed));
     return {
         alignment: args.alignment,
         bindingStrength: args.bindingStrength,

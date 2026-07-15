@@ -8,7 +8,11 @@
  */
 
 import type { ChaosAlignment } from '../../config/game-systems/types.ts';
-import { type DaemonWeaponAttributeRollResult, rollDaemonWeaponAttributes } from '../../rules/daemon-weapon-attributes.ts';
+import {
+    type DaemonWeaponAttributeRollResult,
+    readDaemonWeaponAttributeTables,
+    rollDaemonWeaponAttributes,
+} from '../../rules/daemon-weapon-attribute-tables.ts';
 import { BINDING_STRENGTH_PROFILES, type BindingStrength } from '../../rules/daemon-weapon.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
@@ -109,7 +113,8 @@ export default class DaemonWeaponAttributeDialog extends ApplicationV2Mixin(Appl
 
     static async #onRoll(this: DaemonWeaponAttributeDialog, _event: Event, _target: HTMLElement): Promise<void> {
         this.#syncSelections();
-        this.result = rollDaemonWeaponAttributes(this.alignment, this.bindingStrength);
+        const tables = await readDaemonWeaponAttributeTables();
+        this.result = rollDaemonWeaponAttributes(this.alignment, this.bindingStrength, tables);
         await this.render({ force: true });
     }
 

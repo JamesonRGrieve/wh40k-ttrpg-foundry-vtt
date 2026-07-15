@@ -1,23 +1,36 @@
 /**
  * @file DisorderRollDialog — GM-only dialog for rolling a Mental Disorder
- * from the canonical Disorders table (#116, core.md §"Insanity").
+ * from the canonical Disorders RollTable (#116, core.md §"Insanity").
  *
  * The GM picks a severity tier (Minor / Severe / Acute) — corresponding
  * to the 40 / 60 / 80 Insanity thresholds — clicks Roll, and the dialog
- * emits a chat card surfacing the rolled disorder's name, severity, and
- * mechanical effect summary.
+ * draws from the "Disorders" RollTable in the `dh2-core-rolltables`
+ * compendium, resolves the referenced Mental Disorder item, and emits a
+ * chat card surfacing the disorder's name, the chosen severity, and a
+ * concise effect summary.
  *
- * Pure picking logic lives in `src/module/rules/disorders-table.ts`;
- * this file is a thin UI shell over `rollDisorder()`.
+ * The disorder content lives ONLY in the compendium packs
+ * (`dh2-core-rolltables` for the range→disorder mapping and
+ * `dh2-core-items-mental-disorders` for the item bodies); this file is a
+ * thin UI shell that reads that content at runtime.
  */
 
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
-import { type DisorderDef, type DisorderSeverity, rollDisorder } from '../../rules/disorders-table.ts';
 import { capitalize } from '../../utils/format.ts';
+import { RollTableUtils } from '../../utils/roll-table-utils.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import { conciseEffect } from './disorder-text.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
+
+/** Three canonical severity tiers, mirroring `MentalDisorderData.severity`. */
+export type DisorderSeverity = 'minor' | 'severe' | 'acute';
+
+/** World/compendium name of the Disorders roll table (authored in `dh2-core-rolltables`). */
+const DISORDERS_TABLE_NAME = 'Disorders';
+/** Compendium collection id the Disorders table lives in — scopes the lookup so a shared table name can't mis-resolve. */
+const DISORDERS_ROLLTABLE_PACK = 'wh40k-rpg.dh2-core-rolltables';
 
 interface SeverityOption {
     id: DisorderSeverity;
@@ -36,6 +49,19 @@ const SEVERITY_OPTIONS: ReadonlyArray<SeverityOption> = Object.freeze([
 interface DisorderRollContext extends Record<string, unknown> {
     severities: ReadonlyArray<SeverityOption>;
     severity: DisorderSeverity;
+}
+
+/** The subset of a drawn `TableResult` this dialog reads. */
+interface DrawnDisorderResult {
+    documentUuid: string | null;
+    name: string;
+    description: string;
+}
+
+/** The subset of a resolved Mental Disorder item this dialog reads (per-line variants already flattened at load). */
+interface ResolvedDisorderItem {
+    name: string;
+    system: { trigger?: string; effect?: string };
 }
 
 function isValidSeverity(value: string): value is DisorderSeverity {
@@ -101,18 +127,36 @@ export default class DisorderRollDialog extends ApplicationV2Mixin(ApplicationV2
 
     static async #onRollDisorder(this: DisorderRollDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const disorder: DisorderDef | null = rollDisorder(this.severity);
-        if (disorder === null) {
+
+        // Draw the disorder from the compendium RollTable (content lives in the
+        // packs, not in this module). `displayChat: false` — we emit a bespoke card below.
+        const rollResult = await RollTableUtils.rollTable(DISORDERS_TABLE_NAME, {
+            pack: DISORDERS_ROLLTABLE_PACK,
+            displayChat: false,
+        });
+        const results = rollResult?.results ?? [];
+        const first = results[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess (tsconfig.strict.json) types results[0] as TableResult|undefined; the main/ESLint config has the flag off and sees the guard as redundant
+        if (first === undefined) {
             await this.close();
             return;
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's TableResult is untyped for our purposes; we read only documentUuid/name/description
+        const drawn = first as unknown as DrawnDisorderResult;
+        const item = drawn.documentUuid !== null ? ((await fromUuid(drawn.documentUuid)) as ResolvedDisorderItem | null) : null;
+
+        // Bind `system` to a local so the `??` defaults below don't read a `.system.*`
+        // member directly (which the no-restricted-syntax schema-tightening rule forbids).
+        const sys = item?.system;
+        const disorderName = item?.name ?? drawn.name;
+        const effect = conciseEffect(sys?.trigger ?? '', sys?.effect ?? drawn.description);
+
         const templateData = {
             severity: this.severity,
             severityKey: `WH40K.DisorderRoll.${capitalize(this.severity)}`,
-            disorderName: disorder.name,
-            disorderKey: disorder.key,
-            effect: disorder.effect,
+            disorderName,
+            effect,
             gameSystem: 'dh2',
         };
 
