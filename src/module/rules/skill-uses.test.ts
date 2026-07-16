@@ -94,6 +94,17 @@ describe('resolveFirstAid (#432)', () => {
     });
 });
 
+describe('Demolition place/defuse (#445)', () => {
+    it('offers general + place-charge + defuse', () => {
+        expect(getSkillUses('demolition').map((u) => u.id)).toEqual(['general', 'placeCharge', 'defuse']);
+    });
+
+    it('acts on chosen explosives (self-directed picker), not a targeted token', () => {
+        expect(getSkillUse('demolition', 'placeCharge')?.needsTarget).toBe(false);
+        expect(getSkillUse('demolition', 'defuse')?.needsTarget).toBe(false);
+    });
+});
+
 describe('object-interaction appliers (#443/#444)', () => {
     it('offers Tech-Use Repair alongside the general (DoS-readout) test', () => {
         expect(getSkillUses('techUse').map((u) => u.id)).toEqual(['general', 'repair']);

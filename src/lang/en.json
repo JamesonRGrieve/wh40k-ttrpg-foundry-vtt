@@ -418,6 +418,22 @@
                 "Diagnose": "Diagnose",
                 "ExtractBullet": "Extract Embedded Object"
             },
+            "Demo": {
+                "Place": "Place Charge",
+                "Defuse": "Defuse Charge",
+                "DefaultTrigger": "on trigger",
+                "PickTitle": "{use} — choose an explosive",
+                "PickPlaceHint": "Pick the charge to place and arm.",
+                "PickDefuseHint": "Pick the armed charge to defuse.",
+                "NoCharge": "You carry no explosive charge to place.",
+                "NoArmed": "There is no armed charge to defuse.",
+                "Placed": "{item} is placed and armed ({trigger}).",
+                "PlaceFailed": "You fail to place {item}.",
+                "Premature": "The placement goes wrong — {item} detonates prematurely!",
+                "Defused": "{item} is defused.",
+                "DefuseFailed": "You fail to defuse {item} — it stays live.",
+                "DefuseSetOff": "The defuse goes wrong — {item} detonates!"
+            },
             "Object": {
                 "Repair": "Repair Item",
                 "BypassLock": "Bypass Lock",

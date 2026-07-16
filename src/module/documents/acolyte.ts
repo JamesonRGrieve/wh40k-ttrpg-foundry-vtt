@@ -8,6 +8,8 @@ import {
     type CoatableWeapon,
     PalmActionData,
     ObjectStateActionData,
+    DemolitionActionData,
+    type ExplosiveItem,
     type StatefulItem,
     DetectionActionData,
     DosReadoutActionData,
@@ -467,6 +469,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
             await this._rollObjectState(use, skillKey, skillLabel, targetValue, skillRank);
             return true;
         }
+        // Demolition (#445): pick the explosive to place or defuse before rolling.
+        if (use.kind === 'placeCharge' || use.kind === 'defuse') {
+            await this._rollDemolition(use, skillKey, skillLabel, targetValue, skillRank);
+            return true;
+        }
         if (use.needsTarget) {
             this._rollTargetedSkillUse(use, skillKey, skillLabel, targetValue, skillRank);
             return true;
@@ -751,6 +758,55 @@ export class WH40KAcolyte extends WH40KBaseActor {
             ...(skillRank !== undefined ? { skillRank } : {}),
         });
         prepareUnifiedRoll(objectAction);
+    }
+
+    /**
+     * Demolition (#445): pick the explosive to place (an unarmed charge you carry) or
+     * defuse (an armed charge on you or a targeted actor), then route through
+     * DemolitionActionData, which arms it with the setter's degrees on a placement or
+     * resolves the opposed defuse against those recorded degrees.
+     */
+    async _rollDemolition(use: SkillUseDef, skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<void> {
+        const useLabel = game.i18n.localize(use.labelKey);
+        const isPlace = use.kind === 'placeCharge';
+        const target = firstTargetedActor();
+        // Place from your own carried charges; defuse an armed charge on you or the target.
+        const pools: WH40KItem[][] = isPlace ? [this.items.contents] : target !== null ? [this.items.contents, target.items.contents] : [this.items.contents];
+        const candidates = pools.flat().filter((item: WH40KItem) => {
+            if (!item.isWeapon && !item.isGear) return false;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; narrow to the armed state slot this reads
+            const armed = (item.system as unknown as { state?: { armed?: { active?: boolean } } }).state?.armed?.active ?? false;
+            return armed !== isPlace && item.id !== null;
+        });
+        const pickable = candidates.map((i: WH40KItem) => ({ id: i.id as string, name: i.name }));
+        const chosen = await promptItemChoice(
+            pickable,
+            game.i18n.format('WH40K.SkillUse.Demo.PickTitle', { use: useLabel }),
+            game.i18n.localize(isPlace ? 'WH40K.SkillUse.Demo.PickPlaceHint' : 'WH40K.SkillUse.Demo.PickDefuseHint'),
+        );
+        if (chosen === null) {
+            ui.notifications.warn(game.i18n.localize(isPlace ? 'WH40K.SkillUse.Demo.NoCharge' : 'WH40K.SkillUse.Demo.NoArmed'));
+            return;
+        }
+        const owner = !isPlace && target?.items.get(chosen.id) !== undefined ? target : this;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the resolved Item satisfies ExplosiveItem structurally (id/name/update + armed state)
+        const explosive = owner.items.get(chosen.id) as unknown as ExplosiveItem;
+
+        const demo = new DemolitionActionData(
+            isPlace ? 'placeCharge' : 'defuse',
+            explosive,
+            isPlace ? game.i18n.localize('WH40K.SkillUse.Demo.DefaultTrigger') : '',
+        );
+        this._buildSimpleSkillRoll({
+            key: skillKey,
+            type: 'skill',
+            label: `${skillLabel}: ${useLabel} (${chosen.name})`,
+            target: targetValue,
+            situationalKey: skillKey,
+            instance: demo,
+            ...(skillRank !== undefined ? { skillRank } : {}),
+        });
+        prepareUnifiedRoll(demo);
     }
 
     /**

@@ -43,7 +43,9 @@ export type SkillUseKind =
     | 'steal'
     | 'plant'
     | 'repair'
-    | 'bypassLock';
+    | 'bypassLock'
+    | 'placeCharge'
+    | 'defuse';
 
 /** One selectable use offered when rolling a skill. */
 export interface SkillUseDef {
@@ -221,6 +223,14 @@ const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     security: () => [
         GENERAL_SKILL_USE,
         { id: 'bypassLock', labelKey: 'WH40K.SkillUse.Object.BypassLock', needsTarget: false, difficultyMod: 0, kind: 'bypassLock' },
+    ],
+    // Demolition (#445): place an explosive (arm + record the setter's degrees) or
+    // defuse one (opposed vs those recorded degrees). DH1/DW/OW/RT skill; BC/DH2 fold
+    // it into Tech-Use, but the demolition skill key exists so the flow lives here.
+    demolition: () => [
+        GENERAL_SKILL_USE,
+        { id: 'placeCharge', labelKey: 'WH40K.SkillUse.Demo.Place', needsTarget: false, difficultyMod: 0, kind: 'placeCharge' },
+        { id: 'defuse', labelKey: 'WH40K.SkillUse.Demo.Defuse', needsTarget: false, difficultyMod: 0, kind: 'defuse' },
     ],
     // Opposed detection (#434): a hider vs an observer's Perception, a scanner vs the
     // hider's Agility, Scrutiny vs the mark's Fellowship (Deceive), a thief vs Perception.
