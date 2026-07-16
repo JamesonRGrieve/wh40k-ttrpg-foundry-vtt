@@ -106,6 +106,16 @@ describe('unified roll dialog wires test variants (#246) + sense-split (#440)', 
         expect(dialog).toContain('variantAutoFails(');
     });
 
+    it('propagates the item modifier appliesToVariant tag through getSituationalModifiers (#440 auspex→Visual)', () => {
+        // Without this propagation the dialog's filterModifiersByVariant never sees a
+        // sense-scoped item modifier, so an auspex bonus tagged Visual would apply to
+        // every channel. The acolyte must forward mod.appliesToVariant.
+        const acolyte = readRepoFile('src/module/documents/acolyte.ts');
+        expect(acolyte).toContain('appliesToVariant');
+        const modifiersTemplate = readRepoFile('src/module/data/shared/modifiers-template.ts');
+        expect(modifiersTemplate).toContain('appliesToVariant');
+    });
+
     it('runs the skill-use resolution hooks on BOTH simple-roll paths so opposed/auto-resolve fire', () => {
         // Regression: the simple auto (_systemRoll) and manual (_submitSimpleRoll)
         // paths previously skipped checkForOpposed/descriptionText, so #432-#434

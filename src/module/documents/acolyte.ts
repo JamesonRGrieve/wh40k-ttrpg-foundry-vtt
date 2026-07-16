@@ -252,9 +252,9 @@ export class WH40KAcolyte extends WH40KBaseActor {
     getSituationalModifiers(
         type: 'characteristics' | 'skills' | 'combat',
         key: string | null = null,
-    ): Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string }> {
-        type SituationalEntry = { key: string; value: number; condition: string; icon?: string };
-        const modifiers: Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string }> = [];
+    ): Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string; appliesToVariant?: string }> {
+        type SituationalEntry = { key: string; value: number; condition: string; icon?: string; appliesToVariant?: string };
+        const modifiers: Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string; appliesToVariant?: string }> = [];
 
         // Collect from all modifier-providing items
         const modifierItems = this.items.filter((item: WH40KItem) => {
@@ -286,6 +286,9 @@ export class WH40KAcolyte extends WH40KBaseActor {
                     icon: mod.icon ?? 'fa-solid fa-exclamation-triangle',
                     source: item.name,
                     itemId: item.id,
+                    // Propagate the test-variant tag (#246/#440) so the dialog can gate
+                    // a sense-scoped modifier (an auspex tagged "Visual") to its channel.
+                    ...(mod.appliesToVariant !== undefined && mod.appliesToVariant !== '' ? { appliesToVariant: mod.appliesToVariant } : {}),
                 });
             }
         }

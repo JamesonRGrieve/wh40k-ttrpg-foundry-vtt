@@ -146,6 +146,8 @@ describe('situationalEntrySchema (via ModifiersTemplate.defineSchema)', () => {
                 value: { kind: 'NumberField', options: { required: true, initial: 0 } },
                 condition: { kind: 'StringField', options: { required: true } },
                 icon: { kind: 'StringField', options: { required: false, initial: 'fa-exclamation-triangle' } },
+                // #246/#440 test-variant scoping tag (blank = universal).
+                appliesToVariant: { kind: 'StringField', options: { required: false, blank: true, initial: '' } },
             },
         },
     };
