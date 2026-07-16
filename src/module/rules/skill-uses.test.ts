@@ -94,6 +94,21 @@ describe('resolveFirstAid (#432)', () => {
     });
 });
 
+describe('Sleight of Hand plant/steal (#442)', () => {
+    it('adds opposed steal + plant uses alongside the #434 detection use', () => {
+        const ids = getSkillUses('sleightOfHand').map((u) => u.id);
+        expect(ids).toEqual(['general', 'detect', 'steal', 'plant']);
+    });
+
+    it('makes both transfer uses target-directed and opposed by Perception', () => {
+        for (const id of ['steal', 'plant']) {
+            const use = getSkillUse('sleightOfHand', id);
+            expect(use?.needsTarget).toBe(true);
+            expect(use?.opposedChar).toBe('Per');
+        }
+    });
+});
+
 describe('Chem-Use (#441)', () => {
     it('offers general + administer-chem (targeted) + coat-weapon (self)', () => {
         const ids = getSkillUses('chemUse').map((u) => u.id);
@@ -240,9 +255,12 @@ describe('object interaction DoS readout (#436)', () => {
 
 describe('opposed detection (#434)', () => {
     it('offers general + an opposed detect use for the detection skills', () => {
+        // Sleight of Hand additionally carries steal/plant transfer uses (#442), so
+        // assert the detect use's presence rather than an exact list for it.
+        for (const key of ['stealth', 'awareness', 'scrutiny']) {
+            expect(getSkillUses(key).map((u) => u.id)).toEqual(['general', 'detect']);
+        }
         for (const key of ['stealth', 'awareness', 'scrutiny', 'sleightOfHand']) {
-            const uses = getSkillUses(key);
-            expect(uses.map((u) => u.id)).toEqual(['general', 'detect']);
             const detect = getSkillUse(key, 'detect');
             expect(detect?.needsTarget).toBe(true);
             expect(detect?.opposedChar).toBeDefined();

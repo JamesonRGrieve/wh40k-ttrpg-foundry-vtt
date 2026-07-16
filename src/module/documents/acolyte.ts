@@ -6,6 +6,7 @@ import {
     type ChemLike,
     ChemUseActionData,
     type CoatableWeapon,
+    PalmActionData,
     DetectionActionData,
     DosReadoutActionData,
     InterrogationActionData,
@@ -429,6 +430,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 await this._rollChemUse(use, resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank);
                 return;
             }
+            // Sleight of Hand plant/steal (#442) picks the item to move before rolling.
+            if (use.kind === 'steal' || use.kind === 'plant') {
+                await this._rollPalm(use, resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank);
+                return;
+            }
             if (use.needsTarget) {
                 this._rollTargetedSkillUse(use, resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank);
                 return;
@@ -636,6 +642,52 @@ export class WH40KAcolyte extends WH40KBaseActor {
         });
         chemAction.rollData.targetActor = targetActor;
         prepareUnifiedRoll(chemAction);
+    }
+
+    /**
+     * Sleight of Hand plant/steal (#442): pick the item to move — from the target's
+     * carried items when stealing, from the actor's own when planting — then route
+     * through PalmActionData, which transfers it on a winning opposed roll.
+     */
+    async _rollPalm(use: SkillUseDef, skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<void> {
+        const useLabel = game.i18n.localize(use.labelKey);
+        const targetActor = firstTargetedActor();
+        if (targetActor === null) {
+            ui.notifications.warn(game.i18n.format('WH40K.SkillUse.NoTarget', { use: useLabel }));
+            return;
+        }
+        // Steal from the target's inventory; plant from your own. Physical items only
+        // (something you can actually palm), so skip talents/skills/conditions/etc.
+        const source = use.kind === 'steal' ? targetActor : this;
+        const carried = source.items.filter(
+            (item: WH40KItem) =>
+                (item.isWeapon || item.isArmour || item.isGear || item.type === 'cybernetic' || item.type === 'ammunition') && item.id !== null,
+        );
+        const pickable = carried.map((i: WH40KItem) => ({ id: i.id as string, name: i.name }));
+        const chosen = await promptItemChoice(
+            pickable,
+            game.i18n.format('WH40K.SkillUse.Palm.PickTitle', { use: useLabel }),
+            game.i18n.localize('WH40K.SkillUse.Palm.PickHint'),
+        );
+        if (chosen === null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.SkillUse.Palm.NoItem'));
+            return;
+        }
+
+        const palm = new PalmActionData(use.kind === 'steal' ? 'steal' : 'plant', chosen.id);
+        this._buildSimpleSkillRoll({
+            key: skillKey,
+            type: 'skill',
+            label: `${skillLabel}: ${useLabel} (${chosen.name})`,
+            target: targetValue,
+            situationalKey: skillKey,
+            instance: palm,
+            ...(skillRank !== undefined ? { skillRank } : {}),
+        });
+        palm.rollData.targetActor = targetActor;
+        palm.rollData.isOpposed = true;
+        palm.rollData.opposedChar = use.opposedChar ?? 'Per';
+        prepareUnifiedRoll(palm);
     }
 
     /**
