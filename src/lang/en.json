@@ -429,6 +429,10 @@
                     "Basic": "You recall the basics (tier {tier}).",
                     "Detailed": "You recall detailed knowledge (tier {tier}).",
                     "Comprehensive": "You recall comprehensive knowledge (tier {tier})."
+                },
+                "Physical": {
+                    "Fail": "You fail the physical feat.",
+                    "Success": "You clear the feat (+{tier} degrees — the GM scales the distance/height cleared)."
                 }
             }
         },
