@@ -1,8 +1,10 @@
 import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.ts';
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { D100Roll } from '../dice/_module.ts';
-import type { ActionData } from '../rolls/action-data.ts';
+import { type ActionData, MedicaeActionData } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
+import { firstTargetedActor, promptSkillUse } from '../rolls/skill-use-picker.ts';
+import { firstAidDifficultyForTier, hasSkillUses } from '../rules/skill-uses.ts';
 import type {
     WH40KActorBio,
     WH40KActorSystemData,
@@ -395,6 +397,41 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 // their training per-entry; the parent skill's advance is ~0, which the
                 // dialog would otherwise read as "untrained" and halve/block (#225).
                 skillRank = speciality.rank ?? (speciality.trained === true ? 1 : 0);
+            }
+        }
+
+        // Skill-use flow (#432): when a skill offers RAW Special Uses (e.g. Medicae),
+        // let the player pick one. A target-directed use (First Aid, Surgery) prompts
+        // for a target and routes through MedicaeActionData, which auto-applies the
+        // healing on resolution. General / informational uses fall through to the
+        // normal test below.
+        if (hasSkillUses(resolvedSkillName)) {
+            const use = await promptSkillUse(resolvedSkillName, label ?? resolvedSkillName);
+            if (use === null) return;
+            if (use.needsTarget) {
+                const patient = firstTargetedActor();
+                if (patient === null) {
+                    ui.notifications.warn(game.i18n.format('WH40K.SkillUse.NoTarget', { use: game.i18n.localize(use.labelKey) }));
+                    return;
+                }
+                const medicae = new MedicaeActionData(use.kind);
+                // RAW First Aid difficulty scales with how hurt the patient is; other
+                // Medicae uses carry the flat per-action difficulty from MEDICAE_ACTIONS.
+                const patientWounds = patient.system.wounds;
+                const difficulty = use.kind === 'firstAid' ? firstAidDifficultyForTier(patientWounds.value, patientWounds.max) : use.difficultyMod;
+                this._buildSimpleSkillRoll({
+                    key: resolvedSkillName,
+                    type: 'skill',
+                    label: `${label}: ${game.i18n.localize(use.labelKey)}`,
+                    target: targetValue,
+                    situationalKey: resolvedSkillName,
+                    instance: medicae,
+                    ...(difficulty !== 0 ? { extraModifiers: { medicaeDifficulty: difficulty } } : {}),
+                    ...(skillRank !== undefined ? { skillRank } : {}),
+                });
+                medicae.rollData.targetActor = patient;
+                prepareUnifiedRoll(medicae);
+                return;
             }
         }
 

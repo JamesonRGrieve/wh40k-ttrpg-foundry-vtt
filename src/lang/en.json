@@ -401,6 +401,24 @@
         },
         "Characteristics": "Characteristics",
         "CharacteristicModifiers": "Characteristic Modifiers",
+        "SkillUse": {
+            "PickerTitle": "{skill} — choose a use",
+            "PickerHint": "Pick how you are using this skill.",
+            "General": "General Test",
+            "NoTarget": "Target a token first, then use {use}.",
+            "Applied": "{medic} applies {use} to {patient}.",
+            "HealedWounds": "Restored {wounds} wound(s).",
+            "ResolvedCritical": "Removed {tiers} critical-injury tier(s).",
+            "BloodLossStopped": "Blood loss closed.",
+            "Failed": "The {use} attempt fails.",
+            "Medicae": {
+                "FirstAid": "First Aid",
+                "ExtendedCare": "Extended Care",
+                "Surgery": "Surgery",
+                "Diagnose": "Diagnose",
+                "ExtractBullet": "Extract Embedded Object"
+            }
+        },
         "Skills": {
             "Header": "Skills",
             "SpecialistHeader": "Specialist Skills",

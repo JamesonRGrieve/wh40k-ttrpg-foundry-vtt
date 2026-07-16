@@ -801,6 +801,12 @@ export class WH40KBaseActor extends Actor {
          * difficulty / situational modifiers. Zero-valued entries are skipped.
          */
         extraModifiers?: Record<string, number> | undefined;
+        /**
+         * A pre-constructed action-data instance to populate instead of a fresh
+         * `SimpleSkillData` — lets a caller route a skill roll through a subclass
+         * (e.g. `MedicaeActionData`) while reusing this shared setup (#432).
+         */
+        instance?: SimpleSkillData | undefined;
     }): SimpleSkillData {
         const TYPE_LITERAL: Record<typeof opts.type, string> = {
             characteristic: 'Characteristic',
@@ -808,7 +814,7 @@ export class WH40KBaseActor extends Actor {
             simpleWeapon: 'Attack',
         };
 
-        const simpleSkillData = new SimpleSkillData();
+        const simpleSkillData = opts.instance ?? new SimpleSkillData();
         // eslint-disable-next-line no-restricted-syntax -- boundary: SimpleSkillData.rollData is opaque; cast to RollDataLike is necessary to access typed fields
         const rollData = simpleSkillData.rollData as unknown as RollDataLike;
         rollData.actor = this;

@@ -3,6 +3,7 @@ import { SYSTEM_ID } from '../constants.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import type { RerollOption } from '../rules/reroll.ts';
+import { applyFirstAidOutcome, type FirstAidPatient, getSkillUse, resolveFirstAid, type SkillUseKind } from '../rules/skill-uses.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
@@ -595,5 +596,64 @@ export class SimpleSkillData extends ActionData {
         this.template = 'systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs';
         this.hasDamage = false;
         this.rollData = new RollData();
+    }
+}
+
+/**
+ * A targeted Medicae skill-use roll (#432). Built like a {@link SimpleSkillData}
+ * but carries the chosen use kind and a pre-selected patient on
+ * `rollData.targetActor`. On resolution it reads the patient's vitals, resolves
+ * the RAW outcome (`resolveFirstAid`), and **auto-applies the healing** to the
+ * patient — the skill analogue of a weapon auto-applying damage — then summarizes
+ * what it did on the chat card. Talent/effect modifiers (e.g. Superior Chirurgeon)
+ * are already folded into the roll's target via the shared modifier pipeline.
+ */
+export class MedicaeActionData extends SimpleSkillData {
+    readonly useKind: SkillUseKind;
+
+    constructor(useKind: SkillUseKind) {
+        super();
+        this.useKind = useKind;
+    }
+
+    override async descriptionText(): Promise<void> {
+        const target = this.rollData.targetActor;
+        if (target === null || this.useKind === 'general') return;
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor.wounds is the loosely-typed system wounds block
+        const wounds = target.wounds as { value?: number; max?: number; critical?: number } | undefined;
+        const woundsValue = wounds?.value ?? 0;
+        const woundsMax = wounds?.max ?? 0;
+        const criticalDamage = wounds?.critical ?? 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics[key] is the runtime characteristic record; effectiveBonus is the bonus-only channel
+        const toughness = target.characteristics['toughness'] as { effectiveBonus?: number } | undefined;
+        const toughnessBonus = toughness?.effectiveBonus ?? 0;
+
+        const useLabel = game.i18n.localize(getSkillUse('medicae', this.useKind)?.labelKey ?? '');
+        const outcome = resolveFirstAid(this.useKind, { woundsValue, woundsMax, criticalDamage, toughnessBonus }, this.rollData.success ? 1 : 0);
+
+        if (!outcome.success) {
+            this.addEffect('Medicae', game.i18n.format('WH40K.SkillUse.Failed', { use: useLabel }));
+            return;
+        }
+
+        const patient: FirstAidPatient = {
+            woundsValue,
+            woundsMax,
+            criticalDamage,
+            update: async (patch): Promise<void> => {
+                const upd: Record<string, number> = {};
+                if (patch.woundsValue !== undefined) upd['system.wounds.value'] = patch.woundsValue;
+                if (patch.criticalDamage !== undefined) upd['system.wounds.critical'] = patch.criticalDamage;
+                await target.update(upd);
+            },
+        };
+        await applyFirstAidOutcome(patient, outcome);
+
+        const parts = [game.i18n.format('WH40K.SkillUse.Applied', { medic: this.rollData.sourceActor?.name ?? '', use: useLabel, patient: target.name })];
+        if (outcome.woundsRestored > 0) parts.push(game.i18n.format('WH40K.SkillUse.HealedWounds', { wounds: String(outcome.woundsRestored) }));
+        if (outcome.criticalResolved > 0) parts.push(game.i18n.format('WH40K.SkillUse.ResolvedCritical', { tiers: String(outcome.criticalResolved) }));
+        if (outcome.bloodLossStopped) parts.push(game.i18n.localize('WH40K.SkillUse.BloodLossStopped'));
+        this.addEffect('Medicae', parts.join(' '));
     }
 }
