@@ -162,6 +162,24 @@ export class WH40KBaseActor extends Actor {
         await this.createEmbeddedDocuments('ActiveEffect', [data] as unknown as Parameters<typeof this.createEmbeddedDocuments<'ActiveEffect'>>[1]);
     }
 
+    /**
+     * Move one embedded item from this actor to `destination` (#442) — the inventory
+     * transfer behind Sleight of Hand's plant/steal. Creates a copy on the destination
+     * and deletes the original here, so possession actually changes hands. Returns the
+     * moved item's name for the chat readout, or null when the item id is not found.
+     */
+    async transferItemTo(itemId: string, destination: WH40KBaseActor): Promise<string | null> {
+        const item = this.items.get(itemId);
+        if (item === undefined) return null;
+        const name = item.name;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Item#toObject returns Foundry's source payload; createEmbeddedDocuments takes the untyped create schema
+        const data = (item as { toObject: () => Record<string, unknown> }).toObject();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts Foundry's untyped embedded-document create schema
+        await destination.createEmbeddedDocuments('Item', [data] as unknown as Parameters<typeof destination.createEmbeddedDocuments<'Item'>>[1]);
+        await this.deleteEmbeddedDocuments('Item', [itemId]);
+        return name;
+    }
+
     /** This actor's current Addiction tier for a substance (#457); `none` when unrecorded. */
     getAddictionTier(substanceKey: string): AddictionTier {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Actor#flags is Foundry's untyped per-module flag bag

@@ -418,6 +418,16 @@
                 "Diagnose": "Diagnose",
                 "ExtractBullet": "Extract Embedded Object"
             },
+            "Palm": {
+                "Steal": "Steal / Pickpocket",
+                "Plant": "Plant Item",
+                "PickTitle": "{use} — choose an item",
+                "PickHint": "Pick the item to move.",
+                "NoItem": "No physical item is available to move.",
+                "Stole": "You lift {item} off {target} unnoticed.",
+                "Planted": "You plant {item} on {target} unnoticed.",
+                "Caught": "{target} catches the attempt — nothing changes hands."
+            },
             "Chem": {
                 "Apply": "Administer Chem",
                 "Coat": "Coat Weapon",

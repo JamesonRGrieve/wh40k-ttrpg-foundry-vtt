@@ -39,7 +39,9 @@ export type SkillUseKind =
     | 'warCry'
     | 'blather'
     | 'applyChem'
-    | 'coatWeapon';
+    | 'coatWeapon'
+    | 'steal'
+    | 'plant';
 
 /** One selectable use offered when rolling a skill. */
 export interface SkillUseDef {
@@ -216,7 +218,15 @@ const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     stealth: () => [GENERAL_SKILL_USE, detectionUse('Stealth', 'Per')],
     awareness: () => [GENERAL_SKILL_USE, detectionUse('Awareness', 'Ag')],
     scrutiny: () => [GENERAL_SKILL_USE, detectionUse('Scrutiny', 'Fel')],
-    sleightOfHand: () => [GENERAL_SKILL_USE, detectionUse('SleightOfHand', 'Per')],
+    // Sleight of Hand also transfers an item (#442): steal one off a target or plant
+    // one onto them, opposed vs the mark's Perception (Awareness/Scrutiny). The
+    // detection use (#434) is the "did they notice" contest; these move the item.
+    sleightOfHand: () => [
+        GENERAL_SKILL_USE,
+        detectionUse('SleightOfHand', 'Per'),
+        { id: 'steal', labelKey: 'WH40K.SkillUse.Palm.Steal', needsTarget: true, difficultyMod: 0, kind: 'steal', opposedChar: 'Per' },
+        { id: 'plant', labelKey: 'WH40K.SkillUse.Palm.Plant', needsTarget: true, difficultyMod: 0, kind: 'plant', opposedChar: 'Per' },
+    ],
     // Opposed detection/deception (#452, extends #434): the remaining hide/find/tail
     // skills, each opposed by the observer's Perception (or the quarry's Agility for
     // Tracking). Deceive's lie contest is the social use (#433), not repeated here.

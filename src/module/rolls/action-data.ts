@@ -890,6 +890,40 @@ export class SocialInfluenceActionData extends SimpleSkillData {
 }
 
 /**
+ * A Sleight of Hand plant/steal roll (#442) — an opposed contest (vs the mark's
+ * Perception, resolved by the #449 engine) that, on a win, actually MOVES the chosen
+ * item between inventories. Steal pulls it from the target to the actor; plant pushes
+ * it the other way. On a loss the mark notices and no transfer happens.
+ */
+export class PalmActionData extends SimpleSkillData {
+    readonly mode: 'steal' | 'plant';
+    readonly itemId: string;
+
+    constructor(mode: 'steal' | 'plant', itemId: string) {
+        super();
+        this.mode = mode;
+        this.itemId = itemId;
+    }
+
+    override async descriptionText(): Promise<void> {
+        const actor = this.rollData.sourceActor;
+        const target = this.rollData.targetActor;
+        if (actor === null || target === null) return;
+
+        if (!this.rollData.success) {
+            this.addEffect('Sleight of Hand', game.i18n.format('WH40K.SkillUse.Palm.Caught', { target: target.name }));
+            return;
+        }
+
+        const [from, to] = this.mode === 'steal' ? [target, actor] : [actor, target];
+        const moved = await from.transferItemTo(this.itemId, to);
+        if (moved === null) return;
+        const key = this.mode === 'steal' ? 'WH40K.SkillUse.Palm.Stole' : 'WH40K.SkillUse.Palm.Planted';
+        this.addEffect('Sleight of Hand', game.i18n.format(key, { item: moved, target: target.name }));
+    }
+}
+
+/**
  * A Chem-Use roll (#441) — administer a chem to a subject, or coat a weapon with it.
  * RAW: "administers a drug/poison/toxin to a patient, or applies it to a weapon"
  * (DH2 p109). The chosen chem's `grants.activeEffects` are applied to the TARGET
