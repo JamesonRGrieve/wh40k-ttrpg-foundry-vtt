@@ -7,6 +7,7 @@ import {
     DosReadoutActionData,
     InterrogationActionData,
     MedicaeActionData,
+    SocialBuffActionData,
     SocialInfluenceActionData,
 } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
@@ -500,6 +501,28 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 social.rollData.opposedChar = use.opposedChar;
             }
             prepareUnifiedRoll(social);
+            return;
+        }
+
+        // Social buff/debuff (#447): Inspire/Terrify buff an ally, War Cry debuffs an
+        // enemy's defence, Blather (opposed vs WP) holds a target inactive.
+        if (use.kind === 'socialBuff' && (use.id === 'inspire' || use.id === 'terrify' || use.id === 'warCry' || use.id === 'blather')) {
+            const socialBuff = new SocialBuffActionData(use.id);
+            this._buildSimpleSkillRoll({
+                key: skillKey,
+                type: 'skill',
+                label: rollLabel,
+                target: targetValue,
+                situationalKey: skillKey,
+                instance: socialBuff,
+                ...rankOpt,
+            });
+            socialBuff.rollData.targetActor = targetActor;
+            if (use.opposedChar !== undefined) {
+                socialBuff.rollData.isOpposed = true;
+                socialBuff.rollData.opposedChar = use.opposedChar;
+            }
+            prepareUnifiedRoll(socialBuff);
             return;
         }
 

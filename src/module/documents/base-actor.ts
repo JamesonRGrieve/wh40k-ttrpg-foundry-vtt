@@ -107,6 +107,26 @@ export class WH40KBaseActor extends Actor {
     }
 
     /**
+     * Apply a temporary combat modifier to this actor as an ActiveEffect (#447) —
+     * e.g. War Cry's −10 to defence for a round. Mirrors the `createCombatEffect`
+     * change shape but lives actor-side so the roll layer can apply it via the
+     * actor handle it already holds; importing `rules/active-effects` from
+     * `rolls/action-data` would close a rolls↔rules cycle (roll-helpers type-imports
+     * ActionData).
+     */
+    async applyCombatModifier(type: string, value: number, opts: { name: string; rounds?: number }): Promise<void> {
+        if (!Number.isFinite(value) || value === 0) return;
+        const data = {
+            name: opts.name,
+            icon: 'icons/svg/combat.svg',
+            changes: [{ key: `system.combat.${type}`, mode: CONST.ACTIVE_EFFECT_MODES.ADD, value }],
+            duration: opts.rounds !== undefined ? { rounds: opts.rounds } : {},
+        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts Foundry's untyped embedded-document create schema
+        await this.createEmbeddedDocuments('ActiveEffect', [data] as unknown as Parameters<typeof this.createEmbeddedDocuments<'ActiveEffect'>>[1]);
+    }
+
+    /**
      * Apply recoverable characteristic damage (core.md §"Characteristic
      * Damage"). The damage slot lives on each characteristic; the actor's
      * effective value is `total − damage`. Always non-negative.

@@ -3,6 +3,7 @@ import {
     applyFirstAidOutcome,
     firstAidDifficultyForTier,
     type FirstAidPatient,
+    blatherRounds,
     getSkillUse,
     getSkillUses,
     hasSkillUses,
@@ -244,8 +245,9 @@ describe('opposed detection/deception — extended skills (#452)', () => {
 describe('social influence (#433)', () => {
     it('offers general + a target-directed social use for each social skill', () => {
         for (const key of ['charm', 'command', 'intimidate', 'deceive']) {
-            const uses = getSkillUses(key);
-            expect(uses.map((u) => u.id)).toEqual(['general', 'social']);
+            const ids = getSkillUses(key).map((u) => u.id);
+            expect(ids[0]).toBe('general');
+            expect(ids).toContain('social');
             expect(getSkillUse(key, 'social')?.needsTarget).toBe(true);
         }
     });
@@ -289,5 +291,29 @@ describe('social influence (#433)', () => {
             expect(resolveSocialInfluence(use, 11, true)).toEqual({ success: true, dispositionDelta: 3 });
             expect(resolveSocialInfluence(use, 1, true)).toEqual({ success: true, dispositionDelta: 1 });
         }
+    });
+});
+
+describe('social buff/debuff sub-uses (#447)', () => {
+    it('offers Inspire on Command/Charm, Terrify on Command, War Cry on Intimidate, Blather on Blather', () => {
+        expect(getSkillUses('command').map((u) => u.id)).toEqual(['general', 'social', 'inspire', 'terrify']);
+        expect(getSkillUses('charm').map((u) => u.id)).toEqual(['general', 'social', 'inspire']);
+        expect(getSkillUses('intimidate').map((u) => u.id)).toEqual(['general', 'social', 'warCry']);
+        expect(getSkillUses('blather').map((u) => u.id)).toEqual(['general', 'blather']);
+    });
+
+    it('opposes only Blather (vs Willpower); the buffs are unopposed', () => {
+        expect(getSkillUse('blather', 'blather')?.opposedChar).toBe('WP');
+        expect(getSkillUse('command', 'inspire')?.opposedChar).toBeUndefined();
+        expect(getSkillUse('intimidate', 'warCry')?.opposedChar).toBeUndefined();
+        for (const id of ['inspire', 'terrify', 'warCry', 'blather']) {
+            expect(getSkillUse(id === 'warCry' ? 'intimidate' : id === 'blather' ? 'blather' : 'command', id)?.kind).toBe('socialBuff');
+        }
+    });
+
+    it('scales Blather inaction to 1 + degrees of victory on a win, 0 on a loss', () => {
+        expect(blatherRounds(false, 4)).toBe(0);
+        expect(blatherRounds(true, 0)).toBe(1);
+        expect(blatherRounds(true, 3)).toBe(4);
     });
 });

@@ -7,6 +7,7 @@ import { type OpposedSide, resolveOpposed } from '../rules/opposed.ts';
 import type { RerollOption } from '../rules/reroll.ts';
 import {
     applyFirstAidOutcome,
+    blatherRounds,
     type FirstAidPatient,
     getSkillUse,
     type ReadoutFamily,
@@ -827,5 +828,52 @@ export class SocialInfluenceActionData extends SimpleSkillData {
                 band,
             }),
         );
+    }
+}
+
+/**
+ * A targeted social buff/debuff roll (#447). Applies a temporary effect to the
+ * target actor on success: an ally buff (Inspire +10 next test, Terrify ignore
+ * Fear) or an enemy debuff (War Cry −10 defence, applied as a real 1-round
+ * ActiveEffect; Blather holds the target inactive for 1 + degrees-of-victory
+ * rounds, opposed vs Willpower via the #449 engine). Buffs that have no clean
+ * "next-test / for-the-encounter" ActiveEffect are surfaced on the card for the
+ * table to track.
+ */
+export class SocialBuffActionData extends SimpleSkillData {
+    readonly buff: 'inspire' | 'terrify' | 'warCry' | 'blather';
+
+    constructor(buff: 'inspire' | 'terrify' | 'warCry' | 'blather') {
+        super();
+        this.buff = buff;
+    }
+
+    override async descriptionText(): Promise<void> {
+        const target = this.rollData.targetActor;
+        const targetName = target?.name ?? '';
+
+        if (this.buff === 'blather') {
+            const rounds = blatherRounds(this.rollData.success, this.rollData.opposedMargin);
+            const key = rounds > 0 ? 'WH40K.SkillUse.Buff.BlatherHeld' : 'WH40K.SkillUse.Buff.BlatherResist';
+            this.addEffect('Blather', game.i18n.format(key, { target: targetName, rounds: String(rounds) }));
+            return;
+        }
+
+        if (!this.rollData.success) {
+            this.addEffect('Social', game.i18n.format('WH40K.SkillUse.Buff.Failed', { target: targetName }));
+            return;
+        }
+
+        if (this.buff === 'warCry' && target !== null) {
+            // Real debuff: −10 to the target's defence (Dodge/Parry) for one round,
+            // applied through the actor's own effect helper (no rules↔rolls import cycle).
+            await target.applyCombatModifier('defense', -10, { name: game.i18n.localize('WH40K.SkillUse.Buff.WarCry'), rounds: 1 });
+            this.addEffect('War Cry', game.i18n.format('WH40K.SkillUse.Buff.WarCryApplied', { target: targetName }));
+            return;
+        }
+
+        // Inspire / Terrify — GM/player-tracked (no clean per-next-test / per-encounter effect).
+        const applied = this.buff === 'inspire' ? 'WH40K.SkillUse.Buff.InspireApplied' : 'WH40K.SkillUse.Buff.TerrifyApplied';
+        this.addEffect('Social', game.i18n.format(applied, { target: targetName }));
     }
 }
