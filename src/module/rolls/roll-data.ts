@@ -67,6 +67,8 @@ export class RollData {
     opposedDof: number = 0;
     opposedDos: number = 0;
     opposedRoll: Roll | null = null;
+    /** Winner's degrees of victory from the opposed resolution (#449); consumers scale on it. */
+    opposedMargin: number = 0;
 
     baseAim: number = 0;
     modifiers: Record<string, number> = {

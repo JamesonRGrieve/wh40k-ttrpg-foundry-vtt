@@ -461,6 +461,10 @@
                 "Text": "The {channel} channel is blocked ({condition}) — the test auto-fails."
             }
         },
+        "Opposed": {
+            "Margin": "(by {margin} degree(s) of victory)",
+            "Stalemate": "Opposed test — stalemate (both failed)."
+        },
         "Disposition": {
             "Hostile": "Hostile",
             "Antagonistic": "Antagonistic",

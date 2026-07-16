@@ -2249,6 +2249,8 @@ export type I18nKey =
     | 'WH40K.OW.VehicleMovement.Timing.Full'
     | 'WH40K.OW.VehicleMovement.Timing.Half'
     | 'WH40K.OW.VehicleMovement.Timing.Reaction'
+    | 'WH40K.Opposed.Margin'
+    | 'WH40K.Opposed.Stalemate'
     | 'WH40K.Orders.Action'
     | 'WH40K.Orders.Header'
     | 'WH40K.Orders.Name'
