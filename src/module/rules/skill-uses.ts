@@ -20,6 +20,7 @@
  */
 
 import { type DamageTier, getDamageTier, MEDICAE_ACTIONS, type MedicaeActionKind } from './healing.ts';
+import { DAY_SECONDS } from './world-time.ts';
 
 /** How a use resolves once the roll lands. `general` is a plain pass/fail test. */
 export type SkillUseKind =
@@ -72,6 +73,15 @@ export interface SkillUseDef {
      * e.g. Wrangling shifts at most 3 levels, #446). Absent = uncapped.
      */
     readonly dispositionCap?: number;
+    /**
+     * RAW per-target time gate (#458): after this use resolves against a target it
+     * cannot be used on them again until the gate reopens — e.g. First Aid is "once
+     * every 24 hours" per patient (DH2 p109). `key` is the gate stamped on the target
+     * actor. `windowSeconds` is the FIXED window; omit it when the window is rolled at
+     * resolution (Interrogation's 1d5-day lockout), in which case the flow computes
+     * the expiry itself. Absent = no cooldown.
+     */
+    readonly timeGate?: { readonly key: string; readonly windowSeconds?: number };
 }
 
 /** The universal "just roll the skill" use every skill offers. */
@@ -95,15 +105,30 @@ const MEDICAE_LABEL_KEY: Record<MedicaeActionKind, string> = {
 /** Medicae kinds that act on a target (heal / operate) vs. informational. */
 const MEDICAE_TARGETED: ReadonlySet<MedicaeActionKind> = new Set<MedicaeActionKind>(['firstAid', 'extendedCare', 'surgery', 'extractBullet']);
 
+/**
+ * RAW per-target cooldowns on Medicae uses (#458): "A given individual can only be
+ * treated with first aid once every 24 hours, and only so long as he is not also
+ * undergoing extended care." (DH2 Core p109). Extended Care runs on the same 24-hour
+ * cycle and is the state that blocks First Aid.
+ */
+const MEDICAE_TIME_GATES: Partial<Record<MedicaeActionKind, { key: string; windowSeconds: number }>> = {
+    firstAid: { key: 'firstAid', windowSeconds: DAY_SECONDS },
+    extendedCare: { key: 'extendedCare', windowSeconds: DAY_SECONDS },
+};
+
 /** Build Medicae's use list from the shared `MEDICAE_ACTIONS` content registry. */
 function medicaeUses(): SkillUseDef[] {
-    return (Object.keys(MEDICAE_ACTIONS) as MedicaeActionKind[]).map((kind) => ({
-        id: kind,
-        labelKey: MEDICAE_LABEL_KEY[kind],
-        needsTarget: MEDICAE_TARGETED.has(kind),
-        difficultyMod: MEDICAE_ACTIONS[kind].difficulty,
-        kind,
-    }));
+    return (Object.keys(MEDICAE_ACTIONS) as MedicaeActionKind[]).map((kind) => {
+        const gate = MEDICAE_TIME_GATES[kind];
+        return {
+            id: kind,
+            labelKey: MEDICAE_LABEL_KEY[kind],
+            needsTarget: MEDICAE_TARGETED.has(kind),
+            difficultyMod: MEDICAE_ACTIONS[kind].difficulty,
+            kind,
+            ...(gate !== undefined ? { timeGate: gate } : {}),
+        };
+    });
 }
 
 /**
@@ -120,6 +145,9 @@ const INTERROGATE_USE: SkillUseDef = {
     difficultyMod: 0,
     kind: 'interrogate',
     opposedChar: 'WP',
+    // RAW (#458): a 2+ DoF session locks the subject out for 1d5 days — a rolled
+    // window, so the flow stamps the expiry itself (no fixed `windowSeconds`).
+    timeGate: { key: 'interrogate' },
 };
 
 /** An opposed detection use — the actor's roll is opposed by the target's `opposedChar` (#434). */

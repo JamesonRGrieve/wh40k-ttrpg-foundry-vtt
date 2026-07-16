@@ -94,6 +94,30 @@ describe('resolveFirstAid (#432)', () => {
     });
 });
 
+describe('RAW per-target time gates (#458)', () => {
+    it('gates First Aid at 24 in-universe hours per patient (DH2 p109)', () => {
+        const gate = getSkillUse('medicae', 'firstAid')?.timeGate;
+        expect(gate?.key).toBe('firstAid');
+        expect(gate?.windowSeconds).toBe(86400);
+    });
+
+    it('gates Extended Care on the same 24-hour cycle (it is what blocks First Aid)', () => {
+        expect(getSkillUse('medicae', 'extendedCare')?.timeGate).toEqual({ key: 'extendedCare', windowSeconds: 86400 });
+    });
+
+    it('declares the Interrogation lockout gate with NO fixed window (1d5 days is rolled at resolution)', () => {
+        const gate = getSkillUse('interrogation', 'interrogate')?.timeGate;
+        expect(gate?.key).toBe('interrogate');
+        expect(gate?.windowSeconds).toBeUndefined();
+    });
+
+    it('leaves uncooled uses ungated', () => {
+        expect(getSkillUse('medicae', 'diagnose')?.timeGate).toBeUndefined();
+        expect(getSkillUse('medicae', 'surgery')?.timeGate).toBeUndefined();
+        expect(getSkillUse('charm', 'social')?.timeGate).toBeUndefined();
+    });
+});
+
 describe('firstAidDifficultyForTier (#432)', () => {
     it('is harder the more damaged the patient is', () => {
         expect(firstAidDifficultyForTier(12, 12)).toBe(0); // unharmed
