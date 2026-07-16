@@ -717,3 +717,16 @@ export class DosReadoutActionData extends SimpleSkillData {
         return Promise.resolve();
     }
 }
+
+/**
+ * A targeted opposed detection roll (#434) — Stealth/Awareness/Scrutiny/Sleight
+ * of Hand vs the target's opposing characteristic (`isOpposed`/`opposedChar` set
+ * by the caller, resolved by `checkForOpposed`). Reports win/lose on the card;
+ * there is no state change to apply.
+ */
+export class DetectionActionData extends SimpleSkillData {
+    override async descriptionText(): Promise<void> {
+        this.addEffect('Detection', game.i18n.localize(this.rollData.success ? 'WH40K.SkillUse.Detection.Win' : 'WH40K.SkillUse.Detection.Lose'));
+        return Promise.resolve();
+    }
+}

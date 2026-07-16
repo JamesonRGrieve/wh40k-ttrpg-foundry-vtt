@@ -22,7 +22,7 @@
 import { type DamageTier, getDamageTier, MEDICAE_ACTIONS, type MedicaeActionKind } from './healing.ts';
 
 /** How a use resolves once the roll lands. `general` is a plain pass/fail test. */
-export type SkillUseKind = 'general' | 'firstAid' | 'extendedCare' | 'surgery' | 'diagnose' | 'extractBullet' | 'interrogate';
+export type SkillUseKind = 'general' | 'firstAid' | 'extendedCare' | 'surgery' | 'diagnose' | 'extractBullet' | 'interrogate' | 'detect';
 
 /** One selectable use offered when rolling a skill. */
 export interface SkillUseDef {
@@ -91,9 +91,20 @@ const INTERROGATE_USE: SkillUseDef = {
     opposedChar: 'WP',
 };
 
+/** An opposed detection use — the actor's roll is opposed by the target's `opposedChar` (#434). */
+function detectionUse(labelLeaf: string, opposedChar: string): SkillUseDef {
+    return { id: 'detect', labelKey: `WH40K.SkillUse.Detection.${labelLeaf}`, needsTarget: true, difficultyMod: 0, kind: 'detect', opposedChar };
+}
+
 const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     medicae: () => [GENERAL_SKILL_USE, ...medicaeUses()],
     interrogation: () => [GENERAL_SKILL_USE, INTERROGATE_USE],
+    // Opposed detection (#434): a hider vs an observer's Perception, a scanner vs the
+    // hider's Agility, Scrutiny vs the mark's Fellowship (Deceive), a thief vs Perception.
+    stealth: () => [GENERAL_SKILL_USE, detectionUse('Stealth', 'Per')],
+    awareness: () => [GENERAL_SKILL_USE, detectionUse('Awareness', 'Ag')],
+    scrutiny: () => [GENERAL_SKILL_USE, detectionUse('Scrutiny', 'Fel')],
+    sleightOfHand: () => [GENERAL_SKILL_USE, detectionUse('SleightOfHand', 'Per')],
 };
 
 /** The uses a skill offers, general test first. Unknown skills get the general test only. */

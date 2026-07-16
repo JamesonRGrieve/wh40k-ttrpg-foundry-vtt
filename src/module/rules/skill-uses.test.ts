@@ -15,10 +15,10 @@ import {
 
 describe('skill-use registry (#432)', () => {
     it('offers only the general test for a skill with no special uses', () => {
-        const uses = getSkillUses('awareness');
+        const uses = getSkillUses('commerce');
         expect(uses).toHaveLength(1);
         expect(uses[0]?.id).toBe('general');
-        expect(hasSkillUses('awareness')).toBe(false);
+        expect(hasSkillUses('commerce')).toBe(false);
     });
 
     it('offers Medicae Special Uses (general + First Aid + Extended Care + Surgery + …)', () => {
@@ -196,5 +196,23 @@ describe('object interaction DoS readout (#436)', () => {
     it('scales the time/outcome by degrees of success', () => {
         expect(resolveDosReadout('objectInteraction', 0, false)).toEqual({ tier: 0, labelKey: 'WH40K.SkillUse.Readout.Object.Fail' });
         expect(resolveDosReadout('objectInteraction', 2, true)).toEqual({ tier: 2, labelKey: 'WH40K.SkillUse.Readout.Object.Success' });
+    });
+});
+
+describe('opposed detection (#434)', () => {
+    it('offers general + an opposed detect use for the detection skills', () => {
+        for (const key of ['stealth', 'awareness', 'scrutiny', 'sleightOfHand']) {
+            const uses = getSkillUses(key);
+            expect(uses.map((u) => u.id)).toEqual(['general', 'detect']);
+            const detect = getSkillUse(key, 'detect');
+            expect(detect?.needsTarget).toBe(true);
+            expect(detect?.opposedChar).toBeDefined();
+        }
+    });
+
+    it('opposes each detection skill by the appropriate characteristic', () => {
+        expect(getSkillUse('stealth', 'detect')?.opposedChar).toBe('Per');
+        expect(getSkillUse('awareness', 'detect')?.opposedChar).toBe('Ag');
+        expect(getSkillUse('scrutiny', 'detect')?.opposedChar).toBe('Fel');
     });
 });
