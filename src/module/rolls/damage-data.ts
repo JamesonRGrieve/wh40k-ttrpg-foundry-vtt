@@ -37,6 +37,8 @@ export interface AttackDataLike {
             getCharacteristicFuzzy: (key: string) => { bonus: number };
             hasTalent: (name: string) => boolean;
             hasTalentFuzzyWords: (words: string | string[], extra?: string) => boolean;
+            /** Active game line, used to resolve the line's critical-injury pack (#439). */
+            system?: { gameSystem?: string };
         };
         // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor; typing omitted to avoid circular imports
         targetActor?: unknown;
@@ -214,7 +216,7 @@ export class Hit {
         for (const righteousFury of hit.righteousFury) {
             const rfTotal = righteousFury.roll.total ?? 0;
             // eslint-disable-next-line no-await-in-loop -- sequential by design (see above)
-            righteousFury.effect = (await getCriticalDamage(hit.damageType, hit.location, rfTotal)) ?? '';
+            righteousFury.effect = (await getCriticalDamage(hit.damageType, hit.location, rfTotal, attackData.rollData.sourceActor.system?.gameSystem)) ?? '';
         }
 
         return hit;

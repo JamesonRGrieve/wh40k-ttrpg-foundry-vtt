@@ -125,7 +125,19 @@ export function classifyCriticalEffect(effectText: string | null | undefined): C
     });
 }
 
-const CRITICAL_INJURY_PACK = 'wh40k-rpg.dh2-core-items-critical-injuries';
+/** The line whose critical-injury pack is used when a system has no crit pack of its own. */
+const DEFAULT_CRIT_SYSTEM = 'dh2';
+
+/**
+ * Resolve the critical-injury compendium for a game line (#439) — the line's own
+ * `<system>-core-items-critical-injuries` pack where it exists, else the DH2 pack
+ * (lines that share the DH2 critical table). Keeps the applied-damage descriptor
+ * lookup homologated: RT/IM read their own crit tables, not DH2's.
+ */
+function criticalInjuryPackId(systemId: string): string {
+    const perLine = `wh40k-rpg.${systemId}-core-items-critical-injuries`;
+    return game.packs.get(perLine) !== undefined ? perLine : `wh40k-rpg.${DEFAULT_CRIT_SYSTEM}-core-items-critical-injuries`;
+}
 
 type ConsolidatedEffect = { text?: string | null; permanent?: boolean };
 type ConsolidatedCriticalInjuryItem = {
@@ -136,7 +148,8 @@ type ConsolidatedCriticalInjuryItem = {
     };
 };
 
-let CACHED_TABLE_PROMISE: Promise<CriticalDamageTable> | null = null;
+/** Per-system critical-damage table cache, keyed by the resolved game-line id. */
+const CACHED_TABLES = new Map<string, Promise<CriticalDamageTable>>();
 
 /**
  * Build the damageType × bodyPart × severity lookup from the
@@ -145,20 +158,21 @@ let CACHED_TABLE_PROMISE: Promise<CriticalDamageTable> | null = null;
  * installed, the returned table is empty and callers should degrade to a
  * minimal fallback string.
  */
-async function loadCriticalDamageTable(): Promise<CriticalDamageTable> {
-    if (CACHED_TABLE_PROMISE !== null) return CACHED_TABLE_PROMISE;
-    const promise = buildCriticalDamageTable();
-    CACHED_TABLE_PROMISE = promise;
+async function loadCriticalDamageTable(systemId: string): Promise<CriticalDamageTable> {
+    const existing = CACHED_TABLES.get(systemId);
+    if (existing !== undefined) return existing;
+    const promise = buildCriticalDamageTable(systemId);
+    CACHED_TABLES.set(systemId, promise);
     try {
         return await promise;
     } catch (err) {
-        CACHED_TABLE_PROMISE = null;
+        CACHED_TABLES.delete(systemId);
         throw err;
     }
 }
 
-async function buildCriticalDamageTable(): Promise<CriticalDamageTable> {
-    const pack = game.packs.get(CRITICAL_INJURY_PACK);
+async function buildCriticalDamageTable(systemId: string): Promise<CriticalDamageTable> {
+    const pack = game.packs.get(criticalInjuryPackId(systemId));
     if (pack === undefined) return {};
     const docs = (await pack.getDocuments()) as ConsolidatedCriticalInjuryItem[];
 
@@ -188,7 +202,7 @@ async function buildCriticalDamageTable(): Promise<CriticalDamageTable> {
 
 /** Discard the cached lookup — call after editing pack items at runtime. */
 export function invalidateCriticalDamageCache(): void {
-    CACHED_TABLE_PROMISE = null;
+    CACHED_TABLES.clear();
 }
 
 function normalizeKey(value: string | undefined): string | null {
@@ -222,8 +236,8 @@ function getFuzzy<T>(obj: Record<string, T>, term: string): T | undefined {
     return undefined;
 }
 
-export async function getCriticalDamage(type: string, location: string, amount: number): Promise<string | null> {
-    const table = await loadCriticalDamageTable();
+export async function getCriticalDamage(type: string, location: string, amount: number, systemId: string = DEFAULT_CRIT_SYSTEM): Promise<string | null> {
+    const table = await loadCriticalDamageTable(systemId);
     const damageMap = getFuzzy(table, type);
     if (damageMap === undefined) return null;
     const locationMap = getFuzzy(damageMap, location);
@@ -266,13 +280,14 @@ export async function getCriticalDamageRecord(
     damageType: string | null | undefined,
     hitLocation: string | null | undefined,
     criticalValue: number,
+    systemId: string = DEFAULT_CRIT_SYSTEM,
 ): Promise<CriticalDamageRecord | null> {
     // core.md L10646: an unspecified / unknown damage type is Impact.
     const dt = normalizeDamageType(damageType) ?? 'Impact';
     const bp = normalizeBodyPart(hitLocation);
     if (bp === null) return null;
     const severity = clampCriticalSeverity(criticalValue);
-    const effect = (await getCriticalDamage(dt, bp, severity)) ?? '';
+    const effect = (await getCriticalDamage(dt, bp, severity, systemId)) ?? '';
     return {
         damageType: dt,
         bodyPart: bp,

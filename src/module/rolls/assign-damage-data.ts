@@ -276,7 +276,7 @@ export class AssignDamageData {
             // classified riders) so the applied conditions (#108) come from the
             // same lookup as the chat-card effect text.
             const criticalValue = this.actor.system.wounds.critical + this.criticalDamageTaken;
-            this.criticalRecord = await getCriticalDamageRecord(this.hit.damageType, this.hit.location, criticalValue);
+            this.criticalRecord = await getCriticalDamageRecord(this.hit.damageType, this.hit.location, criticalValue, this.actor.system.gameSystem);
             this.criticalEffect = this.criticalRecord?.effect ?? '';
         }
 
