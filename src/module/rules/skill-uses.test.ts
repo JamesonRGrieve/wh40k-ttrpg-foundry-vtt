@@ -7,6 +7,7 @@ import {
     getSkillUses,
     hasSkillUses,
     resolveFirstAid,
+    resolveInterrogation,
     type FirstAidTargetVitals,
 } from './skill-uses.ts';
 
@@ -138,5 +139,20 @@ describe('applyFirstAidOutcome (#432)', () => {
         const wrote = await applyFirstAidOutcome(p, { success: false, woundsRestored: 0, criticalResolved: 0, bloodLossStopped: false });
         expect(wrote).toEqual({});
         expect(p.patches).toEqual([]);
+    });
+});
+
+describe('interrogation (#435)', () => {
+    it('offers general + interrogate (opposed vs WP, target-directed)', () => {
+        expect(getSkillUses('interrogation').map((u) => u.id)).toEqual(['general', 'interrogate']);
+        const interro = getSkillUse('interrogation', 'interrogate');
+        expect(interro?.needsTarget).toBe(true);
+        expect(interro?.opposedChar).toBe('WP');
+    });
+
+    it('extracts a degrees-scaled info tier on success and always fatigues the subject', () => {
+        expect(resolveInterrogation(0)).toEqual({ success: false, infoTier: 0, fatigue: 1 });
+        expect(resolveInterrogation(1)).toEqual({ success: true, infoTier: 1, fatigue: 1 });
+        expect(resolveInterrogation(3)).toEqual({ success: true, infoTier: 3, fatigue: 1 });
     });
 });

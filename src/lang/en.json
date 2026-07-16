@@ -417,6 +417,11 @@
                 "Surgery": "Surgery",
                 "Diagnose": "Diagnose",
                 "ExtractBullet": "Extract Embedded Object"
+            },
+            "Interrogation": {
+                "Interrogate": "Interrogate",
+                "Extracted": "Extracted tier-{tier} information from {subject} ({fatigue} fatigue).",
+                "Resisted": "{subject} resists interrogation ({fatigue} fatigue)."
             }
         },
         "Skills": {

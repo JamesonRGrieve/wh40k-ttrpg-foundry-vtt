@@ -3,7 +3,7 @@ import { SYSTEM_ID } from '../constants.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import type { RerollOption } from '../rules/reroll.ts';
-import { applyFirstAidOutcome, type FirstAidPatient, getSkillUse, resolveFirstAid, type SkillUseKind } from '../rules/skill-uses.ts';
+import { applyFirstAidOutcome, type FirstAidPatient, getSkillUse, resolveFirstAid, resolveInterrogation, type SkillUseKind } from '../rules/skill-uses.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
@@ -655,5 +655,36 @@ export class MedicaeActionData extends SimpleSkillData {
         if (outcome.criticalResolved > 0) parts.push(game.i18n.format('WH40K.SkillUse.ResolvedCritical', { tiers: String(outcome.criticalResolved) }));
         if (outcome.bloodLossStopped) parts.push(game.i18n.localize('WH40K.SkillUse.BloodLossStopped'));
         this.addEffect('Medicae', parts.join(' '));
+    }
+}
+
+/**
+ * A targeted Interrogation roll (#435). Opposed by the subject's Willpower
+ * (`rollData.isOpposed` + `opposedChar` set by the caller, resolved by
+ * `checkForOpposed`). On resolution it inflicts the RAW fatigue on the subject
+ * and surfaces the degrees-of-success information tier on the chat card.
+ */
+export class InterrogationActionData extends SimpleSkillData {
+    override async descriptionText(): Promise<void> {
+        const target = this.rollData.targetActor;
+        if (target === null) return;
+        const degrees = this.rollData.success ? Math.max(1, this.rollData.dos) : 0;
+        const outcome = resolveInterrogation(degrees);
+        if (outcome.fatigue > 0) await target.applyFatigue(outcome.fatigue);
+        if (outcome.success) {
+            this.addEffect(
+                'Interrogation',
+                game.i18n.format('WH40K.SkillUse.Interrogation.Extracted', {
+                    tier: String(outcome.infoTier),
+                    subject: target.name,
+                    fatigue: String(outcome.fatigue),
+                }),
+            );
+        } else {
+            this.addEffect(
+                'Interrogation',
+                game.i18n.format('WH40K.SkillUse.Interrogation.Resisted', { subject: target.name, fatigue: String(outcome.fatigue) }),
+            );
+        }
     }
 }
