@@ -438,6 +438,14 @@
                     "Fail": "The attempt fails.",
                     "Success": "Success — each degree ({tier}) cuts the time taken and improves the result (GM adjudicates)."
                 }
+            },
+            "Detection": {
+                "Stealth": "Move Unseen",
+                "Awareness": "Scan for Hidden",
+                "Scrutiny": "Study Target",
+                "SleightOfHand": "Palm / Plant",
+                "Win": "Opposed test won — you succeed against the target.",
+                "Lose": "Opposed test lost — the target prevails."
             }
         },
         "Skills": {
