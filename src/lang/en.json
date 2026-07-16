@@ -455,6 +455,10 @@
                 "Won": "{use} succeeds against {target}.",
                 "Lost": "{target} resists your {use}.",
                 "Shift": "{use} shifts {target} {bands} band(s) — now {band}."
+            },
+            "SenseBlocked": {
+                "Label": "Sense Blocked",
+                "Text": "The {channel} channel is blocked ({condition}) — the test auto-fails."
             }
         },
         "Disposition": {
@@ -804,6 +808,10 @@
             "AutoCoverLos": {
                 "Name": "Auto Line of Sight & Cover",
                 "Hint": "When enabled, the attack dialog ray-casts from the attacker to the target against the scene's walls to auto-detect line of sight and full/half cover, and pre-selects the cover situational. Disabled by default: verify the geometry on your own scenes before relying on it to drive rolls."
+            },
+            "AwarenessSenseSplit": {
+                "Name": "Homebrew: Awareness Sense Channels",
+                "Hint": "When enabled, Awareness resolves per sense channel (Visual / Auditory / Olfactory): the test-variant selector is offered for skills that declare channels even outside the homebrew ruleset, sense-scoped modifiers apply to their channel only (an auspex bonus tagged Visual augments sight, not hearing), and a condition that blinds or deafens auto-fails the matching channel. Disabled by default: Awareness rolls exactly as written, with the auspex bonus applying to the whole test."
             },
             "FreeformCharacters": {
                 "Name": "Freeform Character Editing",

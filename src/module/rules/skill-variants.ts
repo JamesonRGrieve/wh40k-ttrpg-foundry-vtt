@@ -15,16 +15,38 @@
 export interface SkillVariant {
     name: string;
     description: string;
+    /**
+     * Homebrew (#440): a condition token that auto-fails this sense channel when
+     * the actor carries it (e.g. a Visual channel `blockedBy: 'blinded'`, an
+     * Auditory channel `blockedBy: 'deafened'`). The token↔channel relationship is
+     * authored in the compendium skill data, not hardcoded here (Direction #7).
+     * Empty / absent = the channel is never condition-gated.
+     */
+    blockedBy?: string | null;
 }
 
 /**
- * Variants available to the roll dialog: none unless homebrew refinements are on,
- * and blank-named entries are dropped. Returning `[]` is the gate that keeps the
- * variant selector hidden in RAW mode.
+ * Variants available to the roll dialog: none unless the variant refinements are
+ * enabled (the homebrew ruleset, or the granular Awareness sense-split toggle
+ * #440), and blank-named entries are dropped. Returning `[]` is the gate that
+ * keeps the variant selector hidden in RAW mode.
  */
-export function availableSkillVariants(variants: readonly SkillVariant[] | undefined, isHomebrew: boolean): SkillVariant[] {
-    if (!isHomebrew) return [];
+export function availableSkillVariants(variants: readonly SkillVariant[] | undefined, refinementsEnabled: boolean): SkillVariant[] {
+    if (!refinementsEnabled) return [];
     return (variants ?? []).filter((v) => v.name.trim() !== '');
+}
+
+/**
+ * Whether a selected sense channel auto-fails against the actor's active
+ * conditions (#440): true when the variant declares a `blockedBy` token and that
+ * token (lower-cased) is present in the actor's condition set — a blinded
+ * character auto-fails a Visual channel, a deafened one an Auditory channel.
+ * Pure over the injected condition set so the gate is unit-testable.
+ */
+export function variantAutoFails(variant: Pick<SkillVariant, 'blockedBy'>, activeConditionTokens: ReadonlySet<string>): boolean {
+    const token = variant.blockedBy;
+    if (token === undefined || token === null || token.trim() === '') return false;
+    return activeConditionTokens.has(token.trim().toLowerCase());
 }
 
 /** A modifier that may opt into a specific variant. Empty / absent tag = universal. */

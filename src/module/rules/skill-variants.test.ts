@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { readRepoFile } from '../testing/repo-file.ts';
-import { availableSkillVariants, filterModifiersByVariant, modifierAppliesToVariant, type SkillVariant } from './skill-variants.ts';
+import { availableSkillVariants, filterModifiersByVariant, modifierAppliesToVariant, type SkillVariant, variantAutoFails } from './skill-variants.ts';
 
 const AWARENESS: SkillVariant[] = [
     { name: 'Visual', description: 'Sight-based perception.' },
@@ -58,7 +58,35 @@ describe('filterModifiersByVariant', () => {
     });
 });
 
-describe('unified roll dialog wires test variants (#246)', () => {
+describe('variantAutoFails — sense-channel condition gate (#440)', () => {
+    const visual: SkillVariant = { name: 'Visual', description: '', blockedBy: 'blinded' };
+    const auditory: SkillVariant = { name: 'Auditory', description: '', blockedBy: 'deafened' };
+    const untagged: SkillVariant = { name: 'Olfactory', description: '' };
+
+    it('auto-fails when the actor carries the channel-blocking condition (case-insensitive)', () => {
+        expect(variantAutoFails(visual, new Set(['blinded']))).toBe(true);
+        expect(variantAutoFails(visual, new Set(['BLINDED']))).toBe(false); // set holds lower-cased tokens
+        expect(variantAutoFails(auditory, new Set(['deafened', 'prone']))).toBe(true);
+    });
+
+    it('does not gate when the blocking condition is absent or the channel declares none', () => {
+        expect(variantAutoFails(visual, new Set(['deafened']))).toBe(false);
+        expect(variantAutoFails(untagged, new Set(['blinded', 'deafened']))).toBe(false);
+        expect(variantAutoFails({ blockedBy: '  ' }, new Set(['blinded']))).toBe(false);
+    });
+});
+
+describe('availableSkillVariants — enabled by the sense-split toggle too (#440)', () => {
+    it('offers channels when refinements are enabled by any source (homebrew OR sense-split)', () => {
+        // The caller passes `isHomebrew() || isAwarenessSenseSplit()`; either true enables.
+        const enabledBy = (isHomebrew: boolean, isSenseSplit: boolean): boolean => isHomebrew || isSenseSplit;
+        expect(availableSkillVariants(AWARENESS, enabledBy(false, true)).map((v) => v.name)).toEqual(['Visual', 'Auditory']);
+        expect(availableSkillVariants(AWARENESS, enabledBy(true, false)).map((v) => v.name)).toEqual(['Visual', 'Auditory']);
+        expect(availableSkillVariants(AWARENESS, enabledBy(false, false))).toEqual([]);
+    });
+});
+
+describe('unified roll dialog wires test variants (#246) + sense-split (#440)', () => {
     const dialog = readRepoFile('src/module/applications/prompts/unified-roll-dialog.ts');
     const modifiers = readRepoFile('src/templates/prompt/unified/modifiers.hbs');
 
@@ -71,5 +99,22 @@ describe('unified roll dialog wires test variants (#246)', () => {
     it('renders the variant selector gated on hasSkillVariants', () => {
         expect(modifiers).toContain('{{#if hasSkillVariants}}');
         expect(modifiers).toContain('data-action="selectSkillVariant"');
+    });
+
+    it('also enables the variant selector via the granular sense-split toggle (#440)', () => {
+        expect(dialog).toContain('WH40KSettings.isAwarenessSenseSplit()');
+        expect(dialog).toContain('variantAutoFails(');
+    });
+
+    it('runs the skill-use resolution hooks on BOTH simple-roll paths so opposed/auto-resolve fire', () => {
+        // Regression: the simple auto (_systemRoll) and manual (_submitSimpleRoll)
+        // paths previously skipped checkForOpposed/descriptionText, so #432-#434
+        // skill-use flows never resolved through the dialog.
+        expect(dialog).toContain('async _resolveSimpleActionHooks()');
+        expect(dialog).toContain('this.actionData.checkForOpposed()');
+        expect(dialog).toContain('this.actionData.descriptionText()');
+        // Both call sites present.
+        const hookCalls = dialog.split('await this._resolveSimpleActionHooks()').length - 1;
+        expect(hookCalls).toBeGreaterThanOrEqual(2);
     });
 });
