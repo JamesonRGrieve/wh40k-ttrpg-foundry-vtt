@@ -53,6 +53,11 @@ export interface SkillUseDef {
      * resolve a contest without a lasting disposition shift (Command, Deceive).
      */
     readonly dispositionDir?: -1 | 0 | 1;
+    /**
+     * Maximum disposition bands this use may shift in one resolution (RAW cap —
+     * e.g. Wrangling shifts at most 3 levels, #446). Absent = uncapped.
+     */
+    readonly dispositionCap?: number;
 }
 
 /** The universal "just roll the skill" use every skill offers. */
@@ -115,7 +120,7 @@ function detectionUse(labelLeaf: string, opposedChar: string): SkillUseDef {
  * (Deceive is opposed by the target's Scrutiny). `dispositionDir` of 0 resolves
  * the contest without a lasting disposition shift.
  */
-function socialUse(labelLeaf: string, opts: { opposedChar?: string; opposedSkill?: string; dispositionDir: -1 | 0 | 1 }): SkillUseDef {
+function socialUse(labelLeaf: string, opts: { opposedChar?: string; opposedSkill?: string; dispositionDir: -1 | 0 | 1; dispositionCap?: number }): SkillUseDef {
     return {
         id: 'social',
         labelKey: `WH40K.SkillUse.Social.${labelLeaf}`,
@@ -125,6 +130,7 @@ function socialUse(labelLeaf: string, opts: { opposedChar?: string; opposedSkill
         dispositionDir: opts.dispositionDir,
         ...(opts.opposedChar !== undefined ? { opposedChar: opts.opposedChar } : {}),
         ...(opts.opposedSkill !== undefined ? { opposedSkill: opts.opposedSkill } : {}),
+        ...(opts.dispositionCap !== undefined ? { dispositionCap: opts.dispositionCap } : {}),
     };
 }
 
@@ -151,6 +157,11 @@ const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     command: () => [GENERAL_SKILL_USE, socialUse('Command', { opposedChar: 'WP', dispositionDir: 0 })],
     intimidate: () => [GENERAL_SKILL_USE, socialUse('Intimidate', { opposedChar: 'WP', dispositionDir: -1 })],
     deceive: () => [GENERAL_SKILL_USE, socialUse('Deceive', { opposedSkill: 'scrutiny', dispositionDir: 0 })],
+    // Animal/audience disposition (#446): Wrangling calms/trains a beast and Performer
+    // sways a crowd — the #433 disposition engine, unopposed (a plain test vs the GM's
+    // difficulty), warming the target up to the RAW cap of 3 bands.
+    wrangling: () => [GENERAL_SKILL_USE, socialUse('Wrangle', { dispositionDir: 1, dispositionCap: 3 })],
+    performer: () => [GENERAL_SKILL_USE, socialUse('Perform', { dispositionDir: 1, dispositionCap: 3 })],
 };
 
 /** The uses a skill offers, general test first. Unknown skills get the general test only. */
@@ -270,7 +281,8 @@ export function resolveSocialInfluence(def: SkillUseDef, degrees: number, succes
     const dir = def.dispositionDir ?? 0;
     if (!success || dir === 0) return { success, dispositionDelta: 0 };
     const bands = 1 + Math.floor(Math.max(0, degrees - 1) / 2);
-    return { success, dispositionDelta: dir * bands };
+    const capped = def.dispositionCap !== undefined ? Math.min(bands, def.dispositionCap) : bands;
+    return { success, dispositionDelta: dir * capped };
 }
 
 /* -------------------------------------------------------------------------- */

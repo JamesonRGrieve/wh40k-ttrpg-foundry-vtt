@@ -277,4 +277,17 @@ describe('social influence (#433)', () => {
         expect(resolveSocialInfluence(charm, 0, false)).toEqual({ success: false, dispositionDelta: 0 });
         expect(resolveSocialInfluence(command, 3, true)).toEqual({ success: true, dispositionDelta: 0 });
     });
+
+    it('offers Wrangling/Performer as unopposed warming disposition uses capped at 3 bands (#446)', () => {
+        for (const key of ['wrangling', 'performer']) {
+            expect(getSkillUses(key).map((u) => u.id)).toEqual(['general', 'social']);
+            const use = getSkillUse(key, 'social') as SkillUseDef;
+            expect(use.dispositionDir).toBe(1);
+            expect(use.opposedChar).toBeUndefined();
+            expect(use.opposedSkill).toBeUndefined();
+            // RAW cap: a very high roll still shifts at most 3 bands.
+            expect(resolveSocialInfluence(use, 11, true)).toEqual({ success: true, dispositionDelta: 3 });
+            expect(resolveSocialInfluence(use, 1, true)).toEqual({ success: true, dispositionDelta: 1 });
+        }
+    });
 });

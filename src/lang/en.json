@@ -457,6 +457,8 @@
                 "Command": "Command",
                 "Intimidate": "Intimidate",
                 "Deceive": "Deceive",
+                "Wrangle": "Wrangle Beast",
+                "Perform": "Charming Performance",
                 "Won": "{use} succeeds against {target}.",
                 "Lost": "{target} resists your {use}.",
                 "Shift": "{use} shifts {target} {bands} band(s) — now {band}."
