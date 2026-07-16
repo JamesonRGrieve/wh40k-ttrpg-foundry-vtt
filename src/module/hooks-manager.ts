@@ -153,6 +153,12 @@ export class HooksManager {
         hooksOn('ready', () => {
             void HooksManager.ready();
         });
+        // #456: the GM advancing the in-universe clock changes every world-time
+        // effect's remaining duration — re-render open actor sheets so the effects
+        // panel counts down live instead of going stale until the next open.
+        hooksOn('updateWorldTime', () => {
+            HooksManager.onUpdateWorldTime();
+        });
         // eslint-disable-next-line no-restricted-syntax -- boundary: hotbarDrop hook payload is an untyped Record from Foundry
         hooksOn('hotbarDrop', (bar: unknown, data: Record<string, unknown>, slot: number) => HooksManager.hotbarDrop(bar, data, slot));
         /* eslint-disable no-restricted-syntax, @typescript-eslint/no-deprecated -- boundary: Foundry hook payloads use deprecated globals (CompendiumDirectory, ActorDirectory, Application); migration tracked separately */
@@ -264,6 +270,22 @@ export class HooksManager {
      * WH40KCreateActorDialog so users pick system + kind rather than a
      * flat type list.
      */
+    /**
+     * Re-render every open actor sheet whose effects panel shows in-universe time
+     * remaining (#456), so advancing the GM clock updates the countdown and drops
+     * expired effects immediately. Cheap: only rendered sheets are touched.
+     */
+    static onUpdateWorldTime(): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors may be absent pre-ready; the sheet handle is loosely typed by Foundry
+        const actors = (globalThis as { game?: { actors?: { contents?: unknown[] } } }).game?.actors?.contents;
+        if (!Array.isArray(actors)) return;
+        for (const actor of actors) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: narrow the Foundry actor surface this touches (sheet.rendered + sheet.render)
+            const a = actor as { sheet?: { rendered?: boolean; render?: (force?: boolean) => unknown } };
+            if (a.sheet?.rendered === true) void a.sheet.render?.();
+        }
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: ActorDirectory is the V14 hook global; Record<string, unknown> is the Foundry hook payload type; migration tracked separately
     static renderActorDirectory(_app: ActorDirectory, html: JQuery, _data: Record<string, unknown>): void {
         const root = html[0] as HTMLElement | undefined;

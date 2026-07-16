@@ -1284,6 +1284,8 @@ export type I18nKey =
     | 'WH40K.Effects.Label'
     | 'WH40K.Effects.None'
     | 'WH40K.Effects.NoneShort'
+    | 'WH40K.Effects.RemainingRounds'
+    | 'WH40K.Effects.RemainingTurns'
     | 'WH40K.Encumbrance.BackpackCurrent'
     | 'WH40K.Encumbrance.BackpackMax'
     | 'WH40K.Encumbrance.Current'

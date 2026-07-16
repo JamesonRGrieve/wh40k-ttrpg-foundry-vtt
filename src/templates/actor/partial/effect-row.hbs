@@ -60,7 +60,8 @@
             {{/if}}
             {{#if showDuration}}
                 {{#if effect.duration.label}}
-                    <div class="tw-text-xs tw-text-gray-500 tw-flex tw-items-center tw-gap-1">
+                    {{! #456: live in-universe time remaining; highlighted when about to expire. }}
+                    <div class="tw-text-xs tw-flex tw-items-center tw-gap-1 {{#if effect.isExpiring}}tw-text-amber-500 tw-font-semibold{{else}}tw-text-gray-500{{/if}}">
                         <i class="fas fa-clock"></i> {{effect.duration.label}}
                     </div>
                 {{/if}}
