@@ -1,0 +1,197 @@
+/**
+ * Skill-use flow engine (#432).
+ *
+ * Generalizes the combat roll builder into a per-skill flow: when a player rolls
+ * a skill, the engine offers that skill's applicable RAW "uses" (a plain test
+ * plus any Special Uses). Each use declares whether it needs a target, its RAW
+ * difficulty modifier, and how it resolves — so the roll dialog can render a use
+ * picker and dispatch to a target-directed, auto-resolving flow (First Aid heals
+ * a target the same way an attack damages one).
+ *
+ * This module is the **content-agnostic engine**: types, the per-skill use
+ * registry, and pure resolution math. The mechanical *values* it exposes for
+ * Medicae are sourced from the existing `healing.ts` `MEDICAE_ACTIONS` registry
+ * rather than re-authored here. New skills declare their uses by adding a
+ * registry entry; the dialog and dispatch code read this engine and never
+ * hardcode a skill's uses inline.
+ *
+ * Foundry-free (no `foundry.*` / DataModel at module load) so it is directly
+ * unit-testable, mirroring `rules/weapon-modes.ts` and `aptitude-derivation.ts`.
+ */
+
+import { type DamageTier, getDamageTier, MEDICAE_ACTIONS, type MedicaeActionKind } from './healing.ts';
+
+/** How a use resolves once the roll lands. `general` is a plain pass/fail test. */
+export type SkillUseKind = 'general' | 'firstAid' | 'extendedCare' | 'surgery' | 'diagnose' | 'extractBullet';
+
+/** One selectable use offered when rolling a skill. */
+export interface SkillUseDef {
+    /** Stable id (used as the picker button value + i18n leaf). */
+    readonly id: SkillUseKind;
+    /** Localization key for the button label (namespaced under `WH40K.SkillUse.*`). */
+    readonly labelKey: string;
+    /** Whether the use prompts for a target token before rolling (like a combat attack). */
+    readonly needsTarget: boolean;
+    /** d100 test-target modifier applied to the roll (RAW difficulty for the use). */
+    readonly difficultyMod: number;
+    /** Resolution family — drives what the dialog does with the result. */
+    readonly kind: SkillUseKind;
+}
+
+/** The universal "just roll the skill" use every skill offers. */
+const GENERAL_SKILL_USE: SkillUseDef = {
+    id: 'general',
+    labelKey: 'WH40K.SkillUse.General',
+    needsTarget: false,
+    difficultyMod: 0,
+    kind: 'general',
+};
+
+/** i18n leaf per Medicae action kind (labels live in the langpack, per Direction #6). */
+const MEDICAE_LABEL_KEY: Record<MedicaeActionKind, string> = {
+    firstAid: 'WH40K.SkillUse.Medicae.FirstAid',
+    extendedCare: 'WH40K.SkillUse.Medicae.ExtendedCare',
+    surgery: 'WH40K.SkillUse.Medicae.Surgery',
+    diagnose: 'WH40K.SkillUse.Medicae.Diagnose',
+    extractBullet: 'WH40K.SkillUse.Medicae.ExtractBullet',
+};
+
+/** Medicae kinds that act on a target (heal / operate) vs. informational. */
+const MEDICAE_TARGETED: ReadonlySet<MedicaeActionKind> = new Set<MedicaeActionKind>(['firstAid', 'extendedCare', 'surgery', 'extractBullet']);
+
+/** Build Medicae's use list from the shared `MEDICAE_ACTIONS` content registry. */
+function medicaeUses(): SkillUseDef[] {
+    return (Object.keys(MEDICAE_ACTIONS) as MedicaeActionKind[]).map((kind) => ({
+        id: kind,
+        labelKey: MEDICAE_LABEL_KEY[kind],
+        needsTarget: MEDICAE_TARGETED.has(kind),
+        difficultyMod: MEDICAE_ACTIONS[kind].difficulty,
+        kind,
+    }));
+}
+
+/**
+ * Per-skill Special-Use builders, keyed by the actor's camelCase skill key.
+ * A skill absent from this map has only the general test (no picker shown).
+ * Builders are lazy so the list reflects any runtime edits to the source
+ * content registries.
+ */
+const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
+    medicae: () => [GENERAL_SKILL_USE, ...medicaeUses()],
+};
+
+/** The uses a skill offers, general test first. Unknown skills get the general test only. */
+export function getSkillUses(skillKey: string): SkillUseDef[] {
+    const builder = SKILL_USE_BUILDERS[skillKey];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess (tsconfig.strict.json) types this record access as possibly-undefined; the ESLint parser config has the flag off and sees the guard as redundant
+    return builder !== undefined ? builder() : [GENERAL_SKILL_USE];
+}
+
+/** Whether a skill offers more than the plain test (i.e. the picker is worth showing). */
+export function hasSkillUses(skillKey: string): boolean {
+    return getSkillUses(skillKey).length > 1;
+}
+
+/** Look up a single use def by skill + id, or null when unknown. */
+export function getSkillUse(skillKey: string, useId: string): SkillUseDef | null {
+    return getSkillUses(skillKey).find((u) => u.id === useId) ?? null;
+}
+
+/** Target vitals the First-Aid resolver reads (subset of a creature's wounds block). */
+export interface FirstAidTargetVitals {
+    readonly woundsValue: number;
+    readonly woundsMax: number;
+    /** Critical-damage severity currently on the target (`system.wounds.critical`). */
+    readonly criticalDamage: number;
+    /** The medic-relevant Toughness bonus of the PATIENT (RAW Extended Care restores TB wounds). */
+    readonly toughnessBonus: number;
+}
+
+/** Outcome of a resolved Medicae target action, ready to apply to the patient. */
+export interface FirstAidOutcome {
+    readonly success: boolean;
+    /** Wounds to restore (clamped so value never exceeds max). */
+    readonly woundsRestored: number;
+    /** Critical-injury severity tiers removed (Surgery). */
+    readonly criticalResolved: number;
+    /** Whether ongoing Blood Loss is closed (First Aid). */
+    readonly bloodLossStopped: boolean;
+}
+
+/**
+ * Resolve a Medicae target action against a patient's vitals (RAW, per the
+ * `MEDICAE_ACTIONS` descriptions). Pure: the caller applies the returned deltas.
+ *
+ * - **First Aid** — on success, close Blood Loss and restore 1 wound.
+ * - **Extended Care** — on success, restore Toughness-bonus wounds.
+ * - **Surgery** — on success, remove one Critical-injury severity tier.
+ * - **Extract Embedded Object** — on success, no wound gain (removal only); failure
+ *   is handled by the caller (RAW deals 1d5 Impact) and is out of this pure result.
+ *
+ * `degrees` is degrees of success (≥ 0). A failure (degrees < 1) yields an
+ * all-zero, `success:false` outcome. `woundsRestored` is pre-clamped to the
+ * missing-wounds headroom so applying it can't overheal.
+ */
+export function resolveFirstAid(kind: SkillUseKind, vitals: FirstAidTargetVitals, degrees: number): FirstAidOutcome {
+    const success = degrees >= 1;
+    const empty: FirstAidOutcome = { success: false, woundsRestored: 0, criticalResolved: 0, bloodLossStopped: false };
+    if (!success) return empty;
+
+    const headroom = Math.max(0, vitals.woundsMax - vitals.woundsValue);
+    const clampWounds = (n: number): number => Math.max(0, Math.min(n, headroom));
+
+    if (kind === 'firstAid') {
+        return { success: true, woundsRestored: clampWounds(1), criticalResolved: 0, bloodLossStopped: true };
+    }
+    if (kind === 'extendedCare') {
+        return { success: true, woundsRestored: clampWounds(Math.max(0, vitals.toughnessBonus)), criticalResolved: 0, bloodLossStopped: false };
+    }
+    if (kind === 'surgery') {
+        return { success: true, woundsRestored: 0, criticalResolved: vitals.criticalDamage > 0 ? 1 : 0, bloodLossStopped: false };
+    }
+    // diagnose / extractBullet / general: informational or non-healing on success.
+    return { success: true, woundsRestored: 0, criticalResolved: 0, bloodLossStopped: false };
+}
+
+/** Minimal patient surface the outcome applier reads and writes (a thin actor adapter). */
+export interface FirstAidPatient {
+    readonly woundsValue: number;
+    readonly woundsMax: number;
+    readonly criticalDamage: number;
+    /** Persist the new vitals (only the changed fields are passed). */
+    update: (patch: { woundsValue?: number; criticalDamage?: number }) => Promise<void>;
+}
+
+/**
+ * Apply a resolved {@link FirstAidOutcome} to a patient — restore wounds (clamped
+ * to max) and reduce critical severity (floored at 0). Pure over the injected
+ * adapter, so it is unit-testable without Foundry and reused by `MedicaeActionData`
+ * (which wraps the real actor). Returns the fields it wrote (empty when nothing changed).
+ */
+export async function applyFirstAidOutcome(patient: FirstAidPatient, outcome: FirstAidOutcome): Promise<{ woundsValue?: number; criticalDamage?: number }> {
+    const patch: { woundsValue?: number; criticalDamage?: number } = {};
+    if (outcome.woundsRestored > 0) {
+        patch.woundsValue = Math.min(patient.woundsMax, patient.woundsValue + outcome.woundsRestored);
+    }
+    if (outcome.criticalResolved > 0) {
+        patch.criticalDamage = Math.max(0, patient.criticalDamage - outcome.criticalResolved);
+    }
+    if (patch.woundsValue !== undefined || patch.criticalDamage !== undefined) {
+        await patient.update(patch);
+    }
+    return patch;
+}
+
+/**
+ * RAW First-Aid difficulty scales with how hurt the patient is (the dialog can
+ * surface this as the default difficulty when a target is chosen): treating a
+ * heavily-damaged patient is harder. Content-agnostic mapping over `getDamageTier`.
+ */
+export function firstAidDifficultyForTier(woundsValue: number, woundsMax: number): number {
+    const byTier: Record<DamageTier, number> = {
+        unharmed: 0, // Ordinary (stabilising)
+        lightlyDamaged: -10, // Difficult
+        heavilyDamaged: -20, // Hard
+    };
+    return byTier[getDamageTier(woundsValue, woundsMax)];
+}
