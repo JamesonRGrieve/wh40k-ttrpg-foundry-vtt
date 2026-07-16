@@ -389,3 +389,41 @@ describe('criticalRiderConditionIds (#108 — riders → condition registry ids)
         expect(ids).toEqual(['stunned', 'burning', 'bloodloss', 'uselessLimb']);
     });
 });
+
+describe('per-line critical-injury pack (#439 homologation)', () => {
+    const DH2: FixtureItem[] = [{ system: { damageType: 'Impact', bodyPart: 'Head', effects: { 5: { text: '<p>DH2 head crit.</p>' } } } }];
+    const RT: FixtureItem[] = [{ system: { damageType: 'Impact', bodyPart: 'Head', effects: { 5: { text: '<p>RT head crit.</p>' } } } }];
+
+    beforeEach(() => {
+        invalidateCriticalDamageCache();
+        vi.stubGlobal('game', {
+            packs: {
+                get: (id: string) => {
+                    if (id === 'wh40k-rpg.dh2-core-items-critical-injuries') return { getDocuments: async () => Promise.resolve(DH2) };
+                    if (id === 'wh40k-rpg.rt-core-items-critical-injuries') return { getDocuments: async () => Promise.resolve(RT) };
+                    return undefined;
+                },
+            },
+        });
+    });
+
+    afterEach(() => {
+        invalidateCriticalDamageCache();
+        vi.unstubAllGlobals();
+    });
+
+    it("reads the active line's own crit pack (RT -> RT descriptors)", async () => {
+        const rec = await getCriticalDamageRecord('Impact', 'Head', 5, 'rt');
+        expect(rec?.effect).toContain('RT head crit');
+    });
+
+    it('falls back to the DH2 pack for a line without its own crit pack', async () => {
+        const rec = await getCriticalDamageRecord('Impact', 'Head', 5, 'bc');
+        expect(rec?.effect).toContain('DH2 head crit');
+    });
+
+    it('defaults to the DH2 pack when no system id is given', async () => {
+        const rec = await getCriticalDamageRecord('Impact', 'Head', 5);
+        expect(rec?.effect).toContain('DH2 head crit');
+    });
+});
