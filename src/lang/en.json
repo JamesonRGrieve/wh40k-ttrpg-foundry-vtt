@@ -487,6 +487,9 @@
             "Margin": "(by {margin} degree(s) of victory)",
             "Stalemate": "Opposed test — stalemate (both failed)."
         },
+        "Addiction": {
+            "Escalated": "{actor} fails to resist the substance — Addiction worsens to {tier}."
+        },
         "Disposition": {
             "Hostile": "Hostile",
             "Antagonistic": "Antagonistic",

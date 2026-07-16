@@ -162,6 +162,7 @@ export type I18nKey =
     | 'WH40K.Actor.ConvertSystem.Target'
     | 'WH40K.Actor.ConvertSystem.Title'
     | 'WH40K.Actor.ConvertSystem.Warning'
+    | 'WH40K.Addiction.Escalated'
     | 'WH40K.AdditionalUse.Add'
     | 'WH40K.AdditionalUse.Delete'
     | 'WH40K.AdditionalUse.DescriptionPlaceholder'

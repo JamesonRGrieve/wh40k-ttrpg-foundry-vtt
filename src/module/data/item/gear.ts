@@ -30,8 +30,14 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * pattern at `talent.ts:100`.
      */
     declare grants: {
-        activeEffects: Array<{ key: string; mode: number; value: number; durationRounds: number }>;
+        activeEffects: Array<{ key: string; mode: number; value: number; durationRounds: number; durationSeconds?: number }>;
     };
+    /**
+     * Addictive rating of a drug-class dose (#457) — the per-substance constant
+     * `rules/addiction.ts` resolves an addiction check against on each use. 0 = not
+     * addictive. Content-authored on the item (Direction #7), never hardcoded.
+     */
+    declare addictive: number;
     /**
      * Profane Object payload (within.md p. 52). When non-null, this gear
      * piece carries the corruption-bound mechanical hook; the engine
@@ -87,8 +93,13 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
             // Effect when used
             effect: new fields.HTMLField({ required: false, blank: true }),
 
-            // Duration of effect (for drugs, etc.)
+            // Duration of effect (for drugs, etc.) — prose; the mechanical duration
+            // lives on each `grants.activeEffects` entry (durationRounds/durationSeconds).
             duration: new fields.StringField({ required: false, blank: true }),
+
+            // #457: addictive rating of a drug-class dose; `rules/addiction.ts` resolves
+            // an addiction check against it on each use. 0 = not addictive.
+            addictive: new fields.NumberField({ required: false, initial: 0, min: 0, integer: true }),
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
@@ -105,6 +116,10 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
                         mode: new fields.NumberField({ required: true, initial: 2, integer: true }), // ACTIVE_EFFECT_MODES.ADD
                         value: new fields.NumberField({ required: true, initial: 0, integer: true }),
                         durationRounds: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                        // #457: in-universe duration for doses that outlast a combat — a
+                        // stimm lasting hours wears off on the world clock, not on rounds.
+                        // 0 = not world-time bound (use durationRounds, or permanent).
+                        durationSeconds: new fields.NumberField({ required: false, initial: 0, min: 0, integer: true }),
                     }),
                     { required: true, initial: [] },
                 ),
@@ -359,6 +374,11 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         const newValue = Math.max(0, this.uses.value - 1);
         await parent.update({ 'system.uses.value': newValue });
 
+        // #457: the dose actually does something — apply its granted effects to the
+        // bearer with a real duration so they wear off on the clock (world-time) or at
+        // end of combat (rounds), and run the addiction check for addictive substances.
+        await this.#applyDoseEffects();
+
         // Notification
         ui.notifications.info(
             game.i18n.format('WH40K.Gear.ConsumedUse', {
@@ -368,6 +388,46 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         );
 
         return parent;
+    }
+
+    /**
+     * Apply this dose's `grants.activeEffects` to the bearer (#457) as a single timed
+     * ActiveEffect, and resolve the addiction check when the substance is addictive.
+     * A no-op for gear with no grants or no owning actor.
+     */
+    async #applyDoseEffects(): Promise<void> {
+        // Structural narrowing rather than importing the actor document: `data/` must
+        // not take a hard dependency on `documents/` (depcruise layering + cycles).
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.parent is a Foundry Item; `actor` is the owning actor when embedded
+        const parent = this.parent as {
+            name: string;
+            actor?: {
+                applyDoseEffect: (
+                    name: string,
+                    changes: ReadonlyArray<{ key: string; mode: number; value: number }>,
+                    d: { seconds?: number; rounds?: number },
+                ) => Promise<void>;
+                resolveDoseAddiction: (substanceKey: string, rating: number) => Promise<void>;
+            } | null;
+        };
+        const actor = parent.actor;
+        if (actor === undefined || actor === null) return;
+
+        const grants = this.grants.activeEffects;
+        if (grants.length > 0) {
+            const seconds = Math.max(...grants.map((g) => g.durationSeconds ?? 0));
+            const rounds = Math.max(...grants.map((g) => g.durationRounds));
+            await actor.applyDoseEffect(
+                parent.name,
+                grants.map((g) => ({ key: g.key, mode: g.mode, value: g.value })),
+                { ...(seconds > 0 ? { seconds } : {}), ...(rounds > 0 ? { rounds } : {}) },
+            );
+        }
+
+        if (this.addictive > 0) {
+            // Key the tier by the substance's stable identifier, falling back to its name.
+            await actor.resolveDoseAddiction(this.identifier !== '' ? this.identifier : parent.name, this.addictive);
+        }
     }
 
     /**
