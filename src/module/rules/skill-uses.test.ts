@@ -174,3 +174,15 @@ describe('knowledge DoS readout (#437)', () => {
         expect(resolveDosReadout('knowledge', 4, true)).toEqual({ tier: 4, labelKey: 'WH40K.SkillUse.Readout.Knowledge.Comprehensive' });
     });
 });
+
+describe('physical feats DoS readout (#438)', () => {
+    it('flags Athletics/Acrobatics as physical readout skills', () => {
+        expect(getSkillReadout('athletics')).toBe('physical');
+        expect(getSkillReadout('acrobatics')).toBe('physical');
+    });
+
+    it('scales the cleared feat by degrees of success', () => {
+        expect(resolveDosReadout('physical', 0, false)).toEqual({ tier: 0, labelKey: 'WH40K.SkillUse.Readout.Physical.Fail' });
+        expect(resolveDosReadout('physical', 3, true)).toEqual({ tier: 3, labelKey: 'WH40K.SkillUse.Readout.Physical.Success' });
+    });
+});

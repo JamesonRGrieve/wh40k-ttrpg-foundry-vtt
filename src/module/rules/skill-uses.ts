@@ -194,7 +194,7 @@ export function resolveInterrogation(degrees: number): InterrogationOutcome {
 /* -------------------------------------------------------------------------- */
 
 /** Skill families whose roll surfaces a degrees-of-success interpretation on the card. */
-export type ReadoutFamily = 'knowledge';
+export type ReadoutFamily = 'knowledge' | 'physical';
 
 /** A resolved DoS readout: a magnitude tier and the langpack key describing it. */
 export interface DosReadout {
@@ -210,8 +210,15 @@ function knowledgeReadout(degrees: number, success: boolean): DosReadout {
     return { tier, labelKey: `WH40K.SkillUse.Readout.Knowledge.${level}` };
 }
 
+/** Physical feats (Athletics/Acrobatics): degrees of success scale the distance/height cleared. */
+function physicalReadout(degrees: number, success: boolean): DosReadout {
+    if (!success) return { tier: 0, labelKey: 'WH40K.SkillUse.Readout.Physical.Fail' };
+    return { tier: Math.max(1, Math.floor(degrees)), labelKey: 'WH40K.SkillUse.Readout.Physical.Success' };
+}
+
 const READOUT_RESOLVERS: Record<ReadoutFamily, (degrees: number, success: boolean) => DosReadout> = {
     knowledge: knowledgeReadout,
+    physical: physicalReadout,
 };
 
 /** Resolve the DoS readout for a family from the (opposed-adjusted) degrees + success. Pure. */
@@ -228,6 +235,8 @@ const SKILL_READOUT: Record<string, ReadoutFamily> = {
     forbiddenLore: 'knowledge',
     logic: 'knowledge',
     psyniscience: 'knowledge',
+    athletics: 'physical',
+    acrobatics: 'physical',
 };
 
 /** The readout family for a skill, or null when the skill has none. */

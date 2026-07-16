@@ -3057,6 +3057,8 @@ export type I18nKey =
     | 'WH40K.SkillUse.Readout.Knowledge.Comprehensive'
     | 'WH40K.SkillUse.Readout.Knowledge.Detailed'
     | 'WH40K.SkillUse.Readout.Knowledge.Nothing'
+    | 'WH40K.SkillUse.Readout.Physical.Fail'
+    | 'WH40K.SkillUse.Readout.Physical.Success'
     | 'WH40K.SkillUse.ResolvedCritical'
     | 'WH40K.Skills.AddFirstSpecializationHint'
     | 'WH40K.Skills.AddSpecialistSkillTitle'
