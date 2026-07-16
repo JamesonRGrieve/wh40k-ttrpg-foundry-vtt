@@ -3,6 +3,7 @@ import { SYSTEM_ID } from '../constants.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
+import { type OpposedSide, resolveOpposed } from '../rules/opposed.ts';
 import type { RerollOption } from '../rules/reroll.ts';
 import {
     applyFirstAidOutcome,
@@ -115,6 +116,33 @@ export class ActionData {
         await RollTableUtils.rollPsychicPhenomena(sourceActor, phenomenaModifier);
     }
 
+    /**
+     * Resolve the opposed contest (#449) once the target's roll is known: build both
+     * sides, run the RAW victor ladder (`resolveOpposed`), and write the outcome —
+     * the initiator's `success` becomes whether it won, and `opposedMargin` carries
+     * the winner's degrees of victory for consumers to scale on. Shared by the
+     * characteristic path (below) and the skill path (SocialInfluenceActionData).
+     */
+    applyOpposedResult(target: { success: boolean; dos: number; dof: number; roll?: number | undefined }): void {
+        const initiatorRoll = this.rollData.roll?.total;
+        const initiator: OpposedSide = {
+            success: this.rollData.success,
+            dos: this.rollData.dos,
+            dof: this.rollData.dof,
+            ...(initiatorRoll !== undefined ? { roll: initiatorRoll } : {}),
+        };
+        const targetSide: OpposedSide = {
+            success: target.success,
+            dos: target.dos,
+            dof: target.dof,
+            ...(target.roll !== undefined ? { roll: target.roll } : {}),
+        };
+        const result = resolveOpposed(initiator, targetSide);
+        this.rollData.opposedSuccess = target.success;
+        this.rollData.success = result.winner === 'initiator';
+        this.rollData.opposedMargin = result.margin;
+    }
+
     async checkForOpposed(): Promise<void> {
         if (this.rollData.isOpposed && this.rollData.targetActor !== null) {
             const targetActor = this.rollData.targetActor;
@@ -127,11 +155,7 @@ export class ActionData {
             this.rollData.opposedRoll = rollCheck.roll;
             this.rollData.opposedDos = rollCheck.dos;
             this.rollData.opposedDof = rollCheck.dof;
-            if (rollCheck.success) {
-                if (this.rollData.opposedDos >= this.rollData.dos) {
-                    this.rollData.success = false;
-                }
-            }
+            this.applyOpposedResult({ success: rollCheck.success, dos: rollCheck.dos, dof: rollCheck.dof, roll: rollCheck.roll.total });
         }
 
         const weaponRollData = this.rollData as WeaponRollData;
@@ -729,7 +753,11 @@ export class DosReadoutActionData extends SimpleSkillData {
  */
 export class DetectionActionData extends SimpleSkillData {
     override async descriptionText(): Promise<void> {
-        this.addEffect('Detection', game.i18n.localize(this.rollData.success ? 'WH40K.SkillUse.Detection.Win' : 'WH40K.SkillUse.Detection.Lose'));
+        const base = game.i18n.localize(this.rollData.success ? 'WH40K.SkillUse.Detection.Win' : 'WH40K.SkillUse.Detection.Lose');
+        const margin = this.rollData.opposedMargin;
+        // #449: surface the winner's degrees of victory when the contest was decided by a margin.
+        const text = margin > 0 ? `${base} ${game.i18n.format('WH40K.Opposed.Margin', { margin: String(margin) })}` : base;
+        this.addEffect('Detection', text);
         return Promise.resolve();
     }
 }
@@ -765,9 +793,7 @@ export class SocialInfluenceActionData extends SimpleSkillData {
         this.rollData.opposedRoll = rollCheck.roll;
         this.rollData.opposedDos = rollCheck.dos;
         this.rollData.opposedDof = rollCheck.dof;
-        if (rollCheck.success && rollCheck.dos >= this.rollData.dos) {
-            this.rollData.success = false;
-        }
+        this.applyOpposedResult({ success: rollCheck.success, dos: rollCheck.dos, dof: rollCheck.dof, roll: rollCheck.roll.total });
     }
 
     override async descriptionText(): Promise<void> {
