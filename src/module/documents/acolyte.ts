@@ -1,7 +1,7 @@
 import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.ts';
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { D100Roll } from '../dice/_module.ts';
-import { type ActionData, MedicaeActionData } from '../rolls/action-data.ts';
+import { type ActionData, InterrogationActionData, MedicaeActionData } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { firstTargetedActor, promptSkillUse } from '../rolls/skill-use-picker.ts';
 import { firstAidDifficultyForTier, hasSkillUses } from '../rules/skill-uses.ts';
@@ -409,27 +409,50 @@ export class WH40KAcolyte extends WH40KBaseActor {
             const use = await promptSkillUse(resolvedSkillName, label ?? resolvedSkillName);
             if (use === null) return;
             if (use.needsTarget) {
-                const patient = firstTargetedActor();
-                if (patient === null) {
+                const targetActor = firstTargetedActor();
+                if (targetActor === null) {
                     ui.notifications.warn(game.i18n.format('WH40K.SkillUse.NoTarget', { use: game.i18n.localize(use.labelKey) }));
                     return;
                 }
+                const useLabel = game.i18n.localize(use.labelKey);
+
+                // Interrogation (#435): an opposed test vs the subject's Willpower;
+                // InterrogationActionData applies fatigue + surfaces the info tier.
+                if (use.kind === 'interrogate') {
+                    const interro = new InterrogationActionData();
+                    this._buildSimpleSkillRoll({
+                        key: resolvedSkillName,
+                        type: 'skill',
+                        label: `${label}: ${useLabel}`,
+                        target: targetValue,
+                        situationalKey: resolvedSkillName,
+                        instance: interro,
+                        ...(use.difficultyMod !== 0 ? { extraModifiers: { useDifficulty: use.difficultyMod } } : {}),
+                        ...(skillRank !== undefined ? { skillRank } : {}),
+                    });
+                    interro.rollData.targetActor = targetActor;
+                    interro.rollData.isOpposed = true;
+                    interro.rollData.opposedChar = use.opposedChar ?? 'WP';
+                    prepareUnifiedRoll(interro);
+                    return;
+                }
+
+                // Medicae target uses (#432). RAW First Aid difficulty scales with how
+                // hurt the patient is; other uses carry the flat MEDICAE_ACTIONS difficulty.
                 const medicae = new MedicaeActionData(use.kind);
-                // RAW First Aid difficulty scales with how hurt the patient is; other
-                // Medicae uses carry the flat per-action difficulty from MEDICAE_ACTIONS.
-                const patientWounds = patient.system.wounds;
+                const patientWounds = targetActor.system.wounds;
                 const difficulty = use.kind === 'firstAid' ? firstAidDifficultyForTier(patientWounds.value, patientWounds.max) : use.difficultyMod;
                 this._buildSimpleSkillRoll({
                     key: resolvedSkillName,
                     type: 'skill',
-                    label: `${label}: ${game.i18n.localize(use.labelKey)}`,
+                    label: `${label}: ${useLabel}`,
                     target: targetValue,
                     situationalKey: resolvedSkillName,
                     instance: medicae,
                     ...(difficulty !== 0 ? { extraModifiers: { medicaeDifficulty: difficulty } } : {}),
                     ...(skillRank !== undefined ? { skillRank } : {}),
                 });
-                medicae.rollData.targetActor = patient;
+                medicae.rollData.targetActor = targetActor;
                 prepareUnifiedRoll(medicae);
                 return;
             }

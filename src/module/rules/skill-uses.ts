@@ -22,7 +22,7 @@
 import { type DamageTier, getDamageTier, MEDICAE_ACTIONS, type MedicaeActionKind } from './healing.ts';
 
 /** How a use resolves once the roll lands. `general` is a plain pass/fail test. */
-export type SkillUseKind = 'general' | 'firstAid' | 'extendedCare' | 'surgery' | 'diagnose' | 'extractBullet';
+export type SkillUseKind = 'general' | 'firstAid' | 'extendedCare' | 'surgery' | 'diagnose' | 'extractBullet' | 'interrogate';
 
 /** One selectable use offered when rolling a skill. */
 export interface SkillUseDef {
@@ -36,6 +36,11 @@ export interface SkillUseDef {
     readonly difficultyMod: number;
     /** Resolution family — drives what the dialog does with the result. */
     readonly kind: SkillUseKind;
+    /**
+     * Characteristic key the target resists with when this use is opposed (e.g.
+     * `'willpower'` for Interrogation). Absent for unopposed uses.
+     */
+    readonly opposedChar?: string;
 }
 
 /** The universal "just roll the skill" use every skill offers. */
@@ -76,8 +81,19 @@ function medicaeUses(): SkillUseDef[] {
  * Builders are lazy so the list reflects any runtime edits to the source
  * content registries.
  */
+/** Interrogation's target-directed use — opposed by the subject's Willpower (#435). */
+const INTERROGATE_USE: SkillUseDef = {
+    id: 'interrogate',
+    labelKey: 'WH40K.SkillUse.Interrogation.Interrogate',
+    needsTarget: true,
+    difficultyMod: 0,
+    kind: 'interrogate',
+    opposedChar: 'WP',
+};
+
 const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     medicae: () => [GENERAL_SKILL_USE, ...medicaeUses()],
+    interrogation: () => [GENERAL_SKILL_USE, INTERROGATE_USE],
 };
 
 /** The uses a skill offers, general test first. Unknown skills get the general test only. */
@@ -151,6 +167,26 @@ export function resolveFirstAid(kind: SkillUseKind, vitals: FirstAidTargetVitals
     }
     // diagnose / extractBullet / general: informational or non-healing on success.
     return { success: true, woundsRestored: 0, criticalResolved: 0, bloodLossStopped: false };
+}
+
+/** Outcome of a resolved Interrogation (#435), ready to apply to the subject. */
+export interface InterrogationOutcome {
+    readonly success: boolean;
+    /** Information tier extracted (0 = nothing; higher = more/clearer), scaled by degrees of success. */
+    readonly infoTier: number;
+    /** Fatigue levels inflicted on the subject — the session is taxing whether or not it succeeds (RAW). */
+    readonly fatigue: number;
+}
+
+/**
+ * Resolve an Interrogation against the opposed result (`degrees` = the
+ * interrogator's degrees of success after the opposed Willpower test). Pure:
+ * the caller applies the fatigue and surfaces the info tier. A failed session
+ * still fatigues the subject.
+ */
+export function resolveInterrogation(degrees: number): InterrogationOutcome {
+    if (degrees < 1) return { success: false, infoTier: 0, fatigue: 1 };
+    return { success: true, infoTier: Math.max(1, Math.floor(degrees)), fatigue: 1 };
 }
 
 /** Minimal patient surface the outcome applier reads and writes (a thin actor adapter). */
