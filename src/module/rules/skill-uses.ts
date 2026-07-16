@@ -41,7 +41,9 @@ export type SkillUseKind =
     | 'applyChem'
     | 'coatWeapon'
     | 'steal'
-    | 'plant';
+    | 'plant'
+    | 'repair'
+    | 'bypassLock';
 
 /** One selectable use offered when rolling a skill. */
 export interface SkillUseDef {
@@ -213,6 +215,13 @@ const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     medicae: () => [GENERAL_SKILL_USE, ...medicaeUses()],
     interrogation: () => [GENERAL_SKILL_USE, INTERROGATE_USE],
     chemUse: () => [GENERAL_SKILL_USE, ...CHEM_USES],
+    // Object-interaction appliers (extend the #436 DoS readout with the state write):
+    // Tech-Use repairs a broken/jammed device (#444); Security opens a locked one (#443).
+    techUse: () => [GENERAL_SKILL_USE, { id: 'repair', labelKey: 'WH40K.SkillUse.Object.Repair', needsTarget: false, difficultyMod: 0, kind: 'repair' }],
+    security: () => [
+        GENERAL_SKILL_USE,
+        { id: 'bypassLock', labelKey: 'WH40K.SkillUse.Object.BypassLock', needsTarget: false, difficultyMod: 0, kind: 'bypassLock' },
+    ],
     // Opposed detection (#434): a hider vs an observer's Perception, a scanner vs the
     // hider's Agility, Scrutiny vs the mark's Fellowship (Deceive), a thief vs Perception.
     stealth: () => [GENERAL_SKILL_USE, detectionUse('Stealth', 'Per')],

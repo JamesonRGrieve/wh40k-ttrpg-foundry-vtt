@@ -418,6 +418,19 @@
                 "Diagnose": "Diagnose",
                 "ExtractBullet": "Extract Embedded Object"
             },
+            "Object": {
+                "Repair": "Repair Item",
+                "BypassLock": "Bypass Lock",
+                "PickTitle": "{use} — choose an item",
+                "PickRepairHint": "Pick the broken or jammed item to repair.",
+                "PickLockHint": "Pick the locked item to open.",
+                "NoBroken": "You have no broken or jammed item to repair.",
+                "NoLocked": "There is no locked item to open.",
+                "Repaired": "{item} is repaired and working again.",
+                "RepairFailed": "The repair of {item} fails.",
+                "Unlocked": "{item} is unlocked.",
+                "BypassFailed": "The lock on {item} holds."
+            },
             "Palm": {
                 "Steal": "Steal / Pickpocket",
                 "Plant": "Plant Item",

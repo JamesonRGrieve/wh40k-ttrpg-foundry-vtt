@@ -22,6 +22,17 @@ export interface EquippableState {
      * `system.state`.
      */
     coating: { name: string; charges: number };
+    /**
+     * Whether this device is broken/inoperable (#444) — a Tech-Use Repair clears it.
+     * Weapons track their own `jammed` state; this covers other equipment (a broken
+     * auspex, a smashed lock mechanism). Transient per-instance state.
+     */
+    broken: boolean;
+    /**
+     * Whether this item's lock is engaged (#443) — a Security/Lock-picking bypass
+     * clears it. For lockable containers / strongboxes / door-items. Transient state.
+     */
+    locked: boolean;
 }
 
 interface UpdatableActor {
@@ -66,6 +77,10 @@ export default class EquippableTemplate extends SystemDataModel {
                     name: new fields.StringField({ required: true, blank: true, initial: '' }),
                     charges: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 }),
+                // #444 — device broken/inoperable until a Tech-Use Repair clears it.
+                broken: new fields.BooleanField({ required: true, initial: false }),
+                // #443 — lock engaged until a Security/Lock-picking bypass clears it.
+                locked: new fields.BooleanField({ required: true, initial: false }),
             }),
         };
     }
