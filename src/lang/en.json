@@ -418,10 +418,13 @@
                 "Diagnose": "Diagnose",
                 "ExtractBullet": "Extract Embedded Object"
             },
+            "GateCooldown": "{target} cannot be treated with {use} again yet — {remaining} remaining.",
+            "GateExtendedCare": "{target} is undergoing Extended Care — {use} cannot be applied ({remaining} remaining).",
             "Interrogation": {
                 "Interrogate": "Interrogate",
                 "Extracted": "Extracted tier-{tier} information from {subject} ({fatigue} fatigue).",
-                "Resisted": "{subject} resists interrogation ({fatigue} fatigue)."
+                "Resisted": "{subject} resists interrogation ({fatigue} fatigue).",
+                "Lockout": "The session breaks down — {subject} cannot be interrogated again for {days} day(s)."
             },
             "Readout": {
                 "Knowledge": {

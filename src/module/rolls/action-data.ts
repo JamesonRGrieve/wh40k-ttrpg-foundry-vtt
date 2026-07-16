@@ -19,6 +19,7 @@ import {
     type SkillUseKind,
 } from '../rules/skill-uses.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
+import { DAY_SECONDS } from '../rules/world-time.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
@@ -687,6 +688,13 @@ export class MedicaeActionData extends SimpleSkillData {
         };
         await applyFirstAidOutcome(patient, outcome);
 
+        // RAW cooldown (#458): close the patient's gate so the same use cannot be
+        // repeated on them until the in-universe window elapses (First Aid: 24h).
+        const gate = getSkillUse('medicae', this.useKind)?.timeGate;
+        if (gate?.windowSeconds !== undefined) {
+            await target.setTimeGate(gate.key, Number(game.time.worldTime) + gate.windowSeconds);
+        }
+
         const parts = [game.i18n.format('WH40K.SkillUse.Applied', { medic: this.rollData.sourceActor?.name ?? '', use: useLabel, patient: target.name })];
         if (outcome.woundsRestored > 0) parts.push(game.i18n.format('WH40K.SkillUse.HealedWounds', { wounds: String(outcome.woundsRestored) }));
         if (outcome.criticalResolved > 0) parts.push(game.i18n.format('WH40K.SkillUse.ResolvedCritical', { tiers: String(outcome.criticalResolved) }));
@@ -722,6 +730,15 @@ export class InterrogationActionData extends SimpleSkillData {
                 'Interrogation',
                 game.i18n.format('WH40K.SkillUse.Interrogation.Resisted', { subject: target.name, fatigue: String(outcome.fatigue) }),
             );
+            // RAW (#458): a badly botched session (2+ degrees of failure) leaves the
+            // subject unable to be interrogated again for 1d5 days.
+            if (this.rollData.dof >= 2) {
+                const lockout = new Roll('1d5');
+                await lockout.evaluate();
+                const days = lockout.total ?? 1;
+                await target.setTimeGate('interrogate', Number(game.time.worldTime) + days * DAY_SECONDS);
+                this.addEffect('Interrogation', game.i18n.format('WH40K.SkillUse.Interrogation.Lockout', { subject: target.name, days: String(days) }));
+            }
         }
     }
 }

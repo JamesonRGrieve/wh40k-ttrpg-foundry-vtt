@@ -107,6 +107,36 @@ export class WH40KBaseActor extends Actor {
     }
 
     /**
+     * Read this actor's in-universe time-gate **expiry** for `key` (#455) — the world
+     * time at which a time-limited rule stops blocking them (e.g. `firstAid`).
+     * `null` when unset, i.e. the gate is open. The shared mechanism behind every
+     * per-target RAW cooldown, so no rule invents its own flag.
+     */
+    getTimeGate(key: string): number | null {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor#flags is Foundry's untyped per-module flag bag
+        const gates = (this.flags as { 'wh40k-rpg'?: { timeGates?: Record<string, number> } })['wh40k-rpg']?.timeGates;
+        const expiry = gates?.[key];
+        return typeof expiry === 'number' ? expiry : null;
+    }
+
+    /**
+     * Close this actor's in-universe time gate for `key` until `expiry` (#455) —
+     * an absolute world time, so fixed windows (First Aid: now + 24h) and random
+     * ones (Interrogation: now + 1d5 days) share one mechanism.
+     */
+    async setTimeGate(key: string, expiry: number): Promise<void> {
+        await this.setFlag('wh40k-rpg', `timeGates.${key}`, Math.trunc(expiry));
+    }
+
+    /**
+     * Clear this actor's in-universe time gate for `key` (#455) — e.g. a GM
+     * releasing a lockout by hand, or a rule whose blocking state ended.
+     */
+    async clearTimeGate(key: string): Promise<void> {
+        await this.unsetFlag('wh40k-rpg', `timeGates.${key}`);
+    }
+
+    /**
      * Apply a temporary combat modifier to this actor as an ActiveEffect (#447) —
      * e.g. War Cry's −10 to defence for a round. Mirrors the `createCombatEffect`
      * change shape but lives actor-side so the roll layer can apply it via the
