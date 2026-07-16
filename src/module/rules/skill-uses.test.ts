@@ -186,3 +186,15 @@ describe('physical feats DoS readout (#438)', () => {
         expect(resolveDosReadout('physical', 3, true)).toEqual({ tier: 3, labelKey: 'WH40K.SkillUse.Readout.Physical.Success' });
     });
 });
+
+describe('object interaction DoS readout (#436)', () => {
+    it('flags Security/Tech-Use as object-interaction readout skills', () => {
+        expect(getSkillReadout('security')).toBe('objectInteraction');
+        expect(getSkillReadout('techUse')).toBe('objectInteraction');
+    });
+
+    it('scales the time/outcome by degrees of success', () => {
+        expect(resolveDosReadout('objectInteraction', 0, false)).toEqual({ tier: 0, labelKey: 'WH40K.SkillUse.Readout.Object.Fail' });
+        expect(resolveDosReadout('objectInteraction', 2, true)).toEqual({ tier: 2, labelKey: 'WH40K.SkillUse.Readout.Object.Success' });
+    });
+});
