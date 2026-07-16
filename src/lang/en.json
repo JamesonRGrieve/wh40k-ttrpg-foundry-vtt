@@ -446,7 +446,25 @@
                 "SleightOfHand": "Palm / Plant",
                 "Win": "Opposed test won — you succeed against the target.",
                 "Lose": "Opposed test lost — the target prevails."
+            },
+            "Social": {
+                "Charm": "Charm",
+                "Command": "Command",
+                "Intimidate": "Intimidate",
+                "Deceive": "Deceive",
+                "Won": "{use} succeeds against {target}.",
+                "Lost": "{target} resists your {use}.",
+                "Shift": "{use} shifts {target} {bands} band(s) — now {band}."
             }
+        },
+        "Disposition": {
+            "Hostile": "Hostile",
+            "Antagonistic": "Antagonistic",
+            "Wary": "Wary",
+            "Neutral": "Neutral",
+            "Cooperative": "Cooperative",
+            "Friendly": "Friendly",
+            "Helpful": "Helpful"
         },
         "Skills": {
             "Header": "Skills",
