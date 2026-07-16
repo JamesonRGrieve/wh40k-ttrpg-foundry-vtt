@@ -10,7 +10,9 @@ import {
     getSkillReadout,
     resolveDosReadout,
     resolveInterrogation,
+    resolveSocialInfluence,
     type FirstAidTargetVitals,
+    type SkillUseDef,
 } from './skill-uses.ts';
 
 describe('skill-use registry (#432)', () => {
@@ -214,5 +216,43 @@ describe('opposed detection (#434)', () => {
         expect(getSkillUse('stealth', 'detect')?.opposedChar).toBe('Per');
         expect(getSkillUse('awareness', 'detect')?.opposedChar).toBe('Ag');
         expect(getSkillUse('scrutiny', 'detect')?.opposedChar).toBe('Fel');
+    });
+});
+
+describe('social influence (#433)', () => {
+    it('offers general + a target-directed social use for each social skill', () => {
+        for (const key of ['charm', 'command', 'intimidate', 'deceive']) {
+            const uses = getSkillUses(key);
+            expect(uses.map((u) => u.id)).toEqual(['general', 'social']);
+            expect(getSkillUse(key, 'social')?.needsTarget).toBe(true);
+        }
+    });
+
+    it('opposes Charm/Command/Intimidate by Willpower and Deceive by the Scrutiny skill', () => {
+        expect(getSkillUse('charm', 'social')?.opposedChar).toBe('WP');
+        expect(getSkillUse('command', 'social')?.opposedChar).toBe('WP');
+        expect(getSkillUse('intimidate', 'social')?.opposedChar).toBe('WP');
+        expect(getSkillUse('deceive', 'social')?.opposedSkill).toBe('scrutiny');
+        expect(getSkillUse('deceive', 'social')?.opposedChar).toBeUndefined();
+    });
+
+    it('directs the disposition shift warmer for Charm and colder for Intimidate', () => {
+        expect(getSkillUse('charm', 'social')?.dispositionDir).toBe(1);
+        expect(getSkillUse('intimidate', 'social')?.dispositionDir).toBe(-1);
+        expect(getSkillUse('command', 'social')?.dispositionDir).toBe(0);
+        expect(getSkillUse('deceive', 'social')?.dispositionDir).toBe(0);
+    });
+
+    it('scales the disposition delta by degrees of success in the use direction', () => {
+        const charm = getSkillUse('charm', 'social') as SkillUseDef;
+        const intimidate = getSkillUse('intimidate', 'social') as SkillUseDef;
+        const command = getSkillUse('command', 'social') as SkillUseDef;
+
+        expect(resolveSocialInfluence(charm, 1, true)).toEqual({ success: true, dispositionDelta: 1 });
+        expect(resolveSocialInfluence(charm, 3, true)).toEqual({ success: true, dispositionDelta: 2 });
+        expect(resolveSocialInfluence(intimidate, 3, true)).toEqual({ success: true, dispositionDelta: -2 });
+        // A failed contest never shifts disposition, and a directionless use never does.
+        expect(resolveSocialInfluence(charm, 0, false)).toEqual({ success: false, dispositionDelta: 0 });
+        expect(resolveSocialInfluence(command, 3, true)).toEqual({ success: true, dispositionDelta: 0 });
     });
 });

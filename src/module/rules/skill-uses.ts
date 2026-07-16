@@ -22,7 +22,7 @@
 import { type DamageTier, getDamageTier, MEDICAE_ACTIONS, type MedicaeActionKind } from './healing.ts';
 
 /** How a use resolves once the roll lands. `general` is a plain pass/fail test. */
-export type SkillUseKind = 'general' | 'firstAid' | 'extendedCare' | 'surgery' | 'diagnose' | 'extractBullet' | 'interrogate' | 'detect';
+export type SkillUseKind = 'general' | 'firstAid' | 'extendedCare' | 'surgery' | 'diagnose' | 'extractBullet' | 'interrogate' | 'detect' | 'social';
 
 /** One selectable use offered when rolling a skill. */
 export interface SkillUseDef {
@@ -41,6 +41,18 @@ export interface SkillUseDef {
      * `'willpower'` for Interrogation). Absent for unopposed uses.
      */
     readonly opposedChar?: string;
+    /**
+     * Skill key the target resists with when this use is opposed by a *skill*
+     * rather than a characteristic (e.g. `'scrutiny'` for Deceive). Takes
+     * precedence over `opposedChar` in the opposed resolution. Absent otherwise.
+     */
+    readonly opposedSkill?: string;
+    /**
+     * Direction this social use pushes the target's disposition on success:
+     * `+1` warmer (Charm), `-1` colder (Intimidate), `0`/absent for uses that
+     * resolve a contest without a lasting disposition shift (Command, Deceive).
+     */
+    readonly dispositionDir?: -1 | 0 | 1;
 }
 
 /** The universal "just roll the skill" use every skill offers. */
@@ -96,6 +108,26 @@ function detectionUse(labelLeaf: string, opposedChar: string): SkillUseDef {
     return { id: 'detect', labelKey: `WH40K.SkillUse.Detection.${labelLeaf}`, needsTarget: true, difficultyMod: 0, kind: 'detect', opposedChar };
 }
 
+/**
+ * A target-directed social-influence use (#433) — an opposed test that, on
+ * success, may shift the target NPC's disposition (`dispositionDir`). Opposition
+ * is by the target's Willpower (`opposedChar`) unless `opposedSkill` is given
+ * (Deceive is opposed by the target's Scrutiny). `dispositionDir` of 0 resolves
+ * the contest without a lasting disposition shift.
+ */
+function socialUse(labelLeaf: string, opts: { opposedChar?: string; opposedSkill?: string; dispositionDir: -1 | 0 | 1 }): SkillUseDef {
+    return {
+        id: 'social',
+        labelKey: `WH40K.SkillUse.Social.${labelLeaf}`,
+        needsTarget: true,
+        difficultyMod: 0,
+        kind: 'social',
+        dispositionDir: opts.dispositionDir,
+        ...(opts.opposedChar !== undefined ? { opposedChar: opts.opposedChar } : {}),
+        ...(opts.opposedSkill !== undefined ? { opposedSkill: opts.opposedSkill } : {}),
+    };
+}
+
 const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     medicae: () => [GENERAL_SKILL_USE, ...medicaeUses()],
     interrogation: () => [GENERAL_SKILL_USE, INTERROGATE_USE],
@@ -105,6 +137,12 @@ const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     awareness: () => [GENERAL_SKILL_USE, detectionUse('Awareness', 'Ag')],
     scrutiny: () => [GENERAL_SKILL_USE, detectionUse('Scrutiny', 'Fel')],
     sleightOfHand: () => [GENERAL_SKILL_USE, detectionUse('SleightOfHand', 'Per')],
+    // Social influence (#433): opposed vs the target's Willpower (Charm/Command/
+    // Intimidate) or Scrutiny (Deceive); Charm warms and Intimidate cools disposition.
+    charm: () => [GENERAL_SKILL_USE, socialUse('Charm', { opposedChar: 'WP', dispositionDir: 1 })],
+    command: () => [GENERAL_SKILL_USE, socialUse('Command', { opposedChar: 'WP', dispositionDir: 0 })],
+    intimidate: () => [GENERAL_SKILL_USE, socialUse('Intimidate', { opposedChar: 'WP', dispositionDir: -1 })],
+    deceive: () => [GENERAL_SKILL_USE, socialUse('Deceive', { opposedSkill: 'scrutiny', dispositionDir: 0 })],
 };
 
 /** The uses a skill offers, general test first. Unknown skills get the general test only. */
@@ -198,6 +236,33 @@ export interface InterrogationOutcome {
 export function resolveInterrogation(degrees: number): InterrogationOutcome {
     if (degrees < 1) return { success: false, infoTier: 0, fatigue: 1 };
     return { success: true, infoTier: Math.max(1, Math.floor(degrees)), fatigue: 1 };
+}
+
+/** Outcome of a resolved social-influence use (#433), ready to apply to the target NPC. */
+export interface SocialInfluenceOutcome {
+    readonly success: boolean;
+    /**
+     * Signed disposition band shift to apply to the target on success (0 when the
+     * use has no lasting disposition effect or the test failed). One band at 1
+     * degree of success, +1 further band per two additional degrees.
+     */
+    readonly dispositionDelta: number;
+}
+
+/**
+ * Resolve a social-influence use against the opposed result. `degrees` is the
+ * actor's degrees of success after the opposed test; `success` is whether the
+ * actor won the contest. Pure: the caller writes the disposition shift.
+ *
+ * A win with a directional use (Charm/Intimidate) shifts disposition one band in
+ * that direction, gaining a further band per two extra degrees. A directionless
+ * use (Command/Deceive) resolves the contest with no disposition change.
+ */
+export function resolveSocialInfluence(def: SkillUseDef, degrees: number, success: boolean): SocialInfluenceOutcome {
+    const dir = def.dispositionDir ?? 0;
+    if (!success || dir === 0) return { success, dispositionDelta: 0 };
+    const bands = 1 + Math.floor(Math.max(0, degrees - 1) / 2);
+    return { success, dispositionDelta: dir * bands };
 }
 
 /* -------------------------------------------------------------------------- */

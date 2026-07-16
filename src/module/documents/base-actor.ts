@@ -70,6 +70,11 @@ export class WH40KBaseActor extends Actor {
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: base class stub returns unknown; subclasses override with concrete roll results
+    async rollSkillCheck(_skillKey: string): Promise<unknown> {
+        return Promise.resolve(null);
+    }
+
+    // eslint-disable-next-line no-restricted-syntax -- boundary: base class stub returns unknown; subclasses override with concrete roll results
     async rollWeaponAction(item: WH40KItem): Promise<unknown> {
         return this.rollItem(item.id ?? '');
     }

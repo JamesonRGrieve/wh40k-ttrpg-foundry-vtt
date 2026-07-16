@@ -1,6 +1,7 @@
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
+import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import type { RerollOption } from '../rules/reroll.ts';
 import {
@@ -11,6 +12,8 @@ import {
     resolveDosReadout,
     resolveFirstAid,
     resolveInterrogation,
+    resolveSocialInfluence,
+    type SkillUseDef,
     type SkillUseKind,
 } from '../rules/skill-uses.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
@@ -728,5 +731,75 @@ export class DetectionActionData extends SimpleSkillData {
     override async descriptionText(): Promise<void> {
         this.addEffect('Detection', game.i18n.localize(this.rollData.success ? 'WH40K.SkillUse.Detection.Win' : 'WH40K.SkillUse.Detection.Lose'));
         return Promise.resolve();
+    }
+}
+
+/**
+ * A targeted social-influence roll (#433) — Charm / Command / Intimidate / Deceive
+ * against a chosen target. The contest is opposed by the target's Willpower
+ * (`opposedChar`, resolved by the inherited `checkForOpposed`) or, for Deceive,
+ * by the target's Scrutiny *skill* (`opposedSkill`, resolved here). On a win, a
+ * directional use (Charm/Intimidate) auto-adjusts the target NPC's disposition;
+ * the shift and the resulting band are summarized on the chat card. Social
+ * talents/traits are already folded into the roll target via the shared modifier
+ * pipeline, so no special-casing is needed here.
+ */
+export class SocialInfluenceActionData extends SimpleSkillData {
+    readonly def: SkillUseDef;
+
+    constructor(def: SkillUseDef) {
+        super();
+        this.def = def;
+    }
+
+    override async checkForOpposed(): Promise<void> {
+        const target = this.rollData.targetActor;
+        const opposedSkill = this.def.opposedSkill;
+        if (opposedSkill === undefined || target === null) {
+            await super.checkForOpposed();
+            return;
+        }
+        // Opposed by a SKILL (Deceive vs Scrutiny) rather than a characteristic.
+        const rollCheck = (await target.rollSkillCheck(opposedSkill)) as { roll: Roll; dos: number; dof: number; success: boolean } | null;
+        if (rollCheck === null) return;
+        this.rollData.opposedRoll = rollCheck.roll;
+        this.rollData.opposedDos = rollCheck.dos;
+        this.rollData.opposedDof = rollCheck.dof;
+        if (rollCheck.success && rollCheck.dos >= this.rollData.dos) {
+            this.rollData.success = false;
+        }
+    }
+
+    override async descriptionText(): Promise<void> {
+        const target = this.rollData.targetActor;
+        const useLabel = game.i18n.localize(this.def.labelKey);
+        const targetName = target?.name ?? '';
+
+        if (!this.rollData.success) {
+            this.addEffect('Social', game.i18n.format('WH40K.SkillUse.Social.Lost', { use: useLabel, target: targetName }));
+            return;
+        }
+
+        const degrees = Math.max(1, this.rollData.dos);
+        const outcome = resolveSocialInfluence(this.def, degrees, true);
+        if (target === null || outcome.dispositionDelta === 0) {
+            this.addEffect('Social', game.i18n.format('WH40K.SkillUse.Social.Won', { use: useLabel, target: targetName }));
+            return;
+        }
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: disposition lives on npc.ts only; loosely typed here
+        const disposition = (target.system as { disposition?: { value: number } }).disposition;
+        const before = disposition?.value ?? 0;
+        await target.adjustDisposition(outcome.dispositionDelta);
+        const band = game.i18n.localize(`WH40K.Disposition.${labelForDisposition(clampDisposition(before + outcome.dispositionDelta))}`);
+        this.addEffect(
+            'Social',
+            game.i18n.format('WH40K.SkillUse.Social.Shift', {
+                use: useLabel,
+                target: targetName,
+                bands: String(Math.abs(outcome.dispositionDelta)),
+                band,
+            }),
+        );
     }
 }

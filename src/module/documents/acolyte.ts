@@ -1,7 +1,14 @@
 import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.ts';
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { D100Roll } from '../dice/_module.ts';
-import { type ActionData, DetectionActionData, DosReadoutActionData, InterrogationActionData, MedicaeActionData } from '../rolls/action-data.ts';
+import {
+    type ActionData,
+    DetectionActionData,
+    DosReadoutActionData,
+    InterrogationActionData,
+    MedicaeActionData,
+    SocialInfluenceActionData,
+} from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { firstTargetedActor, promptSkillUse } from '../rolls/skill-use-picker.ts';
 import { firstAidDifficultyForTier, getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
@@ -469,6 +476,30 @@ export class WH40KAcolyte extends WH40KBaseActor {
             return;
         }
 
+        // Social influence (#433): Charm/Command/Intimidate/Deceive vs the target's
+        // Willpower (or Scrutiny for Deceive); a win may auto-shift disposition.
+        if (use.kind === 'social') {
+            const social = new SocialInfluenceActionData(use);
+            this._buildSimpleSkillRoll({
+                key: skillKey,
+                type: 'skill',
+                label: rollLabel,
+                target: targetValue,
+                situationalKey: skillKey,
+                instance: social,
+                ...rankOpt,
+            });
+            social.rollData.targetActor = targetActor;
+            // Deceive is opposed by the target's Scrutiny SKILL, resolved inside the
+            // action; the WP-opposed uses drive the shared characteristic opposition.
+            if (use.opposedSkill === undefined && use.opposedChar !== undefined) {
+                social.rollData.isOpposed = true;
+                social.rollData.opposedChar = use.opposedChar;
+            }
+            prepareUnifiedRoll(social);
+            return;
+        }
+
         // Opposed detection (#434): Stealth/Awareness/Scrutiny/Sleight of Hand vs
         // the target's opposing characteristic; reports win/lose, no state change.
         if (use.kind === 'detect') {
@@ -640,6 +671,28 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const roll = await D100Roll.evaluate({
             actor: this,
             target: char.total,
+            configure: false,
+        });
+
+        return roll as D100RollResult | null;
+    }
+
+    /**
+     * Perform a quick skill check without dialog — used by opposed skill contests
+     * (e.g. Deceive vs the target's Scrutiny, #433).
+     * @param {string} skillKey - The skill key
+     * @returns {Promise<D100RollResult|null>} The evaluated roll
+     */
+    override async rollSkillCheck(skillKey: string): Promise<D100RollResult | null> {
+        const skill = this.getSkillFuzzy(skillKey) as WH40KSkill | undefined;
+        if (skill === undefined) {
+            game.wh40k.error('Unable to perform skill test. Could not find provided skill.', skillKey);
+            return null;
+        }
+
+        const roll = await D100Roll.evaluate({
+            actor: this,
+            target: skill.current,
             configure: false,
         });
 
