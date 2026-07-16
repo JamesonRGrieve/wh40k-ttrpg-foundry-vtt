@@ -22,7 +22,21 @@
 import { type DamageTier, getDamageTier, MEDICAE_ACTIONS, type MedicaeActionKind } from './healing.ts';
 
 /** How a use resolves once the roll lands. `general` is a plain pass/fail test. */
-export type SkillUseKind = 'general' | 'firstAid' | 'extendedCare' | 'surgery' | 'diagnose' | 'extractBullet' | 'interrogate' | 'detect' | 'social';
+export type SkillUseKind =
+    | 'general'
+    | 'firstAid'
+    | 'extendedCare'
+    | 'surgery'
+    | 'diagnose'
+    | 'extractBullet'
+    | 'interrogate'
+    | 'detect'
+    | 'social'
+    | 'socialBuff'
+    | 'inspire'
+    | 'terrify'
+    | 'warCry'
+    | 'blather';
 
 /** One selectable use offered when rolling a skill. */
 export interface SkillUseDef {
@@ -134,6 +148,24 @@ function socialUse(labelLeaf: string, opts: { opposedChar?: string; opposedSkill
     };
 }
 
+/**
+ * A social buff/debuff sub-use (#447) — applies a temporary effect to a target
+ * actor: an ally buff (Inspire/Terrify) or an enemy debuff (War Cry/Blather).
+ * `id` is the specific effect (unique per skill so the picker buttons are distinct);
+ * `kind` is `socialBuff` so the dispatch routes them together. Blather is opposed.
+ */
+function buffUse(buff: 'inspire' | 'terrify' | 'warCry' | 'blather', opts: { opposedChar?: string } = {}): SkillUseDef {
+    const leaf = buff.charAt(0).toUpperCase() + buff.slice(1);
+    return {
+        id: buff,
+        labelKey: `WH40K.SkillUse.Buff.${leaf}`,
+        needsTarget: true,
+        difficultyMod: 0,
+        kind: 'socialBuff',
+        ...(opts.opposedChar !== undefined ? { opposedChar: opts.opposedChar } : {}),
+    };
+}
+
 const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     medicae: () => [GENERAL_SKILL_USE, ...medicaeUses()],
     interrogation: () => [GENERAL_SKILL_USE, INTERROGATE_USE],
@@ -153,10 +185,13 @@ const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     disguise: () => [GENERAL_SKILL_USE, detectionUse('Disguise', 'Per')],
     // Social influence (#433): opposed vs the target's Willpower (Charm/Command/
     // Intimidate) or Scrutiny (Deceive); Charm warms and Intimidate cools disposition.
-    charm: () => [GENERAL_SKILL_USE, socialUse('Charm', { opposedChar: 'WP', dispositionDir: 1 })],
-    command: () => [GENERAL_SKILL_USE, socialUse('Command', { opposedChar: 'WP', dispositionDir: 0 })],
-    intimidate: () => [GENERAL_SKILL_USE, socialUse('Intimidate', { opposedChar: 'WP', dispositionDir: -1 })],
+    // Social buff/debuff sub-uses (#447): Inspire/Terrify buff allies, War Cry debuffs
+    // an enemy's defence, Blather (opposed vs WP) holds a target in inaction.
+    charm: () => [GENERAL_SKILL_USE, socialUse('Charm', { opposedChar: 'WP', dispositionDir: 1 }), buffUse('inspire')],
+    command: () => [GENERAL_SKILL_USE, socialUse('Command', { opposedChar: 'WP', dispositionDir: 0 }), buffUse('inspire'), buffUse('terrify')],
+    intimidate: () => [GENERAL_SKILL_USE, socialUse('Intimidate', { opposedChar: 'WP', dispositionDir: -1 }), buffUse('warCry')],
     deceive: () => [GENERAL_SKILL_USE, socialUse('Deceive', { opposedSkill: 'scrutiny', dispositionDir: 0 })],
+    blather: () => [GENERAL_SKILL_USE, buffUse('blather', { opposedChar: 'WP' })],
     // Animal/audience disposition (#446): Wrangling calms/trains a beast and Performer
     // sways a crowd — the #433 disposition engine, unopposed (a plain test vs the GM's
     // difficulty), warming the target up to the RAW cap of 3 bands.
@@ -283,6 +318,11 @@ export function resolveSocialInfluence(def: SkillUseDef, degrees: number, succes
     const bands = 1 + Math.floor(Math.max(0, degrees - 1) / 2);
     const capped = def.dispositionCap !== undefined ? Math.min(bands, def.dispositionCap) : bands;
     return { success, dispositionDelta: dir * capped };
+}
+
+/** Rounds a Blather (#447) holds its target inactive: 1 + degrees of victory on a win, else 0. */
+export function blatherRounds(success: boolean, margin: number): number {
+    return success ? 1 + Math.max(0, margin) : 0;
 }
 
 /* -------------------------------------------------------------------------- */

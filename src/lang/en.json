@@ -463,6 +463,18 @@
                 "Lost": "{target} resists your {use}.",
                 "Shift": "{use} shifts {target} {bands} band(s) — now {band}."
             },
+            "Buff": {
+                "Inspire": "Inspire",
+                "Terrify": "Terrify",
+                "WarCry": "War Cry",
+                "Blather": "Blather",
+                "Failed": "The attempt on {target} fails.",
+                "InspireApplied": "{target} gains +10 to their next Skill or Characteristic Test.",
+                "TerrifyApplied": "{target} and allies ignore the target creature's Fear for this encounter.",
+                "WarCryApplied": "{target} suffers −10 to Parry and Dodge until your next turn.",
+                "BlatherHeld": "{target} is held in bemused inaction for {rounds} round(s).",
+                "BlatherResist": "{target} sees through the blather and is unaffected."
+            },
             "SenseBlocked": {
                 "Label": "Sense Blocked",
                 "Text": "The {channel} channel is blocked ({condition}) — the test auto-fails."
