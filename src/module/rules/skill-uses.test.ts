@@ -219,6 +219,28 @@ describe('opposed detection (#434)', () => {
     });
 });
 
+describe('opposed detection/deception — extended skills (#452)', () => {
+    it('offers a detect use for the remaining hide/find/tail/disguise skills', () => {
+        for (const key of ['concealment', 'silentMove', 'shadowing', 'tracking', 'disguise']) {
+            const uses = getSkillUses(key);
+            expect(uses.map((u) => u.id)).toEqual(['general', 'detect']);
+            expect(getSkillUse(key, 'detect')?.needsTarget).toBe(true);
+        }
+    });
+
+    it('opposes hide/tail/disguise by Perception and Tracking by the quarry Agility', () => {
+        expect(getSkillUse('concealment', 'detect')?.opposedChar).toBe('Per');
+        expect(getSkillUse('silentMove', 'detect')?.opposedChar).toBe('Per');
+        expect(getSkillUse('shadowing', 'detect')?.opposedChar).toBe('Per');
+        expect(getSkillUse('disguise', 'detect')?.opposedChar).toBe('Per');
+        expect(getSkillUse('tracking', 'detect')?.opposedChar).toBe('Ag');
+    });
+
+    it('leaves Deceive as the social lie-contest (#433), not a duplicate detect use', () => {
+        expect(getSkillUses('deceive').map((u) => u.id)).toEqual(['general', 'social']);
+    });
+});
+
 describe('social influence (#433)', () => {
     it('offers general + a target-directed social use for each social skill', () => {
         for (const key of ['charm', 'command', 'intimidate', 'deceive']) {
