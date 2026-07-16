@@ -1,5 +1,6 @@
 import type { AnyMutableObject } from 'fvtt-types/utils';
 import { type EffectChangeRaw, formatChangeValue, getChangeLabel } from '../helpers/effects.ts';
+import { formatRemaining } from '../rules/world-time.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 
 /** Shape of an ActiveEffect change entry used throughout this class. */
@@ -272,6 +273,15 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @type {number|null}
      */
     get remainingDuration(): number | null {
+        return this.#remainingWithUnit()?.value ?? null;
+    }
+
+    /**
+     * Remaining duration together with the UNIT it is measured in (#456) — the single
+     * computation `remainingDuration` and {@link remainingLabel} both read. The unit
+     * matters: a raw number alone cannot be formatted (3 could be rounds or seconds).
+     */
+    #remainingWithUnit(): { value: number; unit: 'rounds' | 'turns' | 'seconds' } | null {
         if (!this.isTemporary) return null;
 
         const d = this.duration;
@@ -280,7 +290,7 @@ export class WH40KActiveEffect extends ActiveEffect {
         if (d.rounds != null && d.rounds > 0 && combat) {
             const startRound = d.startRound ?? 0;
             const currentRound = combat.round;
-            return Math.max(0, startRound + d.rounds - currentRound);
+            return { value: Math.max(0, startRound + d.rounds - currentRound), unit: 'rounds' };
         }
 
         if (d.turns != null && d.turns > 0 && combat) {
@@ -290,16 +300,30 @@ export class WH40KActiveEffect extends ActiveEffect {
             const currentRound = combat.round;
             const totalStart = startRound * combat.turns.length + startTurn;
             const totalCurrent = currentRound * combat.turns.length + currentTurn;
-            return Math.max(0, totalStart + d.turns - totalCurrent);
+            return { value: Math.max(0, totalStart + d.turns - totalCurrent), unit: 'turns' };
         }
 
         if (d.seconds != null && d.seconds > 0) {
             const startTime = d.startTime ?? 0;
             const currentTime = game.time.worldTime;
-            return Math.max(0, startTime + d.seconds - currentTime);
+            return { value: Math.max(0, startTime + d.seconds - currentTime), unit: 'seconds' };
         }
 
         return null;
+    }
+
+    /**
+     * Human-readable time remaining for the effects panel (#456) — "2 rounds",
+     * "1h 30m", "2d 3h". World-time durations are formatted in in-universe time
+     * (`formatRemaining`) so they count down as the GM advances the clock; combat
+     * durations read in rounds/turns. `null` when the effect is not temporary.
+     */
+    get remainingLabel(): string | null {
+        const remaining = this.#remainingWithUnit();
+        if (remaining === null) return null;
+        if (remaining.unit === 'seconds') return formatRemaining(remaining.value);
+        const key = remaining.unit === 'rounds' ? 'WH40K.Effects.RemainingRounds' : 'WH40K.Effects.RemainingTurns';
+        return game.i18n.format(key, { n: String(remaining.value) });
     }
 
     /**

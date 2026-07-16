@@ -2887,6 +2887,10 @@ export default class CharacterSheet extends BaseActorSheet {
         // Prepare active effects data — emit the canonical {label, value}
         // change shape consumed by `effect-row.hbs`.
         sheetContext.effects = this.actor.effects.map((effect) => {
+            // #456: surface the live in-universe time remaining so timed effects
+            // (drugs, War Cry, conditions) count down on the panel and expire when
+            // the GM advances the clock.
+            const remainingLabel = effect.remainingLabel;
             return {
                 id: effect.id,
                 label: effect.name,
@@ -2894,6 +2898,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 icon: effect.icon,
                 disabled: effect.disabled,
                 sourceName: effect.sourceName,
+                ...(remainingLabel !== null ? { duration: { label: remainingLabel }, isExpiring: effect.isExpiring } : {}),
                 // eslint-disable-next-line no-restricted-syntax -- boundary: effect.changes is Foundry EffectChange[]; double-cast to EffectChangeRaw[] which is this codebase's typed wrapper
                 changes: summarizeChanges(effect.changes as unknown as EffectChangeRaw[]),
                 document: effect,
