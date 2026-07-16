@@ -94,6 +94,18 @@ describe('resolveFirstAid (#432)', () => {
     });
 });
 
+describe('Chem-Use (#441)', () => {
+    it('offers general + administer-chem (targeted) + coat-weapon (self)', () => {
+        const ids = getSkillUses('chemUse').map((u) => u.id);
+        expect(ids).toEqual(['general', 'applyChem', 'coatWeapon']);
+    });
+
+    it('marks administering as target-directed and coating as self-directed', () => {
+        expect(getSkillUse('chemUse', 'applyChem')?.needsTarget).toBe(true);
+        expect(getSkillUse('chemUse', 'coatWeapon')?.needsTarget).toBe(false);
+    });
+});
+
 describe('RAW per-target time gates (#458)', () => {
     it('gates First Aid at 24 in-universe hours per patient (DH2 p109)', () => {
         const gate = getSkillUse('medicae', 'firstAid')?.timeGate;

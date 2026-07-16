@@ -637,6 +637,47 @@ export class SimpleSkillData extends ActionData {
     }
 }
 
+/** A chem/drug item as the Chem-Use flow reads it (#441) — its dose payload + uses. */
+export interface ChemLike {
+    readonly id: string;
+    readonly name: string;
+    readonly system: {
+        readonly uses: { value: number; max: number };
+        readonly grants: { activeEffects: ReadonlyArray<{ key: string; mode: number; value: number; durationRounds: number; durationSeconds?: number }> };
+        readonly addictive: number;
+    };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item#update accepts an untyped path-keyed payload
+    update: (data: Record<string, unknown>) => Promise<unknown>;
+}
+
+/** A weapon the Chem-Use flow can coat (#441). */
+export interface CoatableWeapon {
+    readonly id: string;
+    readonly name: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item#update accepts an untyped path-keyed payload
+    update: (data: Record<string, unknown>) => Promise<unknown>;
+}
+
+/**
+ * Apply one dose of `chem` to `subject` (#441) — the same timed-effect application a
+ * self-consumed dose uses (#457), but aimed at an arbitrary actor, plus the dose
+ * decrement and the addiction check. Shared by the apply and botch paths.
+ */
+async function applyChemDose(chem: ChemLike, subject: WH40KBaseActorDocument): Promise<void> {
+    const grants = chem.system.grants.activeEffects;
+    if (grants.length > 0) {
+        const seconds = Math.max(...grants.map((g) => g.durationSeconds ?? 0));
+        const rounds = Math.max(...grants.map((g) => g.durationRounds));
+        await subject.applyDoseEffect(
+            chem.name,
+            grants.map((g) => ({ key: g.key, mode: g.mode, value: g.value })),
+            { ...(seconds > 0 ? { seconds } : {}), ...(rounds > 0 ? { rounds } : {}) },
+        );
+    }
+    if (chem.system.addictive > 0) await subject.resolveDoseAddiction(chem.name, chem.system.addictive);
+    await chem.update({ 'system.uses.value': Math.max(0, chem.system.uses.value - 1) });
+}
+
 /**
  * A targeted Medicae skill-use roll (#432). Built like a {@link SimpleSkillData}
  * but carries the chosen use kind and a pre-selected patient on
@@ -845,6 +886,59 @@ export class SocialInfluenceActionData extends SimpleSkillData {
                 band,
             }),
         );
+    }
+}
+
+/**
+ * A Chem-Use roll (#441) — administer a chem to a subject, or coat a weapon with it.
+ * RAW: "administers a drug/poison/toxin to a patient, or applies it to a weapon"
+ * (DH2 p109). The chosen chem's `grants.activeEffects` are applied to the TARGET
+ * (rather than the bearer, as a self-consumed dose would be, #457), so a toxin lands
+ * on the victim and wears off on the clock. A dose is consumed either way. OW/BC RAW:
+ * a botch afflicts the applicant instead — modelled by applying the dose to the user.
+ */
+export class ChemUseActionData extends SimpleSkillData {
+    readonly mode: 'applyChem' | 'coatWeapon';
+    /** The chem item chosen by the caller (its `system` carries the dose payload). */
+    readonly chem: ChemLike;
+    /** The weapon chosen for a coating (`coatWeapon` only). */
+    readonly weapon: CoatableWeapon | null;
+
+    constructor(mode: 'applyChem' | 'coatWeapon', chem: ChemLike, weapon: CoatableWeapon | null = null) {
+        super();
+        this.mode = mode;
+        this.chem = chem;
+        this.weapon = weapon;
+    }
+
+    override async descriptionText(): Promise<void> {
+        const chemName = this.chem.name;
+
+        if (!this.rollData.success) {
+            // RAW (OW p126 / BC p104): a botched application afflicts the applicant.
+            const user = this.rollData.sourceActor;
+            if (this.mode === 'applyChem' && user !== null) {
+                await applyChemDose(this.chem, user);
+                this.addEffect('Chem-Use', game.i18n.format('WH40K.SkillUse.Chem.Botched', { chem: chemName, actor: user.name }));
+                return;
+            }
+            this.addEffect('Chem-Use', game.i18n.format('WH40K.SkillUse.Chem.Failed', { chem: chemName }));
+            return;
+        }
+
+        if (this.mode === 'coatWeapon') {
+            const weapon = this.weapon;
+            if (weapon === null) return;
+            const charges = Math.max(1, this.chem.system.uses.max);
+            await weapon.update({ 'system.state.coating': { name: chemName, charges } });
+            this.addEffect('Chem-Use', game.i18n.format('WH40K.SkillUse.Chem.Coated', { chem: chemName, weapon: weapon.name, charges: String(charges) }));
+            return;
+        }
+
+        const target = this.rollData.targetActor;
+        if (target === null) return;
+        await applyChemDose(this.chem, target);
+        this.addEffect('Chem-Use', game.i18n.format('WH40K.SkillUse.Chem.Applied', { chem: chemName, target: target.name }));
     }
 }
 
