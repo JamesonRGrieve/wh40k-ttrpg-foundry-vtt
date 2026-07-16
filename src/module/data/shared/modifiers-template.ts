@@ -16,6 +16,11 @@ function situationalEntrySchema(): foundry.data.fields.DataField.Any {
             value: new fields.NumberField({ required: true, initial: 0 }),
             condition: new fields.StringField({ required: true }),
             icon: new fields.StringField({ required: false, initial: 'fa-exclamation-triangle' }),
+            // Homebrew test-variant scoping (#246/#440): when set to a skill test
+            // variant name (e.g. "Visual"), this modifier only applies when that
+            // sense channel is the one being rolled — an auspex bonus tagged Visual
+            // augments sight, not hearing. Blank = universal (applies to every variant).
+            appliesToVariant: new fields.StringField({ required: false, blank: true, initial: '' }),
         }),
         { required: true, initial: [] },
     );
@@ -193,9 +198,9 @@ export default class ModifiersTemplate extends SystemDataModel {
         resources: { wounds: number; fate: number; insanity: number; corruption: number };
         other: Array<{ key: string; label: string; value: number; mode: string }>;
         situational: {
-            characteristics: Array<{ key: string; value: number; condition: string; icon: string }>;
-            skills: Array<{ key: string; value: number; condition: string; icon: string }>;
-            combat: Array<{ key: string; value: number; condition: string; icon: string }>;
+            characteristics: Array<{ key: string; value: number; condition: string; icon: string; appliesToVariant?: string }>;
+            skills: Array<{ key: string; value: number; condition: string; icon: string; appliesToVariant?: string }>;
+            combat: Array<{ key: string; value: number; condition: string; icon: string; appliesToVariant?: string }>;
         };
     };
 
@@ -407,9 +412,9 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @type {object}
      */
     get situationalModifiers(): {
-        characteristics: Array<{ key: string; value: number; condition: string; icon: string }>;
-        skills: Array<{ key: string; value: number; condition: string; icon: string }>;
-        combat: Array<{ key: string; value: number; condition: string; icon: string }>;
+        characteristics: Array<{ key: string; value: number; condition: string; icon: string; appliesToVariant?: string }>;
+        skills: Array<{ key: string; value: number; condition: string; icon: string; appliesToVariant?: string }>;
+        combat: Array<{ key: string; value: number; condition: string; icon: string; appliesToVariant?: string }>;
     } {
         const situational = this.modifiers.situational;
         return {
