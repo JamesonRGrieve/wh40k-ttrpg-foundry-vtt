@@ -30,7 +30,7 @@ import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.
 import { computeGangUpModifier, gangUpConfigFor, type GangUpTokenLike } from '../../rules/gang-up.ts';
 import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/high-ground.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
-import { availableSkillVariants, filterModifiersByVariant, type SkillVariant } from '../../rules/skill-variants.ts';
+import { availableSkillVariants, filterModifiersByVariant, type SkillVariant, variantAutoFails } from '../../rules/skill-variants.ts';
 import {
     deriveTargetSituationalKeys,
     shouldSkipSelfTargetDefenderMods,
@@ -1139,7 +1139,50 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // handle can't crash render with "object is not iterable".
         const skillItem = sourceActor?.items?.find?.((item) => item.type === 'skill' && (item.system?.identifier === rollKey || item.name === rollKey));
         const variants: SkillVariant[] = Array.isArray(skillItem?.system?.variants) ? skillItem.system.variants : [];
-        return availableSkillVariants(variants, WH40KSettings.isHomebrew());
+        // Variant refinements surface under the homebrew ruleset OR the granular
+        // Awareness sense-split toggle (#440), so a table can enable per-sense
+        // Awareness without switching the whole game to homebrew.
+        return availableSkillVariants(variants, WH40KSettings.isHomebrew() || WH40KSettings.isAwarenessSenseSplit());
+    }
+
+    /**
+     * Run the post-roll resolution hooks a simple skill/characteristic ActionData
+     * needs but which only the weapon/psychic pipeline (`performActionAndSendToChat`)
+     * ran previously: the homebrew sense-channel gate (#440), the opposed contest
+     * (`checkForOpposed` — Interrogation/Detection/Social, #435/#434/#433), and the
+     * `descriptionText` auto-resolve (First Aid heal, DoS readout, disposition
+     * shift — #432/#437/#438/#436). Base `ActionData` no-ops both hooks, so a plain
+     * characteristic/skill roll is unaffected. Order matters: the sense-gate may
+     * force a failure that `descriptionText` must then read.
+     */
+    async _resolveSimpleActionHooks(): Promise<void> {
+        this.#applySenseChannelGate();
+        await this.actionData.checkForOpposed();
+        await this.actionData.descriptionText();
+    }
+
+    /**
+     * Homebrew Awareness sense-split (#440): when the selected sense channel is
+     * gated by a condition the source actor currently carries (blinded → Visual,
+     * deafened → Auditory), auto-fail the roll and surface why. The token↔channel
+     * relationship is authored on the compendium variant (`blockedBy`), not here.
+     */
+    #applySenseChannelGate(): void {
+        if (this.rollType !== 'simple' || this.rollData.type !== 'Skill') return;
+        const variantName = this._selectedSkillVariant;
+        if (variantName === null || variantName === '') return;
+        const variant = this._getSkillVariants().find((v) => v.name === variantName);
+        if (variant === undefined) return;
+        const source = this.rollData.sourceActor;
+        if (source === null) return;
+        const conditions = UnifiedRollDialog.#collectConditionTokens(source);
+        if (!variantAutoFails(variant, conditions)) return;
+        this.actionData.rollData.success = false;
+        this.actionData.rollData.dos = 0;
+        this.actionData.addEffect(
+            game.i18n.localize('WH40K.SkillUse.SenseBlocked.Label'),
+            game.i18n.format('WH40K.SkillUse.SenseBlocked.Text', { channel: variant.name, condition: variant.blockedBy ?? '' }),
+        );
     }
 
     _calculateSituationalModifiers(): number {
@@ -1950,6 +1993,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         } else {
             await this.rollData.calculateTotalModifiers();
             await this.actionData.calculateSuccessOrFailure();
+            await this._resolveSimpleActionHooks();
             await sendActionDataToChat(this.actionData);
         }
 
@@ -2025,6 +2069,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             }
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Roll.render() is not typed in the system typings; cast is required
             this.rollData.render = await (this.rollData.roll as unknown as { render: () => Promise<string> }).render();
+            // A real (manual) roll resolved — run the skill-use resolution hooks so
+            // opposed contests and auto-resolve/readout effects fire on this path too.
+            await this._resolveSimpleActionHooks();
         } else {
             // No roll entered - post target info only
             this.rollData['isTargetOnly'] = true;

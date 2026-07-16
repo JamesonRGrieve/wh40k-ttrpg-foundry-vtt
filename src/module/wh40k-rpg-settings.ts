@@ -62,6 +62,7 @@ export class WH40KSettings {
         homebrewSelfTargeting: 'homebrew-self-targeting',
         autoCoverLos: 'auto-cover-los',
         fatigueMode: 'fatigue-mode',
+        awarenessSenseSplit: 'awareness-sense-split',
     };
 
     /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
@@ -292,6 +293,20 @@ export class WH40KSettings {
         }
     }
 
+    /** Homebrew (#440): when true, Awareness resolves per sense channel (Visual /
+     *  Auditory / Olfactory), surfacing the #246 variant selector for skills that
+     *  declare variants even when the ruleset is otherwise RAW — so sense-scoped
+     *  modifiers (an auspex tagged Visual) and condition channel-gates (blinded
+     *  auto-fails Visual) apply. Off by default; when off, Awareness rolls exactly
+     *  as RAW. Safe to call before the setting is registered (returns false). */
+    static isAwarenessSenseSplit(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.awarenessSenseSplit) === true;
+        } catch {
+            return false;
+        }
+    }
+
     /** When true, the attack dialog auto-detects line of sight + full/half cover
      *  by ray-casting the attacker→target geometry against the scene's walls, and
      *  auto-selects the cover situational (#406). Off by default: the canvas
@@ -512,6 +527,18 @@ export class WH40KSettings {
                 key: S.autoCoverLos,
                 name: 'WH40K.SETTINGS.AutoCoverLos.Name',
                 hint: 'WH40K.SETTINGS.AutoCoverLos.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: false,
+                default: false,
+                type: Boolean,
+            },
+            {
+                // Homebrew Awareness sense-split (#440): resolve Awareness per sense
+                // channel and re-scope the auspex bonus to Visual only. Off = RAW.
+                key: S.awarenessSenseSplit,
+                name: 'WH40K.SETTINGS.AwarenessSenseSplit.Name',
+                hint: 'WH40K.SETTINGS.AwarenessSenseSplit.Hint',
                 scope: 'world',
                 config: true,
                 requiresReload: false,

@@ -266,6 +266,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
             {
               "choices": undefined,
               "config": true,
+              "default": "false",
+              "key": "awareness-sense-split",
+              "requiresReload": false,
+              "scope": "world",
+              "type": "Boolean",
+            },
+            {
+              "choices": undefined,
+              "config": true,
               "default": "0",
               "key": "characteristic-offset",
               "requiresReload": undefined,
