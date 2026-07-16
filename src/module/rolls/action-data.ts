@@ -962,10 +962,10 @@ export class DemolitionActionData extends SimpleSkillData {
  * still conveys the time/retry cost).
  */
 export class ObjectStateActionData extends SimpleSkillData {
-    readonly mode: 'repair' | 'bypassLock';
+    readonly mode: 'repair' | 'bypassLock' | 'breakObject';
     readonly item: StatefulItem;
 
-    constructor(mode: 'repair' | 'bypassLock', item: StatefulItem) {
+    constructor(mode: 'repair' | 'bypassLock' | 'breakObject', item: StatefulItem) {
         super();
         this.mode = mode;
         this.item = item;
@@ -974,14 +974,24 @@ export class ObjectStateActionData extends SimpleSkillData {
     override async descriptionText(): Promise<void> {
         const itemName = this.item.name;
         if (!this.rollData.success) {
-            const failKey = this.mode === 'repair' ? 'WH40K.SkillUse.Object.RepairFailed' : 'WH40K.SkillUse.Object.BypassFailed';
-            this.addEffect('Tech-Use', game.i18n.format(failKey, { item: itemName }));
+            const failKey =
+                this.mode === 'repair'
+                    ? 'WH40K.SkillUse.Object.RepairFailed'
+                    : this.mode === 'breakObject'
+                    ? 'WH40K.SkillUse.Object.BreakFailed'
+                    : 'WH40K.SkillUse.Object.BypassFailed';
+            this.addEffect('Object', game.i18n.format(failKey, { item: itemName }));
             return;
         }
 
         if (this.mode === 'repair') {
             await this.item.update({ 'system.state.broken': false, 'system.jammed': false });
             this.addEffect('Tech-Use', game.i18n.format('WH40K.SkillUse.Object.Repaired', { item: itemName }));
+            return;
+        }
+        if (this.mode === 'breakObject') {
+            await this.item.update({ 'system.state.broken': true });
+            this.addEffect('Athletics', game.i18n.format('WH40K.SkillUse.Object.Broke', { item: itemName }));
             return;
         }
         await this.item.update({ 'system.state.locked': false });

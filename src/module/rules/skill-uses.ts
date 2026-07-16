@@ -45,7 +45,8 @@ export type SkillUseKind =
     | 'repair'
     | 'bypassLock'
     | 'placeCharge'
-    | 'defuse';
+    | 'defuse'
+    | 'breakObject';
 
 /** One selectable use offered when rolling a skill. */
 export interface SkillUseDef {
@@ -231,6 +232,13 @@ const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
         GENERAL_SKILL_USE,
         { id: 'placeCharge', labelKey: 'WH40K.SkillUse.Demo.Place', needsTarget: false, difficultyMod: 0, kind: 'placeCharge' },
         { id: 'defuse', labelKey: 'WH40K.SkillUse.Demo.Defuse', needsTarget: false, difficultyMod: 0, kind: 'defuse' },
+    ],
+    // Break an object (#448): a Strength/Athletics test that smashes a physical item,
+    // setting its broken state (the inverse of a Tech-Use Repair). GM sets the
+    // difficulty from the object's toughness; the flow writes the state on success.
+    athletics: () => [
+        GENERAL_SKILL_USE,
+        { id: 'breakObject', labelKey: 'WH40K.SkillUse.Object.Break', needsTarget: false, difficultyMod: 0, kind: 'breakObject' },
     ],
     // Opposed detection (#434): a hider vs an observer's Perception, a scanner vs the
     // hider's Agility, Scrutiny vs the mark's Fellowship (Deceive), a thief vs Perception.
