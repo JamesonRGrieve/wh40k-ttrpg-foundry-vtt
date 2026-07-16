@@ -3,7 +3,16 @@ import { SYSTEM_ID } from '../constants.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import type { RerollOption } from '../rules/reroll.ts';
-import { applyFirstAidOutcome, type FirstAidPatient, getSkillUse, resolveFirstAid, resolveInterrogation, type SkillUseKind } from '../rules/skill-uses.ts';
+import {
+    applyFirstAidOutcome,
+    type FirstAidPatient,
+    getSkillUse,
+    type ReadoutFamily,
+    resolveDosReadout,
+    resolveFirstAid,
+    resolveInterrogation,
+    type SkillUseKind,
+} from '../rules/skill-uses.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
@@ -686,5 +695,25 @@ export class InterrogationActionData extends SimpleSkillData {
                 game.i18n.format('WH40K.SkillUse.Interrogation.Resisted', { subject: target.name, fatigue: String(outcome.fatigue) }),
             );
         }
+    }
+}
+
+/**
+ * A skill roll that surfaces a degrees-of-success readout on the chat card
+ * (#437 knowledge/investigation; extended by #438/#436) — no target, no apply,
+ * just a DoS-gated interpretation (how much is recalled/learned).
+ */
+export class DosReadoutActionData extends SimpleSkillData {
+    readonly family: ReadoutFamily;
+
+    constructor(family: ReadoutFamily) {
+        super();
+        this.family = family;
+    }
+
+    override async descriptionText(): Promise<void> {
+        const readout = resolveDosReadout(this.family, this.rollData.dos, this.rollData.success);
+        this.addEffect('Readout', game.i18n.format(readout.labelKey, { tier: String(readout.tier) }));
+        return Promise.resolve();
     }
 }

@@ -189,6 +189,52 @@ export function resolveInterrogation(degrees: number): InterrogationOutcome {
     return { success: true, infoTier: Math.max(1, Math.floor(degrees)), fatigue: 1 };
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Degrees-of-success readout (#437 knowledge; extended by #438 / #436)        */
+/* -------------------------------------------------------------------------- */
+
+/** Skill families whose roll surfaces a degrees-of-success interpretation on the card. */
+export type ReadoutFamily = 'knowledge';
+
+/** A resolved DoS readout: a magnitude tier and the langpack key describing it. */
+export interface DosReadout {
+    readonly tier: number;
+    readonly labelKey: string;
+}
+
+/** Knowledge/investigation: degrees of success gate how much is recalled/learned. */
+function knowledgeReadout(degrees: number, success: boolean): DosReadout {
+    if (!success) return { tier: 0, labelKey: 'WH40K.SkillUse.Readout.Knowledge.Nothing' };
+    const tier = Math.max(1, Math.floor(degrees));
+    const level = tier >= 4 ? 'Comprehensive' : tier >= 2 ? 'Detailed' : 'Basic';
+    return { tier, labelKey: `WH40K.SkillUse.Readout.Knowledge.${level}` };
+}
+
+const READOUT_RESOLVERS: Record<ReadoutFamily, (degrees: number, success: boolean) => DosReadout> = {
+    knowledge: knowledgeReadout,
+};
+
+/** Resolve the DoS readout for a family from the (opposed-adjusted) degrees + success. Pure. */
+export function resolveDosReadout(family: ReadoutFamily, degrees: number, success: boolean): DosReadout {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess types this record access as possibly-undefined; the ESLint parser has the flag off
+    return (READOUT_RESOLVERS[family] ?? knowledgeReadout)(degrees, success);
+}
+
+/** Skills whose normal roll gains a DoS readout (no picker), keyed by camelCase skill key. */
+const SKILL_READOUT: Record<string, ReadoutFamily> = {
+    inquiry: 'knowledge',
+    commonLore: 'knowledge',
+    scholasticLore: 'knowledge',
+    forbiddenLore: 'knowledge',
+    logic: 'knowledge',
+    psyniscience: 'knowledge',
+};
+
+/** The readout family for a skill, or null when the skill has none. */
+export function getSkillReadout(skillKey: string): ReadoutFamily | null {
+    return SKILL_READOUT[skillKey] ?? null;
+}
+
 /** Minimal patient surface the outcome applier reads and writes (a thin actor adapter). */
 export interface FirstAidPatient {
     readonly woundsValue: number;

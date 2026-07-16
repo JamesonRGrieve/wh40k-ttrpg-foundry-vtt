@@ -422,6 +422,14 @@
                 "Interrogate": "Interrogate",
                 "Extracted": "Extracted tier-{tier} information from {subject} ({fatigue} fatigue).",
                 "Resisted": "{subject} resists interrogation ({fatigue} fatigue)."
+            },
+            "Readout": {
+                "Knowledge": {
+                    "Nothing": "You recall nothing useful.",
+                    "Basic": "You recall the basics (tier {tier}).",
+                    "Detailed": "You recall detailed knowledge (tier {tier}).",
+                    "Comprehensive": "You recall comprehensive knowledge (tier {tier})."
+                }
             }
         },
         "Skills": {

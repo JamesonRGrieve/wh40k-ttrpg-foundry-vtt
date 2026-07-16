@@ -1,10 +1,10 @@
 import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.ts';
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { D100Roll } from '../dice/_module.ts';
-import { type ActionData, InterrogationActionData, MedicaeActionData } from '../rolls/action-data.ts';
+import { type ActionData, DosReadoutActionData, InterrogationActionData, MedicaeActionData } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { firstTargetedActor, promptSkillUse } from '../rolls/skill-use-picker.ts';
-import { firstAidDifficultyForTier, hasSkillUses } from '../rules/skill-uses.ts';
+import { firstAidDifficultyForTier, getSkillReadout, hasSkillUses } from '../rules/skill-uses.ts';
 import type {
     WH40KActorBio,
     WH40KActorSystemData,
@@ -458,12 +458,16 @@ export class WH40KAcolyte extends WH40KBaseActor {
             }
         }
 
+        // Skills with a degrees-of-success readout (#437 knowledge/investigation) route
+        // through DosReadoutActionData, which surfaces the DoS interpretation on the card.
+        const readoutFamily = getSkillReadout(resolvedSkillName);
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: resolvedSkillName,
             type: 'skill',
             label: `${label} Test`,
             target: targetValue,
             situationalKey: resolvedSkillName,
+            ...(readoutFamily !== null ? { instance: new DosReadoutActionData(readoutFamily) } : {}),
             ...(skillRank !== undefined ? { skillRank } : {}),
         });
         prepareUnifiedRoll(simpleSkillData);
