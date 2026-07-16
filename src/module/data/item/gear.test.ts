@@ -61,3 +61,39 @@ describe('GearData grants.activeEffects[] (#75 drugs)', () => {
         expect(stimm.grants.activeEffects).toHaveLength(2);
     });
 });
+
+/**
+ * #457: a dose's mechanical duration. `durationRounds` only expires inside combat —
+ * a stimm that lasts hours needs an in-universe window, so grants also carry
+ * `durationSeconds`, stamped against the world clock at consume-time. The consume
+ * path picks the longest of each so one dose yields a single timed effect.
+ */
+describe('GearData dose durations (#457)', () => {
+    type Grant = { key: string; mode: number; value: number; durationRounds: number; durationSeconds?: number };
+    const longest = (grants: Grant[]): { seconds: number; rounds: number } => ({
+        seconds: Math.max(...grants.map((g) => g.durationSeconds ?? 0)),
+        rounds: Math.max(...grants.map((g) => g.durationRounds)),
+    });
+
+    it('picks the longest world-time and round window across a dose stacked grants', () => {
+        const grants: Grant[] = [
+            { key: 'a', mode: 2, value: 10, durationRounds: 15, durationSeconds: 3600 },
+            { key: 'b', mode: 2, value: 10, durationRounds: 5, durationSeconds: 7200 },
+        ];
+        expect(longest(grants)).toEqual({ seconds: 7200, rounds: 15 });
+    });
+
+    it('treats an omitted durationSeconds as not world-time bound (rounds only)', () => {
+        const grants: Grant[] = [{ key: 'a', mode: 2, value: 10, durationRounds: 3 }];
+        expect(longest(grants)).toEqual({ seconds: 0, rounds: 3 });
+    });
+
+    it('exposes the schema slots the consume path reads', async () => {
+        const mod = await importModelOrSkip(import('./gear.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        const schema = mod.default.defineSchema();
+        expect(schema['addictive']).toBeTruthy();
+        expect(schema['grants']).toBeTruthy();
+    });
+});

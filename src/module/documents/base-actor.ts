@@ -7,6 +7,7 @@ import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shar
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { t } from '../i18n/t.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
+import { type AddictionTier, resolveAddictionCheck } from '../rules/addiction.ts';
 import { clampDisposition } from '../rules/disposition.ts';
 import { clampFearRating, getFearTestPenalty } from '../rules/fear.ts';
 import { resolveEscapePinningTest, resolvePinningTest } from '../rules/pinning.ts';
@@ -134,6 +135,59 @@ export class WH40KBaseActor extends Actor {
      */
     async clearTimeGate(key: string): Promise<void> {
         await this.unsetFlag('wh40k-rpg', `timeGates.${key}`);
+    }
+
+    /**
+     * Apply a consumed dose's granted effects to this actor as one timed
+     * ActiveEffect (#457). A world-time duration is stamped at the current world
+     * time so the dose wears off as the GM advances the clock (and counts down on
+     * the effects panel, #456); a rounds duration expires with combat instead.
+     */
+    async applyDoseEffect(
+        name: string,
+        changes: ReadonlyArray<{ key: string; mode: number; value: number }>,
+        duration: { seconds?: number; rounds?: number },
+    ): Promise<void> {
+        if (changes.length === 0) return;
+        const data = {
+            name,
+            icon: 'icons/svg/aura.svg',
+            changes: changes.map((c) => ({ key: c.key, mode: c.mode, value: c.value })),
+            duration: {
+                ...(duration.seconds !== undefined ? { seconds: duration.seconds, startTime: Number(game.time.worldTime) } : {}),
+                ...(duration.rounds !== undefined ? { rounds: duration.rounds } : {}),
+            },
+        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts Foundry's untyped embedded-document create schema
+        await this.createEmbeddedDocuments('ActiveEffect', [data] as unknown as Parameters<typeof this.createEmbeddedDocuments<'ActiveEffect'>>[1]);
+    }
+
+    /** This actor's current Addiction tier for a substance (#457); `none` when unrecorded. */
+    getAddictionTier(substanceKey: string): AddictionTier {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor#flags is Foundry's untyped per-module flag bag
+        const bag = (this.flags as { 'wh40k-rpg'?: { addiction?: Record<string, AddictionTier> } })['wh40k-rpg']?.addiction;
+        return bag?.[substanceKey] ?? 'none';
+    }
+
+    /**
+     * Resolve the Addiction test for one dose of an addictive substance (#457),
+     * running the existing `rules/addiction.ts` resolver its header always intended
+     * to be wired: the target is Willpower reduced by the substance's rating, and a
+     * failed test escalates this actor's tier for that substance one step.
+     */
+    async resolveDoseAddiction(substanceKey: string, rating: number): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies by subclass; willpower is guaranteed by creature.ts for the relevant subclasses
+        const willpower = (this.system as { characteristics?: { willpower?: { total?: number } } }).characteristics?.willpower?.total ?? 0;
+        const currentTier = this.getAddictionTier(substanceKey);
+        const { target, nextTierOnFailure } = resolveAddictionCheck({ willpowerTotal: willpower, substanceRating: rating, currentTier });
+
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        const passed = (roll.total ?? 100) <= target;
+        if (passed) return;
+
+        await this.setFlag('wh40k-rpg', `addiction.${substanceKey}`, nextTierOnFailure);
+        ui.notifications.warn(game.i18n.format('WH40K.Addiction.Escalated', { actor: this.name, tier: nextTierOnFailure }));
     }
 
     /**
