@@ -444,6 +444,11 @@
                 "Awareness": "Scan for Hidden",
                 "Scrutiny": "Study Target",
                 "SleightOfHand": "Palm / Plant",
+                "Concealment": "Stay Hidden",
+                "SilentMove": "Move Silently",
+                "Shadowing": "Tail Unseen",
+                "Tracking": "Follow the Trail",
+                "Disguise": "Hold the Disguise",
                 "Win": "Opposed test won — you succeed against the target.",
                 "Lose": "Opposed test lost — the target prevails."
             },

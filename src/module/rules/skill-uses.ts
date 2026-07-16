@@ -137,6 +137,14 @@ const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     awareness: () => [GENERAL_SKILL_USE, detectionUse('Awareness', 'Ag')],
     scrutiny: () => [GENERAL_SKILL_USE, detectionUse('Scrutiny', 'Fel')],
     sleightOfHand: () => [GENERAL_SKILL_USE, detectionUse('SleightOfHand', 'Per')],
+    // Opposed detection/deception (#452, extends #434): the remaining hide/find/tail
+    // skills, each opposed by the observer's Perception (or the quarry's Agility for
+    // Tracking). Deceive's lie contest is the social use (#433), not repeated here.
+    concealment: () => [GENERAL_SKILL_USE, detectionUse('Concealment', 'Per')],
+    silentMove: () => [GENERAL_SKILL_USE, detectionUse('SilentMove', 'Per')],
+    shadowing: () => [GENERAL_SKILL_USE, detectionUse('Shadowing', 'Per')],
+    tracking: () => [GENERAL_SKILL_USE, detectionUse('Tracking', 'Ag')],
+    disguise: () => [GENERAL_SKILL_USE, detectionUse('Disguise', 'Per')],
     // Social influence (#433): opposed vs the target's Willpower (Charm/Command/
     // Intimidate) or Scrutiny (Deceive); Charm warms and Intimidate cools disposition.
     charm: () => [GENERAL_SKILL_USE, socialUse('Charm', { opposedChar: 'WP', dispositionDir: 1 })],
