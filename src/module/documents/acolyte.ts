@@ -464,8 +464,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
             await this._rollPalm(use, skillKey, skillLabel, targetValue, skillRank);
             return true;
         }
-        // Object-interaction appliers (#444 repair / #443 bypass lock): pick the item.
-        if (use.kind === 'repair' || use.kind === 'bypassLock') {
+        // Object-interaction appliers (#444 repair / #443 bypass lock / #448 break): pick the item.
+        if (use.kind === 'repair' || use.kind === 'bypassLock' || use.kind === 'breakObject') {
             await this._rollObjectState(use, skillKey, skillLabel, targetValue, skillRank);
             return true;
         }
@@ -716,38 +716,50 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
 
     /**
-     * Object-interaction appliers (#443/#444): pick the item to act on — a broken or
-     * jammed device to repair, or a locked one to open — from your own carried items
-     * or a targeted actor's, then route through ObjectStateActionData, which clears
-     * the state on success. Candidate items are gathered by the state the use clears.
+     * Object-interaction appliers (#443/#444/#448): pick the item to act on — a broken
+     * or jammed device to repair, a locked one to open, or an intact one to smash —
+     * from your own carried items or a targeted actor's, then route through
+     * ObjectStateActionData, which writes the state on success. Candidate items are
+     * gathered by the state the use targets.
      */
     async _rollObjectState(use: SkillUseDef, skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<void> {
         const useLabel = game.i18n.localize(use.labelKey);
+        const mode = use.kind === 'repair' ? 'repair' : use.kind === 'bypassLock' ? 'bypassLock' : 'breakObject';
         const target = firstTargetedActor();
         const pools: WH40KItem[][] = [this.items.contents];
         if (target !== null) pools.push(target.items.contents);
-        const isRepair = use.kind === 'repair';
         const candidates = pools.flat().filter((item: WH40KItem) => {
+            if (!item.isWeapon && !item.isArmour && !item.isGear) return false;
             // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; narrow to the runtime state slots this reads
             const sys = item.system as unknown as { state?: { broken?: boolean; locked?: boolean }; jammed?: boolean };
-            const flagged = isRepair ? (sys.state?.broken ?? false) || sys.jammed === true : sys.state?.locked ?? false;
+            const broken = (sys.state?.broken ?? false) || sys.jammed === true;
+            // Repair → broken/jammed; bypass → locked; break → an intact item to smash.
+            const flagged = mode === 'repair' ? broken : mode === 'bypassLock' ? sys.state?.locked ?? false : !broken;
             return flagged && item.id !== null;
         });
         const pickable = candidates.map((i: WH40KItem) => ({ id: i.id as string, name: i.name }));
-        const chosen = await promptItemChoice(
-            pickable,
-            game.i18n.format('WH40K.SkillUse.Object.PickTitle', { use: useLabel }),
-            game.i18n.localize(isRepair ? 'WH40K.SkillUse.Object.PickRepairHint' : 'WH40K.SkillUse.Object.PickLockHint'),
-        );
+        const hintKey =
+            mode === 'repair'
+                ? 'WH40K.SkillUse.Object.PickRepairHint'
+                : mode === 'bypassLock'
+                ? 'WH40K.SkillUse.Object.PickLockHint'
+                : 'WH40K.SkillUse.Object.PickBreakHint';
+        const chosen = await promptItemChoice(pickable, game.i18n.format('WH40K.SkillUse.Object.PickTitle', { use: useLabel }), game.i18n.localize(hintKey));
         if (chosen === null) {
-            ui.notifications.warn(game.i18n.localize(isRepair ? 'WH40K.SkillUse.Object.NoBroken' : 'WH40K.SkillUse.Object.NoLocked'));
+            const noneKey =
+                mode === 'repair'
+                    ? 'WH40K.SkillUse.Object.NoBroken'
+                    : mode === 'bypassLock'
+                    ? 'WH40K.SkillUse.Object.NoLocked'
+                    : 'WH40K.SkillUse.Object.NoBreakable';
+            ui.notifications.warn(game.i18n.localize(noneKey));
             return;
         }
         const owner = target?.items.get(chosen.id) !== undefined ? target : this;
         // eslint-disable-next-line no-restricted-syntax -- boundary: the resolved Item satisfies StatefulItem structurally (id/name/update)
         const statefulItem = owner.items.get(chosen.id) as unknown as StatefulItem;
 
-        const objectAction = new ObjectStateActionData(isRepair ? 'repair' : 'bypassLock', statefulItem);
+        const objectAction = new ObjectStateActionData(mode, statefulItem);
         this._buildSimpleSkillRoll({
             key: skillKey,
             type: 'skill',

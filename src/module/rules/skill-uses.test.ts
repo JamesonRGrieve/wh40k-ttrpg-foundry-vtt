@@ -94,6 +94,14 @@ describe('resolveFirstAid (#432)', () => {
     });
 });
 
+describe('break object (#448)', () => {
+    it('offers Athletics a break-object use (inverse of Tech-Use repair) + the #438 physical readout on general', () => {
+        expect(getSkillUses('athletics').map((u) => u.id)).toEqual(['general', 'breakObject']);
+        expect(getSkillUse('athletics', 'breakObject')?.needsTarget).toBe(false);
+        expect(getSkillReadout('athletics')).toBe('physical');
+    });
+});
+
 describe('Demolition place/defuse (#445)', () => {
     it('offers general + place-charge + defuse', () => {
         expect(getSkillUses('demolition').map((u) => u.id)).toEqual(['general', 'placeCharge', 'defuse']);

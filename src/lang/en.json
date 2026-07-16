@@ -437,15 +437,20 @@
             "Object": {
                 "Repair": "Repair Item",
                 "BypassLock": "Bypass Lock",
+                "Break": "Break Object",
                 "PickTitle": "{use} — choose an item",
                 "PickRepairHint": "Pick the broken or jammed item to repair.",
                 "PickLockHint": "Pick the locked item to open.",
+                "PickBreakHint": "Pick the item to break.",
                 "NoBroken": "You have no broken or jammed item to repair.",
                 "NoLocked": "There is no locked item to open.",
+                "NoBreakable": "There is no intact item to break.",
                 "Repaired": "{item} is repaired and working again.",
                 "RepairFailed": "The repair of {item} fails.",
                 "Unlocked": "{item} is unlocked.",
-                "BypassFailed": "The lock on {item} holds."
+                "BypassFailed": "The lock on {item} holds.",
+                "Broke": "{item} is smashed and broken.",
+                "BreakFailed": "You fail to break {item}."
             },
             "Palm": {
                 "Steal": "Steal / Pickpocket",
