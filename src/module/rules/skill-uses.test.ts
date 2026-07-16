@@ -7,6 +7,8 @@ import {
     getSkillUses,
     hasSkillUses,
     resolveFirstAid,
+    getSkillReadout,
+    resolveDosReadout,
     resolveInterrogation,
     type FirstAidTargetVitals,
 } from './skill-uses.ts';
@@ -154,5 +156,21 @@ describe('interrogation (#435)', () => {
         expect(resolveInterrogation(0)).toEqual({ success: false, infoTier: 0, fatigue: 1 });
         expect(resolveInterrogation(1)).toEqual({ success: true, infoTier: 1, fatigue: 1 });
         expect(resolveInterrogation(3)).toEqual({ success: true, infoTier: 3, fatigue: 1 });
+    });
+});
+
+describe('knowledge DoS readout (#437)', () => {
+    it('flags the knowledge/investigation skills as having a readout family', () => {
+        for (const key of ['inquiry', 'commonLore', 'scholasticLore', 'forbiddenLore', 'logic', 'psyniscience']) {
+            expect(getSkillReadout(key)).toBe('knowledge');
+        }
+        expect(getSkillReadout('medicae')).toBeNull();
+    });
+
+    it('gates the recalled tier by degrees of success', () => {
+        expect(resolveDosReadout('knowledge', 0, false)).toEqual({ tier: 0, labelKey: 'WH40K.SkillUse.Readout.Knowledge.Nothing' });
+        expect(resolveDosReadout('knowledge', 1, true)).toEqual({ tier: 1, labelKey: 'WH40K.SkillUse.Readout.Knowledge.Basic' });
+        expect(resolveDosReadout('knowledge', 2, true)).toEqual({ tier: 2, labelKey: 'WH40K.SkillUse.Readout.Knowledge.Detailed' });
+        expect(resolveDosReadout('knowledge', 4, true)).toEqual({ tier: 4, labelKey: 'WH40K.SkillUse.Readout.Knowledge.Comprehensive' });
     });
 });
