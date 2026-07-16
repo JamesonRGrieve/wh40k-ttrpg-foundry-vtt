@@ -897,6 +897,63 @@ export interface StatefulItem {
     update: (data: Record<string, unknown>) => Promise<unknown>;
 }
 
+/** An explosive item as the Demolition flow reads/writes it (#445). */
+export interface ExplosiveItem extends StatefulItem {
+    readonly system: { readonly state: { readonly armed: { active: boolean; setterDegrees: number } } };
+}
+
+/**
+ * A Demolition roll (#445) — place an explosive charge, or defuse one. Placing arms
+ * the chosen explosive and records the setter's degrees of success (a 4+ DoF plant
+ * detonates prematurely, RAW). Defusing is opposed against those recorded degrees via
+ * the #449 engine (RAW: defuse vs the setter's Demolition result); a win disarms it,
+ * a 4+ DoF sets it off.
+ */
+export class DemolitionActionData extends SimpleSkillData {
+    readonly mode: 'placeCharge' | 'defuse';
+    readonly explosive: ExplosiveItem;
+    readonly trigger: string;
+
+    constructor(mode: 'placeCharge' | 'defuse', explosive: ExplosiveItem, trigger = '') {
+        super();
+        this.mode = mode;
+        this.explosive = explosive;
+        this.trigger = trigger;
+    }
+
+    override async descriptionText(): Promise<void> {
+        const name = this.explosive.name;
+
+        if (this.mode === 'placeCharge') {
+            if (!this.rollData.success) {
+                this.addEffect('Demolition', game.i18n.format('WH40K.SkillUse.Demo.PlaceFailed', { item: name }));
+                return;
+            }
+            if (this.rollData.dof >= 4) {
+                this.addEffect('Demolition', game.i18n.format('WH40K.SkillUse.Demo.Premature', { item: name }));
+                return;
+            }
+            await this.explosive.update({ 'system.state.armed': { active: true, trigger: this.trigger, setterDegrees: Math.max(1, this.rollData.dos) } });
+            this.addEffect('Demolition', game.i18n.format('WH40K.SkillUse.Demo.Placed', { item: name, trigger: this.trigger }));
+            return;
+        }
+
+        // Defuse: opposed vs the setter's recorded degrees.
+        const setterDegrees = this.explosive.system.state.armed.setterDegrees;
+        this.applyOpposedResult({ success: true, dos: setterDegrees, dof: 0 });
+        if (this.rollData.dof >= 4) {
+            this.addEffect('Demolition', game.i18n.format('WH40K.SkillUse.Demo.DefuseSetOff', { item: name }));
+            return;
+        }
+        if (!this.rollData.success) {
+            this.addEffect('Demolition', game.i18n.format('WH40K.SkillUse.Demo.DefuseFailed', { item: name }));
+            return;
+        }
+        await this.explosive.update({ 'system.state.armed': { active: false, trigger: '', setterDegrees: 0 } });
+        this.addEffect('Demolition', game.i18n.format('WH40K.SkillUse.Demo.Defused', { item: name }));
+    }
+}
+
 /**
  * An object-interaction applier (#443 Security bypass / #444 Tech-Use repair) — the
  * state-writing half of the #436 DoS readout. On success it clears the chosen item's

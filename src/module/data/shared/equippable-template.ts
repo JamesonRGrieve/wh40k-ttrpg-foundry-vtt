@@ -33,6 +33,13 @@ export interface EquippableState {
      * clears it. For lockable containers / strongboxes / door-items. Transient state.
      */
     locked: boolean;
+    /**
+     * Demolition arming state (#445) — an explosive charge that has been placed.
+     * `active` while armed, `trigger` is the chosen trigger prose, and `setterDegrees`
+     * records the placer's degrees of success so a later Defuse is opposed against it
+     * (RAW: defuse vs the setter's Demolition result). Transient per-instance state.
+     */
+    armed: { active: boolean; trigger: string; setterDegrees: number };
 }
 
 interface UpdatableActor {
@@ -81,6 +88,13 @@ export default class EquippableTemplate extends SystemDataModel {
                 broken: new fields.BooleanField({ required: true, initial: false }),
                 // #443 — lock engaged until a Security/Lock-picking bypass clears it.
                 locked: new fields.BooleanField({ required: true, initial: false }),
+                // #445 — Demolition arming: active + trigger + the setter's degrees
+                // (the value a later Defuse is opposed against).
+                armed: new fields.SchemaField({
+                    active: new fields.BooleanField({ required: true, initial: false }),
+                    trigger: new fields.StringField({ required: true, blank: true, initial: '' }),
+                    setterDegrees: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                }),
             }),
         };
     }
