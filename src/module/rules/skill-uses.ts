@@ -194,7 +194,7 @@ export function resolveInterrogation(degrees: number): InterrogationOutcome {
 /* -------------------------------------------------------------------------- */
 
 /** Skill families whose roll surfaces a degrees-of-success interpretation on the card. */
-export type ReadoutFamily = 'knowledge' | 'physical';
+export type ReadoutFamily = 'knowledge' | 'physical' | 'objectInteraction';
 
 /** A resolved DoS readout: a magnitude tier and the langpack key describing it. */
 export interface DosReadout {
@@ -216,9 +216,16 @@ function physicalReadout(degrees: number, success: boolean): DosReadout {
     return { tier: Math.max(1, Math.floor(degrees)), labelKey: 'WH40K.SkillUse.Readout.Physical.Success' };
 }
 
+/** Security/Tech-Use object interaction: degrees of success reduce the time taken / improve completeness. */
+function objectInteractionReadout(degrees: number, success: boolean): DosReadout {
+    if (!success) return { tier: 0, labelKey: 'WH40K.SkillUse.Readout.Object.Fail' };
+    return { tier: Math.max(1, Math.floor(degrees)), labelKey: 'WH40K.SkillUse.Readout.Object.Success' };
+}
+
 const READOUT_RESOLVERS: Record<ReadoutFamily, (degrees: number, success: boolean) => DosReadout> = {
     knowledge: knowledgeReadout,
     physical: physicalReadout,
+    objectInteraction: objectInteractionReadout,
 };
 
 /** Resolve the DoS readout for a family from the (opposed-adjusted) degrees + success. Pure. */
@@ -237,6 +244,8 @@ const SKILL_READOUT: Record<string, ReadoutFamily> = {
     psyniscience: 'knowledge',
     athletics: 'physical',
     acrobatics: 'physical',
+    security: 'objectInteraction',
+    techUse: 'objectInteraction',
 };
 
 /** The readout family for a skill, or null when the skill has none. */

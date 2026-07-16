@@ -433,6 +433,10 @@
                 "Physical": {
                     "Fail": "You fail the physical feat.",
                     "Success": "You clear the feat (+{tier} degrees — the GM scales the distance/height cleared)."
+                },
+                "Object": {
+                    "Fail": "The attempt fails.",
+                    "Success": "Success — each degree ({tier}) cuts the time taken and improves the result (GM adjudicates)."
                 }
             }
         },
