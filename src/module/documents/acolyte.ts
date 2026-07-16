@@ -3,6 +3,9 @@ import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.
 import { D100Roll } from '../dice/_module.ts';
 import {
     type ActionData,
+    type ChemLike,
+    ChemUseActionData,
+    type CoatableWeapon,
     DetectionActionData,
     DosReadoutActionData,
     InterrogationActionData,
@@ -11,7 +14,7 @@ import {
     SocialInfluenceActionData,
 } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
-import { firstTargetedActor, promptSkillUse } from '../rolls/skill-use-picker.ts';
+import { firstTargetedActor, promptItemChoice, promptSkillUse } from '../rolls/skill-use-picker.ts';
 import { firstAidDifficultyForTier, getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
 import { formatRemaining, gateRemaining, isGateOpen } from '../rules/world-time.ts';
 import type {
@@ -420,6 +423,12 @@ export class WH40KAcolyte extends WH40KBaseActor {
         if (hasSkillUses(resolvedSkillName)) {
             const use = await promptSkillUse(resolvedSkillName, label ?? resolvedSkillName);
             if (use === null) return;
+            // Chem-Use (#441) picks the chem (and, when coating, the weapon) before
+            // rolling — it acts on chosen items, not only a targeted token.
+            if (use.kind === 'applyChem' || use.kind === 'coatWeapon') {
+                await this._rollChemUse(use, resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank);
+                return;
+            }
             if (use.needsTarget) {
                 this._rollTargetedSkillUse(use, resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank);
                 return;
@@ -569,6 +578,64 @@ export class WH40KAcolyte extends WH40KBaseActor {
         });
         medicae.rollData.targetActor = targetActor;
         prepareUnifiedRoll(medicae);
+    }
+
+    /**
+     * Chem-Use (#441): pick the chem to administer (and the weapon to coat), then
+     * route through ChemUseActionData, which applies the dose to the TARGET on
+     * success — or to the applicant on a botch (OW/BC RAW). Chems are the carried
+     * drug/consumable items that still have a dose left and declare an effect.
+     */
+    async _rollChemUse(use: SkillUseDef, skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<void> {
+        const useLabel = game.i18n.localize(use.labelKey);
+        const chems = this.items.filter((item: WH40KItem) => {
+            if (item.type !== 'drug' && item.type !== 'consumable' && item.type !== 'gear') return false;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; narrow to the gear dose slots this reads
+            const sys = item.system as unknown as { uses?: { value?: number }; grants?: { activeEffects?: unknown[] } };
+            return (sys.uses?.value ?? 0) > 0 && (sys.grants?.activeEffects?.length ?? 0) > 0;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: the filtered items satisfy ChemLike structurally (dose payload + update)
+        }) as unknown as ChemLike[];
+        const chem = await promptItemChoice(
+            chems,
+            game.i18n.format('WH40K.SkillUse.Chem.PickTitle', { use: useLabel }),
+            game.i18n.localize('WH40K.SkillUse.Chem.PickHint'),
+        );
+        if (chem === null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.SkillUse.Chem.NoChem'));
+            return;
+        }
+
+        let weapon: CoatableWeapon | null = null;
+        let targetActor: WH40KBaseActor | null = null;
+        if (use.kind === 'coatWeapon') {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: filtered weapon Items satisfy CoatableWeapon structurally (id/name/update)
+            const weapons = this.items.filter((item: WH40KItem) => item.type === 'weapon') as unknown as CoatableWeapon[];
+            weapon = await promptItemChoice(
+                weapons,
+                game.i18n.localize('WH40K.SkillUse.Chem.PickWeaponTitle'),
+                game.i18n.localize('WH40K.SkillUse.Chem.PickWeaponHint'),
+            );
+            if (weapon === null) return;
+        } else {
+            targetActor = firstTargetedActor();
+            if (targetActor === null) {
+                ui.notifications.warn(game.i18n.format('WH40K.SkillUse.NoTarget', { use: useLabel }));
+                return;
+            }
+        }
+
+        const chemAction = new ChemUseActionData(use.kind === 'coatWeapon' ? 'coatWeapon' : 'applyChem', chem, weapon);
+        this._buildSimpleSkillRoll({
+            key: skillKey,
+            type: 'skill',
+            label: `${skillLabel}: ${useLabel} (${chem.name})`,
+            target: targetValue,
+            situationalKey: skillKey,
+            instance: chemAction,
+            ...(skillRank !== undefined ? { skillRank } : {}),
+        });
+        chemAction.rollData.targetActor = targetActor;
+        prepareUnifiedRoll(chemAction);
     }
 
     /**

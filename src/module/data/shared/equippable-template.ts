@@ -15,6 +15,13 @@ export interface EquippableState {
      * state, so it is preserved across the compendium→world resync.
      */
     identified: boolean;
+    /**
+     * Chem coating applied to this weapon (#441) — RAW Chem-Use can "apply it to a
+     * weapon" (DH2 p109). `name` is the substance, `charges` how many hits still
+     * carry it (0 = uncoated). Transient per-instance state, like the rest of
+     * `system.state`.
+     */
+    coating: { name: string; charges: number };
 }
 
 interface UpdatableActor {
@@ -53,6 +60,12 @@ export default class EquippableTemplate extends SystemDataModel {
                 // #262 — players cannot see an unidentified weapon's stats. Defaults
                 // to identified so existing/RAW gear is visible; GM toggles per item.
                 identified: new fields.BooleanField({ required: true, initial: true }),
+                // #441 — Chem-Use coating: the substance smeared on the blade/rounds
+                // and how many hits still carry it. charges 0 = uncoated.
+                coating: new fields.SchemaField({
+                    name: new fields.StringField({ required: true, blank: true, initial: '' }),
+                    charges: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                }),
             }),
         };
     }

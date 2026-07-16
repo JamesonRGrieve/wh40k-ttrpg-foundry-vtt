@@ -418,6 +418,19 @@
                 "Diagnose": "Diagnose",
                 "ExtractBullet": "Extract Embedded Object"
             },
+            "Chem": {
+                "Apply": "Administer Chem",
+                "Coat": "Coat Weapon",
+                "PickTitle": "{use} — choose a chem",
+                "PickHint": "Pick the substance to use.",
+                "PickWeaponTitle": "Coat which weapon?",
+                "PickWeaponHint": "Pick the weapon to coat with the chem.",
+                "NoChem": "You carry no chem with a dose left and a declared effect.",
+                "Applied": "{chem} is administered to {target}.",
+                "Coated": "{weapon} is coated with {chem} ({charges} hit(s)).",
+                "Botched": "The application goes wrong — {chem} afflicts {actor} instead.",
+                "Failed": "The {chem} application fails."
+            },
             "GateCooldown": "{target} cannot be treated with {use} again yet — {remaining} remaining.",
             "GateExtendedCare": "{target} is undergoing Extended Care — {use} cannot be applied ({remaining} remaining).",
             "Interrogation": {

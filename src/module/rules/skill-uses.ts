@@ -37,7 +37,9 @@ export type SkillUseKind =
     | 'inspire'
     | 'terrify'
     | 'warCry'
-    | 'blather';
+    | 'blather'
+    | 'applyChem'
+    | 'coatWeapon';
 
 /** One selectable use offered when rolling a skill. */
 export interface SkillUseDef {
@@ -194,9 +196,21 @@ function buffUse(buff: 'inspire' | 'terrify' | 'warCry' | 'blather', opts: { opp
     };
 }
 
+/**
+ * Chem-Use (#441): administer a chem to a subject, or coat a weapon with it.
+ * RAW across the FFG lines — DH2 p109 "Applying Poisons/Chemicals", DH1 p99,
+ * BC p104, OW p126 (a botch afflicts the applicant), RT p78, DW p95.
+ * Applying to a subject is target-directed; coating acts on your own weapon.
+ */
+const CHEM_USES: readonly SkillUseDef[] = [
+    { id: 'applyChem', labelKey: 'WH40K.SkillUse.Chem.Apply', needsTarget: true, difficultyMod: 0, kind: 'applyChem' },
+    { id: 'coatWeapon', labelKey: 'WH40K.SkillUse.Chem.Coat', needsTarget: false, difficultyMod: 0, kind: 'coatWeapon' },
+];
+
 const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     medicae: () => [GENERAL_SKILL_USE, ...medicaeUses()],
     interrogation: () => [GENERAL_SKILL_USE, INTERROGATE_USE],
+    chemUse: () => [GENERAL_SKILL_USE, ...CHEM_USES],
     // Opposed detection (#434): a hider vs an observer's Perception, a scanner vs the
     // hider's Agility, Scrutiny vs the mark's Fellowship (Deceive), a thief vs Perception.
     stealth: () => [GENERAL_SKILL_USE, detectionUse('Stealth', 'Per')],
