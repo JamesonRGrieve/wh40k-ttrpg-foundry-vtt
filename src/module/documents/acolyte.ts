@@ -7,6 +7,8 @@ import {
     ChemUseActionData,
     type CoatableWeapon,
     PalmActionData,
+    ObjectStateActionData,
+    type StatefulItem,
     DetectionActionData,
     DosReadoutActionData,
     InterrogationActionData,
@@ -421,24 +423,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // for a target and routes through MedicaeActionData, which auto-applies the
         // healing on resolution. General / informational uses fall through to the
         // normal test below.
-        if (hasSkillUses(resolvedSkillName)) {
-            const use = await promptSkillUse(resolvedSkillName, label ?? resolvedSkillName);
-            if (use === null) return;
-            // Chem-Use (#441) picks the chem (and, when coating, the weapon) before
-            // rolling — it acts on chosen items, not only a targeted token.
-            if (use.kind === 'applyChem' || use.kind === 'coatWeapon') {
-                await this._rollChemUse(use, resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank);
-                return;
-            }
-            // Sleight of Hand plant/steal (#442) picks the item to move before rolling.
-            if (use.kind === 'steal' || use.kind === 'plant') {
-                await this._rollPalm(use, resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank);
-                return;
-            }
-            if (use.needsTarget) {
-                this._rollTargetedSkillUse(use, resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank);
-                return;
-            }
+        if (hasSkillUses(resolvedSkillName) && (await this._dispatchSkillUse(resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank))) {
+            return;
         }
 
         // Skills with a degrees-of-success readout (#437 knowledge/investigation) route
@@ -454,6 +440,38 @@ export class WH40KAcolyte extends WH40KBaseActor {
             ...(skillRank !== undefined ? { skillRank } : {}),
         });
         prepareUnifiedRoll(simpleSkillData);
+    }
+
+    /**
+     * Prompt for the skill's use and dispatch it to the matching flow (#432 and its
+     * consumers). Returns true when a use handled the roll, false when the choice
+     * falls through to the normal test below (general / informational uses, or a
+     * dismissed picker with nothing to do). Split out of `rollSkill` to keep that
+     * method within the complexity budget as more use families were added.
+     */
+    async _dispatchSkillUse(skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<boolean> {
+        const use = await promptSkillUse(skillKey, skillLabel);
+        if (use === null) return true; // picker dismissed — do not fall through to a plain roll
+        // Chem-Use (#441): pick the chem (and, when coating, the weapon) before rolling.
+        if (use.kind === 'applyChem' || use.kind === 'coatWeapon') {
+            await this._rollChemUse(use, skillKey, skillLabel, targetValue, skillRank);
+            return true;
+        }
+        // Sleight of Hand plant/steal (#442): pick the item to move before rolling.
+        if (use.kind === 'steal' || use.kind === 'plant') {
+            await this._rollPalm(use, skillKey, skillLabel, targetValue, skillRank);
+            return true;
+        }
+        // Object-interaction appliers (#444 repair / #443 bypass lock): pick the item.
+        if (use.kind === 'repair' || use.kind === 'bypassLock') {
+            await this._rollObjectState(use, skillKey, skillLabel, targetValue, skillRank);
+            return true;
+        }
+        if (use.needsTarget) {
+            this._rollTargetedSkillUse(use, skillKey, skillLabel, targetValue, skillRank);
+            return true;
+        }
+        return false; // general / informational — fall through to the normal test
     }
 
     /**
@@ -688,6 +706,51 @@ export class WH40KAcolyte extends WH40KBaseActor {
         palm.rollData.isOpposed = true;
         palm.rollData.opposedChar = use.opposedChar ?? 'Per';
         prepareUnifiedRoll(palm);
+    }
+
+    /**
+     * Object-interaction appliers (#443/#444): pick the item to act on — a broken or
+     * jammed device to repair, or a locked one to open — from your own carried items
+     * or a targeted actor's, then route through ObjectStateActionData, which clears
+     * the state on success. Candidate items are gathered by the state the use clears.
+     */
+    async _rollObjectState(use: SkillUseDef, skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<void> {
+        const useLabel = game.i18n.localize(use.labelKey);
+        const target = firstTargetedActor();
+        const pools: WH40KItem[][] = [this.items.contents];
+        if (target !== null) pools.push(target.items.contents);
+        const isRepair = use.kind === 'repair';
+        const candidates = pools.flat().filter((item: WH40KItem) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; narrow to the runtime state slots this reads
+            const sys = item.system as unknown as { state?: { broken?: boolean; locked?: boolean }; jammed?: boolean };
+            const flagged = isRepair ? (sys.state?.broken ?? false) || sys.jammed === true : sys.state?.locked ?? false;
+            return flagged && item.id !== null;
+        });
+        const pickable = candidates.map((i: WH40KItem) => ({ id: i.id as string, name: i.name }));
+        const chosen = await promptItemChoice(
+            pickable,
+            game.i18n.format('WH40K.SkillUse.Object.PickTitle', { use: useLabel }),
+            game.i18n.localize(isRepair ? 'WH40K.SkillUse.Object.PickRepairHint' : 'WH40K.SkillUse.Object.PickLockHint'),
+        );
+        if (chosen === null) {
+            ui.notifications.warn(game.i18n.localize(isRepair ? 'WH40K.SkillUse.Object.NoBroken' : 'WH40K.SkillUse.Object.NoLocked'));
+            return;
+        }
+        const owner = target?.items.get(chosen.id) !== undefined ? target : this;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the resolved Item satisfies StatefulItem structurally (id/name/update)
+        const statefulItem = owner.items.get(chosen.id) as unknown as StatefulItem;
+
+        const objectAction = new ObjectStateActionData(isRepair ? 'repair' : 'bypassLock', statefulItem);
+        this._buildSimpleSkillRoll({
+            key: skillKey,
+            type: 'skill',
+            label: `${skillLabel}: ${useLabel} (${chosen.name})`,
+            target: targetValue,
+            situationalKey: skillKey,
+            instance: objectAction,
+            ...(skillRank !== undefined ? { skillRank } : {}),
+        });
+        prepareUnifiedRoll(objectAction);
     }
 
     /**

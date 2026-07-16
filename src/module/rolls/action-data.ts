@@ -889,6 +889,49 @@ export class SocialInfluenceActionData extends SimpleSkillData {
     }
 }
 
+/** An item whose runtime state a skill use writes (#443/#444). */
+export interface StatefulItem {
+    readonly id: string;
+    readonly name: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item#update accepts an untyped path-keyed payload
+    update: (data: Record<string, unknown>) => Promise<unknown>;
+}
+
+/**
+ * An object-interaction applier (#443 Security bypass / #444 Tech-Use repair) — the
+ * state-writing half of the #436 DoS readout. On success it clears the chosen item's
+ * state: `repair` clears `system.state.broken` (and a weapon's `jammed`), `bypassLock`
+ * clears `system.state.locked`. On failure the item stays as it was (the #436 readout
+ * still conveys the time/retry cost).
+ */
+export class ObjectStateActionData extends SimpleSkillData {
+    readonly mode: 'repair' | 'bypassLock';
+    readonly item: StatefulItem;
+
+    constructor(mode: 'repair' | 'bypassLock', item: StatefulItem) {
+        super();
+        this.mode = mode;
+        this.item = item;
+    }
+
+    override async descriptionText(): Promise<void> {
+        const itemName = this.item.name;
+        if (!this.rollData.success) {
+            const failKey = this.mode === 'repair' ? 'WH40K.SkillUse.Object.RepairFailed' : 'WH40K.SkillUse.Object.BypassFailed';
+            this.addEffect('Tech-Use', game.i18n.format(failKey, { item: itemName }));
+            return;
+        }
+
+        if (this.mode === 'repair') {
+            await this.item.update({ 'system.state.broken': false, 'system.jammed': false });
+            this.addEffect('Tech-Use', game.i18n.format('WH40K.SkillUse.Object.Repaired', { item: itemName }));
+            return;
+        }
+        await this.item.update({ 'system.state.locked': false });
+        this.addEffect('Security', game.i18n.format('WH40K.SkillUse.Object.Unlocked', { item: itemName }));
+    }
+}
+
 /**
  * A Sleight of Hand plant/steal roll (#442) — an opposed contest (vs the mark's
  * Perception, resolved by the #449 engine) that, on a win, actually MOVES the chosen

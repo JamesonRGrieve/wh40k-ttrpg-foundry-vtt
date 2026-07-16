@@ -94,6 +94,23 @@ describe('resolveFirstAid (#432)', () => {
     });
 });
 
+describe('object-interaction appliers (#443/#444)', () => {
+    it('offers Tech-Use Repair alongside the general (DoS-readout) test', () => {
+        expect(getSkillUses('techUse').map((u) => u.id)).toEqual(['general', 'repair']);
+        expect(getSkillUse('techUse', 'repair')?.needsTarget).toBe(false);
+    });
+
+    it('offers Security Bypass Lock alongside the general test', () => {
+        expect(getSkillUses('security').map((u) => u.id)).toEqual(['general', 'bypassLock']);
+        expect(getSkillUse('security', 'bypassLock')?.needsTarget).toBe(false);
+    });
+
+    it('keeps Tech-Use/Security on the object-interaction DoS readout for the general test (#436)', () => {
+        expect(getSkillReadout('techUse')).toBe('objectInteraction');
+        expect(getSkillReadout('security')).toBe('objectInteraction');
+    });
+});
+
 describe('Sleight of Hand plant/steal (#442)', () => {
     it('adds opposed steal + plant uses alongside the #434 detection use', () => {
         const ids = getSkillUses('sleightOfHand').map((u) => u.id);
