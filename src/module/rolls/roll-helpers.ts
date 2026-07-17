@@ -220,6 +220,12 @@ export async function sendActionDataToChat(actionData: ActionData): Promise<void
     // the live instances renders those fields blank (proto-property guard).
     const context = resolveGettersForTemplate(actionData);
     context['rollData'] = resolveGettersForTemplate(actionData.rollData);
+    // Surface the rolling actor's game system on the chat render context so the
+    // `{{themeClassFor}}` helper resolves the per-system themed class from
+    // `@root._gameSystemId` on chat cards (rendered outside any sheet root) rather
+    // than falling back to the RT default (#422).
+    const chatSystem = actionData.rollData.sourceActor?.system.gameSystem;
+    if (chatSystem !== undefined) context['_gameSystemId'] = chatSystem;
     const html = await foundry.applications.handlebars.renderTemplate(actionData.template, context);
     const rollData = actionData.rollData as typeof actionData.rollData & { isManualRoll?: boolean };
     const roll = rollData.roll;

@@ -36,6 +36,12 @@ export class BasicActionManager {
             // under `.wh40k-rpg`. Chat messages render outside the system's sheet
             // root, so without this class the chat cards lose all Tailwind styling.
             html.classList.add('wh40k-rpg');
+            // Surface the speaker actor's game system on the card root so per-system
+            // Tailwind variants (`bc:`/`dh2:`/…) resolve via `[data-wh40k-system]` in
+            // chat, which renders outside any sheet root. Without this the inline
+            // 7-system chains on chat cards fall back to their base colour (#422).
+            const chatSystem = (message as { speakerActor?: { system?: { gameSystem?: string } } | null }).speakerActor?.system?.gameSystem;
+            if (chatSystem !== undefined && chatSystem !== '') html.dataset['wh40kSystem'] = chatSystem;
             html.querySelectorAll('.roll-control__hide-control').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     this._toggleExpandChatMessage(ev);
