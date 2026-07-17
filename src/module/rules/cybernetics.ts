@@ -36,7 +36,7 @@
  * the other six lines; only the DH2 character-sheet surfaces wire it.
  */
 
-import { degreesOfFailure, degreesOfSuccess, rollDie, type Rng } from './_dice.ts';
+import { degreesOfFailure, degreesOfSuccess, isD100Success, rollDie, type Rng } from './_dice.ts';
 
 /** Re-exported from the shared dice primitives for callers/tests importing them from this module. */
 export { degreesOfFailure, degreesOfSuccess };
@@ -220,7 +220,7 @@ export interface InstallResolution {
  */
 export function resolveInstall(composition: InstallTestComposition, roll: number): InstallResolution {
     const { target, breakdown } = composition;
-    const success = roll <= target;
+    const success = isD100Success(roll, target);
     const dos = degreesOfSuccess(roll, target);
     const dof = degreesOfFailure(roll, target);
     return {
@@ -347,7 +347,7 @@ export interface MaintenanceResolution {
  */
 export function resolveMaintenance(currentCraftsmanship: CyberneticCraftsmanship, composition: InstallTestComposition, roll: number): MaintenanceResolution {
     const { target, breakdown } = composition;
-    const success = roll <= target;
+    const success = isD100Success(roll, target);
     const dos = degreesOfSuccess(roll, target);
     const dof = degreesOfFailure(roll, target);
 

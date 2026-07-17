@@ -29,6 +29,8 @@
  * RNG-free and actor-decoupled.
  */
 
+import { isD100Success } from './_dice.ts';
+
 /* -------------------------------------------------------------------- */
 /*  Asset kinds & definitions                                           */
 /* -------------------------------------------------------------------- */
@@ -104,7 +106,7 @@ export interface SupportRequestResult {
  */
 export function requestSupport(input: SupportRequestInput): SupportRequestResult {
     const effectiveTarget = Math.max(0, input.currentLogisticsTarget + input.asset.logisticsModifier);
-    const successful = input.roll <= effectiveTarget;
+    const successful = isD100Success(input.roll, effectiveTarget);
     if (!successful) {
         return { successful: false, effectiveTarget };
     }

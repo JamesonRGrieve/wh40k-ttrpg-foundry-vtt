@@ -46,7 +46,7 @@
  */
 
 import type { GameSystemId } from '../config/game-systems/types.ts';
-import { degreesOfFailure as computeDegreesOfFailure, degreesOfSuccess as computeDegreesOfSuccess } from './_dice.ts';
+import { degreesOfFailure as computeDegreesOfFailure, degreesOfSuccess as computeDegreesOfSuccess, isD100Success } from './_dice.ts';
 
 // ---------------------------------------------------------------------------
 // Per-stage primitives
@@ -133,7 +133,7 @@ export function resolveD100Test(input: D100TestInput): {
     // (`degreesOfSuccess` is 0 on a fail, `degreesOfFailure` is 0 on a pass),
     // so the pair reproduces the original `+1` margin counting exactly.
     return {
-        passed: rolled <= target,
+        passed: isD100Success(rolled, target),
         degreesOfSuccess: computeDegreesOfSuccess(rolled, target),
         degreesOfFailure: computeDegreesOfFailure(rolled, target),
     };

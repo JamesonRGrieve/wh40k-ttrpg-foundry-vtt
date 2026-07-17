@@ -24,7 +24,7 @@
  * RNG-free and actor-decoupled; no I/O, no Foundry Document reads.
  */
 
-import { degreesOfFailure, degreesOfSuccess } from './_dice.ts';
+import { degreesOfFailure, degreesOfSuccess, isD100Success } from './_dice.ts';
 
 /* -------------------------------------------------------------------- */
 /*  Base rating + flat bonuses                                          */
@@ -266,7 +266,7 @@ export function resolveLogisticsTest(ctx: LogisticsContext, roll: number): Logis
     // and each full ten of margin adds one — so route through the shared
     // primitives with `extra: true`.
     return {
-        success: roll <= target,
+        success: isD100Success(roll, target),
         degreesOfSuccess: degreesOfSuccess(roll, target, { extra: true }),
         degreesOfFailure: degreesOfFailure(roll, target, { extra: true }),
         target,
