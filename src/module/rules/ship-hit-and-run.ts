@@ -45,7 +45,7 @@
  * the 1d5 × 2 crit picks.
  */
 
-import { degreesOfFailure as degreesOfFailureCore, degreesOfSuccess, resolveOpposedByDoS } from './_dice.ts';
+import { degreesOfFailure as degreesOfFailureCore, degreesOfSuccess, isD100Success, resolveOpposedByDoS } from './_dice.ts';
 
 /** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
 export { degreesOfSuccess };
@@ -112,7 +112,7 @@ export interface HitAndRunApproachResolution {
 /** Resolve the approach Pilot test. */
 export function resolveHitAndRunApproach(input: HitAndRunApproachInput): HitAndRunApproachResolution {
     const target = computeApproachTarget(input.pilotSkill, input.targetTurretRating);
-    const hit = input.pilotRoll <= target;
+    const hit = isD100Success(input.pilotRoll, target);
     const dos = hit ? degreesOfSuccess(input.pilotRoll, target) : 0;
     const dof = hit ? 0 : degreesOfFailure(input.pilotRoll, target);
     const shotDown = !hit && dof >= APPROACH_SHOTDOWN_DOF;

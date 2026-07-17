@@ -158,6 +158,9 @@ export function resolveContemptOfTheWarp(input: ContemptOfTheWarpInput): Contemp
     // and each full ten of margin adds one — so route through the shared
     // primitives with `extra: true`.
     return {
+        // Deliberate bare comparison (NOT isD100Success): this resolver's own test
+        // pins "only roll ≤ target succeeds" at a zero target, so the natural-01/100
+        // override is intentionally NOT applied here pending RAW confirmation (#463).
         success: roll <= target,
         degreesOfSuccess: degreesOfSuccess(roll, target, { extra: true }),
         degreesOfFailure: degreesOfFailure(roll, target, { extra: true }),

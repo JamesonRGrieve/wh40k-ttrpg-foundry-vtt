@@ -53,14 +53,10 @@ export function getDegreeForMode(method: 'gen1' | 'gen2', a: number, b: number):
     return Math.floor(a / 10) - Math.floor(b / 10);
 }
 
-/** The d100 success rule, single-sourced: a roll-under test succeeds when the
- * total is at or below the target, EXCEPT that a natural 01 ALWAYS succeeds and
- * a natural 100 ALWAYS fails, regardless of target. Every success/failure
- * decision across the config / document / dice / dialog layers routes through
- * this so identical rolls resolve identically. */
-export function isD100Success(roll: number, target: number): boolean {
-    return roll === 1 || (roll <= target && roll !== 100);
-}
+// The d100 success rule lives in the pure dice layer so the Foundry-free rules/
+// modules can share it without importing this Foundry-heavy file; re-exported here
+// for the many Foundry-side callers that already import it from roll-helpers (#463).
+export { isD100Success } from '../rules/_dice.ts';
 
 /**
  * Resolve an instance's prototype getters into a plain object of own

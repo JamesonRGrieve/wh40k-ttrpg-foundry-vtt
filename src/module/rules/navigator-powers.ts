@@ -42,7 +42,7 @@
  * (Document layer in `documents/item.ts`).
  */
 
-import { clampRoll, degreesOfFailure, degreesOfSuccess } from './_dice.ts';
+import { clampRoll, degreesOfFailure, degreesOfSuccess, isD100Success } from './_dice.ts';
 
 /**
  * Three canonical Navigator-power mastery tiers (core.md L8366–L8370).
@@ -149,7 +149,7 @@ export function resolveNavigatorPower(input: NavigatorTestInput): NavigatorTestR
     const levelBonus = NAVIGATOR_LEVEL_BONUS[input.level];
     const target = navigatorPowerTarget(input);
     const roll = clampRoll(input.roll, { nonFinite: 1 });
-    const success = roll <= target;
+    const success = isD100Success(roll, target);
     const dos = degreesOfSuccess(roll, target);
     // Navigator powers count DoF from the first point *past* the target
     // (the off-by-one variant), so `{ inclusive: false }` reproduces the
@@ -178,7 +178,7 @@ export function resolveOpposedNavigatorPower(input: NavigatorOpposedInput): Navi
     const navResult = resolveNavigatorPower(input.navigator);
     const opponentTarget = clampTarget(input.opponent.characteristic + (input.opponent.difficultyModifier ?? 0) + (input.opponent.situationalModifier ?? 0));
     const opponentRoll = clampRoll(input.opponent.roll, { nonFinite: 1 });
-    const opponentSuccess = opponentRoll <= opponentTarget;
+    const opponentSuccess = isD100Success(opponentRoll, opponentTarget);
     const opponentDos = degreesOfSuccess(opponentRoll, opponentTarget);
     const opponentDof = degreesOfFailure(opponentRoll, opponentTarget, { inclusive: false });
     const opponent: NavigatorTestResult = Object.freeze({

@@ -16,6 +16,18 @@
 export type Rng = () => number;
 
 /**
+ * The d100 roll-under success rule, single-sourced here in the pure dice layer:
+ * a test succeeds when the total is at or below the target, EXCEPT that a natural
+ * 01 ALWAYS succeeds and a natural 100 ALWAYS fails, regardless of target. Every
+ * success/failure decision routes through this so identical rolls resolve
+ * identically across the config / document / dice / dialog / rules layers.
+ * (`roll-helpers.ts` re-exports this as `isD100Success` for its Foundry-side callers.)
+ */
+export function isD100Success(roll: number, target: number): boolean {
+    return roll === 1 || (roll <= target && roll !== 100);
+}
+
+/**
  * Degrees of Success for a passed d100 test (`roll ≤ target`): the full tens of
  * the margin, plus one — a bare pass is 1 DoS (core.md §"Degrees of Success").
  * A failed roll (`roll > target`) yields 0, so callers can use the return value
