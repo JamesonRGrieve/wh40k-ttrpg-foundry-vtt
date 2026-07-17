@@ -3,12 +3,8 @@
  * Based on dnd5e's ApplicationV2Mixin pattern for Foundry V13+
  */
 
+import { type AppSystemHandles, resolveAppSystemId } from './app-system-id.ts';
 import type { ApplicationV2Ctor, FoundryApplicationApiLike } from './application-types.ts';
-
-/** A handle that may carry a game-system id, used to theme dialogs per system (#422). */
-interface SystemHandle {
-    system?: { gameSystem?: string };
-}
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped; cast required to reach api surface
 const applicationAPI = (foundry.applications as unknown as { api: FoundryApplicationApiLike }).api;
@@ -119,6 +115,13 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
             const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
             /* eslint-enable no-restricted-syntax */
             context['CONFIG'] = CONFIG.wh40k;
+            // Surface the active game system so `{{themeClassFor}}` resolves the per-system
+            // themed class on dialogs/prompts (rendered outside a sheet root) instead of the
+            // RT default. Subclasses that already set `_gameSystemId` keep their value (#422).
+            if (context['_gameSystemId'] === undefined) {
+                const systemId = resolveAppSystemId(this as AppSystemHandles);
+                if (systemId !== undefined && systemId !== '') context['_gameSystemId'] = systemId;
+            }
             return context;
         }
 
@@ -228,26 +231,14 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
             // Surface the active game system on the app root so per-system Tailwind
             // variants (`bc:`/`dh2:`/…) on dialogs/prompts — which render outside a
             // sheet root — resolve via `[data-wh40k-system]`. Prefer the id already
-            // resolved into context (roll prompts), else probe the common actor /
-            // document handles. System-agnostic dialogs resolve to nothing and keep
-            // their base colour, which is the intended fallback (#422).
-            // eslint-disable-next-line no-restricted-syntax -- boundary: this.element / heterogeneous app handles are Foundry runtime properties not on ApplicationV2Ctor
-            const app = this as unknown as {
-                element: HTMLElement;
-                rollData?: { sourceActor?: SystemHandle; actor?: SystemHandle };
-                document?: SystemHandle;
-                actor?: SystemHandle;
-                object?: SystemHandle;
-            };
+            // resolved into context (roll prompts), else probe the common handles.
+            // System-agnostic dialogs resolve to nothing and keep their base colour (#422).
             const fromContext = typeof context['_gameSystemId'] === 'string' ? context['_gameSystemId'] : undefined;
-            const systemId =
-                fromContext ??
-                app.rollData?.sourceActor?.system?.gameSystem ??
-                app.rollData?.actor?.system?.gameSystem ??
-                app.document?.system?.gameSystem ??
-                app.actor?.system?.gameSystem ??
-                app.object?.system?.gameSystem;
-            if (systemId !== undefined && systemId !== '') app.element.dataset['wh40kSystem'] = systemId;
+            const systemId = fromContext ?? resolveAppSystemId(this as AppSystemHandles);
+            if (systemId !== undefined && systemId !== '') {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: this.element is a Foundry runtime property not on ApplicationV2Ctor
+                (this as unknown as { element: HTMLElement }).element.dataset['wh40kSystem'] = systemId;
+            }
 
             // Shared PARTS containers (for example the player-sheet sidebar)
             // can be replaced during later full renders, so rebuild them every

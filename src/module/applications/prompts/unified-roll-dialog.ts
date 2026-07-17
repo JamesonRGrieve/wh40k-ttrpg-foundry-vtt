@@ -687,15 +687,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             : (typeof rollData.type === 'string' && rollData.type.length > 0 ? rollData.type : null) ?? rollData.action ?? '';
         /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
-        // Surface the rolling actor's game system so `{{themeClassFor}}` on the
-        // roll prompt (rendered outside a sheet root) resolves the per-system themed
-        // class from `@root._gameSystemId` instead of the RT default (#422).
-        const themeActor = (rollData.sourceActor ?? rollData['actor']) as { system?: { gameSystem?: string } } | null | undefined;
-        const gameSystemId = themeActor?.system?.gameSystem;
-
+        // `_gameSystemId` (for the per-system `{{themeClassFor}}` on the roll prompt) is
+        // injected into `context` by ApplicationV2Mixin._prepareContext from the rolling
+        // actor; it flows through the `...context` spread below (#422).
         return {
             ...context,
-            _gameSystemId: gameSystemId,
             rollData,
             actorName,
             actorImg,
