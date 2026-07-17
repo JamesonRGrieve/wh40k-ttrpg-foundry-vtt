@@ -53,7 +53,7 @@ export function degreesOfFailure(roll: number, target: number, options?: { inclu
 }
 
 /** One side of an opposed d100 test: its d100 roll and effective target. */
-export interface OpposedSide {
+export interface OpposedRoll {
     /** This side's d100 roll (1–100). */
     roll: number;
     /** This side's effective target number (characteristic/skill + modifiers). */
@@ -82,7 +82,7 @@ export interface OpposedResult {
  * that misses its own test contributes 0 DoS, so a both-fail contest is decided
  * purely by the tie rule — matching the hand-written resolvers this replaces.
  */
-export function resolveOpposed(a: OpposedSide, b: OpposedSide, options: { tie: 'a' | 'b' }): OpposedResult {
+export function resolveOpposedByDoS(a: OpposedRoll, b: OpposedRoll, options: { tie: 'a' | 'b' }): OpposedResult {
     const aDoS = degreesOfSuccess(a.roll, a.target);
     const bDoS = degreesOfSuccess(b.roll, b.target);
     const netDoS = aDoS - bDoS;

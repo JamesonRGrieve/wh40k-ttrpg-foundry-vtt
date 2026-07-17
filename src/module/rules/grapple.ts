@@ -21,7 +21,7 @@
  * responsible for prompting the rolls and emitting chat cards.
  */
 
-import { degreesOfSuccess, resolveOpposed } from './_dice.ts';
+import { degreesOfSuccess, resolveOpposedByDoS } from './_dice.ts';
 
 /** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
 export { degreesOfSuccess };
@@ -63,7 +63,7 @@ export interface GrappleResolution {
  * least as many degrees of success as the opponent — `tie: 'a'` routes the
  * equal-DoS contest (and the both-fail 0–0 contest) to the actor, modelling
  * the controller-favoring tie at every call site (the resolver always returns
- * `success` for the side passed in as `actor`). See {@link resolveOpposed} for
+ * `success` for the side passed in as `actor`). See {@link resolveOpposedByDoS} for
  * the shared core; the grapple-specific net-DoS scaling is read off the result.
  */
 function resolveOpposedStrength(input: OpposedStrengthInput, action: GrappleAction): GrappleResolution {
@@ -72,7 +72,7 @@ function resolveOpposedStrength(input: OpposedStrengthInput, action: GrappleActi
         aDoS: actorDoS,
         bDoS: opponentDoS,
         netDoS,
-    } = resolveOpposed({ roll: input.actorRoll, target: input.actorStrength }, { roll: input.opponentRoll, target: input.opponentStrength }, { tie: 'a' });
+    } = resolveOpposedByDoS({ roll: input.actorRoll, target: input.actorStrength }, { roll: input.opponentRoll, target: input.opponentStrength }, { tie: 'a' });
     return { success, actorDoS, opponentDoS, netDoS, action };
 }
 

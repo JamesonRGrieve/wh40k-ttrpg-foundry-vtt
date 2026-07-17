@@ -38,7 +38,7 @@ export const BOARDING_HULL_DAMAGE_PER_DOS = 1;
 /** DoS margin for the defender at which the boarding party is captured/destroyed. */
 export const BOARDING_BOARDERS_LOST_DOS = 3;
 
-import { degreesOfSuccess, resolveOpposed } from './_dice.ts';
+import { degreesOfSuccess, resolveOpposedByDoS } from './_dice.ts';
 
 /** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
 export { degreesOfSuccess };
@@ -85,7 +85,7 @@ export function resolveBoardingOpposed(input: BoardingOpposedInput): BoardingOpp
         aDoS: attackerDoS,
         bDoS: defenderDoS,
         netDoS,
-    } = resolveOpposed(
+    } = resolveOpposedByDoS(
         { roll: input.attackerRoll, target: input.attackerCommandTarget },
         { roll: input.defenderRoll, target: input.defenderCommandTarget },
         { tie: 'b' },

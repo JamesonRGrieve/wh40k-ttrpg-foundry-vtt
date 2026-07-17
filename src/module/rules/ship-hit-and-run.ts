@@ -45,7 +45,7 @@
  * the 1d5 × 2 crit picks.
  */
 
-import { degreesOfFailure as degreesOfFailureCore, degreesOfSuccess, resolveOpposed } from './_dice.ts';
+import { degreesOfFailure as degreesOfFailureCore, degreesOfSuccess, resolveOpposedByDoS } from './_dice.ts';
 
 /** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
 export { degreesOfSuccess };
@@ -160,7 +160,7 @@ export function resolveHitAndRunCommand(input: HitAndRunCommandInput): HitAndRun
         aDoS: attackerDoS,
         bDoS: defenderDoS,
         netDoS,
-    } = resolveOpposed({ roll: input.attackerRoll, target: atkTarget }, { roll: input.defenderRoll, target: defTarget }, { tie: 'b' });
+    } = resolveOpposedByDoS({ roll: input.attackerRoll, target: atkTarget }, { roll: input.defenderRoll, target: defTarget }, { tie: 'b' });
     return { success, attackerDoS, defenderDoS, netDoS };
 }
 
