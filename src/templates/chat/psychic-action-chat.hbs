@@ -5,7 +5,7 @@
     subtitle=rollData.action
     subtitle2=rollData.effectString}}
             {{#with rollData}}
-                {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=baseTarget activeModifiers=activeModifiers modifiedTarget=modifiedTarget}}
+                {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=baseTarget activeModifiers=activeModifiers modifierSources=modifierSources modifiedTarget=modifiedTarget modifierCapFired=modifierCapFired rawModifierTotal=rawModifierTotal modifierTotal=modifierTotal}}
 
                 {{!-- Effects --}}
                 {{#each @root.effectOutput as |effect|}}

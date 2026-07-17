@@ -201,6 +201,30 @@
                 "RollVsTarget": "Roll vs Target",
                 "RollResult": "Roll Result",
                 "AgainstTarget": "vs {target}"
+            },
+            "ModifierSource": {
+                "Manual": "Manual Modifier",
+                "Assistance": "Assistance",
+                "Aim": "Aim",
+                "Range": "Range",
+                "WeaponAttack": "Weapon",
+                "WeaponTraining": "Weapon Training",
+                "TargetSize": "Target Size",
+                "CombatAction": "Combat Action",
+                "PsyMode": "Psychic Focus",
+                "Difficulty": "Difficulty",
+                "Situational": "Situational",
+                "CombatSituational": "Combat Situational"
+            },
+            "ModifierCap": {
+                "Label": "Modifier cap (±60)",
+                "Value": "{raw} → {capped}",
+                "Tooltip": "The total modifier is capped at ±60 (DH2 core). The raw sum before the cap is shown for transparency."
+            },
+            "ResultFormula": {
+                "Success": "{dos} DoS = 1 + {degree} (roll {roll} vs target {target})",
+                "Failure": "{dof} DoF = 1 + {degree} (roll {roll} vs target {target})",
+                "Tooltip": "Degrees = 1 + the difference between the roll and the target, by tens under the active degrees mode (DH2 Gen 2 = tens digit; Gen 1 = margin ÷ 10)."
             }
         },
         "Assistance": {

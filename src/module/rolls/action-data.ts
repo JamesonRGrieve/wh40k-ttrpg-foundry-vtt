@@ -420,6 +420,28 @@ export class ActionData {
                 this.effects.push('auto-failure');
             }
         }
+
+        // Transparency readout: derive the result formula from the final degrees
+        // and the roll vs target, for the chat card (#…). Method-agnostic phrasing
+        // (`1 + degree`) — the exact degrees method is explained in the card's
+        // hover. Skipped for automatic / degree-less resolutions.
+        if (!this.rollData.ignoreDegrees) {
+            const rollTotalForFormula = this.rollData.roll?.total ?? 0;
+            const target = this.rollData.modifiedTarget;
+            this.rollData.resultFormula = this.rollData.success
+                ? game.i18n.format('WH40K.Roll.ResultFormula.Success', {
+                      dos: String(this.rollData.dos),
+                      degree: String(this.rollData.dos - 1),
+                      roll: String(rollTotalForFormula),
+                      target: String(target),
+                  })
+                : game.i18n.format('WH40K.Roll.ResultFormula.Failure', {
+                      dof: String(this.rollData.dof),
+                      degree: String(this.rollData.dof - 1),
+                      roll: String(rollTotalForFormula),
+                      target: String(target),
+                  });
+        }
     }
 
     async calculateHits(): Promise<void> {

@@ -26,7 +26,7 @@
                 {{/if}}
 
                 {{#unless ignoreModifiers}}
-                    {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=baseTarget activeModifiers=activeModifiers modifiedTarget=modifiedTarget}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=baseTarget activeModifiers=activeModifiers modifierSources=modifierSources modifiedTarget=modifiedTarget modifierCapFired=modifierCapFired rawModifierTotal=rawModifierTotal modifierTotal=modifierTotal}}
 
                     {{!-- Audit: tie the d100 result to the final target so the table can
                           see exactly how success/failure was reached. Skipped for
@@ -77,6 +77,9 @@
                             <span class="tw-text-[1.5rem] tw-font-bold tw-text-[var(--wh40k-danger-secondary)]">{{dof}}</span>
                             <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">Degrees of Failure</span>
                         </div>
+                    {{/if}}
+                    {{#if resultFormula}}
+                        <div class="tw-text-center tw-py-1 tw-text-[0.8rem] tw-text-[var(--wh40k-card-muted)] tw-cursor-help" data-tooltip="{{localize "WH40K.Roll.ResultFormula.Tooltip"}}">{{resultFormula}}</div>
                     {{/if}}
                   {{/unless}}
                 {{/unless}}
