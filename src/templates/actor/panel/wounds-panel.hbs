@@ -32,7 +32,7 @@
 
     {{!-- Warning Messages --}}
     {{#if (eq system.wounds.value 0)}}
-    <div class="tw-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-mt-1 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-rounded-[6px] tw-border-2 tw-border-solid tw-border-crimson bc:tw-border-crimson-light dh1:tw-border-gold-raw-l5 dh2:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-bg-[var(--wh40k-wounds-bg)] tw-text-crimson {{themeClassFor 'accent'}} tw-animate-pulse-red">
+    <div class="tw-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-mt-1 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-rounded-[6px] tw-border-2 tw-border-solid {{themeClassFor 'border'}} tw-bg-[var(--wh40k-wounds-bg)] tw-text-crimson {{themeClassFor 'accent'}} tw-animate-pulse-red">
         <i class="fas fa-skull-crossbones"></i>
         <span>{{localize "WH40K.Status.Wounds.CriticallyWounded"}}</span>
     </div>

@@ -35,7 +35,7 @@
         <span class="tw-shrink-0 tw-border tw-border-solid tw-rounded-[3px] tw-text-[0.65rem] tw-font-semibold tw-px-1 tw-py-0.5 tw-min-w-[24px] tw-text-center {{#if ind.active}}active tw-bg-[rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.25)] tw-border-accent-skills tw-text-[color:var(--color-text-primary)] tw-opacity-100 tw-font-bold{{else}}tw-bg-[rgba(255,255,255,0.35)] tw-border-[rgba(120,46,34,0.35)] tw-text-[#3a2820] tw-opacity-50{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
         {{/each}}
     </div>
-    <div class="tw-shrink-0 tw-min-w-8.5 tw-h-6.5 tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center tw-border tw-border-gold bc:tw-border-crimson-light dh1:tw-border-gold-raw-l5 dh2:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-rounded-md tw-bg-[var(--color-bg-option)] tw-shadow-[inset_0_1px_2px_rgba(255,255,255,0.1),0_2px_6px_rgba(0,0,0,0.15)]" title="{{entry.[1].breakdown}}">
+    <div class="tw-shrink-0 tw-min-w-8.5 tw-h-6.5 tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center tw-border {{themeClassFor 'border'}} tw-rounded-md tw-bg-[var(--color-bg-option)] tw-shadow-[inset_0_1px_2px_rgba(255,255,255,0.1),0_2px_6px_rgba(0,0,0,0.15)]" title="{{entry.[1].breakdown}}">
         <span class="tw-font-alt tw-text-[1.05rem] tw-font-bold tw-text-[color:var(--color-text-primary)]">{{entry.[1].current}}</span>
     </div>
 </div>

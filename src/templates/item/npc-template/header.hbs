@@ -4,7 +4,7 @@
 
 {{#> systems/wh40k-rpg/templates/actor/partial/header-base.hbs
     variant="horizontal"
-    cardClass="wh40k-sheet-header npc-template-header tw-gap-4 tw-p-3 tw-bg-[var(--wh40k-bg-secondary)] tw-border-[var(--wh40k-border-color)] bc:tw-border-crimson-light dh1:tw-border-gold-raw-l5 dh2:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure"}}
+    cardClass="wh40k-sheet-header npc-template-header tw-gap-4 tw-p-3 tw-bg-[var(--wh40k-bg-secondary)] {{themeClassFor 'border'}}"}}
     <div class="tw-shrink-0">
         {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs
             imgOnly=true
