@@ -3,7 +3,7 @@ import { SYSTEM_ID } from '../constants.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
-import { type OpposedSide, resolveOpposed } from '../rules/opposed.ts';
+import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/opposed.ts';
 import type { RerollOption } from '../rules/reroll.ts';
 import {
     applyFirstAidOutcome,
@@ -25,7 +25,7 @@ import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
-import { getDegreeForMode, getOpposedDegrees, isD100Success, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
+import { getDegreeForMode, isD100Success, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
 
 export class ActionData {
     id: string = uuid();
@@ -176,8 +176,11 @@ export class ActionData {
 
         if (weaponRollData.isKnockDown) {
             if (this.rollData.targetActor !== null) {
-                const opposedDegrees = getOpposedDegrees(this.rollData.dos, this.rollData.dof, this.rollData.opposedDos, this.rollData.opposedDof);
-                if (opposedDegrees >= 2) {
+                const oppDegrees = opposedDegrees(
+                    { dos: this.rollData.dos, dof: this.rollData.dof },
+                    { dos: this.rollData.opposedDos, dof: this.rollData.opposedDof },
+                );
+                if (oppDegrees >= 2) {
                     const sourceActor = this.rollData.sourceActor;
                     const sourceCharacteristics =
                         sourceActor !== null ? (sourceActor.system as { characteristics?: { strength?: { bonus: number } } }).characteristics : undefined;
@@ -186,9 +189,9 @@ export class ActionData {
                         'Knock Down',
                         `The target is knocked Prone and must use a Stand action in his turn to regain his feet! The impact deals [[1d5-3+${strengthBonus}]] (min 0) damage and one level of fatigue to the target!`,
                     );
-                } else if (opposedDegrees > 0) {
+                } else if (oppDegrees > 0) {
                     this.addEffect('Knock Down', `The target is knocked Prone and must use a Stand action in his turn to regain his feet!`);
-                } else if (opposedDegrees > -2) {
+                } else if (oppDegrees > -2) {
                     this.addEffect('Knock Down', `The character fails to knock down the target!`);
                 } else {
                     this.addEffect('Knock Down', `The character fails to knock down the target and in the failure knocks themselves prone instead!`);
