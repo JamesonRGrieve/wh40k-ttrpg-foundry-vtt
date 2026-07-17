@@ -2,9 +2,9 @@
 {{#with rollData}}
     <form class="tw-relative tw-font-ui tw-text-[#e8e4d9] tw-p-5" autocomplete="off">
         {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title=name}}
-            <div class="tw-flex tw-items-center tw-justify-center tw-gap-3 tw-p-4 tw-bg-gradient-to-br tw-from-[rgba(201,162,39,0.1)] tw-to-[rgba(0,0,0,0.2)] tw-border tw-border-gold bc:tw-border-crimson-light dh1:tw-border-gold-raw-l5 dh2:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-rounded-lg tw-my-3">
+            <div class="tw-flex tw-items-center tw-justify-center tw-gap-3 tw-p-4 tw-bg-gradient-to-br tw-from-[rgba(201,162,39,0.1)] tw-to-[rgba(0,0,0,0.2)] tw-border {{themeClassFor 'border'}} tw-rounded-lg tw-my-3">
                 <span class="tw-text-[0.9rem] tw-font-semibold tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.1em]">Target</span>
-                <span class="tw-text-[2rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-shadow-[0_0_20px_rgba(201,162,39,0.2)] tw-tabular-nums">{{baseTarget}}</span>
+                <span class="tw-text-[2rem] tw-font-bold {{themeClassFor 'accent'}} tw-shadow-[0_0_20px_rgba(201,162,39,0.2)] tw-tabular-nums">{{baseTarget}}</span>
                 <span class="tw-text-[1rem] tw-text-[#6a6a6a]">%</span>
             </div>
 
