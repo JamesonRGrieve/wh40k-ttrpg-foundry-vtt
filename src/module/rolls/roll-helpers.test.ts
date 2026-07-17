@@ -93,7 +93,7 @@ describe('emitChatFromTemplate — the single-sourced template→ChatMessage idi
         rollMode?: string;
         speaker?: SpeakerStub;
         whisper?: string[];
-        rolls?: unknown[];
+        rolls?: Roll[];
         flavor?: string;
         type?: number;
     }
@@ -156,7 +156,8 @@ describe('emitChatFromTemplate — the single-sourced template→ChatMessage idi
     });
 
     it('passes rolls / flavor / type through to the created message (#368)', async () => {
-        const rolls = [{ total: 42 }, { total: 7 }];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: minimal Roll stubs for a pass-through assertion; Foundry's Roll has no lightweight shipped mock.
+        const rolls = [{ total: 42 }, { total: 7 }] as unknown as Roll[];
         await emitChatFromTemplate('tpl.hbs', {}, { rolls, flavor: 'Bolt Pistol - Reload', type: 5 });
         const payload = lastPayload();
         expect(payload.rolls).toBe(rolls);

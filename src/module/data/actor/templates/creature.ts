@@ -490,9 +490,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
             // Characteristics mapped from the canonical CHARACTERISTICS table
             // (#464). Creature has no Influence characteristic → excluded.
-            characteristics: new SchemaField(
-                buildCharacteristicFields((label, short) => this.CharacteristicField(label, short), { includeInfluence: false }),
-            ),
+            characteristics: new SchemaField(buildCharacteristicFields((label, short) => this.CharacteristicField(label, short), { includeInfluence: false })),
 
             size: sizeField({ nullable: false }),
 

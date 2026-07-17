@@ -68,7 +68,8 @@ export function makeStatModifiers<K extends string>(
         },
         modifiersList(modifiers: Record<K, number>): (StatModifierEntry | FormattedStatModifierEntry)[] {
             const list: (StatModifierEntry | FormattedStatModifierEntry)[] = [];
-            for (const [key, value] of Object.entries(modifiers)) {
+            for (const key of Object.keys(modifiers) as K[]) {
+                const value = modifiers[key];
                 if (value === 0) continue;
                 const label = game.i18n.localize(`${i18nPrefix}.${capitalize(key)}`);
                 if (includeFormatted) {

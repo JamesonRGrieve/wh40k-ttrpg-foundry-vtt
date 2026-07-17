@@ -185,7 +185,7 @@ async function emitBattlefieldChat(host: Host, event: ChatPayload): Promise<void
     const speaker = ChatMessage.getSpeaker({ actor: host.actor as unknown as WH40KBaseActor });
     // `_gameSystemId` is derived by the helper from the speaker's actor (#422).
     // eslint-disable-next-line no-restricted-syntax -- boundary: emitChatFromTemplate expects a Record<string, unknown> render context; the typed templateData literal is structurally compatible
-    await emitChatFromTemplate(CHAT_TEMPLATE, templateData as unknown as Record<string, unknown>, { speaker, applyWhispers: true });
+    await emitChatFromTemplate(CHAT_TEMPLATE, templateData, { speaker, applyWhispers: true });
 }
 
 /* -------------------------------------------- */
