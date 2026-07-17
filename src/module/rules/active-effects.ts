@@ -405,6 +405,13 @@ export async function createConditionEffect(actor: WH40KBaseActorDocument, condi
  * applied — instant death is surfaced on the chat card for GM adjudication.
  */
 export async function applyCriticalDamageConditions(actor: WH40KBaseActorDocument, record: CriticalDamageRecord): Promise<void> {
+    const helmet = findEquippedHelmet(actor);
+    const hasHelmet = helmet !== undefined;
+
+    // Decision tree (#… helmet-gated rows): "If he is wearing a helmet, he suffers
+    // no ill effects; otherwise …" — a worn helmet negates this row's conditions.
+    if (record.riders.helmetNegates && hasHelmet) return;
+
     const ids = criticalRiderConditionIds(record.riders);
     for (const id of ids) {
         const already = actor.effects.find(
@@ -415,6 +422,72 @@ export async function applyCriticalDamageConditions(actor: WH40KBaseActorDocumen
         // eslint-disable-next-line no-await-in-loop -- sequential: each create mutates the actor's effects collection the next dedupe reads
         await createConditionEffect(actor, id, { flags: { 'wh40k-rpg': { criticalConditionId: id } } });
     }
+
+    // Helmet knocked/torn off ("If he is wearing a helmet, it is torn off"): unequip
+    // the worn head armour so it stops contributing head AP. Reversible — the GM /
+    // player re-equips it after the fight.
+    if (record.riders.helmetTornOff && helmet !== undefined) {
+        await helmet.update({ 'system.state.equipped': false });
+        game.wh40k.log('critical-damage: helmet torn off', { actor: actor.name, helmet: helmet.name });
+    }
+
+    // Drop held item ("Drop any item held in the hand", a hand/arm crit): unequip
+    // the target's held (equipped) weapon so it stops being wielded. Reversible —
+    // the GM / player re-equips it after retrieving it.
+    if (record.riders.dropsHeldItem) {
+        const weapon = findEquippedWeapon(actor);
+        if (weapon !== undefined) {
+            await weapon.update({ 'system.state.equipped': false });
+            game.wh40k.log('critical-damage: held item dropped', { actor: actor.name, weapon: weapon.name });
+        }
+    }
+}
+
+/** The minimal owned-item surface the critical-damage auto-appliers read/update. */
+interface EquippedItemLike {
+    type: string;
+    name: string | null;
+    system: { coverage?: Set<string> | readonly string[] | undefined; state?: { equipped?: boolean } | undefined };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#update (open-ended payload, opaque Promise return)
+    update: (data: Record<string, unknown>) => Promise<unknown>;
+}
+
+/**
+ * The target's equipped head-covering armour, if any — a "helmet" for the RAW
+ * helmet-gated critical effects. When several worn pieces cover the head, the one
+ * with the SMALLEST coverage wins (a dedicated helmet over a full suit that also
+ * covers the head). Returns `undefined` when no worn armour covers the head.
+ */
+function findEquippedHelmet(actor: WH40KBaseActorDocument): EquippedItemLike | undefined {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: actor.items is a Foundry collection of loosely-typed owned items
+    const items = (actor as unknown as { items: Iterable<EquippedItemLike> }).items;
+    let best: EquippedItemLike | undefined;
+    let bestCoverage = Infinity;
+    for (const item of items) {
+        if (item.type !== 'armour' || item.system.state?.equipped !== true) continue;
+        const coverage = item.system.coverage;
+        const size = coverage instanceof Set ? coverage.size : Array.isArray(coverage) ? coverage.length : 0;
+        const coversHead = coverage instanceof Set ? coverage.has('head') : Array.isArray(coverage) && coverage.includes('head');
+        if (coversHead && size < bestCoverage) {
+            best = item;
+            bestCoverage = size;
+        }
+    }
+    return best;
+}
+
+/**
+ * The target's held (equipped) weapon, if any — what the "drop held item" critical
+ * effects knock loose. Returns the first equipped weapon; `undefined` when the
+ * target is wielding nothing (an empty-handed target has nothing to drop).
+ */
+function findEquippedWeapon(actor: WH40KBaseActorDocument): EquippedItemLike | undefined {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: actor.items is a Foundry collection of loosely-typed owned items
+    const items = (actor as unknown as { items: Iterable<EquippedItemLike> }).items;
+    for (const item of items) {
+        if (item.type === 'weapon' && item.system.state?.equipped === true) return item;
+    }
+    return undefined;
 }
 
 /**
