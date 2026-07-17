@@ -721,12 +721,10 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     protected _resolveGameSystemId(): GameSystemId | null {
         if (this._gameSystemId) return this._gameSystemId;
-
-        const actorGameSystem = this.actor.system.gameSystem;
-        if (typeof actorGameSystem !== 'string') return null;
-
-        const gameSystemId = actorGameSystem;
-        return SystemConfigRegistry.has(gameSystemId) ? gameSystemId : null;
+        // The actor-system read is the shared firstSystemId knowledge; this method
+        // only layers registry validation on top (#461).
+        const raw = firstSystemId(this.actor);
+        return raw !== undefined && SystemConfigRegistry.has(raw) ? (raw as GameSystemId) : null;
     }
 
     /** @override */

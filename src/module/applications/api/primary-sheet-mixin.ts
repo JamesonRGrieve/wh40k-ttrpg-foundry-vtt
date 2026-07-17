@@ -12,6 +12,7 @@
 /* eslint-disable no-restricted-syntax -- mixin chain is a Foundry V14 framework boundary; super-prototype payloads are untyped */
 
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../../types/global.d.ts';
+import { firstSystemId } from '../../utils/chat-system-id.ts';
 import type { ApplicationV2Ctor } from './application-types.ts';
 import DragDropMixin from './drag-drop-api-mixin.ts';
 import type { PrimarySheetMixinAPI } from './sheet-mixin-types.js';
@@ -186,7 +187,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                 _gameSystemId?: string;
                 document?: { system?: { gameSystem?: string } };
             };
-            return sheetWithSystem._gameSystemId ?? sheetWithSystem.document?.system?.gameSystem;
+            return sheetWithSystem._gameSystemId ?? firstSystemId(sheetWithSystem.document);
         }
 
         /* -------------------------------------------- */
