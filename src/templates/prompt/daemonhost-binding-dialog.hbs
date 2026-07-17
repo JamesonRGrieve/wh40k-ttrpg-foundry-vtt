@@ -12,8 +12,8 @@
             <button type="button"
                     data-action="selectTier"
                     data-tier="{{this.id}}"
-                    class="tw-flex tw-flex-col tw-items-stretch tw-gap-2 tw-p-3 tw-rounded-md tw-border-2 tw-cursor-pointer tw-text-left tw-bg-[rgba(0,0,0,0.35)] tw-transition-colors {{#if this.selected}}tw-border-gold dh2:tw-border-bronze bc:tw-border-crimson dh1:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass rt:tw-border-amber-700 im:tw-border-failure tw-shadow-[0_0_18px_rgba(201,162,39,0.35)]{{else}}tw-border-[rgba(201,162,39,0.25)]{{/if}}">
-                <div class="tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-gold dh2:tw-text-bronze bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-amber-700 im:tw-text-failure">
+                    class="tw-flex tw-flex-col tw-items-stretch tw-gap-2 tw-p-3 tw-rounded-md tw-border-2 tw-cursor-pointer tw-text-left tw-bg-[rgba(0,0,0,0.35)] tw-transition-colors {{#if this.selected}}{{themeClassFor 'border' 'dh2'}} tw-shadow-[0_0_18px_rgba(201,162,39,0.35)]{{else}}tw-border-[rgba(201,162,39,0.25)]{{/if}}">
+                <div class="tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] {{themeClassFor 'accent' 'dh2'}}">
                     {{this.label}}
                 </div>
                 <div class="tw-flex tw-flex-col tw-gap-1 tw-text-[0.8rem]">
