@@ -20,6 +20,16 @@ describe('computeCharacteristicTotals (#271)', () => {
         expect(computeCharacteristicTotals(50, 0, 1).bonus).toBe(5);
     });
 
+    it('is the SSOT the NPC-template generator now routes its bonus through (#365)', () => {
+        // NPCTemplateData.generateAtThreat previously computed the bonus inline as
+        // `Math.floor(value / 10) + unnatural`, which disagrees with this SSOT
+        // whenever Unnatural (X) ≥ 2 (Unnatural multiplies the base bonus, it is
+        // not added). For value 40, unnatural 2 the correct bonus is 8, not 6.
+        expect(computeCharacteristicTotals(40, 0, 2)).toEqual({ total: 40, bonus: 8 });
+        // The old inline formula (kept here only to document the divergence) gave 6.
+        expect(Math.floor(40 / 10) + 2).toBe(6);
+    });
+
     it('clampTotalToZero floors the total at 0 before deriving the bonus (#365)', () => {
         // Default (no clamp) leaves a negative total negative.
         expect(computeCharacteristicTotals(10, 0, 0, -30)).toEqual({ total: -20, bonus: -2 });

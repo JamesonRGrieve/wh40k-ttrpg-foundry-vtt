@@ -3,6 +3,7 @@ import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
+import { buildCharacteristicFields } from '../shared/characteristics.ts';
 import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
 import { computeMovement } from '../shared/movement-math.ts';
 import { skillCharacteristicMap } from '../shared/skill-definitions.ts';
@@ -302,18 +303,9 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             }),
 
             // === CHARACTERISTICS ===
-            characteristics: new SchemaField({
-                weaponSkill: this._CharacteristicField('Weapon Skill', 'WS'),
-                ballisticSkill: this._CharacteristicField('Ballistic Skill', 'BS'),
-                strength: this._CharacteristicField('Strength', 'S'),
-                toughness: this._CharacteristicField('Toughness', 'T'),
-                agility: this._CharacteristicField('Agility', 'Ag'),
-                intelligence: this._CharacteristicField('Intelligence', 'Int'),
-                perception: this._CharacteristicField('Perception', 'Per'),
-                willpower: this._CharacteristicField('Willpower', 'WP'),
-                fellowship: this._CharacteristicField('Fellowship', 'Fel'),
-                influence: this._CharacteristicField('Influence', 'Inf'),
-            }),
+            // Mapped from the canonical CHARACTERISTICS table (#464); NPCs carry
+            // the full ten including Influence.
+            characteristics: new SchemaField(buildCharacteristicFields((label, short) => this._CharacteristicField(label, short))),
 
             // === WOUNDS ===
             wounds: woundsField({ max: 10, value: 10, critical: 0, nullable: true }),

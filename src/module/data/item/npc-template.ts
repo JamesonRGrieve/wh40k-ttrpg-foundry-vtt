@@ -7,6 +7,8 @@
  */
 
 import ItemDataModel from '../abstract/item-data-model.ts';
+import { computeCharacteristicTotals } from '../shared/characteristic-math.ts';
+import { CHARACTERISTICS } from '../shared/characteristics.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
 
@@ -371,18 +373,9 @@ export default class NPCTemplateData extends ItemDataModel {
         // Generate characteristics
         // eslint-disable-next-line no-restricted-syntax -- boundary: per-key dynamic stat block
         const characteristics: Record<string, unknown> = {};
-        const charLabels: Record<string, { label: string; short: string }> = {
-            weaponSkill: { label: 'Weapon Skill', short: 'WS' },
-            ballisticSkill: { label: 'Ballistic Skill', short: 'BS' },
-            strength: { label: 'Strength', short: 'S' },
-            toughness: { label: 'Toughness', short: 'T' },
-            agility: { label: 'Agility', short: 'Ag' },
-            intelligence: { label: 'Intelligence', short: 'Int' },
-            perception: { label: 'Perception', short: 'Per' },
-            willpower: { label: 'Willpower', short: 'WP' },
-            fellowship: { label: 'Fellowship', short: 'Fel' },
-            influence: { label: 'Influence', short: 'Inf' },
-        };
+        // Label/short lookup mapped from the canonical CHARACTERISTICS table (#464).
+        const charLabels: Record<string, { label: string; short: string }> = {};
+        for (const c of CHARACTERISTICS) charLabels[c.key] = { label: c.label, short: c.short };
 
         for (const [key, base] of Object.entries(this.baseCharacteristics)) {
             let value = Math.round(base * clampedScale);
@@ -401,14 +394,18 @@ export default class NPCTemplateData extends ItemDataModel {
             const labels = charLabels[key];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: charLabels[key] may be undefined at runtime
             if (labels === undefined) continue;
+            // Route the bonus through the SSOT so Unnatural (X) is handled
+            // identically to the creature/NPC prepare passes (#365): bonus is the
+            // tens digit, multiplied by Unnatural when ≥ 2 (not additive).
+            const { total, bonus } = computeCharacteristicTotals(value, 0, unnatural);
             characteristics[key] = {
                 label: labels.label,
                 short: labels.short,
                 base: value,
                 modifier: 0,
                 unnatural,
-                total: value,
-                bonus: Math.floor(value / 10) + unnatural,
+                total,
+                bonus,
             };
         }
 
