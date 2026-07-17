@@ -1,3 +1,4 @@
+import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 
@@ -27,8 +28,7 @@ export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTempla
             props.push(this.group);
         }
         if (this.modifier !== 0) {
-            const sign = this.modifier > 0 ? '+' : '';
-            props.push(`${sign}${this.modifier}`);
+            props.push(formatSigned(this.modifier));
         }
         return props;
     }
@@ -37,8 +37,7 @@ export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTempla
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         const labels = [];
         if (this.modifier !== 0) {
-            const sign = this.modifier > 0 ? '+' : '';
-            labels.push({ label: `${sign}${this.modifier}`, icon: 'fa-solid fa-users' });
+            labels.push({ label: formatSigned(this.modifier), icon: 'fa-solid fa-users' });
         }
         return labels;
     }

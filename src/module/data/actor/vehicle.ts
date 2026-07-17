@@ -1,5 +1,6 @@
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import { applyCharacteristicRollData, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
+import { buildCharacteristicFields } from '../shared/characteristics.ts';
 import { characteristicField } from '../shared/stat-fields.ts';
 import { migrateCharacteristics } from './npc-import-migration.ts';
 
@@ -275,18 +276,10 @@ export class ConventionalCraftData extends VehicleData {
             ...super.defineSchema(),
 
             // === Optional creature-style profile (animate craft only; null otherwise) ===
+            // Mapped from the canonical CHARACTERISTICS table (#464); the vehicle
+            // profile carries the nine core characteristics — no Influence.
             characteristics: new fields.SchemaField(
-                {
-                    weaponSkill: this._CharacteristicField('Weapon Skill', 'WS'),
-                    ballisticSkill: this._CharacteristicField('Ballistic Skill', 'BS'),
-                    strength: this._CharacteristicField('Strength', 'S'),
-                    toughness: this._CharacteristicField('Toughness', 'T'),
-                    agility: this._CharacteristicField('Agility', 'Ag'),
-                    intelligence: this._CharacteristicField('Intelligence', 'Int'),
-                    perception: this._CharacteristicField('Perception', 'Per'),
-                    willpower: this._CharacteristicField('Willpower', 'WP'),
-                    fellowship: this._CharacteristicField('Fellowship', 'Fel'),
-                },
+                buildCharacteristicFields((label, short) => this._CharacteristicField(label, short), { includeInfluence: false }),
                 { required: false, nullable: true, initial: null },
             ),
 

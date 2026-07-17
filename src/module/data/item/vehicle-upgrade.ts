@@ -1,3 +1,4 @@
+import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -146,8 +147,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
      * @type {string}
      */
     get difficultyFormatted(): string {
-        if (this.difficulty === 0) return '+0';
-        return `${this.difficulty > 0 ? '+' : ''}${this.difficulty}`;
+        return formatSigned(this.difficulty);
     }
 
     /* -------------------------------------------- */

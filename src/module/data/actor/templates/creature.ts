@@ -9,7 +9,7 @@ import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
 import { WH40KSettings } from '../../../wh40k-rpg-settings.ts';
 import { coerceInt } from '../../fields/coerce.ts';
 import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../../shared/characteristic-math.ts';
-import { CHARACTERISTIC_SHORT_TO_FULL } from '../../shared/characteristics.ts';
+import { buildCharacteristicFields, CHARACTERISTIC_SHORT_TO_FULL } from '../../shared/characteristics.ts';
 import { clampSize, coerceIntFields, sizeNameToInt } from '../../shared/field-coercion.ts';
 import { computeMovement, sumMovementModifiers } from '../../shared/movement-math.ts';
 import { asRawSource, type RawSource } from '../../shared/raw-source.ts';
@@ -488,17 +488,11 @@ export default class CreatureTemplate extends CommonTemplate {
         return {
             ...super.defineSchema(),
 
-            characteristics: new SchemaField({
-                weaponSkill: this.CharacteristicField('Weapon Skill', 'WS'),
-                ballisticSkill: this.CharacteristicField('Ballistic Skill', 'BS'),
-                strength: this.CharacteristicField('Strength', 'S'),
-                toughness: this.CharacteristicField('Toughness', 'T'),
-                agility: this.CharacteristicField('Agility', 'Ag'),
-                intelligence: this.CharacteristicField('Intelligence', 'Int'),
-                perception: this.CharacteristicField('Perception', 'Per'),
-                willpower: this.CharacteristicField('Willpower', 'WP'),
-                fellowship: this.CharacteristicField('Fellowship', 'Fel'),
-            }),
+            // Characteristics mapped from the canonical CHARACTERISTICS table
+            // (#464). Creature has no Influence characteristic → excluded.
+            characteristics: new SchemaField(
+                buildCharacteristicFields((label, short) => this.CharacteristicField(label, short), { includeInfluence: false }),
+            ),
 
             size: sizeField({ nullable: false }),
 

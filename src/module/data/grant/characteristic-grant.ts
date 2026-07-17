@@ -1,4 +1,5 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { formatSigned } from '../../utils/format.ts';
 import BaseGrantData, { type GrantApplicationResult, type GrantApplyOptions, type GrantRestoreData, type GrantSummary } from './base-grant.ts';
 
 interface CharacteristicAppliedState {
@@ -109,7 +110,7 @@ export default class CharacteristicGrantData extends BaseGrantData {
             result.applied[key] = { previousValue: currentAdvance, appliedValue: value, newValue: newAdvance };
 
             const charLabel = game.i18n.localize(`WH40K.Characteristic.${key}`);
-            result.notifications.push(`${charLabel} ${value > 0 ? '+' : ''}${value}`);
+            result.notifications.push(`${charLabel} ${formatSigned(value)}`);
         }
 
         await this._applyUpdates(actor, updates, options);
