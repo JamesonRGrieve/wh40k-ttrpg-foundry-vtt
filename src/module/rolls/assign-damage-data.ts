@@ -1,5 +1,5 @@
 import type { HordeTrait } from '../data/actor/mixins/horde-template.ts';
-import { applyCriticalDamageConditions } from '../rules/active-effects.ts';
+import { applyCriticalDamageConditions, type CriticalSideEffectReport } from '../rules/active-effects.ts';
 import { type CriticalDamageRecord, getCriticalDamageRecord } from '../rules/critical-damage.ts';
 import { damageTypeDropdown } from '../rules/damage-type.ts';
 import { type BreakCheck, magnitudeLossForHit, resolveBreakCheck } from '../rules/dw-horde-magnitude.ts';
@@ -88,6 +88,15 @@ export class AssignDamageData {
      * in {@link finalize} whenever critical damage is taken; null otherwise.
      */
     criticalRecord: CriticalDamageRecord | null = null;
+    /**
+     * Non-condition side effects the Critical Damage produced (helmet torn off,
+     * weapon dropped/destroyed, munitions detonated, armour decision-tree outcome)
+     * — surfaced on the damage chat card. Null until {@link performActionAndSendToChat}
+     * applies the crit; only populated when critical damage was taken.
+     */
+    criticalSideEffects: CriticalSideEffectReport | null = null;
+    /** Convenience flag for Handlebars: the crit produced surfaceable side effects. */
+    hasCriticalSideEffects = false;
 
     /** True when this hit resolved against a DW horde (#166). */
     hasHordeDamage = false;
@@ -317,7 +326,9 @@ export class AssignDamageData {
         // empty and nothing is applied.
         if (this.hasCriticalDamage && this.criticalRecord !== null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: ActorLike is the damage-apply narrowing of the real target document; the condition applicator needs the full actor surface (effects, createEmbeddedDocuments)
-            await applyCriticalDamageConditions(this.actor as unknown as WH40KBaseActorDocument, this.criticalRecord);
+            const report = await applyCriticalDamageConditions(this.actor as unknown as WH40KBaseActorDocument, this.criticalRecord);
+            this.criticalSideEffects = report;
+            this.hasCriticalSideEffects = report.hasSideEffects;
         }
 
         await postFlattenedInstanceToChat(this, 'systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs', { actor: this.actor });

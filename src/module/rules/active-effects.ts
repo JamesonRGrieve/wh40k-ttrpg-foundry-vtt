@@ -2,6 +2,7 @@ import { t } from '../i18n/t.ts';
 import { emitChatFromTemplate, isD100Success, roll1d100 } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { type CriticalDamageRecord, criticalRiderConditionIds } from './critical-damage.ts';
+import type { CanonicalBodyPart } from './damage-type.ts';
 
 type ActiveEffectChatContext = {
     template: string;
@@ -390,104 +391,251 @@ export async function createConditionEffect(actor: WH40KBaseActorDocument, condi
     });
 }
 
+/** A carried munition (grenade / ammunition) that cooked off from a crit. */
+interface DetonatedMunition {
+    /** Display name of the detonating item. */
+    name: string;
+    /**
+     * Rolled secondary-damage total (the grenade's own formula + bonus), or null
+     * when the item has no rollable damage of its own — loose ammunition, whose
+     * blast is the fixed value in the crit prose the GM resolves by hand.
+     */
+    damage: number | null;
+    /** The munition's own damage type (`explosive`, `impact`, …), when known. */
+    damageType: string | null;
+}
+
 /**
- * Apply the conditions / ActiveEffects a Critical Damage result inflicts (#108).
- * Walks the classified riders (Stunned, Burning, Blood Loss, Prone, Blinded,
- * Deafened, Fatigue, lost limb) and creates the matching condition Active Effect
- * on the target. Persistent tick conditions (Burning, Blood Loss) are then
- * processed at the turn boundary by the combat turn-hook (#413).
+ * Structured account of the non-condition side effects a Critical Damage result
+ * produced — what the appliers changed on the target and what the GM must still
+ * adjudicate. Returned by {@link applyCriticalDamageConditions} so the damage
+ * chat card can surface a readout (blast radii / nearby-target selection need
+ * token positions the damage path does not have).
+ */
+export interface CriticalSideEffectReport {
+    /** A `negates` armour gate fired against worn armour — the row had no effect. */
+    armourNegated: boolean;
+    /** A `worsensIfUnarmoured` gate on an armoured location — harsher branch withheld for GM adjudication. */
+    unarmouredWorsens: boolean;
+    /** Name of the head armour torn off, or null. */
+    helmetTornOff: string | null;
+    /** Name of the weapon dropped (unequipped), or null. */
+    itemDropped: string | null;
+    /** Name of the weapon destroyed (broken + unequipped), or null. */
+    weaponBroken: string | null;
+    /** Carried munitions that cooked off, with rolled secondary damage. */
+    munitions: DetonatedMunition[];
+    /** Condition-registry ids applied this call (completeness / tests). */
+    conditionsApplied: string[];
+    /** True when the report carries anything worth surfacing on the chat card. */
+    hasSideEffects: boolean;
+}
+
+/**
+ * Apply the conditions / ActiveEffects and side effects a Critical Damage result
+ * inflicts (#108). Walks the classified riders (Stunned, Burning, Blood Loss,
+ * Prone, Blinded, Deafened, Fatigue, lost limb) and creates the matching
+ * condition Active Effect on the target, then resolves the row's armour decision
+ * tree and physical side effects (helmet torn off, held weapon dropped or
+ * destroyed, carried munitions cooking off). Persistent tick conditions (Burning,
+ * Blood Loss) are processed at the turn boundary by the combat turn-hook (#413).
+ *
+ * Armour decision trees (content-agnostic, resolved against the target's armour
+ * at the crit body-part — a helmet for Head hits, location armour otherwise):
+ *   - `negates` + armoured → the whole row is skipped ("wearing a helmet, he
+ *     suffers no ill effects").
+ *   - `worsensIfUnarmoured` + armoured → the harsher conditions are withheld and
+ *     the reduction surfaced for the GM (the prose can't be split mechanically).
  *
  * Each crit-sourced condition is stamped with a `criticalConditionId` flag so a
- * later Critical does not stack a second copy of a per-turn-tick condition
- * (which would double the Burning / Blood Loss damage). The rider classifier and
- * id mapping are content-agnostic, so the same application holds across systems
- * that share the condition registry. The `fatal` rider is intentionally not
- * applied — instant death is surfaced on the chat card for GM adjudication.
+ * later Critical does not stack a second per-turn-tick condition. The `fatal`
+ * rider is intentionally not applied — instant death is surfaced on the chat card
+ * for GM adjudication. Returns a {@link CriticalSideEffectReport} for the card.
  */
-export async function applyCriticalDamageConditions(actor: WH40KBaseActorDocument, record: CriticalDamageRecord): Promise<void> {
-    const helmet = findEquippedHelmet(actor);
-    const hasHelmet = helmet !== undefined;
+export async function applyCriticalDamageConditions(actor: WH40KBaseActorDocument, record: CriticalDamageRecord): Promise<CriticalSideEffectReport> {
+    const report: CriticalSideEffectReport = {
+        armourNegated: false,
+        unarmouredWorsens: false,
+        helmetTornOff: null,
+        itemDropped: null,
+        weaponBroken: null,
+        munitions: [],
+        conditionsApplied: [],
+        hasSideEffects: false,
+    };
 
-    // Decision tree (#… helmet-gated rows): "If he is wearing a helmet, he suffers
-    // no ill effects; otherwise …" — a worn helmet negates this row's conditions.
-    if (record.riders.helmetNegates && hasHelmet) return;
+    const gate = record.riders.armourGate;
+    const locationArmoured = findEquippedArmourAt(actor, record.bodyPart) !== undefined;
 
-    const ids = criticalRiderConditionIds(record.riders);
-    for (const id of ids) {
-        const already = actor.effects.find(
-            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.effects elements are loosely typed; read getFlag off a minimal shape
-            (e) => (e as unknown as { getFlag: (scope: string, key: string) => unknown }).getFlag('wh40k-rpg', 'criticalConditionId') === id,
-        );
-        if (already !== undefined) continue;
-        // eslint-disable-next-line no-await-in-loop -- sequential: each create mutates the actor's effects collection the next dedupe reads
-        await createConditionEffect(actor, id, { flags: { 'wh40k-rpg': { criticalConditionId: id } } });
+    // `negates` gate: worn armour at the struck location cancels the entire row.
+    if (gate === 'negates' && locationArmoured) {
+        report.armourNegated = true;
+        return finalizeSideEffectReport(report);
+    }
+
+    // `worsensIfUnarmoured` + armoured: the harsher (unarmoured) branch is what the
+    // classifier caught, but the prose can't be split into base vs. worse
+    // conditions — so withhold auto-applying them and surface the reduction.
+    const suppressConditions = gate === 'worsensIfUnarmoured' && locationArmoured;
+    if (suppressConditions) report.unarmouredWorsens = true;
+
+    if (!suppressConditions) {
+        for (const id of criticalRiderConditionIds(record.riders)) {
+            const already = actor.effects.find(
+                // eslint-disable-next-line no-restricted-syntax -- boundary: actor.effects elements are loosely typed; read getFlag off a minimal shape
+                (e) => (e as unknown as { getFlag: (scope: string, key: string) => unknown }).getFlag('wh40k-rpg', 'criticalConditionId') === id,
+            );
+            if (already !== undefined) continue;
+            // eslint-disable-next-line no-await-in-loop -- sequential: each create mutates the actor's effects collection the next dedupe reads
+            await createConditionEffect(actor, id, { flags: { 'wh40k-rpg': { criticalConditionId: id } } });
+            report.conditionsApplied.push(id);
+        }
     }
 
     // Helmet knocked/torn off ("If he is wearing a helmet, it is torn off"): unequip
-    // the worn head armour so it stops contributing head AP. Reversible — the GM /
-    // player re-equips it after the fight.
-    if (record.riders.helmetTornOff && helmet !== undefined) {
-        await helmet.update({ 'system.state.equipped': false });
-        game.wh40k.log('critical-damage: helmet torn off', { actor: actor.name, helmet: helmet.name });
-    }
-
-    // Drop held item ("Drop any item held in the hand", a hand/arm crit): unequip
-    // the target's held (equipped) weapon so it stops being wielded. Reversible —
-    // the GM / player re-equips it after retrieving it.
-    if (record.riders.dropsHeldItem) {
-        const weapon = findEquippedWeapon(actor);
-        if (weapon !== undefined) {
-            await weapon.update({ 'system.state.equipped': false });
-            game.wh40k.log('critical-damage: held item dropped', { actor: actor.name, weapon: weapon.name });
+    // the worn head armour so it stops contributing head AP. Reversible.
+    if (record.riders.helmetTornOff) {
+        const helmet = findEquippedArmourAt(actor, 'Head');
+        if (helmet !== undefined) {
+            await helmet.update({ 'system.state.equipped': false });
+            report.helmetTornOff = helmet.name ?? '';
+            game.wh40k.log('critical-damage: helmet torn off', { actor: actor.name, helmet: helmet.name });
         }
     }
+
+    // Held weapon dropped or destroyed (a hand/arm crit). Destruction supersedes a
+    // mere drop on the same weapon: mark it broken (reversible via a Tech-Use
+    // Repair, #444) and unequip; a plain drop only unequips.
+    if (record.riders.weaponDestroyed || record.riders.dropsHeldItem) {
+        const weapon = findEquippedWeapon(actor);
+        if (weapon !== undefined) {
+            if (record.riders.weaponDestroyed) {
+                await weapon.update({ 'system.state.equipped': false, 'system.state.broken': true });
+                report.weaponBroken = weapon.name ?? '';
+                game.wh40k.log('critical-damage: held weapon destroyed', { actor: actor.name, weapon: weapon.name });
+            } else {
+                await weapon.update({ 'system.state.equipped': false });
+                report.itemDropped = weapon.name ?? '';
+                game.wh40k.log('critical-damage: held item dropped', { actor: actor.name, weapon: weapon.name });
+            }
+        }
+    }
+
+    // Carried munitions cook off ("any grenades or missiles … detonate"): roll each
+    // detonating grenade's own damage; the GM distributes the blast (needs token
+    // positions the damage path lacks).
+    if (record.riders.detonatesMunitions) {
+        report.munitions = await detonateCarriedMunitions(actor);
+    }
+
+    return finalizeSideEffectReport(report);
 }
 
-/** The minimal owned-item surface the critical-damage auto-appliers read/update. */
-interface EquippedItemLike {
+/** Set `hasSideEffects` from the populated report fields. */
+function finalizeSideEffectReport(report: CriticalSideEffectReport): CriticalSideEffectReport {
+    report.hasSideEffects =
+        report.armourNegated ||
+        report.unarmouredWorsens ||
+        report.helmetTornOff !== null ||
+        report.itemDropped !== null ||
+        report.weaponBroken !== null ||
+        report.munitions.length > 0;
+    return report;
+}
+
+/** The minimal owned-item surface the critical-damage side-effect appliers read/update. */
+interface OwnedItemLike {
     type: string;
     name: string | null;
-    system: { coverage?: Set<string> | readonly string[] | undefined; state?: { equipped?: boolean } | undefined };
+    system: {
+        coverage?: Set<string> | readonly string[] | undefined;
+        /** Weapon usage class (`'thrown'` for grenades). */
+        class?: string | undefined;
+        /** Weapon damage block — the detonation path rolls a grenade's own formula. */
+        damage?: { formula?: string | undefined; bonus?: number | undefined; type?: string | undefined } | undefined;
+        state?: { equipped?: boolean | undefined; broken?: boolean | undefined } | undefined;
+    };
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#update (open-ended payload, opaque Promise return)
     update: (data: Record<string, unknown>) => Promise<unknown>;
 }
 
-/**
- * The target's equipped head-covering armour, if any — a "helmet" for the RAW
- * helmet-gated critical effects. When several worn pieces cover the head, the one
- * with the SMALLEST coverage wins (a dedicated helmet over a full suit that also
- * covers the head). Returns `undefined` when no worn armour covers the head.
- */
-function findEquippedHelmet(actor: WH40KBaseActorDocument): EquippedItemLike | undefined {
+/** Read the actor's owned items as the minimal side-effect surface. */
+function ownedItems(actor: WH40KBaseActorDocument): Iterable<OwnedItemLike> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: actor.items is a Foundry collection of loosely-typed owned items
-    const items = (actor as unknown as { items: Iterable<EquippedItemLike> }).items;
-    let best: EquippedItemLike | undefined;
+    return (actor as unknown as { items: Iterable<OwnedItemLike> }).items;
+}
+
+/** Canonical Critical Effects body-part → armour `coverage` keys it maps onto. */
+const BODY_PART_COVERAGE_KEYS: Record<CanonicalBodyPart, readonly string[]> = {
+    Head: ['head'],
+    Body: ['body'],
+    Arm: ['leftArm', 'rightArm'],
+    Leg: ['leftLeg', 'rightLeg'],
+};
+
+/**
+ * The target's equipped armour covering a given Critical Effects body-part (a
+ * "helmet" for Head), or undefined when the location is unarmoured. When several
+ * worn pieces cover it, the one with the SMALLEST coverage wins (a dedicated
+ * helmet over a full suit that also covers the head). `all`-coverage armour
+ * counts for every location.
+ */
+function findEquippedArmourAt(actor: WH40KBaseActorDocument, bodyPart: CanonicalBodyPart): OwnedItemLike | undefined {
+    const keys = BODY_PART_COVERAGE_KEYS[bodyPart];
+    let best: OwnedItemLike | undefined;
     let bestCoverage = Infinity;
-    for (const item of items) {
+    for (const item of ownedItems(actor)) {
         if (item.type !== 'armour' || item.system.state?.equipped !== true) continue;
         const coverage = item.system.coverage;
-        const size = coverage instanceof Set ? coverage.size : Array.isArray(coverage) ? coverage.length : 0;
-        const coversHead = coverage instanceof Set ? coverage.has('head') : Array.isArray(coverage) && coverage.includes('head');
-        if (coversHead && size < bestCoverage) {
+        const asSet = coverage instanceof Set ? coverage : new Set(Array.isArray(coverage) ? coverage : []);
+        const covers = asSet.has('all') || keys.some((k) => asSet.has(k));
+        if (covers && asSet.size < bestCoverage) {
             best = item;
-            bestCoverage = size;
+            bestCoverage = asSet.size;
         }
     }
     return best;
 }
 
 /**
- * The target's held (equipped) weapon, if any — what the "drop held item" critical
- * effects knock loose. Returns the first equipped weapon; `undefined` when the
- * target is wielding nothing (an empty-handed target has nothing to drop).
+ * The target's held (equipped) weapon, if any — what the "drop held item" /
+ * "weapon destroyed" critical effects act on. Returns the first equipped weapon;
+ * undefined when the target is wielding nothing.
  */
-function findEquippedWeapon(actor: WH40KBaseActorDocument): EquippedItemLike | undefined {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: actor.items is a Foundry collection of loosely-typed owned items
-    const items = (actor as unknown as { items: Iterable<EquippedItemLike> }).items;
-    for (const item of items) {
+function findEquippedWeapon(actor: WH40KBaseActorDocument): OwnedItemLike | undefined {
+    for (const item of ownedItems(actor)) {
         if (item.type === 'weapon' && item.system.state?.equipped === true) return item;
     }
     return undefined;
+}
+
+/**
+ * Find the target's carried munitions (thrown-class grenades and ammunition
+ * items) and, for each grenade with a rollable damage formula, roll its own
+ * secondary damage. Ammunition (and utility grenades with no damage of their own)
+ * is reported with `damage: null` for the GM to resolve from the crit prose.
+ */
+async function detonateCarriedMunitions(actor: WH40KBaseActorDocument): Promise<DetonatedMunition[]> {
+    const munitions = [...ownedItems(actor)].filter((item) => (item.type === 'weapon' && item.system.class === 'thrown') || item.type === 'ammunition');
+    return Promise.all(
+        munitions.map(async (item): Promise<DetonatedMunition> => {
+            const dmg = item.system.damage;
+            const formula = typeof dmg?.formula === 'string' ? dmg.formula.trim() : '';
+            const bonus = typeof dmg?.bonus === 'number' ? dmg.bonus : 0;
+            const damageType = typeof dmg?.type === 'string' ? dmg.type : null;
+            let damage: number | null = null;
+            if (item.type === 'weapon' && formula !== '' && formula !== '-') {
+                try {
+                    const roll = new Roll(formula, {});
+                    await roll.evaluate();
+                    damage = (roll.total ?? 0) + bonus;
+                } catch {
+                    damage = null;
+                }
+            }
+            return { name: item.name ?? '', damage, damageType };
+        }),
+    );
 }
 
 /**

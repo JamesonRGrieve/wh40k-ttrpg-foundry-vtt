@@ -76,6 +76,35 @@
                     <div class="tw-text-sm tw-text-[var(--wh40k-card-text)] tw-mt-2 tw-leading-snug">{{this.criticalEffect}}</div>
                 </div>
             {{/if}}
+
+            {{#if this.hasCriticalSideEffects}}
+                {{#with this.criticalSideEffects as |se|}}
+                    <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-[var(--wh40k-gold-bright)] tw-rounded-r-md">
+                        <div class="tw-font-display tw-text-xs tw-font-bold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-widest tw-mb-1.5">{{localize "WH40K.CriticalDamage.SideEffects.Title"}}</div>
+                        <ul class="tw-m-0 tw-pl-4 tw-text-sm tw-text-[var(--wh40k-card-text)] tw-leading-snug tw-list-disc">
+                            {{#if se.armourNegated}}<li>{{localize "WH40K.CriticalDamage.SideEffects.ArmourNegated"}}</li>{{/if}}
+                            {{#if se.unarmouredWorsens}}<li>{{localize "WH40K.CriticalDamage.SideEffects.UnarmouredWorsens"}}</li>{{/if}}
+                            {{#if se.helmetTornOff}}<li>{{localize "WH40K.CriticalDamage.SideEffects.HelmetTornOff"}}: <strong>{{se.helmetTornOff}}</strong></li>{{/if}}
+                            {{#if se.weaponBroken}}<li>{{localize "WH40K.CriticalDamage.SideEffects.WeaponDestroyed"}}: <strong>{{se.weaponBroken}}</strong></li>{{/if}}
+                            {{#if se.itemDropped}}<li>{{localize "WH40K.CriticalDamage.SideEffects.ItemDropped"}}: <strong>{{se.itemDropped}}</strong></li>{{/if}}
+                            {{#if se.munitions.length}}
+                                <li>
+                                    <span class="tw-font-semibold">{{localize "WH40K.CriticalDamage.SideEffects.MunitionsTitle"}}</span>
+                                    <ul class="tw-m-0 tw-pl-4 tw-list-[circle]">
+                                        {{#each se.munitions as |m|}}
+                                            {{#if m.damage}}
+                                                <li>{{localize "WH40K.CriticalDamage.SideEffects.MunitionDamage" name=m.name damage=m.damage type=m.damageType}}</li>
+                                            {{else}}
+                                                <li>{{localize "WH40K.CriticalDamage.SideEffects.MunitionGmResolve" name=m.name}}</li>
+                                            {{/if}}
+                                        {{/each}}
+                                    </ul>
+                                </li>
+                            {{/if}}
+                        </ul>
+                    </div>
+                {{/with}}
+            {{/if}}
         </div>
     </div>
 </div>
