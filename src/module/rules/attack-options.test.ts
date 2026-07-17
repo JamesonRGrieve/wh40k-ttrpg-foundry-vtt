@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from '../testing/repo-file.ts';
 import {
     aggregateSituationalDamageEffects,
     getSituationalModifiers,
@@ -127,5 +128,28 @@ describe('attack-mode ↔ combat-action modifier consistency (single source, #23
 
     it.each(allModes)('mode "$key" displays the same modifier its action ($actionName) applies', (mode) => {
         expect(mode.modifier, `${mode.key} → ${mode.actionName}`).toBe(actionModifier(mode.actionName));
+    });
+});
+
+describe('opposed melee manoeuvres routed through the #449 engine (#450)', () => {
+    const rollData = readRepoFile('src/module/rolls/roll-data.ts');
+    const actionData = readRepoFile('src/module/rolls/action-data.ts');
+
+    it('offers Manoeuvre and Disarm as melee special options', () => {
+        const keys = MELEE_SPECIAL_OPTIONS.map((o) => o.key);
+        expect(keys).toContain('manoeuvre');
+        expect(keys).toContain('disarm');
+    });
+
+    it('finalize marks Manoeuvre/Disarm opposed (vs WS) alongside Feint/Knock-Down', () => {
+        expect(rollData).toContain("this.isManoeuvre = this.action === 'Manoeuvre'");
+        expect(rollData).toContain("this.isDisarm = this.action === 'Disarm'");
+        expect(rollData).toContain('this.isOpposed = this.isKnockDown || this.isFeint || this.isManoeuvre || this.isDisarm');
+    });
+
+    it('resolves their effects, Disarm scaling by the #449 opposed margin', () => {
+        expect(actionData).toContain('weaponRollData.isManoeuvre');
+        expect(actionData).toContain('weaponRollData.isDisarm');
+        expect(actionData).toContain('this.rollData.opposedMargin >= 3');
     });
 });
