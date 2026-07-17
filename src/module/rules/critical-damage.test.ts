@@ -208,10 +208,29 @@ describe('classifyCriticalEffect (#108)', () => {
         expect(classifyCriticalEffect('The arm is torn off at the shoulder.').helmetTornOff).toBe(false);
     });
 
-    it('detects a helmet-gated decision tree (a worn helmet negates the ill effect)', () => {
-        const r = classifyCriticalEffect('If he is wearing a helmet, he suffers no ill effects; otherwise he suffers 1 level of Fatigue.');
-        expect(r.helmetNegates).toBe(true);
-        expect(r.fatigue).toBe(true); // the "otherwise" branch still flags fatigue; the applier gates it on the helmet
+    it('classifies a `negates` armour gate (worn armour cancels the row)', () => {
+        // Head phrasing: "wearing a helmet, he suffers no ill effects; otherwise …"
+        const head = classifyCriticalEffect('If he is wearing a helmet, he suffers no ill effects; otherwise he suffers 1 level of Fatigue.');
+        expect(head.armourGate).toBe('negates');
+        expect(head.fatigue).toBe(true); // the "otherwise" branch still flags fatigue; the applier gates it on armour
+        // Body phrasing (inverted): "not wearing armour … he suffers …; if wearing armour, there is no effect"
+        const body = classifyCriticalEffect(
+            'If the target is not wearing armour on this location, he suffers 1 level of Fatigue. If he is wearing armour, there is no effect.',
+        );
+        expect(body.armourGate).toBe('negates');
+    });
+
+    it('classifies a `worsensIfUnarmoured` gate (unarmoured location suffers extra)', () => {
+        const r = classifyCriticalEffect(
+            'The attack tears the helmet from his head. If he is not wearing a helmet, he instead loses an ear and is Deafened. The target is Stunned for 1d5 rounds.',
+        );
+        expect(r.armourGate).toBe('worsensIfUnarmoured');
+        expect(r.helmetTornOff).toBe(true);
+        expect(r.deafened).toBe(true);
+    });
+
+    it('leaves the armour gate at `none` when the row does not mention armour', () => {
+        expect(classifyCriticalEffect('The target is Stunned for 1 round and suffers Blood Loss.').armourGate).toBe('none');
     });
 
     it('detects a "drop held item" hand/arm crit', () => {
@@ -220,6 +239,20 @@ describe('classifyCriticalEffect (#108)', () => {
         expect(classifyCriticalEffect('The shock forces him to drop his weapon.').dropsHeldItem).toBe(true);
         // A crit that doesn't unhand anything is not flagged.
         expect(classifyCriticalEffect('The target is Stunned for 1 round.').dropsHeldItem).toBe(false);
+    });
+
+    it('detects a held weapon being destroyed / rendered useless', () => {
+        expect(classifyCriticalEffect('Anything he was carrying in that hand is destroyed.').weaponDestroyed).toBe(true);
+        expect(classifyCriticalEffect('Whatever he was holding is badly damaged and unusable until repaired.').weaponDestroyed).toBe(true);
+        // A plain drop is not a destruction.
+        expect(classifyCriticalEffect('He drops anything he was holding in that hand.').weaponDestroyed).toBe(false);
+    });
+
+    it('detects carried munitions cooking off (needs a munition noun AND a detonation verb)', () => {
+        expect(classifyCriticalEffect('If the target is carrying any ammunition, it explodes.').detonatesMunitions).toBe(true);
+        expect(classifyCriticalEffect('If the target is carrying any grenades or missiles, these detonate immediately.').detonatesMunitions).toBe(true);
+        // "explodes" without a munition noun (a body-part bursting) is not a cook-off.
+        expect(classifyCriticalEffect("The target's chest explodes outward, killing him.").detonatesMunitions).toBe(false);
     });
 
     it('detects Blinded / Deafened', () => {
@@ -385,8 +418,10 @@ describe('criticalRiderConditionIds (#108 — riders → condition registry ids)
         lostLimb: false,
         fatal: false,
         helmetTornOff: false,
-        helmetNegates: false,
+        armourGate: 'none',
         dropsHeldItem: false,
+        weaponDestroyed: false,
+        detonatesMunitions: false,
     };
 
     it('returns no ids when no riders fire', () => {

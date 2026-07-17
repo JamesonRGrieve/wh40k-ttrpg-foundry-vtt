@@ -1,5 +1,24 @@
 import { type CanonicalBodyPart, type CanonicalDamageType, normalizeBodyPart, normalizeDamageType } from './damage-type.ts';
 
+/**
+ * How a Critical Effects row's outcome is gated on armour worn at the struck
+ * location (core.md §"Critical Effects" decision-tree rows). Content-agnostic —
+ * derived from the row prose, not a hand-maintained per-row table.
+ *
+ * - `none`               — the row applies unconditionally.
+ * - `negates`            — worn armour at the location negates the row entirely
+ *                          ("If he is wearing a helmet, he suffers no ill
+ *                          effects"; "If he is wearing armour, there is no
+ *                          effect"). The applier skips the row when armoured.
+ * - `worsensIfUnarmoured` — an *unarmoured* location suffers extra harm the
+ *                          armoured one avoids ("If he is not wearing a helmet,
+ *                          the target instead loses an ear …"). The applier
+ *                          applies the row's conditions when unarmoured and, when
+ *                          armoured, surfaces the reduction for GM adjudication
+ *                          rather than auto-applying the harsher branch.
+ */
+type CriticalArmourGate = 'none' | 'negates' | 'worsensIfUnarmoured';
+
 interface CriticalDamageTable {
     [key: string]: {
         [key: string]: {
@@ -43,18 +62,36 @@ export interface CriticalDamageRiders {
      */
     readonly helmetTornOff: boolean;
     /**
-     * Row's ill effect is a decision tree gated on a helmet ("If he is wearing a
-     * helmet, he suffers no ill effects; otherwise …"): a worn helmet negates the
-     * row's other conditions. The applier skips this row's conditions when the
-     * target has an equipped helmet.
+     * How the row is gated on armour worn at the struck location — a decision
+     * tree ("If he is wearing a helmet/armour, he suffers no ill effects"; "If he
+     * is not wearing armour, he suffers …"). See {@link CriticalArmourGate}. The
+     * applier resolves the gate against the target's armour at the crit body-part
+     * (a helmet for Head hits, location armour otherwise).
      */
-    readonly helmetNegates: boolean;
+    readonly armourGate: CriticalArmourGate;
     /**
      * Row makes the target drop what it is holding ("Drop any item held in the
      * hand", "drops anything he was holding") — a hand/arm crit. The applier
      * unequips the target's held (equipped) weapon.
      */
     readonly dropsHeldItem: boolean;
+    /**
+     * Row destroys / renders useless what the target is holding ("anything he was
+     * carrying in that hand is destroyed", "badly damaged and unusable until
+     * repaired"). The applier marks the held weapon broken (reversible via a
+     * Tech-Use Repair) and unequips it. Supersedes {@link dropsHeldItem} on the
+     * same weapon.
+     */
+    readonly weaponDestroyed: boolean;
+    /**
+     * Row detonates the target's carried munitions ("If the target is carrying
+     * any ammunition, it explodes"; "any grenades or missiles … detonate
+     * immediately"). The applier finds carried grenades/ammunition, rolls each
+     * detonating grenade's own damage, and surfaces the secondary hits for the
+     * GM to distribute (blast radius / nearby targets need token positions the
+     * damage path does not have).
+     */
+    readonly detonatesMunitions: boolean;
 }
 
 /** Structured Critical Damage lookup result. */
@@ -83,8 +120,10 @@ const NO_RIDERS: CriticalDamageRiders = Object.freeze({
     lostLimb: false,
     fatal: false,
     helmetTornOff: false,
-    helmetNegates: false,
+    armourGate: 'none',
     dropsHeldItem: false,
+    weaponDestroyed: false,
+    detonatesMunitions: false,
 });
 
 const BURNING_KEYWORDS = ['catch fire', 'catches fire', 'on fire', 'immolate', 'burning'] as const;
@@ -125,9 +164,22 @@ const FATAL_KEYWORDS = [
 ] as const;
 
 /** A worn helmet is knocked/torn/blown off. Requires the word "helmet" to co-occur. */
-const HELMET_OFF_KEYWORDS = ['torn off', 'knocked off', 'knocks off', 'torn from', 'blown off', 'ripped off', 'knocked from'] as const;
-/** A worn helmet negates the row's ill effect ("wearing a helmet, he suffers no ill effects"). */
-const HELMET_NEGATES_KEYWORDS = ['no ill effect', 'suffers no', 'is protected', 'protects him'] as const;
+const HELMET_OFF_KEYWORDS = [
+    'torn off',
+    'knocked off',
+    'knocks off',
+    'torn from',
+    'blown off',
+    'ripped off',
+    'knocked from',
+    'from his head',
+    'from her head',
+    'from their head',
+] as const;
+/** The row negates its ill effect when the location is armoured ("wearing a helmet, he suffers no ill effects"). */
+const ARMOUR_NEGATE_KEYWORDS = ['no ill effect', 'no effect', 'suffers no', 'is protected', 'protects him', 'thanks the emperor'] as const;
+/** The row worsens for an unarmoured location ("if he is not wearing a helmet, …"). */
+const UNARMOURED_KEYWORDS = ['not wearing', 'no helmet', 'without a helmet', 'has no armour', 'unarmoured'] as const;
 /** The target drops what it is holding (a hand/arm crit). The applier unequips the held weapon. */
 const DROP_HELD_KEYWORDS = [
     'drop any item held',
@@ -142,9 +194,41 @@ const DROP_HELD_KEYWORDS = [
     'drop his weapon',
     'item held in the hand',
     'item held in that hand',
+    'releases anything he was holding',
 ] as const;
+/** The held item is destroyed / rendered unusable (stronger than a mere drop). */
+const WEAPON_DESTROYED_KEYWORDS = [
+    'is destroyed',
+    'are destroyed',
+    'was destroyed',
+    'badly damaged and unusable',
+    'unusable until repaired',
+    'damaged and unusable',
+] as const;
+/** Carried munitions cook off — needs a munition noun AND a detonation verb (below) to co-occur. */
+const MUNITION_NOUN_KEYWORDS = ['ammunition', 'ammo', 'grenade', 'missile'] as const;
+const DETONATION_VERB_KEYWORDS = ['detonate', 'explode'] as const;
 
 const anyKeyword = (haystack: string, needles: readonly string[]): boolean => needles.some((n) => haystack.includes(n));
+
+/**
+ * Derive the {@link CriticalArmourGate} for a row from its prose. A row that
+ * mentions a helmet/armour and states a no-effect outcome is `negates` (worn
+ * armour cancels it); a row that only mentions being *un*armoured worsening is
+ * `worsensIfUnarmoured`; otherwise `none`. Pure keyword co-occurrence — no
+ * per-row content table.
+ */
+function classifyArmourGate(t: string): CriticalArmourGate {
+    const mentionsArmour = t.includes('helmet') || t.includes('armour');
+    if (!mentionsArmour) return 'none';
+    // "…no effect / no ill effect / suffers no…" alongside an armour mention →
+    // worn armour negates the row (covers both "if wearing … no effect" and
+    // "if not wearing … he suffers …; if wearing … there is no effect").
+    if (anyKeyword(t, ARMOUR_NEGATE_KEYWORDS)) return 'negates';
+    // No negation clause, but an unarmoured location is called out as worse.
+    if (anyKeyword(t, UNARMOURED_KEYWORDS)) return 'worsensIfUnarmoured';
+    return 'none';
+}
 
 /**
  * Classify a Critical Effects row's prose into structured rider flags.
@@ -165,8 +249,10 @@ export function classifyCriticalEffect(effectText: string | null | undefined): C
         lostLimb: anyKeyword(t, LOST_LIMB_KEYWORDS),
         fatal: anyKeyword(t, FATAL_KEYWORDS),
         helmetTornOff: t.includes('helmet') && anyKeyword(t, HELMET_OFF_KEYWORDS),
-        helmetNegates: t.includes('wearing a helmet') && anyKeyword(t, HELMET_NEGATES_KEYWORDS),
+        armourGate: classifyArmourGate(t),
         dropsHeldItem: anyKeyword(t, DROP_HELD_KEYWORDS),
+        weaponDestroyed: anyKeyword(t, WEAPON_DESTROYED_KEYWORDS),
+        detonatesMunitions: anyKeyword(t, MUNITION_NOUN_KEYWORDS) && anyKeyword(t, DETONATION_VERB_KEYWORDS),
     });
 }
 

@@ -43,17 +43,25 @@ describe('active-effects condition registry', () => {
         expect(source).toContain('export async function handleBloodLoss');
     });
 
-    it('applyCriticalDamageConditions wires the helmet + drop-held decision trees', async () => {
+    it('applyCriticalDamageConditions wires the armour decision trees + physical side effects', async () => {
         const fs = await import('node:fs/promises');
         const path = await import('node:path');
         const source = await fs.readFile(path.resolve(process.cwd(), 'src/module/rules/active-effects.ts'), 'utf8');
-        // Helmet-gated negation short-circuits the whole row.
-        expect(source).toContain('record.riders.helmetNegates && hasHelmet');
-        // Both side-effect appliers unequip the affected item (reversible).
+        // `negates` gate short-circuits the whole row when the location is armoured.
+        expect(source).toContain("gate === 'negates' && locationArmoured");
+        // `worsensIfUnarmoured` gate withholds the harsher conditions when armoured.
+        expect(source).toContain("gate === 'worsensIfUnarmoured' && locationArmoured");
+        // The physical side-effect appliers.
         expect(source).toContain('record.riders.helmetTornOff');
+        expect(source).toContain('record.riders.weaponDestroyed');
         expect(source).toContain('record.riders.dropsHeldItem');
-        expect(source).toContain('function findEquippedHelmet');
+        expect(source).toContain('record.riders.detonatesMunitions');
+        // Per-location armour resolution + the finders.
+        expect(source).toContain('function findEquippedArmourAt');
         expect(source).toContain('function findEquippedWeapon');
+        expect(source).toContain('function detonateCarriedMunitions');
+        // Destroyed weapon is marked broken (reversible), dropped weapon just unequipped.
+        expect(source).toContain("'system.state.broken': true");
         expect(source).toContain("'system.state.equipped': false");
     });
 });

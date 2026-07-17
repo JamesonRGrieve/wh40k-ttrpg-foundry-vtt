@@ -1597,6 +1597,17 @@
                 "Fatigue": "Fatigue",
                 "LostLimb": "Lost Limb",
                 "Fatal": "Fatal"
+            },
+            "SideEffects": {
+                "Title": "Critical Side Effects",
+                "ArmourNegated": "Worn armour absorbed the effect — no additional harm.",
+                "UnarmouredWorsens": "Worn armour reduced the effect — GM adjudicates the lesser (armoured) outcome.",
+                "HelmetTornOff": "Helmet torn off",
+                "ItemDropped": "Dropped from hand",
+                "WeaponDestroyed": "Weapon destroyed — unusable until repaired",
+                "MunitionsTitle": "Carried munitions detonate!",
+                "MunitionDamage": "{name}: {damage} {type} damage — GM distributes the blast",
+                "MunitionGmResolve": "{name} detonates — GM resolves the blast per the effect text"
             }
         },
         "TwoWeaponWielder": {
