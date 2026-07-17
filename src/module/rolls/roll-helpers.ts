@@ -111,20 +111,6 @@ export function resolveGettersForTemplate(instance: object): Record<string, unkn
     return out;
 }
 
-export function getOpposedDegrees(dos: number, dof: number, opposedDos: number, opposedDof: number): number {
-    if (dos > 0) {
-        if (opposedDos > 0) {
-            return dos - opposedDos;
-        } else {
-            return dos + opposedDof;
-        }
-    } else if (opposedDos > 0) {
-        return -1 * (dof + opposedDos);
-    } else {
-        return -1 * (dof - opposedDof);
-    }
-}
-
 export async function roll1d100(): Promise<Roll> {
     const formula = '1d100';
     const roll = new Roll(formula, {});
