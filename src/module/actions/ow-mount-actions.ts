@@ -113,5 +113,5 @@ export async function owMountedAction(this: OwMountedActionContext, event: Event
     };
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: emitChatFromTemplate expects a Record<string, unknown> render context; the typed templateData literal is structurally compatible
-    await emitChatFromTemplate(CHAT_TEMPLATE, templateData as unknown as Record<string, unknown>, { speaker: { alias: this.actor.name }, applyWhispers: true });
+    await emitChatFromTemplate(CHAT_TEMPLATE, templateData, { speaker: { alias: this.actor.name }, applyWhispers: true });
 }

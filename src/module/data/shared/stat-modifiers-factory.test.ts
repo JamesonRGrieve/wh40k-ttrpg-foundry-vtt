@@ -42,16 +42,26 @@ describe('makeStatModifiers (#346)', () => {
 
     it('schema builds one integer NumberField per key inside a SchemaField', () => {
         // Recording stand-ins for the two field ctors schema() constructs.
+        interface FieldOptions {
+            required?: boolean;
+            initial?: number;
+            integer?: boolean;
+        }
         class RecNumberField {
-            constructor(readonly options: unknown) {}
+            constructor(readonly options: FieldOptions) {}
         }
         class RecSchemaField {
             constructor(readonly block: Record<string, RecNumberField>) {}
         }
-        const G = globalThis as { foundry?: unknown };
+        interface FoundryFieldGlobal {
+            foundry?: { data: { fields: { NumberField: typeof RecNumberField; SchemaField: typeof RecSchemaField } } } | undefined;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: install a typed field-ctor stub over the real Foundry global for this test
+        const G = globalThis as unknown as FoundryFieldGlobal;
         const originalFoundry = G.foundry;
         G.foundry = { data: { fields: { NumberField: RecNumberField, SchemaField: RecSchemaField } } };
         try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: schema() returns a Foundry SchemaField; read it through the recording stub installed above
             const result = makeStatModifiers(KEYS, 'WH40K.Test').schema() as unknown as RecSchemaField;
             expect(Object.keys(result.block)).toEqual([...KEYS]);
             for (const [, field] of Object.entries(result.block)) {

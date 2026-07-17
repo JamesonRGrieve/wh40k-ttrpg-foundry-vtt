@@ -227,11 +227,13 @@ export async function emitChatFromTemplate(template: string, data: Record<string
 /** Options for {@link postFlattenedInstanceToChat}. */
 interface PostInstanceOptions {
     /** Actor whose `system.gameSystem` pins the card's per-system theme (`_gameSystemId`). */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry actor handle, narrowed inside firstSystemId
     actor?: unknown;
     /** Rolls to attach to the posted message. */
     rolls?: Roll[] | undefined;
     /** Extra own-property patches merged onto the flattened context after
      * flattening (e.g. a nested pre-flattened `rollData`). */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: a pre-flattened Handlebars context bag, merged onto the template context as-is
     extraContext?: Record<string, unknown> | undefined;
 }
 

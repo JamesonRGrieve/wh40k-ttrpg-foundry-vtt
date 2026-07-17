@@ -64,10 +64,7 @@ export const CHARACTERISTICS: readonly CharacteristicDef[] = [
  * pass `false` — they carry no Influence characteristic. Runtime output is
  * byte-identical to each model's former hand-listed literal.
  */
-export function buildCharacteristicFields<F>(
-    fieldFn: (label: string, short: string) => F,
-    options: { includeInfluence?: boolean } = {},
-): Record<string, F> {
+export function buildCharacteristicFields<F>(fieldFn: (label: string, short: string) => F, options: { includeInfluence?: boolean } = {}): Record<string, F> {
     const { includeInfluence = true } = options;
     const block: Record<string, F> = {};
     for (const c of CHARACTERISTICS) {
