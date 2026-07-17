@@ -1,6 +1,5 @@
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.d.ts';
-import { firstSystemId } from '../utils/chat-system-id.ts';
-import { postChatCard, resolveGettersForTemplate, roll1d100 } from './roll-helpers.ts';
+import { postFlattenedInstanceToChat, roll1d100 } from './roll-helpers.ts';
 
 type ForceFieldItem = WH40KItemDocument & {
     system: WH40KItemDocument['system'] & {
@@ -58,9 +57,6 @@ export class ForceFieldData {
             })) as ForceFieldItem;
         }
 
-        const cardData = resolveGettersForTemplate(this);
-        cardData['_gameSystemId'] = firstSystemId(this.actor);
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs', cardData);
-        await postChatCard(html);
+        await postFlattenedInstanceToChat(this, 'systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs', { actor: this.actor });
     }
 }

@@ -8,9 +8,8 @@ import type AmmunitionData from '../data/item/ammunition.ts';
 import type WeaponData from '../data/item/weapon.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
-import { postChatCard } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { isActorInActiveCombat } from '../rules/combat-state.ts';
-import { firstSystemId } from '../utils/chat-system-id.ts';
 
 interface AmmunitionDataWithQuantity extends AmmunitionData {
     quantity?: number;
@@ -372,7 +371,6 @@ export class ReloadActionManager {
         const system = this.getWeaponSystem(weapon);
         const templateData = {
             actor: actor,
-            _gameSystemId: firstSystemId(actor),
             weapon: weapon,
             result: result,
             effectiveReloadTime: this.getEffectiveReloadTime(weapon),
@@ -382,11 +380,15 @@ export class ReloadActionManager {
             clipMax: system.effectiveClipMax,
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/reload-action-chat.hbs', templateData);
-
         // eslint-disable-next-line @typescript-eslint/no-deprecated -- Foundry V14 transition: CHAT_MESSAGE_TYPES still works while CHAT_MESSAGE_STYLES rolls out
         const messageType = CONST.CHAT_MESSAGE_TYPES.OTHER;
-        await postChatCard(html, { speaker: ChatMessage.getSpeaker({ actor }), type: messageType, flavor: `${weapon.name} - Reload` });
+        // `_gameSystemId` is derived by the helper from `templateData.actor` (#422).
+        await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/reload-action-chat.hbs', templateData, {
+            speaker: ChatMessage.getSpeaker({ actor }),
+            type: messageType,
+            flavor: `${weapon.name} - Reload`,
+            applyWhispers: true,
+        });
     }
 
     /**

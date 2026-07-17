@@ -33,7 +33,7 @@
 
 import type { ActiveOrderEntry } from '../data/actor/mixins/ow-orders-template.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
-import { postChatCard } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { GENERIC_ORDERS, canIssueOrder, type OrderDef, type OrderBlockReason } from '../rules/ow-orders.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 
@@ -148,6 +148,8 @@ export async function owIssueOrder(this: OwOrdersActionContext, event: Event, ta
 
     const templateData = {
         gameSystem: 'ow' as const,
+        // No attributed speaker on this card, so the helper cannot derive
+        // `_gameSystemId` — keep it set for per-system theming.
         _gameSystemId: firstSystemId(this.actor),
         orderId: order.id,
         orderNameKey,
@@ -159,6 +161,5 @@ export async function owIssueOrder(this: OwOrdersActionContext, event: Event, ta
         affectedMembers: [] as ReadonlyArray<{ id: string; name: string }>,
     };
 
-    const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ow-orders-chat.hbs', templateData);
-    await postChatCard(html);
+    await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/ow-orders-chat.hbs', templateData, { applyWhispers: true });
 }

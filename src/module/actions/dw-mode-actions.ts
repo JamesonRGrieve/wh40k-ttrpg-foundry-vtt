@@ -18,7 +18,7 @@
  * `WH40K.DW.Mode.*` keys in the langpack; no hard-coded English here.
  */
 
-import { postChatCard } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { enterSquadMode, leaveSquadMode, type DwMode } from '../rules/dw-squad-mode.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 
@@ -92,23 +92,27 @@ async function postModeTransitionChat(actor: DwModeActionThis['actor'], previous
     const previousModeKey = previous === 'squad' ? 'WH40K.DW.Mode.Squad' : 'WH40K.DW.Mode.Solo';
     const newModeKey = next === 'squad' ? 'WH40K.DW.Mode.Squad' : 'WH40K.DW.Mode.Solo';
 
-    const content = await foundry.applications.handlebars.renderTemplate(CHAT_PARTIAL, {
-        gameSystem: 'dw',
-        _gameSystemId: firstSystemId(actor),
-        actorName: actor.name ?? '',
-        previousMode: previous,
-        newMode: next,
-        previousModeKey,
-        newModeKey,
-        transitionMessageKey,
-        viaKey: next === 'squad' ? transitionMessageKey : '',
-        // Support-range readout is omitted from the chat card by
-        // default; the calling site can extend the context if a
-        // future story wants it surfaced. Keep the shape stable so
-        // the panel-side preload entry stays valid.
-        renownRankKey: '',
-        supportRange: null,
-    });
-
-    await postChatCard(content);
+    await emitChatFromTemplate(
+        CHAT_PARTIAL,
+        {
+            gameSystem: 'dw',
+            // No actor field or attributed speaker on this card, so the helper
+            // cannot derive `_gameSystemId` — keep it set for per-system theming.
+            _gameSystemId: firstSystemId(actor),
+            actorName: actor.name ?? '',
+            previousMode: previous,
+            newMode: next,
+            previousModeKey,
+            newModeKey,
+            transitionMessageKey,
+            viaKey: next === 'squad' ? transitionMessageKey : '',
+            // Support-range readout is omitted from the chat card by
+            // default; the calling site can extend the context if a
+            // future story wants it surfaced. Keep the shape stable so
+            // the panel-side preload entry stays valid.
+            renownRankKey: '',
+            supportRange: null,
+        },
+        { applyWhispers: true },
+    );
 }

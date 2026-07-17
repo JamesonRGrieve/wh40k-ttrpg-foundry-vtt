@@ -139,9 +139,47 @@ export async function postChatCard(
     // eslint-disable-next-line no-restricted-syntax -- boundary: speaker is an opaque Foundry ChatSpeaker bag passed straight through to ChatMessage.create
     opts: { rolls?: Roll[] | undefined; speaker?: unknown; rollMode?: string | undefined; flavor?: string | undefined; type?: number | undefined } = {},
 ): Promise<void> {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped payload; Record<string, unknown> is the correct boundary type
+    const chatData = buildChatPayload(content, { ...opts, applyWhispers: true });
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped Foundry payload
+    await ChatMessage.create(chatData);
+}
+
+/** Options controlling how {@link emitChatFromTemplate} builds its payload.
+ * Each field maps a chat key the prompt-dialog / rules / action-manager call
+ * sites set by hand; `user` defaults to the current user and `rollMode` to the
+ * `core.rollMode` world setting (see {@link buildChatPayload}). */
+export interface EmitChatOptions {
+    /** Posting user id (defaults to the current user). */
+    user?: string | undefined;
+    /** Opaque Foundry ChatSpeaker bag, included only when provided. */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: speaker is an opaque Foundry ChatSpeaker bag passed straight through to ChatMessage.create
+    speaker?: unknown;
+    /** Explicit rollMode; defaults to the `core.rollMode` world setting (as
+     * {@link postChatCard} does) so a routed manager keeps its whisper behavior. */
+    rollMode?: string | undefined;
+    /** When true, run {@link applyRollModeWhispers} after assembling the payload
+     * so a `gmroll` / `blindroll` / `selfroll` rollMode is honoured. */
+    applyWhispers?: boolean | undefined;
+    /** Rolls to attach to the message (dice-so-nice / roll plumbing). */
+    rolls?: Roll[] | undefined;
+    /** Flavor line rendered above the card content. */
+    flavor?: string | undefined;
+    /** Chat message type (a `CONST.CHAT_MESSAGE_TYPES` value). */
+    type?: number | undefined;
+}
+
+/**
+ * Assemble the standard `{ user, rollMode, content }` chat payload (plus the
+ * optional `speaker` / `rolls` / `flavor` / `type` keys), default `rollMode`
+ * to the `core.rollMode` world setting, and apply roll-mode whispers when
+ * requested. The single home of the payload shaping that {@link postChatCard}
+ * and {@link emitChatFromTemplate} previously duplicated (#368 P3).
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped Foundry payload; Record<string, unknown> is the correct boundary type
+function buildChatPayload(content: string, opts: EmitChatOptions): Record<string, unknown> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
     const chatData: Record<string, unknown> = {
-        user: game.user.id,
+        user: opts.user ?? game.user.id,
         rollMode: opts.rollMode ?? game.settings.get('core', 'rollMode'),
         content,
     };
@@ -149,25 +187,8 @@ export async function postChatCard(
     if (opts.speaker !== undefined) chatData['speaker'] = opts.speaker;
     if (opts.flavor !== undefined) chatData['flavor'] = opts.flavor;
     if (opts.type !== undefined) chatData['type'] = opts.type;
-    applyRollModeWhispers(chatData);
-    await ChatMessage.create(chatData);
-}
-
-/** Options controlling how {@link emitChatFromTemplate} builds its payload.
- * Each field maps a chat key the prompt-dialog / rules call sites set by hand;
- * defaults reproduce the bare `{ user: game.user.id, content }` public post. */
-export interface EmitChatOptions {
-    /** Posting user id (defaults to the current user). */
-    user?: string | undefined;
-    /** Opaque Foundry ChatSpeaker bag, included only when provided. */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: speaker is an opaque Foundry ChatSpeaker bag passed straight through to ChatMessage.create
-    speaker?: unknown;
-    /** Explicit rollMode; included in the payload only when provided (so the
-     * default public post carries no rollMode, matching the legacy call sites). */
-    rollMode?: string | undefined;
-    /** When true, run {@link applyRollModeWhispers} after assembling the payload
-     * so a `gmroll` / `blindroll` / `selfroll` rollMode is honoured. */
-    applyWhispers?: boolean | undefined;
+    if (opts.applyWhispers === true) applyRollModeWhispers(chatData);
+    return chatData;
 }
 
 /**
@@ -178,9 +199,10 @@ export interface EmitChatOptions {
  * eslint-disable). The boundary cast to `Parameters<typeof ChatMessage.create>[0]`
  * lives here once.
  *
- * Defaults reproduce the bare public post (`{ user: game.user.id, content }`);
- * pass `rollMode` / `applyWhispers` to honour whisper modes, or `speaker` to
- * attribute the message — so each call site keeps its exact prior intent.
+ * The payload is shaped by {@link buildChatPayload}: `user` defaults to the
+ * current user and `rollMode` to the `core.rollMode` world setting; pass
+ * `applyWhispers` to honour whisper modes, `speaker` to attribute the message,
+ * or `rolls` / `flavor` / `type` for the action-manager cards routed here (#368).
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload (Foundry framework type) — `data` is the untyped Handlebars context bag fed to renderTemplate then ChatMessage.create
 export async function emitChatFromTemplate(template: string, data: Record<string, unknown>, opts: EmitChatOptions = {}): Promise<void> {
@@ -197,35 +219,56 @@ export async function emitChatFromTemplate(template: string, data: Record<string
         if (systemId !== undefined) data['_gameSystemId'] = systemId;
     }
     const html = await foundry.applications.handlebars.renderTemplate(template, data);
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
-    const chatData: Record<string, unknown> = {
-        user: opts.user ?? game.user.id,
-        content: html,
-    };
-    if (opts.rollMode !== undefined) chatData['rollMode'] = opts.rollMode;
-    if (opts.speaker !== undefined) chatData['speaker'] = opts.speaker;
-    if (opts.applyWhispers === true) applyRollModeWhispers(chatData);
+    const chatData = buildChatPayload(html, opts);
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped Foundry payload
     await ChatMessage.create(chatData);
 }
 
+/** Options for {@link postFlattenedInstanceToChat}. */
+interface PostInstanceOptions {
+    /** Actor whose `system.gameSystem` pins the card's per-system theme (`_gameSystemId`). */
+    actor?: unknown;
+    /** Rolls to attach to the posted message. */
+    rolls?: Roll[] | undefined;
+    /** Extra own-property patches merged onto the flattened context after
+     * flattening (e.g. a nested pre-flattened `rollData`). */
+    extraContext?: Record<string, unknown> | undefined;
+}
+
+/**
+ * Flatten a runtime instance's getters into a Handlebars context, surface the
+ * card's per-system `_gameSystemId` from `opts.actor`, render `template`, and
+ * post the result. The single home of the `resolveGettersForTemplate → set
+ * _gameSystemId → renderTemplate → postChatCard` idiom that
+ * {@link sendActionDataToChat}, ForceFieldData, and AssignDamageData each
+ * re-implemented (#368).
+ */
+export async function postFlattenedInstanceToChat(instance: object, template: string, opts: PostInstanceOptions = {}): Promise<void> {
+    // Flatten own + inherited-getter values so Handlebars can read prototype
+    // getters (passing the live instance renders those fields blank — the
+    // proto-property guard). See {@link resolveGettersForTemplate}.
+    const context = resolveGettersForTemplate(instance);
+    if (opts.extraContext !== undefined) Object.assign(context, opts.extraContext);
+    // Surface the rolling actor's game system so `{{themeClassFor}}` resolves the
+    // per-system themed class from `@root._gameSystemId` on chat cards (rendered
+    // outside any sheet root) rather than falling back to the RT default (#422).
+    const systemId = firstSystemId(opts.actor);
+    if (systemId !== undefined) context['_gameSystemId'] = systemId;
+    const html = await foundry.applications.handlebars.renderTemplate(template, context);
+    await postChatCard(html, { rolls: opts.rolls });
+}
+
 export async function sendActionDataToChat(actionData: ActionData): Promise<void> {
-    // Flatten the ActionData + its RollData so Handlebars can read the
-    // prototype getters (modifiedTarget / name / activeModifiers / …); passing
-    // the live instances renders those fields blank (proto-property guard).
-    const context = resolveGettersForTemplate(actionData);
-    context['rollData'] = resolveGettersForTemplate(actionData.rollData);
-    // Surface the rolling actor's game system on the chat render context so the
-    // `{{themeClassFor}}` helper resolves the per-system themed class from
-    // `@root._gameSystemId` on chat cards (rendered outside any sheet root) rather
-    // than falling back to the RT default (#422).
-    const chatSystem = actionData.rollData.sourceActor?.system.gameSystem;
-    if (chatSystem !== undefined) context['_gameSystemId'] = chatSystem;
-    const html = await foundry.applications.handlebars.renderTemplate(actionData.template, context);
     const rollData = actionData.rollData as typeof actionData.rollData & { isManualRoll?: boolean };
     const roll = rollData.roll;
     const rolls = roll != null && rollData.isManualRoll !== true ? [roll] : undefined;
-    await postChatCard(html, { rolls });
+    // The ActionData's RollData is flattened separately and nested under `rollData`
+    // so the template can read its prototype getters too.
+    await postFlattenedInstanceToChat(actionData, actionData.template, {
+        actor: actionData.rollData.sourceActor,
+        rolls,
+        extraContext: { rollData: resolveGettersForTemplate(actionData.rollData) },
+    });
 }
 
 export function recursiveUpdate(targetObject: DotNotationTarget, updateObject: DotNotationTarget): void {
