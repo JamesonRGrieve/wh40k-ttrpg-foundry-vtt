@@ -5,6 +5,11 @@
 
 import type { ApplicationV2Ctor, FoundryApplicationApiLike } from './application-types.ts';
 
+/** A handle that may carry a game-system id, used to theme dialogs per system (#422). */
+interface SystemHandle {
+    system?: { gameSystem?: string };
+}
+
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped; cast required to reach api surface
 const applicationAPI = (foundry.applications as unknown as { api: FoundryApplicationApiLike }).api;
 // eslint-disable-next-line @typescript-eslint/unbound-method -- destructured from framework API object; used as a mixin factory, not as a method call
@@ -219,6 +224,30 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender context is the Foundry render object; Record<string,unknown> is the correct type at this API seam
         override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
+
+            // Surface the active game system on the app root so per-system Tailwind
+            // variants (`bc:`/`dh2:`/…) on dialogs/prompts — which render outside a
+            // sheet root — resolve via `[data-wh40k-system]`. Prefer the id already
+            // resolved into context (roll prompts), else probe the common actor /
+            // document handles. System-agnostic dialogs resolve to nothing and keep
+            // their base colour, which is the intended fallback (#422).
+            // eslint-disable-next-line no-restricted-syntax -- boundary: this.element / heterogeneous app handles are Foundry runtime properties not on ApplicationV2Ctor
+            const app = this as unknown as {
+                element: HTMLElement;
+                rollData?: { sourceActor?: SystemHandle; actor?: SystemHandle };
+                document?: SystemHandle;
+                actor?: SystemHandle;
+                object?: SystemHandle;
+            };
+            const fromContext = typeof context['_gameSystemId'] === 'string' ? context['_gameSystemId'] : undefined;
+            const systemId =
+                fromContext ??
+                app.rollData?.sourceActor?.system?.gameSystem ??
+                app.rollData?.actor?.system?.gameSystem ??
+                app.document?.system?.gameSystem ??
+                app.actor?.system?.gameSystem ??
+                app.object?.system?.gameSystem;
+            if (systemId !== undefined && systemId !== '') app.element.dataset['wh40kSystem'] = systemId;
 
             // Shared PARTS containers (for example the player-sheet sidebar)
             // can be replaced during later full renders, so rebuild them every
