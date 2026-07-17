@@ -874,6 +874,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
             // Equipment actions
             'toggleEquip': CharacterSheet.#toggleEquip,
+            'useItem': CharacterSheet.#useItem,
             'stowItem': CharacterSheet.#stowItem,
             'unstowItem': CharacterSheet.#unstowItem,
             'stowToShip': CharacterSheet.#stowToShip,
@@ -4111,6 +4112,21 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
+    /**
+     * Consume one use of a consumable / drug from the inventory (the Use button that
+     * sits beside the equip toggle). Delegates to the item's own `consume()` on the
+     * DataModel — which decrements uses, applies the dose's timed effects, and runs
+     * the addiction check (#457) — so a stimm can be used straight from the sheet.
+     */
+    static async #useItem(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const item = this._resolveItemFromTarget(target);
+        if (!item) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: consume() lives on the gear/consumable DataModel, not the shared item system union
+        const consume = (item.system as { consume?: () => Promise<unknown> }).consume;
+        if (typeof consume !== 'function') return;
+        await consume.call(item.system);
+    }
+
     static async #toggleEquip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const item = this._resolveItemFromTarget(target);
         if (!item) return;

@@ -81,6 +81,13 @@
                                         <i class="fas {{#if item.system.state.equipped}}fa-toggle-on{{else}}fa-toggle-off{{/if}} tw-text-[0.75rem]"></i>
                                     </button>
                                     {{/if}}
+                                    {{!-- Use button for consumables/drugs with a dose left — consume one
+                                         use straight from the inventory, mirroring the equip toggle. --}}
+                                    {{#if item.system.uses.max}}
+                                    <button type="button" class="tw-bg-transparent tw-border-none tw-p-0.5 tw-mr-1 {{#if item.system.uses.value}}tw-cursor-pointer tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-gold{{else}}tw-cursor-not-allowed tw-text-[color:var(--wh40k-text-muted)] tw-opacity-40{{/if}}" data-action="useItem" data-item-id="{{item.id}}" {{#unless item.system.uses.value}}disabled{{/unless}} title="{{localize 'WH40K.Gear.Consume'}} ({{item.system.uses.value}}/{{item.system.uses.max}})" aria-label="{{localize 'WH40K.Gear.Consume'}}">
+                                        <i class="fas fa-hand-holding-medical tw-text-[0.75rem]"></i>
+                                    </button>
+                                    {{/if}}
                                     <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-0.5 tw-mr-1 tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-gold" data-action="dropItem" data-item-id="{{item.id}}" title="{{localize 'WH40K.Loot.Drop'}}" aria-label="{{localize 'WH40K.Loot.Drop'}}">
                                         <i class="fas fa-arrow-down tw-text-[0.75rem]"></i>
                                     </button>
