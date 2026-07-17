@@ -26,7 +26,7 @@
         {{#if inEditMode}}
         {{> systems/wh40k-rpg/templates/item/partial/item-name-input.hbs placeholderKey="WH40K.OriginPath.NamePlaceholder"}}
         {{else}}
-        <h1 class="tw-font-display tw-text-xl tw-m-0 tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-p-1">{{item.name}}</h1>
+        <h1 class="tw-font-display tw-text-xl tw-m-0 tw-text-gold {{themeClassFor 'accent'}} tw-p-1">{{item.name}}</h1>
         {{/if}}
       </div>
 
@@ -45,7 +45,7 @@
       {{!-- Scalar fields (selects / checkboxes) --}}
       {{#each contentScalars}}
       <div class="tw-mb-3">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold {{themeClassFor 'accent'}}">
           <i class="fas fa-sliders tw-opacity-70"></i> {{localize this.labelKey}}
         </h3>
         <div class="tw-px-1">
@@ -75,7 +75,7 @@
 
       {{!-- Description --}}
       <div class="tw-mb-3">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold {{themeClassFor 'accent'}}">
           <i class="fas fa-book tw-opacity-70"></i> {{localize "WH40K.Item.Tabs.Description"}}
         </h3>
         <div class="tw-px-1">
@@ -90,7 +90,7 @@
       {{!-- Type-specific HTML fields --}}
       {{#each contentFields}}
       <div class="tw-mb-3">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold {{themeClassFor 'accent'}}">
           <i class="fas fa-bolt tw-opacity-70"></i> {{localize this.labelKey}}
         </h3>
         <div class="tw-px-1">
@@ -105,7 +105,7 @@
 
       {{!-- Notes --}}
       <div class="tw-mb-3">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold {{themeClassFor 'accent'}}">
           <i class="fas fa-sticky-note tw-opacity-70"></i> {{localize "WH40K.Item.Tabs.Notes"}}
         </h3>
         <div class="tw-px-1">
@@ -119,7 +119,7 @@
 
       {{!-- Modifiers --}}
       <div class="tw-mb-3">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold {{themeClassFor 'accent'}}">
           <i class="fas fa-chart-line tw-opacity-70"></i> {{localize "WH40K.Item.Tabs.Modifiers"}}
         </h3>
         <div class="tw-px-1">

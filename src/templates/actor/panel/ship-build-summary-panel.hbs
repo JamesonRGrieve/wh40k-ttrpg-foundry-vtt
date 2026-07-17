@@ -29,7 +29,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
     label=(localize "WH40K.Voidcraft.Build.SummaryHeader")
     rootClass="tw-col-span-6 wh40k-ship-build-summary-panel"
-    titleClass="tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"}}
+    titleClass="tw-text-gold {{themeClassFor 'accent'}}"}}
     <div class="tw-flex tw-flex-col tw-gap-2 tw-p-3" data-component="ship-build-summary">
         {{#if hasAppliedModifiers}}
             <ul class="wh40k-ship-build-summary__rows tw-flex tw-flex-col tw-gap-1">
@@ -48,7 +48,7 @@
                                         {{#if (gt row.modifier 0)}}+{{/if}}{{row.modifier}}
                                     </span>
                                     <span class="tw-opacity-40">=</span>
-                                    <span class="wh40k-ship-build-summary__total tw-text-lg tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"
+                                    <span class="wh40k-ship-build-summary__total tw-text-lg tw-font-semibold tw-text-gold {{themeClassFor 'accent'}}"
                                           data-field="total">{{row.total}}</span>
                                 </span>
                             </summary>

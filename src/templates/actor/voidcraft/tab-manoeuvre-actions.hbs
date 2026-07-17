@@ -1,7 +1,7 @@
 {{!-- Voidcraft Manoeuvre Actions Tab — issue #185 --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-hidden tw-flex-col tw-gap-3 tw-p-3 {{#if tab.active}}tw-flex{{/if}} tw-border-t tw-border-gold bc:tw-border-crimson-light dh1:tw-border-gold-raw-l5 dh2:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     <div class="wh40k-panel">
-        <h1 class="wh40k-panel-header tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{localize "WH40K.Voidcraft.ManoeuvreAction.Header"}}</h1>
+        <h1 class="wh40k-panel-header tw-text-gold {{themeClassFor 'accent'}}">{{localize "WH40K.Voidcraft.ManoeuvreAction.Header"}}</h1>
         <p class="tw-text-[0.85em] tw-text-[#4a3728] tw-px-3 tw-py-2 tw-opacity-80">{{localize "WH40K.Voidcraft.ManoeuvreAction.Description"}}</p>
 
         {{#if manoeuvreActions.length}}
