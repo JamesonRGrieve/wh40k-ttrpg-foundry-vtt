@@ -170,6 +170,27 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
 
         /* -------------------------------------------- */
 
+        /**
+         * Resolve the active game-system id for this sheet.
+         *
+         * Prefers `_gameSystemId` (set on the prototype by `makeSystemVariant()`
+         * — see actor/game-system-sheets.ts), falling back to the document's own
+         * `system.gameSystem` for sheets that don't go through the variant
+         * factory. Shared by `_prepareContext` (so `{{themeClassFor}}` can read
+         * `@root._gameSystemId`) and `_onRender` (so the `data-wh40k-system`
+         * ancestor lets `bc:`/`dh2:`/… variants resolve via CSS).
+         * @protected
+         */
+        _resolveGameSystemId(): string | undefined {
+            const sheetWithSystem = this as unknown as {
+                _gameSystemId?: string;
+                document?: { system?: { gameSystem?: string } };
+            };
+            return sheetWithSystem._gameSystemId ?? sheetWithSystem.document?.system?.gameSystem;
+        }
+
+        /* -------------------------------------------- */
+
         /** @inheritDoc */
         override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
@@ -178,6 +199,11 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
             context['locked'] = !this.isEditable;
             context['editable'] = this.isEditable && this._mode === PrimarySheetWH40K.MODES.EDIT;
             context['tabs'] = this._getTabs();
+            // Surface the active game-system id on the render context so the
+            // `{{themeClassFor}}` helper resolves the per-system themed class from
+            // `@root._gameSystemId` instead of falling back to the RT default.
+            const systemId = this._resolveGameSystemId();
+            if (systemId !== undefined && systemId !== '') context['_gameSystemId'] = systemId;
             return context;
         }
 
@@ -248,15 +274,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
             // Surface the active game-system id on the sheet root so per-system
             // Tailwind variants (`bc:`, `dh1:`, `dh2:`, `dw:`, `ow:`, `rt:`,
             // `im:`) can resolve via `[data-wh40k-system="<id>"] &`.
-            // `_gameSystemId` is set on the prototype by `makeSystemVariant()`
-            // (see actor/game-system-sheets.ts); fall back to the document's
-            // own `system.gameSystem` field for sheets that don't go through
-            // the variant factory.
-            const sheetWithSystem = this as unknown as {
-                _gameSystemId?: string;
-                document?: { system?: { gameSystem?: string } };
-            };
-            const systemId = sheetWithSystem._gameSystemId ?? sheetWithSystem.document?.system?.gameSystem;
+            const systemId = this._resolveGameSystemId();
             if (systemId !== undefined && systemId !== '') this.element.dataset['wh40kSystem'] = systemId;
 
             this._renderModeToggle();
