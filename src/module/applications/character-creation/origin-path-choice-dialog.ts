@@ -11,6 +11,7 @@ import { findSkillUuid } from '../../helpers/skill-uuid-helper.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applySystemDataset } from '../api/apply-system-dataset.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: foundry.applications is untyped; cast required to reach api surface */
@@ -464,6 +465,9 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender/Record<string,unknown> is the ApplicationV2 override signature
     override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
+
+        // #462: pair the context _gameSystemId with the ancestor stamp for per-system variants.
+        applySystemDataset(this.element, typeof context['_gameSystemId'] === 'string' ? context['_gameSystemId'] : undefined);
 
         // Restore scroll position after re-render
         if (this._savedScrollTop !== 0) {

@@ -20,6 +20,7 @@ import { t } from '../../i18n/t.ts';
 import type { ActionKind } from '../../rules/action-budget.ts';
 import { actionBudgetForActor, resetActionsForActor, spendActionForActor } from '../../rules/action-economy.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
+import { applySystemDataset } from '../api/apply-system-dataset.ts';
 import { buildReactionState, type ReactionState } from './reaction-state.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -448,6 +449,9 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
     override _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
+        // #462: pair the context _gameSystemId with the ancestor stamp so per-system
+        // inline variants resolve (ApplicationV2Mixin does this; this raw dialog must too).
+        applySystemDataset(this.element, typeof context['_gameSystemId'] === 'string' ? context['_gameSystemId'] : undefined);
         this._restorePosition();
         this._subscribeToActor();
         this._subscribeToCombat();

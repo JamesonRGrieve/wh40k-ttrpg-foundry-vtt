@@ -13,6 +13,7 @@ import {
     resolveAcquisitionTest,
 } from '../../rules/acquisition-scale.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
+import { applySystemDataset } from '../api/apply-system-dataset.ts';
 import DialogResolution from './dialog-resolution.ts';
 
 /**
@@ -272,6 +273,9 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /** @override */
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AcquisitionContext> {
         const context = (await super._prepareContext(options)) as AcquisitionContext;
+        // #462: raw-mixin dialog — surface the actor's system for the dialog's per-system
+        // {{themeClassFor}} (ApplicationV2Mixin would do this, but this extends the raw mixin).
+        context['_gameSystemId'] = firstSystemId(this.actor);
 
         // Profit Factor
         const pf = (this.actor.system as RogueTraderSystem).rogueTrader?.profitFactor ?? { current: 0, starting: 0 };
@@ -360,6 +364,15 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         context.recentAcquisitions = this._getRecentAcquisitions();
 
         return context;
+    }
+
+    /* -------------------------------------------- */
+
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender signature is framework-defined.
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        await super._onRender(context, options);
+        // #462: pair the context _gameSystemId with the ancestor stamp for per-system variants.
+        applySystemDataset(this.element, typeof context['_gameSystemId'] === 'string' ? context['_gameSystemId'] : undefined);
     }
 
     /* -------------------------------------------- */
