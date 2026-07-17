@@ -252,6 +252,12 @@ const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     barter: () => [GENERAL_SKILL_USE, contestUse('barter')],
     commerce: () => [GENERAL_SKILL_USE, contestUse('commerce')],
     gamble: () => [GENERAL_SKILL_USE, contestUse('gamble')],
+    // Pilot/Operate chase (#454): a high-speed pursuit or contest for position, opposed
+    // by the rival driver/pilot's same skill, through the #449 engine. The ship-scale
+    // Command contests (Boarding/Hit-and-Run/Disengage) already resolve opposed in the
+    // void-combat engine (#183/#188); this adds the actor-facing chase contest.
+    pilot: () => [GENERAL_SKILL_USE, contestUse('pilot')],
+    operate: () => [GENERAL_SKILL_USE, contestUse('operate')],
     // Opposed detection (#434): a hider vs an observer's Perception, a scanner vs the
     // hider's Agility, Scrutiny vs the mark's Fellowship (Deceive), a thief vs Perception.
     stealth: () => [GENERAL_SKILL_USE, detectionUse('Stealth', 'Per')],

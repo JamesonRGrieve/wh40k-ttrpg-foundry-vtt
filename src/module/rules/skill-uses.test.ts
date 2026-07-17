@@ -419,3 +419,15 @@ describe('opposed utility contests (#453)', () => {
         }
     });
 });
+
+describe('opposed pilot/operate chases (#454)', () => {
+    it('offers a same-skill opposed contest use on Pilot/Operate', () => {
+        for (const key of ['pilot', 'operate']) {
+            const ids = getSkillUses(key).map((u) => u.id);
+            expect(ids).toEqual(['general', 'contest']);
+            const use = getSkillUse(key, 'contest');
+            expect(use?.needsTarget).toBe(true);
+            expect(use?.opposedSkill).toBe(key);
+        }
+    });
+});
