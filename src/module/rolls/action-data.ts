@@ -917,6 +917,39 @@ export class SocialInfluenceActionData extends SimpleSkillData {
     }
 }
 
+/**
+ * An opposed utility contest (#453) — Barter/Commerce/Gamble resolved by out-rolling a
+ * rival at the SAME skill (opposedSkill), through the #449 engine. Reports the winner
+ * and degrees of victory; the degree-scaled reward (price %, the pot) is GM-adjudicated.
+ */
+export class ContestActionData extends SimpleSkillData {
+    readonly opposedSkill: string;
+
+    constructor(opposedSkill: string) {
+        super();
+        this.opposedSkill = opposedSkill;
+    }
+
+    override async checkForOpposed(): Promise<void> {
+        const target = this.rollData.targetActor;
+        if (target === null) return;
+        const rollCheck = (await target.rollSkillCheck(this.opposedSkill)) as { roll: Roll; dos: number; dof: number; success: boolean } | null;
+        if (rollCheck === null) return;
+        this.rollData.opposedRoll = rollCheck.roll;
+        this.rollData.opposedDos = rollCheck.dos;
+        this.rollData.opposedDof = rollCheck.dof;
+        this.applyOpposedResult({ success: rollCheck.success, dos: rollCheck.dos, dof: rollCheck.dof, roll: rollCheck.roll.total });
+    }
+
+    override async descriptionText(): Promise<void> {
+        const base = game.i18n.localize(this.rollData.success ? 'WH40K.SkillUse.Contest.Won' : 'WH40K.SkillUse.Contest.Lost');
+        const margin = this.rollData.opposedMargin;
+        const text = margin > 0 ? `${base} ${game.i18n.format('WH40K.Opposed.Margin', { margin: String(margin) })}` : base;
+        this.addEffect('Contest', text);
+        return Promise.resolve();
+    }
+}
+
 /** An item whose runtime state a skill use writes (#443/#444). */
 export interface StatefulItem {
     readonly id: string;

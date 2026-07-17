@@ -5,6 +5,7 @@ import {
     type ActionData,
     type ChemLike,
     ChemUseActionData,
+    ContestActionData,
     type CoatableWeapon,
     PalmActionData,
     ObjectStateActionData,
@@ -472,6 +473,27 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // Demolition (#445): pick the explosive to place or defuse before rolling.
         if (use.kind === 'placeCharge' || use.kind === 'defuse') {
             await this._rollDemolition(use, skillKey, skillLabel, targetValue, skillRank);
+            return true;
+        }
+        // Opposed utility contest (#453): out-roll a targeted rival at the same skill.
+        if (use.kind === 'contest' && use.opposedSkill !== undefined) {
+            const targetActor = firstTargetedActor();
+            if (targetActor === null) {
+                ui.notifications.warn(game.i18n.format('WH40K.SkillUse.NoTarget', { use: game.i18n.localize(use.labelKey) }));
+                return true;
+            }
+            const contest = new ContestActionData(use.opposedSkill);
+            this._buildSimpleSkillRoll({
+                key: skillKey,
+                type: 'skill',
+                label: `${skillLabel}: ${game.i18n.localize(use.labelKey)}`,
+                target: targetValue,
+                situationalKey: skillKey,
+                instance: contest,
+                ...(skillRank !== undefined ? { skillRank } : {}),
+            });
+            contest.rollData.targetActor = targetActor;
+            prepareUnifiedRoll(contest);
             return true;
         }
         if (use.needsTarget) {

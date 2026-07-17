@@ -46,7 +46,8 @@ export type SkillUseKind =
     | 'bypassLock'
     | 'placeCharge'
     | 'defuse'
-    | 'breakObject';
+    | 'breakObject'
+    | 'contest';
 
 /** One selectable use offered when rolling a skill. */
 export interface SkillUseDef {
@@ -164,6 +165,11 @@ function detectionUse(labelLeaf: string, opposedChar: string): SkillUseDef {
     return { id: 'detect', labelKey: `WH40K.SkillUse.Detection.${labelLeaf}`, needsTarget: true, difficultyMod: 0, kind: 'detect', opposedChar };
 }
 
+/** An opposed utility contest (#453) — out-roll a rival at the SAME skill (Barter/Gamble). */
+function contestUse(skillKey: string): SkillUseDef {
+    return { id: 'contest', labelKey: 'WH40K.SkillUse.Contest.Contest', needsTarget: true, difficultyMod: 0, kind: 'contest', opposedSkill: skillKey };
+}
+
 /**
  * A target-directed social-influence use (#433) — an opposed test that, on
  * success, may shift the target NPC's disposition (`dispositionDir`). Opposition
@@ -240,6 +246,12 @@ const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
         GENERAL_SKILL_USE,
         { id: 'breakObject', labelKey: 'WH40K.SkillUse.Object.Break', needsTarget: false, difficultyMod: 0, kind: 'breakObject' },
     ],
+    // Opposed utility/economy contests (#453): a haggle or a game of chance resolved by
+    // out-rolling a rival at the same skill. Reports the winner + degrees of victory
+    // through the #449 engine; the degree-scaled reward (price %, pot) is GM-adjudicated.
+    barter: () => [GENERAL_SKILL_USE, contestUse('barter')],
+    commerce: () => [GENERAL_SKILL_USE, contestUse('commerce')],
+    gamble: () => [GENERAL_SKILL_USE, contestUse('gamble')],
     // Opposed detection (#434): a hider vs an observer's Perception, a scanner vs the
     // hider's Agility, Scrutiny vs the mark's Fellowship (Deceive), a thief vs Perception.
     stealth: () => [GENERAL_SKILL_USE, detectionUse('Stealth', 'Per')],
