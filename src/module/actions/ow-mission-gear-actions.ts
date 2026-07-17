@@ -21,7 +21,7 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
-import { isD100Success, postChatCard, roll1d100 } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate, isD100Success, roll1d100 } from '../rolls/roll-helpers.ts';
 import { degreesOfFailure as diceDegreesOfFailure, degreesOfSuccess as diceDegreesOfSuccess } from '../rules/_dice.ts';
 import { type GearOutcome, ORDINARY_BONUS_KEY, applyTable63Modifiers, resolveGearOutcome, rollRandomIssueGear } from '../rules/ow-mission-gear.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
@@ -251,6 +251,8 @@ export async function owRequestGear(this: MissionGearActionHost, event: Event, _
 
     const templateData = {
         gameSystem: 'ow',
+        // No attributed speaker on this card, so the helper cannot derive
+        // `_gameSystemId` — keep it set for per-system theming.
         _gameSystemId: firstSystemId(this.actor),
         success,
         roll: rollTotal,
@@ -263,6 +265,5 @@ export async function owRequestGear(this: MissionGearActionHost, event: Event, _
         bonusItemRoll,
     };
 
-    const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ow-mission-gear-chat.hbs', templateData);
-    await postChatCard(html);
+    await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/ow-mission-gear-chat.hbs', templateData, { applyWhispers: true });
 }

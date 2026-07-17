@@ -37,7 +37,7 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
-import { postChatCard } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import {
     applyMedicaeAttempt,
     OW_COMRADE_AUTO_RECOVERY_DAYS,
@@ -47,7 +47,6 @@ import {
     tickComradeRecovery,
 } from '../rules/ow-comrade-healing.ts';
 import type { ComradeState } from '../rules/ow-comrade.ts';
-import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /**
  * Structural type the OW Comrade-Healing handlers expect. The
@@ -100,15 +99,14 @@ type ChatPayload = TickChatPayload | MedicaeChatPayload | ReplaceChatPayload;
 async function emitHealingChat(host: Host, event: ChatPayload): Promise<void> {
     const templateData = {
         gameSystem: 'ow',
-        _gameSystemId: firstSystemId(host.actor),
         actor: { name: host.actor.name },
         comradeName: host.actor.system.comrade.name || '—',
         event,
     };
-    const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ow-comrade-healing-chat.hbs', templateData);
     // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is assignment-compatible but getSpeaker expects the concrete Foundry Actor type
     const speaker = ChatMessage.getSpeaker({ actor: host.actor as unknown as WH40KBaseActor });
-    await postChatCard(html, { speaker });
+    // `_gameSystemId` is derived by the helper from the speaker's actor (#422).
+    await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/ow-comrade-healing-chat.hbs', templateData, { speaker, applyWhispers: true });
 }
 
 /* -------------------------------------------- */

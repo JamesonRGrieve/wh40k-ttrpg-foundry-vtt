@@ -32,7 +32,7 @@
 
 import type { MountedOnEntry } from '../data/actor/mixins/ow-mount-template.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
-import { postChatCard } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { getMountedAction, type MountedAction, type MountedActionId, type MountedActionTiming } from '../rules/ow-mount.ts';
 import type { I18nKey } from '../types/i18n-keys';
 import { firstSystemId } from '../utils/chat-system-id.ts';
@@ -102,6 +102,8 @@ export async function owMountedAction(this: OwMountedActionContext, event: Event
 
     const templateData = {
         gameSystem: 'ow' as const,
+        // Alias-only speaker (no actor id), so the helper cannot derive
+        // `_gameSystemId` — keep it set for per-system theming.
         _gameSystemId: firstSystemId(this.actor),
         actionId: action.id,
         actionNameKey: NAME_KEY[action.id],
@@ -110,7 +112,6 @@ export async function owMountedAction(this: OwMountedActionContext, event: Event
         mount,
     };
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate signature requires AnyObject; the templateData literal is structurally compatible
-    const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, templateData as unknown as Record<string, unknown>);
-    await postChatCard(html, { speaker: { alias: this.actor.name } });
+    // eslint-disable-next-line no-restricted-syntax -- boundary: emitChatFromTemplate expects a Record<string, unknown> render context; the typed templateData literal is structurally compatible
+    await emitChatFromTemplate(CHAT_TEMPLATE, templateData as unknown as Record<string, unknown>, { speaker: { alias: this.actor.name }, applyWhispers: true });
 }

@@ -93,6 +93,9 @@ describe('emitChatFromTemplate — the single-sourced template→ChatMessage idi
         rollMode?: string;
         speaker?: SpeakerStub;
         whisper?: string[];
+        rolls?: unknown[];
+        flavor?: string;
+        type?: number;
     }
 
     let chat: ChatRuntimeHandle;
@@ -122,15 +125,19 @@ describe('emitChatFromTemplate — the single-sourced template→ChatMessage idi
         expect(payload.content).toBe('<card tpl="systems/wh40k-rpg/templates/chat/example.hbs">{"foo":"bar","n":3}</card>');
     });
 
-    it('defaults to a bare public post — current user, no rollMode, no whisper', async () => {
+    it('defaults rollMode to the core world setting and adds no whisper', async () => {
+        // The runtime stub's `game.settings.get` returns 'roll' (public). The
+        // helper defaults rollMode to it (as postChatCard does) so a routed
+        // manager keeps its whisper behavior; with applyWhispers unset no
+        // whisper recipients are added (#368).
         await emitChatFromTemplate('tpl.hbs', {});
         const payload = lastPayload();
         expect(payload.user).toBe('gm-7');
-        expect(payload.rollMode).toBeUndefined();
+        expect(payload.rollMode).toBe('roll');
         expect(payload.whisper).toBeUndefined();
     });
 
-    it('includes an explicit rollMode and speaker only when provided', async () => {
+    it('includes an explicit rollMode and speaker when provided', async () => {
         const speaker = { actor: 'actor-1', alias: 'Brother Test' };
         await emitChatFromTemplate('tpl.hbs', {}, { rollMode: 'roll', speaker });
         const payload = lastPayload();
@@ -146,6 +153,27 @@ describe('emitChatFromTemplate — the single-sourced template→ChatMessage idi
         expect(payload.rollMode).toBe('gmroll');
         // The stub's getWhisperRecipients returns [], so the key is set to an array.
         expect(Array.isArray(payload.whisper)).toBe(true);
+    });
+
+    it('passes rolls / flavor / type through to the created message (#368)', async () => {
+        const rolls = [{ total: 42 }, { total: 7 }];
+        await emitChatFromTemplate('tpl.hbs', {}, { rolls, flavor: 'Bolt Pistol - Reload', type: 5 });
+        const payload = lastPayload();
+        expect(payload.rolls).toBe(rolls);
+        expect(payload.flavor).toBe('Bolt Pistol - Reload');
+        expect(payload.type).toBe(5);
+    });
+
+    it('derives _gameSystemId from the render data actor and surfaces it on the card (#422)', async () => {
+        await emitChatFromTemplate('tpl.hbs', { actor: { system: { gameSystem: 'dw' } } });
+        // The stub renderer JSON-dumps the context; the helper mutated the data
+        // to add `_gameSystemId` before render.
+        expect(lastPayload().content).toContain('"_gameSystemId":"dw"');
+    });
+
+    it('does not overwrite an explicit _gameSystemId already on the render data', async () => {
+        await emitChatFromTemplate('tpl.hbs', { _gameSystemId: 'ow', actor: { system: { gameSystem: 'dw' } } });
+        expect(lastPayload().content).toContain('"_gameSystemId":"ow"');
     });
 
     it('honours an explicit user override', async () => {

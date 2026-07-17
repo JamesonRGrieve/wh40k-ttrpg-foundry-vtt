@@ -3,7 +3,7 @@ import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-d
 import type { ActionData } from '../rolls/action-data.ts';
 import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';
 import { Hit } from '../rolls/damage-data.ts';
-import { uuid, postChatCard } from '../rolls/roll-helpers.ts';
+import { uuid, postChatCard, emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { actionBudgetForActor, spendActionForActor } from '../rules/action-economy.ts';
 import { ASSASSINS_STRIKE_TEST } from '../rules/assassins-strike.ts';
 import { weaponHasQuality } from '../rules/weapon-quality-effects.ts';
@@ -245,12 +245,14 @@ export class BasicActionManager {
             canReplaceDie: true,
             // eslint-disable-next-line no-restricted-syntax -- boundary: psychicEffect is a system extension not declared in ActionData type
             psychicEffect: (actionData as unknown as { psychicEffect?: unknown }).psychicEffect ?? null,
+            // `templateData` carries no `actor`/`sourceActor` key and no speaker,
+            // so the helper cannot derive `_gameSystemId` — keep it set from the
+            // rolling actor for per-system theming (#422).
             _gameSystemId: firstSystemId(actionData.rollData.sourceActor),
         };
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
-        const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
-        await postChatCard(html, { rolls: damageRolls });
+        await emitChatFromTemplate(template, templateData, { rolls: damageRolls, applyWhispers: true });
     }
 
     /**
@@ -759,8 +761,8 @@ export class BasicActionManager {
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: caller-supplied vocalize payload is untyped; Record<string, unknown> is the correct boundary type
     async sendItemVocalizeChat(data: Record<string, unknown>): Promise<void> {
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
-        await postChatCard(html);
+        // Callers set `_gameSystemId` on `data`, so the helper keeps it (#422).
+        await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data, { applyWhispers: true });
     }
 }
 

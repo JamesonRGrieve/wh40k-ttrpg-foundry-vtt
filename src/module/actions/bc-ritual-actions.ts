@@ -29,9 +29,8 @@
  */
 
 import type { BcRitualDeclarations } from '../data/actor/mixins/bc-ritual-template.ts';
-import { postChatCard, roll1d100 } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate, roll1d100 } from '../rolls/roll-helpers.ts';
 import { computeRitualTarget, resolveContemptOfTheWarp, type RitualModifier, type RitualModifierKind, type RitualTemplate } from '../rules/bc-chaos-ritual.ts';
-import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /* -------------------------------------------- */
 /*  Structural sheet contract                   */
@@ -265,21 +264,23 @@ export async function bcPerformRitual(this: BcRitualSheetLike, _event: Event, _t
 
     const outcome = resolveContemptOfTheWarp({ target: composed.target, roll: rolled });
 
-    const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/bc-ritual-chat.hbs', {
-        gameSystem: 'bc',
-        _gameSystemId: firstSystemId(this.actor),
-        templateId: inputs.templateId,
-        baseTarget: inputs.baseTarget,
-        modifierSum,
-        finalTarget: composed.target,
-        roll: rolled,
-        success: outcome.success,
-        degreesOfSuccess: outcome.degreesOfSuccess,
-        degreesOfFailure: outcome.degreesOfFailure,
-        breakdown: shapeBreakdown(composed.breakdown),
-    });
-
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker takes WH40KBaseActor; our typed Actor subtype union is structurally compatible
     const speakerActor = this.actor as unknown as Parameters<typeof ChatMessage.getSpeaker>[0];
-    await postChatCard(content, { speaker: ChatMessage.getSpeaker(speakerActor), rolls: [roll] });
+    // `_gameSystemId` is derived by the helper from the speaker's actor (#422).
+    await emitChatFromTemplate(
+        'systems/wh40k-rpg/templates/chat/bc-ritual-chat.hbs',
+        {
+            gameSystem: 'bc',
+            templateId: inputs.templateId,
+            baseTarget: inputs.baseTarget,
+            modifierSum,
+            finalTarget: composed.target,
+            roll: rolled,
+            success: outcome.success,
+            degreesOfSuccess: outcome.degreesOfSuccess,
+            degreesOfFailure: outcome.degreesOfFailure,
+            breakdown: shapeBreakdown(composed.breakdown),
+        },
+        { speaker: ChatMessage.getSpeaker(speakerActor), rolls: [roll], applyWhispers: true },
+    );
 }

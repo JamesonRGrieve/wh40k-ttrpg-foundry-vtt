@@ -23,10 +23,9 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
-import { postChatCard } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { canRequisition, type RenownRank } from '../rules/dw-renown.ts';
 import { type Craftsmanship, type PooledContribution, canActorRequisition, canPoolRequisition, computeItemCost } from '../rules/dw-requisition.ts';
-import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /** Minimal action-handler `this` binding. The character sheet supplies a richer shape; only `actor` is consumed. */
 export interface DwRequisitionActionContext {
@@ -231,7 +230,6 @@ async function emitChatCard(
     const craftsmanshipKey = `WH40K.DW.Requisition.Craftsmanship.${payload.craftsmanship.charAt(0).toUpperCase()}${payload.craftsmanship.slice(1)}`;
     const templateData = {
         gameSystem: 'dw' as const,
-        _gameSystemId: firstSystemId(actor),
         mode: payload.mode,
         actorName: actor.name,
         itemName: payload.itemName,
@@ -243,8 +241,11 @@ async function emitChatCard(
         totalContributed: payload.totalContributed ?? 0,
     };
     try {
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/dw-requisition-chat.hbs', templateData);
-        await postChatCard(html, { speaker: ChatMessage.getSpeaker({ actor }) });
+        // `_gameSystemId` is derived by the helper from the speaker's actor (#422).
+        await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/dw-requisition-chat.hbs', templateData, {
+            speaker: ChatMessage.getSpeaker({ actor }),
+            applyWhispers: true,
+        });
     } catch (error) {
         console.error('DW requisition chat-card emission failed:', error);
     }

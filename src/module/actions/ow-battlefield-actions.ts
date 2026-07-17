@@ -28,10 +28,9 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
-import { postChatCard } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { applySupportCooldown, requestSupport, type SupportAssetDef, type SupportAssetKind } from '../rules/ow-battlefield-support.ts';
 import type { I18nKey } from '../types/i18n-keys';
-import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /**
  * Structural type the OW Battlefield handlers expect. The character
@@ -179,15 +178,14 @@ type ChatPayload = RequestChatPayload | AwardChatPayload;
 async function emitBattlefieldChat(host: Host, event: ChatPayload): Promise<void> {
     const templateData = {
         gameSystem: 'ow' as const,
-        _gameSystemId: firstSystemId(host.actor),
         actor: { name: host.actor.name },
         event,
     };
-    // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate expects AnyObject; templateData is structurally compatible
-    const html = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, templateData as unknown as Record<string, unknown>);
     // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is assignment-compatible but getSpeaker expects the concrete Foundry Actor type
     const speaker = ChatMessage.getSpeaker({ actor: host.actor as unknown as WH40KBaseActor });
-    await postChatCard(html, { speaker });
+    // `_gameSystemId` is derived by the helper from the speaker's actor (#422).
+    // eslint-disable-next-line no-restricted-syntax -- boundary: emitChatFromTemplate expects a Record<string, unknown> render context; the typed templateData literal is structurally compatible
+    await emitChatFromTemplate(CHAT_TEMPLATE, templateData as unknown as Record<string, unknown>, { speaker, applyWhispers: true });
 }
 
 /* -------------------------------------------- */

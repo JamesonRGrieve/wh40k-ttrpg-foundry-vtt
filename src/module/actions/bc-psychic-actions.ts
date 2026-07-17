@@ -26,9 +26,8 @@
  */
 
 import type { BcPsychicDeclarations } from '../data/actor/mixins/bc-psychic-template.ts';
-import { postChatCard } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { maxPushLevel, resolvePsychicTest, type PsyMode, type PsykerClass } from '../rules/bc-psychic-strength.ts';
-import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /* -------------------------------------------- */
 /*  Structural sheet contract                   */
@@ -184,23 +183,25 @@ export async function bcPsychicTest(this: BcPsychicSheetLike, _event: Event, _ta
 
     const clampedPushLevel = inputs.mode === 'push' ? Math.min(Math.max(0, inputs.pushLevel), maxPushLevel(psykerClass)) : 0;
 
-    const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/bc-psychic-test-chat.hbs', {
-        gameSystem: 'bc',
-        _gameSystemId: firstSystemId(this.actor),
-        psykerClass,
-        mode: inputs.mode,
-        classLabelKey: CLASS_LABEL_KEYS[psykerClass],
-        modeLabelKey: MODE_LABEL_KEYS[inputs.mode],
-        basePR,
-        pushLevel: clampedPushLevel,
-        maxPushLevel: maxPushLevel(psykerClass),
-        showPushLevel: inputs.mode === 'push',
-        effectivePR: resolved.effectivePR,
-        sustainPenalty: resolved.sustainPenalty,
-        phenomenaRolls: resolved.phenomenaRolls,
-    });
-
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker takes WH40KBaseActor; our typed Actor subtype union is structurally compatible
     const speakerActor = this.actor as unknown as Parameters<typeof ChatMessage.getSpeaker>[0];
-    await postChatCard(content, { speaker: ChatMessage.getSpeaker(speakerActor) });
+    // `_gameSystemId` is derived by the helper from the speaker's actor (#422).
+    await emitChatFromTemplate(
+        'systems/wh40k-rpg/templates/chat/bc-psychic-test-chat.hbs',
+        {
+            gameSystem: 'bc',
+            psykerClass,
+            mode: inputs.mode,
+            classLabelKey: CLASS_LABEL_KEYS[psykerClass],
+            modeLabelKey: MODE_LABEL_KEYS[inputs.mode],
+            basePR,
+            pushLevel: clampedPushLevel,
+            maxPushLevel: maxPushLevel(psykerClass),
+            showPushLevel: inputs.mode === 'push',
+            effectivePR: resolved.effectivePR,
+            sustainPenalty: resolved.sustainPenalty,
+            phenomenaRolls: resolved.phenomenaRolls,
+        },
+        { speaker: ChatMessage.getSpeaker(speakerActor), applyWhispers: true },
+    );
 }
