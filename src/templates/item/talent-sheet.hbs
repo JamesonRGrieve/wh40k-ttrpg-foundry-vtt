@@ -3,6 +3,10 @@
   Modern tabbed interface with translucent gothic styling
   Font Awesome 6 Pro icons throughout
 --}}
+{{!-- Section-header shell reused across every tab panel (#471). Body content is
+     delivered through the partial-block slot; the gold/accent treatment is
+     applied uniformly (previously only the first "Benefit" header carried it). --}}
+{{#*inline "talentSectionHeader"}}<h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)] tw-text-gold {{themeClassFor 'accent'}}">{{> @partial-block}}</h3>{{/inline}}
 <div class="tw-flex tw-flex-col tw-h-full">
 
     {{!-- ═══════════════════════════════════════════════════════════════════
@@ -181,28 +185,11 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="tabs wh40k-tabs tw-flex tw-flex-shrink-0 tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)]" data-group="primary">
-      <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab "overview")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
-              data-tab="overview" data-group="primary">
-        <i class="fa-solid fa-eye tw-text-[0.9rem]"></i>
-        <span>Overview</span>
-      </button>
-      <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab "effects")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
-              data-tab="effects" data-group="primary">
-        <i class="fa-solid fa-wand-magic-sparkles tw-text-[0.9rem]"></i>
-        <span>Effects</span>
-      </button>
-      <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab "properties")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
-              data-tab="properties" data-group="primary">
-        <i class="fa-solid fa-sliders tw-text-[0.9rem]"></i>
-        <span>Properties</span>
-      </button>
-      <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab "description")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
-              data-tab="description" data-group="primary">
-        <i class="fa-solid fa-book tw-text-[0.9rem]"></i>
-        <span>Description</span>
-      </button>
-    </nav>
+    {{> systems/wh40k-rpg/templates/item/partial/item-accent-tab-strip.hbs category="talents" tabs=(array
+        (object tab="overview"    label="Overview"    icon="fa-eye"                 active=(eq activeTab "overview"))
+        (object tab="effects"     label="Effects"     icon="fa-wand-magic-sparkles" active=(eq activeTab "effects"))
+        (object tab="properties"  label="Properties"  icon="fa-sliders"             active=(eq activeTab "properties"))
+        (object tab="description" label="Description"  icon="fa-book"                active=(eq activeTab "description")))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
@@ -216,7 +203,7 @@
 
         {{!-- Benefit Section (Editable with hover button) --}}
         <div class="{{#if inEditMode}}tw-ring-1 tw-ring-[color:var(--wh40k-accent-gold)]{{/if}}">
-          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)] tw-text-gold {{themeClassFor 'accent'}}">
+          {{#> talentSectionHeader}}
             <i class="fa-solid fa-star"></i>
             Benefit
             {{#if canEdit}}
@@ -226,7 +213,7 @@
             {{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs action="toggleEditMode" icon="fa-check" title="Done Editing"}}
             {{/unless}}
             {{/if}}
-          </h3>
+          {{/talentSectionHeader}}
           <div >
             {{#if inEditMode}}
             <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
@@ -249,7 +236,7 @@
 
         {{!-- Special Abilities Section --}}
         <div >
-          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+          {{#> talentSectionHeader}}
             <i class="fa-solid fa-bolt-lightning"></i>
             Special Abilities
             {{#if inEditMode}}
@@ -257,7 +244,7 @@
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {{/if}}
-          </h3>
+          {{/talentSectionHeader}}
           <div >
             {{#if grantsData.hasSpecialAbilities}}
             <div class="tw-flex tw-flex-col tw-gap-2">
@@ -296,10 +283,10 @@
 
         {{!-- Basic Properties --}}
         <div >
-          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+          {{#> talentSectionHeader}}
             <i class="fa-solid fa-cog"></i>
             Basic Properties
-          </h3>
+          {{/talentSectionHeader}}
           <div >
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               {{!-- Category --}}
@@ -422,10 +409,10 @@
 
         {{!-- Specialization (with Has Specialization checkbox) --}}
         <div >
-          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+          {{#> talentSectionHeader}}
             <i class="fa-solid fa-bullseye"></i>
             Specialization (X)
-          </h3>
+          {{/talentSectionHeader}}
           <div >
             {{#if inEditMode}}
             <div class="tw-flex tw-flex-col tw-gap-2">
@@ -458,7 +445,7 @@
 
         {{!-- Prerequisites --}}
         <div >
-          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+          {{#> talentSectionHeader}}
             <i class="fa-solid fa-lock"></i>
             Prerequisites
             {{#if inEditMode}}
@@ -466,7 +453,7 @@
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {{/if}}
-          </h3>
+          {{/talentSectionHeader}}
           <div >
             {{#if prerequisitesData.hasAny}}
             <div class="tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md">
@@ -518,10 +505,10 @@
         {{!-- Roll Configuration (if active talent) --}}
         {{#unless talentData.isPassive}}
         <div >
-          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+          {{#> talentSectionHeader}}
             <i class="fa-solid fa-dice-d20"></i>
             Roll Configuration
-          </h3>
+          {{/talentSectionHeader}}
           <div >
             {{#if inEditMode}}
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
@@ -597,7 +584,7 @@
 
         {{!-- Permanent Modifiers --}}
         <div  data-section-id="modifiers" data-has-data="{{modifiersData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "modifiers")}}{{@index}}{{/if}}{{/each}}">
-          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+          {{#> talentSectionHeader}}
             <i class="fa-solid fa-chart-line"></i>
             Permanent Modifiers
             {{#if inEditMode}}
@@ -605,7 +592,7 @@
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {{/if}}
-          </h3>
+          {{/talentSectionHeader}}
           <div >
             {{#if modifiersData.hasAny}}
             <p class="tw-flex tw-items-center tw-gap-1">
@@ -731,7 +718,7 @@
 
         {{!-- Situational Modifiers --}}
         <div  data-section-id="situational" data-has-data="{{situationalData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "situational")}}{{@index}}{{/if}}{{/each}}">
-          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+          {{#> talentSectionHeader}}
             <i class="fa-solid fa-clock-rotate-left"></i>
             Situational Modifiers
             {{#if inEditMode}}
@@ -739,7 +726,7 @@
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {{/if}}
-          </h3>
+          {{/talentSectionHeader}}
           <div >
             {{#if situationalData.hasAny}}
             <p class="tw-flex tw-items-center tw-gap-1">
@@ -802,7 +789,7 @@
 
         {{!-- Grants Section --}}
         <div  data-section-id="grants" data-has-data="{{grantsData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "grants")}}{{@index}}{{/if}}{{/each}}">
-          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+          {{#> talentSectionHeader}}
             <i class="fa-solid fa-gift"></i>
             Grants
             {{#if inEditMode}}
@@ -810,7 +797,7 @@
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {{/if}}
-          </h3>
+          {{/talentSectionHeader}}
           <div >
             {{#if grantsData.hasAny}}
             <p class="tw-flex tw-items-center tw-gap-1">
@@ -909,7 +896,7 @@
 
         {{!-- Benefit (Editable with hover button) --}}
         <div class="{{#if inEditMode}}tw-ring-1 tw-ring-[color:var(--wh40k-accent-gold)]{{/if}}">
-          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+          {{#> talentSectionHeader}}
             <i class="fa-solid fa-star"></i>
             Benefit
             {{#if canEdit}}
@@ -919,7 +906,7 @@
             {{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs action="toggleEditMode" icon="fa-check" title="Done Editing"}}
             {{/unless}}
             {{/if}}
-          </h3>
+          {{/talentSectionHeader}}
           <div >
             {{#if inEditMode}}
             <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
@@ -942,10 +929,10 @@
 
         {{!-- Notes --}}
         <div >
-          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+          {{#> talentSectionHeader}}
             <i class="fa-solid fa-sticky-note"></i>
             Notes
-          </h3>
+          {{/talentSectionHeader}}
           <div >
             {{#if inEditMode}}
             <textarea name="system.notes" rows="4" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm tw-min-h-[80px] tw-resize-y focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]"
@@ -966,10 +953,10 @@
         {{!-- Identifier (for developers) --}}
         {{#if inEditMode}}
         <div >
-          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+          {{#> talentSectionHeader}}
             <i class="fa-solid fa-code"></i>
             Technical
-          </h3>
+          {{/talentSectionHeader}}
           <div >
             <div class="tw-flex tw-flex-col tw-gap-1.5">
               <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Identifier <span >(for macros/scripts)</span></label>

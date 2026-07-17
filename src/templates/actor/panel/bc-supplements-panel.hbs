@@ -85,18 +85,14 @@
             <div class="wh40k-bc-quick-and-the-dead-readout tw-grid tw-grid-cols-2 tw-gap-1 tw-mt-1">
                 <div class="wh40k-bc-quick-and-the-dead-bonus tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                      data-alignment-bonus="{{supplementsPanel.quickAndTheDeadBonus}}">
-                    <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                        {{localize "WH40K.BC.Supplements.QuickAndTheDead.AlignmentBonusLabel"}}
-                    </span>
+                    {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Supplements.QuickAndTheDead.AlignmentBonusLabel"}}
                     <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
                         +{{supplementsPanel.quickAndTheDeadBonus}}
                     </span>
                 </div>
                 <div class="wh40k-bc-quick-and-the-dead-initiative tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                      data-initiative="{{supplementsPanel.quickAndTheDeadInitiative}}">
-                    <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                        {{localize "WH40K.BC.Supplements.QuickAndTheDead.InitiativeLabel"}}
-                    </span>
+                    {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Supplements.QuickAndTheDead.InitiativeLabel"}}
                     <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
                         {{supplementsPanel.quickAndTheDeadInitiative}}
                     </span>

@@ -43,9 +43,7 @@
                         <span class="wh40k-ow-vehicle-movement-effect tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
                             {{localize this.descriptionKey}}
                         </span>
-                        <span class="wh40k-ow-vehicle-movement-cost tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] ow:tw-text-brass">
-                            {{localize this.timingKey}}
-                        </span>
+                        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" rootClass="wh40k-ow-vehicle-movement-cost ow:tw-text-brass" labelKey=this.timingKey}}
                     </div>
                     <button type="button"
                             class="wh40k-ow-vehicle-movement-issue-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-brass hover:tw-bg-brass hover:tw-text-black"

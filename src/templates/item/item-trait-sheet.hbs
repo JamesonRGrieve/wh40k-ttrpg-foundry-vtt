@@ -97,20 +97,10 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="tw-flex tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)] tw-shrink-0" data-group="primary">
-      <button type="button" class="wh40k-tab active tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-[var(--wh40k-traits-bg)] tw-border-0 tw-border-b-[3px] tw-border-b-[color:var(--wh40k-traits-primary)] tw-text-sm tw-font-medium tw-text-[color:var(--wh40k-traits-primary)] tw-cursor-pointer" data-tab="properties" data-group="primary">
-        <i class="fas fa-cog tw-text-[0.9rem]"></i>
-        <span>Properties</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-sm tw-font-medium tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="effects" data-group="primary">
-        <i class="fas fa-magic tw-text-[0.9rem]"></i>
-        <span>Effects</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-sm tw-font-medium tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="description" data-group="primary">
-        <i class="fas fa-book tw-text-[0.9rem]"></i>
-        <span>Description</span>
-      </button>
-    </nav>
+    {{> systems/wh40k-rpg/templates/item/partial/item-accent-tab-strip.hbs category="traits" tabs=(array
+        (object tab="properties"  label="Properties"  icon="fa-cog"   active=true)
+        (object tab="effects"     label="Effects"     icon="fa-magic" active=false)
+        (object tab="description" label="Description"  icon="fa-book"  active=false))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
