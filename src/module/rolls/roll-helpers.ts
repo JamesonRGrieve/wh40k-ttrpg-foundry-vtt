@@ -1,3 +1,4 @@
+import { firstSystemId } from '../utils/chat-system-id.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { ActionData } from './action-data.ts';
 
@@ -201,6 +202,18 @@ export interface EmitChatOptions {
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload (Foundry framework type) — `data` is the untyped Handlebars context bag fed to renderTemplate then ChatMessage.create
 export async function emitChatFromTemplate(template: string, data: Record<string, unknown>, opts: EmitChatOptions = {}): Promise<void> {
+    // Surface the speaking actor's game system so the chat card's `{{themeClassFor}}`
+    // resolves per-system from `@root._gameSystemId` (cards render outside a sheet
+    // root). Probe the render data first, then the speaker's actor (#422).
+    if (data['_gameSystemId'] === undefined) {
+        const speakerActor =
+            opts.speaker !== undefined
+                ? // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeakerActor takes an opaque Foundry ChatSpeaker bag
+                  ChatMessage.getSpeakerActor(opts.speaker as Parameters<typeof ChatMessage.getSpeakerActor>[0])
+                : null;
+        const systemId = firstSystemId(data['actor'], data['sourceActor'], speakerActor);
+        if (systemId !== undefined) data['_gameSystemId'] = systemId;
+    }
     const html = await foundry.applications.handlebars.renderTemplate(template, data);
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
     const chatData: Record<string, unknown> = {

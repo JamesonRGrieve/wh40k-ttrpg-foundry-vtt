@@ -5,6 +5,7 @@ import { damageTypeDropdown } from '../rules/damage-type.ts';
 import { type BreakCheck, magnitudeLossForHit, resolveBreakCheck } from '../rules/dw-horde-magnitude.ts';
 import { hitDropdown } from '../rules/hit-locations.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 import { postChatCard, resolveGettersForTemplate } from './roll-helpers.ts';
 
 /**
@@ -320,10 +321,9 @@ export class AssignDamageData {
             await applyCriticalDamageConditions(this.actor as unknown as WH40KBaseActorDocument, this.criticalRecord);
         }
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs',
-            resolveGettersForTemplate(this),
-        );
+        const cardData = resolveGettersForTemplate(this);
+        cardData['_gameSystemId'] = firstSystemId(this.actor);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs', cardData);
         await postChatCard(html);
     }
 

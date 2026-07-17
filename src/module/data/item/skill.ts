@@ -1,3 +1,4 @@
+import { firstSystemId } from '../../utils/chat-system-id.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -238,11 +239,14 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create return type is opaque; unknown is the honest type here
     async toChat(): Promise<unknown> {
-        const parent = this.parent as { id: string; name: string };
+        const parent = this.parent as { id: string; name: string; actor?: { system?: { gameSystem?: string } } | null };
         const messageData = {
             style: CONST.CHAT_MESSAGE_STYLES.OTHER,
             speaker: ChatMessage.getSpeaker(),
-            content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/skill-card.hbs', { skill: this.parent }),
+            content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/skill-card.hbs', {
+                skill: this.parent,
+                _gameSystemId: firstSystemId(parent.actor),
+            }),
             flags: {
                 'wh40k-rpg': {
                     skillId: parent.id,
@@ -266,11 +270,12 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
         const entry = this.specialUses[index];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: regular tsconfig types entry as defined, strict tsconfig flags possibly-undefined; guard satisfies both
         if (entry === undefined) return undefined;
-        const parent = this.parent as { id: string; name: string };
+        const parent = this.parent as { id: string; name: string; actor?: { system?: { gameSystem?: string } } | null };
 
         const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/skill-card.hbs', {
             skill: this.parent,
             specialUse: entry,
+            _gameSystemId: firstSystemId(parent.actor),
         });
 
         const messageData: Parameters<typeof ChatMessage.create>[0] = {

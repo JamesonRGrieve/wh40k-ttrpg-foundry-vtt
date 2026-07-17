@@ -24,6 +24,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { isD100Success, postChatCard, roll1d100 } from '../rolls/roll-helpers.ts';
 import { degreesOfFailure as diceDegreesOfFailure, degreesOfSuccess as diceDegreesOfSuccess } from '../rules/_dice.ts';
 import { type GearOutcome, ORDINARY_BONUS_KEY, applyTable63Modifiers, resolveGearOutcome, rollRandomIssueGear } from '../rules/ow-mission-gear.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 import { isActorOfSystem } from './action-host.ts';
 
 /** Sheet-like host shape; the ApplicationV2 dispatcher binds the sheet as `this`. */
@@ -250,6 +251,7 @@ export async function owRequestGear(this: MissionGearActionHost, event: Event, _
 
     const templateData = {
         gameSystem: 'ow',
+        _gameSystemId: firstSystemId(this.actor),
         success,
         roll: rollTotal,
         target: composed.target,

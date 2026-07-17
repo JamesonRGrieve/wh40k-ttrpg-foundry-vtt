@@ -12,6 +12,7 @@ import {
     normaliseScale,
     resolveAcquisitionTest,
 } from '../../rules/acquisition-scale.ts';
+import { firstSystemId } from '../../utils/chat-system-id.ts';
 import DialogResolution from './dialog-resolution.ts';
 
 /**
@@ -592,6 +593,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         autoFail: boolean;
     }): Promise<ChatMessage | undefined> {
         const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/acquisition-test.hbs', {
+            _gameSystemId: firstSystemId(this.actor),
             actor: this.actor,
             item: data.item,
             roll: data.roll?.total ?? null,

@@ -31,6 +31,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { postChatCard } from '../rolls/roll-helpers.ts';
 import { applySupportCooldown, requestSupport, type SupportAssetDef, type SupportAssetKind } from '../rules/ow-battlefield-support.ts';
 import type { I18nKey } from '../types/i18n-keys';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /**
  * Structural type the OW Battlefield handlers expect. The character
@@ -178,6 +179,7 @@ type ChatPayload = RequestChatPayload | AwardChatPayload;
 async function emitBattlefieldChat(host: Host, event: ChatPayload): Promise<void> {
     const templateData = {
         gameSystem: 'ow' as const,
+        _gameSystemId: firstSystemId(host.actor),
         actor: { name: host.actor.name },
         event,
     };

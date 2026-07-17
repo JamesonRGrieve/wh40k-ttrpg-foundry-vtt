@@ -24,6 +24,7 @@
 import type { BcDaemonPrinceDeclarations } from '../data/actor/mixins/bc-daemon-prince-template.ts';
 import { postChatCard } from '../rolls/roll-helpers.ts';
 import { ascendCharacter, getDaemonPrinceBoost, isAscended, type DaemonPrinceAlignment } from '../rules/bc-daemon-prince.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /* -------------------------------------------- */
 /*  Structural sheet contract                   */
@@ -155,6 +156,7 @@ export async function bcAscend(this: BcDaemonPrinceSheetLike, _event: Event, _ta
     const boost = getDaemonPrinceBoost(record);
     const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/bc-ascension-chat.hbs', {
         gameSystem: 'bc',
+        _gameSystemId: firstSystemId(this.actor),
         ascendedAt: record.ascendedAt,
         alignmentAtAscension: record.alignmentAtAscension,
         boost,

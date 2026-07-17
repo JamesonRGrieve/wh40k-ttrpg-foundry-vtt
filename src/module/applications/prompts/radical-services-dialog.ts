@@ -9,6 +9,7 @@
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import { RADICAL_SERVICES, type RadicalServiceDefinition, type RadicalServiceId } from '../../rules/radical-services.ts';
 import { getRequisitionTestTarget } from '../../rules/requisition-test.ts';
+import { firstSystemId } from '../../utils/chat-system-id.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
@@ -164,6 +165,7 @@ export default class RadicalServicesDialog extends ApplicationV2Mixin(Applicatio
         }
 
         const templateData = {
+            _gameSystemId: firstSystemId(this.actor),
             actor: this.actor,
             service: {
                 id: service.id,

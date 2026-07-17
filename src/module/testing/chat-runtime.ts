@@ -46,6 +46,8 @@ interface ChatGameStub {
 interface ChatMessageStub {
     create: (data: CreatedMessage) => CreatedMessage;
     getWhisperRecipients: () => never[];
+    /** #422: emitChatFromTemplate resolves the speaker's actor for per-system theming. */
+    getSpeakerActor: () => null;
 }
 
 /** The minimal `foundry` surface exposing the Handlebars `renderTemplate`. */
@@ -95,6 +97,7 @@ export function stubChatRuntime(options: StubChatRuntimeOptions = {}): ChatRunti
             return data;
         },
         getWhisperRecipients: (): never[] => [],
+        getSpeakerActor: (): null => null,
     };
     g.foundry = { applications: { handlebars: { renderTemplate: renderTemplateFn } } };
 

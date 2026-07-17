@@ -35,6 +35,7 @@ import type { ActiveOrderEntry } from '../data/actor/mixins/ow-orders-template.t
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { postChatCard } from '../rolls/roll-helpers.ts';
 import { GENERIC_ORDERS, canIssueOrder, type OrderDef, type OrderBlockReason } from '../rules/ow-orders.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /**
  * Subset of the OW character `system` shape this handler reads/writes.
@@ -147,6 +148,7 @@ export async function owIssueOrder(this: OwOrdersActionContext, event: Event, ta
 
     const templateData = {
         gameSystem: 'ow' as const,
+        _gameSystemId: firstSystemId(this.actor),
         orderId: order.id,
         orderNameKey,
         actionCostKey: ACTION_COST_KEY[order.actionCost],

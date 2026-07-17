@@ -10,6 +10,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { postChatCard } from '../rolls/roll-helpers.ts';
 import { isActorInActiveCombat } from '../rules/combat-state.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 
 interface AmmunitionDataWithQuantity extends AmmunitionData {
     quantity?: number;
@@ -371,6 +372,7 @@ export class ReloadActionManager {
         const system = this.getWeaponSystem(weapon);
         const templateData = {
             actor: actor,
+            _gameSystemId: firstSystemId(actor),
             weapon: weapon,
             result: result,
             effectiveReloadTime: this.getEffectiveReloadTime(weapon),

@@ -37,6 +37,7 @@
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { postChatCard } from '../rolls/roll-helpers.ts';
 import { type ComradeState, applyComradeHit, healComrade, replaceComrade } from '../rules/ow-comrade.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 
 const STATE_LABEL_KEY: Record<ComradeState, string> = {
     unharmed: 'WH40K.OW.Comrade.State.Unharmed',
@@ -78,6 +79,7 @@ interface StateChangePayload {
 async function emitStateChangeChat(host: Host, payload: StateChangePayload): Promise<void> {
     const templateData = {
         gameSystem: 'ow',
+        _gameSystemId: firstSystemId(host.actor),
         actor: { name: host.actor.name },
         comradeName: host.actor.system.comrade.name || '—',
         event: {

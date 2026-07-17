@@ -1,4 +1,5 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { composeSpecializationName } from '../../utils/specialization-name.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -449,6 +450,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
             },
             timestamp: new Date().toLocaleString(),
             gameSystem: parentItem.actor?.system?.gameSystem,
+            _gameSystemId: firstSystemId(parentItem.actor),
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-card.hbs', templateData);

@@ -1,4 +1,5 @@
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 
 // Allow custom hook names beyond fvtt-types' strict HookConfig keyof constraint.
 type HooksCompat = typeof Hooks & {
@@ -178,6 +179,7 @@ export default class BasicRollWH40K extends Roll {
 
         // Render the chat template - V13: use namespaced renderTemplate
         const templateData = await this._prepareTemplateData(roll, config);
+        templateData['_gameSystemId'] = firstSystemId(config['actor']);
         const content = await foundry.applications.handlebars.renderTemplate(this.chatTemplate, templateData);
 
         // V13: Don't specify type - provide rolls directly and Foundry handles it

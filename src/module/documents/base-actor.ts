@@ -27,6 +27,7 @@ import {
 import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type SubtletySourceRef } from '../rules/subtlety-adjusters.ts';
 import { weaponFireBlockReason } from '../rules/weapon-jam.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
@@ -1150,6 +1151,7 @@ export class WH40KBaseActor extends Actor {
                 : '');
         const psyRating = this._rollPsyRating();
         await DHBasicActionManager.sendItemVocalizeChat({
+            _gameSystemId: firstSystemId(this),
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- this.name is a Foundry document property that may be null; boundary: ?? is necessary here, not a DataModel schema gap
             actor: this.name ?? '',
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional

@@ -15,6 +15,7 @@ import VoidcraftData, {
 } from '../../data/actor/voidcraft.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
+import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { capitalize } from '../../utils/format.ts';
 import { RollTableUtils } from '../../utils/roll-table-utils.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
@@ -51,6 +52,7 @@ type ActionCardData = {
     };
     actorName: string | null;
     gameSystem: string;
+    _gameSystemId?: string | undefined;
 };
 
 /** Localization key per essential slot for the build panel. */
@@ -620,6 +622,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
 
         // ── Build chat card ─────────────────────────────────────────────────
         const cardData = {
+            _gameSystemId: firstSystemId(actor),
             actor,
             weapon,
             crewRating,
@@ -901,6 +904,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             },
             actorName: actor.name,
             gameSystem: (actor.system as { gameSystem: string }).gameSystem,
+            _gameSystemId: firstSystemId(actor),
         };
     }
 
@@ -1054,6 +1058,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
 
         // Render and post chat card.
         const cardData = {
+            _gameSystemId: firstSystemId(actor),
             actorName: actor.name,
             resultName: statusLabel,
             resultText,
