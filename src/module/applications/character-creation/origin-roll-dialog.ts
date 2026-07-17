@@ -235,7 +235,8 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             additions.expandedFormula = this._expandWoundsFormula(this.formula, tb);
         }
 
-        return { ...superCtx, ...additions };
+        // #422: surface the actor's game system for the per-system `{{themeClassFor}}`.
+        return { ...superCtx, ...additions, _gameSystemId: firstSystemId(this.context.actor) };
     }
 
     /**

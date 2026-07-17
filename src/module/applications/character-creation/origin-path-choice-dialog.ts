@@ -8,6 +8,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { findSkillUuid } from '../../helpers/skill-uuid-helper.ts';
+import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
@@ -238,6 +239,8 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         context['item'] = this.item;
         context['itemName'] = this.item.name;
         context['itemImg'] = this.item.img;
+        // #422: surface the actor's game system for the per-system `{{themeClassFor}}`.
+        context['_gameSystemId'] = firstSystemId(this.actor);
 
         // Prepare choices with selection state
         context['choices'] = await Promise.all(
