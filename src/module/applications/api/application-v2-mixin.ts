@@ -5,6 +5,7 @@
 
 import { type AppSystemHandles, resolveAppSystemId } from './app-system-id.ts';
 import type { ApplicationV2Ctor, FoundryApplicationApiLike } from './application-types.ts';
+import { applySystemDataset } from './apply-system-dataset.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped; cast required to reach api surface
 const applicationAPI = (foundry.applications as unknown as { api: FoundryApplicationApiLike }).api;
@@ -235,10 +236,8 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
             // System-agnostic dialogs resolve to nothing and keep their base colour (#422).
             const fromContext = typeof context['_gameSystemId'] === 'string' ? context['_gameSystemId'] : undefined;
             const systemId = fromContext ?? resolveAppSystemId(this as AppSystemHandles);
-            if (systemId !== undefined && systemId !== '') {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: this.element is a Foundry runtime property not on ApplicationV2Ctor
-                (this as unknown as { element: HTMLElement }).element.dataset['wh40kSystem'] = systemId;
-            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: this.element is a Foundry runtime property not on ApplicationV2Ctor
+            applySystemDataset((this as unknown as { element: HTMLElement }).element, systemId);
 
             // Shared PARTS containers (for example the player-sheet sidebar)
             // can be replaced during later full renders, so rebuild them every

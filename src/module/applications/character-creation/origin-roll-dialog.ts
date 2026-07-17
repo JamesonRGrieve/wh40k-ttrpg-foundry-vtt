@@ -14,6 +14,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applySystemDataset } from '../api/apply-system-dataset.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `foundry.applications` has no shipped type for the v2 api namespace
@@ -237,6 +238,13 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         // #422: surface the actor's game system for the per-system `{{themeClassFor}}`.
         return { ...superCtx, ...additions, _gameSystemId: firstSystemId(this.context.actor) };
+    }
+
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender signature is framework-defined.
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        await super._onRender(context, options);
+        // #462: pair the context _gameSystemId with the ancestor stamp for per-system variants.
+        applySystemDataset(this.element, typeof context['_gameSystemId'] === 'string' ? context['_gameSystemId'] : undefined);
     }
 
     /**
