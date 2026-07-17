@@ -31,4 +31,15 @@ describe('resolveAppSystemId (#422 dialog theming)', () => {
         expect(resolveAppSystemId({ rollData: null, document: null })).toBeUndefined();
         expect(resolveAppSystemId({ actor: { system: {} } })).toBeUndefined();
     });
+
+    // #461: delegating to firstSystemId inherits its empty-string guard — an empty
+    // gameSystem on an earlier handle no longer short-circuits the walk.
+    it('skips an empty-string handle and falls through to the next (was a latent bug)', () => {
+        expect(
+            resolveAppSystemId({
+                rollData: { sourceActor: { system: { gameSystem: '' } } },
+                document: { system: { gameSystem: 'dh2' } },
+            }),
+        ).toBe('dh2');
+    });
 });
