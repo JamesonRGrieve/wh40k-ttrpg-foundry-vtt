@@ -1,3 +1,5 @@
+import { findBandBy } from './_dice.ts';
+
 /**
  * Reverse the digits of a d100 attack-roll result to derive the hit-
  * location lookup index per core.md L10372-10390 (Table 7-3).
@@ -19,7 +21,9 @@ export function getHitLocationForRoll(roll: number): string | undefined {
         game.wh40k.log('getHitLocationForRoll', roll);
     }
     const reverseInt = reverseAttackRollDigits(roll);
-    return creatureHitLocations().find((i) => reverseInt >= i.min && reverseInt <= i.max)?.name;
+    // Route the inclusive [min,max] band lookup through the shared findBandBy (#472);
+    // clamp:false preserves the original .find() semantics (undefined when out of band).
+    return findBandBy(creatureHitLocations(), reverseInt, (i): readonly [number, number] => [i.min, i.max], { clamp: false })?.name;
 }
 
 export function hitDropdown(): Record<string, string> {

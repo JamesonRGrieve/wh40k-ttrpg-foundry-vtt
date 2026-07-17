@@ -443,22 +443,19 @@ function knowledgeReadout(degrees: number, success: boolean): DosReadout {
     return { tier, labelKey: `WH40K.SkillUse.Readout.Knowledge.${level}` };
 }
 
-/** Physical feats (Athletics/Acrobatics): degrees of success scale the distance/height cleared. */
-function physicalReadout(degrees: number, success: boolean): DosReadout {
-    if (!success) return { tier: 0, labelKey: 'WH40K.SkillUse.Readout.Physical.Fail' };
-    return { tier: Math.max(1, Math.floor(degrees)), labelKey: 'WH40K.SkillUse.Readout.Physical.Success' };
-}
-
-/** Security/Tech-Use object interaction: degrees of success reduce the time taken / improve completeness. */
-function objectInteractionReadout(degrees: number, success: boolean): DosReadout {
-    if (!success) return { tier: 0, labelKey: 'WH40K.SkillUse.Readout.Object.Fail' };
-    return { tier: Math.max(1, Math.floor(degrees)), labelKey: 'WH40K.SkillUse.Readout.Object.Success' };
+/** DoS readout that scales the tier on success and picks a single fail/success labelKey.
+ * Physical feats and object-interaction share this exact shape (knowledge differs — it
+ * grades the success key by tier), so both route through this factory (#472). */
+function tieredReadout(failKey: string, successKey: string): (degrees: number, success: boolean) => DosReadout {
+    return (degrees, success) => (success ? { tier: Math.max(1, Math.floor(degrees)), labelKey: successKey } : { tier: 0, labelKey: failKey });
 }
 
 const READOUT_RESOLVERS: Record<ReadoutFamily, (degrees: number, success: boolean) => DosReadout> = {
     knowledge: knowledgeReadout,
-    physical: physicalReadout,
-    objectInteraction: objectInteractionReadout,
+    // Physical feats (Athletics/Acrobatics): DoS scale the distance/height cleared.
+    physical: tieredReadout('WH40K.SkillUse.Readout.Physical.Fail', 'WH40K.SkillUse.Readout.Physical.Success'),
+    // Security/Tech-Use object interaction: DoS reduce time taken / improve completeness.
+    objectInteraction: tieredReadout('WH40K.SkillUse.Readout.Object.Fail', 'WH40K.SkillUse.Readout.Object.Success'),
 };
 
 /** Resolve the DoS readout for a family from the (opposed-adjusted) degrees + success. Pure. */
