@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from '../testing/repo-file.ts';
 import {
     FATIGUE_MODES,
     getFatigueAfterRest,
@@ -223,5 +224,28 @@ describe('getFatigueAfterWaking (#114) — per line wake behaviour', () => {
     });
     it('none (IM) leaves the level unchanged', () => {
         expect(getFatigueAfterWaking(5, 4, CONDITION)).toBe(5);
+    });
+});
+
+describe('fatigue automation wiring (#431)', () => {
+    const baseActor = readRepoFile('src/module/documents/base-actor.ts');
+    const hooks = readRepoFile('src/module/hooks-manager.ts');
+
+    it('applyFatigue re-checks the RAW thresholds after writing', () => {
+        expect(baseActor).toContain('await this.checkFatigueThresholds()');
+    });
+
+    it('the threshold check applies Unconscious on fatigue-unconscious and surfaces fatigue-death', () => {
+        expect(baseActor).toContain('isFatigueUnconscious(');
+        expect(baseActor).toContain('isFatigueDeath(');
+        // The applied effect is flag-tagged so the check owns exactly what it created.
+        expect(baseActor).toContain('fatigueUnconscious');
+    });
+
+    it('world-time advance recovers fatigue over the elapsed rest hours (GM only)', () => {
+        expect(baseActor).toContain('getFatigueAfterRest(');
+        expect(baseActor).toContain('recoverFatigueOverTime');
+        expect(hooks).toContain('recoverFatigueOverTime');
+        expect(hooks).toContain('isPrimaryGm');
     });
 });

@@ -547,6 +547,11 @@
         "Addiction": {
             "Escalated": "{actor} fails to resist the substance — Addiction worsens to {tier}."
         },
+        "Fatigue": {
+            "Unconscious": "{actor} collapses from fatigue — Unconscious.",
+            "UnconsciousLabel": "Unconscious",
+            "Death": "{actor}'s fatigue is fatal — they succumb."
+        },
         "Disposition": {
             "Hostile": "Hostile",
             "Antagonistic": "Antagonistic",
