@@ -11,7 +11,7 @@
  */
 
 import type { ActionData } from '../../rolls/action-data.ts';
-import type { RollData } from '../../rolls/roll-data.ts';
+import type { RollData, RollModifierComponent } from '../../rolls/roll-data.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
 import {
@@ -1190,14 +1190,30 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     _calculateSituationalModifiers(): number {
         let total = 0;
+        for (const mod of this._activeSituationalComponents()) {
+            total += mod.value;
+        }
+        return total;
+    }
+
+    /**
+     * The active situational modifiers as provenance-bearing components (#…): the
+     * same active + variant-gated set {@link _calculateSituationalModifiers} sums,
+     * mapped to `{ key, label, value, source }` so the chat card can expand the
+     * lumped `situational` bucket into its individual sourced parts instead of one
+     * `SITUATIONAL +N` row. Their values sum to `_calculateSituationalModifiers()`.
+     */
+    _activeSituationalComponents(): RollModifierComponent[] {
         // Active, then gated by the selected test variant (#246): a variant-tagged
         // modifier only counts when its variant is the one being rolled.
         // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is dialog state (null = not yet collected), not a DataModel field
         const active = (this._cachedSituationalModifiers ?? []).filter((mod) => this._situationalModifiers[`${mod.key}_${mod.source}`]);
-        for (const mod of filterModifiersByVariant(active, this._selectedSkillVariant)) {
-            total += mod.value;
-        }
-        return total;
+        return filterModifiersByVariant(active, this._selectedSkillVariant).map((mod) => ({
+            key: `${mod.key}_${mod.source}`,
+            label: mod.label,
+            value: mod.value,
+            source: mod.source,
+        }));
     }
 
     /**
@@ -2012,6 +2028,23 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         rd.modifiers['difficulty'] = this._currentDifficulty.modifier;
         rd.modifiers['situational'] = this._calculateSituationalModifiers();
         rd.modifiers['modifier'] = this._customModifier;
+
+        // Provenance for the lumped buckets so the chat card renders each modifier
+        // as a sourced, hoverable row instead of a summed total (#…). The
+        // difficulty band's own label is its provenance; situational entries carry
+        // their originating item/source.
+        rd.expandedBuckets['situational'] = this._activeSituationalComponents();
+        rd.expandedBuckets['difficulty'] =
+            this._currentDifficulty.modifier === 0
+                ? []
+                : [
+                      {
+                          key: 'difficulty',
+                          label: game.i18n.localize('WH40K.Roll.ModifierSource.Difficulty'),
+                          value: this._currentDifficulty.modifier,
+                          source: this._currentDifficulty.label,
+                      },
+                  ];
         // Assistance modifier (#60). +10 per assistant up to DEFAULT_ASSISTANT_CAP.
         // Surfaces on chat cards via RollData.activeModifiers; key is uppercased
         // for the modifier-breakdown partial, so "ASSISTANCE +N" appears in the
@@ -2035,12 +2068,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             const isRanged = rd.weapon?.isRanged === true;
             const situationals = getSituationalModifiers(isRanged);
             let combatSitTotal = 0;
+            const combatSitComponents: RollModifierComponent[] = [];
+            const combatSitSource = game.i18n.localize('WH40K.Roll.ModifierSource.CombatSituational');
             for (const s of situationals) {
                 if (this._activeCombatSituationals.has(s.key)) {
                     combatSitTotal += s.modifier;
+                    combatSitComponents.push({ key: s.key, label: s.label, value: s.modifier, source: combatSitSource });
                 }
             }
             rd.modifiers['combat-situational'] = combatSitTotal;
+            rd.expandedBuckets['combat-situational'] = combatSitComponents;
 
             // Propagate damage-side effects (Cover AP, forced hit location)
             // from active situationals onto WeaponRollData so AssignDamageData

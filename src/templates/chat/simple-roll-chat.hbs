@@ -8,7 +8,7 @@
     bgClass="tw-bg-[var(--wh40k-panel-bg-solid)]"
     gameSystem=../gameSystem}}
             {{!-- Modifiers Breakdown --}}
-            {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=baseTarget activeModifiers=activeModifiers modifiedTarget=modifiedTarget}}
+            {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=baseTarget activeModifiers=activeModifiers modifierSources=modifierSources modifiedTarget=modifiedTarget modifierCapFired=modifierCapFired rawModifierTotal=rawModifierTotal modifierTotal=modifierTotal}}
 
             {{!-- Target-only display (no roll entered) --}}
             {{#if isTargetOnly}}

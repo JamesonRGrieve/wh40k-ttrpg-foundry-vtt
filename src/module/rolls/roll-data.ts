@@ -21,6 +21,64 @@ import { evaluateFormula } from './evaluate-formula.ts';
 export { clampModifierToCap, ROLL_MODIFIER_CAP } from './aggregate-target.ts';
 
 /**
+ * One provenance-bearing component of a roll's target-number formula. The chat
+ * card renders `base ± each component = target`, each row hoverable to its
+ * `source` (the talent / quality / action / difficulty band / manual entry it
+ * came from). Built at commit by {@link RollData.buildModifierSources}; the sum
+ * of every component's `value` equals `modifierTotal` (before the ±60 cap).
+ */
+export interface RollModifierComponent {
+    /** Stable id (a bucket key like `situational`, or a named modifier / source key). */
+    key: string;
+    /** Localised label for the card row. */
+    label: string;
+    /** Signed contribution to the target number. */
+    value: number;
+    /** Provenance — where the modifier came from (shown in the hover tooltip). */
+    source: string;
+    /**
+     * Pre-serialised `wh40k-tooltip` "modifier" payload
+     * (`{title, sources:[{name, value}]}`) for the hoverable card row. Built by
+     * {@link RollData.buildModifierSources}; the template emits it verbatim as
+     * `data-wh40k-tooltip-data`. Optional on hand-built (dialog) components until
+     * the builder attaches it.
+     */
+    tooltipData?: string;
+}
+
+/**
+ * Localisation suffix (`WH40K.Roll.Modifier.<suffix>`) for each known named /
+ * bucket modifier key the target number is summed from. Keys absent here fall
+ * back to a title-cased display of the key itself (attack-special / weapon-mod
+ * names, which are already their own provenance). Lumped buckets
+ * (`situational`, `combat-situational`, `difficulty`) are expanded into their
+ * individual sourced parts via {@link RollData.expandedBuckets} instead.
+ */
+const MODIFIER_KEY_META: Record<string, string> = {
+    'modifier': 'Manual',
+    'assistance': 'Assistance',
+    'aim': 'Aim',
+    'range': 'Range',
+    'attack': 'WeaponAttack',
+    'weapon-training': 'WeaponTraining',
+    'target-size': 'TargetSize',
+    'combat-action': 'CombatAction',
+    'psy-mode': 'PsyMode',
+    'difficulty': 'Difficulty',
+    'situational': 'Situational',
+    'combat-situational': 'CombatSituational',
+};
+
+/** Title-case a raw modifier key for display (`combat-action` → `Combat Action`). */
+function prettyModifierKey(key: string): string {
+    return key
+        .toLowerCase()
+        .split(/[-_ ]+/)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ');
+}
+
+/**
  * Base class for all roll-related data
  */
 export class RollData {
@@ -87,6 +145,21 @@ export class RollData {
      *  `modifierTotal`. The chat-card layer reads this to render a
      *  visual indicator. */
     modifierCapFired: boolean = false;
+    /**
+     * Per-component derivation of the target number, with provenance, for the
+     * transparency readout on the chat card. Built at commit by
+     * {@link buildModifierSources}; the component `value`s sum to
+     * `rawModifierTotal`. Empty until the roll is committed.
+     */
+    modifierSources: RollModifierComponent[] = [];
+    /**
+     * Sourced expansions for lumped modifier buckets (`situational`,
+     * `combat-situational`, `difficulty`), stashed by the roll dialog so
+     * {@link buildModifierSources} replaces the bucket total with its individual
+     * provenance-bearing parts. A bucket absent here renders as a single row.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: dialog-populated provenance map keyed by modifier bucket; values sum to the bucket total
+    expandedBuckets: Record<string, RollModifierComponent[]> = {};
     hasEyeOfVengeanceAvailable: boolean = false;
     eyeOfVengeance: boolean = false;
 
@@ -98,6 +171,13 @@ export class RollData {
     success: boolean = false;
     dos: number = 0;
     dof: number = 0;
+    /**
+     * Human-readable derivation of the degrees-of-success/failure result for the
+     * chat-card transparency readout — `N DoS = 1 + degree (roll R vs target T)`.
+     * Built centrally in `ActionData._calculateHit` where the degrees method and
+     * numbers are known; empty until the roll resolves.
+     */
+    resultFormula: string = '';
 
     // For name getter compatibility
     weapon?: WH40KItem;
@@ -214,6 +294,46 @@ export class RollData {
         this.modifierTotal = clamped;
         this.rawModifierTotal = raw;
         this.modifierCapFired = capFired;
+        this.buildModifierSources();
+    }
+
+    /**
+     * Build the provenance-bearing {@link modifierSources} component list from the
+     * committed `modifiers` map: one row per non-zero modifier, lumped buckets
+     * replaced by their {@link expandedBuckets} sub-components (so a summed
+     * `SITUATIONAL +30` renders as its "+10 Aim / +20 Deadeye / …" parts). Named
+     * keys resolve a localised label via {@link MODIFIER_KEY_META}, falling back
+     * to a title-cased display. Content-agnostic: the labels/sources are UI chrome
+     * (localised) or already-content strings carried on the expansions — no
+     * modifier value is invented here. Purely additive to the total math.
+     */
+    buildModifierSources(): void {
+        const sources: RollModifierComponent[] = [];
+        for (const key of Object.keys(this.modifiers)) {
+            const value = this.modifiers[key];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: modifiers[key] may be undefined despite Record<string, number> type
+            if (value === undefined || value === 0) continue;
+            const expansion = this.expandedBuckets[key];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: expandedBuckets[key] may be undefined despite Record<string, …[]> type
+            if (expansion !== undefined && expansion.length > 0) {
+                sources.push(...expansion);
+                continue;
+            }
+            const suffix = MODIFIER_KEY_META[key];
+            // eslint-disable-next-line no-restricted-syntax -- boundary: `game` is the Foundry runtime global; buildModifierSources also runs under unit tests where it is absent, so localise defensively
+            const i18n = (globalThis as { game?: { i18n?: { localize?: (k: string) => string } } }).game?.i18n;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: MODIFIER_KEY_META[key] may be undefined despite Record<string, string> type
+            const label = suffix !== undefined ? i18n?.localize?.(`WH40K.Roll.ModifierSource.${suffix}`) ?? prettyModifierKey(key) : prettyModifierKey(key);
+            sources.push({ key, label, value, source: label });
+        }
+        // Attach the hover payload uniformly (one sourced row per component), so
+        // the card row emits `data-wh40k-tooltip-data` verbatim — same shape as
+        // the shared wh40k-tooltip "modifier" builder. Fresh objects, so the
+        // dialog's `expandedBuckets` arrays are never mutated.
+        this.modifierSources = sources.map((c) => ({
+            ...c,
+            tooltipData: JSON.stringify({ title: c.label, sources: [{ name: c.source, value: c.value }] }),
+        }));
     }
 
     /**
