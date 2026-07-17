@@ -63,24 +63,11 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="tw-flex tw-shrink-0 tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)]" data-group="primary">
-      <button type="button" class="active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-text-[color:var(--wh40k-dynasty-primary)] tw-bg-[var(--wh40k-dynasty-bg)] tw-border-b-[color:var(--wh40k-dynasty-primary)]" data-tab="grants" data-group="primary">
-        <i class="fas fa-gift tw-text-[0.9rem]"></i>
-        <span>Grants</span>
-      </button>
-      <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="requirements" data-group="primary">
-        <i class="fas fa-lock tw-text-[0.9rem]"></i>
-        <span>Requirements</span>
-      </button>
-      <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="choices" data-group="primary">
-        <i class="fas fa-question-circle tw-text-[0.9rem]"></i>
-        <span>Choices</span>
-      </button>
-      <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="description" data-group="primary">
-        <i class="fas fa-book tw-text-[0.9rem]"></i>
-        <span>Description</span>
-      </button>
-    </nav>
+    {{> systems/wh40k-rpg/templates/item/partial/item-accent-tab-strip.hbs category="dynasty" tabs=(array
+        (object tab="grants"       label="Grants"       icon="fa-gift"            active=true)
+        (object tab="requirements" label="Requirements" icon="fa-lock"            active=false)
+        (object tab="choices"      label="Choices"      icon="fa-question-circle" active=false)
+        (object tab="description"  label="Description"  icon="fa-book"            active=false))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT

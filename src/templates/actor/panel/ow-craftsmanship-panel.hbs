@@ -50,9 +50,7 @@
                      data-tier="{{entry.tier}}">
                     <div class="tw-flex tw-flex-col tw-min-w-[8rem]">
                         <span class="wh40k-ow-craftsmanship-name tw-text-[0.8rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">{{entry.name}}</span>
-                        <span class="wh40k-ow-craftsmanship-tier tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                            {{localize (concat "WH40K.OW.Craftsmanship.Tier." (capitalize entry.tier))}}
-                        </span>
+                        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" rootClass="wh40k-ow-craftsmanship-tier" labelKey=(concat "WH40K.OW.Craftsmanship.Tier." (capitalize entry.tier))}}
                     </div>
                     {{#if (eq entry.kind "ranged")}}
                         <span class="wh40k-ow-craftsmanship-effect tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-bright)]"
@@ -101,9 +99,7 @@
                      data-tier="{{entry.tier}}">
                     <div class="tw-flex tw-flex-col tw-min-w-[8rem]">
                         <span class="wh40k-ow-craftsmanship-name tw-text-[0.8rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">{{entry.name}}</span>
-                        <span class="wh40k-ow-craftsmanship-tier tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                            {{localize (concat "WH40K.OW.Craftsmanship.Tier." (capitalize entry.tier))}}
-                        </span>
+                        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" rootClass="wh40k-ow-craftsmanship-tier" labelKey=(concat "WH40K.OW.Craftsmanship.Tier." (capitalize entry.tier))}}
                     </div>
                     <span class="wh40k-ow-craftsmanship-effect tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-bright)]"
                           data-agility-modifier="{{entry.effect.agilityModifier}}"

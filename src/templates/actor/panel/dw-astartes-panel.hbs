@@ -67,9 +67,7 @@
                     <i class="fas {{#if this.has}}fa-check-circle{{else}}fa-circle{{/if}} tw-mr-1"></i>
                     {{localize this.nameKey}}
                 </span>
-                <span class="wh40k-dw-astartes-implant-category tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                    {{localize this.categoryKey}}
-                </span>
+                {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" rootClass="wh40k-dw-astartes-implant-category" labelKey=this.categoryKey}}
             </button>
         {{/each}}
     </div>

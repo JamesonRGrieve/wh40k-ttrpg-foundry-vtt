@@ -209,6 +209,7 @@ export class HandlebarManager {
 
             // NPC Template sheet templates
             'systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs',
+            'systems/wh40k-rpg/templates/item/partial/item-accent-tab-strip.hbs',
             'systems/wh40k-rpg/templates/item/partial/item-name-input.hbs',
             'systems/wh40k-rpg/templates/item/npc-template/header.hbs',
             'systems/wh40k-rpg/templates/item/npc-template/tabs.hbs',

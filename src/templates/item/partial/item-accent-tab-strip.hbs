@@ -1,0 +1,22 @@
+{{!--
+    Secondary tab strip with a per-category accent (#466). Shared by the
+    talent / trait / origin-path item sheets, which previously each inlined
+    this nav differing only by the `--wh40k-<category>-*` accent token.
+
+    Hash params:
+      tabs      array of { tab, label, icon, active } — one per tab. `tab` is the
+                data-tab id, `label` the button text, `icon` a Font Awesome class
+                (e.g. "fa-gift"), `active` a bool for the initial-render active
+                state (the framework toggles it thereafter on click).
+      category  accent token — "talents" | "traits" | "dynasty". Selects the
+                literal `--wh40k-<category>-primary` / `-bg` class strings below,
+                written out in full so Tailwind's static scan emits them.
+--}}
+<nav class="wh40k-tabs tw-flex tw-shrink-0 tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)]" data-group="primary">
+  {{#each tabs}}
+  <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] {{#if active}}active {{#if (eq ../category "talents")}}tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else if (eq ../category "traits")}}tw-text-[color:var(--wh40k-traits-primary)] tw-bg-[var(--wh40k-traits-bg)] tw-border-b-[color:var(--wh40k-traits-primary)]{{else}}tw-text-[color:var(--wh40k-dynasty-primary)] tw-bg-[var(--wh40k-dynasty-bg)] tw-border-b-[color:var(--wh40k-dynasty-primary)]{{/if}}{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}" data-tab="{{tab}}" data-group="primary">
+    <i class="fa-solid {{icon}} tw-text-[0.9rem]"></i>
+    <span>{{label}}</span>
+  </button>
+  {{/each}}
+</nav>

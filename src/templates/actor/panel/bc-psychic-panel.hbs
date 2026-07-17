@@ -122,25 +122,19 @@
     {{!-- Computed readouts --}}
     <div class="wh40k-bc-psychic-readout tw-grid tw-grid-cols-3 tw-gap-1 tw-mt-1">
         <div class="wh40k-bc-psychic-effective tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-effective-pr="{{psychicPanel.effectivePR}}">
-            <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                {{localize "WH40K.BC.Psychic.EffectivePR"}}
-            </span>
+            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Psychic.EffectivePR"}}
             <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
                 {{psychicPanel.effectivePR}}
             </span>
         </div>
         <div class="wh40k-bc-psychic-phenomena tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-phenomena-rolls="{{psychicPanel.phenomenaRolls}}">
-            <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                {{localize "WH40K.BC.Psychic.Phenomena.RollCount"}}
-            </span>
+            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Psychic.Phenomena.RollCount"}}
             <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
                 {{psychicPanel.phenomenaRolls}}
             </span>
         </div>
         <div class="wh40k-bc-psychic-sustain-penalty tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-sustain-penalty="{{psychicPanel.sustainPenalty}}">
-            <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                {{localize "WH40K.BC.Psychic.Sustain.Penalty"}}
-            </span>
+            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Psychic.Sustain.Penalty"}}
             <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
                 {{psychicPanel.sustainPenalty}}
             </span>
