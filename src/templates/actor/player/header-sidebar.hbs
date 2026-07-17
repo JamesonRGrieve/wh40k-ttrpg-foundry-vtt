@@ -15,7 +15,7 @@
 
 {{#> systems/wh40k-rpg/templates/actor/partial/header-base.hbs
     cardClass="wh40k-character-header wh40k-npc-sidebar-header"
-    innerClass="tw-flex tw-flex-col tw-items-center tw-gap-3 tw-border-0 dh2:tw-border-bronze rt:tw-border-accent-dynasty bc:tw-border-crimson dw:tw-border-bronze ow:tw-border-brass im:tw-border-crimson-light dh1:tw-border-gold-raw"}}
+    innerClass="tw-flex tw-flex-col tw-items-center tw-gap-3 tw-border-0 {{themeClassFor 'border'}}"}}
     {{> systems/wh40k-rpg/templates/actor/partial/sidebar-header.hbs}}
     {{> systems/wh40k-rpg/templates/actor/partial/origin-path-bubbles.hbs}}
     {{#if isDaemonic}}
