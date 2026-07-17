@@ -26,7 +26,7 @@
        - footerIcon      FA icon class for the footer (default "fa-book")
 --}}
 <div class="tw-font-ui">
-    <div class="tw-relative tw-overflow-hidden tw-rounded-md {{#if borderClass}}{{borderClass}}{{else}}tw-border-2 tw-border-gold bc:tw-border-crimson-light dh1:tw-border-gold-raw-l5 dh2:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure{{/if}} {{#if bgClass}}{{bgClass}}{{else}}tw-bg-[var(--wh40k-panel-bg-solid)] tw-text-[var(--wh40k-text-dark)]{{/if}} tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]{{#if outerExtraClass}} {{outerExtraClass}}{{/if}}"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md {{#if borderClass}}{{borderClass}}{{else}}tw-border-2 {{themeClassFor 'border'}}{{/if}} {{#if bgClass}}{{bgClass}}{{else}}tw-bg-[var(--wh40k-panel-bg-solid)] tw-text-[var(--wh40k-text-dark)]{{/if}} tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]{{#if outerExtraClass}} {{outerExtraClass}}{{/if}}"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
         <div class="tw-relative {{#if image}}tw-flex tw-items-center tw-gap-3 tw-p-3 tw-bg-gradient-to-br{{else}}tw-px-4 tw-py-3 tw-bg-gradient-to-r{{/if}} tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color)]{{#if headerExtraClass}} {{headerExtraClass}}{{/if}}">
             {{#if image}}
                 <img class="tw-w-12 tw-h-12 tw-rounded-md tw-object-cover tw-flex-shrink-0 tw-border-2 tw-border-[var(--wh40k-bronze)] tw-shadow-[0_2px_6px_var(--wh40k-shadow-medium)]" src="{{image}}" alt="{{#if title}}{{title}}{{else if titleKey}}{{localize titleKey}}{{/if}}" />
@@ -37,7 +37,7 @@
             {{/if}}
             <div class="{{#if image}}tw-flex-1 tw-min-w-0{{/if}}">
                 {{#if actorName}}<div class="tw-text-xs tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-widest tw-mb-1">{{actorName}}</div>{{/if}}
-                <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.05em] tw-m-0 tw-[text-shadow:0_2px_4px_var(--wh40k-shadow-medium)]">{{#if title}}{{title}}{{else if titleKey}}{{localize titleKey}}{{/if}}</h2>
+                <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.05em] tw-m-0 tw-[text-shadow:0_2px_4px_var(--wh40k-shadow-medium)]">{{#if title}}{{title}}{{else if titleKey}}{{localize titleKey}}{{/if}}</h2>
                 {{#if subtitle}}<div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)] tw-mt-0.5 tw-opacity-90">{{subtitle}}</div>{{/if}}
             </div>
             {{#if actionType}}
