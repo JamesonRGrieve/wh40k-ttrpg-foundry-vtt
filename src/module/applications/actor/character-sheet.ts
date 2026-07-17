@@ -107,6 +107,7 @@ import {
 } from '../../rules/possession.ts';
 import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
 import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
+import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { errorMessage } from '../../utils/error-message.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
@@ -3884,6 +3885,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 user: game.user.id,
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
                 content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/combat-action-card.hbs', {
+                    _gameSystemId: firstSystemId(this.actor),
                     name: actionName,
                     actor: this.actor.name,
                     actionType: actionConfig.type ?? '',
@@ -4009,6 +4011,7 @@ export default class CharacterSheet extends BaseActorSheet {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/movement-card.hbs', {
+                _gameSystemId: firstSystemId(this.actor),
                 actor: this.actor.name,
                 movementType: movementType,
                 movementLabel: movement.label,
@@ -4772,6 +4775,7 @@ export default class CharacterSheet extends BaseActorSheet {
                     name: bonus.name,
                     type: bonus.source,
                     description: bonus.benefit,
+                    _gameSystemId: firstSystemId(this.actor),
                 });
             } else {
                 this._notify('warning', `Bonus "${bonusName}" not found`, {
@@ -4862,6 +4866,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: data is passed straight into foundry.applications.handlebars.renderTemplate which accepts an arbitrary template context
     async _postPossessionChat(data: Record<string, unknown>): Promise<void> {
+        data['_gameSystemId'] = firstSystemId(this.actor);
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/possession-frenzy-chat.hbs', data);
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
         const payload = { user: game.user.id, content: html, speaker: { alias: this.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
@@ -4986,6 +4991,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
             const gameSystem = this._resolveGameSystemId() ?? '';
             const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/mortification-chat.hbs', {
+                _gameSystemId: firstSystemId(this.actor),
                 actorName: this.actor.name,
                 wpBonus: MORTIFICATION_OF_THE_FLESH.wpBonus,
                 durationRounds: MORTIFICATION_OF_THE_FLESH.durationRounds,
@@ -5058,6 +5064,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
             const gameSystem = this._resolveGameSystemId() ?? '';
             const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/fanatic-chat.hbs', {
+                _gameSystemId: firstSystemId(this.actor),
                 actorName: this.actor.name,
                 wsBonus,
                 bsBonus,
@@ -5091,6 +5098,7 @@ export default class CharacterSheet extends BaseActorSheet {
             const dos = resolveSmiteTheUnholyDoS(wp);
             const gameSystem = this._resolveGameSystemId() ?? '';
             const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/crusader-chat.hbs', {
+                _gameSystemId: firstSystemId(this.actor),
                 actorName: this.actor.name,
                 willpowerBonus: dos,
                 gameSystem,
@@ -5243,6 +5251,7 @@ export default class CharacterSheet extends BaseActorSheet {
             const shockAfter = Math.max(0, shockBefore - (success ? 1 : 0));
 
             const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/shock-snap-chat.hbs', {
+                _gameSystemId: firstSystemId(this.actor),
                 actorName: this.actor.name,
                 willpower,
                 roll: rollValue,

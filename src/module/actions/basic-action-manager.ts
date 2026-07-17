@@ -8,6 +8,7 @@ import { actionBudgetForActor, spendActionForActor } from '../rules/action-econo
 import { ASSASSINS_STRIKE_TEST } from '../rules/assassins-strike.ts';
 import { weaponHasQuality } from '../rules/weapon-quality-effects.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
@@ -244,6 +245,7 @@ export class BasicActionManager {
             canReplaceDie: true,
             // eslint-disable-next-line no-restricted-syntax -- boundary: psychicEffect is a system extension not declared in ActionData type
             psychicEffect: (actionData as unknown as { psychicEffect?: unknown }).psychicEffect ?? null,
+            _gameSystemId: firstSystemId(actionData.rollData.sourceActor),
         };
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';

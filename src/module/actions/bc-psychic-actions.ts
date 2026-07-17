@@ -28,6 +28,7 @@
 import type { BcPsychicDeclarations } from '../data/actor/mixins/bc-psychic-template.ts';
 import { postChatCard } from '../rolls/roll-helpers.ts';
 import { maxPushLevel, resolvePsychicTest, type PsyMode, type PsykerClass } from '../rules/bc-psychic-strength.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /* -------------------------------------------- */
 /*  Structural sheet contract                   */
@@ -185,6 +186,7 @@ export async function bcPsychicTest(this: BcPsychicSheetLike, _event: Event, _ta
 
     const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/bc-psychic-test-chat.hbs', {
         gameSystem: 'bc',
+        _gameSystemId: firstSystemId(this.actor),
         psykerClass,
         mode: inputs.mode,
         classLabelKey: CLASS_LABEL_KEYS[psykerClass],

@@ -47,6 +47,7 @@ import {
     tickComradeRecovery,
 } from '../rules/ow-comrade-healing.ts';
 import type { ComradeState } from '../rules/ow-comrade.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /**
  * Structural type the OW Comrade-Healing handlers expect. The
@@ -99,6 +100,7 @@ type ChatPayload = TickChatPayload | MedicaeChatPayload | ReplaceChatPayload;
 async function emitHealingChat(host: Host, event: ChatPayload): Promise<void> {
     const templateData = {
         gameSystem: 'ow',
+        _gameSystemId: firstSystemId(host.actor),
         actor: { name: host.actor.name },
         comradeName: host.actor.system.comrade.name || '—',
         event,

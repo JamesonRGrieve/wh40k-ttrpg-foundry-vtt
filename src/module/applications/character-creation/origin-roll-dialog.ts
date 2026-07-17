@@ -12,6 +12,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { firstSystemId } from '../../utils/chat-system-id.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
 
@@ -879,6 +880,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const result = this.rollResult;
         if (!result) return undefined;
         const templateData = {
+            _gameSystemId: firstSystemId(this.context.actor),
             actor: this.context.actor.name,
             actorImg: this.context.actor.img,
             origin: this.context.originItem.name,

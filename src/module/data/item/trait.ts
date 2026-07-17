@@ -1,3 +1,4 @@
+import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { composeSpecializationName } from '../../utils/specialization-name.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -174,7 +175,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * @returns {Promise<ChatMessage>}
      */
     async toChat(options: { rollMode?: string } = {}): Promise<void> {
-        const parent = this.parent as { id?: string } | undefined;
+        const parent = this.parent as { id?: string; actor?: { system?: { gameSystem?: string } } | null } | undefined;
         // Prepare template data
         const templateData = {
             trait: parent,
@@ -188,6 +189,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
             fullName: this.fullName,
             isVariable: this.isVariable,
             timestamp: new Date().toLocaleString(),
+            _gameSystemId: firstSystemId(parent?.actor),
         };
 
         // Render chat template

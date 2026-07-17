@@ -8,6 +8,7 @@ import {
     type PriorTurnDamageSnapshot,
     type ShipCombatState,
 } from '../rules/ship-crew-morale.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 import type { WH40KItem } from './item.ts';
 
@@ -200,6 +201,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
             crewRating: this.system.crew.crewRating,
             detectionBonus: this.detectionBonus,
             gameSystem: this.system.gameSystem,
+            _gameSystemId: firstSystemId(this),
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);

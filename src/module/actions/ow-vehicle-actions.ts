@@ -36,6 +36,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { postChatCard } from '../rolls/roll-helpers.ts';
 import { getOwVehicleAction, type OwVehicleAction, type OwVehicleActionId, type VehicleActionTiming } from '../rules/ow-vehicle-movement.ts';
 import type { I18nKey } from '../types/i18n-keys';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /**
  * Subset of the OW actor `system` shape this handler reads. The full
@@ -105,6 +106,7 @@ export async function owVehicleAction(this: OwVehicleActionContext, event: Event
 
     const templateData = {
         gameSystem: 'ow' as const,
+        _gameSystemId: firstSystemId(this.actor),
         actionId: action.id,
         actionNameKey: NAME_KEY[action.id],
         descriptionKey: DESCRIPTION_KEY[action.id],

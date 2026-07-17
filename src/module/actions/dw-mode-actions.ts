@@ -20,6 +20,7 @@
 
 import { postChatCard } from '../rolls/roll-helpers.ts';
 import { enterSquadMode, leaveSquadMode, type DwMode } from '../rules/dw-squad-mode.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /**
  * Minimal `this` shape for a DW mode-transition action handler.
@@ -93,6 +94,7 @@ async function postModeTransitionChat(actor: DwModeActionThis['actor'], previous
 
     const content = await foundry.applications.handlebars.renderTemplate(CHAT_PARTIAL, {
         gameSystem: 'dw',
+        _gameSystemId: firstSystemId(actor),
         actorName: actor.name ?? '',
         previousMode: previous,
         newMode: next,

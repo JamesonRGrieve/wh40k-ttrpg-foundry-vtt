@@ -8,6 +8,7 @@ import type { default as WeaponData } from '../../data/item/weapon.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
@@ -501,6 +502,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         };
 
         const templateData = {
+            _gameSystemId: firstSystemId(actor),
             weaponName: weapon.name,
             hits: [hit],
             targetActor: null,

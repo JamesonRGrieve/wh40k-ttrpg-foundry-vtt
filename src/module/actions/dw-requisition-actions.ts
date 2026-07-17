@@ -26,6 +26,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { postChatCard } from '../rolls/roll-helpers.ts';
 import { canRequisition, type RenownRank } from '../rules/dw-renown.ts';
 import { type Craftsmanship, type PooledContribution, canActorRequisition, canPoolRequisition, computeItemCost } from '../rules/dw-requisition.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /** Minimal action-handler `this` binding. The character sheet supplies a richer shape; only `actor` is consumed. */
 export interface DwRequisitionActionContext {
@@ -230,6 +231,7 @@ async function emitChatCard(
     const craftsmanshipKey = `WH40K.DW.Requisition.Craftsmanship.${payload.craftsmanship.charAt(0).toUpperCase()}${payload.craftsmanship.slice(1)}`;
     const templateData = {
         gameSystem: 'dw' as const,
+        _gameSystemId: firstSystemId(actor),
         mode: payload.mode,
         actorName: actor.name,
         itemName: payload.itemName,

@@ -9,6 +9,7 @@ import {
 } from '../origin-grant-ledger.ts';
 import { applyRollModeWhispers, getDegreeForMode, isD100Success, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
 import type { WH40KItemSystemData } from '../types/global.d.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 import { capitalize } from '../utils/format.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
@@ -575,6 +576,7 @@ export class WH40KItem extends WH40KItemContainer {
             isUsable: this.isConsumable || this.isDrug || this.isTool,
             actor: this.actor,
             gameSystem: (this.actor?.system as { gameSystem?: string } | undefined)?.gameSystem,
+            _gameSystemId: firstSystemId(this.actor),
             // When auto-apply-damage is on, the manual Damage button is redundant (#248) —
             // the weapon card hides it and leans on Attack as the primary action.
             autoApplyDamage: WH40KSettings.isAutoApplyDamageEnabled(),
@@ -682,6 +684,7 @@ export class WH40KItem extends WH40KItemContainer {
             success: success,
             degrees: degrees,
             actor: this.actor?.name,
+            _gameSystemId: firstSystemId(this.actor),
             ...opts.extra,
         };
 

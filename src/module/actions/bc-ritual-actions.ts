@@ -31,6 +31,7 @@
 import type { BcRitualDeclarations } from '../data/actor/mixins/bc-ritual-template.ts';
 import { postChatCard, roll1d100 } from '../rolls/roll-helpers.ts';
 import { computeRitualTarget, resolveContemptOfTheWarp, type RitualModifier, type RitualModifierKind, type RitualTemplate } from '../rules/bc-chaos-ritual.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /* -------------------------------------------- */
 /*  Structural sheet contract                   */
@@ -266,6 +267,7 @@ export async function bcPerformRitual(this: BcRitualSheetLike, _event: Event, _t
 
     const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/bc-ritual-chat.hbs', {
         gameSystem: 'bc',
+        _gameSystemId: firstSystemId(this.actor),
         templateId: inputs.templateId,
         baseTarget: inputs.baseTarget,
         modifierSum,
