@@ -45,6 +45,14 @@ interface BaseRollDialogProto {
         selectFn: ((name: string) => void) | undefined,
         name: string,
     ) => Promise<void>;
+    _prepareContext: (this: { rollData: ThemeContextRollData; initialized: boolean }, options: Record<string, never>) => Promise<{ _gameSystemId?: string }>;
+}
+
+/** The subset of rollData `_prepareContext` reads for the #422 theme-context injection. */
+interface ThemeContextRollData {
+    sourceActor?: { system?: { gameSystem?: string } };
+    initialize?: () => void;
+    update?: () => Promise<void> | void;
 }
 
 function installFoundryStubs(): void {
@@ -53,7 +61,11 @@ function installFoundryStubs(): void {
         foundry: {
             applications: {
                 api: {
-                    ApplicationV2: class {},
+                    ApplicationV2: class {
+                        _prepareContext(): Record<string, never> {
+                            return {};
+                        }
+                    },
                     HandlebarsApplicationMixin<T extends Constructor>(base: T): T {
                         return base;
                     },
@@ -192,5 +204,27 @@ describe('BaseRollDialog shared roll plumbing (#348)', () => {
         await proto._onSelectItem.call(stub, {}, undefined, 'Anything');
 
         expect(render).toHaveBeenCalledOnce();
+    });
+
+    // #422: roll prompts render outside a sheet root, so `{{themeClassFor}}` needs the
+    // rolling actor's game system surfaced on the context as `_gameSystemId`.
+    it('_prepareContext surfaces the rolling actor game system as _gameSystemId', async () => {
+        const proto = await loadProto();
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the ApplicationV2 runtime is unavailable, not an assertion branch
+        if (proto === undefined) return;
+
+        const stub = { rollData: { sourceActor: { system: { gameSystem: 'dw' } } }, initialized: true };
+        const context = await proto._prepareContext.call(stub, {});
+        expect(context._gameSystemId).toBe('dw');
+    });
+
+    it('_prepareContext omits _gameSystemId when there is no source actor', async () => {
+        const proto = await loadProto();
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the ApplicationV2 runtime is unavailable, not an assertion branch
+        if (proto === undefined) return;
+
+        const stub = { rollData: {}, initialized: true };
+        const context = await proto._prepareContext.call(stub, {});
+        expect(context._gameSystemId).toBeUndefined();
     });
 });

@@ -103,12 +103,18 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
         }
 
         const context = await super._prepareContext(options);
+        // Surface the rolling actor's game system so the `{{themeClassFor}}` helper
+        // resolves the per-system themed class from `@root._gameSystemId` on roll
+        // prompts (which render outside a sheet root) rather than the RT default (#422).
+        const sourceActor = this.rollData['sourceActor'] as { system?: { gameSystem?: string } } | null | undefined;
+        const gameSystemId = sourceActor?.system?.gameSystem;
         return {
             ...context,
             ...this.rollData,
             rollData: this.rollData,
             dh: CONFIG.wh40k,
             isEditable: true,
+            ...(gameSystemId !== undefined && gameSystemId !== '' ? { _gameSystemId: gameSystemId } : {}),
         };
     }
 
