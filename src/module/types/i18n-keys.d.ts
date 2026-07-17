@@ -2572,6 +2572,8 @@ export type I18nKey =
     | 'WH40K.PsyMode.PushLevel'
     | 'WH40K.PsyMode.Unfettered'
     | 'WH40K.PsyMode.UnfetteredDesc'
+    | 'WH40K.Psychic.OpposedOvercome'
+    | 'WH40K.Psychic.OpposedResisted'
     | 'WH40K.Quality.Blast.Description'
     | 'WH40K.Quality.Blast.Name'
     | 'WH40K.Quality.ChatTitle'

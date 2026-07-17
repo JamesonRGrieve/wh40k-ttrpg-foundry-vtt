@@ -634,6 +634,14 @@ export class PsychicActionData extends ActionData {
             // eslint-disable-next-line no-restricted-syntax -- boundary: TextEditor.enrichHTML expects a record-shaped rollData payload
             rollData: this.rollData as unknown as Record<string, unknown>,
         });
+
+        // #451: for an opposed power, surface whether the target resisted and by how
+        // much (the #449 margin) — a resisted power is already marked unsuccessful by
+        // checkForOpposed, and the margin scales its magnitude where the content reads it.
+        if (this.rollData.isOpposed && this.rollData.targetActor !== null) {
+            const key = this.rollData.success ? 'WH40K.Psychic.OpposedOvercome' : 'WH40K.Psychic.OpposedResisted';
+            this.addEffect('Psychic', game.i18n.format(key, { target: this.rollData.targetActor.name, margin: String(this.rollData.opposedMargin) }));
+        }
     }
 }
 

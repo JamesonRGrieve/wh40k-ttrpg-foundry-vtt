@@ -531,6 +531,20 @@ export class PsychicRollData extends RollData {
         this.modifiers['focus'] = this.hasFocus ? 10 : 0;
         this.modifiers['power'] = (this.power.system as { target?: { bonus?: number } }).target?.bonus ?? 0;
         this.hasDamage = (this.power.system as { isAttack?: boolean }).isAttack === true;
+
+        // #451: a power flagged Opposed resolves as a contest against the target's
+        // declared resist characteristic (focusPower.opposedCharacteristic, default
+        // Willpower). Wiring isOpposed/opposedChar here routes the Focus Power roll
+        // through the #449 engine (checkForOpposed → applyOpposedResult), so the victor
+        // and degrees-of-victory (opposedMargin) are computed uniformly. The resist axis
+        // is content-authored per power (mind → WP, body → Toughness, kinetic → Strength).
+        const focusPower = (this.power.system as { focusPower?: { opposed?: boolean; opposedCharacteristic?: string } }).focusPower;
+        if (focusPower?.opposed === true && this.targetActor !== null) {
+            this.isOpposed = true;
+            this.opposedChar =
+                focusPower.opposedCharacteristic !== undefined && focusPower.opposedCharacteristic !== '' ? focusPower.opposedCharacteristic : 'willpower';
+        }
+
         updateAttackSpecials(this);
         this.updateBaseTarget();
         await calculatePsychicPowerRange(this);

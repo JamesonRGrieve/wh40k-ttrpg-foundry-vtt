@@ -552,6 +552,10 @@
             "UnconsciousLabel": "Unconscious",
             "Death": "{actor}'s fatigue is fatal — they succumb."
         },
+        "Psychic": {
+            "OpposedOvercome": "{target} fails to resist — the power takes hold (by {margin} degree(s)).",
+            "OpposedResisted": "{target} resists the power — it fails."
+        },
         "Disposition": {
             "Hostile": "Hostile",
             "Antagonistic": "Antagonistic",
