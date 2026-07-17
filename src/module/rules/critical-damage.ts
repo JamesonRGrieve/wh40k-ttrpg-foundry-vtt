@@ -36,6 +36,25 @@ export interface CriticalDamageRiders {
     readonly lostLimb: boolean;
     /** Row is outright lethal (the target dies / does not survive). */
     readonly fatal: boolean;
+    /**
+     * Row knocks/tears the target's helmet off ("If he is wearing a helmet, it
+     * is torn off"). The damage-application path unequips the target's equipped
+     * head-covering armour when this is set and one is worn.
+     */
+    readonly helmetTornOff: boolean;
+    /**
+     * Row's ill effect is a decision tree gated on a helmet ("If he is wearing a
+     * helmet, he suffers no ill effects; otherwise …"): a worn helmet negates the
+     * row's other conditions. The applier skips this row's conditions when the
+     * target has an equipped helmet.
+     */
+    readonly helmetNegates: boolean;
+    /**
+     * Row makes the target drop what it is holding ("Drop any item held in the
+     * hand", "drops anything he was holding") — a hand/arm crit. The applier
+     * unequips the target's held (equipped) weapon.
+     */
+    readonly dropsHeldItem: boolean;
 }
 
 /** Structured Critical Damage lookup result. */
@@ -63,6 +82,9 @@ const NO_RIDERS: CriticalDamageRiders = Object.freeze({
     fatigue: false,
     lostLimb: false,
     fatal: false,
+    helmetTornOff: false,
+    helmetNegates: false,
+    dropsHeldItem: false,
 });
 
 const BURNING_KEYWORDS = ['catch fire', 'catches fire', 'on fire', 'immolate', 'burning'] as const;
@@ -102,6 +124,26 @@ const FATAL_KEYWORDS = [
     'ceases to exist',
 ] as const;
 
+/** A worn helmet is knocked/torn/blown off. Requires the word "helmet" to co-occur. */
+const HELMET_OFF_KEYWORDS = ['torn off', 'knocked off', 'knocks off', 'torn from', 'blown off', 'ripped off', 'knocked from'] as const;
+/** A worn helmet negates the row's ill effect ("wearing a helmet, he suffers no ill effects"). */
+const HELMET_NEGATES_KEYWORDS = ['no ill effect', 'suffers no', 'is protected', 'protects him'] as const;
+/** The target drops what it is holding (a hand/arm crit). The applier unequips the held weapon. */
+const DROP_HELD_KEYWORDS = [
+    'drop any item held',
+    'drop held item',
+    'drop anything held',
+    'drops anything held',
+    'drops anything he was holding',
+    'drops anything they were holding',
+    'drops whatever',
+    'drop whatever',
+    'drops his weapon',
+    'drop his weapon',
+    'item held in the hand',
+    'item held in that hand',
+] as const;
+
 const anyKeyword = (haystack: string, needles: readonly string[]): boolean => needles.some((n) => haystack.includes(n));
 
 /**
@@ -122,6 +164,9 @@ export function classifyCriticalEffect(effectText: string | null | undefined): C
         fatigue: t.includes('fatigue'),
         lostLimb: anyKeyword(t, LOST_LIMB_KEYWORDS),
         fatal: anyKeyword(t, FATAL_KEYWORDS),
+        helmetTornOff: t.includes('helmet') && anyKeyword(t, HELMET_OFF_KEYWORDS),
+        helmetNegates: t.includes('wearing a helmet') && anyKeyword(t, HELMET_NEGATES_KEYWORDS),
+        dropsHeldItem: anyKeyword(t, DROP_HELD_KEYWORDS),
     });
 }
 

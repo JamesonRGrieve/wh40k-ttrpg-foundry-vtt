@@ -201,6 +201,27 @@ describe('classifyCriticalEffect (#108)', () => {
         expect(classifyCriticalEffect('the leg immolates and thick fire consumes the target').burning).toBe(true);
     });
 
+    it('detects a helmet being torn/knocked off', () => {
+        expect(classifyCriticalEffect('If he is wearing a helmet, it is torn off.').helmetTornOff).toBe(true);
+        expect(classifyCriticalEffect('The blow knocks off his helmet.').helmetTornOff).toBe(true);
+        // "torn off" without a helmet mention is NOT a helmet effect (e.g. a limb).
+        expect(classifyCriticalEffect('The arm is torn off at the shoulder.').helmetTornOff).toBe(false);
+    });
+
+    it('detects a helmet-gated decision tree (a worn helmet negates the ill effect)', () => {
+        const r = classifyCriticalEffect('If he is wearing a helmet, he suffers no ill effects; otherwise he suffers 1 level of Fatigue.');
+        expect(r.helmetNegates).toBe(true);
+        expect(r.fatigue).toBe(true); // the "otherwise" branch still flags fatigue; the applier gates it on the helmet
+    });
+
+    it('detects a "drop held item" hand/arm crit', () => {
+        expect(classifyCriticalEffect('The target must Drop any item held in the hand.').dropsHeldItem).toBe(true);
+        expect(classifyCriticalEffect('He drops anything he was holding and is knocked Prone.').dropsHeldItem).toBe(true);
+        expect(classifyCriticalEffect('The shock forces him to drop his weapon.').dropsHeldItem).toBe(true);
+        // A crit that doesn't unhand anything is not flagged.
+        expect(classifyCriticalEffect('The target is Stunned for 1 round.').dropsHeldItem).toBe(false);
+    });
+
     it('detects Blinded / Deafened', () => {
         const r = classifyCriticalEffect('He is Blinded for 1d10 rounds and permanently Deafened.');
         expect(r.blinded).toBe(true);
@@ -363,6 +384,9 @@ describe('criticalRiderConditionIds (#108 — riders → condition registry ids)
         fatigue: false,
         lostLimb: false,
         fatal: false,
+        helmetTornOff: false,
+        helmetNegates: false,
+        dropsHeldItem: false,
     };
 
     it('returns no ids when no riders fire', () => {
