@@ -450,6 +450,100 @@ See `src/module/data/actor/templates/creature.ts`.
 
 ---
 
+## Roll transparency & modifier provenance (hard requirement)
+
+Two invariants govern everything that touches a roll — the target number, the
+result (degrees of success/failure), damage, penetration. They exist so players
+can see *exactly* how any number was reached, and so bugs surface on the card
+instead of hiding inside a summed total.
+
+### 1. Every roll card prints the full formula — for BOTH target and result — with per-component provenance
+
+A roll chat card must show the complete derivation, not a lumped total:
+
+- **Target side:** `base (source) ± each modifier (source) = final target`. Every
+  component is an individual row carrying its **provenance** — where it came from
+  (the characteristic, the talent, the aim action, the range band, the cover, the
+  weapon quality, the difficulty band). No component may be silently folded into a
+  bucket subtotal (`MODIFIER: +30`) that hides its parts.
+- **Result side:** the same transparency for the outcome — `roll.total` vs
+  `modifiedTarget`, the degrees-of-success/failure math (`(target − roll)/10 + 1`
+  under the active `degreesMode`), and the ±60 cap accounting
+  (`rawModifierTotal` / `modifierCapFired`) when the cap absorbed anything.
+- **Hoverable components:** each component row is hoverable to reveal how it was
+  derived, via the existing rich-tooltip system —
+  `src/module/applications/components/wh40k-tooltip.ts` already ships a
+  `"modifier"` tooltip type and `prepareModifierTooltipData(title, sources)`
+  serialiser (`{name/source, value}` rows). Put `data-wh40k-tooltip="modifier"` +
+  `data-wh40k-tooltip-data="<json>"` on the row. Do not invent a second tooltip
+  mechanism; do not use a bare `title=`.
+
+This means the roll must **carry its derivation state** onto the committed
+`RollData`/`ActionData` (a `{label, value, source}[]` component list), not just a
+`modifierTotal`. The dialog already knows each situational modifier's
+`{source, value, label}` (`_cachedSituationalModifiers`) — that provenance MUST
+be carried through to the card, never summed away at commit
+(`unified-roll-dialog.ts` `_calculateSituationalModifiers` is the historic
+provenance-loss site). `modifiersToRollData()` already builds a formula string
+today and throws it away — surface it. New roll surfaces are incomplete until the
+card renders full target + result formulas with hoverable per-component
+provenance; homologate across all seven systems.
+
+### 2. All calculation-modifying content routes through the central path — no monkey-patching the roll
+
+A talent, trait, item, quality, condition, or aptitude that changes a roll MUST
+feed one of the three sanctioned central mechanisms — never name-match itself into
+a roll/damage builder or mutate the roll's modifier maps ad-hoc:
+
+- **Path A — static item modifiers (data-driven):** `ModifiersTemplate`
+  (`src/module/data/shared/modifiers-template.ts`), applied centrally by
+  `creature.ts` `_applyModifiersTo*`, which also populates `system.modifierSources`
+  for transparency. Use for any flat numeric modifier.
+- **Path B — roll-time collectors:** a named collector under `src/module/rules/*`
+  consumed by `assembleFinalModifiers()` and summed/clamped by the single SSOT
+  `aggregate-target.ts`. Use for context modifiers (range, aim, combat action,
+  weapon quality). Each collector returns **named, provenance-bearing** entries.
+- **Path C — Foundry ActiveEffect `changes`:** the condition registry in
+  `active-effects.ts`. Use for conditions.
+
+**Forbidden (the offender patterns an audit must keep at zero):**
+`actor.hasTalent('X')` / `item.name === 'X'` / `.includes('quality')` branches
+inside `roll-data.ts` / `damage-data.ts` / `action-data.ts` that add or subtract a
+modifier; direct `this.modifiers['x'] = …` / `penetrationModifiers['x'] = …`
+writes that bypass the aggregator; the same quality implemented both inline and in
+`weapon-quality-effects.ts` (name-match drift caused a live `'Razer Sharp'` typo
+bug that never matched `'Razor Sharp'`).
+
+**Dynamic values are DATA, not code.** A modifier whose value is dynamic (scales
+with a characteristic bonus, DoS, penetration, or range band) — which the static
+`ModifiersTemplate` schema historically could not express, forcing the name-match
+hardcode — is declared as a **structured hook on the compendium item itself** and
+evaluated by the central collector at runtime. This is Direction #7 applied to
+modifiers: the content value lives in `_source/*.json`, never in `src/`. Extend
+the schema whenever a new hook shape is needed:
+
+- Add the structured field to `ModifiersTemplate`
+  (`src/module/data/shared/modifiers-template.ts`) — a `scale` descriptor
+  (`{ source: <char key | 'dos' | 'penetration'>, field: 'bonus' | 'total',
+  factor, round, min?, max? }`) rather than a static number, a `trigger`
+  (`always | melee | ranged | onHit | …`), a `target`
+  (`attack | damage | penetration | defense | dos`), and, for consumables, a
+  `duration` (rounds / encounter / scene). Prefer a validatable structured
+  descriptor over a stringly-typed formula.
+- Author the value in the compendium `src/packs/*/_source/*.json` for the item
+  (Crushing Blow, Mighty Shot, Deathdealer, Hammer Blow, Eye of Vengeance, …), and
+  homologate the field across the seven lines' packs.
+- The central collector walks the actor's owned items, evaluates each declared
+  hook against the live roll context, and emits provenance-bearing components.
+  Then **delete the name-match TS**. `src/packs` is a submodule — its schema/data
+  changes are their own commit (change → commit inside the submodule → bump the
+  parent pointer), never mixed with the system-code commit.
+
+Every modifier lands in the central path so it (a) appears on the card with its
+source and (b) is defined once, in data.
+
+---
+
 ## Critical gotchas
 
 1. **Template context: use `{{system.xxx}}`, NOT `{{actor.system.xxx}}`.**
