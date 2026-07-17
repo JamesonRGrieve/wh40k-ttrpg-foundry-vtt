@@ -1,5 +1,5 @@
 {{!-- Orders Panel --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs panelId="orders" label="Ship Orders" icon="fa-ship" count=ordersCount rootClass="wh40k-panel-powers wh40k-panel-orders" bodyClass="tw-p-0" titleClass="tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure" accentBg="linear-gradient(135deg,rgb(from #0284c7 r g b / 0.15) 0%,rgb(from #0284c7 r g b / 0.05) 100%)" accentBorder="rgb(from #0284c7 r g b / 0.3)" accentIcon="#0284c7"}}
+{{#> systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs panelId="orders" label="Ship Orders" icon="fa-ship" count=ordersCount rootClass="wh40k-panel-powers wh40k-panel-orders" bodyClass="tw-p-0" titleClass="tw-text-gold {{themeClassFor 'accent'}}" accentBg="linear-gradient(135deg,rgb(from #0284c7 r g b / 0.15) 0%,rgb(from #0284c7 r g b / 0.05) 100%)" accentBorder="rgb(from #0284c7 r g b / 0.3)" accentIcon="#0284c7"}}
     {{!-- Category Filter Tabs --}}
     {{#if orderCategories.length}}
     <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-[var(--wh40k-radius-sm)] tw-mb-[var(--wh40k-space-md)]">

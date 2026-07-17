@@ -22,8 +22,8 @@
 --}}
 <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
     {{#if titleKey}}
-    <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
-        {{#if icon}}<i class="fas {{icon}} tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{/if}}{{localize titleKey}}
+    <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold {{themeClassFor 'accent'}} tw-mb-2 tw-flex tw-items-center tw-gap-2">
+        {{#if icon}}<i class="fas {{icon}} tw-text-gold {{themeClassFor 'accent'}}"></i> {{/if}}{{localize titleKey}}
     </h3>
     {{/if}}
     {{> @partial-block}}

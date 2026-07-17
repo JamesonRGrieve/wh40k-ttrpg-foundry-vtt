@@ -30,7 +30,7 @@
                             data-action="setFateStar"
                             data-fate-index="{{index}}"
                             title="Fate Point {{index}}{{#if (lte index ../system.fate.value)}} (Available — click to spend){{else}} (Spent — click to restore){{/if}}">
-                        <i class="fas fa-skull {{#if (lte index ../system.fate.value)}}tw-text-[var(--wh40k-accent-gold)] bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
+                        <i class="fas fa-skull {{#if (lte index ../system.fate.value)}}tw-text-[var(--wh40k-accent-gold)] {{themeClassFor 'accent'}}{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
                     </button>
                 {{/each}}
             {{else}}

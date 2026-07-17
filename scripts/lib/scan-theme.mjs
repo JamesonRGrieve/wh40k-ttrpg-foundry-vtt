@@ -14,6 +14,14 @@ import { SYSTEM_IDS } from './system-ids.mjs';
 
 const COVERAGE_PATH = '.theme-coverage.json';
 const variantPattern = new RegExp(`\\b(${SYSTEM_IDS.join('|')}):tw-`);
+// #422: `themeClassFor` is the SSOT the inline `<id>:tw-*` chains migrate onto — it
+// emits the active system's themed class from one call instead of a 7-line chain.
+// A template that routes its theming through the helper is per-system aware too, so
+// count it as adopted; otherwise migrating a chain to the helper would DROP the
+// coverage count and fight the ratchet (the metric this ratchet protects is
+// "per-system-aware templates", not specifically the inline-chain spelling).
+const helperPattern = /themeClassFor/;
+const isPerSystemAware = (text) => variantPattern.test(text) || helperPattern.test(text);
 
 function listTemplates() {
     return [...walkFiles('src/templates', { ext: '.hbs' })];
@@ -27,7 +35,7 @@ function tally() {
 
     for (const path of templatePaths) {
         const text = readFileSync(path, 'utf8');
-        if (!variantPattern.test(text)) continue;
+        if (!isPerSystemAware(text)) continue;
         adopted++;
         adoptedTemplates.push(path);
         for (const id of SYSTEM_IDS) {
