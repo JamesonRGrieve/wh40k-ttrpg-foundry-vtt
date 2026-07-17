@@ -106,45 +106,21 @@ export default class ArmourModSheet extends SetFieldActionsMixin(ContainerItemSh
         // Add armour types config for restrictions
         const armourTypes = (CONFIG.wh40k as { armourTypes?: Record<string, { label: string }> }).armourTypes ?? {};
         context['armourTypes'] = armourTypes;
-        context['armourTypesArray'] = Object.entries(armourTypes).map(([key, config]) => ({
-            key,
-            label: game.i18n.localize(config.label),
-            selected: system.restrictions.armourTypes.has(key),
-        }));
+        // #429: project config option maps into row arrays via the shared mixin helper
+        // (which also owns the add/remove mutation side), replacing three hand-rolled
+        // Object.entries/Array.from(...).map projections.
+        context['armourTypesArray'] = this.projectSetOptions(armourTypes, { selected: system.restrictions.armourTypes });
 
         // Add properties config
         const armourProperties = (CONFIG.wh40k as { armourProperties?: Record<string, { label: string; description: string }> }).armourProperties ?? {};
         context['armourProperties'] = armourProperties;
 
-        // Prepare added properties array
-        context['addedPropertiesArray'] = Array.from(system.addedProperties).map((key) => {
-            const config = armourProperties[key] as { label: string; description: string } | undefined;
-            return {
-                key,
-                label: config ? game.i18n.localize(config.label) : key,
-                description: config ? game.i18n.localize(config.description) : '',
-            };
-        });
+        context['addedPropertiesArray'] = this.projectSetOptions(armourProperties, { only: system.addedProperties });
+        context['removedPropertiesArray'] = this.projectSetOptions(armourProperties, { only: system.removedProperties });
 
-        // Prepare removed properties array
-        context['removedPropertiesArray'] = Array.from(system.removedProperties).map((key) => {
-            const config = armourProperties[key] as { label: string; description: string } | undefined;
-            return {
-                key,
-                label: config ? game.i18n.localize(config.label) : key,
-                description: config ? game.i18n.localize(config.description) : '',
-            };
-        });
-
-        // Available properties (not yet added or removed)
-        const usedKeys = new Set([...Array.from(system.addedProperties), ...Array.from(system.removedProperties)]);
-        context['availablePropertiesArray'] = Object.entries(armourProperties)
-            .filter(([key]) => !usedKeys.has(key))
-            .map(([key, config]) => ({
-                key,
-                label: game.i18n.localize(config.label),
-                description: game.i18n.localize(config.description),
-            }));
+        // Available properties (not yet added or removed).
+        const usedKeys = new Set([...system.addedProperties, ...system.removedProperties]);
+        context['availablePropertiesArray'] = this.projectSetOptions(armourProperties, { exclude: usedKeys });
 
         return context;
     }
