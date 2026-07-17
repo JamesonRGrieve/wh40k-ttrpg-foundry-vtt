@@ -18,10 +18,10 @@ import {
 
 describe('skill-use registry (#432)', () => {
     it('offers only the general test for a skill with no special uses', () => {
-        const uses = getSkillUses('commerce');
+        const uses = getSkillUses('carouse');
         expect(uses).toHaveLength(1);
         expect(uses[0]?.id).toBe('general');
-        expect(hasSkillUses('commerce')).toBe(false);
+        expect(hasSkillUses('carouse')).toBe(false);
     });
 
     it('offers Medicae Special Uses (general + First Aid + Extended Care + Surgery + …)', () => {
@@ -405,5 +405,17 @@ describe('social buff/debuff sub-uses (#447)', () => {
         expect(blatherRounds(false, 4)).toBe(0);
         expect(blatherRounds(true, 0)).toBe(1);
         expect(blatherRounds(true, 3)).toBe(4);
+    });
+});
+
+describe('opposed utility contests (#453)', () => {
+    it('offers a same-skill opposed contest use on Barter/Commerce/Gamble', () => {
+        for (const key of ['barter', 'commerce', 'gamble']) {
+            const ids = getSkillUses(key).map((u) => u.id);
+            expect(ids).toEqual(['general', 'contest']);
+            const use = getSkillUse(key, 'contest');
+            expect(use?.needsTarget).toBe(true);
+            expect(use?.opposedSkill).toBe(key);
+        }
     });
 });
