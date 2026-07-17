@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { clampRoll, degreesOfFailure, degreesOfSuccess, findBand, findBandBy, type OpposedSide, resolveOpposed, type Rng, rollD100, rollDie } from './_dice.ts';
+import {
+    clampRoll,
+    degreesOfFailure,
+    degreesOfSuccess,
+    findBand,
+    findBandBy,
+    type OpposedRoll,
+    resolveOpposedByDoS,
+    type Rng,
+    rollD100,
+    rollDie,
+} from './_dice.ts';
 
 const SAMPLE = [1, 5, 10, 11, 20, 21, 30, 41, 50, 55, 70, 90, 100];
 
@@ -47,8 +58,8 @@ describe('degreesOfFailure (#301)', () => {
     });
 });
 
-describe('resolveOpposed — equivalence with the hand-written resolvers (#301)', () => {
-    it("tie:'a' matches the original grapple resolveOpposedStrength formula", () => {
+describe('resolveOpposedByDoS — equivalence with the hand-written resolvers (#301)', () => {
+    it("tie:'a' matches the original grapple resolveOpposedByDoSStrength formula", () => {
         for (const aRoll of SAMPLE) {
             for (const aTarget of SAMPLE) {
                 for (const bRoll of SAMPLE) {
@@ -61,7 +72,7 @@ describe('resolveOpposed — equivalence with the hand-written resolvers (#301)'
                         const expectedSuccess = actorDoS >= opponentDoS && (actorPassed || !opponentPassed);
                         const expectedNet = actorDoS - opponentDoS;
 
-                        const got = resolveOpposed({ roll: aRoll, target: aTarget }, { roll: bRoll, target: bTarget }, { tie: 'a' });
+                        const got = resolveOpposedByDoS({ roll: aRoll, target: aTarget }, { roll: bRoll, target: bTarget }, { tie: 'a' });
                         expect(got.success).toBe(expectedSuccess);
                         expect(got.aDoS).toBe(actorDoS);
                         expect(got.bDoS).toBe(opponentDoS);
@@ -85,7 +96,7 @@ describe('resolveOpposed — equivalence with the hand-written resolvers (#301)'
                         const netDoS = attackerDoS - defenderDoS;
                         const expectedSuccess = attackerPassed && netDoS > 0;
 
-                        const got = resolveOpposed({ roll: aRoll, target: aTarget }, { roll: bRoll, target: bTarget }, { tie: 'b' });
+                        const got = resolveOpposedByDoS({ roll: aRoll, target: aTarget }, { roll: bRoll, target: bTarget }, { tie: 'b' });
                         expect(got.success).toBe(expectedSuccess);
                         expect(got.netDoS).toBe(netDoS);
                     }
@@ -95,10 +106,10 @@ describe('resolveOpposed — equivalence with the hand-written resolvers (#301)'
     });
 
     it('an equal-DoS contest is decided purely by the tie rule', () => {
-        const a: OpposedSide = { roll: 40, target: 50 }; // 2 DoS
-        const b: OpposedSide = { roll: 30, target: 40 }; // 2 DoS
-        expect(resolveOpposed(a, b, { tie: 'a' }).success).toBe(true);
-        expect(resolveOpposed(a, b, { tie: 'b' }).success).toBe(false);
+        const a: OpposedRoll = { roll: 40, target: 50 }; // 2 DoS
+        const b: OpposedRoll = { roll: 30, target: 40 }; // 2 DoS
+        expect(resolveOpposedByDoS(a, b, { tie: 'a' }).success).toBe(true);
+        expect(resolveOpposedByDoS(a, b, { tie: 'b' }).success).toBe(false);
     });
 });
 

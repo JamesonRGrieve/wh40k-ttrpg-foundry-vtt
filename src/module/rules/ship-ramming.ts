@@ -32,7 +32,7 @@
  * rolls the d100s and the d10 damage die, then feeds the totals in here.
  */
 
-import { degreesOfSuccess, resolveOpposed } from './_dice.ts';
+import { degreesOfSuccess, resolveOpposedByDoS } from './_dice.ts';
 
 /** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
 export { degreesOfSuccess };
@@ -78,7 +78,11 @@ export function resolveRammingToHit(input: RammingToHitInput): RammingToHitResol
         aDoS: attackerDoS,
         bDoS: defenderDoS,
         netDoS,
-    } = resolveOpposed({ roll: input.attackerRoll, target: input.attackerTarget }, { roll: input.defenderRoll, target: input.defenderTarget }, { tie: 'b' });
+    } = resolveOpposedByDoS(
+        { roll: input.attackerRoll, target: input.attackerTarget },
+        { roll: input.defenderRoll, target: input.defenderTarget },
+        { tie: 'b' },
+    );
     return { success, attackerDoS, defenderDoS, netDoS };
 }
 
