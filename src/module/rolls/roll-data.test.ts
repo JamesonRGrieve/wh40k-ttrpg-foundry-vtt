@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from '../testing/repo-file.ts';
 import { clampModifierToCap, ROLL_MODIFIER_CAP } from './roll-data';
 
 /**
@@ -37,5 +38,23 @@ describe('clampModifierToCap (#127)', () => {
         expect(clampModifierToCap(Number.NaN)).toEqual({ clamped: 0, raw: 0, capFired: false });
         expect(clampModifierToCap(Number.POSITIVE_INFINITY)).toEqual({ clamped: 0, raw: 0, capFired: false });
         expect(clampModifierToCap(Number.NEGATIVE_INFINITY)).toEqual({ clamped: 0, raw: 0, capFired: false });
+    });
+});
+
+describe('opposed psychic resolution wired to the #449 engine (#451)', () => {
+    const rollData = readRepoFile('src/module/rolls/roll-data.ts');
+    const actionData = readRepoFile('src/module/rolls/action-data.ts');
+
+    it('a power flagged focusPower.opposed becomes an opposed roll vs its resist characteristic', () => {
+        expect(rollData).toContain('focusPower?.opposed === true');
+        expect(rollData).toContain('this.isOpposed = true');
+        // Defaults to Willpower when the power does not name a resist characteristic.
+        expect(rollData).toContain("'willpower'");
+    });
+
+    it('the psychic card surfaces whether the target resisted and the #449 margin', () => {
+        expect(actionData).toContain('this.rollData.isOpposed');
+        expect(actionData).toContain('WH40K.Psychic.OpposedResisted');
+        expect(actionData).toContain('this.rollData.opposedMargin');
     });
 });
