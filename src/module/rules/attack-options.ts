@@ -221,6 +221,15 @@ export const MELEE_SPECIAL_OPTIONS: AttackModeOption[] = [
         icon: 'fas fa-arrows-up-down-left-right',
         tooltip: 'Opposed WS test. Move opponent up to 1m in chosen direction. Cannot push into obstacles.',
     },
+    {
+        key: 'disarm',
+        label: 'Disarm',
+        actionName: 'Disarm',
+        actionCost: 'Full',
+        modifier: 0,
+        icon: 'fas fa-hand-fist',
+        tooltip: 'Opposed WS test. If you win, the target drops its weapon; win by 3+ degrees to take it.',
+    },
 ];
 
 // ──────────────────────────────────────────────

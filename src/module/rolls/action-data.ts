@@ -202,6 +202,26 @@ export class ActionData {
                 this.addEffect('Knock Down', `The character fails to knock down the target!`);
             }
         }
+
+        // #450: Manoeuvre — opposed WS; a win shoves the target 1 metre.
+        if (weaponRollData.isManoeuvre) {
+            this.addEffect(
+                'Manoeuvre',
+                this.rollData.success ? game.i18n.localize('WH40K.Combat.ManoeuvrePush') : game.i18n.localize('WH40K.Combat.ManoeuvreFail'),
+            );
+        }
+
+        // #450: Disarm — opposed WS; a win drops the target's weapon, 3+ degrees of
+        // victory lets the attacker take it (uses the #449 margin).
+        if (weaponRollData.isDisarm) {
+            if (!this.rollData.success) {
+                this.addEffect('Disarm', game.i18n.localize('WH40K.Combat.DisarmFail'));
+            } else if (this.rollData.opposedMargin >= 3) {
+                this.addEffect('Disarm', game.i18n.localize('WH40K.Combat.DisarmTake'));
+            } else {
+                this.addEffect('Disarm', game.i18n.localize('WH40K.Combat.DisarmDrop'));
+            }
+        }
     }
 
     async _calculateHit(): Promise<void> {

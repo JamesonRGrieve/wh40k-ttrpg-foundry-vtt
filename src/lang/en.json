@@ -1091,6 +1091,11 @@
         },
         "Combat": {
             "Title": "Combat",
+            "ManoeuvrePush": "You shove the target 1 metre in the chosen direction.",
+            "ManoeuvreFail": "The target holds their ground — no movement.",
+            "DisarmDrop": "The target's weapon is knocked from their grip!",
+            "DisarmTake": "You wrench the weapon away and take it for yourself!",
+            "DisarmFail": "The target keeps hold of their weapon.",
             "ActionEconomy": "Actions",
             "FullAction": "Full",
             "HalfAction": "Half",

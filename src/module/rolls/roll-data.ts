@@ -289,6 +289,9 @@ export class WeaponRollData extends RollData {
     isKnockDown: boolean = false;
     isFeint: boolean = false;
     isStun: boolean = false;
+    /** Opposed melee manoeuvres routed through the #449 engine (#450). */
+    isManoeuvre: boolean = false;
+    isDisarm: boolean = false;
     override isThrown: boolean = false;
     isSpray: boolean = false;
     isLasWeapon: boolean = false;
@@ -329,25 +332,29 @@ export class WeaponRollData extends RollData {
         this.isStun = this.action === 'Stun';
         this.isFeint = this.action === 'Feint';
         this.isKnockDown = this.action === 'Knock Down';
+        this.isManoeuvre = this.action === 'Manoeuvre';
+        this.isDisarm = this.action === 'Disarm';
 
         this.ignoreModifiers = this.isSpray || this.isStun;
         this.ignoreDegrees = this.isSpray || this.isStun;
         this.ignoreSuccess = this.isSpray;
-        this.ignoreControls = this.isFeint || this.isStun || this.isKnockDown;
-        this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown;
+        this.ignoreControls = this.isFeint || this.isStun || this.isKnockDown || this.isManoeuvre || this.isDisarm;
+        this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown || this.isManoeuvre || this.isDisarm;
         this.isThrown = (this.weapon as { isThrown?: boolean }).isThrown ?? false;
 
-        this.isOpposed = this.isKnockDown || this.isFeint;
+        // #450: Manoeuvre and Disarm are opposed vs the target's Weapon Skill, like
+        // Feint; Knock-Down opposes Strength. All resolve through the #449 engine.
+        this.isOpposed = this.isKnockDown || this.isFeint || this.isManoeuvre || this.isDisarm;
         if (this.isOpposed && this.targetActor) {
             const targetActor = this.targetActor;
-            if (this.isFeint) {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
-                this.opposedTarget = targetActor.characteristics['weaponSkill']?.total ?? 0;
-                this.opposedChar = 'WS';
-            } else if (this.isKnockDown) {
+            if (this.isKnockDown) {
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
                 this.opposedTarget = targetActor.characteristics['strength']?.total ?? 0;
                 this.opposedChar = 'S';
+            } else {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
+                this.opposedTarget = targetActor.characteristics['weaponSkill']?.total ?? 0;
+                this.opposedChar = 'WS';
             }
         }
 
