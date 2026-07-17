@@ -19,8 +19,18 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { walkFiles } from './lib/walk.mjs';
 
-const CANONICAL_ACCENT_CHAIN =
-    'bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure';
+// The canonical accent chain (byte-identical to the config `theme.accent` values) plus
+// two DRIFTED spellings where dh1/dh2 carry the wrong accent colour (`dh2:crimson` where
+// the canonical accent is `gold-raw`, `dh1:gold-raw` where it is `gold-raw-l5`). Routing
+// the drifted ones through the helper CORRECTS them to the canonical accent — the exact
+// "accents silently fork across sheets" bug the issue flags. Only the `-light`/`-raw`
+// family is converged; the `-dark` shade chain and the all-crimson uniform chain are
+// left (different intents, not accent drift).
+const ACCENT_CHAINS = [
+    'bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure',
+    'bc:tw-text-crimson-light dh1:tw-text-gold-raw dh2:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure',
+    'bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure',
+];
 const REPLACEMENT = "{{themeClassFor 'accent'}}";
 // Allowlist the two directories that are GUARANTEED to render under an item/actor
 // sheet root (where `@root._gameSystemId` is always present). Everything else — chat,
@@ -35,14 +45,18 @@ let sitesConverted = 0;
 
 for (const path of walkFiles('src/templates', { ext: '.hbs' })) {
     if (!ALLOWED_DIRS.test(path)) continue;
-    const text = readFileSync(path, 'utf8');
-    if (!text.includes(CANONICAL_ACCENT_CHAIN)) continue;
-    const occurrences = text.split(CANONICAL_ACCENT_CHAIN).length - 1;
+    let text = readFileSync(path, 'utf8');
+    let occurrences = 0;
+    for (const chain of ACCENT_CHAINS) {
+        const n = text.split(chain).length - 1;
+        if (n === 0) continue;
+        occurrences += n;
+        text = text.split(chain).join(REPLACEMENT);
+    }
+    if (occurrences === 0) continue;
     sitesConverted += occurrences;
     filesChanged++;
-    if (apply) {
-        writeFileSync(path, text.split(CANONICAL_ACCENT_CHAIN).join(REPLACEMENT));
-    }
+    if (apply) writeFileSync(path, text);
     console.log(`${apply ? 'converted' : 'would convert'} ${occurrences.toString().padStart(2)} in ${path}`);
 }
 
