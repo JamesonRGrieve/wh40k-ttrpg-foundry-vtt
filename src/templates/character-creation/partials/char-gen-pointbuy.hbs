@@ -13,7 +13,7 @@
  {{localize "WH40K.CharGen.PointBuyPoints"}}
  </h3>
  <div class="tw-flex tw-items-center tw-gap-3">
- <span class="csd-pointbuy-remaining tw-text-[1.1rem] tw-font-bold {{#if charGen.pointBuyOverspent}}tw-text-failure{{else}}tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure{{/if}}" aria-live="polite">
+ <span class="csd-pointbuy-remaining tw-text-[1.1rem] tw-font-bold {{#if charGen.pointBuyOverspent}}tw-text-failure{{else}}{{themeClassFor 'accent'}}{{/if}}" aria-live="polite">
  {{localize "WH40K.CharGen.PointsRemaining"}}: {{charGen.pointBuyRemaining}} / {{charGen.pointBuyPool}}
  </span>
  <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="charReset" data-tooltip="{{localize 'WH40K.CharGen.PointBuyResetHint'}}">

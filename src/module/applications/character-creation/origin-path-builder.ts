@@ -1089,6 +1089,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         return {
             actor: this.actor,
             gameSystem: this.gameSystem,
+            // #422: the `{{themeClassFor}}` helper reads `@root._gameSystemId`.
+            _gameSystemId: this.gameSystem,
             guidedMode: this.guidedMode,
             isForward: this.direction === DIRECTION.FORWARD,
             isBackward: this.direction === DIRECTION.BACKWARD,

@@ -19,6 +19,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { t } from '../../i18n/t.ts';
 import type { ActionKind } from '../../rules/action-budget.ts';
 import { actionBudgetForActor, resetActionsForActor, spendActionForActor } from '../../rules/action-economy.ts';
+import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { buildReactionState, type ReactionState } from './reaction-state.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -325,6 +326,8 @@ export default class CombatQuickPanel extends HandlebarsApplicationMixin(Applica
         // Panel state
         context['opacityLevel'] = this.opacityLevel;
         context['opacityKey'] = this._getOpacityKey();
+        // #422: surface the actor's game system for the per-system `{{themeClassFor}}`.
+        context['_gameSystemId'] = firstSystemId(this.actor);
 
         return context;
     }
