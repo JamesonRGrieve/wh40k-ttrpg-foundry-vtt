@@ -113,6 +113,32 @@ export default function SetFieldActionsMixin<T extends ApplicationV2Ctor>(Base: 
             await this.writeSetField(field, set);
         }
 
+        /**
+         * Project a config option map into the `{ key, label, description, selected }`
+         * rows the Set-field sheets render (#429) — the shared projection side of the
+         * mixin (it already owned the mutation side). Labels/descriptions are resolved
+         * through `game.i18n`. Filters: `selected` flags rows whose key is in that set;
+         * `only` restricts to keys in that set (materialise a chosen set); `exclude`
+         * drops keys in that set (an available-minus-used list). Callers read only the
+         * fields they need.
+         */
+        projectSetOptions(
+            options: Record<string, { label: string; description?: string }>,
+            filters: { selected?: Set<string>; only?: Set<string>; exclude?: Set<string> } = {},
+        ): Array<{ key: string; label: string; description: string; selected: boolean }> {
+            return (
+                Object.entries(options)
+                    // `only` absent → include all; `exclude` absent → drop none.
+                    .filter(([key]) => filters.only?.has(key) !== false && filters.exclude?.has(key) !== true)
+                    .map(([key, config]) => ({
+                        key,
+                        label: game.i18n.localize(config.label),
+                        description: config.description !== undefined ? game.i18n.localize(config.description) : '',
+                        selected: filters.selected?.has(key) ?? false,
+                    }))
+            );
+        }
+
         /* -------------------------------------------- */
         /*  Generic Action Handlers                     */
         /* -------------------------------------------- */

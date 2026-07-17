@@ -104,24 +104,22 @@ export default class ArmourSheet extends SetFieldActionsMixin(ContainerItemSheet
      * Get available properties with localized labels.
      */
     _getAvailableProperties(): Record<string, { label: string }> {
-        const props: Record<string, { label: string }> = {};
         const available = ['sealed', 'auto-stabilized', 'hexagrammic', 'blessed', 'camouflage', 'lightweight', 'reinforced', 'agility-bonus', 'strength-bonus'];
-        const sys = this.item.system;
-
+        // #429: build the option map, then project it through the shared mixin helper
+        // (excluding already-added properties) rather than hand-rolling the loop. The
+        // record shape the template consumes is preserved by re-collecting the rows.
+        const options: Record<string, { label: string }> = {};
         for (const id of available) {
-            // Skip already-added properties
-            if (sys.properties.has(id)) continue;
-
             const pascalCase = id
                 .split('-')
                 .map((s) => capitalize(s))
                 .join('');
-            props[id] = {
-                label: game.i18n.localize(`WH40K.ArmourProperty.${pascalCase}`),
-            };
+            options[id] = { label: `WH40K.ArmourProperty.${pascalCase}` };
         }
-
-        return props;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system is the DataModel union; `properties` is the armour Set field
+        const selected = (this.item.system as { properties: Set<string> }).properties;
+        const rows = this.projectSetOptions(options, { exclude: selected });
+        return Object.fromEntries(rows.map((r) => [r.key, { label: r.label }]));
     }
 
     /* -------------------------------------------- */

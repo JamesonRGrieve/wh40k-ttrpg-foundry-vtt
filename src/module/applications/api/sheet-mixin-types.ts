@@ -301,6 +301,11 @@ export interface SetFieldActionsMixinAPI {
     addToSetField: (field: string, value: string) => Promise<void>;
     /** Remove a value from a Set-backed field and persist the result. */
     removeFromSetField: (field: string, value: string | undefined) => Promise<void>;
+    /** Project a config option map into `{ key, label, description, selected }` rows (#429). */
+    projectSetOptions: (
+        options: Record<string, { label: string; description?: string }>,
+        filters?: { selected?: Set<string>; only?: Set<string>; exclude?: Set<string> },
+    ) => Array<{ key: string; label: string; description: string; selected: boolean }>;
 }
 
 /* -------------------------------------------- */
