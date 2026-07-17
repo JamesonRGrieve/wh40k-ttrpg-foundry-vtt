@@ -156,8 +156,9 @@ export class HooksManager {
         // #456: the GM advancing the in-universe clock changes every world-time
         // effect's remaining duration — re-render open actor sheets so the effects
         // panel counts down live instead of going stale until the next open.
-        hooksOn('updateWorldTime', () => {
-            HooksManager.onUpdateWorldTime();
+        // #431: the elapsed time also recovers fatigue (rest), so pass the delta.
+        hooksOn('updateWorldTime', (_worldTime: number, dt: number) => {
+            void HooksManager.onUpdateWorldTime(dt);
         });
         // eslint-disable-next-line no-restricted-syntax -- boundary: hotbarDrop hook payload is an untyped Record from Foundry
         hooksOn('hotbarDrop', (bar: unknown, data: Record<string, unknown>, slot: number) => HooksManager.hotbarDrop(bar, data, slot));
@@ -275,13 +276,25 @@ export class HooksManager {
      * remaining (#456), so advancing the GM clock updates the countdown and drops
      * expired effects immediately. Cheap: only rendered sheets are touched.
      */
-    static onUpdateWorldTime(): void {
+    static async onUpdateWorldTime(dt: number): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors may be absent pre-ready; the sheet handle is loosely typed by Foundry
         const actors = (globalThis as { game?: { actors?: { contents?: unknown[] } } }).game?.actors?.contents;
         if (!Array.isArray(actors)) return;
+        const HOUR_SECONDS = 3600;
+        const hours = Number.isFinite(dt) && dt > 0 ? dt / HOUR_SECONDS : 0;
+        // Only the GM writes actor state, so gate the recovery on the primary GM to
+        // avoid every client racing the same update.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.user.isGM is the Foundry permission flag, untyped here
+        const isPrimaryGm = (globalThis as { game?: { user?: { isGM?: boolean } } }).game?.user?.isGM === true;
         for (const actor of actors) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: narrow the Foundry actor surface this touches (sheet.rendered + sheet.render)
-            const a = actor as { sheet?: { rendered?: boolean; render?: (force?: boolean) => unknown } };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: narrow the Foundry actor surface this touches (sheet + fatigue recovery)
+            const a = actor as { sheet?: { rendered?: boolean; render?: (force?: boolean) => unknown }; recoverFatigueOverTime?: (h: number) => Promise<void> };
+            // #431: recover fatigue over the elapsed rest time (GM only).
+            if (isPrimaryGm && hours > 0 && typeof a.recoverFatigueOverTime === 'function') {
+                // eslint-disable-next-line no-await-in-loop -- sequential per-actor updates; the actor count is small and this is a rare GM clock event
+                await a.recoverFatigueOverTime(hours);
+            }
+            // #456: re-render open sheets so the effect countdowns refresh.
             if (a.sheet?.rendered === true) void a.sheet.render?.();
         }
     }

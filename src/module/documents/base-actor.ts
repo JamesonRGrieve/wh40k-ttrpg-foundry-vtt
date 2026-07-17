@@ -1,4 +1,5 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
+import type { FatigueModelDef } from '../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { computeCharacteristicTotals } from '../data/shared/characteristic-math.ts';
 import { isEffectSuppressedByEquipState, isWeaponAttackBlockedByEquip } from '../data/shared/equip-state.ts';
@@ -9,6 +10,7 @@ import { t } from '../i18n/t.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
 import { type AddictionTier, resolveAddictionCheck } from '../rules/addiction.ts';
 import { clampDisposition } from '../rules/disposition.ts';
+import { getFatigueAfterRest, isFatigueDeath, isFatigueUnconscious } from '../rules/fatigue.ts';
 import { clampFearRating, getFearTestPenalty } from '../rules/fear.ts';
 import { resolveEscapePinningTest, resolvePinningTest } from '../rules/pinning.ts';
 import { type RerollOption, type RerollRollContext, type RerollSpec, rerollApplies, rerollLedgerKey, rerollUseAvailable } from '../rules/reroll.ts';
@@ -105,6 +107,90 @@ export class WH40KBaseActor extends Actor {
         if (!fatigue) return;
         const next = Math.max(0, fatigue.value + Math.trunc(amount));
         await this.update({ 'system.fatigue.value': next });
+        await this.checkFatigueThresholds();
+    }
+
+    /**
+     * Read this actor's fatigue level, threshold model, and TB/WPB (#431). Returns
+     * null for actors with no fatigue model (the fatigue rules do not apply).
+     */
+    #fatigueState(): { level: number; def: FatigueModelDef; toughnessBonus: number; willpowerBonus: number } | null {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the fatigue slot + model resolver live on creature.ts; narrow structurally
+        const sys = this.system as {
+            fatigue?: { value: number };
+            characteristics?: { toughness?: { effectiveBonus?: number }; willpower?: { effectiveBonus?: number } };
+            _resolveFatigueModel?: () => FatigueModelDef;
+        };
+        if (sys.fatigue === undefined || typeof sys._resolveFatigueModel !== 'function') return null;
+        return {
+            level: sys.fatigue.value,
+            def: sys._resolveFatigueModel(),
+            toughnessBonus: sys.characteristics?.toughness?.effectiveBonus ?? 0,
+            willpowerBonus: sys.characteristics?.willpower?.effectiveBonus ?? 0,
+        };
+    }
+
+    /**
+     * Apply the RAW fatigue consequences (#431, follow-up to #114): a character whose
+     * fatigue exceeds their threshold falls Unconscious; on the halving-model lines,
+     * passing 2× the threshold is fatigue-death. The Unconscious condition is applied
+     * (and removed when fatigue drops back under threshold) automatically, tagged so
+     * this method owns exactly the effect it created; death is surfaced to the GM.
+     */
+    async checkFatigueThresholds(): Promise<void> {
+        const state = this.#fatigueState();
+        if (state === null) return;
+        const input = { fatigueLevel: state.level, toughnessBonus: state.toughnessBonus, willpowerBonus: state.willpowerBonus };
+        const unconscious = isFatigueUnconscious(input, state.def);
+
+        // The fatigue-applied Unconscious effect this method owns (flag-tagged).
+        const existing = this.effects.find((e) => {
+            const flags = e.flags as { 'wh40k-rpg'?: { fatigueUnconscious?: boolean } };
+            return flags['wh40k-rpg']?.fatigueUnconscious === true;
+        });
+
+        if (unconscious && existing === undefined) {
+            // Apply the Unconscious condition inline (mirrors the `unconscious` def in
+            // rules/active-effects.ts) rather than importing that module: base-actor →
+            // rules/active-effects closes a depcruise no-circular cycle. Flag-tagged so
+            // this method owns exactly the effect it created.
+            const data = {
+                name: game.i18n.localize('WH40K.Fatigue.UnconsciousLabel'),
+                icon: 'icons/svg/unconscious.svg',
+                changes: [
+                    { key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+                    { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+                    { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+                    { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+                ],
+                flags: { 'wh40k-rpg': { nature: 'harmful', fatigueUnconscious: true } },
+            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts Foundry's untyped embedded-document create schema
+            await this.createEmbeddedDocuments('ActiveEffect', [data] as unknown as Parameters<typeof this.createEmbeddedDocuments<'ActiveEffect'>>[1]);
+            ui.notifications.warn(game.i18n.format('WH40K.Fatigue.Unconscious', { actor: this.name }));
+        } else if (!unconscious && existing?.id != null) {
+            await this.deleteEmbeddedDocuments('ActiveEffect', [existing.id]);
+        }
+
+        if (isFatigueDeath(input, state.def)) {
+            ui.notifications.warn(game.i18n.format('WH40K.Fatigue.Death', { actor: this.name }));
+        }
+    }
+
+    /**
+     * Reduce fatigue as in-universe time passes (#431 + #455): resting for `hours`
+     * removes fatigue per the active model (`getFatigueAfterRest`), then re-checks the
+     * thresholds (waking from fatigue-unconsciousness). Driven by the GM clock, so
+     * advancing world time lets fatigue recover. No-op with no fatigue model / no rest.
+     */
+    async recoverFatigueOverTime(hours: number): Promise<void> {
+        if (!(hours > 0)) return;
+        const state = this.#fatigueState();
+        if (state === null || state.level <= 0) return;
+        const next = getFatigueAfterRest(state.level, hours, state.def);
+        if (next === state.level) return;
+        await this.update({ 'system.fatigue.value': next });
+        await this.checkFatigueThresholds();
     }
 
     /**
