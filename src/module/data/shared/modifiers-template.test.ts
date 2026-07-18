@@ -1,4 +1,6 @@
 import { afterAll, describe, expect, it } from 'vitest';
+// Type-only import (erased at runtime, so it does not evaluate the module before the stub is installed).
+import type { DynamicModifierEntry } from './modifiers-template.ts';
 
 /**
  * Characterization of `ModifiersTemplate.defineSchema()`'s situational channels.
@@ -66,6 +68,7 @@ const fields = {
     NumberField: makeField('NumberField'),
     SchemaField: makeField('SchemaField'),
     StringField: makeField('StringField'),
+    BooleanField: makeField('BooleanField'),
 };
 
 interface FoundryStub {
@@ -87,7 +90,21 @@ afterAll(() => {
 });
 
 // Imported after the stub is in place (the module evaluates `foundry.*` at load).
-const { default: ModifiersTemplate } = await import('./modifiers-template.ts');
+const modifiersModule = await import('./modifiers-template.ts');
+const { default: ModifiersTemplate } = modifiersModule;
+const {
+    DYNAMIC_MODIFIER_TARGETS,
+    DYNAMIC_MODIFIER_MODES,
+    DYNAMIC_MODIFIER_SIDES,
+    DYNAMIC_SCALE_SOURCES,
+    DYNAMIC_SCALE_FIELDS,
+    DYNAMIC_SCALE_ROUNDING,
+    DYNAMIC_SCALE_MULTIPLIERS,
+    DYNAMIC_MODIFIER_WHEN,
+    DYNAMIC_DURATION_UNITS,
+    DYNAMIC_DURATION_UPKEEP,
+    DYNAMIC_DURATION_STACKING,
+} = modifiersModule;
 
 /** Narrow a schema slot to the recording-field the stub guarantees it is. */
 function field(x: object): RecordingField {
@@ -178,5 +195,126 @@ describe('situationalEntrySchema (via ModifiersTemplate.defineSchema)', () => {
                 options: { required: false, initial: 'fa-exclamation-triangle' },
             });
         }
+    });
+});
+
+describe('dynamicModifiers schema (data-driven modifier hooks, Direction #7)', () => {
+    const schema = ModifiersTemplate.defineSchema();
+    const modifiersSlot = schema['modifiers'];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) sees `DataField`, tsconfig.json (flag on) sees `DataField | undefined`.
+    if (modifiersSlot === undefined) throw new Error('schema missing modifiers field');
+    const dynamic = subField(field(modifiersSlot), 'dynamicModifiers');
+
+    it('is an ArrayField initialising to empty (legacy items carry none)', () => {
+        expect(dynamic._kind).toBe('ArrayField');
+        expect(dynamic.arg(1)).toEqual({ required: true, initial: [] });
+    });
+
+    /** The choices array recorded on a StringField descriptor's options bag. */
+    function choicesOf(f: Descriptor | undefined): readonly string[] | undefined {
+        // eslint-disable-next-line no-restricted-syntax -- test: the recorded StringField options bag carries the `choices` array we authored
+        return (f?.options as { choices?: readonly string[] } | undefined)?.choices;
+    }
+    function entryFieldsOf(): Readonly<Record<string, Descriptor>> {
+        return describeField(field(dynamic.arg(0))).fields ?? {};
+    }
+
+    it('each entry exposes the full hook surface (what / how-much / when / duration)', () => {
+        const entry = describeField(field(dynamic.arg(0)));
+        expect(entry.kind).toBe('SchemaField');
+        expect(Object.keys(entry.fields ?? {}).sort()).toEqual(
+            [
+                'condition',
+                'conditionValue',
+                'duration',
+                'formula',
+                'label',
+                'mode',
+                'scale',
+                'side',
+                'target',
+                'targetKey',
+                'value',
+                'valueFormula',
+                'when',
+            ].sort(),
+        );
+    });
+
+    it('wires every choice vocabulary on the entry from the exported consts', () => {
+        const entryFields = entryFieldsOf();
+        expect(choicesOf(entryFields['target'])).toEqual([...DYNAMIC_MODIFIER_TARGETS]);
+        expect(choicesOf(entryFields['mode'])).toEqual([...DYNAMIC_MODIFIER_MODES]);
+        expect(choicesOf(entryFields['side'])).toEqual([...DYNAMIC_MODIFIER_SIDES]);
+        expect(choicesOf(entryFields['when'])).toEqual([...DYNAMIC_MODIFIER_WHEN]);
+    });
+
+    it('wires the scale sub-schema choice vocabularies from the exported consts', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.strict.json (flag on).
+        const scaleFields = entryFieldsOf()['scale']?.fields ?? {};
+        expect(choicesOf(scaleFields['source'])).toEqual([...DYNAMIC_SCALE_SOURCES]);
+        expect(choicesOf(scaleFields['field'])).toEqual([...DYNAMIC_SCALE_FIELDS]);
+        expect(choicesOf(scaleFields['round'])).toEqual([...DYNAMIC_SCALE_ROUNDING]);
+        expect(choicesOf(scaleFields['multiplier'])).toEqual([...DYNAMIC_SCALE_MULTIPLIERS]);
+    });
+
+    it('wires the duration sub-schema choice vocabularies from the exported consts', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.strict.json (flag on).
+        const durationFields = entryFieldsOf()['duration']?.fields ?? {};
+        expect(choicesOf(durationFields['unit'])).toEqual([...DYNAMIC_DURATION_UNITS]);
+        expect(choicesOf(durationFields['upkeep'])).toEqual([...DYNAMIC_DURATION_UPKEEP]);
+        expect(choicesOf(durationFields['stacking'])).toEqual([...DYNAMIC_DURATION_STACKING]);
+    });
+
+    it('carries a temporary-effect duration lifecycle with a nested crash after-effect', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.strict.json (flag on).
+        const durationFields = entryFieldsOf()['duration']?.fields ?? {};
+        expect(Object.keys(durationFields).sort()).toEqual(['aftereffect', 'save', 'stacking', 'sustained', 'unit', 'upkeep', 'value', 'valueFormula'].sort());
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.strict.json (flag on).
+        expect(durationFields['aftereffect']?.kind).toBe('SchemaField');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.strict.json (flag on).
+        expect(durationFields['sustained']?.kind).toBe('BooleanField');
+    });
+});
+
+describe('ModifiersTemplate.hasDynamicModifiers getter', () => {
+    /** A fully-populated hook fixture (every schema field present), so no `as unknown` cast is needed. */
+    const SAMPLE_HOOK: DynamicModifierEntry = {
+        target: 'damage',
+        targetKey: '',
+        side: 'attacker',
+        mode: 'add',
+        value: 2,
+        valueFormula: '',
+        scale: { source: '', field: 'bonus', factor: 1, round: 'up', multiplier: '', min: null, max: null },
+        when: 'always',
+        condition: '',
+        conditionValue: '',
+        duration: {
+            unit: 'instant',
+            value: 0,
+            valueFormula: '',
+            sustained: false,
+            upkeep: '',
+            stacking: 'none',
+            save: { characteristic: '', difficulty: 0 },
+            aftereffect: { target: 'characteristic', targetKey: '', value: 0, valueFormula: '', durationUnit: 'instant', durationValue: 0 },
+        },
+        formula: '',
+        label: '',
+    };
+
+    /** Build a ModifiersTemplate without the DataModel constructor and set only the field the getter reads. */
+    function withDynamic(dynamicModifiers: DynamicModifierEntry[]): InstanceType<typeof ModifiersTemplate> {
+        // eslint-disable-next-line no-restricted-syntax -- test: bypass the DataModel constructor to exercise one pure getter
+        const inst = Object.create(ModifiersTemplate.prototype) as InstanceType<typeof ModifiersTemplate>;
+        // eslint-disable-next-line no-restricted-syntax -- test: the getter reads only modifiers.dynamicModifiers; a partial modifiers object suffices
+        (inst as { modifiers: { dynamicModifiers: DynamicModifierEntry[] } }).modifiers = { dynamicModifiers };
+        return inst;
+    }
+
+    it('is false with no hooks and true once one is declared', () => {
+        expect(withDynamic([]).hasDynamicModifiers).toBe(false);
+        expect(withDynamic([SAMPLE_HOOK]).hasDynamicModifiers).toBe(true);
     });
 });
