@@ -3,6 +3,12 @@ import { applyCriticalDamageConditions, type CriticalSideEffectReport } from '..
 import { type CriticalDamageRecord, getCriticalDamageRecord } from '../rules/critical-damage.ts';
 import { damageTypeDropdown } from '../rules/damage-type.ts';
 import { type BreakCheck, magnitudeLossForHit, resolveBreakCheck } from '../rules/dw-horde-magnitude.ts';
+import {
+    collectDynamicComponents,
+    type DynamicModifierContext,
+    type DynamicModifierItemLike,
+    type DynamicModifierSituation,
+} from '../rules/dynamic-modifiers.ts';
 import { hitDropdown } from '../rules/hit-locations.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { postFlattenedInstanceToChat } from './roll-helpers.ts';
@@ -32,6 +38,8 @@ export interface ActorLike {
         horde?: ActorHordeState;
     };
     hasTalent: (name: string) => boolean;
+    /** Owned items, walked for defender-side dynamic modifier hooks (e.g. crit reduction). */
+    items?: Iterable<DynamicModifierItemLike>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.update accepts arbitrary update data; return type is unknown
     update: (data: Record<string, unknown>) => Promise<unknown>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.createEmbeddedDocuments return type is unknown
@@ -275,10 +283,12 @@ export class AssignDamageData {
         }
 
         if (this.criticalDamageTaken > 0) {
-            // Handle True Grit Talent
-            if (this.actor.hasTalent('True Grit')) {
-                // Reduces by Toughness Bonus to minimum of 1
-                this.criticalDamageTaken = this.criticalDamageTaken - this.tb < 1 ? 1 : this.criticalDamageTaken - this.tb;
+            // Defender-side critical-damage reduction (True Grit, Daemonic, …) — the
+            // reduction now comes from the item's dynamicModifiers hook via the central
+            // collector rather than a name match here (Direction #7). Floored at 1.
+            const critReduction = this._collectCritReduction();
+            if (critReduction > 0) {
+                this.criticalDamageTaken = Math.max(1, this.criticalDamageTaken - critReduction);
             }
 
             // Resolve the structured Critical Damage record (effect prose + the
@@ -297,6 +307,37 @@ export class AssignDamageData {
         if (this.damageTaken > 0) {
             this.hasDamage = true;
         }
+    }
+
+    /**
+     * Sum the defender-side critical-damage reduction the target's owned items grant
+     * via their `dynamicModifiers` hooks (target `critReduction`), so a talent like
+     * True Grit reduces crit damage from its declared data rather than a name match
+     * (Direction #7). A reduction that scales on Toughness Bonus reads it from the
+     * context's `t` bonus (`this.tb` is the struck location's Toughness Bonus).
+     * Returns 0 when the actor exposes no items (e.g. minimal test doubles).
+     */
+    private _collectCritReduction(): number {
+        const items = this.actor.items;
+        if (items === undefined) return 0;
+        const ctx: DynamicModifierContext = {
+            charBonus: { t: this.tb },
+            charTotal: {},
+            dos: 0,
+            pr: 0,
+            cb: 0,
+            level: 0,
+            penetration: 0,
+            armourPoints: 0,
+        };
+        const situation: DynamicModifierSituation = { isCrit: true };
+        let total = 0;
+        for (const component of collectDynamicComponents(items, ctx, situation)) {
+            if (component.side === 'defender' && component.target === 'critReduction' && component.mode === 'add') {
+                total += component.value;
+            }
+        }
+        return total;
     }
 
     async performActionAndSendToChat(): Promise<void> {

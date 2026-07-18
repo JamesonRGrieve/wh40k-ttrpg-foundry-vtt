@@ -1,6 +1,36 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { DynamicModifierEntry } from '../data/shared/modifiers-template.ts';
 import { invalidateCriticalDamageCache } from '../rules/critical-damage';
+import type { DynamicModifierItemLike } from '../rules/dynamic-modifiers.ts';
 import { AssignDamageData, type ActorLike } from './assign-damage-data';
+
+/** A defender-side crit-reduction hook (scales by Toughness Bonus) — the True Grit shape. */
+function critReductionHook(): DynamicModifierEntry {
+    return {
+        target: 'critReduction',
+        targetKey: '',
+        side: 'defender',
+        mode: 'add',
+        value: 0,
+        valueFormula: '',
+        scale: { source: 't', field: 'bonus', factor: 1, round: 'up', multiplier: '', min: null, max: null },
+        when: 'onCrit',
+        condition: '',
+        conditionValue: '',
+        duration: {
+            unit: 'instant',
+            value: 0,
+            valueFormula: '',
+            sustained: false,
+            upkeep: '',
+            stacking: 'none',
+            save: { characteristic: '', difficulty: 0 },
+            aftereffect: { target: 'characteristic', targetKey: '', value: 0, valueFormula: '', durationUnit: 'instant', durationValue: 0 },
+        },
+        formula: '',
+        label: '',
+    };
+}
 
 function buildActor(overrides: Partial<ActorLike['system']> = {}): ActorLike {
     return {
@@ -345,5 +375,42 @@ describe('Critical Damage record capture (#108)', () => {
         await data.finalize();
         expect(data.hasCriticalDamage).toBe(false);
         expect(data.criticalRecord).toBeNull();
+    });
+});
+
+describe('defender-side crit reduction via dynamicModifiers (True Grit, data-driven)', () => {
+    beforeEach(() => vi.stubGlobal('game', { packs: { get: () => undefined } }));
+    afterEach(() => {
+        invalidateCriticalDamageCache();
+        vi.unstubAllGlobals();
+    });
+
+    /** Body hit that overflows 2 wounds into critical damage: reducedDamage 7, crit 5 before reduction. */
+    function critHit(): { location: string; damageType: string; totalDamage: number; totalPenetration: number; totalFatigue: number } {
+        return { location: 'Body', damageType: 'Impact', totalDamage: 10, totalPenetration: 0, totalFatigue: 0 };
+    }
+    function actorWith(items?: DynamicModifierItemLike[]): ActorLike {
+        const actor = buildActor({
+            armour: { BODY: { value: 0, toughnessBonus: 3 }, HEAD: { value: 0, toughnessBonus: 3 } },
+            wounds: { value: 2, critical: 0 },
+        });
+        if (items !== undefined) actor.items = items;
+        return actor;
+    }
+
+    it('reduces critical damage by the hook value (Toughness Bonus), floored at 1', async () => {
+        const trueGrit: DynamicModifierItemLike = { name: 'True Grit', system: { modifiers: { dynamicModifiers: [critReductionHook()] } } };
+        const data = new AssignDamageData(actorWith([trueGrit]), critHit());
+        data.update();
+        await data.finalize();
+        // reducedDamage 7 − 2 wounds = 5 crit; True Grit −TB(3) → 2.
+        expect(data.criticalDamageTaken).toBe(2);
+    });
+
+    it('takes the full critical damage when no crit-reduction hook is present', async () => {
+        const data = new AssignDamageData(actorWith(), critHit());
+        data.update();
+        await data.finalize();
+        expect(data.criticalDamageTaken).toBe(5);
     });
 });
