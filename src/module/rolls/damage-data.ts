@@ -283,6 +283,8 @@ export class Hit {
             isRanged: actionItem?.isRanged === true,
             isCrit: this.righteousFury.length > 0,
             action: attackData.rollData.action,
+            // Per-attack activated effects (Eye of Vengeance, …) for `condition: activated` hooks.
+            activated: attackData.rollData.eyeOfVengeance ? ['eyeOfVengeance'] : [],
         };
         for (const component of collectDynamicComponents(items, ctx, situation)) {
             if (component.side !== 'attacker') continue;
@@ -461,10 +463,8 @@ export class Hit {
                 }
             }
 
-            // Eye of Vengeance
-            if (attackData.rollData.eyeOfVengeance) {
-                this.modifiers['eye of vengeance'] = attackData.rollData.dos;
-            }
+            // Eye of Vengeance → data-driven via the talent's dynamicModifiers hook
+            // (condition: activated), applied by applyDynamicModifiers. Direction #7.
 
             // Las Modes
             if (attackData.rollData.hasAttackSpecial('Overcharge')) {
@@ -574,9 +574,8 @@ export class Hit {
             calculateAmmoPenetrationBonuses(attackData as unknown as Parameters<typeof calculateAmmoPenetrationBonuses>[0], this);
         }
 
-        if (attackData.rollData.eyeOfVengeance) {
-            this.penetrationModifiers['eye of vengeance'] = attackData.rollData.dos;
-        }
+        // Eye of Vengeance Penetration → data-driven via the talent's dynamicModifiers
+        // hook (condition: activated), applied by applyDynamicModifiers. Direction #7.
 
         if (attackData.rollData.rangeName === 'Short Range' || attackData.rollData.rangeName === 'Point Blank') {
             if (attackData.rollData.hasAttackSpecial('Melta')) {

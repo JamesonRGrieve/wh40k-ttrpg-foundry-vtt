@@ -113,7 +113,10 @@ describe('Hit.applyDynamicModifiers — data-driven damage hooks (Direction #7)'
         return { name, system: { modifiers: { dynamicModifiers: hooks } } };
     }
     /** A minimal AttackDataLike whose actor exposes fuzzy characteristic bonuses (WS 4, BS 3, else 2) + owned items. */
-    function attackData(items: DynamicModifierItemLike[], opts: { isMelee?: boolean; isRanged?: boolean; dos?: number } = {}): AttackDataLike {
+    function attackData(
+        items: DynamicModifierItemLike[],
+        opts: { isMelee?: boolean; isRanged?: boolean; dos?: number; activated?: boolean } = {},
+    ): AttackDataLike {
         const bonus = (key: string): number => (key === 'WeaponSkill' ? 4 : key === 'BallisticSkill' ? 3 : 2);
         return {
             rollData: {
@@ -129,7 +132,7 @@ describe('Hit.applyDynamicModifiers — data-driven damage hooks (Direction #7)'
                 rangeName: '',
                 attackSpecials: [],
                 dos: opts.dos ?? 3,
-                eyeOfVengeance: false,
+                eyeOfVengeance: opts.activated ?? false,
                 hasAttackSpecial: () => false,
                 getAttackSpecial: () => ({ level: 0 }),
             },
@@ -165,6 +168,19 @@ describe('Hit.applyDynamicModifiers — data-driven damage hooks (Direction #7)'
         const hit = new Hit();
         await hit.applyDynamicModifiers(attackData([clamp]));
         expect(Object.keys(hit.modifiers)).toEqual([]);
+    });
+
+    it('applies an activation-gated hook (Eye of Vengeance +DoS) only when activated', async () => {
+        const eov = item('Eye of Vengeance', [
+            makeHook({ target: 'damage', condition: 'activated', conditionValue: 'eyeOfVengeance', scale: scale({ source: 'dos', factor: 1, round: 'none' }) }),
+        ]);
+        const notActivated = new Hit();
+        await notActivated.applyDynamicModifiers(attackData([eov], { isRanged: true, isMelee: false, dos: 3, activated: false }));
+        expect(notActivated.modifiers['eye of vengeance']).toBeUndefined();
+
+        const activated = new Hit();
+        await activated.applyDynamicModifiers(attackData([eov], { isRanged: true, isMelee: false, dos: 3, activated: true }));
+        expect(activated.modifiers['eye of vengeance']).toBe(3); // +DoS
     });
 
     it('skips a ranged-only hook on a melee attack, and is a no-op for hookless items', async () => {
