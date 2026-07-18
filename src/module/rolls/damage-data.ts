@@ -552,9 +552,9 @@ export class Hit {
                 this.penetrationModifiers['lance'] = this.penetration * attackData.rollData.dos;
             }
 
-            if (attackData.rollData.dos > 2 && attackData.rollData.hasAttackSpecial('Razer Sharp')) {
-                this.penetrationModifiers['razer sharp'] = this.penetration;
-            }
+            // Razor Sharp Penetration is applied by calculateQualityPenetrationModifiers
+            // below. The old inline branch matched a mis-spelled 'Razer Sharp' quality
+            // that never fired (canonical is 'Razor Sharp') — removed (#303).
 
             // Hammer Blow Penetration → data-driven via the talent's dynamicModifiers
             // hook (applied by applyDynamicModifiers). See Direction #7. The separate
@@ -577,11 +577,9 @@ export class Hit {
         // Eye of Vengeance Penetration → data-driven via the talent's dynamicModifiers
         // hook (condition: activated), applied by applyDynamicModifiers. Direction #7.
 
-        if (attackData.rollData.rangeName === 'Short Range' || attackData.rollData.rangeName === 'Point Blank') {
-            if (attackData.rollData.hasAttackSpecial('Melta')) {
-                this.penetrationModifiers['melta'] = this.penetration;
-            }
-        }
+        // Melta short-range Penetration is applied by calculateQualityPenetrationModifiers
+        // below. The old inline branch here double-counted it under a separate 'melta'
+        // key alongside the collector's 'Melta' — removed (#303).
 
         // Quality-based penetration modifiers (Melta + Razor Sharp via weapon qualities)
         const qualityPenModifiers = calculateQualityPenetrationModifiers({
