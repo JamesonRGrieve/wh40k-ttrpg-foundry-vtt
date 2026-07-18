@@ -421,11 +421,8 @@ export class Hit {
         if (actionItem.isMelee) {
             this.modifiers['strength bonus'] = sourceActor.getCharacteristicFuzzy('Strength').bonus;
 
-            // Crushing Blow
-            if (sourceActor.hasTalent('Crushing Blow')) {
-                const wsBonus = sourceActor.getCharacteristicFuzzy('WeaponSkill').bonus;
-                this.modifiers['crushing blow'] = Math.ceil(wsBonus / 2);
-            }
+            // Crushing Blow → data-driven via the talent's dynamicModifiers hook
+            // (applied by applyDynamicModifiers). See Direction #7.
 
             // Deathdealer
             if (sourceActor.hasTalentFuzzyWords(['Deathdealer', 'Melee'])) {
@@ -477,11 +474,8 @@ export class Hit {
                 this.modifiers['maximal'] = maximalRoll.total ?? 0;
             }
 
-            // Mighty Shot
-            if (sourceActor.hasTalent('Mighty Shot')) {
-                const bsBonus = sourceActor.getCharacteristicFuzzy('ballisticSkill').bonus;
-                this.modifiers['mighty shot'] = Math.ceil(bsBonus / 2);
-            }
+            // Mighty Shot → data-driven via the talent's dynamicModifiers hook
+            // (applied by applyDynamicModifiers). See Direction #7.
 
             // Deathdealer
             if (sourceActor.hasTalentFuzzyWords(['Deathdealer', 'Ranged'])) {
@@ -525,7 +519,6 @@ export class Hit {
     async _calculatePenetration(attackData: AttackDataLike): Promise<void> {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
-        const sourceActor = attackData.rollData.sourceActor;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: penetration may be a number or Roll formula string from legacy data; union cannot be expressed in the minimal interface
         const rollFormula = actionItem.system.effectivePenetration ?? actionItem.system.damage?.penetration ?? actionItem.system.penetration;
@@ -557,10 +550,9 @@ export class Hit {
                 this.penetrationModifiers['razer sharp'] = this.penetration;
             }
 
-            if (attackData.rollData.action === 'All Out Attack' && sourceActor.hasTalent('Hammer Blow')) {
-                const strBonus = sourceActor.getCharacteristicFuzzy('strength').bonus;
-                this.penetrationModifiers['hammer blow'] = Math.ceil(strBonus / 2);
-            }
+            // Hammer Blow Penetration → data-driven via the talent's dynamicModifiers
+            // hook (applied by applyDynamicModifiers). See Direction #7. The separate
+            // Concussive-quality grant it also confers is handled below.
         } else if (actionItem.isRanged) {
             if (attackData.rollData.hasAttackSpecial('Maximal')) {
                 this.penetrationModifiers['maximal'] = 2;
