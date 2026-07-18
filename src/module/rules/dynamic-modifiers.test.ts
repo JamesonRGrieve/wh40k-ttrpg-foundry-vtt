@@ -7,6 +7,7 @@ import {
     type DynamicModifierSituation,
     evaluateScale,
     hookApplies,
+    modeDelta,
     resolveDynamicMagnitude,
 } from './dynamic-modifiers.ts';
 
@@ -118,6 +119,25 @@ describe('resolveDynamicMagnitude', () => {
     });
     it('uses the scale when scaled (scale wins over a stray static value)', () => {
         expect(resolveDynamicMagnitude(makeHook({ value: 99, scale: scale({ source: 'per', factor: 0.5, round: 'up' }) }), makeCtx())).toBe(2);
+    });
+});
+
+describe('modeDelta — additive delta for each combine mode', () => {
+    it('add returns the value verbatim', () => {
+        expect(modeDelta('add', 10, 3)).toBe(3);
+    });
+    it('multiply returns base × (value − 1) so the total becomes base × value', () => {
+        // Melta pen×2 on base pen 6 → delta 6 → total 12
+        expect(modeDelta('multiply', 6, 2)).toBe(6);
+        // Lance pen×DoS(3) on base pen 6 → delta 12 → total 18
+        expect(modeDelta('multiply', 6, 3)).toBe(12);
+    });
+    it('set returns value − base so the total becomes value', () => {
+        expect(modeDelta('set', 6, 10)).toBe(4);
+    });
+    it('min / max return null (a stat clamp, not a damage/pen delta)', () => {
+        expect(modeDelta('min', 6, 2)).toBeNull();
+        expect(modeDelta('max', 6, 2)).toBeNull();
     });
 });
 
