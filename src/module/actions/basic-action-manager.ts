@@ -529,8 +529,16 @@ export class BasicActionManager {
         const sourceActor = actionData.rollData.sourceActor;
         if (sourceActor == null) return;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.weapon is a WH40KItem; isMelee/isRanged are DataModel getters not surfaced on that union at this layer
+        const reWeapon = actionData.rollData.weapon as { isMelee?: boolean; isRanged?: boolean } | undefined;
         const option = sourceActor
-            .getRerollOptions({ success: actionData.rollData.success, type: actionData.rollData.type, rollKey: actionData.rollData.rollKey })
+            .getRerollOptions({
+                success: actionData.rollData.success,
+                type: actionData.rollData.type,
+                rollKey: actionData.rollData.rollKey,
+                isMelee: reWeapon?.isMelee === true,
+                isRanged: reWeapon?.isRanged === true,
+            })
             .find((o) => o.id === variantId);
         if (option === undefined || option.disabled) {
             const freq =

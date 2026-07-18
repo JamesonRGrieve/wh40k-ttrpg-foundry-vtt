@@ -65,10 +65,14 @@ export class ActionData {
     get rerollOptions(): RerollOption[] {
         const actor = this.rollData.sourceActor;
         if (actor === null) return [];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.weapon is a WH40KItem; isMelee/isRanged are DataModel getters not surfaced on that union at this layer
+        const weapon = this.rollData.weapon as { isMelee?: boolean; isRanged?: boolean } | undefined;
         return actor.getRerollOptions({
             success: this.rollData.success,
             type: this.rollData.type,
             rollKey: this.rollData.rollKey,
+            isMelee: weapon?.isMelee === true,
+            isRanged: weapon?.isRanged === true,
         });
     }
 
@@ -295,17 +299,12 @@ export class ActionData {
                 isPsychicStorm?: boolean;
                 usesAmmo?: boolean;
             };
-            if (itemSystem.isMelee === true) {
-                if (!this.rollData.success) {
-                    type ActorWithHasTalent = WH40KBaseActorDocument & { hasTalent: (name: string) => boolean };
-                    const sourceActor = this.rollData.sourceActor as ActorWithHasTalent | null;
-                    if (sourceActor?.hasTalent('Blademaster') === true) {
-                        this.effects.push('blademaster');
-                        if (this.rollData.roll !== null) this.rollData.previousRolls.push(this.rollData.roll);
-                        await this._calculateHit();
-                    }
-                }
-            } else if (itemSystem.isRanged === true) {
+            // Blademaster's "re-roll a failed melee attack once per round" is now a
+            // data-driven, player-chosen re-roll option (its talent's `reroll` block,
+            // frequency 'per-round', combatMode 'melee'), surfaced on the roll card
+            // via getRerollOptions — no longer an automatic re-roll here (Direction #7
+            // + RAW: the talent says the character *may* re-roll).
+            if (itemSystem.isRanged === true) {
                 if (this.rollData.action === 'Suppressing Fire - Semi') {
                     this.addEffect('Suppressing', 'All targets within a 30 degree arc must pass a Difficult (-10) Pinning test for become Pinned.');
                 } else if (this.rollData.action === 'Suppressing Fire - Full') {
@@ -471,8 +470,6 @@ export class ActionData {
         for (const effect of this.effects) {
             if (effect === 'auto-failure') {
                 this.addEffect('Auto Failure', `The roll resulted in an automatic failure!`);
-            } else if (effect === 'blademaster') {
-                this.addEffect('Blademaster', `Original roll of ${this.rollData.previousRolls[0]?.total ?? 0} rerolled.`);
             } else if (effect === 'overheat') {
                 this.addEffect('Overheats', `The weapon overheats forcing it to be dropped on the ground!`);
             } else if (effect === 'jam') {

@@ -105,7 +105,7 @@ function rerollSpec(overrides: Partial<RerollSpec> = {}): RerollSpec {
         enabled: true,
         modifier: 0,
         condition: 'failed',
-        appliesTo: { mode: 'any', types: [], keys: [] },
+        appliesTo: { mode: 'any', types: [], keys: [], combatMode: 'any' },
         frequency: 'at-will',
         uses: 1,
         label: '',
@@ -138,7 +138,7 @@ describe('getRerollOptions', () => {
             isTrait: false,
             id: 'keen',
             name: 'Keen Intuition',
-            system: { reroll: rerollSpec({ appliesTo: { mode: 'keys', types: [], keys: ['awareness'] } }) },
+            system: { reroll: rerollSpec({ appliesTo: { mode: 'keys', types: [], keys: ['awareness'], combatMode: 'any' } }) },
         };
         const opts = getOptions(makeActor({ items: [item] }), { success: false, type: 'Skill', rollKey: 'awareness' });
         const keen = opts.find((o) => o.kind === 'item');
@@ -154,7 +154,7 @@ describe('getRerollOptions', () => {
             isTrait: false,
             id: 'keen',
             name: 'Keen Intuition',
-            system: { reroll: rerollSpec({ appliesTo: { mode: 'keys', types: [], keys: ['awareness'] } }) },
+            system: { reroll: rerollSpec({ appliesTo: { mode: 'keys', types: [], keys: ['awareness'], combatMode: 'any' } }) },
         };
         const opts = getOptions(makeActor({ items: [item] }), { success: false, type: 'Skill', rollKey: 'dodge' });
         expect(opts.some((o) => o.kind === 'item')).toBe(false);
