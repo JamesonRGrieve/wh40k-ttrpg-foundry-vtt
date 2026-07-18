@@ -176,6 +176,18 @@ describe('hookApplies — trigger filtering', () => {
         expect(hookApplies(hook, { isCrit: true, isRanged: false })).toBe(false);
         expect(hookApplies(hook, { isCrit: false, isRanged: true })).toBe(false);
     });
+
+    it('specializationMode gates on the owning item specialization vs the attack mode (Deathdealer)', () => {
+        const hook = makeHook({ when: 'onCrit', condition: 'specializationMode' });
+        // Deathdealer (Melee) on a melee crit fires; on a ranged crit it does not.
+        expect(hookApplies(hook, { isCrit: true, isMelee: true }, 'Melee')).toBe(true);
+        expect(hookApplies(hook, { isCrit: true, isRanged: true }, 'Melee')).toBe(false);
+        // Deathdealer (Ranged) mirrors it.
+        expect(hookApplies(hook, { isCrit: true, isRanged: true }, 'Ranged')).toBe(true);
+        expect(hookApplies(hook, { isCrit: true, isMelee: true }, 'Ranged')).toBe(false);
+        // No specialization → never fires.
+        expect(hookApplies(hook, { isCrit: true, isMelee: true }, '')).toBe(false);
+    });
 });
 
 describe('collectDynamicComponents', () => {

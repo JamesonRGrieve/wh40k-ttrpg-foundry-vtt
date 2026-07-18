@@ -396,16 +396,9 @@ export class Hit {
                     await righteousFuryRoll.evaluate();
                     this.righteousFury.push({ roll: righteousFuryRoll, effect: '' });
 
-                    // DeathDealer
-                    if (actionItem.isMelee) {
-                        if (sourceActor.hasTalentFuzzyWords('Deathdealer', 'Melee')) {
-                            this.modifiers['deathdealer'] = sourceActor.getCharacteristicFuzzy('Perception').bonus;
-                        }
-                    } else if (actionItem.isRanged) {
-                        if (sourceActor.hasTalentFuzzyWords('Deathdealer', 'Ranged')) {
-                            this.modifiers['deathdealer'] = sourceActor.getCharacteristicFuzzy('Perception').bonus;
-                        }
-                    }
+                    // Deathdealer (crit-gated +full Perception Bonus) → data-driven via the
+                    // talent's dynamicModifiers hook (when: onCrit, specializationMode),
+                    // applied by applyDynamicModifiers once RF/crit is detected. Direction #7.
                 }
 
                 if (attackData.rollData.hasAttackSpecial('Primitive')) {
@@ -432,11 +425,8 @@ export class Hit {
             // Crushing Blow → data-driven via the talent's dynamicModifiers hook
             // (applied by applyDynamicModifiers). See Direction #7.
 
-            // Deathdealer
-            if (sourceActor.hasTalentFuzzyWords(['Deathdealer', 'Melee'])) {
-                const perBonus = sourceActor.getCharacteristicFuzzy('Perception').bonus;
-                this.modifiers['deathdealer melee'] = Math.ceil(perBonus / 2);
-            }
+            // Deathdealer: the always-on +ceil(PerB/2) here was NOT RAW (the talent grants
+            // +full Perception Bonus only on a Critical, handled by the onCrit hook). Removed.
         } else if (actionItem.isRanged) {
             // Scatter
             if (attackData.rollData.hasAttackSpecial('Scatter')) {
@@ -483,11 +473,8 @@ export class Hit {
             // Mighty Shot → data-driven via the talent's dynamicModifiers hook
             // (applied by applyDynamicModifiers). See Direction #7.
 
-            // Deathdealer
-            if (sourceActor.hasTalentFuzzyWords(['Deathdealer', 'Ranged'])) {
-                const perBonus = sourceActor.getCharacteristicFuzzy('Perception').bonus;
-                this.modifiers['deathdealer ranged'] = Math.ceil(perBonus / 2);
-            }
+            // Deathdealer: the always-on +ceil(PerB/2) here was NOT RAW (crit-only +full
+            // Perception Bonus via the onCrit hook). Removed.
 
             // Ammo
             // eslint-disable-next-line no-restricted-syntax -- boundary: AttackDataLike is a minimal interface; rule functions expect full ActionData which satisfies it at runtime

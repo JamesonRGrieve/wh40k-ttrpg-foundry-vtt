@@ -166,7 +166,7 @@ function whenMatches(hook: DynamicModifierEntry, situation: DynamicModifierSitua
 }
 
 /** Does the hook's `condition` predicate match the situation? */
-function conditionMatches(hook: DynamicModifierEntry, situation: DynamicModifierSituation): boolean {
+function conditionMatches(hook: DynamicModifierEntry, situation: DynamicModifierSituation, itemSpecialization: string): boolean {
     const c = hook.condition;
     const value = hook.conditionValue;
     if (c === '') return true;
@@ -177,18 +177,33 @@ function conditionMatches(hook: DynamicModifierEntry, situation: DynamicModifier
     if (c === 'rangeBand') return situation.rangeBand === value;
     if (c === 'action') return situation.action === value;
     if (c === 'activated') return (situation.activated ?? []).includes(value);
+    // The owning item's specialization ('Melee' / 'Ranged') must match the attack mode —
+    // e.g. Deathdealer (Melee) fires only on melee attacks (Ranged only on ranged).
+    if (c === 'specializationMode') {
+        if (itemSpecialization === 'Melee') return situation.isMelee === true;
+        if (itemSpecialization === 'Ranged') return situation.isRanged === true;
+        return false;
+    }
     return true;
 }
 
-/** Whether a hook fires in the given situation (both its timing and predicate must match). */
-export function hookApplies(hook: DynamicModifierEntry, situation: DynamicModifierSituation): boolean {
-    return whenMatches(hook, situation) && conditionMatches(hook, situation);
+/**
+ * Whether a hook fires in the given situation (both its timing and predicate must
+ * match). `itemSpecialization` is the owning item's `system.specialization`, read by
+ * the `specializationMode` condition (default '' — no specialization).
+ */
+export function hookApplies(hook: DynamicModifierEntry, situation: DynamicModifierSituation, itemSpecialization = ''): boolean {
+    return whenMatches(hook, situation) && conditionMatches(hook, situation, itemSpecialization);
 }
 
 /** The minimal owned-item surface the collector reads. */
 export interface DynamicModifierItemLike {
     name: string | null;
-    system: { modifiers?: { dynamicModifiers?: readonly DynamicModifierEntry[] | undefined } | undefined };
+    system: {
+        modifiers?: { dynamicModifiers?: readonly DynamicModifierEntry[] | undefined } | undefined;
+        /** The item's specialization ('Melee' / 'Ranged' / …), read by the `specializationMode` condition. */
+        specialization?: string | undefined;
+    };
 }
 
 /**
@@ -206,8 +221,10 @@ export function collectDynamicComponents(
     const components: DynamicComponent[] = [];
     for (const item of items) {
         const hooks = item.system.modifiers?.dynamicModifiers ?? [];
+        const spec = item.system.specialization;
+        const specialization = typeof spec === 'string' ? spec : '';
         for (const hook of hooks) {
-            if (!hookApplies(hook, situation)) continue;
+            if (!hookApplies(hook, situation, specialization)) continue;
             const isDice = hook.scale.source === '' && hook.valueFormula !== '';
             components.push({
                 target: hook.target,
