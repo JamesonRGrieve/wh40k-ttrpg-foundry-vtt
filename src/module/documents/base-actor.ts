@@ -967,10 +967,10 @@ export class WH40KBaseActor extends Actor {
 
     /**
      * Clear windowed re-roll uses whose variant id ends with the given frequency
-     * suffix (`:per-encounter` on combat end, `:per-session` on the session
-     * marker). Other windows are left untouched.
+     * suffix (`:per-round` on a new combat round, `:per-encounter` on combat end,
+     * `:per-session` on the session marker). Other windows are left untouched.
      */
-    async resetRerollUses(frequency: 'per-encounter' | 'per-session'): Promise<void> {
+    async resetRerollUses(frequency: 'per-round' | 'per-encounter' | 'per-session'): Promise<void> {
         const ledger = this._rerollLedger();
         const suffix = `:${frequency}`;
         const next: Record<string, number> = {};

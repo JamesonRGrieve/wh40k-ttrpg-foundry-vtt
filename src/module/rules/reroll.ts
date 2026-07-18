@@ -9,15 +9,17 @@
  */
 
 type RerollCondition = 'failed' | 'success' | 'any';
-export type RerollFrequency = 'at-will' | 'per-encounter' | 'per-session';
+export type RerollFrequency = 'at-will' | 'per-round' | 'per-encounter' | 'per-session';
 type RerollAppliesMode = 'any' | 'types' | 'keys';
+/** Combat-mode gate: a re-roll restricted to melee or ranged attacks (Blademaster = melee-only), or `any`. */
+type RerollCombatMode = 'any' | 'melee' | 'ranged';
 
 /** The declared `reroll` block on a talent/trait DataModel. */
 export interface RerollSpec {
     enabled: boolean;
     modifier: number;
     condition: RerollCondition;
-    appliesTo: { mode: RerollAppliesMode; types: string[]; keys: string[] };
+    appliesTo: { mode: RerollAppliesMode; types: string[]; keys: string[]; combatMode: RerollCombatMode };
     frequency: RerollFrequency;
     uses: number;
     label: string;
@@ -31,6 +33,10 @@ export interface RerollRollContext {
     type: string;
     /** `rollData.rollKey`, e.g. `'awareness'` | `'willpower'`. */
     rollKey: string;
+    /** Whether the roll is a melee attack (for `appliesTo.combatMode: 'melee'`). */
+    isMelee?: boolean;
+    /** Whether the roll is a ranged attack (for `appliesTo.combatMode: 'ranged'`). */
+    isRanged?: boolean;
 }
 
 /** A re-roll option surfaced on the chat card. */
@@ -57,7 +63,10 @@ export function rerollApplies(spec: RerollSpec, ctx: RerollRollContext): boolean
     if (!spec.enabled) return false;
     if (spec.condition === 'failed' && ctx.success) return false;
     if (spec.condition === 'success' && !ctx.success) return false;
-    const { mode, types, keys } = spec.appliesTo;
+    const { mode, types, keys, combatMode } = spec.appliesTo;
+    // Combat-mode gate (melee/ranged-only re-rolls, e.g. Blademaster).
+    if (combatMode === 'melee' && ctx.isMelee !== true) return false;
+    if (combatMode === 'ranged' && ctx.isRanged !== true) return false;
     if (mode === 'types') return types.includes(ctx.type);
     if (mode === 'keys') return keys.includes(ctx.rollKey);
     return true; // 'any'

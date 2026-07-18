@@ -264,6 +264,27 @@ export class HooksManager {
                 });
             }
         });
+
+        // Per-round re-roll uses (frequency 'per-round', e.g. Blademaster's
+        // once-per-round attack re-roll) reset at the start of each new combat
+        // round. First active GM only (the reset writes a flag to the DB).
+        // eslint-disable-next-line no-restricted-syntax -- boundary: combatRound hook payload is framework-typed; we read only combatants → actor
+        hooksOn('combatRound', (combat: { combatants?: { contents?: Array<{ actor?: WH40KBaseActor | null }> } }) => {
+            const firstGM = game.users.contents.find((u) => u.active && u.isGM)?.id;
+            if (game.user.id !== firstGM) return;
+            const seen = new Set<string>();
+            for (const combatant of combat.combatants?.contents ?? []) {
+                const actor = combatant.actor;
+                if (actor == null) continue;
+                const id = actor.id;
+                if (id === null || seen.has(id)) continue;
+                seen.add(id);
+                // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+                actor.resetRerollUses('per-round').catch((err: unknown) => {
+                    console.error('reroll-reset: combatRound per-round reset failed', err);
+                });
+            }
+        });
     }
 
     /**

@@ -38,8 +38,8 @@ export default class RerollTemplate extends SystemDataModel {
         enabled: boolean;
         modifier: number;
         condition: 'failed' | 'success' | 'any';
-        appliesTo: { mode: 'any' | 'types' | 'keys'; types: string[]; keys: string[] };
-        frequency: 'at-will' | 'per-encounter' | 'per-session';
+        appliesTo: { mode: 'any' | 'types' | 'keys'; types: string[]; keys: string[]; combatMode: 'any' | 'melee' | 'ranged' };
+        frequency: 'at-will' | 'per-round' | 'per-encounter' | 'per-session';
         uses: number;
         label: string;
     };
@@ -56,8 +56,9 @@ export default class RerollTemplate extends SystemDataModel {
                     mode: new fields.StringField({ required: true, initial: 'any', choices: ['any', 'types', 'keys'] }),
                     types: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
                     keys: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
+                    combatMode: new fields.StringField({ required: true, initial: 'any', choices: ['any', 'melee', 'ranged'] }),
                 }),
-                frequency: new fields.StringField({ required: true, initial: 'at-will', choices: ['at-will', 'per-encounter', 'per-session'] }),
+                frequency: new fields.StringField({ required: true, initial: 'at-will', choices: ['at-will', 'per-round', 'per-encounter', 'per-session'] }),
                 uses: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
                 label: new fields.StringField({ required: false, blank: true, initial: '' }),
             }),
