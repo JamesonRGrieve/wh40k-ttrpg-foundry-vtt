@@ -33,29 +33,38 @@ export const ASSASSINS_STRIKE_TEST = {
     modifier: 0,
 } as const;
 
-/** Localized & alternate spellings the errata + supplements have used. */
-const TALENT_NAMES: readonly string[] = ["Assassin's Strike", 'Assassin Strike', 'Assassins Strike'];
-
 /**
- * Minimal duck-type for an actor that exposes the `hasTalent` lookup.
- * Both the DH2 acolyte document and the NPC document satisfy this
- * shape (`hasTalent(name: string): boolean`).
+ * The talent's stable `system.identifier`. Matching on this instead of the
+ * display name (which shipped under several spellings) removes the fragile
+ * name-list and routes through the same identifier key the rest of the system
+ * uses (item.ts §"Items are matched by system.identifier"). Direction #7.
  */
-interface ActorWithTalentLookup {
-    hasTalent: (talent: string) => boolean;
+const ASSASSINS_STRIKE_IDENTIFIER = 'assassinStrike';
+
+/** Minimal owned-item surface: a typed item carrying a `system.identifier`. */
+interface ItemWithIdentifier {
+    type?: string;
+    system?: { identifier?: string };
+}
+
+/** Minimal duck-type for an actor that exposes its owned `items`. Both the acolyte and NPC documents satisfy it. */
+interface ActorWithItems {
+    items: Iterable<ItemWithIdentifier>;
+}
+
+function hasItemsLookup(value: object): value is ActorWithItems {
+    return 'items' in value && typeof (value as Partial<ActorWithItems>).items === 'object';
 }
 
 /**
- * Predicate — does this actor carry the Assassin's Strike talent?
- * Tolerates the apostrophe / non-apostrophe spellings the compendium
- * data has historically shipped under.
+ * Predicate — does this actor carry the Assassin's Strike talent? Matches by the
+ * talent's stable `system.identifier`, not its display name.
  */
-function hasTalentLookup(value: object): value is ActorWithTalentLookup {
-    return 'hasTalent' in value && typeof (value as Partial<ActorWithTalentLookup>).hasTalent === 'function';
-}
-
-export function hasAssassinsStrike(actor: WH40KBaseActor | ActorWithTalentLookup | null | undefined): boolean {
+export function hasAssassinsStrike(actor: WH40KBaseActor | ActorWithItems | null | undefined): boolean {
     if (actor == null) return false;
-    if (!hasTalentLookup(actor)) return false;
-    return TALENT_NAMES.some((name) => actor.hasTalent(name));
+    if (!hasItemsLookup(actor)) return false;
+    for (const item of actor.items) {
+        if (item.type === 'talent' && item.system?.identifier === ASSASSINS_STRIKE_IDENTIFIER) return true;
+    }
+    return false;
 }

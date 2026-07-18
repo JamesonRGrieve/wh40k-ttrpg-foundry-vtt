@@ -403,6 +403,8 @@ interface DetonatedMunition {
     damage: number | null;
     /** The munition's own damage type (`explosive`, `impact`, …), when known. */
     damageType: string | null;
+    /** True when the detonated munition was expended (its carried quantity zeroed). */
+    consumed: boolean;
 }
 
 /**
@@ -554,6 +556,8 @@ interface OwnedItemLike {
         /** Weapon damage block — the detonation path rolls a grenade's own formula. */
         damage?: { formula?: string | undefined; bonus?: number | undefined; type?: string | undefined } | undefined;
         state?: { equipped?: boolean | undefined; broken?: boolean | undefined } | undefined;
+        /** Carried count — the detonation path expends the munition (RAW: it is destroyed). */
+        quantity?: number | undefined;
     };
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#update (open-ended payload, opaque Promise return)
     update: (data: Record<string, unknown>) => Promise<unknown>;
@@ -633,7 +637,16 @@ async function detonateCarriedMunitions(actor: WH40KBaseActorDocument): Promise<
                     damage = null;
                 }
             }
-            return { name: item.name ?? '', damage, damageType };
+            // Expend the detonated munition (RAW: it is destroyed) — zero its carried
+            // quantity. Reversible via a normal quantity edit; a no-op when it has none.
+            const quantity = typeof item.system.quantity === 'number' ? item.system.quantity : 0;
+            let consumed = false;
+            if (quantity > 0) {
+                await item.update({ 'system.quantity': 0 });
+                consumed = true;
+                game.wh40k.log('critical-damage: munition detonated & expended', { actor: actor.name, munition: item.name, quantity });
+            }
+            return { name: item.name ?? '', damage, damageType, consumed };
         }),
     );
 }

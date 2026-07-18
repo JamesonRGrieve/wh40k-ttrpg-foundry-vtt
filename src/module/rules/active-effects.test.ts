@@ -64,4 +64,13 @@ describe('active-effects condition registry', () => {
         expect(source).toContain("'system.state.broken': true");
         expect(source).toContain("'system.state.equipped': false");
     });
+
+    it('detonateCarriedMunitions expends the detonated munitions (zeroes carried quantity)', async () => {
+        const fs = await import('node:fs/promises');
+        const path = await import('node:path');
+        const source = await fs.readFile(path.resolve(process.cwd(), 'src/module/rules/active-effects.ts'), 'utf8');
+        // The detonated munition is consumed — its carried quantity is zeroed.
+        expect(source).toContain("'system.quantity': 0");
+        expect(source).toContain('consumed');
+    });
 });

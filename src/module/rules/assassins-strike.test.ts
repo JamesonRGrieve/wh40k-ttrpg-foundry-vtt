@@ -5,12 +5,19 @@
  *  - The test parameters (Challenging difficulty, Acrobatics skill,
  *    +0 modifier) must not drift; the chat-card dispatch reads them
  *    verbatim and the errata wording locks them in place.
- *  - The predicate accepts the apostrophe and non-apostrophe
- *    spellings the compendium data has used over time.
+ *  - The predicate matches the talent by its stable `system.identifier`
+ *    ('assassinStrike'), not its display name.
  */
 
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { ASSASSINS_STRIKE_TEST, hasAssassinsStrike } from './assassins-strike.ts';
+
+/** A minimal actor exposing an `items` iterable of `{ type, system.identifier }`. */
+function actorWithItems(items: { type?: string; system?: { identifier?: string } }[]): {
+    items: Iterable<{ type?: string; system?: { identifier?: string } }>;
+} {
+    return { items };
+}
 
 describe('ASSASSINS_STRIKE_TEST constants (#149 — errata L75)', () => {
     it('pins the test difficulty to Challenging (+0)', () => {
@@ -29,22 +36,22 @@ describe('hasAssassinsStrike predicate (#149)', () => {
         expect(hasAssassinsStrike(undefined)).toBe(false);
     });
 
-    it('returns false when the actor lacks a hasTalent method', () => {
+    it('returns false when the actor exposes no items iterable', () => {
         expect(hasAssassinsStrike({} as never)).toBe(false);
     });
 
-    it("recognises the canonical apostrophe spelling Assassin's Strike", () => {
-        const actor = { hasTalent: vi.fn((name: string) => name === "Assassin's Strike") };
+    it('recognises the talent by its stable system.identifier', () => {
+        const actor = actorWithItems([{ type: 'talent', system: { identifier: 'assassinStrike' } }]);
         expect(hasAssassinsStrike(actor)).toBe(true);
     });
 
-    it('recognises the apostrophe-less Assassin Strike spelling', () => {
-        const actor = { hasTalent: vi.fn((name: string) => name === 'Assassin Strike') };
-        expect(hasAssassinsStrike(actor)).toBe(true);
+    it('ignores a non-talent item that happens to share the identifier', () => {
+        const actor = actorWithItems([{ type: 'trait', system: { identifier: 'assassinStrike' } }]);
+        expect(hasAssassinsStrike(actor)).toBe(false);
     });
 
-    it('returns false when the actor has unrelated talents', () => {
-        const actor = { hasTalent: vi.fn(() => false) };
+    it('returns false when the actor has only unrelated talents', () => {
+        const actor = actorWithItems([{ type: 'talent', system: { identifier: 'crushingBlow' } }]);
         expect(hasAssassinsStrike(actor)).toBe(false);
     });
 });
