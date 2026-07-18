@@ -5,6 +5,7 @@ import {
     type DynamicModifierContext,
     type DynamicModifierItemLike,
     type DynamicModifierSituation,
+    modeDelta,
 } from '../rules/dynamic-modifiers.ts';
 import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
@@ -284,7 +285,7 @@ export class Hit {
             action: attackData.rollData.action,
         };
         for (const component of collectDynamicComponents(items, ctx, situation)) {
-            if (component.side !== 'attacker' || component.mode !== 'add') continue;
+            if (component.side !== 'attacker') continue;
             if (component.target !== 'damage' && component.target !== 'penetration') continue;
             let value = component.value;
             if (component.valueFormula !== '') {
@@ -293,10 +294,15 @@ export class Hit {
                 await roll.evaluate();
                 value = roll.total ?? 0;
             }
-            const map = component.target === 'penetration' ? this.penetrationModifiers : this.modifiers;
+            const isPen = component.target === 'penetration';
+            // multiply/set are expressed as an additive delta against the base
+            // (this.damage / this.penetration); min/max are stat clamps and don't map here.
+            const delta = modeDelta(component.mode, isPen ? this.penetration : this.damage, value);
+            if (delta === null) continue;
+            const map = isPen ? this.penetrationModifiers : this.modifiers;
             const key = component.label.toLowerCase();
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: map[key] may be undefined despite Record<string, number> type
-            map[key] = (map[key] ?? 0) + value;
+            map[key] = (map[key] ?? 0) + delta;
         }
     }
 

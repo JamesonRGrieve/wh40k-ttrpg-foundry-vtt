@@ -151,6 +151,22 @@ describe('Hit.applyDynamicModifiers — data-driven damage hooks (Direction #7)'
         expect(hit.penetrationModifiers['hammer blow']).toBe(1); // ceil(2 / 2)
     });
 
+    it('applies a multiply-mode penetration hook as base × (value − 1) (Melta pen×2 shape)', async () => {
+        const melta = item('Melta', [makeHook({ target: 'penetration', mode: 'multiply', value: 2 })]);
+        const hit = new Hit();
+        hit.penetration = 6;
+        await hit.applyDynamicModifiers(attackData([melta]));
+        // delta = 6 × (2 − 1) = 6 → total pen 12
+        expect(hit.penetrationModifiers['melta']).toBe(6);
+    });
+
+    it('skips min/max-mode components (stat clamps, not damage deltas)', async () => {
+        const clamp = item('Some Cap', [makeHook({ target: 'damage', mode: 'max', value: 3 })]);
+        const hit = new Hit();
+        await hit.applyDynamicModifiers(attackData([clamp]));
+        expect(Object.keys(hit.modifiers)).toEqual([]);
+    });
+
     it('skips a ranged-only hook on a melee attack, and is a no-op for hookless items', async () => {
         const mighty = item('Mighty Shot', [makeHook({ target: 'damage', condition: 'ranged', scale: scale({ source: 'bs', factor: 0.5, round: 'up' }) })]);
         const bare: DynamicModifierItemLike = { name: 'Plain', system: {} };

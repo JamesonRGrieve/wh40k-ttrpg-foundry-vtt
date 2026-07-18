@@ -133,6 +133,23 @@ export function resolveDynamicMagnitude(hook: DynamicModifierEntry, ctx: Dynamic
     return hook.value;
 }
 
+/**
+ * Convert a resolved component `value` into the **additive delta** to apply against
+ * `base` for a given `mode`, so multiply/set semantics fit the additive
+ * modifier-map model the damage pipeline uses:
+ * - `add`      → `value` (a plain delta).
+ * - `multiply` → `base × (value − 1)` (so total = base × value; Melta pen×2, Lance pen×DoS).
+ * - `set`      → `value − base` (so total = value).
+ * - `min`/`max`→ `null` (a clamp on a prepared stat, not a damage/pen delta — the
+ *   caller skips it here; those belong to actor-prep, not the damage sum).
+ */
+export function modeDelta(mode: DynamicModifierEntry['mode'], base: number, value: number): number | null {
+    if (mode === 'add') return value;
+    if (mode === 'multiply') return base * (value - 1);
+    if (mode === 'set') return value - base;
+    return null;
+}
+
 /** Does the hook's `when` timing match the situation? */
 function whenMatches(hook: DynamicModifierEntry, situation: DynamicModifierSituation): boolean {
     const w = hook.when;
