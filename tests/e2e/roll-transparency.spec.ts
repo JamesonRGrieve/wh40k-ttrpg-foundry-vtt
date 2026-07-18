@@ -134,7 +134,11 @@ async function buildTransparencyCard(page: Page, sys: string): Promise<BuiltCard
         const gameObj = g.game;
         const ChatMessageCtor = g.ChatMessage;
         const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
-        const i18nFormat = gameObj?.i18n?.format;
+        // Bind `format` to its i18n owner: Foundry's Localization.format reads
+        // `this.translations`, so calling a detached `const fn = i18n.format`
+        // throws "Cannot read properties of undefined (reading 'translations')".
+        const i18nObj = gameObj?.i18n;
+        const i18nFormat = typeof i18nObj?.format === 'function' ? i18nObj.format.bind(i18nObj) : undefined;
         if (ActorCtor?.create == null || ChatMessageCtor?.create == null || renderTemplateFn == null || i18nFormat == null) {
             return { ...fail('Foundry runtime surfaces (Actor/ChatMessage/renderTemplate/i18n) unavailable'), skip: true };
         }
@@ -309,9 +313,13 @@ test.describe.serial('roll transparency chat card (Tier B)', () => {
                 expect(built.error, `${built.error ?? ''}${errTail}`).toBeNull();
                 expect(built.messageId, 'no chat message id returned').not.toBeNull();
 
-                // The rendered message <li> — the element the renderChatMessageHTML
-                // hook stamps `wh40k-rpg` onto.
-                const card = page.locator(`[data-message-id="${built.messageId}"]`);
+                // The rendered message <li> in the sidebar chat (`#chat`) — the
+                // element the renderChatMessageHTML hook stamps `wh40k-rpg` onto.
+                // Scope to `#chat li.chat-message` so the bare id doesn't also
+                // match the transient `#chat-notifications` copy or the
+                // Dismiss/Delete anchors that carry the same data-message-id
+                // (Playwright strict mode rejects a multi-element single-target).
+                const card = page.locator(`#chat li.chat-message[data-message-id="${built.messageId}"]`).first();
                 await expect(card).toBeAttached();
 
                 // (1) `.wh40k-rpg` ancestor: proves the hook fired so Tailwind + the
