@@ -1,5 +1,199 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
 
+/* -------------------------------------------------------------------------- */
+/*  Dynamic modifier hooks (data-driven, Direction #7)                        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The axes a dynamic modifier can target. Personal-combat and personal-test axes
+ * live here; RT ship-combat axes are modelled separately (a parallel subsystem),
+ * per the schema survey §D9. `characteristic` / `skill` / `resource` name their
+ * subject via `targetKey`.
+ */
+export const DYNAMIC_MODIFIER_TARGETS = [
+    'attack',
+    'damage',
+    'penetration',
+    'defense',
+    'initiative',
+    'speed',
+    'characteristic',
+    'skill',
+    'resource',
+    'damageReduction',
+    'critReduction',
+    'additionalHits',
+    'additionalReactions',
+] as const;
+/** How the value combines with the base — additive by default; the survey's D1. */
+export const DYNAMIC_MODIFIER_MODES = ['add', 'multiply', 'set', 'min', 'max'] as const;
+/** Whose roll the modifier acts on — an attacker-side bonus or a defender-side reduction. */
+export const DYNAMIC_MODIFIER_SIDES = ['attacker', 'defender'] as const;
+/**
+ * Dynamic scalar source (`value = source.field × factor [× multiplier]`, rounded).
+ * `''` = no scaling (use the static `value` / `valueFormula`). Includes Psy Rating
+ * (`pr`), Corruption Bonus (`cb`), the item's own level/rating (`level`), degrees of
+ * success (`dos`), and the struck location's armour (`armourPoints`) — survey §D3.
+ */
+export const DYNAMIC_SCALE_SOURCES = [
+    '',
+    'ws',
+    'bs',
+    's',
+    't',
+    'ag',
+    'int',
+    'per',
+    'wp',
+    'fel',
+    'pr',
+    'cb',
+    'level',
+    'dos',
+    'degrees',
+    'penetration',
+    'armourPoints',
+] as const;
+/** Whether the scale reads a characteristic's `bonus` (tens digit) or `total`. */
+export const DYNAMIC_SCALE_FIELDS = ['bonus', 'total'] as const;
+/** Rounding applied to a scaled value. */
+export const DYNAMIC_SCALE_ROUNDING = ['up', 'down', 'nearest', 'none'] as const;
+/** Optional second dynamic factor for product-of-two-variables scaling (Lance = pen × DoS) — survey §D4. */
+export const DYNAMIC_SCALE_MULTIPLIERS = ['', 'dos', 'degrees', 'level'] as const;
+/** When the modifier fires (timing half of the trigger) — survey trigger split. */
+export const DYNAMIC_MODIFIER_WHEN = ['always', 'onHit', 'onCrit', 'onKill', 'onCharge', 'onAction', 'onParry', 'atRangeBand'] as const;
+/** Duration units for temporary/consumable effects — survey §D6. */
+export const DYNAMIC_DURATION_UNITS = ['instant', 'rounds', 'minutes', 'hours', 'days', 'encounter', 'scene', 'permanent'] as const;
+/** Per-round action cost to sustain a psychic upkeep buff (`''` = not sustained). */
+export const DYNAMIC_DURATION_UPKEEP = ['', 'free', 'half', 'full'] as const;
+/** How re-application of a temporary effect (a second drug dose) stacks. */
+export const DYNAMIC_DURATION_STACKING = ['none', 'stack', 'refresh', 'escalating'] as const;
+
+/** A scaled magnitude: `source.field × factor [× multiplier]`, rounded, clamped to [min, max]. */
+interface DynamicScale {
+    source: (typeof DYNAMIC_SCALE_SOURCES)[number];
+    field: (typeof DYNAMIC_SCALE_FIELDS)[number];
+    factor: number;
+    round: (typeof DYNAMIC_SCALE_ROUNDING)[number];
+    multiplier: (typeof DYNAMIC_SCALE_MULTIPLIERS)[number];
+    min: number | null;
+    max: number | null;
+}
+
+/** The delayed "crash" a temporary effect inflicts when it wears off (drug after-effect). */
+interface DynamicAftereffect {
+    target: (typeof DYNAMIC_MODIFIER_TARGETS)[number];
+    targetKey: string;
+    value: number;
+    valueFormula: string;
+    durationUnit: (typeof DYNAMIC_DURATION_UNITS)[number];
+    durationValue: number;
+}
+
+/** The lifecycle of a temporary/consumable/sustained dynamic modifier. */
+interface DynamicDuration {
+    unit: (typeof DYNAMIC_DURATION_UNITS)[number];
+    value: number;
+    valueFormula: string;
+    sustained: boolean;
+    upkeep: (typeof DYNAMIC_DURATION_UPKEEP)[number];
+    stacking: (typeof DYNAMIC_DURATION_STACKING)[number];
+    save: { characteristic: string; difficulty: number };
+    aftereffect: DynamicAftereffect;
+}
+
+/**
+ * A single declared dynamic modifier hook — the data an item authors so the
+ * central collector can evaluate its (possibly characteristic-/DoS-/PR-scaled,
+ * conditionally-triggered, temporary) contribution to a roll at runtime, instead
+ * of the value being hardcoded by name in `src/`. Non-numeric grants (grant a
+ * talent / quality / sense / condition-on-hit) do NOT live here — they belong in
+ * the `grants` / weaponQuality `hitEffect` channels (survey §D8).
+ */
+export interface DynamicModifierEntry {
+    /** The axis modified. `characteristic`/`skill`/`resource` name their subject in `targetKey`. */
+    target: (typeof DYNAMIC_MODIFIER_TARGETS)[number];
+    /** Char/skill/resource id when `target` names one (e.g. `strength`, `awareness`, `wounds`); else blank. */
+    targetKey: string;
+    /** Attacker-side bonus vs defender-side reduction. */
+    side: (typeof DYNAMIC_MODIFIER_SIDES)[number];
+    /** How the magnitude combines with the base. */
+    mode: (typeof DYNAMIC_MODIFIER_MODES)[number];
+    /** Static magnitude (used when `scale.source` and `valueFormula` are empty). */
+    value: number;
+    /** Dice/Roll expression over `@sb/@bsb/@pr/@dos/@level` for dice-valued magnitudes (ammo +Xd10). */
+    valueFormula: string;
+    /** Dynamic scalar magnitude; `source: ''` disables it. */
+    scale: DynamicScale;
+    /** Timing half of the trigger. */
+    when: (typeof DYNAMIC_MODIFIER_WHEN)[number];
+    /** Predicate half of the trigger (`whileState`, `vsType`, `vsFaction`, `rangeBand`, `action`); blank = unconditional. */
+    condition: string;
+    /** The predicate's value (the creature type, faction, state, range band, or action name). */
+    conditionValue: string;
+    /** Temporary/consumable lifecycle (default `instant` = permanent-while-present). */
+    duration: DynamicDuration;
+    /** Escape hatch (survey §D7): a raw Roll-syntax formula for the irreducible <5%. Prefer the structured fields. */
+    formula: string;
+    /** Display/provenance label override; blank = the owning item's name. */
+    label: string;
+}
+
+/**
+ * The `ArrayField` of {@link DynamicModifierEntry} hooks. A validatable structured
+ * descriptor (not a formula language): the collector reads these fields to compute
+ * each modifier's value and provenance at roll time. See the schema survey at
+ * `src/packs/MODIFIER_HOOK_SCHEMA_SURVEY.md` for the design rationale.
+ */
+function dynamicModifiersSchema(): foundry.data.fields.DataField.Any {
+    const fields = foundry.data.fields;
+    return new fields.ArrayField(
+        new fields.SchemaField({
+            target: new fields.StringField({ required: true, initial: 'damage', choices: [...DYNAMIC_MODIFIER_TARGETS] }),
+            targetKey: new fields.StringField({ required: false, blank: true, initial: '' }),
+            side: new fields.StringField({ required: true, initial: 'attacker', choices: [...DYNAMIC_MODIFIER_SIDES] }),
+            mode: new fields.StringField({ required: true, initial: 'add', choices: [...DYNAMIC_MODIFIER_MODES] }),
+            value: new fields.NumberField({ required: true, initial: 0 }),
+            valueFormula: new fields.StringField({ required: false, blank: true, initial: '' }),
+            scale: new fields.SchemaField({
+                source: new fields.StringField({ required: true, initial: '', choices: [...DYNAMIC_SCALE_SOURCES] }),
+                field: new fields.StringField({ required: true, initial: 'bonus', choices: [...DYNAMIC_SCALE_FIELDS] }),
+                factor: new fields.NumberField({ required: true, initial: 1 }),
+                round: new fields.StringField({ required: true, initial: 'up', choices: [...DYNAMIC_SCALE_ROUNDING] }),
+                multiplier: new fields.StringField({ required: true, initial: '', choices: [...DYNAMIC_SCALE_MULTIPLIERS] }),
+                min: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                max: new fields.NumberField({ required: false, nullable: true, initial: null }),
+            }),
+            when: new fields.StringField({ required: true, initial: 'always', choices: [...DYNAMIC_MODIFIER_WHEN] }),
+            condition: new fields.StringField({ required: false, blank: true, initial: '' }),
+            conditionValue: new fields.StringField({ required: false, blank: true, initial: '' }),
+            duration: new fields.SchemaField({
+                unit: new fields.StringField({ required: true, initial: 'instant', choices: [...DYNAMIC_DURATION_UNITS] }),
+                value: new fields.NumberField({ required: true, initial: 0 }),
+                valueFormula: new fields.StringField({ required: false, blank: true, initial: '' }),
+                sustained: new fields.BooleanField({ required: true, initial: false }),
+                upkeep: new fields.StringField({ required: true, initial: '', choices: [...DYNAMIC_DURATION_UPKEEP] }),
+                stacking: new fields.StringField({ required: true, initial: 'none', choices: [...DYNAMIC_DURATION_STACKING] }),
+                save: new fields.SchemaField({
+                    characteristic: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    difficulty: new fields.NumberField({ required: true, initial: 0 }),
+                }),
+                aftereffect: new fields.SchemaField({
+                    target: new fields.StringField({ required: true, initial: 'characteristic', choices: [...DYNAMIC_MODIFIER_TARGETS] }),
+                    targetKey: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    value: new fields.NumberField({ required: true, initial: 0 }),
+                    valueFormula: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    durationUnit: new fields.StringField({ required: true, initial: 'instant', choices: [...DYNAMIC_DURATION_UNITS] }),
+                    durationValue: new fields.NumberField({ required: true, initial: 0 }),
+                }),
+            }),
+            formula: new fields.StringField({ required: false, blank: true, initial: '' }),
+            label: new fields.StringField({ required: false, blank: true, initial: '' }),
+        }),
+        { required: true, initial: [] },
+    );
+}
+
 /**
  * One situational-modifier channel: an `ArrayField` of conditional
  * `{ key, value, condition, icon }` entries. The `situational.characteristics`,
@@ -202,6 +396,8 @@ export default class ModifiersTemplate extends SystemDataModel {
             skills: Array<{ key: string; value: number; condition: string; icon: string; appliesToVariant?: string }>;
             combat: Array<{ key: string; value: number; condition: string; icon: string; appliesToVariant?: string }>;
         };
+        /** Data-driven dynamic modifier hooks (Direction #7) — see {@link DynamicModifierEntry}. */
+        dynamicModifiers: DynamicModifierEntry[];
     };
 
     /** @inheritdoc */
@@ -243,6 +439,10 @@ export default class ModifiersTemplate extends SystemDataModel {
                     skills: situationalEntrySchema(),
                     combat: situationalEntrySchema(),
                 }),
+                // Data-driven dynamic modifier hooks (Direction #7). Empty on legacy
+                // items; authored on content whose modifier is dynamic / conditional /
+                // temporary and read by the central collector.
+                dynamicModifiers: dynamicModifiersSchema(),
             }),
         };
     }
@@ -278,6 +478,7 @@ export default class ModifiersTemplate extends SystemDataModel {
         if (!('resources' in mods) || mods['resources'] === undefined) mods['resources'] = {};
         if (!('other' in mods) || mods['other'] === undefined) mods['other'] = [];
         if (!('situational' in mods) || mods['situational'] === undefined) mods['situational'] = { characteristics: [], skills: [], combat: [] };
+        if (!('dynamicModifiers' in mods) || mods['dynamicModifiers'] === undefined) mods['dynamicModifiers'] = [];
     }
 
     /* -------------------------------------------- */
@@ -311,7 +512,19 @@ export default class ModifiersTemplate extends SystemDataModel {
         if (mods.situational.characteristics.length > 0) return true;
         if (mods.situational.skills.length > 0) return true;
         if (mods.situational.combat.length > 0) return true;
+        if (mods.dynamicModifiers.length > 0) return true;
         return false;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Whether this item declares any data-driven dynamic modifier hooks
+     * (Direction #7). Read by the central collector to skip items with none.
+     * @type {boolean}
+     */
+    get hasDynamicModifiers(): boolean {
+        return this.modifiers.dynamicModifiers.length > 0;
     }
 
     /* -------------------------------------------- */
