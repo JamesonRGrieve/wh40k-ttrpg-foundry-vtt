@@ -1,8 +1,27 @@
 import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateAmmoSpecials } from '../rules/ammo.ts';
 import { getCriticalDamage } from '../rules/critical-damage.ts';
+import {
+    collectDynamicComponents,
+    type DynamicModifierContext,
+    type DynamicModifierItemLike,
+    type DynamicModifierSituation,
+} from '../rules/dynamic-modifiers.ts';
 import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
 import { calculateExoticQualityDamageModifiers, calculateQualityPenetrationModifiers, getRighteousFuryThreshold } from '../rules/weapon-quality-effects.ts';
+
+/** Short characteristic key → the fuzzy name `getCharacteristicFuzzy` resolves, for the dynamic-modifier context. */
+const DAMAGE_CHAR_FUZZY: Readonly<Record<string, string>> = {
+    ws: 'WeaponSkill',
+    bs: 'BallisticSkill',
+    s: 'Strength',
+    t: 'Toughness',
+    ag: 'Agility',
+    int: 'Intelligence',
+    per: 'Perception',
+    wp: 'Willpower',
+    fel: 'Fellowship',
+};
 
 /**
  * Minimal interface for the attackData parameter passed to Hit calculation methods.
@@ -37,6 +56,8 @@ export interface AttackDataLike {
             getCharacteristicFuzzy: (key: string) => { bonus: number };
             hasTalent: (name: string) => boolean;
             hasTalentFuzzyWords: (words: string | string[], extra?: string) => boolean;
+            /** Owned items, walked for data-driven dynamic modifier hooks (Direction #7). */
+            items?: Iterable<DynamicModifierItemLike>;
             /** Active game line, used to resolve the line's critical-injury pack (#439). */
             system?: { gameSystem?: string };
         };
@@ -194,6 +215,7 @@ export class Hit {
     static async createHit(attackData: AttackDataLike, hitNumber: number): Promise<Hit> {
         const hit = new Hit();
         await hit._calculateDamage(attackData);
+        await hit.applyDynamicModifiers(attackData);
         hit._totalDamage();
         await hit._calculatePenetration(attackData);
         hit._totalPenetration();
@@ -224,6 +246,58 @@ export class Hit {
 
     _totalDamage(): void {
         this.totalDamage = this.damage + Object.values(this.modifiers).reduce((a, b) => a + b, 0);
+    }
+
+    /**
+     * Additive pass for data-driven dynamic modifier hooks (Direction #7): collect
+     * the attacker's damage / penetration hooks that fire for this hit and merge
+     * them into the modifier maps, so a talent's or quality's contribution comes
+     * from its declared `dynamicModifiers` data rather than a name match hardcoded
+     * here. A no-op when no owned item declares a hook (legacy content). Only
+     * `add`-mode components are merged; `multiply` / `set` need a base-value context
+     * handled by the dedicated quality collectors. Runs before {@link _totalDamage}
+     * / {@link _totalPenetration}, so the merged values are summed into the totals.
+     */
+    async applyDynamicModifiers(attackData: AttackDataLike): Promise<void> {
+        const sourceActor = attackData.rollData.sourceActor;
+        const items = sourceActor.items;
+        if (items === undefined) return;
+        const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
+        const charBonus: Record<string, number> = {};
+        for (const [short, fuzzy] of Object.entries(DAMAGE_CHAR_FUZZY)) {
+            charBonus[short] = sourceActor.getCharacteristicFuzzy(fuzzy).bonus;
+        }
+        const ctx: DynamicModifierContext = {
+            charBonus,
+            charTotal: {},
+            dos: attackData.rollData.dos,
+            pr: 0,
+            cb: 0,
+            level: 0,
+            penetration: this.penetration,
+            armourPoints: 0,
+        };
+        const situation: DynamicModifierSituation = {
+            isMelee: actionItem?.isMelee === true,
+            isRanged: actionItem?.isRanged === true,
+            isCrit: this.righteousFury.length > 0,
+            action: attackData.rollData.action,
+        };
+        for (const component of collectDynamicComponents(items, ctx, situation)) {
+            if (component.side !== 'attacker' || component.mode !== 'add') continue;
+            if (component.target !== 'damage' && component.target !== 'penetration') continue;
+            let value = component.value;
+            if (component.valueFormula !== '') {
+                const roll = new Roll(component.valueFormula, {});
+                // eslint-disable-next-line no-await-in-loop -- sequential: each dice-valued hook rolls its own magnitude
+                await roll.evaluate();
+                value = roll.total ?? 0;
+            }
+            const map = component.target === 'penetration' ? this.penetrationModifiers : this.modifiers;
+            const key = component.label.toLowerCase();
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: map[key] may be undefined despite Record<string, number> type
+            map[key] = (map[key] ?? 0) + value;
+        }
     }
 
     /**
