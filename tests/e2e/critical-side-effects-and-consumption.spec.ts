@@ -89,6 +89,7 @@ async function probeCriticalSideEffects(page: Page): Promise<{ results: FlowResu
                 class?: string;
             }
             interface ItemRef {
+                _id?: string;
                 name?: string | null;
                 type?: string;
                 system?: ItemSystem;
@@ -384,7 +385,11 @@ async function probeCriticalSideEffects(page: Page): Promise<{ results: FlowResu
             // ── Flow 7 — stack-merge quantity math for a stacked consumable ─────
             try {
                 const plan = mgrMod.ItemDropManager.planStackMerge(
-                    [{ name: 'E2E Stub Rounds', type: 'ammunition', system: { quantity: 5 } }],
+                    // The existing stack MUST carry an `_id`: planStackMerge tallies
+                    // (and later targets its update at) existing items by id, so an
+                    // id-less existing stack is never merged into — the incoming
+                    // stack would fall through to `creates` instead of `updates`.
+                    [{ _id: 'e2eStubRoundsExisting', name: 'E2E Stub Rounds', type: 'ammunition', system: { quantity: 5 } }],
                     [{ name: 'E2E Stub Rounds', type: 'ammunition', system: { quantity: 4 } }],
                 );
                 const ok = plan.updates.length === 1 && plan.updates[0]?.quantity === 9;
