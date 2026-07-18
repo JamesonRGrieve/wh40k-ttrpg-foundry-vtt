@@ -49,6 +49,8 @@ export interface DynamicModifierSituation {
     targetTags?: readonly string[];
     /** States on the acting actor — `fatigued`, `frenzied`, `aiming`, `sustained`, `braced` (for `whileState`). */
     states?: readonly string[];
+    /** Ids of per-attack effects the attacker activated this roll (for `condition: activated`; e.g. `eyeOfVengeance`). */
+    activated?: readonly string[];
 }
 
 /** One resolved contribution ready for the roll/damage pipeline (value or deferred dice). */
@@ -174,6 +176,7 @@ function conditionMatches(hook: DynamicModifierEntry, situation: DynamicModifier
     if (c === 'vsType' || c === 'vsFaction' || c === 'vsAlignment') return (situation.targetTags ?? []).includes(value);
     if (c === 'rangeBand') return situation.rangeBand === value;
     if (c === 'action') return situation.action === value;
+    if (c === 'activated') return (situation.activated ?? []).includes(value);
     return true;
 }
 
