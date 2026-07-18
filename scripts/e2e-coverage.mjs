@@ -2164,6 +2164,28 @@ const LOOT_FLOWS = [
 ];
 recordDimension('loot.flow', covered['loot.flow'], LOOT_FLOWS);
 
+// Item Piles integration dimension exercised by
+// tests/e2e/item-piles-integration.spec.ts. Real-runtime coverage of the
+// wh40k-rpg ↔ Item Piles surface (currency registry + per-line wallet-path
+// resolution + pickupLoot ammo/condition/stack preservation) that the unit
+// tests (item-piles.test.ts, item-drop-manager.test.ts) cannot reach. Keys MUST
+// match the recordCoverage('itempiles.flow', ...) calls in that spec. The real
+// Item Piles MODULE flows live in item-piles-module.spec.ts (skip-gated).
+const ITEM_PILES_FLOWS = [
+    'currency-registry-complete',
+    'currency-wallet-throne',
+    'currency-wallet-influence',
+    'currency-wallet-profitFactor',
+    'currency-wallet-requisition',
+    'currency-wallet-infamy',
+    'currency-wallet-logistics',
+    'pickup-preserves-ammo-quantity',
+    'pickup-preserves-weapon-condition',
+    'pickup-merges-into-existing-stack',
+    'pickup-empty-pile-rejected',
+];
+recordDimension('itempiles.flow', covered['itempiles.flow'], ITEM_PILES_FLOWS);
+
 // WH40KStarship document-layer methods exercised by
 // tests/e2e/starship-methods.spec.ts. vehicle-starship.spec.ts drives the
 // underlying DataModel (component embedding, morale, hull-and-shields);
