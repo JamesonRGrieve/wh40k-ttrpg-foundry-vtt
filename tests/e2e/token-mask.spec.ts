@@ -192,12 +192,6 @@ test.describe.serial('runtime token mask (Tier B)', () => {
     test('tokenFrame flag renders a circular bust from a rectangular portrait', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
-
         let state: ProbeState = { results: [], sceneId: null, actorId: null };
         try {
             state = await probeTokenMask(page, PORTRAIT);
@@ -211,7 +205,6 @@ test.describe.serial('runtime token mask (Tier B)', () => {
             }
         } finally {
             await cleanupProbe(page, state.sceneId, state.actorId);
-            page.off('pageerror', listener);
         }
 
         const failures: string[] = [];
@@ -225,8 +218,6 @@ test.describe.serial('runtime token mask (Tier B)', () => {
             }
         }
 
-        const pageErrorTail = pageErrors.length > 0 ? `\n  pageerrors: ${pageErrors.slice(0, 5).join(' | ')}` : '';
-
-        expect(failures, `${failures.length}/${TOKEN_MASK_FLOWS.length} token-mask probes failed:\n  - ${failures.join('\n  - ')}${pageErrorTail}`).toEqual([]);
+        expect(failures, `${failures.length}/${TOKEN_MASK_FLOWS.length} token-mask probes failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 });

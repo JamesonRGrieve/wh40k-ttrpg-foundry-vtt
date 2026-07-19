@@ -100,12 +100,6 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
         }
         const actorId = created.id;
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
-
         try {
             const result = await page.evaluate(async (id: string): Promise<HealingProbeResult> => {
                 const base: HealingProbeResult = {
@@ -212,11 +206,9 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
             if (result.tickDispatched === true) {
                 expect(result.recoveryAfter, 'recovery should tick 5 → 4 after one day').toBe(4);
             }
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
 
             recordCoverage('panel.render', 'OwComradeHealingPanel');
         } finally {
-            page.off('pageerror', listener);
             await deleteActor(page, actorId);
         }
     });

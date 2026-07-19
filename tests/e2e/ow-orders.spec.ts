@@ -73,12 +73,6 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
         }
         const actorId = created.id;
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
-
         try {
             const result = await page.evaluate(async (id: string) => {
                 interface ProbeSheet {
@@ -194,11 +188,9 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
                 expect(result.ordersAfter, 'activeOrders should append one entry after Issue').toBe(1);
                 expect(result.firstOrderId, 'persisted entry should match the clicked orderId').toBe('ranged-volley');
             }
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
 
             recordCoverage('panel.render', 'OwOrdersPanel');
         } finally {
-            page.off('pageerror', listener);
             await deleteActor(page, actorId);
         }
     });

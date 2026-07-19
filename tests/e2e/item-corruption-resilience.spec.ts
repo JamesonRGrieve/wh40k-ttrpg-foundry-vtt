@@ -58,7 +58,6 @@ interface ProbeResult {
     armourBasicType: string | undefined;
     psychicDiscipline: string | undefined;
     backpackRows: number;
-    pageErrors: string[];
 }
 
 const VALID_WEAPON_TYPES = [
@@ -94,10 +93,7 @@ const VALID_ARMOUR_TYPES = [
 ];
 
 async function probe(page: Page): Promise<ProbeResult> {
-    const pageErrors: string[] = [];
-    page.on('pageerror', (err) => pageErrors.push(err.message));
-
-    const result = await page.evaluate(async (): Promise<Omit<ProbeResult, 'pageErrors'>> => {
+    const result = await page.evaluate(async (): Promise<ProbeResult> => {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's global `Actor` document class is untyped inside page.evaluate
         const g = globalThis as unknown as { Actor: ActorStatic };
         const actor = await g.Actor.create({ name: 'ZZItemCorruptionTest', type: 'dh2-character' });
@@ -131,7 +127,7 @@ async function probe(page: Page): Promise<ProbeResult> {
             await sheet.close?.();
         }
 
-        const out: Omit<ProbeResult, 'pageErrors'> = {
+        const out: ProbeResult = {
             created: created.length,
             liveCount: actor.items?.size ?? 0,
             // The drop regression manifests as a created item VANISHING; a valid
@@ -148,7 +144,7 @@ async function probe(page: Page): Promise<ProbeResult> {
         await actor.delete?.();
         return out;
     });
-    return { ...result, pageErrors };
+    return result;
 }
 
 test('corrupt-enum / multi-system-blob items load and render (not dropped)', async ({ page }) => {
@@ -176,6 +172,4 @@ test('corrupt-enum / multi-system-blob items load and render (not dropped)', asy
 
     // Equipment tab renders rows for the loaded items (3 weapons + armour + gear).
     expect(r.backpackRows, 'inventory renders rows, not empty').toBeGreaterThanOrEqual(5);
-
-    expect(r.pageErrors, 'no client-side render errors').toEqual([]);
 });

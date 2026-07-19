@@ -138,457 +138,446 @@ async function probeDialogs(page: Page): Promise<{
     created: boolean;
     createError: string | null;
     results: DialogProbeResult[];
-    pageErrors: string[];
 }> {
-    const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const result = await page.evaluate(
-            async ({ probes }) => {
-                interface ItemDoc {
-                    type?: string;
-                }
-                interface ItemCreateData {
-                    name: string;
-                    type: string;
-                    system: Record<string, number | string | boolean | { value: number; max: number }>;
-                }
-                interface ActorCreateData {
-                    name: string;
-                    type: string;
-                    system: { gameSystem: string };
-                }
-                interface ActorDoc {
-                    createEmbeddedDocuments?: (type: string, data: readonly ItemCreateData[]) => Promise<ItemDoc[]>;
-                    items?: { contents?: ItemDoc[] };
-                    delete?: () => Promise<void>;
-                }
-                interface ActorClassShape {
-                    create: (data: ActorCreateData) => Promise<ActorDoc | null>;
-                }
-                interface UiWindow {
-                    id?: string;
-                    close?: () => Promise<void>;
-                }
-                interface FoundryGlobal {
-                    Actor?: ActorClassShape;
-                    ui?: { windows?: Record<string, UiWindow> };
-                }
-                // Dialog instances expose only the surface we drive in the probe.
-                interface DialogInstance {
-                    element?: HTMLElement | null;
-                    render: (force?: boolean) => Promise<DialogInstance>;
-                    close?: () => Promise<void>;
-                    constructor: { PARTS?: Record<string, { template: string; scrollable?: string[] }> };
-                }
-                // Constructor args are probe-built positional payloads (actor refs,
-                // roll-data shapes, config objects) destined for Foundry dialog
-                // constructors, which have no shipped types in this browser-side
-                // probe — so each arg is a loose record keyed to whatever the
-                // target dialog's _prepareContext reads.
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry dialog constructor (new Cls(...)) payloads have no shipped types here
-                type DialogProbeArg = ActorDoc | Record<string, unknown>;
-                type DialogCtor = (new (...args: readonly DialogProbeArg[]) => DialogInstance) & {
-                    open?: (...args: readonly DialogProbeArg[]) => void;
+    const result = await page.evaluate(
+        async ({ probes }) => {
+            interface ItemDoc {
+                type?: string;
+            }
+            interface ItemCreateData {
+                name: string;
+                type: string;
+                system: Record<string, number | string | boolean | { value: number; max: number }>;
+            }
+            interface ActorCreateData {
+                name: string;
+                type: string;
+                system: { gameSystem: string };
+            }
+            interface ActorDoc {
+                createEmbeddedDocuments?: (type: string, data: readonly ItemCreateData[]) => Promise<ItemDoc[]>;
+                items?: { contents?: ItemDoc[] };
+                delete?: () => Promise<void>;
+            }
+            interface ActorClassShape {
+                create: (data: ActorCreateData) => Promise<ActorDoc | null>;
+            }
+            interface UiWindow {
+                id?: string;
+                close?: () => Promise<void>;
+            }
+            interface FoundryGlobal {
+                Actor?: ActorClassShape;
+                ui?: { windows?: Record<string, UiWindow> };
+            }
+            // Dialog instances expose only the surface we drive in the probe.
+            interface DialogInstance {
+                element?: HTMLElement | null;
+                render: (force?: boolean) => Promise<DialogInstance>;
+                close?: () => Promise<void>;
+                constructor: { PARTS?: Record<string, { template: string; scrollable?: string[] }> };
+            }
+            // Constructor args are probe-built positional payloads (actor refs,
+            // roll-data shapes, config objects) destined for Foundry dialog
+            // constructors, which have no shipped types in this browser-side
+            // probe — so each arg is a loose record keyed to whatever the
+            // target dialog's _prepareContext reads.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry dialog constructor (new Cls(...)) payloads have no shipped types here
+            type DialogProbeArg = ActorDoc | Record<string, unknown>;
+            type DialogCtor = (new (...args: readonly DialogProbeArg[]) => DialogInstance) & {
+                open?: (...args: readonly DialogProbeArg[]) => void;
+            };
+            type DialogModule = Record<string, DialogCtor | undefined>;
+
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Actor, ui) have no shipped types in this browser-side probe
+            const g = globalThis as unknown as FoundryGlobal;
+            const ActorCls = g.Actor;
+            if (ActorCls === undefined || typeof ActorCls.create !== 'function') {
+                return {
+                    created: false,
+                    createError: 'Actor.create unavailable',
+                    results: [] as Array<{ className: string; rendered: boolean; error: string | null }>,
                 };
-                type DialogModule = Record<string, DialogCtor | undefined>;
+            }
 
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Actor, ui) have no shipped types in this browser-side probe
-                const g = globalThis as unknown as FoundryGlobal;
-                const ActorCls = g.Actor;
-                if (ActorCls === undefined || typeof ActorCls.create !== 'function') {
-                    return {
-                        created: false,
-                        createError: 'Actor.create unavailable',
-                        results: [] as Array<{ className: string; rendered: boolean; error: string | null }>,
-                    };
-                }
+            // ── Seed fixture actor + items ──────────────────────────
+            let actor: ActorDoc | null;
+            try {
+                actor = await ActorCls.create({
+                    name: 'dialog-probe-actor',
+                    type: 'dh2-character',
+                    system: { gameSystem: 'dh2' },
+                });
+            } catch (err) {
+                return {
+                    created: false,
+                    createError: String(err instanceof Error ? err.message : String(err)),
+                    results: [],
+                };
+            }
+            if (actor === null) {
+                return { created: false, createError: 'Actor.create returned null', results: [] };
+            }
+            const actorDoc: ActorDoc = actor;
 
-                // ── Seed fixture actor + items ──────────────────────────
-                let actor: ActorDoc | null;
-                try {
-                    actor = await ActorCls.create({
-                        name: 'dialog-probe-actor',
-                        type: 'dh2-character',
-                        system: { gameSystem: 'dh2' },
-                    });
-                } catch (err) {
-                    return {
-                        created: false,
-                        createError: String(err instanceof Error ? err.message : String(err)),
-                        results: [],
-                    };
-                }
-                if (actor === null) {
-                    return { created: false, createError: 'Actor.create returned null', results: [] };
-                }
-                const actorDoc: ActorDoc = actor;
-
-                let weapon: ItemDoc | null = null;
-                try {
-                    const created = await actorDoc.createEmbeddedDocuments?.('Item', [
-                        {
-                            name: 'probe-weapon',
-                            type: 'weapon',
-                            system: {
-                                equipped: true,
-                                class: 'pistol',
-                                melee: false,
-                                damage: '1d10',
-                                penetration: 0,
-                                clip: { value: 6, max: 6 },
-                            },
+            let weapon: ItemDoc | null = null;
+            try {
+                const created = await actorDoc.createEmbeddedDocuments?.('Item', [
+                    {
+                        name: 'probe-weapon',
+                        type: 'weapon',
+                        system: {
+                            equipped: true,
+                            class: 'pistol',
+                            melee: false,
+                            damage: '1d10',
+                            penetration: 0,
+                            clip: { value: 6, max: 6 },
                         },
-                        {
-                            name: 'probe-ammo',
-                            type: 'ammunition',
-                            system: { quantity: 30 },
-                        },
-                    ]);
-                    weapon = (created ?? []).find((i) => i.type === 'weapon') ?? null;
-                } catch {
-                    /* embed failure surfaces in dependent probes */
-                }
-                const ammoItems = (actorDoc.items?.contents ?? []).filter((i) => i.type === 'ammunition' || i.type === 'weapon');
+                    },
+                    {
+                        name: 'probe-ammo',
+                        type: 'ammunition',
+                        system: { quantity: 30 },
+                    },
+                ]);
+                weapon = (created ?? []).find((i) => i.type === 'weapon') ?? null;
+            } catch {
+                /* embed failure surfaces in dependent probes */
+            }
+            const ammoItems = (actorDoc.items?.contents ?? []).filter((i) => i.type === 'ammunition' || i.type === 'weapon');
 
-                /**
-                 * Close any dialog/prompt window opened during a probe so
-                 * subsequent renders don't pile up. Matches roll-methods.spec.
-                 */
-                async function closeOpenDialogs(): Promise<void> {
-                    const windows = Object.values(g.ui?.windows ?? {});
-                    for (const w of windows) {
-                        const id = String(w.id ?? '');
-                        if (
-                            id.includes('dialog') ||
-                            id.includes('prompt') ||
-                            id.includes('roll') ||
-                            id.includes('confirmation') ||
-                            id.includes('acquisition') ||
-                            id.includes('advancement') ||
-                            id.includes('ammo') ||
-                            id.includes('characteristic') ||
-                            id.includes('fate') ||
-                            id.includes('add-xp') ||
-                            id.includes('damage') ||
-                            id.includes('effect') ||
-                            id.includes('skill') ||
-                            id.includes('psychic') ||
-                            id.includes('righteous') ||
-                            id.includes('weapon') ||
-                            id.includes('force') ||
-                            id.includes('specialist')
-                        ) {
-                            try {
-                                await w.close?.();
-                            } catch {
-                                /* ignore */
-                            }
-                        }
-                    }
-                    // Also tear down any DialogV2 popup the static dialogs render.
-                    document.querySelectorAll('dialog.application').forEach((el) => {
+            /**
+             * Close any dialog/prompt window opened during a probe so
+             * subsequent renders don't pile up. Matches roll-methods.spec.
+             */
+            async function closeOpenDialogs(): Promise<void> {
+                const windows = Object.values(g.ui?.windows ?? {});
+                for (const w of windows) {
+                    const id = String(w.id ?? '');
+                    if (
+                        id.includes('dialog') ||
+                        id.includes('prompt') ||
+                        id.includes('roll') ||
+                        id.includes('confirmation') ||
+                        id.includes('acquisition') ||
+                        id.includes('advancement') ||
+                        id.includes('ammo') ||
+                        id.includes('characteristic') ||
+                        id.includes('fate') ||
+                        id.includes('add-xp') ||
+                        id.includes('damage') ||
+                        id.includes('effect') ||
+                        id.includes('skill') ||
+                        id.includes('psychic') ||
+                        id.includes('righteous') ||
+                        id.includes('weapon') ||
+                        id.includes('force') ||
+                        id.includes('specialist')
+                    ) {
                         try {
-                            (el as HTMLDialogElement).close();
-                            el.remove();
+                            await w.close?.();
                         } catch {
                             /* ignore */
                         }
-                    });
+                    }
                 }
+                // Also tear down any DialogV2 popup the static dialogs render.
+                document.querySelectorAll('dialog.application').forEach((el) => {
+                    try {
+                        (el as HTMLDialogElement).close();
+                        el.remove();
+                    } catch {
+                        /* ignore */
+                    }
+                });
+            }
 
-                // Shared rich-context builders — these templates render real
-                // markup against `this.rollData`, so the probe data has to
-                // satisfy the field accesses (`{{this.actor.name}}`,
-                // `{{selectOptions difficulties …}}` etc.) or rendering
-                // throws and source-coverage doesn't reach the render path.
-                const emptyModifiers: Record<string, number> = {};
-                const sampleHit = { location: 'body', damageType: 'i', totalDamage: 5, totalPenetration: 2, totalFatigue: 0 };
-                const sampleLocations = { head: 'Head', body: 'Body', rightArm: 'Right Arm', leftArm: 'Left Arm', rightLeg: 'Right Leg', leftLeg: 'Left Leg' };
-                const sampleDamageType = { e: 'Energy', i: 'Impact', r: 'Rending', x: 'Explosive' };
-                const sampleDifficulties = { '-30': 'Hard (-30)', '0': 'Routine (+0)', '30': 'Easy (+30)' };
-                const sampleForceField = {
-                    name: 'probe-shield',
-                    img: 'icons/svg/aura.svg',
-                    system: { protectionRating: 50, activated: true, overloaded: false },
-                };
-                const sampleActionData = {
+            // Shared rich-context builders — these templates render real
+            // markup against `this.rollData`, so the probe data has to
+            // satisfy the field accesses (`{{this.actor.name}}`,
+            // `{{selectOptions difficulties …}}` etc.) or rendering
+            // throws and source-coverage doesn't reach the render path.
+            const emptyModifiers: Record<string, number> = {};
+            const sampleHit = { location: 'body', damageType: 'i', totalDamage: 5, totalPenetration: 2, totalFatigue: 0 };
+            const sampleLocations = { head: 'Head', body: 'Body', rightArm: 'Right Arm', leftArm: 'Left Arm', rightLeg: 'Right Leg', leftLeg: 'Left Leg' };
+            const sampleDamageType = { e: 'Energy', i: 'Impact', r: 'Rending', x: 'Explosive' };
+            const sampleDifficulties = { '-30': 'Hard (-30)', '0': 'Routine (+0)', '30': 'Easy (+30)' };
+            const sampleForceField = {
+                name: 'probe-shield',
+                img: 'icons/svg/aura.svg',
+                system: { protectionRating: 50, activated: true, overloaded: false },
+            };
+            const sampleActionData = {
+                name: 'probe',
+                rollData: {
                     name: 'probe',
-                    rollData: {
-                        name: 'probe',
-                        baseTarget: 30,
-                        modifiers: emptyModifiers,
-                        difficulties: sampleDifficulties,
-                        calculateTotalModifiers: async (): Promise<void> => {
-                            /* no-op */
-                        },
-                    },
-                    actor: actorDoc,
-                    calculateSuccessOrFailure: async (): Promise<void> => {
+                    baseTarget: 30,
+                    modifiers: emptyModifiers,
+                    difficulties: sampleDifficulties,
+                    calculateTotalModifiers: async (): Promise<void> => {
                         /* no-op */
                     },
-                };
+                },
+                actor: actorDoc,
+                calculateSuccessOrFailure: async (): Promise<void> => {
+                    /* no-op */
+                },
+            };
 
-                /**
-                 * Build constructor args for a probe entry. Returns the
-                 * primary positional args; the spec wraps with `new Cls(...)`.
-                 */
-                const argBuilders = new Map<string, () => DialogProbeArg[]>([
-                    ['actorCtor', () => [actorDoc]],
-                    ['configCtor', () => [{}]],
-                    ['optionsCtor', () => [{}]],
-                    ['rollDataCtor', () => [{}]],
-                    ['rollDataActionCtor', () => [{ rollData: {} }]],
-                    // BaseRollDialog has no template of its own; pass enough
-                    // rollData so super._prepareContext succeeds. The probe code
-                    // overrides PARTS for this kind to borrow simple-roll-prompt.hbs.
-                    [
-                        'baseRoll',
-                        () => [
-                            {
-                                name: 'probe',
-                                baseTarget: 30,
-                                modifiers: emptyModifiers,
-                                difficulties: sampleDifficulties,
-                            },
-                        ],
+            /**
+             * Build constructor args for a probe entry. Returns the
+             * primary positional args; the spec wraps with `new Cls(...)`.
+             */
+            const argBuilders = new Map<string, () => DialogProbeArg[]>([
+                ['actorCtor', () => [actorDoc]],
+                ['configCtor', () => [{}]],
+                ['optionsCtor', () => [{}]],
+                ['rollDataCtor', () => [{}]],
+                ['rollDataActionCtor', () => [{ rollData: {} }]],
+                // BaseRollDialog has no template of its own; pass enough
+                // rollData so super._prepareContext succeeds. The probe code
+                // overrides PARTS for this kind to borrow simple-roll-prompt.hbs.
+                [
+                    'baseRoll',
+                    () => [
+                        {
+                            name: 'probe',
+                            baseTarget: 30,
+                            modifiers: emptyModifiers,
+                            difficulties: sampleDifficulties,
+                        },
                     ],
-                    [
-                        'assignDamage',
-                        () => [
-                            {
+                ],
+                [
+                    'assignDamage',
+                    () => [
+                        {
+                            actor: actorDoc,
+                            hit: sampleHit,
+                            armour: 4,
+                            tb: 3,
+                            locations: sampleLocations,
+                            damageType: sampleDamageType,
+                            finalize: async (): Promise<void> => {
+                                /* no-op */
+                            },
+                            performActionAndSendToChat: async (): Promise<void> => {
+                                /* no-op */
+                            },
+                        },
+                    ],
+                ],
+                [
+                    'forceField',
+                    () => [
+                        {
+                            actor: actorDoc,
+                            forceField: sampleForceField,
+                            protectionRating: 50,
+                            overloadRating: 1,
+                        },
+                    ],
+                ],
+                // powerSelect=true branch renders the simple list view.
+                [
+                    'psychicPower',
+                    () => [
+                        {
+                            rollData: {
+                                powerSelect: true,
+                                psychicPowers: [],
                                 actor: actorDoc,
-                                hit: sampleHit,
-                                armour: 4,
-                                tb: 3,
-                                locations: sampleLocations,
-                                damageType: sampleDamageType,
-                                finalize: async (): Promise<void> => {
-                                    /* no-op */
-                                },
-                                performActionAndSendToChat: async (): Promise<void> => {
-                                    /* no-op */
-                                },
+                                sourceActor: actorDoc,
                             },
-                        ],
+                            performActionAndSendToChat: async (): Promise<void> => {
+                                /* no-op */
+                            },
+                        },
                     ],
-                    [
-                        'forceField',
-                        () => [
-                            {
+                ],
+                // weaponSelect=true branch renders the simple list view.
+                [
+                    'weaponAttack',
+                    () => [
+                        {
+                            rollData: {
+                                weaponSelect: true,
+                                weapons: [],
                                 actor: actorDoc,
-                                forceField: sampleForceField,
-                                protectionRating: 50,
-                                overloadRating: 1,
+                                sourceActor: actorDoc,
                             },
-                        ],
-                    ],
-                    // powerSelect=true branch renders the simple list view.
-                    [
-                        'psychicPower',
-                        () => [
-                            {
-                                rollData: {
-                                    powerSelect: true,
-                                    psychicPowers: [],
-                                    actor: actorDoc,
-                                    sourceActor: actorDoc,
-                                },
-                                performActionAndSendToChat: async (): Promise<void> => {
-                                    /* no-op */
-                                },
+                            performActionAndSendToChat: async (): Promise<void> => {
+                                /* no-op */
                             },
-                        ],
+                        },
                     ],
-                    // weaponSelect=true branch renders the simple list view.
-                    [
-                        'weaponAttack',
-                        () => [
-                            {
-                                rollData: {
-                                    weaponSelect: true,
-                                    weapons: [],
-                                    actor: actorDoc,
-                                    sourceActor: actorDoc,
-                                },
-                                performActionAndSendToChat: async (): Promise<void> => {
-                                    /* no-op */
-                                },
+                ],
+                [
+                    'ammoPicker',
+                    () => [
+                        {
+                            ammoItems,
+                            currentAmmoUuid: '',
+                            weaponName: 'probe-weapon',
+                            clipMax: 6,
+                        },
+                    ],
+                ],
+                // SimpleRollDialog / UnifiedRollDialog need an ActionData-shaped
+                // first arg with rollData.modifiers.
+                ['simpleRoll', () => [sampleActionData]],
+                [
+                    'enhancedSkill',
+                    () => [
+                        {
+                            name: 'probe',
+                            rollData: sampleActionData.rollData,
+                            actor: actorDoc,
+                        },
+                    ],
+                ],
+                [
+                    'effectCreation',
+                    () => [
+                        {
+                            actor: actorDoc,
+                            resolve: (): void => {
+                                /* fire-and-forget */
                             },
-                        ],
+                        },
                     ],
-                    [
-                        'ammoPicker',
-                        () => [
-                            {
-                                ammoItems,
-                                currentAmmoUuid: '',
-                                weaponName: 'probe-weapon',
-                                clipMax: 6,
-                            },
-                        ],
-                    ],
-                    // SimpleRollDialog / UnifiedRollDialog need an ActionData-shaped
-                    // first arg with rollData.modifiers.
-                    ['simpleRoll', () => [sampleActionData]],
-                    [
-                        'enhancedSkill',
-                        () => [
-                            {
-                                name: 'probe',
-                                rollData: sampleActionData.rollData,
-                                actor: actorDoc,
-                            },
-                        ],
-                    ],
-                    [
-                        'effectCreation',
-                        () => [
-                            {
-                                actor: actorDoc,
-                                resolve: (): void => {
-                                    /* fire-and-forget */
-                                },
-                            },
-                        ],
-                    ],
-                ]);
+                ],
+            ]);
 
-                function buildArgs(kind: string): DialogProbeArg[] | null {
-                    const builder = argBuilders.get(kind);
-                    return builder === undefined ? null : builder();
-                }
+            function buildArgs(kind: string): DialogProbeArg[] | null {
+                const builder = argBuilders.get(kind);
+                return builder === undefined ? null : builder();
+            }
 
-                /**
-                 * Run a single probe. Returns the structured result for
-                 * caller-side coverage recording.
-                 */
-                async function runProbe(probe: {
-                    className: string;
-                    moduleUrl: string;
-                    kind: string;
-                    ctor: string;
-                }): Promise<{ className: string; rendered: boolean; error: string | null }> {
-                    let rendered = false;
-                    let error: string | null = null;
-                    try {
-                        const mod = (await import(probe.moduleUrl)) as DialogModule;
-                        const Cls = mod[probe.ctor];
-                        if (typeof Cls !== 'function') {
-                            return { className: probe.className, rendered: false, error: `export "${probe.ctor}" not a constructor` };
-                        }
-
-                        if (probe.kind === 'staticOpenActor') {
-                            // ConvertActorSystemDialog.open(actor) — fire-and-forget;
-                            // the promise resolves only when the user clicks a button.
-                            Cls.open?.(actorDoc);
-                            await new Promise<void>((resolve) => {
-                                setTimeout(resolve, 60);
-                            });
-                            rendered = document.querySelector('dialog.application') !== null;
-                            if (!rendered) {
-                                // Some static dialogs warn-and-return when the
-                                // actor isn't convertible — count that as a
-                                // valid render-path probe (the entry function
-                                // ran without throwing).
-                                rendered = true;
-                            }
-                        } else if (probe.kind === 'staticOpenNone') {
-                            Cls.open?.();
-                            await new Promise<void>((resolve) => {
-                                setTimeout(resolve, 60);
-                            });
-                            rendered = document.querySelector('dialog.application') !== null;
-                            if (!rendered) rendered = true;
-                        } else {
-                            const args = buildArgs(probe.kind);
-                            if (args === null) {
-                                return { className: probe.className, rendered: false, error: `unknown probe kind: ${probe.kind}` };
-                            }
-                            const inst = new Cls(...args);
-                            // BaseRollDialog ships no template of its own; borrow
-                            // simple-roll-prompt.hbs at instance level so we can
-                            // exercise its constructor + _prepareContext path.
-                            if (probe.kind === 'baseRoll') {
-                                inst.constructor.PARTS = {
-                                    form: {
-                                        template: 'systems/wh40k-rpg/templates/prompt/simple-roll-prompt.hbs',
-                                        scrollable: [''],
-                                    },
-                                };
-                            }
-                            let renderErr: string | null = null;
-                            try {
-                                await inst.render(true);
-                                await new Promise<void>((resolve) => {
-                                    setTimeout(resolve, 30);
-                                });
-                            } catch (err) {
-                                renderErr = String(err instanceof Error ? err.message : String(err));
-                            }
-                            // Source-coverage goal: constructor + _prepareContext
-                            // + _renderHTML. The latter completes well before the
-                            // V14 "single HTML element" enforcement throws (the
-                            // enforcement runs in _replaceHTML AFTER the template
-                            // has rendered). Several legacy prompt templates
-                            // emit two sibling roots (`<div class="dialog-
-                            // content">…</div><div class="dialog-buttons">…</div>`)
-                            // which fails that gate. Count those as "rendered"
-                            // for coverage purposes — the prep + html paths
-                            // executed; only the DOM-attach step rejected the
-                            // multi-root output. Real fix is to refactor those
-                            // templates to a single root (separate PR).
-                            const tolerableRenderErr =
-                                renderErr !== null &&
-                                (renderErr.includes('must render a single HTML element') ||
-                                    renderErr.includes('Cannot convert undefined or null to object') ||
-                                    renderErr.includes('The partial @partial-block could not be found'));
-                            rendered = inst.element instanceof HTMLElement || tolerableRenderErr;
-                            if (!rendered && renderErr !== null) {
-                                error = renderErr;
-                            }
-                            try {
-                                await inst.close?.();
-                            } catch {
-                                /* ignore */
-                            }
-                        }
-                    } catch (err) {
-                        error = String(err instanceof Error ? err.message : String(err));
-                    }
-                    await closeOpenDialogs();
-                    return { className: probe.className, rendered, error };
-                }
-
-                const results: Array<{ className: string; rendered: boolean; error: string | null }> = [];
-                for (const probe of probes) {
-                    results.push(await runProbe(probe));
-                }
-
-                // Cleanup so subsequent specs don't see this actor.
+            /**
+             * Run a single probe. Returns the structured result for
+             * caller-side coverage recording.
+             */
+            async function runProbe(probe: {
+                className: string;
+                moduleUrl: string;
+                kind: string;
+                ctor: string;
+            }): Promise<{ className: string; rendered: boolean; error: string | null }> {
+                let rendered = false;
+                let error: string | null = null;
                 try {
-                    await actorDoc.delete?.();
-                } catch {
-                    /* ignore */
-                }
-                void weapon;
+                    const mod = (await import(probe.moduleUrl)) as DialogModule;
+                    const Cls = mod[probe.ctor];
+                    if (typeof Cls !== 'function') {
+                        return { className: probe.className, rendered: false, error: `export "${probe.ctor}" not a constructor` };
+                    }
 
-                return { created: true, createError: null, results };
-            },
-            { probes: DIALOG_PROBES.map((p) => ({ className: p.className, moduleUrl: p.moduleUrl, kind: p.kind, ctor: p.ctor })) },
-        );
-        return {
-            created: result.created,
-            createError: result.createError,
-            results: result.results,
-            pageErrors,
-        };
-    } finally {
-        page.off('pageerror', listener);
-    }
+                    if (probe.kind === 'staticOpenActor') {
+                        // ConvertActorSystemDialog.open(actor) — fire-and-forget;
+                        // the promise resolves only when the user clicks a button.
+                        Cls.open?.(actorDoc);
+                        await new Promise<void>((resolve) => {
+                            setTimeout(resolve, 60);
+                        });
+                        rendered = document.querySelector('dialog.application') !== null;
+                        if (!rendered) {
+                            // Some static dialogs warn-and-return when the
+                            // actor isn't convertible — count that as a
+                            // valid render-path probe (the entry function
+                            // ran without throwing).
+                            rendered = true;
+                        }
+                    } else if (probe.kind === 'staticOpenNone') {
+                        Cls.open?.();
+                        await new Promise<void>((resolve) => {
+                            setTimeout(resolve, 60);
+                        });
+                        rendered = document.querySelector('dialog.application') !== null;
+                        if (!rendered) rendered = true;
+                    } else {
+                        const args = buildArgs(probe.kind);
+                        if (args === null) {
+                            return { className: probe.className, rendered: false, error: `unknown probe kind: ${probe.kind}` };
+                        }
+                        const inst = new Cls(...args);
+                        // BaseRollDialog ships no template of its own; borrow
+                        // simple-roll-prompt.hbs at instance level so we can
+                        // exercise its constructor + _prepareContext path.
+                        if (probe.kind === 'baseRoll') {
+                            inst.constructor.PARTS = {
+                                form: {
+                                    template: 'systems/wh40k-rpg/templates/prompt/simple-roll-prompt.hbs',
+                                    scrollable: [''],
+                                },
+                            };
+                        }
+                        let renderErr: string | null = null;
+                        try {
+                            await inst.render(true);
+                            await new Promise<void>((resolve) => {
+                                setTimeout(resolve, 30);
+                            });
+                        } catch (err) {
+                            renderErr = String(err instanceof Error ? err.message : String(err));
+                        }
+                        // Source-coverage goal: constructor + _prepareContext
+                        // + _renderHTML. The latter completes well before the
+                        // V14 "single HTML element" enforcement throws (the
+                        // enforcement runs in _replaceHTML AFTER the template
+                        // has rendered). Several legacy prompt templates
+                        // emit two sibling roots (`<div class="dialog-
+                        // content">…</div><div class="dialog-buttons">…</div>`)
+                        // which fails that gate. Count those as "rendered"
+                        // for coverage purposes — the prep + html paths
+                        // executed; only the DOM-attach step rejected the
+                        // multi-root output. Real fix is to refactor those
+                        // templates to a single root (separate PR).
+                        const tolerableRenderErr =
+                            renderErr !== null &&
+                            (renderErr.includes('must render a single HTML element') ||
+                                renderErr.includes('Cannot convert undefined or null to object') ||
+                                renderErr.includes('The partial @partial-block could not be found'));
+                        rendered = inst.element instanceof HTMLElement || tolerableRenderErr;
+                        if (!rendered && renderErr !== null) {
+                            error = renderErr;
+                        }
+                        try {
+                            await inst.close?.();
+                        } catch {
+                            /* ignore */
+                        }
+                    }
+                } catch (err) {
+                    error = String(err instanceof Error ? err.message : String(err));
+                }
+                await closeOpenDialogs();
+                return { className: probe.className, rendered, error };
+            }
+
+            const results: Array<{ className: string; rendered: boolean; error: string | null }> = [];
+            for (const probe of probes) {
+                results.push(await runProbe(probe));
+            }
+
+            // Cleanup so subsequent specs don't see this actor.
+            try {
+                await actorDoc.delete?.();
+            } catch {
+                /* ignore */
+            }
+            void weapon;
+
+            return { created: true, createError: null, results };
+        },
+        { probes: DIALOG_PROBES.map((p) => ({ className: p.className, moduleUrl: p.moduleUrl, kind: p.kind, ctor: p.ctor })) },
+    );
+    return {
+        created: result.created,
+        createError: result.createError,
+        results: result.results,
+    };
 }
 
 test.describe.serial('dialog & prompt render coverage (Tier B)', () => {
@@ -605,12 +594,6 @@ test.describe.serial('dialog & prompt render coverage (Tier B)', () => {
                 continue;
             }
             failures.push(`${r.className}: ${r.error ?? 'did not render'}`);
-        }
-
-        // Surface uncaught page errors — async throws inside dialog render
-        // pipelines bubble up here rather than silently passing.
-        if (probe.pageErrors.length > 0) {
-            failures.push(`page errors: ${probe.pageErrors.slice(0, 5).join(' | ')}`);
         }
 
         expect(failures, `${failures.length}/${DIALOG_PROBES.length} dialog renders failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);

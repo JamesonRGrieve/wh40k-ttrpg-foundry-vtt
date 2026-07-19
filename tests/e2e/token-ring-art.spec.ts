@@ -244,12 +244,6 @@ test.describe.serial('token ring art (Tier B)', () => {
     test('DH2 token busts ring-enable, serve, and render in a live Foundry world', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
-
         let results: FlowResult[] = [];
         let sceneId: string | null = null;
         let actorId: string | null = null;
@@ -263,7 +257,6 @@ test.describe.serial('token ring art (Tier B)', () => {
             }
         } finally {
             await cleanup(page, sceneId, actorId);
-            page.off('pageerror', listener);
         }
 
         const failures: string[] = [];
@@ -277,8 +270,6 @@ test.describe.serial('token ring art (Tier B)', () => {
             }
         }
 
-        const pageErrorTail = pageErrors.length > 0 ? `\n  pageerrors: ${pageErrors.slice(0, 5).join(' | ')}` : '';
-
-        expect(failures, `${failures.length}/${TOKEN_RING_FLOWS.length} token-ring probes failed:\n  - ${failures.join('\n  - ')}${pageErrorTail}`).toEqual([]);
+        expect(failures, `${failures.length}/${TOKEN_RING_FLOWS.length} token-ring probes failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 });

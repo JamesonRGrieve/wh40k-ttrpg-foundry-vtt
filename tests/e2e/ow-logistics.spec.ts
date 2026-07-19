@@ -17,138 +17,127 @@ test.describe.serial('LogisticsTestDialog (Tier B)', () => {
     test('renders all four axes + craftsmanship + standard-kit + target preview + roll, snaps', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
+        const result = await page.evaluate(async () => {
+            interface DialogInstance {
+                render: (opts?: { force: boolean }) => Promise<void>;
+                element: HTMLElement | null;
+                close: () => Promise<void>;
+            }
+            interface DialogCtor {
+                new (opts?: object): DialogInstance;
+            }
+            interface DialogModule {
+                default: DialogCtor;
+            }
+            const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/logistics-test-dialog.js';
+            let error: string | null = null;
+            let rendered = false;
+            let hasTroopCount = false;
+            let hasTimeInFront = false;
+            let hasFrontActive = false;
+            let hasWarCondition = false;
+            let hasCraftsmanship = false;
+            let hasStandardKitToggle = false;
+            let hasTargetPreview = false;
+            let hasRollButton = false;
+            let hasCancelButton = false;
+            let troopCountButtons = 0;
 
-        try {
-            const result = await page.evaluate(async () => {
-                interface DialogInstance {
-                    render: (opts?: { force: boolean }) => Promise<void>;
-                    element: HTMLElement | null;
-                    close: () => Promise<void>;
+            try {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of compiled JS module; shape declared via DialogModule
+                const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                const Cls = mod.default;
+                if (typeof Cls !== 'function') {
+                    return {
+                        rendered,
+                        hasTroopCount,
+                        hasTimeInFront,
+                        hasFrontActive,
+                        hasWarCondition,
+                        hasCraftsmanship,
+                        hasStandardKitToggle,
+                        hasTargetPreview,
+                        hasRollButton,
+                        hasCancelButton,
+                        troopCountButtons,
+                        error: 'default export not a constructor',
+                    };
                 }
-                interface DialogCtor {
-                    new (opts?: object): DialogInstance;
-                }
-                interface DialogModule {
-                    default: DialogCtor;
-                }
-                const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/logistics-test-dialog.js';
-                let error: string | null = null;
-                let rendered = false;
-                let hasTroopCount = false;
-                let hasTimeInFront = false;
-                let hasFrontActive = false;
-                let hasWarCondition = false;
-                let hasCraftsmanship = false;
-                let hasStandardKitToggle = false;
-                let hasTargetPreview = false;
-                let hasRollButton = false;
-                let hasCancelButton = false;
-                let troopCountButtons = 0;
-
+                const inst = new Cls({});
                 try {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of compiled JS module; shape declared via DialogModule
-                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
-                    const Cls = mod.default;
-                    if (typeof Cls !== 'function') {
-                        return {
-                            rendered,
-                            hasTroopCount,
-                            hasTimeInFront,
-                            hasFrontActive,
-                            hasWarCondition,
-                            hasCraftsmanship,
-                            hasStandardKitToggle,
-                            hasTargetPreview,
-                            hasRollButton,
-                            hasCancelButton,
-                            troopCountButtons,
-                            error: 'default export not a constructor',
-                        };
-                    }
-                    const inst = new Cls({});
-                    try {
-                        await inst.render({ force: true });
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 80);
-                        });
-                    } catch (err) {
-                        error = err instanceof Error ? err.message : String(err);
-                    }
-                    rendered = inst.element instanceof HTMLElement;
-                    if (rendered && inst.element) {
-                        const el = inst.element;
-                        hasTroopCount = el.querySelector('[data-axis="troopCount"]') !== null;
-                        hasTimeInFront = el.querySelector('[data-axis="timeInFront"]') !== null;
-                        hasFrontActive = el.querySelector('[data-axis="frontActive"]') !== null;
-                        hasWarCondition = el.querySelector('[data-axis="warCondition"]') !== null;
-                        hasCraftsmanship = el.querySelector('[data-axis="craftsmanship"]') !== null;
-                        hasStandardKitToggle = el.querySelector('button[data-action="owToggleStandardKit"]') !== null;
-                        hasTargetPreview = el.querySelector('[data-target-preview]') !== null;
-                        hasRollButton = el.querySelector('button[data-action="owRollLogistics"]') !== null;
-                        hasCancelButton = el.querySelector('button[data-action="owCancelLogistics"]') !== null;
-                        troopCountButtons = el.querySelectorAll('[data-axis="troopCount"] button[data-action="owSetAxis"]').length;
-                    }
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing instance on globalThis for cross-evaluate access
-                    (globalThis as unknown as { __owLogisticsDialog?: DialogInstance }).__owLogisticsDialog = inst;
+                    await inst.render({ force: true });
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 80);
+                    });
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
-
-                return {
-                    rendered,
-                    hasTroopCount,
-                    hasTimeInFront,
-                    hasFrontActive,
-                    hasWarCondition,
-                    hasCraftsmanship,
-                    hasStandardKitToggle,
-                    hasTargetPreview,
-                    hasRollButton,
-                    hasCancelButton,
-                    troopCountButtons,
-                    error,
-                };
-            });
-
-            await snap(page, 'ow-logistics-dialog');
-
-            // Tear down so the dialog doesn't leak into the next serial test.
-            await page.evaluate(async () => {
-                interface DialogHandle {
-                    close?: () => Promise<void>;
+                rendered = inst.element instanceof HTMLElement;
+                if (rendered && inst.element) {
+                    const el = inst.element;
+                    hasTroopCount = el.querySelector('[data-axis="troopCount"]') !== null;
+                    hasTimeInFront = el.querySelector('[data-axis="timeInFront"]') !== null;
+                    hasFrontActive = el.querySelector('[data-axis="frontActive"]') !== null;
+                    hasWarCondition = el.querySelector('[data-axis="warCondition"]') !== null;
+                    hasCraftsmanship = el.querySelector('[data-axis="craftsmanship"]') !== null;
+                    hasStandardKitToggle = el.querySelector('button[data-action="owToggleStandardKit"]') !== null;
+                    hasTargetPreview = el.querySelector('[data-target-preview]') !== null;
+                    hasRollButton = el.querySelector('button[data-action="owRollLogistics"]') !== null;
+                    hasCancelButton = el.querySelector('button[data-action="owCancelLogistics"]') !== null;
+                    troopCountButtons = el.querySelectorAll('[data-axis="troopCount"] button[data-action="owSetAxis"]').length;
                 }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: reading instance stashed on globalThis across evaluate calls
-                const g = globalThis as unknown as { __owLogisticsDialog?: DialogHandle };
-                try {
-                    await g.__owLogisticsDialog?.close?.();
-                } catch {
-                    /* ignore */
-                }
-                g.__owLogisticsDialog = undefined;
-            });
+                // eslint-disable-next-line no-restricted-syntax -- boundary: stashing instance on globalThis for cross-evaluate access
+                (globalThis as unknown as { __owLogisticsDialog?: DialogInstance }).__owLogisticsDialog = inst;
+            } catch (err) {
+                error = err instanceof Error ? err.message : String(err);
+            }
 
-            expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'dialog did not render').toBe(true);
-            expect(result.hasTroopCount, 'Troop Count axis should render').toBe(true);
-            expect(result.hasTimeInFront, 'Time in Front axis should render').toBe(true);
-            expect(result.hasFrontActive, 'Front Activity axis should render').toBe(true);
-            expect(result.hasWarCondition, 'War Conditions axis should render').toBe(true);
-            expect(result.hasCraftsmanship, 'Craftsmanship axis should render').toBe(true);
-            expect(result.hasStandardKitToggle, 'Standard Kit toggle should render').toBe(true);
-            expect(result.hasTargetPreview, 'Target preview should render').toBe(true);
-            expect(result.hasRollButton, 'Roll button should render').toBe(true);
-            expect(result.hasCancelButton, 'Cancel button should render').toBe(true);
-            expect(result.troopCountButtons, 'expected four Troop Count buttons').toBe(4);
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
+            return {
+                rendered,
+                hasTroopCount,
+                hasTimeInFront,
+                hasFrontActive,
+                hasWarCondition,
+                hasCraftsmanship,
+                hasStandardKitToggle,
+                hasTargetPreview,
+                hasRollButton,
+                hasCancelButton,
+                troopCountButtons,
+                error,
+            };
+        });
 
-            recordCoverage('dialog.render', 'LogisticsTestDialog');
-        } finally {
-            page.off('pageerror', listener);
-        }
+        await snap(page, 'ow-logistics-dialog');
+
+        // Tear down so the dialog doesn't leak into the next serial test.
+        await page.evaluate(async () => {
+            interface DialogHandle {
+                close?: () => Promise<void>;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: reading instance stashed on globalThis across evaluate calls
+            const g = globalThis as unknown as { __owLogisticsDialog?: DialogHandle };
+            try {
+                await g.__owLogisticsDialog?.close?.();
+            } catch {
+                /* ignore */
+            }
+            g.__owLogisticsDialog = undefined;
+        });
+
+        expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.rendered, 'dialog did not render').toBe(true);
+        expect(result.hasTroopCount, 'Troop Count axis should render').toBe(true);
+        expect(result.hasTimeInFront, 'Time in Front axis should render').toBe(true);
+        expect(result.hasFrontActive, 'Front Activity axis should render').toBe(true);
+        expect(result.hasWarCondition, 'War Conditions axis should render').toBe(true);
+        expect(result.hasCraftsmanship, 'Craftsmanship axis should render').toBe(true);
+        expect(result.hasStandardKitToggle, 'Standard Kit toggle should render').toBe(true);
+        expect(result.hasTargetPreview, 'Target preview should render').toBe(true);
+        expect(result.hasRollButton, 'Roll button should render').toBe(true);
+        expect(result.hasCancelButton, 'Cancel button should render').toBe(true);
+        expect(result.troopCountButtons, 'expected four Troop Count buttons').toBe(4);
+
+        recordCoverage('dialog.render', 'LogisticsTestDialog');
     });
 });

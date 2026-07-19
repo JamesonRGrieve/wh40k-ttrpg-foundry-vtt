@@ -12,10 +12,14 @@ interface FlowOutcome {
     detail: string | null;
 }
 
-/** The shape every flow probe returns: per-flow outcomes plus any page errors. */
+/**
+ * The shape a flow probe returns: per-flow outcomes. `pageErrors` is optional
+ * and legacy — the global browser-error guard (lib/test.ts) now catches page
+ * errors for every spec, so probes no longer need to collect or return them.
+ */
 interface FlowProbe {
     results: readonly FlowOutcome[];
-    pageErrors: readonly string[];
+    pageErrors?: readonly string[];
 }
 
 /**
@@ -45,7 +49,7 @@ export function assertFlowResults(probe: FlowProbe, expectedFlows: readonly stri
     for (const flow of expectedFlows) {
         if (!seen.has(flow)) failures.push(`${flow}: flow did not run`);
     }
-    if (probe.pageErrors.length > 0) {
+    if (probe.pageErrors !== undefined && probe.pageErrors.length > 0) {
         failures.push(`page errors: ${probe.pageErrors.slice(0, 5).join(' | ')}`);
     }
     expect(failures, `${failures.length}/${expectedFlows.length} ${opts.label} flows failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);

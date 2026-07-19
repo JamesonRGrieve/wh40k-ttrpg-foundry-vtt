@@ -25,82 +25,71 @@ test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
     test('opens and renders three talent grants plus Apply / Cancel', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
+        const result = await page.evaluate(async () => {
+            const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/sister-of-battle-dialog.js';
+            let error: string | null = null;
+            let rendered = false;
+            let talentRowCount = 0;
+            let hasApplyButton = false;
+            let hasCancelButton = false;
 
-        try {
-            const result = await page.evaluate(async () => {
-                const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/sister-of-battle-dialog.js';
-                let error: string | null = null;
-                let rendered = false;
-                let talentRowCount = 0;
-                let hasApplyButton = false;
-                let hasCancelButton = false;
+            interface DialogInstance {
+                render: (force?: boolean) => Promise<void>;
+                element: HTMLElement | null;
+                close: () => Promise<void>;
+            }
+            interface DialogModule {
+                default: new () => DialogInstance;
+            }
 
-                interface DialogInstance {
-                    render: (force?: boolean) => Promise<void>;
-                    element: HTMLElement | null;
-                    close: () => Promise<void>;
+            try {
+                const mod = (await import(moduleUrl)) as DialogModule;
+                const Cls = mod.default;
+                if (typeof Cls !== 'function') {
+                    return { rendered, talentRowCount, hasApplyButton, hasCancelButton, error: 'default export not a constructor' };
                 }
-                interface DialogModule {
-                    default: new () => DialogInstance;
-                }
-
+                const inst = new Cls();
                 try {
-                    const mod = (await import(moduleUrl)) as DialogModule;
-                    const Cls = mod.default;
-                    if (typeof Cls !== 'function') {
-                        return { rendered, talentRowCount, hasApplyButton, hasCancelButton, error: 'default export not a constructor' };
-                    }
-                    const inst = new Cls();
-                    try {
-                        await inst.render(true);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 40);
-                        });
-                    } catch (err) {
-                        error = err instanceof Error ? err.message : String(err);
-                    }
-                    rendered = inst.element instanceof HTMLElement;
-                    if (rendered && inst.element) {
-                        talentRowCount = inst.element.querySelectorAll('[data-talent]').length;
-                        hasApplyButton = inst.element.querySelector('[data-action="apply"]') !== null;
-                        hasCancelButton = inst.element.querySelector('[data-action="cancel"]') !== null;
-                    }
+                    await inst.render(true);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 40);
+                    });
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
-
-                return { rendered, talentRowCount, hasApplyButton, hasCancelButton, error };
-            });
-
-            expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'dialog did not render').toBe(true);
-            expect(result.talentRowCount, 'expected 3 talent rows').toBe(3);
-            expect(result.hasApplyButton, 'expected Apply action button').toBe(true);
-            expect(result.hasCancelButton, 'expected Cancel action button').toBe(true);
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
-
-            await snap(page, 'sister-of-battle-dialog');
-
-            recordCoverage('dialog.render', 'SisterOfBattleDialog');
-
-            // Best-effort cleanup so the dialog doesn't leak into later specs.
-            await page.evaluate(() => {
-                const root = document.querySelector<HTMLDialogElement>('.sister-of-battle-dialog');
-                if (root?.close) {
-                    try {
-                        root.close();
-                    } catch {
-                        /* ignore */
-                    }
+                rendered = inst.element instanceof HTMLElement;
+                if (rendered && inst.element) {
+                    talentRowCount = inst.element.querySelectorAll('[data-talent]').length;
+                    hasApplyButton = inst.element.querySelector('[data-action="apply"]') !== null;
+                    hasCancelButton = inst.element.querySelector('[data-action="cancel"]') !== null;
                 }
-            });
-        } finally {
-            page.off('pageerror', listener);
-        }
+            } catch (err) {
+                error = err instanceof Error ? err.message : String(err);
+            }
+
+            return { rendered, talentRowCount, hasApplyButton, hasCancelButton, error };
+        });
+
+        expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.rendered, 'dialog did not render').toBe(true);
+        expect(result.talentRowCount, 'expected 3 talent rows').toBe(3);
+        expect(result.hasApplyButton, 'expected Apply action button').toBe(true);
+        expect(result.hasCancelButton, 'expected Cancel action button').toBe(true);
+
+        await snap(page, 'sister-of-battle-dialog');
+
+        recordCoverage('dialog.render', 'SisterOfBattleDialog');
+
+        // Best-effort cleanup so the dialog doesn't leak into later specs.
+        await page.evaluate(() => {
+            const root = document.querySelector<HTMLDialogElement>('.sister-of-battle-dialog');
+            if (root?.close) {
+                try {
+                    root.close();
+                } catch {
+                    /* ignore */
+                }
+            }
+        });
     });
 });

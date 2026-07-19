@@ -17,7 +17,7 @@ interface ActorTypeProbe {
     type: string;
     docId: string | null;
     sheetRendered: boolean;
-    pageErrors: string[];
+    createError: string | null;
 }
 
 interface ProbeActorResult {
@@ -50,45 +50,35 @@ interface ActorConfigGlobal {
 }
 
 async function probeActorType(page: Page, type: string, gameSystem: string): Promise<ActorTypeProbe> {
-    const errors: string[] = [];
-    const listener = (err: Error): void => {
-        errors.push(err.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const result = await page.evaluate(
-            async ({ actorType, actorGameSystem }): Promise<ProbeActorResult> => {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side Actor global is runtime-only, no shipped types
-                const browserCtx = globalThis as unknown as ActorProbeGlobal;
-                const ActorClass = browserCtx.Actor;
-                if (!ActorClass?.create) return { docId: null, sheetRendered: false, createError: 'Actor.create unavailable' };
-                let actor: BrowserActorDocument | null;
-                try {
-                    actor = await ActorClass.create({
-                        name: `probe-${actorType}-${actorGameSystem}`,
-                        type: actorType,
-                        system: { gameSystem: actorGameSystem },
-                    });
-                } catch (err) {
-                    return { docId: null, sheetRendered: false, createError: err instanceof Error ? err.message : String(err) };
-                }
-                if (!actor) return { docId: null, sheetRendered: false, createError: 'Actor.create returned null (silent failure)' };
-                let sheetRendered = false;
-                if (actor.sheet?.render) {
-                    await actor.sheet.render(true);
-                    sheetRendered = true;
-                    await actor.sheet.close?.();
-                }
-                await actor.delete?.();
-                return { docId: actor.id ?? null, sheetRendered, createError: null };
-            },
-            { actorType: type, actorGameSystem: gameSystem },
-        );
-        if (result.docId === null && result.createError !== null) errors.unshift(`create: ${result.createError}`);
-        return { type, docId: result.docId, sheetRendered: result.sheetRendered, pageErrors: errors };
-    } finally {
-        page.off('pageerror', listener);
-    }
+    const result = await page.evaluate(
+        async ({ actorType, actorGameSystem }): Promise<ProbeActorResult> => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side Actor global is runtime-only, no shipped types
+            const browserCtx = globalThis as unknown as ActorProbeGlobal;
+            const ActorClass = browserCtx.Actor;
+            if (!ActorClass?.create) return { docId: null, sheetRendered: false, createError: 'Actor.create unavailable' };
+            let actor: BrowserActorDocument | null;
+            try {
+                actor = await ActorClass.create({
+                    name: `probe-${actorType}-${actorGameSystem}`,
+                    type: actorType,
+                    system: { gameSystem: actorGameSystem },
+                });
+            } catch (err) {
+                return { docId: null, sheetRendered: false, createError: err instanceof Error ? err.message : String(err) };
+            }
+            if (!actor) return { docId: null, sheetRendered: false, createError: 'Actor.create returned null (silent failure)' };
+            let sheetRendered = false;
+            if (actor.sheet?.render) {
+                await actor.sheet.render(true);
+                sheetRendered = true;
+                await actor.sheet.close?.();
+            }
+            await actor.delete?.();
+            return { docId: actor.id ?? null, sheetRendered, createError: null };
+        },
+        { actorType: type, actorGameSystem: gameSystem },
+    );
+    return { type, docId: result.docId, sheetRendered: result.sheetRendered, createError: result.createError };
 }
 
 async function listActorTypes(page: Page): Promise<string[]> {
@@ -148,21 +138,17 @@ test.describe.serial('actor types × systems (Tier B)', () => {
                         type,
                         docId: null,
                         sheetRendered: false,
-                        pageErrors: [err instanceof Error ? err.message : String(err)],
+                        createError: err instanceof Error ? err.message : String(err),
                     }),
                 );
                 if (probe.docId === null) {
-                    const reason = probe.pageErrors[0] ?? 'Actor.create returned null';
+                    const reason = probe.createError ?? 'Actor.create returned null';
                     failures.push(`${type}: ${reason}`);
                     continue;
                 }
                 recordCoverage('actor.type-system', `${type}::${gameSystem}`);
                 if (!probe.sheetRendered) {
                     failures.push(`${type}: sheet did not render`);
-                    continue;
-                }
-                if (probe.pageErrors.length > 0) {
-                    failures.push(`${type}: ${probe.pageErrors[0]}`);
                     continue;
                 }
                 recordCoverage('actor.sheet-render', `${type}::${gameSystem}`);

@@ -36,125 +36,116 @@ interface FlowResult {
     detail: string | null;
 }
 
-async function probeD100Extras(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
-    const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            interface RollInstance {
-                evaluate?: () => Promise<void>;
-                total: string | number | undefined;
-                isSuccess: string | number | boolean | undefined;
-            }
-            interface PreparedData {
-                rollData?: { activeModifiers?: Record<string, number> };
-            }
-            type RollConfig = Record<string, string | number | Record<string, number>>;
-            interface D100RollStatic {
-                new (formula: string): RollInstance;
-                _prepareTemplateData: (roll: RollInstance, config: RollConfig) => Promise<PreparedData | null>;
-                _prepareChatData: (roll: RollInstance, config: RollConfig) => Promise<object | null>;
-            }
-            interface D100RollModule {
-                default?: D100RollStatic;
-                D100Roll?: D100RollStatic;
-            }
+async function probeD100Extras(page: Page): Promise<{ results: FlowResult[] }> {
+    const results = await page.evaluate(async (): Promise<FlowResult[]> => {
+        interface RollInstance {
+            evaluate?: () => Promise<void>;
+            total: string | number | undefined;
+            isSuccess: string | number | boolean | undefined;
+        }
+        interface PreparedData {
+            rollData?: { activeModifiers?: Record<string, number> };
+        }
+        type RollConfig = Record<string, string | number | Record<string, number>>;
+        interface D100RollStatic {
+            new (formula: string): RollInstance;
+            _prepareTemplateData: (roll: RollInstance, config: RollConfig) => Promise<PreparedData | null>;
+            _prepareChatData: (roll: RollInstance, config: RollConfig) => Promise<object | null>;
+        }
+        interface D100RollModule {
+            default?: D100RollStatic;
+            D100Roll?: D100RollStatic;
+        }
 
-            const out: FlowResult[] = [];
-            const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
-                out.push({ name, ok, detail });
-            };
+        const out: FlowResult[] = [];
+        const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
+            out.push({ name, ok, detail });
+        };
 
-            let mod: D100RollModule;
-            try {
-                mod = (await import(`${'/systems/wh40k-rpg'}/module/dice/d100-roll.js`)) as D100RollModule;
-            } catch (err) {
-                for (const f of D100_ROLL_EXTRAS_FLOWS) record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
-                return out;
-            }
-            const D100Roll = mod.default ?? mod.D100Roll;
-            if (typeof D100Roll !== 'function') {
-                for (const f of D100_ROLL_EXTRAS_FLOWS) record(f, false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
-                return out;
-            }
-
-            // ---- _prepareTemplateData (base config) ----
-            async function probeTemplateDataBase(rollInstance: RollInstance): Promise<void> {
-                if (typeof D100Roll !== 'function') return;
-                try {
-                    const data = await D100Roll._prepareTemplateData(rollInstance, { target: 50, flavor: 'spec-base' });
-                    const okShape = data !== null && typeof data === 'object' && data.rollData !== undefined;
-                    record('prepareTemplateData-base', okShape, `keys=${Object.keys(data ?? {}).join(',')}`);
-                } catch (err) {
-                    record('prepareTemplateData-base', false, err instanceof Error ? err.message : String(err));
-                }
-            }
-
-            // ---- _prepareTemplateData with modifiers (drives the activeModifiers branch) ----
-            async function probeTemplateDataWithModifiers(rollInstance: RollInstance): Promise<void> {
-                if (typeof D100Roll !== 'function') return;
-                try {
-                    const data = await D100Roll._prepareTemplateData(rollInstance, {
-                        target: 60,
-                        flavor: 'spec-mods',
-                        modifiers: { aiming: 10, range: -10, cover: 0 },
-                    });
-                    const am = data?.rollData?.activeModifiers ?? {};
-                    // cover should be filtered out (value === 0).
-                    const ok = 'AIMING' in am && 'RANGE' in am && !('COVER' in am);
-                    record('prepareTemplateData-with-modifiers', ok, `activeModifiers=${JSON.stringify(am)}`);
-                } catch (err) {
-                    record('prepareTemplateData-with-modifiers', false, err instanceof Error ? err.message : String(err));
-                }
-            }
-
-            // ---- _prepareChatData ----
-            async function probeChatDataBase(rollInstance: RollInstance): Promise<void> {
-                if (typeof D100Roll !== 'function') return;
-                try {
-                    const chat = await D100Roll._prepareChatData(rollInstance, { target: 50, flavor: 'spec-chat' });
-                    const ok = chat !== null && typeof chat === 'object';
-                    record('prepareChatData-base', ok, `keys=${Object.keys(chat ?? {}).join(',')}`);
-                } catch (err) {
-                    record('prepareChatData-base', false, err instanceof Error ? err.message : String(err));
-                }
-            }
-
-            // Build & evaluate a roll so the prepare-* helpers have a real
-            // Roll to read from. D100Roll inherits Roll's evaluate() so the
-            // standard `await roll.evaluate()` lifecycle applies.
-            let roll: RollInstance;
-            try {
-                roll = new D100Roll('1d100');
-                if (typeof roll.evaluate === 'function') {
-                    await roll.evaluate();
-                }
-                record(
-                    'evaluate-roll-isSuccess',
-                    typeof roll.isSuccess === 'boolean' || roll.isSuccess === undefined,
-                    `total=${roll.total} isSuccess=${roll.isSuccess}`,
-                );
-            } catch (err) {
-                record('evaluate-roll-isSuccess', false, err instanceof Error ? err.message : String(err));
-                for (const f of ['prepareTemplateData-base', 'prepareTemplateData-with-modifiers', 'prepareChatData-base'] as const) {
-                    record(f, false, 'roll evaluation failed');
-                }
-                return out;
-            }
-
-            await probeTemplateDataBase(roll);
-            await probeTemplateDataWithModifiers(roll);
-            await probeChatDataBase(roll);
-
+        let mod: D100RollModule;
+        try {
+            mod = (await import(`${'/systems/wh40k-rpg'}/module/dice/d100-roll.js`)) as D100RollModule;
+        } catch (err) {
+            for (const f of D100_ROLL_EXTRAS_FLOWS) record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
             return out;
-        });
-        return { results, pageErrors };
-    } finally {
-        page.off('pageerror', listener);
-    }
+        }
+        const D100Roll = mod.default ?? mod.D100Roll;
+        if (typeof D100Roll !== 'function') {
+            for (const f of D100_ROLL_EXTRAS_FLOWS) record(f, false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
+            return out;
+        }
+
+        // ---- _prepareTemplateData (base config) ----
+        async function probeTemplateDataBase(rollInstance: RollInstance): Promise<void> {
+            if (typeof D100Roll !== 'function') return;
+            try {
+                const data = await D100Roll._prepareTemplateData(rollInstance, { target: 50, flavor: 'spec-base' });
+                const okShape = data !== null && typeof data === 'object' && data.rollData !== undefined;
+                record('prepareTemplateData-base', okShape, `keys=${Object.keys(data ?? {}).join(',')}`);
+            } catch (err) {
+                record('prepareTemplateData-base', false, err instanceof Error ? err.message : String(err));
+            }
+        }
+
+        // ---- _prepareTemplateData with modifiers (drives the activeModifiers branch) ----
+        async function probeTemplateDataWithModifiers(rollInstance: RollInstance): Promise<void> {
+            if (typeof D100Roll !== 'function') return;
+            try {
+                const data = await D100Roll._prepareTemplateData(rollInstance, {
+                    target: 60,
+                    flavor: 'spec-mods',
+                    modifiers: { aiming: 10, range: -10, cover: 0 },
+                });
+                const am = data?.rollData?.activeModifiers ?? {};
+                // cover should be filtered out (value === 0).
+                const ok = 'AIMING' in am && 'RANGE' in am && !('COVER' in am);
+                record('prepareTemplateData-with-modifiers', ok, `activeModifiers=${JSON.stringify(am)}`);
+            } catch (err) {
+                record('prepareTemplateData-with-modifiers', false, err instanceof Error ? err.message : String(err));
+            }
+        }
+
+        // ---- _prepareChatData ----
+        async function probeChatDataBase(rollInstance: RollInstance): Promise<void> {
+            if (typeof D100Roll !== 'function') return;
+            try {
+                const chat = await D100Roll._prepareChatData(rollInstance, { target: 50, flavor: 'spec-chat' });
+                const ok = chat !== null && typeof chat === 'object';
+                record('prepareChatData-base', ok, `keys=${Object.keys(chat ?? {}).join(',')}`);
+            } catch (err) {
+                record('prepareChatData-base', false, err instanceof Error ? err.message : String(err));
+            }
+        }
+
+        // Build & evaluate a roll so the prepare-* helpers have a real
+        // Roll to read from. D100Roll inherits Roll's evaluate() so the
+        // standard `await roll.evaluate()` lifecycle applies.
+        let roll: RollInstance;
+        try {
+            roll = new D100Roll('1d100');
+            if (typeof roll.evaluate === 'function') {
+                await roll.evaluate();
+            }
+            record(
+                'evaluate-roll-isSuccess',
+                typeof roll.isSuccess === 'boolean' || roll.isSuccess === undefined,
+                `total=${roll.total} isSuccess=${roll.isSuccess}`,
+            );
+        } catch (err) {
+            record('evaluate-roll-isSuccess', false, err instanceof Error ? err.message : String(err));
+            for (const f of ['prepareTemplateData-base', 'prepareTemplateData-with-modifiers', 'prepareChatData-base'] as const) {
+                record(f, false, 'roll evaluation failed');
+            }
+            return out;
+        }
+
+        await probeTemplateDataBase(roll);
+        await probeTemplateDataWithModifiers(roll);
+        await probeChatDataBase(roll);
+
+        return out;
+    });
+    return { results };
 }
 
 test.describe.serial('d100-roll extras (Tier B)', () => {

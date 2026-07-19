@@ -62,18 +62,11 @@ interface CardProbe {
     chatDelta: number;
     hasWh40kAncestor: boolean | null;
     error: string | null;
-    pageErrors: string[];
 }
 
 test.describe.serial('chat-card templates (Tier B)', () => {
     test('every chat-card template renders and posts as a ChatMessage', async ({ page }) => {
         await joinOrSkip(page);
-
-        const errors: string[] = [];
-        const listener = (pageErr: Error): void => {
-            errors.push(pageErr.message);
-        };
-        page.on('pageerror', listener);
 
         let setup: {
             actorId: string;
@@ -457,7 +450,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
             const TEMPLATE_CLOSE_TAG_BUG = new Set(['condition-card', 'critical-injury-card', 'movement-card']);
 
             for (const probe of probes) {
-                const full: CardProbe = { ...probe, pageErrors: [...errors] };
+                const full: CardProbe = probe;
                 if (full.error !== null) {
                     if (TEMPLATE_CLOSE_TAG_BUG.has(full.template) && full.error.includes("doesn't match chat-card-shell")) {
                         knownBroken.push(full.template);
@@ -499,7 +492,6 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                 `templates missing .wh40k-rpg ancestor on rendered message DOM (renderChatMessageHTML hook regression): ${ancestorFailures.join(', ')}`,
             ).toEqual([]);
         } finally {
-            page.off('pageerror', listener);
             // Tear down the parent actor (cascades to embedded items).
             if (setup !== null) {
                 await page.evaluate(async (actorId: string) => {

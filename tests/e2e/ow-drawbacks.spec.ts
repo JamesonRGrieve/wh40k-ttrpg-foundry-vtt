@@ -89,12 +89,6 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
         }
         const actorId = created.id;
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
-
         try {
             const result = await page.evaluate(async (id: string): Promise<DrawbackProbeResult> => {
                 interface ActorSheet {
@@ -221,11 +215,9 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
             if (result.toggleDispatched === true) {
                 expect(result.drawbacksAfter, 'one click should remove one drawback id').toBe(1);
             }
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
 
             recordCoverage('panel.render', 'OwDrawbackPanel');
         } finally {
-            page.off('pageerror', listener);
             await deleteActor(page, actorId);
         }
     });

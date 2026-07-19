@@ -69,12 +69,6 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
         }
         const actorId = created.id;
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
-
         try {
             const result = await page.evaluate(async (id: string) => {
                 interface ProbeSheet {
@@ -171,11 +165,9 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
             expect(result.cooldownBefore, 'initial cooldown should be 3').toBe(3);
             expect(result.awardRosterSize, 'initial award roster should hold 2 ids').toBe(2);
             expect(result.hasAwardListOrEmpty, 'awards section should render either the list or the empty-state notice').toBe(true);
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
 
             recordCoverage('panel.render', 'OwBattlefieldPanel');
         } finally {
-            page.off('pageerror', listener);
             await deleteActor(page, actorId);
         }
     });

@@ -18,97 +18,86 @@ test.describe.serial('WithinHomeworldInfoDialog (#139)', () => {
     test('renders three homeworld cards, all expected ids, and a close action', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
+        const result = await page.evaluate(async () => {
+            interface DialogInstance {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
+                render: (force?: boolean) => Promise<unknown>;
+                element: HTMLElement | null;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                close: () => Promise<unknown>;
+            }
+            interface DialogModule {
+                default: new () => DialogInstance;
+            }
+            interface DialogHostWindow {
+                __wh40kWithinHomeworldDialog?: DialogInstance | undefined;
+            }
+            const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/within-homeworld-info-dialog.js';
+            let error: string | null = null;
+            let rendered = false;
+            let cardCount = 0;
+            let ids: string[] = [];
+            let hasCloseButton = false;
 
-        try {
-            const result = await page.evaluate(async () => {
-                interface DialogInstance {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
-                    render: (force?: boolean) => Promise<unknown>;
-                    element: HTMLElement | null;
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
-                    close: () => Promise<unknown>;
+            try {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
+                const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                const Cls = mod.default;
+                if (typeof Cls !== 'function') {
+                    return { rendered, cardCount, ids, hasCloseButton, error: 'default export not a constructor' };
                 }
-                interface DialogModule {
-                    default: new () => DialogInstance;
-                }
-                interface DialogHostWindow {
-                    __wh40kWithinHomeworldDialog?: DialogInstance | undefined;
-                }
-                const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/within-homeworld-info-dialog.js';
-                let error: string | null = null;
-                let rendered = false;
-                let cardCount = 0;
-                let ids: string[] = [];
-                let hasCloseButton = false;
-
+                const inst = new Cls();
                 try {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
-                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
-                    const Cls = mod.default;
-                    if (typeof Cls !== 'function') {
-                        return { rendered, cardCount, ids, hasCloseButton, error: 'default export not a constructor' };
-                    }
-                    const inst = new Cls();
-                    try {
-                        await inst.render(true);
-                        await new Promise((r) => {
-                            setTimeout(r, 60);
-                        });
-                    } catch (err) {
-                        error = err instanceof Error ? err.message : String(err);
-                    }
-                    rendered = inst.element instanceof HTMLElement;
-                    if (rendered && inst.element) {
-                        const cards = inst.element.querySelectorAll('[data-homeworld]');
-                        cardCount = cards.length;
-                        ids = Array.from(cards).map((el) => el.getAttribute('data-homeworld') ?? '');
-                        hasCloseButton = inst.element.querySelector('[data-action="close"]') !== null;
-                    }
-                    // intentionally leave open until after screenshot; will close below
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm dialog on window for cross-eval cleanup
-                    (window as unknown as DialogHostWindow).__wh40kWithinHomeworldDialog = inst;
+                    await inst.render(true);
+                    await new Promise((r) => {
+                        setTimeout(r, 60);
+                    });
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
-
-                return { rendered, cardCount, ids, hasCloseButton, error };
-            });
-
-            expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'dialog did not render').toBe(true);
-            expect(result.cardCount, 'expected 3 homeworld cards').toBe(3);
-            expect(result.ids.sort()).toEqual(['agri-world', 'feudal-world', 'frontier-world']);
-            expect(result.hasCloseButton, 'expected close action button').toBe(true);
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
-
-            await snap(page, 'within-homeworld-info-dialog');
-
-            // Best-effort teardown — close the still-open dialog instance.
-            await page.evaluate(async () => {
-                interface DialogCloseable {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
-                    close: () => Promise<unknown>;
+                rendered = inst.element instanceof HTMLElement;
+                if (rendered && inst.element) {
+                    const cards = inst.element.querySelectorAll('[data-homeworld]');
+                    cardCount = cards.length;
+                    ids = Array.from(cards).map((el) => el.getAttribute('data-homeworld') ?? '');
+                    hasCloseButton = inst.element.querySelector('[data-action="close"]') !== null;
                 }
-                interface DialogHostWindow {
-                    __wh40kWithinHomeworldDialog?: DialogCloseable | undefined;
-                }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm dialog stashed on window
-                const handle = (window as unknown as DialogHostWindow).__wh40kWithinHomeworldDialog;
-                try {
-                    await handle?.close();
-                } catch {
-                    /* ignore */
-                }
-            });
+                // intentionally leave open until after screenshot; will close below
+                // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm dialog on window for cross-eval cleanup
+                (window as unknown as DialogHostWindow).__wh40kWithinHomeworldDialog = inst;
+            } catch (err) {
+                error = err instanceof Error ? err.message : String(err);
+            }
 
-            recordCoverage('dialog.render', 'WithinHomeworldInfoDialog');
-        } finally {
-            page.off('pageerror', listener);
-        }
+            return { rendered, cardCount, ids, hasCloseButton, error };
+        });
+
+        expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.rendered, 'dialog did not render').toBe(true);
+        expect(result.cardCount, 'expected 3 homeworld cards').toBe(3);
+        expect(result.ids.sort()).toEqual(['agri-world', 'feudal-world', 'frontier-world']);
+        expect(result.hasCloseButton, 'expected close action button').toBe(true);
+
+        await snap(page, 'within-homeworld-info-dialog');
+
+        // Best-effort teardown — close the still-open dialog instance.
+        await page.evaluate(async () => {
+            interface DialogCloseable {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                close: () => Promise<unknown>;
+            }
+            interface DialogHostWindow {
+                __wh40kWithinHomeworldDialog?: DialogCloseable | undefined;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm dialog stashed on window
+            const handle = (window as unknown as DialogHostWindow).__wh40kWithinHomeworldDialog;
+            try {
+                await handle?.close();
+            } catch {
+                /* ignore */
+            }
+        });
+
+        recordCoverage('dialog.render', 'WithinHomeworldInfoDialog');
     });
 });

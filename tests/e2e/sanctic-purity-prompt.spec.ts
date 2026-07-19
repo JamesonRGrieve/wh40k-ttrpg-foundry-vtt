@@ -18,12 +18,6 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
     test("renders against a dh2 actor with Emperor's Anathema + Fate", async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
-
         try {
             const result = await page.evaluate(async () => {
                 interface ActorInstance {
@@ -127,8 +121,6 @@ test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
 
             await snap(page, 'sanctic-purity-prompt');
         } finally {
-            page.off('pageerror', listener);
-
             // Cleanup
             await page.evaluate(async () => {
                 interface ActorHandle {

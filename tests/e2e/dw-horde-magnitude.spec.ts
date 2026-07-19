@@ -17,210 +17,198 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
     test('renders horde-mode NPC sheet, applies RAW magnitude loss, snaps', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
+        const result = await page.evaluate(async () => {
+            interface HordeData {
+                enabled?: boolean;
+                toHitBonus?: number;
+                bonusDamageDice?: number;
+                sizeKeyword?: string;
+                magnitude?: { current?: number; max?: number };
+            }
+            interface HordeSystem {
+                horde?: HordeData;
+                applyMagnitudeDamage?: (loss: number, source: string) => Promise<void>;
+            }
+            interface HordeSheet {
+                render?: (force?: boolean) => Promise<void>;
+                element?: HTMLElement | null;
+                close?: () => Promise<void>;
+            }
+            interface HordeActor {
+                id?: string;
+                system?: HordeSystem;
+                _source?: { system?: { horde?: { magnitude?: { current?: number } } } };
+                sheet?: HordeSheet;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.update accepts arbitrary partial-update payloads and returns the untyped document
+                update?: (data: Record<string, unknown>) => Promise<unknown>;
+                delete?: () => Promise<void>;
+            }
+            interface FoundryActorGlobal {
+                Actor?: { create?: (data: object) => Promise<HordeActor | null> };
+                __c9horde?: HordeActor;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const gt = globalThis as unknown as FoundryActorGlobal;
 
-        try {
-            const result = await page.evaluate(async () => {
-                interface HordeData {
-                    enabled?: boolean;
-                    toHitBonus?: number;
-                    bonusDamageDice?: number;
-                    sizeKeyword?: string;
-                    magnitude?: { current?: number; max?: number };
-                }
-                interface HordeSystem {
-                    horde?: HordeData;
-                    applyMagnitudeDamage?: (loss: number, source: string) => Promise<void>;
-                }
-                interface HordeSheet {
-                    render?: (force?: boolean) => Promise<void>;
-                    element?: HTMLElement | null;
-                    close?: () => Promise<void>;
-                }
-                interface HordeActor {
-                    id?: string;
-                    system?: HordeSystem;
-                    _source?: { system?: { horde?: { magnitude?: { current?: number } } } };
-                    sheet?: HordeSheet;
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.update accepts arbitrary partial-update payloads and returns the untyped document
-                    update?: (data: Record<string, unknown>) => Promise<unknown>;
-                    delete?: () => Promise<void>;
-                }
-                interface FoundryActorGlobal {
-                    Actor?: { create?: (data: object) => Promise<HordeActor | null> };
-                    __c9horde?: HordeActor;
-                }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
-                const gt = globalThis as unknown as FoundryActorGlobal;
+            let error: string | null = null;
+            let rendered = false;
+            let toHitBonus: number | null = null;
+            let bonusDamageDice: number | null = null;
+            let sizeKeyword: string | null = null;
+            let magnitudeBefore: number | null = null;
+            let magnitudeAfter: number | null = null;
+            let actorId: string | null = null;
+            let hordeEnabled: boolean | null = null;
+            let sourceMagnitude: number | null = null;
 
-                let error: string | null = null;
-                let rendered = false;
-                let toHitBonus: number | null = null;
-                let bonusDamageDice: number | null = null;
-                let sizeKeyword: string | null = null;
-                let magnitudeBefore: number | null = null;
-                let magnitudeAfter: number | null = null;
-                let actorId: string | null = null;
-                let hordeEnabled: boolean | null = null;
-                let sourceMagnitude: number | null = null;
-
-                try {
-                    const ActorCls = gt.Actor;
-                    if (typeof ActorCls?.create !== 'function') {
-                        return {
-                            rendered,
-                            toHitBonus,
-                            bonusDamageDice,
-                            sizeKeyword,
-                            magnitudeBefore,
-                            magnitudeAfter,
-                            actorId,
-                            hordeEnabled,
-                            sourceMagnitude,
-                            error: 'Actor.create unavailable',
-                        };
-                    }
-                    // dw-npc is the DW NPC datamodel registered by the system manifest.
-                    const actor = await ActorCls.create({
-                        name: 'rawHordeProbe-#166',
-                        type: 'dw-npc',
-                        system: {
-                            gameSystem: 'dw',
-                            type: 'horde',
-                            horde: {
-                                enabled: true,
-                                magnitude: { current: 90, max: 90 },
-                                traits: ['fearless'],
-                            },
+            try {
+                const ActorCls = gt.Actor;
+                if (typeof ActorCls?.create !== 'function') {
+                    return {
+                        rendered,
+                        toHitBonus,
+                        bonusDamageDice,
+                        sizeKeyword,
+                        magnitudeBefore,
+                        magnitudeAfter,
+                        actorId,
+                        hordeEnabled,
+                        sourceMagnitude,
+                        error: 'Actor.create unavailable',
+                    };
+                }
+                // dw-npc is the DW NPC datamodel registered by the system manifest.
+                const actor = await ActorCls.create({
+                    name: 'rawHordeProbe-#166',
+                    type: 'dw-npc',
+                    system: {
+                        gameSystem: 'dw',
+                        type: 'horde',
+                        horde: {
+                            enabled: true,
+                            magnitude: { current: 90, max: 90 },
+                            traits: ['fearless'],
                         },
+                    },
+                });
+                if (actor === null) {
+                    return {
+                        rendered,
+                        toHitBonus,
+                        bonusDamageDice,
+                        sizeKeyword,
+                        magnitudeBefore,
+                        magnitudeAfter,
+                        actorId,
+                        hordeEnabled,
+                        sourceMagnitude,
+                        error: 'Actor.create returned null',
+                    };
+                }
+                actorId = actor.id ?? null;
+
+                // Setting nested horde.magnitude through the create payload doesn't
+                // reliably persist (Foundry nested-create merge); set it via update()
+                // with dotted paths — the canonical sheet-mutation path — so the
+                // derived toHitBonus reflects Magnitude 90.
+                if (typeof actor.update === 'function') {
+                    await actor.update({ 'system.horde.enabled': true, 'system.horde.magnitude.max': 90, 'system.horde.magnitude.current': 90 });
+                }
+
+                // Probe the prepared horde fields (populated by the mixin).
+                const horde = actor.system?.horde;
+                toHitBonus = typeof horde?.toHitBonus === 'number' ? horde.toHitBonus : null;
+                bonusDamageDice = typeof horde?.bonusDamageDice === 'number' ? horde.bonusDamageDice : null;
+                sizeKeyword = typeof horde?.sizeKeyword === 'string' ? horde.sizeKeyword : null;
+                magnitudeBefore = typeof horde?.magnitude?.current === 'number' ? horde.magnitude.current : null;
+                hordeEnabled = typeof horde?.enabled === 'boolean' ? horde.enabled : null;
+                sourceMagnitude = typeof actor._source?.system?.horde?.magnitude?.current === 'number' ? actor._source.system.horde.magnitude.current : null;
+
+                // Drive one RAW magnitude loss (single damaging hit).
+                if (typeof actor.system?.applyMagnitudeDamage === 'function') {
+                    await actor.system.applyMagnitudeDamage(1, 'e2e-test-hit');
+                    magnitudeAfter = actor.system.horde?.magnitude?.current ?? null;
+                }
+
+                if (typeof actor.sheet?.render === 'function') {
+                    await actor.sheet.render(true);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 120);
                     });
-                    if (actor === null) {
-                        return {
-                            rendered,
-                            toHitBonus,
-                            bonusDamageDice,
-                            sizeKeyword,
-                            magnitudeBefore,
-                            magnitudeAfter,
-                            actorId,
-                            hordeEnabled,
-                            sourceMagnitude,
-                            error: 'Actor.create returned null',
-                        };
-                    }
-                    actorId = actor.id ?? null;
-
-                    // Setting nested horde.magnitude through the create payload doesn't
-                    // reliably persist (Foundry nested-create merge); set it via update()
-                    // with dotted paths — the canonical sheet-mutation path — so the
-                    // derived toHitBonus reflects Magnitude 90.
-                    if (typeof actor.update === 'function') {
-                        await actor.update({ 'system.horde.enabled': true, 'system.horde.magnitude.max': 90, 'system.horde.magnitude.current': 90 });
-                    }
-
-                    // Probe the prepared horde fields (populated by the mixin).
-                    const horde = actor.system?.horde;
-                    toHitBonus = typeof horde?.toHitBonus === 'number' ? horde.toHitBonus : null;
-                    bonusDamageDice = typeof horde?.bonusDamageDice === 'number' ? horde.bonusDamageDice : null;
-                    sizeKeyword = typeof horde?.sizeKeyword === 'string' ? horde.sizeKeyword : null;
-                    magnitudeBefore = typeof horde?.magnitude?.current === 'number' ? horde.magnitude.current : null;
-                    hordeEnabled = typeof horde?.enabled === 'boolean' ? horde.enabled : null;
-                    sourceMagnitude =
-                        typeof actor._source?.system?.horde?.magnitude?.current === 'number' ? actor._source.system.horde.magnitude.current : null;
-
-                    // Drive one RAW magnitude loss (single damaging hit).
-                    if (typeof actor.system?.applyMagnitudeDamage === 'function') {
-                        await actor.system.applyMagnitudeDamage(1, 'e2e-test-hit');
-                        magnitudeAfter = actor.system.horde?.magnitude?.current ?? null;
-                    }
-
-                    if (typeof actor.sheet?.render === 'function') {
-                        await actor.sheet.render(true);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 120);
-                        });
-                        rendered = actor.sheet.element instanceof HTMLElement;
-                    }
-
-                    // Keep the sheet open for the snap() call below.
-                    gt.__c9horde = actor;
-                } catch (err) {
-                    error = String(err instanceof Error ? err.message : String(err));
+                    rendered = actor.sheet.element instanceof HTMLElement;
                 }
 
-                return {
-                    rendered,
-                    toHitBonus,
-                    bonusDamageDice,
-                    sizeKeyword,
-                    magnitudeBefore,
-                    magnitudeAfter,
-                    actorId,
-                    hordeEnabled,
-                    sourceMagnitude,
-                    error,
-                };
-            });
-
-            await snap(page, 'dw-horde-magnitude-sheet');
-
-            // Tear down so the actor doesn't leak into a sibling spec.
-            await page.evaluate(async () => {
-                interface HordeSheet {
-                    close?: () => Promise<void>;
-                }
-                interface HordeActor {
-                    sheet?: HordeSheet;
-                    delete?: () => Promise<void>;
-                }
-                interface FoundryGlobal {
-                    __c9horde?: HordeActor;
-                }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
-                const gt = globalThis as unknown as FoundryGlobal;
-                const a = gt.__c9horde;
-                try {
-                    await a?.sheet?.close?.();
-                    await a?.delete?.();
-                } catch {
-                    /* ignore */
-                }
-                gt.__c9horde = undefined;
-            });
-
-            // Skip the spec gracefully if the DW NPC datamodel isn't registered
-            // in this test build (e.g., the manifest didn't include the dw-npc
-            // type for some lane); we still want page errors to fail loudly.
-            const datamodelMissing = result.error !== null && /Actor\.create returned null|datamodel|invalid type/i.exec(result.error) !== null;
-            if (datamodelMissing) {
-                test.skip(true, `DW NPC datamodel not registered: ${result.error ?? ''}`);
+                // Keep the sheet open for the snap() call below.
+                gt.__c9horde = actor;
+            } catch (err) {
+                error = String(err instanceof Error ? err.message : String(err));
             }
 
-            expect(result.error, `horde probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.actorId, 'actor must have been created').not.toBeNull();
-            // RAW TABLE 13-1: Magnitude 90 → Monumental / +50 to hit.
-            expect(
-                result.toHitBonus,
-                `Magnitude 90 to-hit bonus (enabled=${String(result.hordeEnabled)} magBefore=${String(result.magnitudeBefore)} src=${String(
-                    result.sourceMagnitude,
-                )})`,
-            ).toBe(50);
-            // RAW: bonus damage dice = floor(M/10), capped +2 → 2.
-            expect(result.bonusDamageDice, 'Magnitude 90 bonus damage dice (capped +2d10)').toBe(2);
-            expect(result.sizeKeyword, 'size keyword at Magnitude 90').toBe('Monumental');
-            // One RAW magnitude loss applied.
-            expect(result.magnitudeBefore, 'starting magnitude').toBe(90);
-            expect(result.magnitudeAfter, 'magnitude after one hit').toBe(89);
-            expect(result.rendered, 'sheet must have rendered').toBe(true);
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
+            return {
+                rendered,
+                toHitBonus,
+                bonusDamageDice,
+                sizeKeyword,
+                magnitudeBefore,
+                magnitudeAfter,
+                actorId,
+                hordeEnabled,
+                sourceMagnitude,
+                error,
+            };
+        });
 
-            recordCoverage('actor.sheet.render', 'DwHordeNpcSheet');
-        } finally {
-            page.off('pageerror', listener);
+        await snap(page, 'dw-horde-magnitude-sheet');
+
+        // Tear down so the actor doesn't leak into a sibling spec.
+        await page.evaluate(async () => {
+            interface HordeSheet {
+                close?: () => Promise<void>;
+            }
+            interface HordeActor {
+                sheet?: HordeSheet;
+                delete?: () => Promise<void>;
+            }
+            interface FoundryGlobal {
+                __c9horde?: HordeActor;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const gt = globalThis as unknown as FoundryGlobal;
+            const a = gt.__c9horde;
+            try {
+                await a?.sheet?.close?.();
+                await a?.delete?.();
+            } catch {
+                /* ignore */
+            }
+            gt.__c9horde = undefined;
+        });
+
+        // Skip the spec gracefully if the DW NPC datamodel isn't registered
+        // in this test build (e.g., the manifest didn't include the dw-npc
+        // type for some lane); we still want page errors to fail loudly.
+        const datamodelMissing = result.error !== null && /Actor\.create returned null|datamodel|invalid type/i.exec(result.error) !== null;
+        if (datamodelMissing) {
+            test.skip(true, `DW NPC datamodel not registered: ${result.error ?? ''}`);
         }
+
+        expect(result.error, `horde probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.actorId, 'actor must have been created').not.toBeNull();
+        // RAW TABLE 13-1: Magnitude 90 → Monumental / +50 to hit.
+        expect(
+            result.toHitBonus,
+            `Magnitude 90 to-hit bonus (enabled=${String(result.hordeEnabled)} magBefore=${String(result.magnitudeBefore)} src=${String(
+                result.sourceMagnitude,
+            )})`,
+        ).toBe(50);
+        // RAW: bonus damage dice = floor(M/10), capped +2 → 2.
+        expect(result.bonusDamageDice, 'Magnitude 90 bonus damage dice (capped +2d10)').toBe(2);
+        expect(result.sizeKeyword, 'size keyword at Magnitude 90').toBe('Monumental');
+        // One RAW magnitude loss applied.
+        expect(result.magnitudeBefore, 'starting magnitude').toBe(90);
+        expect(result.magnitudeAfter, 'magnitude after one hit').toBe(89);
+        expect(result.rendered, 'sheet must have rendered').toBe(true);
+
+        recordCoverage('actor.sheet.render', 'DwHordeNpcSheet');
     });
 });

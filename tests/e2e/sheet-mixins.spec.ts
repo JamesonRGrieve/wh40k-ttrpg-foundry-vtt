@@ -46,128 +46,265 @@ interface FlowResult {
 
 interface ProbeResult {
     flows: FlowResult[];
-    pageErrors: string[];
 }
 
 const TALENT_PACK = 'wh40k-rpg.dh2-core-items-talents';
 
 async function probeSheetMixins(page: Page): Promise<ProbeResult> {
-    const pageErrors: string[] = [];
-    const listener = (pageErr: Error): void => {
-        pageErrors.push(pageErr.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const flows = await page.evaluate(async (talentPackId: string): Promise<Array<{ flow: string; ok: boolean; detail: string | null }>> => {
-            type ActionHandler = (event: MouseEvent, target: HTMLElement) => void | Promise<void>;
-            interface SheetShape {
-                inEditMode: boolean;
-                isOwnedByActor: boolean;
-                isCompendiumItem: boolean;
-                canEdit: boolean;
-                tabGroups?: { primary?: string };
-                options?: { actions?: Record<string, ActionHandler | undefined> };
-                element?: { querySelector?: (selector: string) => Element | null } | null;
-                render: (force?: boolean) => Promise<void>;
-                close?: () => Promise<void>;
-                changeTab?: (tab: string, group: string) => void;
-                _onDropItem?: (event: Event, item: ItemDoc) => Promise<ItemDoc[] | boolean | undefined>;
-            }
-            interface ItemDoc {
-                sheet?: SheetShape | null;
-                delete?: () => Promise<void>;
-            }
-            interface ActorDoc {
-                sheet?: SheetShape | null;
-                items?: { contents?: ItemDoc[] };
-                createEmbeddedDocuments?: (embeddedName: string, data: object[]) => Promise<ItemDoc[]>;
-                delete?: () => Promise<void>;
-            }
-            interface ActorCtorShape {
-                create?: (data: object) => Promise<ActorDoc | null>;
-            }
-            interface ItemCtorShape {
-                create?: (data: object) => Promise<ItemDoc | null>;
-            }
-            interface CompendiumPack {
-                getDocuments: () => Promise<ItemDoc[]>;
-            }
-            interface GameManager {
-                packs?: { get?: (id: string) => CompendiumPack | undefined };
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's game.settings.get/set are untyped over the stored setting value
-                settings?: { get?: (scope: string, key: string) => unknown; set?: (scope: string, key: string, value: unknown) => Promise<unknown> };
-            }
-            interface FoundryGlobal {
-                Actor?: ActorCtorShape;
-                Item?: ItemCtorShape;
-                game?: GameManager;
-            }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals, no type surface available in browser context
-            const { Actor: ActorCls, Item: ItemCls, game: gameMgr } = globalThis as unknown as FoundryGlobal;
-            const results: Array<{ flow: string; ok: boolean; detail: string | null }> = [];
+    const flows = await page.evaluate(async (talentPackId: string): Promise<Array<{ flow: string; ok: boolean; detail: string | null }>> => {
+        type ActionHandler = (event: MouseEvent, target: HTMLElement) => void | Promise<void>;
+        interface SheetShape {
+            inEditMode: boolean;
+            isOwnedByActor: boolean;
+            isCompendiumItem: boolean;
+            canEdit: boolean;
+            tabGroups?: { primary?: string };
+            options?: { actions?: Record<string, ActionHandler | undefined> };
+            element?: { querySelector?: (selector: string) => Element | null } | null;
+            render: (force?: boolean) => Promise<void>;
+            close?: () => Promise<void>;
+            changeTab?: (tab: string, group: string) => void;
+            _onDropItem?: (event: Event, item: ItemDoc) => Promise<ItemDoc[] | boolean | undefined>;
+        }
+        interface ItemDoc {
+            sheet?: SheetShape | null;
+            delete?: () => Promise<void>;
+        }
+        interface ActorDoc {
+            sheet?: SheetShape | null;
+            items?: { contents?: ItemDoc[] };
+            createEmbeddedDocuments?: (embeddedName: string, data: object[]) => Promise<ItemDoc[]>;
+            delete?: () => Promise<void>;
+        }
+        interface ActorCtorShape {
+            create?: (data: object) => Promise<ActorDoc | null>;
+        }
+        interface ItemCtorShape {
+            create?: (data: object) => Promise<ItemDoc | null>;
+        }
+        interface CompendiumPack {
+            getDocuments: () => Promise<ItemDoc[]>;
+        }
+        interface GameManager {
+            packs?: { get?: (id: string) => CompendiumPack | undefined };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's game.settings.get/set are untyped over the stored setting value
+            settings?: { get?: (scope: string, key: string) => unknown; set?: (scope: string, key: string, value: unknown) => Promise<unknown> };
+        }
+        interface FoundryGlobal {
+            Actor?: ActorCtorShape;
+            Item?: ItemCtorShape;
+            game?: GameManager;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals, no type surface available in browser context
+        const { Actor: ActorCls, Item: ItemCls, game: gameMgr } = globalThis as unknown as FoundryGlobal;
+        const results: Array<{ flow: string; ok: boolean; detail: string | null }> = [];
 
-            const record = (flow: string, ok: boolean, detail: string | null): void => {
-                results.push({ flow, ok, detail });
-            };
+        const record = (flow: string, ok: boolean, detail: string | null): void => {
+            results.push({ flow, ok, detail });
+        };
 
-            /* ---------- shared setup: build an actor + an owned item ---------- */
-            let actor: ActorDoc | null = null;
-            let ownedItem: ItemDoc | null = null;
-            if (ActorCls?.create == null) {
-                record('edit-mode-toggle-actor', false, 'Actor.create unavailable');
-                return results;
-            }
-            try {
-                actor = await ActorCls.create({
-                    name: 'sheet-mixin-probe-actor',
-                    type: 'dh2-character',
-                    system: { gameSystem: 'dh2' },
+        /* ---------- shared setup: build an actor + an owned item ---------- */
+        let actor: ActorDoc | null = null;
+        let ownedItem: ItemDoc | null = null;
+        if (ActorCls?.create == null) {
+            record('edit-mode-toggle-actor', false, 'Actor.create unavailable');
+            return results;
+        }
+        try {
+            actor = await ActorCls.create({
+                name: 'sheet-mixin-probe-actor',
+                type: 'dh2-character',
+                system: { gameSystem: 'dh2' },
+            });
+        } catch (err) {
+            record('edit-mode-toggle-actor', false, `actor.create threw: ${String(err instanceof Error ? err.message : err)}`);
+            return results;
+        }
+        if (actor == null) {
+            record('edit-mode-toggle-actor', false, 'ActorCls.create returned null');
+            return results;
+        }
+        const probeActor = actor;
+
+        /* ---------- flow 1: edit-mode-toggle-actor ---------- */
+        try {
+            const sheet = probeActor.sheet;
+            if (sheet == null) {
+                record('edit-mode-toggle-actor', false, 'actor.sheet undefined');
+            } else {
+                await sheet.render(true);
+                await new Promise<void>((r) => {
+                    setTimeout(r, 80);
                 });
-            } catch (err) {
-                record('edit-mode-toggle-actor', false, `actor.create threw: ${String(err instanceof Error ? err.message : err)}`);
-                return results;
+                const before = sheet.inEditMode;
+                // Character/NPC sheets register `toggleEditMode` as an action.
+                const handler = sheet.options?.actions?.toggleEditMode;
+                if (typeof handler !== 'function') {
+                    record('edit-mode-toggle-actor', false, 'toggleEditMode action not registered');
+                } else {
+                    const event = new MouseEvent('click', { bubbles: false, cancelable: true });
+                    const target = document.createElement('div');
+                    const rv = handler.call(sheet, event, target);
+                    if (rv instanceof Promise) await rv;
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 60);
+                    });
+                    const afterFirst = sheet.inEditMode;
+                    // Toggle back so we exercise both edges.
+                    const rv2 = handler.call(sheet, event, target);
+                    if (rv2 instanceof Promise) await rv2;
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 60);
+                    });
+                    const afterSecond = sheet.inEditMode;
+                    if (!before && afterFirst && !afterSecond) {
+                        record('edit-mode-toggle-actor', true, null);
+                    } else {
+                        record('edit-mode-toggle-actor', false, `inEditMode trace: ${String(before)} → ${String(afterFirst)} → ${String(afterSecond)}`);
+                    }
+                }
+                try {
+                    await sheet.close?.();
+                } catch {
+                    /* ignore */
+                }
             }
-            if (actor == null) {
-                record('edit-mode-toggle-actor', false, 'ActorCls.create returned null');
-                return results;
-            }
-            const probeActor = actor;
+        } catch (err) {
+            record('edit-mode-toggle-actor', false, String(err instanceof Error ? err.message : err));
+        }
 
-            /* ---------- flow 1: edit-mode-toggle-actor ---------- */
+        /* ---------- flow 5: tab-switch-routes-via-mixin ---------- */
+        try {
+            const sheet = probeActor.sheet;
+            if (sheet == null) {
+                record('tab-switch-routes-via-mixin', false, 'actor.sheet undefined');
+            } else {
+                await sheet.render(true);
+                await new Promise<void>((r) => {
+                    setTimeout(r, 80);
+                });
+                const initial = sheet.tabGroups?.primary;
+                const targetTab = initial === 'skills' ? 'combat' : 'skills';
+                if (typeof sheet.changeTab !== 'function') {
+                    record('tab-switch-routes-via-mixin', false, 'sheet.changeTab not a function');
+                } else {
+                    sheet.changeTab(targetTab, 'primary');
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 60);
+                    });
+                    const after = sheet.tabGroups?.primary;
+                    if (after === targetTab) {
+                        record('tab-switch-routes-via-mixin', true, null);
+                    } else {
+                        record('tab-switch-routes-via-mixin', false, `tabGroups.primary was ${String(after)}, expected ${targetTab}`);
+                    }
+                }
+                try {
+                    await sheet.close?.();
+                } catch {
+                    /* ignore */
+                }
+            }
+        } catch (err) {
+            record('tab-switch-routes-via-mixin', false, String(err instanceof Error ? err.message : err));
+        }
+
+        /* ---------- create an owned item on the actor for flows 2/3/6 ---------- */
+        try {
+            const docs = await probeActor.createEmbeddedDocuments?.('Item', [
+                {
+                    name: 'sheet-mixin-probe-talent',
+                    type: 'talent',
+                    system: { gameSystem: 'dh2' },
+                },
+            ]);
+            ownedItem = Array.isArray(docs) ? docs[0] : null;
+        } catch (err) {
+            // capture below per flow
+            ownedItem = null;
+            record('owned-item-sheet-canEdit', false, `createEmbeddedDocuments threw: ${String(err instanceof Error ? err.message : err)}`);
+        }
+
+        // Item-sheet editing is now gated behind the `freeform-items` world
+        // setting (read-only by default — BaseItemSheet.canEdit). Enable it so the
+        // owned-item canEdit + edit-mode-toggle flows below exercise the editable
+        // path; the prior value is restored before the compendium-readonly flows.
+        const priorFreeform = gameMgr?.settings?.get?.('wh40k-rpg', 'freeform-items') === true;
+        await gameMgr?.settings?.set?.('wh40k-rpg', 'freeform-items', true);
+
+        /* ---------- flow 3: owned-item-sheet-canEdit ---------- */
+        if (ownedItem != null) {
             try {
-                const sheet = probeActor.sheet;
+                const sheet = ownedItem.sheet;
                 if (sheet == null) {
-                    record('edit-mode-toggle-actor', false, 'actor.sheet undefined');
+                    record('owned-item-sheet-canEdit', false, 'item.sheet undefined');
                 } else {
                     await sheet.render(true);
                     await new Promise<void>((r) => {
                         setTimeout(r, 80);
                     });
+                    const ownedFlag = sheet.isOwnedByActor;
+                    const compendiumFlag = !sheet.isCompendiumItem;
+                    const canEdit = sheet.canEdit; // owner GM on a world actor
+                    if (ownedFlag && compendiumFlag && canEdit) {
+                        record('owned-item-sheet-canEdit', true, null);
+                    } else {
+                        record(
+                            'owned-item-sheet-canEdit',
+                            false,
+                            `isOwnedByActor=${String(sheet.isOwnedByActor)} isCompendiumItem=${String(sheet.isCompendiumItem)} canEdit=${String(
+                                sheet.canEdit,
+                            )}`,
+                        );
+                    }
+                    try {
+                        await sheet.close?.();
+                    } catch {
+                        /* ignore */
+                    }
+                }
+            } catch (err) {
+                record('owned-item-sheet-canEdit', false, String(err instanceof Error ? err.message : err));
+            }
+        } else if (!results.some((r) => r.flow === 'owned-item-sheet-canEdit')) {
+            record('owned-item-sheet-canEdit', false, 'owned item not created');
+        }
+
+        /* ---------- flow 2: edit-mode-toggle-item ---------- */
+        if (ownedItem != null) {
+            try {
+                const sheet = ownedItem.sheet;
+                if (sheet == null) {
+                    record('edit-mode-toggle-item', false, 'item.sheet undefined');
+                } else {
+                    await sheet.render(true);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 80);
+                    });
+                    // Actor-owned items use the toggle to switch view ↔ edit
                     const before = sheet.inEditMode;
-                    // Character/NPC sheets register `toggleEditMode` as an action.
                     const handler = sheet.options?.actions?.toggleEditMode;
                     if (typeof handler !== 'function') {
-                        record('edit-mode-toggle-actor', false, 'toggleEditMode action not registered');
+                        record('edit-mode-toggle-item', false, 'toggleEditMode action not registered on item sheet');
                     } else {
                         const event = new MouseEvent('click', { bubbles: false, cancelable: true });
                         const target = document.createElement('div');
                         const rv = handler.call(sheet, event, target);
                         if (rv instanceof Promise) await rv;
                         await new Promise<void>((r) => {
-                            setTimeout(r, 60);
+                            setTimeout(r, 80);
                         });
                         const afterFirst = sheet.inEditMode;
-                        // Toggle back so we exercise both edges.
                         const rv2 = handler.call(sheet, event, target);
                         if (rv2 instanceof Promise) await rv2;
                         await new Promise<void>((r) => {
-                            setTimeout(r, 60);
+                            setTimeout(r, 80);
                         });
                         const afterSecond = sheet.inEditMode;
                         if (!before && afterFirst && !afterSecond) {
-                            record('edit-mode-toggle-actor', true, null);
+                            record('edit-mode-toggle-item', true, null);
                         } else {
-                            record('edit-mode-toggle-actor', false, `inEditMode trace: ${String(before)} → ${String(afterFirst)} → ${String(afterSecond)}`);
+                            record('edit-mode-toggle-item', false, `inEditMode trace: ${String(before)} → ${String(afterFirst)} → ${String(afterSecond)}`);
                         }
                     }
                     try {
@@ -177,316 +314,169 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     }
                 }
             } catch (err) {
-                record('edit-mode-toggle-actor', false, String(err instanceof Error ? err.message : err));
+                record('edit-mode-toggle-item', false, String(err instanceof Error ? err.message : err));
             }
+        } else {
+            record('edit-mode-toggle-item', false, 'owned item not created');
+        }
 
-            /* ---------- flow 5: tab-switch-routes-via-mixin ---------- */
-            try {
-                const sheet = probeActor.sheet;
-                if (sheet == null) {
-                    record('tab-switch-routes-via-mixin', false, 'actor.sheet undefined');
+        /* ---------- flow 6: drop-event-on-sheet ---------- */
+        try {
+            const sheet = probeActor.sheet;
+            if (sheet == null) {
+                record('drop-event-on-sheet', false, 'actor.sheet undefined');
+            } else {
+                await sheet.render(true);
+                await new Promise<void>((r) => {
+                    setTimeout(r, 80);
+                });
+                // Build a transient world-level item, then invoke the sheet's
+                // _onDropItem handler with a synthesized DragEvent. This is
+                // the entrypoint base-actor-sheet.ts:2351 overrides; the
+                // synthetic path is preferred over a real DOM drag because
+                // playwright's drag plumbing doesn't traverse Foundry's
+                // DataTransfer payload contract.
+                //
+                // Drop a `gear` item rather than a `talent`: character-sheet.ts
+                // intercepts unknown-talent drops and routes them through
+                // AdvancementDialog (issue #17), returning `false` from
+                // _onDropItem to block the direct embed. That branch is the
+                // intended behaviour, not what the sheet-mixin drop flow
+                // wants to exercise — we want the BaseActorSheet pass-through
+                // path that creates the embedded item.
+                const transient = await ItemCls?.create?.({
+                    name: 'sheet-mixin-drop-source',
+                    type: 'gear',
+                    system: { gameSystem: 'dh2' },
+                });
+                if (transient == null) {
+                    record('drop-event-on-sheet', false, 'ItemCls.create for drop-source returned null');
                 } else {
-                    await sheet.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 80);
-                    });
-                    const initial = sheet.tabGroups?.primary;
-                    const targetTab = initial === 'skills' ? 'combat' : 'skills';
-                    if (typeof sheet.changeTab !== 'function') {
-                        record('tab-switch-routes-via-mixin', false, 'sheet.changeTab not a function');
-                    } else {
-                        sheet.changeTab(targetTab, 'primary');
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 60);
-                        });
-                        const after = sheet.tabGroups?.primary;
-                        if (after === targetTab) {
-                            record('tab-switch-routes-via-mixin', true, null);
-                        } else {
-                            record('tab-switch-routes-via-mixin', false, `tabGroups.primary was ${String(after)}, expected ${targetTab}`);
-                        }
-                    }
+                    const beforeCount = probeActor.items?.contents?.length ?? 0;
+                    const dragEvent = new Event('drop', { bubbles: false, cancelable: true });
+                    let dropOk = false;
+                    let dropDetail: string | null = null;
                     try {
-                        await sheet.close?.();
+                        const result = await sheet._onDropItem?.(dragEvent, transient);
+                        // _onDropItem returns the created Document[] on a fresh
+                        // drop, the sort result on an existing item, or false /
+                        // undefined on a reject path.
+                        const afterCount = probeActor.items?.contents?.length ?? 0;
+                        if (afterCount > beforeCount || (Array.isArray(result) && result.length > 0)) {
+                            dropOk = true;
+                        } else {
+                            const resultDesc = Array.isArray(result) ? `array(${result.length})` : String(result);
+                            dropDetail = `items before=${beforeCount} after=${afterCount} result=${resultDesc}`;
+                        }
+                    } catch (err) {
+                        dropDetail = `_onDropItem threw: ${String(err instanceof Error ? err.message : err)}`;
+                    }
+                    record('drop-event-on-sheet', dropOk, dropDetail);
+                    try {
+                        await transient.delete?.();
                     } catch {
                         /* ignore */
                     }
                 }
-            } catch (err) {
-                record('tab-switch-routes-via-mixin', false, String(err instanceof Error ? err.message : err));
-            }
-
-            /* ---------- create an owned item on the actor for flows 2/3/6 ---------- */
-            try {
-                const docs = await probeActor.createEmbeddedDocuments?.('Item', [
-                    {
-                        name: 'sheet-mixin-probe-talent',
-                        type: 'talent',
-                        system: { gameSystem: 'dh2' },
-                    },
-                ]);
-                ownedItem = Array.isArray(docs) ? docs[0] : null;
-            } catch (err) {
-                // capture below per flow
-                ownedItem = null;
-                record('owned-item-sheet-canEdit', false, `createEmbeddedDocuments threw: ${String(err instanceof Error ? err.message : err)}`);
-            }
-
-            // Item-sheet editing is now gated behind the `freeform-items` world
-            // setting (read-only by default — BaseItemSheet.canEdit). Enable it so the
-            // owned-item canEdit + edit-mode-toggle flows below exercise the editable
-            // path; the prior value is restored before the compendium-readonly flows.
-            const priorFreeform = gameMgr?.settings?.get?.('wh40k-rpg', 'freeform-items') === true;
-            await gameMgr?.settings?.set?.('wh40k-rpg', 'freeform-items', true);
-
-            /* ---------- flow 3: owned-item-sheet-canEdit ---------- */
-            if (ownedItem != null) {
                 try {
-                    const sheet = ownedItem.sheet;
-                    if (sheet == null) {
-                        record('owned-item-sheet-canEdit', false, 'item.sheet undefined');
+                    await sheet.close?.();
+                } catch {
+                    /* ignore */
+                }
+            }
+        } catch (err) {
+            record('drop-event-on-sheet', false, String(err instanceof Error ? err.message : err));
+        }
+
+        // Restore the freeform-items setting before the read-only flows.
+        await gameMgr?.settings?.set?.('wh40k-rpg', 'freeform-items', priorFreeform);
+
+        /* ---------- flow 4: compendium-item-sheet-readonly ---------- */
+        /* ---------- flow 7: prosemirror-gated-in-readonly --------- */
+        let compendiumSheet: SheetShape | null = null;
+        try {
+            const pack = gameMgr?.packs?.get?.(talentPackId);
+            if (pack == null) {
+                record('compendium-item-sheet-readonly', false, `pack ${talentPackId} not found`);
+                record('prosemirror-gated-in-readonly', false, `pack ${talentPackId} not found`);
+            } else {
+                const docs = await pack.getDocuments();
+                const sample: ItemDoc | null = Array.isArray(docs) ? docs[0] ?? null : null;
+                if (sample == null) {
+                    record('compendium-item-sheet-readonly', false, `pack ${talentPackId} empty`);
+                    record('prosemirror-gated-in-readonly', false, `pack ${talentPackId} empty`);
+                } else {
+                    compendiumSheet = sample.sheet ?? null;
+                    if (compendiumSheet == null) {
+                        record('compendium-item-sheet-readonly', false, 'compendium item sheet undefined');
+                        record('prosemirror-gated-in-readonly', false, 'compendium item sheet undefined');
                     } else {
-                        await sheet.render(true);
+                        await compendiumSheet.render(true);
                         await new Promise<void>((r) => {
-                            setTimeout(r, 80);
+                            setTimeout(r, 100);
                         });
-                        const ownedFlag = sheet.isOwnedByActor;
-                        const compendiumFlag = !sheet.isCompendiumItem;
-                        const canEdit = sheet.canEdit; // owner GM on a world actor
-                        if (ownedFlag && compendiumFlag && canEdit) {
-                            record('owned-item-sheet-canEdit', true, null);
+
+                        // flow 4: assert read-only flags
+                        const isCompendium = compendiumSheet.isCompendiumItem;
+                        const editGatedOff = !compendiumSheet.canEdit;
+                        if (isCompendium && editGatedOff) {
+                            record('compendium-item-sheet-readonly', true, null);
                         } else {
                             record(
-                                'owned-item-sheet-canEdit',
+                                'compendium-item-sheet-readonly',
                                 false,
-                                `isOwnedByActor=${String(sheet.isOwnedByActor)} isCompendiumItem=${String(sheet.isCompendiumItem)} canEdit=${String(
-                                    sheet.canEdit,
-                                )}`,
+                                `isCompendiumItem=${String(compendiumSheet.isCompendiumItem)} canEdit=${String(compendiumSheet.canEdit)}`,
                             );
                         }
-                        try {
-                            await sheet.close?.();
-                        } catch {
-                            /* ignore */
-                        }
-                    }
-                } catch (err) {
-                    record('owned-item-sheet-canEdit', false, String(err instanceof Error ? err.message : err));
-                }
-            } else if (!results.some((r) => r.flow === 'owned-item-sheet-canEdit')) {
-                record('owned-item-sheet-canEdit', false, 'owned item not created');
-            }
 
-            /* ---------- flow 2: edit-mode-toggle-item ---------- */
-            if (ownedItem != null) {
-                try {
-                    const sheet = ownedItem.sheet;
-                    if (sheet == null) {
-                        record('edit-mode-toggle-item', false, 'item.sheet undefined');
-                    } else {
-                        await sheet.render(true);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 80);
-                        });
-                        // Actor-owned items use the toggle to switch view ↔ edit
-                        const before = sheet.inEditMode;
-                        const handler = sheet.options?.actions?.toggleEditMode;
-                        if (typeof handler !== 'function') {
-                            record('edit-mode-toggle-item', false, 'toggleEditMode action not registered on item sheet');
+                        // flow 7: ProseMirror gating — `inEditMode` MUST be
+                        // false on a compendium item so {{#if inEditMode}}
+                        // skips the ProseMirror editor instantiation (CLAUDE.md
+                        // gotcha #5). We also verify no `<prose-mirror>` element
+                        // is wired into the rendered DOM, since the editor
+                        // would have to short-circuit on the gate to keep the
+                        // sheet from crashing in compendium read-only context.
+                        const inEdit = compendiumSheet.inEditMode;
+                        const proseEl = compendiumSheet.element?.querySelector?.('prose-mirror');
+                        if (!inEdit && proseEl === null) {
+                            record('prosemirror-gated-in-readonly', true, null);
                         } else {
-                            const event = new MouseEvent('click', { bubbles: false, cancelable: true });
-                            const target = document.createElement('div');
-                            const rv = handler.call(sheet, event, target);
-                            if (rv instanceof Promise) await rv;
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 80);
-                            });
-                            const afterFirst = sheet.inEditMode;
-                            const rv2 = handler.call(sheet, event, target);
-                            if (rv2 instanceof Promise) await rv2;
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 80);
-                            });
-                            const afterSecond = sheet.inEditMode;
-                            if (!before && afterFirst && !afterSecond) {
-                                record('edit-mode-toggle-item', true, null);
-                            } else {
-                                record('edit-mode-toggle-item', false, `inEditMode trace: ${String(before)} → ${String(afterFirst)} → ${String(afterSecond)}`);
-                            }
+                            record(
+                                'prosemirror-gated-in-readonly',
+                                false,
+                                `inEditMode=${String(compendiumSheet.inEditMode)} proseMirrorEl=${proseEl != null ? 'present' : 'absent'}`,
+                            );
                         }
+
                         try {
-                            await sheet.close?.();
+                            await compendiumSheet.close?.();
                         } catch {
                             /* ignore */
                         }
                     }
-                } catch (err) {
-                    record('edit-mode-toggle-item', false, String(err instanceof Error ? err.message : err));
-                }
-            } else {
-                record('edit-mode-toggle-item', false, 'owned item not created');
-            }
-
-            /* ---------- flow 6: drop-event-on-sheet ---------- */
-            try {
-                const sheet = probeActor.sheet;
-                if (sheet == null) {
-                    record('drop-event-on-sheet', false, 'actor.sheet undefined');
-                } else {
-                    await sheet.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 80);
-                    });
-                    // Build a transient world-level item, then invoke the sheet's
-                    // _onDropItem handler with a synthesized DragEvent. This is
-                    // the entrypoint base-actor-sheet.ts:2351 overrides; the
-                    // synthetic path is preferred over a real DOM drag because
-                    // playwright's drag plumbing doesn't traverse Foundry's
-                    // DataTransfer payload contract.
-                    //
-                    // Drop a `gear` item rather than a `talent`: character-sheet.ts
-                    // intercepts unknown-talent drops and routes them through
-                    // AdvancementDialog (issue #17), returning `false` from
-                    // _onDropItem to block the direct embed. That branch is the
-                    // intended behaviour, not what the sheet-mixin drop flow
-                    // wants to exercise — we want the BaseActorSheet pass-through
-                    // path that creates the embedded item.
-                    const transient = await ItemCls?.create?.({
-                        name: 'sheet-mixin-drop-source',
-                        type: 'gear',
-                        system: { gameSystem: 'dh2' },
-                    });
-                    if (transient == null) {
-                        record('drop-event-on-sheet', false, 'ItemCls.create for drop-source returned null');
-                    } else {
-                        const beforeCount = probeActor.items?.contents?.length ?? 0;
-                        const dragEvent = new Event('drop', { bubbles: false, cancelable: true });
-                        let dropOk = false;
-                        let dropDetail: string | null = null;
-                        try {
-                            const result = await sheet._onDropItem?.(dragEvent, transient);
-                            // _onDropItem returns the created Document[] on a fresh
-                            // drop, the sort result on an existing item, or false /
-                            // undefined on a reject path.
-                            const afterCount = probeActor.items?.contents?.length ?? 0;
-                            if (afterCount > beforeCount || (Array.isArray(result) && result.length > 0)) {
-                                dropOk = true;
-                            } else {
-                                const resultDesc = Array.isArray(result) ? `array(${result.length})` : String(result);
-                                dropDetail = `items before=${beforeCount} after=${afterCount} result=${resultDesc}`;
-                            }
-                        } catch (err) {
-                            dropDetail = `_onDropItem threw: ${String(err instanceof Error ? err.message : err)}`;
-                        }
-                        record('drop-event-on-sheet', dropOk, dropDetail);
-                        try {
-                            await transient.delete?.();
-                        } catch {
-                            /* ignore */
-                        }
-                    }
-                    try {
-                        await sheet.close?.();
-                    } catch {
-                        /* ignore */
-                    }
-                }
-            } catch (err) {
-                record('drop-event-on-sheet', false, String(err instanceof Error ? err.message : err));
-            }
-
-            // Restore the freeform-items setting before the read-only flows.
-            await gameMgr?.settings?.set?.('wh40k-rpg', 'freeform-items', priorFreeform);
-
-            /* ---------- flow 4: compendium-item-sheet-readonly ---------- */
-            /* ---------- flow 7: prosemirror-gated-in-readonly --------- */
-            let compendiumSheet: SheetShape | null = null;
-            try {
-                const pack = gameMgr?.packs?.get?.(talentPackId);
-                if (pack == null) {
-                    record('compendium-item-sheet-readonly', false, `pack ${talentPackId} not found`);
-                    record('prosemirror-gated-in-readonly', false, `pack ${talentPackId} not found`);
-                } else {
-                    const docs = await pack.getDocuments();
-                    const sample: ItemDoc | null = Array.isArray(docs) ? docs[0] ?? null : null;
-                    if (sample == null) {
-                        record('compendium-item-sheet-readonly', false, `pack ${talentPackId} empty`);
-                        record('prosemirror-gated-in-readonly', false, `pack ${talentPackId} empty`);
-                    } else {
-                        compendiumSheet = sample.sheet ?? null;
-                        if (compendiumSheet == null) {
-                            record('compendium-item-sheet-readonly', false, 'compendium item sheet undefined');
-                            record('prosemirror-gated-in-readonly', false, 'compendium item sheet undefined');
-                        } else {
-                            await compendiumSheet.render(true);
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 100);
-                            });
-
-                            // flow 4: assert read-only flags
-                            const isCompendium = compendiumSheet.isCompendiumItem;
-                            const editGatedOff = !compendiumSheet.canEdit;
-                            if (isCompendium && editGatedOff) {
-                                record('compendium-item-sheet-readonly', true, null);
-                            } else {
-                                record(
-                                    'compendium-item-sheet-readonly',
-                                    false,
-                                    `isCompendiumItem=${String(compendiumSheet.isCompendiumItem)} canEdit=${String(compendiumSheet.canEdit)}`,
-                                );
-                            }
-
-                            // flow 7: ProseMirror gating — `inEditMode` MUST be
-                            // false on a compendium item so {{#if inEditMode}}
-                            // skips the ProseMirror editor instantiation (CLAUDE.md
-                            // gotcha #5). We also verify no `<prose-mirror>` element
-                            // is wired into the rendered DOM, since the editor
-                            // would have to short-circuit on the gate to keep the
-                            // sheet from crashing in compendium read-only context.
-                            const inEdit = compendiumSheet.inEditMode;
-                            const proseEl = compendiumSheet.element?.querySelector?.('prose-mirror');
-                            if (!inEdit && proseEl === null) {
-                                record('prosemirror-gated-in-readonly', true, null);
-                            } else {
-                                record(
-                                    'prosemirror-gated-in-readonly',
-                                    false,
-                                    `inEditMode=${String(compendiumSheet.inEditMode)} proseMirrorEl=${proseEl != null ? 'present' : 'absent'}`,
-                                );
-                            }
-
-                            try {
-                                await compendiumSheet.close?.();
-                            } catch {
-                                /* ignore */
-                            }
-                        }
-                    }
-                }
-            } catch (err) {
-                const msg = String(err instanceof Error ? err.message : err);
-                if (!results.some((r) => r.flow === 'compendium-item-sheet-readonly')) {
-                    record('compendium-item-sheet-readonly', false, msg);
-                }
-                if (!results.some((r) => r.flow === 'prosemirror-gated-in-readonly')) {
-                    record('prosemirror-gated-in-readonly', false, msg);
                 }
             }
-
-            /* ---------- cleanup ---------- */
-            try {
-                await probeActor.delete?.();
-            } catch {
-                /* ignore */
+        } catch (err) {
+            const msg = String(err instanceof Error ? err.message : err);
+            if (!results.some((r) => r.flow === 'compendium-item-sheet-readonly')) {
+                record('compendium-item-sheet-readonly', false, msg);
             }
+            if (!results.some((r) => r.flow === 'prosemirror-gated-in-readonly')) {
+                record('prosemirror-gated-in-readonly', false, msg);
+            }
+        }
 
-            return results;
-        }, TALENT_PACK);
+        /* ---------- cleanup ---------- */
+        try {
+            await probeActor.delete?.();
+        } catch {
+            /* ignore */
+        }
 
-        return { flows: flows as FlowResult[], pageErrors };
-    } finally {
-        page.off('pageerror', listener);
-    }
+        return results;
+    }, TALENT_PACK);
+
+    return { flows: flows as FlowResult[] };
 }
 
 test.describe.serial('sheet mixins (Tier B)', () => {
@@ -510,10 +500,6 @@ test.describe.serial('sheet mixins (Tier B)', () => {
             if (!seen.has(expected)) {
                 failures.push(`${expected}: probe did not report on this flow`);
             }
-        }
-
-        if (probe.pageErrors.length > 0) {
-            failures.push(`page errors: ${probe.pageErrors.slice(0, 3).join(' | ')}`);
         }
 
         expect(failures, `${failures.length}/${SHEET_MIXIN_FLOWS.length} sheet-mixin flows failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);

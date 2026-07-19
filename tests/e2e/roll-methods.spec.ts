@@ -102,188 +102,177 @@ async function probeRollMethods(
     created: boolean;
     createError: string | null;
     results: RollProbeResult[];
-    pageErrors: string[];
     diag?: { ctorName: string };
 }> {
-    const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const result = await page.evaluate(
-            async ({ gameSystem: sysId, prefix, methods }) => {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.Actor / globalThis.ui (Foundry globals, no repo type)
-                const { Actor: ActorCls, ui: foundryUi } = globalThis as unknown as RollWindow;
-                if (!ActorCls?.create) {
-                    return { created: false, createError: 'Actor.create unavailable', results: [] };
-                }
+    const result = await page.evaluate(
+        async ({ gameSystem: sysId, prefix, methods }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.Actor / globalThis.ui (Foundry globals, no repo type)
+            const { Actor: ActorCls, ui: foundryUi } = globalThis as unknown as RollWindow;
+            if (!ActorCls?.create) {
+                return { created: false, createError: 'Actor.create unavailable', results: [] };
+            }
 
-                const actorType = `${prefix}-character`;
-                let actor: RollActorHandle | null;
-                try {
-                    actor = await ActorCls.create({
-                        name: `roll-probe-${prefix}`,
-                        type: actorType,
-                        system: { gameSystem: sysId },
-                    });
-                } catch (err) {
-                    return { created: false, createError: err instanceof Error ? err.message : String(err), results: [] };
-                }
-                if (!actor) {
-                    return { created: false, createError: 'Actor.create returned null', results: [] };
-                }
+            const actorType = `${prefix}-character`;
+            let actor: RollActorHandle | null;
+            try {
+                actor = await ActorCls.create({
+                    name: `roll-probe-${prefix}`,
+                    type: actorType,
+                    system: { gameSystem: sysId },
+                });
+            } catch (err) {
+                return { created: false, createError: err instanceof Error ? err.message : String(err), results: [] };
+            }
+            if (!actor) {
+                return { created: false, createError: 'Actor.create returned null', results: [] };
+            }
 
-                // Capture the concrete document class identity. When the
-                // proxy / fallback path returns `WH40KBaseActor` instead of
-                // the per-system concrete subclass, the four acolyte-only
-                // roll methods (rollSkill / rollCheck / rollCharacteristicCheck /
-                // override rollCharacteristic) will be missing — surfacing the
-                // class name in the failure message turns "method not present"
-                // from a mystery into a regression breadcrumb.
-                // eslint-disable-next-line no-restricted-syntax -- boundary: introspecting the runtime actor prototype for test diagnostics
-                const proto = Object.getPrototypeOf(actor) as { constructor?: { name?: string } } | null;
-                const ctorName = proto?.constructor?.name ?? 'unknown';
+            // Capture the concrete document class identity. When the
+            // proxy / fallback path returns `WH40KBaseActor` instead of
+            // the per-system concrete subclass, the four acolyte-only
+            // roll methods (rollSkill / rollCheck / rollCharacteristicCheck /
+            // override rollCharacteristic) will be missing — surfacing the
+            // class name in the failure message turns "method not present"
+            // from a mystery into a regression breadcrumb.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: introspecting the runtime actor prototype for test diagnostics
+            const proto = Object.getPrototypeOf(actor) as { constructor?: { name?: string } } | null;
+            const ctorName = proto?.constructor?.name ?? 'unknown';
 
-                // Create one weapon and one psychic-power on the actor so
-                // rollItem / rollWeaponAction / rollPsychicPower have a real
-                // embedded document to dispatch against.
-                let weaponId: string | null = null;
-                let powerId: string | null = null;
-                try {
-                    await actor.createEmbeddedDocuments?.('Item', [
-                        {
-                            name: 'probe-weapon',
-                            type: 'weapon',
-                            system: { equipped: true, class: 'melee', melee: true, damage: '1d10', penetration: 0 },
-                        },
-                        {
-                            name: 'probe-power',
-                            type: 'psychicPower',
-                            system: { damage: '1d10', penetration: 0 },
-                        },
-                    ]);
-                    const contents = actor.items?.contents ?? [];
-                    weaponId = contents.find((i) => i.type === 'weapon')?.id ?? null;
-                    powerId = contents.find((i) => i.type === 'psychicPower')?.id ?? null;
-                } catch {
-                    // If embedded item creation fails the item-dependent rolls
-                    // will surface that in their own per-method branch.
-                }
+            // Create one weapon and one psychic-power on the actor so
+            // rollItem / rollWeaponAction / rollPsychicPower have a real
+            // embedded document to dispatch against.
+            let weaponId: string | null = null;
+            let powerId: string | null = null;
+            try {
+                await actor.createEmbeddedDocuments?.('Item', [
+                    {
+                        name: 'probe-weapon',
+                        type: 'weapon',
+                        system: { equipped: true, class: 'melee', melee: true, damage: '1d10', penetration: 0 },
+                    },
+                    {
+                        name: 'probe-power',
+                        type: 'psychicPower',
+                        system: { damage: '1d10', penetration: 0 },
+                    },
+                ]);
+                const contents = actor.items?.contents ?? [];
+                weaponId = contents.find((i) => i.type === 'weapon')?.id ?? null;
+                powerId = contents.find((i) => i.type === 'psychicPower')?.id ?? null;
+            } catch {
+                // If embedded item creation fails the item-dependent rolls
+                // will surface that in their own per-method branch.
+            }
 
-                /**
-                 * Close any ApplicationV2 / V1 window the previous roll
-                 * opened. We filter to dialog-shaped windows (UnifiedRollDialog,
-                 * Dialog, prompt classes) so we don't accidentally close the
-                 * sidebar or hotbar.
-                 */
-                async function closeOpenDialogs(): Promise<void> {
-                    const windows = Object.values(foundryUi?.windows ?? {});
-                    for (const w of windows) {
-                        // Heuristic: ids starting with 'app-' or containing
-                        // 'dialog'/'prompt' are roll-flow surfaces.
-                        const id = w.id ?? '';
-                        if (id.includes('dialog') || id.includes('prompt') || id.includes('roll')) {
-                            try {
-                                await w.close?.();
-                            } catch {
-                                /* ignore */
-                            }
+            /**
+             * Close any ApplicationV2 / V1 window the previous roll
+             * opened. We filter to dialog-shaped windows (UnifiedRollDialog,
+             * Dialog, prompt classes) so we don't accidentally close the
+             * sidebar or hotbar.
+             */
+            async function closeOpenDialogs(): Promise<void> {
+                const windows = Object.values(foundryUi?.windows ?? {});
+                for (const w of windows) {
+                    // Heuristic: ids starting with 'app-' or containing
+                    // 'dialog'/'prompt' are roll-flow surfaces.
+                    const id = w.id ?? '';
+                    if (id.includes('dialog') || id.includes('prompt') || id.includes('roll')) {
+                        try {
+                            await w.close?.();
+                        } catch {
+                            /* ignore */
                         }
                     }
                 }
+            }
 
-                const NOT_PRESENT = 'method not present on actor';
-                // One dispatcher per roll method. Each returns whether the
-                // method body ran (`invoked`) and a failure reason (`error`).
-                // An object/Map lookup replaces the prohibited `switch`.
-                const liveActor = actor;
-                const dispatch: Record<string, () => Promise<{ invoked: boolean; error: string | null }>> = {
-                    rollCharacteristic: async () => {
-                        if (typeof liveActor.rollCharacteristic !== 'function') return { invoked: false, error: NOT_PRESENT };
-                        await liveActor.rollCharacteristic('weaponSkill');
-                        return { invoked: true, error: null };
-                    },
-                    rollCharacteristicCheck: async () => {
-                        if (typeof liveActor.rollCharacteristicCheck !== 'function') return { invoked: false, error: NOT_PRESENT };
-                        // base stub returns null; acolyte returns an object
-                        const r = await liveActor.rollCharacteristicCheck('weaponSkill');
-                        return { invoked: r !== undefined, error: null };
-                    },
-                    rollSkill: async () => {
-                        if (typeof liveActor.rollSkill !== 'function') return { invoked: false, error: NOT_PRESENT };
-                        await liveActor.rollSkill('awareness');
-                        return { invoked: true, error: null };
-                    },
-                    rollCheck: async () => {
-                        if (typeof liveActor.rollCheck !== 'function') return { invoked: false, error: NOT_PRESENT };
-                        const r = await liveActor.rollCheck(50);
-                        return { invoked: r !== undefined, error: null };
-                    },
-                    rollItem: async () => {
-                        if (weaponId === null) return { invoked: false, error: 'no weapon item created' };
-                        if (typeof liveActor.rollItem !== 'function') return { invoked: false, error: NOT_PRESENT };
-                        await liveActor.rollItem(weaponId);
-                        return { invoked: true, error: null };
-                    },
-                    rollWeaponAction: async () => {
-                        if (weaponId === null) return { invoked: false, error: 'no weapon item created' };
-                        if (typeof liveActor.rollWeaponAction !== 'function') return { invoked: false, error: NOT_PRESENT };
-                        const weapon = liveActor.items?.contents.find((i) => i.id === weaponId);
-                        await liveActor.rollWeaponAction(weapon);
-                        return { invoked: true, error: null };
-                    },
-                    rollPsychicPower: async () => {
-                        if (powerId === null) return { invoked: false, error: 'no psychic-power item created' };
-                        if (typeof liveActor.rollPsychicPower !== 'function') return { invoked: false, error: NOT_PRESENT };
-                        const power = liveActor.items?.contents.find((i) => i.id === powerId);
-                        await liveActor.rollPsychicPower(power);
-                        return { invoked: true, error: null };
-                    },
-                };
+            const NOT_PRESENT = 'method not present on actor';
+            // One dispatcher per roll method. Each returns whether the
+            // method body ran (`invoked`) and a failure reason (`error`).
+            // An object/Map lookup replaces the prohibited `switch`.
+            const liveActor = actor;
+            const dispatch: Record<string, () => Promise<{ invoked: boolean; error: string | null }>> = {
+                rollCharacteristic: async () => {
+                    if (typeof liveActor.rollCharacteristic !== 'function') return { invoked: false, error: NOT_PRESENT };
+                    await liveActor.rollCharacteristic('weaponSkill');
+                    return { invoked: true, error: null };
+                },
+                rollCharacteristicCheck: async () => {
+                    if (typeof liveActor.rollCharacteristicCheck !== 'function') return { invoked: false, error: NOT_PRESENT };
+                    // base stub returns null; acolyte returns an object
+                    const r = await liveActor.rollCharacteristicCheck('weaponSkill');
+                    return { invoked: r !== undefined, error: null };
+                },
+                rollSkill: async () => {
+                    if (typeof liveActor.rollSkill !== 'function') return { invoked: false, error: NOT_PRESENT };
+                    await liveActor.rollSkill('awareness');
+                    return { invoked: true, error: null };
+                },
+                rollCheck: async () => {
+                    if (typeof liveActor.rollCheck !== 'function') return { invoked: false, error: NOT_PRESENT };
+                    const r = await liveActor.rollCheck(50);
+                    return { invoked: r !== undefined, error: null };
+                },
+                rollItem: async () => {
+                    if (weaponId === null) return { invoked: false, error: 'no weapon item created' };
+                    if (typeof liveActor.rollItem !== 'function') return { invoked: false, error: NOT_PRESENT };
+                    await liveActor.rollItem(weaponId);
+                    return { invoked: true, error: null };
+                },
+                rollWeaponAction: async () => {
+                    if (weaponId === null) return { invoked: false, error: 'no weapon item created' };
+                    if (typeof liveActor.rollWeaponAction !== 'function') return { invoked: false, error: NOT_PRESENT };
+                    const weapon = liveActor.items?.contents.find((i) => i.id === weaponId);
+                    await liveActor.rollWeaponAction(weapon);
+                    return { invoked: true, error: null };
+                },
+                rollPsychicPower: async () => {
+                    if (powerId === null) return { invoked: false, error: 'no psychic-power item created' };
+                    if (typeof liveActor.rollPsychicPower !== 'function') return { invoked: false, error: NOT_PRESENT };
+                    const power = liveActor.items?.contents.find((i) => i.id === powerId);
+                    await liveActor.rollPsychicPower(power);
+                    return { invoked: true, error: null };
+                },
+            };
 
-                const probeResults: Array<{ method: string; invoked: boolean; error: string | null }> = [];
-                for (const method of methods) {
-                    let outcome: { invoked: boolean; error: string | null };
-                    try {
-                        outcome = Object.prototype.hasOwnProperty.call(dispatch, method)
-                            ? await dispatch[method]()
-                            : { invoked: false, error: `unknown method ${method}` };
-                    } catch (err) {
-                        outcome = { invoked: false, error: err instanceof Error ? err.message : String(err) };
-                    }
-                    // Drain any dialog the method opened so the next probe
-                    // doesn't stack windows.
-                    await closeOpenDialogs();
-                    probeResults.push({ method, invoked: outcome.invoked, error: outcome.error });
-                }
-
-                // Best-effort cleanup so subsequent specs don't see this actor.
+            const probeResults: Array<{ method: string; invoked: boolean; error: string | null }> = [];
+            for (const method of methods) {
+                let outcome: { invoked: boolean; error: string | null };
                 try {
-                    await actor.delete?.();
-                } catch {
-                    /* ignore */
+                    outcome = Object.prototype.hasOwnProperty.call(dispatch, method)
+                        ? await dispatch[method]()
+                        : { invoked: false, error: `unknown method ${method}` };
+                } catch (err) {
+                    outcome = { invoked: false, error: err instanceof Error ? err.message : String(err) };
                 }
+                // Drain any dialog the method opened so the next probe
+                // doesn't stack windows.
+                await closeOpenDialogs();
+                probeResults.push({ method, invoked: outcome.invoked, error: outcome.error });
+            }
 
-                return { created: true, createError: null, results: probeResults, diag: { ctorName } };
-            },
-            { gameSystem, prefix: SYSTEM_PREFIX[gameSystem] ?? gameSystem, methods: [...ROLL_METHODS] },
-        );
-        const results: RollProbeResult[] = result.results.map((r) => ({
-            method: r.method as RollMethod,
-            invoked: r.invoked,
-            error: r.error,
-        }));
-        return {
-            created: result.created,
-            createError: result.createError,
-            results,
-            pageErrors,
-            diag: 'diag' in result ? result.diag : undefined,
-        };
-    } finally {
-        page.off('pageerror', listener);
-    }
+            // Best-effort cleanup so subsequent specs don't see this actor.
+            try {
+                await actor.delete?.();
+            } catch {
+                /* ignore */
+            }
+
+            return { created: true, createError: null, results: probeResults, diag: { ctorName } };
+        },
+        { gameSystem, prefix: SYSTEM_PREFIX[gameSystem] ?? gameSystem, methods: [...ROLL_METHODS] },
+    );
+    const results: RollProbeResult[] = result.results.map((r) => ({
+        method: r.method as RollMethod,
+        invoked: r.invoked,
+        error: r.error,
+    }));
+    return {
+        created: result.created,
+        createError: result.createError,
+        results,
+        diag: 'diag' in result ? result.diag : undefined,
+    };
 }
 
 test.describe.serial('actor roll methods × systems (Tier B)', () => {
@@ -302,12 +291,6 @@ test.describe.serial('actor roll methods × systems (Tier B)', () => {
                     continue;
                 }
                 failures.push(`${r.method}: ${r.error ?? 'not invoked'}`);
-            }
-            // Surface uncaught page errors that fired while methods ran — they
-            // indicate the roll plumbing threw asynchronously past the
-            // try/catch in page.evaluate (e.g., inside a Dialog render).
-            if (probe.pageErrors.length > 0) {
-                failures.push(`page errors: ${probe.pageErrors.slice(0, 3).join(' | ')}`);
             }
             const ctorName = probe.diag?.ctorName ?? 'unknown';
             expect(

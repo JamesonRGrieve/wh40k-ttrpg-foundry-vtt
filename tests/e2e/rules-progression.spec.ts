@@ -69,366 +69,357 @@ interface FlowResult {
     detail: string | null;
 }
 
-async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
-    const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            type ImportError = { __importError?: string };
-            interface TalentConstant {
-                radiusMetres?: number;
-                wpBonus?: number;
-                testBonusPerCp?: number;
-            }
-            interface ChaosTalentsModule extends ImportError {
-                AEGIS_OF_CONTEMPT?: TalentConstant;
-                FLAGELLANT?: TalentConstant;
-                TAINTED_PSYKER?: TalentConstant;
-            }
-            interface EliteAdvanceEntry {
-                id?: string;
-                xpCost?: number;
-                prerequisites?: Array<{ type?: string; minimum?: number }>;
-            }
-            interface EliteAdvancesModule extends ImportError {
-                ELITE_ADVANCES?: Record<string, EliteAdvanceEntry>;
-            }
-            interface RadicalServiceEntry {
-                id?: string;
-                threatLevel?: number;
-                subtletyOnHire?: number;
-                availability?: string;
-            }
-            interface RadicalServicesModule extends ImportError {
-                RADICAL_SERVICES?: Record<string, RadicalServiceEntry>;
-            }
-            interface XenosFeaturesModule extends ImportError {
-                RIGHT_STUFF?: { applicableSkills?: readonly string[] };
-                PUSH_THE_LIMIT?: { operateBonus?: number; failureThresholdForCritical?: number };
-                SURVIVORS_PARANOIA?: { negatedSurpriseBonus?: number };
-            }
-            type ProfaneObjectsModule = ImportError;
-            interface TrainingCheckResult {
-                trained?: boolean;
-                talent?: { name: string } | null;
-            }
-            interface SyntheticActor {
-                items: Array<{ type: string; name: string }>;
-            }
-            interface SyntheticWeapon {
-                system: { requiredTraining: string; special: string };
-            }
-            interface WeaponTrainingModule extends ImportError {
-                checkWeaponTraining?: (actor: SyntheticActor, weapon: SyntheticWeapon) => TrainingCheckResult;
-                getWeaponTrainingModifier?: (actor: SyntheticActor, weapon: SyntheticWeapon) => number;
-                getWeaponTrainingDescription?: (actor: SyntheticActor, weapon: SyntheticWeapon) => string;
-            }
-            interface WeaponModifierRollData {
-                weapon: { items: never[]; isRanged?: boolean; isMelee?: boolean; system?: Record<string, never> } | undefined;
-                weaponModifications?: never[];
-                weaponModifiers?: Record<string, number>;
-                modifiers: Record<string, number>;
-                attackSpecials?: Array<{ name: string }>;
-                action?: string;
-            }
-            interface WeaponModifiersModule extends ImportError {
-                updateWeaponModifiers?: (rollData: WeaponModifierRollData) => void;
-                calculateWeaponModifiersAttackBonuses?: (rollData: WeaponModifierRollData) => void;
-                calculateWeaponModifiersAttackSpecials?: (rollData: WeaponModifierRollData) => void;
-            }
-            interface RangeRollData {
-                weapon: { isMelee?: boolean; system?: Record<string, never> } | undefined;
-                distance: number;
-                modifiers: Record<string, number>;
-                hasWeaponModification: () => boolean;
-                hasAttackSpecial: () => boolean;
-                rangeName?: string;
-                maxRange?: number;
-            }
-            interface RangeModule extends ImportError {
-                calculateWeaponRange?: (rollData: RangeRollData) => void;
-            }
+async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
+    const results = await page.evaluate(async (): Promise<FlowResult[]> => {
+        type ImportError = { __importError?: string };
+        interface TalentConstant {
+            radiusMetres?: number;
+            wpBonus?: number;
+            testBonusPerCp?: number;
+        }
+        interface ChaosTalentsModule extends ImportError {
+            AEGIS_OF_CONTEMPT?: TalentConstant;
+            FLAGELLANT?: TalentConstant;
+            TAINTED_PSYKER?: TalentConstant;
+        }
+        interface EliteAdvanceEntry {
+            id?: string;
+            xpCost?: number;
+            prerequisites?: Array<{ type?: string; minimum?: number }>;
+        }
+        interface EliteAdvancesModule extends ImportError {
+            ELITE_ADVANCES?: Record<string, EliteAdvanceEntry>;
+        }
+        interface RadicalServiceEntry {
+            id?: string;
+            threatLevel?: number;
+            subtletyOnHire?: number;
+            availability?: string;
+        }
+        interface RadicalServicesModule extends ImportError {
+            RADICAL_SERVICES?: Record<string, RadicalServiceEntry>;
+        }
+        interface XenosFeaturesModule extends ImportError {
+            RIGHT_STUFF?: { applicableSkills?: readonly string[] };
+            PUSH_THE_LIMIT?: { operateBonus?: number; failureThresholdForCritical?: number };
+            SURVIVORS_PARANOIA?: { negatedSurpriseBonus?: number };
+        }
+        type ProfaneObjectsModule = ImportError;
+        interface TrainingCheckResult {
+            trained?: boolean;
+            talent?: { name: string } | null;
+        }
+        interface SyntheticActor {
+            items: Array<{ type: string; name: string }>;
+        }
+        interface SyntheticWeapon {
+            system: { requiredTraining: string; special: string };
+        }
+        interface WeaponTrainingModule extends ImportError {
+            checkWeaponTraining?: (actor: SyntheticActor, weapon: SyntheticWeapon) => TrainingCheckResult;
+            getWeaponTrainingModifier?: (actor: SyntheticActor, weapon: SyntheticWeapon) => number;
+            getWeaponTrainingDescription?: (actor: SyntheticActor, weapon: SyntheticWeapon) => string;
+        }
+        interface WeaponModifierRollData {
+            weapon: { items: never[]; isRanged?: boolean; isMelee?: boolean; system?: Record<string, never> } | undefined;
+            weaponModifications?: never[];
+            weaponModifiers?: Record<string, number>;
+            modifiers: Record<string, number>;
+            attackSpecials?: Array<{ name: string }>;
+            action?: string;
+        }
+        interface WeaponModifiersModule extends ImportError {
+            updateWeaponModifiers?: (rollData: WeaponModifierRollData) => void;
+            calculateWeaponModifiersAttackBonuses?: (rollData: WeaponModifierRollData) => void;
+            calculateWeaponModifiersAttackSpecials?: (rollData: WeaponModifierRollData) => void;
+        }
+        interface RangeRollData {
+            weapon: { isMelee?: boolean; system?: Record<string, never> } | undefined;
+            distance: number;
+            modifiers: Record<string, number>;
+            hasWeaponModification: () => boolean;
+            hasAttackSpecial: () => boolean;
+            rangeName?: string;
+            maxRange?: number;
+        }
+        interface RangeModule extends ImportError {
+            calculateWeaponRange?: (rollData: RangeRollData) => void;
+        }
 
-            const out: FlowResult[] = [];
-            const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
-                out.push({ name, ok, detail });
-            };
+        const out: FlowResult[] = [];
+        const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
+            out.push({ name, ok, detail });
+        };
 
-            const base = `${'/systems/wh40k-rpg'}/module/rules`;
-            const loadModule = async <T extends ImportError>(name: string): Promise<T> => {
+        const base = `${'/systems/wh40k-rpg'}/module/rules`;
+        const loadModule = async <T extends ImportError>(name: string): Promise<T> => {
+            try {
+                return (await import(`${base}/${name}.js`)) as T;
+            } catch (err) {
+                return { __importError: String((err as Error).message) } as T;
+            }
+        };
+
+        // ---------- content registries (chaos / elite / radical / xenos / profane) ----------
+        async function probeContentRegistries(): Promise<void> {
+            // ---------- chaos-talents ----------
+            const chaosTalents = await loadModule<ChaosTalentsModule>('chaos-talents');
+            if (chaosTalents.__importError !== undefined) {
+                record('chaos-talents-constants', false, String(chaosTalents.__importError));
+            } else {
                 try {
-                    return (await import(`${base}/${name}.js`)) as T;
+                    const aegis = chaosTalents.AEGIS_OF_CONTEMPT;
+                    const flagellant = chaosTalents.FLAGELLANT;
+                    const tainted = chaosTalents.TAINTED_PSYKER;
+                    record(
+                        'chaos-talents-constants',
+                        typeof aegis?.radiusMetres === 'number' && typeof flagellant?.wpBonus === 'number' && typeof tainted?.testBonusPerCp === 'number',
+                        null,
+                    );
                 } catch (err) {
-                    return { __importError: String((err as Error).message) } as T;
-                }
-            };
-
-            // ---------- content registries (chaos / elite / radical / xenos / profane) ----------
-            async function probeContentRegistries(): Promise<void> {
-                // ---------- chaos-talents ----------
-                const chaosTalents = await loadModule<ChaosTalentsModule>('chaos-talents');
-                if (chaosTalents.__importError !== undefined) {
-                    record('chaos-talents-constants', false, String(chaosTalents.__importError));
-                } else {
-                    try {
-                        const aegis = chaosTalents.AEGIS_OF_CONTEMPT;
-                        const flagellant = chaosTalents.FLAGELLANT;
-                        const tainted = chaosTalents.TAINTED_PSYKER;
-                        record(
-                            'chaos-talents-constants',
-                            typeof aegis?.radiusMetres === 'number' && typeof flagellant?.wpBonus === 'number' && typeof tainted?.testBonusPerCp === 'number',
-                            null,
-                        );
-                    } catch (err) {
-                        record('chaos-talents-constants', false, String((err as Error).message));
-                    }
-                }
-
-                // ---------- elite-advances ----------
-                const elite = await loadModule<EliteAdvancesModule>('elite-advances');
-                if (elite.__importError !== undefined) {
-                    for (const k of ['elite-advances-registry', 'elite-advances-prerequisites'] as const) record(k, false, String(elite.__importError));
-                } else {
-                    try {
-                        const reg = elite.ELITE_ADVANCES ?? {};
-                        const ids = Object.keys(reg);
-                        const allShaped = ids.every((id) => typeof reg[id].id === 'string' && typeof reg[id].xpCost === 'number');
-                        record('elite-advances-registry', ids.length > 0 && allShaped, `ids=${ids.join(',')}`);
-                    } catch (err) {
-                        record('elite-advances-registry', false, String((err as Error).message));
-                    }
-                    try {
-                        const astropath = elite.ELITE_ADVANCES?.astropath;
-                        const prereqs = astropath?.prerequisites ?? [];
-                        const allValid = prereqs.length > 0 && prereqs.every((p) => typeof p.type === 'string' && typeof p.minimum === 'number');
-                        record('elite-advances-prerequisites', allValid, null);
-                    } catch (err) {
-                        record('elite-advances-prerequisites', false, String((err as Error).message));
-                    }
-                }
-
-                // ---------- radical-services ----------
-                const radical = await loadModule<RadicalServicesModule>('radical-services');
-                if (radical.__importError !== undefined) {
-                    for (const k of ['radical-services-registry', 'radical-services-availability'] as const) record(k, false, String(radical.__importError));
-                } else {
-                    try {
-                        const reg = radical.RADICAL_SERVICES ?? {};
-                        const ids = Object.keys(reg);
-                        const allShaped = ids.every(
-                            (id) => typeof reg[id].id === 'string' && typeof reg[id].threatLevel === 'number' && typeof reg[id].subtletyOnHire === 'number',
-                        );
-                        record('radical-services-registry', ids.length > 0 && allShaped, `ids=${ids.join(',')}`);
-                    } catch (err) {
-                        record('radical-services-registry', false, String((err as Error).message));
-                    }
-                    try {
-                        const reg = radical.RADICAL_SERVICES ?? {};
-                        const availabilities = Object.values(reg).map((s) => s.availability);
-                        const allStrings = availabilities.length > 0 && availabilities.every((a) => typeof a === 'string' && a.length > 0);
-                        record('radical-services-availability', allStrings, null);
-                    } catch (err) {
-                        record('radical-services-availability', false, String((err as Error).message));
-                    }
-                }
-
-                // ---------- xenos-features ----------
-                const xenos = await loadModule<XenosFeaturesModule>('xenos-features');
-                if (xenos.__importError !== undefined) {
-                    record('xenos-features-constants', false, String(xenos.__importError));
-                } else {
-                    try {
-                        const rightStuff = xenos.RIGHT_STUFF ?? {};
-                        const pushLimit = xenos.PUSH_THE_LIMIT ?? {};
-                        const survivors = xenos.SURVIVORS_PARANOIA ?? {};
-                        record(
-                            'xenos-features-constants',
-                            Array.isArray(rightStuff.applicableSkills) &&
-                                rightStuff.applicableSkills.length > 0 &&
-                                typeof pushLimit.operateBonus === 'number' &&
-                                typeof pushLimit.failureThresholdForCritical === 'number' &&
-                                typeof survivors.negatedSurpriseBonus === 'number',
-                            null,
-                        );
-                    } catch (err) {
-                        record('xenos-features-constants', false, String((err as Error).message));
-                    }
-                }
-
-                // ---------- profane-objects ----------
-                // Type-only module: importing it confirms the build emits a
-                // resolvable chunk and that the shape surface stays stable.
-                const profane = await loadModule<ProfaneObjectsModule>('profane-objects');
-                if (profane.__importError !== undefined) {
-                    record('profane-objects-module-shape', false, String(profane.__importError));
-                } else {
-                    try {
-                        record('profane-objects-module-shape', typeof profane === 'object', null);
-                    } catch (err) {
-                        record('profane-objects-module-shape', false, String((err as Error).message));
-                    }
+                    record('chaos-talents-constants', false, String((err as Error).message));
                 }
             }
 
-            // ---------- weapon progression (training / modifiers / range) ----------
-            async function probeWeaponProgression(): Promise<void> {
-                // ---------- weapon-training ----------
-                const wt = await loadModule<WeaponTrainingModule>('weapon-training');
-                if (wt.__importError !== undefined) {
-                    for (const k of [
-                        'weapon-training-check-noTraining',
-                        'weapon-training-check-untrained',
-                        'weapon-training-modifier',
-                        'weapon-training-description',
-                    ] as const)
-                        record(k, false, String(wt.__importError));
-                } else {
-                    // Synthetic actor: an items array of plain talent-shaped
-                    // objects. No talent matches "Las", so the untrained
-                    // branch fires; a weapon with no requiredTraining hits
-                    // the early "trained: true" branch.
-                    const actor: SyntheticActor = { items: [{ type: 'talent', name: 'Quick Draw' }] };
-                    const untrainedWeapon: SyntheticWeapon = { system: { requiredTraining: 'Las', special: '' } };
-                    const freeWeapon: SyntheticWeapon = { system: { requiredTraining: '-', special: '' } };
-                    const checkWeaponTraining = wt.checkWeaponTraining;
-                    const getWeaponTrainingModifier = wt.getWeaponTrainingModifier;
-                    const getWeaponTrainingDescription = wt.getWeaponTrainingDescription;
-                    try {
-                        const r = checkWeaponTraining?.(actor, freeWeapon);
-                        record('weapon-training-check-noTraining', r?.trained === true && r.talent === null, null);
-                    } catch (err) {
-                        record('weapon-training-check-noTraining', false, String((err as Error).message));
-                    }
-                    try {
-                        const r = checkWeaponTraining?.(actor, untrainedWeapon);
-                        record('weapon-training-check-untrained', r?.trained === false && r.talent === null, null);
-                    } catch (err) {
-                        record('weapon-training-check-untrained', false, String((err as Error).message));
-                    }
-                    try {
-                        const free = getWeaponTrainingModifier?.(actor, freeWeapon);
-                        const untrained = getWeaponTrainingModifier?.(actor, untrainedWeapon);
-                        record('weapon-training-modifier', free === 0 && untrained === -20, `free=${String(free)} untrained=${String(untrained)}`);
-                    } catch (err) {
-                        record('weapon-training-modifier', false, String((err as Error).message));
-                    }
-                    try {
-                        const desc = getWeaponTrainingDescription?.(actor, untrainedWeapon);
-                        record('weapon-training-description', typeof desc === 'string' && desc.length > 0, null);
-                    } catch (err) {
-                        record('weapon-training-description', false, String((err as Error).message));
-                    }
+            // ---------- elite-advances ----------
+            const elite = await loadModule<EliteAdvancesModule>('elite-advances');
+            if (elite.__importError !== undefined) {
+                for (const k of ['elite-advances-registry', 'elite-advances-prerequisites'] as const) record(k, false, String(elite.__importError));
+            } else {
+                try {
+                    const reg = elite.ELITE_ADVANCES ?? {};
+                    const ids = Object.keys(reg);
+                    const allShaped = ids.every((id) => typeof reg[id].id === 'string' && typeof reg[id].xpCost === 'number');
+                    record('elite-advances-registry', ids.length > 0 && allShaped, `ids=${ids.join(',')}`);
+                } catch (err) {
+                    record('elite-advances-registry', false, String((err as Error).message));
                 }
-
-                // ---------- weapon-modifiers ----------
-                const wm = await loadModule<WeaponModifiersModule>('weapon-modifiers');
-                if (wm.__importError !== undefined) {
-                    for (const k of ['weapon-modifiers-update', 'weapon-modifiers-attackBonuses', 'weapon-modifiers-attackSpecials'] as const)
-                        record(k, false, String(wm.__importError));
-                } else {
-                    // Minimal rollData whose actionItem (weapon) carries an
-                    // empty item collection: the loop bodies short-circuit and
-                    // each mutator completes without throwing — the covered
-                    // outcome for an actor-bound mutator in headless mode.
-                    const actionItem = { items: [] as never[], isRanged: false };
-                    const updateWeaponModifiers = wm.updateWeaponModifiers;
-                    const calculateWeaponModifiersAttackBonuses = wm.calculateWeaponModifiersAttackBonuses;
-                    const calculateWeaponModifiersAttackSpecials = wm.calculateWeaponModifiersAttackSpecials;
-                    try {
-                        const rollData: WeaponModifierRollData = {
-                            weapon: actionItem,
-                            weaponModifications: [],
-                            modifiers: {},
-                            attackSpecials: [],
-                            action: 'Standard Attack',
-                        };
-                        updateWeaponModifiers?.(rollData);
-                        record('weapon-modifiers-update', (rollData.weaponModifications ?? []).length === 0, null);
-                    } catch (err) {
-                        record('weapon-modifiers-update', false, String((err as Error).message));
-                    }
-                    try {
-                        const rollData: WeaponModifierRollData = {
-                            weapon: actionItem,
-                            weaponModifiers: { stale: 1 },
-                            modifiers: {},
-                            attackSpecials: [],
-                            action: 'Standard Attack',
-                        };
-                        calculateWeaponModifiersAttackBonuses?.(rollData);
-                        // The function resets weaponModifiers to {} before the loop.
-                        record('weapon-modifiers-attackBonuses', Object.keys(rollData.weaponModifiers ?? {}).length === 0, null);
-                    } catch (err) {
-                        record('weapon-modifiers-attackBonuses', false, String((err as Error).message));
-                    }
-                    try {
-                        const rollData: WeaponModifierRollData = {
-                            weapon: actionItem,
-                            modifiers: {},
-                            attackSpecials: [{ name: 'Primitive' }],
-                            action: 'Standard Attack',
-                        };
-                        calculateWeaponModifiersAttackSpecials?.(rollData);
-                        record('weapon-modifiers-attackSpecials', Array.isArray(rollData.attackSpecials), null);
-                    } catch (err) {
-                        record('weapon-modifiers-attackSpecials', false, String((err as Error).message));
-                    }
-                }
-
-                // ---------- range ----------
-                const range = await loadModule<RangeModule>('range');
-                if (range.__importError !== undefined) {
-                    for (const k of ['range-calculateWeaponRange-melee', 'range-calculateWeaponRange-noWeapon'] as const)
-                        record(k, false, String(range.__importError));
-                } else {
-                    const calculateWeaponRange = range.calculateWeaponRange;
-                    try {
-                        // Melee branch: maxRange forced to 1, range bracket = melee,
-                        // no Roll formula path. hasWeaponModification short-circuits
-                        // because rangeBonus is not negative here.
-                        const rollData: RangeRollData = {
-                            weapon: { isMelee: true, system: {} },
-                            distance: 2,
-                            modifiers: { aim: 0 },
-                            hasWeaponModification: () => false,
-                            hasAttackSpecial: () => false,
-                        };
-                        calculateWeaponRange?.(rollData);
-                        record('range-calculateWeaponRange-melee', rollData.rangeName === 'Melee' && rollData.maxRange === 1, null);
-                    } catch (err) {
-                        record('range-calculateWeaponRange-melee', false, String((err as Error).message));
-                    }
-                    try {
-                        // No-weapon guard: maxRange resolves to 0, the ranged
-                        // calculator still runs with an empty quality set. The
-                        // mutator must complete and assign a string rangeName.
-                        const rollData: RangeRollData = {
-                            weapon: undefined,
-                            distance: 5,
-                            modifiers: { aim: 0 },
-                            hasWeaponModification: () => false,
-                            hasAttackSpecial: () => false,
-                        };
-                        calculateWeaponRange?.(rollData);
-                        record('range-calculateWeaponRange-noWeapon', rollData.maxRange === 0 && typeof rollData.rangeName === 'string', null);
-                    } catch (err) {
-                        record('range-calculateWeaponRange-noWeapon', false, String((err as Error).message));
-                    }
+                try {
+                    const astropath = elite.ELITE_ADVANCES?.astropath;
+                    const prereqs = astropath?.prerequisites ?? [];
+                    const allValid = prereqs.length > 0 && prereqs.every((p) => typeof p.type === 'string' && typeof p.minimum === 'number');
+                    record('elite-advances-prerequisites', allValid, null);
+                } catch (err) {
+                    record('elite-advances-prerequisites', false, String((err as Error).message));
                 }
             }
 
-            await probeContentRegistries();
-            await probeWeaponProgression();
+            // ---------- radical-services ----------
+            const radical = await loadModule<RadicalServicesModule>('radical-services');
+            if (radical.__importError !== undefined) {
+                for (const k of ['radical-services-registry', 'radical-services-availability'] as const) record(k, false, String(radical.__importError));
+            } else {
+                try {
+                    const reg = radical.RADICAL_SERVICES ?? {};
+                    const ids = Object.keys(reg);
+                    const allShaped = ids.every(
+                        (id) => typeof reg[id].id === 'string' && typeof reg[id].threatLevel === 'number' && typeof reg[id].subtletyOnHire === 'number',
+                    );
+                    record('radical-services-registry', ids.length > 0 && allShaped, `ids=${ids.join(',')}`);
+                } catch (err) {
+                    record('radical-services-registry', false, String((err as Error).message));
+                }
+                try {
+                    const reg = radical.RADICAL_SERVICES ?? {};
+                    const availabilities = Object.values(reg).map((s) => s.availability);
+                    const allStrings = availabilities.length > 0 && availabilities.every((a) => typeof a === 'string' && a.length > 0);
+                    record('radical-services-availability', allStrings, null);
+                } catch (err) {
+                    record('radical-services-availability', false, String((err as Error).message));
+                }
+            }
 
-            return out;
-        });
-        return { results, pageErrors };
-    } finally {
-        page.off('pageerror', listener);
-    }
+            // ---------- xenos-features ----------
+            const xenos = await loadModule<XenosFeaturesModule>('xenos-features');
+            if (xenos.__importError !== undefined) {
+                record('xenos-features-constants', false, String(xenos.__importError));
+            } else {
+                try {
+                    const rightStuff = xenos.RIGHT_STUFF ?? {};
+                    const pushLimit = xenos.PUSH_THE_LIMIT ?? {};
+                    const survivors = xenos.SURVIVORS_PARANOIA ?? {};
+                    record(
+                        'xenos-features-constants',
+                        Array.isArray(rightStuff.applicableSkills) &&
+                            rightStuff.applicableSkills.length > 0 &&
+                            typeof pushLimit.operateBonus === 'number' &&
+                            typeof pushLimit.failureThresholdForCritical === 'number' &&
+                            typeof survivors.negatedSurpriseBonus === 'number',
+                        null,
+                    );
+                } catch (err) {
+                    record('xenos-features-constants', false, String((err as Error).message));
+                }
+            }
+
+            // ---------- profane-objects ----------
+            // Type-only module: importing it confirms the build emits a
+            // resolvable chunk and that the shape surface stays stable.
+            const profane = await loadModule<ProfaneObjectsModule>('profane-objects');
+            if (profane.__importError !== undefined) {
+                record('profane-objects-module-shape', false, String(profane.__importError));
+            } else {
+                try {
+                    record('profane-objects-module-shape', typeof profane === 'object', null);
+                } catch (err) {
+                    record('profane-objects-module-shape', false, String((err as Error).message));
+                }
+            }
+        }
+
+        // ---------- weapon progression (training / modifiers / range) ----------
+        async function probeWeaponProgression(): Promise<void> {
+            // ---------- weapon-training ----------
+            const wt = await loadModule<WeaponTrainingModule>('weapon-training');
+            if (wt.__importError !== undefined) {
+                for (const k of [
+                    'weapon-training-check-noTraining',
+                    'weapon-training-check-untrained',
+                    'weapon-training-modifier',
+                    'weapon-training-description',
+                ] as const)
+                    record(k, false, String(wt.__importError));
+            } else {
+                // Synthetic actor: an items array of plain talent-shaped
+                // objects. No talent matches "Las", so the untrained
+                // branch fires; a weapon with no requiredTraining hits
+                // the early "trained: true" branch.
+                const actor: SyntheticActor = { items: [{ type: 'talent', name: 'Quick Draw' }] };
+                const untrainedWeapon: SyntheticWeapon = { system: { requiredTraining: 'Las', special: '' } };
+                const freeWeapon: SyntheticWeapon = { system: { requiredTraining: '-', special: '' } };
+                const checkWeaponTraining = wt.checkWeaponTraining;
+                const getWeaponTrainingModifier = wt.getWeaponTrainingModifier;
+                const getWeaponTrainingDescription = wt.getWeaponTrainingDescription;
+                try {
+                    const r = checkWeaponTraining?.(actor, freeWeapon);
+                    record('weapon-training-check-noTraining', r?.trained === true && r.talent === null, null);
+                } catch (err) {
+                    record('weapon-training-check-noTraining', false, String((err as Error).message));
+                }
+                try {
+                    const r = checkWeaponTraining?.(actor, untrainedWeapon);
+                    record('weapon-training-check-untrained', r?.trained === false && r.talent === null, null);
+                } catch (err) {
+                    record('weapon-training-check-untrained', false, String((err as Error).message));
+                }
+                try {
+                    const free = getWeaponTrainingModifier?.(actor, freeWeapon);
+                    const untrained = getWeaponTrainingModifier?.(actor, untrainedWeapon);
+                    record('weapon-training-modifier', free === 0 && untrained === -20, `free=${String(free)} untrained=${String(untrained)}`);
+                } catch (err) {
+                    record('weapon-training-modifier', false, String((err as Error).message));
+                }
+                try {
+                    const desc = getWeaponTrainingDescription?.(actor, untrainedWeapon);
+                    record('weapon-training-description', typeof desc === 'string' && desc.length > 0, null);
+                } catch (err) {
+                    record('weapon-training-description', false, String((err as Error).message));
+                }
+            }
+
+            // ---------- weapon-modifiers ----------
+            const wm = await loadModule<WeaponModifiersModule>('weapon-modifiers');
+            if (wm.__importError !== undefined) {
+                for (const k of ['weapon-modifiers-update', 'weapon-modifiers-attackBonuses', 'weapon-modifiers-attackSpecials'] as const)
+                    record(k, false, String(wm.__importError));
+            } else {
+                // Minimal rollData whose actionItem (weapon) carries an
+                // empty item collection: the loop bodies short-circuit and
+                // each mutator completes without throwing — the covered
+                // outcome for an actor-bound mutator in headless mode.
+                const actionItem = { items: [] as never[], isRanged: false };
+                const updateWeaponModifiers = wm.updateWeaponModifiers;
+                const calculateWeaponModifiersAttackBonuses = wm.calculateWeaponModifiersAttackBonuses;
+                const calculateWeaponModifiersAttackSpecials = wm.calculateWeaponModifiersAttackSpecials;
+                try {
+                    const rollData: WeaponModifierRollData = {
+                        weapon: actionItem,
+                        weaponModifications: [],
+                        modifiers: {},
+                        attackSpecials: [],
+                        action: 'Standard Attack',
+                    };
+                    updateWeaponModifiers?.(rollData);
+                    record('weapon-modifiers-update', (rollData.weaponModifications ?? []).length === 0, null);
+                } catch (err) {
+                    record('weapon-modifiers-update', false, String((err as Error).message));
+                }
+                try {
+                    const rollData: WeaponModifierRollData = {
+                        weapon: actionItem,
+                        weaponModifiers: { stale: 1 },
+                        modifiers: {},
+                        attackSpecials: [],
+                        action: 'Standard Attack',
+                    };
+                    calculateWeaponModifiersAttackBonuses?.(rollData);
+                    // The function resets weaponModifiers to {} before the loop.
+                    record('weapon-modifiers-attackBonuses', Object.keys(rollData.weaponModifiers ?? {}).length === 0, null);
+                } catch (err) {
+                    record('weapon-modifiers-attackBonuses', false, String((err as Error).message));
+                }
+                try {
+                    const rollData: WeaponModifierRollData = {
+                        weapon: actionItem,
+                        modifiers: {},
+                        attackSpecials: [{ name: 'Primitive' }],
+                        action: 'Standard Attack',
+                    };
+                    calculateWeaponModifiersAttackSpecials?.(rollData);
+                    record('weapon-modifiers-attackSpecials', Array.isArray(rollData.attackSpecials), null);
+                } catch (err) {
+                    record('weapon-modifiers-attackSpecials', false, String((err as Error).message));
+                }
+            }
+
+            // ---------- range ----------
+            const range = await loadModule<RangeModule>('range');
+            if (range.__importError !== undefined) {
+                for (const k of ['range-calculateWeaponRange-melee', 'range-calculateWeaponRange-noWeapon'] as const)
+                    record(k, false, String(range.__importError));
+            } else {
+                const calculateWeaponRange = range.calculateWeaponRange;
+                try {
+                    // Melee branch: maxRange forced to 1, range bracket = melee,
+                    // no Roll formula path. hasWeaponModification short-circuits
+                    // because rangeBonus is not negative here.
+                    const rollData: RangeRollData = {
+                        weapon: { isMelee: true, system: {} },
+                        distance: 2,
+                        modifiers: { aim: 0 },
+                        hasWeaponModification: () => false,
+                        hasAttackSpecial: () => false,
+                    };
+                    calculateWeaponRange?.(rollData);
+                    record('range-calculateWeaponRange-melee', rollData.rangeName === 'Melee' && rollData.maxRange === 1, null);
+                } catch (err) {
+                    record('range-calculateWeaponRange-melee', false, String((err as Error).message));
+                }
+                try {
+                    // No-weapon guard: maxRange resolves to 0, the ranged
+                    // calculator still runs with an empty quality set. The
+                    // mutator must complete and assign a string rangeName.
+                    const rollData: RangeRollData = {
+                        weapon: undefined,
+                        distance: 5,
+                        modifiers: { aim: 0 },
+                        hasWeaponModification: () => false,
+                        hasAttackSpecial: () => false,
+                    };
+                    calculateWeaponRange?.(rollData);
+                    record('range-calculateWeaponRange-noWeapon', rollData.maxRange === 0 && typeof rollData.rangeName === 'string', null);
+                } catch (err) {
+                    record('range-calculateWeaponRange-noWeapon', false, String((err as Error).message));
+                }
+            }
+        }
+
+        await probeContentRegistries();
+        await probeWeaponProgression();
+
+        return out;
+    });
+    return { results };
 }
 
 test.describe.serial('rules progression surface (Tier B)', () => {
