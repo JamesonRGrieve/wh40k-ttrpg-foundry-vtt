@@ -106,6 +106,19 @@ fi
 mkdir -p "${SEED_DST}"
 cp -r "${SEED_SRC}/." "${SEED_DST}/"
 
+# When the third-party module cache is present, pre-seed the world's
+# core.moduleConfiguration so it BOOTS with Item Piles + socketlib + lib-wrapper
+# active (clean, complete module init). This is what lets the real-module Tier B
+# spec RUN instead of skip. Idempotent + preserving. Absent cache → no-op, so the
+# default suite is unaffected. Uses the ClassicLevel-capable Node (the pnpm-
+# managed 24 if present, matching the release's native binding).
+if [[ -d "${MODULE_CACHE}" ]]; then
+    SEED_NODE="${HOME}/.local/share/pnpm/bin/node"
+    [[ -x "${SEED_NODE}" ]] || SEED_NODE="node"
+    "${SEED_NODE}" "${SCRIPT_DIR}/scripts/seed-e2e-module-config.cjs" "${SEED_DST}" ||
+        echo "[setup-foundry-test-world] module-config seed failed — real-module Tier B will skip-gate" >&2
+fi
+
 # Foundry options.json. adminPassword null disables admin auth for the test
 # instance only; never enable on a production data dir.
 cat > "${CONFIG_DIR}/options.json" <<JSON

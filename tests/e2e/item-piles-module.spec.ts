@@ -59,8 +59,17 @@ async function itemPilesFullyActive(page: Page): Promise<boolean> {
     return page.evaluate(async () => {
         // eslint-disable-next-line no-restricted-syntax -- boundary: third-party `game.itempiles` + Foundry `game.settings` are outside our type surface
         const g = globalThis as unknown as { game?: { itempiles?: { API?: unknown }; settings?: { get?: (s: string, k: string) => unknown } } };
-        for (let i = 0; i < 40; i++) {
-            if (g.game?.itempiles?.API != null && g.game.settings?.get?.('item-piles', 'actorClassType') === 'loot') return true;
+        for (let i = 0; i < 60; i++) {
+            const apiUp = g.game?.itempiles?.API != null;
+            const seeded = g.game?.settings?.get?.('item-piles', 'actorClassType') === 'loot';
+            // Our addSystemIntegration must have populated Item Piles' active
+            // currencies (its parser reads them from this setting) — otherwise
+            // every addCurrencies("5tg") throws "could not determine currencies".
+            // Our throne-gelt abbreviation is "{#}tg", so the serialised setting
+            // contains "tg" once registration lands.
+            const currencies = g.game?.settings?.get?.('item-piles', 'currencies');
+            const currenciesLive = currencies != null && JSON.stringify(currencies).includes('tg');
+            if (apiUp && seeded && currenciesLive) return true;
             // eslint-disable-next-line no-await-in-loop -- polling for module ready-init after activation; bounded, sequential by design
             await new Promise((r) => {
                 setTimeout(r, 250);
@@ -83,10 +92,13 @@ async function itemPilesFullyActive(page: Page): Promise<boolean> {
  * libWrapper" page errors that break every OTHER spec sharing the world, and
  * (b) only half-activates anyway (item-piles loads but lib-wrapper/socketlib do
  * not co-activate, so item-piles-ready never fires). Full activation with all
- * deps co-active is a world-PROVISIONING concern (enable the three at boot in a
- * dedicated licensed CI world), not something a test may do to a shared world.
- * Until such a world exists this tier skip-gates — the flows below are proven
- * against the real API and light up the moment the module is genuinely active.
+ * deps co-active is therefore a world-PROVISIONING concern:
+ * setup-foundry-test-world.sh runs scripts/seed-e2e-module-config.cjs, which
+ * pre-seeds core.moduleConfiguration to enable the three at boot WHEN the module
+ * cache (scripts/install-e2e-itempiles.sh) is installed. So this tier RUNS
+ * whenever the cache is present, and skip-gates cleanly when it is not (default
+ * CI) or when a headless boot doesn't fully initialise the module (e.g. its
+ * currency parser — see itemPilesFullyActive, which waits for that too).
  */
 async function ensureItemPilesActive(page: Page): Promise<'absent' | 'inactive' | 'active'> {
     const installed = await page.evaluate(() => {
