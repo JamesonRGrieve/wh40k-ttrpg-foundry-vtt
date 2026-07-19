@@ -599,6 +599,13 @@ export class Hit {
 
         this.damageType = actionItem.system.damage?.type ?? actionItem.system.damageType ?? 'Impact';
 
+        // Hammer Blow's *numeric* half (½SB → penetration) is data-driven via the
+        // talent's dynamicModifiers hook (see below). Its remaining half — granting
+        // the Concussive(2) *weapon quality* on an All-Out Attack — is a non-numeric
+        // grant, which the numeric-only dynamicModifiers schema deliberately scopes
+        // out (survey §D8: quality/talent/condition grants belong in a unified
+        // `grants.effects[]` channel that is not yet built). Until that channel
+        // exists this stays a name-match; tracked in #475 (the last one in rolls/).
         if (attackData.rollData.action === 'All Out Attack' && sourceActor.hasTalent('Hammer Blow')) {
             if (!attackData.rollData.attackSpecials.find((s) => s.name === 'Concussive')) {
                 attackData.rollData.attackSpecials.push({

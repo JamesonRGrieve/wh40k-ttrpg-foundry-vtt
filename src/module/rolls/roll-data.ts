@@ -6,6 +6,7 @@ import { calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../ru
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.ts';
 import { WH40K } from '../rules/config.ts';
 import { rollDifficulties } from '../rules/difficulties.ts';
+import { type DynamicModifierItemLike, ownsActivatableHook } from '../rules/dynamic-modifiers.ts';
 import { hitDropdown } from '../rules/hit-locations.ts';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.ts';
 import { targetSizeModifier } from '../rules/target-size.ts';
@@ -518,11 +519,17 @@ export class WeaponRollData extends RollData {
             }
         }
 
-        // Talents
-        type ActorWithTalents = WH40KBaseActorDocument & { hasTalent: (name: string) => boolean };
-        const sourceActor = this.sourceActor as ActorWithTalents | null;
-        const sourceActorSystem = sourceActor?.system as { fate?: { value: number } };
-        if (sourceActor?.hasTalent('Eye of Vengeance') === true && sourceActorSystem.fate !== undefined && sourceActorSystem.fate.value > 0) {
+        // Eye of Vengeance availability — discovered from the talent's activatable
+        // dynamicModifiers hook (Direction #7), not a `hasTalent('Eye of Vengeance')`
+        // name match. The fate check remains: activating it costs a Fate point.
+        const sourceActor = this.sourceActor;
+        const sourceActorSystem = sourceActor?.system as { fate?: { value: number } } | undefined;
+        if (
+            sourceActor != null &&
+            ownsActivatableHook(sourceActor.items as Iterable<DynamicModifierItemLike>, 'eyeOfVengeance') &&
+            sourceActorSystem?.fate !== undefined &&
+            sourceActorSystem.fate.value > 0
+        ) {
             this.hasEyeOfVengeanceAvailable = true;
         }
 

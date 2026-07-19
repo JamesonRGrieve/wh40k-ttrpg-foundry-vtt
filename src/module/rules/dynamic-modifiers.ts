@@ -240,3 +240,22 @@ export function collectDynamicComponents(
     }
     return components;
 }
+
+/**
+ * Whether any owned item declares an *activatable* dynamic-modifier hook for the
+ * given per-attack effect id (a hook with `condition: 'activated'` and
+ * `conditionValue: <id>`). Lets a roll surface discover "does this actor have,
+ * say, Eye of Vengeance available to activate?" from the hook that carries the
+ * effect, instead of name-matching the talent (`actor.hasTalent('Eye of
+ * Vengeance')`) in the roll builder (Direction #7). Pure and content-agnostic —
+ * the effect id is the same key the collector reads for `condition: 'activated'`.
+ */
+export function ownsActivatableHook(items: Iterable<DynamicModifierItemLike>, conditionValue: string): boolean {
+    for (const item of items) {
+        const hooks = item.system.modifiers?.dynamicModifiers ?? [];
+        for (const hook of hooks) {
+            if (hook.condition === 'activated' && hook.conditionValue === conditionValue) return true;
+        }
+    }
+    return false;
+}
