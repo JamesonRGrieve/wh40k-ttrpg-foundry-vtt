@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -450,8 +450,7 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
 
 test.describe.serial('utils extra (Tier B)', () => {
     test('remaining pure utils/* surface lights up under coverage', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeUtilsExtra(page);
         assertFlowResults(probe, UTILS_EXTRA_FLOWS, { dimension: 'utils-extra.flow', label: 'utils-extra' });

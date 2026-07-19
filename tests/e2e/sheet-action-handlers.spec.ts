@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -350,8 +350,7 @@ async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; p
 
 test.describe.serial('sheet action handlers (Tier B)', () => {
     test('quick-actions-bar + stat-adjustment-actions handlers behave correctly', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeSheetActions(page);
         assertFlowResults(probe, SHEET_ACTION_FLOWS, { dimension: 'sheet-action.flow', label: 'sheet-action' });

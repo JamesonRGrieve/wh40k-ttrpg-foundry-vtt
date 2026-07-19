@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -505,8 +505,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
 
 test.describe.serial('origin-path-builder flows (Tier B)', () => {
     test('OriginPathBuilder drives the full character-creation pipeline', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeOriginPathBuilder(page);
         test.skip(!probe.created, `could not bootstrap OriginPathBuilder: ${probe.createError ?? 'unknown'}`);

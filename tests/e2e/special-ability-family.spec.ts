@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -170,8 +170,7 @@ async function probe(page: Page): Promise<{ results: FlowResult[]; pageErrors: s
 
 test.describe.serial('special ability family (Tier B)', () => {
     test('content sheet edit gate + origin-path special-ability commit', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const result = await probe(page);
         const failures: string[] = [];

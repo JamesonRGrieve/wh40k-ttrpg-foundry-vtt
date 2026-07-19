@@ -1,5 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -18,8 +18,7 @@ import { expect, test } from './lib/test';
 
 test.describe.serial('OW Mission Assignment Gear engine (Tier B)', () => {
     test('module exposes engine API and resolves a full roll path', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const pageErrors: string[] = [];
         const listener = (err: Error): void => {

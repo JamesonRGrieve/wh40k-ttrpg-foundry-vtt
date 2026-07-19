@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -281,8 +281,7 @@ async function probeRealModule(page: Page): Promise<{ results: FlowResult[]; pag
 
 test.describe.serial('Item Piles MODULE (Tier B, skip-gated)', () => {
     test('real game.itempiles.API drives currency + item transfer + pile detection', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const state = await ensureItemPilesActive(page);
         test.skip(state === 'absent', 'Item Piles not installed — run scripts/install-e2e-itempiles.sh to enable this tier');

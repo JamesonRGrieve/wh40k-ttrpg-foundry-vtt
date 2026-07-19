@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -159,8 +159,7 @@ async function probeD100Extras(page: Page): Promise<{ results: FlowResult[]; pag
 
 test.describe.serial('d100-roll extras (Tier B)', () => {
     test('D100Roll._prepareTemplateData + _prepareChatData drive their branches', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeD100Extras(page);
         assertFlowResults(probe, D100_ROLL_EXTRAS_FLOWS, { dimension: 'd100-roll-extras.flow', label: 'd100-roll-extras' });

@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -297,8 +297,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
 test.describe.serial('rules pure-logic surface — batch 4 occult (Tier B)', () => {
     test('every occult / chaos / progression resolver returns the expected value without throwing', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeRules(page);
         assertFlowResults(probe, RULE_OCCULT_FLOWS, { dimension: 'rule-occult.flow', label: 'rules occult' });

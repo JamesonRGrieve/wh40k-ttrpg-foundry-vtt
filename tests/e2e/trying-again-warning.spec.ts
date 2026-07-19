@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -19,8 +19,7 @@ import { expect, test } from './lib/test';
 
 test.describe.serial('trying again warning (#62)', () => {
     test('renders warning banner when retry count > 0 for a no-retry skill', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const result = await page.evaluate(async () => {
             interface DialogInstance {

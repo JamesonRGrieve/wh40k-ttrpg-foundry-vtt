@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -478,8 +478,7 @@ test.describe.serial('compendium content validation (Tier B)', () => {
     // case; we add headroom for the inner per-doc work.
     test.setTimeout(900_000);
     test('every enumerated wh40k-rpg pack: every doc validates against its DataModel and round-trips', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeCompendiumContent(page);
 

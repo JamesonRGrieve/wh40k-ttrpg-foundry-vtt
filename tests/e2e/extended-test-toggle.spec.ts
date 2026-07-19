@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -15,8 +15,7 @@ import { expect, test } from './lib/test';
 
 test.describe.serial('extended test toggle (#59)', () => {
     test('toggle reveals threshold input and persists state across renders', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const result = await page.evaluate(async () => {
             interface UnifiedRollDialogInstance {

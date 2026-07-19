@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { GAME_SYSTEM_IDS, joinAsGM } from './lib/join';
+import { GAME_SYSTEM_IDS, joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -323,8 +323,7 @@ async function probeAttackFlow(page: Page, systemIds: readonly string[]): Promis
 
 test.describe.serial('combat attack→damage→audit flow (Tier B)', () => {
     test('rollWeaponAttack defined, auto-damage setting + gating, audit row renders', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'no Gamemaster option appeared in the join select within 30s');
+        await joinOrSkip(page, 'no Gamemaster option appeared in the join select within 30s');
 
         const probe = await probeAttackFlow(page, GAME_SYSTEM_IDS);
 

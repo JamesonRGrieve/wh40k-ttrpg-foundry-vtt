@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -107,8 +107,7 @@ async function addFearTrait(page: Page, actorId: string, fearRating: number): Pr
 
 test.describe.serial('FearTestDialog (Tier B)', () => {
     test('renders dialog with a Fear (3) trait actor and snaps fr3', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const pageErrors: string[] = [];
         const listener = (err: Error): void => {

@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -12,8 +12,7 @@ import { expect, test } from './lib/test';
  * misfired).
  */
 test('grapple-controller-panel renders five actions when state=grappling (#120)', async ({ page }) => {
-    const joined = await joinAsGM(page);
-    test.skip(!joined, 'no Gamemaster user available in this test world');
+    await joinOrSkip(page, 'no Gamemaster user available in this test world');
 
     interface ProbeResult {
         setupOk: boolean;

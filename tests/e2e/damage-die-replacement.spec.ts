@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -21,8 +21,7 @@ import { expect, test } from './lib/test';
 
 test.describe.serial('damage die replacement chat card (#129)', () => {
     test('renders the replacement button when DoS > 0', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const errors: string[] = [];
         page.on('pageerror', (err: Error) => errors.push(err.message));

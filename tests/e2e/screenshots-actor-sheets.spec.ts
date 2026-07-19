@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { GAME_SYSTEM_IDS, joinAsGM, type GameSystemId } from './lib/join';
+import { GAME_SYSTEM_IDS, joinOrSkip, type GameSystemId } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -599,8 +599,7 @@ test.describe.serial('actor-sheet screenshots (Tier B)', () => {
     test.setTimeout(300_000);
 
     test('every (actorType × gameSystem × {view,edit}) renders and screenshots', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await runAllScreenshots(page);
 

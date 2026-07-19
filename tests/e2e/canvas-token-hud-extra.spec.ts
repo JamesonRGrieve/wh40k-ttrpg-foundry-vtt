@@ -1,7 +1,7 @@
 // Keys MUST match the CANVAS_EXTRA_FLOWS constant in scripts/e2e-coverage.mjs (registered by the orchestrator).
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -899,8 +899,7 @@ test.describe.serial('canvas ruler + token HUD depth (Tier B)', () => {
     // timeout and take downstream specs with it.
     test.setTimeout(120_000);
     test('TokenRulerWH40K style helpers + onTokenHUDRender button branches exercise canvas + HUD source', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeCanvasTokenHudExtra(page);
 

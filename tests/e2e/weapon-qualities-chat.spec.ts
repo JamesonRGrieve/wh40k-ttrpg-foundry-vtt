@@ -1,5 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -126,8 +126,7 @@ function capitalize(s: string): string {
 test.describe.serial('WeaponQualityEffectChat (Tier B)', () => {
     for (const qcase of QUALITY_CASES) {
         test(`renders quality card: ${qcase.name}`, async ({ page }) => {
-            const joined = await joinAsGM(page);
-            test.skip(!joined, 'GM join failed');
+            await joinOrSkip(page);
 
             const pageErrors: string[] = [];
             const listener = (err: Error): void => {

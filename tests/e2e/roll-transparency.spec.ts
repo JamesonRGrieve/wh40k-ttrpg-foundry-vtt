@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { GAME_SYSTEM_IDS, joinAsGM } from './lib/join';
+import { GAME_SYSTEM_IDS, joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -296,8 +296,7 @@ async function cleanupCard(page: Page, built: BuiltCard): Promise<void> {
 test.describe.serial('roll transparency chat card (Tier B)', () => {
     for (const sys of GAME_SYSTEM_IDS) {
         test(`modifier breakdown + provenance + result formula render — ${sys}`, async ({ page }) => {
-            const joined = await joinAsGM(page);
-            test.skip(!joined, 'no Gamemaster option appeared in the join select');
+            await joinOrSkip(page, 'no Gamemaster option appeared in the join select');
 
             const pageErrors: string[] = [];
             const listener = (err: Error): void => {

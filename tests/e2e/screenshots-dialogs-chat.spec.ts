@@ -9,7 +9,7 @@
  * stub args; render failures are collected and reported, never fatal mid-loop.
  */
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 // Re-derived from tests/e2e/dialogs.spec.ts DIALOG_PROBES (kept in sync there).
@@ -127,8 +127,7 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
         // against a live Foundry world — the full pass measures ~330s, so the prior
         // 180s budget guaranteed a timeout regardless of correctness. Give real headroom.
         testInfo.setTimeout(420_000);
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const pageErrors: string[] = [];

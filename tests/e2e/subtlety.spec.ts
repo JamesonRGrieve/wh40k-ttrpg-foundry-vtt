@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -530,8 +530,7 @@ async function probeClearsWhenRemoved(page: Page, actorId: string): Promise<Flow
 
 test.describe.serial('subtlety / Direction #7 adjusters (Tier B)', () => {
     test('every Subtlety flow drives the adjuster surface end-to-end', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const parent = await createParentActor(page);
         expect('id' in parent, `parent actor create failed: ${'error' in parent ? parent.error : 'unknown'}`).toBe(true);

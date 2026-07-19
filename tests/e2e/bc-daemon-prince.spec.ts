@@ -1,5 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -28,8 +28,7 @@ interface DaemonPrinceProbeResult {
  */
 test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
     test('renders ascended + not-ascended states, drives the ascend button, and snaps', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const pageErrors: string[] = [];
         const listener = (err: Error): void => {

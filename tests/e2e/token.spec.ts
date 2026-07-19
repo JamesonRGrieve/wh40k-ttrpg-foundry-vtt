@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -582,8 +582,7 @@ test.describe.serial('token document + scene embedding (Tier B)', () => {
     // 10-minute test timeout and take downstream specs with it.
     test.setTimeout(120_000);
     test('scene token lifecycle exercises TokenDocumentWH40K overrides', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeTokenFlows(page);
 

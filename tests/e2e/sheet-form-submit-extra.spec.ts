@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -698,8 +698,7 @@ test.describe.serial('sheet form-submit round-trip depth (Tier B)', () => {
     // so a stuck render can't hold a CI runner indefinitely.
     test.setTimeout(300_000);
     test('form-submit round-trips across actor + item sheets and schema fields', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeFormSubmitFlows(page);
 

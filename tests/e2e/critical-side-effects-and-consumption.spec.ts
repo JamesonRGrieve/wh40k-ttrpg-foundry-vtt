@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -419,8 +419,7 @@ async function probeCriticalSideEffects(page: Page): Promise<{ results: FlowResu
 
 test.describe.serial('critical side effects + consumption (Tier B)', () => {
     test('crit appliers mutate equipped gear, detonate munitions, and loot transfers consumables', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeCriticalSideEffects(page);
         const seen = new Set<string>();
@@ -440,8 +439,7 @@ test.describe.serial('critical side effects + consumption (Tier B)', () => {
     });
 
     test('assign-damage card renders the Critical Side Effects readout and snaps', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const pageErrors: string[] = [];
         const listener = (err: Error): void => {

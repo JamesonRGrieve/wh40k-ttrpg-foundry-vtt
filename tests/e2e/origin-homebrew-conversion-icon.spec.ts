@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -156,8 +156,7 @@ async function probeConversionIcon(page: Page): Promise<IconProbeResult> {
 
 test.describe.serial('origin homebrew-conversion icon (Tier B)', () => {
     test('DH2 builder renders the fa-shuffle adapted-homebrew badge for converted homeworlds', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeConversionIcon(page);
         test.skip(!probe.created, `could not bootstrap builder: ${probe.createError ?? 'unknown'}`);

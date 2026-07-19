@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -42,8 +42,7 @@ interface UnifiedRollDialogModule {
 
 test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
     test('renders dropdown, swaps characteristic, surfaces indicators', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const result = await page.evaluate(async (): Promise<SkillDropdownProbeResult> => {
             const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';

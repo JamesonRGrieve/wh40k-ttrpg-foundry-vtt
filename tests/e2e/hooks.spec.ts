@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -359,8 +359,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
 
 test.describe.serial('hook-fired coverage (Tier B)', () => {
     test('every registered Foundry hook the system listens on fires when triggered', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'no Gamemaster option appeared in the join select within 30s');
+        await joinOrSkip(page, 'no Gamemaster option appeared in the join select within 30s');
 
         const probe = await runHookProbes(page, EXERCISED_HOOKS);
 

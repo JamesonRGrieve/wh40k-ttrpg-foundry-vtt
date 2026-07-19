@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -482,8 +482,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult & { pa
 test.describe.serial('vehicle + starship gameplay pipeline (Tier B)', () => {
     test.setTimeout(180_000);
     test('vehicle and starship update flows drive integrity, crew, altitude, components, morale, and shields', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeVehicleStarshipFlows(page);
 

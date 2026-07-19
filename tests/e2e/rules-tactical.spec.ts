@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -240,8 +240,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
 test.describe.serial('rules pure-logic surface — batch 5 tactical (Tier B)', () => {
     test('every tactical / registry resolver returns the expected value without throwing', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeRules(page);
         assertFlowResults(probe, RULE_TACTICAL_FLOWS, { dimension: 'rule-tactical.flow', label: 'rules tactical' });

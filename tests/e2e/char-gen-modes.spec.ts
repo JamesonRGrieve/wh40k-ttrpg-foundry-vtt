@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -244,8 +244,7 @@ async function probeCharGenModes(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('character-generation modes (Tier B)', () => {
     test('point-buy + roll modes render their controls in the OriginPathBuilder', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'no Gamemaster option appeared in the join select within 30s');
+        await joinOrSkip(page, 'no Gamemaster option appeared in the join select within 30s');
 
         const probe = await probeCharGenModes(page);
         test.skip(!probe.created, `could not bootstrap OriginPathBuilder: ${probe.createError ?? 'unknown'}`);

@@ -1,5 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -67,8 +67,7 @@ interface CardProbe {
 
 test.describe.serial('chat-card templates (Tier B)', () => {
     test('every chat-card template renders and posts as a ChatMessage', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const errors: string[] = [];
         const listener = (pageErr: Error): void => {

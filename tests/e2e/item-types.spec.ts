@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -86,8 +86,7 @@ async function listItemTypes(page: Page): Promise<string[]> {
 
 test.describe.serial('item types (Tier B)', () => {
     test('every item type creates + renders sheet', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
         const itemTypes = await listItemTypes(page);
         test.skip(itemTypes.length === 0, 'no item types discovered from CONFIG.Item.dataModels');
         const failures: string[] = [];

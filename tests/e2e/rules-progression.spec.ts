@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -433,8 +433,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
 test.describe.serial('rules progression surface (Tier B)', () => {
     test('every remaining rules/* progression surface returns without throwing', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeRules(page);
         assertFlowResults(probe, RULE_PROGRESSION_FLOWS, { dimension: 'rule-progression.flow', label: 'rules-progression' });

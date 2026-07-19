@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -15,8 +15,7 @@ import { expect, test } from './lib/test';
  * gate misfired, or the template typo'd).
  */
 test('possession-panel renders Frenzy-loop actions when state=latent (#132)', async ({ page }) => {
-    const joined = await joinAsGM(page);
-    test.skip(!joined, 'no Gamemaster user available in this test world');
+    await joinOrSkip(page, 'no Gamemaster user available in this test world');
 
     const result = await page.evaluate(async () => {
         interface ActorSheet {

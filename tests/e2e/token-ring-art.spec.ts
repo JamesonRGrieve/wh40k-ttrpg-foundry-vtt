@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -242,8 +242,7 @@ async function cleanup(page: Page, sceneId: string | null, actorId: string | nul
 test.describe.serial('token ring art (Tier B)', () => {
     test.setTimeout(180_000);
     test('DH2 token busts ring-enable, serve, and render in a live Foundry world', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const pageErrors: string[] = [];
         const listener = (err: Error): void => {

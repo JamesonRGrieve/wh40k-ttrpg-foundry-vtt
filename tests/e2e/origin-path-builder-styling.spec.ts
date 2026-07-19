@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -52,8 +52,7 @@ interface StylingProbeResult {
 }
 
 test('origin-path-builder renders fully-styled dialog with workspace, journey rail, and preview panel (#198)', async ({ page }) => {
-    const joined = await joinAsGM(page);
-    test.skip(!joined, 'no Gamemaster user available in this test world');
+    await joinOrSkip(page, 'no Gamemaster user available in this test world');
 
     const result = await page.evaluate(async (): Promise<StylingProbeResult> => {
         interface ActorDoc {

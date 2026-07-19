@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -325,8 +325,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
 
 test.describe.serial('rules/active-effects (Tier B)', () => {
     test('every active-effects rule helper creates/removes/toggles correctly', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeActiveEffectsRules(page);
         assertFlowResults(probe, ACTIVE_EFFECTS_RULES_FLOWS, { dimension: 'active-effects-rule.flow', label: 'active-effects-rule' });

@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -462,8 +462,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[]; 
 
 test.describe.serial('foundry CONFIG registration audit (Tier B)', () => {
     test('every CONFIG / collection / game.wh40k slot the system installs is present and well-typed', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeFoundryConfig(page);
         assertFlowResults(probe, FOUNDRY_CONFIG_FLOWS, { dimension: 'foundry-config.flow', label: 'foundry-config' });

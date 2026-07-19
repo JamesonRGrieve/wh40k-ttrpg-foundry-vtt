@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -16,8 +16,7 @@ import { expect, test } from './lib/test';
 
 test.describe.serial('SancticPurityPrompt (Tier B, #131)', () => {
     test("renders against a dh2 actor with Emperor's Anathema + Fate", async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const pageErrors: string[] = [];
         const listener = (err: Error): void => {

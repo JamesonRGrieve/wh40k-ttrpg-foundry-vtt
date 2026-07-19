@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { GAME_SYSTEM_IDS, joinAsGM } from './lib/join';
+import { GAME_SYSTEM_IDS, joinAsGM, joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -137,8 +137,7 @@ test.describe.serial('actor types × systems (Tier B)', () => {
 
     for (const gameSystem of GAME_SYSTEM_IDS) {
         test(`every actor type creates + renders sheet in gameSystem='${gameSystem}'`, async ({ page }) => {
-            const joined = await joinAsGM(page);
-            test.skip(!joined, 'GM join failed');
+            await joinOrSkip(page);
             const actorTypes = typesForSystem(allActorTypes, gameSystem);
             test.skip(actorTypes.length === 0, `no <${SYSTEM_PREFIX[gameSystem]}-*> actor types declared`);
             const failures: string[] = [];

@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -103,8 +103,7 @@ async function deleteActor(page: Page, id: string): Promise<void> {
 
 test.describe.serial('dh2 flows (Tier B)', () => {
     test('dh2-character fate track persists updates', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createDH2Character(page, 'dh2-fate-probe');
@@ -147,8 +146,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
     });
 
     test('dh2-character corruption track persists updates', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createDH2Character(page, 'dh2-corruption-probe');
@@ -184,8 +182,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
     });
 
     test('dh2-character insanity track persists updates', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createDH2Character(page, 'dh2-insanity-probe');
@@ -221,8 +218,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
     });
 
     test('dh2 origin-path item embeds onto dh2-character', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createDH2Character(page, 'dh2-origin-probe');
@@ -280,8 +276,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
     });
 
     test('dh2 elite-advance compendium pack is readable', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {

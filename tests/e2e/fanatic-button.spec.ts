@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -13,8 +13,7 @@ import { expect, test } from './lib/test';
  *     now exists on the actor (granting +10 WS / +10 BS for 5 rounds)
  */
 test('fanatic-button spends Fate + applies active effect and posts chat (#93)', async ({ page }) => {
-    const joined = await joinAsGM(page);
-    test.skip(!joined, 'no Gamemaster user available in this test world');
+    await joinOrSkip(page, 'no Gamemaster user available in this test world');
 
     interface ProbeResult {
         setupOk: boolean;

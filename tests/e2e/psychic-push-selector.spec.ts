@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -15,8 +15,7 @@ import { expect, test } from './lib/test';
 
 test.describe.serial('psychic push selector', () => {
     test('renders three-mode selector and updates state across mode + push level changes', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const result = await page.evaluate(async () => {
             interface DialogInstance {
