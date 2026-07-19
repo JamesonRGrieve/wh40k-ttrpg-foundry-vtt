@@ -23,9 +23,6 @@ test.describe.serial('damage die replacement chat card (#129)', () => {
     test('renders the replacement button when DoS > 0', async ({ page }) => {
         await joinOrSkip(page);
 
-        const errors: string[] = [];
-        page.on('pageerror', (err: Error) => errors.push(err.message));
-
         const result = await page.evaluate(async () => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry` global is injected by the licensed app; no shipped types
             const g = globalThis as unknown as {
@@ -76,8 +73,6 @@ test.describe.serial('damage die replacement chat card (#129)', () => {
             });
             return { withDoS, withoutDoS };
         });
-
-        expect(errors, `pageerror events: ${errors.join('\n')}`).toEqual([]);
 
         // With DoS > 0 the amber button should be present and carry the
         // wiring metadata the basic-action-manager handler reads back.

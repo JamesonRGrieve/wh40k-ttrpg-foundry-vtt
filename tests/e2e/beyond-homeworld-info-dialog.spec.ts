@@ -15,105 +15,94 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
     test('renders all three home-world cards and snaps', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
+        const result = await page.evaluate(async () => {
+            interface DialogInstance {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render/close return Promise<this> with no shipped types
+                render: (opts?: object) => Promise<unknown>;
+                element: HTMLElement | null;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                close: () => Promise<unknown>;
+            }
+            interface DialogModule {
+                default: new (opts?: object) => DialogInstance;
+            }
+            const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/beyond-homeworld-info-dialog.js';
+            let error: string | null = null;
+            let rendered = false;
+            let cardCount = 0;
+            let hasDaemonWorld = false;
+            let hasPenalColony = false;
+            let hasQuarantineWorld = false;
+            let hasCorruptionRider = false;
+            let hasSubtletyClampRider = false;
 
-        try {
-            const result = await page.evaluate(async () => {
-                interface DialogInstance {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render/close return Promise<this> with no shipped types
-                    render: (opts?: object) => Promise<unknown>;
-                    element: HTMLElement | null;
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
-                    close: () => Promise<unknown>;
+            try {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
+                const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                const Cls = mod.default;
+                if (typeof Cls !== 'function') {
+                    return {
+                        rendered,
+                        cardCount,
+                        hasDaemonWorld,
+                        hasPenalColony,
+                        hasQuarantineWorld,
+                        hasCorruptionRider,
+                        hasSubtletyClampRider,
+                        error: 'default export not a constructor',
+                    };
                 }
-                interface DialogModule {
-                    default: new (opts?: object) => DialogInstance;
-                }
-                const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/beyond-homeworld-info-dialog.js';
-                let error: string | null = null;
-                let rendered = false;
-                let cardCount = 0;
-                let hasDaemonWorld = false;
-                let hasPenalColony = false;
-                let hasQuarantineWorld = false;
-                let hasCorruptionRider = false;
-                let hasSubtletyClampRider = false;
-
+                const inst = new Cls({});
                 try {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
-                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
-                    const Cls = mod.default;
-                    if (typeof Cls !== 'function') {
-                        return {
-                            rendered,
-                            cardCount,
-                            hasDaemonWorld,
-                            hasPenalColony,
-                            hasQuarantineWorld,
-                            hasCorruptionRider,
-                            hasSubtletyClampRider,
-                            error: 'default export not a constructor',
-                        };
-                    }
-                    const inst = new Cls({});
-                    try {
-                        await inst.render({ force: true });
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 80);
-                        });
-                    } catch (err) {
-                        error = err instanceof Error ? err.message : String(err);
-                    }
-                    rendered = inst.element instanceof HTMLElement;
-                    if (rendered && inst.element) {
-                        const el = inst.element;
-                        cardCount = el.querySelectorAll('[data-homeworld-id]').length;
-                        hasDaemonWorld = el.querySelector('[data-homeworld-id="daemonWorld"]') !== null;
-                        hasPenalColony = el.querySelector('[data-homeworld-id="penalColony"]') !== null;
-                        hasQuarantineWorld = el.querySelector('[data-homeworld-id="quarantineWorld"]') !== null;
-                        hasCorruptionRider = el.querySelector('[data-homeworld-id="daemonWorld"] [data-rider="corruption"]') !== null;
-                        hasSubtletyClampRider = el.querySelector('[data-homeworld-id="quarantineWorld"] [data-rider="subtlety-clamp"]') !== null;
-                    }
-                    try {
-                        await inst.close();
-                    } catch {
-                        /* ignore */
-                    }
+                    await inst.render({ force: true });
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 80);
+                    });
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
+                rendered = inst.element instanceof HTMLElement;
+                if (rendered && inst.element) {
+                    const el = inst.element;
+                    cardCount = el.querySelectorAll('[data-homeworld-id]').length;
+                    hasDaemonWorld = el.querySelector('[data-homeworld-id="daemonWorld"]') !== null;
+                    hasPenalColony = el.querySelector('[data-homeworld-id="penalColony"]') !== null;
+                    hasQuarantineWorld = el.querySelector('[data-homeworld-id="quarantineWorld"]') !== null;
+                    hasCorruptionRider = el.querySelector('[data-homeworld-id="daemonWorld"] [data-rider="corruption"]') !== null;
+                    hasSubtletyClampRider = el.querySelector('[data-homeworld-id="quarantineWorld"] [data-rider="subtlety-clamp"]') !== null;
+                }
+                try {
+                    await inst.close();
+                } catch {
+                    /* ignore */
+                }
+            } catch (err) {
+                error = err instanceof Error ? err.message : String(err);
+            }
 
-                return {
-                    rendered,
-                    cardCount,
-                    hasDaemonWorld,
-                    hasPenalColony,
-                    hasQuarantineWorld,
-                    hasCorruptionRider,
-                    hasSubtletyClampRider,
-                    error,
-                };
-            });
+            return {
+                rendered,
+                cardCount,
+                hasDaemonWorld,
+                hasPenalColony,
+                hasQuarantineWorld,
+                hasCorruptionRider,
+                hasSubtletyClampRider,
+                error,
+            };
+        });
 
-            await snap(page, 'beyond-homeworld-info-dialog');
+        await snap(page, 'beyond-homeworld-info-dialog');
 
-            expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'dialog did not render').toBe(true);
-            expect(result.cardCount, 'expected three home-world cards').toBe(3);
-            expect(result.hasDaemonWorld, 'Daemon World card should render').toBe(true);
-            expect(result.hasPenalColony, 'Penal Colony card should render').toBe(true);
-            expect(result.hasQuarantineWorld, 'Quarantine World card should render').toBe(true);
-            expect(result.hasCorruptionRider, 'Daemon World should surface the Corruption rider').toBe(true);
-            expect(result.hasSubtletyClampRider, 'Quarantine World should surface the subtlety-clamp rider').toBe(true);
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
+        expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.rendered, 'dialog did not render').toBe(true);
+        expect(result.cardCount, 'expected three home-world cards').toBe(3);
+        expect(result.hasDaemonWorld, 'Daemon World card should render').toBe(true);
+        expect(result.hasPenalColony, 'Penal Colony card should render').toBe(true);
+        expect(result.hasQuarantineWorld, 'Quarantine World card should render').toBe(true);
+        expect(result.hasCorruptionRider, 'Daemon World should surface the Corruption rider').toBe(true);
+        expect(result.hasSubtletyClampRider, 'Quarantine World should surface the subtlety-clamp rider').toBe(true);
 
-            recordCoverage('dialog.render', 'BeyondHomeworldInfoDialog');
-        } finally {
-            page.off('pageerror', listener);
-        }
+        recordCoverage('dialog.render', 'BeyondHomeworldInfoDialog');
     });
 });

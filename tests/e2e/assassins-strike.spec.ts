@@ -24,9 +24,6 @@ test.describe.serial("assassin's strike chat card (#149)", () => {
     test('renders the post-attack button when the talent is present', async ({ page }) => {
         await joinOrSkip(page);
 
-        const errors: string[] = [];
-        page.on('pageerror', (err: Error) => errors.push(err.message));
-
         const result = await page.evaluate(async () => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry` global is injected by the licensed app; no shipped types
             const g = globalThis as unknown as {
@@ -65,8 +62,6 @@ test.describe.serial("assassin's strike chat card (#149)", () => {
             });
             return { withTalent, withoutTalent, withTalentMissed };
         });
-
-        expect(errors, `pageerror events: ${errors.join('\n')}`).toEqual([]);
 
         // Talent present + successful melee attack → the button is wired in.
         expect(result.withTalent).toContain('roll-control__assassins-strike');

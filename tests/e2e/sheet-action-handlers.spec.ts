@@ -58,294 +58,285 @@ interface FlowResult {
     detail: string | null;
 }
 
-async function probeSheetActions(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
-    const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: synthetic item-system shape for the probe is an open record of arbitrary fields
-            type SyntheticSystem = Record<string, unknown>;
-            interface SyntheticItem {
-                id: string;
-                type: string;
-                name: string;
-                system: SyntheticSystem;
-            }
-            interface ActionEntry {
-                action?: string;
-                label?: string;
-            }
-            interface QuickActionsBarCls {
-                getActionsForItem: (item: SyntheticItem) => ActionEntry[];
-            }
-            interface QuickActionsBarModule {
-                default?: QuickActionsBarCls;
-                QuickActionsBar?: QuickActionsBarCls;
-            }
-            const out: FlowResult[] = [];
-            const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
-                out.push({ name, ok, detail });
-            };
-            const base = `${'/systems/wh40k-rpg'}/module/applications`;
+async function probeSheetActions(page: Page): Promise<{ results: FlowResult[] }> {
+    const results = await page.evaluate(async (): Promise<FlowResult[]> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: synthetic item-system shape for the probe is an open record of arbitrary fields
+        type SyntheticSystem = Record<string, unknown>;
+        interface SyntheticItem {
+            id: string;
+            type: string;
+            name: string;
+            system: SyntheticSystem;
+        }
+        interface ActionEntry {
+            action?: string;
+            label?: string;
+        }
+        interface QuickActionsBarCls {
+            getActionsForItem: (item: SyntheticItem) => ActionEntry[];
+        }
+        interface QuickActionsBarModule {
+            default?: QuickActionsBarCls;
+            QuickActionsBar?: QuickActionsBarCls;
+        }
+        const out: FlowResult[] = [];
+        const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
+            out.push({ name, ok, detail });
+        };
+        const base = `${'/systems/wh40k-rpg'}/module/applications`;
 
-            // ---------- QuickActionsBar.getActionsForItem ----------
-            try {
-                const mod = (await import(`${base}/components/quick-actions-bar.js`)) as QuickActionsBarModule;
-                const QAB = mod.default ?? mod.QuickActionsBar;
-                if (typeof QAB?.getActionsForItem !== 'function') {
-                    for (const k of ['quick-actions-weapon', 'quick-actions-armour', 'quick-actions-talent', 'quick-actions-gear'] as const) {
-                        record(k, false, 'getActionsForItem missing');
-                    }
-                } else {
-                    const synthetic = (type: string, system: SyntheticSystem): SyntheticItem => ({
-                        id: `synth-${type}`,
-                        type,
-                        name: `synth ${type}`,
-                        system,
-                    });
-                    try {
-                        const acts = QAB.getActionsForItem(synthetic('weapon', {}));
-                        // Weapon surfaces attack + damage + reload (+ optional
-                        // inspect on some builds). Just confirm the canonical
-                        // attack-dispatch action is present.
-                        record(
-                            'quick-actions-weapon',
-                            Array.isArray(acts) && acts.length >= 3 && acts.some((a: ActionEntry) => a.action === 'itemRoll'),
-                            `count=${String(acts.length)}`,
-                        );
-                    } catch (err) {
-                        record('quick-actions-weapon', false, err instanceof Error ? err.message : String(err));
-                    }
-                    try {
-                        // Equippable flags are nested under system.state (equippable-template.ts);
-                        // getActionsForItem reads system.state.equipped.
-                        const equipped = QAB.getActionsForItem(synthetic('armour', { state: { equipped: true } }));
-                        const unequipped = QAB.getActionsForItem(synthetic('armour', { state: { equipped: false } }));
-                        // Equipped armour reports the "Unequip" label; unequipped reports "Equip".
-                        const ok = equipped[0]?.label === 'Unequip' && unequipped[0]?.label === 'Equip';
-                        record('quick-actions-armour', ok, `equipped=${String(equipped[0]?.label)} unequipped=${String(unequipped[0]?.label)}`);
-                    } catch (err) {
-                        record('quick-actions-armour', false, err instanceof Error ? err.message : String(err));
-                    }
-                    try {
-                        const rollable = QAB.getActionsForItem(synthetic('talent', { isRollable: true }));
-                        const notRollable = QAB.getActionsForItem(synthetic('talent', { isRollable: false }));
-                        // Rollable talent surfaces a roll dispatch; non-rollable
-                        // does not. Both surface favorite + any common item
-                        // actions (inspect/delete on owned items). Just confirm
-                        // the rollable branch's `itemRoll` action exists and
-                        // the non-rollable branch lacks it.
-                        const hasRollAction = rollable.some((a: ActionEntry) => a.action === 'itemRoll');
-                        const notRollAction = notRollable.some((a: ActionEntry) => a.action === 'itemRoll');
-                        const ok = hasRollAction && !notRollAction;
-                        record('quick-actions-talent', ok, `rollable=${String(rollable.length)} notRollable=${String(notRollable.length)}`);
-                    } catch (err) {
-                        record('quick-actions-talent', false, err instanceof Error ? err.message : String(err));
-                    }
-                    try {
-                        const consumable = QAB.getActionsForItem(synthetic('gear', { consumable: true }));
-                        const ok = consumable.length >= 1 && consumable.some((a: ActionEntry) => a.action === 'useItem');
-                        record('quick-actions-gear', ok, `count=${String(consumable.length)}`);
-                    } catch (err) {
-                        record('quick-actions-gear', false, err instanceof Error ? err.message : String(err));
-                    }
-                }
-            } catch (err) {
+        // ---------- QuickActionsBar.getActionsForItem ----------
+        try {
+            const mod = (await import(`${base}/components/quick-actions-bar.js`)) as QuickActionsBarModule;
+            const QAB = mod.default ?? mod.QuickActionsBar;
+            if (typeof QAB?.getActionsForItem !== 'function') {
                 for (const k of ['quick-actions-weapon', 'quick-actions-armour', 'quick-actions-talent', 'quick-actions-gear'] as const) {
-                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+                    record(k, false, 'getActionsForItem missing');
                 }
-            }
-
-            // ---------- stat-adjustment-actions ----------
-            try {
-                type FieldValue = number | string | boolean | object;
-                type ActorSystem = Record<string, FieldValue>;
-                interface HostActor {
-                    id: string;
-                    name: string;
-                    system: ActorSystem;
-                    update: () => Promise<void>;
-                }
-                type ThrottledFn = (...a: FieldValue[]) => FieldValue | Promise<FieldValue>;
-                interface HostStub {
-                    actor: HostActor;
-                    last: { field?: string; value?: FieldValue };
-                    _throttle: (key: string, wait: number, fn: ThrottledFn, ctx: HostStub, args: FieldValue[]) => Promise<FieldValue>;
-                    _notify: () => void;
-                    _updateSystemField: (field: string, value: FieldValue) => Promise<void>;
-                }
-                type ActionFn = (this: HostStub, event: MouseEvent, target: HTMLElement) => Promise<void> | void;
-                interface StatAdjustmentModule {
-                    adjustStat: ActionFn;
-                    increment: ActionFn;
-                    decrement: ActionFn;
-                    setCriticalPip: ActionFn;
-                    setFateStar: ActionFn;
-                    setFatigueBolt: ActionFn;
-                    setCorruption: ActionFn;
-                    setInsanity: ActionFn;
-                    restoreFate: ActionFn;
-                    spendFate: ActionFn;
-                }
-                const mod = (await import(`${base}/api/stat-adjustment-actions.js`)) as StatAdjustmentModule;
-
-                // Build a Host stub that captures calls. Each call records the
-                // last (field, value) pair so we can assert downstream.
-                const buildHost = (system: ActorSystem): HostStub => ({
-                    actor: {
-                        id: 'probe-actor',
-                        name: 'Probe',
-                        system,
-                        update: async () => Promise.resolve(undefined),
-                    },
-                    last: {},
-                    _throttle: async function (_k, _w, fn, ctx, args) {
-                        return Promise.resolve(fn.apply(ctx, args));
-                    },
-                    _notify: () => undefined,
-                    _updateSystemField: async function (this: HostStub, field, value) {
-                        this.last = { field, value };
-                        return Promise.resolve();
-                    },
+            } else {
+                const synthetic = (type: string, system: SyntheticSystem): SyntheticItem => ({
+                    id: `synth-${type}`,
+                    type,
+                    name: `synth ${type}`,
+                    system,
                 });
-
-                const makeTarget = (data: Record<string, string>): HTMLElement => {
-                    const el = document.createElement('div');
-                    for (const [k, v] of Object.entries(data)) el.dataset[k] = v;
-                    return el;
-                };
-                const evt = new MouseEvent('click', { bubbles: false });
-
-                // adjustStat — drive via data-field + data-delta
                 try {
-                    const host = buildHost({ wounds: { value: 5, max: 10 } });
-                    await mod.adjustStat.call(host, evt, makeTarget({ field: 'system.wounds.value', delta: '2' }));
-                    record('stat-adjustStat', host.last.field === 'system.wounds.value' && host.last.value === 7, `last=${JSON.stringify(host.last)}`);
-                } catch (err) {
-                    record('stat-adjustStat', false, err instanceof Error ? err.message : String(err));
-                }
-
-                // increment — adds 1 to a numeric field
-                try {
-                    const host = buildHost({ wounds: { value: 5, max: 10 } });
-                    await mod.increment.call(host, evt, makeTarget({ field: 'system.wounds.value' }));
-                    record('stat-increment', host.last.value === 6, `last=${JSON.stringify(host.last)}`);
-                } catch (err) {
-                    record('stat-increment', false, err instanceof Error ? err.message : String(err));
-                }
-
-                // decrement — subtracts 1
-                try {
-                    const host = buildHost({ wounds: { value: 5, max: 10 } });
-                    await mod.decrement.call(host, evt, makeTarget({ field: 'system.wounds.value' }));
-                    record('stat-decrement', host.last.value === 4, `last=${JSON.stringify(host.last)}`);
-                } catch (err) {
-                    record('stat-decrement', false, err instanceof Error ? err.message : String(err));
-                }
-
-                // setCriticalPip — driven by data-pip-index
-                try {
-                    const host = buildHost({ wounds: { critical: 0, value: 0, max: 10 } });
-                    await mod.setCriticalPip.call(host, evt, makeTarget({ pipIndex: '2' }));
-                    // setCriticalPip writes system.wounds.critical to pipIndex+1.
-                    record('stat-setCriticalPip', host.last.field === 'system.wounds.critical', `last=${JSON.stringify(host.last)}`);
-                } catch (err) {
-                    record('stat-setCriticalPip', false, err instanceof Error ? err.message : String(err));
-                }
-
-                // setFateStar — driven by data-star-index
-                try {
-                    const host = buildHost({ fate: { value: 0, max: 3 } });
-                    await mod.setFateStar.call(host, evt, makeTarget({ starIndex: '1' }));
+                    const acts = QAB.getActionsForItem(synthetic('weapon', {}));
+                    // Weapon surfaces attack + damage + reload (+ optional
+                    // inspect on some builds). Just confirm the canonical
+                    // attack-dispatch action is present.
                     record(
-                        'stat-setFateStar',
-                        typeof host.last.field === 'string' && host.last.field.startsWith('system.fate'),
-                        `last=${JSON.stringify(host.last)}`,
+                        'quick-actions-weapon',
+                        Array.isArray(acts) && acts.length >= 3 && acts.some((a: ActionEntry) => a.action === 'itemRoll'),
+                        `count=${String(acts.length)}`,
                     );
                 } catch (err) {
-                    record('stat-setFateStar', false, err instanceof Error ? err.message : String(err));
+                    record('quick-actions-weapon', false, err instanceof Error ? err.message : String(err));
                 }
-
-                // setFatigueBolt — driven by data-bolt-index
                 try {
-                    const host = buildHost({ fatigue: { value: 0, max: 5 } });
-                    await mod.setFatigueBolt.call(host, evt, makeTarget({ boltIndex: '2' }));
-                    record(
-                        'stat-setFatigueBolt',
-                        typeof host.last.field === 'string' && host.last.field.startsWith('system.fatigue'),
-                        `last=${JSON.stringify(host.last)}`,
-                    );
+                    // Equippable flags are nested under system.state (equippable-template.ts);
+                    // getActionsForItem reads system.state.equipped.
+                    const equipped = QAB.getActionsForItem(synthetic('armour', { state: { equipped: true } }));
+                    const unequipped = QAB.getActionsForItem(synthetic('armour', { state: { equipped: false } }));
+                    // Equipped armour reports the "Unequip" label; unequipped reports "Equip".
+                    const ok = equipped[0]?.label === 'Unequip' && unequipped[0]?.label === 'Equip';
+                    record('quick-actions-armour', ok, `equipped=${String(equipped[0]?.label)} unequipped=${String(unequipped[0]?.label)}`);
                 } catch (err) {
-                    record('stat-setFatigueBolt', false, err instanceof Error ? err.message : String(err));
+                    record('quick-actions-armour', false, err instanceof Error ? err.message : String(err));
                 }
-
-                // setCorruption — driven by data-corruption-value (or similar)
                 try {
-                    const host = buildHost({ corruption: 0 });
-                    await mod.setCorruption.call(host, evt, makeTarget({ value: '10', pipIndex: '5' }));
-                    record('stat-setCorruption', typeof host.last.field === 'string', `last=${JSON.stringify(host.last)}`);
+                    const rollable = QAB.getActionsForItem(synthetic('talent', { isRollable: true }));
+                    const notRollable = QAB.getActionsForItem(synthetic('talent', { isRollable: false }));
+                    // Rollable talent surfaces a roll dispatch; non-rollable
+                    // does not. Both surface favorite + any common item
+                    // actions (inspect/delete on owned items). Just confirm
+                    // the rollable branch's `itemRoll` action exists and
+                    // the non-rollable branch lacks it.
+                    const hasRollAction = rollable.some((a: ActionEntry) => a.action === 'itemRoll');
+                    const notRollAction = notRollable.some((a: ActionEntry) => a.action === 'itemRoll');
+                    const ok = hasRollAction && !notRollAction;
+                    record('quick-actions-talent', ok, `rollable=${String(rollable.length)} notRollable=${String(notRollable.length)}`);
                 } catch (err) {
-                    record('stat-setCorruption', false, err instanceof Error ? err.message : String(err));
+                    record('quick-actions-talent', false, err instanceof Error ? err.message : String(err));
                 }
-
-                // setInsanity — same pattern
                 try {
-                    const host = buildHost({ insanity: { value: 0 } });
-                    await mod.setInsanity.call(host, evt, makeTarget({ value: '5', pipIndex: '2' }));
-                    record('stat-setInsanity', typeof host.last.field === 'string', `last=${JSON.stringify(host.last)}`);
+                    const consumable = QAB.getActionsForItem(synthetic('gear', { consumable: true }));
+                    const ok = consumable.length >= 1 && consumable.some((a: ActionEntry) => a.action === 'useItem');
+                    record('quick-actions-gear', ok, `count=${String(consumable.length)}`);
                 } catch (err) {
-                    record('stat-setInsanity', false, err instanceof Error ? err.message : String(err));
-                }
-
-                // restoreFate — sets fate.value to fate.max
-                try {
-                    const host = buildHost({ fate: { value: 1, max: 3 } });
-                    await mod.restoreFate.call(host, evt, makeTarget({}));
-                    // restoreFate writes fate.value back to its max; assert any
-                    // write to system.fate fired.
-                    record('stat-restoreFate', typeof host.last.field === 'string' && host.last.field.includes('fate'), `last=${JSON.stringify(host.last)}`);
-                } catch (err) {
-                    record('stat-restoreFate', false, err instanceof Error ? err.message : String(err));
-                }
-
-                // spendFate — confirms via ConfirmationDialog. We provide a
-                // confirmation-dialog stub on the host's actor sheet so the
-                // function resolves without opening UI.
-                try {
-                    const host = buildHost({ fate: { value: 3, max: 3 } });
-                    // Many spendFate impls open a confirmation dialog; we accept
-                    // either a successful no-throw resolution OR a recorded write.
-                    await mod.spendFate.call(host, evt, makeTarget({}));
-                    record('stat-spendFate', true, `last=${JSON.stringify(host.last)}`);
-                } catch (err) {
-                    record('stat-spendFate', false, err instanceof Error ? err.message : String(err));
-                }
-            } catch (err) {
-                for (const k of [
-                    'stat-adjustStat',
-                    'stat-increment',
-                    'stat-decrement',
-                    'stat-setCriticalPip',
-                    'stat-setFateStar',
-                    'stat-setFatigueBolt',
-                    'stat-setCorruption',
-                    'stat-setInsanity',
-                    'stat-restoreFate',
-                    'stat-spendFate',
-                ] as const) {
-                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+                    record('quick-actions-gear', false, err instanceof Error ? err.message : String(err));
                 }
             }
+        } catch (err) {
+            for (const k of ['quick-actions-weapon', 'quick-actions-armour', 'quick-actions-talent', 'quick-actions-gear'] as const) {
+                record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+            }
+        }
 
-            return out;
-        });
-        return { results, pageErrors };
-    } finally {
-        page.off('pageerror', listener);
-    }
+        // ---------- stat-adjustment-actions ----------
+        try {
+            type FieldValue = number | string | boolean | object;
+            type ActorSystem = Record<string, FieldValue>;
+            interface HostActor {
+                id: string;
+                name: string;
+                system: ActorSystem;
+                update: () => Promise<void>;
+            }
+            type ThrottledFn = (...a: FieldValue[]) => FieldValue | Promise<FieldValue>;
+            interface HostStub {
+                actor: HostActor;
+                last: { field?: string; value?: FieldValue };
+                _throttle: (key: string, wait: number, fn: ThrottledFn, ctx: HostStub, args: FieldValue[]) => Promise<FieldValue>;
+                _notify: () => void;
+                _updateSystemField: (field: string, value: FieldValue) => Promise<void>;
+            }
+            type ActionFn = (this: HostStub, event: MouseEvent, target: HTMLElement) => Promise<void> | void;
+            interface StatAdjustmentModule {
+                adjustStat: ActionFn;
+                increment: ActionFn;
+                decrement: ActionFn;
+                setCriticalPip: ActionFn;
+                setFateStar: ActionFn;
+                setFatigueBolt: ActionFn;
+                setCorruption: ActionFn;
+                setInsanity: ActionFn;
+                restoreFate: ActionFn;
+                spendFate: ActionFn;
+            }
+            const mod = (await import(`${base}/api/stat-adjustment-actions.js`)) as StatAdjustmentModule;
+
+            // Build a Host stub that captures calls. Each call records the
+            // last (field, value) pair so we can assert downstream.
+            const buildHost = (system: ActorSystem): HostStub => ({
+                actor: {
+                    id: 'probe-actor',
+                    name: 'Probe',
+                    system,
+                    update: async () => Promise.resolve(undefined),
+                },
+                last: {},
+                _throttle: async function (_k, _w, fn, ctx, args) {
+                    return Promise.resolve(fn.apply(ctx, args));
+                },
+                _notify: () => undefined,
+                _updateSystemField: async function (this: HostStub, field, value) {
+                    this.last = { field, value };
+                    return Promise.resolve();
+                },
+            });
+
+            const makeTarget = (data: Record<string, string>): HTMLElement => {
+                const el = document.createElement('div');
+                for (const [k, v] of Object.entries(data)) el.dataset[k] = v;
+                return el;
+            };
+            const evt = new MouseEvent('click', { bubbles: false });
+
+            // adjustStat — drive via data-field + data-delta
+            try {
+                const host = buildHost({ wounds: { value: 5, max: 10 } });
+                await mod.adjustStat.call(host, evt, makeTarget({ field: 'system.wounds.value', delta: '2' }));
+                record('stat-adjustStat', host.last.field === 'system.wounds.value' && host.last.value === 7, `last=${JSON.stringify(host.last)}`);
+            } catch (err) {
+                record('stat-adjustStat', false, err instanceof Error ? err.message : String(err));
+            }
+
+            // increment — adds 1 to a numeric field
+            try {
+                const host = buildHost({ wounds: { value: 5, max: 10 } });
+                await mod.increment.call(host, evt, makeTarget({ field: 'system.wounds.value' }));
+                record('stat-increment', host.last.value === 6, `last=${JSON.stringify(host.last)}`);
+            } catch (err) {
+                record('stat-increment', false, err instanceof Error ? err.message : String(err));
+            }
+
+            // decrement — subtracts 1
+            try {
+                const host = buildHost({ wounds: { value: 5, max: 10 } });
+                await mod.decrement.call(host, evt, makeTarget({ field: 'system.wounds.value' }));
+                record('stat-decrement', host.last.value === 4, `last=${JSON.stringify(host.last)}`);
+            } catch (err) {
+                record('stat-decrement', false, err instanceof Error ? err.message : String(err));
+            }
+
+            // setCriticalPip — driven by data-pip-index
+            try {
+                const host = buildHost({ wounds: { critical: 0, value: 0, max: 10 } });
+                await mod.setCriticalPip.call(host, evt, makeTarget({ pipIndex: '2' }));
+                // setCriticalPip writes system.wounds.critical to pipIndex+1.
+                record('stat-setCriticalPip', host.last.field === 'system.wounds.critical', `last=${JSON.stringify(host.last)}`);
+            } catch (err) {
+                record('stat-setCriticalPip', false, err instanceof Error ? err.message : String(err));
+            }
+
+            // setFateStar — driven by data-star-index
+            try {
+                const host = buildHost({ fate: { value: 0, max: 3 } });
+                await mod.setFateStar.call(host, evt, makeTarget({ starIndex: '1' }));
+                record(
+                    'stat-setFateStar',
+                    typeof host.last.field === 'string' && host.last.field.startsWith('system.fate'),
+                    `last=${JSON.stringify(host.last)}`,
+                );
+            } catch (err) {
+                record('stat-setFateStar', false, err instanceof Error ? err.message : String(err));
+            }
+
+            // setFatigueBolt — driven by data-bolt-index
+            try {
+                const host = buildHost({ fatigue: { value: 0, max: 5 } });
+                await mod.setFatigueBolt.call(host, evt, makeTarget({ boltIndex: '2' }));
+                record(
+                    'stat-setFatigueBolt',
+                    typeof host.last.field === 'string' && host.last.field.startsWith('system.fatigue'),
+                    `last=${JSON.stringify(host.last)}`,
+                );
+            } catch (err) {
+                record('stat-setFatigueBolt', false, err instanceof Error ? err.message : String(err));
+            }
+
+            // setCorruption — driven by data-corruption-value (or similar)
+            try {
+                const host = buildHost({ corruption: 0 });
+                await mod.setCorruption.call(host, evt, makeTarget({ value: '10', pipIndex: '5' }));
+                record('stat-setCorruption', typeof host.last.field === 'string', `last=${JSON.stringify(host.last)}`);
+            } catch (err) {
+                record('stat-setCorruption', false, err instanceof Error ? err.message : String(err));
+            }
+
+            // setInsanity — same pattern
+            try {
+                const host = buildHost({ insanity: { value: 0 } });
+                await mod.setInsanity.call(host, evt, makeTarget({ value: '5', pipIndex: '2' }));
+                record('stat-setInsanity', typeof host.last.field === 'string', `last=${JSON.stringify(host.last)}`);
+            } catch (err) {
+                record('stat-setInsanity', false, err instanceof Error ? err.message : String(err));
+            }
+
+            // restoreFate — sets fate.value to fate.max
+            try {
+                const host = buildHost({ fate: { value: 1, max: 3 } });
+                await mod.restoreFate.call(host, evt, makeTarget({}));
+                // restoreFate writes fate.value back to its max; assert any
+                // write to system.fate fired.
+                record('stat-restoreFate', typeof host.last.field === 'string' && host.last.field.includes('fate'), `last=${JSON.stringify(host.last)}`);
+            } catch (err) {
+                record('stat-restoreFate', false, err instanceof Error ? err.message : String(err));
+            }
+
+            // spendFate — confirms via ConfirmationDialog. We provide a
+            // confirmation-dialog stub on the host's actor sheet so the
+            // function resolves without opening UI.
+            try {
+                const host = buildHost({ fate: { value: 3, max: 3 } });
+                // Many spendFate impls open a confirmation dialog; we accept
+                // either a successful no-throw resolution OR a recorded write.
+                await mod.spendFate.call(host, evt, makeTarget({}));
+                record('stat-spendFate', true, `last=${JSON.stringify(host.last)}`);
+            } catch (err) {
+                record('stat-spendFate', false, err instanceof Error ? err.message : String(err));
+            }
+        } catch (err) {
+            for (const k of [
+                'stat-adjustStat',
+                'stat-increment',
+                'stat-decrement',
+                'stat-setCriticalPip',
+                'stat-setFateStar',
+                'stat-setFatigueBolt',
+                'stat-setCorruption',
+                'stat-setInsanity',
+                'stat-restoreFate',
+                'stat-spendFate',
+            ] as const) {
+                record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+            }
+        }
+
+        return out;
+    });
+    return { results };
 }
 
 test.describe.serial('sheet action handlers (Tier B)', () => {

@@ -67,227 +67,159 @@ interface FlowResult {
     detail: string | null;
 }
 
-async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
-    const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            // Browser-side probe shapes. The dynamic-imported dist modules are
-            // runtime-only; describe only the exported surface each flow drives.
-            interface PackPrefixModule {
-                gameSystemPackPrefix?: (id: string | undefined) => string;
-            }
-            interface EncumbranceModule {
-                getCarryCapacity?: (sb: number) => number;
-                ENCUMBRANCE_TABLE?: number[];
-            }
-            interface OriginUiModule {
-                getCharacteristicDisplayInfo?: (key: string) => { label?: string; short?: string };
-                getTrainingLabel?: (key: string) => string;
-            }
-            interface TextPatternExtractorStatic {
-                splitList: (input: string) => string[];
-                toKey: (input: string, capitalize?: boolean) => string;
-                parseRange: (input: string) => { value?: number; type?: string } | null;
-                parseValueWithModifier: (input: string) => { value?: string; bonus?: number; hasBonus?: boolean };
-                cleanEntry: (input: string) => string;
-            }
-            interface TextPatternModule {
-                default?: TextPatternExtractorStatic;
-                TextPatternExtractor?: TextPatternExtractorStatic;
-            }
-            interface ItemVariantModule {
-                normalizeGameLineKey?: (key: string) => string | null;
-                isLineVariantContainer?: (value: object) => boolean;
-                resolveLineVariant?: (value: string | Record<string, string>, line: string) => string;
-            }
-            interface XpTransactionModule {
-                calculateTotalCost?: (entries: Array<{ cost: number }>) => number;
-            }
-            interface ActorConverterModule {
-                isConvertibleActorType?: (type: string) => boolean;
-            }
-            interface StatBlockValidatorStatic {
-                validate?: (input: object | null) => { valid?: boolean; errors?: string[]; warnings?: string[] } | null;
-            }
-            interface StatBlockModule {
-                default?: StatBlockValidatorStatic;
-                StatBlockValidator?: StatBlockValidatorStatic;
-            }
-            interface OriginChartCard {
-                stepKey?: string;
-                cards?: object[];
-            }
-            interface OriginChart {
-                steps?: OriginChartCard[];
-                maxColumns?: number;
-            }
-            interface OriginChartLayoutStatic {
-                computeFullChart?: (origins: object[], pinned: Map<string, object>, forward: boolean, direction: string, steps: string[]) => OriginChart;
-            }
-            interface OriginChartModule {
-                OriginChartLayout?: OriginChartLayoutStatic;
-                DIRECTION?: { FORWARD?: string };
-            }
+async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[] }> {
+    const results = await page.evaluate(async (): Promise<FlowResult[]> => {
+        // Browser-side probe shapes. The dynamic-imported dist modules are
+        // runtime-only; describe only the exported surface each flow drives.
+        interface PackPrefixModule {
+            gameSystemPackPrefix?: (id: string | undefined) => string;
+        }
+        interface EncumbranceModule {
+            getCarryCapacity?: (sb: number) => number;
+            ENCUMBRANCE_TABLE?: number[];
+        }
+        interface OriginUiModule {
+            getCharacteristicDisplayInfo?: (key: string) => { label?: string; short?: string };
+            getTrainingLabel?: (key: string) => string;
+        }
+        interface TextPatternExtractorStatic {
+            splitList: (input: string) => string[];
+            toKey: (input: string, capitalize?: boolean) => string;
+            parseRange: (input: string) => { value?: number; type?: string } | null;
+            parseValueWithModifier: (input: string) => { value?: string; bonus?: number; hasBonus?: boolean };
+            cleanEntry: (input: string) => string;
+        }
+        interface TextPatternModule {
+            default?: TextPatternExtractorStatic;
+            TextPatternExtractor?: TextPatternExtractorStatic;
+        }
+        interface ItemVariantModule {
+            normalizeGameLineKey?: (key: string) => string | null;
+            isLineVariantContainer?: (value: object) => boolean;
+            resolveLineVariant?: (value: string | Record<string, string>, line: string) => string;
+        }
+        interface XpTransactionModule {
+            calculateTotalCost?: (entries: Array<{ cost: number }>) => number;
+        }
+        interface ActorConverterModule {
+            isConvertibleActorType?: (type: string) => boolean;
+        }
+        interface StatBlockValidatorStatic {
+            validate?: (input: object | null) => { valid?: boolean; errors?: string[]; warnings?: string[] } | null;
+        }
+        interface StatBlockModule {
+            default?: StatBlockValidatorStatic;
+            StatBlockValidator?: StatBlockValidatorStatic;
+        }
+        interface OriginChartCard {
+            stepKey?: string;
+            cards?: object[];
+        }
+        interface OriginChart {
+            steps?: OriginChartCard[];
+            maxColumns?: number;
+        }
+        interface OriginChartLayoutStatic {
+            computeFullChart?: (origins: object[], pinned: Map<string, object>, forward: boolean, direction: string, steps: string[]) => OriginChart;
+        }
+        interface OriginChartModule {
+            OriginChartLayout?: OriginChartLayoutStatic;
+            DIRECTION?: { FORWARD?: string };
+        }
 
-            const out: FlowResult[] = [];
-            const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
-                out.push({ name, ok, detail });
-            };
+        const out: FlowResult[] = [];
+        const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
+            out.push({ name, ok, detail });
+        };
 
-            const base = `${'/systems/wh40k-rpg'}/module/utils`;
+        const base = `${'/systems/wh40k-rpg'}/module/utils`;
 
-            // ---------- game-system-pack-prefix ----------
+        // ---------- game-system-pack-prefix ----------
+        try {
+            const mod = (await import(`${base}/game-system-pack-prefix.js`)) as PackPrefixModule;
             try {
-                const mod = (await import(`${base}/game-system-pack-prefix.js`)) as PackPrefixModule;
-                try {
-                    const a = mod.gameSystemPackPrefix?.('dh1');
-                    const b = mod.gameSystemPackPrefix?.('dh2');
-                    record('pack-prefix-dh-editions', a === 'dh1' && b === 'dh2', `dh1=${String(a)} dh2=${String(b)}`);
-                } catch (err) {
-                    record('pack-prefix-dh-editions', false, err instanceof Error ? err.message : String(err));
-                }
-                try {
-                    const passthrough = mod.gameSystemPackPrefix?.('rt');
-                    const absent = mod.gameSystemPackPrefix?.(undefined);
-                    record('pack-prefix-passthrough', passthrough === 'rt' && absent === '', `rt=${String(passthrough)} undefined=${JSON.stringify(absent)}`);
-                } catch (err) {
-                    record('pack-prefix-passthrough', false, err instanceof Error ? err.message : String(err));
-                }
+                const a = mod.gameSystemPackPrefix?.('dh1');
+                const b = mod.gameSystemPackPrefix?.('dh2');
+                record('pack-prefix-dh-editions', a === 'dh1' && b === 'dh2', `dh1=${String(a)} dh2=${String(b)}`);
             } catch (err) {
-                for (const k of ['pack-prefix-dh-editions', 'pack-prefix-passthrough'] as const) {
-                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
-                }
+                record('pack-prefix-dh-editions', false, err instanceof Error ? err.message : String(err));
             }
-
-            // ---------- encumbrance-calculator ----------
             try {
-                const mod = (await import(`${base}/encumbrance-calculator.js`)) as EncumbranceModule;
-                try {
-                    const zero = mod.getCarryCapacity?.(0);
-                    const high = mod.getCarryCapacity?.(5);
-                    const clamped = mod.getCarryCapacity?.(999);
-                    record(
-                        'encumbrance-carry-capacity',
-                        zero === 0.9 && high === 27 && typeof clamped === 'number' && clamped > 0,
-                        `cap(0)=${String(zero)} cap(5)=${String(high)} cap(999)=${String(clamped)}`,
-                    );
-                } catch (err) {
-                    record('encumbrance-carry-capacity', false, err instanceof Error ? err.message : String(err));
-                }
-                try {
-                    const table = mod.ENCUMBRANCE_TABLE;
-                    record(
-                        'encumbrance-table-exported',
-                        Array.isArray(table) && table.length === 21 && table[0] === 0.9,
-                        `len=${Array.isArray(table) ? table.length : typeof table}`,
-                    );
-                } catch (err) {
-                    record('encumbrance-table-exported', false, err instanceof Error ? err.message : String(err));
-                }
+                const passthrough = mod.gameSystemPackPrefix?.('rt');
+                const absent = mod.gameSystemPackPrefix?.(undefined);
+                record('pack-prefix-passthrough', passthrough === 'rt' && absent === '', `rt=${String(passthrough)} undefined=${JSON.stringify(absent)}`);
             } catch (err) {
-                for (const k of ['encumbrance-carry-capacity', 'encumbrance-table-exported'] as const) {
-                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
-                }
+                record('pack-prefix-passthrough', false, err instanceof Error ? err.message : String(err));
             }
-
-            // ---------- origin-ui-labels ----------
-            try {
-                const mod = (await import(`${base}/origin-ui-labels.js`)) as OriginUiModule;
-                try {
-                    const known = mod.getCharacteristicDisplayInfo?.('weaponSkill');
-                    const fallback = mod.getCharacteristicDisplayInfo?.('madeUpKey');
-                    record(
-                        'origin-ui-characteristic-info',
-                        known?.label === 'Weapon Skill' && known.short === 'WS' && fallback?.label === 'madeUpKey',
-                        `known=${JSON.stringify(known)} fallback=${JSON.stringify(fallback)}`,
-                    );
-                } catch (err) {
-                    record('origin-ui-characteristic-info', false, err instanceof Error ? err.message : String(err));
-                }
-                try {
-                    const trained = mod.getTrainingLabel?.('trained');
-                    const plus10 = mod.getTrainingLabel?.('plus10');
-                    record('origin-ui-training-label', trained === 'Trained' && plus10 === '+10', `trained=${String(trained)} plus10=${String(plus10)}`);
-                } catch (err) {
-                    record('origin-ui-training-label', false, err instanceof Error ? err.message : String(err));
-                }
-            } catch (err) {
-                for (const k of ['origin-ui-characteristic-info', 'origin-ui-training-label'] as const) {
-                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
-                }
+        } catch (err) {
+            for (const k of ['pack-prefix-dh-editions', 'pack-prefix-passthrough'] as const) {
+                record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
             }
+        }
 
-            // ---------- text-pattern-extractor ----------
+        // ---------- encumbrance-calculator ----------
+        try {
+            const mod = (await import(`${base}/encumbrance-calculator.js`)) as EncumbranceModule;
             try {
-                const mod = (await import(`${base}/text-pattern-extractor.js`)) as TextPatternModule;
-                const TPE = mod.default ?? mod.TextPatternExtractor;
-                if (typeof TPE?.splitList !== 'function') {
-                    for (const k of [
-                        'text-pattern-split-list',
-                        'text-pattern-to-key',
-                        'text-pattern-parse-range',
-                        'text-pattern-parse-value-with-modifier',
-                        'text-pattern-clean-entry',
-                    ] as const) {
-                        record(k, false, 'TextPatternExtractor missing');
-                    }
-                } else {
-                    try {
-                        const split = TPE.splitList('Sword (Best), Shield; Bolt Pistol (Reliable)');
-                        record(
-                            'text-pattern-split-list',
-                            Array.isArray(split) && split.length === 3 && split[0] === 'Sword (Best)' && split[2] === 'Bolt Pistol (Reliable)',
-                            `split=${JSON.stringify(split)}`,
-                        );
-                    } catch (err) {
-                        record('text-pattern-split-list', false, err instanceof Error ? err.message : String(err));
-                    }
-                    try {
-                        const key = TPE.toKey('Ballistic Skill');
-                        const capped = TPE.toKey('Ballistic Skill', true);
-                        record('text-pattern-to-key', key === 'ballisticSkill' && capped === 'BallisticSkill', `key=${String(key)} capped=${String(capped)}`);
-                    } catch (err) {
-                        record('text-pattern-to-key', false, err instanceof Error ? err.message : String(err));
-                    }
-                    try {
-                        const ranged = TPE.parseRange('30m');
-                        const melee = TPE.parseRange('Melee');
-                        const none = TPE.parseRange('???');
-                        record(
-                            'text-pattern-parse-range',
-                            ranged?.value === 30 && ranged.type === 'ranged' && melee?.type === 'melee' && none === null,
-                            `ranged=${JSON.stringify(ranged)} melee=${JSON.stringify(melee)} none=${JSON.stringify(none)}`,
-                        );
-                    } catch (err) {
-                        record('text-pattern-parse-range', false, err instanceof Error ? err.message : String(err));
-                    }
-                    try {
-                        const withBonus = TPE.parseValueWithModifier('Awareness +10');
-                        const noBonus = TPE.parseValueWithModifier('Dodge');
-                        record(
-                            'text-pattern-parse-value-with-modifier',
-                            withBonus.value === 'Awareness' &&
-                                withBonus.bonus === 10 &&
-                                withBonus.hasBonus === true &&
-                                noBonus.value === 'Dodge' &&
-                                noBonus.hasBonus === false,
-                            `withBonus=${JSON.stringify(withBonus)} noBonus=${JSON.stringify(noBonus)}`,
-                        );
-                    } catch (err) {
-                        record('text-pattern-parse-value-with-modifier', false, err instanceof Error ? err.message : String(err));
-                    }
-                    try {
-                        const cleaned = TPE.cleanEntry('Power  Sword...');
-                        record('text-pattern-clean-entry', cleaned === 'Power Sword', `cleaned=${JSON.stringify(cleaned)}`);
-                    } catch (err) {
-                        record('text-pattern-clean-entry', false, err instanceof Error ? err.message : String(err));
-                    }
-                }
+                const zero = mod.getCarryCapacity?.(0);
+                const high = mod.getCarryCapacity?.(5);
+                const clamped = mod.getCarryCapacity?.(999);
+                record(
+                    'encumbrance-carry-capacity',
+                    zero === 0.9 && high === 27 && typeof clamped === 'number' && clamped > 0,
+                    `cap(0)=${String(zero)} cap(5)=${String(high)} cap(999)=${String(clamped)}`,
+                );
             } catch (err) {
+                record('encumbrance-carry-capacity', false, err instanceof Error ? err.message : String(err));
+            }
+            try {
+                const table = mod.ENCUMBRANCE_TABLE;
+                record(
+                    'encumbrance-table-exported',
+                    Array.isArray(table) && table.length === 21 && table[0] === 0.9,
+                    `len=${Array.isArray(table) ? table.length : typeof table}`,
+                );
+            } catch (err) {
+                record('encumbrance-table-exported', false, err instanceof Error ? err.message : String(err));
+            }
+        } catch (err) {
+            for (const k of ['encumbrance-carry-capacity', 'encumbrance-table-exported'] as const) {
+                record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+            }
+        }
+
+        // ---------- origin-ui-labels ----------
+        try {
+            const mod = (await import(`${base}/origin-ui-labels.js`)) as OriginUiModule;
+            try {
+                const known = mod.getCharacteristicDisplayInfo?.('weaponSkill');
+                const fallback = mod.getCharacteristicDisplayInfo?.('madeUpKey');
+                record(
+                    'origin-ui-characteristic-info',
+                    known?.label === 'Weapon Skill' && known.short === 'WS' && fallback?.label === 'madeUpKey',
+                    `known=${JSON.stringify(known)} fallback=${JSON.stringify(fallback)}`,
+                );
+            } catch (err) {
+                record('origin-ui-characteristic-info', false, err instanceof Error ? err.message : String(err));
+            }
+            try {
+                const trained = mod.getTrainingLabel?.('trained');
+                const plus10 = mod.getTrainingLabel?.('plus10');
+                record('origin-ui-training-label', trained === 'Trained' && plus10 === '+10', `trained=${String(trained)} plus10=${String(plus10)}`);
+            } catch (err) {
+                record('origin-ui-training-label', false, err instanceof Error ? err.message : String(err));
+            }
+        } catch (err) {
+            for (const k of ['origin-ui-characteristic-info', 'origin-ui-training-label'] as const) {
+                record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+            }
+        }
+
+        // ---------- text-pattern-extractor ----------
+        try {
+            const mod = (await import(`${base}/text-pattern-extractor.js`)) as TextPatternModule;
+            const TPE = mod.default ?? mod.TextPatternExtractor;
+            if (typeof TPE?.splitList !== 'function') {
                 for (const k of [
                     'text-pattern-split-list',
                     'text-pattern-to-key',
@@ -295,157 +227,216 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[]; pag
                     'text-pattern-parse-value-with-modifier',
                     'text-pattern-clean-entry',
                 ] as const) {
-                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+                    record(k, false, 'TextPatternExtractor missing');
+                }
+            } else {
+                try {
+                    const split = TPE.splitList('Sword (Best), Shield; Bolt Pistol (Reliable)');
+                    record(
+                        'text-pattern-split-list',
+                        Array.isArray(split) && split.length === 3 && split[0] === 'Sword (Best)' && split[2] === 'Bolt Pistol (Reliable)',
+                        `split=${JSON.stringify(split)}`,
+                    );
+                } catch (err) {
+                    record('text-pattern-split-list', false, err instanceof Error ? err.message : String(err));
+                }
+                try {
+                    const key = TPE.toKey('Ballistic Skill');
+                    const capped = TPE.toKey('Ballistic Skill', true);
+                    record('text-pattern-to-key', key === 'ballisticSkill' && capped === 'BallisticSkill', `key=${String(key)} capped=${String(capped)}`);
+                } catch (err) {
+                    record('text-pattern-to-key', false, err instanceof Error ? err.message : String(err));
+                }
+                try {
+                    const ranged = TPE.parseRange('30m');
+                    const melee = TPE.parseRange('Melee');
+                    const none = TPE.parseRange('???');
+                    record(
+                        'text-pattern-parse-range',
+                        ranged?.value === 30 && ranged.type === 'ranged' && melee?.type === 'melee' && none === null,
+                        `ranged=${JSON.stringify(ranged)} melee=${JSON.stringify(melee)} none=${JSON.stringify(none)}`,
+                    );
+                } catch (err) {
+                    record('text-pattern-parse-range', false, err instanceof Error ? err.message : String(err));
+                }
+                try {
+                    const withBonus = TPE.parseValueWithModifier('Awareness +10');
+                    const noBonus = TPE.parseValueWithModifier('Dodge');
+                    record(
+                        'text-pattern-parse-value-with-modifier',
+                        withBonus.value === 'Awareness' &&
+                            withBonus.bonus === 10 &&
+                            withBonus.hasBonus === true &&
+                            noBonus.value === 'Dodge' &&
+                            noBonus.hasBonus === false,
+                        `withBonus=${JSON.stringify(withBonus)} noBonus=${JSON.stringify(noBonus)}`,
+                    );
+                } catch (err) {
+                    record('text-pattern-parse-value-with-modifier', false, err instanceof Error ? err.message : String(err));
+                }
+                try {
+                    const cleaned = TPE.cleanEntry('Power  Sword...');
+                    record('text-pattern-clean-entry', cleaned === 'Power Sword', `cleaned=${JSON.stringify(cleaned)}`);
+                } catch (err) {
+                    record('text-pattern-clean-entry', false, err instanceof Error ? err.message : String(err));
                 }
             }
+        } catch (err) {
+            for (const k of [
+                'text-pattern-split-list',
+                'text-pattern-to-key',
+                'text-pattern-parse-range',
+                'text-pattern-parse-value-with-modifier',
+                'text-pattern-clean-entry',
+            ] as const) {
+                record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+            }
+        }
 
-            // ---------- item-variant-utils ----------
+        // ---------- item-variant-utils ----------
+        try {
+            const mod = (await import(`${base}/item-variant-utils.js`)) as ItemVariantModule;
             try {
-                const mod = (await import(`${base}/item-variant-utils.js`)) as ItemVariantModule;
-                try {
-                    const dh = mod.normalizeGameLineKey?.('dh2');
-                    const rt = mod.normalizeGameLineKey?.('rt');
-                    const bad = mod.normalizeGameLineKey?.('not-a-system');
-                    record(
-                        'item-variant-normalize-line-key',
-                        dh === 'dh2' && rt === 'rt' && bad === null,
-                        `dh2=${String(dh)} rt=${String(rt)} bad=${JSON.stringify(bad)}`,
-                    );
-                } catch (err) {
-                    record('item-variant-normalize-line-key', false, err instanceof Error ? err.message : String(err));
-                }
-                try {
-                    const isContainer = mod.isLineVariantContainer?.({ dh2: { v: 1 }, rt: { v: 2 } });
-                    const notContainer = mod.isLineVariantContainer?.({ value: 1, extra: 2 });
-                    record(
-                        'item-variant-is-line-container',
-                        isContainer === true && notContainer === false,
-                        `container=${String(isContainer)} notContainer=${String(notContainer)}`,
-                    );
-                } catch (err) {
-                    record('item-variant-is-line-container', false, err instanceof Error ? err.message : String(err));
-                }
-                try {
-                    const resolved = mod.resolveLineVariant?.({ dh2: 'dh-value', rt: 'rt-value' }, 'rt');
-                    const passthrough = mod.resolveLineVariant?.('plain-string', 'dh2');
-                    record(
-                        'item-variant-resolve-variant',
-                        resolved === 'rt-value' && passthrough === 'plain-string',
-                        `resolved=${JSON.stringify(resolved)} passthrough=${JSON.stringify(passthrough)}`,
-                    );
-                } catch (err) {
-                    record('item-variant-resolve-variant', false, err instanceof Error ? err.message : String(err));
-                }
+                const dh = mod.normalizeGameLineKey?.('dh2');
+                const rt = mod.normalizeGameLineKey?.('rt');
+                const bad = mod.normalizeGameLineKey?.('not-a-system');
+                record(
+                    'item-variant-normalize-line-key',
+                    dh === 'dh2' && rt === 'rt' && bad === null,
+                    `dh2=${String(dh)} rt=${String(rt)} bad=${JSON.stringify(bad)}`,
+                );
             } catch (err) {
-                for (const k of ['item-variant-normalize-line-key', 'item-variant-is-line-container', 'item-variant-resolve-variant'] as const) {
-                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
-                }
+                record('item-variant-normalize-line-key', false, err instanceof Error ? err.message : String(err));
             }
-
-            // ---------- xp-transaction ----------
             try {
-                const mod = (await import(`${base}/xp-transaction.js`)) as XpTransactionModule;
-                try {
-                    const empty = mod.calculateTotalCost?.([]);
-                    const summed = mod.calculateTotalCost?.([{ cost: 100 }, { cost: 250 }, { cost: 50 }]);
-                    record('xp-calculate-total-cost', empty === 0 && summed === 400, `empty=${String(empty)} summed=${String(summed)}`);
-                } catch (err) {
-                    record('xp-calculate-total-cost', false, err instanceof Error ? err.message : String(err));
-                }
+                const isContainer = mod.isLineVariantContainer?.({ dh2: { v: 1 }, rt: { v: 2 } });
+                const notContainer = mod.isLineVariantContainer?.({ value: 1, extra: 2 });
+                record(
+                    'item-variant-is-line-container',
+                    isContainer === true && notContainer === false,
+                    `container=${String(isContainer)} notContainer=${String(notContainer)}`,
+                );
             } catch (err) {
-                record('xp-calculate-total-cost', false, `import: ${err instanceof Error ? err.message : String(err)}`);
+                record('item-variant-is-line-container', false, err instanceof Error ? err.message : String(err));
             }
-
-            // ---------- actor-system-converter ----------
             try {
-                const mod = (await import(`${base}/actor-system-converter.js`)) as ActorConverterModule;
-                try {
-                    const charType = mod.isConvertibleActorType?.('dh2-character');
-                    const npcType = mod.isConvertibleActorType?.('rt-npc');
-                    const bogus = mod.isConvertibleActorType?.('not-a-type');
-                    record(
-                        'actor-converter-is-convertible-type',
-                        charType === true && npcType === true && bogus === false,
-                        `char=${String(charType)} npc=${String(npcType)} bogus=${String(bogus)}`,
-                    );
-                } catch (err) {
-                    record('actor-converter-is-convertible-type', false, err instanceof Error ? err.message : String(err));
-                }
+                const resolved = mod.resolveLineVariant?.({ dh2: 'dh-value', rt: 'rt-value' }, 'rt');
+                const passthrough = mod.resolveLineVariant?.('plain-string', 'dh2');
+                record(
+                    'item-variant-resolve-variant',
+                    resolved === 'rt-value' && passthrough === 'plain-string',
+                    `resolved=${JSON.stringify(resolved)} passthrough=${JSON.stringify(passthrough)}`,
+                );
             } catch (err) {
-                record('actor-converter-is-convertible-type', false, `import: ${err instanceof Error ? err.message : String(err)}`);
+                record('item-variant-resolve-variant', false, err instanceof Error ? err.message : String(err));
             }
+        } catch (err) {
+            for (const k of ['item-variant-normalize-line-key', 'item-variant-is-line-container', 'item-variant-resolve-variant'] as const) {
+                record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+            }
+        }
 
-            // ---------- stat-block-validator ----------
+        // ---------- xp-transaction ----------
+        try {
+            const mod = (await import(`${base}/xp-transaction.js`)) as XpTransactionModule;
             try {
-                const mod = (await import(`${base}/stat-block-validator.js`)) as StatBlockModule;
-                const SBV = mod.default ?? mod.StatBlockValidator;
-                try {
-                    const nullResult = SBV?.validate?.(null);
-                    const okResult = SBV?.validate?.({
-                        name: 'Test NPC',
-                        type: 'dh2-npc',
-                        system: {
-                            characteristics: { weaponSkill: { base: 35 } },
-                            wounds: { max: 12 },
-                        },
-                    });
-                    record(
-                        'stat-block-validator-validate',
-                        nullResult?.valid === false &&
-                            Array.isArray(nullResult.errors) &&
-                            nullResult.errors.length > 0 &&
-                            typeof okResult?.valid === 'boolean' &&
-                            Array.isArray(okResult.warnings),
-                        `null=${JSON.stringify(nullResult)} ok.valid=${String(okResult?.valid)}`,
-                    );
-                } catch (err) {
-                    record('stat-block-validator-validate', false, err instanceof Error ? err.message : String(err));
-                }
+                const empty = mod.calculateTotalCost?.([]);
+                const summed = mod.calculateTotalCost?.([{ cost: 100 }, { cost: 250 }, { cost: 50 }]);
+                record('xp-calculate-total-cost', empty === 0 && summed === 400, `empty=${String(empty)} summed=${String(summed)}`);
             } catch (err) {
-                record('stat-block-validator-validate', false, `import: ${err instanceof Error ? err.message : String(err)}`);
+                record('xp-calculate-total-cost', false, err instanceof Error ? err.message : String(err));
             }
+        } catch (err) {
+            record('xp-calculate-total-cost', false, `import: ${err instanceof Error ? err.message : String(err)}`);
+        }
 
-            // ---------- origin-chart-layout ----------
+        // ---------- actor-system-converter ----------
+        try {
+            const mod = (await import(`${base}/actor-system-converter.js`)) as ActorConverterModule;
             try {
-                const mod = (await import(`${base}/origin-chart-layout.js`)) as OriginChartModule;
-                const OCL = mod.OriginChartLayout;
-                try {
-                    const origins = [
-                        {
-                            id: 'origin-a',
-                            name: 'Test Home World',
-                            system: { step: 'homeWorld', primaryPosition: 0, pathPositions: [0] },
-                        },
-                        {
-                            id: 'origin-b',
-                            name: 'Test Home World 2',
-                            system: { step: 'homeWorld', primaryPosition: 1, pathPositions: [1] },
-                        },
-                    ];
-                    const chart = OCL?.computeFullChart?.(origins, new Map(), true, mod.DIRECTION?.FORWARD ?? 'forward', ['homeWorld']);
-                    record(
-                        'origin-chart-layout-compute-full-chart',
-                        chart != null &&
-                            Array.isArray(chart.steps) &&
-                            chart.steps.length === 1 &&
-                            chart.steps[0]?.stepKey === 'homeWorld' &&
-                            Array.isArray(chart.steps[0]?.cards) &&
-                            chart.steps[0].cards.length === 2,
-                        `steps=${Array.isArray(chart?.steps) ? chart.steps.length : typeof chart} maxColumns=${String(chart?.maxColumns)}`,
-                    );
-                } catch (err) {
-                    record('origin-chart-layout-compute-full-chart', false, err instanceof Error ? err.message : String(err));
-                }
+                const charType = mod.isConvertibleActorType?.('dh2-character');
+                const npcType = mod.isConvertibleActorType?.('rt-npc');
+                const bogus = mod.isConvertibleActorType?.('not-a-type');
+                record(
+                    'actor-converter-is-convertible-type',
+                    charType === true && npcType === true && bogus === false,
+                    `char=${String(charType)} npc=${String(npcType)} bogus=${String(bogus)}`,
+                );
             } catch (err) {
-                record('origin-chart-layout-compute-full-chart', false, `import: ${err instanceof Error ? err.message : String(err)}`);
+                record('actor-converter-is-convertible-type', false, err instanceof Error ? err.message : String(err));
             }
+        } catch (err) {
+            record('actor-converter-is-convertible-type', false, `import: ${err instanceof Error ? err.message : String(err)}`);
+        }
 
-            return out;
-        });
-        return { results, pageErrors };
-    } finally {
-        page.off('pageerror', listener);
-    }
+        // ---------- stat-block-validator ----------
+        try {
+            const mod = (await import(`${base}/stat-block-validator.js`)) as StatBlockModule;
+            const SBV = mod.default ?? mod.StatBlockValidator;
+            try {
+                const nullResult = SBV?.validate?.(null);
+                const okResult = SBV?.validate?.({
+                    name: 'Test NPC',
+                    type: 'dh2-npc',
+                    system: {
+                        characteristics: { weaponSkill: { base: 35 } },
+                        wounds: { max: 12 },
+                    },
+                });
+                record(
+                    'stat-block-validator-validate',
+                    nullResult?.valid === false &&
+                        Array.isArray(nullResult.errors) &&
+                        nullResult.errors.length > 0 &&
+                        typeof okResult?.valid === 'boolean' &&
+                        Array.isArray(okResult.warnings),
+                    `null=${JSON.stringify(nullResult)} ok.valid=${String(okResult?.valid)}`,
+                );
+            } catch (err) {
+                record('stat-block-validator-validate', false, err instanceof Error ? err.message : String(err));
+            }
+        } catch (err) {
+            record('stat-block-validator-validate', false, `import: ${err instanceof Error ? err.message : String(err)}`);
+        }
+
+        // ---------- origin-chart-layout ----------
+        try {
+            const mod = (await import(`${base}/origin-chart-layout.js`)) as OriginChartModule;
+            const OCL = mod.OriginChartLayout;
+            try {
+                const origins = [
+                    {
+                        id: 'origin-a',
+                        name: 'Test Home World',
+                        system: { step: 'homeWorld', primaryPosition: 0, pathPositions: [0] },
+                    },
+                    {
+                        id: 'origin-b',
+                        name: 'Test Home World 2',
+                        system: { step: 'homeWorld', primaryPosition: 1, pathPositions: [1] },
+                    },
+                ];
+                const chart = OCL?.computeFullChart?.(origins, new Map(), true, mod.DIRECTION?.FORWARD ?? 'forward', ['homeWorld']);
+                record(
+                    'origin-chart-layout-compute-full-chart',
+                    chart != null &&
+                        Array.isArray(chart.steps) &&
+                        chart.steps.length === 1 &&
+                        chart.steps[0]?.stepKey === 'homeWorld' &&
+                        Array.isArray(chart.steps[0]?.cards) &&
+                        chart.steps[0].cards.length === 2,
+                    `steps=${Array.isArray(chart?.steps) ? chart.steps.length : typeof chart} maxColumns=${String(chart?.maxColumns)}`,
+                );
+            } catch (err) {
+                record('origin-chart-layout-compute-full-chart', false, err instanceof Error ? err.message : String(err));
+            }
+        } catch (err) {
+            record('origin-chart-layout-compute-full-chart', false, `import: ${err instanceof Error ? err.message : String(err)}`);
+        }
+
+        return out;
+    });
+    return { results };
 }
 
 test.describe.serial('utils extra (Tier B)', () => {

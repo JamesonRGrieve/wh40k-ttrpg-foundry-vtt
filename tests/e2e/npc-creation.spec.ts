@@ -61,97 +61,88 @@ interface OneArgDialogModule {
     TemplateSelector?: OneArgDialogCtor;
 }
 
-async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
-    const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            const out: FlowResult[] = [];
-            const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
-                out.push({ name, ok, detail });
-            };
+async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[] }> {
+    const results = await page.evaluate(async (): Promise<FlowResult[]> => {
+        const out: FlowResult[] = [];
+        const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
+            out.push({ name, ok, detail });
+        };
 
-            const base = `${'/systems/wh40k-rpg'}/module/applications/npc`;
-            const opened: DialogInstance[] = [];
+        const base = `${'/systems/wh40k-rpg'}/module/applications/npc`;
+        const opened: DialogInstance[] = [];
 
-            // ---------- quick-create-dialog ----------
+        // ---------- quick-create-dialog ----------
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of a runtime-only Foundry system module path
+            const mod = (await import(`${base}/quick-create-dialog.js`)) as TwoArgDialogModule;
+            const NPCQuickCreateDialog = mod.default ?? mod.NPCQuickCreateDialog;
+            if (typeof NPCQuickCreateDialog !== 'function') {
+                record('quick-create-dialog-renders', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
+            } else {
+                const dlg = new NPCQuickCreateDialog({}, {});
+                opened.push(dlg);
+                await dlg.render({ force: true });
+                await new Promise<void>((r) => {
+                    setTimeout(r, 50);
+                });
+                record('quick-create-dialog-renders', dlg.element instanceof HTMLElement, null);
+            }
+        } catch (err) {
+            record('quick-create-dialog-renders', false, err instanceof Error ? err.message : String(err));
+        }
+
+        // ---------- batch-create-dialog ----------
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of a runtime-only Foundry system module path
+            const mod = (await import(`${base}/batch-create-dialog.js`)) as TwoArgDialogModule;
+            const BatchCreateDialog = mod.default ?? mod.BatchCreateDialog;
+            if (typeof BatchCreateDialog !== 'function') {
+                record('batch-create-dialog-renders', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
+            } else {
+                const dlg = new BatchCreateDialog({}, {});
+                opened.push(dlg);
+                await dlg.render({ force: true });
+                await new Promise<void>((r) => {
+                    setTimeout(r, 50);
+                });
+                record('batch-create-dialog-renders', dlg.element instanceof HTMLElement, null);
+            }
+        } catch (err) {
+            record('batch-create-dialog-renders', false, err instanceof Error ? err.message : String(err));
+        }
+
+        // ---------- template-selector ----------
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of a runtime-only Foundry system module path
+            const mod = (await import(`${base}/template-selector.js`)) as OneArgDialogModule;
+            const TemplateSelector = mod.default ?? mod.TemplateSelector;
+            if (typeof TemplateSelector !== 'function') {
+                record('template-selector-renders', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
+            } else {
+                const dlg = new TemplateSelector({});
+                opened.push(dlg);
+                await dlg.render({ force: true });
+                await new Promise<void>((r) => {
+                    setTimeout(r, 50);
+                });
+                record('template-selector-renders', dlg.element instanceof HTMLElement, null);
+            }
+        } catch (err) {
+            record('template-selector-renders', false, err instanceof Error ? err.message : String(err));
+        }
+
+        // ---------- cleanup ----------
+        for (const w of opened) {
             try {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of a runtime-only Foundry system module path
-                const mod = (await import(`${base}/quick-create-dialog.js`)) as TwoArgDialogModule;
-                const NPCQuickCreateDialog = mod.default ?? mod.NPCQuickCreateDialog;
-                if (typeof NPCQuickCreateDialog !== 'function') {
-                    record('quick-create-dialog-renders', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
-                } else {
-                    const dlg = new NPCQuickCreateDialog({}, {});
-                    opened.push(dlg);
-                    await dlg.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 50);
-                    });
-                    record('quick-create-dialog-renders', dlg.element instanceof HTMLElement, null);
-                }
-            } catch (err) {
-                record('quick-create-dialog-renders', false, err instanceof Error ? err.message : String(err));
+                await w.close?.();
+            } catch {
+                /* ignore */
             }
+        }
 
-            // ---------- batch-create-dialog ----------
-            try {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of a runtime-only Foundry system module path
-                const mod = (await import(`${base}/batch-create-dialog.js`)) as TwoArgDialogModule;
-                const BatchCreateDialog = mod.default ?? mod.BatchCreateDialog;
-                if (typeof BatchCreateDialog !== 'function') {
-                    record('batch-create-dialog-renders', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
-                } else {
-                    const dlg = new BatchCreateDialog({}, {});
-                    opened.push(dlg);
-                    await dlg.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 50);
-                    });
-                    record('batch-create-dialog-renders', dlg.element instanceof HTMLElement, null);
-                }
-            } catch (err) {
-                record('batch-create-dialog-renders', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---------- template-selector ----------
-            try {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of a runtime-only Foundry system module path
-                const mod = (await import(`${base}/template-selector.js`)) as OneArgDialogModule;
-                const TemplateSelector = mod.default ?? mod.TemplateSelector;
-                if (typeof TemplateSelector !== 'function') {
-                    record('template-selector-renders', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
-                } else {
-                    const dlg = new TemplateSelector({});
-                    opened.push(dlg);
-                    await dlg.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 50);
-                    });
-                    record('template-selector-renders', dlg.element instanceof HTMLElement, null);
-                }
-            } catch (err) {
-                record('template-selector-renders', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---------- cleanup ----------
-            for (const w of opened) {
-                try {
-                    await w.close?.();
-                } catch {
-                    /* ignore */
-                }
-            }
-
-            return out;
-        });
-        return { results, pageErrors };
-    } finally {
-        page.off('pageerror', listener);
-    }
+        return out;
+    });
+    return { results };
 }
 
 test.describe.serial('npc creation dialogs (Tier B)', () => {

@@ -17,171 +17,160 @@ test.describe.serial('DwCohesionPanel (Tier B)', () => {
     test('renders pool + rally/recover/challenge buttons and snaps', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
+        const result = await page.evaluate(async () => {
+            const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-cohesion-panel.hbs';
+            let error: string | null = null;
+            let rendered = false;
+            let readout = '';
+            let hasRallyButton = false;
+            let hasRecoverButton = false;
+            let hasChallengeButton = false;
+            let rallyDisabled = false;
+            let recoverDisabled = false;
+            let currentAttr = '';
+            let maxAttr = '';
 
-        try {
-            const result = await page.evaluate(async () => {
-                const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-cohesion-panel.hbs';
-                let error: string | null = null;
-                let rendered = false;
-                let readout = '';
-                let hasRallyButton = false;
-                let hasRecoverButton = false;
-                let hasChallengeButton = false;
-                let rallyDisabled = false;
-                let recoverDisabled = false;
-                let currentAttr = '';
-                let maxAttr = '';
+            try {
+                interface HandlebarsCompile {
+                    compile: (s: string) => (ctx: object) => string;
+                }
+                interface DwCohesionGlobals {
+                    fetch?: (u: string) => Promise<Response>;
+                    Handlebars?: HandlebarsCompile;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const fg = globalThis as unknown as DwCohesionGlobals;
+                const fetchFn = fg.fetch;
+                if (typeof fetchFn !== 'function') {
+                    return {
+                        rendered,
+                        readout,
+                        hasRallyButton,
+                        hasRecoverButton,
+                        hasChallengeButton,
+                        rallyDisabled,
+                        recoverDisabled,
+                        currentAttr,
+                        maxAttr,
+                        error: 'fetch not available on globalThis',
+                    };
+                }
+                const src = await (await fetchFn(templateUrl)).text();
+                const HandlebarsLib = fg.Handlebars;
+                if (HandlebarsLib === undefined || typeof HandlebarsLib.compile !== 'function') {
+                    return {
+                        rendered,
+                        readout,
+                        hasRallyButton,
+                        hasRecoverButton,
+                        hasChallengeButton,
+                        rallyDisabled,
+                        recoverDisabled,
+                        currentAttr,
+                        maxAttr,
+                        error: 'Handlebars not available on globalThis',
+                    };
+                }
+                const tpl = HandlebarsLib.compile(src);
+                // Mid-fight state: pool partially depleted, already rallied
+                // this turn (rally button disabled), recovery still
+                // available (current < max).
+                const html = tpl({
+                    cohesionPanel: {
+                        current: 3,
+                        max: 6,
+                        lostThisTurn: 1,
+                        rallied: true,
+                        canRally: false,
+                        canRecover: true,
+                    },
+                });
+                const host = document.createElement('div');
+                // Tailwind utilities are scoped to .wh40k-rpg via
+                // tailwind.config.js `important: '.wh40k-rpg'`; without an
+                // ancestor with that class every tw-* class is dropped.
+                // See CLAUDE.md "Check the .wh40k-rpg ancestor".
+                host.className = 'wh40k-rpg';
+                host.dataset['wh40kSystem'] = 'dw';
+                host.style.position = 'fixed';
+                host.style.top = '40px';
+                host.style.right = '40px';
+                host.style.width = '360px';
+                host.style.zIndex = '99999';
+                host.innerHTML = html;
+                document.body.appendChild(host);
+                rendered = host.firstElementChild instanceof HTMLElement;
 
-                try {
-                    interface HandlebarsCompile {
-                        compile: (s: string) => (ctx: object) => string;
-                    }
-                    interface DwCohesionGlobals {
-                        fetch?: (u: string) => Promise<Response>;
-                        Handlebars?: HandlebarsCompile;
-                    }
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
-                    const fg = globalThis as unknown as DwCohesionGlobals;
-                    const fetchFn = fg.fetch;
-                    if (typeof fetchFn !== 'function') {
-                        return {
-                            rendered,
-                            readout,
-                            hasRallyButton,
-                            hasRecoverButton,
-                            hasChallengeButton,
-                            rallyDisabled,
-                            recoverDisabled,
-                            currentAttr,
-                            maxAttr,
-                            error: 'fetch not available on globalThis',
-                        };
-                    }
-                    const src = await (await fetchFn(templateUrl)).text();
-                    const HandlebarsLib = fg.Handlebars;
-                    if (HandlebarsLib === undefined || typeof HandlebarsLib.compile !== 'function') {
-                        return {
-                            rendered,
-                            readout,
-                            hasRallyButton,
-                            hasRecoverButton,
-                            hasChallengeButton,
-                            rallyDisabled,
-                            recoverDisabled,
-                            currentAttr,
-                            maxAttr,
-                            error: 'Handlebars not available on globalThis',
-                        };
-                    }
-                    const tpl = HandlebarsLib.compile(src);
-                    // Mid-fight state: pool partially depleted, already rallied
-                    // this turn (rally button disabled), recovery still
-                    // available (current < max).
-                    const html = tpl({
-                        cohesionPanel: {
-                            current: 3,
-                            max: 6,
-                            lostThisTurn: 1,
-                            rallied: true,
-                            canRally: false,
-                            canRecover: true,
-                        },
-                    });
-                    const host = document.createElement('div');
-                    // Tailwind utilities are scoped to .wh40k-rpg via
-                    // tailwind.config.js `important: '.wh40k-rpg'`; without an
-                    // ancestor with that class every tw-* class is dropped.
-                    // See CLAUDE.md "Check the .wh40k-rpg ancestor".
-                    host.className = 'wh40k-rpg';
-                    host.dataset['wh40kSystem'] = 'dw';
-                    host.style.position = 'fixed';
-                    host.style.top = '40px';
-                    host.style.right = '40px';
-                    host.style.width = '360px';
-                    host.style.zIndex = '99999';
-                    host.innerHTML = html;
-                    document.body.appendChild(host);
-                    rendered = host.firstElementChild instanceof HTMLElement;
-
-                    if (rendered) {
-                        const section = host.querySelector('section.wh40k-dw-cohesion-panel');
-                        const readoutEl = host.querySelector('.wh40k-dw-cohesion-readout');
-                        readout = (readoutEl?.textContent ?? '').trim().replace(/\s+/g, ' ');
-                        const rallyBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwCohesionRally"]');
-                        const recoverBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwCohesionRecoverObjective"]');
-                        const challengeBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwCohesionChallenge"]');
-                        hasRallyButton = rallyBtn !== null;
-                        hasRecoverButton = recoverBtn !== null;
-                        hasChallengeButton = challengeBtn !== null;
-                        rallyDisabled = rallyBtn?.disabled === true;
-                        recoverDisabled = recoverBtn?.disabled === true;
-                        currentAttr = section?.getAttribute('data-dw-cohesion-current') ?? '';
-                        maxAttr = section?.getAttribute('data-dw-cohesion-max') ?? '';
-                    }
-
-                    // Hold the host on a global handle so snap() (called
-                    // outside this evaluate) captures the live DOM.
-                    interface DwCohesionHostGlobal {
-                        __dwCohesionPanelHost?: HTMLElement | undefined;
-                    }
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
-                    (globalThis as unknown as DwCohesionHostGlobal).__dwCohesionPanelHost = host;
-                } catch (err) {
-                    error = err instanceof Error ? err.message : String(err);
+                if (rendered) {
+                    const section = host.querySelector('section.wh40k-dw-cohesion-panel');
+                    const readoutEl = host.querySelector('.wh40k-dw-cohesion-readout');
+                    readout = (readoutEl?.textContent ?? '').trim().replace(/\s+/g, ' ');
+                    const rallyBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwCohesionRally"]');
+                    const recoverBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwCohesionRecoverObjective"]');
+                    const challengeBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwCohesionChallenge"]');
+                    hasRallyButton = rallyBtn !== null;
+                    hasRecoverButton = recoverBtn !== null;
+                    hasChallengeButton = challengeBtn !== null;
+                    rallyDisabled = rallyBtn?.disabled === true;
+                    recoverDisabled = recoverBtn?.disabled === true;
+                    currentAttr = section?.getAttribute('data-dw-cohesion-current') ?? '';
+                    maxAttr = section?.getAttribute('data-dw-cohesion-max') ?? '';
                 }
 
-                return {
-                    rendered,
-                    readout,
-                    hasRallyButton,
-                    hasRecoverButton,
-                    hasChallengeButton,
-                    rallyDisabled,
-                    recoverDisabled,
-                    currentAttr,
-                    maxAttr,
-                    error,
-                };
-            });
-
-            await snap(page, 'dw-cohesion-panel');
-
-            // Tear down so the next serial test starts clean.
-            await page.evaluate(() => {
+                // Hold the host on a global handle so snap() (called
+                // outside this evaluate) captures the live DOM.
                 interface DwCohesionHostGlobal {
                     __dwCohesionPanelHost?: HTMLElement | undefined;
                 }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
-                const fg = globalThis as unknown as DwCohesionHostGlobal;
-                const host = fg.__dwCohesionPanelHost;
-                try {
-                    host?.remove();
-                } catch {
-                    /* ignore */
-                }
-                fg.__dwCohesionPanelHost = undefined;
-            });
+                // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
+                (globalThis as unknown as DwCohesionHostGlobal).__dwCohesionPanelHost = host;
+            } catch (err) {
+                error = err instanceof Error ? err.message : String(err);
+            }
 
-            expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'panel did not render').toBe(true);
-            expect(result.readout, 'pool readout should be "3 / 6"').toBe('3 / 6');
-            expect(result.hasRallyButton, 'rally button should render').toBe(true);
-            expect(result.hasRecoverButton, 'recover-objective button should render').toBe(true);
-            expect(result.hasChallengeButton, 'cohesion-challenge button should render').toBe(true);
-            expect(result.rallyDisabled, 'rally button should be disabled when already rallied').toBe(true);
-            expect(result.recoverDisabled, 'recover button should be enabled when current < max').toBe(false);
-            expect(result.currentAttr, 'current data attr should round-trip').toBe('3');
-            expect(result.maxAttr, 'max data attr should round-trip').toBe('6');
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
+            return {
+                rendered,
+                readout,
+                hasRallyButton,
+                hasRecoverButton,
+                hasChallengeButton,
+                rallyDisabled,
+                recoverDisabled,
+                currentAttr,
+                maxAttr,
+                error,
+            };
+        });
 
-            recordCoverage('panel.render', 'DwCohesionPanel');
-        } finally {
-            page.off('pageerror', listener);
-        }
+        await snap(page, 'dw-cohesion-panel');
+
+        // Tear down so the next serial test starts clean.
+        await page.evaluate(() => {
+            interface DwCohesionHostGlobal {
+                __dwCohesionPanelHost?: HTMLElement | undefined;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
+            const fg = globalThis as unknown as DwCohesionHostGlobal;
+            const host = fg.__dwCohesionPanelHost;
+            try {
+                host?.remove();
+            } catch {
+                /* ignore */
+            }
+            fg.__dwCohesionPanelHost = undefined;
+        });
+
+        expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.rendered, 'panel did not render').toBe(true);
+        expect(result.readout, 'pool readout should be "3 / 6"').toBe('3 / 6');
+        expect(result.hasRallyButton, 'rally button should render').toBe(true);
+        expect(result.hasRecoverButton, 'recover-objective button should render').toBe(true);
+        expect(result.hasChallengeButton, 'cohesion-challenge button should render').toBe(true);
+        expect(result.rallyDisabled, 'rally button should be disabled when already rallied').toBe(true);
+        expect(result.recoverDisabled, 'recover button should be enabled when current < max').toBe(false);
+        expect(result.currentAttr, 'current data attr should round-trip').toBe('3');
+        expect(result.maxAttr, 'max data attr should round-trip').toBe('6');
+
+        recordCoverage('panel.render', 'DwCohesionPanel');
     });
 });

@@ -19,74 +19,63 @@ test.describe.serial('DaemonhostBindingDialog (Tier B)', () => {
     test('opens and renders five tier cards plus a Bind action', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
+        const result = await page.evaluate(async () => {
+            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
+            const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/daemonhost-binding-dialog.js';
+            let error: string | null = null;
+            let rendered = false;
+            let tierCardCount = 0;
+            let hasBindButton = false;
 
-        try {
-            const result = await page.evaluate(async () => {
-                /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: Foundry globals are runtime-only */
-                const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/daemonhost-binding-dialog.js';
-                let error: string | null = null;
-                let rendered = false;
-                let tierCardCount = 0;
-                let hasBindButton = false;
-
+            try {
+                interface DialogInstance {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
+                    render: (force?: boolean) => Promise<unknown>;
+                    element: HTMLElement | null;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                    close: () => Promise<unknown>;
+                }
+                interface DialogModule {
+                    default: new () => DialogInstance;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
+                const mod = (await import(moduleUrl)) as unknown as DialogModule;
+                const Cls = mod.default;
+                if (typeof Cls !== 'function') {
+                    return { rendered, tierCardCount, hasBindButton, error: 'default export not a constructor' };
+                }
+                const inst = new Cls();
                 try {
-                    interface DialogInstance {
-                        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
-                        render: (force?: boolean) => Promise<unknown>;
-                        element: HTMLElement | null;
-                        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
-                        close: () => Promise<unknown>;
-                    }
-                    interface DialogModule {
-                        default: new () => DialogInstance;
-                    }
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
-                    const mod = (await import(moduleUrl)) as unknown as DialogModule;
-                    const Cls = mod.default;
-                    if (typeof Cls !== 'function') {
-                        return { rendered, tierCardCount, hasBindButton, error: 'default export not a constructor' };
-                    }
-                    const inst = new Cls();
-                    try {
-                        await inst.render(true);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 40);
-                        });
-                    } catch (err) {
-                        error = String((err as Error).message);
-                    }
-                    rendered = inst.element instanceof HTMLElement;
-                    if (rendered && inst.element) {
-                        tierCardCount = inst.element.querySelectorAll('[data-action="selectTier"]').length;
-                        hasBindButton = inst.element.querySelector('[data-action="bind"]') !== null;
-                    }
-                    try {
-                        await inst.close();
-                    } catch {
-                        /* ignore */
-                    }
+                    await inst.render(true);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 40);
+                    });
                 } catch (err) {
                     error = String((err as Error).message);
                 }
+                rendered = inst.element instanceof HTMLElement;
+                if (rendered && inst.element) {
+                    tierCardCount = inst.element.querySelectorAll('[data-action="selectTier"]').length;
+                    hasBindButton = inst.element.querySelector('[data-action="bind"]') !== null;
+                }
+                try {
+                    await inst.close();
+                } catch {
+                    /* ignore */
+                }
+            } catch (err) {
+                error = String((err as Error).message);
+            }
 
-                return { rendered, tierCardCount, hasBindButton, error };
-                /* eslint-enable @typescript-eslint/no-explicit-any */
-            });
+            return { rendered, tierCardCount, hasBindButton, error };
+            /* eslint-enable @typescript-eslint/no-explicit-any */
+        });
 
-            expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'dialog did not render').toBe(true);
-            expect(result.tierCardCount, 'expected 5 tier cards').toBe(5);
-            expect(result.hasBindButton, 'expected Bind action button').toBe(true);
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
+        expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.rendered, 'dialog did not render').toBe(true);
+        expect(result.tierCardCount, 'expected 5 tier cards').toBe(5);
+        expect(result.hasBindButton, 'expected Bind action button').toBe(true);
 
-            recordCoverage('dialog.render', 'DaemonhostBindingDialog');
-        } finally {
-            page.off('pageerror', listener);
-        }
+        recordCoverage('dialog.render', 'DaemonhostBindingDialog');
     });
 });

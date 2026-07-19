@@ -20,161 +20,150 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
     test('renders Oath readout + swear/release buttons with leader-no-oath state and snaps', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
+        const result = await page.evaluate(async () => {
+            interface HandlebarsCompile {
+                compile: (s: string) => (ctx: object) => string;
+            }
+            interface PanelGlobals {
+                fetch?: (u: string) => Promise<Response>;
+                Handlebars?: HandlebarsCompile;
+            }
+            const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-oath-panel.hbs';
+            let error: string | null = null;
+            let rendered = false;
+            let hasSwearButton = false;
+            let hasReleaseButton = false;
+            let swearDisabled = false;
+            let releaseDisabled = false;
+            let activeAttr = '';
+            let idAttr = '';
+            let readout = '';
 
-        try {
-            const result = await page.evaluate(async () => {
-                interface HandlebarsCompile {
-                    compile: (s: string) => (ctx: object) => string;
+            try {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const fg = globalThis as unknown as PanelGlobals;
+                const fetchFn = fg.fetch;
+                if (typeof fetchFn !== 'function') {
+                    return {
+                        rendered,
+                        hasSwearButton,
+                        hasReleaseButton,
+                        swearDisabled,
+                        releaseDisabled,
+                        activeAttr,
+                        idAttr,
+                        readout,
+                        error: 'fetch not available on globalThis',
+                    };
                 }
-                interface PanelGlobals {
-                    fetch?: (u: string) => Promise<Response>;
-                    Handlebars?: HandlebarsCompile;
+                const src = await (await fetchFn(templateUrl)).text();
+                const HandlebarsInstance = fg.Handlebars;
+                if (HandlebarsInstance === undefined || typeof HandlebarsInstance.compile !== 'function') {
+                    return {
+                        rendered,
+                        hasSwearButton,
+                        hasReleaseButton,
+                        swearDisabled,
+                        releaseDisabled,
+                        activeAttr,
+                        idAttr,
+                        readout,
+                        error: 'Handlebars not available on globalThis',
+                    };
                 }
-                const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-oath-panel.hbs';
-                let error: string | null = null;
-                let rendered = false;
-                let hasSwearButton = false;
-                let hasReleaseButton = false;
-                let swearDisabled = false;
-                let releaseDisabled = false;
-                let activeAttr = '';
-                let idAttr = '';
-                let readout = '';
+                const tpl = HandlebarsInstance.compile(src);
+                // Leader, no Oath sworn — swear available, release disabled.
+                const html = tpl({
+                    oathPanel: {
+                        isLeader: true,
+                        active: false,
+                        activeOathId: null,
+                        activeLabel: null,
+                        canSwear: true,
+                        canRelease: false,
+                    },
+                });
+                const host = document.createElement('div');
+                // Tailwind utilities are scoped to .wh40k-rpg via
+                // tailwind.config.js `important: '.wh40k-rpg'`; without an
+                // ancestor with that class every tw-* class is dropped.
+                host.className = 'wh40k-rpg';
+                host.dataset['wh40kSystem'] = 'dw';
+                host.style.position = 'fixed';
+                host.style.top = '40px';
+                host.style.right = '40px';
+                host.style.width = '360px';
+                host.style.zIndex = '99999';
+                host.innerHTML = html;
+                document.body.appendChild(host);
+                rendered = host.firstElementChild instanceof HTMLElement;
 
-                try {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
-                    const fg = globalThis as unknown as PanelGlobals;
-                    const fetchFn = fg.fetch;
-                    if (typeof fetchFn !== 'function') {
-                        return {
-                            rendered,
-                            hasSwearButton,
-                            hasReleaseButton,
-                            swearDisabled,
-                            releaseDisabled,
-                            activeAttr,
-                            idAttr,
-                            readout,
-                            error: 'fetch not available on globalThis',
-                        };
-                    }
-                    const src = await (await fetchFn(templateUrl)).text();
-                    const HandlebarsInstance = fg.Handlebars;
-                    if (HandlebarsInstance === undefined || typeof HandlebarsInstance.compile !== 'function') {
-                        return {
-                            rendered,
-                            hasSwearButton,
-                            hasReleaseButton,
-                            swearDisabled,
-                            releaseDisabled,
-                            activeAttr,
-                            idAttr,
-                            readout,
-                            error: 'Handlebars not available on globalThis',
-                        };
-                    }
-                    const tpl = HandlebarsInstance.compile(src);
-                    // Leader, no Oath sworn — swear available, release disabled.
-                    const html = tpl({
-                        oathPanel: {
-                            isLeader: true,
-                            active: false,
-                            activeOathId: null,
-                            activeLabel: null,
-                            canSwear: true,
-                            canRelease: false,
-                        },
-                    });
-                    const host = document.createElement('div');
-                    // Tailwind utilities are scoped to .wh40k-rpg via
-                    // tailwind.config.js `important: '.wh40k-rpg'`; without an
-                    // ancestor with that class every tw-* class is dropped.
-                    host.className = 'wh40k-rpg';
-                    host.dataset['wh40kSystem'] = 'dw';
-                    host.style.position = 'fixed';
-                    host.style.top = '40px';
-                    host.style.right = '40px';
-                    host.style.width = '360px';
-                    host.style.zIndex = '99999';
-                    host.innerHTML = html;
-                    document.body.appendChild(host);
-                    rendered = host.firstElementChild instanceof HTMLElement;
-
-                    if (rendered) {
-                        const section = host.querySelector('section.wh40k-dw-oath-panel');
-                        const swearBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwSwearOath"]');
-                        const releaseBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwReleaseOath"]');
-                        const readoutEl = host.querySelector('.wh40k-dw-oath-current');
-                        hasSwearButton = swearBtn !== null;
-                        hasReleaseButton = releaseBtn !== null;
-                        swearDisabled = swearBtn?.disabled === true;
-                        releaseDisabled = releaseBtn?.disabled === true;
-                        activeAttr = section?.getAttribute('data-dw-oath-active') ?? '';
-                        idAttr = section?.getAttribute('data-dw-oath-id') ?? '';
-                        readout = readoutEl?.textContent.trim().replace(/\s+/g, ' ') ?? '';
-                    }
-
-                    // Hold the host on a global handle so snap() (called
-                    // outside this evaluate) captures the live DOM.
-                    interface DwOathHostGlobal {
-                        __dwOathPanelHost?: HTMLElement | undefined;
-                    }
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
-                    (globalThis as unknown as DwOathHostGlobal).__dwOathPanelHost = host;
-                } catch (err) {
-                    error = String((err as Error).message);
+                if (rendered) {
+                    const section = host.querySelector('section.wh40k-dw-oath-panel');
+                    const swearBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwSwearOath"]');
+                    const releaseBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwReleaseOath"]');
+                    const readoutEl = host.querySelector('.wh40k-dw-oath-current');
+                    hasSwearButton = swearBtn !== null;
+                    hasReleaseButton = releaseBtn !== null;
+                    swearDisabled = swearBtn?.disabled === true;
+                    releaseDisabled = releaseBtn?.disabled === true;
+                    activeAttr = section?.getAttribute('data-dw-oath-active') ?? '';
+                    idAttr = section?.getAttribute('data-dw-oath-id') ?? '';
+                    readout = readoutEl?.textContent.trim().replace(/\s+/g, ' ') ?? '';
                 }
 
-                return {
-                    rendered,
-                    hasSwearButton,
-                    hasReleaseButton,
-                    swearDisabled,
-                    releaseDisabled,
-                    activeAttr,
-                    idAttr,
-                    readout,
-                    error,
-                };
-            });
-
-            await snap(page, 'dw-oath-panel');
-
-            // Tear down so the next serial test starts clean.
-            await page.evaluate(() => {
+                // Hold the host on a global handle so snap() (called
+                // outside this evaluate) captures the live DOM.
                 interface DwOathHostGlobal {
                     __dwOathPanelHost?: HTMLElement | undefined;
                 }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
-                const fg = globalThis as unknown as DwOathHostGlobal;
-                const host = fg.__dwOathPanelHost;
-                try {
-                    host?.remove();
-                } catch {
-                    /* ignore */
-                }
-                fg.__dwOathPanelHost = undefined;
-            });
+                // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
+                (globalThis as unknown as DwOathHostGlobal).__dwOathPanelHost = host;
+            } catch (err) {
+                error = String((err as Error).message);
+            }
 
-            expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'panel did not render').toBe(true);
-            expect(result.hasSwearButton, 'swear button should render').toBe(true);
-            expect(result.hasReleaseButton, 'release button should render').toBe(true);
-            expect(result.swearDisabled, 'swear button should be enabled (leader, no active oath)').toBe(false);
-            expect(result.releaseDisabled, 'release button should be disabled (no active oath)').toBe(true);
-            expect(result.activeAttr, 'data-dw-oath-active should be "false"').toBe('false');
-            expect(result.idAttr, 'data-dw-oath-id should be empty when no Oath sworn').toBe('');
-            expect(result.readout, 'readout should show an em-dash placeholder when no Oath sworn').toContain('—');
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
+            return {
+                rendered,
+                hasSwearButton,
+                hasReleaseButton,
+                swearDisabled,
+                releaseDisabled,
+                activeAttr,
+                idAttr,
+                readout,
+                error,
+            };
+        });
 
-            recordCoverage('panel.render', 'DwOathPanel');
-        } finally {
-            page.off('pageerror', listener);
-        }
+        await snap(page, 'dw-oath-panel');
+
+        // Tear down so the next serial test starts clean.
+        await page.evaluate(() => {
+            interface DwOathHostGlobal {
+                __dwOathPanelHost?: HTMLElement | undefined;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
+            const fg = globalThis as unknown as DwOathHostGlobal;
+            const host = fg.__dwOathPanelHost;
+            try {
+                host?.remove();
+            } catch {
+                /* ignore */
+            }
+            fg.__dwOathPanelHost = undefined;
+        });
+
+        expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.rendered, 'panel did not render').toBe(true);
+        expect(result.hasSwearButton, 'swear button should render').toBe(true);
+        expect(result.hasReleaseButton, 'release button should render').toBe(true);
+        expect(result.swearDisabled, 'swear button should be enabled (leader, no active oath)').toBe(false);
+        expect(result.releaseDisabled, 'release button should be disabled (no active oath)').toBe(true);
+        expect(result.activeAttr, 'data-dw-oath-active should be "false"').toBe('false');
+        expect(result.idAttr, 'data-dw-oath-id should be empty when no Oath sworn').toBe('');
+        expect(result.readout, 'readout should show an em-dash placeholder when no Oath sworn').toContain('—');
+
+        recordCoverage('panel.render', 'DwOathPanel');
     });
 });

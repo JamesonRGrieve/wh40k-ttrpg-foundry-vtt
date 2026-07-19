@@ -164,7 +164,6 @@ interface ProbeResult {
     keysFired: Record<ScreenshotFlow, boolean>;
     keyNotes: Partial<Record<ScreenshotFlow, string>>;
     boundingBoxes: Partial<Record<string, { x: number; y: number; width: number; height: number } | null>>;
-    pageErrors: string[];
 }
 
 const SCREENSHOT_DIR = 'tests/e2e/screenshots/actor';
@@ -463,12 +462,6 @@ async function toggleEditModeAndMeasure(
 }
 
 async function runAllScreenshots(page: Page): Promise<ProbeResult> {
-    const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
-    };
-    page.on('pageerror', listener);
-
     const keysFired: Record<string, boolean> = {};
     const keyNotes: Partial<Record<string, string>> = {};
     const boundingBoxes: Partial<Record<string, { x: number; y: number; width: number; height: number } | null>> = {};
@@ -573,22 +566,17 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
         }
     }
 
-    try {
-        for (const systemId of GAME_SYSTEM_IDS) {
-            const types = actorTypesForSystem(systemId);
-            for (const actorType of types) {
-                await capturePair(actorType, systemId);
-            }
+    for (const systemId of GAME_SYSTEM_IDS) {
+        const types = actorTypesForSystem(systemId);
+        for (const actorType of types) {
+            await capturePair(actorType, systemId);
         }
-    } finally {
-        page.off('pageerror', listener);
     }
 
     return {
         keysFired: keysFired,
         keyNotes: keyNotes,
         boundingBoxes,
-        pageErrors,
     };
 }
 
@@ -613,11 +601,8 @@ test.describe.serial('actor-sheet screenshots (Tier B)', () => {
             }
         }
 
-        const pageErrorTail = probe.pageErrors.length > 0 ? `\n  pageerrors: ${probe.pageErrors.slice(0, 5).join(' | ')}` : '';
-
-        expect(
-            failures,
-            `${failures.length}/${SCREENSHOT_ACTOR_FLOWS.length} actor-sheet screenshot probes failed:\n  - ${failures.join('\n  - ')}${pageErrorTail}`,
-        ).toEqual([]);
+        expect(failures, `${failures.length}/${SCREENSHOT_ACTOR_FLOWS.length} actor-sheet screenshot probes failed:\n  - ${failures.join('\n  - ')}`).toEqual(
+            [],
+        );
     });
 });

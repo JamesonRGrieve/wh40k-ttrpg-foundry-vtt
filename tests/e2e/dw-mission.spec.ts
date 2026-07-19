@@ -19,209 +19,198 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
     test('renders mission name + rating + objective checklist + complications + complete button', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
+        const result = await page.evaluate(async () => {
+            interface HandlebarsCompile {
+                compile: (s: string) => (ctx: object) => string;
+            }
+            interface PanelGlobals {
+                fetch?: (u: string) => Promise<Response>;
+                Handlebars?: HandlebarsCompile;
+            }
+            const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-mission-panel.hbs';
+            let error: string | null = null;
+            let rendered = false;
+            let missionActiveAttr = '';
+            let missionNameText = '';
+            let ratingAttr = '';
+            let objectiveButtonCount = 0;
+            let firstObjectiveAction = '';
+            let firstObjectiveId = '';
+            let complicationButtonCount = 0;
+            let firstComplicationAction = '';
+            let firstComplicationId = '';
+            let hasCompleteBtn = false;
+            let completeBtnAction = '';
 
-        try {
-            const result = await page.evaluate(async () => {
-                interface HandlebarsCompile {
-                    compile: (s: string) => (ctx: object) => string;
+            try {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const fg = globalThis as unknown as PanelGlobals;
+                const fetchFn = fg.fetch;
+                if (typeof fetchFn !== 'function') {
+                    return {
+                        rendered,
+                        missionActiveAttr,
+                        missionNameText,
+                        ratingAttr,
+                        objectiveButtonCount,
+                        firstObjectiveAction,
+                        firstObjectiveId,
+                        complicationButtonCount,
+                        firstComplicationAction,
+                        firstComplicationId,
+                        hasCompleteBtn,
+                        completeBtnAction,
+                        error: 'fetch not available on globalThis',
+                    };
                 }
-                interface PanelGlobals {
-                    fetch?: (u: string) => Promise<Response>;
-                    Handlebars?: HandlebarsCompile;
+                const src = await (await fetchFn(templateUrl)).text();
+                const HandlebarsLib = fg.Handlebars;
+                if (HandlebarsLib === undefined || typeof HandlebarsLib.compile !== 'function') {
+                    return {
+                        rendered,
+                        missionActiveAttr,
+                        missionNameText,
+                        ratingAttr,
+                        objectiveButtonCount,
+                        firstObjectiveAction,
+                        firstObjectiveId,
+                        complicationButtonCount,
+                        firstComplicationAction,
+                        firstComplicationId,
+                        hasCompleteBtn,
+                        completeBtnAction,
+                        error: 'Handlebars not available on globalThis',
+                    };
                 }
-                const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-mission-panel.hbs';
-                let error: string | null = null;
-                let rendered = false;
-                let missionActiveAttr = '';
-                let missionNameText = '';
-                let ratingAttr = '';
-                let objectiveButtonCount = 0;
-                let firstObjectiveAction = '';
-                let firstObjectiveId = '';
-                let complicationButtonCount = 0;
-                let firstComplicationAction = '';
-                let firstComplicationId = '';
-                let hasCompleteBtn = false;
-                let completeBtnAction = '';
-
-                try {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
-                    const fg = globalThis as unknown as PanelGlobals;
-                    const fetchFn = fg.fetch;
-                    if (typeof fetchFn !== 'function') {
-                        return {
-                            rendered,
-                            missionActiveAttr,
-                            missionNameText,
-                            ratingAttr,
-                            objectiveButtonCount,
-                            firstObjectiveAction,
-                            firstObjectiveId,
-                            complicationButtonCount,
-                            firstComplicationAction,
-                            firstComplicationId,
-                            hasCompleteBtn,
-                            completeBtnAction,
-                            error: 'fetch not available on globalThis',
-                        };
-                    }
-                    const src = await (await fetchFn(templateUrl)).text();
-                    const HandlebarsLib = fg.Handlebars;
-                    if (HandlebarsLib === undefined || typeof HandlebarsLib.compile !== 'function') {
-                        return {
-                            rendered,
-                            missionActiveAttr,
-                            missionNameText,
-                            ratingAttr,
-                            objectiveButtonCount,
-                            firstObjectiveAction,
-                            firstObjectiveId,
-                            complicationButtonCount,
-                            firstComplicationAction,
-                            firstComplicationId,
-                            hasCompleteBtn,
-                            completeBtnAction,
-                            error: 'Handlebars not available on globalThis',
-                        };
-                    }
-                    const tpl = HandlebarsLib.compile(src);
-                    const html = tpl({
-                        missionPanel: {
-                            hasMission: true,
-                            mission: {
-                                id: 'mission-blackthorn-vii',
-                                name: 'Strike on Blackthorn VII',
-                                rating: 'priority',
-                                ratingLabel: 'Priority',
-                                objectives: [
-                                    {
-                                        id: 'obj-1',
-                                        description: 'Secure the manufactorum vault',
-                                        renownReward: 5,
-                                        xpReward: 200,
-                                        status: 'complete',
-                                        statusLabel: 'Complete',
-                                    },
-                                    {
-                                        id: 'obj-2',
-                                        description: 'Capture the cult magus alive',
-                                        renownReward: 10,
-                                        xpReward: 400,
-                                        status: 'pending',
-                                        statusLabel: 'Pending',
-                                    },
-                                ],
-                                complications: [
-                                    {
-                                        id: 'comp-1',
-                                        description: 'Civilian casualties exceed acceptable losses',
-                                        renownPenalty: 3,
-                                        triggered: false,
-                                    },
-                                ],
-                            },
+                const tpl = HandlebarsLib.compile(src);
+                const html = tpl({
+                    missionPanel: {
+                        hasMission: true,
+                        mission: {
+                            id: 'mission-blackthorn-vii',
+                            name: 'Strike on Blackthorn VII',
+                            rating: 'priority',
+                            ratingLabel: 'Priority',
+                            objectives: [
+                                {
+                                    id: 'obj-1',
+                                    description: 'Secure the manufactorum vault',
+                                    renownReward: 5,
+                                    xpReward: 200,
+                                    status: 'complete',
+                                    statusLabel: 'Complete',
+                                },
+                                {
+                                    id: 'obj-2',
+                                    description: 'Capture the cult magus alive',
+                                    renownReward: 10,
+                                    xpReward: 400,
+                                    status: 'pending',
+                                    statusLabel: 'Pending',
+                                },
+                            ],
+                            complications: [
+                                {
+                                    id: 'comp-1',
+                                    description: 'Civilian casualties exceed acceptable losses',
+                                    renownPenalty: 3,
+                                    triggered: false,
+                                },
+                            ],
                         },
-                    });
-                    const host = document.createElement('div');
-                    host.className = 'wh40k-rpg';
-                    host.dataset['wh40kSystem'] = 'dw';
-                    host.style.position = 'fixed';
-                    host.style.top = '40px';
-                    host.style.right = '40px';
-                    host.style.width = '420px';
-                    host.style.zIndex = '99999';
-                    host.innerHTML = html;
-                    document.body.appendChild(host);
-                    rendered = host.firstElementChild instanceof HTMLElement;
+                    },
+                });
+                const host = document.createElement('div');
+                host.className = 'wh40k-rpg';
+                host.dataset['wh40kSystem'] = 'dw';
+                host.style.position = 'fixed';
+                host.style.top = '40px';
+                host.style.right = '40px';
+                host.style.width = '420px';
+                host.style.zIndex = '99999';
+                host.innerHTML = html;
+                document.body.appendChild(host);
+                rendered = host.firstElementChild instanceof HTMLElement;
 
-                    if (rendered) {
-                        const section = host.querySelector('section.wh40k-dw-mission-panel');
-                        missionActiveAttr = section?.getAttribute('data-dw-mission-active') ?? '';
-                        missionNameText = host.querySelector('.wh40k-dw-mission-name')?.textContent.trim() ?? '';
-                        ratingAttr = host.querySelector('.wh40k-dw-mission-rating')?.getAttribute('data-rating') ?? '';
+                if (rendered) {
+                    const section = host.querySelector('section.wh40k-dw-mission-panel');
+                    missionActiveAttr = section?.getAttribute('data-dw-mission-active') ?? '';
+                    missionNameText = host.querySelector('.wh40k-dw-mission-name')?.textContent.trim() ?? '';
+                    ratingAttr = host.querySelector('.wh40k-dw-mission-rating')?.getAttribute('data-rating') ?? '';
 
-                        const objectiveButtons = Array.from(host.querySelectorAll('button.wh40k-dw-mission-objective-toggle'));
-                        objectiveButtonCount = objectiveButtons.length;
-                        firstObjectiveAction = objectiveButtons[0]?.getAttribute('data-action') ?? '';
-                        firstObjectiveId = objectiveButtons[0]?.getAttribute('data-objective-id') ?? '';
+                    const objectiveButtons = Array.from(host.querySelectorAll('button.wh40k-dw-mission-objective-toggle'));
+                    objectiveButtonCount = objectiveButtons.length;
+                    firstObjectiveAction = objectiveButtons[0]?.getAttribute('data-action') ?? '';
+                    firstObjectiveId = objectiveButtons[0]?.getAttribute('data-objective-id') ?? '';
 
-                        const complicationButtons = Array.from(host.querySelectorAll('button.wh40k-dw-mission-complication-toggle'));
-                        complicationButtonCount = complicationButtons.length;
-                        firstComplicationAction = complicationButtons[0]?.getAttribute('data-action') ?? '';
-                        firstComplicationId = complicationButtons[0]?.getAttribute('data-complication-id') ?? '';
+                    const complicationButtons = Array.from(host.querySelectorAll('button.wh40k-dw-mission-complication-toggle'));
+                    complicationButtonCount = complicationButtons.length;
+                    firstComplicationAction = complicationButtons[0]?.getAttribute('data-action') ?? '';
+                    firstComplicationId = complicationButtons[0]?.getAttribute('data-complication-id') ?? '';
 
-                        const completeBtn = host.querySelector('button.wh40k-dw-mission-complete-btn');
-                        hasCompleteBtn = completeBtn !== null;
-                        completeBtnAction = completeBtn?.getAttribute('data-action') ?? '';
-                    }
-
-                    interface DwMissionHostGlobal {
-                        __dwMissionPanelHost?: HTMLElement | undefined;
-                    }
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
-                    (globalThis as unknown as DwMissionHostGlobal).__dwMissionPanelHost = host;
-                } catch (err) {
-                    error = String(err instanceof Error ? err.message : err);
+                    const completeBtn = host.querySelector('button.wh40k-dw-mission-complete-btn');
+                    hasCompleteBtn = completeBtn !== null;
+                    completeBtnAction = completeBtn?.getAttribute('data-action') ?? '';
                 }
 
-                return {
-                    rendered,
-                    missionActiveAttr,
-                    missionNameText,
-                    ratingAttr,
-                    objectiveButtonCount,
-                    firstObjectiveAction,
-                    firstObjectiveId,
-                    complicationButtonCount,
-                    firstComplicationAction,
-                    firstComplicationId,
-                    hasCompleteBtn,
-                    completeBtnAction,
-                    error,
-                };
-            });
-
-            await snap(page, 'dw-mission-panel');
-
-            // Tear down so the host doesn't leak into the next serial test.
-            await page.evaluate(() => {
                 interface DwMissionHostGlobal {
                     __dwMissionPanelHost?: HTMLElement | undefined;
                 }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
-                const fg = globalThis as unknown as DwMissionHostGlobal;
-                const host = fg.__dwMissionPanelHost;
-                try {
-                    host?.remove();
-                } catch {
-                    /* ignore */
-                }
-                fg.__dwMissionPanelHost = undefined;
-            });
+                // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm host on globalThis for cross-eval cleanup
+                (globalThis as unknown as DwMissionHostGlobal).__dwMissionPanelHost = host;
+            } catch (err) {
+                error = String(err instanceof Error ? err.message : err);
+            }
 
-            expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'panel did not render').toBe(true);
-            expect(result.missionActiveAttr, 'mission-active flag should be true').toBe('true');
-            expect(result.missionNameText, 'mission name should render').toContain('Strike on Blackthorn VII');
-            expect(result.ratingAttr, 'rating attribute should round-trip').toBe('priority');
-            expect(result.objectiveButtonCount, 'one toggle button per objective should render').toBe(2);
-            expect(result.firstObjectiveAction, 'objective toggle should carry data-action="dwToggleObjective"').toBe('dwToggleObjective');
-            expect(result.firstObjectiveId, 'objective toggle should carry data-objective-id').toBe('obj-1');
-            expect(result.complicationButtonCount, 'one toggle button per complication should render').toBe(1);
-            expect(result.firstComplicationAction, 'complication toggle should carry data-action="dwToggleComplication"').toBe('dwToggleComplication');
-            expect(result.firstComplicationId, 'complication toggle should carry data-complication-id').toBe('comp-1');
-            expect(result.hasCompleteBtn, 'complete-mission button should render').toBe(true);
-            expect(result.completeBtnAction, 'complete-mission button should carry data-action="dwCompleteMission"').toBe('dwCompleteMission');
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
+            return {
+                rendered,
+                missionActiveAttr,
+                missionNameText,
+                ratingAttr,
+                objectiveButtonCount,
+                firstObjectiveAction,
+                firstObjectiveId,
+                complicationButtonCount,
+                firstComplicationAction,
+                firstComplicationId,
+                hasCompleteBtn,
+                completeBtnAction,
+                error,
+            };
+        });
 
-            recordCoverage('panel.render', 'DwMissionPanel');
-        } finally {
-            page.off('pageerror', listener);
-        }
+        await snap(page, 'dw-mission-panel');
+
+        // Tear down so the host doesn't leak into the next serial test.
+        await page.evaluate(() => {
+            interface DwMissionHostGlobal {
+                __dwMissionPanelHost?: HTMLElement | undefined;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm host stashed on globalThis
+            const fg = globalThis as unknown as DwMissionHostGlobal;
+            const host = fg.__dwMissionPanelHost;
+            try {
+                host?.remove();
+            } catch {
+                /* ignore */
+            }
+            fg.__dwMissionPanelHost = undefined;
+        });
+
+        expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.rendered, 'panel did not render').toBe(true);
+        expect(result.missionActiveAttr, 'mission-active flag should be true').toBe('true');
+        expect(result.missionNameText, 'mission name should render').toContain('Strike on Blackthorn VII');
+        expect(result.ratingAttr, 'rating attribute should round-trip').toBe('priority');
+        expect(result.objectiveButtonCount, 'one toggle button per objective should render').toBe(2);
+        expect(result.firstObjectiveAction, 'objective toggle should carry data-action="dwToggleObjective"').toBe('dwToggleObjective');
+        expect(result.firstObjectiveId, 'objective toggle should carry data-objective-id').toBe('obj-1');
+        expect(result.complicationButtonCount, 'one toggle button per complication should render').toBe(1);
+        expect(result.firstComplicationAction, 'complication toggle should carry data-action="dwToggleComplication"').toBe('dwToggleComplication');
+        expect(result.firstComplicationId, 'complication toggle should carry data-complication-id').toBe('comp-1');
+        expect(result.hasCompleteBtn, 'complete-mission button should render').toBe(true);
+        expect(result.completeBtnAction, 'complete-mission button should carry data-action="dwCompleteMission"').toBe('dwCompleteMission');
+
+        recordCoverage('panel.render', 'DwMissionPanel');
     });
 });

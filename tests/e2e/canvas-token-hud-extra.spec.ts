@@ -76,7 +76,6 @@ type FlowName = (typeof CANVAS_EXTRA_FLOWS)[number];
 interface ProbeResult {
     flowsFired: Record<FlowName, boolean>;
     flowNotes: Partial<Record<FlowName, string>>;
-    pageErrors: string[];
 }
 
 interface ProbeResultInner {
@@ -85,812 +84,796 @@ interface ProbeResultInner {
 }
 
 async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
-    const pageErrors: string[] = [];
-    const listener = (pageErr: Error): void => {
-        pageErrors.push(pageErr.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const result = await page.evaluate(async (flows: readonly string[]): Promise<ProbeResultInner> => {
-            interface ActorLike {
-                id?: string;
-                movement?: Record<string, number> | undefined;
-            }
-            interface ActorApi {
-                create?: (data: object) => Promise<ActorLike | null>;
-            }
-            interface HooksApi {
-                callAll?: (name: string, ...args: object[]) => boolean;
-            }
-            interface MovementActionEntry {
-                teleport?: boolean;
-                measure?: boolean;
-                walls?: string;
-                visualize?: boolean;
-            }
-            interface ConfigApi {
-                Token?: {
-                    rulerClass?: RulerCtor | null;
-                    movement?: { actions?: Record<string, MovementActionEntry> };
-                };
-                wh40k?: {
-                    tokenRulerColors?: { normal: number; double: number; triple: number };
-                    movementTypes?: Record<string, object>;
-                };
-            }
-            interface ActorsCollection {
-                get?: (id: string) => (ActorLike & { delete?: () => Promise<void> }) | undefined;
-            }
-            interface GameApi {
-                actors?: ActorsCollection;
-                i18n?: { localize?: (key: string) => string };
-            }
-            interface PixiApi {
-                UPDATE_PRIORITY?: Record<string, number>;
-            }
-            interface StyleResult {
-                color?: number;
-            }
-            type Waypoint = { action: string; measurement: { cost: number } };
-            interface RulerLike {
-                token: object;
-                _getWaypointStyle: (wp: Waypoint) => StyleResult | undefined;
-                _getSegmentStyle: (wp: Waypoint) => StyleResult | undefined;
-                _getGridHighlightStyle: (wp: Waypoint, offset: { i: number; j: number; k: number }) => StyleResult | undefined;
-            }
-            type RulerCtor = new (token: object) => RulerLike;
-            interface TokenDocApi {
-                registerMovementActions?: () => void;
-            }
-
-            interface FoundryGlobals {
-                Actor?: ActorApi;
-                Hooks: HooksApi;
-                CONFIG?: ConfigApi;
-                game?: GameApi;
-                PIXI?: PixiApi;
-            }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Actor/Hooks/CONFIG/game/PIXI) have no shipped browser-side typing inside page.evaluate
-            const gbl = globalThis as unknown as FoundryGlobals;
-            const ActorCls = gbl.Actor;
-            const HooksMgr = gbl.Hooks;
-            const ConfigObj = gbl.CONFIG;
-            const gameMgr = gbl.game;
-
-            const fired: Record<string, boolean> = {};
-            const notes: Record<string, string> = {};
-            for (const f of flows) fired[f] = false;
-
-            if (ActorCls?.create == null) {
-                return {
-                    flowsFired: fired,
-                    flowNotes: { 'ruler-instantiates-with-token': 'ActorCls.create unavailable' },
-                };
-            }
-
-            // Stub the PIXI namespace so anything imported through the
-            // placeables layer (including the ruler module itself) doesn't
-            // throw on the top-level UPDATE_PRIORITY lookups in headless
-            // mode. Mirrors the stub installed by canvas-ruler.spec.ts and
-            // token.spec.ts.
-            gbl.PIXI = gbl.PIXI ?? {};
-            gbl.PIXI.UPDATE_PRIORITY = gbl.PIXI.UPDATE_PRIORITY ?? {
-                INTERACTION: 50,
-                HIGH: 25,
-                NORMAL: 0,
-                LOW: -25,
-                UTILITY: -50,
-                OBJECTS: 1,
-                PERCEPTION: 2,
+    const result = await page.evaluate(async (flows: readonly string[]): Promise<ProbeResultInner> => {
+        interface ActorLike {
+            id?: string;
+            movement?: Record<string, number> | undefined;
+        }
+        interface ActorApi {
+            create?: (data: object) => Promise<ActorLike | null>;
+        }
+        interface HooksApi {
+            callAll?: (name: string, ...args: object[]) => boolean;
+        }
+        interface MovementActionEntry {
+            teleport?: boolean;
+            measure?: boolean;
+            walls?: string;
+            visualize?: boolean;
+        }
+        interface ConfigApi {
+            Token?: {
+                rulerClass?: RulerCtor | null;
+                movement?: { actions?: Record<string, MovementActionEntry> };
             };
-
-            const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | undefined;
-                const timeout = new Promise<T>((_, reject) => {
-                    timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-                });
-                try {
-                    return await Promise.race([p, timeout]);
-                } finally {
-                    clearTimeout(timer);
-                }
+            wh40k?: {
+                tokenRulerColors?: { normal: number; double: number; triple: number };
+                movementTypes?: Record<string, object>;
             };
+        }
+        interface ActorsCollection {
+            get?: (id: string) => (ActorLike & { delete?: () => Promise<void> }) | undefined;
+        }
+        interface GameApi {
+            actors?: ActorsCollection;
+            i18n?: { localize?: (key: string) => string };
+        }
+        interface PixiApi {
+            UPDATE_PRIORITY?: Record<string, number>;
+        }
+        interface StyleResult {
+            color?: number;
+        }
+        type Waypoint = { action: string; measurement: { cost: number } };
+        interface RulerLike {
+            token: object;
+            _getWaypointStyle: (wp: Waypoint) => StyleResult | undefined;
+            _getSegmentStyle: (wp: Waypoint) => StyleResult | undefined;
+            _getGridHighlightStyle: (wp: Waypoint, offset: { i: number; j: number; k: number }) => StyleResult | undefined;
+        }
+        type RulerCtor = new (token: object) => RulerLike;
+        interface TokenDocApi {
+            registerMovementActions?: () => void;
+        }
 
-            // Cleanup registry — every actor / scene / item / created
-            // document gets registered so a single finally block can tear
-            // them all down even if a probe mid-run throws.
-            const cleanups: Array<() => Promise<void>> = [];
+        interface FoundryGlobals {
+            Actor?: ActorApi;
+            Hooks: HooksApi;
+            CONFIG?: ConfigApi;
+            game?: GameApi;
+            PIXI?: PixiApi;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Actor/Hooks/CONFIG/game/PIXI) have no shipped browser-side typing inside page.evaluate
+        const gbl = globalThis as unknown as FoundryGlobals;
+        const ActorCls = gbl.Actor;
+        const HooksMgr = gbl.Hooks;
+        const ConfigObj = gbl.CONFIG;
+        const gameMgr = gbl.game;
 
-            // ---- shared actor with a populated `system.movement` block ----
-            // bc-character is the most stable headless actor type per
-            // token.spec.ts's notes; gameSystem=bc keeps it on the BC
-            // homologation path.
-            let actor: ActorLike | null = null;
+        const fired: Record<string, boolean> = {};
+        const notes: Record<string, string> = {};
+        for (const f of flows) fired[f] = false;
+
+        if (ActorCls?.create == null) {
+            return {
+                flowsFired: fired,
+                flowNotes: { 'ruler-instantiates-with-token': 'ActorCls.create unavailable' },
+            };
+        }
+
+        // Stub the PIXI namespace so anything imported through the
+        // placeables layer (including the ruler module itself) doesn't
+        // throw on the top-level UPDATE_PRIORITY lookups in headless
+        // mode. Mirrors the stub installed by canvas-ruler.spec.ts and
+        // token.spec.ts.
+        gbl.PIXI = gbl.PIXI ?? {};
+        gbl.PIXI.UPDATE_PRIORITY = gbl.PIXI.UPDATE_PRIORITY ?? {
+            INTERACTION: 50,
+            HIGH: 25,
+            NORMAL: 0,
+            LOW: -25,
+            UTILITY: -50,
+            OBJECTS: 1,
+            PERCEPTION: 2,
+        };
+
+        const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
+            let timer: ReturnType<typeof setTimeout> | undefined;
+            const timeout = new Promise<T>((_, reject) => {
+                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+            });
             try {
-                actor = await withTimeout(
-                    ActorCls.create({
-                        name: 'canvas-token-hud-extra-actor',
-                        type: 'bc-character',
-                        system: { gameSystem: 'bc', movement: { half: 3, full: 6, charge: 9, run: 18 } },
-                    }),
-                    5_000,
-                    'ActorCls.create',
-                );
-                if (actor?.id != null) {
-                    const actorId = actor.id;
-                    cleanups.push(async () => {
-                        try {
-                            await gameMgr?.actors?.get?.(actorId)?.delete?.();
-                        } catch {
-                            /* ignore */
-                        }
-                    });
-                }
-            } catch (err) {
-                for (const f of flows) notes[f] = `ActorCls.create threw: ${String((err as Error).message)}`;
-            }
-
-            if (actor?.id == null) {
-                return { flowsFired: fired, flowNotes: notes };
-            }
-
-            // A separate movement-less actor for the
-            // `token-hud-no-movement-skips-injection` flow. We don't want
-            // to mutate the primary actor's movement halfway through the
-            // run because the ruler probes downstream still need it.
-            let actorNoMovement: ActorLike | null = null;
-            try {
-                actorNoMovement = await withTimeout(
-                    ActorCls.create({
-                        name: 'canvas-token-hud-extra-actor-no-movement',
-                        type: 'bc-npc',
-                        system: { gameSystem: 'bc' },
-                    }),
-                    5_000,
-                    'ActorCls.create (no movement)',
-                );
-                if (actorNoMovement?.id != null) {
-                    const actorNoMovementId = actorNoMovement.id;
-                    cleanups.push(async () => {
-                        try {
-                            await gameMgr?.actors?.get?.(actorNoMovementId)?.delete?.();
-                        } catch {
-                            /* ignore */
-                        }
-                    });
-                }
-            } catch {
-                /* best-effort — the no-movement flow will note its own absence */
-            }
-
-            try {
-                /* ============================================================
-                 * Setup: load TokenRulerWH40K via dynamic import. Building
-                 * the URL through a `new Function('u', 'return import(u)')`
-                 * trampoline keeps TS off the Foundry-served URL.
-                 * ============================================================ */
-                let TokenRulerWH40K: RulerCtor | null = null;
-                try {
-                    const url = '/systems/wh40k-rpg/module/canvas/ruler.js';
-                    type RulerModule = { default?: RulerCtor; TokenRulerWH40K?: RulerCtor };
-                    const importMod = async (u: string): Promise<RulerModule> => (await import(/* @vite-ignore */ u)) as RulerModule;
-                    const mod = await importMod(url);
-                    TokenRulerWH40K = mod.default ?? mod.TokenRulerWH40K ?? null;
-                } catch (err) {
-                    notes['ruler-instantiates-with-token'] = `ruler module import threw: ${String((err as Error).message)}`;
-                }
-
-                // Synthesized token shape the ruler reads from. The class
-                // calls `this.token.actor.movement` (a derived getter on
-                // prepared actors), so we hand-roll a fake-token whose
-                // `.actor.movement` returns the budget map directly. The
-                // ruler also reads `this.token._plannedMovement` (Foundry
-                // sets it during a drag) — we set a sentinel object so the
-                // !=null branch passes.
-                // The ruler reads `this.token.actor.movement` directly (a derived
-                // getter). A real actor's derived movement floors to 0 for default
-                // characteristics, which would make every speed-ratio 0 → base color.
-                // Use a fake actor exposing an explicit, non-zero movement map so the
-                // green/yellow/red ratio branches are exercised deterministically.
-                const fakeToken = {
-                    _plannedMovement: { distance: 1 },
-                    actor: { movement: { half: 3, full: 6, charge: 9, run: 18 } },
-                };
-
-                /* ============================================================
-                 * Flow 1: ruler-instantiates-with-token
-                 * Either via ConfigObj.Token.rulerClass (the production
-                 * registration path) or directly through the dynamic
-                 * import. Success = constructor returns a non-null
-                 * instance whose prototype chain reaches the imported
-                 * class.
-                 * ============================================================ */
-                let ruler: RulerLike | null = null;
-                try {
-                    const RulerClassFromConfig = ConfigObj?.Token?.rulerClass ?? null;
-                    const RulerClass = TokenRulerWH40K ?? RulerClassFromConfig;
-                    if (typeof RulerClass !== 'function') {
-                        notes[
-                            'ruler-instantiates-with-token'
-                        ] = `no ruler class — TokenRulerWH40K=${typeof TokenRulerWH40K} ConfigObj.Token.rulerClass=${typeof RulerClassFromConfig}`;
-                    } else {
-                        try {
-                            ruler = new RulerClass(fakeToken);
-                        } catch (err) {
-                            // Foundry's base TokenRuler ctor wants a real
-                            // Token, not a plain object. Bypass the
-                            // hierarchy with a hand-mounted instance whose
-                            // prototype points at TokenRulerWH40K so all
-                            // three method overrides resolve normally.
-                            const fallback = Object.create(RulerClass.prototype as object) as RulerLike;
-                            // `token` is a getter backed by the base class's #token
-                            // private field; a plain assignment can't shadow it (and
-                            // reading it brand-checks). Define an own data property so
-                            // `this.token` resolves to the fake without touching #token.
-                            Object.defineProperty(fallback, 'token', { value: fakeToken, configurable: true, writable: true });
-                            ruler = fallback;
-                            notes['ruler-instantiates-with-token'] = `direct ctor threw (${String((err as Error).message)}); using prototype-mounted fallback`;
-                        }
-                        fired['ruler-instantiates-with-token'] = true;
-                    }
-                } catch (err) {
-                    notes['ruler-instantiates-with-token'] = `ruler instantiation outer threw: ${String((err as Error).message)}`;
-                }
-
-                // Helper: build a synthetic waypoint shape the speed-based
-                // helper reads. The base-class super calls return a style
-                // object we stub via Object.setPrototypeOf so we don't
-                // depend on Foundry's TokenRuler defaults.
-                const makeWaypoint = (action: string, cost: number): Waypoint => ({
-                    action,
-                    measurement: { cost },
-                });
-                const baseColor = 0x808080;
-                interface SuperProto {
-                    _getWaypointStyle?: () => StyleResult;
-                    _getSegmentStyle?: () => StyleResult;
-                    _getGridHighlightStyle?: () => StyleResult;
-                }
-                const stubSuperReturns = (instance: object): void => {
-                    // Replace each `super.*` call with a stub that returns a
-                    // fresh style object carrying baseColor — the helper
-                    // reads `style.color` only, so a plain object is
-                    // sufficient. We patch the prototype chain's parent
-                    // (the Foundry TokenRuler base) so the spread `super.*`
-                    // calls in the WH40K subclass resolve to our stub.
-                    const proto: object | null = Object.getPrototypeOf(instance) as object | null;
-                    const parentProto: object | null = proto !== null ? (Object.getPrototypeOf(proto) as object | null) : null;
-                    if (parentProto !== null && typeof parentProto === 'object') {
-                        const parent: SuperProto = parentProto;
-                        parent._getWaypointStyle = (): StyleResult => ({ color: baseColor });
-                        parent._getSegmentStyle = (): StyleResult => ({ color: baseColor });
-                        parent._getGridHighlightStyle = (): StyleResult => ({ color: baseColor });
-                    }
-                };
-
-                if (ruler !== null) {
-                    try {
-                        stubSuperReturns(ruler);
-                    } catch (err) {
-                        notes['ruler-waypoint-style-budget-green'] = `super stub threw: ${String((err as Error).message)}`;
-                    }
-                }
-
-                // Ensure ConfigObj.wh40k.tokenRulerColors is populated — it's
-                // seeded by config.ts at init, but a fresh Chromium tab can
-                // race. Default to a deterministic palette if missing.
-                if (ConfigObj?.wh40k !== undefined) {
-                    ConfigObj.wh40k.tokenRulerColors = ConfigObj.wh40k.tokenRulerColors ?? {
-                        normal: 0x33bc4e,
-                        double: 0xf1d836,
-                        triple: 0xe72124,
-                    };
-                }
-                const colors = ConfigObj?.wh40k?.tokenRulerColors ?? { normal: 0x33bc4e, double: 0xf1d836, triple: 0xe72124 };
-
-                // Each remaining flow is an independent probe block extracted
-                // into its own named inner function to keep this callback's
-                // cyclomatic complexity bounded. They are declared here —
-                // after the shared ruler / colors / stub setup above — so
-                // they close over that context, and run in sequence below.
-                const probeWaypointStyleBudgetGreen = (): void => {
-                    /* ============================================================
-                     * Flow 2: ruler-waypoint-style-budget-green
-                     * cost / speed <= 1 — `#getSpeedBasedStyle` should assign
-                     * the normal (green) color. speed=6 (full action), cost=2
-                     * → ratio (2 - 0.1) / 6 = 0.31 → normal.
-                     * ============================================================ */
-                    if (ruler !== null) {
-                        try {
-                            const style = ruler._getWaypointStyle(makeWaypoint('full', 2));
-                            if (style?.color === colors.normal) {
-                                fired['ruler-waypoint-style-budget-green'] = true;
-                            } else {
-                                notes['ruler-waypoint-style-budget-green'] = `expected normal=${String(colors.normal)}, got ${String(style?.color)}`;
-                            }
-                        } catch (err) {
-                            notes['ruler-waypoint-style-budget-green'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
-                        }
-                    }
-                };
-
-                const probeWaypointStyleDoubleYellow = (): void => {
-                    /* ============================================================
-                     * Flow 3: ruler-waypoint-style-double-yellow
-                     * 1 < cost/speed <= 2 — yellow. speed=6, cost=8 →
-                     * (8 - 0.1)/6 = 1.32 → double.
-                     * ============================================================ */
-                    if (ruler !== null) {
-                        try {
-                            const style = ruler._getWaypointStyle(makeWaypoint('full', 8));
-                            if (style?.color === colors.double) {
-                                fired['ruler-waypoint-style-double-yellow'] = true;
-                            } else {
-                                notes['ruler-waypoint-style-double-yellow'] = `expected double=${String(colors.double)}, got ${String(style?.color)}`;
-                            }
-                        } catch (err) {
-                            notes['ruler-waypoint-style-double-yellow'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
-                        }
-                    }
-                };
-
-                const probeWaypointStyleTripleRed = (): void => {
-                    /* ============================================================
-                     * Flow 4: ruler-waypoint-style-triple-red
-                     * cost/speed > 2 — red. speed=6, cost=20 →
-                     * (20 - 0.1)/6 = 3.32 → triple.
-                     * ============================================================ */
-                    if (ruler !== null) {
-                        try {
-                            const style = ruler._getWaypointStyle(makeWaypoint('full', 20));
-                            if (style?.color === colors.triple) {
-                                fired['ruler-waypoint-style-triple-red'] = true;
-                            } else {
-                                notes['ruler-waypoint-style-triple-red'] = `expected triple=${String(colors.triple)}, got ${String(style?.color)}`;
-                            }
-                        } catch (err) {
-                            notes['ruler-waypoint-style-triple-red'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
-                        }
-                    }
-                };
-
-                const probeSegmentStyleRespectsSpeed = (): void => {
-                    /* ============================================================
-                     * Flow 5: ruler-segment-style-respects-speed
-                     * Same helper, different override entry-point. cost=10,
-                     * speed=6 → ratio (10 - 0.1)/6 = 1.65 → double color.
-                     * ============================================================ */
-                    if (ruler !== null) {
-                        try {
-                            const style = ruler._getSegmentStyle(makeWaypoint('full', 10));
-                            if (style?.color === colors.double) {
-                                fired['ruler-segment-style-respects-speed'] = true;
-                            } else {
-                                notes['ruler-segment-style-respects-speed'] = `expected double=${String(colors.double)}, got ${String(style?.color)}`;
-                            }
-                        } catch (err) {
-                            notes['ruler-segment-style-respects-speed'] = `_getSegmentStyle threw: ${String((err as Error).message)}`;
-                        }
-                    }
-                };
-
-                const probeGridHighlightStyle = (): void => {
-                    /* ============================================================
-                     * Flow 6: ruler-grid-highlight-style
-                     * Third entry-point. Same ratio bucketing; cost=5
-                     * speed=6 → 0.81 → normal.
-                     * ============================================================ */
-                    if (ruler !== null) {
-                        try {
-                            const style = ruler._getGridHighlightStyle(makeWaypoint('full', 5), { i: 0, j: 0, k: 0 });
-                            if (style?.color === colors.normal) {
-                                fired['ruler-grid-highlight-style'] = true;
-                            } else {
-                                notes['ruler-grid-highlight-style'] = `expected normal=${String(colors.normal)}, got ${String(style?.color)}`;
-                            }
-                        } catch (err) {
-                            notes['ruler-grid-highlight-style'] = `_getGridHighlightStyle threw: ${String((err as Error).message)}`;
-                        }
-                    }
-                };
-
-                const probeTeleportActionSkipsColor = (): void => {
-                    /* ============================================================
-                     * Flow 7: ruler-teleport-action-skips-color
-                     * Waypoint whose action is registered as `teleport: true`
-                     * short-circuits the speed-based helper and returns the
-                     * base style untouched. Inject a synthetic teleport action
-                     * into ConfigObj.Token.movement.actions for the assertion.
-                     * ============================================================ */
-                    if (ruler !== null) {
-                        try {
-                            if (ConfigObj?.Token?.movement?.actions !== undefined) {
-                                ConfigObj.Token.movement.actions['teleport-probe'] = ConfigObj.Token.movement.actions['teleport-probe'] ?? { teleport: true };
-                            }
-                            const style = ruler._getWaypointStyle(makeWaypoint('teleport-probe', 100));
-                            if (style?.color === baseColor) {
-                                fired['ruler-teleport-action-skips-color'] = true;
-                            } else {
-                                notes['ruler-teleport-action-skips-color'] = `expected base color preserved (${String(baseColor)}), got ${String(
-                                    style?.color,
-                                )}`;
-                            }
-                        } catch (err) {
-                            notes['ruler-teleport-action-skips-color'] = `teleport probe threw: ${String((err as Error).message)}`;
-                        }
-                    }
-                };
-
-                const probeNoMovementReturnsDefault = (): void => {
-                    /* ============================================================
-                     * Flow 8: ruler-no-movement-returns-default
-                     * When the actor has no `movement` map, the helper bails
-                     * before touching style.color. Build a fresh ruler whose
-                     * token.actor.movement is undefined and assert the base
-                     * style passes through.
-                     * ============================================================ */
-                    if (ruler !== null && TokenRulerWH40K !== null) {
-                        try {
-                            const fakeTokenNoMove = { _plannedMovement: { distance: 1 }, actor: { movement: undefined } };
-                            const noMoveRuler = Object.create(TokenRulerWH40K.prototype as object) as RulerLike;
-                            // Own data property shadows the #token-backed getter (see above).
-                            Object.defineProperty(noMoveRuler, 'token', { value: fakeTokenNoMove, configurable: true, writable: true });
-                            stubSuperReturns(noMoveRuler);
-                            const style = noMoveRuler._getWaypointStyle(makeWaypoint('full', 4));
-                            if (style?.color === baseColor) {
-                                fired['ruler-no-movement-returns-default'] = true;
-                            } else {
-                                notes['ruler-no-movement-returns-default'] = `expected base color preserved (${String(baseColor)}), got ${String(
-                                    style?.color,
-                                )}`;
-                            }
-                        } catch (err) {
-                            notes['ruler-no-movement-returns-default'] = `no-movement probe threw: ${String((err as Error).message)}`;
-                        }
-                    }
-                };
-
-                const probeHudActiveButtonClass = async (): Promise<void> => {
-                    // Re-narrow the closed-over actor / Hooks refs: the outer
-                    // guards' narrowing does not propagate into this nested arrow.
-                    if (actor.id == null || HooksMgr.callAll == null) return;
-                    /* ============================================================
-                     * Flow 9: token-hud-active-button-class
-                     * Fire `renderTokenHUD` with a token whose
-                     * `getFlag('wh40k-rpg', 'movementAction')` returns 'full',
-                     * and assert exactly one injected button carries the
-                     * `active` class — exercising the active-state branch in
-                     * `onTokenHUDRender` that the scene-controls spec doesn't
-                     * cover.
-                     * ============================================================ */
-                    try {
-                        const htmlRoot = document.createElement('div');
-                        const statusEffects = document.createElement('div');
-                        statusEffects.className = 'status-effects';
-                        htmlRoot.appendChild(statusEffects);
-
-                        const liveActor2 = gameMgr?.actors?.get?.(actor.id) ?? actor;
-                        const fakeTokenDoc = {
-                            id: 'fake-token-active',
-                            actor: liveActor2,
-                            getFlag: (scope: string, key: string) => (scope === 'wh40k-rpg' && key === 'movementAction' ? 'full' : null),
-                            update: (_data: object) => undefined,
-                        };
-                        const fakeHud = { object: { document: fakeTokenDoc } };
-                        HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 30);
-                        });
-                        const activeBtns = htmlRoot.querySelectorAll('.wh40k-token-movement__btn.active');
-                        if (activeBtns.length === 1) {
-                            const activeBtn = activeBtns[0] as HTMLElement;
-                            if (activeBtn.dataset['movementType'] === 'full') {
-                                fired['token-hud-active-button-class'] = true;
-                            } else {
-                                notes['token-hud-active-button-class'] = `active button data-movement-type=${String(
-                                    activeBtn.dataset['movementType'],
-                                )} (expected 'full')`;
-                            }
-                        } else {
-                            notes['token-hud-active-button-class'] = `expected exactly 1 active button, got ${activeBtns.length}`;
-                        }
-                    } catch (err) {
-                        notes['token-hud-active-button-class'] = `active-button probe threw: ${String((err as Error).message)}`;
-                    }
-                };
-
-                const probeHudNoMovementSkipsInjection = async (): Promise<void> => {
-                    // Re-narrow the closed-over Hooks ref: the outer guard's
-                    // narrowing does not propagate into this nested arrow.
-                    if (HooksMgr.callAll == null) return;
-                    /* ============================================================
-                     * Flow 10: token-hud-no-movement-skips-injection
-                     * Actor without `system.movement` — `onTokenHUDRender`
-                     * returns early. Assert the container element was NOT
-                     * appended to the synthesized html root.
-                     * ============================================================ */
-                    try {
-                        // A real creature actor ALWAYS has a derived system.movement
-                        // (NPC/character prepareDerivedData floors it), so there is no
-                        // real "movement-less" actor to create. Feed onTokenHUDRender a
-                        // fake token whose actor.system.movement is explicitly undefined
-                        // to exercise the early-return (`if (movement === undefined)`).
-                        const htmlRoot = document.createElement('div');
-                        const statusEffects = document.createElement('div');
-                        statusEffects.className = 'status-effects';
-                        htmlRoot.appendChild(statusEffects);
-                        const fakeTokenDoc = {
-                            id: 'fake-token-no-move',
-                            actor: { system: { movement: undefined } },
-                            getFlag: (_scope: string, _key: string) => null,
-                            update: (_data: object) => undefined,
-                        };
-                        const fakeHud = { object: { document: fakeTokenDoc } };
-                        HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 30);
-                        });
-                        const container = htmlRoot.querySelector('.wh40k-token-movement');
-                        if (container === null) {
-                            fired['token-hud-no-movement-skips-injection'] = true;
-                        } else {
-                            notes['token-hud-no-movement-skips-injection'] = `expected no container, found one with ${container.children.length} children`;
-                        }
-                    } catch (err) {
-                        notes['token-hud-no-movement-skips-injection'] = `no-movement probe threw: ${String((err as Error).message)}`;
-                    }
-                };
-
-                const probeHudButtonLocalizesLabel = async (): Promise<void> => {
-                    // Re-narrow the closed-over actor / Hooks refs: the outer
-                    // guards' narrowing does not propagate into this nested arrow.
-                    if (actor.id == null || HooksMgr.callAll == null) return;
-                    /* ============================================================
-                     * Flow 11: token-hud-button-localizes-label
-                     * Every injected button's `title` attribute is built via
-                     * `gameMgr.i18n.localize(config.label) + ': <speed>m'`. With
-                     * the registered movement type config, the title should
-                     * contain ':' and a numeric speed value matching the
-                     * actor's movement map.
-                     * ============================================================ */
-                    try {
-                        const htmlRoot = document.createElement('div');
-                        const statusEffects = document.createElement('div');
-                        statusEffects.className = 'status-effects';
-                        htmlRoot.appendChild(statusEffects);
-                        const liveActor3 = gameMgr?.actors?.get?.(actor.id) ?? actor;
-                        const fakeTokenDoc = {
-                            id: 'fake-token-localize',
-                            actor: liveActor3,
-                            getFlag: (_scope: string, _key: string) => null,
-                            update: (_data: object) => undefined,
-                        };
-                        const fakeHud = { object: { document: fakeTokenDoc } };
-                        HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 30);
-                        });
-                        const halfBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="half"]');
-                        if (halfBtn !== null) {
-                            const title = halfBtn.title;
-                            // Title format: "<localized label>: <speed>m". The speed
-                            // is DERIVED in prepareDerivedData (agility/size), not the
-                            // value seeded at create — for a default character it floors
-                            // to 0m. The ":<n>m" suffix (any non-negative integer) proves
-                            // the speed pull from the actor's movement map ran.
-                            if (/:\s*\d+m\b/.test(title)) {
-                                fired['token-hud-button-localizes-label'] = true;
-                            } else {
-                                notes['token-hud-button-localizes-label'] = `unexpected title: "${title}"`;
-                            }
-                        } else {
-                            notes['token-hud-button-localizes-label'] = `half button not found among ${
-                                htmlRoot.querySelectorAll('.wh40k-token-movement__btn').length
-                            } buttons`;
-                        }
-                    } catch (err) {
-                        notes['token-hud-button-localizes-label'] = `localize probe threw: ${String((err as Error).message)}`;
-                    }
-                };
-
-                const probeHudSetMovementActionFlagUpdate = async (): Promise<void> => {
-                    // Re-narrow the closed-over actor / Hooks refs: the outer
-                    // guards' narrowing does not propagate into this nested arrow.
-                    if (actor.id == null || HooksMgr.callAll == null) return;
-                    /* ============================================================
-                     * Flow 12: token-hud-set-movement-action-flag-update
-                     * Click an injected button and observe the resulting
-                     * `token.update({flags: {'wh40k-rpg': {movementAction:
-                     * type}}})` call. We intercept `update` on the fake token
-                     * doc and assert the flag payload shape matches what
-                     * `#setMovementAction` constructs.
-                     * ============================================================ */
-                    try {
-                        const htmlRoot = document.createElement('div');
-                        const statusEffects = document.createElement('div');
-                        statusEffects.className = 'status-effects';
-                        htmlRoot.appendChild(statusEffects);
-                        const liveActor4 = gameMgr?.actors?.get?.(actor.id) ?? actor;
-                        const recordedUpdates: object[] = [];
-                        const fakeTokenDoc = {
-                            id: 'fake-token-update',
-                            actor: liveActor4,
-                            getFlag: (_scope: string, _key: string) => null,
-                            update: (data: object) => {
-                                recordedUpdates.push(data);
-                            },
-                        };
-                        const fakeHud = { object: { document: fakeTokenDoc } };
-                        HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 30);
-                        });
-                        const chargeBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="charge"]');
-                        if (chargeBtn !== null) {
-                            chargeBtn.click();
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 50);
-                            });
-                            const lastUpdate = recordedUpdates[recordedUpdates.length - 1] as
-                                | { flags?: { 'wh40k-rpg'?: { movementAction?: string } } }
-                                | undefined;
-                            const flagsPayload = lastUpdate?.flags?.['wh40k-rpg'];
-                            if (flagsPayload?.movementAction === 'charge') {
-                                fired['token-hud-set-movement-action-flag-update'] = true;
-                            } else {
-                                notes['token-hud-set-movement-action-flag-update'] = `update payload: ${JSON.stringify(
-                                    lastUpdate,
-                                )} (expected flags['wh40k-rpg'].movementAction='charge')`;
-                            }
-                        } else {
-                            notes['token-hud-set-movement-action-flag-update'] = 'charge button not present in injected HUD';
-                        }
-                    } catch (err) {
-                        notes['token-hud-set-movement-action-flag-update'] = `flag-update probe threw: ${String((err as Error).message)}`;
-                    }
-                };
-
-                const probeHudButtonHoverStyles = async (): Promise<void> => {
-                    // Re-narrow the closed-over actor / Hooks refs: the outer
-                    // guards' narrowing does not propagate into this nested arrow.
-                    if (actor.id == null || HooksMgr.callAll == null) return;
-                    /* ============================================================
-                     * Flow 13: token-hud-button-mouseenter-mouseleave-styles
-                     * Dispatch synthetic mouseenter / mouseleave events at a
-                     * non-active button and assert the inline styles swap as
-                     * the handlers prescribe (hover background lighter, leave
-                     * restores baseline). Drives the addEventListener branches
-                     * in `onTokenHUDRender` that the scene-controls spec
-                     * doesn't reach.
-                     * ============================================================ */
-                    try {
-                        const htmlRoot = document.createElement('div');
-                        const statusEffects = document.createElement('div');
-                        statusEffects.className = 'status-effects';
-                        htmlRoot.appendChild(statusEffects);
-                        const liveActor5 = gameMgr?.actors?.get?.(actor.id) ?? actor;
-                        const fakeTokenDoc = {
-                            id: 'fake-token-hover',
-                            actor: liveActor5,
-                            getFlag: (_scope: string, _key: string) => null,
-                            update: (_data: object) => undefined,
-                        };
-                        const fakeHud = { object: { document: fakeTokenDoc } };
-                        HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 30);
-                        });
-                        const runBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="run"]');
-                        if (runBtn !== null) {
-                            const baseBg = runBtn.style.background;
-                            runBtn.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 10);
-                            });
-                            const hoverBg = runBtn.style.background;
-                            runBtn.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 10);
-                            });
-                            const leaveBg = runBtn.style.background;
-                            if (hoverBg !== baseBg && leaveBg === baseBg) {
-                                fired['token-hud-button-mouseenter-mouseleave-styles'] = true;
-                            } else {
-                                notes[
-                                    'token-hud-button-mouseenter-mouseleave-styles'
-                                ] = `base=${baseBg} hover=${hoverBg} leave=${leaveBg} (expected hover!==base and leave===base)`;
-                            }
-                        } else {
-                            notes['token-hud-button-mouseenter-mouseleave-styles'] = 'run button not present in injected HUD';
-                        }
-                    } catch (err) {
-                        notes['token-hud-button-mouseenter-mouseleave-styles'] = `hover probe threw: ${String((err as Error).message)}`;
-                    }
-                };
-
-                const probeRegisterMovementActions = async (): Promise<void> => {
-                    /* ============================================================
-                     * Flow 14: register-movement-actions-config-population
-                     * Dynamic-import the token document module and call
-                     * `TokenDocumentWH40K.registerMovementActions()`. Assert
-                     * every movement type key from ConfigObj.wh40k.movementTypes
-                     * landed in ConfigObj.Token.movement.actions with the
-                     * expected static shape (`measure: true`, `walls: 'move'`).
-                     * The function is idempotent — it uses `??=` — so calling
-                     * it twice is fine.
-                     * ============================================================ */
-                    try {
-                        const url = '/systems/wh40k-rpg/module/documents/token.js';
-                        type TokenModule = { TokenDocumentWH40K?: TokenDocApi; default?: TokenDocApi };
-                        const importTokenMod = async (u: string): Promise<TokenModule> => (await import(/* @vite-ignore */ u)) as TokenModule;
-                        const tokenMod = await importTokenMod(url);
-                        const TokenDocumentWH40K = tokenMod.TokenDocumentWH40K ?? tokenMod.default ?? null;
-                        if (typeof TokenDocumentWH40K?.registerMovementActions !== 'function') {
-                            notes['register-movement-actions-config-population'] = `registerMovementActions missing — keys: ${Object.keys(tokenMod).join(',')}`;
-                        } else {
-                            TokenDocumentWH40K.registerMovementActions();
-                            const wh40kTypes = Object.keys(ConfigObj?.wh40k?.movementTypes ?? {});
-                            const registered: Record<string, MovementActionEntry> = ConfigObj?.Token?.movement?.actions ?? {};
-                            const missing = wh40kTypes.filter((k) => !Object.prototype.hasOwnProperty.call(registered, k));
-                            const firstType = wh40kTypes[0];
-                            if (wh40kTypes.length > 0 && missing.length === 0) {
-                                // Sample one entry to confirm the populated
-                                // shape matches the static config in the
-                                // source (measure / walls / visualize).
-                                const sample = registered[firstType];
-                                if (sample.measure === true && sample.walls === 'move' && sample.visualize === true) {
-                                    fired['register-movement-actions-config-population'] = true;
-                                } else {
-                                    notes['register-movement-actions-config-population'] = `sample entry shape wrong: ${JSON.stringify({
-                                        measure: sample.measure,
-                                        walls: sample.walls,
-                                        visualize: sample.visualize,
-                                    })}`;
-                                }
-                            } else {
-                                notes['register-movement-actions-config-population'] = `registered types=${wh40kTypes.length}, missing=${missing.join(',')}`;
-                            }
-                        }
-                    } catch (err) {
-                        notes['register-movement-actions-config-population'] = `register probe threw: ${String((err as Error).message)}`;
-                    }
-                };
-
-                probeWaypointStyleBudgetGreen();
-                probeWaypointStyleDoubleYellow();
-                probeWaypointStyleTripleRed();
-                probeSegmentStyleRespectsSpeed();
-                probeGridHighlightStyle();
-                probeTeleportActionSkipsColor();
-                probeNoMovementReturnsDefault();
-                await probeHudActiveButtonClass();
-                await probeHudNoMovementSkipsInjection();
-                await probeHudButtonLocalizesLabel();
-                await probeHudSetMovementActionFlagUpdate();
-                await probeHudButtonHoverStyles();
-                await probeRegisterMovementActions();
+                return await Promise.race([p, timeout]);
             } finally {
-                // Best-effort cleanup of everything we created.
-                for (const fn of cleanups) {
+                clearTimeout(timer);
+            }
+        };
+
+        // Cleanup registry — every actor / scene / item / created
+        // document gets registered so a single finally block can tear
+        // them all down even if a probe mid-run throws.
+        const cleanups: Array<() => Promise<void>> = [];
+
+        // ---- shared actor with a populated `system.movement` block ----
+        // bc-character is the most stable headless actor type per
+        // token.spec.ts's notes; gameSystem=bc keeps it on the BC
+        // homologation path.
+        let actor: ActorLike | null = null;
+        try {
+            actor = await withTimeout(
+                ActorCls.create({
+                    name: 'canvas-token-hud-extra-actor',
+                    type: 'bc-character',
+                    system: { gameSystem: 'bc', movement: { half: 3, full: 6, charge: 9, run: 18 } },
+                }),
+                5_000,
+                'ActorCls.create',
+            );
+            if (actor?.id != null) {
+                const actorId = actor.id;
+                cleanups.push(async () => {
                     try {
-                        await fn();
+                        await gameMgr?.actors?.get?.(actorId)?.delete?.();
                     } catch {
                         /* ignore */
                     }
+                });
+            }
+        } catch (err) {
+            for (const f of flows) notes[f] = `ActorCls.create threw: ${String((err as Error).message)}`;
+        }
+
+        if (actor?.id == null) {
+            return { flowsFired: fired, flowNotes: notes };
+        }
+
+        // A separate movement-less actor for the
+        // `token-hud-no-movement-skips-injection` flow. We don't want
+        // to mutate the primary actor's movement halfway through the
+        // run because the ruler probes downstream still need it.
+        let actorNoMovement: ActorLike | null = null;
+        try {
+            actorNoMovement = await withTimeout(
+                ActorCls.create({
+                    name: 'canvas-token-hud-extra-actor-no-movement',
+                    type: 'bc-npc',
+                    system: { gameSystem: 'bc' },
+                }),
+                5_000,
+                'ActorCls.create (no movement)',
+            );
+            if (actorNoMovement?.id != null) {
+                const actorNoMovementId = actorNoMovement.id;
+                cleanups.push(async () => {
+                    try {
+                        await gameMgr?.actors?.get?.(actorNoMovementId)?.delete?.();
+                    } catch {
+                        /* ignore */
+                    }
+                });
+            }
+        } catch {
+            /* best-effort — the no-movement flow will note its own absence */
+        }
+
+        try {
+            /* ============================================================
+             * Setup: load TokenRulerWH40K via dynamic import. Building
+             * the URL through a `new Function('u', 'return import(u)')`
+             * trampoline keeps TS off the Foundry-served URL.
+             * ============================================================ */
+            let TokenRulerWH40K: RulerCtor | null = null;
+            try {
+                const url = '/systems/wh40k-rpg/module/canvas/ruler.js';
+                type RulerModule = { default?: RulerCtor; TokenRulerWH40K?: RulerCtor };
+                const importMod = async (u: string): Promise<RulerModule> => (await import(/* @vite-ignore */ u)) as RulerModule;
+                const mod = await importMod(url);
+                TokenRulerWH40K = mod.default ?? mod.TokenRulerWH40K ?? null;
+            } catch (err) {
+                notes['ruler-instantiates-with-token'] = `ruler module import threw: ${String((err as Error).message)}`;
+            }
+
+            // Synthesized token shape the ruler reads from. The class
+            // calls `this.token.actor.movement` (a derived getter on
+            // prepared actors), so we hand-roll a fake-token whose
+            // `.actor.movement` returns the budget map directly. The
+            // ruler also reads `this.token._plannedMovement` (Foundry
+            // sets it during a drag) — we set a sentinel object so the
+            // !=null branch passes.
+            // The ruler reads `this.token.actor.movement` directly (a derived
+            // getter). A real actor's derived movement floors to 0 for default
+            // characteristics, which would make every speed-ratio 0 → base color.
+            // Use a fake actor exposing an explicit, non-zero movement map so the
+            // green/yellow/red ratio branches are exercised deterministically.
+            const fakeToken = {
+                _plannedMovement: { distance: 1 },
+                actor: { movement: { half: 3, full: 6, charge: 9, run: 18 } },
+            };
+
+            /* ============================================================
+             * Flow 1: ruler-instantiates-with-token
+             * Either via ConfigObj.Token.rulerClass (the production
+             * registration path) or directly through the dynamic
+             * import. Success = constructor returns a non-null
+             * instance whose prototype chain reaches the imported
+             * class.
+             * ============================================================ */
+            let ruler: RulerLike | null = null;
+            try {
+                const RulerClassFromConfig = ConfigObj?.Token?.rulerClass ?? null;
+                const RulerClass = TokenRulerWH40K ?? RulerClassFromConfig;
+                if (typeof RulerClass !== 'function') {
+                    notes[
+                        'ruler-instantiates-with-token'
+                    ] = `no ruler class — TokenRulerWH40K=${typeof TokenRulerWH40K} ConfigObj.Token.rulerClass=${typeof RulerClassFromConfig}`;
+                } else {
+                    try {
+                        ruler = new RulerClass(fakeToken);
+                    } catch (err) {
+                        // Foundry's base TokenRuler ctor wants a real
+                        // Token, not a plain object. Bypass the
+                        // hierarchy with a hand-mounted instance whose
+                        // prototype points at TokenRulerWH40K so all
+                        // three method overrides resolve normally.
+                        const fallback = Object.create(RulerClass.prototype as object) as RulerLike;
+                        // `token` is a getter backed by the base class's #token
+                        // private field; a plain assignment can't shadow it (and
+                        // reading it brand-checks). Define an own data property so
+                        // `this.token` resolves to the fake without touching #token.
+                        Object.defineProperty(fallback, 'token', { value: fakeToken, configurable: true, writable: true });
+                        ruler = fallback;
+                        notes['ruler-instantiates-with-token'] = `direct ctor threw (${String((err as Error).message)}); using prototype-mounted fallback`;
+                    }
+                    fired['ruler-instantiates-with-token'] = true;
+                }
+            } catch (err) {
+                notes['ruler-instantiates-with-token'] = `ruler instantiation outer threw: ${String((err as Error).message)}`;
+            }
+
+            // Helper: build a synthetic waypoint shape the speed-based
+            // helper reads. The base-class super calls return a style
+            // object we stub via Object.setPrototypeOf so we don't
+            // depend on Foundry's TokenRuler defaults.
+            const makeWaypoint = (action: string, cost: number): Waypoint => ({
+                action,
+                measurement: { cost },
+            });
+            const baseColor = 0x808080;
+            interface SuperProto {
+                _getWaypointStyle?: () => StyleResult;
+                _getSegmentStyle?: () => StyleResult;
+                _getGridHighlightStyle?: () => StyleResult;
+            }
+            const stubSuperReturns = (instance: object): void => {
+                // Replace each `super.*` call with a stub that returns a
+                // fresh style object carrying baseColor — the helper
+                // reads `style.color` only, so a plain object is
+                // sufficient. We patch the prototype chain's parent
+                // (the Foundry TokenRuler base) so the spread `super.*`
+                // calls in the WH40K subclass resolve to our stub.
+                const proto: object | null = Object.getPrototypeOf(instance) as object | null;
+                const parentProto: object | null = proto !== null ? (Object.getPrototypeOf(proto) as object | null) : null;
+                if (parentProto !== null && typeof parentProto === 'object') {
+                    const parent: SuperProto = parentProto;
+                    parent._getWaypointStyle = (): StyleResult => ({ color: baseColor });
+                    parent._getSegmentStyle = (): StyleResult => ({ color: baseColor });
+                    parent._getGridHighlightStyle = (): StyleResult => ({ color: baseColor });
+                }
+            };
+
+            if (ruler !== null) {
+                try {
+                    stubSuperReturns(ruler);
+                } catch (err) {
+                    notes['ruler-waypoint-style-budget-green'] = `super stub threw: ${String((err as Error).message)}`;
                 }
             }
 
-            return { flowsFired: fired, flowNotes: notes };
-        }, CANVAS_EXTRA_FLOWS);
+            // Ensure ConfigObj.wh40k.tokenRulerColors is populated — it's
+            // seeded by config.ts at init, but a fresh Chromium tab can
+            // race. Default to a deterministic palette if missing.
+            if (ConfigObj?.wh40k !== undefined) {
+                ConfigObj.wh40k.tokenRulerColors = ConfigObj.wh40k.tokenRulerColors ?? {
+                    normal: 0x33bc4e,
+                    double: 0xf1d836,
+                    triple: 0xe72124,
+                };
+            }
+            const colors = ConfigObj?.wh40k?.tokenRulerColors ?? { normal: 0x33bc4e, double: 0xf1d836, triple: 0xe72124 };
 
-        return {
-            flowsFired: result.flowsFired,
-            flowNotes: result.flowNotes,
-            pageErrors,
-        };
-    } finally {
-        page.off('pageerror', listener);
-    }
+            // Each remaining flow is an independent probe block extracted
+            // into its own named inner function to keep this callback's
+            // cyclomatic complexity bounded. They are declared here —
+            // after the shared ruler / colors / stub setup above — so
+            // they close over that context, and run in sequence below.
+            const probeWaypointStyleBudgetGreen = (): void => {
+                /* ============================================================
+                 * Flow 2: ruler-waypoint-style-budget-green
+                 * cost / speed <= 1 — `#getSpeedBasedStyle` should assign
+                 * the normal (green) color. speed=6 (full action), cost=2
+                 * → ratio (2 - 0.1) / 6 = 0.31 → normal.
+                 * ============================================================ */
+                if (ruler !== null) {
+                    try {
+                        const style = ruler._getWaypointStyle(makeWaypoint('full', 2));
+                        if (style?.color === colors.normal) {
+                            fired['ruler-waypoint-style-budget-green'] = true;
+                        } else {
+                            notes['ruler-waypoint-style-budget-green'] = `expected normal=${String(colors.normal)}, got ${String(style?.color)}`;
+                        }
+                    } catch (err) {
+                        notes['ruler-waypoint-style-budget-green'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
+                    }
+                }
+            };
+
+            const probeWaypointStyleDoubleYellow = (): void => {
+                /* ============================================================
+                 * Flow 3: ruler-waypoint-style-double-yellow
+                 * 1 < cost/speed <= 2 — yellow. speed=6, cost=8 →
+                 * (8 - 0.1)/6 = 1.32 → double.
+                 * ============================================================ */
+                if (ruler !== null) {
+                    try {
+                        const style = ruler._getWaypointStyle(makeWaypoint('full', 8));
+                        if (style?.color === colors.double) {
+                            fired['ruler-waypoint-style-double-yellow'] = true;
+                        } else {
+                            notes['ruler-waypoint-style-double-yellow'] = `expected double=${String(colors.double)}, got ${String(style?.color)}`;
+                        }
+                    } catch (err) {
+                        notes['ruler-waypoint-style-double-yellow'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
+                    }
+                }
+            };
+
+            const probeWaypointStyleTripleRed = (): void => {
+                /* ============================================================
+                 * Flow 4: ruler-waypoint-style-triple-red
+                 * cost/speed > 2 — red. speed=6, cost=20 →
+                 * (20 - 0.1)/6 = 3.32 → triple.
+                 * ============================================================ */
+                if (ruler !== null) {
+                    try {
+                        const style = ruler._getWaypointStyle(makeWaypoint('full', 20));
+                        if (style?.color === colors.triple) {
+                            fired['ruler-waypoint-style-triple-red'] = true;
+                        } else {
+                            notes['ruler-waypoint-style-triple-red'] = `expected triple=${String(colors.triple)}, got ${String(style?.color)}`;
+                        }
+                    } catch (err) {
+                        notes['ruler-waypoint-style-triple-red'] = `_getWaypointStyle threw: ${String((err as Error).message)}`;
+                    }
+                }
+            };
+
+            const probeSegmentStyleRespectsSpeed = (): void => {
+                /* ============================================================
+                 * Flow 5: ruler-segment-style-respects-speed
+                 * Same helper, different override entry-point. cost=10,
+                 * speed=6 → ratio (10 - 0.1)/6 = 1.65 → double color.
+                 * ============================================================ */
+                if (ruler !== null) {
+                    try {
+                        const style = ruler._getSegmentStyle(makeWaypoint('full', 10));
+                        if (style?.color === colors.double) {
+                            fired['ruler-segment-style-respects-speed'] = true;
+                        } else {
+                            notes['ruler-segment-style-respects-speed'] = `expected double=${String(colors.double)}, got ${String(style?.color)}`;
+                        }
+                    } catch (err) {
+                        notes['ruler-segment-style-respects-speed'] = `_getSegmentStyle threw: ${String((err as Error).message)}`;
+                    }
+                }
+            };
+
+            const probeGridHighlightStyle = (): void => {
+                /* ============================================================
+                 * Flow 6: ruler-grid-highlight-style
+                 * Third entry-point. Same ratio bucketing; cost=5
+                 * speed=6 → 0.81 → normal.
+                 * ============================================================ */
+                if (ruler !== null) {
+                    try {
+                        const style = ruler._getGridHighlightStyle(makeWaypoint('full', 5), { i: 0, j: 0, k: 0 });
+                        if (style?.color === colors.normal) {
+                            fired['ruler-grid-highlight-style'] = true;
+                        } else {
+                            notes['ruler-grid-highlight-style'] = `expected normal=${String(colors.normal)}, got ${String(style?.color)}`;
+                        }
+                    } catch (err) {
+                        notes['ruler-grid-highlight-style'] = `_getGridHighlightStyle threw: ${String((err as Error).message)}`;
+                    }
+                }
+            };
+
+            const probeTeleportActionSkipsColor = (): void => {
+                /* ============================================================
+                 * Flow 7: ruler-teleport-action-skips-color
+                 * Waypoint whose action is registered as `teleport: true`
+                 * short-circuits the speed-based helper and returns the
+                 * base style untouched. Inject a synthetic teleport action
+                 * into ConfigObj.Token.movement.actions for the assertion.
+                 * ============================================================ */
+                if (ruler !== null) {
+                    try {
+                        if (ConfigObj?.Token?.movement?.actions !== undefined) {
+                            ConfigObj.Token.movement.actions['teleport-probe'] = ConfigObj.Token.movement.actions['teleport-probe'] ?? { teleport: true };
+                        }
+                        const style = ruler._getWaypointStyle(makeWaypoint('teleport-probe', 100));
+                        if (style?.color === baseColor) {
+                            fired['ruler-teleport-action-skips-color'] = true;
+                        } else {
+                            notes['ruler-teleport-action-skips-color'] = `expected base color preserved (${String(baseColor)}), got ${String(style?.color)}`;
+                        }
+                    } catch (err) {
+                        notes['ruler-teleport-action-skips-color'] = `teleport probe threw: ${String((err as Error).message)}`;
+                    }
+                }
+            };
+
+            const probeNoMovementReturnsDefault = (): void => {
+                /* ============================================================
+                 * Flow 8: ruler-no-movement-returns-default
+                 * When the actor has no `movement` map, the helper bails
+                 * before touching style.color. Build a fresh ruler whose
+                 * token.actor.movement is undefined and assert the base
+                 * style passes through.
+                 * ============================================================ */
+                if (ruler !== null && TokenRulerWH40K !== null) {
+                    try {
+                        const fakeTokenNoMove = { _plannedMovement: { distance: 1 }, actor: { movement: undefined } };
+                        const noMoveRuler = Object.create(TokenRulerWH40K.prototype as object) as RulerLike;
+                        // Own data property shadows the #token-backed getter (see above).
+                        Object.defineProperty(noMoveRuler, 'token', { value: fakeTokenNoMove, configurable: true, writable: true });
+                        stubSuperReturns(noMoveRuler);
+                        const style = noMoveRuler._getWaypointStyle(makeWaypoint('full', 4));
+                        if (style?.color === baseColor) {
+                            fired['ruler-no-movement-returns-default'] = true;
+                        } else {
+                            notes['ruler-no-movement-returns-default'] = `expected base color preserved (${String(baseColor)}), got ${String(style?.color)}`;
+                        }
+                    } catch (err) {
+                        notes['ruler-no-movement-returns-default'] = `no-movement probe threw: ${String((err as Error).message)}`;
+                    }
+                }
+            };
+
+            const probeHudActiveButtonClass = async (): Promise<void> => {
+                // Re-narrow the closed-over actor / Hooks refs: the outer
+                // guards' narrowing does not propagate into this nested arrow.
+                if (actor.id == null || HooksMgr.callAll == null) return;
+                /* ============================================================
+                 * Flow 9: token-hud-active-button-class
+                 * Fire `renderTokenHUD` with a token whose
+                 * `getFlag('wh40k-rpg', 'movementAction')` returns 'full',
+                 * and assert exactly one injected button carries the
+                 * `active` class — exercising the active-state branch in
+                 * `onTokenHUDRender` that the scene-controls spec doesn't
+                 * cover.
+                 * ============================================================ */
+                try {
+                    const htmlRoot = document.createElement('div');
+                    const statusEffects = document.createElement('div');
+                    statusEffects.className = 'status-effects';
+                    htmlRoot.appendChild(statusEffects);
+
+                    const liveActor2 = gameMgr?.actors?.get?.(actor.id) ?? actor;
+                    const fakeTokenDoc = {
+                        id: 'fake-token-active',
+                        actor: liveActor2,
+                        getFlag: (scope: string, key: string) => (scope === 'wh40k-rpg' && key === 'movementAction' ? 'full' : null),
+                        update: (_data: object) => undefined,
+                    };
+                    const fakeHud = { object: { document: fakeTokenDoc } };
+                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
+                    const activeBtns = htmlRoot.querySelectorAll('.wh40k-token-movement__btn.active');
+                    if (activeBtns.length === 1) {
+                        const activeBtn = activeBtns[0] as HTMLElement;
+                        if (activeBtn.dataset['movementType'] === 'full') {
+                            fired['token-hud-active-button-class'] = true;
+                        } else {
+                            notes['token-hud-active-button-class'] = `active button data-movement-type=${String(
+                                activeBtn.dataset['movementType'],
+                            )} (expected 'full')`;
+                        }
+                    } else {
+                        notes['token-hud-active-button-class'] = `expected exactly 1 active button, got ${activeBtns.length}`;
+                    }
+                } catch (err) {
+                    notes['token-hud-active-button-class'] = `active-button probe threw: ${String((err as Error).message)}`;
+                }
+            };
+
+            const probeHudNoMovementSkipsInjection = async (): Promise<void> => {
+                // Re-narrow the closed-over Hooks ref: the outer guard's
+                // narrowing does not propagate into this nested arrow.
+                if (HooksMgr.callAll == null) return;
+                /* ============================================================
+                 * Flow 10: token-hud-no-movement-skips-injection
+                 * Actor without `system.movement` — `onTokenHUDRender`
+                 * returns early. Assert the container element was NOT
+                 * appended to the synthesized html root.
+                 * ============================================================ */
+                try {
+                    // A real creature actor ALWAYS has a derived system.movement
+                    // (NPC/character prepareDerivedData floors it), so there is no
+                    // real "movement-less" actor to create. Feed onTokenHUDRender a
+                    // fake token whose actor.system.movement is explicitly undefined
+                    // to exercise the early-return (`if (movement === undefined)`).
+                    const htmlRoot = document.createElement('div');
+                    const statusEffects = document.createElement('div');
+                    statusEffects.className = 'status-effects';
+                    htmlRoot.appendChild(statusEffects);
+                    const fakeTokenDoc = {
+                        id: 'fake-token-no-move',
+                        actor: { system: { movement: undefined } },
+                        getFlag: (_scope: string, _key: string) => null,
+                        update: (_data: object) => undefined,
+                    };
+                    const fakeHud = { object: { document: fakeTokenDoc } };
+                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
+                    const container = htmlRoot.querySelector('.wh40k-token-movement');
+                    if (container === null) {
+                        fired['token-hud-no-movement-skips-injection'] = true;
+                    } else {
+                        notes['token-hud-no-movement-skips-injection'] = `expected no container, found one with ${container.children.length} children`;
+                    }
+                } catch (err) {
+                    notes['token-hud-no-movement-skips-injection'] = `no-movement probe threw: ${String((err as Error).message)}`;
+                }
+            };
+
+            const probeHudButtonLocalizesLabel = async (): Promise<void> => {
+                // Re-narrow the closed-over actor / Hooks refs: the outer
+                // guards' narrowing does not propagate into this nested arrow.
+                if (actor.id == null || HooksMgr.callAll == null) return;
+                /* ============================================================
+                 * Flow 11: token-hud-button-localizes-label
+                 * Every injected button's `title` attribute is built via
+                 * `gameMgr.i18n.localize(config.label) + ': <speed>m'`. With
+                 * the registered movement type config, the title should
+                 * contain ':' and a numeric speed value matching the
+                 * actor's movement map.
+                 * ============================================================ */
+                try {
+                    const htmlRoot = document.createElement('div');
+                    const statusEffects = document.createElement('div');
+                    statusEffects.className = 'status-effects';
+                    htmlRoot.appendChild(statusEffects);
+                    const liveActor3 = gameMgr?.actors?.get?.(actor.id) ?? actor;
+                    const fakeTokenDoc = {
+                        id: 'fake-token-localize',
+                        actor: liveActor3,
+                        getFlag: (_scope: string, _key: string) => null,
+                        update: (_data: object) => undefined,
+                    };
+                    const fakeHud = { object: { document: fakeTokenDoc } };
+                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
+                    const halfBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="half"]');
+                    if (halfBtn !== null) {
+                        const title = halfBtn.title;
+                        // Title format: "<localized label>: <speed>m". The speed
+                        // is DERIVED in prepareDerivedData (agility/size), not the
+                        // value seeded at create — for a default character it floors
+                        // to 0m. The ":<n>m" suffix (any non-negative integer) proves
+                        // the speed pull from the actor's movement map ran.
+                        if (/:\s*\d+m\b/.test(title)) {
+                            fired['token-hud-button-localizes-label'] = true;
+                        } else {
+                            notes['token-hud-button-localizes-label'] = `unexpected title: "${title}"`;
+                        }
+                    } else {
+                        notes['token-hud-button-localizes-label'] = `half button not found among ${
+                            htmlRoot.querySelectorAll('.wh40k-token-movement__btn').length
+                        } buttons`;
+                    }
+                } catch (err) {
+                    notes['token-hud-button-localizes-label'] = `localize probe threw: ${String((err as Error).message)}`;
+                }
+            };
+
+            const probeHudSetMovementActionFlagUpdate = async (): Promise<void> => {
+                // Re-narrow the closed-over actor / Hooks refs: the outer
+                // guards' narrowing does not propagate into this nested arrow.
+                if (actor.id == null || HooksMgr.callAll == null) return;
+                /* ============================================================
+                 * Flow 12: token-hud-set-movement-action-flag-update
+                 * Click an injected button and observe the resulting
+                 * `token.update({flags: {'wh40k-rpg': {movementAction:
+                 * type}}})` call. We intercept `update` on the fake token
+                 * doc and assert the flag payload shape matches what
+                 * `#setMovementAction` constructs.
+                 * ============================================================ */
+                try {
+                    const htmlRoot = document.createElement('div');
+                    const statusEffects = document.createElement('div');
+                    statusEffects.className = 'status-effects';
+                    htmlRoot.appendChild(statusEffects);
+                    const liveActor4 = gameMgr?.actors?.get?.(actor.id) ?? actor;
+                    const recordedUpdates: object[] = [];
+                    const fakeTokenDoc = {
+                        id: 'fake-token-update',
+                        actor: liveActor4,
+                        getFlag: (_scope: string, _key: string) => null,
+                        update: (data: object) => {
+                            recordedUpdates.push(data);
+                        },
+                    };
+                    const fakeHud = { object: { document: fakeTokenDoc } };
+                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
+                    const chargeBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="charge"]');
+                    if (chargeBtn !== null) {
+                        chargeBtn.click();
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 50);
+                        });
+                        const lastUpdate = recordedUpdates[recordedUpdates.length - 1] as { flags?: { 'wh40k-rpg'?: { movementAction?: string } } } | undefined;
+                        const flagsPayload = lastUpdate?.flags?.['wh40k-rpg'];
+                        if (flagsPayload?.movementAction === 'charge') {
+                            fired['token-hud-set-movement-action-flag-update'] = true;
+                        } else {
+                            notes['token-hud-set-movement-action-flag-update'] = `update payload: ${JSON.stringify(
+                                lastUpdate,
+                            )} (expected flags['wh40k-rpg'].movementAction='charge')`;
+                        }
+                    } else {
+                        notes['token-hud-set-movement-action-flag-update'] = 'charge button not present in injected HUD';
+                    }
+                } catch (err) {
+                    notes['token-hud-set-movement-action-flag-update'] = `flag-update probe threw: ${String((err as Error).message)}`;
+                }
+            };
+
+            const probeHudButtonHoverStyles = async (): Promise<void> => {
+                // Re-narrow the closed-over actor / Hooks refs: the outer
+                // guards' narrowing does not propagate into this nested arrow.
+                if (actor.id == null || HooksMgr.callAll == null) return;
+                /* ============================================================
+                 * Flow 13: token-hud-button-mouseenter-mouseleave-styles
+                 * Dispatch synthetic mouseenter / mouseleave events at a
+                 * non-active button and assert the inline styles swap as
+                 * the handlers prescribe (hover background lighter, leave
+                 * restores baseline). Drives the addEventListener branches
+                 * in `onTokenHUDRender` that the scene-controls spec
+                 * doesn't reach.
+                 * ============================================================ */
+                try {
+                    const htmlRoot = document.createElement('div');
+                    const statusEffects = document.createElement('div');
+                    statusEffects.className = 'status-effects';
+                    htmlRoot.appendChild(statusEffects);
+                    const liveActor5 = gameMgr?.actors?.get?.(actor.id) ?? actor;
+                    const fakeTokenDoc = {
+                        id: 'fake-token-hover',
+                        actor: liveActor5,
+                        getFlag: (_scope: string, _key: string) => null,
+                        update: (_data: object) => undefined,
+                    };
+                    const fakeHud = { object: { document: fakeTokenDoc } };
+                    HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 30);
+                    });
+                    const runBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="run"]');
+                    if (runBtn !== null) {
+                        const baseBg = runBtn.style.background;
+                        runBtn.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 10);
+                        });
+                        const hoverBg = runBtn.style.background;
+                        runBtn.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+                        await new Promise<void>((r) => {
+                            setTimeout(r, 10);
+                        });
+                        const leaveBg = runBtn.style.background;
+                        if (hoverBg !== baseBg && leaveBg === baseBg) {
+                            fired['token-hud-button-mouseenter-mouseleave-styles'] = true;
+                        } else {
+                            notes[
+                                'token-hud-button-mouseenter-mouseleave-styles'
+                            ] = `base=${baseBg} hover=${hoverBg} leave=${leaveBg} (expected hover!==base and leave===base)`;
+                        }
+                    } else {
+                        notes['token-hud-button-mouseenter-mouseleave-styles'] = 'run button not present in injected HUD';
+                    }
+                } catch (err) {
+                    notes['token-hud-button-mouseenter-mouseleave-styles'] = `hover probe threw: ${String((err as Error).message)}`;
+                }
+            };
+
+            const probeRegisterMovementActions = async (): Promise<void> => {
+                /* ============================================================
+                 * Flow 14: register-movement-actions-config-population
+                 * Dynamic-import the token document module and call
+                 * `TokenDocumentWH40K.registerMovementActions()`. Assert
+                 * every movement type key from ConfigObj.wh40k.movementTypes
+                 * landed in ConfigObj.Token.movement.actions with the
+                 * expected static shape (`measure: true`, `walls: 'move'`).
+                 * The function is idempotent — it uses `??=` — so calling
+                 * it twice is fine.
+                 * ============================================================ */
+                try {
+                    const url = '/systems/wh40k-rpg/module/documents/token.js';
+                    type TokenModule = { TokenDocumentWH40K?: TokenDocApi; default?: TokenDocApi };
+                    const importTokenMod = async (u: string): Promise<TokenModule> => (await import(/* @vite-ignore */ u)) as TokenModule;
+                    const tokenMod = await importTokenMod(url);
+                    const TokenDocumentWH40K = tokenMod.TokenDocumentWH40K ?? tokenMod.default ?? null;
+                    if (typeof TokenDocumentWH40K?.registerMovementActions !== 'function') {
+                        notes['register-movement-actions-config-population'] = `registerMovementActions missing — keys: ${Object.keys(tokenMod).join(',')}`;
+                    } else {
+                        TokenDocumentWH40K.registerMovementActions();
+                        const wh40kTypes = Object.keys(ConfigObj?.wh40k?.movementTypes ?? {});
+                        const registered: Record<string, MovementActionEntry> = ConfigObj?.Token?.movement?.actions ?? {};
+                        const missing = wh40kTypes.filter((k) => !Object.prototype.hasOwnProperty.call(registered, k));
+                        const firstType = wh40kTypes[0];
+                        if (wh40kTypes.length > 0 && missing.length === 0) {
+                            // Sample one entry to confirm the populated
+                            // shape matches the static config in the
+                            // source (measure / walls / visualize).
+                            const sample = registered[firstType];
+                            if (sample.measure === true && sample.walls === 'move' && sample.visualize === true) {
+                                fired['register-movement-actions-config-population'] = true;
+                            } else {
+                                notes['register-movement-actions-config-population'] = `sample entry shape wrong: ${JSON.stringify({
+                                    measure: sample.measure,
+                                    walls: sample.walls,
+                                    visualize: sample.visualize,
+                                })}`;
+                            }
+                        } else {
+                            notes['register-movement-actions-config-population'] = `registered types=${wh40kTypes.length}, missing=${missing.join(',')}`;
+                        }
+                    }
+                } catch (err) {
+                    notes['register-movement-actions-config-population'] = `register probe threw: ${String((err as Error).message)}`;
+                }
+            };
+
+            probeWaypointStyleBudgetGreen();
+            probeWaypointStyleDoubleYellow();
+            probeWaypointStyleTripleRed();
+            probeSegmentStyleRespectsSpeed();
+            probeGridHighlightStyle();
+            probeTeleportActionSkipsColor();
+            probeNoMovementReturnsDefault();
+            await probeHudActiveButtonClass();
+            await probeHudNoMovementSkipsInjection();
+            await probeHudButtonLocalizesLabel();
+            await probeHudSetMovementActionFlagUpdate();
+            await probeHudButtonHoverStyles();
+            await probeRegisterMovementActions();
+        } finally {
+            // Best-effort cleanup of everything we created.
+            for (const fn of cleanups) {
+                try {
+                    await fn();
+                } catch {
+                    /* ignore */
+                }
+            }
+        }
+
+        return { flowsFired: fired, flowNotes: notes };
+    }, CANVAS_EXTRA_FLOWS);
+
+    return {
+        flowsFired: result.flowsFired,
+        flowNotes: result.flowNotes,
+    };
 }
 
 test.describe.serial('canvas ruler + token HUD depth (Tier B)', () => {
@@ -913,10 +896,6 @@ test.describe.serial('canvas ruler + token HUD depth (Tier B)', () => {
             }
         }
 
-        const pageErrorTail = probe.pageErrors.length > 0 ? `\n  pageerrors: ${probe.pageErrors.slice(0, 5).join(' | ')}` : '';
-
-        expect(failures, `${failures.length}/${CANVAS_EXTRA_FLOWS.length} canvas-extra probes failed:\n  - ${failures.join('\n  - ')}${pageErrorTail}`).toEqual(
-            [],
-        );
+        expect(failures, `${failures.length}/${CANVAS_EXTRA_FLOWS.length} canvas-extra probes failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 });

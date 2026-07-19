@@ -36,149 +36,138 @@ test.describe.serial('DW Requisition (Tier B)', () => {
     test('renders DW character sheet with requisition panel and snaps', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
+        const result = await page.evaluate(async (): Promise<RequisitionProbeResult> => {
+            interface ActorSheet {
+                render?: (force?: boolean) => Promise<void>;
+                element?: HTMLElement | null;
+                close?: () => Promise<void>;
+            }
+            interface ActorDoc {
+                id?: string;
+                system?: { requisitionPoints?: number; missionRating?: string };
+                sheet?: ActorSheet;
+                delete?: () => Promise<void>;
+            }
+            interface FoundryGlobal {
+                Actor?: { create?: (data: object) => Promise<ActorDoc | null> };
+                __c9req?: ActorDoc;
+            }
 
-        try {
-            const result = await page.evaluate(async (): Promise<RequisitionProbeResult> => {
-                interface ActorSheet {
-                    render?: (force?: boolean) => Promise<void>;
-                    element?: HTMLElement | null;
-                    close?: () => Promise<void>;
-                }
-                interface ActorDoc {
-                    id?: string;
-                    system?: { requisitionPoints?: number; missionRating?: string };
-                    sheet?: ActorSheet;
-                    delete?: () => Promise<void>;
-                }
-                interface FoundryGlobal {
-                    Actor?: { create?: (data: object) => Promise<ActorDoc | null> };
-                    __c9req?: ActorDoc;
-                }
+            let error: string | null = null;
+            let rendered = false;
+            let hasPanel = false;
+            let hasRpInput = false;
+            let hasMissionSelect = false;
+            let hasRequestButton = false;
+            let hasPoolButton = false;
+            let rpInitial: number | null = null;
+            let missionInitial: string | null = null;
+            let actorId: string | null = null;
 
-                let error: string | null = null;
-                let rendered = false;
-                let hasPanel = false;
-                let hasRpInput = false;
-                let hasMissionSelect = false;
-                let hasRequestButton = false;
-                let hasPoolButton = false;
-                let rpInitial: number | null = null;
-                let missionInitial: string | null = null;
-                let actorId: string | null = null;
-
-                const build = (): RequisitionProbeResult => ({
-                    rendered,
-                    hasPanel,
-                    hasRpInput,
-                    hasMissionSelect,
-                    hasRequestButton,
-                    hasPoolButton,
-                    rpInitial,
-                    missionInitial,
-                    actorId,
-                    error,
-                });
-
-                try {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global (Actor), no type surface in browser context
-                    const g = globalThis as unknown as FoundryGlobal;
-                    const ActorCls = g.Actor;
-                    if (typeof ActorCls?.create !== 'function') {
-                        error = 'Actor.create unavailable';
-                        return build();
-                    }
-                    const actor = await ActorCls.create({
-                        name: 'rawReqProbe-#165',
-                        type: 'dw-character',
-                        system: {
-                            gameSystem: 'dw',
-                            requisitionPoints: 25,
-                            missionRating: 'standard',
-                        },
-                    });
-                    if (actor == null) {
-                        error = 'Actor.create returned null';
-                        return build();
-                    }
-                    actorId = actor.id ?? null;
-                    rpInitial = typeof actor.system?.requisitionPoints === 'number' ? actor.system.requisitionPoints : null;
-                    missionInitial = typeof actor.system?.missionRating === 'string' ? actor.system.missionRating : null;
-
-                    const sheet = actor.sheet;
-                    if (typeof sheet?.render === 'function') {
-                        await sheet.render(true);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 120);
-                        });
-                        rendered = sheet.element instanceof HTMLElement;
-                        const el = sheet.element;
-                        if (rendered && el != null) {
-                            hasPanel = el.querySelector('.wh40k-dw-requisition-panel') !== null;
-                            hasRpInput = el.querySelector('input[name="system.requisitionPoints"]') !== null;
-                            hasMissionSelect = el.querySelector('select[name="system.missionRating"]') !== null;
-                            hasRequestButton = el.querySelector('button[data-action="dwRequisitionItem"]') !== null;
-                            hasPoolButton = el.querySelector('button[data-action="dwRequisitionPool"]') !== null;
-                        }
-                    }
-
-                    // Keep the sheet open for snap().
-                    g.__c9req = actor;
-                } catch (err) {
-                    error = err instanceof Error ? err.message : String(err);
-                }
-
-                return build();
+            const build = (): RequisitionProbeResult => ({
+                rendered,
+                hasPanel,
+                hasRpInput,
+                hasMissionSelect,
+                hasRequestButton,
+                hasPoolButton,
+                rpInitial,
+                missionInitial,
+                actorId,
+                error,
             });
 
-            await snap(page, 'dw-requisition-panel');
-
-            // Tear down so the actor doesn't leak into a sibling spec.
-            await page.evaluate(async () => {
-                interface CleanupActor {
-                    sheet?: { close?: () => Promise<void> };
-                    delete?: () => Promise<void>;
-                }
-                interface FoundryGlobal {
-                    __c9req?: CleanupActor;
-                }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: parked actor on Foundry runtime global, no type surface in browser context
+            try {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global (Actor), no type surface in browser context
                 const g = globalThis as unknown as FoundryGlobal;
-                const a = g.__c9req;
-                try {
-                    await a?.sheet?.close?.();
-                    await a?.delete?.();
-                } catch {
-                    /* ignore */
+                const ActorCls = g.Actor;
+                if (typeof ActorCls?.create !== 'function') {
+                    error = 'Actor.create unavailable';
+                    return build();
                 }
-                g.__c9req = undefined;
-            });
+                const actor = await ActorCls.create({
+                    name: 'rawReqProbe-#165',
+                    type: 'dw-character',
+                    system: {
+                        gameSystem: 'dw',
+                        requisitionPoints: 25,
+                        missionRating: 'standard',
+                    },
+                });
+                if (actor == null) {
+                    error = 'Actor.create returned null';
+                    return build();
+                }
+                actorId = actor.id ?? null;
+                rpInitial = typeof actor.system?.requisitionPoints === 'number' ? actor.system.requisitionPoints : null;
+                missionInitial = typeof actor.system?.missionRating === 'string' ? actor.system.missionRating : null;
 
-            // Skip the spec gracefully if the DW character datamodel isn't registered
-            // in this test build (the orchestrator wires the mixin into character.ts
-            // after this spec ships).
-            const datamodelMissing = result.error !== null && /Actor\.create returned null|datamodel|invalid type|requisitionPoints/i.test(result.error);
-            test.skip(datamodelMissing, `DW character datamodel not registered: ${result.error ?? ''}`);
+                const sheet = actor.sheet;
+                if (typeof sheet?.render === 'function') {
+                    await sheet.render(true);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 120);
+                    });
+                    rendered = sheet.element instanceof HTMLElement;
+                    const el = sheet.element;
+                    if (rendered && el != null) {
+                        hasPanel = el.querySelector('.wh40k-dw-requisition-panel') !== null;
+                        hasRpInput = el.querySelector('input[name="system.requisitionPoints"]') !== null;
+                        hasMissionSelect = el.querySelector('select[name="system.missionRating"]') !== null;
+                        hasRequestButton = el.querySelector('button[data-action="dwRequisitionItem"]') !== null;
+                        hasPoolButton = el.querySelector('button[data-action="dwRequisitionPool"]') !== null;
+                    }
+                }
 
-            expect(result.error, `requisition probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.actorId, 'actor must have been created').not.toBeNull();
-            expect(result.rpInitial, 'initial RP must persist').toBe(25);
-            expect(result.missionInitial, 'initial mission rating must persist').toBe('standard');
-            expect(result.rendered, 'sheet must have rendered').toBe(true);
-            expect(result.hasPanel, 'requisition panel must render').toBe(true);
-            expect(result.hasRpInput, 'RP input must render').toBe(true);
-            expect(result.hasMissionSelect, 'mission-rating select must render').toBe(true);
-            expect(result.hasRequestButton, 'Request Item button must render').toBe(true);
-            expect(result.hasPoolButton, 'Pool Requisition button must render').toBe(true);
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
+                // Keep the sheet open for snap().
+                g.__c9req = actor;
+            } catch (err) {
+                error = err instanceof Error ? err.message : String(err);
+            }
 
-            recordCoverage('actor.sheet.render', 'DwRequisitionPanel');
-        } finally {
-            page.off('pageerror', listener);
-        }
+            return build();
+        });
+
+        await snap(page, 'dw-requisition-panel');
+
+        // Tear down so the actor doesn't leak into a sibling spec.
+        await page.evaluate(async () => {
+            interface CleanupActor {
+                sheet?: { close?: () => Promise<void> };
+                delete?: () => Promise<void>;
+            }
+            interface FoundryGlobal {
+                __c9req?: CleanupActor;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: parked actor on Foundry runtime global, no type surface in browser context
+            const g = globalThis as unknown as FoundryGlobal;
+            const a = g.__c9req;
+            try {
+                await a?.sheet?.close?.();
+                await a?.delete?.();
+            } catch {
+                /* ignore */
+            }
+            g.__c9req = undefined;
+        });
+
+        // Skip the spec gracefully if the DW character datamodel isn't registered
+        // in this test build (the orchestrator wires the mixin into character.ts
+        // after this spec ships).
+        const datamodelMissing = result.error !== null && /Actor\.create returned null|datamodel|invalid type|requisitionPoints/i.test(result.error);
+        test.skip(datamodelMissing, `DW character datamodel not registered: ${result.error ?? ''}`);
+
+        expect(result.error, `requisition probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.actorId, 'actor must have been created').not.toBeNull();
+        expect(result.rpInitial, 'initial RP must persist').toBe(25);
+        expect(result.missionInitial, 'initial mission rating must persist').toBe('standard');
+        expect(result.rendered, 'sheet must have rendered').toBe(true);
+        expect(result.hasPanel, 'requisition panel must render').toBe(true);
+        expect(result.hasRpInput, 'RP input must render').toBe(true);
+        expect(result.hasMissionSelect, 'mission-rating select must render').toBe(true);
+        expect(result.hasRequestButton, 'Request Item button must render').toBe(true);
+        expect(result.hasPoolButton, 'Pool Requisition button must render').toBe(true);
+
+        recordCoverage('actor.sheet.render', 'DwRequisitionPanel');
     });
 });

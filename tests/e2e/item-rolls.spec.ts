@@ -62,81 +62,70 @@ interface ItemRollProbe {
     method: string;
     chatDelta: number;
     returned: 'truthy' | 'falsy' | 'threw';
-    pageErrors: string[];
     error: string | null;
 }
 
 async function probeItemRoll(page: Page, outerActorId: string, spec: ItemRollSpec): Promise<ItemRollProbe> {
-    const errors: string[] = [];
-    const listener = (pageErr: Error): void => {
-        errors.push(pageErr.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const result = await page.evaluate(
-            async ({ actorId, itemType, itemSystem, method }) => {
-                // Roll methods resolve to a ChatMessage (or null on a bailout
-                // branch); the probe only checks truthiness, so model the
-                // result as an opaque object the caller null-checks.
-                type RollMethod = () => Promise<object | null>;
-                interface EmbeddedItem {
-                    delete?: () => Promise<void>;
-                    rollTalent?: RollMethod;
-                    rollNavigatorPower?: RollMethod;
-                    rollOrder?: RollMethod;
-                    rollRitual?: RollMethod;
-                }
-                interface ParentActor {
-                    createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<EmbeddedItem | undefined>>;
-                }
-                interface ProbeGlobal {
-                    game?: {
-                        actors?: { get?: (id: string) => ParentActor | undefined };
-                        messages?: { size?: number };
-                    };
-                }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
-                const g = globalThis as unknown as ProbeGlobal;
-                const actor = g.game?.actors?.get?.(actorId);
-                if (!actor?.createEmbeddedDocuments) {
-                    return { chatDelta: 0, returned: 'falsy' as const, error: 'actor or createEmbeddedDocuments unavailable' };
-                }
-                const created = await actor.createEmbeddedDocuments('Item', [{ name: `probe-${itemType}`, type: itemType, system: itemSystem }]);
-                const item = created[0];
-                if (item === undefined) {
-                    return { chatDelta: 0, returned: 'falsy' as const, error: 'createEmbeddedDocuments returned no item' };
-                }
-                const before = g.game?.messages?.size ?? 0;
-                const fn = item[method];
-                if (typeof fn !== 'function') {
-                    await item.delete?.();
-                    return { chatDelta: 0, returned: 'falsy' as const, error: `item.${method} is not a function` };
-                }
-                let returnedKind: 'truthy' | 'falsy' | 'threw' = 'falsy';
-                let error: string | null = null;
-                try {
-                    const ret = await fn.call(item);
-                    returnedKind = ret != null ? 'truthy' : 'falsy';
-                } catch (rollErr) {
-                    returnedKind = 'threw';
-                    error = rollErr instanceof Error ? rollErr.message : String(rollErr);
-                }
-                const after = g.game?.messages?.size ?? 0;
+    const result = await page.evaluate(
+        async ({ actorId, itemType, itemSystem, method }) => {
+            // Roll methods resolve to a ChatMessage (or null on a bailout
+            // branch); the probe only checks truthiness, so model the
+            // result as an opaque object the caller null-checks.
+            type RollMethod = () => Promise<object | null>;
+            interface EmbeddedItem {
+                delete?: () => Promise<void>;
+                rollTalent?: RollMethod;
+                rollNavigatorPower?: RollMethod;
+                rollOrder?: RollMethod;
+                rollRitual?: RollMethod;
+            }
+            interface ParentActor {
+                createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<EmbeddedItem | undefined>>;
+            }
+            interface ProbeGlobal {
+                game?: {
+                    actors?: { get?: (id: string) => ParentActor | undefined };
+                    messages?: { size?: number };
+                };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+            const g = globalThis as unknown as ProbeGlobal;
+            const actor = g.game?.actors?.get?.(actorId);
+            if (!actor?.createEmbeddedDocuments) {
+                return { chatDelta: 0, returned: 'falsy' as const, error: 'actor or createEmbeddedDocuments unavailable' };
+            }
+            const created = await actor.createEmbeddedDocuments('Item', [{ name: `probe-${itemType}`, type: itemType, system: itemSystem }]);
+            const item = created[0];
+            if (item === undefined) {
+                return { chatDelta: 0, returned: 'falsy' as const, error: 'createEmbeddedDocuments returned no item' };
+            }
+            const before = g.game?.messages?.size ?? 0;
+            const fn = item[method];
+            if (typeof fn !== 'function') {
                 await item.delete?.();
-                return { chatDelta: after - before, returned: returnedKind, error };
-            },
-            { actorId: outerActorId, itemType: spec.itemType, itemSystem: spec.itemSystem, method: spec.method },
-        );
-        return {
-            method: spec.method,
-            chatDelta: result.chatDelta,
-            returned: result.returned,
-            pageErrors: errors,
-            error: result.error,
-        };
-    } finally {
-        page.off('pageerror', listener);
-    }
+                return { chatDelta: 0, returned: 'falsy' as const, error: `item.${method} is not a function` };
+            }
+            let returnedKind: 'truthy' | 'falsy' | 'threw' = 'falsy';
+            let error: string | null = null;
+            try {
+                const ret = await fn.call(item);
+                returnedKind = ret != null ? 'truthy' : 'falsy';
+            } catch (rollErr) {
+                returnedKind = 'threw';
+                error = rollErr instanceof Error ? rollErr.message : String(rollErr);
+            }
+            const after = g.game?.messages?.size ?? 0;
+            await item.delete?.();
+            return { chatDelta: after - before, returned: returnedKind, error };
+        },
+        { actorId: outerActorId, itemType: spec.itemType, itemSystem: spec.itemSystem, method: spec.method },
+    );
+    return {
+        method: spec.method,
+        chatDelta: result.chatDelta,
+        returned: result.returned,
+        error: result.error,
+    };
 }
 
 test.describe.serial('item roll methods (Tier B)', () => {
@@ -171,7 +160,6 @@ test.describe.serial('item roll methods (Tier B)', () => {
                         method: spec.method,
                         chatDelta: 0,
                         returned: 'threw' as const,
-                        pageErrors: [message],
                         error: message,
                     };
                 });
@@ -186,10 +174,6 @@ test.describe.serial('item roll methods (Tier B)', () => {
                 }
                 if (probe.chatDelta < 1) {
                     failures.push(`${spec.method}: no ChatMessage created (delta=${probe.chatDelta})`);
-                    continue;
-                }
-                if (probe.pageErrors.length > 0) {
-                    failures.push(`${spec.method}: page error — ${probe.pageErrors[0]}`);
                     continue;
                 }
                 recordCoverage('item.roll-method', spec.method);

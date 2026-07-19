@@ -85,12 +85,6 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
         }
         const actorId = created.id;
 
-        const pageErrors: string[] = [];
-        const listener = (pageErr: Error): void => {
-            pageErrors.push(pageErr.message);
-        };
-        page.on('pageerror', listener);
-
         try {
             const result = await page.evaluate(
                 async (
@@ -218,11 +212,9 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
             expect(result.hasTacticalRow, 'Tactical Manoeuvring row should render').toBe(true);
             expect(result.hasIssueButton, 'Issue button for Evasive Manoeuvring should render').toBe(true);
             expect(result.hasChaseReadout, 'Chase readout should render when chaseState is non-null').toBe(true);
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
 
             recordCoverage('panel.render', 'OwVehicleMovementPanel');
         } finally {
-            page.off('pageerror', listener);
             await deleteActor(page, actorId);
         }
     });

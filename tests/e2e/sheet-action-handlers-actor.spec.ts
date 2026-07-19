@@ -72,960 +72,949 @@ type FlowName = (typeof SHEET_ACTION_ACTOR_FLOWS)[number];
 interface ProbeResult {
     flowsFired: Record<FlowName, boolean>;
     flowNotes: Partial<Record<FlowName, string>>;
-    pageErrors: string[];
 }
 
 async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
-    const pageErrors: string[] = [];
-    const listener = (err: Error): void => {
-        pageErrors.push(err.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const result = await page.evaluate(async (flows: readonly string[]) => {
-            // ---- Boundary shapes -------------------------------------------------
-            // Foundry document / sheet / collection surfaces arriving across the
-            // realm boundary have no shipped types. These structural interfaces
-            // describe exactly the members the probes touch; erased sheet static
-            // action handlers are typed via the shared `ActionHandler` shape.
-            type ActionHandler = (this: ProbeSheet, event: Event, target: HTMLElement) => Promise<void> | void;
-            interface ProbeSheet {
-                render?: (force: boolean) => Promise<void>;
-                close?: () => Promise<void>;
-                element?: HTMLElement | null;
-                options?: { actions?: Record<string, ActionHandler | undefined> };
-            }
-            // Concrete union of every actor/item system path the probes read.
-            interface ProbeSystem {
-                state?: { equipped?: boolean; inBackpack?: boolean; inShipStorage?: boolean };
-                horde?: { active?: boolean; magnitude?: number };
-                trainedSkills?: Record<string, { trained?: boolean } | undefined>;
-                tags?: string[];
-                wounds?: { value?: number; max?: number; critical?: number };
-                integrity?: { value?: number; max?: number };
-                voidShields?: number;
-                voidShieldsStatus?: { active?: number; exhausted?: number };
-            }
-            interface ProbeItem {
-                id?: string;
-                system?: ProbeSystem;
-                delete?: () => Promise<void>;
-            }
-            interface ProbeActor {
-                id?: string;
-                sheet?: ProbeSheet;
-                system?: ProbeSystem;
-                items?: { get?: (id: string) => ProbeItem | undefined };
-                getFlag?: (scope: string, key: string) => string[] | Record<string, number> | undefined;
-                update?: (data: object) => Promise<void>;
-                createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id: string }>>;
-                delete?: () => Promise<void>;
-            }
-            interface ActorsCollection {
-                get?: (id: string) => ProbeActor | undefined;
-            }
-            interface FoundryGlobal {
-                Actor?: { create?: (data: object) => Promise<ProbeActor | null> };
-                game?: { actors?: ActorsCollection; user?: { isGM?: boolean } };
-                ui?: { windows?: Record<string, { id?: string; close?: () => Promise<void> }> };
-            }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
-            const g = globalThis as unknown as FoundryGlobal;
-            const ActorClass = g.Actor;
-            const gameCtx = g.game;
-            const uiCtx = g.ui;
+    const result = await page.evaluate(async (flows: readonly string[]) => {
+        // ---- Boundary shapes -------------------------------------------------
+        // Foundry document / sheet / collection surfaces arriving across the
+        // realm boundary have no shipped types. These structural interfaces
+        // describe exactly the members the probes touch; erased sheet static
+        // action handlers are typed via the shared `ActionHandler` shape.
+        type ActionHandler = (this: ProbeSheet, event: Event, target: HTMLElement) => Promise<void> | void;
+        interface ProbeSheet {
+            render?: (force: boolean) => Promise<void>;
+            close?: () => Promise<void>;
+            element?: HTMLElement | null;
+            options?: { actions?: Record<string, ActionHandler | undefined> };
+        }
+        // Concrete union of every actor/item system path the probes read.
+        interface ProbeSystem {
+            state?: { equipped?: boolean; inBackpack?: boolean; inShipStorage?: boolean };
+            horde?: { active?: boolean; magnitude?: number };
+            trainedSkills?: Record<string, { trained?: boolean } | undefined>;
+            tags?: string[];
+            wounds?: { value?: number; max?: number; critical?: number };
+            integrity?: { value?: number; max?: number };
+            voidShields?: number;
+            voidShieldsStatus?: { active?: number; exhausted?: number };
+        }
+        interface ProbeItem {
+            id?: string;
+            system?: ProbeSystem;
+            delete?: () => Promise<void>;
+        }
+        interface ProbeActor {
+            id?: string;
+            sheet?: ProbeSheet;
+            system?: ProbeSystem;
+            items?: { get?: (id: string) => ProbeItem | undefined };
+            getFlag?: (scope: string, key: string) => string[] | Record<string, number> | undefined;
+            update?: (data: object) => Promise<void>;
+            createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id: string }>>;
+            delete?: () => Promise<void>;
+        }
+        interface ActorsCollection {
+            get?: (id: string) => ProbeActor | undefined;
+        }
+        interface FoundryGlobal {
+            Actor?: { create?: (data: object) => Promise<ProbeActor | null> };
+            game?: { actors?: ActorsCollection; user?: { isGM?: boolean } };
+            ui?: { windows?: Record<string, { id?: string; close?: () => Promise<void> }> };
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
+        const g = globalThis as unknown as FoundryGlobal;
+        const ActorClass = g.Actor;
+        const gameCtx = g.game;
+        const uiCtx = g.ui;
 
-            const fired: Record<string, boolean> = {};
-            const notes: Record<string, string> = {};
-            for (const f of flows) fired[f] = false;
+        const fired: Record<string, boolean> = {};
+        const notes: Record<string, string> = {};
+        for (const f of flows) fired[f] = false;
 
-            if (ActorClass?.create == null) {
-                return {
-                    flowsFired: fired,
-                    flowNotes: { 'character-sheet::toggleEquip': 'Actor.create unavailable' },
-                };
-            }
-
-            // Wrap a promise with a 5s timeout so a blocking dialog can't hang
-            // the spec (mirrors weapon-attack.spec.ts). The optional-chained
-            // Foundry method calls that feed this may resolve to `undefined`
-            // when a member is absent; `Promise.race` passes that through.
-            const withTimeout = async <T>(p: Promise<T> | undefined | void, ms: number, label: string): Promise<T | undefined> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
-                const timeout = new Promise<T>((_, reject) => {
-                    timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-                });
-                // A `void`/`undefined` input (sync handler or absent member) resolves
-                // immediately; only a real promise can win or lose against the timer.
-                const awaitable: Promise<T | undefined> = p instanceof Promise ? p : Promise.resolve(undefined);
-                try {
-                    return await Promise.race([awaitable, timeout]);
-                } finally {
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
-                    if (timer !== null) clearTimeout(timer);
-                }
+        if (ActorClass?.create == null) {
+            return {
+                flowsFired: fired,
+                flowNotes: { 'character-sheet::toggleEquip': 'Actor.create unavailable' },
             };
+        }
 
-            // Drain stray dialogs so the next probe's window stack stays clean.
-            async function closeOpenDialogs(): Promise<void> {
-                const windows = Object.values(uiCtx?.windows ?? {});
-                for (const w of windows) {
-                    const id = w.id ?? '';
-                    if (
-                        id.includes('dialog') ||
-                        id.includes('prompt') ||
-                        id.includes('threat') ||
-                        id.includes('subtlety') ||
-                        id.includes('tag') ||
-                        id.includes('skill') ||
-                        id.includes('xp') ||
-                        id.includes('characteristic')
-                    ) {
-                        try {
-                            // eslint-disable-next-line no-await-in-loop -- best-effort serial teardown; parallel closes race on Foundry's window registry
-                            await w.close?.();
-                        } catch {
-                            /* ignore */
-                        }
+        // Wrap a promise with a 5s timeout so a blocking dialog can't hang
+        // the spec (mirrors weapon-attack.spec.ts). The optional-chained
+        // Foundry method calls that feed this may resolve to `undefined`
+        // when a member is absent; `Promise.race` passes that through.
+        const withTimeout = async <T>(p: Promise<T> | undefined | void, ms: number, label: string): Promise<T | undefined> => {
+            let timer: ReturnType<typeof setTimeout> | null = null;
+            const timeout = new Promise<T>((_, reject) => {
+                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+            });
+            // A `void`/`undefined` input (sync handler or absent member) resolves
+            // immediately; only a real promise can win or lose against the timer.
+            const awaitable: Promise<T | undefined> = p instanceof Promise ? p : Promise.resolve(undefined);
+            try {
+                return await Promise.race([awaitable, timeout]);
+            } finally {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
+                if (timer !== null) clearTimeout(timer);
+            }
+        };
+
+        // Drain stray dialogs so the next probe's window stack stays clean.
+        async function closeOpenDialogs(): Promise<void> {
+            const windows = Object.values(uiCtx?.windows ?? {});
+            for (const w of windows) {
+                const id = w.id ?? '';
+                if (
+                    id.includes('dialog') ||
+                    id.includes('prompt') ||
+                    id.includes('threat') ||
+                    id.includes('subtlety') ||
+                    id.includes('tag') ||
+                    id.includes('skill') ||
+                    id.includes('xp') ||
+                    id.includes('characteristic')
+                ) {
+                    try {
+                        // eslint-disable-next-line no-await-in-loop -- best-effort serial teardown; parallel closes race on Foundry's window registry
+                        await w.close?.();
+                    } catch {
+                        /* ignore */
                     }
                 }
             }
+        }
 
-            const synthEvent = (): MouseEvent => new MouseEvent('click', { bubbles: false, cancelable: true });
-            const synthTarget = (data: Record<string, string>): HTMLElement => {
-                const el = document.createElement('div');
-                for (const [k, v] of Object.entries(data)) el.dataset[k] = v;
-                return el;
-            };
-            // Build a target with a `closest('[data-item-id]')` ancestor so
-            // handlers that walk the DOM up to a row container find the id.
-            const synthRowTarget = (itemId: string, extra: Record<string, string> = {}): HTMLElement => {
-                const row = document.createElement('div');
-                row.dataset['itemId'] = itemId;
-                const inner = document.createElement('button');
-                for (const [k, v] of Object.entries(extra)) inner.dataset[k] = v;
-                row.appendChild(inner);
-                return inner;
-            };
+        const synthEvent = (): MouseEvent => new MouseEvent('click', { bubbles: false, cancelable: true });
+        const synthTarget = (data: Record<string, string>): HTMLElement => {
+            const el = document.createElement('div');
+            for (const [k, v] of Object.entries(data)) el.dataset[k] = v;
+            return el;
+        };
+        // Build a target with a `closest('[data-item-id]')` ancestor so
+        // handlers that walk the DOM up to a row container find the id.
+        const synthRowTarget = (itemId: string, extra: Record<string, string> = {}): HTMLElement => {
+            const row = document.createElement('div');
+            row.dataset['itemId'] = itemId;
+            const inner = document.createElement('button');
+            for (const [k, v] of Object.entries(extra)) inner.dataset[k] = v;
+            row.appendChild(inner);
+            return inner;
+        };
 
-            // Shared cleanup registry — every doc we create gets registered.
-            const cleanups: Array<() => Promise<void>> = [];
+        // Shared cleanup registry — every doc we create gets registered.
+        const cleanups: Array<() => Promise<void>> = [];
 
-            // Helper to create + register an actor with cleanup. `system` is the
-            // per-type seed payload spread into the Foundry `Actor.create` data.
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create seed payload is an open Foundry document-data shape
-            async function makeActor(type: string, gameSystem: string, system: Record<string, unknown> = {}): Promise<ProbeActor | null> {
-                const createActor = ActorClass?.create?.bind(ActorClass);
-                if (createActor == null) return null;
+        // Helper to create + register an actor with cleanup. `system` is the
+        // per-type seed payload spread into the Foundry `Actor.create` data.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create seed payload is an open Foundry document-data shape
+        async function makeActor(type: string, gameSystem: string, system: Record<string, unknown> = {}): Promise<ProbeActor | null> {
+            const createActor = ActorClass?.create?.bind(ActorClass);
+            if (createActor == null) return null;
+            try {
+                const actor = await withTimeout(
+                    createActor({
+                        name: `sheet-action-actor-${type}-${Math.random().toString(36).slice(2, 8)}`,
+                        type,
+                        system: { gameSystem, ...system },
+                    }),
+                    5_000,
+                    `Actor.create(${type}/${gameSystem})`,
+                );
+                const actorId = actor?.id;
+                if (actorId != null) {
+                    cleanups.push(async () => {
+                        try {
+                            await gameCtx?.actors?.get?.(actorId)?.delete?.();
+                        } catch {
+                            /* ignore */
+                        }
+                    });
+                }
+                return actor ?? null;
+            } catch {
+                return null;
+            }
+        }
+
+        /* =================================================================
+         * CharacterSheet flows (dh2-character)
+         * One PC actor + a single embedded gear item drives 5 equipment
+         * + skill/talent favorite flows; subtlety is GM-only so we run it
+         * as the auto-joined GM user.
+         * ================================================================= */
+        async function probeCharacterFlows(): Promise<void> {
+            const pc = await makeActor('dh2-character', 'dh2');
+            if (pc?.id == null) {
+                notes['character-sheet::toggleEquip'] = 'PC create returned null';
+                return;
+            }
+            // Yield so the create flush completes before the embedded create.
+            await new Promise<void>((r) => {
+                setTimeout(r, 250);
+            });
+            const livePc = (): ProbeActor | undefined => (pc.id != null ? gameCtx?.actors?.get?.(pc.id) : undefined);
+            const sheet = livePc()?.sheet;
+            if (sheet == null) {
+                notes['character-sheet::toggleEquip'] = 'PC sheet undefined';
+                return;
+            }
+            // Render once so this.element exists for filter/dom flows.
+            try {
+                await withTimeout(sheet.render?.(true), 5_000, 'PC sheet.render');
+                await new Promise<void>((r) => {
+                    setTimeout(r, 50);
+                });
+            } catch {
+                /* render best-effort; some flows do not require DOM */
+            }
+            cleanups.push(async () => {
                 try {
-                    const actor = await withTimeout(
-                        createActor({
-                            name: `sheet-action-actor-${type}-${Math.random().toString(36).slice(2, 8)}`,
-                            type,
-                            system: { gameSystem, ...system },
-                        }),
+                    await sheet.close?.();
+                } catch {
+                    /* ignore */
+                }
+            });
+            const actions = sheet.options?.actions ?? {};
+
+            // Create one gear item we can equip / stow / unstow / favorite.
+            let gear: ProbeItem | null = null;
+            try {
+                const created = await withTimeout(
+                    livePc()?.createEmbeddedDocuments?.('Item', [
+                        {
+                            name: 'probe-gear-belt',
+                            type: 'gear',
+                            system: { state: { equipped: false, inBackpack: false, inShipStorage: false } },
+                        },
+                    ]),
+                    5_000,
+                    'create gear',
+                );
+                const first = created?.at(0);
+                gear = first != null ? livePc()?.items?.get?.(first.id) ?? null : null;
+            } catch {
+                gear = null;
+            }
+
+            // ---- character-sheet::toggleEquip ----
+            try {
+                const handler = actions.toggleEquip;
+                if (typeof handler !== 'function') {
+                    notes['character-sheet::toggleEquip'] = 'handler missing';
+                } else if (gear == null) {
+                    notes['character-sheet::toggleEquip'] = 'gear missing';
+                } else {
+                    const before = gear.system?.state?.equipped === true;
+                    await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'toggleEquip');
+                    const fresh = livePc()?.items?.get?.(gear.id ?? '');
+                    const after = fresh?.system?.state?.equipped === true;
+                    if (after !== before) {
+                        fired['character-sheet::toggleEquip'] = true;
+                        notes['character-sheet::toggleEquip'] = `equipped ${before} → ${after}`;
+                    } else {
+                        notes['character-sheet::toggleEquip'] = `equipped did not flip (still ${after})`;
+                    }
+                }
+            } catch (err) {
+                notes['character-sheet::toggleEquip'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- character-sheet::stowItem ----
+            try {
+                const handler = actions.stowItem;
+                if (typeof handler !== 'function') {
+                    notes['character-sheet::stowItem'] = 'handler missing';
+                } else if (gear == null) {
+                    notes['character-sheet::stowItem'] = 'gear missing';
+                } else {
+                    await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'stowItem');
+                    const fresh = livePc()?.items?.get?.(gear.id ?? '');
+                    const inBackpack = fresh?.system?.state?.inBackpack === true;
+                    const equipped = fresh?.system?.state?.equipped === true;
+                    if (inBackpack && !equipped) {
+                        fired['character-sheet::stowItem'] = true;
+                        notes['character-sheet::stowItem'] = `inBackpack=true equipped=false`;
+                    } else {
+                        notes['character-sheet::stowItem'] = `unexpected: inBackpack=${String(inBackpack)} equipped=${String(equipped)}`;
+                    }
+                }
+            } catch (err) {
+                notes['character-sheet::stowItem'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- character-sheet::unstowItem ----
+            try {
+                const handler = actions.unstowItem;
+                if (typeof handler !== 'function') {
+                    notes['character-sheet::unstowItem'] = 'handler missing';
+                } else if (gear == null) {
+                    notes['character-sheet::unstowItem'] = 'gear missing';
+                } else {
+                    await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'unstowItem');
+                    const fresh = livePc()?.items?.get?.(gear.id ?? '');
+                    const inBackpack = fresh?.system?.state?.inBackpack === true;
+                    if (!inBackpack) {
+                        fired['character-sheet::unstowItem'] = true;
+                        notes['character-sheet::unstowItem'] = `inBackpack cleared`;
+                    } else {
+                        notes['character-sheet::unstowItem'] = `still inBackpack=true`;
+                    }
+                }
+            } catch (err) {
+                notes['character-sheet::unstowItem'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- character-sheet::filterEquipment ----
+            // Pure DOM helper; success = dispatch returns without throwing.
+            try {
+                const handler = actions.filterEquipment;
+                if (typeof handler !== 'function') {
+                    notes['character-sheet::filterEquipment'] = 'handler missing';
+                } else {
+                    void handler.call(sheet, synthEvent(), synthTarget({}));
+                    fired['character-sheet::filterEquipment'] = true;
+                    notes['character-sheet::filterEquipment'] = 'dispatch ok';
+                }
+            } catch (err) {
+                notes['character-sheet::filterEquipment'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- character-sheet::toggleFavoriteSkill ----
+            // Flips the actor's `favoriteSkills` flag list.
+            try {
+                const handler = actions.toggleFavoriteSkill;
+                if (typeof handler !== 'function') {
+                    notes['character-sheet::toggleFavoriteSkill'] = 'handler missing';
+                } else {
+                    const favBefore = livePc()?.getFlag?.('wh40k-rpg', 'favoriteSkills');
+                    const flagBefore = Array.isArray(favBefore) ? favBefore : [];
+                    const includesBefore = flagBefore.includes('athletics');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ skill: 'athletics' })), 5_000, 'toggleFavoriteSkill');
+                    const favAfter = livePc()?.getFlag?.('wh40k-rpg', 'favoriteSkills');
+                    const flagAfter = Array.isArray(favAfter) ? favAfter : [];
+                    const includesAfter = flagAfter.includes('athletics');
+                    if (includesAfter !== includesBefore) {
+                        fired['character-sheet::toggleFavoriteSkill'] = true;
+                        notes['character-sheet::toggleFavoriteSkill'] = `favorite ${includesBefore} → ${includesAfter}`;
+                    } else {
+                        // Dispatch ran (no-throw); accept that as the coverage signal
+                        // since the underlying skill may be auto-unfavourited if untrained.
+                        fired['character-sheet::toggleFavoriteSkill'] = true;
+                        notes['character-sheet::toggleFavoriteSkill'] = `dispatch ok; flag unchanged (auto-skip)`;
+                    }
+                }
+            } catch (err) {
+                notes['character-sheet::toggleFavoriteSkill'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- character-sheet::toggleFavoriteTalent ----
+            // Create a talent to favorite.
+            try {
+                const handler = actions.toggleFavoriteTalent;
+                if (typeof handler !== 'function') {
+                    notes['character-sheet::toggleFavoriteTalent'] = 'handler missing';
+                } else {
+                    const talentCreated = await withTimeout(
+                        livePc()?.createEmbeddedDocuments?.('Item', [{ name: 'probe-talent', type: 'talent', system: {} }]),
                         5_000,
-                        `Actor.create(${type}/${gameSystem})`,
+                        'create talent',
                     );
-                    const actorId = actor?.id;
-                    if (actorId != null) {
+                    const firstTalent = talentCreated?.at(0);
+                    const talent = firstTalent != null ? livePc()?.items?.get?.(firstTalent.id) ?? null : null;
+                    if (talent == null) {
+                        notes['character-sheet::toggleFavoriteTalent'] = 'talent create failed';
+                    } else {
                         cleanups.push(async () => {
                             try {
-                                await gameCtx?.actors?.get?.(actorId)?.delete?.();
+                                await talent.delete?.();
                             } catch {
                                 /* ignore */
                             }
                         });
+                        const talentId = talent.id ?? '';
+                        await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(talentId)), 5_000, 'toggleFavoriteTalent');
+                        const favTalentsFlag = livePc()?.getFlag?.('wh40k-rpg', 'favoriteTalents');
+                        const flagAfter = Array.isArray(favTalentsFlag) ? favTalentsFlag : [];
+                        if (flagAfter.includes(talentId)) {
+                            fired['character-sheet::toggleFavoriteTalent'] = true;
+                            notes['character-sheet::toggleFavoriteTalent'] = `flag added`;
+                        } else {
+                            // Dispatch ran without throwing — accept the coverage signal.
+                            fired['character-sheet::toggleFavoriteTalent'] = true;
+                            notes['character-sheet::toggleFavoriteTalent'] = 'dispatch ok (favorite list unchanged)';
+                        }
                     }
-                    return actor ?? null;
-                } catch {
-                    return null;
                 }
+            } catch (err) {
+                notes['character-sheet::toggleFavoriteTalent'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
-            /* =================================================================
-             * CharacterSheet flows (dh2-character)
-             * One PC actor + a single embedded gear item drives 5 equipment
-             * + skill/talent favorite flows; subtlety is GM-only so we run it
-             * as the auto-joined GM user.
-             * ================================================================= */
-            async function probeCharacterFlows(): Promise<void> {
-                const pc = await makeActor('dh2-character', 'dh2');
-                if (pc?.id == null) {
-                    notes['character-sheet::toggleEquip'] = 'PC create returned null';
-                    return;
-                }
-                // Yield so the create flush completes before the embedded create.
-                await new Promise<void>((r) => {
-                    setTimeout(r, 250);
-                });
-                const livePc = (): ProbeActor | undefined => (pc.id != null ? gameCtx?.actors?.get?.(pc.id) : undefined);
-                const sheet = livePc()?.sheet;
-                if (sheet == null) {
-                    notes['character-sheet::toggleEquip'] = 'PC sheet undefined';
-                    return;
-                }
-                // Render once so this.element exists for filter/dom flows.
-                try {
-                    await withTimeout(sheet.render?.(true), 5_000, 'PC sheet.render');
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 50);
-                    });
-                } catch {
-                    /* render best-effort; some flows do not require DOM */
-                }
-                cleanups.push(async () => {
-                    try {
-                        await sheet.close?.();
-                    } catch {
-                        /* ignore */
-                    }
-                });
-                const actions = sheet.options?.actions ?? {};
-
-                // Create one gear item we can equip / stow / unstow / favorite.
-                let gear: ProbeItem | null = null;
-                try {
-                    const created = await withTimeout(
-                        livePc()?.createEmbeddedDocuments?.('Item', [
-                            {
-                                name: 'probe-gear-belt',
-                                type: 'gear',
-                                system: { state: { equipped: false, inBackpack: false, inShipStorage: false } },
-                            },
-                        ]),
-                        5_000,
-                        'create gear',
-                    );
-                    const first = created?.at(0);
-                    gear = first != null ? livePc()?.items?.get?.(first.id) ?? null : null;
-                } catch {
-                    gear = null;
-                }
-
-                // ---- character-sheet::toggleEquip ----
-                try {
-                    const handler = actions.toggleEquip;
-                    if (typeof handler !== 'function') {
-                        notes['character-sheet::toggleEquip'] = 'handler missing';
-                    } else if (gear == null) {
-                        notes['character-sheet::toggleEquip'] = 'gear missing';
-                    } else {
-                        const before = gear.system?.state?.equipped === true;
-                        await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'toggleEquip');
-                        const fresh = livePc()?.items?.get?.(gear.id ?? '');
-                        const after = fresh?.system?.state?.equipped === true;
-                        if (after !== before) {
-                            fired['character-sheet::toggleEquip'] = true;
-                            notes['character-sheet::toggleEquip'] = `equipped ${before} → ${after}`;
-                        } else {
-                            notes['character-sheet::toggleEquip'] = `equipped did not flip (still ${after})`;
-                        }
-                    }
-                } catch (err) {
-                    notes['character-sheet::toggleEquip'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- character-sheet::stowItem ----
-                try {
-                    const handler = actions.stowItem;
-                    if (typeof handler !== 'function') {
-                        notes['character-sheet::stowItem'] = 'handler missing';
-                    } else if (gear == null) {
-                        notes['character-sheet::stowItem'] = 'gear missing';
-                    } else {
-                        await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'stowItem');
-                        const fresh = livePc()?.items?.get?.(gear.id ?? '');
-                        const inBackpack = fresh?.system?.state?.inBackpack === true;
-                        const equipped = fresh?.system?.state?.equipped === true;
-                        if (inBackpack && !equipped) {
-                            fired['character-sheet::stowItem'] = true;
-                            notes['character-sheet::stowItem'] = `inBackpack=true equipped=false`;
-                        } else {
-                            notes['character-sheet::stowItem'] = `unexpected: inBackpack=${String(inBackpack)} equipped=${String(equipped)}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['character-sheet::stowItem'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- character-sheet::unstowItem ----
-                try {
-                    const handler = actions.unstowItem;
-                    if (typeof handler !== 'function') {
-                        notes['character-sheet::unstowItem'] = 'handler missing';
-                    } else if (gear == null) {
-                        notes['character-sheet::unstowItem'] = 'gear missing';
-                    } else {
-                        await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'unstowItem');
-                        const fresh = livePc()?.items?.get?.(gear.id ?? '');
-                        const inBackpack = fresh?.system?.state?.inBackpack === true;
-                        if (!inBackpack) {
-                            fired['character-sheet::unstowItem'] = true;
-                            notes['character-sheet::unstowItem'] = `inBackpack cleared`;
-                        } else {
-                            notes['character-sheet::unstowItem'] = `still inBackpack=true`;
-                        }
-                    }
-                } catch (err) {
-                    notes['character-sheet::unstowItem'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- character-sheet::filterEquipment ----
-                // Pure DOM helper; success = dispatch returns without throwing.
-                try {
-                    const handler = actions.filterEquipment;
-                    if (typeof handler !== 'function') {
-                        notes['character-sheet::filterEquipment'] = 'handler missing';
-                    } else {
-                        void handler.call(sheet, synthEvent(), synthTarget({}));
-                        fired['character-sheet::filterEquipment'] = true;
-                        notes['character-sheet::filterEquipment'] = 'dispatch ok';
-                    }
-                } catch (err) {
-                    notes['character-sheet::filterEquipment'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- character-sheet::toggleFavoriteSkill ----
-                // Flips the actor's `favoriteSkills` flag list.
-                try {
-                    const handler = actions.toggleFavoriteSkill;
-                    if (typeof handler !== 'function') {
-                        notes['character-sheet::toggleFavoriteSkill'] = 'handler missing';
-                    } else {
-                        const favBefore = livePc()?.getFlag?.('wh40k-rpg', 'favoriteSkills');
-                        const flagBefore = Array.isArray(favBefore) ? favBefore : [];
-                        const includesBefore = flagBefore.includes('athletics');
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ skill: 'athletics' })), 5_000, 'toggleFavoriteSkill');
-                        const favAfter = livePc()?.getFlag?.('wh40k-rpg', 'favoriteSkills');
-                        const flagAfter = Array.isArray(favAfter) ? favAfter : [];
-                        const includesAfter = flagAfter.includes('athletics');
-                        if (includesAfter !== includesBefore) {
-                            fired['character-sheet::toggleFavoriteSkill'] = true;
-                            notes['character-sheet::toggleFavoriteSkill'] = `favorite ${includesBefore} → ${includesAfter}`;
-                        } else {
-                            // Dispatch ran (no-throw); accept that as the coverage signal
-                            // since the underlying skill may be auto-unfavourited if untrained.
-                            fired['character-sheet::toggleFavoriteSkill'] = true;
-                            notes['character-sheet::toggleFavoriteSkill'] = `dispatch ok; flag unchanged (auto-skip)`;
-                        }
-                    }
-                } catch (err) {
-                    notes['character-sheet::toggleFavoriteSkill'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- character-sheet::toggleFavoriteTalent ----
-                // Create a talent to favorite.
-                try {
-                    const handler = actions.toggleFavoriteTalent;
-                    if (typeof handler !== 'function') {
-                        notes['character-sheet::toggleFavoriteTalent'] = 'handler missing';
-                    } else {
-                        const talentCreated = await withTimeout(
-                            livePc()?.createEmbeddedDocuments?.('Item', [{ name: 'probe-talent', type: 'talent', system: {} }]),
-                            5_000,
-                            'create talent',
-                        );
-                        const firstTalent = talentCreated?.at(0);
-                        const talent = firstTalent != null ? livePc()?.items?.get?.(firstTalent.id) ?? null : null;
-                        if (talent == null) {
-                            notes['character-sheet::toggleFavoriteTalent'] = 'talent create failed';
-                        } else {
-                            cleanups.push(async () => {
-                                try {
-                                    await talent.delete?.();
-                                } catch {
-                                    /* ignore */
-                                }
-                            });
-                            const talentId = talent.id ?? '';
-                            await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(talentId)), 5_000, 'toggleFavoriteTalent');
-                            const favTalentsFlag = livePc()?.getFlag?.('wh40k-rpg', 'favoriteTalents');
-                            const flagAfter = Array.isArray(favTalentsFlag) ? favTalentsFlag : [];
-                            if (flagAfter.includes(talentId)) {
-                                fired['character-sheet::toggleFavoriteTalent'] = true;
-                                notes['character-sheet::toggleFavoriteTalent'] = `flag added`;
-                            } else {
-                                // Dispatch ran without throwing — accept the coverage signal.
-                                fired['character-sheet::toggleFavoriteTalent'] = true;
-                                notes['character-sheet::toggleFavoriteTalent'] = 'dispatch ok (favorite list unchanged)';
-                            }
-                        }
-                    }
-                } catch (err) {
-                    notes['character-sheet::toggleFavoriteTalent'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- character-sheet::adjustSubtletyManually ----
-                // GM-only; passing data-delta drives applySubtlety('manual').
-                try {
-                    const handler = actions.adjustSubtletyManually;
-                    if (typeof handler !== 'function') {
-                        notes['character-sheet::adjustSubtletyManually'] = 'handler missing';
-                    } else if (gameCtx?.user?.isGM !== true) {
-                        notes['character-sheet::adjustSubtletyManually'] = 'not GM (joinAsGM should have made us GM)';
-                    } else {
-                        let threw: string | null = null;
-                        try {
-                            await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-2' })), 5_000, 'adjustSubtletyManually');
-                        } catch (err) {
-                            threw = err instanceof Error ? err.message : String(err);
-                        }
-                        if (threw === null) {
-                            fired['character-sheet::adjustSubtletyManually'] = true;
-                            notes['character-sheet::adjustSubtletyManually'] = 'applySubtlety dispatch ok';
-                        } else {
-                            notes['character-sheet::adjustSubtletyManually'] = `threw: ${threw}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['character-sheet::adjustSubtletyManually'] = `outer threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-            }
-
-            /* =================================================================
-             * NPCSheet flows (dh2-npc + im-npc for the threat-level cross)
-             * ================================================================= */
-            async function probeNpcFlows(): Promise<void> {
-                const npc = await makeActor('dh2-npc', 'dh2', {
-                    wounds: { max: 10, value: 10, critical: 0 },
-                    horde: { active: false, magnitude: 0 },
-                    tags: [],
-                });
-                if (npc?.id == null) {
-                    notes['npc-sheet::toggleHordeMode'] = 'NPC create returned null';
-                    return;
-                }
-                await new Promise<void>((r) => {
-                    setTimeout(r, 250);
-                });
-                const liveNpc = (): ProbeActor | undefined => (npc.id != null ? gameCtx?.actors?.get?.(npc.id) : undefined);
-                const sheet = liveNpc()?.sheet;
-                if (sheet == null) {
-                    notes['npc-sheet::toggleHordeMode'] = 'NPC sheet undefined';
-                    return;
-                }
-                try {
-                    await withTimeout(sheet.render?.(true), 5_000, 'NPC sheet.render');
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 50);
-                    });
-                } catch {
-                    /* best-effort */
-                }
-                cleanups.push(async () => {
-                    try {
-                        await sheet.close?.();
-                    } catch {
-                        /* ignore */
-                    }
-                });
-                const actions = sheet.options?.actions ?? {};
-
-                // ---- npc-sheet::toggleHordeMode ----
-                try {
-                    const handler = actions.toggleHordeMode;
-                    if (typeof handler !== 'function') {
-                        notes['npc-sheet::toggleHordeMode'] = 'handler missing';
-                    } else {
-                        const before = liveNpc()?.system?.horde?.active === true;
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'toggleHordeMode');
-                        const after = liveNpc()?.system?.horde?.active === true;
-                        if (after !== before) {
-                            fired['npc-sheet::toggleHordeMode'] = true;
-                            notes['npc-sheet::toggleHordeMode'] = `horde.active ${before} → ${after}`;
-                        } else {
-                            // Some NPC variants may not expose horde — accept no-throw dispatch.
-                            fired['npc-sheet::toggleHordeMode'] = true;
-                            notes['npc-sheet::toggleHordeMode'] = 'dispatch ok; horde.active unchanged';
-                        }
-                    }
-                } catch (err) {
-                    notes['npc-sheet::toggleHordeMode'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- npc-sheet::applyMagnitudeDamage ----
-                // Reads `data-amount`; success = dispatch returns without throwing.
-                try {
-                    const handler = actions.applyMagnitudeDamage;
-                    if (typeof handler !== 'function') {
-                        notes['npc-sheet::applyMagnitudeDamage'] = 'handler missing';
-                    } else {
-                        let threw: string | null = null;
-                        try {
-                            await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '1' })), 5_000, 'applyMagnitudeDamage');
-                        } catch (err) {
-                            threw = err instanceof Error ? err.message : String(err);
-                        }
-                        if (threw === null) {
-                            fired['npc-sheet::applyMagnitudeDamage'] = true;
-                            notes['npc-sheet::applyMagnitudeDamage'] = 'dispatch ok';
-                        } else {
-                            notes['npc-sheet::applyMagnitudeDamage'] = `threw: ${threw}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['npc-sheet::applyMagnitudeDamage'] = `outer threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- npc-sheet::setSkillLevel ----
-                // Writes `system.trainedSkills.<skill>` to a chosen training level.
-                try {
-                    const handler = actions.setSkillLevel;
-                    if (typeof handler !== 'function') {
-                        notes['npc-sheet::setSkillLevel'] = 'handler missing';
-                    } else {
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ skill: 'awareness', level: 'trained' })), 5_000, 'setSkillLevel');
-                        const fresh = liveNpc()?.system?.trainedSkills?.awareness;
-                        if (fresh?.trained === true) {
-                            fired['npc-sheet::setSkillLevel'] = true;
-                            notes['npc-sheet::setSkillLevel'] = 'awareness set to trained';
-                        } else {
-                            // Dispatch may still be valid — accept no-throw as coverage signal.
-                            fired['npc-sheet::setSkillLevel'] = true;
-                            notes['npc-sheet::setSkillLevel'] = `dispatch ok; entry=${JSON.stringify(fresh ?? null)}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['npc-sheet::setSkillLevel'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- npc-sheet::addTag ----
-                // Opens a DialogV2; we accept render-or-no-throw as the coverage signal.
-                try {
-                    const handler = actions.addTag;
-                    if (typeof handler !== 'function') {
-                        notes['npc-sheet::addTag'] = 'handler missing';
-                    } else {
-                        let threw: string | null = null;
-                        try {
-                            void handler.call(sheet, synthEvent(), synthTarget({}));
-                        } catch (err) {
-                            threw = err instanceof Error ? err.message : String(err);
-                        }
-                        if (threw === null) {
-                            fired['npc-sheet::addTag'] = true;
-                            notes['npc-sheet::addTag'] = 'dialog dispatch ok';
-                        } else {
-                            notes['npc-sheet::addTag'] = `threw: ${threw}`;
-                        }
-                    }
-                    // Make sure we don't leave the Add Tag dialog open.
-                    await closeOpenDialogs();
-                } catch (err) {
-                    notes['npc-sheet::addTag'] = `outer threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- npc-sheet::removeTag ----
-                // Pre-seed a tag, dispatch the action, expect it gone.
-                try {
-                    const handler = actions.removeTag;
-                    if (typeof handler !== 'function') {
-                        notes['npc-sheet::removeTag'] = 'handler missing';
-                    } else {
-                        await withTimeout(liveNpc()?.update?.({ 'system.tags': ['boss'] }), 5_000, 'seed npc tag');
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ tag: 'boss' })), 5_000, 'removeTag');
-                        const tags = liveNpc()?.system?.tags ?? [];
-                        if (!tags.includes('boss')) {
-                            fired['npc-sheet::removeTag'] = true;
-                            notes['npc-sheet::removeTag'] = 'tag removed';
-                        } else {
-                            notes['npc-sheet::removeTag'] = `tag remains: ${JSON.stringify(tags)}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['npc-sheet::removeTag'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- npc-sheet::adjustInteractionCount ----
-                // Writes per-PC interaction tally to a flag.
-                try {
-                    const handler = actions.adjustInteractionCount;
-                    if (typeof handler !== 'function') {
-                        notes['npc-sheet::adjustInteractionCount'] = 'handler missing';
-                    } else {
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ pcId: 'probe-pc', delta: '1' })), 5_000, 'adjustInteractionCount');
-                        const interactionsFlag = liveNpc()?.getFlag?.('wh40k-rpg', 'interactions');
-                        const interactions: Record<string, number> = Array.isArray(interactionsFlag) || interactionsFlag == null ? {} : interactionsFlag;
-                        if (interactions['probe-pc'] === 1) {
-                            fired['npc-sheet::adjustInteractionCount'] = true;
-                            notes['npc-sheet::adjustInteractionCount'] = 'tally incremented to 1';
-                        } else {
-                            notes['npc-sheet::adjustInteractionCount'] = `unexpected: ${JSON.stringify(interactions)}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['npc-sheet::adjustInteractionCount'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-            }
-
-            // ---- npc-sheet::scaleToThreat-im (IM cross-product) ----
-            // Opens NPCThreatScalerDialog. Verified by no-throw + window appearing.
-            async function probeImThreatScaler(): Promise<void> {
-                const imNpc = await makeActor('im-npc', 'im', {
-                    wounds: { max: 8, value: 8, critical: 0 },
-                    tags: [],
-                });
-                if (imNpc?.id == null) {
-                    notes['npc-sheet::scaleToThreat-im'] = 'IM NPC create returned null';
-                    return;
-                }
-                await new Promise<void>((r) => {
-                    setTimeout(r, 250);
-                });
-                const liveIm = (): ProbeActor | undefined => (imNpc.id != null ? gameCtx?.actors?.get?.(imNpc.id) : undefined);
-                const sheet = liveIm()?.sheet;
-                if (sheet == null) {
-                    notes['npc-sheet::scaleToThreat-im'] = 'IM NPC sheet undefined';
-                    return;
-                }
-                try {
-                    await withTimeout(sheet.render?.(true), 5_000, 'IM NPC sheet.render');
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 50);
-                    });
-                } catch {
-                    /* best-effort */
-                }
-                cleanups.push(async () => {
-                    try {
-                        await sheet.close?.();
-                    } catch {
-                        /* ignore */
-                    }
-                });
-                const handler = sheet.options?.actions?.scaleToThreat;
+            // ---- character-sheet::adjustSubtletyManually ----
+            // GM-only; passing data-delta drives applySubtlety('manual').
+            try {
+                const handler = actions.adjustSubtletyManually;
                 if (typeof handler !== 'function') {
-                    notes['npc-sheet::scaleToThreat-im'] = 'handler missing';
+                    notes['character-sheet::adjustSubtletyManually'] = 'handler missing';
+                } else if (gameCtx?.user?.isGM !== true) {
+                    notes['character-sheet::adjustSubtletyManually'] = 'not GM (joinAsGM should have made us GM)';
                 } else {
                     let threw: string | null = null;
                     try {
-                        // scaleToThreat awaits a dialog; race with a timeout so the spec
-                        // never blocks on user input. A timeout still counts as "dispatch
-                        // reached the dialog".
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 2_000, 'scaleToThreat');
-                    } catch (err) {
-                        threw = err instanceof Error ? err.message : String(err);
-                    }
-                    if (threw === null || threw.includes('timed out')) {
-                        fired['npc-sheet::scaleToThreat-im'] = true;
-                        notes['npc-sheet::scaleToThreat-im'] = threw === null ? 'returned ok' : 'reached dialog (timeout)';
-                    } else {
-                        notes['npc-sheet::scaleToThreat-im'] = `threw: ${threw}`;
-                    }
-                }
-            }
-
-            /* =================================================================
-             * VehicleSheet flows (dh2-vehicle)
-             * ================================================================= */
-            async function probeVehicleFlows(): Promise<void> {
-                const vehicle = await makeActor('dh2-vehicle', 'dh2', {
-                    integrity: { max: 20, value: 10 },
-                });
-                if (vehicle?.id == null) {
-                    notes['vehicle-sheet::adjustIntegrity'] = 'Vehicle create returned null';
-                    return;
-                }
-                await new Promise<void>((r) => {
-                    setTimeout(r, 250);
-                });
-                const liveV = (): ProbeActor | undefined => (vehicle.id != null ? gameCtx?.actors?.get?.(vehicle.id) : undefined);
-                const sheet = liveV()?.sheet;
-                if (sheet == null) {
-                    notes['vehicle-sheet::adjustIntegrity'] = 'Vehicle sheet undefined';
-                    return;
-                }
-                try {
-                    await withTimeout(sheet.render?.(true), 5_000, 'Vehicle sheet.render');
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 50);
-                    });
-                } catch {
-                    /* best-effort */
-                }
-                cleanups.push(async () => {
-                    try {
-                        await sheet.close?.();
-                    } catch {
-                        /* ignore */
-                    }
-                });
-                const actions = sheet.options?.actions ?? {};
-
-                // ---- vehicle-sheet::adjustIntegrity ----
-                // Conventional craft's structural field is `integrity` (was
-                // `wounds`); the handler was renamed adjustStructure → adjustIntegrity.
-                try {
-                    const handler = actions.adjustIntegrity;
-                    if (typeof handler !== 'function') {
-                        notes['vehicle-sheet::adjustIntegrity'] = 'handler missing';
-                    } else {
-                        const before = liveV()?.system?.integrity?.value ?? -1;
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-3' })), 5_000, 'adjustIntegrity');
-                        const after = liveV()?.system?.integrity?.value ?? -1;
-                        if (after === Math.max(0, before - 3)) {
-                            fired['vehicle-sheet::adjustIntegrity'] = true;
-                            notes['vehicle-sheet::adjustIntegrity'] = `integrity ${before} → ${after}`;
-                        } else {
-                            notes['vehicle-sheet::adjustIntegrity'] = `expected ${Math.max(0, before - 3)}, got ${after}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['vehicle-sheet::adjustIntegrity'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- vehicle-sheet::repairDamage ----
-                try {
-                    const handler = actions.repairDamage;
-                    if (typeof handler !== 'function') {
-                        notes['vehicle-sheet::repairDamage'] = 'handler missing';
-                    } else {
-                        const before = liveV()?.system?.integrity?.value ?? -1;
-                        const max = liveV()?.system?.integrity?.max ?? before;
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '2' })), 5_000, 'repairDamage');
-                        const after = liveV()?.system?.integrity?.value ?? -1;
-                        if (after === Math.min(max, before + 2)) {
-                            fired['vehicle-sheet::repairDamage'] = true;
-                            notes['vehicle-sheet::repairDamage'] = `integrity ${before} → ${after}`;
-                        } else {
-                            notes['vehicle-sheet::repairDamage'] = `expected ${Math.min(max, before + 2)}, got ${after}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['vehicle-sheet::repairDamage'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-                // NOTE: vehicle-sheet::modifyCrew / adjustCrewMorale were removed —
-                // conventional craft crew is now { required, notes } only (no
-                // rating/morale), and CraftActorSheet exposes no such actions. The
-                // flow keys are dropped from SHEET_ACTION_ACTOR_FLOWS accordingly.
-            }
-
-            /* =================================================================
-             * StarshipSheet flows (rt-starship)
-             * ================================================================= */
-            async function probeStarshipFlows(): Promise<void> {
-                const starship = await makeActor('rt-starship', 'rt', {
-                    voidShields: 2,
-                    voidShieldsStatus: { active: 1, exhausted: 1 },
-                    shipPoints: { budget: 30 },
-                });
-                if (starship?.id == null) {
-                    notes['starship-sheet::raiseVoidShield'] = 'Starship create returned null';
-                    return;
-                }
-                await new Promise<void>((r) => {
-                    setTimeout(r, 250);
-                });
-                const liveS = (): ProbeActor | undefined => (starship.id != null ? gameCtx?.actors?.get?.(starship.id) : undefined);
-                const sheet = liveS()?.sheet;
-                if (sheet == null) {
-                    notes['starship-sheet::raiseVoidShield'] = 'Starship sheet undefined';
-                    return;
-                }
-                try {
-                    await withTimeout(sheet.render?.(true), 5_000, 'Starship sheet.render');
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 50);
-                    });
-                } catch {
-                    /* best-effort */
-                }
-                cleanups.push(async () => {
-                    try {
-                        await sheet.close?.();
-                    } catch {
-                        /* ignore */
-                    }
-                });
-                const actions = sheet.options?.actions ?? {};
-
-                // ---- starship-sheet::raiseVoidShield ----
-                // From active=1/exhausted=1 → active=2/exhausted=0.
-                try {
-                    const handler = actions.raiseVoidShield;
-                    if (typeof handler !== 'function') {
-                        notes['starship-sheet::raiseVoidShield'] = 'handler missing';
-                    } else {
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'raiseVoidShield');
-                        const active = liveS()?.system?.voidShieldsStatus?.active ?? -1;
-                        const exhausted = liveS()?.system?.voidShieldsStatus?.exhausted ?? -1;
-                        if (active === 2 && exhausted === 0) {
-                            fired['starship-sheet::raiseVoidShield'] = true;
-                            notes['starship-sheet::raiseVoidShield'] = `active=${active} exhausted=${exhausted}`;
-                        } else {
-                            notes['starship-sheet::raiseVoidShield'] = `expected active=2 exhausted=0, got active=${active} exhausted=${exhausted}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['starship-sheet::raiseVoidShield'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- starship-sheet::lowerVoidShield ----
-                // From active=2/exhausted=0 → active=1/exhausted=1.
-                try {
-                    const handler = actions.lowerVoidShield;
-                    if (typeof handler !== 'function') {
-                        notes['starship-sheet::lowerVoidShield'] = 'handler missing';
-                    } else {
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'lowerVoidShield');
-                        const active = liveS()?.system?.voidShieldsStatus?.active ?? -1;
-                        const exhausted = liveS()?.system?.voidShieldsStatus?.exhausted ?? -1;
-                        if (active === 1 && exhausted === 1) {
-                            fired['starship-sheet::lowerVoidShield'] = true;
-                            notes['starship-sheet::lowerVoidShield'] = `active=${active} exhausted=${exhausted}`;
-                        } else {
-                            notes['starship-sheet::lowerVoidShield'] = `expected active=1 exhausted=1, got active=${active} exhausted=${exhausted}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['starship-sheet::lowerVoidShield'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- starship-sheet::restoreVoidShields ----
-                // Snaps active=max, exhausted=0.
-                try {
-                    const handler = actions.restoreVoidShields;
-                    if (typeof handler !== 'function') {
-                        notes['starship-sheet::restoreVoidShields'] = 'handler missing';
-                    } else {
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'restoreVoidShields');
-                        const active = liveS()?.system?.voidShieldsStatus?.active ?? -1;
-                        const exhausted = liveS()?.system?.voidShieldsStatus?.exhausted ?? -1;
-                        const max = liveS()?.system?.voidShields ?? -1;
-                        if (active === max && exhausted === 0) {
-                            fired['starship-sheet::restoreVoidShields'] = true;
-                            notes['starship-sheet::restoreVoidShields'] = `active=${active}=${max} exhausted=${exhausted}`;
-                        } else {
-                            notes['starship-sheet::restoreVoidShields'] = `expected active=${max} exhausted=0, got active=${active} exhausted=${exhausted}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['starship-sheet::restoreVoidShields'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-
-                // ---- starship-sheet::validateBuild ----
-                // Pure helper that reads system.buildValidation (or falls back
-                // to StarshipData.validateBuild) and pings ui.notifications.
-                // Success = no throw.
-                try {
-                    const handler = actions.validateBuild;
-                    if (typeof handler !== 'function') {
-                        notes['starship-sheet::validateBuild'] = 'handler missing';
-                    } else {
-                        let threw: string | null = null;
-                        try {
-                            void handler.call(sheet, synthEvent(), synthTarget({}));
-                        } catch (err) {
-                            threw = err instanceof Error ? err.message : String(err);
-                        }
-                        if (threw === null) {
-                            fired['starship-sheet::validateBuild'] = true;
-                            notes['starship-sheet::validateBuild'] = 'dispatch ok';
-                        } else {
-                            notes['starship-sheet::validateBuild'] = `threw: ${threw}`;
-                        }
-                    }
-                } catch (err) {
-                    notes['starship-sheet::validateBuild'] = `outer threw: ${err instanceof Error ? err.message : String(err)}`;
-                }
-            }
-
-            /* =================================================================
-             * LootActorSheet flow (loot type — system-agnostic root)
-             * ================================================================= */
-            async function probeLootFlows(): Promise<void> {
-                const loot = await makeActor('loot', 'dh2');
-                if (loot?.id == null) {
-                    notes['loot-sheet::pickupAll'] = 'Loot create returned null';
-                    return;
-                }
-                await new Promise<void>((r) => {
-                    setTimeout(r, 250);
-                });
-                const liveL = (): ProbeActor | undefined => (loot.id != null ? gameCtx?.actors?.get?.(loot.id) : undefined);
-                const sheet = liveL()?.sheet;
-                if (sheet == null) {
-                    notes['loot-sheet::pickupAll'] = 'Loot sheet undefined';
-                    return;
-                }
-                try {
-                    await withTimeout(sheet.render?.(true), 5_000, 'Loot sheet.render');
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 50);
-                    });
-                } catch {
-                    /* best-effort */
-                }
-                cleanups.push(async () => {
-                    try {
-                        await sheet.close?.();
-                    } catch {
-                        /* ignore */
-                    }
-                });
-                const handler = sheet.options?.actions?.pickupAll;
-                if (typeof handler !== 'function') {
-                    notes['loot-sheet::pickupAll'] = 'handler missing';
-                } else {
-                    // No controlled token / assigned character → resolveReceiver()
-                    // returns null and the handler emits a warning + returns. That
-                    // exercises the receiver-resolution branch without throwing.
-                    let threw: string | null = null;
-                    try {
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'pickupAll');
+                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-2' })), 5_000, 'adjustSubtletyManually');
                     } catch (err) {
                         threw = err instanceof Error ? err.message : String(err);
                     }
                     if (threw === null) {
-                        fired['loot-sheet::pickupAll'] = true;
-                        notes['loot-sheet::pickupAll'] = 'dispatch ok (no receiver branch)';
+                        fired['character-sheet::adjustSubtletyManually'] = true;
+                        notes['character-sheet::adjustSubtletyManually'] = 'applySubtlety dispatch ok';
                     } else {
-                        notes['loot-sheet::pickupAll'] = `threw: ${threw}`;
+                        notes['character-sheet::adjustSubtletyManually'] = `threw: ${threw}`;
                     }
                 }
+            } catch (err) {
+                notes['character-sheet::adjustSubtletyManually'] = `outer threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+        }
+
+        /* =================================================================
+         * NPCSheet flows (dh2-npc + im-npc for the threat-level cross)
+         * ================================================================= */
+        async function probeNpcFlows(): Promise<void> {
+            const npc = await makeActor('dh2-npc', 'dh2', {
+                wounds: { max: 10, value: 10, critical: 0 },
+                horde: { active: false, magnitude: 0 },
+                tags: [],
+            });
+            if (npc?.id == null) {
+                notes['npc-sheet::toggleHordeMode'] = 'NPC create returned null';
+                return;
+            }
+            await new Promise<void>((r) => {
+                setTimeout(r, 250);
+            });
+            const liveNpc = (): ProbeActor | undefined => (npc.id != null ? gameCtx?.actors?.get?.(npc.id) : undefined);
+            const sheet = liveNpc()?.sheet;
+            if (sheet == null) {
+                notes['npc-sheet::toggleHordeMode'] = 'NPC sheet undefined';
+                return;
+            }
+            try {
+                await withTimeout(sheet.render?.(true), 5_000, 'NPC sheet.render');
+                await new Promise<void>((r) => {
+                    setTimeout(r, 50);
+                });
+            } catch {
+                /* best-effort */
+            }
+            cleanups.push(async () => {
+                try {
+                    await sheet.close?.();
+                } catch {
+                    /* ignore */
+                }
+            });
+            const actions = sheet.options?.actions ?? {};
+
+            // ---- npc-sheet::toggleHordeMode ----
+            try {
+                const handler = actions.toggleHordeMode;
+                if (typeof handler !== 'function') {
+                    notes['npc-sheet::toggleHordeMode'] = 'handler missing';
+                } else {
+                    const before = liveNpc()?.system?.horde?.active === true;
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'toggleHordeMode');
+                    const after = liveNpc()?.system?.horde?.active === true;
+                    if (after !== before) {
+                        fired['npc-sheet::toggleHordeMode'] = true;
+                        notes['npc-sheet::toggleHordeMode'] = `horde.active ${before} → ${after}`;
+                    } else {
+                        // Some NPC variants may not expose horde — accept no-throw dispatch.
+                        fired['npc-sheet::toggleHordeMode'] = true;
+                        notes['npc-sheet::toggleHordeMode'] = 'dispatch ok; horde.active unchanged';
+                    }
+                }
+            } catch (err) {
+                notes['npc-sheet::toggleHordeMode'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
             }
 
+            // ---- npc-sheet::applyMagnitudeDamage ----
+            // Reads `data-amount`; success = dispatch returns without throwing.
             try {
-                await probeCharacterFlows();
-                await closeOpenDialogs();
-                await probeNpcFlows();
-                await closeOpenDialogs();
-                await probeImThreatScaler();
-                await closeOpenDialogs();
-                await probeVehicleFlows();
-                await closeOpenDialogs();
-                await probeStarshipFlows();
-                await closeOpenDialogs();
-                await probeLootFlows();
-            } finally {
-                // Best-effort teardown of every created doc + lingering dialog.
-                for (const fn of cleanups) {
+                const handler = actions.applyMagnitudeDamage;
+                if (typeof handler !== 'function') {
+                    notes['npc-sheet::applyMagnitudeDamage'] = 'handler missing';
+                } else {
+                    let threw: string | null = null;
                     try {
-                        // eslint-disable-next-line no-await-in-loop -- best-effort serial cleanup; parallel deletes race on Foundry's collection writes
-                        await fn();
-                    } catch {
-                        /* ignore */
+                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '1' })), 5_000, 'applyMagnitudeDamage');
+                    } catch (err) {
+                        threw = err instanceof Error ? err.message : String(err);
+                    }
+                    if (threw === null) {
+                        fired['npc-sheet::applyMagnitudeDamage'] = true;
+                        notes['npc-sheet::applyMagnitudeDamage'] = 'dispatch ok';
+                    } else {
+                        notes['npc-sheet::applyMagnitudeDamage'] = `threw: ${threw}`;
                     }
                 }
+            } catch (err) {
+                notes['npc-sheet::applyMagnitudeDamage'] = `outer threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- npc-sheet::setSkillLevel ----
+            // Writes `system.trainedSkills.<skill>` to a chosen training level.
+            try {
+                const handler = actions.setSkillLevel;
+                if (typeof handler !== 'function') {
+                    notes['npc-sheet::setSkillLevel'] = 'handler missing';
+                } else {
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ skill: 'awareness', level: 'trained' })), 5_000, 'setSkillLevel');
+                    const fresh = liveNpc()?.system?.trainedSkills?.awareness;
+                    if (fresh?.trained === true) {
+                        fired['npc-sheet::setSkillLevel'] = true;
+                        notes['npc-sheet::setSkillLevel'] = 'awareness set to trained';
+                    } else {
+                        // Dispatch may still be valid — accept no-throw as coverage signal.
+                        fired['npc-sheet::setSkillLevel'] = true;
+                        notes['npc-sheet::setSkillLevel'] = `dispatch ok; entry=${JSON.stringify(fresh ?? null)}`;
+                    }
+                }
+            } catch (err) {
+                notes['npc-sheet::setSkillLevel'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- npc-sheet::addTag ----
+            // Opens a DialogV2; we accept render-or-no-throw as the coverage signal.
+            try {
+                const handler = actions.addTag;
+                if (typeof handler !== 'function') {
+                    notes['npc-sheet::addTag'] = 'handler missing';
+                } else {
+                    let threw: string | null = null;
+                    try {
+                        void handler.call(sheet, synthEvent(), synthTarget({}));
+                    } catch (err) {
+                        threw = err instanceof Error ? err.message : String(err);
+                    }
+                    if (threw === null) {
+                        fired['npc-sheet::addTag'] = true;
+                        notes['npc-sheet::addTag'] = 'dialog dispatch ok';
+                    } else {
+                        notes['npc-sheet::addTag'] = `threw: ${threw}`;
+                    }
+                }
+                // Make sure we don't leave the Add Tag dialog open.
+                await closeOpenDialogs();
+            } catch (err) {
+                notes['npc-sheet::addTag'] = `outer threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- npc-sheet::removeTag ----
+            // Pre-seed a tag, dispatch the action, expect it gone.
+            try {
+                const handler = actions.removeTag;
+                if (typeof handler !== 'function') {
+                    notes['npc-sheet::removeTag'] = 'handler missing';
+                } else {
+                    await withTimeout(liveNpc()?.update?.({ 'system.tags': ['boss'] }), 5_000, 'seed npc tag');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ tag: 'boss' })), 5_000, 'removeTag');
+                    const tags = liveNpc()?.system?.tags ?? [];
+                    if (!tags.includes('boss')) {
+                        fired['npc-sheet::removeTag'] = true;
+                        notes['npc-sheet::removeTag'] = 'tag removed';
+                    } else {
+                        notes['npc-sheet::removeTag'] = `tag remains: ${JSON.stringify(tags)}`;
+                    }
+                }
+            } catch (err) {
+                notes['npc-sheet::removeTag'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- npc-sheet::adjustInteractionCount ----
+            // Writes per-PC interaction tally to a flag.
+            try {
+                const handler = actions.adjustInteractionCount;
+                if (typeof handler !== 'function') {
+                    notes['npc-sheet::adjustInteractionCount'] = 'handler missing';
+                } else {
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ pcId: 'probe-pc', delta: '1' })), 5_000, 'adjustInteractionCount');
+                    const interactionsFlag = liveNpc()?.getFlag?.('wh40k-rpg', 'interactions');
+                    const interactions: Record<string, number> = Array.isArray(interactionsFlag) || interactionsFlag == null ? {} : interactionsFlag;
+                    if (interactions['probe-pc'] === 1) {
+                        fired['npc-sheet::adjustInteractionCount'] = true;
+                        notes['npc-sheet::adjustInteractionCount'] = 'tally incremented to 1';
+                    } else {
+                        notes['npc-sheet::adjustInteractionCount'] = `unexpected: ${JSON.stringify(interactions)}`;
+                    }
+                }
+            } catch (err) {
+                notes['npc-sheet::adjustInteractionCount'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+        }
+
+        // ---- npc-sheet::scaleToThreat-im (IM cross-product) ----
+        // Opens NPCThreatScalerDialog. Verified by no-throw + window appearing.
+        async function probeImThreatScaler(): Promise<void> {
+            const imNpc = await makeActor('im-npc', 'im', {
+                wounds: { max: 8, value: 8, critical: 0 },
+                tags: [],
+            });
+            if (imNpc?.id == null) {
+                notes['npc-sheet::scaleToThreat-im'] = 'IM NPC create returned null';
+                return;
+            }
+            await new Promise<void>((r) => {
+                setTimeout(r, 250);
+            });
+            const liveIm = (): ProbeActor | undefined => (imNpc.id != null ? gameCtx?.actors?.get?.(imNpc.id) : undefined);
+            const sheet = liveIm()?.sheet;
+            if (sheet == null) {
+                notes['npc-sheet::scaleToThreat-im'] = 'IM NPC sheet undefined';
+                return;
+            }
+            try {
+                await withTimeout(sheet.render?.(true), 5_000, 'IM NPC sheet.render');
+                await new Promise<void>((r) => {
+                    setTimeout(r, 50);
+                });
+            } catch {
+                /* best-effort */
+            }
+            cleanups.push(async () => {
                 try {
-                    await closeOpenDialogs();
+                    await sheet.close?.();
+                } catch {
+                    /* ignore */
+                }
+            });
+            const handler = sheet.options?.actions?.scaleToThreat;
+            if (typeof handler !== 'function') {
+                notes['npc-sheet::scaleToThreat-im'] = 'handler missing';
+            } else {
+                let threw: string | null = null;
+                try {
+                    // scaleToThreat awaits a dialog; race with a timeout so the spec
+                    // never blocks on user input. A timeout still counts as "dispatch
+                    // reached the dialog".
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 2_000, 'scaleToThreat');
+                } catch (err) {
+                    threw = err instanceof Error ? err.message : String(err);
+                }
+                if (threw === null || threw.includes('timed out')) {
+                    fired['npc-sheet::scaleToThreat-im'] = true;
+                    notes['npc-sheet::scaleToThreat-im'] = threw === null ? 'returned ok' : 'reached dialog (timeout)';
+                } else {
+                    notes['npc-sheet::scaleToThreat-im'] = `threw: ${threw}`;
+                }
+            }
+        }
+
+        /* =================================================================
+         * VehicleSheet flows (dh2-vehicle)
+         * ================================================================= */
+        async function probeVehicleFlows(): Promise<void> {
+            const vehicle = await makeActor('dh2-vehicle', 'dh2', {
+                integrity: { max: 20, value: 10 },
+            });
+            if (vehicle?.id == null) {
+                notes['vehicle-sheet::adjustIntegrity'] = 'Vehicle create returned null';
+                return;
+            }
+            await new Promise<void>((r) => {
+                setTimeout(r, 250);
+            });
+            const liveV = (): ProbeActor | undefined => (vehicle.id != null ? gameCtx?.actors?.get?.(vehicle.id) : undefined);
+            const sheet = liveV()?.sheet;
+            if (sheet == null) {
+                notes['vehicle-sheet::adjustIntegrity'] = 'Vehicle sheet undefined';
+                return;
+            }
+            try {
+                await withTimeout(sheet.render?.(true), 5_000, 'Vehicle sheet.render');
+                await new Promise<void>((r) => {
+                    setTimeout(r, 50);
+                });
+            } catch {
+                /* best-effort */
+            }
+            cleanups.push(async () => {
+                try {
+                    await sheet.close?.();
+                } catch {
+                    /* ignore */
+                }
+            });
+            const actions = sheet.options?.actions ?? {};
+
+            // ---- vehicle-sheet::adjustIntegrity ----
+            // Conventional craft's structural field is `integrity` (was
+            // `wounds`); the handler was renamed adjustStructure → adjustIntegrity.
+            try {
+                const handler = actions.adjustIntegrity;
+                if (typeof handler !== 'function') {
+                    notes['vehicle-sheet::adjustIntegrity'] = 'handler missing';
+                } else {
+                    const before = liveV()?.system?.integrity?.value ?? -1;
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-3' })), 5_000, 'adjustIntegrity');
+                    const after = liveV()?.system?.integrity?.value ?? -1;
+                    if (after === Math.max(0, before - 3)) {
+                        fired['vehicle-sheet::adjustIntegrity'] = true;
+                        notes['vehicle-sheet::adjustIntegrity'] = `integrity ${before} → ${after}`;
+                    } else {
+                        notes['vehicle-sheet::adjustIntegrity'] = `expected ${Math.max(0, before - 3)}, got ${after}`;
+                    }
+                }
+            } catch (err) {
+                notes['vehicle-sheet::adjustIntegrity'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- vehicle-sheet::repairDamage ----
+            try {
+                const handler = actions.repairDamage;
+                if (typeof handler !== 'function') {
+                    notes['vehicle-sheet::repairDamage'] = 'handler missing';
+                } else {
+                    const before = liveV()?.system?.integrity?.value ?? -1;
+                    const max = liveV()?.system?.integrity?.max ?? before;
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '2' })), 5_000, 'repairDamage');
+                    const after = liveV()?.system?.integrity?.value ?? -1;
+                    if (after === Math.min(max, before + 2)) {
+                        fired['vehicle-sheet::repairDamage'] = true;
+                        notes['vehicle-sheet::repairDamage'] = `integrity ${before} → ${after}`;
+                    } else {
+                        notes['vehicle-sheet::repairDamage'] = `expected ${Math.min(max, before + 2)}, got ${after}`;
+                    }
+                }
+            } catch (err) {
+                notes['vehicle-sheet::repairDamage'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+            // NOTE: vehicle-sheet::modifyCrew / adjustCrewMorale were removed —
+            // conventional craft crew is now { required, notes } only (no
+            // rating/morale), and CraftActorSheet exposes no such actions. The
+            // flow keys are dropped from SHEET_ACTION_ACTOR_FLOWS accordingly.
+        }
+
+        /* =================================================================
+         * StarshipSheet flows (rt-starship)
+         * ================================================================= */
+        async function probeStarshipFlows(): Promise<void> {
+            const starship = await makeActor('rt-starship', 'rt', {
+                voidShields: 2,
+                voidShieldsStatus: { active: 1, exhausted: 1 },
+                shipPoints: { budget: 30 },
+            });
+            if (starship?.id == null) {
+                notes['starship-sheet::raiseVoidShield'] = 'Starship create returned null';
+                return;
+            }
+            await new Promise<void>((r) => {
+                setTimeout(r, 250);
+            });
+            const liveS = (): ProbeActor | undefined => (starship.id != null ? gameCtx?.actors?.get?.(starship.id) : undefined);
+            const sheet = liveS()?.sheet;
+            if (sheet == null) {
+                notes['starship-sheet::raiseVoidShield'] = 'Starship sheet undefined';
+                return;
+            }
+            try {
+                await withTimeout(sheet.render?.(true), 5_000, 'Starship sheet.render');
+                await new Promise<void>((r) => {
+                    setTimeout(r, 50);
+                });
+            } catch {
+                /* best-effort */
+            }
+            cleanups.push(async () => {
+                try {
+                    await sheet.close?.();
+                } catch {
+                    /* ignore */
+                }
+            });
+            const actions = sheet.options?.actions ?? {};
+
+            // ---- starship-sheet::raiseVoidShield ----
+            // From active=1/exhausted=1 → active=2/exhausted=0.
+            try {
+                const handler = actions.raiseVoidShield;
+                if (typeof handler !== 'function') {
+                    notes['starship-sheet::raiseVoidShield'] = 'handler missing';
+                } else {
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'raiseVoidShield');
+                    const active = liveS()?.system?.voidShieldsStatus?.active ?? -1;
+                    const exhausted = liveS()?.system?.voidShieldsStatus?.exhausted ?? -1;
+                    if (active === 2 && exhausted === 0) {
+                        fired['starship-sheet::raiseVoidShield'] = true;
+                        notes['starship-sheet::raiseVoidShield'] = `active=${active} exhausted=${exhausted}`;
+                    } else {
+                        notes['starship-sheet::raiseVoidShield'] = `expected active=2 exhausted=0, got active=${active} exhausted=${exhausted}`;
+                    }
+                }
+            } catch (err) {
+                notes['starship-sheet::raiseVoidShield'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- starship-sheet::lowerVoidShield ----
+            // From active=2/exhausted=0 → active=1/exhausted=1.
+            try {
+                const handler = actions.lowerVoidShield;
+                if (typeof handler !== 'function') {
+                    notes['starship-sheet::lowerVoidShield'] = 'handler missing';
+                } else {
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'lowerVoidShield');
+                    const active = liveS()?.system?.voidShieldsStatus?.active ?? -1;
+                    const exhausted = liveS()?.system?.voidShieldsStatus?.exhausted ?? -1;
+                    if (active === 1 && exhausted === 1) {
+                        fired['starship-sheet::lowerVoidShield'] = true;
+                        notes['starship-sheet::lowerVoidShield'] = `active=${active} exhausted=${exhausted}`;
+                    } else {
+                        notes['starship-sheet::lowerVoidShield'] = `expected active=1 exhausted=1, got active=${active} exhausted=${exhausted}`;
+                    }
+                }
+            } catch (err) {
+                notes['starship-sheet::lowerVoidShield'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- starship-sheet::restoreVoidShields ----
+            // Snaps active=max, exhausted=0.
+            try {
+                const handler = actions.restoreVoidShields;
+                if (typeof handler !== 'function') {
+                    notes['starship-sheet::restoreVoidShields'] = 'handler missing';
+                } else {
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'restoreVoidShields');
+                    const active = liveS()?.system?.voidShieldsStatus?.active ?? -1;
+                    const exhausted = liveS()?.system?.voidShieldsStatus?.exhausted ?? -1;
+                    const max = liveS()?.system?.voidShields ?? -1;
+                    if (active === max && exhausted === 0) {
+                        fired['starship-sheet::restoreVoidShields'] = true;
+                        notes['starship-sheet::restoreVoidShields'] = `active=${active}=${max} exhausted=${exhausted}`;
+                    } else {
+                        notes['starship-sheet::restoreVoidShields'] = `expected active=${max} exhausted=0, got active=${active} exhausted=${exhausted}`;
+                    }
+                }
+            } catch (err) {
+                notes['starship-sheet::restoreVoidShields'] = `threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+
+            // ---- starship-sheet::validateBuild ----
+            // Pure helper that reads system.buildValidation (or falls back
+            // to StarshipData.validateBuild) and pings ui.notifications.
+            // Success = no throw.
+            try {
+                const handler = actions.validateBuild;
+                if (typeof handler !== 'function') {
+                    notes['starship-sheet::validateBuild'] = 'handler missing';
+                } else {
+                    let threw: string | null = null;
+                    try {
+                        void handler.call(sheet, synthEvent(), synthTarget({}));
+                    } catch (err) {
+                        threw = err instanceof Error ? err.message : String(err);
+                    }
+                    if (threw === null) {
+                        fired['starship-sheet::validateBuild'] = true;
+                        notes['starship-sheet::validateBuild'] = 'dispatch ok';
+                    } else {
+                        notes['starship-sheet::validateBuild'] = `threw: ${threw}`;
+                    }
+                }
+            } catch (err) {
+                notes['starship-sheet::validateBuild'] = `outer threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+        }
+
+        /* =================================================================
+         * LootActorSheet flow (loot type — system-agnostic root)
+         * ================================================================= */
+        async function probeLootFlows(): Promise<void> {
+            const loot = await makeActor('loot', 'dh2');
+            if (loot?.id == null) {
+                notes['loot-sheet::pickupAll'] = 'Loot create returned null';
+                return;
+            }
+            await new Promise<void>((r) => {
+                setTimeout(r, 250);
+            });
+            const liveL = (): ProbeActor | undefined => (loot.id != null ? gameCtx?.actors?.get?.(loot.id) : undefined);
+            const sheet = liveL()?.sheet;
+            if (sheet == null) {
+                notes['loot-sheet::pickupAll'] = 'Loot sheet undefined';
+                return;
+            }
+            try {
+                await withTimeout(sheet.render?.(true), 5_000, 'Loot sheet.render');
+                await new Promise<void>((r) => {
+                    setTimeout(r, 50);
+                });
+            } catch {
+                /* best-effort */
+            }
+            cleanups.push(async () => {
+                try {
+                    await sheet.close?.();
+                } catch {
+                    /* ignore */
+                }
+            });
+            const handler = sheet.options?.actions?.pickupAll;
+            if (typeof handler !== 'function') {
+                notes['loot-sheet::pickupAll'] = 'handler missing';
+            } else {
+                // No controlled token / assigned character → resolveReceiver()
+                // returns null and the handler emits a warning + returns. That
+                // exercises the receiver-resolution branch without throwing.
+                let threw: string | null = null;
+                try {
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'pickupAll');
+                } catch (err) {
+                    threw = err instanceof Error ? err.message : String(err);
+                }
+                if (threw === null) {
+                    fired['loot-sheet::pickupAll'] = true;
+                    notes['loot-sheet::pickupAll'] = 'dispatch ok (no receiver branch)';
+                } else {
+                    notes['loot-sheet::pickupAll'] = `threw: ${threw}`;
+                }
+            }
+        }
+
+        try {
+            await probeCharacterFlows();
+            await closeOpenDialogs();
+            await probeNpcFlows();
+            await closeOpenDialogs();
+            await probeImThreatScaler();
+            await closeOpenDialogs();
+            await probeVehicleFlows();
+            await closeOpenDialogs();
+            await probeStarshipFlows();
+            await closeOpenDialogs();
+            await probeLootFlows();
+        } finally {
+            // Best-effort teardown of every created doc + lingering dialog.
+            for (const fn of cleanups) {
+                try {
+                    // eslint-disable-next-line no-await-in-loop -- best-effort serial cleanup; parallel deletes race on Foundry's collection writes
+                    await fn();
                 } catch {
                     /* ignore */
                 }
             }
+            try {
+                await closeOpenDialogs();
+            } catch {
+                /* ignore */
+            }
+        }
 
-            return { flowsFired: fired, flowNotes: notes };
-        }, SHEET_ACTION_ACTOR_FLOWS);
+        return { flowsFired: fired, flowNotes: notes };
+    }, SHEET_ACTION_ACTOR_FLOWS);
 
-        return {
-            flowsFired: result.flowsFired,
-            flowNotes: result.flowNotes,
-            pageErrors,
-        };
-    } finally {
-        page.off('pageerror', listener);
-    }
+    return {
+        flowsFired: result.flowsFired,
+        flowNotes: result.flowNotes,
+    };
 }
 
 test.describe.serial('per-sheet actor action handlers (Tier B)', () => {
@@ -1046,11 +1035,6 @@ test.describe.serial('per-sheet actor action handlers (Tier B)', () => {
             }
         }
 
-        const pageErrorTail = probe.pageErrors.length > 0 ? `\n  pageerrors: ${probe.pageErrors.slice(0, 5).join(' | ')}` : '';
-
-        expect(
-            failures,
-            `${failures.length}/${SHEET_ACTION_ACTOR_FLOWS.length} sheet-action-actor probes failed:\n  - ${failures.join('\n  - ')}${pageErrorTail}`,
-        ).toEqual([]);
+        expect(failures, `${failures.length}/${SHEET_ACTION_ACTOR_FLOWS.length} sheet-action-actor probes failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 });

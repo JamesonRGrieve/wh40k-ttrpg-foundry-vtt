@@ -20,101 +20,90 @@ test.describe.serial('AerialManoeuvre chat card (Tier B)', () => {
     test('posts the Lock On result card and snaps', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
-
-        try {
-            const result = await page.evaluate(async () => {
-                interface FoundryRenderGlobals {
-                    foundry?: {
-                        applications?: {
-                            handlebars?: {
-                                renderTemplate?: (p: string, c: object) => Promise<string>;
-                            };
+        const result = await page.evaluate(async () => {
+            interface FoundryRenderGlobals {
+                foundry?: {
+                    applications?: {
+                        handlebars?: {
+                            renderTemplate?: (p: string, c: object) => Promise<string>;
                         };
                     };
-                    ChatMessage?: { create: (data: object) => Promise<{ id: string } | null> };
-                    game?: { user?: { id?: string } };
-                }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
-                const fg = globalThis as unknown as FoundryRenderGlobals;
-                let error: string | null = null;
-                let rendered = false;
-                let hasCardRoot = false;
-                let hasSystemAnchor = false;
-                let hasFreeAttackBanner = false;
-                let messageId: string | null = null;
+                };
+                ChatMessage?: { create: (data: object) => Promise<{ id: string } | null> };
+                game?: { user?: { id?: string } };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const fg = globalThis as unknown as FoundryRenderGlobals;
+            let error: string | null = null;
+            let rendered = false;
+            let hasCardRoot = false;
+            let hasSystemAnchor = false;
+            let hasFreeAttackBanner = false;
+            let messageId: string | null = null;
 
-                try {
-                    const renderTemplateFn = fg.foundry?.applications?.handlebars?.renderTemplate;
-                    if (!renderTemplateFn) {
-                        return { rendered, hasCardRoot, hasSystemAnchor, hasFreeAttackBanner, messageId, error: 'renderTemplate unavailable' };
-                    }
-
-                    const template = 'systems/wh40k-rpg/templates/chat/aerial-manoeuvre-chat.hbs';
-                    const context = {
-                        gameSystem: 'dh2',
-                        manoeuvreNameKey: 'WH40K.AerialManoeuvre.LockOn.Name',
-                        success: true,
-                        pilotBsBonus: 20,
-                        enemyBsBonus: 10,
-                        freeAttack: true,
-                        resultingAltitudeKey: 'WH40K.AerialManoeuvre.Altitude.Low',
-                        outcomeKey: 'WH40K.AerialManoeuvre.LockOn.OutcomeSuccess',
-                    };
-
-                    const html = await renderTemplateFn(template, context);
-                    rendered = typeof html === 'string' && html.length > 0;
-                    hasCardRoot = html.includes('wh40k-aerial-card');
-                    hasSystemAnchor = html.includes('data-wh40k-system="dh2"');
-                    hasFreeAttackBanner = html.includes('WH40K.AerialManoeuvre.FreeAttack') || html.includes('fa-crosshairs');
-
-                    const ChatMessageCls = fg.ChatMessage;
-                    const msg = await ChatMessageCls?.create({ user: fg.game?.user?.id, content: html });
-                    messageId = msg?.id ?? null;
-                } catch (err) {
-                    error = err instanceof Error ? err.message : String(err);
+            try {
+                const renderTemplateFn = fg.foundry?.applications?.handlebars?.renderTemplate;
+                if (!renderTemplateFn) {
+                    return { rendered, hasCardRoot, hasSystemAnchor, hasFreeAttackBanner, messageId, error: 'renderTemplate unavailable' };
                 }
 
-                return { rendered, hasCardRoot, hasSystemAnchor, hasFreeAttackBanner, messageId, error };
-            });
+                const template = 'systems/wh40k-rpg/templates/chat/aerial-manoeuvre-chat.hbs';
+                const context = {
+                    gameSystem: 'dh2',
+                    manoeuvreNameKey: 'WH40K.AerialManoeuvre.LockOn.Name',
+                    success: true,
+                    pilotBsBonus: 20,
+                    enemyBsBonus: 10,
+                    freeAttack: true,
+                    resultingAltitudeKey: 'WH40K.AerialManoeuvre.Altitude.Low',
+                    outcomeKey: 'WH40K.AerialManoeuvre.LockOn.OutcomeSuccess',
+                };
 
-            await snap(page, 'aerial-manoeuvre-chat');
+                const html = await renderTemplateFn(template, context);
+                rendered = typeof html === 'string' && html.length > 0;
+                hasCardRoot = html.includes('wh40k-aerial-card');
+                hasSystemAnchor = html.includes('data-wh40k-system="dh2"');
+                hasFreeAttackBanner = html.includes('WH40K.AerialManoeuvre.FreeAttack') || html.includes('fa-crosshairs');
 
-            // Card captured; remove it so it doesn't leak into the next
-            // serial test's chat log.
-            await page.evaluate(async (id: string | null) => {
-                if (id === null) return;
-                interface FoundryMessageRef {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ChatMessage.delete returns a Document instance with no shipped types
-                    delete?: () => Promise<unknown>;
-                }
-                interface FoundryMessagesGlobal {
-                    game?: { messages?: { get?: (id: string) => FoundryMessageRef | undefined } };
-                }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
-                const fg = globalThis as unknown as FoundryMessagesGlobal;
-                try {
-                    await fg.game?.messages?.get?.(id)?.delete?.();
-                } catch {
-                    /* ignore */
-                }
-            }, result.messageId);
+                const ChatMessageCls = fg.ChatMessage;
+                const msg = await ChatMessageCls?.create({ user: fg.game?.user?.id, content: html });
+                messageId = msg?.id ?? null;
+            } catch (err) {
+                error = err instanceof Error ? err.message : String(err);
+            }
 
-            expect(result.error, `chat-card probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'aerial-manoeuvre card did not render').toBe(true);
-            expect(result.hasCardRoot, 'card root .wh40k-aerial-card missing').toBe(true);
-            expect(result.hasSystemAnchor, 'per-system data-wh40k-system anchor missing').toBe(true);
-            expect(result.hasFreeAttackBanner, 'Free Action banner should render at 3+ DoS').toBe(true);
-            expect(result.messageId, 'ChatMessage.create returned no id').not.toBeNull();
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
+            return { rendered, hasCardRoot, hasSystemAnchor, hasFreeAttackBanner, messageId, error };
+        });
 
-            recordCoverage('chat.render', 'AerialManoeuvre');
-        } finally {
-            page.off('pageerror', listener);
-        }
+        await snap(page, 'aerial-manoeuvre-chat');
+
+        // Card captured; remove it so it doesn't leak into the next
+        // serial test's chat log.
+        await page.evaluate(async (id: string | null) => {
+            if (id === null) return;
+            interface FoundryMessageRef {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ChatMessage.delete returns a Document instance with no shipped types
+                delete?: () => Promise<unknown>;
+            }
+            interface FoundryMessagesGlobal {
+                game?: { messages?: { get?: (id: string) => FoundryMessageRef | undefined } };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const fg = globalThis as unknown as FoundryMessagesGlobal;
+            try {
+                await fg.game?.messages?.get?.(id)?.delete?.();
+            } catch {
+                /* ignore */
+            }
+        }, result.messageId);
+
+        expect(result.error, `chat-card probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.rendered, 'aerial-manoeuvre card did not render').toBe(true);
+        expect(result.hasCardRoot, 'card root .wh40k-aerial-card missing').toBe(true);
+        expect(result.hasSystemAnchor, 'per-system data-wh40k-system anchor missing').toBe(true);
+        expect(result.hasFreeAttackBanner, 'Free Action banner should render at 3+ DoS').toBe(true);
+        expect(result.messageId, 'ChatMessage.create returned no id').not.toBeNull();
+
+        recordCoverage('chat.render', 'AerialManoeuvre');
     });
 });

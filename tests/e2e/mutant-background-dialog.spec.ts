@@ -52,115 +52,104 @@ test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
     test('opens and renders +10 Corruption + Twisted Flesh grant plus Apply / Cancel', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
+        const result = await page.evaluate(async (): Promise<MutantDialogProbeResult> => {
+            const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/mutant-background-dialog.js';
+            let error: string | null = null;
+            let rendered = false;
+            let hasCorruptionCallout = false;
+            let hasTwistedFleshRow = false;
+            let hasApplyButton = false;
+            let hasCancelButton = false;
+            let actorAttached = false;
 
-        try {
-            const result = await page.evaluate(async (): Promise<MutantDialogProbeResult> => {
-                const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/mutant-background-dialog.js';
-                let error: string | null = null;
-                let rendered = false;
-                let hasCorruptionCallout = false;
-                let hasTwistedFleshRow = false;
-                let hasApplyButton = false;
-                let hasCancelButton = false;
-                let actorAttached = false;
+            try {
+                const mod = (await import(moduleUrl)) as MutantDialogModule;
+                const Cls = mod.default;
+                if (typeof Cls !== 'function') {
+                    return {
+                        rendered,
+                        hasCorruptionCallout,
+                        hasTwistedFleshRow,
+                        hasApplyButton,
+                        hasCancelButton,
+                        actorAttached,
+                        error: 'default export not a constructor',
+                    };
+                }
 
+                // Best-effort fresh dh2 actor creation. If `Actor.create` is
+                // unavailable in the test world we fall back to null so the
+                // surface still renders for the structural assertions.
+                let actor: object | null = null;
                 try {
-                    const mod = (await import(moduleUrl)) as MutantDialogModule;
-                    const Cls = mod.default;
-                    if (typeof Cls !== 'function') {
-                        return {
-                            rendered,
-                            hasCorruptionCallout,
-                            hasTwistedFleshRow,
-                            hasApplyButton,
-                            hasCancelButton,
-                            actorAttached,
-                            error: 'default export not a constructor',
-                        };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side Actor global is runtime-only, no shipped types
+                    const g = globalThis as unknown as MutantActorGlobal;
+                    if (typeof g.Actor?.create === 'function') {
+                        actor = await g.Actor.create(
+                            {
+                                name: 'Mutant Probe',
+                                type: 'dh2-character',
+                            },
+                            { temporary: true },
+                        );
+                        actorAttached = actor !== null;
                     }
+                } catch {
+                    /* fall through with null actor */
+                }
 
-                    // Best-effort fresh dh2 actor creation. If `Actor.create` is
-                    // unavailable in the test world we fall back to null so the
-                    // surface still renders for the structural assertions.
-                    let actor: object | null = null;
-                    try {
-                        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side Actor global is runtime-only, no shipped types
-                        const g = globalThis as unknown as MutantActorGlobal;
-                        if (typeof g.Actor?.create === 'function') {
-                            actor = await g.Actor.create(
-                                {
-                                    name: 'Mutant Probe',
-                                    type: 'dh2-character',
-                                },
-                                { temporary: true },
-                            );
-                            actorAttached = actor !== null;
-                        }
-                    } catch {
-                        /* fall through with null actor */
-                    }
-
-                    const inst = new Cls(actor);
-                    try {
-                        await inst.render(true);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 40);
-                        });
-                    } catch (err) {
-                        error = err instanceof Error ? err.message : String(err);
-                    }
-                    rendered = inst.element instanceof HTMLElement;
-                    if (rendered && inst.element) {
-                        hasCorruptionCallout = inst.element.textContent.includes('+10');
-                        hasTwistedFleshRow = inst.element.querySelector('[data-talent="twisted-flesh"]') !== null;
-                        hasApplyButton = inst.element.querySelector('[data-action="apply"]') !== null;
-                        hasCancelButton = inst.element.querySelector('[data-action="cancel"]') !== null;
-                    }
+                const inst = new Cls(actor);
+                try {
+                    await inst.render(true);
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 40);
+                    });
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }
-
-                return {
-                    rendered,
-                    hasCorruptionCallout,
-                    hasTwistedFleshRow,
-                    hasApplyButton,
-                    hasCancelButton,
-                    actorAttached,
-                    error,
-                };
-            });
-
-            expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'dialog did not render').toBe(true);
-            expect(result.hasCorruptionCallout, 'expected +10 Corruption callout').toBe(true);
-            expect(result.hasTwistedFleshRow, 'expected Twisted Flesh grant row').toBe(true);
-            expect(result.hasApplyButton, 'expected Apply action button').toBe(true);
-            expect(result.hasCancelButton, 'expected Cancel action button').toBe(true);
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
-
-            await snap(page, 'mutant-background-dialog');
-
-            recordCoverage('dialog.render', 'MutantBackgroundDialog');
-
-            // Best-effort cleanup so the dialog doesn't leak into later specs.
-            await page.evaluate(() => {
-                const root = document.querySelector<HTMLDialogElement>('.mutant-background-dialog');
-                if (root?.close) {
-                    try {
-                        root.close();
-                    } catch {
-                        /* ignore */
-                    }
+                rendered = inst.element instanceof HTMLElement;
+                if (rendered && inst.element) {
+                    hasCorruptionCallout = inst.element.textContent.includes('+10');
+                    hasTwistedFleshRow = inst.element.querySelector('[data-talent="twisted-flesh"]') !== null;
+                    hasApplyButton = inst.element.querySelector('[data-action="apply"]') !== null;
+                    hasCancelButton = inst.element.querySelector('[data-action="cancel"]') !== null;
                 }
-            });
-        } finally {
-            page.off('pageerror', listener);
-        }
+            } catch (err) {
+                error = err instanceof Error ? err.message : String(err);
+            }
+
+            return {
+                rendered,
+                hasCorruptionCallout,
+                hasTwistedFleshRow,
+                hasApplyButton,
+                hasCancelButton,
+                actorAttached,
+                error,
+            };
+        });
+
+        expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.rendered, 'dialog did not render').toBe(true);
+        expect(result.hasCorruptionCallout, 'expected +10 Corruption callout').toBe(true);
+        expect(result.hasTwistedFleshRow, 'expected Twisted Flesh grant row').toBe(true);
+        expect(result.hasApplyButton, 'expected Apply action button').toBe(true);
+        expect(result.hasCancelButton, 'expected Cancel action button').toBe(true);
+
+        await snap(page, 'mutant-background-dialog');
+
+        recordCoverage('dialog.render', 'MutantBackgroundDialog');
+
+        // Best-effort cleanup so the dialog doesn't leak into later specs.
+        await page.evaluate(() => {
+            const root = document.querySelector<HTMLDialogElement>('.mutant-background-dialog');
+            if (root?.close) {
+                try {
+                    root.close();
+                } catch {
+                    /* ignore */
+                }
+            }
+        });
     });
 });

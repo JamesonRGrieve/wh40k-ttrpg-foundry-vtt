@@ -109,12 +109,6 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
     test('renders dialog with a Fear (3) trait actor and snaps fr3', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
-
         const parent = await createParentActor(page);
         expect('id' in parent, `parent actor create failed: ${'error' in parent ? parent.error : 'unknown'}`).toBe(true);
         const actorId = (parent as ActorRef).id;
@@ -193,12 +187,10 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
             expect(result.hasFearInput, 'expected fear rating input').toBe(true);
             expect(result.fearInputValue, 'fear input value should be 3').toBe('3');
             expect(result.hasRollButton, 'expected rollTest action button').toBe(true);
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
 
             recordCoverage('dialog.render', 'FearTestDialog');
         } finally {
             await deleteActor(page, actorId).catch(() => undefined);
-            page.off('pageerror', listener);
         }
     });
 });

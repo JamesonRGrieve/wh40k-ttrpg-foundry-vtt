@@ -21,149 +21,138 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
     test('renders the ranged single-shot ×2 refocus card and snaps', async ({ page }) => {
         await joinOrSkip(page);
 
-        const pageErrors: string[] = [];
-        const listener = (err: Error): void => {
-            pageErrors.push(err.message);
-        };
-        page.on('pageerror', listener);
+        const result = await page.evaluate(async () => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry` global is injected by the licensed app; no shipped types
+            const g = globalThis as unknown as {
+                foundry?: { applications?: { handlebars?: { renderTemplate?: (path: string, ctx: object) => Promise<string> } } };
+            };
+            let error: string | null = null;
+            let rendered = false;
+            let granted = false;
+            let attackCount = 0;
+            let actionNames: string[] = [];
+            let actionCosts: string[] = [];
+            let hasSystemAttr = false;
+            let hasWh40kClass = false;
 
-        try {
-            const result = await page.evaluate(async () => {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry` global is injected by the licensed app; no shipped types
-                const g = globalThis as unknown as {
-                    foundry?: { applications?: { handlebars?: { renderTemplate?: (path: string, ctx: object) => Promise<string> } } };
-                };
-                let error: string | null = null;
-                let rendered = false;
-                let granted = false;
-                let attackCount = 0;
-                let actionNames: string[] = [];
-                let actionCosts: string[] = [];
-                let hasSystemAttr = false;
-                let hasWh40kClass = false;
+            interface TwrPlan {
+                granted: boolean;
+                attacks: ReadonlyArray<{ hand: string; actionName: string; actionCost: string; modifier: number }>;
+                aimAppliesToOffHand: boolean;
+            }
+            interface TwrModule {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: deployed rules module input is heterogeneous content payload; consumer interface is opaque
+                resolveTwoWeaponRefocus?: (ctx: unknown) => TwrPlan;
+            }
 
-                interface TwrPlan {
-                    granted: boolean;
-                    attacks: ReadonlyArray<{ hand: string; actionName: string; actionCost: string; modifier: number }>;
-                    aimAppliesToOffHand: boolean;
-                }
-                interface TwrModule {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: deployed rules module input is heterogeneous content payload; consumer interface is opaque
-                    resolveTwoWeaponRefocus?: (ctx: unknown) => TwrPlan;
-                }
-
-                try {
-                    const moduleUrl = '/systems/wh40k-rpg/module/rules/two-weapon-fighting.js';
-                    const mod = (await import(moduleUrl)) as TwrModule;
-                    const resolve = mod.resolveTwoWeaponRefocus;
-                    if (typeof resolve !== 'function') {
-                        return {
-                            rendered,
-                            granted,
-                            attackCount,
-                            actionNames,
-                            actionCosts,
-                            hasSystemAttr,
-                            hasWh40kClass,
-                            error: 'resolveTwoWeaponRefocus export missing',
-                        };
-                    }
-
-                    const plan = resolve({
-                        isMelee: false,
-                        mode: 'Standard Attack',
-                        talents: new Set(['Two-Weapon Wielder (Ranged)']),
-                    });
-                    granted = plan.granted;
-                    attackCount = plan.attacks.length;
-                    actionNames = plan.attacks.map((a) => a.actionName);
-                    actionCosts = plan.attacks.map((a) => a.actionCost);
-
-                    const renderTpl = g.foundry?.applications?.handlebars?.renderTemplate;
-                    if (typeof renderTpl !== 'function') {
-                        return {
-                            rendered,
-                            granted,
-                            attackCount,
-                            actionNames,
-                            actionCosts,
-                            hasSystemAttr,
-                            hasWh40kClass,
-                            error: 'renderTemplate API unavailable',
-                        };
-                    }
-
-                    const html = await renderTpl('systems/wh40k-rpg/templates/chat/two-weapon-refocus-chat.hbs', {
-                        gameSystem: 'dh2',
-                        granted: plan.granted,
-                        attacks: plan.attacks,
-                    });
-
-                    // Inject into a persistent host so snap() (called
-                    // outside this evaluate) captures the live card.
-                    // Removing it here would leave the shot empty.
-                    let host = document.getElementById('__c9_twr_host');
-                    if (!host) {
-                        host = document.createElement('div');
-                        host.id = '__c9_twr_host';
-                        host.className = 'wh40k-rpg';
-                        host.style.cssText = 'position:fixed;top:40px;left:40px;width:420px;z-index:100000;';
-                        document.body.appendChild(host);
-                    }
-                    host.innerHTML = html;
-
-                    const card = host.querySelector('.wh40k-twr-card');
-                    rendered = card instanceof HTMLElement;
-                    if (rendered && card) {
-                        hasSystemAttr = card.getAttribute('data-wh40k-system') === 'dh2';
-                        // The card root sits under the `.wh40k-rpg` host so
-                        // the important-scoped Tailwind utilities cascade.
-                        hasWh40kClass = card.closest('.wh40k-rpg') !== null;
-                    }
-                } catch (err) {
-                    error = err instanceof Error ? err.message : String(err);
+            try {
+                const moduleUrl = '/systems/wh40k-rpg/module/rules/two-weapon-fighting.js';
+                const mod = (await import(moduleUrl)) as TwrModule;
+                const resolve = mod.resolveTwoWeaponRefocus;
+                if (typeof resolve !== 'function') {
+                    return {
+                        rendered,
+                        granted,
+                        attackCount,
+                        actionNames,
+                        actionCosts,
+                        hasSystemAttr,
+                        hasWh40kClass,
+                        error: 'resolveTwoWeaponRefocus export missing',
+                    };
                 }
 
-                return {
-                    rendered,
-                    granted,
-                    attackCount,
-                    actionNames,
-                    actionCosts,
-                    hasSystemAttr,
-                    hasWh40kClass,
-                    error,
-                };
-            });
+                const plan = resolve({
+                    isMelee: false,
+                    mode: 'Standard Attack',
+                    talents: new Set(['Two-Weapon Wielder (Ranged)']),
+                });
+                granted = plan.granted;
+                attackCount = plan.attacks.length;
+                actionNames = plan.attacks.map((a) => a.actionName);
+                actionCosts = plan.attacks.map((a) => a.actionCost);
 
-            await snap(page, 'two-weapon-refocus');
+                const renderTpl = g.foundry?.applications?.handlebars?.renderTemplate;
+                if (typeof renderTpl !== 'function') {
+                    return {
+                        rendered,
+                        granted,
+                        attackCount,
+                        actionNames,
+                        actionCosts,
+                        hasSystemAttr,
+                        hasWh40kClass,
+                        error: 'renderTemplate API unavailable',
+                    };
+                }
 
-            // Card captured; tear down the host so it doesn't leak into
-            // the next serial test's DOM.
-            await page.evaluate(() => {
-                document.getElementById('__c9_twr_host')?.remove();
-            });
+                const html = await renderTpl('systems/wh40k-rpg/templates/chat/two-weapon-refocus-chat.hbs', {
+                    gameSystem: 'dh2',
+                    granted: plan.granted,
+                    attacks: plan.attacks,
+                });
 
-            expect(result.error, `two-weapon refocus probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'two-weapon refocus chat card did not render').toBe(true);
-            // The errata grants the Free-Action follow-up.
-            expect(result.granted, 'ranged Wielder should be granted the refocus follow-up').toBe(true);
-            // Two attacks: the Half-Action opener + the Free-Action follow-up.
-            expect(result.attackCount, 'refocus plan should hold exactly two attacks').toBe(2);
-            // Both are Standard Attacks — NOT a Full-Action lump, NOT
-            // Semi-Auto-Burst ×2.
-            expect(result.actionNames, 'both attacks must be Standard Attack (single shot ×2)').toEqual(['Standard Attack', 'Standard Attack']);
-            // Action economy: Half opener + Free follow-up, never Full.
-            expect(result.actionCosts, 'opener is a Half Action; follow-up is a Free Action').toEqual(['Half', 'Free']);
-            expect(result.actionCosts.includes('Full'), 'no Full-Action lump in the refocus plan').toBe(false);
-            // Outside-sheet cascade + per-system anchors are present.
-            expect(result.hasSystemAttr, 'card should carry data-wh40k-system').toBe(true);
-            expect(result.hasWh40kClass, 'card should sit under a .wh40k-rpg ancestor').toBe(true);
-            expect(pageErrors, `page errors: ${pageErrors.slice(0, 5).join(' | ')}`).toEqual([]);
+                // Inject into a persistent host so snap() (called
+                // outside this evaluate) captures the live card.
+                // Removing it here would leave the shot empty.
+                let host = document.getElementById('__c9_twr_host');
+                if (!host) {
+                    host = document.createElement('div');
+                    host.id = '__c9_twr_host';
+                    host.className = 'wh40k-rpg';
+                    host.style.cssText = 'position:fixed;top:40px;left:40px;width:420px;z-index:100000;';
+                    document.body.appendChild(host);
+                }
+                host.innerHTML = html;
 
-            recordCoverage('chat.render', 'TwoWeaponRefocus');
-        } finally {
-            page.off('pageerror', listener);
-        }
+                const card = host.querySelector('.wh40k-twr-card');
+                rendered = card instanceof HTMLElement;
+                if (rendered && card) {
+                    hasSystemAttr = card.getAttribute('data-wh40k-system') === 'dh2';
+                    // The card root sits under the `.wh40k-rpg` host so
+                    // the important-scoped Tailwind utilities cascade.
+                    hasWh40kClass = card.closest('.wh40k-rpg') !== null;
+                }
+            } catch (err) {
+                error = err instanceof Error ? err.message : String(err);
+            }
+
+            return {
+                rendered,
+                granted,
+                attackCount,
+                actionNames,
+                actionCosts,
+                hasSystemAttr,
+                hasWh40kClass,
+                error,
+            };
+        });
+
+        await snap(page, 'two-weapon-refocus');
+
+        // Card captured; tear down the host so it doesn't leak into
+        // the next serial test's DOM.
+        await page.evaluate(() => {
+            document.getElementById('__c9_twr_host')?.remove();
+        });
+
+        expect(result.error, `two-weapon refocus probe error: ${result.error ?? ''}`).toBeNull();
+        expect(result.rendered, 'two-weapon refocus chat card did not render').toBe(true);
+        // The errata grants the Free-Action follow-up.
+        expect(result.granted, 'ranged Wielder should be granted the refocus follow-up').toBe(true);
+        // Two attacks: the Half-Action opener + the Free-Action follow-up.
+        expect(result.attackCount, 'refocus plan should hold exactly two attacks').toBe(2);
+        // Both are Standard Attacks — NOT a Full-Action lump, NOT
+        // Semi-Auto-Burst ×2.
+        expect(result.actionNames, 'both attacks must be Standard Attack (single shot ×2)').toEqual(['Standard Attack', 'Standard Attack']);
+        // Action economy: Half opener + Free follow-up, never Full.
+        expect(result.actionCosts, 'opener is a Half Action; follow-up is a Free Action').toEqual(['Half', 'Free']);
+        expect(result.actionCosts.includes('Full'), 'no Full-Action lump in the refocus plan').toBe(false);
+        // Outside-sheet cascade + per-system anchors are present.
+        expect(result.hasSystemAttr, 'card should carry data-wh40k-system').toBe(true);
+        expect(result.hasWh40kClass, 'card should sit under a .wh40k-rpg ancestor').toBe(true);
+
+        recordCoverage('chat.render', 'TwoWeaponRefocus');
     });
 });

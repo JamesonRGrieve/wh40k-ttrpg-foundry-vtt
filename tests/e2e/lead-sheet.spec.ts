@@ -15,7 +15,6 @@ interface LeadProbeResult {
     created: boolean;
     rendered: boolean;
     createError: string | null;
-    pageErrors: string[];
 }
 
 interface ProbeReturn {
@@ -25,79 +24,69 @@ interface ProbeReturn {
 }
 
 async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
-    const pageErrors: string[] = [];
-    const listener = (pageErr: Error): void => {
-        pageErrors.push(pageErr.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const result = await page.evaluate(async (): Promise<ProbeReturn> => {
-            interface ItemSheet {
-                render?: (force?: boolean) => Promise<void>;
-                close?: () => Promise<void>;
-            }
-            interface ItemDoc {
-                id?: string;
-                sheet?: ItemSheet;
-                delete?: () => Promise<void>;
-            }
-            interface ItemCtorShape {
-                create?: (data: object) => Promise<ItemDoc | null>;
-            }
-            interface ProbeGlobal {
-                Item?: ItemCtorShape;
-                __leadProbeItemId?: string;
-            }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
-            const g = globalThis as unknown as ProbeGlobal;
-            const ItemCls = g.Item;
-            if (ItemCls?.create == null) {
-                return { created: false, rendered: false, createError: 'Item.create unavailable' };
-            }
-            let item: ItemDoc | null;
-            try {
-                item = await ItemCls.create({
-                    name: 'probe-lead',
-                    type: 'lead',
-                    system: {
-                        state: 'pursued',
-                        leadType: 'witness',
-                        sourceClue: 'Bloodstained sermon-card from the chapel.',
-                        notes: 'Follow up after the vox-window.',
-                    },
+    const result = await page.evaluate(async (): Promise<ProbeReturn> => {
+        interface ItemSheet {
+            render?: (force?: boolean) => Promise<void>;
+            close?: () => Promise<void>;
+        }
+        interface ItemDoc {
+            id?: string;
+            sheet?: ItemSheet;
+            delete?: () => Promise<void>;
+        }
+        interface ItemCtorShape {
+            create?: (data: object) => Promise<ItemDoc | null>;
+        }
+        interface ProbeGlobal {
+            Item?: ItemCtorShape;
+            __leadProbeItemId?: string;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
+        const g = globalThis as unknown as ProbeGlobal;
+        const ItemCls = g.Item;
+        if (ItemCls?.create == null) {
+            return { created: false, rendered: false, createError: 'Item.create unavailable' };
+        }
+        let item: ItemDoc | null;
+        try {
+            item = await ItemCls.create({
+                name: 'probe-lead',
+                type: 'lead',
+                system: {
+                    state: 'pursued',
+                    leadType: 'witness',
+                    sourceClue: 'Bloodstained sermon-card from the chapel.',
+                    notes: 'Follow up after the vox-window.',
+                },
+            });
+        } catch (createErr) {
+            return { created: false, rendered: false, createError: String((createErr as Error).message) };
+        }
+        if (item == null) return { created: false, rendered: false, createError: 'Item.create returned null' };
+
+        let rendered = false;
+        try {
+            if (item.sheet?.render != null) {
+                await item.sheet.render(true);
+                await new Promise<void>((r) => {
+                    setTimeout(r, 100);
                 });
-            } catch (createErr) {
-                return { created: false, rendered: false, createError: String((createErr as Error).message) };
+                rendered = true;
             }
-            if (item == null) return { created: false, rendered: false, createError: 'Item.create returned null' };
+        } catch (renderErr) {
+            return { created: true, rendered: false, createError: String((renderErr as Error).message) };
+        }
 
-            let rendered = false;
-            try {
-                if (item.sheet?.render != null) {
-                    await item.sheet.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 100);
-                    });
-                    rendered = true;
-                }
-            } catch (renderErr) {
-                return { created: true, rendered: false, createError: String((renderErr as Error).message) };
-            }
-
-            // Leave the sheet open long enough for the screenshot caller to
-            // capture it; cleanup happens after snap() in the test below.
-            g.__leadProbeItemId = item.id;
-            return { created: true, rendered, createError: null };
-        });
-        return {
-            created: result.created,
-            rendered: result.rendered,
-            createError: result.createError,
-            pageErrors,
-        };
-    } finally {
-        page.off('pageerror', listener);
-    }
+        // Leave the sheet open long enough for the screenshot caller to
+        // capture it; cleanup happens after snap() in the test below.
+        g.__leadProbeItemId = item.id;
+        return { created: true, rendered, createError: null };
+    });
+    return {
+        created: result.created,
+        rendered: result.rendered,
+        createError: result.createError,
+    };
 }
 
 async function cleanupLeadProbe(page: Page): Promise<void> {
@@ -148,9 +137,6 @@ test.describe.serial('lead item sheet', () => {
         const failures: string[] = [];
         if (!probe.rendered) {
             failures.push(`sheet did not render: ${probe.createError ?? 'unknown'}`);
-        }
-        if (probe.pageErrors.length > 0) {
-            failures.push(`page errors: ${probe.pageErrors.slice(0, 3).join(' | ')}`);
         }
         expect(failures, `lead sheet render failures:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });

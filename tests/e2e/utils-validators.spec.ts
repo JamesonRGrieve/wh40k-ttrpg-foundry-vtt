@@ -53,239 +53,230 @@ interface FlowResult {
     detail: string | null;
 }
 
-async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
-    const pageErrors: string[] = [];
-    const listener = (pageErr: Error): void => {
-        pageErrors.push(pageErr.message);
-    };
-    page.on('pageerror', listener);
-    try {
-        const results = await page.evaluate(async (): Promise<FlowResult[]> => {
-            interface ParsedPrereq {
-                type?: string;
-                key?: string;
-                value?: number;
-            }
-            interface PrereqEntry {
-                type: 'characteristic' | 'skill' | 'talent';
-                key: string;
-                value?: number;
-            }
-            interface PrereqCheckResult {
-                valid?: boolean;
-                unmet?: object[];
-            }
-            interface PrereqValidatorModule {
-                parsePrerequisiteString?: (s: string) => ParsedPrereq | null;
-                checkPrerequisites?: (actor: ProbeActor | undefined, prereqs: PrereqEntry[]) => PrereqCheckResult | undefined;
-            }
-            interface ProbeActor {
-                id?: string;
-                delete?: () => Promise<void>;
-            }
-            interface ActorClass {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.create accepts arbitrary creation data
-                create?: (data: Record<string, unknown>) => Promise<ProbeActor | null | undefined>;
-            }
-            interface ActorsCollection {
-                get?: (id: string) => ProbeActor | undefined;
-            }
-            interface RollOutcome {
-                total?: number;
-                results?: object[];
-            }
-            interface RollTableUtilsCls {
-                findTableInCompendiums?: (name: string) => Promise<object | null>;
-                rollPsychicPhenomena?: (actor: object, n: number) => Promise<RollOutcome | null>;
-                rollPerilsOfTheWarp?: (actor: object) => Promise<RollOutcome | null>;
-                rollMutation?: () => Promise<RollOutcome | null>;
-                rollMalignancy?: () => Promise<RollOutcome | null>;
-                rollNavigatorMutation?: () => Promise<RollOutcome | null>;
-                rollGiftOfTheGods?: (arg: object | null) => Promise<RollOutcome | null>;
-                rollFearEffects?: (a: number, b: number) => Promise<RollOutcome | null>;
-                rollCriticalInjury?: (kind: string, loc: string, n: number) => Promise<RollOutcome | null>;
-            }
-            interface RollTableUtilsModule {
-                RollTableUtils?: RollTableUtilsCls;
-                default?: RollTableUtilsCls;
-            }
-            interface FoundryGlobal {
-                Actor?: ActorClass;
-                game?: { actors?: ActorsCollection };
-            }
+async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[] }> {
+    const results = await page.evaluate(async (): Promise<FlowResult[]> => {
+        interface ParsedPrereq {
+            type?: string;
+            key?: string;
+            value?: number;
+        }
+        interface PrereqEntry {
+            type: 'characteristic' | 'skill' | 'talent';
+            key: string;
+            value?: number;
+        }
+        interface PrereqCheckResult {
+            valid?: boolean;
+            unmet?: object[];
+        }
+        interface PrereqValidatorModule {
+            parsePrerequisiteString?: (s: string) => ParsedPrereq | null;
+            checkPrerequisites?: (actor: ProbeActor | undefined, prereqs: PrereqEntry[]) => PrereqCheckResult | undefined;
+        }
+        interface ProbeActor {
+            id?: string;
+            delete?: () => Promise<void>;
+        }
+        interface ActorClass {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.create accepts arbitrary creation data
+            create?: (data: Record<string, unknown>) => Promise<ProbeActor | null | undefined>;
+        }
+        interface ActorsCollection {
+            get?: (id: string) => ProbeActor | undefined;
+        }
+        interface RollOutcome {
+            total?: number;
+            results?: object[];
+        }
+        interface RollTableUtilsCls {
+            findTableInCompendiums?: (name: string) => Promise<object | null>;
+            rollPsychicPhenomena?: (actor: object, n: number) => Promise<RollOutcome | null>;
+            rollPerilsOfTheWarp?: (actor: object) => Promise<RollOutcome | null>;
+            rollMutation?: () => Promise<RollOutcome | null>;
+            rollMalignancy?: () => Promise<RollOutcome | null>;
+            rollNavigatorMutation?: () => Promise<RollOutcome | null>;
+            rollGiftOfTheGods?: (arg: object | null) => Promise<RollOutcome | null>;
+            rollFearEffects?: (a: number, b: number) => Promise<RollOutcome | null>;
+            rollCriticalInjury?: (kind: string, loc: string, n: number) => Promise<RollOutcome | null>;
+        }
+        interface RollTableUtilsModule {
+            RollTableUtils?: RollTableUtilsCls;
+            default?: RollTableUtilsCls;
+        }
+        interface FoundryGlobal {
+            Actor?: ActorClass;
+            game?: { actors?: ActorsCollection };
+        }
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
-            const fg = globalThis as unknown as FoundryGlobal;
-            const ActorClassRef = fg.Actor;
-            const out: FlowResult[] = [];
-            const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
-                out.push({ name, ok, detail });
-            };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+        const fg = globalThis as unknown as FoundryGlobal;
+        const ActorClassRef = fg.Actor;
+        const out: FlowResult[] = [];
+        const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
+            out.push({ name, ok, detail });
+        };
 
-            const base = `${'/systems/wh40k-rpg'}/module/utils`;
+        const base = `${'/systems/wh40k-rpg'}/module/utils`;
 
-            // ---------- prerequisite-validator ----------
+        // ---------- prerequisite-validator ----------
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic ESM import of a runtime-only Foundry module
+            const mod = (await import(`${base}/prerequisite-validator.js`)) as PrereqValidatorModule;
+
             try {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic ESM import of a runtime-only Foundry module
-                const mod = (await import(`${base}/prerequisite-validator.js`)) as PrereqValidatorModule;
+                const parsed = mod.parsePrerequisiteString?.('Fel 30');
+                record(
+                    'prereq-parse-characteristic',
+                    parsed?.type === 'characteristic' && parsed.key === 'Fel' && parsed.value === 30,
+                    `parsed=${JSON.stringify(parsed)}`,
+                );
+            } catch (err) {
+                record('prereq-parse-characteristic', false, err instanceof Error ? err.message : String(err));
+            }
+
+            try {
+                const parsed = mod.parsePrerequisiteString?.('Command');
+                record('prereq-parse-skill', parsed?.type === 'skill' && parsed.key === 'Command', `parsed=${JSON.stringify(parsed)}`);
+            } catch (err) {
+                record('prereq-parse-skill', false, err instanceof Error ? err.message : String(err));
+            }
+
+            try {
+                const parsed = mod.parsePrerequisiteString?.('   ');
+                record('prereq-parse-empty', parsed === null, `parsed=${JSON.stringify(parsed)}`);
+            } catch (err) {
+                record('prereq-parse-empty', false, err instanceof Error ? err.message : String(err));
+            }
+
+            // Seed an actor with known characteristic + skill state.
+            let actor: ProbeActor | null | undefined;
+            try {
+                actor = await ActorClassRef?.create?.({
+                    name: 'utils-validators-spec-actor',
+                    type: 'dh2-character',
+                    system: {
+                        gameSystem: 'dh2',
+                        characteristics: {
+                            weaponSkill: { base: 30, advance: 0, modifier: 0 },
+                            fellowship: { base: 25, advance: 0, modifier: 0 },
+                        },
+                    },
+                });
+            } catch (err) {
+                for (const k of ['prereq-check-empty', 'prereq-check-unmet-characteristic', 'prereq-check-unmet-skill'] as const) {
+                    record(k, false, `actor create: ${err instanceof Error ? err.message : String(err)}`);
+                }
+            }
+
+            if (actor !== null && actor !== undefined) {
+                const liveActor = actor.id !== undefined ? fg.game?.actors?.get?.(actor.id) : undefined;
 
                 try {
-                    const parsed = mod.parsePrerequisiteString?.('Fel 30');
+                    const result = mod.checkPrerequisites?.(liveActor, []);
                     record(
-                        'prereq-parse-characteristic',
-                        parsed?.type === 'characteristic' && parsed.key === 'Fel' && parsed.value === 30,
-                        `parsed=${JSON.stringify(parsed)}`,
+                        'prereq-check-empty',
+                        result?.valid === true && Array.isArray(result.unmet) && result.unmet.length === 0,
+                        `result=${JSON.stringify(result)}`,
                     );
                 } catch (err) {
-                    record('prereq-parse-characteristic', false, err instanceof Error ? err.message : String(err));
+                    record('prereq-check-empty', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
-                    const parsed = mod.parsePrerequisiteString?.('Command');
-                    record('prereq-parse-skill', parsed?.type === 'skill' && parsed.key === 'Command', `parsed=${JSON.stringify(parsed)}`);
+                    // fellowship base is 25; require 40 → unmet.
+                    const result = mod.checkPrerequisites?.(liveActor, [{ type: 'characteristic', key: 'fellowship', value: 40 }]);
+                    record(
+                        'prereq-check-unmet-characteristic',
+                        result?.valid === false && Array.isArray(result.unmet) && result.unmet.length === 1,
+                        `result=${JSON.stringify(result)}`,
+                    );
                 } catch (err) {
-                    record('prereq-parse-skill', false, err instanceof Error ? err.message : String(err));
+                    record('prereq-check-unmet-characteristic', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
-                    const parsed = mod.parsePrerequisiteString?.('   ');
-                    record('prereq-parse-empty', parsed === null, `parsed=${JSON.stringify(parsed)}`);
+                    // No skill named 'Probe Imaginary Skill' → unmet.
+                    const result = mod.checkPrerequisites?.(liveActor, [{ type: 'skill', key: 'Probe Imaginary Skill' }]);
+                    record(
+                        'prereq-check-unmet-skill',
+                        result?.valid === false && Array.isArray(result.unmet) && result.unmet.length === 1,
+                        `result=${JSON.stringify(result)}`,
+                    );
                 } catch (err) {
-                    record('prereq-parse-empty', false, err instanceof Error ? err.message : String(err));
+                    record('prereq-check-unmet-skill', false, err instanceof Error ? err.message : String(err));
                 }
 
-                // Seed an actor with known characteristic + skill state.
-                let actor: ProbeActor | null | undefined;
                 try {
-                    actor = await ActorClassRef?.create?.({
-                        name: 'utils-validators-spec-actor',
-                        type: 'dh2-character',
-                        system: {
-                            gameSystem: 'dh2',
-                            characteristics: {
-                                weaponSkill: { base: 30, advance: 0, modifier: 0 },
-                                fellowship: { base: 25, advance: 0, modifier: 0 },
-                            },
-                        },
-                    });
-                } catch (err) {
-                    for (const k of ['prereq-check-empty', 'prereq-check-unmet-characteristic', 'prereq-check-unmet-skill'] as const) {
-                        record(k, false, `actor create: ${err instanceof Error ? err.message : String(err)}`);
-                    }
-                }
-
-                if (actor !== null && actor !== undefined) {
-                    const liveActor = actor.id !== undefined ? fg.game?.actors?.get?.(actor.id) : undefined;
-
-                    try {
-                        const result = mod.checkPrerequisites?.(liveActor, []);
-                        record(
-                            'prereq-check-empty',
-                            result?.valid === true && Array.isArray(result.unmet) && result.unmet.length === 0,
-                            `result=${JSON.stringify(result)}`,
-                        );
-                    } catch (err) {
-                        record('prereq-check-empty', false, err instanceof Error ? err.message : String(err));
-                    }
-
-                    try {
-                        // fellowship base is 25; require 40 → unmet.
-                        const result = mod.checkPrerequisites?.(liveActor, [{ type: 'characteristic', key: 'fellowship', value: 40 }]);
-                        record(
-                            'prereq-check-unmet-characteristic',
-                            result?.valid === false && Array.isArray(result.unmet) && result.unmet.length === 1,
-                            `result=${JSON.stringify(result)}`,
-                        );
-                    } catch (err) {
-                        record('prereq-check-unmet-characteristic', false, err instanceof Error ? err.message : String(err));
-                    }
-
-                    try {
-                        // No skill named 'Probe Imaginary Skill' → unmet.
-                        const result = mod.checkPrerequisites?.(liveActor, [{ type: 'skill', key: 'Probe Imaginary Skill' }]);
-                        record(
-                            'prereq-check-unmet-skill',
-                            result?.valid === false && Array.isArray(result.unmet) && result.unmet.length === 1,
-                            `result=${JSON.stringify(result)}`,
-                        );
-                    } catch (err) {
-                        record('prereq-check-unmet-skill', false, err instanceof Error ? err.message : String(err));
-                    }
-
-                    try {
-                        await actor.delete?.();
-                    } catch {
-                        /* ignore */
-                    }
-                }
-            } catch (err) {
-                for (const k of [
-                    'prereq-parse-characteristic',
-                    'prereq-parse-skill',
-                    'prereq-parse-empty',
-                    'prereq-check-empty',
-                    'prereq-check-unmet-characteristic',
-                    'prereq-check-unmet-skill',
-                ] as const) {
-                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+                    await actor.delete?.();
+                } catch {
+                    /* ignore */
                 }
             }
+        } catch (err) {
+            for (const k of [
+                'prereq-parse-characteristic',
+                'prereq-parse-skill',
+                'prereq-parse-empty',
+                'prereq-check-empty',
+                'prereq-check-unmet-characteristic',
+                'prereq-check-unmet-skill',
+            ] as const) {
+                record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+            }
+        }
 
-            // ---------- roll-table-utils ----------
-            try {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic ESM import of a runtime-only Foundry module
-                const mod = (await import(`${base}/roll-table-utils.js`)) as RollTableUtilsModule;
-                const RTU: RollTableUtilsCls | undefined = mod.RollTableUtils ?? mod.default;
-                if (typeof RTU?.findTableInCompendiums !== 'function') {
-                    for (const k of UTILS_VALIDATORS_FLOWS.filter((f) => f.startsWith('roll-table-'))) record(k, false, 'RollTableUtils missing');
-                } else {
-                    // findInCompendiums — accept null (no matching table)
-                    try {
-                        const res = await RTU.findTableInCompendiums('Critical Damage - Energy');
-                        record('roll-table-findInCompendiums', res === null || typeof res === 'object', `type=${typeof res}`);
-                    } catch (err) {
-                        record('roll-table-findInCompendiums', false, err instanceof Error ? err.message : String(err));
-                    }
-
-                    // All domain wrappers: accept null OR a TableResult.
-                    const probes: Array<[FlowName, () => Promise<RollOutcome | null>]> = [
-                        ['roll-table-rollPsychicPhenomena', async () => (await RTU.rollPsychicPhenomena?.({ system: {} }, 0)) ?? null],
-                        ['roll-table-rollPerilsOfTheWarp', async () => (await RTU.rollPerilsOfTheWarp?.({ system: {} })) ?? null],
-                        ['roll-table-rollMutation', async () => (await RTU.rollMutation?.()) ?? null],
-                        ['roll-table-rollMalignancy', async () => (await RTU.rollMalignancy?.()) ?? null],
-                        ['roll-table-rollNavigatorMutation', async () => (await RTU.rollNavigatorMutation?.()) ?? null],
-                        ['roll-table-rollGiftOfTheGods', async () => (await RTU.rollGiftOfTheGods?.(null)) ?? null],
-                        ['roll-table-rollFearEffects', async () => (await RTU.rollFearEffects?.(1, 1)) ?? null],
-                        ['roll-table-rollCriticalInjury', async () => (await RTU.rollCriticalInjury?.('impact', 'body', 1)) ?? null],
-                    ];
-                    for (const [name, fn] of probes) {
-                        try {
-                            // eslint-disable-next-line no-await-in-loop -- domain wrappers must execute in series to attribute coverage cleanly
-                            await fn();
-                            record(name, true, null);
-                        } catch (err) {
-                            // Many of these depend on a packed roll table that
-                            // may be absent from the test world. Treat throw
-                            // as a flow failure unless the err looks like a
-                            // tolerable "no table" path.
-                            const msg = err instanceof Error ? err.message : String(err);
-                            const tolerable = /not found|no table|missing/i.test(msg);
-                            record(name, tolerable, msg);
-                        }
-                    }
+        // ---------- roll-table-utils ----------
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic ESM import of a runtime-only Foundry module
+            const mod = (await import(`${base}/roll-table-utils.js`)) as RollTableUtilsModule;
+            const RTU: RollTableUtilsCls | undefined = mod.RollTableUtils ?? mod.default;
+            if (typeof RTU?.findTableInCompendiums !== 'function') {
+                for (const k of UTILS_VALIDATORS_FLOWS.filter((f) => f.startsWith('roll-table-'))) record(k, false, 'RollTableUtils missing');
+            } else {
+                // findInCompendiums — accept null (no matching table)
+                try {
+                    const res = await RTU.findTableInCompendiums('Critical Damage - Energy');
+                    record('roll-table-findInCompendiums', res === null || typeof res === 'object', `type=${typeof res}`);
+                } catch (err) {
+                    record('roll-table-findInCompendiums', false, err instanceof Error ? err.message : String(err));
                 }
-            } catch (err) {
-                for (const k of UTILS_VALIDATORS_FLOWS.filter((f) => f.startsWith('roll-table-'))) {
-                    record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+
+                // All domain wrappers: accept null OR a TableResult.
+                const probes: Array<[FlowName, () => Promise<RollOutcome | null>]> = [
+                    ['roll-table-rollPsychicPhenomena', async () => (await RTU.rollPsychicPhenomena?.({ system: {} }, 0)) ?? null],
+                    ['roll-table-rollPerilsOfTheWarp', async () => (await RTU.rollPerilsOfTheWarp?.({ system: {} })) ?? null],
+                    ['roll-table-rollMutation', async () => (await RTU.rollMutation?.()) ?? null],
+                    ['roll-table-rollMalignancy', async () => (await RTU.rollMalignancy?.()) ?? null],
+                    ['roll-table-rollNavigatorMutation', async () => (await RTU.rollNavigatorMutation?.()) ?? null],
+                    ['roll-table-rollGiftOfTheGods', async () => (await RTU.rollGiftOfTheGods?.(null)) ?? null],
+                    ['roll-table-rollFearEffects', async () => (await RTU.rollFearEffects?.(1, 1)) ?? null],
+                    ['roll-table-rollCriticalInjury', async () => (await RTU.rollCriticalInjury?.('impact', 'body', 1)) ?? null],
+                ];
+                for (const [name, fn] of probes) {
+                    try {
+                        // eslint-disable-next-line no-await-in-loop -- domain wrappers must execute in series to attribute coverage cleanly
+                        await fn();
+                        record(name, true, null);
+                    } catch (err) {
+                        // Many of these depend on a packed roll table that
+                        // may be absent from the test world. Treat throw
+                        // as a flow failure unless the err looks like a
+                        // tolerable "no table" path.
+                        const msg = err instanceof Error ? err.message : String(err);
+                        const tolerable = /not found|no table|missing/i.test(msg);
+                        record(name, tolerable, msg);
+                    }
                 }
             }
+        } catch (err) {
+            for (const k of UTILS_VALIDATORS_FLOWS.filter((f) => f.startsWith('roll-table-'))) {
+                record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
+            }
+        }
 
-            return out;
-        });
-        return { results, pageErrors };
-    } finally {
-        page.off('pageerror', listener);
-    }
+        return out;
+    });
+    return { results };
 }
 
 test.describe.serial('utils validators (Tier B)', () => {

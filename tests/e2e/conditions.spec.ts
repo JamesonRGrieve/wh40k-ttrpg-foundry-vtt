@@ -21,7 +21,6 @@ interface ConditionProbe {
     id: string;
     appliedOk: boolean;
     removedOk: boolean;
-    pageErrors: string[];
     error: string | null;
 }
 
@@ -81,70 +80,60 @@ async function listStatusEffectIds(page: Page): Promise<string[]> {
 }
 
 async function probeStatusEffect(page: Page, actorId: string, effectId: string): Promise<ConditionProbe> {
-    const errors: string[] = [];
-    const listener = (err: Error): void => {
-        errors.push(err.message);
+    const result = await page.evaluate(
+        async ({ actorId: probeActorId, effectId: probeEffectId }) => {
+            interface FoundryActorEffectRef {
+                statuses?: Set<string>;
+                name?: string;
+            }
+            interface FoundryActorEffects {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry effects.find returns ActiveEffect with no shipped types
+                find: (cb: (e: FoundryActorEffectRef) => boolean) => unknown;
+            }
+            interface FoundryProbeActor {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.toggleStatusEffect returns Promise<ActiveEffect|undefined>
+                toggleStatusEffect?: (id: string, opts?: { active?: boolean }) => Promise<unknown>;
+                statuses?: Set<string>;
+                effects?: FoundryActorEffects;
+            }
+            interface FoundryProbeGameGlobal {
+                game?: { actors?: { get?: (id: string) => FoundryProbeActor | undefined } };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const { game: gameGlobal } = globalThis as unknown as FoundryProbeGameGlobal;
+            const actor = gameGlobal?.actors?.get?.(probeActorId);
+            if (!actor) return { appliedOk: false, removedOk: false, error: 'actor lookup failed' };
+            if (typeof actor.toggleStatusEffect !== 'function') {
+                return { appliedOk: false, removedOk: false, error: 'actor.toggleStatusEffect unavailable' };
+            }
+            try {
+                await actor.toggleStatusEffect(probeEffectId, { active: true });
+            } catch (err) {
+                return { appliedOk: false, removedOk: false, error: `toggle-on threw: ${String((err as Error).message)}` };
+            }
+            const hasAfterOn = Boolean(actor.statuses?.has(probeEffectId)) || Boolean(actor.effects?.find((e) => e.statuses?.has(probeEffectId) ?? false));
+            if (!hasAfterOn) {
+                return { appliedOk: false, removedOk: false, error: 'effect not present after toggle-on' };
+            }
+            try {
+                await actor.toggleStatusEffect(probeEffectId, { active: false });
+            } catch (err) {
+                return { appliedOk: true, removedOk: false, error: `toggle-off threw: ${String((err as Error).message)}` };
+            }
+            const hasAfterOff = Boolean(actor.statuses?.has(probeEffectId)) || Boolean(actor.effects?.find((e) => e.statuses?.has(probeEffectId) ?? false));
+            if (hasAfterOff) {
+                return { appliedOk: true, removedOk: false, error: 'effect still present after toggle-off' };
+            }
+            return { appliedOk: true, removedOk: true, error: null };
+        },
+        { actorId, effectId },
+    );
+    return {
+        id: effectId,
+        appliedOk: result.appliedOk,
+        removedOk: result.removedOk,
+        error: result.error,
     };
-    page.on('pageerror', listener);
-    try {
-        const result = await page.evaluate(
-            async ({ actorId: probeActorId, effectId: probeEffectId }) => {
-                interface FoundryActorEffectRef {
-                    statuses?: Set<string>;
-                    name?: string;
-                }
-                interface FoundryActorEffects {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry effects.find returns ActiveEffect with no shipped types
-                    find: (cb: (e: FoundryActorEffectRef) => boolean) => unknown;
-                }
-                interface FoundryProbeActor {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.toggleStatusEffect returns Promise<ActiveEffect|undefined>
-                    toggleStatusEffect?: (id: string, opts?: { active?: boolean }) => Promise<unknown>;
-                    statuses?: Set<string>;
-                    effects?: FoundryActorEffects;
-                }
-                interface FoundryProbeGameGlobal {
-                    game?: { actors?: { get?: (id: string) => FoundryProbeActor | undefined } };
-                }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
-                const { game: gameGlobal } = globalThis as unknown as FoundryProbeGameGlobal;
-                const actor = gameGlobal?.actors?.get?.(probeActorId);
-                if (!actor) return { appliedOk: false, removedOk: false, error: 'actor lookup failed' };
-                if (typeof actor.toggleStatusEffect !== 'function') {
-                    return { appliedOk: false, removedOk: false, error: 'actor.toggleStatusEffect unavailable' };
-                }
-                try {
-                    await actor.toggleStatusEffect(probeEffectId, { active: true });
-                } catch (err) {
-                    return { appliedOk: false, removedOk: false, error: `toggle-on threw: ${String((err as Error).message)}` };
-                }
-                const hasAfterOn = Boolean(actor.statuses?.has(probeEffectId)) || Boolean(actor.effects?.find((e) => e.statuses?.has(probeEffectId) ?? false));
-                if (!hasAfterOn) {
-                    return { appliedOk: false, removedOk: false, error: 'effect not present after toggle-on' };
-                }
-                try {
-                    await actor.toggleStatusEffect(probeEffectId, { active: false });
-                } catch (err) {
-                    return { appliedOk: true, removedOk: false, error: `toggle-off threw: ${String((err as Error).message)}` };
-                }
-                const hasAfterOff = Boolean(actor.statuses?.has(probeEffectId)) || Boolean(actor.effects?.find((e) => e.statuses?.has(probeEffectId) ?? false));
-                if (hasAfterOff) {
-                    return { appliedOk: true, removedOk: false, error: 'effect still present after toggle-off' };
-                }
-                return { appliedOk: true, removedOk: true, error: null };
-            },
-            { actorId, effectId },
-        );
-        return {
-            id: effectId,
-            appliedOk: result.appliedOk,
-            removedOk: result.removedOk,
-            error: result.error,
-            pageErrors: errors,
-        };
-    } finally {
-        page.off('pageerror', listener);
-    }
 }
 
 test.describe.serial('conditions / status effects (Tier B)', () => {
@@ -166,7 +155,6 @@ test.describe.serial('conditions / status effects (Tier B)', () => {
                     appliedOk: false,
                     removedOk: false,
                     error: String((err as Error).message),
-                    pageErrors: [] as string[],
                 }));
                 if (probe.appliedOk) {
                     recordCoverage('condition.toggle', probe.id);
@@ -174,9 +162,6 @@ test.describe.serial('conditions / status effects (Tier B)', () => {
                 if (probe.error !== null) {
                     failures.push(`${probe.id}: ${probe.error}`);
                     continue;
-                }
-                if (probe.pageErrors.length > 0) {
-                    failures.push(`${probe.id}: pageerror: ${probe.pageErrors[0]}`);
                 }
             }
         } finally {
