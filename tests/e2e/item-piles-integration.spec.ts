@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
-import { recordCoverage } from './lib/coverage-tracker';
+import { assertFlowResults } from './lib/flow-assert';
 import { joinAsGM } from './lib/join';
-import { expect, test } from './lib/test';
+import { test } from './lib/test';
 
 /**
  * Tier B coverage of the wh40k-rpg ↔ Item Piles integration surface that only a
@@ -294,23 +294,6 @@ test.describe.serial('Item Piles integration (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const probe = await probeItemPiles(page);
-        const seen = new Set<string>();
-        const failures: string[] = [];
-        for (const r of probe.results) {
-            seen.add(r.name);
-            if (r.ok) {
-                recordCoverage('itempiles.flow', r.name);
-            } else {
-                failures.push(`${r.name}: ${r.detail ?? 'failed'}`);
-            }
-        }
-        for (const expected of ITEM_PILES_FLOWS) {
-            if (!seen.has(expected)) failures.push(`${expected}: flow did not run`);
-        }
-        if (probe.pageErrors.length > 0) {
-            failures.push(`page errors: ${probe.pageErrors.slice(0, 5).join(' | ')}`);
-        }
-
-        expect(failures, `${failures.length}/${ITEM_PILES_FLOWS.length} Item Piles flows failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
+        assertFlowResults(probe, ITEM_PILES_FLOWS, { dimension: 'itempiles.flow', label: 'Item Piles' });
     });
 });

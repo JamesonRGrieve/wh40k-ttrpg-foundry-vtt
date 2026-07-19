@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
-import { recordCoverage } from './lib/coverage-tracker';
+import { assertFlowResults } from './lib/flow-assert';
 import { joinAsGM } from './lib/join';
-import { expect, test } from './lib/test';
+import { test } from './lib/test';
 
 /**
  * Tier B coverage of the REAL Item Piles module driving the wh40k-rpg
@@ -292,23 +292,6 @@ test.describe.serial('Item Piles MODULE (Tier B, skip-gated)', () => {
         );
 
         const probe = await probeRealModule(page);
-        const failures: string[] = [];
-        const seen = new Set<string>();
-        for (const r of probe.results) {
-            seen.add(r.name);
-            if (r.ok) {
-                recordCoverage('itempiles-module.flow', r.name);
-            } else {
-                failures.push(`${r.name}: ${r.detail ?? 'failed'}`);
-            }
-        }
-        for (const expected of ITEM_PILES_MODULE_FLOWS) {
-            if (!seen.has(expected)) failures.push(`${expected}: flow did not run`);
-        }
-        if (probe.pageErrors.length > 0) {
-            failures.push(`page errors: ${probe.pageErrors.slice(0, 5).join(' | ')}`);
-        }
-
-        expect(failures, `${failures.length}/${ITEM_PILES_MODULE_FLOWS.length} Item Piles module flows failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
+        assertFlowResults(probe, ITEM_PILES_MODULE_FLOWS, { dimension: 'itempiles-module.flow', label: 'Item Piles module' });
     });
 });

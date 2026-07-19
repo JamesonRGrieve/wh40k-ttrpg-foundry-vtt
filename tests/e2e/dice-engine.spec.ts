@@ -1,9 +1,9 @@
 // Keys MUST match the DICE_ENGINE_FLOWS constant in scripts/e2e-coverage.mjs (registered by the orchestrator).
 
 import type { Page } from '@playwright/test';
-import { recordCoverage } from './lib/coverage-tracker';
+import { assertFlowResults } from './lib/flow-assert';
 import { joinAsGM } from './lib/join';
-import { expect, test } from './lib/test';
+import { test } from './lib/test';
 
 /**
  * Tier B coverage of the dice engine itself — `src/module/dice/_module.ts`,
@@ -424,23 +424,6 @@ test.describe.serial('dice engine (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const probe = await probeDiceEngine(page);
-        const seen = new Set<string>();
-        const failures: string[] = [];
-        for (const r of probe.results) {
-            seen.add(r.name);
-            if (r.ok) {
-                recordCoverage('dice-engine.flow', r.name);
-            } else {
-                failures.push(`${r.name}: ${r.detail ?? 'failed'}`);
-            }
-        }
-        for (const expected of DICE_ENGINE_FLOWS) {
-            if (!seen.has(expected)) failures.push(`${expected}: flow did not run`);
-        }
-        if (probe.pageErrors.length > 0) {
-            failures.push(`page errors: ${probe.pageErrors.slice(0, 5).join(' | ')}`);
-        }
-
-        expect(failures, `${failures.length}/${DICE_ENGINE_FLOWS.length} dice-engine flows failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
+        assertFlowResults(probe, DICE_ENGINE_FLOWS, { dimension: 'dice-engine.flow', label: 'dice-engine' });
     });
 });
