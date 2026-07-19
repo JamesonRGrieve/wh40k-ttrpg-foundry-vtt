@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
-import { recordCoverage } from './lib/coverage-tracker';
+import { assertFlowResults } from './lib/flow-assert';
 import { joinAsGM } from './lib/join';
-import { expect, test } from './lib/test';
+import { test } from './lib/test';
 
 /**
  * Tier B coverage of `src/module/data/abstract/*` and the custom
@@ -480,25 +480,6 @@ test.describe.serial('data/abstract + data/fields (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const probe = await probeAbstractFields(page);
-        const seen = new Set<string>();
-        const failures: string[] = [];
-        for (const r of probe.results) {
-            seen.add(r.name);
-            if (r.ok) {
-                recordCoverage('data-abstract-fields.flow', r.name);
-            } else {
-                failures.push(`${r.name}: ${r.detail ?? 'failed'}`);
-            }
-        }
-        for (const expected of DATA_ABSTRACT_FIELDS_FLOWS) {
-            if (!seen.has(expected)) failures.push(`${expected}: flow did not run`);
-        }
-        if (probe.pageErrors.length > 0) {
-            failures.push(`page errors: ${probe.pageErrors.slice(0, 5).join(' | ')}`);
-        }
-
-        expect(failures, `${failures.length}/${DATA_ABSTRACT_FIELDS_FLOWS.length} data-abstract-fields flows failed:\n  - ${failures.join('\n  - ')}`).toEqual(
-            [],
-        );
+        assertFlowResults(probe, DATA_ABSTRACT_FIELDS_FLOWS, { dimension: 'data-abstract-fields.flow', label: 'data-abstract-fields' });
     });
 });

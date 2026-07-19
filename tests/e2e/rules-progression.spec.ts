@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
-import { recordCoverage } from './lib/coverage-tracker';
+import { assertFlowResults } from './lib/flow-assert';
 import { joinAsGM } from './lib/join';
-import { expect, test } from './lib/test';
+import { test } from './lib/test';
 
 /**
  * Tier B coverage of the remaining pure-logic / progression surface in
@@ -437,23 +437,6 @@ test.describe.serial('rules progression surface (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const probe = await probeRules(page);
-        const seen = new Set<string>();
-        const failures: string[] = [];
-        for (const r of probe.results) {
-            seen.add(r.name);
-            if (r.ok) {
-                recordCoverage('rule-progression.flow', r.name);
-            } else {
-                failures.push(`${r.name}: ${r.detail ?? 'failed'}`);
-            }
-        }
-        for (const expected of RULE_PROGRESSION_FLOWS) {
-            if (!seen.has(expected)) failures.push(`${expected}: flow did not run`);
-        }
-        if (probe.pageErrors.length > 0) {
-            failures.push(`page errors: ${probe.pageErrors.slice(0, 5).join(' | ')}`);
-        }
-
-        expect(failures, `${failures.length}/${RULE_PROGRESSION_FLOWS.length} rules-progression flows failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
+        assertFlowResults(probe, RULE_PROGRESSION_FLOWS, { dimension: 'rule-progression.flow', label: 'rules-progression' });
     });
 });
