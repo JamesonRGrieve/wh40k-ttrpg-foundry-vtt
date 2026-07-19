@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import type { DynamicModifierEntry } from '../data/shared/modifiers-template.ts';
+import type { DynamicModifierEntry, GrantedQualityEntry } from '../data/shared/modifiers-template.ts';
 import {
     collectDynamicComponents,
+    collectGrantedQualities,
     type DynamicModifierContext,
     type DynamicModifierItemLike,
     type DynamicModifierSituation,
@@ -259,5 +260,51 @@ describe('ownsActivatableHook', () => {
     it('tolerates items with no hooks', () => {
         const bare: DynamicModifierItemLike = { name: 'Plain', system: {} };
         expect(ownsActivatableHook([bare], 'eyeOfVengeance')).toBe(false);
+    });
+});
+
+describe('collectGrantedQualities', () => {
+    function grantItem(name: string, grants: GrantedQualityEntry[]): DynamicModifierItemLike {
+        return { name, system: { modifiers: { grantedQualities: grants } } };
+    }
+    const grant = (o: Partial<GrantedQualityEntry>): GrantedQualityEntry => ({
+        name: 'Concussive',
+        level: 2,
+        when: 'onAction',
+        condition: '',
+        conditionValue: 'All Out Attack',
+        ...o,
+    });
+
+    it('grants a quality (with level + provenance) when its trigger fires', () => {
+        // Hammer Blow [OW/BC/DH2] → Concussive (2) on All Out Attack.
+        const hammerBlow = grantItem('Hammer Blow', [grant({})]);
+        const out = collectGrantedQualities([hammerBlow], { action: 'All Out Attack', isMelee: true });
+        expect(out).toEqual([{ name: 'Concussive', level: 2, source: 'Hammer Blow' }]);
+    });
+
+    it('grants the per-line quality — DW authors Shocking, not Concussive', () => {
+        // Same talent, DW line → Shocking (level 0). Proves the cross-line fix:
+        // the quality is data, not a universal name-match.
+        const dwHammerBlow = grantItem('Hammer Blow', [grant({ name: 'Shocking', level: 0 })]);
+        const out = collectGrantedQualities([dwHammerBlow], { action: 'All Out Attack', isMelee: true });
+        expect(out).toEqual([{ name: 'Shocking', level: 0, source: 'Hammer Blow' }]);
+    });
+
+    it('does not grant when the trigger does not fire (wrong action)', () => {
+        const hammerBlow = grantItem('Hammer Blow', [grant({})]);
+        expect(collectGrantedQualities([hammerBlow], { action: 'Standard Attack', isMelee: true })).toEqual([]);
+    });
+
+    it('collects grants from every owned item', () => {
+        const a = grantItem('Hammer Blow', [grant({})]);
+        const b = grantItem('Other', [grant({ name: 'Snares', level: 0, when: 'always', conditionValue: '' })]);
+        const out = collectGrantedQualities([a, b], { action: 'All Out Attack' });
+        expect(out.map((g) => g.name).sort()).toEqual(['Concussive', 'Snares']);
+    });
+
+    it('tolerates items with no grantedQualities', () => {
+        const bare: DynamicModifierItemLike = { name: 'Plain', system: {} };
+        expect(collectGrantedQualities([bare], { action: 'All Out Attack' })).toEqual([]);
     });
 });

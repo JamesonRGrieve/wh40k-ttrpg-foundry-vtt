@@ -2,6 +2,7 @@ import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateA
 import { getCriticalDamage } from '../rules/critical-damage.ts';
 import {
     collectDynamicComponents,
+    collectGrantedQualities,
     type DynamicModifierContext,
     type DynamicModifierItemLike,
     type DynamicModifierSituation,
@@ -599,20 +600,18 @@ export class Hit {
 
         this.damageType = actionItem.system.damage?.type ?? actionItem.system.damageType ?? 'Impact';
 
-        // Hammer Blow's *numeric* half (½SB → penetration) is data-driven via the
-        // talent's dynamicModifiers hook (see below). Its remaining half — granting
-        // the Concussive(2) *weapon quality* on an All-Out Attack — is a non-numeric
-        // grant, which the numeric-only dynamicModifiers schema deliberately scopes
-        // out (survey §D8: quality/talent/condition grants belong in a unified
-        // `grants.effects[]` channel that is not yet built). Until that channel
-        // exists this stays a name-match; tracked in #475 (the last one in rolls/).
-        if (attackData.rollData.action === 'All Out Attack' && sourceActor.hasTalent('Hammer Blow')) {
-            if (!attackData.rollData.attackSpecials.find((s) => s.name === 'Concussive')) {
-                attackData.rollData.attackSpecials.push({
-                    name: 'Concussive',
-                    level: 2,
-                });
-            }
+        // Conditional weapon-quality grants (Direction #7, §D8) — e.g. Hammer Blow
+        // adding Concussive (2) [DH2/OW/BC] or Shocking [DW/DH1] on an All-Out
+        // Attack. Read from each talent's `grantedQualities` data (per line) rather
+        // than name-matched here, so the correct quality applies per game line.
+        const grantSituation: DynamicModifierSituation = {
+            action: attackData.rollData.action,
+            isMelee: actionItem.isMelee,
+            isRanged: actionItem.isRanged,
+        };
+        for (const granted of collectGrantedQualities(sourceActor.items ?? [], grantSituation)) {
+            if (attackData.rollData.attackSpecials.some((s) => s.name === granted.name)) continue;
+            attackData.rollData.attackSpecials.push({ name: granted.name, level: granted.level });
         }
 
         if (actionItem.isRanged) {

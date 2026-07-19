@@ -1,4 +1,4 @@
-import type { DynamicModifierEntry } from '../data/shared/modifiers-template.ts';
+import type { DynamicModifierEntry, GrantedQualityEntry } from '../data/shared/modifiers-template.ts';
 
 /**
  * The runtime context a dynamic modifier hook is evaluated against — the live
@@ -152,23 +152,31 @@ export function modeDelta(mode: DynamicModifierEntry['mode'], base: number, valu
     return null;
 }
 
-/** Does the hook's `when` timing match the situation? */
-function whenMatches(hook: DynamicModifierEntry, situation: DynamicModifierSituation): boolean {
-    const w = hook.when;
+/**
+ * The trigger fields shared by a numeric hook ({@link DynamicModifierEntry}) and a
+ * conditional quality grant ({@link GrantedQualityEntry}) — the `when` timing plus
+ * the `condition`/`conditionValue` predicate. Extracted so both channels reuse the
+ * one trigger-matching implementation instead of duplicating it.
+ */
+export type DynamicTrigger = Pick<DynamicModifierEntry, 'when' | 'condition' | 'conditionValue'>;
+
+/** Does the trigger's `when` timing match the situation? */
+function whenMatches(trigger: DynamicTrigger, situation: DynamicModifierSituation): boolean {
+    const w = trigger.when;
     if (w === 'always' || w === 'onHit') return true;
     if (w === 'onCrit') return situation.isCrit === true;
     if (w === 'onKill') return situation.isKill === true;
     if (w === 'onCharge') return situation.isCharge === true;
     if (w === 'onParry') return situation.isParry === true;
-    if (w === 'onAction') return hook.conditionValue === '' || situation.action === hook.conditionValue;
+    if (w === 'onAction') return trigger.conditionValue === '' || situation.action === trigger.conditionValue;
     // The only remaining `when` member is `atRangeBand`.
-    return situation.rangeBand === hook.conditionValue;
+    return situation.rangeBand === trigger.conditionValue;
 }
 
-/** Does the hook's `condition` predicate match the situation? */
-function conditionMatches(hook: DynamicModifierEntry, situation: DynamicModifierSituation, itemSpecialization: string): boolean {
-    const c = hook.condition;
-    const value = hook.conditionValue;
+/** Does the trigger's `condition` predicate match the situation? */
+function conditionMatches(trigger: DynamicTrigger, situation: DynamicModifierSituation, itemSpecialization: string): boolean {
+    const c = trigger.condition;
+    const value = trigger.conditionValue;
     if (c === '') return true;
     if (c === 'melee') return situation.isMelee === true;
     if (c === 'ranged') return situation.isRanged === true;
@@ -192,15 +200,20 @@ function conditionMatches(hook: DynamicModifierEntry, situation: DynamicModifier
  * match). `itemSpecialization` is the owning item's `system.specialization`, read by
  * the `specializationMode` condition (default '' — no specialization).
  */
-export function hookApplies(hook: DynamicModifierEntry, situation: DynamicModifierSituation, itemSpecialization = ''): boolean {
+export function hookApplies(hook: DynamicTrigger, situation: DynamicModifierSituation, itemSpecialization = ''): boolean {
     return whenMatches(hook, situation) && conditionMatches(hook, situation, itemSpecialization);
 }
 
-/** The minimal owned-item surface the collector reads. */
+/** The minimal owned-item surface the collectors read. */
 export interface DynamicModifierItemLike {
     name: string | null;
     system: {
-        modifiers?: { dynamicModifiers?: readonly DynamicModifierEntry[] | undefined } | undefined;
+        modifiers?:
+            | {
+                  dynamicModifiers?: readonly DynamicModifierEntry[] | undefined;
+                  grantedQualities?: readonly GrantedQualityEntry[] | undefined;
+              }
+            | undefined;
         /** The item's specialization ('Melee' / 'Ranged' / …), read by the `specializationMode` condition. */
         specialization?: string | undefined;
     };
@@ -258,4 +271,36 @@ export function ownsActivatableHook(items: Iterable<DynamicModifierItemLike>, co
         }
     }
     return false;
+}
+
+/** A weapon quality an item's grant contributes to an attack, with provenance. */
+export interface GrantedQuality {
+    /** The weapon-quality (attack special) name to add. */
+    name: string;
+    /** The quality's `(X)` level; 0 for unlevelled qualities. */
+    level: number;
+    /** The granting item's name (provenance). */
+    source: string;
+}
+
+/**
+ * Walk a set of owned items and return the conditional weapon-quality grants whose
+ * trigger fires in `situation` — the non-numeric counterpart to
+ * {@link collectDynamicComponents}. Lets the damage pipeline add a quality (e.g.
+ * Hammer Blow → Concussive (2) / Shocking on an All-Out Attack) from the item's
+ * declared `grantedQualities` data rather than a name match. Pure and
+ * content-agnostic; each line authors its own quality (§D8).
+ */
+export function collectGrantedQualities(items: Iterable<DynamicModifierItemLike>, situation: DynamicModifierSituation): GrantedQuality[] {
+    const out: GrantedQuality[] = [];
+    for (const item of items) {
+        const grants = item.system.modifiers?.grantedQualities ?? [];
+        const spec = item.system.specialization;
+        const specialization = typeof spec === 'string' ? spec : '';
+        for (const grant of grants) {
+            if (!hookApplies(grant, situation, specialization)) continue;
+            out.push({ name: grant.name, level: grant.level, source: item.name ?? '' });
+        }
+    }
+    return out;
 }
