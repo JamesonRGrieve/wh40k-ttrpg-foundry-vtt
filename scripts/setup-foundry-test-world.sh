@@ -74,6 +74,28 @@ for entry in "${SCRIPT_DIR}/dist"/*; do
     fi
 done
 
+# Optional: symlink the cached third-party modules (Item Piles + deps) into the
+# world so the real-module Tier B spec can enable + drive game.itempiles.API.
+# Populated by scripts/install-e2e-itempiles.sh; absent by default, in which
+# case item-piles-module.spec.ts skip-gates. Modules are static + lock-free, so
+# a symlink (like the system assets above) is safe.
+MODULE_CACHE="${SCRIPT_DIR}/.foundry-test-modules"
+if [[ -d "${MODULE_CACHE}" ]]; then
+    MODULES_DIR="${DATA_DATA}/modules"
+    mkdir -p "${MODULES_DIR}"
+    for mod in "${MODULE_CACHE}"/*/; do
+        [[ -f "${mod}module.json" ]] || continue
+        id="$(basename "${mod}")"
+        target="${MODULES_DIR}/${id}"
+        if [[ -L "${target}" ]] && [[ "$(readlink "${target}")" != "${mod%/}" ]]; then
+            rm -f "${target}"
+        fi
+        if [[ ! -e "${target}" ]]; then
+            ln -s "${mod%/}" "${target}"
+        fi
+    done
+fi
+
 # Copy seed world (idempotent rsync).
 SEED_SRC="${SCRIPT_DIR}/tests/e2e/fixtures/seed-world"
 SEED_DST="${WORLDS_DIR}/${SEED_WORLD_NAME}"

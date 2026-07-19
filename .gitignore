@@ -9,6 +9,7 @@ src/module/foundry-core
 .foundry-release/
 .foundry-test-data/
 .foundry-test-data-*/
+.foundry-test-modules/
 
 ## Build Output
 node_modules
