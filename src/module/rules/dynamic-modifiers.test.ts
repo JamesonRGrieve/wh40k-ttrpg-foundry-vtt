@@ -8,6 +8,7 @@ import {
     evaluateScale,
     hookApplies,
     modeDelta,
+    ownsActivatableHook,
     resolveDynamicMagnitude,
 } from './dynamic-modifiers.ts';
 
@@ -228,5 +229,35 @@ describe('collectDynamicComponents', () => {
     it('tolerates items with no hooks', () => {
         const bare: DynamicModifierItemLike = { name: 'Plain', system: {} };
         expect(collectDynamicComponents([bare], makeCtx(), {})).toEqual([]);
+    });
+});
+
+describe('ownsActivatableHook', () => {
+    function item(name: string, hooks: DynamicModifierEntry[]): DynamicModifierItemLike {
+        return { name, system: { modifiers: { dynamicModifiers: hooks } } };
+    }
+
+    it('finds an activatable hook by its conditionValue (Eye of Vengeance)', () => {
+        const eov = item('Eye of Vengeance', [
+            makeHook({ target: 'damage', condition: 'activated', conditionValue: 'eyeOfVengeance', scale: scale({ source: 'dos' }) }),
+        ]);
+        expect(ownsActivatableHook([eov], 'eyeOfVengeance')).toBe(true);
+    });
+
+    it('is false when no owned item carries that activatable effect', () => {
+        const other = item('Mighty Shot', [makeHook({ target: 'damage', when: 'always' })]);
+        expect(ownsActivatableHook([other], 'eyeOfVengeance')).toBe(false);
+        expect(ownsActivatableHook([], 'eyeOfVengeance')).toBe(false);
+    });
+
+    it('does not match a non-activated hook that merely shares the conditionValue', () => {
+        // A hook with the id but condition !== 'activated' is not player-activatable.
+        const passive = item('Passive', [makeHook({ condition: 'whileState', conditionValue: 'eyeOfVengeance' })]);
+        expect(ownsActivatableHook([passive], 'eyeOfVengeance')).toBe(false);
+    });
+
+    it('tolerates items with no hooks', () => {
+        const bare: DynamicModifierItemLike = { name: 'Plain', system: {} };
+        expect(ownsActivatableHook([bare], 'eyeOfVengeance')).toBe(false);
     });
 });
