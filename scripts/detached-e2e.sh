@@ -9,5 +9,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 LOG="$1"; shift
 : > "${LOG}"
-setsid bash -c "cd '${SCRIPT_DIR}' && HOME=/home/jameson E2E_SKIP_BUILD=1 bash scripts/run-e2e.sh $* >> '${LOG}' 2>&1; echo \"DETACHED_EXIT=\$?\" >> '${LOG}'" < /dev/null >> "${LOG}" 2>&1 &
+# The whole run (and its DETACHED_EXIT sentinel) is written by the inner bash to
+# ${LOG}; setsid's own fds go to /dev/null so no stray line races to the top of
+# the log. \$? is escaped so the INNER shell captures run-e2e.sh's real exit.
+FILTERS="$*"
+setsid bash -c "cd '${SCRIPT_DIR}' && HOME=/home/jameson E2E_SKIP_BUILD=1 bash scripts/run-e2e.sh ${FILTERS} >> '${LOG}' 2>&1; echo \"DETACHED_EXIT=\$?\" >> '${LOG}'" < /dev/null > /dev/null 2>&1 &
 echo "detached pid $! → ${LOG}"

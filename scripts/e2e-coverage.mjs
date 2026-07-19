@@ -2186,6 +2186,22 @@ const ITEM_PILES_FLOWS = [
 ];
 recordDimension('itempiles.flow', covered['itempiles.flow'], ITEM_PILES_FLOWS);
 
+// Real Item Piles MODULE dimension exercised by
+// tests/e2e/item-piles-module.spec.ts (skip-gated on the module being installed
+// + active). 0% when the module cache is absent, 100% when the real
+// game.itempiles.API drives currency/item transfer + pile detection. Keys MUST
+// match the recordCoverage('itempiles-module.flow', ...) calls in that spec.
+const ITEM_PILES_MODULE_FLOWS = [
+    'module-active-and-integrated',
+    'currency-add-and-read',
+    'currency-remove',
+    'currency-transfer-between-actors',
+    'item-add-and-read',
+    'item-transfer-between-actors',
+    'pile-flag-detected',
+];
+recordDimension('itempiles-module.flow', covered['itempiles-module.flow'], ITEM_PILES_MODULE_FLOWS);
+
 // WH40KStarship document-layer methods exercised by
 // tests/e2e/starship-methods.spec.ts. vehicle-starship.spec.ts drives the
 // underlying DataModel (component embedding, morale, hull-and-shields);
