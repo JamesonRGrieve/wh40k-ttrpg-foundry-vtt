@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -345,8 +345,7 @@ test.describe.serial('combat full encounter (Tier B)', () => {
     // close, but a hung server would otherwise eat the global test timeout.
     test.setTimeout(180_000);
     test('plays an encounter end-to-end: tracker → initiative → strikes → wound depletion → death', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeFullEncounter(page);
 

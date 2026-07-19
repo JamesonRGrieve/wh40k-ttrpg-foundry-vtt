@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -593,8 +593,7 @@ async function probeDialogs(page: Page): Promise<{
 
 test.describe.serial('dialog & prompt render coverage (Tier B)', () => {
     test('every dialog & prompt class renders without throwing', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeDialogs(page);
         test.skip(!probe.created, `could not create dialog-probe actor: ${probe.createError ?? 'unknown'}`);

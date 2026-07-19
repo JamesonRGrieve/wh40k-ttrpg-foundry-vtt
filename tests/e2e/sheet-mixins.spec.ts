@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -491,8 +491,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('sheet mixins (Tier B)', () => {
     test('PrimarySheetMixin + Base*Sheet edit-mode / tab / drop / ProseMirror gating', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeSheetMixins(page);
         const failures: string[] = [];

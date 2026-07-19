@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -1032,8 +1032,7 @@ test.describe.serial('per-sheet actor action handlers (Tier B)', () => {
     // Per-call timeouts keep individual probes bounded; cap the full sweep at 4 minutes.
     test.setTimeout(240_000);
     test('character / npc / vehicle / starship / loot per-sheet actions dispatch and mutate documents', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeSheetActorActions(page);
 

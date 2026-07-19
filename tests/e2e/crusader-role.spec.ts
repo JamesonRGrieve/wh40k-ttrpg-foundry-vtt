@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -29,8 +29,7 @@ interface CrusaderProbeResult {
 }
 
 test('crusader-role smite-the-unholy decrements Fate and renders chat (#141)', async ({ page }) => {
-    const joined = await joinAsGM(page);
-    test.skip(!joined, 'no Gamemaster user available in this test world');
+    await joinOrSkip(page, 'no Gamemaster user available in this test world');
 
     const result = await page.evaluate(async (): Promise<CrusaderProbeResult> => {
         interface ActorSheet {

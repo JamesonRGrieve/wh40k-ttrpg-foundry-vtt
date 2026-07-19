@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -190,8 +190,7 @@ async function cleanupProbe(page: Page, sceneId: string | null, actorId: string 
 test.describe.serial('runtime token mask (Tier B)', () => {
     test.setTimeout(180_000);
     test('tokenFrame flag renders a circular bust from a rectangular portrait', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const pageErrors: string[] = [];
         const listener = (err: Error): void => {

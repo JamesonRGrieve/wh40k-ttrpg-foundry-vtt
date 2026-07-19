@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinAsGM, joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -119,8 +119,7 @@ test.describe.serial('compendium packs (Tier B)', () => {
 
     for (const prefix of PACK_PREFIXES) {
         test(`every '${prefix}-*' compendium pack materializes via getDocuments()`, async ({ page }) => {
-            const joined = await joinAsGM(page);
-            test.skip(!joined, 'GM join failed');
+            await joinOrSkip(page);
             const packIds = allPackIds.filter((id) => prefixOf(id) === prefix);
             test.skip(packIds.length === 0, `no '${prefix}-*' packs declared in manifest`);
             const results = await loadPackBatch(page, packIds);

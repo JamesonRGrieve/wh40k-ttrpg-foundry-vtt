@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -39,8 +39,7 @@ interface FakeCombat {
  */
 test.describe.serial('weapon target combatant dropdown (#250)', () => {
     test('renders a dropdown of the active combat roster', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const result = await page.evaluate(async (): Promise<ProbeResult> => {
             const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';

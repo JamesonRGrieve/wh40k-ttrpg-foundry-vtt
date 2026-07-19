@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -363,8 +363,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
 
 test.describe.serial('rolls / dice data classes (Tier B)', () => {
     test('every rolls/* + d100-roll surface returns without throwing', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeRollsData(page);
         assertFlowResults(probe, ROLL_DATA_FLOWS, { dimension: 'roll-data.flow', label: 'rolls-data' });

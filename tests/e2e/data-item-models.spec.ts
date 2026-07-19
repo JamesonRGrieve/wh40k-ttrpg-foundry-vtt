@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -1253,8 +1253,7 @@ test.describe.serial('item DataModel derived-data (Tier B)', () => {
     // Cap at 3 minutes — per-call timeouts mean we should never come close.
     test.setTimeout(180_000);
     test('item DataModels round-trip schema fields and compute derived getters', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeDataItemModelFlows(page);
 

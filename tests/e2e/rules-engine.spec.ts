@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -352,8 +352,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[]; pageErro
 
 test.describe.serial('rules engine pure-logic surface (Tier B)', () => {
     test('every rules/* pure-logic surface returns without throwing', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeRules(page);
         assertFlowResults(probe, RULE_FLOWS, { dimension: 'rule.flow', label: 'rules-engine' });

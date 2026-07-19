@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -1831,8 +1831,7 @@ test.describe.serial('applications/api + components depth coverage (Tier B)', ()
     // Cap at 3 minutes — per-call timeouts mean we should never come close.
     test.setTimeout(180_000);
     test('uncovered api/components modules + deeper branches into entry-level surfaces', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeAppApiDepthFlows(page);
 

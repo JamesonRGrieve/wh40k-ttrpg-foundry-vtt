@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -75,8 +75,7 @@ async function deleteActor(page: Page, id: string): Promise<void> {
 
 test.describe.serial('xp gain & advancement flows (Tier B)', () => {
     test('xp earned increments via actor.update on system.experience.total', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'xp-earned-probe');
@@ -112,8 +111,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
     });
 
     test('xp spent tracks via actor.update on system.experience.used', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'xp-spent-probe');
@@ -153,8 +151,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
     });
 
     test('xp remaining calculates total minus used via system.experience.available', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'xp-remaining-probe');
@@ -195,8 +192,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
     });
 
     test('AddXPDialog renders against a character actor', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'add-xp-prompt-probe');
@@ -259,8 +255,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
     });
 
     test('AdvancementDialog renders against a character actor', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'advancement-dialog-probe');
@@ -323,8 +318,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
     });
 
     test('purchasing a talent embeds the item and decrements available XP', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'purchase-talent-probe');
@@ -381,8 +375,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
     });
 
     test('purchasing a skill advance updates trained / plus10 derived flags', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createBCCharacter(page, 'purchase-skill-probe');

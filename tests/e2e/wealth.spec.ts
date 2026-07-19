@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -157,8 +157,7 @@ async function probeScalarField(
 
 test.describe.serial('wealth / currency mechanics (Tier B)', () => {
     test('dh2-character influence track persists updates', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createActor(page, 'dh2-influence-probe', 'dh2-character', 'dh2');
@@ -181,8 +180,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
     });
 
     test('dh1-character influence track persists updates', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createActor(page, 'dh1-influence-probe', 'dh1-character', 'dh1');
@@ -208,8 +206,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
     });
 
     test('dw-character requisition track persists updates', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createActor(page, 'dw-requisition-probe', 'dw-character', 'dw');
@@ -232,8 +229,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
     });
 
     test('ow-character requisition track persists updates', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createActor(page, 'ow-requisition-probe', 'ow-character', 'ow');
@@ -257,8 +253,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
     });
 
     test('bc-character throneGelt track persists updates', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         // NOTE on field selection: Black Crusade RAW does not use Thrones —
         // its in-fiction currency is also Thrones (the Imperium's coin) but
@@ -288,8 +283,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
     });
 
     test('rt-character profit factor spend decrements current', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createActor(page, 'rt-profit-factor-probe', 'rt-character', 'rt');
@@ -319,8 +313,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
     });
 
     test('acquisition-dialog renders and logs a successful acquisition', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         // RT actor so AcquisitionDialog can read system.rogueTrader.profitFactor.

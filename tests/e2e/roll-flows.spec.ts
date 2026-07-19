@@ -1,10 +1,9 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 test.describe('roll flows (Tier B)', () => {
     test('ChatMessage.create persists into game.messages (CLAUDE.md gotcha 3a)', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'no Gamemaster option appeared in the join select within 30s');
+        await joinOrSkip(page, 'no Gamemaster option appeared in the join select within 30s');
         const result = await page.evaluate(async () => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `ChatMessage`/`game` globals are injected by the licensed app; no shipped types
             const g = globalThis as unknown as {

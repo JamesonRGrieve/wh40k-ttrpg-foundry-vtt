@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -508,8 +508,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[];
 test.describe.serial('documents/vehicle (Tier B)', () => {
     test.setTimeout(180_000);
     test('every WH40KVehicle getter + rollItem branch is exercised', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeVehicleMethods(page);
         const seen = new Set<string>();

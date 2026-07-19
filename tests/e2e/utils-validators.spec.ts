@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -290,8 +290,7 @@ async function probeUtilsValidators(page: Page): Promise<{ results: FlowResult[]
 
 test.describe.serial('utils validators (Tier B)', () => {
     test('prerequisite-validator + roll-table-utils surface lights up under coverage', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeUtilsValidators(page);
         assertFlowResults(probe, UTILS_VALIDATORS_FLOWS, { dimension: 'utils-validators.flow', label: 'utils-validators' });

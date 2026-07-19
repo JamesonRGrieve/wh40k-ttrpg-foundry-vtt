@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -1126,8 +1126,7 @@ test.describe.serial('managers/* extra coverage (Tier B)', () => {
     // Cap at 4 minutes — per-call timeouts mean we should never come close.
     test.setTimeout(240_000);
     test('event-tracker / item-drop / inventory-generator manager flows', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeManagersExtraFlows(page);
 

@@ -2,7 +2,7 @@
 
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -1147,8 +1147,7 @@ test.describe.serial('item-sheet action handlers (Tier B)', () => {
     // Cap at 4 minutes — many independent embedded creates + sheet renders run serially.
     test.setTimeout(240_000);
     test('per-sheet DEFAULT_OPTIONS.actions handlers across 9 item-sheet files', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeItemSheetActionHandlers(page);
 

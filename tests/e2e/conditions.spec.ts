@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -149,8 +149,7 @@ async function probeStatusEffect(page: Page, actorId: string, effectId: string):
 
 test.describe.serial('conditions / status effects (Tier B)', () => {
     test('every CONFIG.statusEffects entry applies + removes on an actor', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const effectIds = await listStatusEffectIds(page);
         test.skip(effectIds.length === 0, 'no CONFIG.statusEffects discovered');

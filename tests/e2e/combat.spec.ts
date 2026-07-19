@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -648,8 +648,7 @@ test.describe.serial('combat lifecycle (Tier B)', () => {
     // 10-minute test timeout and take downstream specs with it.
     test.setTimeout(180_000);
     test('combat tracker drives full encounter lifecycle and renders combat UIs', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const flowProbe = await probeCombatLifecycle(page);
         const uiProbe = await probeCombatUI(page);

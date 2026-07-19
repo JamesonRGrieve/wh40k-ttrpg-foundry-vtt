@@ -1,5 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
-import { GAME_SYSTEM_IDS, joinAsGM } from './lib/join';
+import { GAME_SYSTEM_IDS, joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -70,8 +70,7 @@ interface ProbeResult {
 
 test.describe.serial('game-system config registry + helpers (Tier B)', () => {
     test('SystemConfigRegistry dispatch, themeClassFor, and per-system config getters', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const pageErrors: string[] = [];
         const listener = (err: Error): void => {

@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -340,8 +340,7 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
 
 test.describe.serial('macro-manager (Tier B)', () => {
     test('every macro-manager flow creates / dispatches without throwing', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeMacros(page);
         assertFlowResults(probe, MACRO_FLOWS, { dimension: 'macro.flow', label: 'macro-manager' });

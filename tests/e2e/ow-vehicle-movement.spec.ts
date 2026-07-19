@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -76,8 +76,7 @@ async function deleteActor(page: Page, actorId: string): Promise<void> {
 
 test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
     test('renders the panel, drives owVehicleAction, asserts chase readout, snaps', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const created = await createOwActor(page);
         if ('error' in created) {

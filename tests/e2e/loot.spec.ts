@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -253,8 +253,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[]; pageError
 
 test.describe.serial('loot drop/pickup (Tier B)', () => {
     test('loot pile actor, DataModel, manager, sheet, and pickup transfer', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeLoot(page);
         assertFlowResults(probe, LOOT_FLOWS, { dimension: 'loot.flow', label: 'loot' });

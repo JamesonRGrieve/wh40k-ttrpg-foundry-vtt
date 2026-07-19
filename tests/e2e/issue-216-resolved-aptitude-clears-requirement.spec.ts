@@ -1,5 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -118,8 +118,7 @@ interface Issue216Globals {
 
 test.describe.serial('Issue #216 — resolved duplicate aptitude no longer renders as requirement (Tier B)', () => {
     test('warning banner is absent post-select; resolved-banner is present and snaps', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const pageErrors: string[] = [];
         const listener = (err: Error): void => {

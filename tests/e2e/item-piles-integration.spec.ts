@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -290,8 +290,7 @@ async function probeItemPiles(page: Page): Promise<{ results: FlowResult[]; page
 
 test.describe.serial('Item Piles integration (Tier B)', () => {
     test('currency registry + wallet paths + pickup preservation against real Documents', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeItemPiles(page);
         assertFlowResults(probe, ITEM_PILES_FLOWS, { dimension: 'itempiles.flow', label: 'Item Piles' });

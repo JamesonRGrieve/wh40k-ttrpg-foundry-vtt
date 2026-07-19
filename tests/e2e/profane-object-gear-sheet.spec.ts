@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -164,8 +164,7 @@ async function cleanupProfaneObjectProbe(page: Page): Promise<void> {
 
 test.describe.serial('profane object gear sheet', () => {
     test('renders the profane object badge + aura + hook (#96)', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeProfaneObjectSheet(page);
         test.skip(!probe.created, `could not create gear item: ${probe.createError ?? 'unknown'}`);

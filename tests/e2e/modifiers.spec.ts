@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -408,8 +408,7 @@ async function probeConditionMagnitude(page: Page, actorId: string): Promise<Flo
 
 test.describe.serial('modifiers / equipment-effect pipeline (Tier B)', () => {
     test('every supported modifier flow lands on actor derived data', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const parent = await createParentActor(page);
         expect('id' in parent, `parent actor create failed: ${'error' in parent ? parent.error : 'unknown'}`).toBe(true);

@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -141,8 +141,7 @@ async function probeItemRoll(page: Page, outerActorId: string, spec: ItemRollSpe
 
 test.describe.serial('item roll methods (Tier B)', () => {
     test('every public item roll method posts a chat message', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         // Create parent actor (dh2-character has characteristics).
         const actorId = await page.evaluate(async () => {

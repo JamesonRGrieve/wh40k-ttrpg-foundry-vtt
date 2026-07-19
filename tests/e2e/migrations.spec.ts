@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -133,8 +133,7 @@ async function deleteWorldActor(page: Page, id: string): Promise<void> {
 // if one fails.
 test.describe('migrations + compendium resync (Tier B)', () => {
     test('talent prerequisites string migrates to structured object', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
@@ -190,8 +189,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
     });
 
     test('ActiveEffect label is remapped to name on create', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
@@ -255,8 +253,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
     });
 
     test('system version migration baseline is set on ready', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const result = await page.evaluate(() => {
@@ -292,8 +289,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
     });
 
     test('compendium hydration has fired (resync-on-ready setting + GM ready hook)', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
@@ -354,8 +350,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
     });
 
     test('ActiveEffect icon is remapped to img on create', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
@@ -407,8 +402,7 @@ test.describe('migrations + compendium resync (Tier B)', () => {
     });
 
     test('compendium item materializes without migration error', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const result = await page.evaluate(async () => {

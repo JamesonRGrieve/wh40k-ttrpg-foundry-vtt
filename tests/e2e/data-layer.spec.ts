@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -373,8 +373,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
 
 test.describe.serial('data-layer (Tier B)', () => {
     test('mapping-field + advancements + grant DataModels exercised under coverage', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeDataLayer(page);
         assertFlowResults(probe, DATA_LAYER_FLOWS, { dimension: 'data-layer.flow', label: 'data-layer' });

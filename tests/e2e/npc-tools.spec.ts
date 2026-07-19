@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -847,8 +847,7 @@ async function probePreset(page: Page): Promise<FlowResult> {
 
 test.describe.serial('npc tooling pipeline (Tier B)', () => {
     test('parser, exporter, threat scaler, difficulty, encounter builder, presets', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         await ensurePresetSetting(page);
 

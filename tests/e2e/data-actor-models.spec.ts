@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -802,8 +802,7 @@ test.describe.serial('actor DataModel derived-data pipeline (Tier B)', () => {
     // Cap at 3 minutes — per-call timeouts mean we should never come close.
     test.setTimeout(180_000);
     test('creature/character schema round-trips and derived data computes across game systems', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeActorModelFlows(page);
 

@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -126,8 +126,7 @@ async function probeCanvasRuler(page: Page): Promise<{ results: FlowResult[]; pa
 
 test.describe.serial('canvas/ruler (Tier B)', () => {
     test('TokenRulerWH40K module imports and extends Foundry TokenRuler', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeCanvasRuler(page);
         assertFlowResults(probe, CANVAS_FLOWS, { dimension: 'canvas.flow', label: 'canvas-ruler' });

@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { test } from './test';
 
 /**
  * Base TCP port for the e2e Foundry servers. Worker N talks to its own
@@ -100,6 +101,17 @@ export async function joinAsGM(page: Page): Promise<boolean> {
         }
     });
     return true;
+}
+
+/**
+ * Join the seed world as the Gamemaster, or skip the current test when the join
+ * did not succeed (the transient join race documented on {@link joinAsGM}). This
+ * collapses the `const joined = await joinAsGM(page); test.skip(!joined, …)`
+ * pair that opened nearly every Tier B test into one call.
+ */
+export async function joinOrSkip(page: Page, reason = 'GM join failed'): Promise<void> {
+    const joined = await joinAsGM(page);
+    test.skip(!joined, reason);
 }
 
 /**

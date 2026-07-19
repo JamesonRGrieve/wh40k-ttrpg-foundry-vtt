@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -109,8 +109,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
         // NOTE: BC Infamy track is not a schema field on CharacterBaseData;
         // chaosAlignment is the signature BC mechanic that IS present. If
         // `infamy` is added to the actor schema later, add a sibling probe.
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createActor(page, 'bc-infamy-probe', 'bc-character', 'bc');
@@ -154,8 +153,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
     });
 
     test('dh1-character corruption + insanity tracks persist updates', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createActor(page, 'dh1-corruption-insanity-probe', 'dh1-character', 'dh1');
@@ -194,8 +192,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
         // NOTE: DW Renown is not a schema field on CharacterBaseData;
         // originPath.chapter is the signature DW mechanic that IS present.
         // If `renown` is added to the actor schema later, add a sibling probe.
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createActor(page, 'dw-renown-chapter-probe', 'dw-character', 'dw');
@@ -239,8 +236,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
         // CharacterBaseData; originPath.regiment is the signature OW mechanic
         // that IS present. If a `comrades` field is added later, add a
         // sibling probe.
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createActor(page, 'ow-comrades-regiment-probe', 'ow-character', 'ow');
@@ -287,8 +283,7 @@ test.describe.serial('per-system flows (Tier B)', () => {
         // endeavour is the closest dynasty-shaped surface (a named campaign
         // arc with achievement progress and reward) and is exercised
         // alongside profitFactor.
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const failures: string[] = [];
         const created = await createActor(page, 'rt-profit-dynasty-probe', 'rt-character', 'rt');

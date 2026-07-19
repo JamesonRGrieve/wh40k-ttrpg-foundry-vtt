@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -460,8 +460,7 @@ async function probeSpecialAbility(page: Page, actorId: string): Promise<FlowRes
 
 test.describe.serial('grants-manager (Tier B)', () => {
     test('every manager flow lands the expected state mutation', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         // Single fixture actor reused across the grants flows.
         const grantsParent = await createCharacterActor(page, 'probe-managers-grants-parent');

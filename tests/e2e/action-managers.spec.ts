@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -706,8 +706,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('action manager flows (Tier B)', () => {
     test('basic / combat / targeted / reload managers respond to dispatch + hook fires', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'no Gamemaster option appeared in the join select within 30s');
+        await joinOrSkip(page, 'no Gamemaster option appeared in the join select within 30s');
 
         const probe = await probeActionManagers(page);
 

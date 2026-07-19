@@ -1,5 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -17,8 +17,7 @@ import { expect, test } from './lib/test';
  */
 test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
     test('renders one row per equipped weapon/armour with engine-derived effect annotations', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const pageErrors: string[] = [];
         const listener = (pageErr: Error): void => {

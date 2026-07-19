@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -20,8 +20,7 @@ import { expect, test } from './lib/test';
  * Snap is taken WITH THE SHEET OPEN — cleanup runs after the snap.
  */
 test('ship-component-modifiers apply to derived ship stats (#196)', async ({ page }) => {
-    const joined = await joinAsGM(page);
-    test.skip(!joined, 'no Gamemaster user available in this test world');
+    await joinOrSkip(page, 'no Gamemaster user available in this test world');
 
     const result = await page.evaluate(async () => {
         interface AppliedTotal {

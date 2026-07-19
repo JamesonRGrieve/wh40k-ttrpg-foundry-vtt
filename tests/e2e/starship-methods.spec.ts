@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -454,8 +454,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
 test.describe.serial('documents/starship method coverage (Tier B)', () => {
     test.setTimeout(180_000);
     test('every WH40KStarship getter and method executes against an rt-starship', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeStarshipMethods(page);
         const seen = new Set<string>();

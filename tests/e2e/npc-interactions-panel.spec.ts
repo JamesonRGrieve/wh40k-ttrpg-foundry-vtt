@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -13,8 +13,7 @@ import { expect, test } from './lib/test';
  * lives, assert the panel renders, then snap it.
  */
 test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) => {
-    const joined = await joinAsGM(page);
-    test.skip(!joined, 'no Gamemaster user available in this test world');
+    await joinOrSkip(page, 'no Gamemaster user available in this test world');
 
     const result = await page.evaluate(async (): Promise<{ setupOk: boolean; panelPresent: boolean; rowCount: number; error: string | null }> => {
         interface SheetShape {

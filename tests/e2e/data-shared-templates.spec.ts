@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -1010,8 +1010,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
 
 test.describe.serial('data/shared/* template depth coverage (Tier B)', () => {
     test('every shared template mixin and helper exposes its schema and derived surface without throwing', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeSharedTemplates(page);
         assertFlowResults(probe, DATA_SHARED_FLOWS, { dimension: 'data-shared.flow', label: 'data/shared template' });

@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -10,8 +10,7 @@ import { expect, test } from './lib/test';
 
 test.describe('DaemonWeaponAttributeDialog (#142)', () => {
     test('renders, rolls Attributes, and exposes a Post action', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'no Gamemaster option appeared in the join select within 30s');
+        await joinOrSkip(page, 'no Gamemaster option appeared in the join select within 30s');
 
         const probe = await page.evaluate(async (): Promise<{ rendered: boolean; hasSelects: boolean; hasResult: boolean; error: string | null }> => {
             interface DialogInstance {

@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -280,8 +280,7 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
 
 test.describe.serial('sheet interactions (Tier B)', () => {
     test('character sheet: tabs switch, actions invoke, form submits', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeCharacterSheet(page);
         test.skip(!probe.created, `could not create dh2-character actor: ${probe.createError ?? 'unknown'}`);

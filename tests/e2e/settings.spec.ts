@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -338,8 +338,7 @@ async function probeAccessor(page: Page, name: (typeof SETTING_ACCESSORS)[number
 
 test.describe.serial('settings toggles (Tier B)', () => {
     test('every registered wh40k-rpg.* setting toggles or reads cleanly', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const keys = await listSettingKeys(page);
         test.skip(keys.length === 0, 'no wh40k-rpg.* settings discovered');

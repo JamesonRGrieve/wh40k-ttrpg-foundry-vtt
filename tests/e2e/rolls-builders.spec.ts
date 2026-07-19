@@ -2,7 +2,7 @@
 
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -692,8 +692,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[]; 
 
 test.describe.serial('rolls / dice pure builders (Tier B)', () => {
     test('every rolls/* + basic-roll pure builder surface returns the expected shape', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeRollsBuilders(page);
         assertFlowResults(probe, ROLLS_BUILDER_FLOWS, { dimension: 'rolls-builder.flow', label: 'rolls-builder' });

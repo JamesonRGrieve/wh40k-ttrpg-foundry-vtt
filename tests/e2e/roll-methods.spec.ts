@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { GAME_SYSTEM_IDS, joinAsGM } from './lib/join';
+import { GAME_SYSTEM_IDS, joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -290,8 +290,7 @@ test.describe.serial('actor roll methods × systems (Tier B)', () => {
     for (const gameSystem of GAME_SYSTEM_IDS) {
         test(`every Actor roll method dispatches in gameSystem='${gameSystem}'`, async ({ page }) => {
             test.skip(gameSystem === 'im', 'im-character actor creation is currently broken (see actor-types spec)');
-            const joined = await joinAsGM(page);
-            test.skip(!joined, 'GM join failed');
+            await joinOrSkip(page);
 
             const probe = await probeRollMethods(page, gameSystem);
             test.skip(!probe.created, `could not create ${SYSTEM_PREFIX[gameSystem]}-character actor: ${probe.createError ?? 'unknown'}`);

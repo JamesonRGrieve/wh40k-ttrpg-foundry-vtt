@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -476,8 +476,7 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[];
 
 test.describe.serial('data/abstract + data/fields (Tier B)', () => {
     test('SystemDataModel / ItemDataModel / ActorDataModel + Formula/Identifier fields drive their static hooks under coverage', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeAbstractFields(page);
         assertFlowResults(probe, DATA_ABSTRACT_FIELDS_FLOWS, { dimension: 'data-abstract-fields.flow', label: 'data-abstract-fields' });

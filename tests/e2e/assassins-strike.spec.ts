@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -22,8 +22,7 @@ import { expect, test } from './lib/test';
 
 test.describe.serial("assassin's strike chat card (#149)", () => {
     test('renders the post-attack button when the talent is present', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const errors: string[] = [];
         page.on('pageerror', (err: Error) => errors.push(err.message));

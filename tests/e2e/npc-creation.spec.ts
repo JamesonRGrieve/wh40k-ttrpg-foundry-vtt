@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -156,8 +156,7 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[]; page
 
 test.describe.serial('npc creation dialogs (Tier B)', () => {
     test('every npc-creation dialog renders without throwing', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeNPCCreate(page);
         assertFlowResults(probe, NPC_CREATE_FLOWS, { dimension: 'npc-create.flow', label: 'npc-create' });

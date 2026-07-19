@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -137,8 +137,7 @@ async function cleanupLeadProbe(page: Page): Promise<void> {
 
 test.describe.serial('lead item sheet', () => {
     test('creates a lead item and renders its sheet', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeLeadSheet(page);
         test.skip(!probe.created, `could not create lead item: ${probe.createError ?? 'unknown'}`);

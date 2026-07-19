@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -559,8 +559,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
 
 test.describe.serial('calculators + utilities (Tier B)', () => {
     test('every calculator/utility flow exercises its module via dynamic import', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const created = await createProbeActor(page);
         expect(created.id, `probe actor create failed: ${created.error ?? 'unknown'}`).not.toBeNull();

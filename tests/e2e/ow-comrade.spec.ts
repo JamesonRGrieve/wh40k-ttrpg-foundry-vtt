@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -90,8 +90,7 @@ async function deleteActor(page: Page, actorId: string): Promise<void> {
 
 test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
     test('renders the panel, drives owComradeWound, asserts the track advances, snaps', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const created = await createOwActor(page);
         if ('error' in created) {

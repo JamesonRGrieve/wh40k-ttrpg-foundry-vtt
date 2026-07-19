@@ -1,5 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -54,8 +54,7 @@ interface ProbeResult {
 
 test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
     test('formatter, lookup-table, skill-key, craftsmanship, and icon helpers behave correctly', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const pageErrors: string[] = [];
         const listener = (err: Error): void => {

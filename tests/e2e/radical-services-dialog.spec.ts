@@ -1,4 +1,4 @@
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -10,8 +10,7 @@ import { expect, test } from './lib/test';
  */
 test.describe.serial('Radical Services dialog (#89)', () => {
     test('renders the 9 services and action buttons', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const result = await page.evaluate(async () => {
             interface ActorInstance {

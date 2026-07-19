@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
@@ -448,8 +448,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
 test.describe.serial('scene controls + Token HUD (Tier B)', () => {
     test.setTimeout(120_000);
     test('system-registered scene controls + Token HUD overlay exercise hook handlers', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeSceneHudFlows(page);
 

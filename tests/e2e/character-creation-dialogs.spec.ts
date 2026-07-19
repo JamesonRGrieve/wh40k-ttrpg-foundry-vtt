@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
-import { joinAsGM } from './lib/join';
+import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
@@ -213,8 +213,7 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
 
 test.describe.serial('character-creation dialogs (Tier B)', () => {
     test('every character-creation dialog renders against a seeded actor', async ({ page }) => {
-        const joined = await joinAsGM(page);
-        test.skip(!joined, 'GM join failed');
+        await joinOrSkip(page);
 
         const probe = await probeChargenDialogs(page);
         assertFlowResults(probe, CHARGEN_FLOWS, { dimension: 'chargen.flow', label: 'chargen-dialog' });
