@@ -40,13 +40,78 @@ type FateCondition = {
 };
 
 /**
+ * A synchronous source of a single die result in `[1, faces]`. Injectable so the
+ * pure formula evaluators are deterministic under test and never depend on
+ * Foundry's asynchronous `Roll`.
+ *
+ * Foundry's `Roll#evaluateSync` CANNOT roll a non-deterministic die
+ * synchronously: with `strict: true` (the default) it throws
+ * "This Roll contains terms that cannot be synchronously evaluated", and with
+ * `strict: false` it silently rolls nothing and yields a total of 0
+ * (see `DiceTerm#_evaluateSync` — the non-deterministic branch just `continue`s).
+ * Either way a `1d10`/`1d5` origin-path formula produced 0 instead of a roll, so
+ * these evaluators own their dice via this seam instead.
+ */
+export type DieRoller = (faces: number) => number;
+
+/** Default die roller: a uniform draw over `[1, faces]`. */
+const defaultDieRoller: DieRoller = (faces) => Math.floor(Math.random() * faces) + 1;
+
+/**
+ * Evaluate a simple additive dice expression — a sum of signed integer and
+ * `NdM` terms (e.g. `"8+1d5+2"`, `"4+3"`, `"3xTB"` after substitution). Rolls
+ * each die term through the injected {@link DieRoller}. Throws on any segment
+ * that is not a run of `[+-]?(\d*d\d+|\d+)` terms, so a malformed formula is
+ * caught by the caller's try/catch rather than silently mis-summed.
+ */
+function evaluateDiceExpression(expression: string, rollDie: DieRoller): number {
+    const cleaned = expression.replace(/\s+/g, '');
+    if (cleaned === '') throw new Error('empty dice expression');
+
+    // Give the leading term an explicit sign so a single term regex covers all.
+    const normalized = cleaned.startsWith('+') || cleaned.startsWith('-') ? cleaned : `+${cleaned}`;
+    const termRegex = /([+-])(\d*d\d+|\d+)/gi;
+
+    let total = 0;
+    let cursor = 0;
+    let match: RegExpExecArray | null = termRegex.exec(normalized);
+    while (match !== null) {
+        // Terms must be contiguous — a gap means an unparseable segment.
+        if (match.index !== cursor) throw new Error(`Unparseable segment in "${expression}"`);
+        cursor = termRegex.lastIndex;
+
+        const sign = match[1] === '-' ? -1 : 1;
+        // `String(...)` yields a definite string under `noUncheckedIndexedAccess`
+        // (tsconfig.strict.json), and `Number(...)` accepts `any` so no per-group
+        // undefined guard is needed — the term regex already guaranteed the match.
+        const body = String(match[2]);
+        const dice = /^(\d*)d(\d+)$/i.exec(body);
+        if (dice) {
+            const countStr = dice[1];
+            const count = countStr === '' ? 1 : Number(countStr);
+            const faces = Number(dice[2]);
+            let sum = 0;
+            for (let i = 0; i < count; i++) sum += rollDie(faces);
+            total += sign * sum;
+        } else {
+            total += sign * Number(body);
+        }
+        match = termRegex.exec(normalized);
+    }
+
+    if (cursor !== normalized.length) throw new Error(`Trailing garbage in "${expression}"`);
+    return total;
+}
+
+/**
  * Evaluate a wounds formula with characteristic bonus references.
  *
  * @param {string} formula - The wounds formula (e.g., "2xTB+1d5+2")
  * @param {Actor} actor - The actor to evaluate for (provides characteristic bonuses)
+ * @param {DieRoller} rollDie - Injectable die source (defaults to a uniform roll)
  * @returns {number} Evaluated wounds value
  */
-export function evaluateWoundsFormula(formula: string, actor: WoundsActorView): number {
+export function evaluateWoundsFormula(formula: string, actor: WoundsActorView, rollDie: DieRoller = defaultDieRoller): number {
     if (!formula || typeof formula !== 'string') {
         return 0;
     }
@@ -88,9 +153,9 @@ export function evaluateWoundsFormula(formula: string, actor: WoundsActorView): 
             });
         }
 
-        // Now evaluate dice notation using Foundry's Roll class
-        const roll = new Roll(evaluated).evaluateSync();
-        const total = typeof roll.total === 'number' ? roll.total : 0;
+        // Evaluate the substituted dice notation via the injectable seam (see
+        // DieRoller — Foundry's Roll#evaluateSync cannot roll a die synchronously).
+        const total = evaluateDiceExpression(evaluated, rollDie);
         return Math.max(0, Math.floor(total));
     } catch (err) {
         console.error(`Failed to evaluate wounds formula "${trimmedFormula}":`, err);
@@ -102,9 +167,10 @@ export function evaluateWoundsFormula(formula: string, actor: WoundsActorView): 
  * Evaluate a fate formula with conditional ranges.
  *
  * @param {string} formula - The fate formula (e.g., "(1-5|=2),(6-10|=3)")
+ * @param {DieRoller} rollDie - Injectable die source (defaults to a uniform roll)
  * @returns {number} Evaluated fate threshold value
  */
-export function evaluateFateFormula(formula: string): number {
+export function evaluateFateFormula(formula: string, rollDie: DieRoller = defaultDieRoller): number {
     if (!formula || typeof formula !== 'string') {
         return 0;
     }
@@ -138,9 +204,9 @@ export function evaluateFateFormula(formula: string): number {
             return 0;
         }
 
-        // Roll 1d10 to determine which condition applies
-        const roll = new Roll('1d10').evaluateSync();
-        const result = typeof roll.total === 'number' ? roll.total : 0;
+        // Roll 1d10 to determine which condition applies (via the injectable
+        // seam — Foundry's Roll#evaluateSync cannot roll a die synchronously).
+        const result = rollDie(10);
 
         // Find matching condition
         for (const condition of conditions) {

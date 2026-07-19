@@ -40,14 +40,8 @@ const IGNORED_PATTERNS: readonly RegExp[] = [
     // migration specs; not a runtime defect in the code under test.
     /\bvalidation errors\b/i,
 
-    // ── Baselined pre-existing defects (fix → remove the entry) ─────────────
-    // BUG: src/module/utils/formula-evaluator.ts evaluateFateFormula() rolls
-    //      `new Roll('1d10').evaluateSync()`, but a Die is non-deterministic and
-    //      evaluateSync defaults to strict, so V14 throws "cannot be synchronously
-    //      evaluated" — every origin-path fate formula silently returns 0. Needs a
-    //      sync-random-die seam (or async eval). Surfaced by the global guard;
-    //      remove this entry when formula-evaluator is fixed + unit-tested for it.
-    /Failed to evaluate fate formula/i,
+    // (No baselined defects. The formula-evaluator V14 sync-die throw that lived
+    // here was fixed — see src/module/utils/formula-evaluator.ts DieRoller seam.)
 ];
 
 /** Whether a captured error message is known-benign framework noise or a baselined defect. */
