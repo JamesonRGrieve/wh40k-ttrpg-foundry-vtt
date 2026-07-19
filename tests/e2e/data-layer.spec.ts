@@ -103,6 +103,14 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[] }> {
             getRankAdvancements: (key: string, rank?: number) => object[] | null;
             getNextCharacteristicCost: (key: string, characteristic: string, current: number) => { cost: number } | null;
         }
+        // The career tables load from the rt-core-origins-careers compendium into
+        // a boot cache built at `ready` (Direction #7). To make this probe
+        // independent of ready-hook timing in the ephemeral seed world, rebuild
+        // the (idempotent) index explicitly before reading it.
+        interface CareerCacheModule {
+            buildCareerAdvancementIndex: () => Promise<void>;
+            isCareerAdvancementIndexReady: () => boolean;
+        }
         interface ActorInstance {
             delete: () => Promise<void>;
         }
@@ -175,11 +183,27 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[] }> {
         }
 
         // ---------- config/advancements ----------
+        // Ensure the career-advancement index is built from the compendium before
+        // probing (idempotent; decouples the probe from ready-hook ordering, which
+        // can leave the cache empty in the seed world). Best-effort — a failure
+        // surfaces below via getAvailableCareers recording the empty registry.
+        async function ensureCareerIndexBuilt(): Promise<void> {
+            try {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic runtime import() of a built .js module in the browser realm; no shipped types
+                const cacheMod: unknown = await import(`${base}/config/advancements/career-advancement-cache.js`);
+                await (cacheMod as CareerCacheModule).buildCareerAdvancementIndex();
+            } catch {
+                /* fall through */
+            }
+        }
+
         async function probeAdvancements(): Promise<void> {
             try {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic runtime import() of a built .js module in the browser realm; no shipped types
                 const advMod: unknown = await import(`${base}/config/advancements/index.js`);
                 const mod = advMod as AdvancementsModule;
+
+                await ensureCareerIndexBuilt();
 
                 try {
                     const careers = mod.getAvailableCareers();
