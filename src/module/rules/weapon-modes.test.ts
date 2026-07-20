@@ -3,15 +3,32 @@ import {
     activeFiringMode,
     applyModeQualities,
     hasFiringModes,
+    modeAttackType,
+    modeCharacteristic,
     modeDamageBonus,
     modeDamageFormula,
     modePenetration,
     modeRange,
+    modeRateOfFire,
+    modeWeaponClass,
     type WeaponFiringMode,
 } from './weapon-modes';
 
 function mode(over: Partial<WeaponFiringMode> = {}): WeaponFiringMode {
-    return { label: 'X', damage: '', damageBonus: null, penetration: null, range: null, addedQualities: [], removedQualities: [], ...over };
+    return {
+        label: 'X',
+        damage: '',
+        damageBonus: null,
+        penetration: null,
+        range: null,
+        addedQualities: [],
+        removedQualities: [],
+        weaponClass: '',
+        attackType: '',
+        characteristic: '',
+        rateOfFire: null,
+        ...over,
+    };
 }
 
 describe('weapon firing modes (#430)', () => {
@@ -94,5 +111,52 @@ describe('weapon firing modes (#430)', () => {
         expect([...applyModeQualities(baseQ, focused)]).toEqual(['overheats']);
         expect(modeRange(broad, 0)).toBe(10);
         expect([...applyModeQualities(baseQ, broad)]).toEqual(['scatter']);
+    });
+
+    describe('melee↔ranged mode overrides (#430 extension)', () => {
+        it('modeWeaponClass overrides the class, inheriting on "" or null mode', () => {
+            expect(modeWeaponClass(mode({ weaponClass: 'melee' }), 'basic')).toBe('melee');
+            expect(modeWeaponClass(mode({ weaponClass: '' }), 'basic')).toBe('basic'); // inherit
+            expect(modeWeaponClass(null, 'basic')).toBe('basic');
+        });
+
+        it('modeAttackType / modeCharacteristic override, inheriting on ""', () => {
+            expect(modeAttackType(mode({ attackType: 'melee' }), 'ranged')).toBe('melee');
+            expect(modeAttackType(mode({ attackType: '' }), 'ranged')).toBe('ranged');
+            expect(modeCharacteristic(mode({ characteristic: 'weaponSkill' }), 'ballisticSkill')).toBe('weaponSkill');
+            expect(modeCharacteristic(mode({ characteristic: '' }), 'ballisticSkill')).toBe('ballisticSkill');
+        });
+
+        it('modeRateOfFire overrides, inheriting on null', () => {
+            const base = { single: true, semi: 3, full: 6 };
+            expect(modeRateOfFire(mode({ rateOfFire: { single: false, semi: 0, full: 0 } }), base)).toEqual({ single: false, semi: 0, full: 0 });
+            expect(modeRateOfFire(mode({ rateOfFire: null }), base)).toBe(base); // inherit
+            expect(modeRateOfFire(null, base)).toBe(base);
+        });
+
+        it('models a dual-natured weapon (Burna): a melee mode and a ranged mode', () => {
+            // Ranged mode is the base (BS, class basic, RoF single); melee mode
+            // switches to WS/class melee/no RoF and a power-field cutting profile.
+            const modes = [
+                mode({ label: 'Ranged' }), // inherits the base ranged profile
+                mode({
+                    label: 'Melee',
+                    weaponClass: 'melee',
+                    attackType: 'melee',
+                    characteristic: 'weaponSkill',
+                    rateOfFire: { single: false, semi: 0, full: 0 },
+                    damage: '1d10',
+                    damageBonus: 5,
+                    penetration: 5,
+                }),
+            ];
+            const ranged = activeFiringMode(modes, 0);
+            const melee = activeFiringMode(modes, 1);
+            expect(modeWeaponClass(ranged, 'basic')).toBe('basic');
+            expect(modeWeaponClass(melee, 'basic')).toBe('melee');
+            expect(modeCharacteristic(melee, 'ballisticSkill')).toBe('weaponSkill');
+            expect(modeDamageFormula(melee, '1d10')).toBe('1d10');
+            expect(modePenetration(melee, 2)).toBe(5);
+        });
     });
 });

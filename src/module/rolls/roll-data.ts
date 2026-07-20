@@ -548,8 +548,11 @@ export class WeaponRollData extends RollData {
         const sourceActor = this.sourceActor;
         if (!sourceActor) return;
 
-        const weaponSystem = this.weapon.system as { isRanged?: boolean };
-        if (weaponSystem.isRanged === true) {
+        // `weapon.isRanged` is the document getter (mode-aware via effectiveClass);
+        // the old `weapon.system.isRanged` read a field the DataModel never exposes,
+        // so it always fell through to WS. A dual weapon's active mode now picks the
+        // right characteristic (BS in a ranged mode, WS in a melee mode).
+        if (this.weapon.isRanged) {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
             this.baseTarget = sourceActor.characteristics['ballisticSkill']?.total ?? 0;
             this.baseChar = 'BS';

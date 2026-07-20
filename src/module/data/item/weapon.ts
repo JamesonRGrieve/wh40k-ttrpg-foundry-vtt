@@ -7,10 +7,14 @@ import {
     activeFiringMode,
     applyModeQualities,
     hasFiringModes,
+    modeAttackType,
+    modeCharacteristic,
     modeDamageBonus,
     modeDamageFormula,
     modePenetration,
     modeRange,
+    modeRateOfFire,
+    modeWeaponClass,
     type WeaponFiringMode,
 } from '../../rules/weapon-modes.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
@@ -283,6 +287,21 @@ export default class WeaponData extends ItemDataModel.mixin(
                     range: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
                     addedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
                     removedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
+                    // Melee↔ranged switch: a mode may override the weapon's class /
+                    // attack type / characteristic / rate-of-fire so one dual-natured
+                    // weapon (Burna, Necron Staff of Light) carries a melee and a
+                    // ranged profile. Empty '' / null inherit the base attack.
+                    weaponClass: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    attackType: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    characteristic: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    rateOfFire: new fields.SchemaField(
+                        {
+                            single: new fields.BooleanField({ required: true, initial: false }),
+                            semi: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                            full: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                        },
+                        { required: false, nullable: true, initial: null },
+                    ),
                 }),
                 { required: false, initial: [] },
             ),
@@ -548,20 +567,54 @@ export default class WeaponData extends ItemDataModel.mixin(
     }
 
     /**
-     * Is this a ranged weapon?
+     * The weapon's class for the active firing mode (#430). A dual-natured weapon
+     * (Burna, Necron Staff of Light) carries a `melee` mode and a `basic`/`heavy`
+     * mode; this returns the active mode's `weaponClass` override, else the base
+     * `class`. Every melee↔ranged decision routes through this so a mode toggle
+     * flips `isMeleeWeapon`/`isRangedWeapon` (and the WS↔BS characteristic).
+     */
+    get effectiveClass(): string {
+        return modeWeaponClass(this.activeFiringModeProfile, this.class);
+    }
+
+    /** The active firing mode's attack type ('melee'|'ranged'), else the base attack type. */
+    get effectiveAttackType(): string {
+        return modeAttackType(this.activeFiringModeProfile, this.attack.type);
+    }
+
+    /** The active firing mode's test characteristic, else the base attack characteristic. */
+    get effectiveCharacteristic(): string {
+        return modeCharacteristic(this.activeFiringModeProfile, this.attack.characteristic);
+    }
+
+    /** The active firing mode's rate of fire, else the base attack rate of fire. */
+    get effectiveRateOfFire(): { single: boolean; semi: number; full: number } {
+        return modeRateOfFire(this.activeFiringModeProfile, this.attack.rateOfFire);
+    }
+
+    /**
+     * Is this a ranged weapon? When a firing mode overrides the class (a dual
+     * weapon's ranged mode), that wins; otherwise the base class decides (behaviour
+     * unchanged for weapons without modes).
      * @type {boolean}
      */
     get isRangedWeapon(): boolean {
         // `launcher` is a weapon *type*, not a class — grenade/missile launchers are
         // class basic/heavy (already covered). The old 'launcher' class-check was dead.
+        const mode = this.activeFiringModeProfile;
+        if (mode !== null && mode.weaponClass !== '') return ['pistol', 'basic', 'heavy'].includes(mode.weaponClass);
         return ['pistol', 'basic', 'heavy'].includes(this.class);
     }
 
     /**
-     * Is this a melee weapon?
+     * Is this a melee weapon? A firing mode's class override wins (a dual weapon's
+     * melee mode); otherwise the base class / legacy `melee` flag decides (behaviour
+     * unchanged for weapons without modes).
      * @type {boolean}
      */
     get isMeleeWeapon(): boolean {
+        const mode = this.activeFiringModeProfile;
+        if (mode !== null && mode.weaponClass !== '') return mode.weaponClass === 'melee';
         return this.class === 'melee' || this.melee;
     }
 
@@ -858,7 +911,7 @@ export default class WeaponData extends ItemDataModel.mixin(
         if (!this.isRangedWeapon) return [];
 
         const modes: Array<{ mode: string; label: string; rof: number; modifier: number; description: string; actionType: string }> = [];
-        const rof = this.attack.rateOfFire;
+        const rof = this.effectiveRateOfFire;
         const hasStorm = this.effectiveSpecial.has('storm');
 
         // Single Shot - always available for ranged weapons
@@ -908,7 +961,7 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @returns {number} - Effective rate of fire
      */
     getEffectiveRoF(mode: string): number {
-        const rof = this.attack.rateOfFire;
+        const rof = this.effectiveRateOfFire;
         const hasStorm = this.effectiveSpecial.has('storm');
 
         if (mode === 'semi') return hasStorm ? rof.semi * 2 : rof.semi;
