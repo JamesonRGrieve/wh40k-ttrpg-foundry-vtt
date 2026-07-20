@@ -7,30 +7,18 @@ import type { WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KItemDocument } from '../types/global.d.ts';
 import { consumeRounds, type MagazineSegment, refundRounds } from './magazine.ts';
 
-type AttackSpecialEffect = {
-    remove?: string;
-    add?: { name: string; level: number | boolean };
-};
-
-type HitEffect = {
-    key: string;
-    description: string;
-};
-
-type AmmoEffects = {
-    attackBonuses?: Record<string, number>;
-    attackSpecials?: AttackSpecialEffect[];
-    hitEffects?: HitEffect[];
-    hitDamageType?: string;
-    damageModifiers?: Record<string, number>;
-    penetrationModifiers?: Record<string, number>;
-    fireRate?: number;
+/** The loaded (chambered) round's cached effect fields, read from the weapon's front segment. */
+type LoadedAmmoEffects = {
+    name: string;
+    attack: number;
+    fireRateOverride: number | null;
+    hitEffect: string;
 };
 
 type AmmoItem = WH40KItemDocument & {
     usesAmmo: boolean;
     system: WH40KItemDocument['system'] & {
-        loadedAmmo?: { name?: string };
+        loadedAmmo?: LoadedAmmoEffects & { name?: string };
         clip: { value: number; magazine?: MagazineSegment[] };
         activeModeSingleUse?: boolean;
         effectiveClipMax?: number;
@@ -45,7 +33,6 @@ type AmmoItem = WH40KItemDocument & {
 
 type AmmoRollData = WeaponRollData & {
     weapon: AmmoItem;
-    attackSpecials: Array<{ name: string; level?: number | boolean }>;
 };
 
 type AmmoActionData = ActionData & {
@@ -56,52 +43,24 @@ type AmmoActionData = ActionData & {
 
 type AmmoHit = {
     addEffect: (key: string, description: string) => void;
-    damageType?: string;
-    modifiers: Record<string, number>;
-    penetrationModifiers: Record<string, number>;
 };
 
-/**
- * All ammo type effects in one place.
- * To add a new ammo type, add a single entry here — no function changes needed.
+/*
+ * (The name-keyed AMMO_EFFECTS table was retired — Direction #7. Every ammo type's
+ * effect now lives on its ammunition item's structured fields, cached onto the
+ * chambered magazine segment and applied through the central paths:
+ *   - damage / penetration deltas → `modifiers.{damage,penetration}` → the weapon's
+ *     `effectiveDamageFormula` / `effectivePenetration` getters (so they also
+ *     rendered on the roll card and no longer double-counted);
+ *   - a full-profile OVERRIDE round (warhead / sniper) → `system.damage` → the same
+ *     getters (dice + type + bonus + Pen replacement);
+ *   - damage TYPE override → `system.damage.type` → `effectiveDamageType`;
+ *   - added / removed qualities → `addedQualities` / `removedQualities` → applied to
+ *     the roll's attack-specials in `attack-specials.ts` (id → canonical name bridge);
+ *   - to-hit delta → `modifiers.attack` (below);
+ *   - fire-rate override → `fireRateOverride` (below);
+ *   - on-hit effect text → `hitEffect` (below).)
  */
-const AMMO_EFFECTS: Partial<Record<string, AmmoEffects>> = {
-    'Amputator Shells': {
-        damageModifiers: { 'amputator shells': 2 },
-    },
-    'Bleeder Rounds': {
-        hitEffects: [{ key: 'Bleeder Rounds', description: 'If the target takes damage, they suffer blood loss for [[1d5]] rounds.' }],
-    },
-    'Dumdum Bullets': {
-        hitEffects: [{ key: 'Dumdum Bullets', description: 'Armour points count double against this hit.' }],
-        damageModifiers: { 'dumdum bullets': 2 },
-    },
-    'Expander Rounds': {
-        damageModifiers: { 'expander rounds': 1 },
-        penetrationModifiers: { 'expander rounds': 1 },
-    },
-    'Explosive Arrows/Quarrels': {
-        attackBonuses: { 'explosive arrows': -10 },
-        attackSpecials: [{ remove: 'Primitive' }, { add: { name: 'Blast', level: 1 } }],
-        hitDamageType: 'Explosive',
-    },
-    'Hot-Shot Charge Packs': {
-        attackSpecials: [{ remove: 'Reliable' }, { add: { name: 'Tearing', level: true } }],
-        damageModifiers: { 'hot-shot charge pack': 1 },
-        penetrationModifiers: { 'hot-shot charge pack': 4 },
-        fireRate: 1,
-    },
-    'Inferno Shells': {
-        attackSpecials: [{ add: { name: 'Flame', level: true } }],
-    },
-    'Man-Stopper Bullets': {
-        penetrationModifiers: { 'man-stopper bullets': 3 },
-    },
-    'Tox Rounds': {
-        attackSpecials: [{ add: { name: 'Toxic', level: 1 } }],
-        damageModifiers: { 'tox rounds': -1 },
-    },
-};
 
 /* -------------------------------------------- */
 /*  Ammo Utility Functions                      */
@@ -161,70 +120,33 @@ export async function refundAmmo(actionData: AmmoActionData): Promise<void> {
 /* -------------------------------------------- */
 
 /**
+ * Apply the loaded round's to-hit delta to the attack roll (e.g. Explosive
+ * Arrows/Quarrels −10). Data-driven from the ammunition item's `modifiers.attack`
+ * (cached on the chambered segment). Keyed by the round's name for card provenance.
  * @param rollData {WeaponRollData}
  */
 export function calculateAmmoAttackBonuses(rollData: AmmoRollData): void {
-    const ammoName = rollData.weapon.system.loadedAmmo?.name;
-    if (ammoName === undefined || ammoName === '') return;
-    const effects = AMMO_EFFECTS[ammoName];
-    if (!effects?.attackBonuses) return;
-    for (const [key, value] of Object.entries(effects.attackBonuses)) {
-        rollData.specialModifiers[key] = value;
-    }
-}
-
-export function calculateAmmoAttackSpecials(rollData: AmmoRollData): void {
-    const ammoName = rollData.weapon.system.loadedAmmo?.name;
-    if (ammoName === undefined || ammoName === '') return;
-    game.wh40k.log('calculateAmmoAttackSpecials', ammoName);
-    const effects = AMMO_EFFECTS[ammoName];
-    if (!effects?.attackSpecials) return;
-    for (const spec of effects.attackSpecials) {
-        if (spec.remove !== undefined && spec.remove !== '') rollData.attackSpecials.findSplice((i: { name: string }) => i.name === spec.remove);
-        if (spec.add !== undefined) rollData.attackSpecials.push(spec.add);
-    }
+    const loaded = rollData.weapon.system.loadedAmmo;
+    if (loaded === undefined || loaded.attack === 0) return;
+    const key = loaded.name !== '' ? loaded.name : 'Ammunition';
+    rollData.specialModifiers[key] = loaded.attack;
 }
 
 /* -------------------------------------------- */
 /*  Hit Phase                                   */
 /* -------------------------------------------- */
 
+/**
+ * Apply the loaded round's structured on-hit effect (e.g. Bleeder Rounds blood
+ * loss, Dumdum armour-doubling) to the hit. The damage TYPE override is applied
+ * upstream by the weapon's `effectiveDamageType` getter, not here.
+ */
 export function calculateAmmoSpecials(actionData: AmmoActionData, hit: AmmoHit): void {
-    const ammoName = actionData.rollData.weapon.system.loadedAmmo?.name;
-    if (ammoName === undefined || ammoName === '') return;
-    const effects = AMMO_EFFECTS[ammoName];
-    if (!effects) return;
-    if (effects.hitEffects !== undefined) {
-        for (const e of effects.hitEffects) hit.addEffect(e.key, e.description);
-    }
-    if (effects.hitDamageType !== undefined && effects.hitDamageType !== '') hit.damageType = effects.hitDamageType;
-}
-
-/**
- * @param actionData {WeaponAttackData}
- * @param hit {Hit}
- */
-export function calculateAmmoDamageBonuses(actionData: AmmoActionData, hit: AmmoHit): void {
-    const ammoName = actionData.rollData.weapon.system.loadedAmmo?.name;
-    if (ammoName === undefined || ammoName === '') return;
-    const effects = AMMO_EFFECTS[ammoName];
-    if (!effects?.damageModifiers) return;
-    for (const [key, value] of Object.entries(effects.damageModifiers)) {
-        hit.modifiers[key] = value;
-    }
-}
-
-/**
- * @param actionData {actionData}
- * @param hit {Hit}
- */
-export function calculateAmmoPenetrationBonuses(actionData: AmmoActionData, hit: AmmoHit): void {
-    const ammoName = actionData.rollData.weapon.system.loadedAmmo?.name;
-    if (ammoName === undefined || ammoName === '') return;
-    const effects = AMMO_EFFECTS[ammoName];
-    if (!effects?.penetrationModifiers) return;
-    for (const [key, value] of Object.entries(effects.penetrationModifiers)) {
-        hit.penetrationModifiers[key] = value;
+    const loaded = actionData.rollData.weapon.system.loadedAmmo;
+    if (loaded === undefined) return;
+    if (loaded.hitEffect !== '') {
+        const key = loaded.name !== '' ? loaded.name : 'Ammunition';
+        hit.addEffect(key, loaded.hitEffect);
     }
 }
 
@@ -278,12 +200,10 @@ export function calculateAmmoInformation(rollData: AmmoRollData): void {
         fireRate = maximumHits;
     }
 
-    // Ammunition fire rate override
-    const ammoName = rollData.weapon.system.loadedAmmo?.name;
-    if (ammoName !== undefined && ammoName !== '') {
-        const effects = AMMO_EFFECTS[ammoName];
-        if (effects?.fireRate !== undefined) fireRate = effects.fireRate;
-    }
+    // Ammunition fire-rate override (e.g. Hot-shot Charge Packs → single shot),
+    // data-driven from the chambered round's `fireRateOverride`.
+    const override = rollData.weapon.system.loadedAmmo?.fireRateOverride;
+    if (override !== undefined && override !== null) fireRate = Math.min(fireRate, override);
 
     rollData.ammoPerShot = ammoPerShot;
     rollData.fireRate = fireRate;

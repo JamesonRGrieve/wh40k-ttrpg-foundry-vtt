@@ -76,10 +76,52 @@ interface AmmoItemLike {
     system: {
         clipModifier?: number;
         quantity?: number;
-        modifiers?: { damage?: number; penetration?: number; range?: number };
+        modifiers?: { damage?: number; penetration?: number; range?: number; attack?: number };
         addedQualities?: Set<string>;
         removedQualities?: Set<string>;
+        fireRateOverride?: number | null;
+        hitEffect?: string;
+        damage?: { formula?: string; type?: string; bonus?: number; penetration?: number };
     };
+}
+
+/**
+ * Extract the cached effect fields an ammunition item contributes to a magazine
+ * segment (#ammo-system). Shared by `loadAmmo` and `buildClip` so the segment shape
+ * is populated identically. `damageOverride` is set only for a full-profile round
+ * (a warhead / sniper round with its own `formula`); a delta round leaves it absent
+ * and carries its numbers in `modifiers`.
+ */
+function ammoSegmentEffects(
+    system: AmmoItemLike['system'],
+): Pick<
+    MagazineSegment,
+    'modifiers' | 'clipModifier' | 'addedQualities' | 'removedQualities' | 'attack' | 'damageType' | 'damageOverride' | 'fireRateOverride' | 'hitEffect'
+> {
+    const {
+        clipModifier = 0,
+        modifiers = {},
+        addedQualities = new Set<string>(),
+        removedQualities = new Set<string>(),
+        fireRateOverride = null,
+        hitEffect = '',
+        damage,
+    } = system;
+    const { damage: damageMod = 0, penetration: penMod = 0, range: rangeMod = 0, attack: attackMod = 0 } = modifiers;
+    const formula = damage?.formula ?? '';
+    const base = {
+        modifiers: { damage: damageMod, penetration: penMod, range: rangeMod },
+        clipModifier,
+        addedQualities: Array.from(addedQualities),
+        removedQualities: Array.from(removedQualities),
+        attack: attackMod,
+        damageType: damage?.type ?? '',
+        fireRateOverride,
+        hitEffect,
+    };
+    // `damageOverride` is present ONLY for a full-profile round (formula set); an
+    // absent key (not `undefined`) keeps the segment delta-mode under exactOptionalPropertyTypes.
+    return formula !== '' ? { ...base, damageOverride: { formula, bonus: damage?.bonus ?? 0, penetration: damage?.penetration ?? 0 } } : base;
 }
 
 /** Minimal shape of an inventory ammunition item used by _returnRoundsToInventory(). */
@@ -269,6 +311,21 @@ export default class WeaponData extends ItemDataModel.mixin(
                         clipModifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
                         addedQualities: new fields.ArrayField(new fields.StringField({ required: true }), { required: false, initial: [] }),
                         removedQualities: new fields.ArrayField(new fields.StringField({ required: true }), { required: false, initial: [] }),
+                        // Structured ammo effects (#ammo-system) cached from the ammo item so
+                        // the sync effective-stat getters read them without an async lookup.
+                        // Optional with defaults: segments persisted before this model default cleanly.
+                        attack: new fields.NumberField({ required: false, initial: 0, integer: true }),
+                        damageType: new fields.StringField({ required: false, blank: true, initial: '' }),
+                        damageOverride: new fields.SchemaField(
+                            {
+                                formula: new fields.StringField({ required: false, blank: true, initial: '' }),
+                                bonus: new fields.NumberField({ required: false, initial: 0, integer: true }),
+                                penetration: new fields.NumberField({ required: false, initial: 0, integer: true }),
+                            },
+                            { required: false },
+                        ),
+                        fireRateOverride: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
+                        hitEffect: new fields.StringField({ required: false, blank: true, initial: '' }),
                     }),
                     { required: false, initial: [] },
                 ),
@@ -602,10 +659,16 @@ export default class WeaponData extends ItemDataModel.mixin(
         }
 
         // Add loaded ammunition modifiers (loadedAmmo may be undefined if the
-        // schema failed to initialize due to upstream validation errors)
+        // schema failed to initialize due to upstream validation errors). A
+        // full-profile OVERRIDE round (warhead / sniper round) replaces the damage
+        // and penetration outright — its delta `modifiers` do NOT stack on top of the
+        // replacement (they are 0 by authoring convention, but the guard makes it
+        // robust); the orthogonal range delta always applies.
         if (this.loadedAmmo !== undefined && this.loadedAmmo.uuid !== '') {
-            this._modificationModifiers.damage += this.loadedAmmo.modifiers.damage;
-            this._modificationModifiers.penetration += this.loadedAmmo.modifiers.penetration;
+            if (this.loadedAmmo.damageOverride === null) {
+                this._modificationModifiers.damage += this.loadedAmmo.modifiers.damage;
+                this._modificationModifiers.penetration += this.loadedAmmo.modifiers.penetration;
+            }
             this._modificationModifiers.range += this.loadedAmmo.modifiers.range;
         }
     }
@@ -880,8 +943,14 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @type {string}
      */
     get effectiveDamageFormula(): string {
-        const baseDamage = modeDamageFormula(this.activeFiringModeProfile, this.damage.formula || '1d10');
-        const baseBonus = modeDamageBonus(this.activeFiringModeProfile, this.damage.bonus || 0);
+        // A loaded warhead / sniper round OVERRIDES the dice + bonus outright
+        // (#ammo-system); otherwise the weapon's own profile is the base and the
+        // ammo's delta is folded via `_modificationModifiers`.
+        const override = this.loadedAmmo?.damageOverride ?? null;
+        const baseFormulaRaw = override !== null ? override.formula : this.damage.formula || '1d10';
+        const baseBonusRaw = override !== null ? override.bonus : this.damage.bonus || 0;
+        const baseDamage = modeDamageFormula(this.activeFiringModeProfile, baseFormulaRaw);
+        const baseBonus = modeDamageBonus(this.activeFiringModeProfile, baseBonusRaw);
         const craftBonus = this.craftsmanshipModifiers.damage;
         const modBonus = this._modificationModifiers.damage;
         const deactBonus = deactivationStatDeltas(this.activation, this.state.activated).damage;
@@ -899,7 +968,11 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @type {string}
      */
     get effectiveDamageType(): string {
-        return modeDamageType(this.activeFiringModeProfile, this.damage.type);
+        // A loaded round's damage type overrides the weapon's (a needle round → Rending,
+        // an Explosive Arrow → Explosive); the active firing mode overrides both.
+        const ammoType = this.loadedAmmo?.damageType ?? '';
+        const base = ammoType !== '' ? ammoType : this.damage.type;
+        return modeDamageType(this.activeFiringModeProfile, base);
     }
 
     /** Damage-type abbreviation for the active mode (shadows the DamageTemplate getter). */
@@ -944,7 +1017,11 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @type {number}
      */
     get effectivePenetration(): number {
-        const basePen = modePenetration(this.activeFiringModeProfile, this.damage.penetration || 0);
+        // An OVERRIDE round replaces base penetration; a delta round's Pen delta is
+        // folded via `_modificationModifiers` (#ammo-system).
+        const override = this.loadedAmmo?.damageOverride ?? null;
+        const basePenRaw = override !== null ? override.penetration : this.damage.penetration || 0;
+        const basePen = modePenetration(this.activeFiringModeProfile, basePenRaw);
         const modPen = this._modificationModifiers.penetration;
         return basePen + modPen + deactivationStatDeltas(this.activation, this.state.activated).penetration;
     }
@@ -1414,10 +1491,16 @@ export default class WeaponData extends ItemDataModel.mixin(
               clipModifier: number;
               addedQualities: Set<string>;
               removedQualities: Set<string>;
+              attack: number;
+              damageType: string;
+              damageOverride: { formula: string; bonus: number; penetration: number } | null;
+              fireRateOverride: number | null;
+              hitEffect: string;
           }
         | undefined {
         const front = frontSegment(this.clip.magazine);
         if (front === null || front.ammoUuid === '') return undefined;
+        const override = front.damageOverride;
         return {
             uuid: front.ammoUuid,
             name: front.ammoName,
@@ -1425,6 +1508,11 @@ export default class WeaponData extends ItemDataModel.mixin(
             clipModifier: front.clipModifier,
             addedQualities: new Set(front.addedQualities),
             removedQualities: new Set(front.removedQualities),
+            attack: front.attack ?? 0,
+            damageType: front.damageType ?? '',
+            damageOverride: override !== undefined && override.formula !== '' ? override : null,
+            fireRateOverride: front.fireRateOverride ?? null,
+            hitEffect: front.hitEffect ?? '',
         };
     }
 
@@ -1544,17 +1632,11 @@ export default class WeaponData extends ItemDataModel.mixin(
             await this._returnRoundsToInventory(actor, this.clip.value);
         }
 
-        // Cache ammunition modifiers — destructure with defaults so the schema-optional
-        // fields are surfaced as concrete values without `??` paper-overs at each call site.
-        const {
-            clipModifier: clipMod = 0,
-            modifiers = {},
-            addedQualities = new Set<string>(),
-            removedQualities = new Set<string>(),
-            quantity,
-        } = ammoItem.system;
-        const { damage: ammoDamageMod = 0, penetration: ammoPenMod = 0, range: ammoRangeMod = 0 } = modifiers;
-        const effectiveMax = Math.max(1, this.clip.max + clipMod);
+        // Cache ammunition effects into the segment (#ammo-system) via the shared
+        // extractor, so the sync effective-stat getters read them without an async lookup.
+        const effects = ammoSegmentEffects(ammoItem.system);
+        const quantity = ammoItem.system.quantity;
+        const effectiveMax = Math.max(1, this.clip.max + effects.clipModifier);
 
         // Deduct rounds from inventory
         const availableQuantity = quantity ?? effectiveMax;
@@ -1569,10 +1651,7 @@ export default class WeaponData extends ItemDataModel.mixin(
             ammoUuid: ammoItem.uuid,
             ammoName: ammoItem.name,
             count: roundsToLoad,
-            modifiers: { damage: ammoDamageMod, penetration: ammoPenMod, range: ammoRangeMod },
-            clipModifier: clipMod,
-            addedQualities: Array.from(addedQualities),
-            removedQualities: Array.from(removedQualities),
+            ...effects,
         };
         await this.parent.update({
             'system.clip.magazine': [segment],
@@ -1643,16 +1722,11 @@ export default class WeaponData extends ItemDataModel.mixin(
                 // eslint-disable-next-line no-await-in-loop -- sequential: parallel inventory writes to distinct ammo items still must not race the shared clamp accounting
                 await ammoItem.update({ 'system.quantity': available - take });
             }
-            const { clipModifier: clipMod = 0, modifiers = {}, addedQualities = new Set<string>(), removedQualities = new Set<string>() } = ammoItem.system;
-            const { damage: dmg = 0, penetration: pen = 0, range: rng = 0 } = modifiers;
             magazine.push({
                 ammoUuid,
                 ammoName: ammoItem.name,
                 count: take,
-                modifiers: { damage: dmg, penetration: pen, range: rng },
-                clipModifier: clipMod,
-                addedQualities: Array.from(addedQualities),
-                removedQualities: Array.from(removedQualities),
+                ...ammoSegmentEffects(ammoItem.system),
             });
             loaded += take;
         }

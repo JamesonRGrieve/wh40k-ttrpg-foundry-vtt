@@ -37,6 +37,37 @@ describe('magazine helpers', () => {
         });
     });
 
+    describe('structured effect fields survive consume/refund (#ammo-system)', () => {
+        const warhead = seg({
+            ammoName: 'Krak Warhead',
+            count: 3,
+            attack: -10,
+            damageType: 'explosive',
+            damageOverride: { formula: '2d10', bonus: 5, penetration: 8 },
+            fireRateOverride: 1,
+            hitEffect: '<p>Blast</p>',
+        });
+
+        it('consumeRounds preserves the cached effect fields on the surviving segment', () => {
+            const { magazine } = consumeRounds([warhead], 1);
+            expect(magazine[0]).toMatchObject({
+                count: 2,
+                attack: -10,
+                damageType: 'explosive',
+                damageOverride: { formula: '2d10', bonus: 5, penetration: 8 },
+                fireRateOverride: 1,
+                hitEffect: '<p>Blast</p>',
+            });
+        });
+
+        it('refundRounds grows the matching front segment without dropping effect fields', () => {
+            const out = refundRounds([warhead], 2, warhead);
+            expect(out[0]?.count).toBe(5);
+            expect(out[0]?.damageOverride).toEqual({ formula: '2d10', bonus: 5, penetration: 8 });
+            expect(out[0]?.damageType).toBe('explosive');
+        });
+    });
+
     describe('consumeRounds', () => {
         it('consumes from the front, dropping an emptied segment', () => {
             const mag = [seg({ ammoName: 'AP', count: 2 }), seg({ ammoName: 'HS', count: 3 })];

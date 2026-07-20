@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import type { RollData } from '../rolls/roll-data.ts';
-import { attackSpecials, attackSpecialsNames, calculateAttackSpecialAttackBonuses } from './attack-specials.ts';
+import { attackSpecialForQualityId, attackSpecials, attackSpecialsNames, calculateAttackSpecialAttackBonuses } from './attack-specials.ts';
 import { setWeaponQualityPayloadsForTesting } from './weapon-quality-payloads.ts';
 
 /**
@@ -121,5 +121,32 @@ describe('calculateAttackSpecialAttackBonuses', () => {
         calculateAttackSpecialAttackBonuses(rollData as unknown as RollData);
         expect(rollData.specialModifiers['Stale']).toBeUndefined();
         expect(rollData.specialModifiers['Twin-Linked']).toBe(20);
+    });
+});
+
+describe('attackSpecialForQualityId (ammo quality-id → attack-special bridge, #ammo-system)', () => {
+    it('bridges a level-less quality id to its canonical name with level:true', () => {
+        expect(attackSpecialForQualityId('flame')).toEqual({ name: 'Flame', level: true });
+        expect(attackSpecialForQualityId('tearing')).toEqual({ name: 'Tearing', level: true });
+    });
+
+    it('extracts a trailing -N as the numeric level', () => {
+        expect(attackSpecialForQualityId('toxic-1')).toEqual({ name: 'Toxic', level: 1 });
+        expect(attackSpecialForQualityId('blast-1')).toEqual({ name: 'Blast', level: 1 });
+        expect(attackSpecialForQualityId('proven-2')).toEqual({ name: 'Proven', level: 2 });
+    });
+
+    it('normalizes hyphens/spaces so razor-sharp ⇄ Razor Sharp', () => {
+        expect(attackSpecialForQualityId('razor-sharp')).toEqual({ name: 'Razor Sharp', level: true });
+    });
+
+    it('resolves qualities used for removal (primitive, reliable)', () => {
+        expect(attackSpecialForQualityId('primitive')?.name).toBe('Primitive');
+        expect(attackSpecialForQualityId('reliable')?.name).toBe('Reliable');
+    });
+
+    it('returns null for a pseudo-quality with no combat attack-special', () => {
+        expect(attackSpecialForQualityId('clip-reduced-to-1')).toBeNull();
+        expect(attackSpecialForQualityId('not-a-real-quality')).toBeNull();
     });
 });
