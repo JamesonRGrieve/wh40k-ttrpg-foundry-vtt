@@ -302,8 +302,11 @@ export class WH40KItem extends WH40KItemContainer {
 
     /** Normalize a possibly-undefined weapon class to lower-case string. */
     #weaponClass(): string {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: system.class optional in shared weapon schema
-        const cls: string = this.system.class ?? '';
+        // eslint-disable-next-line no-restricted-syntax -- boundary: class/effectiveClass optional in shared weapon schema
+        const sys = this.system as { class?: string; effectiveClass?: string };
+        // Prefer the active firing mode's effective class (#430) so a dual-natured
+        // weapon's melee↔ranged toggle flips isRanged/isMelee for the active mode.
+        const cls: string = (typeof sys.effectiveClass === 'string' ? sys.effectiveClass : sys.class) ?? '';
         return cls.toLowerCase();
     }
 

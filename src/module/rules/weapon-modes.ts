@@ -21,7 +21,7 @@
 
 /** One firing mode's authored profile. Empty / null fields inherit the base attack. */
 export interface WeaponFiringMode {
-    /** Display label (e.g. "Focused", "Broad"). */
+    /** Display label (e.g. "Focused", "Broad", "Melee", "Ranged"). */
     label: string;
     /** Damage formula override, or '' to inherit the base. */
     damage: string;
@@ -35,6 +35,19 @@ export interface WeaponFiringMode {
     addedQualities: Iterable<string>;
     /** Qualities this mode removes. */
     removedQualities: Iterable<string>;
+    /**
+     * Weapon-class override, or '' to inherit — the master melee↔ranged switch. A
+     * dual-natured weapon (a Burna, a Necron Staff of Light) carries a `melee` mode
+     * and a `basic`/`heavy` mode; the class drives `isMeleeWeapon`/`isRangedWeapon`
+     * (and therefore the WS↔BS test characteristic) for the active mode.
+     */
+    weaponClass: string;
+    /** Attack-type override ('melee'|'ranged'), or '' to inherit the base attack block. */
+    attackType: string;
+    /** Test-characteristic override (e.g. 'weaponSkill'|'ballisticSkill'), or '' to inherit. */
+    characteristic: string;
+    /** Rate-of-fire override, or null to inherit (a melee mode carries `{single:false,…}`). */
+    rateOfFire: { single: boolean; semi: number; full: number } | null;
 }
 
 /** Whether the weapon has any authored firing modes. */
@@ -79,4 +92,27 @@ export function modePenetration(mode: WeaponFiringMode | null, fallback: number)
 /** The active mode's range, or `fallback` when the mode does not override it. */
 export function modeRange(mode: WeaponFiringMode | null, fallback: number): number {
     return mode !== null && mode.range !== null ? mode.range : fallback;
+}
+
+/** The active mode's weapon class, or `fallback` when the mode does not override it. */
+export function modeWeaponClass(mode: WeaponFiringMode | null, fallback: string): string {
+    return mode !== null && mode.weaponClass !== '' ? mode.weaponClass : fallback;
+}
+
+/** The active mode's attack type, or `fallback` when the mode does not override it. */
+export function modeAttackType(mode: WeaponFiringMode | null, fallback: string): string {
+    return mode !== null && mode.attackType !== '' ? mode.attackType : fallback;
+}
+
+/** The active mode's test characteristic, or `fallback` when the mode does not override it. */
+export function modeCharacteristic(mode: WeaponFiringMode | null, fallback: string): string {
+    return mode !== null && mode.characteristic !== '' ? mode.characteristic : fallback;
+}
+
+/** The active mode's rate of fire, or `fallback` when the mode does not override it. */
+export function modeRateOfFire(
+    mode: WeaponFiringMode | null,
+    fallback: { single: boolean; semi: number; full: number },
+): { single: boolean; semi: number; full: number } {
+    return mode !== null && mode.rateOfFire !== null ? mode.rateOfFire : fallback;
 }
