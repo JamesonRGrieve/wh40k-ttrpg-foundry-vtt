@@ -189,6 +189,20 @@
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
         </div>
+
+        {{!-- Build Clip Action Card — compose an ordered mixed magazine (#ammo-system) --}}
+        <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-cursor-pointer tw-border-[rgba(132,110,58,0.4)] tw-bg-[linear-gradient(145deg,rgba(132,110,58,0.2),rgba(12,16,24,0.7))]"
+             data-action="buildClip"
+             data-tooltip="{{localize 'WH40K.ClipBuilder.Title'}}">
+          <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
+            <i class="fa-solid fa-layer-group"></i>
+          </div>
+          <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
+            <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[rgba(234,214,178,0.95)] tw-leading-[1.1]">{{localize 'WH40K.ClipBuilder.Title'}}</span>
+            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">{{localize 'WH40K.ClipBuilder.Mixed'}}</span>
+          </div>
+          <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
+        </div>
         {{/if}}
 
         {{!-- Clear Jam Action Card (only when the weapon is jammed) --}}

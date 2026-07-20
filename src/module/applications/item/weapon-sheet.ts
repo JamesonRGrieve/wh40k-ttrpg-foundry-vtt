@@ -13,6 +13,7 @@ import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
+import ClipBuilderDialog from '../dialogs/clip-builder-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
 
@@ -84,6 +85,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         actions: {
             ...ContainerItemSheet.DEFAULT_OPTIONS.actions,
             reload: WeaponSheet.#onReload,
+            buildClip: WeaponSheet.#buildClip,
             addModification: WeaponSheet.#onAddModification,
             rollAttack: WeaponSheet.#rollAttack,
             rollDamage: WeaponSheet.#rollDamage,
@@ -681,6 +683,29 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         } else {
             ui.notifications.warn(result.message);
         }
+    }
+
+    /**
+     * Open the clip builder to compose an ordered mixed magazine (#ammo-system),
+     * then apply it via `WeaponData.buildClip`.
+     */
+    static async #buildClip(this: WeaponSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        const actor = this.item.actor;
+        const weaponName = this.item.name;
+        if (actor === null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.ClipBuilder.NoActor'));
+            return;
+        }
+        const spareAmmo = ReloadActionManager.findSpareAmmunition(actor, this.item);
+        if (spareAmmo.length === 0) {
+            ui.notifications.warn(game.i18n.format('WH40K.ClipBuilder.NoCompatible', { weapon: weaponName }));
+            return;
+        }
+        const segments = await ClipBuilderDialog.build({ ammoItems: spareAmmo, weaponName, clipMax: this.item.system.effectiveClipMax });
+        if (segments.length === 0) return;
+        await this.item.system.buildClip(segments);
+        const rounds = segments.reduce((sum, s) => sum + s.count, 0);
+        ui.notifications.info(game.i18n.format('WH40K.ClipBuilder.Loaded', { weapon: weaponName, rounds: String(rounds) }));
     }
 
     /* -------------------------------------------- */
