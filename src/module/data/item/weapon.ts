@@ -13,6 +13,7 @@ import {
     modeDamageBonus,
     modeDamageFormula,
     modeDamageType,
+    modeIsSingleUse,
     modePenetration,
     modeRange,
     modeRateOfFire,
@@ -161,6 +162,10 @@ export default class WeaponData extends ItemDataModel.mixin(
     // Per-weapon jam state (#411). May be undefined at runtime when the schema
     // fails to initialise (mirrors loadedAmmo), so consumers guard via isJammed.
     declare jammed: boolean | undefined;
+    // Combi-weapon single-use secondary spent state (#ammo-system): true once the
+    // active single-use mode has fired, until the weapon reloads. May be undefined
+    // if the schema failed to initialise, so consumers guard.
+    declare secondaryUsed: boolean | undefined;
     // Note: 'reload' schema field accessed via [key: string]: any; to avoid conflict with reload() method.
     // `loadedAmmo` is no longer a stored field — it is a derived getter over the
     // chambered (front) magazine segment (#ammo-system); see `get loadedAmmo()`.
@@ -282,6 +287,8 @@ export default class WeaponData extends ItemDataModel.mixin(
             // written to the owned item's per-actor overlay so it survives across
             // turns and the compendium→world resync.
             jammed: new fields.BooleanField({ required: false, initial: false }),
+            // Combi-weapon single-use secondary spent state (#ammo-system).
+            secondaryUsed: new fields.BooleanField({ required: false, initial: false }),
 
             // Firing modes (#430) — multiple named firing profiles on ONE weapon
             // (e.g. a mining melta's Focused vs Broad beam), each overriding a
@@ -314,6 +321,11 @@ export default class WeaponData extends ItemDataModel.mixin(
                         },
                         { required: false, nullable: true, initial: null },
                     ),
+                    // Combi-weapon secondary (#ammo-system): a single-use mode fires once
+                    // then is spent until reload (RAW clip of 1). `clipMax` is the mode's
+                    // own clip size (0 = share the weapon's clip).
+                    singleUse: new fields.BooleanField({ required: false, initial: false }),
+                    clipMax: new fields.NumberField({ required: false, initial: 0, min: 0, integer: true }),
                 }),
                 { required: false, initial: [] },
             ),
@@ -690,25 +702,41 @@ export default class WeaponData extends ItemDataModel.mixin(
         return activeFiringMode(this.modes, this.activeMode);
     }
 
+    /** True when the active mode is a single-use combi secondary (#ammo-system). */
+    get activeModeSingleUse(): boolean {
+        return modeIsSingleUse(this.activeFiringModeProfile);
+    }
+
+    /** The active single-use secondary's remaining shots (0 once spent, else its clipMax / 1). */
+    get secondaryRemaining(): number {
+        if (!this.activeModeSingleUse) return 0;
+        if (this.secondaryUsed === true) return 0;
+        const mode = this.activeFiringModeProfile;
+        return mode !== null && mode.clipMax > 0 ? mode.clipMax : 1;
+    }
+
     /** True when the weapon is currently powered/active. Always true for a weapon with no toggle. */
     get powered(): boolean {
         return !isDeactivated(this.activation, this.state.activated);
     }
 
     /**
-     * Does this weapon use ammunition?
+     * Does this weapon use ammunition? A single-use combi secondary counts as
+     * ammo-using even if the base bolter had no clip.
      * @type {boolean}
      */
     get usesAmmo(): boolean {
-        return this.clip.max > 0;
+        return this.clip.max > 0 || this.activeModeSingleUse;
     }
 
     /**
-     * Is the weapon jammed or out of ammo?
+     * Is the weapon jammed or out of ammo? A single-use combi secondary is "out"
+     * once it has been fired (spent until reload); otherwise the shared clip decides.
      * @type {boolean}
      */
     get isOutOfAmmo(): boolean {
-        return this.usesAmmo && this.clip.value <= 0;
+        if (this.activeModeSingleUse) return this.secondaryRemaining <= 0;
+        return this.clip.max > 0 && this.clip.value <= 0;
     }
 
     /** Alias of {@link isOutOfAmmo} — the conceptual name used by chat / sheet templates. */
@@ -1238,9 +1266,20 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @type {number}
      */
     get effectiveClipMax(): number {
+        // A single-use combi secondary shows its own clip (1), not the bolter's.
+        if (this.activeModeSingleUse) {
+            const mode = this.activeFiringModeProfile;
+            return mode !== null && mode.clipMax > 0 ? mode.clipMax : 1;
+        }
         const base = this.clip.max;
         const ammoMod = this.loadedAmmo?.clipModifier ?? 0;
         return Math.max(1, base + ammoMod);
+    }
+
+    /** The clip count for display — the active single-use secondary's remaining shots
+     *  (#ammo-system), else the shared clip count. */
+    get effectiveClipValue(): number {
+        return this.activeModeSingleUse ? this.secondaryRemaining : this.clip.value;
     }
 
     /**
@@ -1248,8 +1287,9 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @type {number}
      */
     get ammoPercentage(): number {
-        if (!this.usesAmmo || this.clip.max === 0) return 100;
-        return Math.round((this.clip.value / this.effectiveClipMax) * 100);
+        if (!this.usesAmmo) return 100;
+        if (!this.activeModeSingleUse && this.clip.max === 0) return 100;
+        return Math.round((this.effectiveClipValue / this.effectiveClipMax) * 100);
     }
 
     /**

@@ -8,6 +8,7 @@ import {
     modeDamageBonus,
     modeDamageFormula,
     modeDamageType,
+    modeIsSingleUse,
     modePenetration,
     modeRange,
     modeRateOfFire,
@@ -29,6 +30,8 @@ function mode(over: Partial<WeaponFiringMode> = {}): WeaponFiringMode {
         attackType: '',
         characteristic: '',
         rateOfFire: null,
+        singleUse: false,
+        clipMax: 0,
         ...over,
     };
 }
@@ -140,6 +143,24 @@ describe('weapon firing modes (#430)', () => {
             expect(modeRateOfFire(mode({ rateOfFire: { single: false, semi: 0, full: 0 } }), base)).toEqual({ single: false, semi: 0, full: 0 });
             expect(modeRateOfFire(mode({ rateOfFire: null }), base)).toBe(base); // inherit
             expect(modeRateOfFire(null, base)).toBe(base);
+        });
+
+        it('modeIsSingleUse flags a combi secondary mode', () => {
+            expect(modeIsSingleUse(mode({ singleUse: true, clipMax: 1 }))).toBe(true);
+            expect(modeIsSingleUse(mode({ singleUse: false }))).toBe(false);
+            expect(modeIsSingleUse(null)).toBe(false);
+        });
+
+        it('models a combi-weapon (Bolter + single-use Melta secondary)', () => {
+            const modes = [
+                mode({ label: 'Bolter' }), // repeat-fire, shares the weapon clip
+                mode({ label: 'Melta', singleUse: true, clipMax: 1, damage: '2d10', damageBonus: 10, penetration: 12, addedQualities: ['melta'] }),
+            ];
+            const bolter = activeFiringMode(modes, 0);
+            const melta = activeFiringMode(modes, 1);
+            expect(modeIsSingleUse(bolter)).toBe(false);
+            expect(modeIsSingleUse(melta)).toBe(true);
+            expect(modePenetration(melta, 4)).toBe(12);
         });
 
         it('models a dual-natured weapon (Burna): a melee mode and a ranged mode', () => {

@@ -32,6 +32,7 @@ type AmmoItem = WH40KItemDocument & {
     system: WH40KItemDocument['system'] & {
         loadedAmmo?: { name?: string };
         clip: { value: number; magazine?: MagazineSegment[] };
+        activeModeSingleUse?: boolean;
         effectiveClipMax?: number;
         attack?: {
             rateOfFire?: {
@@ -120,6 +121,12 @@ function ammoText(item: AmmoItem): string | undefined {
 export async function useAmmo(actionData: AmmoActionData): Promise<void> {
     const actionItem = actionData.rollData.weapon;
     if (actionItem.usesAmmo) {
+        // Combi single-use secondary (#ammo-system): firing it spends the secondary
+        // (until reload), not the bolter's clip.
+        if (actionItem.system.activeModeSingleUse === true) {
+            await actionItem.update({ 'system.secondaryUsed': true });
+            return;
+        }
         const used = actionData.rollData.ammoUsed;
         const newValue = Math.max(0, actionItem.system.clip.value - used);
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item.update accepts a loose document payload
