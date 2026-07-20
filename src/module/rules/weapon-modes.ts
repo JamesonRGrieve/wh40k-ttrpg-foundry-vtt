@@ -50,6 +50,20 @@ export interface WeaponFiringMode {
     characteristic: string;
     /** Rate-of-fire override, or null to inherit (a melee mode carries `{single:false,…}`). */
     rateOfFire: { single: boolean; semi: number; full: number } | null;
+    /**
+     * Single-use secondary (combi-weapons, #ammo-system): when true, this mode fires
+     * once and is spent until the weapon reloads (RAW: a combi's secondary weapon has
+     * a clip of 1; reloading reloads the bolter too). The weapon tracks the spent
+     * state in `system.secondaryUsed`. `false` = a normal repeat-fire mode.
+     */
+    singleUse: boolean;
+    /** This mode's clip size (0 = share the weapon's clip). A single-use secondary is 1. */
+    clipMax: number;
+}
+
+/** Whether the given mode is a spent-after-one-shot secondary (combi). */
+export function modeIsSingleUse(mode: WeaponFiringMode | null): boolean {
+    return mode?.singleUse === true;
 }
 
 /** Whether the weapon has any authored firing modes. */

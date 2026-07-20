@@ -216,7 +216,7 @@ export class ReloadActionManager {
                 addedQualities: Array.from(ammoSystem.addedQualities),
                 removedQualities: Array.from(ammoSystem.removedQualities),
             };
-            await weapon.update({ 'system.clip.value': roundsToLoad, 'system.clip.magazine': [segment] });
+            await weapon.update({ 'system.clip.value': roundsToLoad, 'system.clip.magazine': [segment], 'system.secondaryUsed': false });
 
             // Build success message
             let message = `${weapon.name} reloaded with ${selectedAmmo.name} (${previousValue} → ${roundsToLoad})`;
@@ -238,7 +238,7 @@ export class ReloadActionManager {
 
         // Fallback for unowned weapons (no actor) — simple reload to full with a
         // generic (ammo-item-less) magazine (#ammo-system).
-        await weapon.update({ 'system.clip.value': effectiveMax, 'system.clip.magazine': [] });
+        await weapon.update({ 'system.clip.value': effectiveMax, 'system.clip.magazine': [], 'system.secondaryUsed': false });
 
         return {
             success: true,
