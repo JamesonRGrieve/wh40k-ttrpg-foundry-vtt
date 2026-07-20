@@ -4829,6 +4829,19 @@
             "Title": "Select Ammunition",
             "LoadTitle": "Load Ammunition — {weaponName}"
         },
+        "ClipBuilder": {
+            "Title": "Build Clip",
+            "Mixed": "Mixed",
+            "LoadTitle": "Build Clip — {weaponName}",
+            "Prompt": "Load rounds into {weaponName} in firing order (top loads first). Clip size: {clipMax}.",
+            "Available": "available",
+            "Rounds": "Rounds",
+            "OrderHint": "Rounds fire top-to-bottom; totals over the clip size are trimmed.",
+            "Load": "Load Clip",
+            "NoActor": "Only a carried weapon can build a mixed clip.",
+            "NoCompatible": "No compatible ammunition available for {weapon}.",
+            "Loaded": "{weapon} loaded ({rounds} rounds)."
+        },
         "InventoryGenerator": {
             "Title": "Inventory Generator — {actor}",
             "Heading": "Stock {actor}",

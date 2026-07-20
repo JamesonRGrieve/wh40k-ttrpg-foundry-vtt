@@ -1569,6 +1569,59 @@ export default class WeaponData extends ItemDataModel.mixin(
     }
 
     /**
+     * Build an ordered magazine from a sequence of `{ammoUuid, count}` segments —
+     * the mixed-clip loadout (#ammo-system). The rounds fire front-first in the
+     * given order, each using its own ammo profile. Returns any currently-loaded
+     * special rounds to inventory first, then deducts each requested ammo type
+     * from the owning actor's inventory (clamped to availability and the clip's
+     * base max), and writes the resulting ordered magazine. Unresolvable / empty
+     * segments are skipped.
+     * @param {ReadonlyArray<{ammoUuid: string, count: number}>} segments - Ordered load
+     * @returns {Promise<Item|null>}
+     */
+    async buildClip(segments: ReadonlyArray<{ ammoUuid: string; count: number }>): Promise<WH40KItem | null> {
+        const actor: AmmoActorLike | null = (this.parent.actor as AmmoActorLike | null | undefined) ?? null;
+
+        // Return the currently-chambered special rounds to inventory first.
+        if (this.clip.value > 0 && this.hasLoadedAmmo && actor !== null) {
+            await this._returnRoundsToInventory(actor, this.clip.value);
+        }
+
+        const max = this.clip.max;
+        const magazine: MagazineSegment[] = [];
+        let loaded = 0;
+        for (const { ammoUuid, count } of segments) {
+            if (count <= 0 || loaded >= max) continue;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.items members are Foundry Items; narrow to the ammo shape we read
+            const ammoItem = actor?.items.find((i) => (i as unknown as { uuid: string }).uuid === ammoUuid) as AmmoItemLike | undefined;
+            if (ammoItem?.type !== 'ammunition') continue;
+            const quantity = ammoItem.system.quantity;
+            const available = quantity ?? count;
+            const take = Math.min(count, max - loaded, available);
+            if (take <= 0) continue;
+            if (actor !== null && quantity !== undefined) {
+                // eslint-disable-next-line no-await-in-loop -- sequential: parallel inventory writes to distinct ammo items still must not race the shared clamp accounting
+                await ammoItem.update({ 'system.quantity': available - take });
+            }
+            const { clipModifier: clipMod = 0, modifiers = {}, addedQualities = new Set<string>(), removedQualities = new Set<string>() } = ammoItem.system;
+            const { damage: dmg = 0, penetration: pen = 0, range: rng = 0 } = modifiers;
+            magazine.push({
+                ammoUuid,
+                ammoName: ammoItem.name,
+                count: take,
+                modifiers: { damage: dmg, penetration: pen, range: rng },
+                clipModifier: clipMod,
+                addedQualities: Array.from(addedQualities),
+                removedQualities: Array.from(removedQualities),
+            });
+            loaded += take;
+        }
+
+        await this.parent.update({ 'system.clip.magazine': magazine, 'system.clip.value': magazineTotal(magazine) });
+        return this.parent;
+    }
+
+    /**
      * Return remaining rounds to the actor's inventory.
      * Finds the ammo item by UUID, then by name as fallback.
      * @param {Actor} actor - The owning actor
