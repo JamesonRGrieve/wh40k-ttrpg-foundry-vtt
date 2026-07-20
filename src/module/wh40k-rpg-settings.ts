@@ -63,6 +63,7 @@ export class WH40KSettings {
         autoCoverLos: 'auto-cover-los',
         fatigueMode: 'fatigue-mode',
         awarenessSenseSplit: 'awareness-sense-split',
+        magazineBuilding: 'magazine-building',
     };
 
     /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
@@ -268,6 +269,18 @@ export class WH40KSettings {
         }
     }
 
+    /** When true, the Build Clip action lets players compose an ordered mixed
+     *  magazine (#ammo-system). Off by default — RAW loads one ammo type per clip;
+     *  enabling this exposes the mixed-loadout builder. Safe to call before the
+     *  setting is registered (returns false). */
+    static isMagazineBuildingEnabled(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.magazineBuilding) === true;
+        } catch {
+            return false;
+        }
+    }
+
     static getRuleset(): DH2Ruleset {
         try {
             return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.dh2Ruleset) === 'raw' ? 'raw' : 'homebrew';
@@ -395,6 +408,15 @@ export class WH40KSettings {
                 key: S.autoApplyDamage,
                 name: 'WH40K.SETTINGS.AutoApplyDamage.Name',
                 hint: 'WH40K.SETTINGS.AutoApplyDamage.Hint',
+                scope: 'world',
+                config: true,
+                default: false,
+                type: Boolean,
+            },
+            {
+                key: S.magazineBuilding,
+                name: 'WH40K.SETTINGS.MagazineBuilding.Name',
+                hint: 'WH40K.SETTINGS.MagazineBuilding.Hint',
                 scope: 'world',
                 config: true,
                 default: false,

@@ -190,7 +190,8 @@
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
         </div>
 
-        {{!-- Build Clip Action Card — compose an ordered mixed magazine (#ammo-system) --}}
+        {{!-- Build Clip Action Card — compose an ordered mixed magazine (#ammo-system). Gated on the Magazine Building world setting. --}}
+        {{#if magazineBuildingEnabled}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-cursor-pointer tw-border-[rgba(132,110,58,0.4)] tw-bg-[linear-gradient(145deg,rgba(132,110,58,0.2),rgba(12,16,24,0.7))]"
              data-action="buildClip"
              data-tooltip="{{localize 'WH40K.ClipBuilder.Title'}}">
@@ -203,6 +204,7 @@
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
         </div>
+        {{/if}}
         {{/if}}
 
         {{!-- Clear Jam Action Card (only when the weapon is jammed) --}}

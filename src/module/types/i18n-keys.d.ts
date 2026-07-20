@@ -2908,6 +2908,8 @@ export type I18nKey =
     | 'WH40K.SETTINGS.FreeformItems.Name'
     | 'WH40K.SETTINGS.HomebrewSelfTargeting.Hint'
     | 'WH40K.SETTINGS.HomebrewSelfTargeting.Name'
+    | 'WH40K.SETTINGS.MagazineBuilding.Hint'
+    | 'WH40K.SETTINGS.MagazineBuilding.Name'
     | 'WH40K.SETTINGS.MovementAutomation.Display'
     | 'WH40K.SETTINGS.MovementAutomation.Full'
     | 'WH40K.SETTINGS.MovementAutomation.Hint'

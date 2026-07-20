@@ -147,6 +147,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
             {
               "choices": undefined,
               "config": true,
+              "default": "false",
+              "key": "magazine-building",
+              "requiresReload": undefined,
+              "scope": "world",
+              "type": "Boolean",
+            },
+            {
+              "choices": undefined,
+              "config": true,
               "default": "true",
               "key": "require-combat-to-attack",
               "requiresReload": undefined,
