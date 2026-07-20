@@ -598,7 +598,10 @@ export class Hit {
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 
-        this.damageType = actionItem.system.damage?.type ?? actionItem.system.damageType ?? 'Impact';
+        // Prefer the weapon's mode-aware damage type (#430) — a beam-vs-blade weapon
+        // deals a different type per firing mode; falls back to the base damage type.
+        const effectiveType = (actionItem.system as { effectiveDamageType?: string }).effectiveDamageType;
+        this.damageType = effectiveType ?? actionItem.system.damage?.type ?? actionItem.system.damageType ?? 'Impact';
 
         // Conditional weapon-quality grants (Direction #7, §D8) — e.g. Hammer Blow
         // adding Concussive (2) [DH2/OW/BC] or Shocking [DW/DH1] on an All-Out
