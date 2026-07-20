@@ -17,10 +17,12 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare weaponTypes: Set<string>;
-    declare modifiers: { damage: number; penetration: number; range: number; rateOfFire: { single: number; semi: number; full: number } };
+    declare modifiers: { damage: number; penetration: number; range: number; attack: number; rateOfFire: { single: number; semi: number; full: number } };
     declare addedQualities: Set<string>;
     declare removedQualities: Set<string>;
     declare clipModifier: number;
+    declare fireRateOverride: number | null;
+    declare hitEffect: string;
     declare costMultiplier: number | null;
     declare effect: string;
     declare notes: string;
@@ -38,11 +40,16 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
             // What weapon types can use this ammo
             weaponTypes: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
-            // Ammo modifiers (applied to weapon when loaded)
+            // Ammo modifiers (applied to weapon when loaded). Flat DELTAS — a
+            // delta-mode round (Man-Stopper +3 Pen, Hot-shot +1 dmg) carries its
+            // numbers here; a full-profile OVERRIDE round (a warhead / sniper round)
+            // leaves these 0 and authors the replacement profile in `system.damage`.
             modifiers: new fields.SchemaField({
                 damage: new fields.NumberField({ required: true, initial: 0, integer: true }),
                 penetration: new fields.NumberField({ required: true, initial: 0, integer: true }),
                 range: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                // To-hit delta (e.g. Explosive Arrows/Quarrels −10).
+                attack: new fields.NumberField({ required: true, initial: 0, integer: true }),
                 rateOfFire: new fields.SchemaField({
                     single: new fields.NumberField({ required: true, initial: 0, integer: true }),
                     semi: new fields.NumberField({ required: true, initial: 0, integer: true }),
@@ -58,6 +65,16 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
 
             // Clip size modifier
             clipModifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+
+            // Rate-of-fire OVERRIDE this ammo forces while loaded (e.g. Hot-shot →
+            // single shot), or null to keep the weapon's own rate. Distinct from the
+            // `modifiers.rateOfFire` deltas — this replaces the fire rate outright.
+            fireRateOverride: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
+
+            // Structured on-hit effect this ammo triggers (Bleeder Rounds blood loss,
+            // Dumdum armour-doubling). Replaces the retired AMMO_EFFECTS `hitEffects`
+            // name-match table; surfaced on the hit as a damage-phase effect.
+            hitEffect: new fields.HTMLField({ required: false, blank: true }),
 
             // Imperium Maledictum prices custom ammunition as a MULTIPLE of the
             // linked weapon's cost (e.g. ×2, ×3) rather than a flat currency
@@ -106,6 +123,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
                 damage: 0,
                 penetration: 0,
                 range: 0,
+                attack: 0,
                 rateOfFire: { single: 0, semi: 0, full: 0 },
             },
             // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: resolveLineVariant may return undefined at runtime when variant key is absent despite the cast type
@@ -129,6 +147,11 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: line-variant dispatch requires unknown cast; resolved scalar values cast at call site
         this.clipModifier = Number(resolveLineVariant(this.clipModifier as unknown, lineKey) ?? 0);
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: resolveLineVariant may return undefined at runtime when variant key is absent
+        const resolvedFireRate = resolveLineVariant(this.fireRateOverride as unknown, lineKey) as number | null | undefined;
+        this.fireRateOverride = resolvedFireRate ?? null;
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: resolveLineVariant may return undefined at runtime when variant key is absent
+        this.hitEffect = (resolveLineVariant(this.hitEffect as unknown, lineKey) as string) ?? '';
         // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: resolveLineVariant may return undefined at runtime when variant key is absent
         this.effect = (resolveLineVariant(this.effect as unknown, lineKey) as string) ?? '';
         // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: resolveLineVariant may return undefined at runtime when variant key is absent
@@ -166,6 +189,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         if (mods.damage !== 0) return true;
         if (mods.penetration !== 0) return true;
         if (mods.range !== 0) return true;
+        if (mods.attack !== 0) return true;
         if (Object.values(mods.rateOfFire).some((v) => v !== 0)) return true;
         return false;
     }
@@ -184,6 +208,9 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         }
         if (mods.penetration !== 0) {
             props.push(`Pen: ${formatSigned(mods.penetration)}`);
+        }
+        if (mods.attack !== 0) {
+            props.push(`To-Hit: ${formatSigned(mods.attack)}`);
         }
 
         if (this.addedQualities.size) {

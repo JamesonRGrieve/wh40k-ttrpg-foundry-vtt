@@ -1,6 +1,5 @@
 import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KItemDocument } from '../types/global.d.ts';
-import { calculateAmmoAttackSpecials } from './ammo.ts';
 import { calculateWeaponModifiersAttackSpecials } from './weapon-modifiers.ts';
 import { applyQualityModifiersToRollData } from './weapon-quality-effects.ts';
 
@@ -8,6 +7,34 @@ type AttackSpecialLike = {
     name: string;
     level?: number | boolean | string;
 };
+
+/** The chambered round's quality changes, read from the weapon's `loadedAmmo` getter. */
+type LoadedAmmoQualities = { addedQualities?: Iterable<string>; removedQualities?: Iterable<string> };
+
+/** Collapse a quality identifier / attack-special name to a comparable key (`Razor Sharp` ⇄ `razor-sharp`). */
+function normalizeQualityKey(s: string): string {
+    return s.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+// Canonical attack-special registry keyed by normalized name, built once at module
+// load (`attackSpecials()` is a hoisted pure function returning a static list).
+const attackSpecialByKey: Map<string, { name: string; hasLevel: boolean }> = new Map(attackSpecials().map((a) => [normalizeQualityKey(a.name), a]));
+
+/**
+ * Bridge an ammunition quality id (lowercase-hyphenated, e.g. `toxic-1`, `blast-1`,
+ * `razor-sharp`) to the roll's canonical attack-special ({ name, level }). A trailing
+ * `-N` is the level; a level-less quality resolves to `level: true`. Returns null for
+ * a pseudo-quality with no combat attack-special (e.g. `clip-reduced-to-1`), which is
+ * then skipped. This replaces the name-keyed AMMO_EFFECTS `attackSpecials` table.
+ */
+export function attackSpecialForQualityId(qualityId: string): { name: string; level: number | boolean } | null {
+    const levelMatch = /-(\d+)$/.exec(qualityId);
+    const base = levelMatch !== null ? qualityId.slice(0, levelMatch.index) : qualityId;
+    const level = levelMatch !== null ? Number(levelMatch[1]) : null;
+    const found = attackSpecialByKey.get(normalizeQualityKey(base));
+    if (found === undefined) return null;
+    return { name: found.name, level: level ?? true };
+}
 
 type AttackSpecialCarrier = WH40KItemDocument & {
     isAttackSpecial: boolean;
@@ -50,10 +77,23 @@ export function updateAttackSpecials(rollData: AttackSpecialSourceRollData): voi
     }
 
     if (actionItem.isRanged) {
-        // actionItem.isRanged is true → rollData is WeaponRollData (not PsychicRollData),
-        // narrowed at runtime but invisible to the TS type system; cast accordingly.
-        // eslint-disable-next-line no-restricted-syntax -- boundary: runtime-narrowed WeaponRollData; TS union can't see isRanged implies weapon not power
-        calculateAmmoAttackSpecials(mutableRollData as unknown as Parameters<typeof calculateAmmoAttackSpecials>[0]);
+        // Apply the loaded round's quality changes (#ammo-system, Direction #7):
+        // the ammo item's structured `addedQualities` / `removedQualities` (lowercase
+        // quality ids) bridge to the roll's canonical attack-special names. This
+        // replaces the name-keyed AMMO_EFFECTS `attackSpecials` table.
+        const loaded = (actionItem.system as { loadedAmmo?: LoadedAmmoQualities }).loadedAmmo;
+        if (loaded !== undefined) {
+            for (const q of loaded.removedQualities ?? []) {
+                const spec = attackSpecialForQualityId(q);
+                if (spec !== null) mutableRollData.attackSpecials.findSplice((i: AttackSpecialLike) => i.name === spec.name);
+            }
+            for (const q of loaded.addedQualities ?? []) {
+                const spec = attackSpecialForQualityId(q);
+                if (spec !== null && !mutableRollData.attackSpecials.some((i) => i.name === spec.name)) {
+                    mutableRollData.attackSpecials.push(spec);
+                }
+            }
+        }
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: runtime-narrowed union; WeaponModifiers accepts WeaponRollData at runtime

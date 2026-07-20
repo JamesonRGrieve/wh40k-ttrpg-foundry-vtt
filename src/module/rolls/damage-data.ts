@@ -1,4 +1,4 @@
-import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateAmmoSpecials } from '../rules/ammo.ts';
+import { calculateAmmoSpecials } from '../rules/ammo.ts';
 import { getCriticalDamage } from '../rules/critical-damage.ts';
 import {
     collectDynamicComponents,
@@ -477,9 +477,9 @@ export class Hit {
             // Deathdealer: the always-on +ceil(PerB/2) here was NOT RAW (crit-only +full
             // Perception Bonus via the onCrit hook). Removed.
 
-            // Ammo
-            // eslint-disable-next-line no-restricted-syntax -- boundary: AttackDataLike is a minimal interface; rule functions expect full ActionData which satisfies it at runtime
-            calculateAmmoDamageBonuses(attackData as unknown as Parameters<typeof calculateAmmoDamageBonuses>[0], this);
+            // Ammo damage delta / override is applied upstream by the weapon's
+            // `effectiveDamageFormula` getter (#ammo-system, Direction #7) — no
+            // name-match here, and no double-count with the base damage roll.
         }
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: AttackDataLike is a minimal interface; rule functions expect full ActionData which satisfies it at runtime
@@ -557,9 +557,8 @@ export class Hit {
                 this.penetrationModifiers['overload'] = 2;
             }
 
-            // Ammo
-            // eslint-disable-next-line no-restricted-syntax -- boundary: AttackDataLike is a minimal interface; rule functions expect full ActionData which satisfies it at runtime
-            calculateAmmoPenetrationBonuses(attackData as unknown as Parameters<typeof calculateAmmoPenetrationBonuses>[0], this);
+            // Ammo penetration delta / override is applied upstream by the weapon's
+            // `effectivePenetration` getter (#ammo-system) — no name-match, no double-count.
         }
 
         // Eye of Vengeance Penetration → data-driven via the talent's dynamicModifiers

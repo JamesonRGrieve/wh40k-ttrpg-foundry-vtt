@@ -22,7 +22,7 @@ export interface MagazineSegment {
     ammoName: string;
     /** Rounds of this type remaining in this segment. */
     count: number;
-    /** Flat stat deltas the ammo applies while chambered. */
+    /** Flat stat deltas the ammo applies while chambered (delta-mode rounds). */
     modifiers: { damage: number; penetration: number; range: number };
     /** Clip-size delta this ammo imposes (e.g. Hot-shot → clip reduced). */
     clipModifier: number;
@@ -30,6 +30,26 @@ export interface MagazineSegment {
     addedQualities: readonly string[];
     /** Weapon qualities this ammo removes while chambered. */
     removedQualities: readonly string[];
+    /**
+     * To-hit delta this ammo applies (e.g. Explosive Arrows/Quarrels −10). Optional:
+     * segments persisted before the structured-ammo model default to 0.
+     */
+    attack?: number;
+    /**
+     * Damage-type override (e.g. a needle round → Rending), or '' to keep the
+     * weapon's type. Applied over the base, under a firing-mode override.
+     */
+    damageType?: string;
+    /**
+     * Full damage-profile OVERRIDE (a warhead / sniper round that replaces the
+     * dice, not a delta). Used ONLY when `damageOverride.formula` is non-empty; a
+     * delta-mode round leaves `formula` '' and carries its numbers in `modifiers`.
+     */
+    damageOverride?: { formula: string; bonus: number; penetration: number };
+    /** Rate-of-fire override this ammo forces (e.g. Hot-shot → single shot), or null to keep the weapon's. */
+    fireRateOverride?: number | null;
+    /** Structured on-hit effect text this ammo triggers (e.g. Bleeder Rounds blood loss), or '' for none. */
+    hitEffect?: string;
 }
 
 /** The legacy single-loaded-ammo cache shape (pre-magazine), read during migration. */
