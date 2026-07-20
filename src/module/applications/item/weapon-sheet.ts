@@ -70,6 +70,7 @@ interface WeaponSheetContext extends Record<string, unknown> {
     effectivePenetration: number;
     effectiveToHit: number;
     effectiveWeight: number;
+    magazineBuildingEnabled: boolean;
 }
 
 /**
@@ -190,6 +191,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
 
         // Body collapse state - start collapsed by default
         context.bodyCollapsed = this.#bodyCollapsed;
+        context.magazineBuildingEnabled = WH40KSettings.isMagazineBuildingEnabled();
 
         // Prepare qualities array for clickable tags
         context.qualitiesArray = Array.from(system.effectiveSpecial).map((q: string) => {
@@ -690,6 +692,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
      * then apply it via `WeaponData.buildClip`.
      */
     static async #buildClip(this: WeaponSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        if (!WH40KSettings.isMagazineBuildingEnabled()) return;
         const actor = this.item.actor;
         const weaponName = this.item.name;
         if (actor === null) {

@@ -979,6 +979,10 @@
             "RequireCombatToAttack": {
                 "Name": "Require Active Combat to Attack",
                 "Hint": "When enabled, weapon attacks can only be initiated during an active combat encounter that the attacker's token is part of. Disable for out-of-combat or narrative attacks. Defaults to on."
+            },
+            "MagazineBuilding": {
+                "Name": "Enable Magazine Building",
+                "Hint": "When enabled, the weapon sheet shows a Build Clip action that lets players compose an ordered mixed magazine — loading several ammunition types in firing order (e.g. 3 AP then 2 Hot-shot). RAW loads one ammo type per clip, so this is off by default; the standard Reload is unaffected either way."
             }
         },
         "ActiveEffect": {
