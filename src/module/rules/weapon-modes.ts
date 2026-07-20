@@ -25,6 +25,8 @@ export interface WeaponFiringMode {
     label: string;
     /** Damage formula override, or '' to inherit the base. */
     damage: string;
+    /** Damage type override (e.g. 'energy'|'impact'|'rending'), or '' to inherit — a beam-vs-blade weapon changes type per mode. */
+    damageType: string;
     /** Damage bonus override, or null to inherit the base. */
     damageBonus: number | null;
     /** Penetration override, or null to inherit the base. */
@@ -77,6 +79,11 @@ export function applyModeQualities(qualities: Set<string>, mode: WeaponFiringMod
 /** The active mode's damage formula, or `fallback` when the mode does not override it. */
 export function modeDamageFormula(mode: WeaponFiringMode | null, fallback: string): string {
     return mode !== null && mode.damage !== '' ? mode.damage : fallback;
+}
+
+/** The active mode's damage type, or `fallback` when the mode does not override it. */
+export function modeDamageType(mode: WeaponFiringMode | null, fallback: string): string {
+    return mode !== null && mode.damageType !== '' ? mode.damageType : fallback;
 }
 
 /** The active mode's damage bonus, or `fallback` when the mode does not override it. */

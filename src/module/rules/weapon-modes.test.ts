@@ -7,6 +7,7 @@ import {
     modeCharacteristic,
     modeDamageBonus,
     modeDamageFormula,
+    modeDamageType,
     modePenetration,
     modeRange,
     modeRateOfFire,
@@ -18,6 +19,7 @@ function mode(over: Partial<WeaponFiringMode> = {}): WeaponFiringMode {
     return {
         label: 'X',
         damage: '',
+        damageType: '',
         damageBonus: null,
         penetration: null,
         range: null,
@@ -118,6 +120,12 @@ describe('weapon firing modes (#430)', () => {
             expect(modeWeaponClass(mode({ weaponClass: 'melee' }), 'basic')).toBe('melee');
             expect(modeWeaponClass(mode({ weaponClass: '' }), 'basic')).toBe('basic'); // inherit
             expect(modeWeaponClass(null, 'basic')).toBe('basic');
+        });
+
+        it('modeDamageType overrides the damage type (beam vs blade), inheriting on ""', () => {
+            expect(modeDamageType(mode({ damageType: 'impact' }), 'energy')).toBe('impact');
+            expect(modeDamageType(mode({ damageType: '' }), 'energy')).toBe('energy'); // inherit
+            expect(modeDamageType(null, 'energy')).toBe('energy');
         });
 
         it('modeAttackType / modeCharacteristic override, inheriting on ""', () => {

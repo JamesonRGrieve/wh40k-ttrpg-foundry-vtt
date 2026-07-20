@@ -11,6 +11,7 @@ import {
     modeCharacteristic,
     modeDamageBonus,
     modeDamageFormula,
+    modeDamageType,
     modePenetration,
     modeRange,
     modeRateOfFire,
@@ -282,6 +283,7 @@ export default class WeaponData extends ItemDataModel.mixin(
                 new fields.SchemaField({
                     label: new fields.StringField({ required: true, blank: false }),
                     damage: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    damageType: new fields.StringField({ required: false, blank: true, initial: '' }),
                     damageBonus: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
                     penetration: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
                     range: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
@@ -821,6 +823,37 @@ export default class WeaponData extends ItemDataModel.mixin(
 
         if (totalBonus === 0) return baseDamage;
         return `${baseDamage}${totalBonus > 0 ? '+' : ''}${totalBonus}`;
+    }
+
+    /**
+     * The damage type for the active firing mode (#430), else the base damage type.
+     * A beam-vs-blade weapon (a Necron Staff of Light) deals Energy at range and
+     * Impact in melee — the active mode's `damageType` override selects which.
+     * @type {string}
+     */
+    get effectiveDamageType(): string {
+        return modeDamageType(this.activeFiringModeProfile, this.damage.type);
+    }
+
+    /** Damage-type abbreviation for the active mode (shadows the DamageTemplate getter). */
+    get damageTypeAbbr(): string {
+        const abbrs: Record<string, string | undefined> = {
+            impact: 'I',
+            rending: 'R',
+            explosive: 'X',
+            energy: 'E',
+            fire: 'F',
+            shock: 'S',
+            cold: 'C',
+            toxic: 'T',
+        };
+        const type = this.effectiveDamageType;
+        return abbrs[type] ?? type.charAt(0).toUpperCase();
+    }
+
+    /** Localized damage-type label for the active mode (shadows the DamageTemplate getter). */
+    get damageTypeLabel(): string {
+        return game.i18n.localize(`WH40K.DamageType.${this.effectiveDamageType.capitalize()}`);
     }
 
     /**
