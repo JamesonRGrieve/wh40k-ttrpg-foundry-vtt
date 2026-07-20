@@ -7,6 +7,7 @@ import type { LabelConfig, LabelAbbreviationConfig, LabelModifierConfig } from '
 import type { default as WeaponData } from '../../data/item/weapon.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
+import { consumeRounds } from '../../rules/magazine.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
@@ -545,9 +546,12 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
             return;
         }
 
-        // Decrement ammo by 1
+        // Decrement ammo by 1 (and consume the chambered round from the magazine, #ammo-system).
         const newValue = system.clip.value - 1;
-        await this.item.update({ 'system.clip.value': newValue });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item.update accepts a loose document payload
+        const update: Record<string, unknown> = { 'system.clip.value': newValue };
+        if (system.clip.magazine.length > 0) update['system.clip.magazine'] = consumeRounds(system.clip.magazine, 1).magazine;
+        await this.item.update(update);
 
         // Show feedback
         if (newValue === 0) {

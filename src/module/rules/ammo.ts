@@ -5,6 +5,7 @@
 import type { ActionData } from '../rolls/action-data.ts';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KItemDocument } from '../types/global.d.ts';
+import { consumeRounds, type MagazineSegment, refundRounds } from './magazine.ts';
 
 type AttackSpecialEffect = {
     remove?: string;
@@ -30,7 +31,7 @@ type AmmoItem = WH40KItemDocument & {
     usesAmmo: boolean;
     system: WH40KItemDocument['system'] & {
         loadedAmmo?: { name?: string };
-        clip: { value: number };
+        clip: { value: number; magazine?: MagazineSegment[] };
         effectiveClipMax?: number;
         attack?: {
             rateOfFire?: {
@@ -119,18 +120,17 @@ function ammoText(item: AmmoItem): string | undefined {
 export async function useAmmo(actionData: AmmoActionData): Promise<void> {
     const actionItem = actionData.rollData.weapon;
     if (actionItem.usesAmmo) {
-        actionItem.system.clip.value -= actionData.rollData.ammoUsed;
-        let newValue = actionItem.system.clip.value;
-        // Reset to 0 if there was a problem
-        if (newValue < 0) {
-            newValue = 0;
-        }
+        const used = actionData.rollData.ammoUsed;
+        const newValue = Math.max(0, actionItem.system.clip.value - used);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item.update accepts a loose document payload
+        const update: Record<string, unknown> = { 'system.clip.value': newValue };
+        // Consume the chambered round(s) from the ordered magazine (#ammo-system);
+        // a generic (magazine-less) clip only tracks the count.
+        const magazine = actionItem.system.clip.magazine;
+        if (magazine !== undefined && magazine.length > 0) update['system.clip.magazine'] = consumeRounds(magazine, used).magazine;
+        await actionItem.update(update);
 
-        await actionItem.update({
-            'system.clip.value': newValue,
-        });
-
-        if (actionItem.system.clip.value === 0) {
+        if (newValue === 0) {
             ui.notifications.warn(game.i18n.localize('WH40K.AMMO.ClipEmpty'));
         }
     }
@@ -139,9 +139,13 @@ export async function useAmmo(actionData: AmmoActionData): Promise<void> {
 export async function refundAmmo(actionData: AmmoActionData): Promise<void> {
     const actionItem = actionData.rollData.weapon;
     if (actionItem.usesAmmo) {
-        await actionItem.update({
-            'system.clip.value': actionItem.system.clip.value + actionData.rollData.ammoUsed,
-        });
+        const used = actionData.rollData.ammoUsed;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item.update accepts a loose document payload
+        const update: Record<string, unknown> = { 'system.clip.value': actionItem.system.clip.value + used };
+        const magazine = actionItem.system.clip.magazine;
+        const front = magazine !== undefined && magazine.length > 0 ? magazine[0] : undefined;
+        if (magazine !== undefined && front !== undefined) update['system.clip.magazine'] = refundRounds(magazine, used, front);
+        await actionItem.update(update);
     }
 }
 
