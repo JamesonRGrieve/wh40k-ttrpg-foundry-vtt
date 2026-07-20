@@ -2,6 +2,7 @@ import type { ReloadResult } from '../../actions/reload-action-manager.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { capitalize } from '../../handlebars/handlebars-helpers.ts';
 import { t } from '../../i18n/t.ts';
+import { consumeRounds, frontSegment, type MagazineSegment, magazineFromLegacy, magazineTotal } from '../../rules/magazine.ts';
 import { applyDeactivationQualities, deactivationStatDeltas, isDeactivated, type WeaponActivationConfig } from '../../rules/weapon-activation.ts';
 import {
     activeFiringMode,
@@ -156,24 +157,13 @@ export default class WeaponData extends ItemDataModel.mixin(
      * system code never name-matches the item (Direction #7).
      */
     declare grantedByDefault: boolean;
-    declare clip: { max: number; value: number; type: string };
+    declare clip: { max: number; value: number; type: string; magazine: MagazineSegment[] };
     // Per-weapon jam state (#411). May be undefined at runtime when the schema
     // fails to initialise (mirrors loadedAmmo), so consumers guard via isJammed.
     declare jammed: boolean | undefined;
-    // Note: 'reload' schema field accessed via [key: string]: any; to avoid conflict with reload() method
-    // May be undefined at runtime when the schema fails to initialize (e.g. an
-    // upstream validation error on a sibling field — Foundry leaves later fields
-    // un-populated). Type matches the live behavior so consumers must guard.
-    declare loadedAmmo:
-        | {
-              uuid: string;
-              name: string;
-              modifiers: { damage: number; penetration: number; range: number };
-              clipModifier: number;
-              addedQualities: Set<string>;
-              removedQualities: Set<string>;
-          }
-        | undefined;
+    // Note: 'reload' schema field accessed via [key: string]: any; to avoid conflict with reload() method.
+    // `loadedAmmo` is no longer a stored field — it is a derived getter over the
+    // chambered (front) magazine segment (#ammo-system); see `get loadedAmmo()`.
     declare modifications: Array<{
         uuid: string;
         name: string;
@@ -252,11 +242,31 @@ export default class WeaponData extends ItemDataModel.mixin(
             // the variant containers when owned.
             grantedByDefault: new fields.BooleanField({ required: false, initial: false }),
 
-            // Ammunition
+            // Ammunition. `magazine` is the ordered clip loadout (#ammo-system): a
+            // list of round-segments fired front-first, each a run of one ammo type
+            // (empty `ammoUuid` = generic/standard rounds). `value` is the derived
+            // total (Σ segment counts), synced in prepareDerivedData; `max`/`type`
+            // are the base clip size and ammo family.
             clip: new fields.SchemaField({
                 max: new fields.NumberField({ required: true, initial: 0, min: 0 }),
                 value: new fields.NumberField({ required: true, initial: 0, min: 0 }),
                 type: new fields.StringField({ required: false, blank: true }),
+                magazine: new fields.ArrayField(
+                    new fields.SchemaField({
+                        ammoUuid: new fields.StringField({ required: true, blank: true, initial: '' }),
+                        ammoName: new fields.StringField({ required: true, blank: true, initial: '' }),
+                        count: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                        modifiers: new fields.SchemaField({
+                            damage: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                            penetration: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                            range: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                        }),
+                        clipModifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                        addedQualities: new fields.ArrayField(new fields.StringField({ required: true }), { required: false, initial: [] }),
+                        removedQualities: new fields.ArrayField(new fields.StringField({ required: true }), { required: false, initial: [] }),
+                    }),
+                    { required: false, initial: [] },
+                ),
             }),
             reload: new fields.StringField({
                 required: true,
@@ -310,28 +320,8 @@ export default class WeaponData extends ItemDataModel.mixin(
             // Live selected firing-mode index — per-weapon transient state, like `jammed`.
             activeMode: new fields.NumberField({ required: false, initial: 0, min: 0, integer: true }),
 
-            // Loaded ammunition (reference to ammunition item)
-            loadedAmmo: new fields.SchemaField(
-                {
-                    uuid: new fields.StringField({ required: false, blank: true }),
-                    name: new fields.StringField({ required: false, blank: true }),
-                    // Cached modifier values from loaded ammo
-                    modifiers: new fields.SchemaField(
-                        {
-                            damage: new fields.NumberField({ required: false, initial: 0, integer: true }),
-                            penetration: new fields.NumberField({ required: false, initial: 0, integer: true }),
-                            range: new fields.NumberField({ required: false, initial: 0, integer: true }),
-                        },
-                        { required: false },
-                    ),
-                    // Cached clip size modifier from loaded ammo
-                    clipModifier: new fields.NumberField({ required: false, initial: 0, integer: true }),
-                    // Cached qualities
-                    addedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
-                    removedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
-                },
-                { required: false },
-            ),
+            // (Loaded ammunition is no longer stored — the chambered round is the
+            // front of `clip.magazine`; `loadedAmmo` is a derived getter.)
 
             // Activation mode CONFIG — the powered ↔ deactivated toggle (chainsword,
             // shock whip, power weapons). Line-authored rules content: `activatable`
@@ -402,8 +392,54 @@ export default class WeaponData extends ItemDataModel.mixin(
         WeaponData.#migrateSpecial(source);
         WeaponData.#migrateClass(source);
         WeaponData.#coerceEnums(source);
+        WeaponData.#migrateMagazine(source);
         // Legacy field rename (overwrite if source present): proficiency→requiredTraining.
         renameKeys(source, { proficiency: 'requiredTraining' }, { guard: 'overwrite' });
+    }
+
+    /**
+     * Migrate the pre-#ammo-system single `loadedAmmo` + `clip.value` shape into an
+     * ordered `clip.magazine` (one segment for the loaded special ammo). Generic
+     * rounds (no `loadedAmmo`) stay tracked by `clip.value` with an empty magazine.
+     * Idempotent: a source that already has a magazine array is left alone.
+     * @param {object} source  The source data
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors _migrateData source signature for internal migration helpers
+    static #migrateMagazine(source: Record<string, unknown>): void {
+        const clip = source['clip'];
+        if (typeof clip !== 'object' || clip === null) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: raw pre-validation source object
+        const clipObj = clip as Record<string, unknown>;
+        if (Array.isArray(clipObj['magazine'])) return; // already migrated
+        const loaded = source['loadedAmmo'];
+        const clipValue = typeof clipObj['value'] === 'number' ? clipObj['value'] : 0;
+        if (typeof loaded === 'object' && loaded !== null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: raw pre-validation legacy loadedAmmo object
+            const l = loaded as {
+                uuid?: string;
+                name?: string;
+                modifiers?: { damage?: number; penetration?: number; range?: number };
+                clipModifier?: number;
+                addedQualities?: Iterable<string>;
+                removedQualities?: Iterable<string>;
+            };
+            clipObj['magazine'] = magazineFromLegacy(
+                {
+                    uuid: typeof l.uuid === 'string' ? l.uuid : '',
+                    name: typeof l.name === 'string' ? l.name : '',
+                    modifiers: {
+                        damage: Number(l.modifiers?.damage ?? 0),
+                        penetration: Number(l.modifiers?.penetration ?? 0),
+                        range: Number(l.modifiers?.range ?? 0),
+                    },
+                    clipModifier: Number(l.clipModifier ?? 0),
+                    addedQualities: l.addedQualities ?? [],
+                    removedQualities: l.removedQualities ?? [],
+                },
+                clipValue,
+            );
+        }
+        delete source['loadedAmmo']; // drop the retired legacy field
     }
 
     /**
@@ -519,7 +555,10 @@ export default class WeaponData extends ItemDataModel.mixin(
         this.type = resolveLineVariant(this.type, lineKey);
         this.twoHanded = Boolean(resolveLineVariant(this.twoHanded, lineKey));
         this.melee = Boolean(resolveLineVariant(this.melee, lineKey));
-        this.clip = foundry.utils.mergeObject({ max: 0, value: 0, type: '' }, resolveLineVariant(this.clip, lineKey), { inplace: false });
+        this.clip = foundry.utils.mergeObject({ max: 0, value: 0, type: '', magazine: [] }, resolveLineVariant(this.clip, lineKey), { inplace: false });
+        // `clip.value` is the authoritative round count; when a magazine (special /
+        // mixed ammo, #ammo-system) is loaded it mirrors the segment total.
+        if (this.clip.magazine.length > 0) this.clip.value = magazineTotal(this.clip.magazine);
         setReloadField(this, resolveLineVariant(getReloadField(this), lineKey));
         this.requiredTraining = resolveLineVariant(this.requiredTraining, lineKey);
         this.notes = resolveLineVariant(this.notes, lineKey);
@@ -1320,7 +1359,37 @@ export default class WeaponData extends ItemDataModel.mixin(
     }
 
     /**
-     * Check if weapon has loaded ammunition.
+     * The chambered ammunition (#ammo-system): the front `clip.magazine` segment
+     * mapped to the legacy loaded-ammo shape, or `undefined` when no *special* ammo
+     * is chambered (an empty magazine, or a generic/standard front segment with no
+     * ammo item — `ammoUuid === ''`). This is the single derivation every legacy
+     * `loadedAmmo` consumer reads unchanged (modifiers, qualities, clip modifier).
+     * @type {object|undefined}
+     */
+    get loadedAmmo():
+        | {
+              uuid: string;
+              name: string;
+              modifiers: { damage: number; penetration: number; range: number };
+              clipModifier: number;
+              addedQualities: Set<string>;
+              removedQualities: Set<string>;
+          }
+        | undefined {
+        const front = frontSegment(this.clip.magazine);
+        if (front === null || front.ammoUuid === '') return undefined;
+        return {
+            uuid: front.ammoUuid,
+            name: front.ammoName,
+            modifiers: { damage: front.modifiers.damage, penetration: front.modifiers.penetration, range: front.modifiers.range },
+            clipModifier: front.clipModifier,
+            addedQualities: new Set(front.addedQualities),
+            removedQualities: new Set(front.removedQualities),
+        };
+    }
+
+    /**
+     * Check if weapon has loaded (special) ammunition chambered.
      * @type {boolean}
      */
     get hasLoadedAmmo(): boolean {
@@ -1348,7 +1417,10 @@ export default class WeaponData extends ItemDataModel.mixin(
     fire(shots = 1): WH40KItem | null | Promise<WH40KItem | undefined> {
         if (!this.usesAmmo) return this.parent;
         const newValue = Math.max(0, this.clip.value - shots);
-        return this.parent.update({ 'system.clip.value': newValue });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: weapon.update accepts a loose document update payload
+        const update: Record<string, unknown> = { 'system.clip.value': newValue };
+        if (this.clip.magazine.length > 0) update['system.clip.magazine'] = consumeRounds(this.clip.magazine, shots).magazine;
+        return this.parent.update(update);
     }
 
     /**
@@ -1375,7 +1447,7 @@ export default class WeaponData extends ItemDataModel.mixin(
      */
     async clearJam({ loseAmmo = true }: { loseAmmo?: boolean } = {}): Promise<WH40KItem | undefined> {
         if (loseAmmo && this.usesAmmo) {
-            return this.parent.update({ 'system.jammed': false, 'system.clip.value': 0 });
+            return this.parent.update({ 'system.jammed': false, 'system.clip.value': 0, 'system.clip.magazine': [] });
         }
         return this.parent.update({ 'system.jammed': false });
     }
@@ -1443,14 +1515,6 @@ export default class WeaponData extends ItemDataModel.mixin(
         } = ammoItem.system;
         const { damage: ammoDamageMod = 0, penetration: ammoPenMod = 0, range: ammoRangeMod = 0 } = modifiers;
         const effectiveMax = Math.max(1, this.clip.max + clipMod);
-        const loadedAmmoData = {
-            uuid: ammoItem.uuid,
-            name: ammoItem.name,
-            modifiers: { damage: ammoDamageMod, penetration: ammoPenMod, range: ammoRangeMod },
-            clipModifier: clipMod,
-            addedQualities,
-            removedQualities,
-        };
 
         // Deduct rounds from inventory
         const availableQuantity = quantity ?? effectiveMax;
@@ -1459,8 +1523,19 @@ export default class WeaponData extends ItemDataModel.mixin(
             await ammoItem.update({ 'system.quantity': quantity - roundsToLoad });
         }
 
+        // Load as a single-segment magazine (#ammo-system): the whole clip is this
+        // one ammo type until fired down / reloaded.
+        const segment: MagazineSegment = {
+            ammoUuid: ammoItem.uuid,
+            ammoName: ammoItem.name,
+            count: roundsToLoad,
+            modifiers: { damage: ammoDamageMod, penetration: ammoPenMod, range: ammoRangeMod },
+            clipModifier: clipMod,
+            addedQualities: Array.from(addedQualities),
+            removedQualities: Array.from(removedQualities),
+        };
         await this.parent.update({
-            'system.loadedAmmo': loadedAmmoData,
+            'system.clip.magazine': [segment],
             'system.clip.value': roundsToLoad,
         });
 
@@ -1485,14 +1560,7 @@ export default class WeaponData extends ItemDataModel.mixin(
         }
 
         await this.parent.update({
-            'system.loadedAmmo': {
-                uuid: '',
-                name: '',
-                modifiers: { damage: 0, penetration: 0, range: 0 },
-                clipModifier: 0,
-                addedQualities: new Set(),
-                removedQualities: new Set(),
-            },
+            'system.clip.magazine': [],
             'system.clip.value': 0,
         });
 

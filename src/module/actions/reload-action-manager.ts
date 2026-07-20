@@ -10,6 +10,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { isActorInActiveCombat } from '../rules/combat-state.ts';
+import type { MagazineSegment } from '../rules/magazine.ts';
 
 interface AmmunitionDataWithQuantity extends AmmunitionData {
     quantity?: number;
@@ -204,27 +205,18 @@ export class ReloadActionManager {
             // Deduct rounds from inventory
             await selectedAmmo.update({ 'system.quantity': ammoQuantity - roundsToLoad });
 
-            // Update weapon — set loadedAmmo reference if different type
-            const isSameAmmo = selectedAmmo.uuid === currentLoadedAmmo?.uuid;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: weapon.update accepts loose document update payload
-            const updateData: Record<string, unknown> = { 'system.clip.value': roundsToLoad };
-
-            if (!isSameAmmo) {
-                updateData['system.loadedAmmo'] = {
-                    uuid: selectedAmmo.uuid,
-                    name: selectedAmmo.name,
-                    modifiers: {
-                        damage: ammoSystem.modifiers.damage,
-                        penetration: ammoSystem.modifiers.penetration,
-                        range: ammoSystem.modifiers.range,
-                    },
-                    clipModifier: clipMod,
-                    addedQualities: ammoSystem.addedQualities,
-                    removedQualities: ammoSystem.removedQualities,
-                };
-            }
-
-            await weapon.update(updateData);
+            // Update the weapon's magazine (#ammo-system): a standard reload loads a
+            // single segment of the chosen ammo type (the whole clip is that type).
+            const segment: MagazineSegment = {
+                ammoUuid: selectedAmmo.uuid ?? '',
+                ammoName: selectedAmmo.name,
+                count: roundsToLoad,
+                modifiers: { damage: ammoSystem.modifiers.damage, penetration: ammoSystem.modifiers.penetration, range: ammoSystem.modifiers.range },
+                clipModifier: clipMod,
+                addedQualities: Array.from(ammoSystem.addedQualities),
+                removedQualities: Array.from(ammoSystem.removedQualities),
+            };
+            await weapon.update({ 'system.clip.value': roundsToLoad, 'system.clip.magazine': [segment] });
 
             // Build success message
             let message = `${weapon.name} reloaded with ${selectedAmmo.name} (${previousValue} → ${roundsToLoad})`;
@@ -244,8 +236,9 @@ export class ReloadActionManager {
             };
         }
 
-        // Fallback for unowned weapons (no actor) — simple reload without inventory
-        await weapon.update({ 'system.clip.value': effectiveMax });
+        // Fallback for unowned weapons (no actor) — simple reload to full with a
+        // generic (ammo-item-less) magazine (#ammo-system).
+        await weapon.update({ 'system.clip.value': effectiveMax, 'system.clip.magazine': [] });
 
         return {
             success: true,
