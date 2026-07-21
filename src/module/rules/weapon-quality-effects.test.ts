@@ -21,6 +21,7 @@ import {
     resolveMaximalEffect,
     resolvePowerFieldParryDestroys,
     resolvePrimitiveDamageAdjust,
+    resolveProvenDamageAdjust,
     resolveScatterRangeBand,
     resolveStunDuration,
     resolveTemplateRadius,
@@ -263,6 +264,40 @@ describe('Primitive (X) — damage die cap', () => {
         // Die rolled 9, Primitive (7) → adjust = 7 - 9 = -2
         expect(resolvePrimitiveDamageAdjust(9, 7)).toBe(-2);
         expect(resolvePrimitiveDamageAdjust(10, 6)).toBe(-4);
+    });
+
+    it('is PER-DIE, so a multi-die weapon accumulates each qualifying die (#303)', () => {
+        // 2d10 Primitive(7) rolling [9, 10]: each die is capped independently, so
+        // the engine sums -2 + -3 = -5. The inline branch this replaced assigned
+        // with `=` inside the per-die loop and kept only the last die's -3.
+        const rolls = [9, 10];
+        const total = rolls.reduce((sum, die) => sum + resolvePrimitiveDamageAdjust(die, 7), 0);
+        expect(total).toBe(-5);
+    });
+});
+
+describe('Proven (X) — damage die floor', () => {
+    it('returns 0 when die >= floor (no adjustment)', () => {
+        expect(resolveProvenDamageAdjust(5, 3)).toBe(0);
+        expect(resolveProvenDamageAdjust(3, 3)).toBe(0);
+    });
+
+    it('returns the positive delta when die < floor', () => {
+        // Die rolled 1, Proven (3) → adjust = 3 - 1 = +2
+        expect(resolveProvenDamageAdjust(1, 3)).toBe(2);
+        expect(resolveProvenDamageAdjust(2, 5)).toBe(3);
+    });
+
+    it('is PER-DIE, so a multi-die weapon accumulates each qualifying die (#303)', () => {
+        // 2d10 Proven(3) rolling [1, 2] → +2 and +1 = +3.
+        const rolls = [1, 2];
+        const total = rolls.reduce((sum, die) => sum + resolveProvenDamageAdjust(die, 3), 0);
+        expect(total).toBe(3);
+    });
+
+    it('clamps negative inputs rather than inverting the floor', () => {
+        expect(resolveProvenDamageAdjust(-4, 3)).toBe(3);
+        expect(resolveProvenDamageAdjust(2, -1)).toBe(0);
     });
 });
 

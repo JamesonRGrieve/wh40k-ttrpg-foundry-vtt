@@ -10,7 +10,13 @@ import {
 } from '../rules/dynamic-modifiers.ts';
 import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
-import { calculateExoticQualityDamageModifiers, calculateQualityPenetrationModifiers, getRighteousFuryThreshold } from '../rules/weapon-quality-effects.ts';
+import {
+    calculateExoticQualityDamageModifiers,
+    calculateQualityPenetrationModifiers,
+    getRighteousFuryThreshold,
+    resolvePrimitiveDamageAdjust,
+    resolveProvenDamageAdjust,
+} from '../rules/weapon-quality-effects.ts';
 
 /** Short characteristic key → the fuzzy name `getCharacteristicFuzzy` resolves, for the dynamic-modifier context. */
 const DAMAGE_CHAR_FUZZY: Readonly<Record<string, string>> = {
@@ -402,20 +408,23 @@ export class Hit {
                     // applied by applyDynamicModifiers once RF/crit is detected. Direction #7.
                 }
 
+                // Primitive (X) / Proven (X) are PER-DIE: each die above the cap (or
+                // below the floor) contributes its own adjustment, so the deltas
+                // ACCUMULATE across a multi-die weapon. These used to assign with `=`
+                // inside this loop, so only the last qualifying die survived — a 2d10
+                // Primitive(7) rolling [9,10] reduced by 3 instead of 2+3=5.
+                // The arithmetic itself lives in the pure, unit-tested resolvers
+                // rather than being open-coded a second time here.
                 if (attackData.rollData.hasAttackSpecial('Primitive')) {
                     const primitive = attackData.rollData.getAttackSpecial('Primitive');
-                    const dieResult = result.result ?? 0;
-                    if (dieResult > primitive.level) {
-                        this.modifiers['primitive'] = primitive.level - dieResult;
-                    }
+                    const adjust = resolvePrimitiveDamageAdjust(result.result ?? 0, primitive.level);
+                    if (adjust !== 0) this.modifiers['primitive'] = (this.modifiers['primitive'] ?? 0) + adjust;
                 }
 
                 if (attackData.rollData.hasAttackSpecial('Proven')) {
                     const proven = attackData.rollData.getAttackSpecial('Proven');
-                    const dieResult = result.result ?? 0;
-                    if (dieResult < proven.level) {
-                        this.modifiers['proven'] = proven.level - dieResult;
-                    }
+                    const adjust = resolveProvenDamageAdjust(result.result ?? 0, proven.level);
+                    if (adjust !== 0) this.modifiers['proven'] = (this.modifiers['proven'] ?? 0) + adjust;
                 }
             }
         }
