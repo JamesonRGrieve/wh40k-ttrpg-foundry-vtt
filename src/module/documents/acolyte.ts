@@ -3,25 +3,22 @@ import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.
 import { D100Roll } from '../dice/_module.ts';
 import {
     type ActionData,
+    applySkillUseToRollData,
+    buildSkillUseDelegate,
     type ChemLike,
     ChemUseActionData,
-    ContestActionData,
     type CoatableWeapon,
     PalmActionData,
     ObjectStateActionData,
     DemolitionActionData,
     type ExplosiveItem,
     type StatefulItem,
-    DetectionActionData,
     DosReadoutActionData,
-    InterrogationActionData,
-    MedicaeActionData,
-    SocialBuffActionData,
-    SocialInfluenceActionData,
+    SkillUseActionData,
 } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { firstTargetedActor, promptItemChoice, promptSkillUse } from '../rolls/skill-use-picker.ts';
-import { firstAidDifficultyForTier, getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
+import { getSkillReadout, hasSkillUses, type SkillUseDef, skillUsesAreInline } from '../rules/skill-uses.ts';
 import type {
     WH40KActorBio,
     WH40KActorSystemData,
@@ -460,13 +457,42 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
 
     /**
-     * Prompt for the skill's use and dispatch it to the matching flow (#432 and its
-     * consumers). Returns true when a use handled the roll, false when the choice
-     * falls through to the normal test below (general / informational uses, or a
-     * dismissed picker with nothing to do). Split out of `rollSkill` to keep that
-     * method within the complexity budget as more use families were added.
+     * Dispatch a skill roll to the flow its chosen use needs (#432 and its consumers).
+     * Returns true when a use handled the roll, false when the choice falls through to
+     * the normal test below.
+     *
+     * Two paths, decided by whether the skill's uses can be chosen INSIDE the roll
+     * dialog:
+     * - **Inline** (the default, and every target-directed family): the Roll Test
+     *   dialog opens straight away with the use picker — and, for a target-directed
+     *   use, the target picker — rendered in it. No pre-dialog pop-up, and the
+     *   concrete action data is not built until the roll resolves.
+     * - **Pre-roll picker** (Chem-Use, Sleight of Hand, Tech-Use, Security,
+     *   Demolition, Athletics): these uses need a SECOND choice — which chem, which
+     *   item, which charge — before their action data can be constructed at all, so
+     *   they keep the pop-up that gathers it.
      */
     async _dispatchSkillUse(skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<boolean> {
+        if (skillUsesAreInline(skillKey)) {
+            const action = new SkillUseActionData(skillKey, skillLabel);
+            this._buildSimpleSkillRoll({
+                key: skillKey,
+                type: 'skill',
+                label: `${skillLabel} Test`,
+                target: targetValue,
+                situationalKey: skillKey,
+                instance: action,
+                ...(skillRank !== undefined ? { skillRank } : {}),
+            });
+            // Pre-targeting is now a CONVENIENCE pre-fill, not a precondition: seed the
+            // dialog's target selector from the canvas when something is targeted, and
+            // let the player pick (or change) it in the dialog otherwise.
+            action.rollData.targetActor = firstTargetedActor();
+            action.syncSkillUse();
+            prepareUnifiedRoll(action);
+            return true;
+        }
+
         const use = await promptSkillUse(skillKey, skillLabel);
         if (use === null) return true; // picker dismissed — do not fall through to a plain roll
         // Chem-Use (#441): pick the chem (and, when coating, the weapon) before rolling.
@@ -489,27 +515,6 @@ export class WH40KAcolyte extends WH40KBaseActor {
             await this._rollDemolition(use, skillKey, skillLabel, targetValue, skillRank);
             return true;
         }
-        // Opposed utility contest (#453): out-roll a targeted rival at the same skill.
-        if (use.kind === 'contest' && use.opposedSkill !== undefined) {
-            const targetActor = firstTargetedActor();
-            if (targetActor === null) {
-                ui.notifications.warn(game.i18n.format('WH40K.SkillUse.NoTarget', { use: game.i18n.localize(use.labelKey) }));
-                return true;
-            }
-            const contest = new ContestActionData(use.opposedSkill);
-            this._buildSimpleSkillRoll({
-                key: skillKey,
-                type: 'skill',
-                label: `${skillLabel}: ${game.i18n.localize(use.labelKey)}`,
-                target: targetValue,
-                situationalKey: skillKey,
-                instance: contest,
-                ...(skillRank !== undefined ? { skillRank } : {}),
-            });
-            contest.rollData.targetActor = targetActor;
-            prepareUnifiedRoll(contest);
-            return true;
-        }
         if (use.needsTarget) {
             this._rollTargetedSkillUse(use, skillKey, skillLabel, targetValue, skillRank);
             return true;
@@ -518,13 +523,17 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
 
     /**
-     * Resolve a target-directed skill use (#432/#434/#435): prompt for the target,
-     * then route through the ActionData subclass that auto-resolves the use on roll.
-     * @param {SkillUseDef} use - The chosen target-directed use
-     * @param {string} skillKey - The resolved skill key (situational + roll key)
-     * @param {string} skillLabel - The display label for the skill
-     * @param {number} targetValue - The skill's roll target
-     * @param {number} [skillRank] - The effective skill rank, when known
+     * Resolve a target-directed skill use on the PRE-ROLL picker path (#432/#434/#435).
+     * Only reachable for skills whose use list also contains an item-choice family
+     * (Sleight of Hand's Notice contest is the live case) — every other target-directed
+     * use is chosen inside the dialog now.
+     *
+     * The per-use wiring is NOT duplicated here: `buildSkillUseDelegate` picks the same
+     * action subclass the inline path builds, and `applySkillUseToRollData` applies the
+     * same label / RAW difficulty / opposition, so the two paths cannot drift.
+     *
+     * RAW per-target time gates (#458) are deliberately NOT checked here — they are
+     * enforced at roll RESOLUTION, against the final target.
      */
     _rollTargetedSkillUse(use: SkillUseDef, skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): void {
         const targetActor = firstTargetedActor();
@@ -532,120 +541,20 @@ export class WH40KAcolyte extends WH40KBaseActor {
             ui.notifications.warn(game.i18n.format('WH40K.SkillUse.NoTarget', { use: game.i18n.localize(use.labelKey) }));
             return;
         }
-        const useLabel = game.i18n.localize(use.labelKey);
-        const rollLabel = `${skillLabel}: ${useLabel}`;
-        const rankOpt = skillRank !== undefined ? { skillRank } : {};
-
-        // RAW per-target time gates (#458) are NOT checked here. They are enforced at
-        // roll RESOLUTION (`blockedByTimeGate` in action-data.ts), where the final
-        // target is known — the dialog lets the player retarget in-flight, so a
-        // pre-dialog check could be passed against one actor and the effect then
-        // applied to a cooldown-locked one.
-
-        // Interrogation (#435): an opposed test vs the subject's Willpower;
-        // InterrogationActionData applies fatigue + surfaces the info tier.
-        if (use.kind === 'interrogate') {
-            const interro = new InterrogationActionData();
-            this._buildSimpleSkillRoll({
-                key: skillKey,
-                type: 'skill',
-                label: rollLabel,
-                target: targetValue,
-                situationalKey: skillKey,
-                instance: interro,
-                ...(use.difficultyMod !== 0 ? { extraModifiers: { useDifficulty: use.difficultyMod } } : {}),
-                ...rankOpt,
-            });
-            interro.rollData.targetActor = targetActor;
-            interro.rollData.isOpposed = true;
-            interro.rollData.opposedChar = use.opposedChar ?? 'WP';
-            prepareUnifiedRoll(interro);
-            return;
-        }
-
-        // Social influence (#433): Charm/Command/Intimidate/Deceive vs the target's
-        // Willpower (or Scrutiny for Deceive); a win may auto-shift disposition.
-        if (use.kind === 'social') {
-            const social = new SocialInfluenceActionData(use);
-            this._buildSimpleSkillRoll({
-                key: skillKey,
-                type: 'skill',
-                label: rollLabel,
-                target: targetValue,
-                situationalKey: skillKey,
-                instance: social,
-                ...rankOpt,
-            });
-            social.rollData.targetActor = targetActor;
-            // Deceive is opposed by the target's Scrutiny SKILL, resolved inside the
-            // action; the WP-opposed uses drive the shared characteristic opposition.
-            if (use.opposedSkill === undefined && use.opposedChar !== undefined) {
-                social.rollData.isOpposed = true;
-                social.rollData.opposedChar = use.opposedChar;
-            }
-            prepareUnifiedRoll(social);
-            return;
-        }
-
-        // Social buff/debuff (#447): Inspire/Terrify buff an ally, War Cry debuffs an
-        // enemy's defence, Blather (opposed vs WP) holds a target inactive.
-        if (use.kind === 'socialBuff' && (use.id === 'inspire' || use.id === 'terrify' || use.id === 'warCry' || use.id === 'blather')) {
-            const socialBuff = new SocialBuffActionData(use.id);
-            this._buildSimpleSkillRoll({
-                key: skillKey,
-                type: 'skill',
-                label: rollLabel,
-                target: targetValue,
-                situationalKey: skillKey,
-                instance: socialBuff,
-                ...rankOpt,
-            });
-            socialBuff.rollData.targetActor = targetActor;
-            if (use.opposedChar !== undefined) {
-                socialBuff.rollData.isOpposed = true;
-                socialBuff.rollData.opposedChar = use.opposedChar;
-            }
-            prepareUnifiedRoll(socialBuff);
-            return;
-        }
-
-        // Opposed detection (#434): Stealth/Awareness/Scrutiny/Sleight of Hand vs
-        // the target's opposing characteristic; reports win/lose, no state change.
-        if (use.kind === 'detect') {
-            const detect = new DetectionActionData();
-            this._buildSimpleSkillRoll({
-                key: skillKey,
-                type: 'skill',
-                label: rollLabel,
-                target: targetValue,
-                situationalKey: skillKey,
-                instance: detect,
-                ...rankOpt,
-            });
-            detect.rollData.targetActor = targetActor;
-            detect.rollData.isOpposed = true;
-            detect.rollData.opposedChar = use.opposedChar ?? 'Per';
-            prepareUnifiedRoll(detect);
-            return;
-        }
-
-        // Medicae target uses (#432). RAW First Aid difficulty scales with how
-        // hurt the patient is; other uses carry the flat MEDICAE_ACTIONS difficulty.
-        const medicae = new MedicaeActionData(use.kind);
-        const patientWounds = targetActor.system.wounds;
-        const difficulty = use.kind === 'firstAid' ? firstAidDifficultyForTier(patientWounds.value, patientWounds.max) : use.difficultyMod;
+        const action = buildSkillUseDelegate(use);
+        if (action === null) return;
         this._buildSimpleSkillRoll({
             key: skillKey,
             type: 'skill',
-            label: rollLabel,
+            label: `${skillLabel}: ${game.i18n.localize(use.labelKey)}`,
             target: targetValue,
             situationalKey: skillKey,
-            instance: medicae,
-            ...(difficulty !== 0 ? { extraModifiers: { medicaeDifficulty: difficulty } } : {}),
-            ...rankOpt,
+            instance: action,
+            ...(skillRank !== undefined ? { skillRank } : {}),
         });
-        medicae.rollData.targetActor = targetActor;
-        prepareUnifiedRoll(medicae);
+        action.rollData.targetActor = targetActor;
+        applySkillUseToRollData(action.rollData, use, skillLabel);
+        prepareUnifiedRoll(action);
     }
 
     /**

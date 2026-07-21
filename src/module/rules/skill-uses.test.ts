@@ -13,6 +13,8 @@ import {
     resolveDosReadout,
     resolveInterrogation,
     resolveSocialInfluence,
+    skillUsesAreInline,
+    useNeedsItemChoice,
     type FirstAidTargetVitals,
     type SkillUseDef,
 } from './skill-uses.ts';
@@ -508,5 +510,86 @@ describe('opposed pilot/operate chases (#454)', () => {
             expect(use?.needsTarget).toBe(true);
             expect(use?.opposedSkill).toBe(key);
         }
+    });
+});
+
+describe('inline vs pre-roll use resolution (#432)', () => {
+    it('classifies the item-choice families as needing a pre-roll pick', () => {
+        expect(useNeedsItemChoice(getSkillUse('chemUse', 'applyChem') as SkillUseDef)).toBe(true);
+        expect(useNeedsItemChoice(getSkillUse('chemUse', 'coatWeapon') as SkillUseDef)).toBe(true);
+        expect(useNeedsItemChoice(getSkillUse('sleightOfHand', 'steal') as SkillUseDef)).toBe(true);
+        expect(useNeedsItemChoice(getSkillUse('sleightOfHand', 'plant') as SkillUseDef)).toBe(true);
+        expect(useNeedsItemChoice(getSkillUse('techUse', 'repair') as SkillUseDef)).toBe(true);
+        expect(useNeedsItemChoice(getSkillUse('security', 'bypassLock') as SkillUseDef)).toBe(true);
+        expect(useNeedsItemChoice(getSkillUse('athletics', 'breakObject') as SkillUseDef)).toBe(true);
+        expect(useNeedsItemChoice(getSkillUse('demolition', 'placeCharge') as SkillUseDef)).toBe(true);
+        expect(useNeedsItemChoice(getSkillUse('demolition', 'defuse') as SkillUseDef)).toBe(true);
+    });
+
+    it('classifies every target-directed / informational family as inline-resolvable', () => {
+        for (const use of [
+            getSkillUse('medicae', 'general'),
+            getSkillUse('medicae', 'firstAid'),
+            getSkillUse('medicae', 'extendedCare'),
+            getSkillUse('medicae', 'surgery'),
+            getSkillUse('medicae', 'diagnose'),
+            getSkillUse('medicae', 'extractBullet'),
+            getSkillUse('interrogation', 'interrogate'),
+            getSkillUse('stealth', 'detect'),
+            getSkillUse('charm', 'social'),
+            getSkillUse('charm', 'inspire'),
+            getSkillUse('barter', 'contest'),
+        ]) {
+            expect(useNeedsItemChoice(use as SkillUseDef)).toBe(false);
+        }
+    });
+
+    it('routes the Medicae-family and social/detection skills through the INLINE dialog picker', () => {
+        for (const skill of [
+            'medicae',
+            'interrogation',
+            'charm',
+            'command',
+            'intimidate',
+            'deceive',
+            'blather',
+            'wrangling',
+            'performer',
+            'stealth',
+            'awareness',
+            'scrutiny',
+            'concealment',
+            'silentMove',
+            'shadowing',
+            'tracking',
+            'disguise',
+            'barter',
+            'commerce',
+            'gamble',
+            'pilot',
+            'operate',
+        ]) {
+            expect(skillUsesAreInline(skill)).toBe(true);
+        }
+    });
+
+    it('keeps the item-choice skills on their pre-roll picker path', () => {
+        for (const skill of ['chemUse', 'sleightOfHand', 'techUse', 'security', 'demolition', 'athletics']) {
+            expect(skillUsesAreInline(skill)).toBe(false);
+        }
+    });
+
+    it('treats a skill with no special uses as inline (it never shows a picker at all)', () => {
+        expect(skillUsesAreInline('carouse')).toBe(true);
+        expect(hasSkillUses('carouse')).toBe(false);
+    });
+
+    it('marks a skill inline ONLY when every one of its uses is — one item-choice use disqualifies it', () => {
+        // Sleight of Hand offers an inline-resolvable detection contest AND item-moving
+        // uses; the item-moving ones force the whole skill onto the pre-roll path.
+        const uses = getSkillUses('sleightOfHand');
+        expect(uses.some((u) => !useNeedsItemChoice(u))).toBe(true);
+        expect(uses.some((u) => useNeedsItemChoice(u))).toBe(true);
+        expect(skillUsesAreInline('sleightOfHand')).toBe(false);
     });
 });

@@ -319,6 +319,39 @@ export function hasSkillUses(skillKey: string): boolean {
     return getSkillUses(skillKey).length > 1;
 }
 
+/**
+ * Use kinds that cannot be resolved from the roll dialog alone because they need a
+ * SECOND choice first — which chem, which item to palm, which device to repair,
+ * which charge to place. Those families still open their own pre-roll picker.
+ */
+const ITEM_CHOICE_KINDS: ReadonlySet<SkillUseKind> = new Set<SkillUseKind>([
+    'applyChem',
+    'coatWeapon',
+    'steal',
+    'plant',
+    'repair',
+    'bypassLock',
+    'breakObject',
+    'placeCharge',
+    'defuse',
+]);
+
+/** Whether resolving this use requires picking an item before the roll can be built. */
+export function useNeedsItemChoice(use: SkillUseDef): boolean {
+    return ITEM_CHOICE_KINDS.has(use.kind);
+}
+
+/**
+ * Whether every use this skill offers can be chosen INSIDE the roll dialog (#432) —
+ * i.e. none of them needs a secondary item pick. Such a skill opens the Roll Test
+ * dialog directly, with its use picker (and, for target-directed uses, its target
+ * picker) inline; a skill with any item-choice use keeps its pre-roll picker, since
+ * the item must be known before the action data can be built.
+ */
+export function skillUsesAreInline(skillKey: string): boolean {
+    return getSkillUses(skillKey).every((use) => !useNeedsItemChoice(use));
+}
+
 /** Look up a single use def by skill + id, or null when unknown. */
 export function getSkillUse(skillKey: string, useId: string): SkillUseDef | null {
     return getSkillUses(skillKey).find((u) => u.id === useId) ?? null;

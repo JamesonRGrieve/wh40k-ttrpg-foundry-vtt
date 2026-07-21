@@ -9,8 +9,10 @@ import {
     applyFirstAidOutcome,
     blatherRounds,
     evaluateSkillUseGate,
+    firstAidDifficultyForTier,
     type FirstAidPatient,
     getSkillUse,
+    getSkillUses,
     type ReadoutFamily,
     resolveDosReadout,
     resolveFirstAid,
@@ -18,6 +20,7 @@ import {
     resolveSocialInfluence,
     type SkillUseDef,
     type SkillUseKind,
+    useNeedsItemChoice,
 } from '../rules/skill-uses.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
 import { DAY_SECONDS } from '../rules/world-time.ts';
@@ -1255,4 +1258,193 @@ export class SocialBuffActionData extends SimpleSkillData {
         const applied = this.buff === 'inspire' ? 'WH40K.SkillUse.Buff.InspireApplied' : 'WH40K.SkillUse.Buff.TerrifyApplied';
         this.addEffect('Social', game.i18n.format(applied, { target: targetName }));
     }
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Inline skill-use flow (#432)                                               */
+/* -------------------------------------------------------------------------- */
+
+/** Named modifier slot the chosen use's RAW difficulty occupies on the roll. */
+const USE_DIFFICULTY_MODIFIER_KEY = 'useDifficulty';
+
+/**
+ * The RAW test modifier for a use against a given target. First Aid is the one use
+ * whose difficulty is not flat — it scales with how hurt the CURRENT patient is — so
+ * it resolves against the live target rather than the definition's constant.
+ */
+function skillUseDifficulty(use: SkillUseDef, target: WH40KBaseActorDocument | null): number {
+    if (use.kind !== 'firstAid' || target === null) return use.difficultyMod;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor.wounds is the loosely-typed system wounds block
+    const wounds = target.wounds as { value?: number; max?: number } | undefined;
+    return firstAidDifficultyForTier(wounds?.value ?? 0, wounds?.max ?? 0);
+}
+
+/**
+ * Shape a roll for a chosen skill use (#432) — its display label, its RAW difficulty
+ * modifier, and its opposition. The SINGLE place that mapping lives, so the inline
+ * dialog picker and the pre-roll picker (kept for the item-choice families) cannot
+ * drift apart. Idempotent: re-running it for the same use is a no-op, and re-running
+ * it for a different one replaces rather than accumulates.
+ *
+ * Opposition by CHARACTERISTIC is resolved by the shared `checkForOpposed`; opposition
+ * by SKILL (Deceive vs Scrutiny, the Barter/Gamble contests) is resolved inside that
+ * use's own action override, so it must not ALSO raise the characteristic flag.
+ */
+export function applySkillUseToRollData(rollData: RollData, use: SkillUseDef, skillLabel: string): void {
+    rollData.nameOverride = use.kind === 'general' ? `${skillLabel} Test` : `${skillLabel}: ${game.i18n.localize(use.labelKey)}`;
+
+    const opposedChar = use.opposedSkill === undefined ? use.opposedChar : undefined;
+    rollData.isOpposed = opposedChar !== undefined;
+    if (opposedChar !== undefined) rollData.opposedChar = opposedChar;
+
+    const difficulty = skillUseDifficulty(use, rollData.targetActor);
+    if (difficulty === 0) delete rollData.modifiers[USE_DIFFICULTY_MODIFIER_KEY];
+    else rollData.modifiers[USE_DIFFICULTY_MODIFIER_KEY] = difficulty;
+}
+
+/**
+ * The one roll-dialog-facing action for a skill whose uses are all resolvable
+ * inline (`skillUsesAreInline`). It carries the skill's use list and the player's
+ * current pick, and **defers constructing the concrete ActionData subclass until
+ * the roll resolves** — at which point both the use AND the target are final.
+ *
+ * That deferral is the point: the use used to be chosen in a pre-dialog picker and
+ * the subclass built immediately, which forced a second pop-up before the Roll Test
+ * dialog and froze the target before the dialog could offer one. Here the dialog
+ * mutates `selectedSkillUseId` / `rollData.targetActor` freely, and the subclass is
+ * built from whatever they finally are.
+ *
+ * The shell delegates the two resolution hooks that the use families specialise —
+ * `checkForOpposed()` (Deceive/Barter oppose by SKILL, others by characteristic) and
+ * `descriptionText()` (the apply-and-report step) — onto the built instance, sharing
+ * its own `rollData` so every dialog-applied modifier carries through, then folds the
+ * delegate's chat-card effects back onto itself.
+ */
+export class SkillUseActionData extends SimpleSkillData {
+    readonly skillKey: string;
+    readonly skillLabel: string;
+    private _selectedUseId: string;
+    private _delegate: SimpleSkillData | null = null;
+
+    constructor(skillKey: string, skillLabel: string, initialUseId?: string) {
+        super();
+        this.skillKey = skillKey;
+        this.skillLabel = skillLabel;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json (flag on) types [0] as possibly-undefined and requires the fallback; the lint parser (flag off) does not
+        this._selectedUseId = initialUseId ?? getSkillUses(skillKey)[0]?.id ?? 'general';
+    }
+
+    /** Every use this skill offers — the dialog's inline picker reads this. */
+    get skillUseOptions(): readonly SkillUseDef[] {
+        return getSkillUses(this.skillKey);
+    }
+
+    /** The player's current pick. */
+    get selectedSkillUseId(): string {
+        return this._selectedUseId;
+    }
+
+    /** The resolved definition of the current pick (falls back to the skill's first use). */
+    get selectedSkillUse(): SkillUseDef | null {
+        const uses = this.skillUseOptions;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json (flag on) types uses[0] as possibly-undefined and requires the `?? null`; the lint parser (flag off) does not
+        return uses.find((u) => u.id === this._selectedUseId) ?? uses[0] ?? null;
+    }
+
+    /**
+     * Change the selected use from the dialog. Drops any delegate built for the old
+     * pick and re-shapes the roll (label, RAW difficulty, opposition) for the new one.
+     */
+    selectSkillUse(useId: string): void {
+        if (this.skillUseOptions.every((u) => u.id !== useId)) return;
+        this._selectedUseId = useId;
+        this._delegate = null;
+        this.syncSkillUse();
+    }
+
+    /**
+     * Re-apply the selected use's roll shaping onto `rollData`. Idempotent, and safe
+     * to call on every dialog render: the RAW First-Aid difficulty scales with the
+     * patient's wounds, so it must be recomputed whenever the player retargets, not
+     * only when they change use.
+     */
+    syncSkillUse(): void {
+        const use = this.selectedSkillUse;
+        if (use === null) return;
+        applySkillUseToRollData(this.rollData, use, this.skillLabel);
+    }
+
+    /**
+     * Build (once, lazily) the ActionData subclass that resolves the selected use.
+     * Returns null when the pick needs nothing applied (the plain test) or when a
+     * target-directed use reached resolution with no target chosen — the latter is
+     * reported to the player rather than silently resolving as a bare skill test.
+     */
+    #resolveDelegate(): SimpleSkillData | null {
+        if (this._delegate !== null) return this._delegate;
+        const use = this.selectedSkillUse;
+        if (use === null || use.kind === 'general') return null;
+
+        if (use.needsTarget && this.rollData.targetActor === null) {
+            const message = game.i18n.format('WH40K.SkillUse.NoTarget', { use: game.i18n.localize(use.labelKey) });
+            ui.notifications.warn(message);
+            this.addEffect(game.i18n.localize('WH40K.SkillUse.EffectLabel'), message);
+            return null;
+        }
+
+        const delegate = buildSkillUseDelegate(use);
+        if (delegate === null) return null;
+        delegate.rollData = this.rollData;
+        this._delegate = delegate;
+        return delegate;
+    }
+
+    override async checkForOpposed(): Promise<void> {
+        const delegate = this.#resolveDelegate();
+        if (delegate === null) {
+            await super.checkForOpposed();
+            return;
+        }
+        await delegate.checkForOpposed();
+    }
+
+    override async descriptionText(): Promise<void> {
+        const delegate = this.#resolveDelegate();
+        if (delegate === null) return;
+        await delegate.descriptionText();
+        // Fold the delegate's chat-card rows onto the shell — it is the action that
+        // was stored for, and rendered by, the chat pipeline.
+        for (const effect of delegate.effectOutput) this.addEffect(effect.name, effect.effect);
+    }
+}
+
+/**
+ * Per-use-family action constructors. Keyed by the use's declared `kind` — never by a
+ * skill name — so a new skill that reuses an existing family needs no entry here. A
+ * `null` return means "nothing to apply": the plain test, or a malformed definition
+ * missing the field its action requires.
+ */
+const SKILL_USE_DELEGATE_FACTORIES: Partial<Record<SkillUseKind, (use: SkillUseDef) => SimpleSkillData | null>> = {
+    general: () => null,
+    interrogate: () => new InterrogationActionData(),
+    detect: () => new DetectionActionData(),
+    social: (use) => new SocialInfluenceActionData(use),
+    socialBuff: (use) =>
+        use.id === 'inspire' || use.id === 'terrify' || use.id === 'warCry' || use.id === 'blather' ? new SocialBuffActionData(use.id) : null,
+    contest: (use) => (use.opposedSkill !== undefined ? new ContestActionData(use.opposedSkill) : null),
+};
+
+/**
+ * Map an inline-resolvable use to the ActionData subclass that applies it (#432).
+ * Deliberately keyed on the use's declared `kind` / `id` — never on a skill name —
+ * so a new skill that reuses an existing use family needs no code change here.
+ * Returns null for the plain test and for the item-choice families, which are built
+ * by their own pre-roll flows (they need the chosen item as a constructor argument).
+ */
+export function buildSkillUseDelegate(use: SkillUseDef): SimpleSkillData | null {
+    if (useNeedsItemChoice(use)) return null;
+    const factory = SKILL_USE_DELEGATE_FACTORIES[use.kind];
+    // The Medicae family (firstAid / extendedCare / surgery / diagnose / extractBullet)
+    // has no dedicated entry — every member resolves through the one action, keyed by kind.
+    return factory !== undefined ? factory(use) : new MedicaeActionData(use.kind);
 }

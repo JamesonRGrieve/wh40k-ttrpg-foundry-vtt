@@ -240,6 +240,7 @@ export class HandlebarManager {
 
             // Unified roll dialog panels
             'systems/wh40k-rpg/templates/prompt/unified/target-selector.hbs',
+            'systems/wh40k-rpg/templates/prompt/unified/skill-use-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/unified/panels/weapon-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/unified/panels/psychic-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/unified/panels/force-field-panel.hbs',
