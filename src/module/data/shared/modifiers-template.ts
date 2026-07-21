@@ -149,9 +149,13 @@ export interface DynamicModifierEntry {
  *   declared so the descriptor does not need reshaping when their consumers land;
  *   each resolves through `uuid` rather than `name`.
  */
-export const GRANT_EFFECT_KINDS = ['quality', 'talent', 'trait', 'condition', 'sense', 'weaponProfile', 'immunity'] as const;
+// Not exported: only `quality` has a consumer today, so the runtime array is used
+// only in-file (the schema `choices` below). The PUBLIC surface consumers need is
+// the `GrantEffectKind` union type — re-export the array if/when a consumer of the
+// other six kinds needs to iterate it at runtime. Keeps the export dead-code-free.
+const GRANT_EFFECT_KINDS = ['quality', 'talent', 'trait', 'condition', 'sense', 'weaponProfile', 'immunity'] as const;
 
-/** {@link GRANT_EFFECT_KINDS} as a union — the schema's `choices` and the type share one source. */
+/** The grant-effect kinds as a union — the schema's `choices` and the type share one source. */
 export type GrantEffectKind = (typeof GRANT_EFFECT_KINDS)[number];
 
 /**
