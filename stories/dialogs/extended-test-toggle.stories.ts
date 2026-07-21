@@ -19,8 +19,6 @@ interface ExtendedTestCtx {
     assistantCount: number;
     assistanceBonus: number;
     assistantMax: number;
-    canIncrementAssistant: boolean;
-    canDecrementAssistant: boolean;
     extended: boolean;
     extendedThreshold: number;
 }
@@ -39,8 +37,6 @@ function buildContext(args: ExtendedToggleArgs): ExtendedTestCtx {
         assistantCount: 0,
         assistanceBonus: 0,
         assistantMax: 2,
-        canIncrementAssistant: true,
-        canDecrementAssistant: false,
         // Extended-test contract (#59).
         extended: args.extended,
         extendedThreshold: Math.max(1, Math.trunc(args.extendedThreshold)),
