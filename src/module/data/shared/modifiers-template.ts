@@ -140,20 +140,44 @@ export interface DynamicModifierEntry {
 }
 
 /**
- * A data-driven conditional **weapon-quality grant** (survey §D8): an item that,
- * when its trigger fires, adds a weapon quality (attack special) to the attack —
- * e.g. Hammer Blow granting Concussive (2) [DH2/OW/BC] or Shocking [DW/DH1] on an
- * All-Out Attack. This is the *non-numeric* counterpart to
- * {@link DynamicModifierEntry}: it names a quality to add rather than a numeric
- * axis to modify (which the numeric-only `dynamicModifiers` schema deliberately
- * scopes out). The central collector (`collectGrantedQualities`) reads these so
- * the grant is defined once, in content, **per line** — the granted quality
+ * The kinds of thing a conditional grant may confer (survey §D8).
+ *
+ * - `quality` — a weapon quality / attack special added to the attack
+ *   (Hammer Blow → Concussive (2)). **The only kind with a live consumer today**
+ *   (`collectGrantedQualities` → `damage-data._calculateSpecials`).
+ * - `talent` / `trait` / `condition` / `sense` / `weaponProfile` / `immunity` —
+ *   declared so the descriptor does not need reshaping when their consumers land;
+ *   each resolves through `uuid` rather than `name`.
+ */
+export const GRANT_EFFECT_KINDS = ['quality', 'talent', 'trait', 'condition', 'sense', 'weaponProfile', 'immunity'] as const;
+
+/** {@link GRANT_EFFECT_KINDS} as a union — the schema's `choices` and the type share one source. */
+export type GrantEffectKind = (typeof GRANT_EFFECT_KINDS)[number];
+
+/**
+ * A data-driven **conditional grant** (survey §D8): an item that, when its trigger
+ * fires, confers something non-numeric on the attack or actor — e.g. Hammer Blow
+ * granting Concussive (2) [DH2/OW/BC] or Shocking [DW/DH1] on an All-Out Attack.
+ *
+ * This is the *non-numeric* counterpart to {@link DynamicModifierEntry}: it names a
+ * thing to add rather than a numeric axis to modify (which the numeric-only
+ * `dynamicModifiers` schema deliberately scopes out). It reuses that hook's
+ * `when` / `condition` / `conditionValue` trigger primitives verbatim, so a grant is
+ * gated exactly the way a numeric hook is and both read through the same
+ * `hookApplies` predicate.
+ *
+ * The central collectors (`collectGrantedEffects` / `collectGrantedQualities`) read
+ * these so the grant is defined once, in content, **per line** — the granted quality
  * differs by game line — instead of being name-matched in `src/`.
  */
-export interface GrantedQualityEntry {
-    /** The weapon-quality (attack special) name to add, e.g. `Concussive`, `Shocking`. */
+export interface GrantedEffectEntry {
+    /** What sort of thing is granted. Only `quality` has a live consumer today. */
+    kind: GrantEffectKind;
+    /** The granted thing's display name, e.g. `Concussive`, `Shocking`. Qualities resolve by name (they are attack specials, not documents). */
     name: string;
-    /** The quality's `(X)` level (e.g. Concussive (2)); 0 for unlevelled qualities like Shocking. */
+    /** Compendium UUID of the granted document, for the kinds that are documents (talent/trait/condition/…). Blank for `quality`. */
+    uuid: string;
+    /** The grant's `(X)` level (e.g. Concussive (2)); 0 for unlevelled grants like Shocking. */
     level: number;
     /** Timing half of the trigger (mirrors {@link DynamicModifierEntry.when}). */
     when: (typeof DYNAMIC_MODIFIER_WHEN)[number];
@@ -163,12 +187,14 @@ export interface GrantedQualityEntry {
     conditionValue: string;
 }
 
-/** The `ArrayField` of {@link GrantedQualityEntry} conditional quality grants. */
-function grantedQualitiesSchema(): foundry.data.fields.DataField.Any {
+/** The `ArrayField` of {@link GrantedEffectEntry} conditional grants. */
+function grantedEffectsSchema(): foundry.data.fields.DataField.Any {
     const fields = foundry.data.fields;
     return new fields.ArrayField(
         new fields.SchemaField({
+            kind: new fields.StringField({ required: true, initial: 'quality', choices: [...GRANT_EFFECT_KINDS] }),
             name: new fields.StringField({ required: true, blank: false }),
+            uuid: new fields.StringField({ required: false, blank: true, initial: '' }),
             level: new fields.NumberField({ required: true, initial: 0 }),
             when: new fields.StringField({ required: true, initial: 'always', choices: [...DYNAMIC_MODIFIER_WHEN] }),
             condition: new fields.StringField({ required: false, blank: true, initial: '' }),
@@ -437,8 +463,8 @@ export default class ModifiersTemplate extends SystemDataModel {
         };
         /** Data-driven dynamic modifier hooks (Direction #7) — see {@link DynamicModifierEntry}. */
         dynamicModifiers: DynamicModifierEntry[];
-        /** Data-driven conditional weapon-quality grants (Direction #7, survey §D8) — see {@link GrantedQualityEntry}. */
-        grantedQualities: GrantedQualityEntry[];
+        /** Data-driven conditional grants (Direction #7, survey §D8) — see {@link GrantedEffectEntry}. */
+        grantedEffects: GrantedEffectEntry[];
     };
 
     /** @inheritdoc */
@@ -484,10 +510,10 @@ export default class ModifiersTemplate extends SystemDataModel {
                 // items; authored on content whose modifier is dynamic / conditional /
                 // temporary and read by the central collector.
                 dynamicModifiers: dynamicModifiersSchema(),
-                // Data-driven conditional weapon-quality grants (Direction #7, §D8).
-                // Empty on legacy items; authored per line on content that grants a
-                // quality on a trigger (Hammer Blow → Concussive/Shocking on All-Out).
-                grantedQualities: grantedQualitiesSchema(),
+                // Data-driven conditional grants (Direction #7, §D8). Empty on legacy
+                // items; authored per line on content that grants a quality on a
+                // trigger (Hammer Blow → Concussive/Shocking on All-Out).
+                grantedEffects: grantedEffectsSchema(),
             }),
         };
     }
@@ -524,7 +550,26 @@ export default class ModifiersTemplate extends SystemDataModel {
         if (!('other' in mods) || mods['other'] === undefined) mods['other'] = [];
         if (!('situational' in mods) || mods['situational'] === undefined) mods['situational'] = { characteristics: [], skills: [], combat: [] };
         if (!('dynamicModifiers' in mods) || mods['dynamicModifiers'] === undefined) mods['dynamicModifiers'] = [];
-        if (!('grantedQualities' in mods) || mods['grantedQualities'] === undefined) mods['grantedQualities'] = [];
+        ModifiersTemplate.#normalizeGrantedEffects(mods);
+    }
+
+    /**
+     * Normalize the conditional-grant channel (§D8).
+     *
+     * Folds the legacy quality-only `grantedQualities` array forward into the unified
+     * `grantedEffects` array, stamping the `kind: 'quality'` discriminator every legacy
+     * entry implied, so content and live-world items authored before the channel was
+     * generalized keep resolving.
+     * @param mods  The raw `modifiers` object from source data, pre-validation.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
+    static #normalizeGrantedEffects(mods: Record<string, unknown>): void {
+        const legacy = mods['grantedQualities'];
+        if (Array.isArray(legacy) && !('grantedEffects' in mods)) {
+            mods['grantedEffects'] = legacy.map((entry) => (typeof entry === 'object' && entry !== null ? { kind: 'quality', ...entry } : entry));
+        }
+        delete mods['grantedQualities'];
+        if (!('grantedEffects' in mods) || mods['grantedEffects'] === undefined) mods['grantedEffects'] = [];
     }
 
     /* -------------------------------------------- */
@@ -559,7 +604,7 @@ export default class ModifiersTemplate extends SystemDataModel {
         if (mods.situational.skills.length > 0) return true;
         if (mods.situational.combat.length > 0) return true;
         if (mods.dynamicModifiers.length > 0) return true;
-        if (mods.grantedQualities.length > 0) return true;
+        if (mods.grantedEffects.length > 0) return true;
         return false;
     }
 

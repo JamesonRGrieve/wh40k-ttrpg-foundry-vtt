@@ -617,7 +617,7 @@ export class Hit {
 
         // Conditional weapon-quality grants (Direction #7, §D8) — e.g. Hammer Blow
         // adding Concussive (2) [DH2/OW/BC] or Shocking [DW/DH1] on an All-Out
-        // Attack. Read from each talent's `grantedQualities` data (per line) rather
+        // Attack. Read from each talent's `grantedEffects` data (per line) rather
         // than name-matched here, so the correct quality applies per game line.
         const grantSituation: DynamicModifierSituation = {
             action: attackData.rollData.action,

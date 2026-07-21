@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import type { DynamicModifierEntry, GrantedQualityEntry } from '../data/shared/modifiers-template.ts';
+import type { DynamicModifierEntry, GrantedEffectEntry } from '../data/shared/modifiers-template.ts';
 import {
     collectDynamicComponents,
+    collectGrantedEffects,
     collectGrantedQualities,
     type DynamicModifierContext,
     type DynamicModifierItemLike,
@@ -264,11 +265,13 @@ describe('ownsActivatableHook', () => {
 });
 
 describe('collectGrantedQualities', () => {
-    function grantItem(name: string, grants: GrantedQualityEntry[]): DynamicModifierItemLike {
-        return { name, system: { modifiers: { grantedQualities: grants } } };
+    function grantItem(name: string, grants: GrantedEffectEntry[]): DynamicModifierItemLike {
+        return { name, system: { modifiers: { grantedEffects: grants } } };
     }
-    const grant = (o: Partial<GrantedQualityEntry>): GrantedQualityEntry => ({
+    const grant = (o: Partial<GrantedEffectEntry>): GrantedEffectEntry => ({
+        kind: 'quality',
         name: 'Concussive',
+        uuid: '',
         level: 2,
         when: 'onAction',
         condition: '',
@@ -303,8 +306,49 @@ describe('collectGrantedQualities', () => {
         expect(out.map((g) => g.name).sort()).toEqual(['Concussive', 'Snares']);
     });
 
-    it('tolerates items with no grantedQualities', () => {
+    it('tolerates items with no grantedEffects', () => {
         const bare: DynamicModifierItemLike = { name: 'Plain', system: {} };
         expect(collectGrantedQualities([bare], { action: 'All Out Attack' })).toEqual([]);
+    });
+
+    it('ignores non-quality grant kinds — only qualities become attack specials', () => {
+        // A talent-kind grant rides the same channel but must not be pushed into the
+        // attack's specials list; it awaits its own consumer.
+        const item = grantItem('Mixed', [
+            grant({}),
+            grant({ kind: 'talent', name: 'Berserk Charge', uuid: 'Compendium.wh40k-rpg.ow-core-items-talents.Item.abc' }),
+        ]);
+        expect(collectGrantedQualities([item], { action: 'All Out Attack', isMelee: true })).toEqual([{ name: 'Concussive', level: 2, source: 'Mixed' }]);
+    });
+});
+
+describe('collectGrantedEffects', () => {
+    const grant = (o: Partial<GrantedEffectEntry>): GrantedEffectEntry => ({
+        kind: 'quality',
+        name: 'Concussive',
+        uuid: '',
+        level: 2,
+        when: 'onAction',
+        condition: '',
+        conditionValue: 'All Out Attack',
+        ...o,
+    });
+
+    it('carries the kind and uuid through for non-quality kinds', () => {
+        const uuid = 'Compendium.wh40k-rpg.dh2-core-items-traits.Item.xyz';
+        const item: DynamicModifierItemLike = {
+            name: 'Some Talent',
+            system: { modifiers: { grantedEffects: [grant({ kind: 'trait', name: 'Fear', uuid, level: 1 })] } },
+        };
+        expect(collectGrantedEffects([item], { action: 'All Out Attack' })).toEqual([{ kind: 'trait', name: 'Fear', uuid, level: 1, source: 'Some Talent' }]);
+    });
+
+    it('gates every kind through the same trigger predicate', () => {
+        const item: DynamicModifierItemLike = {
+            name: 'Gated',
+            system: { modifiers: { grantedEffects: [grant({ kind: 'condition', name: 'Stunned' })] } },
+        };
+        expect(collectGrantedEffects([item], { action: 'Standard Attack' })).toEqual([]);
+        expect(collectGrantedEffects([item], { action: 'All Out Attack' })).toHaveLength(1);
     });
 });
