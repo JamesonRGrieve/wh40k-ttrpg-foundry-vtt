@@ -85,18 +85,18 @@ export class WH40KNPC extends WH40KBaseActor {
         // Configure token defaults for NPC V2
         // eslint-disable-next-line no-restricted-syntax -- boundary: token init data passed to updateSource; Record<string, unknown> is the correct boundary type
         const initData: Record<string, unknown> = {
-            'token.bar1': { attribute: 'wounds' },
-            'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-            'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-            'token.disposition': CONST.TOKEN_DISPOSITIONS.HOSTILE,
-            'token.name': createData['name'],
+            'prototypeToken.bar1': { attribute: 'wounds' },
+            'prototypeToken.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            'prototypeToken.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            'prototypeToken.disposition': CONST.TOKEN_DISPOSITIONS.HOSTILE,
+            'prototypeToken.name': createData['name'],
         };
 
         // If horde type, show magnitude instead of wounds
         // eslint-disable-next-line no-restricted-syntax -- boundary: createData['system'] is untyped from _preCreate; cast is necessary
         const systemData = createData['system'] as Record<string, unknown> | undefined;
         if (systemData !== undefined && (systemData['type'] === 'horde' || systemData['type'] === 'swarm')) {
-            initData['token.bar1'] = { attribute: 'horde.magnitude' };
+            initData['prototypeToken.bar1'] = { attribute: 'horde.magnitude' };
         }
 
         this.updateSource(initData);
