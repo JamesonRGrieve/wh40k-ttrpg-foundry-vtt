@@ -14,6 +14,9 @@ import { readRepoFile } from './lib/repo-file.ts';
 
 const dialog = readRepoFile('src/module/applications/prompts/unified-roll-dialog.ts');
 const panel = readRepoFile('src/templates/prompt/unified/panels/weapon-panel.hbs');
+// #432: the target picker was hoisted out of the weapon panel into a shared partial
+// so target-directed skill uses can reuse the identical defender selector.
+const targetSelector = readRepoFile('src/templates/prompt/unified/target-selector.hbs');
 
 describe('attack target selection (#250)', () => {
     it('the dialog exposes the current target to the template', () => {
@@ -26,14 +29,20 @@ describe('attack target selection (#250)', () => {
         expect(dialog).toContain('rd.targetActor = targetToken.actor');
     });
 
-    it('the weapon panel shows a target indicator with a Select Target button', () => {
+    it('the weapon panel includes the shared target-selector partial', () => {
+        expect(panel).toContain('{{> "systems/wh40k-rpg/templates/prompt/unified/target-selector.hbs"}}');
+    });
+
+    it('the shared target selector shows a target indicator with a Select Target button', () => {
         // Indicator: target name when present, a "pick a target" hint otherwise.
-        expect(panel).toContain('{{#if hasTarget}}');
-        expect(panel).toContain('{{targetName}}');
-        expect(panel).toContain('{{localize "WH40K.Roll.NoTargetSelected"}}');
+        expect(targetSelector).toContain('{{#if hasTarget}}');
+        expect(targetSelector).toContain('{{targetName}}');
+        expect(targetSelector).toContain('{{localize "WH40K.Roll.NoTargetSelected"}}');
         // The Select Target affordance is wired to the selectTarget action.
-        expect(panel).toContain('data-action="selectTarget"');
-        expect(panel).toContain('{{localize "WH40K.Roll.SelectTarget"}}');
+        expect(targetSelector).toContain('data-action="selectTarget"');
+        expect(targetSelector).toContain('{{localize "WH40K.Roll.SelectTarget"}}');
+        // With an active combat it is the roster dropdown routed through the form.
+        expect(targetSelector).toContain('name="targetCombatantId"');
     });
 
     it('clears the canvas target reticle when a roll resolves (#401)', () => {
