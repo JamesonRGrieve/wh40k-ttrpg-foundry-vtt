@@ -11,7 +11,7 @@
  * each over the all-absent default so consumers always get a fully-shaped payload.
  */
 
-import type { WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
+import type { WeaponQualityDieOp, WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
 
 /** Pack-name suffix shared by every system's weapon-qualities pack (`rt-core-items-weapon-qualities`, `dh2-…`, …). */
 const WEAPON_QUALITY_PACK_SUFFIX = '-core-items-weapon-qualities';
@@ -37,7 +37,6 @@ function defaultWeaponQualityMechanics(): WeaponQualityMechanics {
         bonusVsDaemons: false,
         ignoresNonWardedArmor: false,
         cancelsAim: false,
-        provenFloor: false,
         bonusHitOnTwoDoS: false,
         doublesAdditionalHits: false,
         reliable: false,
@@ -47,7 +46,6 @@ function defaultWeaponQualityMechanics(): WeaponQualityMechanics {
         overheats: false,
         recharge: false,
         triggersRecharge: false,
-        primitiveCap: false,
         cripplingPenaltyPerActionVariable: false,
         gravitonAddsArmourAsDamage: false,
         allowsIndirectFire: false,
@@ -60,7 +58,28 @@ function defaultWeaponQualityMechanics(): WeaponQualityMechanics {
         hitEffect: { requiresSave: '', failEffect: '', stunRoundsVariable: false, stunRounds: null, saveTargetPenaltyPerLevel: null },
         template: { shape: '', radiusVariable: false },
         rangeBands: { pointBlank: null, shortRange: null, standardRange: null, longRange: null, extremeRange: null },
+        dieOps: [],
     };
+}
+
+/** All-absent die operation: the shape a partial `dieOps` entry is merged over. */
+function defaultWeaponQualityDieOp(): WeaponQualityDieOp {
+    return { op: 'keepHighest', phase: 'postEvaluate', extraDice: null, threshold: null, usesLevel: false, modifierKey: '' };
+}
+
+/**
+ * Merge a (possibly partial) raw `dieOps` array over the per-entry default. Tolerates
+ * a missing / non-array value (returns an empty list) and skips non-object entries.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: raw is the untyped `system.mechanics.dieOps` payload off a pack document, validated and merged over the default here
+function weaponQualityDieOpsFromRaw(raw: unknown): WeaponQualityDieOp[] {
+    if (!Array.isArray(raw)) return [];
+    const ops: WeaponQualityDieOp[] = [];
+    for (const entry of raw) {
+        if (entry === null || typeof entry !== 'object') continue;
+        ops.push({ ...defaultWeaponQualityDieOp(), ...(entry as Partial<WeaponQualityDieOp>) });
+    }
+    return ops;
 }
 
 /**
@@ -81,6 +100,7 @@ export function weaponQualityMechanicsFromRaw(raw: unknown): WeaponQualityMechan
         hitEffect: { ...base.hitEffect, ...r.hitEffect },
         template: { ...base.template, ...r.template },
         rangeBands: { ...base.rangeBands, ...r.rangeBands },
+        dieOps: weaponQualityDieOpsFromRaw(r.dieOps),
     };
 }
 

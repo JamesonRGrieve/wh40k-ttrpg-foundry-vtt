@@ -26,6 +26,51 @@ interface WeaponQualityTemplate {
     radiusVariable: boolean;
 }
 
+/**
+ * Die-level operation kinds a quality may declare (#303).
+ *
+ * - `keepHighest` — append `extraDice` dice to each damage Die term and keep the
+ *   ORIGINAL number of dice, highest first (Tearing: "roll one extra die, discard
+ *   the lowest").
+ * - `floor` — a die rolling below the threshold counts as the threshold (Proven (X)).
+ * - `cap` — a die rolling above the threshold counts as the threshold (Primitive (X)).
+ */
+export const WEAPON_QUALITY_DIE_OP_KINDS = ['keepHighest', 'floor', 'cap'] as const;
+
+/** {@link WEAPON_QUALITY_DIE_OP_KINDS} as a union — the schema's `choices` and the type share one source. */
+export type WeaponQualityDieOpKind = (typeof WEAPON_QUALITY_DIE_OP_KINDS)[number];
+
+/**
+ * When a die operation runs relative to `Roll#evaluate()`.
+ *
+ * - `preEvaluate` — term surgery on the unevaluated Roll (the only phase in which
+ *   the dice pool itself can still be changed).
+ * - `postEvaluate` — a per-die adjustment against already-rolled results, emitted as
+ *   a signed delta into the hit's modifier map so the chat card keeps its provenance.
+ */
+export const WEAPON_QUALITY_DIE_OP_PHASES = ['preEvaluate', 'postEvaluate'] as const;
+
+/** {@link WEAPON_QUALITY_DIE_OP_PHASES} as a union — the schema's `choices` and the type share one source. */
+export type WeaponQualityDieOpPhase = (typeof WEAPON_QUALITY_DIE_OP_PHASES)[number];
+
+/**
+ * One structured die operation on the damage roll (#303). Declared as content on the
+ * weaponQuality compendium document so the engine never name-matches `'Tearing'` /
+ * `'Proven'` / `'Primitive'` in `src/` (Direction #7).
+ */
+export interface WeaponQualityDieOp {
+    op: WeaponQualityDieOpKind;
+    phase: WeaponQualityDieOpPhase;
+    /** `keepHighest` only: how many extra dice to append to each damage Die term. */
+    extraDice: number | null;
+    /** `floor` / `cap`: the fixed threshold, used when `usesLevel` is false. */
+    threshold: number | null;
+    /** `floor` / `cap`: take the threshold from the quality's `(X)` level instead of `threshold`. */
+    usesLevel: boolean;
+    /** Modifier-map key the resulting adjustment accumulates under; defaults to the quality identifier when blank. */
+    modifierKey: string;
+}
+
 /** Range-banded damage/penetration deltas (Scatter). */
 interface WeaponQualityRangeBands {
     pointBlank: number | null;
@@ -61,7 +106,6 @@ export interface WeaponQualityMechanics {
     bonusVsDaemons: boolean;
     ignoresNonWardedArmor: boolean;
     cancelsAim: boolean;
-    provenFloor: boolean;
     bonusHitOnTwoDoS: boolean;
     doublesAdditionalHits: boolean;
     reliable: boolean;
@@ -71,7 +115,6 @@ export interface WeaponQualityMechanics {
     overheats: boolean;
     recharge: boolean;
     triggersRecharge: boolean;
-    primitiveCap: boolean;
     cripplingPenaltyPerActionVariable: boolean;
     gravitonAddsArmourAsDamage: boolean;
     allowsIndirectFire: boolean;
@@ -84,4 +127,9 @@ export interface WeaponQualityMechanics {
     hitEffect: WeaponQualityHitEffect;
     template: WeaponQualityTemplate;
     rangeBands: WeaponQualityRangeBands;
+    /**
+     * Die-level operations this quality applies to the damage roll (#303). Empty for
+     * every quality that does not touch the dice pool.
+     */
+    dieOps: WeaponQualityDieOp[];
 }

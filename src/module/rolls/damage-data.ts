@@ -11,11 +11,13 @@ import {
 import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
 import {
+    applyKeepHighestToDie,
     calculateExoticQualityDamageModifiers,
     calculateQualityPenetrationModifiers,
+    collectWeaponQualityDieOps,
+    type DieTermLike,
     getRighteousFuryThreshold,
-    resolvePrimitiveDamageAdjust,
-    resolveProvenDamageAdjust,
+    resolveDieOpDamageAdjust,
 } from '../rules/weapon-quality-effects.ts';
 
 /** Short characteristic key → the fuzzy name `getCharacteristicFuzzy` resolves, for the dynamic-modifier context. */
@@ -372,17 +374,32 @@ export class Hit {
         const damageRoll = new Roll(rollFormula, attackData.rollData) as unknown as Roll;
         this.damageRoll = damageRoll;
 
-        if (attackData.rollData.hasAttackSpecial('Tearing')) {
-            game.wh40k.log('Modifying dice due to tearing');
+        // Descriptor-driven weapon-quality die operations (#303). Each quality declares
+        // its own `dieOps` on its compendium doc (Direction #7) — the engine no longer
+        // name-matches Tearing / Proven / Primitive here.
+        const dieOps = collectWeaponQualityDieOps(attackData.rollData.attackSpecials, sourceActor.system?.gameSystem);
+
+        // Pre-evaluation pass: the dice pool can only be changed while the Roll is
+        // still unevaluated, so `keepHighest` (Tearing) is term surgery, not a modifier.
+        const keepHighestOps = dieOps.filter((dieOp) => dieOp.phase === 'preEvaluate' && dieOp.op === 'keepHighest');
+        if (keepHighestOps.length > 0) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Roll.terms is typed as RollTerm[] but runtime may include untyped dice; cast needed for instanceof check
-            (damageRoll.terms as unknown[])
-                .filter((term): term is foundry.dice.terms.Die => term instanceof foundry.dice.terms.Die)
-                .forEach((die) => {
-                    if (die.modifiers.includes('kh')) return;
-                    die.modifiers.push(`kh${die.number ?? 0}`);
-                    die.number = (die.number ?? 0) + 1;
-                });
+            const dieTerms = (damageRoll.terms as unknown[]).filter((term): term is foundry.dice.terms.Die => term instanceof foundry.dice.terms.Die);
+            for (const dieOp of keepHighestOps) {
+                for (const die of dieTerms) {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.dice.terms.Die's public type does not expose the mutable `number` / `modifiers` pair DieTermLike narrows to
+                    if (applyKeepHighestToDie(die as unknown as DieTermLike, dieOp.extraDice)) {
+                        game.wh40k.log(`Modifying dice due to ${dieOp.quality}`);
+                    }
+                }
+            }
         }
+
+        // Post-evaluation ops (Proven floor / Primitive cap) are PER-DIE: each die below
+        // the floor (or above the cap) contributes its own adjustment, so the deltas
+        // ACCUMULATE across a multi-die weapon. The arithmetic lives in the pure,
+        // unit-tested resolvers rather than being open-coded here.
+        const perDieOps = dieOps.filter((dieOp) => dieOp.phase === 'postEvaluate');
 
         await damageRoll.evaluate();
         game.wh40k.log('Damage Roll', damageRoll);
@@ -408,23 +425,10 @@ export class Hit {
                     // applied by applyDynamicModifiers once RF/crit is detected. Direction #7.
                 }
 
-                // Primitive (X) / Proven (X) are PER-DIE: each die above the cap (or
-                // below the floor) contributes its own adjustment, so the deltas
-                // ACCUMULATE across a multi-die weapon. These used to assign with `=`
-                // inside this loop, so only the last qualifying die survived — a 2d10
-                // Primitive(7) rolling [9,10] reduced by 3 instead of 2+3=5.
-                // The arithmetic itself lives in the pure, unit-tested resolvers
-                // rather than being open-coded a second time here.
-                if (attackData.rollData.hasAttackSpecial('Primitive')) {
-                    const primitive = attackData.rollData.getAttackSpecial('Primitive');
-                    const adjust = resolvePrimitiveDamageAdjust(result.result ?? 0, primitive.level);
-                    if (adjust !== 0) this.modifiers['primitive'] = (this.modifiers['primitive'] ?? 0) + adjust;
-                }
-
-                if (attackData.rollData.hasAttackSpecial('Proven')) {
-                    const proven = attackData.rollData.getAttackSpecial('Proven');
-                    const adjust = resolveProvenDamageAdjust(result.result ?? 0, proven.level);
-                    if (adjust !== 0) this.modifiers['proven'] = (this.modifiers['proven'] ?? 0) + adjust;
+                for (const dieOp of perDieOps) {
+                    const adjust = resolveDieOpDamageAdjust(result.result ?? 0, dieOp);
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: modifiers[key] may be undefined despite Record<string, number> type
+                    if (adjust !== 0) this.modifiers[dieOp.modifierKey] = (this.modifiers[dieOp.modifierKey] ?? 0) + adjust;
                 }
             }
         }

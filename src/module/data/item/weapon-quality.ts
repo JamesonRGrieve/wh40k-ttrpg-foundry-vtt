@@ -1,7 +1,7 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import type { WeaponQualityMechanics } from './weapon-quality-mechanics.ts';
+import { WEAPON_QUALITY_DIE_OP_KINDS, WEAPON_QUALITY_DIE_OP_PHASES, type WeaponQualityMechanics } from './weapon-quality-mechanics.ts';
 
 /**
  * Data model for Weapon Quality items (reference items for weapon qualities).
@@ -65,7 +65,6 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
                 bonusVsDaemons: new fields.BooleanField({ required: false, initial: false }),
                 ignoresNonWardedArmor: new fields.BooleanField({ required: false, initial: false }),
                 cancelsAim: new fields.BooleanField({ required: false, initial: false }),
-                provenFloor: new fields.BooleanField({ required: false, initial: false }),
                 bonusHitOnTwoDoS: new fields.BooleanField({ required: false, initial: false }),
                 doublesAdditionalHits: new fields.BooleanField({ required: false, initial: false }),
                 reliable: new fields.BooleanField({ required: false, initial: false }),
@@ -75,7 +74,6 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
                 overheats: new fields.BooleanField({ required: false, initial: false }),
                 recharge: new fields.BooleanField({ required: false, initial: false }),
                 triggersRecharge: new fields.BooleanField({ required: false, initial: false }),
-                primitiveCap: new fields.BooleanField({ required: false, initial: false }),
                 cripplingPenaltyPerActionVariable: new fields.BooleanField({ required: false, initial: false }),
                 gravitonAddsArmourAsDamage: new fields.BooleanField({ required: false, initial: false }),
                 allowsIndirectFire: new fields.BooleanField({ required: false, initial: false }),
@@ -103,6 +101,22 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
                     longRange: new fields.NumberField({ required: false, nullable: true, initial: null }),
                     extremeRange: new fields.NumberField({ required: false, nullable: true, initial: null }),
                 }),
+
+                // Die-level operations on the damage roll (#303) — the descriptor the
+                // damage engine's pre-/post-evaluation passes read instead of
+                // name-matching Tearing / Proven / Primitive. Structured and
+                // choice-validated rather than a stringly-typed formula.
+                dieOps: new fields.ArrayField(
+                    new fields.SchemaField({
+                        op: new fields.StringField({ required: true, blank: false, initial: 'keepHighest', choices: WEAPON_QUALITY_DIE_OP_KINDS }),
+                        phase: new fields.StringField({ required: true, blank: false, initial: 'postEvaluate', choices: WEAPON_QUALITY_DIE_OP_PHASES }),
+                        extraDice: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true, min: 0 }),
+                        threshold: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true, min: 0 }),
+                        usesLevel: new fields.BooleanField({ required: false, initial: false }),
+                        modifierKey: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    }),
+                    { required: false, initial: [] },
+                ),
             }),
         };
     }

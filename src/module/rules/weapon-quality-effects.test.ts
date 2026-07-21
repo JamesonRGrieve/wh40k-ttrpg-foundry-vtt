@@ -12,6 +12,9 @@ import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import type { WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
 import {
+    applyKeepHighestToDie,
+    collectWeaponQualityDieOps,
+    type DieTermLike,
     resolveCripplingTickDamage,
     resolveGravitonBonusDamage,
     resolveHaywireRadius,
@@ -22,9 +25,11 @@ import {
     resolvePowerFieldParryDestroys,
     resolvePrimitiveDamageAdjust,
     resolveProvenDamageAdjust,
+    resolveDieOpDamageAdjust,
     resolveScatterRangeBand,
     resolveStunDuration,
     resolveTemplateRadius,
+    weaponQualityIdentifierFromName,
 } from './weapon-quality-effects.ts';
 import { setWeaponQualityPayloadsForTesting, weaponQualityMechanicsFromRaw } from './weapon-quality-payloads.ts';
 
@@ -388,5 +393,176 @@ describe('Toxic (X) — Toughness penalty, 1d10 additional damage', () => {
 
     it('exposes a 1d10 additional-damage dice expression', () => {
         expect(mech('toxic').toxicAdditionalDamageDice).toBe('1d10');
+    });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Die operations (#303) — the descriptor that retired the name-matching      */
+/* -------------------------------------------------------------------------- */
+
+describe('weaponQualityIdentifierFromName', () => {
+    it('collapses a display name to its pack identifier', () => {
+        expect(weaponQualityIdentifierFromName('Tearing')).toBe('tearing');
+        expect(weaponQualityIdentifierFromName('Razor Sharp')).toBe('razor-sharp');
+        expect(weaponQualityIdentifierFromName('Twin-Linked')).toBe('twin-linked');
+    });
+
+    it('strips punctuation and edge separators (levelled variant names)', () => {
+        expect(weaponQualityIdentifierFromName('Primitive (X)')).toBe('primitive-x');
+        expect(weaponQualityIdentifierFromName('  Proven  ')).toBe('proven');
+    });
+});
+
+describe('dieOps content is authored on the canonical RT docs (#303)', () => {
+    it('Tearing declares a pre-evaluation keep-highest with one extra die', () => {
+        expect(mech('tearing').dieOps).toEqual([
+            { op: 'keepHighest', phase: 'preEvaluate', extraDice: 1, threshold: null, usesLevel: false, modifierKey: 'tearing' },
+        ]);
+    });
+
+    it('Proven declares a levelled post-evaluation floor, on both the bare and (X) docs', () => {
+        for (const id of ['proven', 'proven-x']) {
+            const ops = mech(id).dieOps;
+            expect(ops).toHaveLength(1);
+            expect(ops[0]?.op).toBe('floor');
+            expect(ops[0]?.phase).toBe('postEvaluate');
+            expect(ops[0]?.usesLevel).toBe(true);
+            expect(ops[0]?.modifierKey).toBe('proven');
+        }
+    });
+
+    it('Primitive declares a levelled post-evaluation cap, on both the bare and (X) docs', () => {
+        for (const id of ['primitive', 'primitive-x']) {
+            const ops = mech(id).dieOps;
+            expect(ops).toHaveLength(1);
+            expect(ops[0]?.op).toBe('cap');
+            expect(ops[0]?.phase).toBe('postEvaluate');
+            expect(ops[0]?.usesLevel).toBe(true);
+            expect(ops[0]?.modifierKey).toBe('primitive');
+        }
+    });
+
+    it('leaves every other quality with an empty dieOps list', () => {
+        expect(mech('accurate').dieOps).toEqual([]);
+        expect(mech('melta').dieOps).toEqual([]);
+    });
+});
+
+describe('collectWeaponQualityDieOps', () => {
+    it('resolves Tearing to a pre-evaluation keep-highest op', () => {
+        expect(collectWeaponQualityDieOps([{ name: 'Tearing' }])).toEqual([
+            { quality: 'Tearing', op: 'keepHighest', phase: 'preEvaluate', extraDice: 1, threshold: 0, modifierKey: 'tearing' },
+        ]);
+    });
+
+    it('substitutes the attack special’s (X) level as the floor / cap threshold', () => {
+        expect(collectWeaponQualityDieOps([{ name: 'Proven', level: 3 }])).toEqual([
+            { quality: 'Proven', op: 'floor', phase: 'postEvaluate', extraDice: 0, threshold: 3, modifierKey: 'proven' },
+        ]);
+        expect(collectWeaponQualityDieOps([{ name: 'Primitive', level: 7 }])).toEqual([
+            { quality: 'Primitive', op: 'cap', phase: 'postEvaluate', extraDice: 0, threshold: 7, modifierKey: 'primitive' },
+        ]);
+    });
+
+    it('drops a levelled floor / cap with no level in play rather than resolving a 0 threshold', () => {
+        // A cap of 0 would reduce every damage die to nothing; an inert op is correct.
+        expect(collectWeaponQualityDieOps([{ name: 'Primitive' }])).toEqual([]);
+        expect(collectWeaponQualityDieOps([{ name: 'Proven', level: 0 }])).toEqual([]);
+    });
+
+    it('resolves a bare name through the sibling (X) doc when only that one is authored', () => {
+        setWeaponQualityPayloadsForTesting({ 'felling-x': { dieOps: [{ op: 'cap', phase: 'postEvaluate', usesLevel: true, modifierKey: 'felling' }] } });
+        expect(collectWeaponQualityDieOps([{ name: 'Felling', level: 2 }])).toEqual([
+            { quality: 'Felling', op: 'cap', phase: 'postEvaluate', extraDice: 0, threshold: 2, modifierKey: 'felling' },
+        ]);
+        setWeaponQualityPayloadsForTesting(Object.fromEntries(mechanicsById));
+    });
+
+    it('falls back to the quality identifier when the descriptor names no modifier key', () => {
+        setWeaponQualityPayloadsForTesting({ 'razor-sharp': { dieOps: [{ op: 'floor', phase: 'postEvaluate', threshold: 4 }] } });
+        expect(collectWeaponQualityDieOps([{ name: 'Razor Sharp' }])[0]?.modifierKey).toBe('razor-sharp');
+        setWeaponQualityPayloadsForTesting(Object.fromEntries(mechanicsById));
+    });
+
+    it('ignores qualities with no payload and qualities that declare no die ops', () => {
+        expect(collectWeaponQualityDieOps([{ name: 'Not A Quality' }, { name: 'Accurate' }])).toEqual([]);
+    });
+
+    it('collects every declared op across a multi-quality weapon', () => {
+        const ops = collectWeaponQualityDieOps([{ name: 'Tearing' }, { name: 'Proven', level: 3 }]);
+        expect(ops.map((o) => o.op)).toEqual(['keepHighest', 'floor']);
+    });
+});
+
+describe('applyKeepHighestToDie — Tearing term surgery', () => {
+    function die(number: number, modifiers: string[] = []): DieTermLike {
+        return { number, modifiers };
+    }
+
+    it('appends the extra die and keeps the original count highest', () => {
+        const term = die(1);
+        expect(applyKeepHighestToDie(term, 1)).toBe(true);
+        expect(term).toEqual({ number: 2, modifiers: ['kh1'] });
+    });
+
+    it('keeps the ORIGINAL count on a multi-die weapon (2d10 → 3d10kh2)', () => {
+        const term = die(2);
+        applyKeepHighestToDie(term, 1);
+        expect(term).toEqual({ number: 3, modifiers: ['kh2'] });
+    });
+
+    it('does not stack when the term already carries a kh modifier (double-apply guard)', () => {
+        const term = die(2, ['kh1']);
+        expect(applyKeepHighestToDie(term, 1)).toBe(false);
+        expect(term).toEqual({ number: 2, modifiers: ['kh1'] });
+    });
+
+    it('is idempotent across repeated application', () => {
+        const term = die(1);
+        applyKeepHighestToDie(term, 1);
+        applyKeepHighestToDie(term, 1);
+        expect(term).toEqual({ number: 2, modifiers: ['kh1'] });
+    });
+
+    it('leaves unrelated modifiers alone and still applies', () => {
+        const term = die(1, ['r1']);
+        expect(applyKeepHighestToDie(term, 1)).toBe(true);
+        expect(term).toEqual({ number: 2, modifiers: ['r1', 'kh1'] });
+    });
+
+    it('is a no-op for a zero-die term, a null count, or zero extra dice', () => {
+        const empty = die(0);
+        expect(applyKeepHighestToDie(empty, 1)).toBe(false);
+        expect(empty).toEqual({ number: 0, modifiers: [] });
+
+        const nullCount: DieTermLike = { number: null, modifiers: [] };
+        expect(applyKeepHighestToDie(nullCount, 1)).toBe(false);
+
+        const noExtra = die(2);
+        expect(applyKeepHighestToDie(noExtra, 0)).toBe(false);
+        expect(noExtra).toEqual({ number: 2, modifiers: [] });
+    });
+});
+
+describe('resolveDieOpDamageAdjust — per-die accumulation across a multi-die weapon', () => {
+    /** Sum the adjustments every op resolved for `special` contributes over `rolls` — what the engine's per-die loop does. */
+    function totalAdjust(special: { name: string; level?: number }, rolls: number[]): number {
+        const ops = collectWeaponQualityDieOps([special]);
+        expect(ops.length).toBeGreaterThan(0);
+        return ops.reduce((sum, op) => sum + rolls.reduce((dieSum, roll) => dieSum + resolveDieOpDamageAdjust(roll, op), 0), 0);
+    }
+
+    it('accumulates the Proven floor over every die below the threshold', () => {
+        // 3d10 Proven(3) rolling [1, 2, 8] → +2 +1 +0 = +3
+        expect(totalAdjust({ name: 'Proven', level: 3 }, [1, 2, 8])).toBe(3);
+    });
+
+    it('accumulates the Primitive cap over every die above the threshold', () => {
+        // 3d10 Primitive(7) rolling [9, 10, 4] → -2 -3 +0 = -5
+        expect(totalAdjust({ name: 'Primitive', level: 7 }, [9, 10, 4])).toBe(-5);
+    });
+
+    it('contributes nothing for a pre-evaluation keepHighest op', () => {
+        expect(totalAdjust({ name: 'Tearing' }, [1, 10])).toBe(0);
     });
 });
