@@ -234,6 +234,10 @@
             "MinusButton": "Remove an assistant",
             "BreakdownLine": "Assistance"
         },
+        "PassiveModifiers": {
+            "Label": "Passive Effects",
+            "AlreadyApplied": "Already included in the target number."
+        },
         "TryingAgain": {
             "WarningTitle": "Trying Again",
             "BlockedMessage": "RAW: this skill cannot be retried within the same scene without a meaningful change in circumstances.",

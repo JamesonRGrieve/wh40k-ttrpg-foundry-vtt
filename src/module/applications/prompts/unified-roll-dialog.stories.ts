@@ -69,8 +69,6 @@ function baseContext(overrides: Ctx = {}): Ctx {
         hasSkillVariants: false,
         hasSituationalModifiers: false,
         assistantCount: 0,
-        canDecrementAssistant: false,
-        canIncrementAssistant: true,
         assistanceBonus: 0,
         extended: false,
         extendedThreshold: 3,
@@ -120,7 +118,6 @@ export const ManualSuccess: Story = {
             { active: false, toggleKey: 'darkness', condition: 'Fighting in darkness', icon: 'fas fa-moon', source: 'Darkness', value: -20, valueLabel: '-20' },
         ],
         assistantCount: 1,
-        canDecrementAssistant: true,
         assistanceBonus: 10,
     }),
     play: async ({ canvasElement }) => {

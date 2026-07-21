@@ -3,24 +3,31 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * e2e coverage for #60 — Assistance stepper on the unified roll dialog.
+ * e2e coverage for #60 — Assistance on the unified roll dialog.
  *
- * +10 per assistant up to DEFAULT_ASSISTANT_CAP (core.md §"Assistance", p. 25).
- * Opens UnifiedRollDialog against a synthetic simple-skill rollData, clicks
- * the `incrementAssistant` button twice, and asserts that:
+ * The bare +/- integer stepper was replaced by one toggleable chip per ELIGIBLE
+ * ally (friendly token on the active scene, not the roller, trained in the skill
+ * being rolled). A raw count let a player claim aid from allies who weren't
+ * present or couldn't perform the skill, and gave the chat card no names.
  *
- *   - the count badge shows "2"
- *   - the `+N` pill shows "+20"
- *   - the plus button is disabled at cap
- *   - capture both a default `snap` (sheet bounds) and a focused element
- *     screenshot of `.wh40k-assistance-stepper` for review.
+ * What this spec verifies headlessly, against a synthetic rollData with no scene
+ * tokens and no skill key:
  *
- * Pattern adapted from `psychic-push-selector.spec.ts` — instantiate the
- * dialog via its deployed module URL with a hand-rolled rollData.
+ *   - the legacy stepper DOM is gone (no `.wh40k-assistance-stepper*`, no
+ *     `incrementAssistant` / `decrementAssistant` actions) — a regression guard
+ *     on the removal itself;
+ *   - with no eligible ally, the chip group is correctly HIDDEN rather than
+ *     rendering an empty shell.
+ *
+ * NOT covered here: chip selection applying +10 each and naming the assistants on
+ * the chat card. That needs a scene with friendly tokens whose actors are trained
+ * in the rolled skill, which this synthetic harness does not build — the
+ * eligibility and cap logic is unit-tested in `src/module/rules/roll-assist.test.ts`.
+ * Add a seeded-scene case here when running the licensed lane.
  */
 
-test.describe.serial('assistance stepper (#60)', () => {
-    test('increment + decrement update count, bonus, and cap state', async ({ page }) => {
+test.describe.serial('assistance chips (#60)', () => {
+    test('legacy stepper is gone and the chip group hides when no ally is eligible', async ({ page }) => {
         await joinOrSkip(page);
 
         const result = await page.evaluate(async () => {
@@ -36,12 +43,12 @@ test.describe.serial('assistance stepper (#60)', () => {
             const mod = (await import(/* @vite-ignore */ modUrl)) as DialogModule;
             const Cls = mod.default;
             if (typeof Cls !== 'function') {
-                return { error: 'UnifiedRollDialog default export missing', snaps: null };
+                return { error: 'UnifiedRollDialog default export missing', state: null };
             }
 
             // Synthetic SimpleSkillRollData-shaped rollData. The dialog only
-            // exercises the modifiers panel here, so no skill/weapon plumbing
-            // is needed beyond the few fields the partial reads.
+            // exercises the modifiers panel here, so no skill/weapon plumbing is
+            // needed beyond the few fields the partial reads.
             class SimpleRollData {
                 name = 'probe-skill';
                 baseTarget = 30;
@@ -73,7 +80,7 @@ test.describe.serial('assistance stepper (#60)', () => {
                 dialog = new Cls(actionData);
                 await dialog.render(true);
             } catch (err) {
-                return { error: `dialog render threw: ${(err as Error).message}`, snaps: null };
+                return { error: `dialog render threw: ${(err as Error).message}`, state: null };
             }
 
             await new Promise<void>((r) => {
@@ -81,111 +88,41 @@ test.describe.serial('assistance stepper (#60)', () => {
             });
             const root = dialog.element;
             if (!(root instanceof HTMLElement)) {
-                return { error: 'dialog.element is not an HTMLElement', snaps: null };
-            }
-            // Capture into a typed const so closures below don't need `!`.
-            const safeRoot: HTMLElement = root;
-
-            interface StepperState {
-                label: string;
-                rendered: boolean;
-                count: string | null;
-                badge: string | null;
-                plusDisabled: boolean | null;
-                minusDisabled: boolean | null;
-            }
-            function readState(label: string): StepperState {
-                const stepperEl = safeRoot.querySelector<HTMLElement>('.wh40k-assistance-stepper');
-                const count = safeRoot.querySelector<HTMLElement>('.wh40k-assistance-stepper__count');
-                const badge = safeRoot.querySelector<HTMLElement>('.wh40k-assistance-stepper__badge');
-                const plus = safeRoot.querySelector<HTMLButtonElement>('.wh40k-assistance-stepper__plus');
-                const minus = safeRoot.querySelector<HTMLButtonElement>('.wh40k-assistance-stepper__minus');
-                return {
-                    label,
-                    rendered: stepperEl !== null,
-                    count: count?.textContent.trim() ?? null,
-                    badge: badge?.textContent.trim() ?? null,
-                    plusDisabled: plus?.disabled ?? null,
-                    minusDisabled: minus?.disabled ?? null,
-                };
+                return { error: 'dialog.element is not an HTMLElement', state: null };
             }
 
-            async function clickAction(action: string): Promise<void> {
-                const el = safeRoot.querySelector<HTMLElement>(`[data-action="${action}"]:not([disabled])`);
-                el?.click();
-                await new Promise<void>((r) => {
-                    setTimeout(r, 60);
-                });
+            const probe = {
+                // Legacy stepper must be fully removed.
+                legacyStepper: root.querySelector('.wh40k-assistance-stepper') !== null,
+                legacyCount: root.querySelector('.wh40k-assistance-stepper__count') !== null,
+                legacyIncrement: root.querySelector('[data-action="incrementAssistant"]') !== null,
+                legacyDecrement: root.querySelector('[data-action="decrementAssistant"]') !== null,
+                // With no eligible ally the whole group is suppressed.
+                chipGroup: root.querySelector('.wh40k-assist-chips') !== null,
+                chips: root.querySelectorAll('.wh40k-assist-chip').length,
+            };
+
+            try {
+                await dialog.close?.();
+            } catch {
+                /* ignore teardown failures */
             }
-
-            const initial = readState('initial-0');
-            await clickAction('incrementAssistant');
-            const afterOne = readState('after-+1');
-            await clickAction('incrementAssistant');
-            const afterTwo = readState('after-+2-capped');
-            // Overshoot attempt — button is disabled, so this is a no-op.
-            await clickAction('incrementAssistant');
-            const afterOvershoot = readState('after-overshoot');
-            await clickAction('decrementAssistant');
-            const afterDec = readState('after-dec');
-
-            return { error: null, snaps: { initial, afterOne, afterTwo, afterOvershoot, afterDec } };
+            return { error: null, state: probe };
         });
 
         expect(result.error, result.error ?? 'ok').toBeNull();
-        const snaps = result.snaps;
-        expect(snaps, 'snapshot bundle returned').not.toBeNull();
-        if (snaps === null) return;
+        const state = result.state;
+        expect(state, 'state bundle returned').not.toBeNull();
+        if (state === null) return;
 
-        // Initial: rendered, count=0, badge=+0, minus disabled.
-        expect(snaps.initial.rendered, 'stepper renders').toBe(true);
-        expect(snaps.initial.count).toBe('0');
-        expect(snaps.initial.badge).toBe('+0');
-        expect(snaps.initial.minusDisabled).toBe(true);
-        expect(snaps.initial.plusDisabled).toBe(false);
+        expect(state.legacyStepper, 'legacy .wh40k-assistance-stepper must be gone').toBe(false);
+        expect(state.legacyCount, 'legacy count element must be gone').toBe(false);
+        expect(state.legacyIncrement, 'incrementAssistant action must be gone').toBe(false);
+        expect(state.legacyDecrement, 'decrementAssistant action must be gone').toBe(false);
 
-        // +1 click: count=1, badge=+10.
-        expect(snaps.afterOne.count).toBe('1');
-        expect(snaps.afterOne.badge).toBe('+10');
-        expect(snaps.afterOne.minusDisabled).toBe(false);
-        expect(snaps.afterOne.plusDisabled).toBe(false);
+        expect(state.chipGroup, 'chip group hides when no ally is eligible').toBe(false);
+        expect(state.chips, 'no chips render without eligible allies').toBe(0);
 
-        // +2 click: count=2, badge=+20, plus disabled (cap).
-        expect(snaps.afterTwo.count).toBe('2');
-        expect(snaps.afterTwo.badge).toBe('+20');
-        expect(snaps.afterTwo.plusDisabled).toBe(true);
-
-        // Overshoot stays at cap.
-        expect(snaps.afterOvershoot.count).toBe('2');
-
-        // Decrement returns to 1.
-        expect(snaps.afterDec.count).toBe('1');
-        expect(snaps.afterDec.badge).toBe('+10');
-
-        // Visual record at the cap state.
-        await page.evaluate(async () => {
-            const root = document.querySelector<HTMLElement>('.application[data-application-part]');
-            const plus = root?.querySelector<HTMLButtonElement>('.wh40k-assistance-stepper__plus');
-            if (plus && !plus.disabled) {
-                plus.click();
-                await new Promise<void>((r) => {
-                    setTimeout(r, 60);
-                });
-            }
-        });
-        await snap(page, 'assistance-stepper-2');
-
-        const stepper = page.locator('.wh40k-assistance-stepper').first();
-        if ((await stepper.count()) > 0) {
-            const { mkdirSync } = await import('node:fs');
-            const { resolve } = await import('node:path');
-            const dir = resolve(__dirname, '..', '..', '.e2e-screenshots');
-            try {
-                mkdirSync(dir, { recursive: true });
-            } catch {
-                /* ignore */
-            }
-            await stepper.screenshot({ path: resolve(dir, 'assistance-stepper-element.png') });
-        }
+        await snap(page, 'assistance-chips-no-eligible-allies');
     });
 });

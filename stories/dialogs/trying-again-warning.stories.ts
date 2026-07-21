@@ -20,8 +20,6 @@ interface TryingAgainCtx {
     assistantCount: number;
     assistanceBonus: number;
     assistantMax: number;
-    canIncrementAssistant: boolean;
-    canDecrementAssistant: boolean;
     tryAgainAdvice: RetryAdvice | null;
     tryAgainPenalty: number;
     tryAgainPenaltyLabel: string;
@@ -40,8 +38,6 @@ function buildContext(args: TryingAgainArgs): TryingAgainCtx {
         assistantCount: 0,
         assistanceBonus: 0,
         assistantMax: 4,
-        canIncrementAssistant: true,
-        canDecrementAssistant: false,
         tryAgainAdvice: showAdvice ? advice : null,
         tryAgainPenalty: penalty,
         tryAgainPenaltyLabel: penalty < 0 ? `${penalty}` : penalty > 0 ? `+${penalty}` : '0',

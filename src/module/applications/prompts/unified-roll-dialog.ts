@@ -13,7 +13,7 @@
 import type { ActionData } from '../../rolls/action-data.ts';
 import type { RollData, RollModifierComponent } from '../../rolls/roll-data.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
-import { DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
+import { ASSIST_BONUS_PER_ALLY, DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
 import {
     AIM_OPTIONS,
     aggregateSituationalDamageEffects,
@@ -30,6 +30,7 @@ import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.
 import { computeGangUpModifier, gangUpConfigFor, type GangUpTokenLike } from '../../rules/gang-up.ts';
 import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/high-ground.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
+import { type AssistCandidate, type AssistSkillSource, eligibleAssistants, retainEligibleSelection } from '../../rules/roll-assist.ts';
 import { getSkillVariantsForKey, normalizeSkillKey } from '../../rules/skill-variant-index.ts';
 import { availableSkillVariants, filterModifiersByVariant, type SkillVariant, variantAutoFails } from '../../rules/skill-variants.ts';
 import {
@@ -74,6 +75,35 @@ type AttackOptionWeaponLike = WH40KItemDocument & {
  * of active status ids (not declared on the system's actor type, hence read
  * through this structural shape).
  */
+/** Minimal Foundry token shape the assistance walk reads off the token layer. */
+interface AssistTokenLike {
+    id?: string | null;
+    actor?: ({ name?: string; system?: AssistSkillSource } & object) | null | undefined;
+    document?: { disposition?: number } | undefined;
+}
+
+/** One passive modifier as `creature.ts _applyItemModifiers` writes it. */
+interface PassiveModifierEntry {
+    name?: string;
+    type?: string;
+    value?: number;
+}
+
+/** `actor.system.modifierSources` — per-bucket passive provenance (#484). */
+interface ModifierSourcesShape {
+    characteristics?: Record<string, PassiveModifierEntry[] | undefined> | undefined;
+    skills?: Record<string, PassiveModifierEntry[] | undefined> | undefined;
+    combat?: Record<string, PassiveModifierEntry[] | undefined> | undefined;
+}
+
+/** A read-only passive row rendered in the modifiers panel (#484). */
+interface PassiveModifierRow {
+    label: string;
+    value: number;
+    valueLabel: string;
+    type: string;
+}
+
 interface ConditionSource {
     statuses?: Iterable<string> | null;
     effects?: Iterable<{ name?: string | null; disabled?: boolean }> | null;
@@ -139,8 +169,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _pickerOutsideHandler: ((e: PointerEvent) => void) | null;
     declare _psyMode: PsyMode;
     declare _pushLevel: number;
-    /** Number of assistants helping the active character (#60 — +10 per, capped by `DEFAULT_ASSISTANT_CAP`). */
-    declare _assistantCount: number;
+    /**
+     * Token ids of the allies selected to assist (#60). Replaces the old bare
+     * `_assistantCount` integer: a raw number let a player claim assistance from
+     * allies who are not on the scene or do not know the skill, and gave the chat
+     * card nothing to name. The bonus is derived from the selection size (still
+     * capped by `DEFAULT_ASSISTANT_CAP`) and the names come along for free.
+     */
+    declare _selectedAssistantIds: Set<string>;
     /** Extended-test toggle (#59) — when true, rolled DoS accumulate against `_extendedThreshold`. */
     declare _extended: boolean;
     /** Threshold of cumulative DoS the extended test must reach (#59). */
@@ -187,7 +223,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._pickerOutsideHandler = null;
         this._psyMode = 'unfettered';
         this._pushLevel = 1;
-        this._assistantCount = 0;
+        this._selectedAssistantIds = new Set<string>();
         this._extended = false;
         this._extendedThreshold = 5;
         this._charOverride = null;
@@ -229,8 +265,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             setPsyMode: UnifiedRollDialog.#onSetPsyMode,
             incrementPushLevel: UnifiedRollDialog.#onIncrementPushLevel,
             decrementPushLevel: UnifiedRollDialog.#onDecrementPushLevel,
-            incrementAssistant: UnifiedRollDialog.#onIncrementAssistant,
-            decrementAssistant: UnifiedRollDialog.#onDecrementAssistant,
+            toggleAssistant: UnifiedRollDialog.#onToggleAssistant,
             setCharacteristicOverride: UnifiedRollDialog.#onSetCharacteristicOverride,
             setClimbSurface: UnifiedRollDialog.#onSetClimbSurface,
             toggleExtended: UnifiedRollDialog.#onToggleExtended,
@@ -406,7 +441,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             this.rollType === 'psychic'
                 ? resolvePsyMode({ mode: this._psyMode, basePR: Number(rollData['pr']) || 0, pushLevel: this._pushLevel }).focusModifier
                 : 0;
-        const assistanceMod = isForceField ? 0 : getAssistanceBonus(this._assistantCount);
+        const selectedAssistants = this._selectedAssistants();
+        const assistanceMod = isForceField ? 0 : getAssistanceBonus(selectedAssistants.length);
 
         // Fatigue (#415) — a flat penalty applied to EVERY test (characteristic /
         // skill / weapon), the first concrete consumer of the effective-value split.
@@ -716,11 +752,27 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             hasSkillVariants: skillVariants.length > 0,
             selectedSkillVariant: this._selectedSkillVariant,
             showCustomModifier: this._showCustomModifier || this._customModifier !== 0,
-            assistantCount: this._assistantCount,
+            assistantCount: selectedAssistants.length,
             assistanceBonus: assistanceMod,
             assistantMax: DEFAULT_ASSISTANT_CAP,
-            canIncrementAssistant: this._assistantCount < DEFAULT_ASSISTANT_CAP,
-            canDecrementAssistant: this._assistantCount > 0,
+            // One chip per ally on the scene who is friendly, not the roller, and
+            // trained in the skill (#60). `atCap` disables unselected chips once the
+            // RAW cap is reached rather than silently ignoring the extra pick.
+            assistChips: this._assistCandidates().map((candidate) => ({
+                id: candidate.id,
+                name: candidate.name,
+                isSelected: this._selectedAssistantIds.has(candidate.id),
+                atCap: !this._selectedAssistantIds.has(candidate.id) && selectedAssistants.length >= DEFAULT_ASSISTANT_CAP,
+            })),
+            hasAssistChips: this._assistCandidates().length > 0,
+            assistBonusPerAlly: ASSIST_BONUS_PER_ALLY,
+            // Read-only passive modifiers already folded into the target (#484):
+            // talent/trait/curse/drug/condition grants from `system.modifierSources`.
+            // Display-only — they are NOT re-summed into finalTarget, because
+            // `_applyModifiersToCharacteristics` / `…ToSkills` already baked them
+            // into the base value this dialog starts from.
+            passiveModifiers: this._passiveModifierRows(),
+            hasPassiveModifiers: this._passiveModifierRows().length > 0,
             extended: this._extended,
             extendedThreshold: this._extendedThreshold,
             tryAgainAdvice,
@@ -1516,18 +1568,83 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
     }
 
-    /* ---- Assistance stepper (#60) ----                                                  */
-    /* +10 per assistant up to DEFAULT_ASSISTANT_CAP (core.md §"Assistance", p. 25).        */
+    /* ---- Assistance chips (#60) ----                                                    */
+    /* +10 per selected ally up to DEFAULT_ASSISTANT_CAP (core.md §"Assistance", p. 25).    */
 
-    static async #onIncrementAssistant(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
-        if (this._assistantCount >= DEFAULT_ASSISTANT_CAP) return;
-        this._assistantCount += 1;
-        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+    /**
+     * Allies on the active scene eligible to assist this test: friendly, not the
+     * roller, and trained in the skill being rolled. Empty for characteristic
+     * tests and force-field activations (no skill to be trained in).
+     */
+    _assistCandidates(): AssistCandidate[] {
+        const rd = this.rollData;
+        if (rd.type !== 'Skill') return [];
+        const selfActor = rd.sourceActor;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: `canvas` is a Foundry runtime global; its token layer is not on the fvtt-types surface at this seam
+        const placeables = (globalThis as unknown as { canvas?: { tokens?: { placeables?: AssistTokenLike[] } } }).canvas?.tokens?.placeables ?? [];
+        const candidates: AssistCandidate[] = [];
+        for (const token of placeables) {
+            const id = token.id;
+            const actor = token.actor;
+            if (typeof id !== 'string' || id === '' || actor == null) continue;
+            candidates.push({
+                id,
+                name: actor.name ?? '',
+                disposition: token.document?.disposition ?? 0,
+                isSelf: actor === selfActor,
+                actor: actor.system,
+            });
+        }
+        return eligibleAssistants(candidates, rd.rollKey);
     }
 
-    static async #onDecrementAssistant(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
-        if (this._assistantCount <= 0) return;
-        this._assistantCount -= 1;
+    /** The eligible candidates currently toggled on, with stale ids dropped. */
+    _selectedAssistants(): AssistCandidate[] {
+        return retainEligibleSelection(this._selectedAssistantIds, this._assistCandidates());
+    }
+
+    /**
+     * Passive / always-on modifiers contributing to this test, for read-only
+     * display (#484). Sourced from `system.modifierSources`, which
+     * `creature.ts _applyItemModifiers` populates from talents, traits,
+     * conditions and equipped gear with `{ name, type, value }` provenance.
+     *
+     * These are NOT toggleable and NOT re-summed: unlike the opt-in situational
+     * pills and assist chips, they are already folded into the characteristic /
+     * skill value the dialog uses as its base target. Surfacing them answers
+     * "why is my target this number" without double-counting.
+     */
+    _passiveModifierRows(): PassiveModifierRow[] {
+        const rd = this.rollData;
+        const rollKey = rd.rollKey;
+        if (rollKey === '') return [];
+        const withSources = rd.sourceActor?.system as { modifierSources?: ModifierSourcesShape } | undefined;
+        const sources = withSources?.modifierSources;
+        if (sources === undefined) return [];
+        const bucket = rd.type === 'Skill' ? sources.skills : rd.type === 'Characteristic' ? sources.characteristics : sources.combat;
+        const entries = bucket?.[rollKey];
+        if (entries === undefined) return [];
+        return entries
+            .filter((entry): entry is PassiveModifierEntry & { value: number } => typeof entry.value === 'number' && entry.value !== 0)
+            .map((entry) => ({
+                label: entry.name ?? '',
+                value: entry.value,
+                valueLabel: entry.value >= 0 ? `+${entry.value}` : `${entry.value}`,
+                type: entry.type ?? '',
+            }));
+    }
+
+    static async #onToggleAssistant(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const id = target.dataset['assistantId'];
+        if (id === undefined || id === '') return;
+        if (this._selectedAssistantIds.has(id)) {
+            this._selectedAssistantIds.delete(id);
+        } else {
+            // Enforce the RAW cap at selection time so the visible chip state always
+            // matches the bonus actually applied.
+            if (this._selectedAssistants().length >= DEFAULT_ASSISTANT_CAP) return;
+            this._selectedAssistantIds.add(id);
+        }
         await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
@@ -2061,11 +2178,19 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                           source: this._currentDifficulty.label,
                       },
                   ];
-        // Assistance modifier (#60). +10 per assistant up to DEFAULT_ASSISTANT_CAP.
-        // Surfaces on chat cards via RollData.activeModifiers; key is uppercased
-        // for the modifier-breakdown partial, so "ASSISTANCE +N" appears in the
-        // chat-card row list when assistantCount > 0.
-        rd.modifiers['assistance'] = getAssistanceBonus(this._assistantCount);
+        // Assistance modifier (#60). +10 per selected ally up to DEFAULT_ASSISTANT_CAP.
+        const assistants = this._selectedAssistants();
+        rd.modifiers['assistance'] = getAssistanceBonus(assistants.length);
+        // Name each assistant on the chat card instead of a lumped "ASSISTANCE +20".
+        // `expandedBuckets` is the same provenance channel difficulty/situational use,
+        // so the breakdown partial renders one hoverable row per ally with no
+        // template change.
+        rd.expandedBuckets['assistance'] = assistants.map((assistant) => ({
+            key: `assistance_${assistant.id}`,
+            label: assistant.name,
+            value: ASSIST_BONUS_PER_ALLY,
+            source: assistant.name,
+        }));
 
         // Apply psychic Push / Fettered / Unfettered selector (#69)
         if (this.rollType === 'psychic') {
