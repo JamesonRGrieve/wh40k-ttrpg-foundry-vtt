@@ -263,9 +263,18 @@ export class WH40KAcolyte extends WH40KBaseActor {
     getSituationalModifiers(
         type: 'characteristics' | 'skills' | 'combat',
         key: string | null = null,
-    ): Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string; appliesToVariant?: string }> {
+    ): Array<{ key: string; value: number; condition: string; icon: string; source: string; sourceType: string; itemId: string; appliesToVariant?: string }> {
         type SituationalEntry = { key: string; value: number; condition: string; icon?: string; appliesToVariant?: string };
-        const modifiers: Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string; appliesToVariant?: string }> = [];
+        const modifiers: Array<{
+            key: string;
+            value: number;
+            condition: string;
+            icon: string;
+            source: string;
+            sourceType: string;
+            itemId: string;
+            appliesToVariant?: string;
+        }> = [];
 
         // Collect from all modifier-providing items
         const modifierItems = this.items.filter((item: WH40KItem) => {
@@ -296,6 +305,12 @@ export class WH40KAcolyte extends WH40KBaseActor {
                     condition: mod.condition,
                     icon: mod.icon ?? 'fa-solid fa-exclamation-triangle',
                     source: item.name,
+                    // Carries the owning item's document type so the roll dialog can
+                    // group gear-sourced modifiers (equipped armour / cybernetics /
+                    // gear) into their own labelled chip group, distinct from the
+                    // talent / trait / condition ones (#480). Eligibility itself stays
+                    // data-driven off the modifier's own `key`, never the item name.
+                    sourceType: item.type,
                     itemId: item.id,
                     // Propagate the test-variant tag (#246/#440) so the dialog can gate
                     // a sense-scoped modifier (an auspex tagged "Visual") to its channel.

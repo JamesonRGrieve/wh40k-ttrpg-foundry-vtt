@@ -75,6 +75,29 @@ type AttackOptionWeaponLike = WH40KItemDocument & {
  * of active status ids (not declared on the system's actor type, hence read
  * through this structural shape).
  */
+/**
+ * One situational (opt-in) modifier collected off the actor's items. `source` is
+ * the owning item's name and doubles as the provenance label on the chat card;
+ * `sourceType` is its document type, used only to group gear chips (#480).
+ */
+interface SituationalModifierEntry {
+    key: string;
+    source: string;
+    sourceType?: string;
+    value: number;
+    condition?: string;
+    icon?: string;
+    appliesToVariant?: string;
+}
+
+/**
+ * Item document types whose situational modifiers are "gear the character is
+ * carrying/wearing" rather than an innate talent/trait/condition (#480). Used
+ * only to GROUP chips in the dialog; eligibility remains the data-driven key
+ * match in `getSituationalModifiers`.
+ */
+const GEAR_SOURCE_TYPES: ReadonlySet<string> = new Set(['armour', 'cybernetic', 'gear']);
+
 /** Minimal Foundry token shape the assistance walk reads off the token layer. */
 interface AssistTokenLike {
     id?: string | null;
@@ -165,7 +188,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _rangeExpanded: boolean;
     declare _situationalExpanded: boolean;
     declare _initialized: boolean;
-    declare _cachedSituationalModifiers: Array<{ key: string; source: string; value: number; label: string; appliesToVariant?: string }> | null;
+    declare _cachedSituationalModifiers: SituationalModifierEntry[] | null;
     declare _pickerOutsideHandler: ((e: PointerEvent) => void) | null;
     declare _psyMode: PsyMode;
     declare _pushLevel: number;
@@ -368,7 +391,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     /** Get the applicable modifier list for the current roll type */
     // eslint-disable-next-line @typescript-eslint/naming-convention -- leading underscore is Foundry V2 convention for accessor-like members
-    get _applicableModifiers(): Array<{ key: string; source: string; value: number; label: string }> {
+    get _applicableModifiers(): SituationalModifierEntry[] {
         // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is nullable state initialized to null, not a DataModel field
         return this._cachedSituationalModifiers ?? [];
     }
@@ -687,13 +710,21 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Situational modifiers with toggle state
         // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is dialog state (null = not yet collected), not a DataModel field
-        const situationalModifiers = (this._cachedSituationalModifiers ?? []).map((m) => ({
+        const allSituationalModifiers = (this._cachedSituationalModifiers ?? []).map((m) => ({
             ...m,
             active: this._situationalModifiers[`${m.key}_${m.source}`] ?? false,
             toggleKey: `${m.key}_${m.source}`,
             valueLabel: m.value >= 0 ? `+${m.value}` : `${m.value}`,
         }));
+        // Split gear-sourced modifiers into their own labelled chip group (#480), so
+        // "which of my items could help this roll" is answerable at a glance instead
+        // of being mixed in with talent/trait/condition pills. Eligibility is still
+        // the data-driven key match in `getSituationalModifiers` — this only groups
+        // by the owning item's document type, never by item name.
+        const gearModifiers = allSituationalModifiers.filter((m) => GEAR_SOURCE_TYPES.has(m.sourceType ?? ''));
+        const situationalModifiers = allSituationalModifiers.filter((m) => !GEAR_SOURCE_TYPES.has(m.sourceType ?? ''));
         const hasSituationalModifiers = situationalModifiers.length > 0;
+        const hasGearModifiers = gearModifiers.length > 0;
 
         // Test variants (#246) — homebrew-gated skill sub-tests.
         const skillVariants = this._getSkillVariants();
@@ -748,6 +779,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             difficultyPickerOpen: this._difficultyPickerOpen,
             situationalModifiers,
             hasSituationalModifiers,
+            gearModifiers,
+            hasGearModifiers,
             skillVariants,
             hasSkillVariants: skillVariants.length > 0,
             selectedSkillVariant: this._selectedSkillVariant,
@@ -1150,7 +1183,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /*  Helper Methods                               */
     /* -------------------------------------------- */
 
-    _collectSituationalModifiers(): Array<{ key: string; source: string; value: number; label: string; appliesToVariant?: string }> {
+    _collectSituationalModifiers(): SituationalModifierEntry[] {
         /* eslint-disable no-restricted-syntax -- boundary: rollData is a heterogeneous bag; actor may be on sourceActor or the legacy 'actor' key */
         const actor = this.rollData.sourceActor ?? (this.rollData as Record<string, unknown>)['actor'];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: actor is unknown; cast + type-guard pattern; optional chain guards real runtime possibility
@@ -1278,7 +1311,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const active = (this._cachedSituationalModifiers ?? []).filter((mod) => this._situationalModifiers[`${mod.key}_${mod.source}`]);
         return filterModifiersByVariant(active, this._selectedSkillVariant).map((mod) => ({
             key: `${mod.key}_${mod.source}`,
-            label: mod.label,
+            // The owning item's name IS the provenance label (#480). This used to
+            // read `mod.label`, a field `getSituationalModifiers` never returns, so
+            // every situational row reached the chat card with `label: undefined`
+            // and rendered unlabelled.
+            label: mod.source,
             value: mod.value,
             source: mod.source,
         }));
