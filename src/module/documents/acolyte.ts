@@ -22,7 +22,6 @@ import {
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { firstTargetedActor, promptItemChoice, promptSkillUse } from '../rolls/skill-use-picker.ts';
 import { firstAidDifficultyForTier, getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
-import { formatRemaining, gateRemaining, isGateOpen } from '../rules/world-time.ts';
 import type {
     WH40KActorBio,
     WH40KActorSystemData,
@@ -537,10 +536,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const rollLabel = `${skillLabel}: ${useLabel}`;
         const rankOpt = skillRank !== undefined ? { skillRank } : {};
 
-        // RAW per-target time gates (#458): a use with a cooldown is blocked while the
-        // target's gate is closed — e.g. First Aid is once every 24 in-universe hours
-        // per patient, and is also blocked while they are under Extended Care (DH2 p109).
-        if (!this._checkSkillUseTimeGate(use, targetActor, useLabel)) return;
+        // RAW per-target time gates (#458) are NOT checked here. They are enforced at
+        // roll RESOLUTION (`blockedByTimeGate` in action-data.ts), where the final
+        // target is known — the dialog lets the player retarget in-flight, so a
+        // pre-dialog check could be passed against one actor and the effect then
+        // applied to a cooldown-locked one.
 
         // Interrogation (#435): an opposed test vs the subject's Willpower;
         // InterrogationActionData applies fatigue + surfaces the info tier.
@@ -856,30 +856,6 @@ export class WH40KAcolyte extends WH40KBaseActor {
             ...(skillRank !== undefined ? { skillRank } : {}),
         });
         prepareUnifiedRoll(demo);
-    }
-
-    /**
-     * Enforce a use's RAW per-target time gate before the roll (#458). Returns false
-     * (and warns with the reason + time remaining) when the target is still inside a
-     * cooldown window — First Aid's own 24-hour gate, or the Extended Care state that
-     * RAW also forbids treating through (DH2 p109). Uses with no `timeGate` pass.
-     */
-    _checkSkillUseTimeGate(use: SkillUseDef, targetActor: WH40KBaseActor, useLabel: string): boolean {
-        const gate = use.timeGate;
-        if (gate === undefined) return true;
-        const now = Number(game.time.worldTime);
-
-        // The use's own cooldown, plus (for First Aid) the RAW Extended Care exclusion.
-        const blockingKeys = gate.key === 'firstAid' ? [gate.key, 'extendedCare'] : [gate.key];
-        for (const key of blockingKeys) {
-            const expiry = targetActor.getTimeGate(key);
-            if (isGateOpen(expiry, now)) continue;
-            const remaining = formatRemaining(gateRemaining(expiry, now));
-            const messageKey = key === 'extendedCare' && gate.key !== 'extendedCare' ? 'WH40K.SkillUse.GateExtendedCare' : 'WH40K.SkillUse.GateCooldown';
-            ui.notifications.warn(game.i18n.format(messageKey, { use: useLabel, target: targetActor.name, remaining }));
-            return false;
-        }
-        return true;
     }
 
     /**

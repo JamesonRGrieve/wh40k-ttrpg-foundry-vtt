@@ -4,6 +4,7 @@ import {
     firstAidDifficultyForTier,
     type FirstAidPatient,
     blatherRounds,
+    evaluateSkillUseGate,
     getSkillUse,
     getSkillUses,
     hasSkillUses,
@@ -178,6 +179,84 @@ describe('RAW per-target time gates (#458)', () => {
         expect(getSkillUse('medicae', 'diagnose')?.timeGate).toBeUndefined();
         expect(getSkillUse('medicae', 'surgery')?.timeGate).toBeUndefined();
         expect(getSkillUse('charm', 'social')?.timeGate).toBeUndefined();
+    });
+
+    it('declares the Extended Care exclusion as DATA on the First Aid gate (not a name-match branch)', () => {
+        expect(getSkillUse('medicae', 'firstAid')?.timeGate?.blockedBy).toEqual([{ key: 'extendedCare', messageKey: 'WH40K.SkillUse.GateExtendedCare' }]);
+        // Extended Care itself carries no exclusion — only its own 24h cycle.
+        expect(getSkillUse('medicae', 'extendedCare')?.timeGate?.blockedBy).toBeUndefined();
+    });
+});
+
+describe('evaluateSkillUseGate (#458 — resolution-time enforcement)', () => {
+    const firstAid = getSkillUse('medicae', 'firstAid') as SkillUseDef;
+    const interrogate = getSkillUse('interrogation', 'interrogate') as SkillUseDef;
+    const diagnose = getSkillUse('medicae', 'diagnose') as SkillUseDef;
+
+    /** An `expiryOf` lookup over a plain per-key expiry map (an unset key is open). */
+    const gatesOf =
+        (map: Record<string, number>) =>
+        (key: string): number | null =>
+            map[key] ?? null;
+
+    it('allows a use whose def carries no time gate at all', () => {
+        expect(evaluateSkillUseGate(diagnose, gatesOf({ firstAid: 999_999 }), 0)).toBeNull();
+    });
+
+    it('allows a use whose gate has never been stamped on this target', () => {
+        expect(evaluateSkillUseGate(firstAid, gatesOf({}), 5_000)).toBeNull();
+    });
+
+    it('blocks the use while its own cooldown is still running, reporting the time remaining', () => {
+        // Stamped at t=0 with a 24h window; 6 hours in, 18 remain.
+        const block = evaluateSkillUseGate(firstAid, gatesOf({ firstAid: 86_400 }), 6 * 3600);
+        expect(block?.key).toBe('firstAid');
+        expect(block?.remaining).toBe(18 * 3600);
+        expect(block?.remainingLabel).toBe('18h');
+        expect(block?.messageKey).toBe('WH40K.SkillUse.GateCooldown');
+    });
+
+    it('reopens the use the instant in-universe time reaches the expiry', () => {
+        expect(evaluateSkillUseGate(firstAid, gatesOf({ firstAid: 86_400 }), 86_399)).not.toBeNull();
+        expect(evaluateSkillUseGate(firstAid, gatesOf({ firstAid: 86_400 }), 86_400)).toBeNull();
+        expect(evaluateSkillUseGate(firstAid, gatesOf({ firstAid: 86_400 }), 90_000)).toBeNull();
+    });
+
+    it('blocks First Aid through an open Extended Care window with the EXCLUSION message (RAW, DH2 p109)', () => {
+        const block = evaluateSkillUseGate(firstAid, gatesOf({ extendedCare: 3600 + 1800 }), 0);
+        expect(block?.key).toBe('extendedCare');
+        expect(block?.messageKey).toBe('WH40K.SkillUse.GateExtendedCare');
+        expect(block?.remainingLabel).toBe('1h 30m');
+    });
+
+    it('prefers the use OWN cooldown over the exclusion when both are closed', () => {
+        const block = evaluateSkillUseGate(firstAid, gatesOf({ firstAid: 7200, extendedCare: 86_400 }), 0);
+        expect(block?.key).toBe('firstAid');
+        expect(block?.messageKey).toBe('WH40K.SkillUse.GateCooldown');
+    });
+
+    it('does NOT block Extended Care on a First Aid stamp (the exclusion is one-directional)', () => {
+        const extendedCare = getSkillUse('medicae', 'extendedCare') as SkillUseDef;
+        expect(evaluateSkillUseGate(extendedCare, gatesOf({ firstAid: 86_400 }), 0)).toBeNull();
+    });
+
+    it('isolates gates per target — a closed gate on one patient never blocks another', () => {
+        const patientA = gatesOf({ firstAid: 86_400 });
+        const patientB = gatesOf({});
+        expect(evaluateSkillUseGate(firstAid, patientA, 0)).not.toBeNull();
+        expect(evaluateSkillUseGate(firstAid, patientB, 0)).toBeNull();
+    });
+
+    it('isolates gates per USE — a First Aid cooldown does not block an Interrogation', () => {
+        expect(evaluateSkillUseGate(interrogate, gatesOf({ firstAid: 86_400 }), 0)).toBeNull();
+    });
+
+    it('blocks a rolled-window Interrogation lockout, formatting multi-day remainders', () => {
+        // A 1d5 lockout of 3 days stamped at t=0; one day later, two remain.
+        const block = evaluateSkillUseGate(interrogate, gatesOf({ interrogate: 3 * 86_400 }), 86_400);
+        expect(block?.key).toBe('interrogate');
+        expect(block?.remainingLabel).toBe('2d');
+        expect(block?.messageKey).toBe('WH40K.SkillUse.GateCooldown');
     });
 });
 
