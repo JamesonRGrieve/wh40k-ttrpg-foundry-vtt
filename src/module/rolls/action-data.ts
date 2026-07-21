@@ -8,6 +8,7 @@ import type { RerollOption } from '../rules/reroll.ts';
 import {
     applyFirstAidOutcome,
     blatherRounds,
+    evaluateSkillUseGate,
     type FirstAidPatient,
     getSkillUse,
     type ReadoutFamily,
@@ -729,6 +730,35 @@ async function applyChemDose(chem: ChemLike, subject: WH40KBaseActorDocument): P
 }
 
 /**
+ * Enforce a use's RAW per-target time gate at RESOLUTION time (#458/#432).
+ *
+ * This check deliberately runs here — where the roll's FINAL target is known —
+ * rather than before the dialog opens. The dialog lets the player retarget
+ * in-flight, so a pre-dialog check could be satisfied against one actor and the
+ * effect then applied to a cooldown-locked one; enforcing at resolution closes
+ * that bypass. It sits next to the setter half (which stamps the gate a few lines
+ * below) so both halves of the mechanic live together.
+ *
+ * Returns true when the gate is CLOSED — the caller must abort WITHOUT applying
+ * any effect. The reason and the time remaining are both warned to the user and
+ * written onto the chat card, so the abort is never silent.
+ */
+function blockedByTimeGate(action: ActionData, cardLabel: string, use: SkillUseDef | null, target: WH40KBaseActorDocument): boolean {
+    if (use === null) return false;
+    const block = evaluateSkillUseGate(use, (key) => target.getTimeGate(key), Number(game.time.worldTime));
+    if (block === null) return false;
+
+    const message = game.i18n.format(block.messageKey, {
+        use: game.i18n.localize(use.labelKey),
+        target: target.name,
+        remaining: block.remainingLabel,
+    });
+    ui.notifications.warn(message);
+    action.addEffect(cardLabel, message);
+    return true;
+}
+
+/**
  * A targeted Medicae skill-use roll (#432). Built like a {@link SimpleSkillData}
  * but carries the chosen use kind and a pre-selected patient on
  * `rollData.targetActor`. On resolution it reads the patient's vitals, resolves
@@ -748,6 +778,11 @@ export class MedicaeActionData extends SimpleSkillData {
     override async descriptionText(): Promise<void> {
         const target = this.rollData.targetActor;
         if (target === null || this.useKind === 'general') return;
+
+        // RAW per-target cooldown (#458), enforced against the FINAL target: First Aid
+        // is once every 24 in-universe hours per patient, and may not be given through
+        // Extended Care at all (DH2 p109). A closed gate applies nothing.
+        if (blockedByTimeGate(this, 'Medicae', getSkillUse('medicae', this.useKind), target)) return;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor.wounds is the loosely-typed system wounds block
         const wounds = target.wounds as { value?: number; max?: number; critical?: number } | undefined;
@@ -804,6 +839,12 @@ export class InterrogationActionData extends SimpleSkillData {
     override async descriptionText(): Promise<void> {
         const target = this.rollData.targetActor;
         if (target === null) return;
+
+        // RAW lockout (#458), enforced against the FINAL subject: a previously botched
+        // session leaves them un-interrogable for the rolled window. A closed gate
+        // inflicts no fatigue and extracts nothing.
+        if (blockedByTimeGate(this, 'Interrogation', getSkillUse('interrogation', 'interrogate'), target)) return;
+
         const degrees = this.rollData.success ? Math.max(1, this.rollData.dos) : 0;
         const outcome = resolveInterrogation(degrees);
         if (outcome.fatigue > 0) await target.applyFatigue(outcome.fatigue);

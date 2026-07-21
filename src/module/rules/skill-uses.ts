@@ -20,7 +20,7 @@
  */
 
 import { type DamageTier, getDamageTier, MEDICAE_ACTIONS, type MedicaeActionKind } from './healing.ts';
-import { DAY_SECONDS } from './world-time.ts';
+import { DAY_SECONDS, formatRemaining, gateRemaining, isGateOpen } from './world-time.ts';
 
 /** How a use resolves once the roll lands. `general` is a plain pass/fail test. */
 export type SkillUseKind =
@@ -89,9 +89,16 @@ export interface SkillUseDef {
      * every 24 hours" per patient (DH2 p109). `key` is the gate stamped on the target
      * actor. `windowSeconds` is the FIXED window; omit it when the window is rolled at
      * resolution (Interrogation's 1d5-day lockout), in which case the flow computes
-     * the expiry itself. Absent = no cooldown.
+     * the expiry itself. `blockedBy` declares OTHER gate keys on the target that also
+     * forbid this use (RAW exclusions — First Aid may not be given through Extended
+     * Care), each with the langpack key explaining that specific block. Absent = no
+     * cooldown.
      */
-    readonly timeGate?: { readonly key: string; readonly windowSeconds?: number };
+    readonly timeGate?: {
+        readonly key: string;
+        readonly windowSeconds?: number;
+        readonly blockedBy?: readonly { readonly key: string; readonly messageKey: string }[];
+    };
 }
 
 /** The universal "just roll the skill" use every skill offers. */
@@ -121,8 +128,12 @@ const MEDICAE_TARGETED: ReadonlySet<MedicaeActionKind> = new Set<MedicaeActionKi
  * undergoing extended care." (DH2 Core p109). Extended Care runs on the same 24-hour
  * cycle and is the state that blocks First Aid.
  */
-const MEDICAE_TIME_GATES: Partial<Record<MedicaeActionKind, { key: string; windowSeconds: number }>> = {
-    firstAid: { key: 'firstAid', windowSeconds: DAY_SECONDS },
+const MEDICAE_TIME_GATES: Partial<Record<MedicaeActionKind, NonNullable<SkillUseDef['timeGate']>>> = {
+    firstAid: {
+        key: 'firstAid',
+        windowSeconds: DAY_SECONDS,
+        blockedBy: [{ key: 'extendedCare', messageKey: 'WH40K.SkillUse.GateExtendedCare' }],
+    },
     extendedCare: { key: 'extendedCare', windowSeconds: DAY_SECONDS },
 };
 
@@ -311,6 +322,53 @@ export function hasSkillUses(skillKey: string): boolean {
 /** Look up a single use def by skill + id, or null when unknown. */
 export function getSkillUse(skillKey: string, useId: string): SkillUseDef | null {
     return getSkillUses(skillKey).find((u) => u.id === useId) ?? null;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Per-target time gates (#458)                                               */
+/* -------------------------------------------------------------------------- */
+
+/** Langpack key for a use blocked by its OWN cooldown (rather than a RAW exclusion). */
+const GATE_COOLDOWN_MESSAGE_KEY = 'WH40K.SkillUse.GateCooldown';
+
+/** Why a use is currently forbidden against a target, and for how much longer. */
+export interface TimeGateBlock {
+    /** The gate key that is closed — the use's own cooldown, or a declared exclusion. */
+    readonly key: string;
+    /** Seconds of in-universe time until that gate reopens. */
+    readonly remaining: number;
+    /** `remaining` rendered for display (`formatRemaining`). */
+    readonly remainingLabel: string;
+    /** Langpack key explaining this specific block (own cooldown vs. the exclusion's own message). */
+    readonly messageKey: string;
+}
+
+/**
+ * Decide whether a use's RAW per-target time gate currently forbids it (#458).
+ * Returns the block (with time remaining) when it does, or `null` when the use is
+ * allowed — a use with no `timeGate`, or one whose gates have all reopened.
+ *
+ * The gate's own cooldown is checked first, then each declared `blockedBy`
+ * exclusion in order. Pure over the injected `expiryOf` lookup and the caller's
+ * `now`, so it is unit-testable without a world clock — and so it can be called at
+ * ROLL-RESOLUTION time, when the final target is known, rather than before the
+ * dialog opens (which would let an in-dialog retarget bypass the gate entirely).
+ */
+export function evaluateSkillUseGate(use: SkillUseDef, expiryOf: (key: string) => number | null, now: number): TimeGateBlock | null {
+    const gate = use.timeGate;
+    if (gate === undefined) return null;
+
+    const candidates: { key: string; messageKey: string }[] = [
+        { key: gate.key, messageKey: GATE_COOLDOWN_MESSAGE_KEY },
+        ...(gate.blockedBy ?? []).map((b) => ({ key: b.key, messageKey: b.messageKey })),
+    ];
+    for (const candidate of candidates) {
+        const expiry = expiryOf(candidate.key);
+        if (isGateOpen(expiry, now)) continue;
+        const remaining = gateRemaining(expiry, now);
+        return { key: candidate.key, remaining, remainingLabel: formatRemaining(remaining), messageKey: candidate.messageKey };
+    }
+    return null;
 }
 
 /** Target vitals the First-Aid resolver reads (subset of a creature's wounds block). */
