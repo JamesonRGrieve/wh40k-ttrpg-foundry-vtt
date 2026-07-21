@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { dropItemAsItemPile, isItemPilesPile, registerItemPilesValuation, shouldSeedPileActorType } from './item-piles.ts';
+import { dropItemAsItemPile, isItemPilesPile, pileUuidFromCreateResult, registerItemPilesValuation, shouldSeedPileActorType } from './item-piles.ts';
 
 /**
  * Unit coverage for the #385 Item Piles drop routing. Exercises the
@@ -10,7 +10,11 @@ import { dropItemAsItemPile, isItemPilesPile, registerItemPilesValuation, should
  */
 
 interface ApiStub {
-    createItemPile?: (options: { sceneId?: string; position?: { x: number; y: number }; items?: object[] }) => Promise<string>;
+    createItemPile?: (options: {
+        sceneId?: string;
+        position?: { x: number; y: number };
+        items?: object[];
+    }) => Promise<{ tokenUuid?: string; actorUuid?: string } | string>;
     addItems?: (target: object, items: object[], options?: object) => Promise<void>;
 }
 interface GameStub {
@@ -41,7 +45,9 @@ describe('dropItemAsItemPile (#385)', () => {
     });
 
     it('creates the pile empty then populates it via an AWAITED addItems, returning true (#405)', async () => {
-        const createItemPile = vi.fn().mockResolvedValue('Scene.s1.Token.t1');
+        // Item Piles 3.3.4 resolves an OBJECT, not a uuid string. Stubbing a string
+        // here is exactly what let #405 pass its tests while failing every real drop.
+        const createItemPile = vi.fn().mockResolvedValue({ tokenUuid: 'Scene.s1.Token.t1', actorUuid: 'Actor.defaultPile' });
         const addItems = vi.fn().mockResolvedValue([]);
         const pile = { id: 't1' };
         vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue(pile));
@@ -56,7 +62,7 @@ describe('dropItemAsItemPile (#385)', () => {
     });
 
     it('returns false (no addItems, so the caller keeps the source) when the pile uuid will not resolve (#405)', async () => {
-        const createItemPile = vi.fn().mockResolvedValue('bad-uuid');
+        const createItemPile = vi.fn().mockResolvedValue({ tokenUuid: 'bad-uuid' });
         const addItems = vi.fn();
         vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue(null));
         stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: { createItemPile, addItems } } });
@@ -70,6 +76,36 @@ describe('dropItemAsItemPile (#385)', () => {
         const addItems = vi.fn();
         stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: { createItemPile, addItems } } });
         expect(await dropItemAsItemPile({ name: 'X' }, POS, 'scene1')).toBe(false);
+    });
+});
+
+describe('pileUuidFromCreateResult (#405)', () => {
+    // Item Piles 3.3.4 `_createItemPile` ends `returns["actorUuid"] = pileActor.uuid;
+    // return returns;` — an object. Reading it as a string made every drop bail.
+    it('prefers tokenUuid — the scene pile for THIS drop', () => {
+        expect(pileUuidFromCreateResult({ tokenUuid: 'Scene.s1.Token.t1', actorUuid: 'Actor.defaultPile' })).toBe('Scene.s1.Token.t1');
+    });
+
+    it('never returns actorUuid when a token exists, since that is the SHARED default template', () => {
+        // Adding items to the template would pollute every future pile instead of
+        // filling this one.
+        expect(pileUuidFromCreateResult({ tokenUuid: 'Scene.s1.Token.t1', actorUuid: 'Actor.defaultPile' })).not.toBe('Actor.defaultPile');
+    });
+
+    it('falls back to actorUuid on the linked-actor path, which places no token', () => {
+        expect(pileUuidFromCreateResult({ actorUuid: 'Actor.linkedPile' })).toBe('Actor.linkedPile');
+    });
+
+    it('still accepts a bare uuid string, in case a build returns one', () => {
+        expect(pileUuidFromCreateResult('Scene.s1.Token.t9')).toBe('Scene.s1.Token.t9');
+    });
+
+    it('returns null for empty / absent results rather than a falsy uuid', () => {
+        expect(pileUuidFromCreateResult(null)).toBeNull();
+        expect(pileUuidFromCreateResult(undefined)).toBeNull();
+        expect(pileUuidFromCreateResult('')).toBeNull();
+        expect(pileUuidFromCreateResult({})).toBeNull();
+        expect(pileUuidFromCreateResult({ tokenUuid: '' })).toBeNull();
     });
 });
 
