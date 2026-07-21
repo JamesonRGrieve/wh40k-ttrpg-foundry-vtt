@@ -1,4 +1,4 @@
-import type { DynamicModifierEntry, GrantedQualityEntry } from '../data/shared/modifiers-template.ts';
+import type { DynamicModifierEntry, GrantedEffectEntry, GrantEffectKind } from '../data/shared/modifiers-template.ts';
 
 /**
  * The runtime context a dynamic modifier hook is evaluated against — the live
@@ -154,7 +154,7 @@ export function modeDelta(mode: DynamicModifierEntry['mode'], base: number, valu
 
 /**
  * The trigger fields shared by a numeric hook ({@link DynamicModifierEntry}) and a
- * conditional quality grant ({@link GrantedQualityEntry}) — the `when` timing plus
+ * conditional grant ({@link GrantedEffectEntry}) — the `when` timing plus
  * the `condition`/`conditionValue` predicate. Extracted so both channels reuse the
  * one trigger-matching implementation instead of duplicating it.
  */
@@ -211,7 +211,7 @@ export interface DynamicModifierItemLike {
         modifiers?:
             | {
                   dynamicModifiers?: readonly DynamicModifierEntry[] | undefined;
-                  grantedQualities?: readonly GrantedQualityEntry[] | undefined;
+                  grantedEffects?: readonly GrantedEffectEntry[] | undefined;
               }
             | undefined;
         /** The item's specialization ('Melee' / 'Ranged' / …), read by the `specializationMode` condition. */
@@ -273,34 +273,52 @@ export function ownsActivatableHook(items: Iterable<DynamicModifierItemLike>, co
     return false;
 }
 
-/** A weapon quality an item's grant contributes to an attack, with provenance. */
-export interface GrantedQuality {
-    /** The weapon-quality (attack special) name to add. */
+/** Something an item's conditional grant confers, with provenance. */
+export interface GrantedEffect {
+    /** What sort of thing is granted (`quality`, `talent`, …). */
+    kind: GrantEffectKind;
+    /** The granted thing's display name. */
     name: string;
-    /** The quality's `(X)` level; 0 for unlevelled qualities. */
+    /** Compendium UUID of the granted document; blank for `quality` grants. */
+    uuid: string;
+    /** The grant's `(X)` level; 0 for unlevelled grants. */
     level: number;
     /** The granting item's name (provenance). */
     source: string;
 }
 
+/** A weapon quality an item's grant contributes to an attack, with provenance. */
+export type GrantedQuality = Omit<GrantedEffect, 'kind' | 'uuid'>;
+
 /**
- * Walk a set of owned items and return the conditional weapon-quality grants whose
- * trigger fires in `situation` — the non-numeric counterpart to
- * {@link collectDynamicComponents}. Lets the damage pipeline add a quality (e.g.
- * Hammer Blow → Concussive (2) / Shocking on an All-Out Attack) from the item's
- * declared `grantedQualities` data rather than a name match. Pure and
- * content-agnostic; each line authors its own quality (§D8).
+ * Walk a set of owned items and return every conditional grant whose trigger fires
+ * in `situation` — the non-numeric counterpart to {@link collectDynamicComponents}.
+ * Lets the engine confer a quality/talent/trait/… (e.g. Hammer Blow → Concussive (2)
+ * / Shocking on an All-Out Attack) from the item's declared `grantedEffects` data
+ * rather than a name match. Pure and content-agnostic; each line authors its own
+ * grant (§D8).
  */
-export function collectGrantedQualities(items: Iterable<DynamicModifierItemLike>, situation: DynamicModifierSituation): GrantedQuality[] {
-    const out: GrantedQuality[] = [];
+export function collectGrantedEffects(items: Iterable<DynamicModifierItemLike>, situation: DynamicModifierSituation): GrantedEffect[] {
+    const out: GrantedEffect[] = [];
     for (const item of items) {
-        const grants = item.system.modifiers?.grantedQualities ?? [];
+        const grants = item.system.modifiers?.grantedEffects ?? [];
         const spec = item.system.specialization;
         const specialization = typeof spec === 'string' ? spec : '';
         for (const grant of grants) {
             if (!hookApplies(grant, situation, specialization)) continue;
-            out.push({ name: grant.name, level: grant.level, source: item.name ?? '' });
+            out.push({ kind: grant.kind, name: grant.name, uuid: grant.uuid, level: grant.level, source: item.name ?? '' });
         }
     }
     return out;
+}
+
+/**
+ * The `quality`-kind subset of {@link collectGrantedEffects} — the grants the damage
+ * pipeline turns into attack specials, so a granted Concussive (2) resolves through
+ * exactly the same weapon-quality payload path as one the weapon carries natively.
+ */
+export function collectGrantedQualities(items: Iterable<DynamicModifierItemLike>, situation: DynamicModifierSituation): GrantedQuality[] {
+    return collectGrantedEffects(items, situation)
+        .filter((grant) => grant.kind === 'quality')
+        .map(({ name, level, source }) => ({ name, level, source }));
 }

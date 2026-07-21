@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { DynamicModifierEntry } from '../data/shared/modifiers-template.ts';
+import type { DynamicModifierEntry, GrantedEffectEntry } from '../data/shared/modifiers-template.ts';
 import { invalidateCriticalDamageCache } from '../rules/critical-damage.ts';
 import type { DynamicModifierItemLike } from '../rules/dynamic-modifiers.ts';
 import { AssignDamageData, type ActorLike } from './assign-damage-data.ts';
@@ -299,6 +299,95 @@ describe('AssignDamageData — defender-side crit-reduction hooks (Direction #7)
         await data.finalize();
         // 5 crit − 10 = −5 → floored to 1.
         expect(data.criticalDamageTaken).toBe(1);
+    });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Conditional grants — Hammer Blow → Concussive (2) (survey §D8)              */
+/* -------------------------------------------------------------------------- */
+
+describe('Hit._calculateSpecials — conditional quality grants (Direction #7, §D8)', () => {
+    /** Build a complete {@link GrantedEffectEntry} with overrides. */
+    function makeGrant(overrides: Partial<GrantedEffectEntry> = {}): GrantedEffectEntry {
+        return { kind: 'quality', name: 'Concussive', uuid: '', level: 2, when: 'onAction', condition: '', conditionValue: 'All Out Attack', ...overrides };
+    }
+
+    /** An owned item exposing the given conditional grants. */
+    function grantItem(name: string, grants: GrantedEffectEntry[]): DynamicModifierItemLike {
+        return { name, system: { modifiers: { grantedEffects: grants } } };
+    }
+
+    /** The DH2/OW/BC Hammer Blow talent: Concussive (2) on an All-Out Attack. */
+    const hammerBlow = (): DynamicModifierItemLike => grantItem('Hammer Blow', [makeGrant()]);
+
+    it('pushes the granted quality onto the attack and resolves its hit effect', () => {
+        const data = attackData([hammerBlow()], { isMelee: true, action: 'All Out Attack' });
+        const hit = new Hit();
+        hit._calculateSpecials(data);
+
+        expect(data.rollData.attackSpecials).toEqual([{ name: 'Concussive', level: 2 }]);
+        // Concussive's effect text is level-driven: level 2 → a −20 Toughness test.
+        expect(hit.effects).toHaveLength(1);
+        expect(hit.effects[0]?.name).toBe('Concussive');
+        expect(hit.effects[0]?.effect).toContain('-20');
+    });
+
+    it('resolves a GRANTED Concussive (2) identically to one the weapon carries natively', () => {
+        // The point of the channel: a granted quality is not a parallel implementation.
+        // It lands in `attackSpecials` and flows through the same payload resolution,
+        // so both routes must produce byte-identical effect output.
+        const granted = new Hit();
+        granted._calculateSpecials(attackData([hammerBlow()], { isMelee: true, action: 'All Out Attack' }));
+
+        const nativeData = attackData([], { isMelee: true, action: 'Standard Attack' });
+        nativeData.rollData.attackSpecials.push({ name: 'Concussive', level: 2 });
+        const native = new Hit();
+        native._calculateSpecials(nativeData);
+
+        expect(granted.effects).toEqual(native.effects);
+    });
+
+    it('is inert when the gating action does not match (Standard Attack)', () => {
+        const data = attackData([hammerBlow()], { isMelee: true, action: 'Standard Attack' });
+        const hit = new Hit();
+        hit._calculateSpecials(data);
+
+        expect(data.rollData.attackSpecials).toEqual([]);
+        expect(hit.effects).toEqual([]);
+    });
+
+    it('substitutes the authored level into the granted quality (DW Shocking, level 0)', () => {
+        // Same talent, DW line → Shocking rather than Concussive. Proves the granted
+        // name AND level come from content, not from a name-match in src/.
+        const dw = grantItem('Hammer Blow', [makeGrant({ name: 'Shocking', level: 0 })]);
+        const data = attackData([dw], { isMelee: true, action: 'All Out Attack' });
+        const hit = new Hit();
+        hit._calculateSpecials(data);
+
+        expect(data.rollData.attackSpecials).toEqual([{ name: 'Shocking', level: 0 }]);
+        expect(hit.effects[0]?.name).toBe('Shocking');
+    });
+
+    it('does not double-add a quality the weapon already carries', () => {
+        const data = attackData([hammerBlow()], { isMelee: true, action: 'All Out Attack' });
+        data.rollData.attackSpecials.push({ name: 'Concussive', level: 1 });
+        const hit = new Hit();
+        hit._calculateSpecials(data);
+
+        // The weapon's own Concussive (1) stands; the grant does not stack a second entry.
+        expect(data.rollData.attackSpecials).toEqual([{ name: 'Concussive', level: 1 }]);
+    });
+
+    it('ignores a non-quality grant kind — it never becomes an attack special', () => {
+        const talentGrant = grantItem('Some Talent', [
+            makeGrant({ kind: 'talent', name: 'Berserk Charge', uuid: 'Compendium.wh40k-rpg.ow-core-items-talents.Item.abc', level: 0 }),
+        ]);
+        const data = attackData([talentGrant], { isMelee: true, action: 'All Out Attack' });
+        const hit = new Hit();
+        hit._calculateSpecials(data);
+
+        expect(data.rollData.attackSpecials).toEqual([]);
+        expect(hit.effects).toEqual([]);
     });
 });
 
