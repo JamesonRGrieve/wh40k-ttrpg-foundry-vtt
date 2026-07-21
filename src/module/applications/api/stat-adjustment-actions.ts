@@ -38,6 +38,9 @@ export interface StatAdjustmentHost {
             fate?: { value?: number; max?: number };
             wounds?: { critical?: number; value?: number; max?: number };
             fatigue?: { value?: number; max?: number };
+            // `max` is schema-initial 0 and is NOT a ceiling — Shock is an open
+            // accumulator, so `setShockPip` clamps against the current value (#293).
+            shock?: { value?: number; max?: number };
         };
         update: (data: Record<string, unknown>) => Promise<unknown>;
     };
@@ -180,6 +183,18 @@ async function setWoundPipImpl(this: Host, _event: Event, target: HTMLElement): 
 }
 
 export const setWoundPip = throttledAction('setWoundPip', 200, setWoundPipImpl);
+
+async function setShockPipImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
+    // Shock is an OPEN accumulator — `system.shock.max` is schema-initial 0, so it
+    // is not a ceiling (#293). One pip renders per accumulated point, i.e. indices
+    // only ever span 1..value, so the current value doubles as the clamp bound:
+    // clicking pip N lowers Shock to N, and clicking the topmost pip toggles it off.
+    // Raising Shock stays the ± steppers' job, since there is no pip above `value`.
+    const current = this.actor.system.shock?.value ?? 0;
+    return togglePipImpl.call(this, target, 'shockIndex', current, current, 'system.shock.value');
+}
+
+export const setShockPip = throttledAction('setShockPip', 200, setShockPipImpl);
 
 /* -------------------------------------------- */
 /*  Direct value setters (corruption / insanity) */

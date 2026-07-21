@@ -199,6 +199,29 @@ describe('pip toggles', () => {
         await StatActions.setFatigueBolt.call(host, ev(), btn({ fatigueIndex: '99' }));
         expect(host._updates).toEqual([{ 'system.fatigue.value': 4 }]);
     });
+
+    // #293 — Shock is an OPEN accumulator: `shock.max` is schema-initial 0, so the
+    // current value is the clamp bound (not max). Clicking the topmost pip toggles
+    // Shock off (N → N-1); clicking a lower pip lowers Shock to that pip.
+    it('setShockPip toggles down to N-1 when clicking the current (topmost) value', async () => {
+        const host = makeHost({ shock: { value: 3, max: 0 } });
+        await StatActions.setShockPip.call(host, ev(), btn({ shockIndex: '3' }));
+        expect(host._updates).toEqual([{ 'system.shock.value': 2 }]);
+    });
+
+    it('setShockPip lowers Shock to N when clicking a lower pip', async () => {
+        const host = makeHost({ shock: { value: 5, max: 0 } });
+        await StatActions.setShockPip.call(host, ev(), btn({ shockIndex: '2' }));
+        expect(host._updates).toEqual([{ 'system.shock.value': 2 }]);
+    });
+
+    it('setShockPip clamps against the current value, not shock.max (which is 0)', async () => {
+        const host = makeHost({ shock: { value: 4, max: 0 } });
+        // No pip above `value` renders, but a stale/oversized index must still clamp
+        // to the current value rather than to the meaningless max=0 ceiling.
+        await StatActions.setShockPip.call(host, ev(), btn({ shockIndex: '99' }));
+        expect(host._updates).toEqual([{ 'system.shock.value': 4 }]);
+    });
 });
 
 describe('direct value setters', () => {

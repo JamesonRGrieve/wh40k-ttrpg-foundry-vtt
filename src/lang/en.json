@@ -242,7 +242,9 @@
         },
         "ExtendedTest": {
             "ToggleLabel": "Extended Test",
+            "Tooltip": "Extended Test: accumulate degrees of success across repeated attempts until the threshold is reached. Progress carries over between rolls instead of each attempt standing alone.",
             "ThresholdLabel": "Threshold",
+            "ThresholdTooltip": "Total degrees of success needed to complete this extended test.",
             "ProgressLabel": "Extended Progress",
             "SuccessCount": "successes",
             "FailureCount": "failures",
@@ -4569,6 +4571,10 @@
         },
         "Status": {
             "Modifier": "Modifier:",
+            "VitalsLabel": "Vitals",
+            "CriticalLabel": "Critical",
+            "FateLabel": "Fate",
+            "RestoreFateTitle": "Restore All",
             "Corruption": {
                 "Label": "Corruption",
                 "Decrease": "Reduce Corruption",

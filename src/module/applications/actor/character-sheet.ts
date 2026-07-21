@@ -761,6 +761,7 @@ export default class CharacterSheet extends BaseActorSheet {
             'setFateStar': StatActions.setFateStar,
             'setFatigueBolt': StatActions.setFatigueBolt,
             'setWoundPip': StatActions.setWoundPip,
+            'setShockPip': StatActions.setShockPip,
             'setCorruption': StatActions.setCorruption,
             'setInsanity': StatActions.setInsanity,
             'restoreFate': StatActions.restoreFate,
@@ -2929,7 +2930,12 @@ export default class CharacterSheet extends BaseActorSheet {
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: returns heterogeneous display objects passed to Handlebars; no concrete type possible
     #prepareArmourDisplayLocations(system: WH40KActorSystemData, armourItems: WH40KItem[]): Array<Record<string, unknown>> {
-        const equippedArmour = armourItems.filter((item) => (item.system as { equipped?: boolean }).equipped === true);
+        // `equipped` is runtime state under `system.state` (EquippableTemplate), not
+        // `system.equipped` — the flat path is always undefined, so this filter used to
+        // yield [] and no armour icon ever reached the silhouette (#486). Every other
+        // equipped-read in this file already uses the nested path.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is the shared item union; `state` is contributed by EquippableTemplate and is not on that union
+        const equippedArmour = armourItems.filter((item) => (item.system as { state?: { equipped?: boolean } }).state?.equipped === true);
 
         return ARMOUR_DISPLAY_LOCATIONS.map((locationConfig) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: system.armour is typed as unknown in WH40KActorSystemData; cast needed to bracket-access by location key

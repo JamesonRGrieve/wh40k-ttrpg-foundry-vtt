@@ -16,13 +16,17 @@
                     title="Click to view {{entry.[1].label}} skill details">
                 <span class="tw-inline-flex tw-items-baseline tw-gap-[var(--wh40k-space-xs)] tw-leading-none tw-font-[var(--wh40k-font-body)] tw-min-w-0 tw-truncate">{{entry.[1].label}} <span class="tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-[var(--wh40k-font-ui)]">({{entry.[1].charShort}})</span></span>
             </button>
-            <button type="button" class="tw-bg-transparent tw-border-none tw-p-1 tw-text-[color:var(--color-text-secondary)] tw-text-[0.85rem] tw-cursor-pointer tw-flex tw-items-center tw-justify-center tw-rounded-[3px] hover:tw-text-accent-skills hover:tw-bg-[rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.1)] hover:tw-scale-110 active:tw-scale-95"
+            {{!-- tw-shrink-0 (#267): this and the favourite star below are flex children
+                 of a `tw-flex-1 tw-min-w-0` box, so without it THEY absorb the squeeze
+                 when the column is tight — the reported "squished icons". The name span
+                 (tw-truncate, line above) is the element that should yield instead. --}}
+            <button type="button" class="tw-shrink-0 tw-bg-transparent tw-border-none tw-p-1 tw-text-[color:var(--color-text-secondary)] tw-text-[0.85rem] tw-cursor-pointer tw-flex tw-items-center tw-justify-center tw-rounded-[3px] hover:tw-text-accent-skills hover:tw-bg-[rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.1)] hover:tw-scale-110 active:tw-scale-95"
                     data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
                     title="Roll {{entry.[1].label}} Test">
                 <i class="fas fa-dice-d20"></i>
             </button>
             {{#if entry.[1].showFavorite}}
-            <button type="button" class="tw-bg-transparent tw-border-none tw-px-1 tw-py-0.5 tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-text-[0.85rem] hover:tw-text-[color:var(--wh40k-color-gold)] hover:tw-scale-110 {{#if entry.[1].isFavorite}}active tw-text-[color:var(--wh40k-color-gold)]{{/if}}"
+            <button type="button" class="tw-shrink-0 tw-bg-transparent tw-border-none tw-px-1 tw-py-0.5 tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-text-[0.85rem] hover:tw-text-[color:var(--wh40k-color-gold)] hover:tw-scale-110 {{#if entry.[1].isFavorite}}active tw-text-[color:var(--wh40k-color-gold)]{{/if}}"
                     data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
                     title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
                 <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
