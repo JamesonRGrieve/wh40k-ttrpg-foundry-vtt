@@ -520,6 +520,21 @@ export function resolvePrimitiveDamageAdjust(dieResult: number, level: number): 
 }
 
 /**
+ * Proven (X) floor: a damage die rolling below X is treated as X.
+ * Returns the signed adjustment the engine adds to the die total
+ * (positive when the die fell short of the floor, 0 otherwise).
+ *
+ * Counterpart to {@link resolvePrimitiveDamageAdjust}. Both are per-DIE: with a
+ * multi-die weapon each qualifying die contributes its own adjustment and the
+ * engine sums them.
+ */
+export function resolveProvenDamageAdjust(dieResult: number, level: number): number {
+    const die = nonNegInt(dieResult);
+    const floor = nonNegInt(level);
+    return die < floor ? floor - die : 0;
+}
+
+/**
  * Graviton bonus damage equal to the struck location's Armour Points.
  * Pure: takes the armour-point reading and returns the additive delta.
  * Returns 0 when armour is missing or non-positive.
