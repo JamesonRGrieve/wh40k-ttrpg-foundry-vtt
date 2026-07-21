@@ -58,6 +58,30 @@
     </div>
     {{/if}}
 
+    {{!-- Gear assist chips (#480) — equipped/carried items whose declared modifiers
+         apply to THIS test, offered as opt-in chips so the player chooses which gear
+         they're using (an auspex on an Awareness test, a tool kit on Tech-Use).
+         Eligibility is data-driven: `getSituationalModifiers` matches the modifier's
+         own key against the roll, and this group is split out purely by the owning
+         item's document type — no per-item name matching. Selected chips are named
+         on the chat card via the shared `situational` provenance bucket. --}}
+    {{#if hasGearModifiers}}
+    <div class="wh40k-gear-chips tw-flex tw-flex-wrap tw-items-center tw-gap-1.5 tw-mb-2.5">
+        <span class="tw-text-[0.72rem] tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em] tw-mr-1">{{localize "WH40K.GearAssist.Label"}}</span>
+        {{#each gearModifiers}}
+        <button type="button"
+                class="wh40k-gear-chip tw-inline-flex tw-items-center tw-gap-[5px] tw-py-1 tw-px-2.5 tw-border tw-rounded-2xl tw-cursor-pointer tw-text-[0.78rem] tw-transition-all [&>i]:tw-text-[0.7rem] [&>i]:tw-opacity-70 {{#if active}}tw-bg-[rgba(201,162,39,0.15)] tw-border-[rgba(201,162,39,0.5)] tw-text-[#e8e4d9] tw-shadow-[0_0_8px_rgba(201,162,39,0.15)] [&>i]:tw-opacity-100 [&>i]:tw-text-gold-raw{{else}}tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a] hover:tw-bg-[rgba(201,162,39,0.08)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-text-[#b8b8a8]{{/if}}"
+                data-action="toggleSituational" data-toggle-key="{{toggleKey}}"
+                aria-pressed="{{#if active}}true{{else}}false{{/if}}"
+                data-tooltip="{{condition}}">
+            {{#if icon}}<i class="{{icon}}"></i>{{/if}}
+            <span class="tw-font-medium tw-max-w-[120px] tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">{{source}}</span>
+            <span class="tw-font-bold tw-text-sm {{#if (gt value 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">{{valueLabel}}</span>
+        </button>
+        {{/each}}
+    </div>
+    {{/if}}
+
     {{!-- Assistance chips (#60) — one toggleable chip per ally on the scene who is
          friendly, not the roller, and trained in the skill being rolled. +10 each up
          to the RAW cap (core.md §"Assistance"); the selection also names the

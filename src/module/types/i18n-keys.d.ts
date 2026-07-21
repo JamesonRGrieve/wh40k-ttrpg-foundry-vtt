@@ -1475,6 +1475,7 @@ export type I18nKey =
     | 'WH40K.Gear.UsesExhausted'
     | 'WH40K.Gear.UsesRemaining'
     | 'WH40K.Gear.UsesReset'
+    | 'WH40K.GearAssist.Label'
     | 'WH40K.GearCategory.Clothing'
     | 'WH40K.GearCategory.Communications'
     | 'WH40K.GearCategory.Consumable'

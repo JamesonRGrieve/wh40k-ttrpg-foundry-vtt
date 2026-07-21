@@ -238,6 +238,9 @@
             "Label": "Passive Effects",
             "AlreadyApplied": "Already included in the target number."
         },
+        "GearAssist": {
+            "Label": "Gear"
+        },
         "TryingAgain": {
             "WarningTitle": "Trying Again",
             "BlockedMessage": "RAW: this skill cannot be retried within the same scene without a meaningful change in circumstances.",
