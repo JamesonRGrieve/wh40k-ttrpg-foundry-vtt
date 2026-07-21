@@ -21,6 +21,7 @@
  * - Coordinates with range system for Melta
  */
 
+import type { WeaponQualityDieOpKind, WeaponQualityDieOpPhase } from '../data/item/weapon-quality-mechanics.ts';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KBaseActorDocument, WH40KItemDocument, WH40KItemSystemData } from '../types/global.d.ts';
 import { nonNegInt } from './_num.ts';
@@ -534,6 +535,116 @@ export function resolveProvenDamageAdjust(dieResult: number, level: number): num
     return die < floor ? floor - die : 0;
 }
 
+/* -------------------------------------------- */
+/*  Die operations (#303)                       */
+/* -------------------------------------------- */
+
+/**
+ * Minimal Foundry `Die`-term surface {@link applyKeepHighestToDie} mutates. Declared
+ * structurally so the term surgery is unit-testable without standing up Foundry's
+ * dice classes; `foundry.dice.terms.Die` satisfies it at runtime.
+ */
+export interface DieTermLike {
+    number: number | null;
+    modifiers: string[];
+}
+
+/**
+ * A quality's `dieOps` entry with its threshold already resolved against the
+ * weapon's `(X)` level, plus the provenance needed for the damage breakdown.
+ */
+export interface ResolvedDieOp {
+    /** Display name of the quality that declared the operation (provenance). */
+    quality: string;
+    op: WeaponQualityDieOpKind;
+    phase: WeaponQualityDieOpPhase;
+    /** `keepHighest`: extra dice to append (always ≥ 1 on a resolved op). */
+    extraDice: number;
+    /** `floor` / `cap`: the effective threshold (always ≥ 1 on a resolved op). */
+    threshold: number;
+    /** Key the post-evaluation adjustment accumulates under in the hit's modifier map. */
+    modifierKey: string;
+}
+
+/** An attack special as it appears on roll data: display name plus optional `(X)` level. */
+interface AttackSpecialWithLevel {
+    name: string;
+    level?: number;
+}
+
+/**
+ * Collapse a quality display name to its pack identifier
+ * (`Razor Sharp` → `razor-sharp`, `Primitive (X)` → `primitive-x`).
+ */
+export function weaponQualityIdentifierFromName(name: string): string {
+    return name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Resolve every die operation the weapon's attack specials declare, substituting each
+ * quality's `(X)` level where the descriptor asks for it.
+ *
+ * Operations that would be inert or destructive are dropped here rather than at the
+ * call site: a levelled `floor` / `cap` with no level in play would otherwise resolve
+ * to a threshold of 0 and cap every damage die to nothing.
+ */
+export function collectWeaponQualityDieOps(specials: ReadonlyArray<AttackSpecialWithLevel>, systemId?: string): ResolvedDieOp[] {
+    const resolved: ResolvedDieOp[] = [];
+    for (const special of specials) {
+        const identifier = weaponQualityIdentifierFromName(special.name);
+        // A levelled quality is authored as a sibling `<id>-x` doc; a weapon carrying
+        // the bare name resolves to whichever of the two the pack defines.
+        const mechanics = getWeaponQualityMechanics(identifier, systemId) ?? getWeaponQualityMechanics(`${identifier}-x`, systemId);
+        if (mechanics === null) continue;
+        for (const dieOp of mechanics.dieOps) {
+            const modifierKey = dieOp.modifierKey === '' ? identifier : dieOp.modifierKey;
+            if (dieOp.op === 'keepHighest') {
+                const extraDice = nonNegInt(dieOp.extraDice ?? 0);
+                if (extraDice === 0) continue;
+                resolved.push({ quality: special.name, op: dieOp.op, phase: dieOp.phase, extraDice, threshold: 0, modifierKey });
+                continue;
+            }
+            const threshold = dieOp.usesLevel ? nonNegInt(special.level ?? 0) : nonNegInt(dieOp.threshold ?? 0);
+            if (threshold === 0) continue;
+            resolved.push({ quality: special.name, op: dieOp.op, phase: dieOp.phase, extraDice: 0, threshold, modifierKey });
+        }
+    }
+    return resolved;
+}
+
+/**
+ * `keepHighest` term surgery: append `extraDice` dice to the term and keep the
+ * ORIGINAL count, highest first — Tearing's "roll one extra die for damage, and the
+ * lowest result is discarded" (RT Core p.117).
+ *
+ * Idempotent: a term that already carries any `kh` modifier is left alone, so a
+ * re-prepared roll (or a weapon whose formula authored its own `kh`) never stacks the
+ * extra die twice. Returns whether the term was modified.
+ */
+export function applyKeepHighestToDie(die: DieTermLike, extraDice: number): boolean {
+    if (die.modifiers.some((modifier) => modifier.startsWith('kh'))) return false;
+    const keep = nonNegInt(die.number ?? 0);
+    const extra = nonNegInt(extraDice);
+    if (keep === 0 || extra === 0) return false;
+    die.modifiers.push(`kh${keep}`);
+    die.number = keep + extra;
+    return true;
+}
+
+/**
+ * Signed damage adjustment a resolved post-evaluation die operation contributes for
+ * one rolled die. Dispatches to the pure per-quality resolvers so the arithmetic lives
+ * in exactly one place; `keepHighest` is a pre-evaluation op and contributes nothing.
+ */
+export function resolveDieOpDamageAdjust(dieResult: number, dieOp: ResolvedDieOp): number {
+    if (dieOp.op === 'floor') return resolveProvenDamageAdjust(dieResult, dieOp.threshold);
+    if (dieOp.op === 'cap') return resolvePrimitiveDamageAdjust(dieResult, dieOp.threshold);
+    return 0;
+}
+
 /**
  * Graviton bonus damage equal to the struck location's Armour Points.
  * Pure: takes the armour-point reading and returns the additive delta.
@@ -651,6 +762,7 @@ export const WeaponQualityEffects = {
     resolveStunDuration,
     resolveLanceBonus,
     resolvePrimitiveDamageAdjust,
+    resolveProvenDamageAdjust,
     resolveGravitonBonusDamage,
     resolveHaywireRadius,
     resolveTemplateRadius,
@@ -658,4 +770,10 @@ export const WeaponQualityEffects = {
     resolvePowerFieldParryDestroys,
     resolveCripplingTickDamage,
     resolveIndirectPenalty,
+
+    // Die operations (#303)
+    weaponQualityIdentifierFromName,
+    collectWeaponQualityDieOps,
+    applyKeepHighestToDie,
+    resolveDieOpDamageAdjust,
 };

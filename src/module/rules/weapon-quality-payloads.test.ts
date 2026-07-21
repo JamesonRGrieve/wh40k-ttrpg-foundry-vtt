@@ -82,6 +82,27 @@ describe('per-system weaponQuality index resolution (#303)', () => {
         expect(getWeaponQualityMechanics('accurate')?.aimBonus).toBe(10);
         expect(getWeaponQualityHasLevel('blast')).toBe(true);
     });
+
+    // #303 — the die-operation descriptor is authored once on the RT docs, so every
+    // system must reach the same Tearing / Proven / Primitive ops through its stub's ref.
+    for (const { systemId } of PACKS) {
+        it(`${systemId}: resolves the Tearing / Proven / Primitive dieOps through the ref`, () => {
+            expect(getWeaponQualityMechanics('tearing', systemId)?.dieOps).toEqual([
+                { op: 'keepHighest', phase: 'preEvaluate', extraDice: 1, threshold: null, usesLevel: false, modifierKey: 'tearing' },
+            ]);
+            expect(getWeaponQualityMechanics('proven', systemId)?.dieOps).toEqual([
+                { op: 'floor', phase: 'postEvaluate', extraDice: null, threshold: null, usesLevel: true, modifierKey: 'proven' },
+            ]);
+            expect(getWeaponQualityMechanics('primitive-x', systemId)?.dieOps).toEqual([
+                { op: 'cap', phase: 'postEvaluate', extraDice: null, threshold: null, usesLevel: true, modifierKey: 'primitive' },
+            ]);
+        });
+    }
+
+    it('defaults dieOps to an empty list for qualities that declare none', () => {
+        expect(getWeaponQualityMechanics('accurate')?.dieOps).toEqual([]);
+        expect(getWeaponQualityMechanics('scatter', 'dh2')?.dieOps).toEqual([]);
+    });
 });
 
 describe('stub pack content integrity (#303)', () => {
