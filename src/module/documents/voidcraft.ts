@@ -1,3 +1,4 @@
+import { t } from '../i18n/t.ts';
 import {
     cancelPriorTurnDamage as cancelPriorTurnDamageRule,
     canCancelPriorTurnDamage as canCancelPriorTurnDamageRule,
@@ -369,30 +370,38 @@ export class WH40KVoidcraft extends WH40KBaseActor {
     }
 
     /**
-     * Roll ship initiative (1d10 + Detection Bonus)
+     * Roll ship initiative (RAW: `1d10 + Detection Bonus`) through Foundry's
+     * combat tracker (#196).
+     *
+     * Previously this posted a standalone chat card and returned `null`, so the
+     * result never reached a Combatant and the ship never took a place in the
+     * turn order — which also meant it was invisible to the RT strategic-round
+     * flow, whose turn counter is the active Combat's `round`
+     * (see `_currentStrategicTurn`). Delegating to `Actor#rollInitiative`
+     * creates the Combatant (default `createCombatants: true`, matching the
+     * terracraft/aircraft sheet button) and writes the rolled total onto it.
+     *
+     * The dice expression itself is not passed here: `WH40KCombatant`
+     * resolves it from `VoidcraftData.initiativeFormula`, so a ship rolled from
+     * the tracker's own "roll all" / "roll NPCs" controls gets the same RAW
+     * formula as one rolled from the sheet button. The chat card's flavour
+     * names the Detection Bonus so the card carries the modifier's provenance
+     * alongside Foundry's rendered `1d10 + N` formula.
+     *
+     * @param options Standard Foundry roll-initiative options; callers may
+     *                override `createCombatants` / `rerollInitiative`.
+     * @returns The Combat the ship was rolled into, or `null` when no encounter
+     *          exists and the user cannot create one.
      */
-    override async rollInitiative(_options?: Actor.RollInitiativeOptions): Promise<Combat.Implementation | null> {
-        const roll = await new Roll(`1d10 + ${this.detectionBonus}`).evaluate();
-
-        const content = `
-            <div class="wh40k-hit-location-result">
-                <h3><i class="fas fa-satellite-dish"></i> Ship Initiative</h3>
-                <div class="wh40k-hit-roll">
-                    <span class="wh40k-roll-result">${roll.total}</span>
-                </div>
-                <div class="wh40k-hit-location">
-                    <span class="wh40k-location-armour">1d10 + Detection Bonus (${this.detectionBonus})</span>
-                </div>
-            </div>
-        `;
-
-        await ChatMessage.create({
-            // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker requires Actor.Implementation; WH40KVoidcraft extends it but type narrowing requires cast
-            speaker: ChatMessage.getSpeaker({ actor: this as unknown as Actor.Implementation }),
-            content: content,
-            rolls: [roll],
+    override async rollInitiative(options?: Actor.RollInitiativeOptions): Promise<Combat.Implementation | null> {
+        const flavor = t('WH40K.Voidcraft.Combat.InitiativeFlavor', { bonus: this.detectionBonus });
+        return super.rollInitiative({
+            createCombatants: true,
+            ...options,
+            initiativeOptions: {
+                messageOptions: { flavor },
+                ...options?.initiativeOptions,
+            },
         });
-
-        return null;
     }
 }

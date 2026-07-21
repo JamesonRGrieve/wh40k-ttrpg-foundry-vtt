@@ -3186,6 +3186,7 @@
                 "DetectionBonus": "Detection Bonus",
                 "Initiative": "Initiative",
                 "RollInitiative": "Roll Ship Initiative",
+                "InitiativeFlavor": "Ship Initiative — 1d10 + Detection Bonus ({bonus})",
                 "Armour": "Armour",
                 "VoidShields": "Void Shields",
                 "TurretRating": "Turret Rating",
