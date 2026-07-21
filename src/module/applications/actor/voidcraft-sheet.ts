@@ -294,6 +294,8 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             turretRating?: number;
             voidShields?: number;
             crew?: { morale?: { max?: number }; crewRating?: number };
+            /** Derived ship BS — diverges from crewRating once a role grants a BS-only bonus (#196). */
+            ballisticSkill?: number;
             weaponCapacity?: { dorsal?: number; prow?: number; port?: number; starboard?: number; keel?: number };
         };
         const base: Record<ShipModifierStatKey, number> = sys.baseStatSnapshot ?? {
@@ -306,7 +308,9 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             voidShields: sysShape.voidShields ?? 0,
             morale: sysShape.crew?.morale?.max ?? 0,
             crewRating: sysShape.crew?.crewRating ?? 0,
-            ballisticSkill: sysShape.crew?.crewRating ?? 0,
+            // Read the derived field, not crewRating — they diverge once a role
+            // grants a BS-only bonus (#196).
+            ballisticSkill: sysShape.ballisticSkill ?? sysShape.crew?.crewRating ?? 0,
             weaponCapacityDorsal: sysShape.weaponCapacity?.dorsal ?? 0,
             weaponCapacityProw: sysShape.weaponCapacity?.prow ?? 0,
             weaponCapacityPort: sysShape.weaponCapacity?.port ?? 0,

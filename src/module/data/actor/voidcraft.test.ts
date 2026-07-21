@@ -134,6 +134,29 @@ describe('StarshipData', () => {
         expect(applied.crewRating.total).toBe(0);
     });
 
+    it('collects a role ballisticSkill bonus separately from crewRating (#196)', async () => {
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        const { default: StarshipData } = mod;
+        // A Master of Ordnance raises the ship's BS without raising Crew Rating.
+        // These were collected and then silently dropped: the write-back block had
+        // no `ballisticSkill` line, and the sheet read `crew.crewRating` directly.
+        const items = [
+            {
+                type: 'shipRole',
+                name: 'Master of Ordnance',
+                uuid: 'Actor.A.Item.9',
+                system: { shipBonuses: { manoeuvrability: 0, detection: 0, ballisticSkill: 5, crewRating: 0 } },
+            },
+        ];
+        const applied = StarshipData.computeAppliedModifiers(items);
+        expect(applied.ballisticSkill.total).toBe(5);
+        expect(applied.ballisticSkill.sources).toHaveLength(1);
+        // The BS bonus must NOT leak into Crew Rating — they are distinct axes.
+        expect(applied.crewRating.total).toBe(0);
+    });
+
     it('computeAppliedModifiers ignores unknown modifier keys', async () => {
         const mod = await importModelOrSkip(import('./voidcraft.ts'));
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch

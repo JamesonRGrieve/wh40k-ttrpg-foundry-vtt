@@ -30,6 +30,7 @@ import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.
 import { computeGangUpModifier, gangUpConfigFor, type GangUpTokenLike } from '../../rules/gang-up.ts';
 import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/high-ground.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
+import { getSkillVariantsForKey, normalizeSkillKey } from '../../rules/skill-variant-index.ts';
 import { availableSkillVariants, filterModifiersByVariant, type SkillVariant, variantAutoFails } from '../../rules/skill-variants.ts';
 import {
     deriveTargetSituationalKeys,
@@ -1140,8 +1141,23 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Read via items.find (matching the alt-characteristics path above and the
         // Foundry Collection API) rather than for..of, so a non-iterable items
         // handle can't crash render with "object is not iterable".
-        const skillItem = sourceActor?.items?.find?.((item) => item.type === 'skill' && (item.system?.identifier === rollKey || item.name === rollKey));
-        const variants: SkillVariant[] = Array.isArray(skillItem?.system?.variants) ? skillItem.system.variants : [];
+        const skillItem = sourceActor?.items?.find?.(
+            (item) =>
+                item.type === 'skill' &&
+                (normalizeSkillKey(item.system?.identifier ?? '') === normalizeSkillKey(rollKey) ||
+                    normalizeSkillKey(item.name ?? '') === normalizeSkillKey(rollKey)),
+        );
+        const itemVariants: SkillVariant[] = Array.isArray(skillItem?.system?.variants) ? skillItem.system.variants : [];
+        // A character's skills live in `system.skills` (a SchemaField built from
+        // SKILL_DEFINITIONS), NOT as embedded Items — only origin/background grants
+        // ever place a skill Item on an actor. So an owned Item is the exception,
+        // and the compendium index is the real source (#440): reading Items alone
+        // meant `variants` was almost always [] and the sense-channel selector
+        // never rendered, however the toggle and content were set.
+        const variants: SkillVariant[] =
+            itemVariants.length > 0
+                ? itemVariants
+                : getSkillVariantsForKey(rollKey, (rd.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
         // Variant refinements surface under the homebrew ruleset OR the granular
         // Awareness sense-split toggle (#440), so a table can enable per-sense
         // Awareness without switching the whole game to homebrew.
