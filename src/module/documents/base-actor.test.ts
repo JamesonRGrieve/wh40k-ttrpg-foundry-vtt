@@ -179,3 +179,23 @@ describe('WH40KBaseActor', () => {
     //   - _buildSimpleSkillRoll assembles correct rollData fields
     //   - _onItemsChanged delegates to system._initializeModifierTracking
 });
+
+describe('isCharacterActorType (#479 linked-token gate)', () => {
+    it('matches the generic character type and every per-line character type', async () => {
+        const mod = await importModelOrSkip(import('./base-actor.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        for (const type of ['character', 'dh1-character', 'dh2-character', 'bc-character', 'dw-character', 'ow-character', 'rt-character', 'im-character']) {
+            expect(mod.isCharacterActorType(type), `${type} should be a character type`).toBe(true);
+        }
+    });
+
+    it('rejects NPC, vehicle, starship and loot types (they stay unlinked)', async () => {
+        const mod = await importModelOrSkip(import('./base-actor.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        for (const type of ['npc', 'dh2-npc', 'im-npc', 'vehicle', 'dh2-vehicle', 'rt-starship', 'starship', 'loot', 'acolyte']) {
+            expect(mod.isCharacterActorType(type), `${type} should NOT be a character type`).toBe(false);
+        }
+    });
+});

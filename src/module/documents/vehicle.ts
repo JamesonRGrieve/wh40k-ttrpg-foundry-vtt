@@ -32,11 +32,11 @@ export class WH40KVehicle extends WH40KBaseActor {
         const dataWithName = data as { name?: string } | undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: updateSource expects typed token delta; Record<string,unknown> is the only viable shape for dot-notation token update paths
         const initData: Record<string, unknown> = {
-            'token.bar1': { attribute: 'integrity' },
-            'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-            'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-            'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-            'token.name': dataWithName?.name,
+            'prototypeToken.bar1': { attribute: 'integrity' },
+            'prototypeToken.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            'prototypeToken.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            'prototypeToken.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
+            'prototypeToken.name': dataWithName?.name,
         };
         this.updateSource(initData);
         return undefined;

@@ -64,6 +64,24 @@ type ItemModifierCarrier = WH40KItem & {
     };
 };
 
+/**
+ * True for player-character actor types — the per-line `<system>-character`
+ * types and the generic `character` fallback — and false for everything else
+ * (NPCs, vehicles, starships, loot). Drives the linked-token default in
+ * `_preCreate` (#479): characters are actor-linked so a placed token stays a
+ * live view of the one canonical Actor, while NPCs stay unlinked so one bestiary
+ * entry can place many independent mook tokens.
+ *
+ * Exported and pure so the gate is unit-testable without booting Foundry — the
+ * bug it replaced tested `=== 'acolyte' || === 'character'`, which matched no
+ * real per-line type (`acolyte` is not a registered type; `character` is only
+ * the generic fallback), so every `dh2-character` / `bc-character` / … fell
+ * through and was created unlinked.
+ */
+export function isCharacterActorType(type: string): boolean {
+    return type === 'character' || type.endsWith('-character');
+}
+
 export class WH40KBaseActor extends Actor {
     declare system: Actor['system'] & WH40KActorSystemData;
     declare items: Actor['items'] & foundry.utils.Collection<WH40KItem>;
@@ -651,14 +669,21 @@ export class WH40KBaseActor extends Actor {
         // eslint-disable-next-line no-restricted-syntax -- boundary: _preCreate options typed as never; cast to Record is necessary to access fields
         const preCreateOptions = options as Record<string, unknown>;
         void preCreateOptions;
+        // Token defaults are written under `prototypeToken`, NOT the V9-era `token`
+        // key (#479). `token` was only ever a `migrateData` shim and is gone in V14;
+        // `updateSource` does not run `migrateData`, so every `token.*` key here was
+        // a silent no-op and Foundry's own schema initials won won out instead —
+        // which is why new actors landed unlinked (actorLink initial `false`) and
+        // HOSTILE (disposition initial `TOKEN_DISPOSITIONS.HOSTILE`) despite the
+        // intent encoded below. Fixing the prefix makes these defaults actually apply.
         // eslint-disable-next-line no-restricted-syntax -- boundary: token init data passed to updateSource; Record<string, unknown> is the correct boundary type
         const initData: Record<string, unknown> = {
-            'token.bar1': { attribute: 'wounds' },
-            'token.bar2': { attribute: 'fate' },
-            'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-            'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
-            'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-            'token.name': createData['name'],
+            'prototypeToken.bar1': { attribute: 'wounds' },
+            'prototypeToken.bar2': { attribute: 'fate' },
+            'prototypeToken.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            'prototypeToken.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            'prototypeToken.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
+            'prototypeToken.name': createData['name'],
         };
 
         // Seed system.gameSystem from the concrete DataModel's static, so a
@@ -684,12 +709,22 @@ export class WH40KBaseActor extends Actor {
         ) {
             // Conventional craft track structural `integrity`; voidcraft use
             // `hullIntegrity` and set their own bars in WH40KVoidcraft._preCreate.
-            initData['token.bar1'] = { attribute: 'integrity' };
-            initData['token.bar2'] = undefined;
+            initData['prototypeToken.bar1'] = { attribute: 'integrity' };
+            // `bar2.attribute` is a nullable StringField — null clears the bar.
+            // `undefined` would merely leave the schema initial in place.
+            initData['prototypeToken.bar2'] = { attribute: null };
         }
-        if (createData['type'] === 'acolyte' || createData['type'] === 'character') {
-            initData['token.vision'] = true;
-            initData['token.actorLink'] = true;
+        // Character-class actors are LINKED by default (#479): a placed token must be
+        // a live view of the one canonical Actor, not a forked unlinked copy. The gate
+        // previously tested `=== 'acolyte' || === 'character'`, but `acolyte` is not a
+        // registered actor type at all and `character` is only the generic fallback —
+        // so every real per-line type (`dh2-character`, `bc-character`, …) fell through
+        // and never got linked. Match the whole family by suffix instead.
+        // NPCs deliberately stay unlinked: one bestiary entry commonly places many
+        // independent mook tokens, which linking would fuse into a single shared statblock.
+        if (typeof createType === 'string' && isCharacterActorType(createType)) {
+            initData['prototypeToken.sight.enabled'] = true;
+            initData['prototypeToken.actorLink'] = true;
 
             // Set default favorite skills for new characters
             if (this.getFlag('wh40k-rpg', 'favoriteSkills') === undefined || this.getFlag('wh40k-rpg', 'favoriteSkills') === null) {
