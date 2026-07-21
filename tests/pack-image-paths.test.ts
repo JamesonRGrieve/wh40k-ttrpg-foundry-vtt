@@ -26,8 +26,19 @@ function jsonFiles(dir: string): string[] {
     return out;
 }
 
+/**
+ * Every pack document, read ONCE. Each assertion below used to re-read the whole
+ * tree from disk (thousands of files x 3 assertions), which pushed this file past
+ * vitest's 30s per-test timeout under pre-commit load. The scans are pure string
+ * work, so hoisting the I/O to a single pass keeps every `it` in-memory and fast.
+ */
+const documents: Array<{ file: string; text: string }> = (existsSync(PACKS_ROOT) ? jsonFiles(PACKS_ROOT) : []).map((file) => ({
+    file,
+    text: readFileSync(file, 'utf8'),
+}));
+
 describe('compendium image paths (#239)', () => {
-    const files = existsSync(PACKS_ROOT) ? jsonFiles(PACKS_ROOT) : [];
+    const files = documents.map((doc) => doc.file);
 
     it('finds the packs submodule (else the guard is vacuous)', () => {
         // src/packs is a git submodule; an unpopulated checkout makes this test meaningless.
@@ -39,12 +50,12 @@ describe('compendium image paths (#239)', () => {
         // outside the system bundle + Foundry core, so they only resolve if the
         // user happens to have that exact module installed.
         const re = /"(?:img|src)":\s*"modules\//;
-        const offenders = files.filter((f) => re.test(readFileSync(f, 'utf8')));
+        const offenders = documents.filter((doc) => re.test(doc.text)).map((doc) => doc.file);
         expect(offenders, `pack docs with external module image paths:\n${offenders.join('\n')}`).toEqual([]);
     });
 
     it('specifically never reintroduces the dead game-icons-net-font module', () => {
-        const offenders = files.filter((f) => readFileSync(f, 'utf8').includes('modules/game-icons-net-font/'));
+        const offenders = documents.filter((doc) => doc.text.includes('modules/game-icons-net-font/')).map((doc) => doc.file);
         expect(offenders).toEqual([]);
     });
 
@@ -77,17 +88,25 @@ describe('compendium image paths (#239)', () => {
         // Non-greedy over a char class that excludes `"` so one match per ref.
         const refRe = /"(?:img|src)":\s*"([^"]+)"/g;
 
-        const broken = new Map<string, number>();
-        for (const file of files) {
-            for (const [, ref] of readFileSync(file, 'utf8').matchAll(refRe)) {
+        // Count references per unique path first, then stat each DISTINCT path once.
+        // There are ~10.5k refs over ~1.2k unique paths, so deduping before touching
+        // the filesystem cuts ~89% of the stat calls.
+        const refCounts = new Map<string, number>();
+        for (const doc of documents) {
+            for (const [, ref] of doc.text.matchAll(refRe)) {
                 // Skip Foundry-core (`icons/svg/…`) and any non-bundled prefix —
                 // those are served by core, not from this repo's src tree.
                 if (!ref.startsWith(PREFIX)) continue;
-                const onDisk = resolve(SRC_ROOT, ref.slice(PREFIX.length));
-                // existsSync is case-sensitive on Linux, which is the property
-                // that makes the `.png` vs `.PNG` class of bug detectable here.
-                if (!existsSync(onDisk)) broken.set(ref, (broken.get(ref) ?? 0) + 1);
+                refCounts.set(ref, (refCounts.get(ref) ?? 0) + 1);
             }
+        }
+
+        const broken = new Map<string, number>();
+        for (const [ref, count] of refCounts) {
+            const onDisk = resolve(SRC_ROOT, ref.slice(PREFIX.length));
+            // existsSync is case-sensitive on Linux, which is the property
+            // that makes the `.png` vs `.PNG` class of bug detectable here.
+            if (!existsSync(onDisk)) broken.set(ref, count);
         }
 
         const total = [...broken.values()].reduce((a, b) => a + b, 0);
