@@ -108,6 +108,7 @@ import { registerActionEconomy } from './rules/action-economy.ts';
 import { registerCombatTurnHooks } from './rules/combat-turn-hooks.ts';
 import { WH40K } from './rules/config.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
+import { buildSkillVariantIndex } from './rules/skill-variant-index.ts';
 import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.ts';
 import { DHTourMain } from './tours/main-tour.ts';
 import type { WH40KGameSystem } from './types/global.d.ts';
@@ -853,6 +854,7 @@ export class HooksManager {
         await HooksManager.hydrateWorldActorsOnReady();
         await uuidNameCache.build();
         await buildWeaponQualityPayloadIndex();
+        await buildSkillVariantIndex();
         await buildCareerAdvancementIndex();
         await backfillOriginPathUuids();
         await reconcileWorldOriginGrants();

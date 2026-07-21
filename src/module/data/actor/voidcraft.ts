@@ -238,6 +238,16 @@ export default class VoidcraftData extends VehicleData {
 
     /** Computed during _prepareCombatStats */
     declare detectionBonus: number;
+    /**
+     * Ship Ballistic Skill — derived, not stored. RAW: a ship's BS equals its
+     * Crew Rating, but a ship role (e.g. a Master of Ordnance) may grant a BS
+     * bonus that must NOT also raise Crew Rating, so the two axes diverge once a
+     * modifier applies. Collected into `appliedModifiers.ballisticSkill` and
+     * written here by `_applyShipModifiers` (#196); before that it was gathered
+     * from role `shipBonuses` and then silently dropped, since there was no field
+     * to write and the sheet read `crew.crewRating` directly.
+     */
+    declare ballisticSkill: number;
     declare hullPercentage: number;
     declare moralePercentage: number;
 
@@ -733,6 +743,10 @@ export default class VoidcraftData extends VehicleData {
         this.voidShields = Math.max(0, this.baseStatSnapshot.voidShields + applied.voidShields.total);
         this.crew.morale.max = this.baseStatSnapshot.morale + applied.morale.total;
         this.crew.crewRating = this.baseStatSnapshot.crewRating + applied.crewRating.total;
+        // Ship BS is Crew Rating plus any BS-specific bonus. Snapshotted from the
+        // UNMODIFIED crew rating, so a role that boosts crewRating raises BS through
+        // that term and a role that boosts BS alone leaves crewRating untouched (#196).
+        this.ballisticSkill = this.baseStatSnapshot.ballisticSkill + applied.crewRating.total + applied.ballisticSkill.total;
         this.weaponCapacity.dorsal = Math.max(0, this.baseStatSnapshot.weaponCapacityDorsal + applied.weaponCapacityDorsal.total);
         this.weaponCapacity.prow = Math.max(0, this.baseStatSnapshot.weaponCapacityProw + applied.weaponCapacityProw.total);
         this.weaponCapacity.port = Math.max(0, this.baseStatSnapshot.weaponCapacityPort + applied.weaponCapacityPort.total);
