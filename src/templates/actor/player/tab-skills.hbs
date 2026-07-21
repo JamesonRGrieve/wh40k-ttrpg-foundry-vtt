@@ -1,6 +1,13 @@
 {{!-- Acolyte Sheet Statistics Tab --}}
 {{!-- Characteristics HUD + Skills + Specialist Skills + Talents + Traits --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1:tw-border-t-gold-raw-l5 dh2:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    {{!-- Characteristics | Aptitudes side by side, collapsing to a stacked single
+         column when the panel is narrow (#482). Same width-responsive auto-fit idiom
+         as the Talents|Traits pair below and keyed off the PANEL width, not the
+         viewport. When `aptitudePills` is empty the grid has a single child and
+         auto-fit collapses the empty track, so Characteristics goes full width. --}}
+    <div class="tw-grid tw-gap-3 tw-w-full tw-items-stretch" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));">
+        <div class="tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col">
     {{!-- Characteristics Panel --}}
     {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label="Characteristics" icon="fa-chart-bar"}}
             <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-2">
@@ -51,10 +58,12 @@
                 {{/each}}
             </div>
     {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
+        </div>
 
     {{!-- Aptitudes (relocated from Overview) — the aptitudes governing what this
          character is apt to learn and advance, with their origin-path source(s). --}}
     {{#if aptitudePills.length}}
+        <div class="tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col">
     {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Aptitudes") icon="fa-graduation-cap"}}
         <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-1.5">
             {{#each aptitudePills as |pill|}}
@@ -65,7 +74,9 @@
             {{/each}}
         </div>
     {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
+        </div>
     {{/if}}
+    </div>
 
     {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label="Skills" icon="fa-book"}}
         {{> systems/wh40k-rpg/templates/actor/panel/skills-panel.hbs}}

@@ -17,14 +17,14 @@
             <div class="tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-rounded-[6px] tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-combat)]">
                 <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.12)_0%,var(--color-bg-tertiary)_100%)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] [&>i]:tw-text-[color:var(--wh40k-accent-combat)]">
                     <i class="fas fa-heartbeat"></i>
-                    <span>Vitals</span>
+                    <span>{{localize "WH40K.Status.VitalsLabel"}}</span>
                 </div>
                 <div class="tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     {{!-- Wounds — heart pip strip (#315), consistent with Fatigue/Fate.
                          Filled hearts = current wounds out of max; the value/max
                          readout stays for an at-a-glance number. --}}
                     {{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
-                        icon="fa-heart" label="Wounds"}}
+                        icon="fa-heart" label=(localize "WH40K.Status.Wounds.Label")}}
                         {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
                             count=system.wounds.max
                             current=system.wounds.value
@@ -38,7 +38,7 @@
                     {{!-- Critical Wounds --}}
                     {{#if (or (gt system.wounds.critical 0) (eq system.wounds.value 0))}}
                     {{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
-                        icon="fa-skull" label="Critical" rowClass="wh40k-vital-critical-row"}}
+                        icon="fa-skull" label=(localize "WH40K.Status.CriticalLabel") rowClass="wh40k-vital-critical-row"}}
                         {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
                             count=10
                             current=system.wounds.critical
@@ -52,7 +52,7 @@
                     {{#unless isNPC}}
                     {{!-- Fatigue (PC-only) --}}
                     {{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
-                        icon="fa-zzz" label="Fatigue"}}
+                        icon="fa-zzz" label=(localize "WH40K.Status.Fatigue.Label")}}
                         {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
                             count=system.fatigue.max
                             current=system.fatigue.value
@@ -77,7 +77,7 @@
                     {{!-- Fate Points (PC-only) --}}
                     {{#if (gt system.fate.max 0)}}
                     {{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
-                        icon="fa-star" label="Fate"}}
+                        icon="fa-star" label=(localize "WH40K.Status.FateLabel")}}
                         {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
                             count=system.fate.max
                             current=system.fate.value
@@ -91,7 +91,7 @@
                             title="{{localize 'WH40K.FateUses.DialogTitle'}}">
                             <i class="fas fa-circle-info"></i>
                         </button>
-                        <button type="button" class="tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)]" data-action="restoreFate" title="Restore All">
+                        <button type="button" class="tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)]" data-action="restoreFate" title="{{localize 'WH40K.Status.RestoreFateTitle'}}">
                             <i class="fas fa-redo"></i>
                         </button>
                     {{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}
