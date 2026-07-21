@@ -200,4 +200,62 @@ describe('StarshipData', () => {
         expect(fakeInstance.hullPercentage).toBe(100);
         expect(fakeInstance.moralePercentage).toBe(100);
     });
+
+    it('exports the RAW ship-initiative formula and exposes it per-instance', async () => {
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+
+        // RAW: 1d10 + Detection Bonus. `@detBonus` must match the key
+        // getRollData publishes, or the Roll resolves the term to 0.
+        expect(mod.VOIDCRAFT_INITIATIVE_FORMULA).toBe('1d10 + @detBonus');
+
+        const fakeInstance = Object.create(mod.default.prototype) as { initiativeFormula: string };
+        expect(fakeInstance.initiativeFormula).toBe(mod.VOIDCRAFT_INITIATIVE_FORMULA);
+    });
+
+    it('getRollData publishes detBonus so the initiative formula resolves', async () => {
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+
+        /** The shorthand keys `VoidcraftData.getRollData()` publishes. */
+        type VoidcraftRollData = {
+            speed: number;
+            man: number;
+            det: number;
+            detBonus: number;
+            arm: number;
+            vs: number;
+            tr: number;
+            cr: number;
+        };
+        type StarshipLike = {
+            speed: number;
+            manoeuvrability: number;
+            detection: number;
+            detectionBonus: number;
+            armour: number;
+            voidShields: number;
+            turretRating: number;
+            crew: { crewRating: number };
+            getRollData: () => VoidcraftRollData;
+        };
+        const fakeInstance = Object.create(mod.default.prototype) as StarshipLike;
+        fakeInstance.speed = 6;
+        fakeInstance.manoeuvrability = 15;
+        fakeInstance.detection = 45;
+        fakeInstance.detectionBonus = 4;
+        fakeInstance.armour = 18;
+        fakeInstance.voidShields = 1;
+        fakeInstance.turretRating = 2;
+        fakeInstance.crew = { crewRating: 30 };
+
+        const rollData = fakeInstance.getRollData();
+        expect(rollData.detBonus).toBe(4);
+        expect(rollData.det).toBe(45);
+        // The formula's only @-term must be a published key.
+        const term = mod.VOIDCRAFT_INITIATIVE_FORMULA.replace('1d10 + @', '');
+        expect(Object.keys(rollData)).toContain(term);
+    });
 });

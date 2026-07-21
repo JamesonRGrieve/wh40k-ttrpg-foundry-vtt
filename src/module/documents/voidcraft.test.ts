@@ -1,5 +1,126 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { importModelOrSkip } from '../testing/model-import.ts';
+
+/**
+ * Issue #196 — ship initiative must resolve through Foundry's combat tracker
+ * (which is also the RT strategic-round counter, read as
+ * `game.combats.active.round`), not as a standalone chat card. These tests pin
+ * the delegation contract: `WH40KVoidcraft.rollInitiative` forwards to
+ * `Actor#rollInitiative` with combatant creation on, and attaches a flavour
+ * that carries the Detection Bonus provenance.
+ */
+describe('WH40KVoidcraft · initiative → combat tracker (issue #196)', () => {
+    /** Args captured from the delegated `super.rollInitiative` call. */
+    interface CapturedOptions {
+        createCombatants?: boolean;
+        rerollInitiative?: boolean;
+        initiativeOptions?: { messageOptions?: { flavor?: string } };
+    }
+
+    /** Stand-in for the Combat the real `Actor#rollInitiative` resolves to. */
+    interface CombatStub {
+        readonly id: string;
+    }
+    const COMBAT_SENTINEL: CombatStub = { id: 'combat' };
+
+    /** Structural surface `rollInitiative` reaches into on `this`. */
+    interface FakeVoidcraft {
+        detectionBonus: number;
+        rollInitiative: (options?: CapturedOptions) => Promise<CombatStub>;
+    }
+
+    /**
+     * The single super-prototype method the tests swap out. The member is
+     * explicitly `| undefined` so restoring an absent original satisfies
+     * `exactOptionalPropertyTypes`.
+     */
+    interface SuperPrototype {
+        rollInitiative?: ((options?: CapturedOptions) => Promise<CombatStub>) | undefined;
+    }
+
+    let restoreSuper: (() => void) | undefined;
+
+    afterEach(() => {
+        restoreSuper?.();
+        restoreSuper = undefined;
+        vi.unstubAllGlobals();
+    });
+
+    async function setup(): Promise<{ fake: FakeVoidcraft; captured: () => CapturedOptions | undefined } | undefined> {
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return undefined;
+
+        vi.stubGlobal('game', {
+            i18n: {
+                // `t()` stringifies params before delegating to game.i18n.format.
+                format: (key: string, data: { bonus: string }) => `${key}:${data.bonus}`,
+            },
+        });
+
+        // `super.rollInitiative` resolves off the class's [[HomeObject]]
+        // prototype — WH40KBaseActor.prototype — so the stub goes there.
+        const superProto = Object.getPrototypeOf(mod.WH40KVoidcraft.prototype) as SuperPrototype;
+        const had = Object.prototype.hasOwnProperty.call(superProto, 'rollInitiative');
+        const previous = superProto.rollInitiative;
+        let seen: CapturedOptions | undefined;
+        superProto.rollInitiative = async function stub(options?: CapturedOptions): Promise<CombatStub> {
+            seen = options;
+            await Promise.resolve();
+            return COMBAT_SENTINEL;
+        };
+        restoreSuper = () => {
+            if (had) superProto.rollInitiative = previous;
+            else delete superProto.rollInitiative;
+        };
+
+        const fake = Object.create(mod.WH40KVoidcraft.prototype) as FakeVoidcraft;
+        fake.detectionBonus = 4;
+        return { fake, captured: () => seen };
+    }
+
+    it('delegates to Actor#rollInitiative and creates the combatant', async () => {
+        const ctx = await setup();
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (ctx === undefined) return;
+
+        const result = await ctx.fake.rollInitiative();
+        expect(result).toBe(COMBAT_SENTINEL);
+        expect(ctx.captured()?.createCombatants).toBe(true);
+    });
+
+    it('attaches a flavour carrying the Detection Bonus provenance', async () => {
+        const ctx = await setup();
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (ctx === undefined) return;
+
+        await ctx.fake.rollInitiative();
+        expect(ctx.captured()?.initiativeOptions?.messageOptions?.flavor).toBe('WH40K.Voidcraft.Combat.InitiativeFlavor:4');
+    });
+
+    it('does not pass an explicit formula — the Combatant resolves it', async () => {
+        const ctx = await setup();
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (ctx === undefined) return;
+
+        await ctx.fake.rollInitiative();
+        // A hard-coded formula here would bypass WH40KCombatant, so tracker-driven
+        // "roll all" would silently use the wrong (characteristic) formula.
+        expect(ctx.captured()?.initiativeOptions).not.toHaveProperty('formula');
+    });
+
+    it('lets callers override createCombatants and rerollInitiative', async () => {
+        const ctx = await setup();
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (ctx === undefined) return;
+
+        await ctx.fake.rollInitiative({ createCombatants: false, rerollInitiative: true });
+        expect(ctx.captured()?.createCombatants).toBe(false);
+        expect(ctx.captured()?.rerollInitiative).toBe(true);
+        // The flavour survives a caller-supplied options bag.
+        expect(ctx.captured()?.initiativeOptions?.messageOptions?.flavor).toBeTruthy();
+    });
+});
 
 describe('WH40KStarship', () => {
     it('exports WH40KStarship class', async () => {

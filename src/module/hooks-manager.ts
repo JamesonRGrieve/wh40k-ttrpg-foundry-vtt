@@ -596,6 +596,9 @@ export class HooksManager {
         CONFIG.Item.documentClass = WH40KItem;
         CONFIG.ActiveEffect.documentClass = documents.WH40KActiveEffect;
         CONFIG.ChatMessage.documentClass = documents.ChatMessageWH40K;
+        // Resolves each combatant's initiative formula from its actor's DataModel,
+        // falling back to CONFIG.Combat.initiative above (#196).
+        CONFIG.Combatant.documentClass = documents.WH40KCombatant;
 
         // Token document and movement
         CONFIG.Token.documentClass = documents.TokenDocumentWH40K;

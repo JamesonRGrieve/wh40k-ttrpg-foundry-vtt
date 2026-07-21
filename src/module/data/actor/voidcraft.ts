@@ -37,6 +37,15 @@ function isFunctional(sys: { condition?: string }): boolean {
 }
 
 /**
+ * RAW Rogue Trader ship initiative: `1d10 + Detection Bonus` (core rulebook,
+ * Ch. XI — Starship Combat). Read by `WH40KCombatant._getInitiativeFormula()`
+ * so voidcraft roll through Foundry's combat tracker on the same path as every
+ * other actor type, instead of the characteristic-driven global formula in
+ * `CONFIG.Combat.initiative`. `@detBonus` is published by `getRollData()`.
+ */
+export const VOIDCRAFT_INITIATIVE_FORMULA = '1d10 + @detBonus';
+
+/**
  * Stat keys that owned items can modify on a starship. Authored as a
  * literal-typed tuple so the iterator in `_recomputeAppliedModifiers` narrows
  * each key against the typed `appliedModifiers` record without needing a
@@ -831,6 +840,17 @@ export default class VoidcraftData extends VehicleData {
     /*  Roll Data                                   */
     /* -------------------------------------------- */
 
+    /**
+     * Per-type initiative formula, consumed by `WH40KCombatant`. Declaring it
+     * here keeps the RT-only rule with the RT-only DataModel: the other six
+     * lines have no voidcraft actor type, so their combatants never see this
+     * and continue to use the global `CONFIG.Combat.initiative` formula.
+     * @returns The RAW ship-initiative dice expression.
+     */
+    get initiativeFormula(): string {
+        return VOIDCRAFT_INITIATIVE_FORMULA;
+    }
+
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry getRollData() returns dynamic shorthand keys
     override getRollData(): Record<string, unknown> {
@@ -839,6 +859,8 @@ export default class VoidcraftData extends VehicleData {
         data['speed'] = this.speed;
         data['man'] = this.manoeuvrability;
         data['det'] = this.detection;
+        // Referenced by VOIDCRAFT_INITIATIVE_FORMULA — must stay published.
+        data['detBonus'] = this.detectionBonus;
         data['arm'] = this.armour;
         data['vs'] = this.voidShields;
         data['tr'] = this.turretRating;

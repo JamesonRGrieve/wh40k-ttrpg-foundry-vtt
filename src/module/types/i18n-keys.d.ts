@@ -3738,6 +3738,7 @@ export type I18nKey =
     | 'WH40K.Voidcraft.Combat.Hull'
     | 'WH40K.Voidcraft.Combat.HullApplied'
     | 'WH40K.Voidcraft.Combat.Initiative'
+    | 'WH40K.Voidcraft.Combat.InitiativeFlavor'
     | 'WH40K.Voidcraft.Combat.LanceBypass'
     | 'WH40K.Voidcraft.Combat.LowerShield'
     | 'WH40K.Voidcraft.Combat.Manoeuvrability'
