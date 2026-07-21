@@ -56,6 +56,19 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `foundry.applications` has no shipped type for the v2 api namespace
 const { ApplicationV2 } = (foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor } }).api;
 
+/**
+ * The inline skill-use surface (#432) an action data may expose. `SkillUseActionData`
+ * implements it; the dialog only ever sees this shape, so it renders the use picker
+ * without importing the rolls layer's concrete classes.
+ */
+interface SkillUseHost {
+    readonly skillUseOptions: ReadonlyArray<{ id: string; labelKey: string; needsTarget: boolean; difficultyMod: number }>;
+    readonly selectedSkillUseId: string;
+    selectSkillUse: (useId: string) => void;
+    /** Re-apply the current pick's label / difficulty / opposition to the roll data. */
+    syncSkillUse: () => void;
+}
+
 type AttackOptionWeaponLike = WH40KItemDocument & {
     isRanged: boolean;
     system: WH40KItemDocument['system'] & {
@@ -277,6 +290,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             selectRangeBracket: UnifiedRollDialog.#onSelectRangeBracket,
             selectTarget: UnifiedRollDialog.#onSelectTarget,
             selectSkillVariant: UnifiedRollDialog.#onSelectSkillVariant,
+            selectSkillUse: UnifiedRollDialog.#onSelectSkillUse,
             selectAttackMode: UnifiedRollDialog.#onSelectAttackMode,
             selectAimMode: UnifiedRollDialog.#onSelectAimMode,
             toggleCombatSituational: UnifiedRollDialog.#onToggleCombatSituational,
@@ -445,6 +459,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (typeof this.rollData['update'] === 'function') {
             await (this.rollData['update'] as () => Promise<void>)();
         }
+
+        // Re-shape the roll for the selected skill use (#432) on EVERY render, not
+        // only when the pick changes: the RAW First-Aid difficulty scales with the
+        // patient, so retargeting in-dialog must re-derive it.
+        this.#skillUseHost()?.syncSkillUse();
 
         const context = await super._prepareContext(options);
         const rollData = this.rollData;
@@ -784,6 +803,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             skillVariants,
             hasSkillVariants: skillVariants.length > 0,
             selectedSkillVariant: this._selectedSkillVariant,
+            // Inline skill-use picker (#432) + the shared target selector it reveals
+            // for a target-directed use. Both live in the `modifiers` part.
+            ...this.#getSkillUseContext(),
+            ...(this.#skillUseHost() !== null ? this.#getTargetSelectorContext() : {}),
             showCustomModifier: this._showCustomModifier || this._customModifier !== 0,
             assistantCount: selectedAssistants.length,
             assistanceBonus: assistanceMod,
@@ -1478,8 +1501,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (typeof rd['update'] === 'function') {
             await (rd['update'] as () => Promise<void>)();
         }
-        // Re-render dependent parts (e.g., Called Shot location dropdown, range info)
-        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+        // Re-render dependent parts (e.g., Called Shot location dropdown, range info).
+        // The skill path also needs `modifiers`: it hosts the use picker and the target
+        // selector, and a target change can move a target-scaled RAW difficulty (#432).
+        const parts = ['contextPanel', 'targetDisplay', 'diceInput'];
+        if (this.#skillUseHost() !== null) parts.push('modifiers');
+        await this.render(false, { parts });
     }
 
     /* -------------------------------------------- */
@@ -1997,6 +2024,24 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (typeof placeable?.setTarget === 'function') placeable.setTarget(true, { releaseOthers: true });
     }
 
+    /**
+     * Bind the user's first canvas-targeted token as this roll's target, without
+     * touching range (#432). Used by non-weapon rolls, where a target is a WHO and
+     * not a distance — so, unlike {@link #applyTargetDistance}, it does not require
+     * the roller to have a placed token of their own. Returns false (having told the
+     * user) when nothing is targeted.
+     */
+    #bindCanvasTarget(): boolean {
+        const targetToken = [...game.user.targets.values()][0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: [0] may be undefined; guard is required
+        if (!targetToken) {
+            ui.notifications.info(game.i18n.localize('WH40K.Roll.TargetFirst'));
+            return false;
+        }
+        this.rollData.targetActor = targetToken.actor;
+        return true;
+    }
+
     /** Drop the current user's canvas targets when the dropdown target is cleared,
      *  keeping the map reticle in sync with the dialog (#401). */
     static #clearCanvasTargets(): void {
@@ -2082,6 +2127,52 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     /**
+     * The action data as a skill-use host, or null when this roll has no inline use
+     * picker (a weapon/psychic roll, or a skill whose uses need a pre-roll item
+     * choice). Structural rather than an `instanceof` so the dialog stays decoupled
+     * from the concrete `SkillUseActionData` in the rolls layer.
+     */
+    #skillUseHost(): SkillUseHost | null {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData is the heterogeneous roll-action union; the inline-use surface is duck-typed
+        const candidate = this.actionData as unknown as Partial<SkillUseHost>;
+        if (!Array.isArray(candidate.skillUseOptions)) return null;
+        if (typeof candidate.selectSkillUse !== 'function' || typeof candidate.syncSkillUse !== 'function') return null;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: verified above by the shape checks
+        return candidate as SkillUseHost;
+    }
+
+    /**
+     * Inline skill-use picker context (#432). One row per RAW use the skill offers,
+     * plus whether the CURRENT pick is target-directed — which is what makes the
+     * shared target selector render on the skill path. Empty for every other roll
+     * type, so the panel simply does not appear.
+     */
+    #getSkillUseContext(): {
+        hasSkillUsePicker: boolean;
+        skillUses: Array<{ id: string; label: string; isSelected: boolean; needsTarget: boolean; modifier: number; modifierLabel: string }>;
+        skillUseNeedsTarget: boolean;
+    } {
+        const host = this.#skillUseHost();
+        // A lone "general test" is not a choice — no picker for it.
+        if (host === null || host.skillUseOptions.length <= 1) {
+            return { hasSkillUsePicker: false, skillUses: [], skillUseNeedsTarget: false };
+        }
+        const selected = host.skillUseOptions.find((use) => use.id === host.selectedSkillUseId);
+        return {
+            hasSkillUsePicker: true,
+            skillUses: host.skillUseOptions.map((use) => ({
+                id: use.id,
+                label: game.i18n.localize(use.labelKey),
+                isSelected: use.id === host.selectedSkillUseId,
+                needsTarget: use.needsTarget,
+                modifier: use.difficultyMod,
+                modifierLabel: formatSigned(use.difficultyMod),
+            })),
+            skillUseNeedsTarget: selected?.needsTarget ?? false,
+        };
+    }
+
+    /**
      * Shared target-selector context (#432) for the `target-selector.hbs` partial —
      * the current defender's display name plus the active Combat's roster rows. The
      * weapon panel spreads it today; once the use selector is inline, target-directed
@@ -2122,6 +2213,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     static async #onSelectTarget(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
+        // A skill use only needs WHO the target is — not how far away they are. Range
+        // (and therefore a placed source token) is a weapon concern, so binding the
+        // canvas target must not require one on the skill path (#432).
+        if (this.rollType !== 'weapon') {
+            if (!this.#bindCanvasTarget()) return;
+            await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+            return;
+        }
         if (!this.#applyTargetDistance(true)) return;
         const rd = this.rollData;
         // Recalculate range with the new distance, then clear any manual bracket
@@ -2138,6 +2237,20 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Re-selecting the active variant clears it (back to the un-gated test).
         this._selectedSkillVariant = variant !== null && variant === this._selectedSkillVariant ? null : variant;
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+    }
+
+    /**
+     * Pick which RAW use of the skill this roll is (#432) — the inline replacement
+     * for the old pre-dialog `promptSkillUse` pop-up. The host action re-shapes the
+     * roll (label, RAW difficulty, opposition) for the new pick; `modifiers` is
+     * re-rendered because it hosts the picker AND the target selector that appears
+     * with a target-directed use.
+     */
+    static async #onSelectSkillUse(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const useId = target.dataset['useId'];
+        if (useId === undefined) return;
+        this.#skillUseHost()?.selectSkillUse(useId);
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
     /* -------------------------------------------- */

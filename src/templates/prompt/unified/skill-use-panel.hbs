@@ -1,0 +1,32 @@
+{{!-- Unified Roll Dialog: Skill-Use Panel (#432) --}}
+{{!-- The skill's RAW uses, chosen INLINE instead of through a pre-dialog pop-up.
+     Mirrors the attack-mode / test-variant chip pattern: a context list rendered as
+     [data-action] buttons that re-render the dialog on click. When the chosen use is
+     target-directed (First Aid, Interrogation, Charm…) the SHARED target selector is
+     rendered right below it, so picking a use and picking who it lands on happen in
+     the one Roll Test dialog. Pre-targeting a token still works — it simply arrives
+     as a pre-fill instead of a precondition.
+     Context: hasSkillUsePicker, skillUses[], skillUseNeedsTarget (+ the target-selector
+     partial's own hasTarget / hasCombat / combatants / targetName). --}}
+{{#if hasSkillUsePicker}}
+<div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-2.5">
+    <span class="tw-text-[0.72rem] tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em] tw-font-medium">{{localize "WH40K.SkillUse.UsePickerLabel"}}</span>
+    <div class="tw-flex tw-flex-wrap tw-gap-1.5">
+        {{#each skillUses}}
+        <button type="button"
+                class="tw-inline-flex tw-items-center tw-gap-[5px] tw-py-1 tw-px-2.5 tw-border tw-rounded-2xl tw-cursor-pointer tw-text-[0.78rem] tw-transition-all [&>i]:tw-text-[0.7rem] [&>i]:tw-opacity-70 {{#if isSelected}}tw-bg-[rgba(201,162,39,0.15)] tw-border-[rgba(201,162,39,0.5)] tw-text-[#e8e4d9] tw-shadow-[0_0_8px_rgba(201,162,39,0.15)] [&>i]:tw-opacity-100 [&>i]:tw-text-gold-raw{{else}}tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a] hover:tw-bg-[rgba(201,162,39,0.08)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-text-[#b8b8a8]{{/if}}"
+                data-action="selectSkillUse" data-use-id="{{id}}"
+                aria-pressed="{{#if isSelected}}true{{else}}false{{/if}}">
+            {{#if needsTarget}}<i class="fas fa-crosshairs"></i>{{/if}}
+            <span class="tw-font-medium">{{label}}</span>
+            {{#unless (eq modifier 0)}}
+            <span class="tw-font-bold tw-text-sm {{#if (gt modifier 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">{{modifierLabel}}</span>
+            {{/unless}}
+        </button>
+        {{/each}}
+    </div>
+    {{#if skillUseNeedsTarget}}
+    {{> "systems/wh40k-rpg/templates/prompt/unified/target-selector.hbs"}}
+    {{/if}}
+</div>
+{{/if}}

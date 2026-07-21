@@ -23,6 +23,10 @@
     </div>
     {{/if}}
 
+    {{!-- Skill-use selector (#432): the skill's RAW uses, inline — plus the shared
+         target selector when the chosen use is target-directed. --}}
+    {{> "systems/wh40k-rpg/templates/prompt/unified/skill-use-panel.hbs"}}
+
     {{!-- Test variant selector (#246): homebrew skill sub-tests (e.g. Visual / Auditory).
          Picking one gates which conditional modifiers apply. --}}
     {{#if hasSkillVariants}}
