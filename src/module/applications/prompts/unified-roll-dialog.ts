@@ -1076,22 +1076,17 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             ? { label: currentSizeOption.label, modifier: currentSizeOption.modifier, modifierLabel: currentSizeOption.modifierLabel }
             : { label: 'Average (4)', modifier: 0, modifierLabel: '+0' };
 
-        // Target picker (#250): pick the defender from the active Combat's roster
-        // (dropdown) rather than canvas token-targeting. Falls back to the native
-        // selectTarget button (game.user.targets) when there is no active combat.
-        const targetActorForDisplay = rd.targetActor as { name?: string } | null | undefined;
-        const combatantTargets = this.#getCombatantTargets();
-
         return {
             weapons: Array.isArray(rd['weapons']) ? rd['weapons'] : [],
             weapon: rd.weapon,
             weaponSelect: rd['weaponSelect'],
             isRanged,
             isMelee: !isRanged,
-            targetName: targetActorForDisplay?.name ?? null,
-            hasTarget: targetActorForDisplay != null,
-            combatants: combatantTargets,
-            hasCombat: combatantTargets.length > 0,
+            // Target picker (#250): pick the defender from the active Combat's roster
+            // (dropdown) or, with no combat, the native selectTarget button
+            // (game.user.targets). Hoisted to a shared helper (#432) so the same
+            // context feeds the shared target-selector partial for skill uses too.
+            ...this.#getTargetSelectorContext(),
             // Card data
             attackModes,
             meleeSpecialOptions,
@@ -2084,6 +2079,28 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Stable sort by disposition group (Array.prototype.sort is stable), so
         // combat order is preserved within each hostile/neutral/friendly/self band.
         return rows.sort((a, b) => TARGET_GROUP_ORDER[a.group] - TARGET_GROUP_ORDER[b.group]);
+    }
+
+    /**
+     * Shared target-selector context (#432) for the `target-selector.hbs` partial —
+     * the current defender's display name plus the active Combat's roster rows. The
+     * weapon panel spreads it today; once the use selector is inline, target-directed
+     * skill uses reuse the identical picker from this one source.
+     */
+    #getTargetSelectorContext(): {
+        combatants: Array<{ id: string; name: string; isSelected: boolean; group: TargetDispositionGroup; colorClass: string }>;
+        hasCombat: boolean;
+        hasTarget: boolean;
+        targetName: string | null;
+    } {
+        const targetActorForDisplay = this.rollData.targetActor as { name?: string } | null | undefined;
+        const combatants = this.#getCombatantTargets();
+        return {
+            combatants,
+            hasCombat: combatants.length > 0,
+            hasTarget: targetActorForDisplay != null,
+            targetName: targetActorForDisplay?.name ?? null,
+        };
     }
 
     /** Resolve the active Combat's combatants into #250 target-dropdown rows,

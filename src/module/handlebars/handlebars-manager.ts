@@ -239,6 +239,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/shock-snap-chat.hbs',
 
             // Unified roll dialog panels
+            'systems/wh40k-rpg/templates/prompt/unified/target-selector.hbs',
             'systems/wh40k-rpg/templates/prompt/unified/panels/weapon-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/unified/panels/psychic-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/unified/panels/force-field-panel.hbs',
