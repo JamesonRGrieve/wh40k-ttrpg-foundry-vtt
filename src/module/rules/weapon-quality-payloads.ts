@@ -230,8 +230,21 @@ export function getWeaponQualityMechanics(identifier: string, systemId?: string)
     return payloadFlat?.get(key) ?? null;
 }
 
+/**
+ * A `system.mechanics` payload in its AUTHORED shape: every field optional,
+ * including the die-op entries. Pack docs author exactly this — `tearing` sets only
+ * `{op, phase, extraDice, modifierKey}` and omits `threshold`/`usesLevel` — and
+ * `weaponQualityMechanicsFromRaw` merges each entry over `defaultWeaponQualityDieOp()`.
+ * A plain `Partial<WeaponQualityMechanics>` cannot express this: it makes the
+ * top-level keys optional but still demands COMPLETE `WeaponQualityDieOp` entries,
+ * which is stricter than what the merge actually accepts.
+ */
+export type WeaponQualityMechanicsInput = Partial<Omit<WeaponQualityMechanics, 'dieOps'>> & {
+    dieOps?: Array<Partial<WeaponQualityDieOp>>;
+};
+
 /** Seed the index directly (unit tests / stories — no Foundry pack available there). Populates the flat fallback. */
-export function setWeaponQualityPayloadsForTesting(entries: Record<string, Partial<WeaponQualityMechanics>>): void {
+export function setWeaponQualityPayloadsForTesting(entries: Record<string, WeaponQualityMechanicsInput>): void {
     payloadBySystem = null;
     payloadFlat = new Map(Object.entries(entries).map(([id, partial]) => [id.toLowerCase(), weaponQualityMechanicsFromRaw(partial)]));
     hasLevelBySystem = null;
