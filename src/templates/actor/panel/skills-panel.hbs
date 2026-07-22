@@ -18,7 +18,7 @@
          panel narrows. Pairs with tw-shrink-0 on the row's trailing buttons.
          Skills render from the flat `standard` list in row-major order rather
          than the old fixed two-array column split. --}}
-    <div class="tw-grid tw-gap-2 tw-relative" style="grid-template-columns: repeat(auto-fit, minmax(max(20rem, calc((100% - 1rem) / 3)), 1fr));">
+    <div class="tw-grid tw-gap-2 tw-relative" style="grid-template-columns: repeat(auto-fit, minmax(max(20rem, calc((100% - 1rem) / 3)), 1fr));" data-testid="skills-responsive-grid">
         {{#each skillLists.standard as |entry|}}
             {{> systems/wh40k-rpg/templates/actor/partial/skill-row.hbs entry=entry}}
         {{/each}}
