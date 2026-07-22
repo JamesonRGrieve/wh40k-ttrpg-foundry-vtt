@@ -913,6 +913,10 @@
                 "Name": "Warband Subtlety Pool",
                 "Hint": "The single warband-wide Subtlety value (DH2) shared by every acolyte. Edited from any acolyte's Subtlety stepper rather than this menu; changing it updates the shared pool and re-renders all open character sheets."
             },
+            "WorldTimeInception": {
+                "Name": "Campaign Inception (World Time)",
+                "Hint": "The world-time stamp, in seconds, treated as Day 0 for the day-since-inception counter shown by the world-time widget. Anchored from that widget's \"Set Day 0 here\" control rather than this menu; defaults to 0 (the world's own epoch)."
+            },
             "DegreesMode": {
                 "Name": "Degrees of Success Calculation",
                 "Hint": "How degrees of success/failure are counted. RAW resolves per game system. Gen 1 (DH1, Deathwatch, Rogue Trader): one extra degree per full 10 points of margin — floor(|target − roll| / 10). Gen 2 (Black Crusade, Only War, Dark Heresy 2e): 1 + the difference of the tens digits.",
@@ -4578,6 +4582,26 @@
             "Draw": "Draw",
             "DrawTooltip": "Draw weapon",
             "NoDrawTooltip": "No weapons to draw"
+        },
+        "WorldTime": {
+            "Title": "In-Universe Time",
+            "DayCounter": "Day {day}",
+            "SinceInception": "since inception",
+            "DateLabel": "Date",
+            "ElapsedLabel": "Elapsed",
+            "FallbackDate": "Year {year}, Day {day} — {clock}",
+            "GmControls": "GM Time Controls",
+            "AdvanceHour": "+1 Hour",
+            "AdvanceDay": "+1 Day",
+            "Advance": "Advance",
+            "AmountLabel": "Amount to advance",
+            "UnitLabel": "Time unit",
+            "UnitHours": "Hours",
+            "UnitDays": "Days",
+            "SetInception": "Set Day 0 here",
+            "SetInceptionTooltip": "Anchor the day-since-inception counter to the current world time.",
+            "InceptionSet": "Campaign inception anchored to the current world time (now Day 0).",
+            "GmOnly": "Only the GM can advance world time."
         },
         "Status": {
             "Modifier": "Modifier:",

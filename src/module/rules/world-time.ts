@@ -30,6 +30,53 @@ export function daysSince(stamp: number, now: number): number {
 }
 
 /**
+ * The **Day-since-inception counter** for the world-time widget (#487): the
+ * integer number of *completed* in-universe days between the campaign's
+ * inception stamp and `now`. Day 0 is the day of inception itself (0 completed
+ * days), Day 1 the following day, and so on — matching the "Day 0 / 1 / 2 / 3 …"
+ * enumeration in #487. Never negative (a clock wound back before inception reads
+ * Day 0), since {@link daysSince} already floors elapsed time at zero.
+ */
+export function dayNumberSince(inceptionStamp: number, now: number): number {
+    return Math.floor(daysSince(inceptionStamp, now));
+}
+
+/** The unit a GM advance step is expressed in (#487 advance controls). */
+export type TimeAdvanceUnit = 'hour' | 'day';
+
+/**
+ * Seconds to advance the world clock by, for a GM "advance N hours/days" control
+ * (#487). Pure arithmetic over {@link HOUR_SECONDS} / {@link DAY_SECONDS}: the
+ * count is truncated to a whole unit; a non-finite count yields 0 (a no-op
+ * advance) so a blank/garbage input never throws at `game.time.advance`. A
+ * negative count is preserved (Foundry's `advance` rewinds on a negative delta),
+ * but the widget's controls only ever pass a positive count.
+ */
+export function advanceSeconds(count: number, unit: TimeAdvanceUnit): number {
+    if (!Number.isFinite(count)) return 0;
+    const unitSeconds = unit === 'day' ? DAY_SECONDS : HOUR_SECONDS;
+    return Math.trunc(count) * unitSeconds;
+}
+
+/** Zero-pad a whole-number time part to two digits (`5` → `"05"`). */
+function padTimePart(value: number): string {
+    return Math.trunc(value).toString().padStart(2, '0');
+}
+
+/**
+ * A zero-padded `HH:MM` (or `HH:MM:SS` when `second` is given) clock readout from
+ * decomposed time-of-day components (#487). Pure and Foundry-free — digits and
+ * colons only, no translatable prose — so the world-time widget can render a
+ * time-of-day fallback from `game.time.components` when the native
+ * `game.time.calendar.format()` timestamp is unavailable (e.g. a world with no
+ * calendar configured).
+ */
+export function formatClock(hour: number, minute: number, second?: number): string {
+    const hhmm = `${padTimePart(hour)}:${padTimePart(minute)}`;
+    return second === undefined ? hhmm : `${hhmm}:${padTimePart(second)}`;
+}
+
+/**
  * Whether a per-target time gate is open — i.e. in-universe time has reached the
  * gate's recorded **expiry**. An unset gate (`null`) is open.
  *
