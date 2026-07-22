@@ -1,7 +1,7 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import type { FatigueModelDef } from '../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../constants.ts';
-import { computeCharacteristicTotals } from '../data/shared/characteristic-math.ts';
+import { applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../data/shared/characteristic-math.ts';
 import { isEffectSuppressedByEquipState, isWeaponAttackBlockedByEquip } from '../data/shared/equip-state.ts';
 import { computeMovement } from '../data/shared/movement-math.ts';
 import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shared/subtlety-adjuster.ts';
@@ -1252,6 +1252,12 @@ export class WH40KBaseActor extends Actor {
             const { total, bonus } = computeCharacteristicTotals(base, modifier, unnatural, advance * 5);
             characteristic.total = total;
             characteristic.bonus = bonus;
+            // Populate the base-vs-effective split on this legacy (DataModel-less)
+            // path too, so `effectiveBonus` is present on EVERY actor's
+            // characteristics — the DataModel paths (creature/npc) already do this.
+            // Without it, outcome consumers reading `effectiveBonus` (weapon damage,
+            // dynamic-modifier scaling — #415) would fall back to base here only.
+            applyEffectiveCharacteristicFields(characteristic);
         }
 
         const initChar = this.initiative.characteristic;

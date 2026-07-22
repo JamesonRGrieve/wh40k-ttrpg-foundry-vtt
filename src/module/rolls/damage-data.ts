@@ -63,7 +63,10 @@ export interface AttackDataLike {
         weapon?: ActionItemLike;
         power?: ActionItemLike;
         sourceActor: {
-            getCharacteristicFuzzy: (key: string) => { bonus: number };
+            // `effectiveBonus` carries the base bonus PLUS the bonus-only modifier
+            // channel and fatigue halving (#415); outcome consumers read it, falling
+            // back to `bonus` for any actor path that hasn't populated it.
+            getCharacteristicFuzzy: (key: string) => { bonus: number; effectiveBonus?: number };
             hasTalent: (name: string) => boolean;
             hasTalentFuzzyWords: (words: string | string[], extra?: string) => boolean;
             /** Owned items, walked for data-driven dynamic modifier hooks (Direction #7). */
@@ -275,7 +278,10 @@ export class Hit {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         const charBonus: Record<string, number> = {};
         for (const [short, fuzzy] of Object.entries(DAMAGE_CHAR_FUZZY)) {
-            charBonus[short] = sourceActor.getCharacteristicFuzzy(fuzzy).bonus;
+            // Effective bonus so dynamic-modifier hooks that scale by a characteristic
+            // bonus (Crushing Blow ½SB, Mighty Shot ½BS) reflect fatigue/traits/drugs (#415).
+            const char = sourceActor.getCharacteristicFuzzy(fuzzy);
+            charBonus[short] = char.effectiveBonus ?? char.bonus;
         }
         const ctx: DynamicModifierContext = {
             charBonus,
@@ -434,7 +440,11 @@ export class Hit {
         }
 
         if (actionItem.isMelee) {
-            this.modifiers['strength bonus'] = sourceActor.getCharacteristicFuzzy('Strength').bonus;
+            // Effective Strength Bonus so a fatigued / buffed character's melee damage
+            // reflects it — the canonical #415 case. For an unmodified character
+            // effectiveBonus == bonus, so the common case is unchanged.
+            const strength = sourceActor.getCharacteristicFuzzy('Strength');
+            this.modifiers['strength bonus'] = strength.effectiveBonus ?? strength.bonus;
 
             // Crushing Blow → data-driven via the talent's dynamicModifiers hook
             // (applied by applyDynamicModifiers). See Direction #7.
@@ -652,7 +662,8 @@ export class Hit {
                 hallucinogenic: () => `A creature stuck by this much make a toughness test with ${level * -10} or suffer a delusion!`,
                 haywire: () => `Everything within ${level * -10}m suffers the Haywire Field at strength [[1d10]]!`,
                 indirect: () => {
-                    const bs = sourceActor.getCharacteristicFuzzy('ballisticSkill').bonus;
+                    const bsChar = sourceActor.getCharacteristicFuzzy('ballisticSkill');
+                    const bs = bsChar.effectiveBonus ?? bsChar.bonus;
                     return `The attack deviates [[ 1d10 - ${bs}]]m (minimum of 0m) off course to the ${scatterDirection()}!`;
                 },
                 shocking: () =>

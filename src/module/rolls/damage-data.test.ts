@@ -115,14 +115,18 @@ describe('Hit.applyDynamicModifiers — data-driven damage hooks (Direction #7)'
     /** A minimal AttackDataLike whose actor exposes fuzzy characteristic bonuses (WS 4, BS 3, else 2) + owned items. */
     function attackData(
         items: DynamicModifierItemLike[],
-        opts: { isMelee?: boolean; isRanged?: boolean; dos?: number; activated?: boolean } = {},
+        opts: { isMelee?: boolean; isRanged?: boolean; dos?: number; activated?: boolean; effectiveBonus?: (key: string) => number } = {},
     ): AttackDataLike {
         const bonus = (key: string): number => (key === 'WeaponSkill' ? 4 : key === 'BallisticSkill' ? 3 : 2);
         return {
             rollData: {
                 weapon: { system: {}, isMelee: opts.isMelee ?? true, isRanged: opts.isRanged ?? false },
                 sourceActor: {
-                    getCharacteristicFuzzy: (key: string) => ({ bonus: bonus(key) }),
+                    // When `effectiveBonus` is supplied, expose the base/effective split
+                    // an actor carries after fatigue/traits/drugs (#415); otherwise omit
+                    // it so the `?? bonus` fallback is exercised (the RAW/unmodified case).
+                    getCharacteristicFuzzy: (key: string) =>
+                        opts.effectiveBonus !== undefined ? { bonus: bonus(key), effectiveBonus: opts.effectiveBonus(key) } : { bonus: bonus(key) },
                     hasTalent: () => false,
                     hasTalentFuzzyWords: () => false,
                     items,
@@ -145,6 +149,25 @@ describe('Hit.applyDynamicModifiers — data-driven damage hooks (Direction #7)'
         hit.penetration = 4;
         await hit.applyDynamicModifiers(attackData([crushing], { isMelee: true }));
         expect(hit.modifiers['crushing blow']).toBe(2); // ceil(4 / 2)
+    });
+
+    it('scales a characteristic-bonus hook off the EFFECTIVE bonus, not the base (#415)', async () => {
+        // Crushing Blow scales by ½ WS bonus. A buffed / rested character whose
+        // effective WS bonus is 6 (base 4) must get ceil(6/2)=3, not ceil(4/2)=2 —
+        // fatigue/traits/drugs flow into damage because the collector reads effective.
+        const crushing = item('Crushing Blow', [makeHook({ target: 'damage', condition: 'melee', scale: scale({ source: 'ws', factor: 0.5, round: 'up' }) })]);
+        const hit = new Hit();
+        await hit.applyDynamicModifiers(attackData([crushing], { isMelee: true, effectiveBonus: (key) => (key === 'WeaponSkill' ? 6 : 2) }));
+        expect(hit.modifiers['crushing blow']).toBe(3);
+    });
+
+    it('falls back to the base bonus when a characteristic carries no effective split', async () => {
+        // The DataModel-less actor path may not populate effectiveBonus; the read
+        // must degrade to base rather than NaN/undefined.
+        const crushing = item('Crushing Blow', [makeHook({ target: 'damage', condition: 'melee', scale: scale({ source: 'ws', factor: 0.5, round: 'up' }) })]);
+        const hit = new Hit();
+        await hit.applyDynamicModifiers(attackData([crushing], { isMelee: true })); // no effectiveBonus supplied
+        expect(hit.modifiers['crushing blow']).toBe(2); // ceil(base 4 / 2)
     });
 
     it('routes a penetration hook into the penetration map', async () => {

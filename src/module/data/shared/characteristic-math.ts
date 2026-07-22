@@ -32,12 +32,17 @@ export interface CharacteristicLike {
 export interface EffectiveCharacteristicFields {
     total: number;
     bonus: number;
+    // The following three are OUTPUTS this helper writes, not inputs it reads — so
+    // they are optional on the parameter. That lets a characteristic whose effective
+    // fields are still absent (the DataModel-less `_computeCharacteristics` path, #415)
+    // satisfy the signature, while the DataModel chars that declare them required
+    // remain assignable.
     /** Alias of `total` — the post-modifier characteristic value. */
-    effectiveValue: number;
+    effectiveValue?: number;
     /** Sum of bonus-only modifiers ("+X Bonus" effects); 0 when none. */
-    bonusModifier: number;
+    bonusModifier?: number;
     /** `bonus` + `bonusModifier`. */
-    effectiveBonus: number;
+    effectiveBonus?: number;
 }
 
 /**
