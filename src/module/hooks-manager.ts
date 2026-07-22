@@ -44,6 +44,7 @@ import { registerCombatTrackerEconomy } from './applications/combat/combat-track
 import { RTCompendiumBrowser } from './applications/compendium-browser.ts';
 import { TooltipsWH40K } from './applications/components/_module.ts';
 import { ConvertActorSystemDialog } from './applications/dialogs/convert-actor-system-dialog.ts';
+import WorldTimeWidget from './applications/hud/world-time-widget.ts';
 import {
     BaseItemSheet,
     WeaponSheet,
@@ -299,6 +300,8 @@ export class HooksManager {
      * expired effects immediately. Cheap: only rendered sheets are touched.
      */
     static async onUpdateWorldTime(dt: number): Promise<void> {
+        // #487: keep the world-time counter widget live as the clock advances.
+        WorldTimeWidget.refresh();
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors may be absent pre-ready; the sheet handle is loosely typed by Foundry
         const actors = (globalThis as { game?: { actors?: { contents?: unknown[] } } }).game?.actors?.contents;
         if (!Array.isArray(actors)) return;
@@ -872,6 +875,10 @@ export class HooksManager {
         if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.processActiveEffectsDuringCombat) === false) {
             DHCombatActionManager.disableHooks();
         }
+
+        // #487: surface the in-universe clock as a persistent, table-visible
+        // widget. System-agnostic; the GM-only advance controls are gated inside.
+        WorldTimeWidget.show();
     }
 
     /* eslint-disable no-restricted-syntax -- boundary: hotbarDrop payload is an untyped Record from Foundry; _bar is unknown per hook contract */

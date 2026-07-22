@@ -348,6 +348,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
               "scope": "world",
               "type": "Number",
             },
+            {
+              "choices": undefined,
+              "config": false,
+              "default": "0",
+              "key": "world-time-inception",
+              "requiresReload": undefined,
+              "scope": "world",
+              "type": "Number",
+            },
           ]
         `);
     });
@@ -425,6 +434,47 @@ describe('WH40KSettings — warband Subtlety pool (#64)', () => {
         expect(() => {
             WH40KSettings.rerenderSubtletyDependentSheets();
         }).not.toThrow();
+    });
+});
+
+describe('WH40KSettings — campaign-inception world-time stamp (#487)', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('getWorldTimeInception returns the default (0) when game.settings is unavailable', () => {
+        expect(WH40KSettings.getWorldTimeInception()).toBe(WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT);
+        expect(WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT).toBe(0);
+    });
+
+    it('getWorldTimeInception reads + truncates the stored world value; junk → default', () => {
+        const cases: Array<[number | string, number]> = [
+            [0, 0],
+            [86_400, 86_400],
+            [90_061.9, 90_061],
+            [-3_600, -3_600],
+            ['nonsense', WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT],
+        ];
+        for (const [stored, expected] of cases) {
+            vi.stubGlobal('game', { settings: { get: () => stored } });
+            expect(WH40KSettings.getWorldTimeInception()).toBe(expected);
+            vi.unstubAllGlobals();
+        }
+    });
+
+    it('setWorldTimeInception writes the truncated stamp to the world setting', async () => {
+        const writes: Array<{ ns: string; key: string; value: number }> = [];
+        vi.stubGlobal('game', {
+            settings: {
+                set: (ns: string, key: string, value: number) => {
+                    writes.push({ ns, key, value });
+                },
+            },
+        });
+        await WH40KSettings.setWorldTimeInception(172_800.7);
+        await WH40KSettings.setWorldTimeInception(Number.NaN);
+        expect(writes.map((w) => w.value)).toEqual([172_800, WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT]);
+        expect(writes[0]).toMatchObject({ ns: SYSTEM_ID, key: WH40KSettings.SETTINGS.worldTimeInception });
     });
 });
 

@@ -64,11 +64,46 @@ export class WH40KSettings {
         fatigueMode: 'fatigue-mode',
         awarenessSenseSplit: 'awareness-sense-split',
         magazineBuilding: 'magazine-building',
+        worldTimeInception: 'world-time-inception',
     };
 
     /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
     static WARBAND_SUBTLETY_MAX = 100;
     static WARBAND_SUBTLETY_DEFAULT = 60;
+
+    /** Default campaign-inception world-time stamp (#487): 0 = the world's own
+     *  epoch, so "Day 0" is the world-time zero until a GM re-anchors it. */
+    static WORLD_TIME_INCEPTION_DEFAULT = 0;
+
+    /**
+     * Read the durable campaign-inception world-time stamp (#487) — the
+     * `game.time.worldTime` value treated as "Day 0" for the day-since-inception
+     * counter. World-scoped so it survives reload and is shared by every client.
+     * Falls back to {@link WORLD_TIME_INCEPTION_DEFAULT} (0) before the setting is
+     * registered or when the stored value is not a finite number, so the widget
+     * can read it during early boot without throwing.
+     */
+    static getWorldTimeInception(): number {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
+        let raw: unknown;
+        try {
+            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldTimeInception);
+        } catch {
+            return WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT;
+        }
+        return typeof raw === 'number' && Number.isFinite(raw) ? Math.trunc(raw) : WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT;
+    }
+
+    /**
+     * Anchor "Day 0" to a world-time stamp (#487), truncated to a whole second.
+     * World-scoped, so the change propagates to every connected client (the
+     * world-time widget refreshes on the `updateSetting` hook). GM-only in
+     * practice — a world setting write is rejected for non-GM users by Foundry.
+     */
+    static async setWorldTimeInception(stamp: number): Promise<void> {
+        const value = Number.isFinite(stamp) ? Math.trunc(stamp) : WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT;
+        await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldTimeInception, value);
+    }
 
     /**
      * Read the single warband-wide Subtlety value (#64) — a world-scoped pool
@@ -642,6 +677,20 @@ export class WH40KSettings {
                 onChange: () => {
                     WH40KSettings.rerenderSubtletyDependentSheets();
                 },
+            },
+            {
+                // Campaign-inception world-time stamp (#487): the game.time.worldTime
+                // value treated as "Day 0" for the day-since-inception counter.
+                // config: false — anchored via the world-time widget's GM control
+                // ("Set Day 0 here"), not the settings menu. Default 0 = the world's
+                // own epoch.
+                key: S.worldTimeInception,
+                name: 'WH40K.SETTINGS.WorldTimeInception.Name',
+                hint: 'WH40K.SETTINGS.WorldTimeInception.Hint',
+                scope: 'world',
+                config: false,
+                default: WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT,
+                type: Number,
             },
         ];
         for (const d of descriptors) {
