@@ -1,8 +1,17 @@
-{{!-- Shared Armour zone (#234) — the Overview dashboard-zone treatment, reused
-     on the Combat tab so both tabs render armour identically. `compact` toggles
-     the silhouette's fitted-items strip + roll-range badge (Overview passes
-     compact=true; Combat passes compact=false for the fuller in-combat detail).
-     `equippedGear` is forwarded to the silhouette's equipped-gear icon cluster (#334). --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Armour" icon="fa-shield-alt" zoneClass="tw-border-l-[3px] tw-border-l-[#7f8c8d]"}}
-    {{> systems/wh40k-rpg/templates/actor/partial/armour-silhouette.hbs armourDisplay=armourDisplay equippedGear=equippedGear compact=compact}}
-{{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
+{{!-- Shared Armour zone (#234). Wrapped in the standard `.wh40k-panel` chrome
+     (header via panel-header.hbs + body) so on the Combat tab it reads as one
+     family with its Force Field and Weapons siblings, instead of the lighter
+     zone treatment it used to carry (#486). This partial is Combat-only — #318
+     removed Armour from the Overview tab — so the panel chrome has no bearing on
+     the Overview tab's own zone styling.
+     `compact` toggles the silhouette's fitted-items strip + roll-range badge
+     (Combat passes compact=false for the fuller in-combat detail). `equippedGear`
+     is forwarded to the silhouette's equipped-gear icon cluster (#334). --}}
+<div class="wh40k-panel">
+    <div class="wh40k-panel-header">
+        {{> systems/wh40k-rpg/templates/actor/partial/panel-header.hbs label=(localize "WH40K.Equipment.Armour") icon="fa-shield-alt"}}
+    </div>
+    <div class="wh40k-panel-body">
+        {{> systems/wh40k-rpg/templates/actor/partial/armour-silhouette.hbs armourDisplay=armourDisplay equippedGear=equippedGear compact=compact}}
+    </div>
+</div>
