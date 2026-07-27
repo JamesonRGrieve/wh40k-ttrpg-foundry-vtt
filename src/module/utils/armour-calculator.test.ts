@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { asBaseActor } from '../testing/actor-stub.ts';
-import { computeArmour } from './armour-calculator';
+import { type ArmourSystemLike, computeArmour, getArmourAPForLocation } from './armour-calculator';
 
 /**
  * Regression tests for the DH2 errata stacking rules (errata.md L69-73):
@@ -160,5 +160,59 @@ describe('computeArmour (#144 errata: Machine + worn-armour stacking)', () => {
         });
         const body = bodyOf(computeArmour(actor));
         expect(body.traitBonus).toBe(4);
+    });
+});
+
+/**
+ * Regression tests for #486 — the AP helpers are DataModel *methods* and must be
+ * invoked with their receiver. Reading one off the model and calling it detached
+ * (`const f = sys.getEffectiveAPForLocation; f(loc)`) leaves `this` undefined, so
+ * the method's own `this.getAPForLocation(...)` threw
+ * "Cannot read properties of undefined" and took the character-sheet render down.
+ *
+ * These stubs mimic the real DataModel shape: the helper is a prototype method
+ * whose body dereferences `this`. Any future refactor that detaches the call
+ * fails here instead of at render time in a live world.
+ */
+describe('getArmourAPForLocation (#486: helpers must be called bound to their model)', () => {
+    class ArmourModelStub {
+        constructor(private readonly points: Record<string, number>) {}
+
+        getAPForLocation(location: string): number {
+            return this.points[location] ?? 0;
+        }
+
+        getEffectiveAPForLocation(location: string): number {
+            // Mirrors armour.ts: delegates through `this`, so an unbound call throws.
+            return this.getAPForLocation(location) + 1;
+        }
+    }
+
+    it('invokes getEffectiveAPForLocation bound to the model (does not throw on `this`)', () => {
+        const model: ArmourSystemLike = new ArmourModelStub({ body: 4 });
+        expect(() => getArmourAPForLocation(model, 'body')).not.toThrow();
+        expect(getArmourAPForLocation(model, 'body')).toBe(5);
+    });
+
+    it('falls back to getAPForLocation, also bound, when no effective-AP helper exists', () => {
+        class ApOnlyStub {
+            constructor(private readonly points: Record<string, number>) {}
+            getAPForLocation(location: string): number {
+                return this.points[location] ?? 0;
+            }
+        }
+        const model: ArmourSystemLike = new ApOnlyStub({ head: 3 });
+        expect(() => getArmourAPForLocation(model, 'head')).not.toThrow();
+        expect(getArmourAPForLocation(model, 'head')).toBe(3);
+    });
+
+    it('falls back to the plain armourPoints map when the model exposes no helpers', () => {
+        expect(getArmourAPForLocation({ armourPoints: { leftArm: 2 } }, 'leftArm')).toBe(2);
+    });
+
+    it('returns 0 for an uncovered location rather than NaN', () => {
+        const model: ArmourSystemLike = new ArmourModelStub({ body: 4 });
+        expect(getArmourAPForLocation(model, 'leftLeg')).toBe(1);
+        expect(getArmourAPForLocation({ armourPoints: {} }, 'leftLeg')).toBe(0);
     });
 });

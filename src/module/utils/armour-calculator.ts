@@ -18,7 +18,7 @@ interface ArmourPointsLike {
     [location: string]: number | undefined;
 }
 
-interface ArmourSystemLike {
+export interface ArmourSystemLike {
     armourPoints?: ArmourPointsLike;
     getEffectiveAPForLocation?: (location: string) => number;
     getAPForLocation?: (location: string) => number;
