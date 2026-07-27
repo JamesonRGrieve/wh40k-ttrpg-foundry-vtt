@@ -10,7 +10,7 @@
  * - Auto Roll for digital rolling
  */
 
-import { SKILL_DEFINITIONS } from '../../data/shared/skill-definitions.ts';
+import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import type { ActionData } from '../../rolls/action-data.ts';
 import type { RollData, RollModifierComponent } from '../../rolls/roll-data.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
@@ -571,10 +571,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // (src/packs/CLAUDE.md: "Skills are not items"), so `skillItem` is undefined and
             // the NPC map entry has no `basic` flag. Falling through to a literal `false`
             // classified every NPC skill as Advanced and blocked even Basic ones (#476).
-            // Resolve from the canonical SKILL_DEFINITIONS catalog instead — the same
-            // single source the character schema is built from.
-            const catalogSkill = rollKey !== null && rollKey !== '' ? SKILL_DEFINITIONS[rollKey] : undefined;
-            const isBasic = skillItem?.system?.isBasic ?? actorSkill?.basic ?? (catalogSkill === undefined ? false : !catalogSkill.advanced);
+            // Resolve from SkillKeyHelper.SKILL_TYPES instead, which is itself derived from
+            // the canonical SKILL_DEFINITIONS catalog (#273) — so the fact still lives in
+            // exactly one place, reached through the helpers layer rather than importing a
+            // DataModel into applications/ (3-layer rule).
+            const catalogAdvanced = rollKey !== null && rollKey !== '' ? SkillKeyHelper.SKILL_TYPES[rollKey] : undefined;
+            const isBasic = skillItem?.system?.isBasic ?? actorSkill?.basic ?? (catalogAdvanced === undefined ? false : !catalogAdvanced);
 
             const charOverride = this._charOverride;
             const effectiveChar = charOverride ?? listedChar;
