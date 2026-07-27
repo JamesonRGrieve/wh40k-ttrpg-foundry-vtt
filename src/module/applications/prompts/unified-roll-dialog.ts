@@ -10,6 +10,7 @@
  * - Auto Roll for digital rolling
  */
 
+import { SKILL_DEFINITIONS } from '../../data/shared/skill-definitions.ts';
 import type { ActionData } from '../../rolls/action-data.ts';
 import type { RollData, RollModifierComponent } from '../../rolls/roll-data.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
@@ -566,7 +567,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 | { system?: { altCharacteristics?: string[]; isBasic?: boolean } }
                 | undefined;
             const altCharacteristics = Array.isArray(skillItem?.system?.altCharacteristics) ? skillItem.system.altCharacteristics : [];
-            const isBasic = skillItem?.system?.isBasic ?? actorSkill?.basic ?? false;
+            // NPCs hold skills as the `system.skills` value-map and carry NO skill Items
+            // (src/packs/CLAUDE.md: "Skills are not items"), so `skillItem` is undefined and
+            // the NPC map entry has no `basic` flag. Falling through to a literal `false`
+            // classified every NPC skill as Advanced and blocked even Basic ones (#476).
+            // Resolve from the canonical SKILL_DEFINITIONS catalog instead — the same
+            // single source the character schema is built from.
+            const catalogSkill = rollKey !== null && rollKey !== '' ? SKILL_DEFINITIONS[rollKey] : undefined;
+            const isBasic = skillItem?.system?.isBasic ?? actorSkill?.basic ?? (catalogSkill === undefined ? false : !catalogSkill.advanced);
 
             const charOverride = this._charOverride;
             const effectiveChar = charOverride ?? listedChar;
@@ -578,7 +586,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // baked into skillCurrent at actor prepare time (creature.ts
             // line 999, `usesAptitudes === true ? charTotal - 20 : …`).
             // Only RT/legacy systems block untrained Advanced skills.
-            const actorGameSystem = (sourceActor as { system?: { gameSystem?: string } } | null | undefined)?.system?.gameSystem ?? '';
+            // `gameSystem` is a schema field on character/vehicle but NOT on npc — on the
+            // NPC DataModel it exists only as a static on the model class. Reading just the
+            // instance path yielded '' for every NPC, so isAptitudeSystem went false and
+            // DH2 NPCs inherited RT/DH1's "cannot attempt untrained" block (#476).
+            // eslint-disable-next-line no-restricted-syntax -- boundary: the actor's system DataModel exposes gameSystem either as a schema field or as a static on its constructor; neither is on the shared union
+            const actorSystemData = (sourceActor as { system?: { gameSystem?: string; constructor?: unknown } } | null | undefined)?.system;
+            const staticGameSystem = (actorSystemData?.constructor as { gameSystem?: string } | undefined)?.gameSystem;
+            const actorGameSystem = actorSystemData?.gameSystem ?? staticGameSystem ?? '';
             const isAptitudeSystem =
                 actorGameSystem === 'dh2' ||
                 actorGameSystem === 'dh1' ||
