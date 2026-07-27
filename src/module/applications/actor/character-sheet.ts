@@ -107,6 +107,7 @@ import {
 } from '../../rules/possession.ts';
 import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
 import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
+import { getArmourAPForLocation, type ArmourSystemLike } from '../../utils/armour-calculator.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { errorMessage } from '../../utils/error-message.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
@@ -2942,18 +2943,14 @@ export default class CharacterSheet extends BaseActorSheet {
             const armourData = (system.armour as Record<string, Record<string, unknown>> | undefined)?.[locationConfig.key] ?? {};
             const coveringItems = equippedArmour
                 .map((item) => {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; AP helper methods are not on the schema type
-                    const itemSystem = item.system as Record<string, unknown>;
-                    const getEff = itemSystem['getEffectiveAPForLocation'];
-                    const getAp = itemSystem['getAPForLocation'];
-                    /* eslint-disable no-restricted-syntax -- boundary: getEff/getAp/armourPoints retrieved as unknown from DataModel; casts needed to invoke or access */
-                    const ap =
-                        typeof getEff === 'function'
-                            ? Number((getEff as (k: string) => unknown)(locationConfig.key) ?? 0)
-                            : typeof getAp === 'function'
-                            ? Number((getAp as (k: string) => unknown)(locationConfig.key) ?? 0)
-                            : Number((itemSystem['armourPoints'] as Record<string, unknown> | undefined)?.[locationConfig.key] ?? 0);
-                    /* eslint-enable no-restricted-syntax */
+                    // Resolve AP through the shared helper so the effective-AP → AP →
+                    // armourPoints ladder lives in exactly one place, and — critically —
+                    // so the DataModel methods are invoked *as methods*. Reading them off
+                    // the model and calling them detached leaves `this` undefined, which
+                    // threw inside `armour.ts` getEffectiveAPForLocation and took the whole
+                    // sheet render down (#486).
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is the shared item union; the AP helpers are DataModel methods absent from that union
+                    const ap = getArmourAPForLocation(item.system as ArmourSystemLike, locationConfig.key);
                     if (ap <= 0) return null;
 
                     return {
