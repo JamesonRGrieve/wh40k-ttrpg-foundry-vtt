@@ -90,7 +90,9 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
         position: {
             top: 8,
             left: 130,
-            width: 240,
+            // 260 (not 240) so the GM advance row fits amount + unit select + button
+            // without the select collapsing under its label (#473).
+            width: 260,
             // V2 accepts 'auto' for height but the upstream type is `number`; the
             // string is the documented sentinel for content-driven sizing.
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V2 accepts the literal 'auto' though the upstream type narrows to number.
@@ -128,6 +130,8 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
 
     static #settingHookRegistered = false;
 
+    static #sceneControlRegistered = false;
+
     /**
      * Show the singleton widget, rendering it if not already open. Registers the
      * `updateSetting` listener once so re-anchoring inception on any client keeps
@@ -149,6 +153,40 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
         }
         void instance.render(true);
         return instance;
+    }
+
+    /**
+     * Register the scene-control button that reopens the widget.
+     *
+     * The window frame supplies a header close button, but `show()` was only ever
+     * called once on `ready` — so closing the panel was a one-way door and the only
+     * way back was reloading the world (#487). This gives it a discoverable, always
+     * present affordance. Available to players as well as GMs: the counter is
+     * table-visible and the advance controls are gated inside the template.
+     *
+     * `show()` is singleton-safe, so re-invoking while open re-renders/focuses the
+     * existing instance rather than stacking duplicates, and it re-establishes the
+     * `updateSetting` subscription.
+     */
+    static registerSceneControl(): void {
+        if (WorldTimeWidget.#sceneControlRegistered) return;
+        WorldTimeWidget.#sceneControlRegistered = true;
+        Hooks.on('getSceneControlButtons', (controls: Record<string, foundry.applications.ui.SceneControls.Control>) => {
+            const bar = controls['tokens'];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard; controls['tokens'] may be undefined at runtime
+            if (bar === undefined) return;
+            bar.tools['wh40kWorldTime'] = {
+                name: 'wh40kWorldTime',
+                title: 'WH40K.WorldTime.Title',
+                icon: 'fa-solid fa-hourglass-half',
+                visible: true,
+                onChange: () => {
+                    WorldTimeWidget.show();
+                },
+                button: true,
+                order: Object.keys(bar.tools).length,
+            };
+        });
     }
 
     /** Re-render the widget if it is open (no-op otherwise). Called when the world
