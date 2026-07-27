@@ -10,7 +10,7 @@
  * - Auto Roll for digital rolling
  */
 
-import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
+import { isBasicSkill } from '../../helpers/skill-classification.ts';
 import type { ActionData } from '../../rolls/action-data.ts';
 import type { RollData, RollModifierComponent } from '../../rolls/roll-data.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
@@ -571,12 +571,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // (src/packs/CLAUDE.md: "Skills are not items"), so `skillItem` is undefined and
             // the NPC map entry has no `basic` flag. Falling through to a literal `false`
             // classified every NPC skill as Advanced and blocked even Basic ones (#476).
-            // Resolve from SkillKeyHelper.SKILL_TYPES instead, which is itself derived from
-            // the canonical SKILL_DEFINITIONS catalog (#273) — so the fact still lives in
-            // exactly one place, reached through the helpers layer rather than importing a
-            // DataModel into applications/ (3-layer rule).
-            const catalogAdvanced = rollKey !== null && rollKey !== '' ? SkillKeyHelper.SKILL_TYPES[rollKey] : undefined;
-            const isBasic = skillItem?.system?.isBasic ?? actorSkill?.basic ?? (catalogAdvanced === undefined ? false : !catalogAdvanced);
+            // Resolve from the catalog via the leaf `isBasicSkill` helper — the fact still
+            // lives once in SKILL_DEFINITIONS (#273), reached without importing a DataModel
+            // into applications/ (3-layer rule) and without SkillKeyHelper's global.d.ts
+            // edge, which closes 9 dependency cycles.
+            const catalogBasic = rollKey !== null && rollKey !== '' ? isBasicSkill(rollKey) : undefined;
+            const isBasic = skillItem?.system?.isBasic ?? actorSkill?.basic ?? catalogBasic ?? false;
 
             const charOverride = this._charOverride;
             const effectiveChar = charOverride ?? listedChar;
