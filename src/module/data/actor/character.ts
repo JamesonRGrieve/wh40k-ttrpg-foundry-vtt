@@ -73,13 +73,23 @@ const GENERATION_CHARACTERISTICS = [
  * Extends CreatureTemplate with character-specific fields like bio, experience, origin path.
  * @extends {CreatureTemplate}
  */
-/** Shape of a single acquisition entry in rogueTrader.acquisitions. */
+/**
+ * Shape of a single acquisition entry in rogueTrader.acquisitions.
+ *
+ * `uuid` is what turns a row from a hand-typed note into a record of a real
+ * acquisition (#496): when set, the row was written by an actual acquisition
+ * test and points at the item that changed hands, so the name and availability
+ * are read from that item rather than retyped. Blank on legacy and hand-entered
+ * rows, which keep working — this adds the link the list was standing in for
+ * rather than deleting authored data out from under live worlds.
+ */
 interface AcquisitionEntry {
     name: string;
     availability: string;
     modifier: number;
     notes: string;
     acquired: boolean;
+    uuid: string;
 }
 
 /** Shape of a background ability entry. */
@@ -471,6 +481,9 @@ export default class CharacterData extends CreatureTemplate {
                         modifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
                         notes: new fields.StringField({ required: false, blank: true }),
                         acquired: new fields.BooleanField({ required: true, initial: false }),
+                        // Set when the row records a REAL acquisition (#496) —
+                        // the item that changed hands. Blank on hand-entered rows.
+                        uuid: new fields.StringField({ required: false, blank: true }),
                     }),
                     { required: true, initial: [] },
                 ),

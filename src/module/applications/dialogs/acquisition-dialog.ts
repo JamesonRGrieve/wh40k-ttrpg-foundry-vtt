@@ -154,7 +154,19 @@ const SCALE_MOD_VALUES: Record<ScaleKey, number> = {
 interface RogueTraderSystem {
     rogueTrader?: {
         profitFactor?: { current: number; starting: number };
+        acquisitions?: AcquisitionRow[];
     };
+}
+
+/** A row on the Dynasty tab's acquisitions list (`system.rogueTrader.acquisitions`). */
+interface AcquisitionRow {
+    name: string;
+    availability: string;
+    modifier: number;
+    notes: string;
+    acquired: boolean;
+    /** The item that changed hands, when this row records a real acquisition (#496). */
+    uuid: string;
 }
 
 interface AcquireableItemSystem {
@@ -542,7 +554,12 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
         // On success, add item to inventory
         if (success && this.item) {
-            await this.actor.createEmbeddedDocuments('Item', [this.item]);
+            // `.at(0)` rather than a destructure: it is typed `T | undefined`
+            // unconditionally, so tsc and eslint agree the value is nullable
+            // instead of disagreeing across the two tsconfig parser settings.
+            const created = (await this.actor.createEmbeddedDocuments('Item', [this.item])).at(0);
+            const modifier = context.baseModifier + context.commonTotal + this.customModifier;
+            await this._recordAcquisition(this.item, modifier, created?.uuid ?? '');
             ui.notifications.info(game.i18n.format('WH40K.AcquisitionScale.Notification.Acquired', { name: this.item.name }));
         }
 
@@ -578,6 +595,38 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {AcquisitionHistoryEntry} data  Acquisition data
      * @private
      */
+    /**
+     * Record a successful acquisition on the Dynasty tab's list as a REAL row
+     * (#496) — one that points at the item that changed hands.
+     *
+     * The list used to be hand-typed: the player wrote the item's *name*, its
+     * availability and the modifier by hand, so the row could disagree with the
+     * item actually acquired, and "acquired" was a checkbox rather than a
+     * possession. Writing it here, from the item and the modifier the roll
+     * actually used, removes that parallel hand-kept record.
+     * @param {WH40KItem} item  The item acquired.
+     * @param {number} modifier  The total modifier the test used.
+     * @param {string} uuid  The created owned item's uuid.
+     * @returns {Promise<void>}
+     */
+    async _recordAcquisition(item: WH40KItem, modifier: number, uuid: string): Promise<void> {
+        const rogueTrader = (this.actor.system as RogueTraderSystem).rogueTrader;
+        // Non-RT actors have no Dynasty tab and no acquisitions list; the
+        // acquisition still happened, it just has nowhere on-sheet to land.
+        if (rogueTrader?.acquisitions === undefined) return;
+        const itemSys = item.system as AcquireableItemSystem;
+        const rows = [...rogueTrader.acquisitions];
+        rows.push({
+            name: item.name,
+            availability: itemSys.availability ?? '',
+            modifier,
+            notes: '',
+            acquired: true,
+            uuid,
+        });
+        await this.actor.update({ 'system.rogueTrader.acquisitions': rows });
+    }
+
     async _logAcquisition(data: AcquisitionHistoryEntry): Promise<void> {
         const history = (this.actor.getFlag('wh40k-rpg', 'acquisitionHistory') as AcquisitionHistoryEntry[] | undefined) ?? [];
         history.push(data);

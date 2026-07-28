@@ -17,16 +17,33 @@
         </div>
         {{#each system.rogueTrader.acquisitions as |acquisition index|}}
             <div class="tw-grid tw-grid-cols-[2fr_1fr_1fr_1fr_2fr_auto] tw-items-center">
+                {{!-- A row with a `uuid` records a REAL acquisition (#496): it was
+                     written by an actual test and points at the item that changed
+                     hands, so its name and availability are READ from that item
+                     rather than retyped — which is what stops the row disagreeing
+                     with the item. Rows without one are hand-entered or legacy and
+                     keep their free-text inputs. --}}
                 <div class="tw-px-[4px] tw-py-[6px]">
-                    <input class="tw-w-full" type="text" name="system.rogueTrader.acquisitions.{{index}}.name" value="{{acquisition.name}}" />
+                    {{#if acquisition.uuid}}
+                        <a class="tw-flex tw-items-center tw-gap-1.5 tw-no-underline tw-text-[color:var(--wh40k-text-primary)]" data-action="openAcquisition" data-uuid="{{acquisition.uuid}}">
+                            <i class="fas fa-link tw-text-[0.7em] tw-opacity-60"></i>
+                            <span>{{acquisition.name}}</span>
+                        </a>
+                    {{else}}
+                        <input class="tw-w-full" type="text" name="system.rogueTrader.acquisitions.{{index}}.name" value="{{acquisition.name}}" />
+                    {{/if}}
                 </div>
                 <div class="tw-px-[4px] tw-py-[6px]">
-                    <input
-                        class="tw-w-full"
-                        type="text"
-                        name="system.rogueTrader.acquisitions.{{index}}.availability"
-                        value="{{acquisition.availability}}"
-                    />
+                    {{#if acquisition.uuid}}
+                        <span class="tw-text-[0.9em] tw-opacity-80">{{acquisition.availability}}</span>
+                    {{else}}
+                        <input
+                            class="tw-w-full"
+                            type="text"
+                            name="system.rogueTrader.acquisitions.{{index}}.availability"
+                            value="{{acquisition.availability}}"
+                        />
+                    {{/if}}
                 </div>
                 <div class="tw-px-[4px] tw-py-[6px]">
                     <input
