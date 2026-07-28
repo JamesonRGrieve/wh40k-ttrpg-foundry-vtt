@@ -1,5 +1,5 @@
 import { SYSTEM_ID } from '../constants.ts';
-import { disembark, embark, slaveOccupantTokens } from '../rules/vehicle-embark.ts';
+import { disembark, embark, embarkOnDropOnto, slaveOccupantTokens } from '../rules/vehicle-embark.ts';
 import { readAboard } from '../rules/vehicle-occupancy.ts';
 import { hasInteriorScene, isVehicleActor, openInteriorScene, type SceneLookup } from '../vehicle/vehicle-interior.ts';
 
@@ -155,7 +155,14 @@ export class TokenDocumentWH40K extends TokenDocument {
                 x: typeof changed.x === 'number' ? changed.x : undefined,
                 y: typeof changed.y === 'number' ? changed.y : undefined,
             };
-            void slaveOccupantTokens(doc, changes, doc.parent as Parameters<typeof slaveOccupantTokens>[2]);
+            const scene = doc.parent as Parameters<typeof slaveOccupantTokens>[2];
+            /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry types `setFlag`/`unsetFlag` over the DECLARED flag scopes, which is not assignable to the plain `(scope: string, …)` shape the embark module works against; one cast where the document crosses into it, as with `TokenWithFlags` above */
+            const token = doc as unknown as Parameters<typeof slaveOccupantTokens>[0];
+            void slaveOccupantTokens(token, changes, scene);
+            // The second embark gesture: dragging a character onto a vehicle.
+            // Same pass, and mutually exclusive with the above — a token is
+            // either the vehicle being moved or a character being dropped.
+            void embarkOnDropOnto(token, changes, scene);
         });
     }
 

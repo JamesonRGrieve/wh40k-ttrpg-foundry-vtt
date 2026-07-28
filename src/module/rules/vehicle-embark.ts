@@ -21,6 +21,7 @@ import {
     canEmbark,
     capacityOf,
     defaultRole,
+    droppedOnto,
     movementDelta,
     type OccupantLike,
     occupantsOf,
@@ -109,13 +110,20 @@ export async function disembark(actor: EmbarkableActor): Promise<boolean> {
     return true;
 }
 
-/** The token surface the slaving update reads and writes. */
+/** The token surface the slaving and drop-detection paths read. */
 interface SlavableToken {
     readonly id: string | null;
     readonly x: number;
     readonly y: number;
-    /** The token's actor. Typed as the vehicle shape because the guard tests it. */
-    readonly actor?: (OccupantLike & VehicleActorLike & { uuid?: string | null | undefined }) | null | undefined;
+    /** Footprint in scene pixels, for the drop-onto test. */
+    readonly width: number;
+    readonly height: number;
+    /**
+     * The token's actor. Typed as BOTH shapes: the same token may be the vehicle
+     * being moved (slaving) or the character being dropped onto one (embark), and
+     * the guards discriminate at runtime — so neither path needs a cast.
+     */
+    readonly actor?: (EmbarkableActor & VehicleActorish) | null | undefined;
 }
 
 /** The scene surface the slaving update walks. */
@@ -167,6 +175,57 @@ export async function slaveOccupantTokens(
 
     await scene.updateEmbeddedDocuments('Token', updates);
     return updates.length;
+}
+
+/**
+ * Embark a character whose move landed it on top of a vehicle (#508).
+ *
+ * The second gesture the issue asks for, alongside the token-HUD control.
+ * Deliberately conservative about what counts as intent:
+ *
+ * - The **mover's centre** must land inside the vehicle's footprint. Any-overlap
+ *   would embark a character who merely clipped a Chimera's corner while running
+ *   past.
+ * - It never moves a character between vehicles. Someone already aboard has to
+ *   disembark first, so a mis-drop cannot silently reseat the driver.
+ * - It never embarks a vehicle into a vehicle.
+ *
+ * Runs on the same `preUpdateToken` pass as the slaving, which is why the slaved
+ * occupants of a moving vehicle do not trigger it: their move is authored by us,
+ * and their centres land on the vehicle they are already aboard.
+ * @param {SlavableToken} moverToken  The token being moved (pre-update).
+ * @param {{x?: number, y?: number}} changes  The update payload.
+ * @param {SlavingScene | null | undefined} scene  The scene the token is on.
+ * @returns {Promise<boolean>}  True when the mover was embarked.
+ */
+export async function embarkOnDropOnto(
+    moverToken: SlavableToken,
+    changes: { x?: number | undefined; y?: number | undefined },
+    scene: SlavingScene | null | undefined,
+): Promise<boolean> {
+    const mover = moverToken.actor;
+    if (scene == null || mover == null) return false;
+    // A vehicle does not board another vehicle, and someone already aboard must
+    // disembark deliberately rather than being reseated by a stray drag.
+    if (isVehicleActor(mover) || readAboard(mover) !== null) return false;
+
+    const delta = movementDelta({ x: moverToken.x, y: moverToken.y }, changes);
+    if (delta === null) return false;
+
+    const destination = {
+        ...slavedPosition({ x: moverToken.x, y: moverToken.y }, delta),
+        width: moverToken.width,
+        height: moverToken.height,
+    };
+
+    for (const token of scene.tokens) {
+        if (token.id === moverToken.id) continue;
+        const candidate = token.actor;
+        if (candidate == null || !isVehicleActor(candidate)) continue;
+        if (!droppedOnto(destination, { x: token.x, y: token.y, width: token.width, height: token.height })) continue;
+        return embark(mover, candidate);
+    }
+    return false;
 }
 
 /**

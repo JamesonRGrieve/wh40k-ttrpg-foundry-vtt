@@ -210,3 +210,45 @@ export function movementDelta(
     if (dx === 0 && dy === 0) return null;
     return { x: dx, y: dy };
 }
+
+/** A token's rectangle in scene pixels. */
+export interface TokenRect {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+/** The centre of a token rectangle. */
+export function centreOf(rect: TokenRect): { x: number; y: number } {
+    return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+}
+
+/**
+ * Whether a point lies inside a rectangle.
+ *
+ * Half-open on the far edges so two tokens sharing a border cannot both claim a
+ * point that sits exactly on it — otherwise a character dropped on the seam
+ * between two vehicles embarks into whichever happened to be iterated first.
+ * @param {TokenRect} rect  The rectangle.
+ * @param {{x: number, y: number}} point  The point.
+ * @returns {boolean}  True when the point is inside.
+ */
+export function containsPoint(rect: TokenRect, point: { x: number; y: number }): boolean {
+    return point.x >= rect.x && point.x < rect.x + rect.width && point.y >= rect.y && point.y < rect.y + rect.height;
+}
+
+/**
+ * Whether a move should be read as "dropped onto this vehicle".
+ *
+ * The test is the MOVER'S CENTRE landing inside the vehicle's footprint, not any
+ * overlap: a character clipping the corner of a Chimera while running past is a
+ * move, not an embarkation, and treating overlap as intent would embark people
+ * who were only walking by.
+ * @param {TokenRect} destination  Where the character token is landing.
+ * @param {TokenRect} vehicle  The vehicle token's footprint.
+ * @returns {boolean}  True when the drop lands on the vehicle.
+ */
+export function droppedOnto(destination: TokenRect, vehicle: TokenRect): boolean {
+    return containsPoint(vehicle, centreOf(destination));
+}

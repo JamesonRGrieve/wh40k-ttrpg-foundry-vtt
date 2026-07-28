@@ -3,13 +3,17 @@ import {
     ABOARD_FLAG,
     canEmbark,
     capacityOf,
+    centreOf,
+    containsPoint,
     defaultRole,
+    droppedOnto,
     movementDelta,
     type Occupant,
     type OccupantLike,
     occupantsOf,
     readAboard,
     slavedPosition,
+    type TokenRect,
     unfilledCrew,
     type VehicleRole,
 } from './vehicle-occupancy.ts';
@@ -165,5 +169,39 @@ describe('token slaving', () => {
     it('handles a single-axis move, where the other coordinate is absent from the update', () => {
         expect(movementDelta({ x: 100, y: 100 }, { x: 140 })).toEqual({ x: 40, y: 0 });
         expect(movementDelta({ x: 100, y: 100 }, { y: 60 })).toEqual({ x: 0, y: -40 });
+    });
+});
+
+describe('droppedOnto — the drag-onto-vehicle gesture (#508)', () => {
+    /** A Chimera occupying a 2×2 block of 100px squares at the origin. */
+    const chimeraRect = { x: 0, y: 0, width: 200, height: 200 };
+    /** A 100px character token. */
+    const rider = (x: number, y: number): TokenRect => ({ x, y, width: 100, height: 100 });
+
+    it('reads a drop whose centre lands inside the vehicle as boarding it', () => {
+        expect(droppedOnto(rider(50, 50), chimeraRect)).toBe(true);
+    });
+
+    it('does NOT read a corner clip as boarding — running past is not embarking', () => {
+        // The mover's centre is at (-50, -50): it overlaps the Chimera's corner
+        // but is mostly outside. Any-overlap detection would embark a character
+        // who merely ran past, which is the whole reason the test is on the centre.
+        expect(droppedOnto(rider(-100, -100), chimeraRect)).toBe(false);
+    });
+
+    it('is false for a drop entirely clear of the vehicle', () => {
+        expect(droppedOnto(rider(500, 500), chimeraRect)).toBe(false);
+    });
+
+    it('treats the far edge as outside, so a shared border is claimed by one vehicle only', () => {
+        // Centre exactly on the far edge belongs to the NEXT square, not this one —
+        // otherwise a character dropped on the seam between two vehicles embarks
+        // into whichever happened to be iterated first.
+        expect(containsPoint(chimeraRect, { x: 200, y: 100 })).toBe(false);
+        expect(containsPoint(chimeraRect, { x: 0, y: 0 })).toBe(true);
+    });
+
+    it('centres a token on its own footprint', () => {
+        expect(centreOf({ x: 40, y: 60, width: 100, height: 200 })).toEqual({ x: 90, y: 160 });
     });
 });
