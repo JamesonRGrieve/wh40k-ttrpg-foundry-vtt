@@ -37,7 +37,13 @@
          muted text so the eye reads it as a unit (#241). --}}
     <span class="tw-flex tw-self-center tw-min-w-0 tw-items-baseline tw-gap-0.5">
         <span class="tw-shrink-0 tw-text-[1.05rem] tw-text-[var(--wh40k-text-muted,#888)] tw-leading-none">(</span>
-        <input size="{{inputSize system.bio.playerName 8}}" class="tw-[field-sizing:content] !tw-w-auto tw-min-w-[3rem] tw-max-w-[200px] tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[0.95rem] tw-italic tw-text-[var(--wh40k-text-medium,#666)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="{{localize 'WH40K.Character.Player'}}" />
+        {{!-- text-center so the name sits BETWEEN the parens rather than drifting
+             left away from the `)`, and a 2ch floor (not 3rem) so the parens
+             actually hug short names — the wider floor reserved space the content
+             never used, which is what stopped it hugging (#249). `field-sizing:content`
+             sizes to the placeholder when empty; `size` is the fallback for engines
+             without it. --}}
+        <input size="{{inputSize system.bio.playerName 8}}" class="tw-[field-sizing:content] !tw-w-auto tw-min-w-[2ch] tw-max-w-[200px] tw-text-center tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[0.95rem] tw-italic tw-text-[var(--wh40k-text-medium,#666)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="{{localize 'WH40K.Character.Player'}}" />
         <span class="tw-shrink-0 tw-text-[1.05rem] tw-text-[var(--wh40k-text-muted,#888)] tw-leading-none">)</span>
     </span>
     {{/if}}
