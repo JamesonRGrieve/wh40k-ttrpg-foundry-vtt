@@ -107,6 +107,7 @@ import { EventTracker } from './managers/event-tracker.ts';
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
 import { registerActionEconomy } from './rules/action-economy.ts';
+import { ensureInquisitionArmoury } from './rules/armoury.ts';
 import { registerCombatTurnHooks } from './rules/combat-turn-hooks.ts';
 import { conditionStatusEffects } from './rules/condition-registry.ts';
 import { WH40K } from './rules/config.ts';
@@ -916,6 +917,9 @@ export class HooksManager {
         // Foundry serves to every authenticated client). On a player client the
         // document is simply absent, which is the intended outcome.
         await EventTracker.loadGraph();
+        // #496: spawn the Inquisition Armoury when a DH2 campaign runs in
+        // homebrew requisition mode. Idempotent and GM-only; a no-op elsewhere.
+        await ensureInquisitionArmoury();
 
         // Initialize rich tooltip system. Capture game.wh40k after the awaits above
         // so the assignment target is the current namespace, not a pre-await read.
