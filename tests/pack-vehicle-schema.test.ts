@@ -17,28 +17,33 @@
  */
 
 import { describe, expect, it } from 'vitest';
-// eslint-disable-next-line no-restricted-syntax -- boundary: validate-schema.cjs is untyped CommonJS shipped alongside the packs
-import validator from '../src/packs/validate-schema.cjs';
+import { type SchemaWarning, validateDocument } from '../src/packs/validate-schema.cjs';
 
-interface Warning {
-    rule: string;
-    file: string;
-    detail: string;
+/**
+ * An authored pack `system` block. Deliberately open: feeding the validator keys
+ * the schema does NOT declare is exactly what these fixtures exercise, so a
+ * closed interface here would make the regression untestable.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: pack `_source` documents are authored JSON whose openness is the thing under test
+type PackSystem = Record<string, unknown>;
+
+/** A pack document as authored in `_source/*.json`. */
+interface PackDocument {
+    name: string;
+    _id: string;
+    type: string;
+    system: PackSystem;
 }
 
-const { validateDocument } = validator as {
-    validateDocument: (doc: unknown, relFile: string, warnings: Warning[]) => void;
-};
-
 /** Run one document through the validator and return the rules it tripped. */
-function rulesFor(doc: unknown): string[] {
-    const warnings: Warning[] = [];
+function rulesFor(doc: PackDocument): string[] {
+    const warnings: SchemaWarning[] = [];
     validateDocument(doc, 'test.json', warnings);
     return warnings.map((w) => w.rule);
 }
 
 /** A minimally-valid terracraft: statted, and using only schema fields. */
-function craft(system: Record<string, unknown> = {}): unknown {
+function craft(system: PackSystem = {}): PackDocument {
     return {
         name: 'Test Craft',
         _id: 'TestCraftId00001',
@@ -75,8 +80,7 @@ describe('vehicle-field-not-in-schema', () => {
     });
 
     it('accepts the aircraft-only altitude fields on an aircraft', () => {
-        const air = craft({ altitude: 'low', ceiling: 'high' });
-        (air as { type: string }).type = 'dh2-aircraft';
+        const air = { ...craft({ altitude: 'low', ceiling: 'high' }), type: 'dh2-aircraft' };
         expect(rulesFor(air)).not.toContain('vehicle-field-not-in-schema');
     });
 
@@ -92,9 +96,7 @@ describe('vehicle-field-not-in-schema', () => {
 
 describe('vehicle-enum-out-of-range', () => {
     it('passes the schema choices', () => {
-        expect(rulesFor(craft({ type: 'tank', locomotion: 'tracked', vehicleClass: 'ground' }))).not.toContain(
-            'vehicle-enum-out-of-range',
-        );
+        expect(rulesFor(craft({ type: 'tank', locomotion: 'tracked', vehicleClass: 'ground' }))).not.toContain('vehicle-enum-out-of-range');
     });
 
     it("flags a classification outside the choices — 103 craft said 'ground'", () => {
