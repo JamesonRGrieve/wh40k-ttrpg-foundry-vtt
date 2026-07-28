@@ -1375,6 +1375,21 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
      * The payload is the genuine Foundry update boundary — a flattened map of
      * dotted paths to mixed values; `payload` accepts that documented shape.
      */
+    /**
+     * Total of every `.cost` on the character — the value the DERIVE sums into
+     * `experience.used` (#509). The reset no longer writes `used` itself, so this
+     * is what "the character owes nothing" actually means now.
+     */
+    function totalStampedCost(system: FakeSystem): number {
+        let total = 0;
+        for (const c of Object.values(system.characteristics)) total += c.cost;
+        for (const s of Object.values(system.skills)) {
+            total += s.cost;
+            for (const e of s.entries ?? []) total += e.cost ?? 0;
+        }
+        return total;
+    }
+
     function applyUpdatePayload(system: FakeSystem, payload: Record<string, FakeUpdateValue>): void {
         const root: MutableTree = system;
         for (const [path, value] of Object.entries(payload)) {
@@ -1467,9 +1482,11 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
 
         await resetExperienceAndAdvancements(host);
 
-        // Experience is fully reset to a clean slate.
+        // Experience is fully reset to a clean slate. `used` is DERIVED from the
+        // stamped costs (#509), so a zero spend means every cost is zero — the
+        // reset no longer writes `used`, because the derive would discard it.
         expect(system.experience.total).toBe(1000);
-        expect(system.experience.used).toBe(0);
+        expect(totalStampedCost(system)).toBe(0);
 
         // Every advance AND its paired cost is zeroed — no orphaned `.cost`
         // left to corrupt calculatedTotal / the Advancement Dialog re-pricing.
@@ -1493,7 +1510,8 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
 
         await resetExperienceAndAdvancements(host);
 
-        const available = system.experience.total - system.experience.used;
+        // The derived spend is zero, so the whole starting allowance is available.
+        const available = system.experience.total - totalStampedCost(system);
         expect(available).toBe(1000);
         expect(available).toBeGreaterThanOrEqual(0);
     });
@@ -1507,11 +1525,12 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
 
         await expect(resetExperienceAndAdvancements(host)).rejects.toThrow();
 
-        // The experience reset is now its own update committed FIRST, so it
-        // landed before the entries write threw: available is never negative.
+        // The experience reset is now its own update committed FIRST, so the new
+        // `total` landed before the entries write threw. The costs did NOT get
+        // swept (that write is what threw), so this asserts only the half that
+        // committed — the balance cannot go negative because the derive floors
+        // it and reports any deficit as `overspent` (#509).
         expect(system.experience.total).toBe(1000);
-        expect(system.experience.used).toBe(0);
-        expect(system.experience.total - system.experience.used).toBeGreaterThanOrEqual(0);
     });
 
     it('is idempotent — re-applying the reset on an already-reset character changes nothing', async () => {
@@ -1523,22 +1542,26 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
         await resetExperienceAndAdvancements(host);
 
         expect(system).toEqual(firstPass);
-        expect(system.experience).toEqual({ total: 1000, used: 0 });
+        expect(system.experience.total).toBe(1000);
+        expect(totalStampedCost(system)).toBe(0);
     });
 
-    it('defensively clamps used <= total if some external state slipped through', async () => {
+    it('needs no defensive used-clamp, because the reset zeroes what the spend is derived FROM', async () => {
+        // The old step 3 clamped `used` back to `total` if some external state
+        // slipped a larger value through. That clamp wrote a DERIVED field, so it
+        // was a no-op the next prepare discarded (#509) — it only appeared to work
+        // because this test's mock host never runs the derive.
+        //
+        // The real invariant is upstream: the reset zeroes every stamped cost, so
+        // the derived spend is 0 whatever `used` happened to hold. A stale `used`
+        // cannot survive a prepare.
         const system = generatedCharacter();
-        // The experience-reset write only partially lands (`used` dropped),
-        // leaving the stale 1500 against the reset total of 1000.
         const host = makeResetHost(system, { dropFirstUsedWrite: true });
 
         await resetExperienceAndAdvancements(host);
 
         expect(system.experience.total).toBe(1000);
-        // Clamp step pulled used back down to total — available is exactly 0,
-        // never negative ("nothing can be bought" no longer occurs).
-        expect(system.experience.used).toBeLessThanOrEqual(system.experience.total);
-        expect(system.experience.total - system.experience.used).toBeGreaterThanOrEqual(0);
+        expect(totalStampedCost(system)).toBe(0);
     });
 });
 

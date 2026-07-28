@@ -5,6 +5,7 @@
  * Provides validation and atomic updates to actor experience.
  */
 
+import { experienceBalance, fitsBudget } from '../data/shared/experience-math.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 type TransactionResult = {
@@ -31,6 +32,8 @@ type XPSummary = {
 type ExperienceLike = {
     total: number;
     used: number;
+    /** The derive's own figure; preferred over `used`, which may be stale. */
+    calculatedTotal?: number | undefined;
     spentCharacteristics: number;
     spentSkills: number;
     spentTalents: number;
@@ -46,6 +49,8 @@ export interface XpActorView {
         experience?: {
             total: number;
             used: number;
+            /** The derive's own figure; preferred over `used`, which may be stale. */
+            calculatedTotal?: number | undefined;
             spentCharacteristics?: number;
             spentSkills?: number;
             spentTalents?: number;
@@ -69,9 +74,21 @@ export interface XpActorView {
 export function getAvailableXP(actor: XpActorView): number {
     const experience = actor.system.experience;
     if (experience === undefined) return 0;
+    return experienceBalance(experience.total, derivedSpend(experience)).available;
+}
 
-    // Available = total - used
-    return experience.total - experience.used;
+/**
+ * The spend the DERIVE will produce, not the persisted `used`.
+ *
+ * `used` is recomputed from `calculatedTotal` on every prepare (#240), so a
+ * persisted value can be stale — imported from another world, or written by one
+ * of the paths that used to set it directly. Preferring `calculatedTotal` means
+ * the guard and the derive cannot disagree, which is the defect in #509.
+ * @param {object} experience  The actor's experience block.
+ * @returns {number}  XP spent, as the derive sees it.
+ */
+function derivedSpend(experience: { used: number; calculatedTotal?: number | undefined }): number {
+    return experience.calculatedTotal ?? experience.used;
 }
 
 /**
@@ -85,23 +102,36 @@ export function canAfford(actor: XpActorView, cost: number): boolean {
 }
 
 /**
- * Spend XP for an advancement
- * Updates the actor's experience.used field
+ * Authorize an XP spend. Does NOT write — the debit is the `.cost` the caller
+ * stamps on the purchased advancement, which the derive then sums (#509).
  *
- * @param {Actor} actor - The actor spending XP
- * @param {number} cost - The XP cost
- * @param {string} [reason] - Optional reason for the transaction (for logging)
- * @returns {Promise<TransactionResult>}
+ * This function used to `update({'system.experience.used': …})`. That write was
+ * a silent no-op: `prepareDerivedData` recomputes `used` from the stamped costs
+ * on the very next prepare and discards it. So the guard reserved nothing, and
+ * two purchases resolved against the same balance could both pass — which is how
+ * a character reached −200.
+ *
+ * Callers MUST re-verify after the debit lands (see {@link assertWithinBudget});
+ * an authorization is not a reservation.
+ * @param {WH40KBaseActorDocument} actor  The actor spending XP.
+ * @param {number} cost  The XP cost.
+ * @param {string} [reason]  Optional reason, for the log.
+ * @returns {Promise<TransactionResult>}  Whether the spend may proceed.
  */
-export async function spendXP(actor: WH40KBaseActorDocument, cost: number, reason = ''): Promise<TransactionResult> {
-    // Validate inputs
+// eslint-disable-next-line @typescript-eslint/require-await -- the async signature is the call-site contract; every caller awaits it alongside the document writes that follow
+export async function authorizeXPSpend(actor: WH40KBaseActorDocument, cost: number, reason = ''): Promise<TransactionResult> {
     if (cost <= 0) {
         return { success: false, error: 'Invalid cost: must be positive' };
     }
 
-    const available = getAvailableXP(actor);
+    const experience = actor.system.experience as ExperienceLike | undefined;
+    if (experience === undefined) {
+        return { success: false, error: game.i18n.localize('WH40K.Advancement.Error.TransactionFailed') };
+    }
 
-    if (available < cost) {
+    const spent = derivedSpend(experience);
+    const available = experienceBalance(experience.total, spent).available;
+    if (!fitsBudget(experience.total, spent, cost)) {
         return {
             success: false,
             error: game.i18n.format('WH40K.Advancement.Error.InsufficientXP', {
@@ -111,54 +141,53 @@ export async function spendXP(actor: WH40KBaseActorDocument, cost: number, reaso
         };
     }
 
-    try {
-        // Calculate new used value
-        const experience = actor.system.experience as ExperienceLike | undefined;
-        const currentUsed = experience?.used ?? 0;
-        const newUsed = currentUsed + cost;
-
-        // Update the actor
-        const updateData: Record<string, number> = {
-            'system.experience.used': newUsed,
-        };
-        await actor.update(updateData);
-
-        // Log the transaction
-        if (reason) {
-            game.wh40k.log(`XP Transaction: ${actor.name} spent ${cost} XP on ${reason}. Available: ${available - cost}`);
-        }
-
-        return {
-            success: true,
-            newAvailable: available - cost,
-        };
-    } catch (error) {
-        console.error('XP Transaction failed:', error);
-        return {
-            success: false,
-            error: game.i18n.localize('WH40K.Advancement.Error.TransactionFailed'),
-        };
+    if (reason) {
+        game.wh40k.log(`XP Transaction: ${actor.name} spent ${cost} XP on ${reason}. Available: ${available - cost}`);
     }
+    return { success: true, newAvailable: available - cost };
 }
 
 /**
- * Batch spend XP for multiple purchases
- * All purchases succeed or all fail (atomic)
+ * Verify the ledger is still solvent AFTER a purchase has landed, and report it
+ * when it is not.
  *
- * @param {Actor} actor - The actor spending XP
- * @param {Array<{cost: number, reason: string}>} purchases - Array of purchases
- * @returns {Promise<TransactionResult>}
+ * The authorization above is a check, not a reservation, so two clients — or a
+ * double-click that outruns a re-prepare — can both pass it. This is the
+ * backstop that catches that, at the point where the truth is known.
+ * @param {WH40KBaseActorDocument} actor  The actor, after the debit.
+ * @returns {number}  XP overspent, or 0 when solvent.
  */
-export async function spendXPBatch(actor: WH40KBaseActorDocument, purchases: XPPurchase[]): Promise<TransactionResult> {
+export function assertWithinBudget(actor: WH40KBaseActorDocument): number {
+    const experience = actor.system.experience as ExperienceLike | undefined;
+    if (experience === undefined) return 0;
+    return experienceBalance(experience.total, derivedSpend(experience)).overspent;
+}
+
+/**
+ * Authorize several XP spends together — all or nothing.
+ *
+ * Like {@link authorizeXPSpend}, this only checks; the debit is the costs the
+ * caller stamps. Checking the combined cost is what stops a batch that each
+ * individually fits but together does not.
+ * @param {WH40KBaseActorDocument} actor  The actor spending XP.
+ * @param {XPPurchase[]} purchases  The purchases.
+ * @returns {Promise<TransactionResult>}  Whether the batch may proceed.
+ */
+// eslint-disable-next-line @typescript-eslint/require-await -- the async signature is the call-site contract, matching authorizeXPSpend
+export async function authorizeXPSpendBatch(actor: WH40KBaseActorDocument, purchases: XPPurchase[]): Promise<TransactionResult> {
     if (purchases.length === 0) {
         return { success: false, error: 'Invalid arguments' };
     }
 
-    // Calculate total cost
     const totalCost = purchases.reduce((sum, p) => sum + p.cost, 0);
-    const available = getAvailableXP(actor);
+    const experience = actor.system.experience as ExperienceLike | undefined;
+    if (experience === undefined) {
+        return { success: false, error: game.i18n.localize('WH40K.Advancement.Error.TransactionFailed') };
+    }
 
-    if (available < totalCost) {
+    const spent = derivedSpend(experience);
+    const available = experienceBalance(experience.total, spent).available;
+    if (!fitsBudget(experience.total, spent, totalCost)) {
         return {
             success: false,
             error: game.i18n.format('WH40K.Advancement.Error.InsufficientXP', {
@@ -168,34 +197,12 @@ export async function spendXPBatch(actor: WH40KBaseActorDocument, purchases: XPP
         };
     }
 
-    try {
-        const experience = actor.system.experience as ExperienceLike | undefined;
-        const currentUsed = experience?.used ?? 0;
-        const newUsed = currentUsed + totalCost;
-
-        const updateData: Record<string, number> = {
-            'system.experience.used': newUsed,
-        };
-        await actor.update(updateData);
-
-        // Log all purchases
-        const reasons = purchases
-            .map((p: XPPurchase) => p.reason)
-            .filter(Boolean)
-            .join(', ');
-        game.wh40k.log(`XP Batch Transaction: ${actor.name} spent ${totalCost} XP on [${reasons}]. Available: ${available - totalCost}`);
-
-        return {
-            success: true,
-            newAvailable: available - totalCost,
-        };
-    } catch (error) {
-        console.error('XP Batch Transaction failed:', error);
-        return {
-            success: false,
-            error: game.i18n.localize('WH40K.Advancement.Error.TransactionFailed'),
-        };
-    }
+    const reasons = purchases
+        .map((p: XPPurchase) => p.reason)
+        .filter(Boolean)
+        .join(', ');
+    game.wh40k.log(`XP Batch Transaction: ${actor.name} spent ${totalCost} XP on [${reasons}]. Available: ${available - totalCost}`);
+    return { success: true, newAvailable: available - totalCost };
 }
 
 /**

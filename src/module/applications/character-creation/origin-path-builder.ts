@@ -5204,10 +5204,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Step 1 — experience totals, committed on their own so a validation
         // failure on the advance/entry sweep below can never leave `used`
         // pointing at the pre-origin spend (issue #214).
-        await this.actor.update({
-            'system.experience.total': startingXP,
-            'system.experience.used': 0,
-        });
+        // Only `total` is written. `used` is derived from the costs stamped on
+        // purchased advancements, so setting it here was a no-op the derive
+        // discarded — and step 2 below, which zeroes those costs, is what
+        // actually resets the spend (#509).
+        await this.actor.update({ 'system.experience.total': startingXP });
 
         // Step 2 — zero every advance AND its paired cost. Resetting `.advance`
         // without `.cost` left the spend accounting internally inconsistent.
@@ -5235,16 +5236,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
         await this.actor.update(update);
 
-        // Step 3 — defensive clamp. Even if some external state slipped a `used`
-        // above `total` past steps 1-2, available XP must never render negative
-        // ("nothing can be bought", issue #214). This is the symptom guard; the
-        // real correction is steps 1-2 keeping the accounting consistent.
-        const exp = (this.actor.system as { experience?: { total?: number; used?: number } } | undefined)?.experience;
-        const total = exp?.total ?? startingXP;
-        const used = exp?.used ?? 0;
-        if (used > total) {
-            await this.actor.update({ 'system.experience.used': total });
-        }
+        // The former step 3 — a defensive `used = total` clamp against a negative
+        // available (#214) — is gone. It wrote a derived field, so it was a no-op
+        // the next prepare discarded; the balance is now floored in the derive
+        // itself, with any deficit reported as `experience.overspent` (#509).
     }
 
     /**

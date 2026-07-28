@@ -16,7 +16,7 @@ import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { psychicPowerCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
 import { capitalize } from '../../utils/format.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
-import { canAfford, getAvailableXP, spendXP } from '../../utils/xp-transaction.ts';
+import { assertWithinBudget, authorizeXPSpend, canAfford, getAvailableXP } from '../../utils/xp-transaction.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ConfirmationDialog from './confirmation-dialog.ts';
 
@@ -312,6 +312,15 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     #activeDiscipline = 'all';
     #psyAvailableOnly = false;
     readonly #recentPurchases = new Set<string>();
+
+    /**
+     * True while a purchase is between its authorization and its debit (#509).
+     *
+     * XP is derived from the costs stamped on purchased advancements, so an
+     * authorization reserves nothing; without this, a double-click passes the
+     * same check twice and buys twice against one balance.
+     */
+    #purchaseInFlight = false;
 
     /* -------------------------------------------- */
     /*  Construction                                */
@@ -1335,13 +1344,32 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         });
         if (!confirmed) return;
 
-        const result = await spendXP(this.actor, opts.cost, opts.spendLabel ?? opts.displayName);
-        if (!result.success) {
-            ui.notifications.error(result.error ?? '');
-            return;
-        }
+        // Serialize purchases on this client. The authorization below is a
+        // CHECK, not a reservation — `experience.used` is derived, so nothing is
+        // debited until `apply()` stamps the cost — and a double-click could
+        // otherwise pass the same check twice before the first purchase landed
+        // (#509).
+        if (this.#purchaseInFlight) return;
+        this.#purchaseInFlight = true;
+        try {
+            const result = await authorizeXPSpend(this.actor, opts.cost, opts.spendLabel ?? opts.displayName);
+            if (!result.success) {
+                ui.notifications.error(result.error ?? '');
+                return;
+            }
 
-        await opts.apply();
+            await opts.apply();
+
+            // The debit has landed and the derive has run: if the ledger went
+            // into deficit anyway — a second client bought at the same moment —
+            // say so here rather than letting it render as a bare negative.
+            const overspent = assertWithinBudget(this.actor);
+            if (overspent > 0) {
+                ui.notifications.error(game.i18n.format('WH40K.Advancement.Error.Overspent', { amount: String(overspent) }));
+            }
+        } finally {
+            this.#purchaseInFlight = false;
+        }
 
         if (opts.recentKey !== undefined) this.#recentPurchases.add(opts.recentKey);
         void this.render();
