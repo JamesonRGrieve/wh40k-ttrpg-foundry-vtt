@@ -58,14 +58,27 @@ function readJsonFile(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
+// A reference stub is `{ reference: "<path>" }` plus OPTIONAL per-line override
+// keys (typically `img`) that are merged onto the resolved canonical document.
+//
+// The override form used to be rejected here (the check demanded exactly one
+// key), which made a `{reference, img}` document neither a stub nor a valid
+// document: it fell through to the compile step, which skips anything without
+// an `_id`, so 25 RT items were silently absent from their compiled packs and
+// every actor referencing them carried a lean husk (#499).
 function isReferenceStub(doc) {
   return (
     doc &&
     typeof doc === 'object' &&
     !Array.isArray(doc) &&
-    typeof doc.reference === 'string' &&
-    Object.keys(doc).length === 1
+    typeof doc.reference === 'string'
   );
+}
+
+/** The per-line override keys carried alongside `reference`. */
+function referenceOverrides(doc) {
+  const { reference, ...overrides } = doc;
+  return overrides;
 }
 
 function resolveReferencePath(reference, fromFile) {
@@ -89,7 +102,9 @@ function resolvePackSourceDocument(filePath, seen = new Set()) {
   if (!fs.existsSync(targetPath)) {
     throw new Error(`Pack reference target not found: ${doc.reference} (from ${normalizedPath})`);
   }
-  return resolvePackSourceDocument(targetPath, seen);
+  const resolved = resolvePackSourceDocument(targetPath, seen);
+  // Per-line overrides win over the canonical body (e.g. an RT-specific `img`).
+  return { ...resolved, ...referenceOverrides(doc) };
 }
 
 function detectCollectionType(folder) {
