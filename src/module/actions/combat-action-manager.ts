@@ -60,16 +60,22 @@ class CombatActionManager {
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- combat.turns indexing may return undefined at runtime despite Foundry types
         if (currentCombatant?.actor !== null && currentCombatant?.actor !== undefined) {
-            // Handle Actor Effects — sequential: each effect may mutate actor state that the next depends on
+            // Handle Actor Effects — sequential: each effect may mutate actor state
+            // that the next depends on.
+            //
+            // Matched by STATUS ID, not by display name (#495). Name matching made
+            // the automation silently die the moment an effect was renamed or
+            // localised — `effect.name === 'Burning'` never fires for a French
+            // client, and a GM retitling the effect on the sheet disabled its tick.
             for (const effect of currentCombatant.actor.effects) {
-                // On Fire!
-                if (effect.name === 'Burning') {
+                const statuses = effect.statuses;
+                if (statuses.has('burning')) {
                     // eslint-disable-next-line no-await-in-loop -- sequential: effects must resolve in order to avoid actor state races
                     await handleOnFire(currentCombatant.actor);
-                } else if (effect.name === 'Bleeding') {
+                } else if (statuses.has('bleeding')) {
                     // eslint-disable-next-line no-await-in-loop -- sequential: effects must resolve in order to avoid actor state races
                     await handleBleeding(currentCombatant.actor);
-                } else if (effect.name === 'Blood Loss') {
+                } else if (statuses.has('bloodloss')) {
                     // eslint-disable-next-line no-await-in-loop -- sequential: effects must resolve in order to avoid actor state races
                     await handleBloodLoss(currentCombatant.actor);
                 }

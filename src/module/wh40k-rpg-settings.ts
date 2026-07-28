@@ -53,6 +53,7 @@ export class WH40KSettings {
         characteristicOffset: 'characteristic-offset',
         pointBuyPool: 'point-buy-pool',
         resyncOnReady: 'resync-on-ready',
+        deathLootPiles: 'death-loot-piles',
         reconcileOriginGrantsOnReady: 'reconcile-origin-grants-on-ready',
         multipleFateBurnPerRoll: 'multiple-fate-burn-per-roll',
         autoPsychicPhenomena: 'auto-psychic-phenomena',
@@ -681,6 +682,15 @@ export class WH40KSettings {
                 scope: 'world',
                 config: true,
                 default: true,
+                type: Boolean,
+            },
+            {
+                key: S.deathLootPiles,
+                name: 'WH40K.SETTINGS.DeathLootPiles.Name',
+                hint: 'WH40K.SETTINGS.DeathLootPiles.Hint',
+                scope: 'world',
+                config: true,
+                default: false,
                 type: Boolean,
             },
             {

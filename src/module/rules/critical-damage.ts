@@ -431,13 +431,20 @@ export async function getCriticalDamageRecord(
 /**
  * Map the content-agnostic Critical Effects riders to the condition-registry
  * ids applied by `active-effects.ts` `createConditionEffect` (#108). Pure and
- * ordered; the `fatal` rider is intentionally NOT mapped — instant death is a
- * GM adjudication surfaced on the chat card, not an auto-applied ActiveEffect.
- * The returned ids are keys of the shared condition registry, so any system
- * that shares that registry gets the same effect application.
+ * ordered. The returned ids are keys of the shared condition registry, so any
+ * system that shares that registry gets the same effect application.
+ *
+ * `fatal` now maps to the registry's `dead` status (#495). Death used to be the
+ * one outcome with no state at all — only chat prose — so nothing downstream
+ * (the token defeated overlay, the combat tracker, the #477 pile conversion)
+ * could see that the creature had died. The status IS the state; the GM can
+ * clear it like any other condition if they overrule the result.
+ * @param {CriticalDamageRiders} riders  Riders classified from the crit row.
+ * @returns {string[]}  Condition-registry ids to apply.
  */
 export function criticalRiderConditionIds(riders: CriticalDamageRiders): string[] {
     const ids: string[] = [];
+    if (riders.fatal) ids.push('dead');
     if (riders.stunned) ids.push('stunned');
     if (riders.burning) ids.push('burning');
     if (riders.bloodLoss) ids.push('bloodloss');

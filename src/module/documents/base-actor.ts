@@ -169,29 +169,42 @@ export class WH40KBaseActor extends Actor {
         });
 
         if (unconscious && existing === undefined) {
-            // Apply the Unconscious condition inline (mirrors the `unconscious` def in
-            // rules/active-effects.ts) rather than importing that module: base-actor →
-            // rules/active-effects closes a depcruise no-circular cycle. Flag-tagged so
-            // this method owns exactly the effect it created.
-            const data = {
+            // Build the Unconscious condition from the ONE registry (#495). This
+            // used to hand-build an effect that "mirrors the `unconscious` def" —
+            // a second writer whose copy could (and did) drift, and which set no
+            // `statuses`, so fatigue-unconsciousness was invisible to the token
+            // and to `targetCombatStateFromConditions`.
+            //
+            // The registry is imported LAZILY: a static
+            // `documents/base-actor → rules/active-effects` edge closes a
+            // depcruise no-circular cycle, and a dynamic import does not.
+            const { conditionEffectData } = await import('../rules/active-effects.ts');
+            const data = conditionEffectData('unconscious', {
                 name: game.i18n.localize('WH40K.Fatigue.UnconsciousLabel'),
-                icon: 'icons/svg/unconscious.svg',
-                changes: [
-                    { key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
-                    { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
-                    { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
-                    { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
-                ],
-                flags: { 'wh40k-rpg': { nature: 'harmful', fatigueUnconscious: true } },
-            };
-            // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts Foundry's untyped embedded-document create schema
-            await this.createEmbeddedDocuments('ActiveEffect', [data] as unknown as Parameters<typeof this.createEmbeddedDocuments<'ActiveEffect'>>[1]);
-            ui.notifications.warn(game.i18n.format('WH40K.Fatigue.Unconscious', { actor: this.name }));
+                flags: { 'wh40k-rpg': { fatigueUnconscious: true } },
+            });
+            if (data !== null) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts Foundry's untyped embedded-document create schema
+                await this.createEmbeddedDocuments('ActiveEffect', [data] as unknown as Parameters<typeof this.createEmbeddedDocuments<'ActiveEffect'>>[1]);
+                ui.notifications.warn(game.i18n.format('WH40K.Fatigue.Unconscious', { actor: this.name }));
+            }
         } else if (!unconscious && existing?.id != null) {
             await this.deleteEmbeddedDocuments('ActiveEffect', [existing.id]);
         }
 
         if (isFatigueDeath(input, state.def)) {
+            // Fatigue death sets the SAME `dead` status damage death does (#495),
+            // so the token defeated overlay, the combat tracker and the #477 pile
+            // conversion see it — previously this route only emitted a chat
+            // notice and left the actor mechanically alive.
+            const { conditionEffectData, DEAD_STATUS_ID } = await import('../rules/active-effects.ts');
+            if (!this.statuses.has(DEAD_STATUS_ID)) {
+                const dead = conditionEffectData(DEAD_STATUS_ID);
+                if (dead !== null) {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts Foundry's untyped embedded-document create schema
+                    await this.createEmbeddedDocuments('ActiveEffect', [dead] as unknown as Parameters<typeof this.createEmbeddedDocuments<'ActiveEffect'>>[1]);
+                }
+            }
             ui.notifications.warn(game.i18n.format('WH40K.Fatigue.Death', { actor: this.name }));
         }
     }
