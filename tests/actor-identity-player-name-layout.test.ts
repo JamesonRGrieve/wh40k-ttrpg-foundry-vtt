@@ -12,7 +12,7 @@
  * `.wh40k-rpg .tw-w-auto` did not reliably win that cascade, so the input stayed
  * 100% wide and `size` was ignored. The fix forces `width: auto !important`
  * (`!tw-w-auto`), which beats the non-important Foundry rule unconditionally;
- * `size` (8-char floor) then sizes the input to its content, bounded by a 3rem
+ * `size` (8-char floor) then sizes the input to its content, bounded by a 2ch
  * floor and a 200px cap.
  *
  * The test is a source scan rather than runtime: rendering the partial requires
@@ -56,9 +56,20 @@ describe('actor-identity player-name input layout (#249)', () => {
         expect(playerInput).toMatch(/size="\{\{inputSize system\.bio\.playerName 8\}\}"/);
     });
 
-    it('keeps a usable floor and a cap so it neither collapses nor sprawls', () => {
-        expect(playerInput).toContain('tw-min-w-[3rem]');
+    it('keeps a minimal floor and a cap so it neither collapses nor sprawls', () => {
+        // The floor was 3rem, which reserved space a short name never used — so the
+        // parens could not hug the text however the sizing was configured (#249
+        // reopen). Tightened to 2ch: enough that the field stays clickable when
+        // empty, small enough that `( Jo )` closes up. `field-sizing:content` still
+        // sizes to the placeholder when the value is empty, so nothing collapses to
+        // invisibility.
+        expect(playerInput).toContain('tw-min-w-[2ch]');
+        expect(playerInput).not.toContain('tw-min-w-[3rem]');
         expect(playerInput).toContain('tw-max-w-[200px]');
+    });
+
+    it('centres the value so it sits between the parens rather than drifting off the closing one', () => {
+        expect(playerInput).toContain('tw-text-center');
     });
 
     it('does not reserve a wide fixed flex basis (the reverted behaviour)', () => {
