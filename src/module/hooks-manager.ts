@@ -113,6 +113,7 @@ import { conditionStatusEffects } from './rules/condition-registry.ts';
 import { WH40K } from './rules/config.ts';
 import { convertDeadActorToPile } from './rules/death-loot.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
+import { buildSkillSpecializationIndex } from './rules/skill-specialization-index.ts';
 import { buildSkillVariantIndex } from './rules/skill-variant-index.ts';
 import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.ts';
 import { DHTourMain } from './tours/main-tour.ts';
@@ -909,6 +910,7 @@ export class HooksManager {
         await uuidNameCache.build();
         await buildWeaponQualityPayloadIndex();
         await buildSkillVariantIndex();
+        await buildSkillSpecializationIndex();
         await buildCareerAdvancementIndex();
         await backfillOriginPathUuids();
         await reconcileWorldOriginGrants();

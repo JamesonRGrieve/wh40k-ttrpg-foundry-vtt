@@ -13,17 +13,21 @@ import type { Prerequisite } from '../../config/game-systems/types.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
+import { getSpecializationsForSkill } from '../../rules/skill-specialization-index.ts';
 import { psychicPowerCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
 import { capitalize } from '../../utils/format.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { assertWithinBudget, authorizeXPSpend, canAfford, getAvailableXP } from '../../utils/xp-transaction.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
 import ConfirmationDialog from './confirmation-dialog.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } =
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `foundry.applications` has no shipped type for the v2 api namespace
     (foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } })
         .api;
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; double-cast is the only way to extract DialogV2
+const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
 
 interface AdvancementAdvance {
     name: string;
@@ -1524,7 +1528,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // Specialist skill: adding a new specialization (prompt for name)
         if (entry.specialization === '__new') {
             const skillLabel = entry.skillLabel ?? entry.name;
-            const specName = await this.#promptForSpecialization(entry.skillKey, skillLabel);
+            const specName = await this.#promptForSpecialization(
+                entry.skillKey,
+                skillLabel,
+                (actorSkill.entries ?? []).map((e) => e.name ?? '').filter((n) => n !== ''),
+            );
             if (specName === null || specName.length === 0) return;
 
             // Dedup on the SLUG, not the raw lower-cased name (#498). The roll engine
@@ -1554,9 +1562,17 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         bonus: 0,
                         cost,
                     };
-                    const currentEntries = actorSkill.entries ?? [];
+                    // Re-read inside apply() rather than reusing the snapshot taken
+                    // when the list was built: a grant or a concurrent advancement may
+                    // have rewritten `entries` while the prompt was open, and replacing
+                    // the whole array from a stale copy would silently drop it (#498).
+                    const liveEntries = this.#liveSkillEntries(entry.skillKey);
+                    if (liveEntries.some((e) => specializationSlug(e.slug ?? e.name ?? '') === newSlug)) {
+                        ui.notifications.warn(game.i18n.format('WH40K.Advancement.Specialization.Duplicate', { skill: skillLabel, name: specName }));
+                        return;
+                    }
                     await this.actor.update({
-                        [`system.skills.${entry.skillKey}.entries`]: [...currentEntries, newEntry],
+                        [`system.skills.${entry.skillKey}.entries`]: [...liveEntries, newEntry],
                     });
                     ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: addDisplayName, cost: String(cost) }));
                 },
@@ -1575,11 +1591,22 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 displayName: bumpDisplayName,
                 recentKey: entry.id,
                 apply: async () => {
-                    const bumpCurrentAdvance = actorSkill.entries?.[entryIndex]?.advance ?? 0;
-                    const bumpCurrentCost = actorSkill.entries?.[entryIndex]?.cost ?? 0;
+                    // Re-resolve the index by SPECIALISATION at write time. The index
+                    // captured when the list was built is invalidated by any reorder
+                    // or concurrent insert, and writing to a stale one bumps somebody
+                    // else's skill (#498).
+                    const liveEntries = this.#liveSkillEntries(entry.skillKey);
+                    const target = specializationSlug(entry.specialization ?? '');
+                    const liveIndex = liveEntries.findIndex((e) => specializationSlug(e.slug ?? e.name ?? '') === target);
+                    if (liveIndex < 0) {
+                        ui.notifications.warn(game.i18n.format('WH40K.Advancement.Specialization.Missing', { name: bumpDisplayName }));
+                        return;
+                    }
+                    const bumpCurrentAdvance = liveEntries[liveIndex]?.advance ?? 0;
+                    const bumpCurrentCost = liveEntries[liveIndex]?.cost ?? 0;
                     await this.actor.update({
-                        [`system.skills.${entry.skillKey}.entries.${entryIndex}.advance`]: bumpCurrentAdvance + 1,
-                        [`system.skills.${entry.skillKey}.entries.${entryIndex}.cost`]: bumpCurrentCost + cost,
+                        [`system.skills.${entry.skillKey}.entries.${liveIndex}.advance`]: bumpCurrentAdvance + 1,
+                        [`system.skills.${entry.skillKey}.entries.${liveIndex}.cost`]: bumpCurrentCost + cost,
                     });
                     ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: bumpDisplayName, cost: String(cost) }));
                 },
@@ -1605,38 +1632,97 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         });
     }
 
-    async #promptForSpecialization(_skillKey: string, skillLabel: string): Promise<string | null> {
-        // `skillLabel` is now the plain label carried on the entry (#498), so the
-        // decoration no longer has to be stripped back off it here.
-        const title = skillLabel;
-        const content = `<div class="form-group">
-            <label>Specialization</label>
-            <input type="text" name="specialization" placeholder="e.g. Imperium, High Gothic, Wheeled"
-                autofocus style="width:100%; margin-top:0.25em"/>
-            <p class="notes">The new ${title} specialization will be purchased at Known (rank 1).</p>
-        </div>`;
-        return new Promise((resolve) => {
-            new foundry.appv1.api.Dialog({
-                title: `${title} — Add Specialization`,
-                content,
-                buttons: {
-                    ok: {
-                        icon: '<i class="fas fa-check"></i>',
-                        label: 'Purchase',
-                        callback: (html: JQuery) => {
-                            const value = (html.find('input[name="specialization"]').val() as string | undefined)?.trim() ?? '';
-                            resolve(value.length > 0 ? value : null);
-                        },
-                    },
-                    cancel: {
-                        icon: '<i class="fas fa-times"></i>',
-                        label: 'Cancel',
-                        callback: () => resolve(null),
-                    },
+    /**
+     * Choose a specialisation for a specialist skill (#498).
+     *
+     * Offers the RULEBOOK'S list for this skill — indexed from the skill
+     * compendium documents by `skill-specialization-index.ts` — instead of the
+     * bare text box this used to be. Nothing validated the typed string, so a
+     * near-miss spelling ("Imperial" for "Imperium") created a new paid track the
+     * roll engine could not match: XP spent on a skill that rolls untrained
+     * (#225). Picking from the list makes that unreachable for canonical entries.
+     *
+     * A GM can still author a non-canonical specialisation, but it is now a
+     * deliberate choice ("Other…") rather than the only path. Specialisations the
+     * character already owns are omitted — buying one twice is not a thing.
+     * @param {string} skillKey  The actor's skill key.
+     * @param {string} skillLabel  Display label, for the dialog title.
+     * @param {string[]} owned  Specialisations already on the character.
+     * @returns {Promise<string | null>}  The chosen name, or null when cancelled.
+     */
+    /**
+     * The skill's CURRENT specialisation entries, read at write time.
+     *
+     * Every write path re-reads through this rather than reusing the snapshot
+     * taken when the purchase list was built: a grant or a concurrent
+     * advancement may have rewritten `entries` while the prompt was open, and
+     * both replacing the array and indexing into it from a stale copy silently
+     * corrupt somebody's skill (#498).
+     * @param {string} skillKey  The actor's skill key.
+     * @returns {Array<{name?: string, slug?: string, advance?: number, cost?: number}>}  Live entries.
+     */
+    #liveSkillEntries(skillKey: string): Array<{ name?: string; slug?: string; advance?: number; cost?: number }> {
+        const skills = this.actor.system.skills as
+            | Record<string, { entries?: Array<{ name?: string; slug?: string; advance?: number; cost?: number }> }>
+            | undefined;
+        return skills?.[skillKey]?.entries ?? [];
+    }
+
+    async #promptForSpecialization(skillKey: string, skillLabel: string, owned: string[] = []): Promise<string | null> {
+        const ownedSlugs = new Set(owned.map((name) => specializationSlug(name)));
+        const canonical = getSpecializationsForSkill(skillKey, this.actor.system.gameSystem).filter((name) => !ownedSlugs.has(specializationSlug(name)));
+
+        const options = canonical.map((name) => `<option value="${foundry.utils.escapeHTML(name)}">${foundry.utils.escapeHTML(name)}</option>`).join('');
+        // With no authored list there is nothing to pick from, so the free-text
+        // field IS the interface rather than an escape hatch from one.
+        const chooser =
+            canonical.length > 0
+                ? `<div class="form-group">
+                <label>${game.i18n.localize('WH40K.Advancement.Specialization.Choose')}</label>
+                <select name="canonical" style="width:100%">${options}<option value="__other">${game.i18n.localize(
+                      'WH40K.Advancement.Specialization.Other',
+                  )}</option></select>
+            </div>
+            <div class="form-group" data-other-row style="display:none">
+                <label>${game.i18n.localize('WH40K.Advancement.Specialization.Custom')}</label>
+                <input type="text" name="custom" style="width:100%" />
+            </div>`
+                : `<div class="form-group">
+                <label>${game.i18n.localize('WH40K.Advancement.Specialization.Custom')}</label>
+                <input type="text" name="custom" style="width:100%" autofocus />
+            </div>`;
+
+        const content = `${chooser}<p class="notes">${game.i18n.format('WH40K.Advancement.Specialization.Note', { skill: skillLabel })}</p>`;
+
+        const result = await dialogV2.prompt({
+            window: { title: game.i18n.format('WH40K.Advancement.Specialization.Title', { skill: skillLabel }) },
+            content,
+            ok: {
+                label: game.i18n.localize('WH40K.Advancement.Specialization.Purchase'),
+                callback: (_event: Event, _button: HTMLButtonElement, dialog: { element?: HTMLElement } | HTMLElement): string => {
+                    const root = dialog instanceof HTMLElement ? dialog : dialog.element ?? null;
+                    if (root === null) return '';
+                    const select = root.querySelector<HTMLSelectElement>('select[name="canonical"]');
+                    const custom = root.querySelector<HTMLInputElement>('input[name="custom"]');
+                    if (select !== null && select.value !== '__other') return select.value;
+                    return custom?.value.trim() ?? '';
                 },
-                default: 'ok',
-            }).render();
+            },
+            rejectClose: false,
+            render: (_event: Event, dialog: HTMLElement): void => {
+                // Reveal the free-text row only when "Other…" is chosen, so the
+                // custom path stays visible-on-purpose rather than always present.
+                const select = dialog.querySelector<HTMLSelectElement>('select[name="canonical"]');
+                const row = dialog.querySelector<HTMLElement>('[data-other-row]');
+                if (select === null || row === null) return;
+                select.addEventListener('change', () => {
+                    row.style.display = select.value === '__other' ? '' : 'none';
+                });
+            },
         });
+
+        const chosen = typeof result === 'string' ? result.trim() : '';
+        return chosen.length > 0 ? chosen : null;
     }
 
     async #purchaseAptitudeTalentAt(advanceIndex: number, systemConfig: AptitudeBasedSystemConfig): Promise<void> {
