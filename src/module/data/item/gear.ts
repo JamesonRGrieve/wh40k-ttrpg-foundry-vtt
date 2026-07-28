@@ -3,6 +3,7 @@ import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
+import ModifiersTemplate from '../shared/modifiers-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
 /**
@@ -12,7 +13,13 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes PhysicalItemTemplate
  * @mixes EquippableTemplate
  */
-export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
+// ModifiersTemplate is REQUIRED for equipped gear to contribute situational
+// modifiers (#480). `getSituationalModifiers` reads `system.modifiers.situational`
+// off equipped armour / cybernetics / gear, but without this mixin `modifiers` is
+// not in the gear schema — so V14 validation drops the authored block on load and
+// an item like the DH2 Auspex/Scanner, which correctly declares a situational
+// Awareness +20, silently contributes nothing and never surfaces as an assist chip.
+export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, ModifiersTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare category: string;

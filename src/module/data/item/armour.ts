@@ -4,6 +4,7 @@ import IdentifierField from '../fields/identifier-field.ts';
 import { BODY_LOCATIONS, bodyLocationsSchema } from '../shared/body-locations.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate, { type EquippableState } from '../shared/equippable-template.ts';
+import ModifiersTemplate from '../shared/modifiers-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
 /**
@@ -38,7 +39,12 @@ const ARMOUR_TYPE_CHOICES = [
  * @mixes PhysicalItemTemplate
  * @mixes EquippableTemplate
  */
-export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
+// ModifiersTemplate for the same reason as gear (#480): `getSituationalModifiers`
+// reads situational blocks off equipped armour, but without the mixin the field is
+// absent from the schema and any authored block is dropped on load. Cybernetic
+// already had it — armour and gear did not, so two of the three item types the
+// collector claims to support could never contribute.
+export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, ModifiersTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare type: string;
