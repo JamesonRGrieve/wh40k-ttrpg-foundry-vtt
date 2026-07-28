@@ -92,6 +92,26 @@ interface PreparedAdvance {
     recentlyPurchased: boolean;
 }
 
+/**
+ * Canonical slug for a skill specialisation (#498).
+ *
+ * ONE definition, used both to store a purchased specialisation's `slug` and to
+ * dedup against existing ones — previously the store used
+ * `toLowerCase().replace(/\s+/g,'-')` while the dedup compared raw lower-cased
+ * names, so the two could disagree and let a near-miss through.
+ *
+ * Punctuation is folded, not just whitespace, so "High Gothic", "high-gothic" and
+ * "High  Gothic" collapse to one identity — the roll engine matches on name OR
+ * slug, so anything that differs only in shape is the same skill to it and must
+ * not become a second paid track.
+ */
+function specializationSlug(value: string): string {
+    return value
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
 interface PreparedSkillAdvance {
     id: string;
     index?: number;
@@ -99,6 +119,15 @@ interface PreparedSkillAdvance {
     displayName: string;
     type: 'skill';
     skillKey: string;
+    /**
+     * The skill's plain display label, carried as DATA (#498).
+     *
+     * The purchase path used to recover it by string-replacing the decoration off
+     * `name` (`name.replace(' — add specialization', '')`), so localising or
+     * rewording that label silently corrupted the skill name in notifications and
+     * purchase records. Carry it instead of re-deriving it.
+     */
+    skillLabel?: string;
     cost: number | null;
     specialization?: string;
     currentRank: number;
@@ -629,6 +658,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         displayName: `${label} — add specialization`,
                         type: 'skill',
                         skillKey,
+                        skillLabel: label,
                         specialization: '__new',
                         cost: addCost,
                         currentRank: 0,
@@ -1465,17 +1495,25 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         // Specialist skill: adding a new specialization (prompt for name)
         if (entry.specialization === '__new') {
-            const specName = await this.#promptForSpecialization(entry.skillKey, entry.name);
+            const skillLabel = entry.skillLabel ?? entry.name;
+            const specName = await this.#promptForSpecialization(entry.skillKey, skillLabel);
             if (specName === null || specName.length === 0) return;
 
-            // Prevent dup
-            const existing = (actorSkill.entries ?? []).some((e) => (e.name ?? '').toLowerCase() === specName.toLowerCase());
+            // Dedup on the SLUG, not the raw lower-cased name (#498). The roll engine
+            // matches a specialisation by name OR slug (`#hasSkillTrained`), so
+            // "High Gothic", "high gothic" and "High-Gothic" are the same skill to it
+            // — but a raw name compare treats them as three, letting a player pay
+            // three times for one skill and splitting the ranks across tracks.
+            const newSlug = specializationSlug(specName);
+            const existing = (actorSkill.entries ?? []).some(
+                (e) => specializationSlug(e.slug ?? '') === newSlug || specializationSlug(e.name ?? '') === newSlug,
+            );
             if (existing) {
-                ui.notifications.warn(`${entry.name.replace(' — add specialization', '')} (${specName}) already exists on this character.`);
+                ui.notifications.warn(`${skillLabel} (${specName}) already exists on this character.`);
                 return;
             }
 
-            const addDisplayName = `${entry.name.replace(' — add specialization', '')} (${specName}) — ${entry.nextLabel}`;
+            const addDisplayName = `${skillLabel} (${specName}) — ${entry.nextLabel}`;
             await this.#confirmAndSpend({
                 cost,
                 displayName: addDisplayName,
@@ -1483,7 +1521,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 apply: async () => {
                     const newEntry = {
                         name: specName,
-                        slug: specName.toLowerCase().replace(/\s+/g, '-'),
+                        slug: specializationSlug(specName),
                         advance: 1,
                         bonus: 0,
                         cost,
@@ -1540,7 +1578,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     async #promptForSpecialization(_skillKey: string, skillLabel: string): Promise<string | null> {
-        const title = skillLabel.replace(' — add specialization', '');
+        // `skillLabel` is now the plain label carried on the entry (#498), so the
+        // decoration no longer has to be stripped back off it here.
+        const title = skillLabel;
         const content = `<div class="form-group">
             <label>Specialization</label>
             <input type="text" name="specialization" placeholder="e.g. Imperium, High Gothic, Wheeled"
