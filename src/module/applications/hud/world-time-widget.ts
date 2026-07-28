@@ -3,24 +3,37 @@
  *
  * Surfaces the shared world clock (#455, `game.time.worldTime`) to the whole
  * table as a small, always-visible floating panel:
- *   - **Day N since inception** — the integer day counter anchored to a durable,
- *     GM-settable campaign-inception stamp (world setting `world-time-inception`).
- *   - **Full standard date/time** — from `game.time.calendar` (the V14
- *     SIMPLIFIED_GREGORIAN calendar #455 adopted), with a Foundry-free fallback.
+ *   - **Day N since inception** — the integer day counter measured from the
+ *     campaign's inception stamp (world setting `world-time-inception`). Day 0 is
+ *     the campaign/mission inception and is FIXED — there is deliberately no
+ *     "set Day 0 here" control, since re-anchoring silently rewrites every
+ *     historical day number.
+ *   - **Imperial date** — the canonical `check.fraction.year.millennium` stamp
+ *     (`rules/imperial-date.ts`), computed as the campaign's inception date
+ *     advanced by elapsed world time. Explicitly NOT a Gregorian timestamp from
+ *     `game.time.calendar`: the Imperium has no universal calendar to render.
+ *   - **Time of day** — a plain `HH:MM`, separate from the Imperial stamp because
+ *     that format's smallest unit is the year fraction (~8.8h) and cannot express
+ *     "evening".
  *   - **GM-only advance controls** — +1 hour / +1 day / advance N, wrapping
  *     `game.time.advance()`; hidden for players.
  *
+ * Which date a campaign began on is **world data**, set per world by its GM — the
+ * system ships only the format and a neutral placeholder default.
+ *
  * All date/day arithmetic and formatting is delegated to the pure, unit-tested
- * helpers in `rules/world-time.ts`; this class is the thin ApplicationV2 shell.
- * It is system-agnostic (world time is not per-line), so it carries no
- * `data-wh40k-system` and no per-system theming.
+ * helpers in `rules/world-time.ts` and `rules/imperial-date.ts`; this class is the
+ * thin ApplicationV2 shell. It is system-agnostic (world time is not per-line), so
+ * it carries no `data-wh40k-system` and no per-system theming.
  *
  * The widget refreshes live: advancing the clock fires `updateWorldTime`
- * (re-render driven from `HooksManager.onUpdateWorldTime`), and re-anchoring
- * inception fires `updateSetting` (handled here) so every client stays current.
+ * (re-render driven from `HooksManager.onUpdateWorldTime`), and a change to the
+ * inception settings fires `updateSetting` (handled here) so every client stays
+ * current.
  */
 import { SYSTEM_ID } from '../../constants.ts';
 import { t } from '../../i18n/t.ts';
+import { addSecondsToImperialDate, formatImperialDate } from '../../rules/imperial-date.ts';
 import { advanceSeconds, dayNumberSince, formatClock, formatRemaining, type TimeAdvanceUnit } from '../../rules/world-time.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 
@@ -46,28 +59,27 @@ function worldClock(): WorldClock {
 }
 
 /**
- * The full standard date/time string for the current world time. Uses the native
- * `game.time.calendar.format()` timestamp when the calendar is available, and
- * falls back to a composed `Year Y, Day D — HH:MM:SS` from `game.time.components`
- * (via the pure {@link formatClock}) when it is not — so the readout never blanks
- * on a world without a configured calendar.
+ * The current in-universe date as a canonical **Imperial timestamp** (#487).
+ *
+ * Deliberately NOT `game.time.calendar.format()`: that emits a Gregorian
+ * wall-clock string, and the Imperium has no universal calendar to render. The
+ * campaign's own inception stamp is the anchor, advanced by elapsed world time.
  */
-function currentDateLabel(clock: WorldClock): string {
-    const format = clock.calendar?.format;
-    if (typeof format === 'function') {
-        try {
-            const label = format(clock.worldTime, 'timestamp');
-            if (typeof label === 'string' && label.length > 0) return label;
-        } catch {
-            // Fall through to the component-based fallback below.
-        }
-    }
+function currentImperialDateLabel(clock: WorldClock): string {
+    const inceptionDate = WH40KSettings.getCampaignInceptionDate();
+    const elapsed = clock.worldTime - WH40KSettings.getWorldTimeInception();
+    return formatImperialDate(addSecondsToImperialDate(inceptionDate, elapsed));
+}
+
+/**
+ * Time of day for the current world time, as `HH:MM`. Kept separate from the
+ * Imperial stamp on purpose: the Imperial format's smallest unit is the year
+ * fraction (~8.8 hours), so it cannot express "evening" — the table still needs a
+ * clock, it just isn't part of the date.
+ */
+function currentClockLabel(clock: WorldClock): string {
     const c = clock.components;
-    return t('WH40K.WorldTime.FallbackDate', {
-        year: c.year,
-        day: c.day,
-        clock: formatClock(c.hour, c.minute, c.second),
-    });
+    return formatClock(c.hour, c.minute);
 }
 
 export default class WorldTimeWidget extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -105,8 +117,6 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
             advanceDay: WorldTimeWidget.#advanceDay as ActionHandler,
             // eslint-disable-next-line @typescript-eslint/unbound-method
             advanceCustom: WorldTimeWidget.#advanceCustom as ActionHandler,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
-            setInception: WorldTimeWidget.#setInception as ActionHandler,
         },
     };
 
@@ -212,7 +222,8 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
 
         context['dayNumber'] = day;
         context['dayCounterLabel'] = t('WH40K.WorldTime.DayCounter', { day });
-        context['fullDate'] = currentDateLabel(clock);
+        context['fullDate'] = currentImperialDateLabel(clock);
+        context['timeOfDay'] = currentClockLabel(clock);
         context['elapsed'] = formatRemaining(now - inception);
         context['isGM'] = game.user.isGM;
 
@@ -257,18 +268,5 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
         // Forward-only: ignore a non-positive / non-finite custom amount.
         if (!Number.isFinite(count) || count <= 0) return;
         await WorldTimeWidget.#advance(advanceSeconds(count, unit));
-    }
-
-    /* -------------------------------------------- */
-
-    /** Re-anchor "Day 0" to the current world time (GM-only). */
-    static async #setInception(this: WorldTimeWidget, _event: Event, _target: HTMLElement): Promise<void> {
-        if (!game.user.isGM) {
-            ui.notifications.warn(t('WH40K.WorldTime.GmOnly'));
-            return;
-        }
-        await WH40KSettings.setWorldTimeInception(worldClock().worldTime);
-        ui.notifications.info(t('WH40K.WorldTime.InceptionSet'));
-        WorldTimeWidget.refresh();
     }
 }

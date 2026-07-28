@@ -915,7 +915,11 @@
             },
             "WorldTimeInception": {
                 "Name": "Campaign Inception (World Time)",
-                "Hint": "The world-time stamp, in seconds, treated as Day 0 for the day-since-inception counter shown by the world-time widget. Anchored from that widget's \"Set Day 0 here\" control rather than this menu; defaults to 0 (the world's own epoch)."
+                "Hint": "The world-time stamp, in seconds, treated as Day 0 for the day-since-inception counter. Day 0 is the campaign/mission inception and is fixed once at campaign start — it is not re-anchorable from the world-time widget."
+            },
+            "CampaignInceptionDate": {
+                "Name": "Campaign Inception Date (Imperial)",
+                "Hint": "The campaign's inception as a canonical Imperial timestamp — check.fraction.year.millennium, e.g. 5.420.816.M41. This IS Day 0; the world-time widget renders this date advanced by elapsed in-universe time."
             },
             "DegreesMode": {
                 "Name": "Degrees of Success Calculation",
@@ -4588,8 +4592,8 @@
             "DayCounter": "Day {day}",
             "SinceInception": "since inception",
             "DateLabel": "Date",
+            "TimeLabel": "Time",
             "ElapsedLabel": "Elapsed",
-            "FallbackDate": "Year {year}, Day {day} — {clock}",
             "GmControls": "GM Time Controls",
             "AdvanceHour": "+1 Hour",
             "AdvanceDay": "+1 Day",
@@ -4598,9 +4602,6 @@
             "UnitLabel": "Time unit",
             "UnitHours": "Hours",
             "UnitDays": "Days",
-            "SetInception": "Set Day 0 here",
-            "SetInceptionTooltip": "Anchor the day-since-inception counter to the current world time.",
-            "InceptionSet": "Campaign inception anchored to the current world time (now Day 0).",
             "GmOnly": "Only the GM can advance world time."
         },
         "Status": {
