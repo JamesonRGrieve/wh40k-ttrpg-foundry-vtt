@@ -9,7 +9,12 @@
     <div class="tw-grid tw-gap-3 tw-w-full tw-items-stretch" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));">
         <div class="tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col">
     {{!-- Characteristics Panel --}}
-    {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label="Characteristics" icon="fa-chart-bar"}}
+    {{!-- rootClass/bodyClass make the panel FILL its stretched grid cell: the row is
+         `items-stretch` and the wrapper is a flex column, so the panel must be
+         `flex-1` (main axis = height here) or it keeps its natural height and the
+         pair renders ragged (#482). `mb-0` drops the partial's default bottom
+         margin so both columns end flush. --}}
+    {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label="Characteristics" icon="fa-chart-bar" rootClass="tw-flex-1 tw-flex tw-flex-col tw-mb-0" bodyClass="tw-flex-1"}}
             <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-2">
                 {{#each actor.characteristics as |characteristic name|}}
                     {{#unless (eq name "influence")}}
@@ -64,7 +69,7 @@
          character is apt to learn and advance, with their origin-path source(s). --}}
     {{#if aptitudePills.length}}
         <div class="tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col">
-    {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Aptitudes") icon="fa-graduation-cap"}}
+    {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Aptitudes") icon="fa-graduation-cap" rootClass="tw-flex-1 tw-flex tw-flex-col tw-mb-0" bodyClass="tw-flex-1"}}
         <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-1.5">
             {{#each aptitudePills as |pill|}}
             <span class="tw-text-[0.8rem] tw-px-2 tw-py-1 tw-rounded tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-bg-[rgba(212,175,55,0.08)] tw-text-[color:var(--color-text-secondary)]"
