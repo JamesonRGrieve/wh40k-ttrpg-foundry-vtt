@@ -235,6 +235,86 @@ describe('migrateSkills (#256)', () => {
         migrateSkills(b);
         expect(b['trainedSkills']).toBeUndefined();
     });
+
+    // #497 — the format 1558 of 1666 authored actors actually use. The parser
+    // previously required the colon-prefixed line form (0 actors use it) and
+    // silently produced nothing, so every NPC's known-skill list was empty.
+    describe('the authored comma-list format (#497)', () => {
+        it('parses a plain comma list with parenthesised characteristics', () => {
+            const source: JsonObject = { skills: 'Athletics (S), Awareness (Per), Dodge (Ag), Intimidate (S), Security (Int)' };
+            migrateSkills(source);
+            const ts = source['trainedSkills'] as JsonObject;
+            expect(Object.keys(ts).sort()).toEqual(['athletics', 'awareness', 'dodge', 'intimidate', 'security'].sort());
+            // The characteristic parenthetical is consumed, not left in the name.
+            expect(ts['awareness']).toMatchObject({ name: 'Awareness', characteristic: 'perception', trained: true });
+            expect(ts['dodge']).toMatchObject({ name: 'Dodge', characteristic: 'agility' });
+        });
+
+        it('keeps a specialisation parenthetical in the name and still resolves the characteristic', () => {
+            const source: JsonObject = { skills: 'Common Lore (Adeptus Arbites), Forbidden Lore (Daemonology)' };
+            migrateSkills(source);
+            const ts = source['trainedSkills'] as JsonObject;
+            expect(ts['commonLore']).toMatchObject({ name: 'Common Lore (Adeptus Arbites)' });
+            // Not named in the string, so it comes from the canonical catalogue.
+            expect((ts['commonLore'] as JsonObject | undefined)?.characteristic).not.toBe('');
+        });
+
+        it('parses advances off the comma-list form', () => {
+            const source: JsonObject = { skills: 'Awareness (Per) +10, Stealth (Ag) +20, Dodge (Ag)' };
+            migrateSkills(source);
+            const ts = source['trainedSkills'] as JsonObject;
+            expect(ts['awareness']).toMatchObject({ plus10: true, plus20: false });
+            expect(ts['stealth']).toMatchObject({ plus10: true, plus20: true });
+            expect(ts['dodge']).toMatchObject({ plus10: false });
+        });
+
+        it('does not fragment a specialisation containing a comma', () => {
+            const source: JsonObject = { skills: 'Common Lore (Imperium, Adeptus Arbites), Dodge (Ag)' };
+            migrateSkills(source);
+            const ts = source['trainedSkills'] as JsonObject;
+            expect(Object.keys(ts).sort()).toEqual(['commonLore', 'dodge'].sort());
+            expect(ts['commonLore']).toMatchObject({ name: 'Common Lore (Imperium, Adeptus Arbites)' });
+        });
+
+        it('keeps skills listed BEFORE a colon that came from a garbled skill name', () => {
+            // 108 actors carry a stray colon like this. The old parser treated
+            // everything before it as a characteristic prefix and discarded it, so
+            // Charm and Deceive vanished entirely.
+            const source: JsonObject = { skills: 'Charm (Fel), Deceive (Fel) +10, Forbidden: Lore (Daemonology), Stealth (Ag)' };
+            migrateSkills(source);
+            const ts = source['trainedSkills'] as JsonObject;
+            expect(ts['charm']).toBeDefined();
+            expect(ts['deceive']).toMatchObject({ plus10: true });
+            expect(ts['stealth']).toBeDefined();
+        });
+
+        it('handles a specialisation AND a characteristic paren on the same skill', () => {
+            // Verbatim from the corpus (furimancer, ardentii-proselytiser): the
+            // trailing paren is the characteristic, the earlier one the
+            // specialisation — and the specialisation itself contains a comma.
+            const source: JsonObject = {
+                skills: 'Acrobatics (Ag), Command (Fel) +10, Forbidden Lore (Psyker, Warp) (Int), Intimidate (S) +20',
+            };
+            migrateSkills(source);
+            const ts = source['trainedSkills'] as JsonObject;
+            expect(Object.keys(ts).sort()).toEqual(['acrobatics', 'command', 'forbiddenLore', 'intimidate'].sort());
+            expect(ts['forbiddenLore']).toMatchObject({
+                name: 'Forbidden Lore (Psyker, Warp)',
+                characteristic: 'intelligence',
+                trained: true,
+            });
+            expect(ts['command']).toMatchObject({ characteristic: 'fellowship', plus10: true });
+            expect(ts['intimidate']).toMatchObject({ characteristic: 'strength', plus20: true });
+        });
+
+        it('still honours the legacy line form when the prefix IS a characteristic', () => {
+            const source: JsonObject = { skills: 'Ag: Dodge, Stealth' };
+            migrateSkills(source);
+            const ts = source['trainedSkills'] as JsonObject;
+            expect(ts['dodge']).toMatchObject({ characteristic: 'agility' });
+            expect(ts['stealth']).toMatchObject({ characteristic: 'agility' });
+        });
+    });
 });
 
 describe('real bestiary pack data migrates to a usable shape', () => {

@@ -26,6 +26,7 @@ export type JsonObject = { [key: string]: Json };
 
 import { coerceInt } from '../fields/coerce.ts';
 import { CHARACTERISTIC_SHORT_TO_FULL } from '../shared/characteristics.ts';
+import { skillCharacteristicMap } from '../shared/skill-definitions.ts';
 
 // The characteristic short→full map is single-sourced in data/shared/characteristics.ts;
 // re-exported here for the existing npc.ts import path.
@@ -174,14 +175,58 @@ function skillNameToKey(name: string): string {
 }
 
 /**
- * Parse a legacy raw `skills` stat-block string into the structured
- * `trainedSkills` map the schema expects (#256). The string is line-per-
- * governing-characteristic, e.g.:
- *   "S: Intimidate\nAg: Dodge\nInt: Common Lore (Adeptus Arbites), Inquiry, Scrutiny\nPer: Awareness +10"
- * Each comma-separated skill becomes a trained entry; a trailing +10/+20/+30 is
- * parsed off as the advance, and the line's characteristic abbreviation
- * (S/Ag/Int/…) is resolved to the full key. No-op when `trainedSkills` is already
- * populated (so a hand-curated NPC is never clobbered).
+ * Split a skill list on top-level commas, ignoring commas inside parentheses so a
+ * multi-part specialisation ("Common Lore (Imperium, Adeptus Arbites)") stays one
+ * entry instead of fragmenting into nonsense skills.
+ */
+function splitSkillList(list: string): string[] {
+    const parts: string[] = [];
+    let depth = 0;
+    let current = '';
+    for (const char of list) {
+        if (char === '(') depth += 1;
+        else if (char === ')') depth = Math.max(0, depth - 1);
+        if (char === ',' && depth === 0) {
+            parts.push(current);
+            current = '';
+            continue;
+        }
+        current += char;
+    }
+    parts.push(current);
+    return parts.map((part) => part.trim()).filter((part) => part !== '');
+}
+
+/**
+ * Parse a raw `skills` stat-block string into the structured `trainedSkills` map
+ * the schema expects (#256/#497).
+ *
+ * The **authored** format across all seven lines is a single comma-separated list
+ * whose per-skill parenthetical carries the governing characteristic:
+ *
+ *   "Athletics (S), Awareness (Per), Dodge (Ag), Common Lore (Adeptus Arbites)"
+ *
+ * The original parser required a colon-prefixed, line-per-characteristic form
+ * ("S: Intimidate\nAg: Dodge") that **no actor in the corpus uses** — 1558 authored
+ * actors are the plain comma list, 0 use the documented shape — so it `continue`d
+ * on every line and silently produced nothing. Every NPC's known-skill list was
+ * empty, and no compiled pack actor had `trainedSkills` at all.
+ *
+ * Parsing rules:
+ *  - A trailing parenthetical that names a characteristic abbreviation (S/Ag/Per…)
+ *    IS the characteristic and is stripped from the display name; any other
+ *    parenthetical is a specialisation and stays in the name.
+ *  - When the string names no characteristic, fall back to the canonical
+ *    SKILL_DEFINITIONS catalogue rather than storing an empty one.
+ *  - A colon is only read as a characteristic prefix when the text before it is a
+ *    real abbreviation. That preserves the legacy line format while fixing the 108
+ *    actors whose colon comes from a garbled skill name ("Forbidden: Lore
+ *    (Daemonology)") — previously everything before that colon was discarded,
+ *    losing every skill listed ahead of it.
+ *  - A trailing +10/+20/+30 is parsed off as the advance.
+ *
+ * No-op when `trainedSkills` is already populated, so a hand-curated NPC is never
+ * clobbered.
  */
 export function migrateSkills(source: JsonObject): void {
     const raw = source['skills'];
@@ -190,21 +235,47 @@ export function migrateSkills(source: JsonObject): void {
     if (isJsonObject(existing) && Object.keys(existing).length > 0) return;
 
     const shortToFull = new Map<string, string>(Object.entries(CHARACTERISTIC_SHORT_TO_FULL).map(([short, full]) => [short.toLowerCase(), full]));
+    const catalogueChar = skillCharacteristicMap();
     const trained: JsonObject = {};
+
     for (const line of raw.split('\n')) {
+        if (line.trim() === '') continue;
+
+        // Legacy "Char: skill, skill" form — ONLY when the prefix really is a
+        // characteristic abbreviation, so a colon inside a skill name can't be
+        // mistaken for one.
+        let lineCharacteristic = '';
+        let list = line;
         const colon = line.indexOf(':');
-        if (colon < 0) continue;
-        const characteristic = shortToFull.get(line.slice(0, colon).trim().toLowerCase()) ?? '';
-        const list = line.slice(colon + 1).trim();
-        if (list === '') continue;
-        for (const part of list.split(',')) {
-            const entry = part.trim();
-            if (entry === '') continue;
+        if (colon >= 0) {
+            const prefixed = shortToFull.get(line.slice(0, colon).trim().toLowerCase());
+            if (prefixed !== undefined) {
+                lineCharacteristic = prefixed;
+                list = line.slice(colon + 1);
+            }
+        }
+
+        for (const entry of splitSkillList(list)) {
             const advMatch = /\+(\d+)\s*$/.exec(entry);
             const plus = advMatch !== null ? toInt(advMatch[1], 0) : 0;
-            const name = entry.replace(/\s*\+\d+\s*$/, '').trim();
+            let name = entry.replace(/\s*\+\d+\s*$/, '').trim();
+
+            let characteristic = lineCharacteristic;
+            const parenMatch = /\(([^)]*)\)\s*$/.exec(name);
+            if (parenMatch !== null) {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (ESLint's parser project) has the flag off so it types this capture-group read as `string`, while tsconfig.json has it on and requires the fallback.
+                const inner = (parenMatch[1] ?? '').trim();
+                const asCharacteristic = shortToFull.get(inner.toLowerCase());
+                if (asCharacteristic !== undefined) {
+                    characteristic = asCharacteristic;
+                    name = name.slice(0, parenMatch.index).trim();
+                }
+            }
+
             const key = skillNameToKey(name);
             if (key === '') continue;
+            if (characteristic === '') characteristic = catalogueChar[key] ?? '';
+
             trained[key] = {
                 name,
                 characteristic,
