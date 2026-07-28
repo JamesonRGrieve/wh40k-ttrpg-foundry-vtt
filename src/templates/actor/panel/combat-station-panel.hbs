@@ -28,6 +28,59 @@
                                  the same markup so the two cannot drift. --}}
                             {{> systems/wh40k-rpg/templates/actor/panel/overview-vitals-panel.hbs showHeader=false}}
                             {{> systems/wh40k-rpg/templates/actor/panel/overview-active-effects-panel.hbs}}
+
+                            {{!-- NPC Fate (#258). The shared Overview partial renders Fate
+                                 inside {{#unless isNPC}}, so an elite/master NPC would
+                                 otherwise lose the control entirely when its body replaced
+                                 the inline one (#494). PCs get the partial's row, NPCs get
+                                 this one — exactly one Fate control either way. --}}
+                            {{#if isNPC}}
+                            {{#unless npcFateHidden}}
+                            <div class="tw-group tw-flex tw-flex-col tw-gap-[6px] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-[6px] tw-transition-all tw-relative tw-overflow-hidden tw-min-w-0 tw-w-full hover:tw-border-[color:var(--vital-color,var(--wh40k-border-medium))] hover:tw-shadow-[0_2px_8px_rgba(0,0,0,0.08)]" style="--vital-color:var(--wh40k-accent-info);--vital-color-rgb:52,152,219">
+                                <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--vital-color,var(--wh40k-border-medium))] tw-transition-all tw-pointer-events-none group-hover:tw-w-[5px]" aria-hidden="true"></span>
+                                <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-sm)] tw-w-full">
+                                    <div class="sheet-control__hide-control tw-cursor-pointer tw-select-none tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-flex-1 tw-transition-colors tw-duration-200 tw-p-[var(--wh40k-space-xs)] tw-mx-[calc(-1*var(--wh40k-space-xs))] tw-mr-0 tw-rounded-[var(--wh40k-radius-md)]"
+                                         data-toggle="combat_fate_details"
+                                         title="Click to {{#if (isExpanded 'combat_fate_details' actor)}}collapse{{else}}expand{{/if}}">
+                                        <div class="tw-flex tw-items-center tw-gap-[6px] tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--vital-color,var(--wh40k-text-secondary))] tw-whitespace-nowrap [&>i]:tw-text-[0.75rem]">
+                                            <i class="fas fa-star"></i>
+                                            <span>FATE</span>
+                                        </div>
+                                        <i class="fas fa-chevron-down tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-transition-[transform,color] tw-duration-200 tw-ml-auto tw-flex-shrink-0 {{#if (isExpanded 'combat_fate_details' actor)}}tw-rotate-180{{/if}}"></i>
+                                    </div>
+                                    <div class="tw-flex tw-gap-[var(--wh40k-space-xs)] tw-shrink-0">
+                                        <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-0 tw-m-0 tw-cursor-pointer tw-transition-all tw-font-bold tw-rounded-[6px] tw-w-[22px] tw-h-[22px] tw-text-[0.7rem] tw-bg-[rgba(var(--vital-color-rgb,0,0,0),0.08)] tw-border tw-border-solid tw-border-[rgba(var(--vital-color-rgb,0,0,0),0.2)] tw-text-[color:var(--vital-color,var(--wh40k-text-primary))]" data-action="decrement" data-field="system.fate.value" data-min="0" title="Spend"><i class="fas fa-minus tw-text-[0.65rem] tw-leading-none"></i></button>
+                                        <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-0 tw-m-0 tw-cursor-pointer tw-transition-all tw-font-bold tw-rounded-[6px] tw-w-[22px] tw-h-[22px] tw-text-[0.7rem] tw-bg-[rgba(var(--vital-color-rgb,0,0,0),0.08)] tw-border tw-border-solid tw-border-[rgba(var(--vital-color-rgb,0,0,0),0.2)] tw-text-[color:var(--vital-color,var(--wh40k-text-primary))]" data-action="increment" data-field="system.fate.value" title="Restore"><i class="fas fa-plus tw-text-[0.65rem] tw-leading-none"></i></button>
+                                    </div>
+                                </div>
+                                <div class="tw-flex tw-flex-col tw-gap-[6px] tw-w-full">
+                                    {{!-- Fate pip strip wraps so high-max characters don't overflow into
+                                         hidden territory (issue #9). Each pip has a real clickable
+                                         button area (was just an unstyled <button> wrapping a tiny
+                                         icon, so clicks landed on dead space). --}}
+                                    <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-1.5 tw-py-1.5">
+                                        {{#each (range 1 system.fate.max) as |index|}}
+                                            <button type="button" class="tw-w-7 tw-h-7 tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-inline-flex tw-items-center tw-justify-center {{#if (lte index ../system.fate.value)}}tw-animate-star-glow{{else}}tw-opacity-40{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}{{#if (lte index ../system.fate.value)}} (Available — click to spend){{else}} (Spent — click to restore){{/if}}">
+                                                <i class="fas fa-star {{#if (lte index ../system.fate.value)}}tw-text-[var(--wh40k-accent-gold)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
+                                            </button>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                                <div class="combat_fate_details tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-bg-[rgba(0,0,0,0.02)] tw-border-t tw-border-[var(--wh40k-border-color-light)]" {{hideIfNot (isExpanded 'combat_fate_details' actor)}}>
+                                    <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-mt-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.02)] tw-border tw-border-solid tw-border-[rgba(0,0,0,0.08)] tw-rounded-[var(--wh40k-radius-md)]">
+                                        <label class="tw-flex tw-flex-col tw-gap-1">
+                                            <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-secondary)]">Max Fate</span>
+                                            <input type="number" data-dtype="Number" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]" name="system.fate.max" value="{{system.fate.max}}" min="0" placeholder="Max" />
+                                        </label>
+                                        <label class="tw-flex tw-flex-col tw-gap-1">
+                                            <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-secondary)]">Current Fate</span>
+                                            <input type="number" data-dtype="Number" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]" name="system.fate.value" value="{{system.fate.value}}" min="0" max="{{system.fate.max}}" placeholder="Current" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/unless}}
+                            {{/if}}
                         </div>
                     </div>
                 </div>
