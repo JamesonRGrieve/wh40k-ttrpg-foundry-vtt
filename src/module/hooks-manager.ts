@@ -106,6 +106,7 @@ import {
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
 import { registerActionEconomy } from './rules/action-economy.ts';
+import { conditionStatusEffects } from './rules/active-effects.ts';
 import { registerCombatTurnHooks } from './rules/combat-turn-hooks.ts';
 import { WH40K } from './rules/config.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
@@ -537,6 +538,14 @@ export class HooksManager {
         CONFIG.wh40k = WH40K as unknown as WH40KSystemConfig;
         CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
         CONFIG.MeasuredTemplate.defaults.angle = 30.0;
+
+        // Replace Foundry's generic default status list with THIS system's
+        // conditions (#495). Previously CONFIG.statusEffects was never registered,
+        // so the token HUD offered defaults with no relationship to the system's
+        // conditions, their artwork, or their mechanical `changes` — and nothing
+        // the system applied ever became a token status at all.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.statusEffects is a loosely-typed core array; the registry projection is asserted at its source
+        CONFIG.statusEffects = conditionStatusEffects();
 
         // Define custom Document classes
         CONFIG.Actor.documentClass = WH40KActorProxy;
