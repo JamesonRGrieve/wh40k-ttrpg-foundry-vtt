@@ -69,19 +69,25 @@ const actors: Array<{ file: string; name: string; img: string }> = [];
  */
 const IN_SCOPE_PACK = /(^|-)(vehicles|voidcraft|starship)(-|$)/;
 
-for (const file of files) {
+/** Parse a pack document, or null when it is unreadable. */
+function readActor(file: string): ActorDoc | null {
+    try {
+        return JSON.parse(readFileSync(file, 'utf8')) as ActorDoc;
+    } catch {
+        return null;
+    }
+}
+
+actors.push(
     // `vehicles-*` groups compile as Actors (see the gulpfile's
     // `detectCollectionType`), which is where the reported placeholders live.
-    if (!IN_SCOPE_PACK.test(basename(resolve(file, '../..')))) continue;
-    let doc: ActorDoc;
-    try {
-        doc = JSON.parse(readFileSync(file, 'utf8')) as ActorDoc;
-    } catch {
-        continue;
-    }
-    if (typeof doc.name !== 'string' || doc.name === '') continue;
-    actors.push({ file, name: doc.name, img: doc.img ?? '' });
-}
+    ...files
+        .filter((file) => IN_SCOPE_PACK.test(basename(resolve(file, '../..'))))
+        .map((file) => ({ file, doc: readActor(file) }))
+        .filter((entry): entry is { file: string; doc: ActorDoc } => entry.doc !== null)
+        .filter(({ doc }) => typeof doc.name === 'string' && doc.name !== '')
+        .map(({ file, doc }) => ({ file, name: doc.name ?? '', img: doc.img ?? '' })),
+);
 
 const skipList: SkipList = existsSync(SKIPS_FILE) ? (JSON.parse(readFileSync(SKIPS_FILE, 'utf8')) as SkipList) : { description: '', skips: {} };
 

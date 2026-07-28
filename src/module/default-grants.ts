@@ -138,6 +138,7 @@ interface RepairableActor {
     name?: string | null;
     type: string;
     items: Iterable<RepairableItem>;
+    /* eslint-disable-next-line no-restricted-syntax -- boundary: `Document#deleteEmbeddedDocuments` resolves to Foundry's untyped deleted-document array; the result is not inspected */
     deleteEmbeddedDocuments: (embeddedName: 'Item', ids: string[]) => Promise<unknown>;
 }
 

@@ -30,6 +30,7 @@ export class WH40KVehicle extends WH40KBaseActor {
 
     protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | undefined> {
         await super._preCreate(data, options, user);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: `_preCreate` data is typed `never` by the framework; `system.size` stays unknown until `tokenFootprintForSize` narrows it
         const dataWithName = data as { name?: string; img?: string; system?: { size?: unknown }; prototypeToken?: { texture?: { src?: string } } } | undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: updateSource expects typed token delta; Record<string,unknown> is the only viable shape for dot-notation token update paths
         const initData: Record<string, unknown> = {

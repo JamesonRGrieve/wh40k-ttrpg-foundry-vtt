@@ -107,7 +107,7 @@ const reportedUnresolved = new Set<string>();
  * @param {string} actorKey   Stable de-dupe key (actor uuid or id).
  * @param {UnresolvedJoin[]} unresolved  The items that stayed lean.
  */
-export function reportUnresolvedJoins(actorName: string, actorKey: string, unresolved: UnresolvedJoin[]): void {
+function reportUnresolvedJoins(actorName: string, actorKey: string, unresolved: UnresolvedJoin[]): void {
     if (unresolved.length === 0 || reportedUnresolved.has(actorKey)) return;
     reportedUnresolved.add(actorKey);
     const items = unresolved.map((u) => `${u.itemName} (${u.uuid})`).join(', ');
@@ -126,7 +126,7 @@ export function reportUnresolvedJoins(actorName: string, actorKey: string, unres
 }
 
 /** An embedded item whose join key did not resolve — it stayed a lean husk. */
-export interface UnresolvedJoin {
+interface UnresolvedJoin {
     /** The item's display name, for a GM-facing message. */
     itemName: string;
     /** The join key that failed to resolve. */
@@ -134,7 +134,7 @@ export interface UnresolvedJoin {
 }
 
 /** Outcome of a hydration pass over one actor. */
-export interface HydrationResult {
+interface HydrationResult {
     /** Patches produced (0 when every item was already full). */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payloads are open-ended Records
     patches: Array<Record<string, unknown>>;
@@ -152,7 +152,7 @@ export interface HydrationResult {
  * that did not resolve. Items with neither a `compendiumSource` nor a
  * `variantOf` are left alone (they are self-contained).
  */
-export async function buildHydration(actor: HydratableActor): Promise<HydrationResult> {
+async function buildHydration(actor: HydratableActor): Promise<HydrationResult> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payloads are open-ended Records
     const patches: Array<Record<string, unknown>> = [];
     const unresolved: UnresolvedJoin[] = [];
@@ -228,7 +228,7 @@ export async function hydrateActorInMemory(actor: HydratableActor): Promise<numb
  * resolve so the caller can surface them. A silent drop is what made #499 read
  * as "the hybrid was authored without claws" instead of "the claws didn't load".
  */
-export async function hydrateActorReporting(actor: HydratableActor): Promise<{ patched: number; unresolved: UnresolvedJoin[] }> {
+async function hydrateActorReporting(actor: HydratableActor): Promise<{ patched: number; unresolved: UnresolvedJoin[] }> {
     const { patches, unresolved } = await buildHydration(actor);
     for (const patch of patches) {
         const item = actor.items.contents.find((i) => i.id === patch['_id']);
@@ -237,6 +237,6 @@ export async function hydrateActorReporting(actor: HydratableActor): Promise<{ p
     if (patches.length > 0) actor.reset?.();
     // Report from the single join site, so EVERY path (boot, import, sheet
     // render) surfaces a failed join without each caller re-implementing it.
-    reportUnresolvedJoins(actor.name ?? 'Unknown actor', actor.uuid ?? actor.id ?? (actor.name ?? ''), unresolved);
+    reportUnresolvedJoins(actor.name ?? 'Unknown actor', actor.uuid ?? actor.id ?? actor.name ?? '', unresolved);
     return { patched: patches.length, unresolved };
 }

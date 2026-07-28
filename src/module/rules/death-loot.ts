@@ -57,7 +57,9 @@ export interface LootableActor {
     items: Iterable<LootableItem>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `actor.statuses` is a Set of status ids
     statuses?: ReadonlySet<string>;
+    /* eslint-disable-next-line no-restricted-syntax -- boundary: `Document#getFlag` is typed by Foundry as returning unknown; the `=== true` comparison at the call site is the narrowing */
     getFlag: (scope: string, key: string) => unknown;
+    /* eslint-disable-next-line no-restricted-syntax -- boundary: `Document#setFlag` accepts and resolves to Foundry's untyped flag value */
     setFlag: (scope: string, key: string, value: unknown) => Promise<unknown>;
 }
 
@@ -75,7 +77,7 @@ export interface LootableToken {
  * @param {LootableActor} actor  The dead actor.
  * @returns {boolean}  True when a pile was already produced for this body.
  */
-export function alreadyLooted(actor: LootableActor): boolean {
+function alreadyLooted(actor: LootableActor): boolean {
     return actor.getFlag(SYSTEM_ID, 'deathLooted') === true;
 }
 

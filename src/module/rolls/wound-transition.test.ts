@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { buildWoundTransition, woundTransitionRows } from './wound-transition.ts';
+import { buildWoundTransition, type WoundState, woundTransitionRows } from './wound-transition.ts';
 
-const state = (wounds: number, critical = 0, max = 12, fatigue?: number) => ({
+const state = (wounds: number, critical = 0, max = 12, fatigue?: number): WoundState => ({
     wounds: { value: wounds, max, critical },
     ...(fatigue === undefined ? {} : { fatigue: { value: fatigue, max: 6 } }),
 });

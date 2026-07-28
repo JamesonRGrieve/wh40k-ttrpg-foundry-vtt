@@ -4,7 +4,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import { conditionPickerRows, conditionRegistry } from '../../rules/active-effects.ts';
+import { conditionPickerRows, conditionRegistry } from '../../rules/condition-registry.ts';
 import { capitalize } from '../../utils/format.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
 

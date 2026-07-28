@@ -600,7 +600,7 @@ export class ActionData {
         try {
             // Hits may already be present if a prior step populated them; only
             // calculate when empty so we don't double-roll.
-            if (this.damageData !== undefined && this.damageData.hits.length === 0) {
+            if (this.damageData?.hits.length === 0) {
                 await this.calculateHits();
             }
 
@@ -646,7 +646,11 @@ export class ActionData {
         return null;
     }
 
-    /** Log and surface an auto-damage failure, naming attacker/weapon/target. */
+    /**
+     * Log and surface an auto-damage failure, naming attacker/weapon/target.
+     * @param {unknown} error  The caught rejection reason.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: a caught Promise rejection reason is untyped by the language; it is logged, never inspected
     #reportAutoRollFailure(error: unknown): void {
         const attacker = this.rollData.sourceActor?.name ?? 'Unknown attacker';
         const weapon = (this.rollData as { weapon?: { name?: string | null } | null }).weapon?.name ?? 'Unknown weapon';

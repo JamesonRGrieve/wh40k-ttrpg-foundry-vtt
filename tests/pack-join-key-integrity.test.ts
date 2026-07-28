@@ -126,7 +126,7 @@ describe('pack embedded-item join keys resolve (#499)', () => {
         const dangling = joinKeys().filter(({ uuid }) => {
             const m = UUID_RE.exec(uuid);
             if (m === null) return true; // malformed UUID can never resolve
-            return !packIds.has(m[2] ?? '');
+            return !packIds.has(m[2]);
         });
         expect(dangling.map((d) => `${d.actor} → ${d.item}: ${d.uuid}`)).toEqual([]);
     });
@@ -135,9 +135,9 @@ describe('pack embedded-item join keys resolve (#499)', () => {
         const dangling = joinKeys().filter(({ uuid }) => {
             const m = UUID_RE.exec(uuid);
             if (m === null) return false; // covered by the pack-existence assertion above
-            const ids = packIds.get(m[2] ?? '');
+            const ids = packIds.get(m[2]);
             if (ids === undefined) return false; // ditto
-            return !ids.has(m[4] ?? '');
+            return !ids.has(m[4]);
         });
         expect(dangling.map((d) => `${d.actor} → ${d.item}: ${d.uuid}`)).toEqual([]);
     });

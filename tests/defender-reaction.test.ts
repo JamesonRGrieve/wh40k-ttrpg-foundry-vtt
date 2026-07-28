@@ -13,22 +13,27 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type * as ActionEconomy from '../src/module/rules/action-economy.ts';
 
-interface FlagBag {
-    [key: string]: unknown;
+/** The one flag the economy reads/writes: a combatant's spent-actions record. */
+interface ActionsSpentFlag {
+    action?: number;
+    halfAction?: number;
+    reaction?: number;
+    free?: number;
 }
 
-/** Minimal combatant carrying the spent-actions flag the economy reads/writes. */
+/** Minimal combatant carrying that flag. */
 class StubCombatant {
     actorId: string;
-    #flags: FlagBag = {};
+    #flags: Record<string, ActionsSpentFlag | undefined> = {};
     constructor(actorId: string) {
         this.actorId = actorId;
     }
-    getFlag(_scope: string, key: string): unknown {
+    getFlag(_scope: string, key: string): ActionsSpentFlag | undefined {
         return this.#flags[key];
     }
-    setFlag(_scope: string, key: string, value: unknown): Promise<void> {
+    async setFlag(_scope: string, key: string, value: ActionsSpentFlag): Promise<void> {
         this.#flags[key] = value;
         return Promise.resolve();
     }
@@ -36,7 +41,8 @@ class StubCombatant {
 
 const DEFENDER = 'defender-actor-id';
 
-async function loadEconomy(): Promise<typeof import('../src/module/rules/action-economy.ts')> {
+/** Re-import per test so the module sees the freshly stubbed `game`. */
+async function loadEconomy(): Promise<typeof ActionEconomy> {
     return import('../src/module/rules/action-economy.ts');
 }
 

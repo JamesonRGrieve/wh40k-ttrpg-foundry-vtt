@@ -1,4 +1,5 @@
 import type { ReloadResult } from '../../actions/reload-action-manager.ts';
+import { SYSTEM_ID } from '../../constants.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { capitalize } from '../../handlebars/handlebars-helpers.ts';
 import { t } from '../../i18n/t.ts';
@@ -20,8 +21,13 @@ import {
     modeWeaponClass,
     type WeaponFiringMode,
 } from '../../rules/weapon-modes.ts';
-import { SYSTEM_ID } from '../../constants.ts';
-import { inferActiveGameLine, isLineVariantContainer, resolveLineVariant, type SupportedLineKey, tryResolveLineVariant } from '../../utils/item-variant-utils.ts';
+import {
+    inferActiveGameLine,
+    isLineVariantContainer,
+    resolveLineVariant,
+    type SupportedLineKey,
+    tryResolveLineVariant,
+} from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import AttackTemplate from '../shared/attack-template.ts';
@@ -59,6 +65,7 @@ const reportedUnresolvedVariants = new Set<string>();
  * @param {string} field  Field name, for the report.
  * @returns {boolean}  The resolved flag, or `false` when unresolved.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: `value` is a schema field that may still be an unresolved per-line container (tryResolveLineVariant narrows it on the next line); `parent` is the owning Foundry Item, read only for its name/uuid in the report
 function resolveFlagVariant(value: unknown, lineKey: SupportedLineKey, parent: unknown, field: string): boolean {
     const outcome = tryResolveLineVariant(value, lineKey);
     if (outcome.resolved) return outcome.value === true;

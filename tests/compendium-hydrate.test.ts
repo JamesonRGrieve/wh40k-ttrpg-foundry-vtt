@@ -105,7 +105,7 @@ describe('hydration wiring (source pins)', () => {
         // performs the join AND reports unresolved keys (#499). The invariant is
         // unchanged — it just lives in the delegate, so assert against the
         // function that actually applies the patches.
-        const fn = hydrate.match(/export async function hydrateActorReporting[\s\S]*?\n\}/);
+        const fn = hydrate.match(/\basync function hydrateActorReporting[\s\S]*?\n\}/);
         expect(fn).not.toBeNull();
         expect(fn?.[0]).toMatch(/updateSource/);
         expect(fn?.[0]).toMatch(/actor\.reset\?\.\(\)/);

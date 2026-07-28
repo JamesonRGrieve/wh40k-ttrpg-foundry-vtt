@@ -1,17 +1,19 @@
 import { describe, expect, it } from 'vitest';
 
 /**
- * Schema regression: parse the active-effects module and confirm the
- * condition registry exposes the full DH2 set. The full
- * `createConditionEffect` flow needs `ui.notifications` and a live actor
- * graph that aren't available outside Foundry, so we verify the registry
- * via static module read (the registry is a literal inside the function).
+ * Schema regression: parse the condition registry and confirm it exposes the
+ * full DH2 set. The full `createConditionEffect` flow needs `ui.notifications`
+ * and a live actor graph that aren't available outside Foundry, so we verify
+ * the registry via static module read (the registry is a module-scope literal).
+ *
+ * The table lives in the LEAF `rules/condition-registry.ts`, not in this hub —
+ * see the `no-circular` note in that module's header.
  */
 describe('active-effects condition registry', () => {
     it('lists every canonical DH2 condition string in the source', async () => {
         const fs = await import('node:fs/promises');
         const path = await import('node:path');
-        const source = await fs.readFile(path.resolve(process.cwd(), 'src/module/rules/active-effects.ts'), 'utf8');
+        const source = await fs.readFile(path.resolve(process.cwd(), 'src/module/rules/condition-registry.ts'), 'utf8');
         // Each entry below appears as `<key>: {` in the conditions registry.
         for (const key of [
             'stunned',

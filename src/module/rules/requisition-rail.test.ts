@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { evaluateRequisition, isTestBasedEconomy, requisitionEconomyFor, resolveRequisition } from './requisition-rail.ts';
+import { evaluateRequisition, isTestBasedEconomy, type RequisitionGate, requisitionEconomyFor, resolveRequisition } from './requisition-rail.ts';
 
 describe('requisitionEconomyFor (#496)', () => {
     it('maps each line to its own economy', () => {
@@ -77,7 +77,7 @@ describe('evaluateRequisition — the gate', () => {
 });
 
 describe('resolveRequisition — the outcome', () => {
-    const gate = (rating: number) => evaluateRequisition('influence', { rating }, { availability: 'common' });
+    const gate = (rating: number): RequisitionGate => evaluateRequisition('influence', { rating }, { availability: 'common' });
 
     it('transfers on a passed test and costs nothing', () => {
         const out = resolveRequisition(gate(50), { rating: 50 }, { success: true, degreesOfFailure: 0 });

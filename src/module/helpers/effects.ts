@@ -119,23 +119,23 @@ export function changeType(change: EffectChangeRaw): EffectChangeType | null {
  * @param {EffectChangeRaw} change  One ActiveEffect change row.
  * @returns {string}  Display string for the effect row.
  */
+/** Per-type value rendering. An object lookup rather than a `switch`, which the
+ *  lint config prohibits outright. `custom` is absent deliberately — see below. */
+const CHANGE_VALUE_FORMATTERS: Readonly<Partial<Record<EffectChangeType, (n: number) => string>>> = {
+    add: (n) => (n > 0 ? `+${n}` : `${n}`),
+    multiply: (n) => `×${n}`,
+    override: (n) => `= ${n}`,
+    upgrade: (n) => `↑${n}`,
+    downgrade: (n) => `↓${n}`,
+};
+
 export function formatChangeValue(change: EffectChangeRaw): string {
     const value = Number(change.value);
     const numeric = Number.isFinite(value) ? value : 0;
-    switch (changeType(change)) {
-        case 'add':
-            return numeric > 0 ? `+${numeric}` : `${numeric}`;
-        case 'multiply':
-            return `×${numeric}`;
-        case 'override':
-            return `= ${numeric}`;
-        case 'upgrade':
-            return `↑${numeric}`;
-        case 'downgrade':
-            return `↓${numeric}`;
-        default:
-            return `${change.value}`;
-    }
+    const format = CHANGE_VALUE_FORMATTERS[changeType(change) ?? 'custom'];
+    // `custom` (and an unrecognised type) fall through to the raw authored value:
+    // a custom change's value is whatever the author wrote, not a number to sign.
+    return format === undefined ? `${change.value}` : format(numeric);
 }
 
 /**

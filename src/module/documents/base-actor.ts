@@ -9,6 +9,7 @@ import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { t } from '../i18n/t.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
 import { type AddictionTier, resolveAddictionCheck } from '../rules/addiction.ts';
+import { conditionEffectData } from '../rules/condition-registry.ts';
 import { clampDisposition } from '../rules/disposition.ts';
 import { getFatigueAfterRest, isFatigueDeath, isFatigueUnconscious } from '../rules/fatigue.ts';
 import { clampFearRating, getFearTestPenalty } from '../rules/fear.ts';
@@ -175,10 +176,10 @@ export class WH40KBaseActor extends Actor {
             // `statuses`, so fatigue-unconsciousness was invisible to the token
             // and to `targetCombatStateFromConditions`.
             //
-            // The registry is imported LAZILY: a static
-            // `documents/base-actor → rules/active-effects` edge closes a
-            // depcruise no-circular cycle, and a dynamic import does not.
-            const { conditionEffectData } = await import('../rules/active-effects.ts');
+            // Imported from `rules/condition-registry.ts` — the LEAF that owns the
+            // table and its pure builders. Reaching for it through
+            // `rules/active-effects.ts` (the impure writer hub) closed a depcruise
+            // `no-circular` cycle, which is why the registry lives on its own.
             const data = conditionEffectData('unconscious', {
                 name: game.i18n.localize('WH40K.Fatigue.UnconsciousLabel'),
                 flags: { 'wh40k-rpg': { fatigueUnconscious: true } },
@@ -197,7 +198,6 @@ export class WH40KBaseActor extends Actor {
             // so the token defeated overlay, the combat tracker and the #477 pile
             // conversion see it — previously this route only emitted a chat
             // notice and left the actor mechanically alive.
-            const { conditionEffectData } = await import('../rules/active-effects.ts');
             if (!this.statuses.has(DEAD_STATUS_ID)) {
                 const dead = conditionEffectData(DEAD_STATUS_ID);
                 if (dead !== null) {
