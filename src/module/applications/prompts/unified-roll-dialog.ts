@@ -819,6 +819,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             hasGearModifiers,
             skillVariants,
             hasSkillVariants: skillVariants.length > 0,
+            hasSuppressedSkillVariants: this._hasSuppressedSkillVariants(),
             selectedSkillVariant: this._selectedSkillVariant,
             // Inline skill-use picker (#432) + the shared target selector it reveals
             // for a target-directed use. Both live in the `modifiers` part.
@@ -1243,6 +1244,15 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      * which keeps the selector hidden in RAW mode.
      */
     _getSkillVariants(): SkillVariant[] {
+        return availableSkillVariants(this._collectSkillVariants(), WH40KSettings.isHomebrew() || WH40KSettings.isAwarenessSenseSplit());
+    }
+
+    /**
+     * The skill's declared variants, BEFORE the refinement-setting gate. Split out
+     * so {@link _getSkillVariants} and {@link _hasSuppressedSkillVariants} share one
+     * lookup and cannot disagree about whether variants exist (#490).
+     */
+    _collectSkillVariants(): SkillVariant[] {
         const rd = this.rollData;
         if (rd.type !== 'Skill') return [];
         const rollKey = (rd.rollKey as string | null | undefined) ?? null;
@@ -1278,10 +1288,20 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             itemVariants.length > 0
                 ? itemVariants
                 : getSkillVariantsForKey(rollKey, (rd.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
-        // Variant refinements surface under the homebrew ruleset OR the granular
-        // Awareness sense-split toggle (#440), so a table can enable per-sense
-        // Awareness without switching the whole game to homebrew.
-        return availableSkillVariants(variants, WH40KSettings.isHomebrew() || WH40KSettings.isAwarenessSenseSplit());
+        return variants;
+    }
+
+    /**
+     * True when this skill HAS variants but the refinement settings suppress them
+     * (#490).
+     *
+     * Rendering nothing in that case is indistinguishable from the feature being
+     * broken — which is exactly how it was reported. The dialog surfaces a hint
+     * instead, so a table can tell "off" from "absent" and knows the toggle exists.
+     */
+    _hasSuppressedSkillVariants(): boolean {
+        if (WH40KSettings.isHomebrew() || WH40KSettings.isAwarenessSenseSplit()) return false;
+        return this._collectSkillVariants().length > 0;
     }
 
     /**
