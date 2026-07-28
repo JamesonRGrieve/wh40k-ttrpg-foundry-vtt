@@ -55,16 +55,45 @@ const RING_CONTENT = 0.75;
  * at the frame centre. The source's short side spans `content * zoom` of the
  * frame — `content` is the ring content circle (mask radius); `zoom` scales the
  * subject INSIDE it, so a face can fill the bust without enlarging the mask.
+ *
+ * The placement is then clamped so the scaled source always COVERS the content
+ * circle. Without the clamp an off-centre `cx`/`cy` slides the source until an
+ * arc of the circle falls outside it and renders transparent — the bust reads
+ * as cut off on that side, and on a ringed token the gap exposes the band
+ * (#501). The clamp only ever engages when the requested centre would uncover
+ * the circle, so a well-framed portrait keeps its exact requested centre.
+ *
+ * When the source is smaller than the circle on an axis (only possible for
+ * `zoom < 1`) full coverage is unachievable; the source is centred on that
+ * axis rather than pinned to one edge, which keeps the gap symmetric.
  */
 export function computeFrameTransform(srcWidth: number, srcHeight: number, size: number, content: number, cx: number, cy: number, zoom = 1): FrameTransform {
     const side = Math.min(srcWidth, srcHeight);
     const scale = (size * content * zoom) / side;
+    const radius = (size * content) / 2;
     return {
         scale,
-        x: size / 2 - cx * srcWidth * scale,
-        y: size / 2 - cy * srcHeight * scale,
-        radius: (size * content) / 2,
+        x: coverClamp(size / 2 - cx * srcWidth * scale, srcWidth * scale, size, radius),
+        y: coverClamp(size / 2 - cy * srcHeight * scale, srcHeight * scale, size, radius),
+        radius,
     };
+}
+
+/**
+ * Clamp one axis of the source placement so `[offset, offset + extent]` spans
+ * the content circle `[size/2 - radius, size/2 + radius]`.
+ * @param {number} offset  Requested top/left of the scaled source, in frame px.
+ * @param {number} extent  Scaled source length on this axis, in frame px.
+ * @param {number} size    Frame edge length, in px.
+ * @param {number} radius  Content-circle radius, in px.
+ * @returns {number}  The clamped offset.
+ */
+function coverClamp(offset: number, extent: number, size: number, radius: number): number {
+    const min = size / 2 - radius;
+    const max = size / 2 + radius;
+    // Source too small to cover: centre it so the shortfall is shared.
+    if (extent < max - min) return size / 2 - extent / 2;
+    return Math.min(min, Math.max(max - extent, offset));
 }
 
 /** Narrow an arbitrary flag value to a usable TokenFrameFlag. */

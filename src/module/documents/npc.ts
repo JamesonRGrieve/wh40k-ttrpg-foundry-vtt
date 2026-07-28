@@ -1,5 +1,6 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import type NPCData from '../data/actor/npc.ts';
+import { hasAuthoredFootprint, prototypeTokenFootprintUpdate } from '../utils/token-footprint.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 
 /**
@@ -82,6 +83,9 @@ export class WH40KNPC extends WH40KBaseActor {
         // eslint-disable-next-line no-restricted-syntax -- boundary: _preCreate data param is typed as never; cast to Record is necessary to access fields
         const createData = data as Record<string, unknown>;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: createData['system'] is untyped from _preCreate; cast is necessary
+        const systemData = createData['system'] as Record<string, unknown> | undefined;
+
         // Configure token defaults for NPC V2
         // eslint-disable-next-line no-restricted-syntax -- boundary: token init data passed to updateSource; Record<string, unknown> is the correct boundary type
         const initData: Record<string, unknown> = {
@@ -90,11 +94,14 @@ export class WH40KNPC extends WH40KBaseActor {
             'prototypeToken.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'prototypeToken.disposition': CONST.TOKEN_DISPOSITIONS.HOSTILE,
             'prototypeToken.name': createData['name'],
+            // Footprint from the shared size ladder, so a compendium-imported
+            // Hulking NPC arrives 2x2 without its sheet ever being opened (#501).
+            // An explicitly authored footprint wins — the ladder is the default,
+            // not an override.
+            ...(hasAuthoredFootprint(createData) ? {} : prototypeTokenFootprintUpdate(systemData?.['size'])),
         };
 
         // If horde type, show magnitude instead of wounds
-        // eslint-disable-next-line no-restricted-syntax -- boundary: createData['system'] is untyped from _preCreate; cast is necessary
-        const systemData = createData['system'] as Record<string, unknown> | undefined;
         if (systemData !== undefined && (systemData['type'] === 'horde' || systemData['type'] === 'swarm')) {
             initData['prototypeToken.bar1'] = { attribute: 'horde.magnitude' };
         }

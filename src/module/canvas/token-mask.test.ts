@@ -31,6 +31,50 @@ describe('computeFrameTransform', () => {
     });
 });
 
+describe('computeFrameTransform content-circle coverage (#501)', () => {
+    /** Does the scaled source span the whole content circle on both axes? */
+    const covers = (t: { scale: number; x: number; y: number; radius: number }, w: number, h: number, size: number): boolean => {
+        const min = size / 2 - t.radius;
+        const max = size / 2 + t.radius;
+        return t.x <= min && t.x + w * t.scale >= max && t.y <= min && t.y + h * t.scale >= max;
+    };
+
+    it.each([
+        // The four live aberrants: two 1.83 landscape, two 0.56 portrait.
+        ['aberrant-assassin', 1024, 559, 0.51, 0.335, 1.644],
+        ['aberrant-melee', 1024, 559, 0.5, 0.4, 1.251],
+        ['aberrant-hybrid', 572, 1024, 0.499, 0.223, 1.252],
+        ['aberrant-ranged', 572, 1024, 0.48, 0.34, 1.8],
+    ])('covers the circle for non-square source %s', (_name, w, h, cx, cy, zoom) => {
+        const t = computeFrameTransform(w, h, 512, 0.75, cx, cy, zoom);
+        expect(covers(t, w, h, 512)).toBe(true);
+    });
+
+    it('clamps an extreme centre rather than leaving an arc of the circle transparent', () => {
+        // cy 0.02 on landscape art would slide the source down and uncover the
+        // top of the bust; the clamp pins it so the circle stays covered.
+        const w = 1024;
+        const h = 559;
+        const t = computeFrameTransform(w, h, 512, 0.75, 0.5, 0.02, 1.1);
+        expect(covers(t, w, h, 512)).toBe(true);
+    });
+
+    it('honours the requested centre exactly when it already covers the circle', () => {
+        // A well-framed portrait must not be nudged by the clamp.
+        const t = computeFrameTransform(512, 512, 512, 0.75, 0.5, 0.303, 1.803);
+        expect(0.5 * 512 * t.scale + t.x).toBeCloseTo(256);
+        expect(0.303 * 512 * t.scale + t.y).toBeCloseTo(256);
+    });
+
+    it('centres a source too small to cover the circle instead of pinning one edge', () => {
+        // zoom < 1 shrinks the subject below the mask; share the shortfall.
+        const t = computeFrameTransform(512, 512, 512, 0.75, 0.1, 0.9, 0.5);
+        const extent = 512 * t.scale;
+        expect(t.x).toBeCloseTo(256 - extent / 2);
+        expect(t.y).toBeCloseTo(256 - extent / 2);
+    });
+});
+
 describe('parseTokenFrameFlag', () => {
     it('returns null for absent or disabled flags', () => {
         expect(parseTokenFrameFlag(undefined)).toBeNull();
