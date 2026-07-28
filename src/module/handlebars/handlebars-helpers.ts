@@ -661,7 +661,11 @@ export function registerHandlebarsHelpers(): void {
         const rtConfig = getRtConfig();
         const wh40kConfig = CONFIG.wh40k as WH40KConfig;
         const config: WH40KConfig | typeof WH40K = rtConfig?.getSkillIcon !== undefined ? wh40kConfig : WH40K;
-        const icon = config.getSkillIcon?.(skillKey) ?? 'modules/game-icons-net-font/svg/skills.svg';
+        // Foundry core icon: it ships with Foundry so it always resolves. The
+        // previous `modules/game-icons-net-font/...` fallback pointed at an
+        // optional module whose manifest is a dead 404, so the fallback for a
+        // missing skill icon was itself a broken image (#239).
+        const icon = config.getSkillIcon?.(skillKey) ?? 'icons/svg/target.svg';
         return foundry.utils.getRoute(icon);
     });
 

@@ -72,6 +72,10 @@ async function migrateActorData(_actor: MigratableActor, _version: number): Prom
  * need from here and wire it into `checkAndMigrateWorld` above.
  * ---------------------------------------------------------------------------
 
+// WARNING before lifting this: every right-hand path below points at
+// `modules/game-icons-net-font`, an OPTIONAL module whose manifest is a dead
+// 404 — the very breakage #239 is about. This map remapped core icons TO the
+// broken ones. Any future migration must map the other way, at core icons.
 const DEAD_ICON_REMAPS: Record<string, string> = {
     'icons/svg/backpack.svg': 'modules/game-icons-net-font/svg/backpack.svg',
     'icons/svg/alien.svg': 'modules/game-icons-net-font/svg/alien-bug.svg',
