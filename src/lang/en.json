@@ -794,6 +794,11 @@
         "Current": "Current",
         "New": "New",
         "Change": "Change",
+        "Armoury": {
+            "Name": "Inquisition Armoury",
+            "Created": "Created the {name}. Stock it with what the Inquisition will supply; acolytes requisition from it with an Influence test.",
+            "CreateFailed": "Could not create the Inquisition Armoury — see the console. Requisition will fall back to hand-tracked acquisitions."
+        },
         "Armour": {
             "Sheet": "Armour Sheet",
             "Protection": "Protection",
@@ -4040,7 +4045,14 @@
                 "Submersible": "Submersible",
                 "Hydrofoil": "Hydrofoil",
                 "Voidship": "Voidship"
-            }
+            },
+            "Renown": "Renown",
+            "SpeedBand": "Speed Band",
+            "Mass": "Mass",
+            "Acceleration": "Max Acceleration",
+            "Complement": "Crew Complement",
+            "Dimensions": "Dimensions",
+            "HullClass": "Hull Class"
         },
         "Theme": {
             "Switched": "Theme switched to {theme} mode"
@@ -4406,7 +4418,9 @@
             "RollDamage": "Roll Damage",
             "ShowDetails": "Show Details",
             "HideDetails": "Hide Details",
-            "FiringMode": "Firing Mode"
+            "FiringMode": "Firing Mode",
+            "Mounting": "Mounting",
+            "Facing": "Facing"
         },
         "Reload": {
             "Free": "Free Action",
