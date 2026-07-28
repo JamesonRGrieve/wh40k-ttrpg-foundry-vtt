@@ -589,34 +589,84 @@ export class ActionData {
      * never auto-rolls; there is no degrees-of-success result to drive hits yet.
      */
     async maybeAutoRollDamage(): Promise<void> {
-        if (!this.hasDamage || this.damageData === undefined) return;
+        const skip = this.#autoRollSkipReason();
+        if (skip !== null) {
+            // Which gate fired is the diagnostic #506 asks for. Debug-level: a
+            // deliberate skip (miss, setting off, target-only post) is normal.
+            game.wh40k.log(`auto-damage: skipped — ${skip}`);
+            return;
+        }
+
+        try {
+            // Hits may already be present if a prior step populated them; only
+            // calculate when empty so we don't double-roll.
+            if (this.damageData !== undefined && this.damageData.hits.length === 0) {
+                await this.calculateHits();
+            }
+
+            // Propagate attack DoS to each hit so the damage card can still offer the
+            // "replace damage die with DoS" action (#129 — DH2 core L10398-10414),
+            // matching the manual `_rollDamage` path.
+            const attackDoS = this.rollData.dos;
+            for (const hit of this.damageData?.hits ?? []) {
+                hit.dos = attackDoS;
+            }
+
+            await DHBasicActionManager._postDamageCard(this);
+        } catch (error) {
+            // A silent abort here is the worst possible failure mode (#506): the
+            // attack card has ALREADY posted, so the table sees the attack land
+            // and then nothing, and assumes the system is waiting on them. The
+            // call site awaits this without a catch, so a rejection also became
+            // an unhandled promise rejection rather than anything actionable.
+            //
+            // Report with the actors named and stop — the attack card's manual
+            // "Roll Damage" button is still there and still works.
+            this.#reportAutoRollFailure(error);
+        }
+    }
+
+    /**
+     * Why auto-damage will not run, or null when it will.
+     *
+     * Split out so the reason is nameable in the log — "no damage card appeared"
+     * previously gave no way to tell an intentional skip from a failure (#506).
+     * @returns {string | null}  A short reason, or null to proceed.
+     */
+    #autoRollSkipReason(): string | null {
+        if (!this.hasDamage || this.damageData === undefined) return 'action has no damage data';
         // `isTargetOnly` is set on a "post target, await physical roll" submit;
         // there is no resolved success/DoS to roll damage from.
-        if ((this.rollData as { isTargetOnly?: boolean }).isTargetOnly === true) return;
-
+        if ((this.rollData as { isTargetOnly?: boolean }).isTargetOnly === true) return 'target-only post (awaiting a physical roll)';
         // `isThrown` is optional on the base RollData (only WeaponRollData sets
         // it); a thrown weapon always rolls damage (scatter on a miss) so it
         // counts as a "hit" for auto-damage purposes.
-        const isHit = this.rollData.success || this.rollData.isThrown === true;
-        if (!isHit) return;
+        if (!(this.rollData.success || this.rollData.isThrown === true)) return 'attack missed';
+        if (!WH40KSettings.isAutoRollDamageEnabled()) return 'auto-roll-damage setting is off';
+        return null;
+    }
 
-        if (!WH40KSettings.isAutoRollDamageEnabled()) return;
-
-        // Hits may already be present if a prior step populated them; only
-        // calculate when empty so we don't double-roll.
-        if (this.damageData.hits.length === 0) {
-            await this.calculateHits();
+    /** Log and surface an auto-damage failure, naming attacker/weapon/target. */
+    #reportAutoRollFailure(error: unknown): void {
+        const attacker = this.rollData.sourceActor?.name ?? 'Unknown attacker';
+        const weapon = (this.rollData as { weapon?: { name?: string | null } | null }).weapon?.name ?? 'Unknown weapon';
+        const target = (this.rollData as { targetActor?: { name?: string | null } | null }).targetActor?.name ?? 'no target';
+        console.error(`${SYSTEM_ID} | auto-damage failed: ${attacker} / ${weapon} → ${target}. The manual Roll Damage button still works.`, error);
+        // The notification is best-effort: a reporter that throws would defeat
+        // its own purpose and re-create the silent abort it exists to prevent.
+        // `game`/`ui` are partially stubbed under vitest and only fully present
+        // after Foundry's `setup`, so every hop is guarded and the whole thing
+        // is wrapped.
+        try {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: `ui`/`game` and their members are absent outside a booted client
+            const notify = typeof ui === 'undefined' ? undefined : ui.notifications;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: `game.i18n` is undefined until Foundry's `i18nInit`
+            const i18n = typeof game === 'undefined' ? undefined : game.i18n;
+            if (notify === undefined || i18n === undefined) return;
+            notify.error(i18n.format('WH40K.Warning.AutoDamageFailed', { attacker, weapon, target }));
+        } catch {
+            // Already logged above; nothing further to do.
         }
-
-        // Propagate attack DoS to each hit so the damage card can still offer the
-        // "replace damage die with DoS" action (#129 — DH2 core L10398-10414),
-        // matching the manual `_rollDamage` path.
-        const attackDoS = this.rollData.dos;
-        for (const hit of this.damageData.hits) {
-            hit.dos = attackDoS;
-        }
-
-        await DHBasicActionManager._postDamageCard(this);
     }
 }
 

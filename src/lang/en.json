@@ -110,7 +110,8 @@
             "LootTokenLocked": "Loot piles can't be moved. Pick it up from the Token HUD instead.",
             "GiveTargetNotOwned": "You can't give items to a character you don't control.",
             "HydrationFailed": "{actor}: {count} item(s) could not load their compendium data and are incomplete — {items}",
-            "UnresolvedWeaponVariant": "{item}: could not determine the '{field}' value for this game line ({actor}). Treated as not-set rather than guessed — check the weapon's per-line authoring."
+            "UnresolvedWeaponVariant": "{item}: could not determine the '{field}' value for this game line ({actor}). Treated as not-set rather than guessed — check the weapon's per-line authoring.",
+            "AutoDamageFailed": "Auto-roll damage failed for {attacker} ({weapon}) against {target}. Use the Roll Damage button on the attack card; see the console for details."
         },
         "Confirm": "Confirm",
         "Cancel": "Cancel",
