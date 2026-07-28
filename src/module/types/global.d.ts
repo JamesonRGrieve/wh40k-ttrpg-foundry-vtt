@@ -19,6 +19,7 @@ import type ItemDataModel from '../data/abstract/item-data-model.ts';
 import type * as dice from '../dice/_module.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
+import type { EventTracker } from '../managers/event-tracker.ts';
 import type { RollTableUtils } from '../utils/roll-table-utils.ts';
 
 // =========================================================================
@@ -412,6 +413,8 @@ export interface WH40KGameSystem {
     loadPreset: (actor: WH40KBaseActor) => Promise<unknown>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry dialog result (`game.wh40k.openPresetLibrary`)
     openPresetLibrary: () => Promise<unknown>;
+    /** Campaign event graph, loaded from the GM-only JournalEntry (#33). */
+    EventTracker: typeof EventTracker;
     dice: typeof dice;
     BasicRollWH40K: typeof dice.BasicRollWH40K;
     D100Roll: typeof dice.D100Roll;
