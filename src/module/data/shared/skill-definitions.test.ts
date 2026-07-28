@@ -60,6 +60,10 @@ const EXPECTED_KEYS_IN_ORDER = [
     'scholasticLore',
     'secretTongue',
     'speakLanguage',
+    // Added #503: DW Core p.104 Tactics (Advanced, Int, specialist groups). Its
+    // absence meant every Deathwatch NPC printing "Tactics (…)" parsed to a key
+    // matching no catalogue skill and rendered nowhere.
+    'tactics',
     'techUse',
     'trade',
 ];

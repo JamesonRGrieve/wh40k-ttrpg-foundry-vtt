@@ -22,6 +22,7 @@ import {
     migrateCharacteristics,
     migrateMove,
     migrateSkills,
+    parseSkillEntries,
     migrateWeapons,
     toInt,
 } from './npc-import-migration.ts';
@@ -256,7 +257,7 @@ describe('migrateSkills (#256)', () => {
             const ts = source['trainedSkills'] as JsonObject;
             expect(ts['commonLore']).toMatchObject({ name: 'Common Lore (Adeptus Arbites)' });
             // Not named in the string, so it comes from the canonical catalogue.
-            expect((ts['commonLore'] as JsonObject | undefined)?.characteristic).not.toBe('');
+            expect((ts['commonLore'] as JsonObject | undefined)?.['characteristic']).not.toBe('');
         });
 
         it('parses advances off the comma-list form', () => {
@@ -470,5 +471,90 @@ describe('migrateMove', () => {
         expect(source['move']).toBeUndefined();
         expect(source['movement']).toBeUndefined();
         expect(source['movementManual']).toBeUndefined();
+    });
+});
+
+/**
+ * Structural hardening (#503). Each case below is a verbatim `skills` string from a
+ * real pack actor that previously minted a garbage key — a key matching no catalogue
+ * skill, which resolves to no characteristic and renders nowhere. Typos in skill
+ * NAMES are deliberately not handled here: those are content defects fixed in the
+ * pack JSON and the corpus, not in the parser (Direction #7).
+ */
+describe('migrateSkills structural hardening (#503)', () => {
+    const parse = (skills: string): JsonObject => {
+        const source: JsonObject = { skills };
+        migrateSkills(source);
+        return (source['trainedSkills'] ?? {}) as JsonObject;
+    };
+
+    it('splits pipe-joined characteristic groups, not just newlines', () => {
+        // hb-rt-actors-npcs "Warlord Grashmekx the Blue" — previously produced the
+        // keys `athletics+10|T:|Ag:Operate|Wp:Interrogation` and `|T:|Ag:Dodge`.
+        const ts = parse('S: Intimidate +50, Athletics +10 | T: | Ag: Operate(Ground, Flyer) | WP: Interrogation');
+        expect(Object.keys(ts).sort()).toEqual(['athletics', 'interrogation', 'intimidate', 'operate']);
+        expect((ts['intimidate'] as JsonObject)['characteristic']).toBe('strength');
+        expect((ts['interrogation'] as JsonObject)['characteristic']).toBe('willpower');
+        expect((ts['operate'] as JsonObject)['characteristic']).toBe('agility');
+    });
+
+    it('drops sentence-ending punctuation instead of baking it into the key', () => {
+        // hb-dh2-actors-bestiary "PDF Riot Officer" / "Genestealer Patriarch (Young)".
+        const ts = parse('Awareness (Per), Intimidate (S), Inquiry (Fel), Scrutiny (Per).');
+        expect(Object.keys(ts)).toContain('scrutiny');
+        expect(Object.keys(ts).some((k) => k.includes('.'))).toBe(false);
+    });
+
+    it('peels every trailing modifier group, keeping the highest advance', () => {
+        // dh2-beyond-actors-npcs "The Lord of Wrath" — previously `athletics+30`.
+        const ts = parse('Athletics (S) +30 (Ag) +20, Awareness (Per)');
+        expect(Object.keys(ts).sort()).toEqual(['athletics', 'awareness']);
+        const athletics = ts['athletics'] as JsonObject;
+        expect(athletics['advance']).toBe(4);
+        expect(athletics['plus30']).toBe(true);
+    });
+
+    it('keeps a real specialisation in the name while peeling the characteristic', () => {
+        const ts = parse('Common Lore (Underworld) (Int) +20, Operate (Surface) (Ag)');
+        expect((ts['commonLore'] as JsonObject)['name']).toBe('Common Lore (Underworld)');
+        expect((ts['commonLore'] as JsonObject)['characteristic']).toBe('intelligence');
+        expect((ts['operate'] as JsonObject)['name']).toBe('Operate (Surface)');
+        expect((ts['operate'] as JsonObject)['characteristic']).toBe('agility');
+    });
+
+    it('writes the advance rank alongside cumulative flags', () => {
+        const ts = parse('Dodge (Ag), Stealth (Ag) +10, Awareness (Per) +20, Parry (WS) +30');
+        const rank = (key: string): Json => (ts[key] as JsonObject)['advance'];
+        expect([rank('dodge'), rank('stealth'), rank('awareness'), rank('parry')]).toEqual([1, 2, 3, 4]);
+        // +20 must set BOTH plus10 and plus20 — getSkillTarget adds them cumulatively.
+        const awareness = ts['awareness'] as JsonObject;
+        expect(awareness['plus10']).toBe(true);
+        expect(awareness['plus20']).toBe(true);
+        expect(awareness['plus30']).toBe(false);
+    });
+});
+
+describe('parseSkillEntries overflow (#503)', () => {
+    it('carries an advance printed above the +30 ceiling as a flat bonus', () => {
+        // hb-rt-actors-npcs "Warlord Grashmekx the Blue" prints Intimidate +50.
+        // Truncating to rank 4 (+30) would silently drop 20 points.
+        const entries = parseSkillEntries('S: Intimidate +50');
+        expect(entries).toHaveLength(1);
+        expect(entries[0]?.advance).toBe(4);
+        expect(entries[0]?.bonus).toBe(20);
+    });
+
+    it('leaves bonus at 0 for every in-ladder advance', () => {
+        for (const [prose, advance] of [
+            ['Dodge (Ag)', 1],
+            ['Dodge (Ag) +10', 2],
+            ['Dodge (Ag) +20', 3],
+            ['Dodge (Ag) +30', 4],
+        ] as const) {
+            const entries = parseSkillEntries(prose);
+            expect(entries).toHaveLength(1);
+            expect(entries[0]?.advance).toBe(advance);
+            expect(entries[0]?.bonus).toBe(0);
+        }
     });
 });
