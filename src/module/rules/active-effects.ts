@@ -13,6 +13,23 @@ type ActiveEffectChatContext = {
     damage?: number;
 };
 
+/**
+ * `CONST.ACTIVE_EFFECT_MODES.ADD`, as a literal.
+ *
+ * The condition registry below is a MODULE-SCOPE table, so it is evaluated at
+ * import time — and `CONST` is a Foundry runtime global that does not exist
+ * under vitest or in headless tooling. Reading it there threw
+ * `ReferenceError: CONST is not defined` and took down every suite that
+ * transitively imported this module (assign-damage-data, dynamic-damage,
+ * medicae-mechadendrite, combat-resolution, get-reroll-options,
+ * build-simple-skill-roll — six suites), because an import-time throw fails the
+ * whole file, not one test.
+ *
+ * Same reasoning `helpers/effects.ts` already documents for its mode literals.
+ * The value is fixed by Foundry's own enum and cannot drift.
+ */
+const MODE_ADD = 2;
+
 type EffectChange = {
     key: string;
     mode: number;
@@ -161,7 +178,7 @@ export async function createCharacteristicEffect(
         changes: [
             {
                 key: `system.characteristics.${characteristic}.modifier`,
-                mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+                mode: MODE_ADD,
                 value: value,
             },
         ],
@@ -190,7 +207,7 @@ export async function createSkillEffect(actor: WH40KBaseActorDocument, skill: st
         changes: [
             {
                 key: `system.skills.${skill}.bonus`,
-                mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+                mode: MODE_ADD,
                 value: value,
             },
         ],
@@ -219,7 +236,7 @@ export async function createCombatEffect(actor: WH40KBaseActorDocument, type: st
         changes: [
             {
                 key: `system.combat.${type}`,
-                mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+                mode: MODE_ADD,
                 value: value,
             },
         ],
@@ -272,38 +289,38 @@ const CONDITION_REGISTRY: Record<string, ConditionDefinition> = {
         name: 'Stunned',
         icon: 'icons/svg/daze.svg',
         changes: [
-            { key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
-            { key: 'system.combat.attack', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
+            { key: 'system.combat.defense', mode: MODE_ADD, value: -20 },
+            { key: 'system.combat.attack', mode: MODE_ADD, value: -20 },
         ],
         flags: { 'wh40k-rpg': { nature: 'harmful' } },
     },
     prone: {
         name: 'Prone',
         icon: 'icons/svg/falling.svg',
-        changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
+        changes: [{ key: 'system.combat.defense', mode: MODE_ADD, value: -20 }],
         flags: { 'wh40k-rpg': { nature: 'harmful' } },
     },
     blinded: {
         name: 'Blinded',
         icon: 'icons/svg/blind.svg',
         changes: [
-            { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
-            { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
+            { key: 'system.characteristics.ballisticSkill.modifier', mode: MODE_ADD, value: -30 },
+            { key: 'system.characteristics.weaponSkill.modifier', mode: MODE_ADD, value: -30 },
         ],
         flags: { 'wh40k-rpg': { nature: 'harmful' } },
     },
     deafened: {
         name: 'Deafened',
         icon: 'icons/svg/deaf.svg',
-        changes: [{ key: 'system.characteristics.perception.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
+        changes: [{ key: 'system.characteristics.perception.modifier', mode: MODE_ADD, value: -20 }],
         flags: { 'wh40k-rpg': { nature: 'harmful' } },
     },
     grappled: {
         name: 'Grappled',
         icon: 'icons/svg/combat.svg',
         changes: [
-            { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
-            { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
+            { key: 'system.characteristics.weaponSkill.modifier', mode: MODE_ADD, value: -20 },
+            { key: 'system.characteristics.agility.modifier', mode: MODE_ADD, value: -20 },
         ],
         flags: { 'wh40k-rpg': { nature: 'harmful' } },
     },
@@ -311,15 +328,15 @@ const CONDITION_REGISTRY: Record<string, ConditionDefinition> = {
         name: 'Inspired',
         icon: 'icons/svg/upgrade.svg',
         changes: [
-            { key: 'system.characteristics.willpower.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
-            { key: 'system.characteristics.fellowship.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
+            { key: 'system.characteristics.willpower.modifier', mode: MODE_ADD, value: 10 },
+            { key: 'system.characteristics.fellowship.modifier', mode: MODE_ADD, value: 10 },
         ],
         flags: { 'wh40k-rpg': { nature: 'beneficial' } },
     },
     blessed: {
         name: 'Blessed',
         icon: 'icons/svg/holy-shield.svg',
-        changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }],
+        changes: [{ key: 'system.combat.defense', mode: MODE_ADD, value: 10 }],
         flags: { 'wh40k-rpg': { nature: 'beneficial' } },
     },
     pinned: {
@@ -327,7 +344,7 @@ const CONDITION_REGISTRY: Record<string, ConditionDefinition> = {
         // ranged weapons; melee attacks against them get +20 WS.
         name: 'Pinned',
         icon: 'icons/svg/net.svg',
-        changes: [{ key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
+        changes: [{ key: 'system.characteristics.ballisticSkill.modifier', mode: MODE_ADD, value: -20 }],
         flags: { 'wh40k-rpg': { nature: 'harmful' } },
     },
     unconscious: {
@@ -335,10 +352,10 @@ const CONDITION_REGISTRY: Record<string, ConditionDefinition> = {
         name: 'Unconscious',
         icon: 'icons/svg/unconscious.svg',
         changes: [
-            { key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
-            { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
-            { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
-            { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+            { key: 'system.combat.defense', mode: MODE_ADD, value: -60 },
+            { key: 'system.characteristics.weaponSkill.modifier', mode: MODE_ADD, value: -60 },
+            { key: 'system.characteristics.ballisticSkill.modifier', mode: MODE_ADD, value: -60 },
+            { key: 'system.characteristics.agility.modifier', mode: MODE_ADD, value: -60 },
         ],
         flags: { 'wh40k-rpg': { nature: 'harmful' } },
     },
@@ -384,8 +401,8 @@ const CONDITION_REGISTRY: Record<string, ConditionDefinition> = {
         name: 'Manacled',
         icon: 'icons/svg/chains.svg',
         changes: [
-            { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -40 },
-            { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -40 },
+            { key: 'system.characteristics.ballisticSkill.modifier', mode: MODE_ADD, value: -40 },
+            { key: 'system.characteristics.weaponSkill.modifier', mode: MODE_ADD, value: -40 },
         ],
         flags: { 'wh40k-rpg': { nature: 'harmful' } },
     },
@@ -399,15 +416,15 @@ const CONDITION_REGISTRY: Record<string, ConditionDefinition> = {
         name: 'Fatigued',
         icon: 'icons/svg/sleep.svg',
         changes: [
-            { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-            { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-            { key: 'system.characteristics.strength.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-            { key: 'system.characteristics.toughness.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-            { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-            { key: 'system.characteristics.intelligence.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-            { key: 'system.characteristics.perception.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-            { key: 'system.characteristics.willpower.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-            { key: 'system.characteristics.fellowship.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+            { key: 'system.characteristics.weaponSkill.modifier', mode: MODE_ADD, value: -10 },
+            { key: 'system.characteristics.ballisticSkill.modifier', mode: MODE_ADD, value: -10 },
+            { key: 'system.characteristics.strength.modifier', mode: MODE_ADD, value: -10 },
+            { key: 'system.characteristics.toughness.modifier', mode: MODE_ADD, value: -10 },
+            { key: 'system.characteristics.agility.modifier', mode: MODE_ADD, value: -10 },
+            { key: 'system.characteristics.intelligence.modifier', mode: MODE_ADD, value: -10 },
+            { key: 'system.characteristics.perception.modifier', mode: MODE_ADD, value: -10 },
+            { key: 'system.characteristics.willpower.modifier', mode: MODE_ADD, value: -10 },
+            { key: 'system.characteristics.fellowship.modifier', mode: MODE_ADD, value: -10 },
         ],
         flags: { 'wh40k-rpg': { nature: 'harmful' } },
     },
