@@ -232,7 +232,8 @@ export class HooksManager {
                 // Repair actors that accumulated copies before the intra-batch
                 // de-dupe landed (#228 — a live hybrid was carrying ~8 Unarmed).
                 // Runs after the grant so the two can never race on the same list.
-                () => repairDuplicateGrants(actor as Parameters<typeof repairDuplicateGrants>[0]),
+                // eslint-disable-next-line no-restricted-syntax -- boundary: the createActor hook payload is a Foundry Actor; the two narrow surfaces here describe disjoint slices of it
+                () => repairDuplicateGrants(actor as unknown as Parameters<typeof repairDuplicateGrants>[0]),
             );
         });
 

@@ -105,7 +105,7 @@ import {
     spendUnleashDaemon,
     type PossessionSlot,
 } from '../../rules/possession.ts';
-import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
+import type { WH40KActorSystemData, WH40KArmourLocation, WH40KItemSystemData } from '../../types/global.d.ts';
 import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
 import { getArmourAPForLocation, type ArmourSystemLike } from '../../utils/armour-calculator.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
@@ -697,6 +697,13 @@ export default class CharacterSheet extends BaseActorSheet {
     declare actor: WH40KAcolyte;
     declare document: WH40KAcolyte & BaseActorSheet['document'];
     declare isEditable: boolean;
+    /**
+     * Memoised diff produced by `_prepareCombatData` within one render pass
+     * (#507). Cleared at the top of `_prepareContext`; replayed by the second
+     * call from `_prepareTabPartContext` so the preparation runs once, not twice.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: holds a slice of Foundry's untyped sheet-context payload
+    #combatDataCache: Record<string, unknown> | null = null;
     _powersFilter: { discipline: string; orderCategory: string } = { discipline: '', orderCategory: '' };
     /**
      * Ephemeral BC Psychic Strength selections (#178). Mode and push
@@ -1183,6 +1190,10 @@ export default class CharacterSheet extends BaseActorSheet {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 _prepareContext returns Record<string, unknown>; concrete sub-typing happens via CharacterSheetContext cast inside
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = (await super._prepareContext(options)) as CharacterSheetContext;
+
+        // New render pass — drop the memoised combat-data diff (#507) so the
+        // next `_prepareCombatData` recomputes from current actor state.
+        this.#combatDataCache = null;
 
         // isGM / dh come from BaseActorSheet._prepareCommonContext (called by super).
         // Edit mode + ruleset state are character-specific.
@@ -2783,6 +2794,23 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: context comes from Foundry ApplicationV2; Record<string, unknown> matches upstream signature
     _prepareCombatData(context: Record<string, unknown>, categorized: CategorizedItems): void {
+        // Runs from BOTH `_prepareContext` and `_prepareTabPartContext` (the
+        // isolated part context doesn't inherit the main one), so the whole
+        // preparation — including mapping every ActiveEffect through
+        // `summarizeChanges` — used to be done twice per render (#507).
+        //
+        // Memoised as a DIFF rather than by returning a fresh object: the body
+        // reads loadout values (`primaryWeapon`, `armourDisplayLocations`, …)
+        // that `_prepareLoadoutData` writes onto the same context immediately
+        // before, at both call sites, so it cannot simply be handed a blank
+        // scratch object. The cache is cleared at the top of every render.
+        const cached = this.#combatDataCache;
+        if (cached !== null) {
+            Object.assign(context, cached);
+            return;
+        }
+        const before = new Map(Object.entries(context));
+
         const sheetContext = context as CharacterSheetContext;
         const weapons = categorized.weapons as WeaponLike[];
         // eslint-disable-next-line no-restricted-syntax -- sheetContext.system may be absent if context was freshly created; ?? fallback to actor.system is intentional
@@ -2925,6 +2953,15 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Attack actions are no longer surfaced on the combat panel — they live on the
         // per-weapon attack dialog (#227), so the panel no longer needs them partitioned.
+
+        // Record what this pass produced so the second call in the same render
+        // replays it instead of recomputing (#507).
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the sheet context is Foundry's untyped template payload
+        const diff: Record<string, unknown> = {};
+        for (const [key, value] of Object.entries(context)) {
+            if (!before.has(key) || before.get(key) !== value) diff[key] = value;
+        }
+        this.#combatDataCache = diff;
     }
 
     /* -------------------------------------------- */
@@ -2939,8 +2976,14 @@ export default class CharacterSheet extends BaseActorSheet {
         const equippedArmour = armourItems.filter((item) => (item.system as { state?: { equipped?: boolean } }).state?.equipped === true);
 
         return ARMOUR_DISPLAY_LOCATIONS.map((locationConfig) => {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: system.armour is typed as unknown in WH40KActorSystemData; cast needed to bracket-access by location key
-            const armourData = (system.armour as Record<string, Record<string, unknown>> | undefined)?.[locationConfig.key] ?? {};
+            // eslint-disable-next-line no-restricted-syntax -- boundary: system.armour is typed loosely on WH40KActorSystemData; narrow per location key
+            const rawArmour = system.armour?.[locationConfig.key];
+            const armourData: WH40KArmourLocation = {
+                value: rawArmour?.value ?? 0,
+                total: rawArmour?.total ?? 0,
+                toughnessBonus: rawArmour?.toughnessBonus ?? 0,
+                traitBonus: rawArmour?.traitBonus ?? 0,
+            };
             const coveringItems = equippedArmour
                 .map((item) => {
                     // Resolve AP through the shared helper so the effective-AP → AP →
@@ -2972,11 +3015,11 @@ export default class CharacterSheet extends BaseActorSheet {
                         }),
                     };
                 })
-                .filter(Boolean);
+                .filter((piece): piece is NonNullable<typeof piece> => piece !== null);
 
             return {
                 ...locationConfig,
-                total: Number(armourData['total'] ?? 0),
+                total: armourData.total,
                 tooltipData: this.prepareArmorTooltip(locationConfig.key, armourData, coveringItems),
                 items: coveringItems,
             };
