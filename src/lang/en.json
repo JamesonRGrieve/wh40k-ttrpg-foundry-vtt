@@ -176,6 +176,7 @@
             "NoTargetSelected": "No target — target a token, then Select Target",
             "TargetLabel": "Target",
             "TestVariant": "Test Variant",
+            "TestVariantsDisabled": "This skill has test variants — enable “Awareness sense split” (or the homebrew ruleset) in system settings to choose one.",
             "NotEnoughAmmo": "Not enough ammo to perform action. Do you need to reload?",
             "ForceFieldTitle": "Force Field",
             "ForceFieldNotActivated": "Force Field not activated!",

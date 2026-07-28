@@ -44,6 +44,16 @@
     </div>
     {{/if}}
 
+    {{!-- This skill declares variants, but the refinement settings suppress them
+         (#490). Rendering nothing is indistinguishable from the feature being
+         broken — which is exactly how it was reported — so say so instead. --}}
+    {{#if hasSuppressedSkillVariants}}
+    <div class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2.5 tw-text-[0.7rem] tw-italic tw-text-[#7a7a6a]">
+        <i class="fa-solid fa-circle-info tw-opacity-70"></i>
+        <span>{{localize "WH40K.Roll.TestVariantsDisabled"}}</span>
+    </div>
+    {{/if}}
+
     {{!-- Situational modifier pills from character talents/traits/conditions --}}
     {{#if hasSituationalModifiers}}
     <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-mb-2.5">
