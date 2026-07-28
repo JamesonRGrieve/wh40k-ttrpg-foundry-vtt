@@ -237,20 +237,19 @@
                         </div>
                         {{/unless}}
 
-                        {{!-- Movement (#394) — consolidated move-mode cluster
-                             (movement-panel-compact): Half/Full/Charge/Run/Disengage
-                             toggles that set the move mode, gate the per-turn budget,
-                             and grey out off-turn for players (#235). Wrapped to size
-                             to its content — self-start + drop the nested panel's
-                             default block margin so it hugs its rows instead of
-                             dominating the Vitals card. --}}
-                        <div class="tw-self-start [&_.wh40k-panel]:tw-mb-0">
-                            {{> systems/wh40k-rpg/templates/actor/panel/movement-panel-compact.hbs}}
-                        </div>
+                        {{!-- Movement moved OUT of the Vitals card to its own panel under
+                             Combat Actions in the right column (#494). --}}
                         </div>
 
                         </div>
                     </div>
+
+                    {{!-- The Overview tab's Vitals and Active Effects panels, beneath
+                         Combat's own Vitals card (#494). ADDITIVE — the card above is
+                         untouched. Shared partials, not copies: both tabs include the
+                         same markup so the two cannot drift. --}}
+                    {{> systems/wh40k-rpg/templates/actor/panel/overview-vitals-panel.hbs}}
+                    {{> systems/wh40k-rpg/templates/actor/panel/overview-active-effects-panel.hbs}}
                 </div>
 
                 {{!-- Right: Armour — shared armour-zone, the same layout as Overview (#234). --}}
@@ -278,9 +277,16 @@
                     {{/if}}
                 </div>
             </div>
-            {{!-- Right column — the former Armour slot (#394) now holds Combat Actions. --}}
+            {{!-- Right column — the former Armour slot (#394) now holds Combat Actions,
+                 with Movement beneath it (#494). Movement used to sit inside the Vitals
+                 card; it belongs with the actions it gates. The self-start + margin
+                 reset keeps the #394 "hug its rows" sizing and the #235 turn-gating
+                 behaviour unchanged — only its position moved. --}}
             <div class="tw-flex tw-flex-col tw-gap-2 tw-min-w-0">
                 {{> systems/wh40k-rpg/templates/actor/panel/combat-actions-panel.hbs}}
+                <div class="tw-self-start [&_.wh40k-panel]:tw-mb-0">
+                    {{> systems/wh40k-rpg/templates/actor/panel/movement-panel-compact.hbs}}
+                </div>
             </div>
         </div>
         {{!-- Row 2: Weapons (full width) --}}

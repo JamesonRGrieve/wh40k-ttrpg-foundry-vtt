@@ -1,0 +1,38 @@
+{{!--
+    Overview Active Effects panel (#494) — the effect chips with their
+    toggle/delete controls, in a dashboard-zone shell.
+
+    Extracted from tab-overview.hbs so the Combat tab can render the same panel
+    without duplicating the markup. Reads `effects` from the sheet context.
+--}}
+            {{!-- Active Effects --}}
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Active Effects" icon="fa-magic" zoneClass="tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-accent-psychic)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-psychic)]"}}
+                    {{#if effects.length}}
+                    <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)]">
+                        {{#each effects as |effect|}}
+                        <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-1.5 tw-py-[3px] tw-bg-[var(--color-bg-option)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] {{#if effect.disabled}}tw-opacity-50{{/if}}" title="{{effect.name}}">
+                            <img src="{{effect.icon}}" alt="" class="tw-w-[14px] tw-h-[14px] tw-rounded-[var(--wh40k-radius-sm)]" />
+                            <span class="tw-text-[color:var(--color-text-secondary)] tw-max-w-[80px] tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">{{effect.name}}</span>
+                            <div class="tw-flex tw-gap-[2px] tw-ml-[2px]">
+                                <button type="button" class="tw-w-[16px] tw-h-[16px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)]"
+                                        data-action="toggleEffect"
+                                        data-effect-id="{{effect.id}}"
+                                        title="{{#if effect.disabled}}Enable{{else}}Disable{{/if}}">
+                                    <i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i>
+                                </button>
+                                <button type="button" class="tw-w-[16px] tw-h-[16px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)]"
+                                        data-action="deleteEffect"
+                                        data-effect-id="{{effect.id}}"
+                                        title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{else}}
+                    <div class="tw-flex tw-items-center tw-justify-center tw-h-full tw-text-[color:var(--color-text-tertiary)] tw-text-[0.75rem] tw-italic">
+                        <span>No active effects</span>
+                    </div>
+                    {{/if}}
+            {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}

@@ -13,8 +13,37 @@ import { describe, expect, it } from 'vitest';
 import { readRepoFile } from './lib/repo-file.ts';
 
 const CHAR_SHEET = readRepoFile('src/module/applications/actor/character-sheet.ts');
-const OVERVIEW = readRepoFile('src/templates/actor/player/tab-overview.hbs');
 const PRELOAD = readRepoFile('src/module/handlebars/handlebars-manager.ts');
+
+/**
+ * Overview's markup, with its `{{> … }}` includes inlined one level deep.
+ *
+ * The guard below asserts each relocated panel is REACHABLE FROM OVERVIEW. Parts
+ * of the tab now live in shared partials (#494 extracted the Vitals and Active
+ * Effects blocks so the Combat tab could render them without duplication), so a
+ * flat read of tab-overview.hbs would report those panels missing when they are
+ * merely one indirection away. Resolving includes keeps the guard honest and
+ * survives future extractions.
+ */
+function readOverviewResolved(): string {
+    const root = readRepoFile('src/templates/actor/player/tab-overview.hbs');
+    const includePattern = /\{\{>\s*systems\/wh40k-rpg\/(templates\/[^\s}]+\.hbs)/g;
+    let resolved = root;
+    for (const match of root.matchAll(includePattern)) {
+        const relative: string | undefined = match[1];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (ESLint's parser project) has the flag off so it types this capture-group read as `string`, while tsconfig.json has it on and requires the guard.
+        if (relative === undefined) continue;
+        try {
+            resolved += `\n${readRepoFile(`src/${relative}`)}`;
+        } catch {
+            // A partial that cannot be read is a separate failure surface
+            // (preload-drift covers missing partials); don't mask it here.
+        }
+    }
+    return resolved;
+}
+
+const OVERVIEW = readOverviewResolved();
 
 describe('Status tab removal (#263)', () => {
     it('deletes the tab-status.hbs template', () => {

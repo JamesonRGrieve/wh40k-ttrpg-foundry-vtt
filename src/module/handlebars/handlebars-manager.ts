@@ -128,6 +128,9 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/movement-panel-compact.hbs',
             'systems/wh40k-rpg/templates/actor/panel/active-effects-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/active-effects-compact.hbs',
+            // Shared Overview panels, rendered by both the Overview and Combat tabs (#494).
+            'systems/wh40k-rpg/templates/actor/panel/overview-vitals-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/overview-active-effects-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/combat-station-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/combat-psychic-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/weapon-panel.hbs',

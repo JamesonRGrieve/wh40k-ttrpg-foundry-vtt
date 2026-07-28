@@ -26,11 +26,11 @@
  */
 
 /** Hours in a Terran standard year (365.25 days) — the basis of the fraction. */
-export const YEAR_HOURS = 365.25 * 24;
+const YEAR_HOURS = 365.25 * 24;
 /** Seconds in a Terran standard year. */
-export const YEAR_SECONDS = YEAR_HOURS * 3600;
+const YEAR_SECONDS = YEAR_HOURS * 3600;
 /** The year is divided into exactly this many fractions. */
-export const FRACTIONS_PER_YEAR = 1000;
+const FRACTIONS_PER_YEAR = 1000;
 /** Seconds in one year-fraction (a "Makr" — 8.766 hours). */
 export const FRACTION_SECONDS = YEAR_SECONDS / FRACTIONS_PER_YEAR;
 
