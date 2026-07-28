@@ -3719,18 +3719,6 @@
             "flags": {}
         },
         {
-            "name": "rt-tau-vehicles-terracraft",
-            "label": "RT: Tau Character Guide, Vehicles",
-            "path": "packs/rogue-trader/rt-tau-vehicles-terracraft",
-            "system": "wh40k-rpg",
-            "type": "Actor",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
             "name": "rt-battlefleet-vehicles-aircraft",
             "label": "RT: Battlefleet Koronus, Aircraft",
             "path": "packs/rogue-trader/rt-battlefleet-vehicles-aircraft",
@@ -10865,8 +10853,7 @@
                         "rt-tau-items-traits",
                         "rt-tau-items-weapons",
                         "rt-tau-journals",
-                        "rt-tau-rolltables",
-                        "rt-tau-vehicles-terracraft"
+                        "rt-tau-rolltables"
                     ]
                 },
                 {
