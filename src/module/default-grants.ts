@@ -37,13 +37,69 @@ export function itemKey(name: string, type: string): string {
 }
 
 /**
+ * Collapse a source list to one entry per (name, type), keeping the first.
+ *
+ * The scan walks EVERY system Item pack, and the same canonical document is
+ * reachable from more than one of them (a line's pack can carry a `reference`
+ * stub at the canonical body). Without this, one flagged Unarmed became one
+ * copy per reachable pack (#228: a live hybrid carrying ~8).
+ */
+export function dedupeByKey<T extends { name: string; type: string }>(sources: readonly T[]): T[] {
+    const seen = new Set<string>();
+    return sources.filter((source) => {
+        const key = itemKey(source.name, source.type);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+}
+
+/**
  * Filter default-grant sources down to those not already present on the actor,
  * comparing by (name, type). Pure — the unit-tested core of the grant decision.
  * De-duping by the source's own name/type (not a hardcoded string) keeps this
  * content-agnostic and idempotent across actor duplication / import.
+ *
+ * De-dupes WITHIN the batch as well as against the actor. `existingKeys` is
+ * snapshotted before the write and the whole batch is embedded in one call, so
+ * it can never catch duplicates that arrive together — the intra-batch pass is
+ * the only thing that can (#228).
  */
 export function selectGrantsToAdd<T extends { name: string; type: string }>(sources: readonly T[], existingKeys: ReadonlySet<string>): T[] {
-    return sources.filter((source) => !existingKeys.has(itemKey(source.name, source.type)));
+    return dedupeByKey(sources).filter((source) => !existingKeys.has(itemKey(source.name, source.type)));
+}
+
+/** Minimal owned-item surface the duplicate repair reads. */
+export interface RepairableItem {
+    id?: string | null;
+    name: string;
+    type: string;
+    system?: { grantedByDefault?: boolean };
+}
+
+/**
+ * Ids of surplus default-granted items on an actor: every copy after the first
+ * of each (name, type). Pure, so the repair is unit-testable without a world.
+ *
+ * Repairs actors that accumulated copies before the intra-batch de-dupe landed.
+ * Only `grantedByDefault` items are considered — a player carrying two identical
+ * bought weapons is legitimate and must not be touched.
+ * @param {readonly RepairableItem[]} items  The actor's owned items.
+ * @returns {string[]}  Item ids to delete.
+ */
+export function selectDuplicateGrantIds(items: readonly RepairableItem[]): string[] {
+    const seen = new Set<string>();
+    const surplus: string[] = [];
+    for (const item of items) {
+        if (item.system?.grantedByDefault !== true) continue;
+        const key = itemKey(item.name, item.type);
+        if (seen.has(key)) {
+            if (typeof item.id === 'string' && item.id !== '') surplus.push(item.id);
+            continue;
+        }
+        seen.add(key);
+    }
+    return surplus;
 }
 
 /**
@@ -75,6 +131,35 @@ interface GrantableActor {
     type: string;
     items: Iterable<{ name: string; type: string }>;
     createEmbeddedDocuments: (embeddedName: 'Item', data: ItemSourceData[]) => Promise<ItemSourceData[]>;
+}
+
+/** Minimal actor surface the duplicate repair touches (Foundry boundary). */
+interface RepairableActor {
+    name?: string | null;
+    type: string;
+    items: Iterable<RepairableItem>;
+    deleteEmbeddedDocuments: (embeddedName: 'Item', ids: string[]) => Promise<unknown>;
+}
+
+/**
+ * Delete surplus copies of default-granted items from an actor that accumulated
+ * them before the intra-batch de-dupe landed. Idempotent and never throws — a
+ * failed repair must not block whatever triggered it.
+ * @param {RepairableActor} actor  The actor to repair.
+ * @returns {Promise<number>}  How many surplus copies were removed.
+ */
+export async function repairDuplicateGrants(actor: RepairableActor): Promise<number> {
+    try {
+        if (!isCreatureActorType(actor.type)) return 0;
+        const surplus = selectDuplicateGrantIds([...actor.items]);
+        if (surplus.length === 0) return 0;
+        await actor.deleteEmbeddedDocuments('Item', surplus);
+        console.warn(`${SYSTEM_ID} | default-grants: removed ${surplus.length} duplicate default-granted item(s) from ${actor.name ?? actor.type}`);
+        return surplus.length;
+    } catch (error) {
+        console.error(`${SYSTEM_ID} | default-grants: failed repairing duplicate grants`, error);
+        return 0;
+    }
 }
 
 /** Session cache of the discovered grant-source scan. The *promise* is cached
@@ -114,7 +199,10 @@ async function scanForDefaultGrantSources(): Promise<ItemSourceData[]> {
         }),
     );
 
-    return sources;
+    // Cross-pack de-dupe at the SOURCE, so a bad scan can't be memoised for the
+    // whole session and multiplied onto every creature created afterwards (#228).
+    // eslint-disable-next-line no-restricted-syntax -- boundary: compendium toObject() payloads are untyped item source data carrying name/type
+    return dedupeByKey(sources as (ItemSourceData & { name: string; type: string })[]);
 }
 
 /** Discovered default-grant source objects, scanned once and cached. The promise
@@ -145,6 +233,9 @@ export async function grantDefaultItemsToActor(actor: GrantableActor): Promise<v
 
         const existingKeys = new Set<string>();
         for (const item of actor.items) existingKeys.add(itemKey(item.name, item.type));
+        // `existingKeys` is snapshotted here and the batch below is embedded in a
+        // single call, so it can never see duplicates that arrive together — the
+        // intra-batch de-dupe inside `selectGrantsToAdd` is what prevents that.
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: compendium toObject() payloads are untyped item source data carrying name/type
         const typedSources = sources as (ItemSourceData & { name: string; type: string })[];
