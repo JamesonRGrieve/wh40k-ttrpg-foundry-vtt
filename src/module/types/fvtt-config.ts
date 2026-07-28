@@ -111,6 +111,12 @@ declare module 'fvtt-types/configuration' {
         User: {
             'wh40k-rpg': Record<string, unknown>;
         };
+        // The GM-only campaign event graph lives in a JournalEntry flag (#33) —
+        // declaring the scope here is what lets `entry.flags['wh40k-rpg']` be read
+        // without a cast at the one site that reads it.
+        JournalEntry: {
+            'wh40k-rpg': Record<string, unknown>;
+        };
     }
     /* eslint-enable no-restricted-syntax */
 

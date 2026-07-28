@@ -103,6 +103,7 @@ import {
     rollItemMacro,
     rollSkillMacro,
 } from './macros/macro-manager.ts';
+import { EventTracker } from './managers/event-tracker.ts';
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
 import { registerActionEconomy } from './rules/action-economy.ts';
@@ -549,6 +550,11 @@ export class HooksManager {
             savePreset: async (actor: WH40KBaseActor) => Promise.resolve(npcApplications.CombatPresetDialog.savePreset(actor as never)),
             loadPreset: async (actor: WH40KBaseActor) => Promise.resolve(npcApplications.CombatPresetDialog.loadPreset(actor as never)),
             openPresetLibrary: async () => Promise.resolve(npcApplications.CombatPresetDialog.showLibrary()),
+            // Campaign event graph (#33). Published so the documented
+            // `game.wh40k.EventTracker.open()` macro resolves, and so the
+            // kanka-foundry plugin can consume the ONE loaded copy instead of
+            // carrying its own transport (it read the over-cap Kanka attribute).
+            EventTracker: EventTracker,
             // Dice/Roll classes
             dice: dice,
             BasicRollWH40K: dice.BasicRollWH40K,
@@ -856,6 +862,7 @@ export class HooksManager {
         }
 
         WH40KSettings.registerSettings();
+        EventTracker.registerSettings();
         void HandlebarManager.loadTemplates();
 
         // Register movement actions and Token HUD hooks (after settings are available)
@@ -904,6 +911,11 @@ export class HooksManager {
         await buildCareerAdvancementIndex();
         await backfillOriginPathUuids();
         await reconcileWorldOriginGrants();
+        // #33: the campaign event graph now lives in a GM-only JournalEntry in the
+        // world (it used to be fetched from `systems/wh40k-rpg/events.json`, which
+        // Foundry serves to every authenticated client). On a player client the
+        // document is simply absent, which is the intended outcome.
+        await EventTracker.loadGraph();
 
         // Initialize rich tooltip system. Capture game.wh40k after the awaits above
         // so the assignment target is the current namespace, not a pre-await read.

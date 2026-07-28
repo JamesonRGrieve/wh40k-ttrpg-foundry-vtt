@@ -71,6 +71,30 @@ interface EventDataFile {
 
 const SETTING_KEY = 'event-tracker-state';
 
+/**
+ * Flag key on the GM-only JournalEntry that carries the graph (#33).
+ *
+ * `deploy.sh` writes `flags[SYSTEM_ID][EVENT_GRAPH_FLAG] = {version, events,
+ * characters}` onto a JournalEntry with `ownership.default = NONE`. The flag is
+ * also how the document is FOUND, so renaming or refiling it is safe.
+ */
+export const EVENT_GRAPH_FLAG = 'eventGraph';
+
+/**
+ * True when a flag payload carries the `events` map the tracker needs.
+ *
+ * The flag is written by `deploy.sh` from the vault export, so nothing about its
+ * shape is guaranteed at this boundary — a half-written or hand-edited document
+ * must leave the tracker empty rather than crash the ready hook.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard over an untyped Foundry document flag (`flags['wh40k-rpg']` is declared Record<string, unknown> in FlagConfig)
+function isEventDataFile(value: unknown): value is EventDataFile {
+    if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+    if (!('events' in value)) return false;
+    const events = value.events;
+    return events !== null && typeof events === 'object' && !Array.isArray(events);
+}
+
 // biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with static state and many callers
 export class EventTracker {
     static _graph: EventGraph | null = null;
@@ -92,18 +116,64 @@ export class EventTracker {
         });
     }
 
+    /** The loaded event graph, or null when no GM-only graph document was found. */
+    static get graph(): EventGraph | null {
+        return EventTracker._graph;
+    }
+
+    /** Per-character dispositions / relationships, or null when the graph carries none. */
+    static get characters(): Record<string, CharacterState> | null {
+        return EventTracker._characters;
+    }
+
+    /** Schema version of the loaded graph. */
+    static get dataVersion(): number {
+        return EventTracker._dataVersion;
+    }
+
     /**
-     * Load the event graph from the system's data directory.
-     * Call during system ready.
+     * The graph payload from the GM-only JournalEntry, or undefined.
+     *
+     * The document is found by FLAG, never by name, so the GM may rename or
+     * refile it without breaking the load. A player client never receives the
+     * document at all (`ownership.default = NONE`), so this simply returns
+     * undefined there — which is the point of the GM-secret ruling on #33.
      */
+    static findGraphPayload(): EventDataFile | undefined {
+        const journal = game.journal;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: `game.journal` is undefined until Foundry's `setup` phase
+        if (journal === undefined) return undefined;
+        for (const entry of journal) {
+            // Read `flags` directly rather than `getFlag`: the scope is declared in
+            // `types/fvtt-config.ts` FlagConfig, so this needs no cast.
+            const payload = entry.flags[SYSTEM_ID]?.[EVENT_GRAPH_FLAG];
+            if (isEventDataFile(payload)) return payload;
+        }
+        return undefined;
+    }
+
+    /**
+     * Load the event graph from the GM-only JournalEntry in the world.
+     * Call during system ready.
+     *
+     * The graph used to be fetched from `systems/wh40k-rpg/events.json` (#33).
+     * Anything under `systems/` is served to every authenticated client, so that
+     * transport leaked every unfired event and every GM disposition note to
+     * players. The operator's ruling is that the graph is GM-SECRET, and the one
+     * Foundry primitive that actually withholds data is document ownership — so
+     * it now lives in a JournalEntry with `ownership.default = NONE`, written
+     * into the world by `deploy.sh`.
+     */
+    // eslint-disable-next-line @typescript-eslint/require-await -- the reader is synchronous now; the async signature is the call-site contract (ready hook + e2e probes)
     static async loadGraph(): Promise<void> {
         try {
-            const resp = await fetch(`systems/${SYSTEM_ID}/events.json`);
-            if (!resp.ok) {
-                console.warn('EventTracker: events.json not found — run export_events.py and copy to system folder');
+            const data = EventTracker.findGraphPayload();
+            if (data === undefined) {
+                console.warn(
+                    'EventTracker: no GM-only event-graph document found — run deploy.sh --restart to write it (players never see this document, so this is expected on a player client)',
+                );
                 return;
             }
-            const data = (await resp.json()) as EventDataFile;
             EventTracker._graph = data.events;
             EventTracker._dataVersion = data.version ?? 1;
             EventTracker._characters = data.characters ?? null;
@@ -114,7 +184,7 @@ export class EventTracker {
                 } (schema v${EventTracker._dataVersion})`,
             );
         } catch (err) {
-            console.error('EventTracker: failed to load events.json', err);
+            console.error('EventTracker: failed to load the event-graph document', err);
         }
     }
 
@@ -483,7 +553,7 @@ export class EventTracker {
 
         if (!EventTracker._graph) {
             // eslint-disable-next-line no-restricted-syntax -- GM-only dev tool; i18n migration tracked separately
-            ui.notifications.warn('Event graph not loaded. Ensure events.json is in the system folder.');
+            ui.notifications.warn('Event graph not loaded. Run deploy.sh --restart to write the GM-only event-graph document into the world.');
             return;
         }
 
