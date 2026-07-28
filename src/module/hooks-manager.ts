@@ -85,7 +85,7 @@ import { onRefreshToken } from './canvas/token-mask.ts';
 import { hydrateActorInMemory } from './compendium-hydrate.ts';
 import { buildCareerAdvancementIndex } from './config/advancements/career-advancement-cache.ts';
 import type { WH40KSystemConfig } from './config.ts';
-import { SYSTEM_ID } from './constants.ts';
+import { DEAD_STATUS_ID, SYSTEM_ID } from './constants.ts';
 import * as dataModels from './data/_module.ts';
 import { grantDefaultItemsToActor, repairDuplicateGrants } from './default-grants.ts';
 import * as dice from './dice/_module.ts';
@@ -106,7 +106,7 @@ import {
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
 import { registerActionEconomy } from './rules/action-economy.ts';
-import { conditionStatusEffects, DEAD_STATUS_ID } from './rules/active-effects.ts';
+import { conditionStatusEffects } from './rules/active-effects.ts';
 import { convertDeadActorToPile } from './rules/death-loot.ts';
 import { registerCombatTurnHooks } from './rules/combat-turn-hooks.ts';
 import { WH40K } from './rules/config.ts';

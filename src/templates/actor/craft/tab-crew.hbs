@@ -8,7 +8,7 @@
 
         {{!-- Crew Stats --}}
         {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-users" label=(localize "WH40K.Vehicle.CrewInformation") bodyClass="tw-p-4"}}
-            <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-4 tw-max-w-[40rem]">
+            <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-4 tw-max-w-[40rem] {{themeClassFor 'border'}}">
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.CrewRequired") name="system.crew.required" value=crew.required type="number" min="0" dataDtype="Number"}}
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Passengers") name="system.passengers" value=craftStats.passengers type="number" min="0" dataDtype="Number"}}
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.CrewNotes") name="system.crew.notes" value=crew.notes type="textarea" rows="3" rowClass="sm:tw-col-span-2"}}

@@ -7,7 +7,7 @@
         {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-cog" label=(localize "WH40K.Vehicle.ComponentsAndUpgrades") bodyClass="tw-p-4"}}
             <div class="tw-flex tw-flex-col tw-gap-3">
                 {{#each components}}
-                <div class="tw-px-3 tw-py-3 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-md" data-item-id="{{this._id}}">
+                <div class="tw-px-3 tw-py-3 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] {{themeClassFor 'border'}} tw-rounded-md" data-item-id="{{this._id}}">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-font-bold tw-mb-1">
                         <input type="checkbox"
                                class="tw-m-0"
@@ -25,7 +25,7 @@
                 {{/each}}
 
                 {{#each vehicleUpgrades}}
-                <div class="tw-px-3 tw-py-3 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-md" data-item-id="{{this._id}}">
+                <div class="tw-px-3 tw-py-3 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] {{themeClassFor 'border'}} tw-rounded-md" data-item-id="{{this._id}}">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-font-bold tw-mb-1">
                         {{this.name}}
                     </div>

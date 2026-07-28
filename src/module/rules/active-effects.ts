@@ -418,13 +418,7 @@ export function conditionRegistry(): Readonly<Record<string, ConditionDefinition
     return CONDITION_REGISTRY;
 }
 
-/**
- * The status id used for "this creature is dead" — Foundry core's own `dead`,
- * which `CONFIG.specialStatusEffects.DEFEATED` maps to. Exported so the death
- * appliers and the #477 pile conversion key off ONE constant instead of a
- * repeated string literal.
- */
-export const DEAD_STATUS_ID = 'dead';
+export { DEAD_STATUS_ID } from '../constants.ts';
 
 /**
  * Picker rows for any UI that offers the system's conditions (the token HUD via

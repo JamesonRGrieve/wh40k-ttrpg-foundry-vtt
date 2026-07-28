@@ -22,6 +22,15 @@ import { describe, expect, it } from 'vitest';
 const SRC = resolve(__dirname, '../src/module');
 const read = (relative: string): string => readFileSync(resolve(SRC, relative), 'utf8');
 
+/** Source lines with comments stripped, so a guard never trips on prose that
+ *  quotes the very pattern it forbids. */
+function codeLines(text: string): string[] {
+    return text
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .split('\n')
+        .filter((line) => !/^\s*(\/\/|\*)/.test(line));
+}
+
 describe('one status-effect system (#495)', () => {
     it('the registry is the only place condition definitions live', () => {
         // A condition definition is recognisable by pairing a condition name with
@@ -46,8 +55,12 @@ describe('one status-effect system (#495)', () => {
     });
 
     it('the per-turn condition automation matches by status id, never by effect name', () => {
+        // CODE lines only — the doc comment quotes the old `effect.name === …`
+        // pattern to explain why it was wrong, and a naive scan reads its own
+        // explanation as a violation (the same trap the #498 guard hit).
+        const offenders = codeLines(read('actions/combat-action-manager.ts')).filter((line) => /effect\.name\s*===/.test(line));
+        expect(offenders).toEqual([]);
         const combat = read('actions/combat-action-manager.ts');
-        expect(combat).not.toMatch(/effect\.name === '/);
         expect(combat).toContain("statuses.has('burning')");
         expect(combat).toContain("statuses.has('bloodloss')");
     });
@@ -59,7 +72,12 @@ describe('one status-effect system (#495)', () => {
     it('the `dead` status reuses core’s id via specialStatusEffects.DEFEATED', () => {
         const hooks = read('hooks-manager.ts');
         expect(hooks).toContain('CONFIG.specialStatusEffects.DEFEATED = DEAD_STATUS_ID');
-        expect(read('rules/active-effects.ts')).toMatch(/DEAD_STATUS_ID\s*=\s*'dead'/);
+        // The id lives in `constants.ts`, not the registry: the registry's
+        // module-scope condition table touches the Foundry `CONST` global, so a
+        // consumer that only needs the id (the #477 pile conversion) must be
+        // able to import it without loading a booted-client-only module.
+        expect(read('constants.ts')).toMatch(/DEAD_STATUS_ID\s*=\s*'dead'/);
+        expect(read('rules/active-effects.ts')).toContain("export { DEAD_STATUS_ID } from '../constants.ts'");
     });
 
     it('every condition effect carries `statuses`, so it is visible on the token', () => {
