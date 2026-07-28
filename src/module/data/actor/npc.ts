@@ -1,12 +1,26 @@
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import {
+    CHARACTERISTIC_STEP,
+    type AdvancementCostTables,
+    type NpcBuild,
+    type NpcCharacteristicAdvance,
+    type NpcSkillAdvance,
+    type NpcTalentAdvance,
+    type SkillRankSource,
+    deriveAptitudes,
+    deriveNpcXp,
+    rankFlags,
+    skillRankFrom,
+    splitCharacteristic,
+} from '../../rules/npc-advancement.ts';
 import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
 import { buildCharacteristicFields } from '../shared/characteristics.ts';
 import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
 import { computeMovement } from '../shared/movement-math.ts';
-import { CHARACTERISTIC_STEP, MAX_SKILL_RANK } from '../../rules/npc-advancement.ts';
 import { skillCharacteristicMap } from '../shared/skill-definitions.ts';
 import { computeSkillTarget, untrainedSkillBase } from '../shared/skill-math.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
@@ -75,6 +89,63 @@ interface NPCV2SimpleWeapon {
     reload: string;
     special: string;
     class: 'melee' | 'pistol' | 'basic' | 'heavy' | 'thrown' | 'launcher';
+}
+
+/** One rendered row in {@link NPCData.trainedSkillsList} — a base skill or a specialization. */
+interface NPCTrainedSkillRow {
+    /** Base skill key, or `<key>:<spec-slug>` for a specialization row. */
+    key: string;
+    name: string;
+    characteristic: string;
+    /** Effective rank 0–4. */
+    rank: number;
+    trained: boolean;
+    plus10: boolean;
+    plus20: boolean;
+    plus30: boolean;
+    bonus: number;
+    target: number;
+}
+
+/**
+ * The advancement-pricing capability {@link NPCData._prepareAdvancement} needs.
+ *
+ * Declared structurally rather than importing `AptitudeBasedSystemConfig` as a
+ * value: that class reaches into the documents/applications layers, so a direct
+ * import pulls a cycle back into the DataModel layer (`no-circular`). The model
+ * depends on the capability, not the class — career-based lines (RT/DH1) simply do
+ * not provide it and are skipped.
+ */
+interface AptitudeCostSource {
+    getSkillCostTable: () => Record<number, number[]>;
+    getCharacteristicCostTable: () => Record<number, number[]>;
+    getTalentCostTable: () => Record<number, Record<number, number>>;
+    getSkillAptitudes: (skillKey: string) => [string, string];
+    getCharacteristicAptitudes: (charKey: string) => [string, string];
+}
+
+/** Whatever the registry hands back for a game system, including its null miss. */
+type SystemConfigLike = ReturnType<typeof SystemConfigRegistry.getOrNull>;
+
+/**
+ * True when the active line prices advances against aptitudes (DH2/BC/DW/OW/IM).
+ * Narrowed with `in` rather than a cast, so no `unknown` crosses the boundary.
+ */
+function isAptitudeCostSource(config: SystemConfigLike): config is SystemConfigLike & AptitudeCostSource {
+    return (
+        config !== null &&
+        'getSkillCostTable' in config &&
+        'getCharacteristicCostTable' in config &&
+        'getTalentCostTable' in config &&
+        'getSkillAptitudes' in config &&
+        'getCharacteristicAptitudes' in config
+    );
+}
+
+/** The owned-item surface {@link NPCData._buildAdvancementLedger} reads when pricing a build. */
+interface AdvancementItemLike {
+    type: string;
+    system?: { tier?: number; aptitudes?: string[]; prCost?: number };
 }
 
 /** One specialization row on a specialist skill — mirrors the PC `SkillField` entry shape. */
@@ -162,6 +233,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     declare trainedSkills: Partial<Record<string, NPCV2TrainedSkill>>;
     /** Aptitudes derived from the stat block (#503); drives every advancement cost. */
     declare aptitudes: string[];
+    /** Psy rating (#503); 0 for a non-psyker. */
+    declare psy: { rating: number };
     /** Homologated with `CharacterData.experience`; `total` at spawn is the exact build cost. */
     declare experience: {
         used: number;
@@ -399,6 +472,13 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
                 used: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 total: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 available: new NumberField({ required: true, initial: 0, integer: true }),
+            }),
+
+            // === PSY RATING (#503) ===
+            // Psyker NPCs print "Psy Rating: N"; 0 for everyone else. Owned
+            // psychicPower items supply the per-power side of the XP total.
+            psy: new SchemaField({
+                rating: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
             }),
 
             // === WEAPONS (SIMPLE MODE) ===
@@ -659,40 +739,76 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * Get the list of trained skills as an array for display.
      * @type {Array<Object>}
      */
-    get trainedSkillsList(): Array<{
-        key: string;
-        name: string;
-        characteristic: string;
-        trained: boolean;
-        plus10: boolean;
-        plus20: boolean;
-        bonus: number;
-        target: number;
-    }> {
-        const list: Array<{
-            key: string;
-            name: string;
-            characteristic: string;
-            trained: boolean;
-            plus10: boolean;
-            plus20: boolean;
-            bonus: number;
-            target: number;
-        }> = [];
+    get trainedSkillsList(): NPCTrainedSkillRow[] {
+        const list: NPCTrainedSkillRow[] = [];
         for (const [key, skill] of Object.entries(this.trainedSkills)) {
             if (skill === undefined) continue;
-            list.push({
-                key,
-                name: skill.name !== '' ? skill.name : key,
-                characteristic: skill.characteristic !== '' ? skill.characteristic : 'Per',
-                trained: skill.trained,
-                plus10: skill.plus10,
-                plus20: skill.plus20,
-                bonus: skill.bonus,
-                target: this.getSkillTarget(key),
-            });
+            const characteristic = skill.characteristic !== '' ? skill.characteristic : 'Per';
+            const entries = Array.isArray(skill.entries) ? skill.entries : [];
+            const rank = NPCData.skillRankOf(skill);
+
+            // A specialist skill whose ranks all live on its entries has no bare row
+            // of its own — emitting one would render an untrained "Common Lore" beside
+            // the specializations the NPC actually has.
+            if (rank > 0 || entries.length === 0) {
+                list.push({
+                    key,
+                    name: skill.name !== '' ? skill.name : key,
+                    characteristic,
+                    rank,
+                    ...rankFlags(rank),
+                    bonus: skill.bonus,
+                    target: this.getSkillTarget(key),
+                });
+            }
+
+            for (const entry of entries) {
+                const specialization = entry.specialization ?? entry.name;
+                if (specialization === '') continue;
+                const entryRank = NPCData.skillRankOf(entry);
+                list.push({
+                    key: `${key}:${specialization.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+                    name: `${skill.name !== '' ? skill.name : key} (${specialization})`,
+                    characteristic: entry.characteristic ?? characteristic,
+                    rank: entryRank,
+                    ...rankFlags(entryRank),
+                    bonus: entry.bonus ?? 0,
+                    target: this.skillEntryTarget(entry, characteristic),
+                });
+            }
         }
         return list.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    /**
+     * Display state for any catalogue skill, trained or not (#503) — the single
+     * source the sheet's basic-skill grid renders from.
+     *
+     * Exists so the sheet stops re-implementing the rank ladder and the
+     * untrained rule inline: that copy silently capped Veteran (+30) at +20 and
+     * could drift from {@link getSkillTarget} on every other axis too.
+     */
+    skillDisplay(skillKey: string): { rank: number; trained: boolean; plus10: boolean; plus20: boolean; plus30: boolean; target: number } {
+        const rank = NPCData.skillRankOf(this.trainedSkills[skillKey]);
+        return {
+            rank,
+            ...rankFlags(rank),
+            target: this.getSkillTarget(skillKey),
+        };
+    }
+
+    /**
+     * Target number for one specialization row. Mirrors {@link getSkillTarget} but
+     * reads the entry's own rank / characteristic / bonus, falling back to the base
+     * skill's characteristic when the row does not override it.
+     */
+    skillEntryTarget(entry: NPCV2SkillEntry, fallbackCharacteristic: string): number {
+        const char = this.getCharacteristic(entry.characteristic ?? fallbackCharacteristic);
+        if (char === null) return 0;
+        const gameSystem = (this.constructor as { gameSystem?: string }).gameSystem;
+        const systemConfig = gameSystem !== undefined ? SystemConfigRegistry.getOrNull(gameSystem) : null;
+        const rank = NPCData.skillRankOf(entry);
+        return computeSkillTarget(char.total, rank, entry.bonus ?? 0, systemConfig?.usesAptitudes === true).current;
     }
 
     /* -------------------------------------------- */
@@ -743,17 +859,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * cumulative boolean flags, so fall back to counting those — which keeps every
      * un-migrated NPC rendering exactly as before.
      */
-    static skillRankOf(skill: Pick<NPCV2TrainedSkill, 'advance' | 'trained' | 'plus10' | 'plus20' | 'plus30'> | undefined): number {
-        if (skill === undefined) return 0;
-        if (typeof skill.advance === 'number' && skill.advance > 0) {
-            return Math.min(skill.advance, MAX_SKILL_RANK);
-        }
-        // Flags are cumulative: trained(1) + plus10 + plus20 + plus30.
-        let rank = skill.trained ? 1 : 0;
-        if (skill.plus10) rank += 1;
-        if (skill.plus20) rank += 1;
-        if (skill.plus30 === true) rank += 1;
-        return Math.min(rank, MAX_SKILL_RANK);
+    static skillRankOf(skill: SkillRankSource | undefined): number {
+        return skillRankFrom(skill);
     }
 
     /**
@@ -1097,11 +1204,103 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         this._prepareCharacteristics();
         this._prepareMovement();
         this._prepareInitiative();
+        this._prepareAdvancement();
 
         // Auto-enable horde mode if NPC type is horde or swarm
         if (this.isHorde && !this.horde.enabled) {
             this.horde.enabled = true;
         }
+    }
+
+    /**
+     * Reduce this NPC's stat block to the advancement ledger an equivalent PC build
+     * would have (#503): derive the aptitude set the block implies (when none is
+     * authored) and set `experience.total` to the exact XP those advances cost.
+     *
+     * Gated on the `npcAdvancement` world setting and on the line being
+     * aptitude-based — RT/DH1 are career systems with no aptitude cost model, so
+     * they are skipped rather than priced against a table that does not apply.
+     * @protected
+     */
+    _prepareAdvancement(): void {
+        if (!WH40KSettings.isNpcAdvancementEnabled()) return;
+
+        const gameSystem = (this.constructor as { gameSystem?: string }).gameSystem;
+        const systemConfig = gameSystem !== undefined ? SystemConfigRegistry.getOrNull(gameSystem) : null;
+        if (!isAptitudeCostSource(systemConfig)) return;
+
+        const build = this._buildAdvancementLedger(systemConfig);
+
+        // Authored aptitudes win; an unauthored NPC derives its set from its own block.
+        if (this.aptitudes.length === 0) this.aptitudes = deriveAptitudes(build);
+
+        const tables: AdvancementCostTables = {
+            skill: systemConfig.getSkillCostTable(),
+            characteristic: systemConfig.getCharacteristicCostTable(),
+            talent: systemConfig.getTalentCostTable(),
+        };
+        const xp = deriveNpcXp(tables, this.aptitudes, build);
+
+        // `used` is DERIVED — it is the cost of the advances the NPC actually has, so
+        // it can never drift from the stat block (same contract as CharacterData's
+        // _computeExperienceSpent). `total` is persisted and GM-editable: granting an
+        // NPC more XP means raising it.
+        this.experience.used = xp.total;
+        this.experience.spentSkills = xp.skills;
+        this.experience.spentTalents = xp.talents;
+        this.experience.spentCharacteristics = xp.characteristics;
+        this.experience.spentPsychicPowers = xp.psychic;
+
+        // At spawn an NPC has earned exactly the XP its stat block represents and
+        // spent all of it — so an unseeded `total` (0) adopts the build cost, leaving
+        // 0 available rather than gifting a second build's worth of XP.
+        if (this.experience.total === 0) this.experience.total = xp.total;
+
+        this.experience.available = this.experience.total - this.experience.used;
+    }
+
+    /**
+     * Collect every advancement this NPC owns into the shape the pricing functions
+     * consume: trained skills (base rows plus each specialization), owned talents,
+     * advanced characteristics, and the psychic side.
+     * @protected
+     */
+    _buildAdvancementLedger(config: AptitudeCostSource): NpcBuild {
+        const skills: NpcSkillAdvance[] = [];
+        for (const [key, skill] of Object.entries(this.trainedSkills)) {
+            if (skill === undefined) continue;
+            const aptitudes = config.getSkillAptitudes(key);
+            const rank = NPCData.skillRankOf(skill);
+            if (rank > 0) skills.push({ key, aptitudes, steps: rank });
+            for (const entry of skill.entries ?? []) {
+                const entryRank = NPCData.skillRankOf(entry);
+                if (entryRank > 0) skills.push({ key, aptitudes, steps: entryRank });
+            }
+        }
+
+        const characteristics: NpcCharacteristicAdvance[] = [];
+        for (const [key, char] of Object.entries(this.characteristics)) {
+            // A stat block stored unsplit (legacy `base` = the printed value, advance 0)
+            // still has to be priced, so fall back to splitting the printed total here.
+            const advance = char.advance > 0 ? char.advance : splitCharacteristic(char.total).advance;
+            if (advance > 0) characteristics.push({ key, aptitudes: config.getCharacteristicAptitudes(key), steps: advance });
+        }
+
+        const talents: NpcTalentAdvance[] = [];
+        const powerPrCosts: number[] = [];
+        // Same narrow-collection idiom as the origin-path read above: Foundry types the
+        // owned-item collection loosely, so name the surface this ledger actually reads
+        // once rather than casting `.system` per branch.
+        const items = (this.parent as { items?: Iterable<AdvancementItemLike> } | null)?.items ?? [];
+        for (const item of items) {
+            if (item.type === 'talent') {
+                talents.push({ aptitudes: item.system?.aptitudes ?? [], tier: item.system?.tier ?? 1 });
+            } else if (item.type === 'psychicPower') {
+                powerPrCosts.push(item.system?.prCost ?? 1);
+            }
+        }
+
+        return { skills, talents, characteristics, psychic: { psyRating: this.psy.rating, powerPrCosts } };
     }
 
     /**
@@ -1115,8 +1314,9 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             // as `base + advance × 5`; it is 0 on an unsplit legacy NPC, so totals are
             // unchanged there. Folding it here — not behind the npcAdvancement setting —
             // keeps a split-authored NPC's printed totals correct with the setting off.
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- parser mismatch: tsconfig.test.json (noUncheckedIndexedAccess off) reports these guards as unnecessary; tsc under tsconfig.json requires them for a characteristic read off the schema map
             const extra = (char.advance ?? 0) * CHARACTERISTIC_STEP - (char.damage ?? 0);
-            const { total, bonus } = computeCharacteristicTotals(char.base, char.modifier, char.unnatural || 0, extra);
+            const { total, bonus } = computeCharacteristicTotals(char.base, char.modifier, char.unnatural, extra);
             char.total = total;
             char.bonus = bonus;
             // Base-vs-effective split (#415): NPCs have no bonus-only channel, so

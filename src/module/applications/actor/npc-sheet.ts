@@ -25,6 +25,8 @@ import CharacterSheet from './character-sheet.ts';
 interface NPCV2TrainedSkillData {
     name?: string;
     characteristic?: string;
+    /** Authored rank 0–4, the source of truth (#503); flags below are derived mirrors. */
+    advance?: number;
     trained?: boolean;
     plus10?: boolean;
     plus20?: boolean;
@@ -93,14 +95,39 @@ function resolveSkillChar(existing: NPCV2TrainedSkillData | undefined, skillKey:
     return (basic ? characteristicFromAbbrev(basic.char) : null) ?? 'perception';
 }
 
-/** Build a trained-skill entry at the requested level, preserving characteristic and bonus from the prior state. */
-function buildSkillEntry(skillKey: string, level: 'trained' | 'plus10' | 'plus20', prior: NPCV2TrainedSkillData | undefined): NPCV2TrainedSkillData {
+/** Ranks in the DH2 ladder above untrained: Known, +10, +20, +30 (#503). */
+const MAX_SKILL_RANK = 4;
+
+/**
+ * Per-rank CSS class and tooltip key for the basic-skill proficiency cycle,
+ * indexed by effective rank 0–4. Literal keys (not interpolated) so the typed
+ * langpack check can verify them.
+ */
+const SKILL_LEVEL_DISPLAY = [
+    { cssClass: 'untrained', tooltip: 'WH40K.NPC.SkillLevel.Untrained' },
+    { cssClass: 'trained', tooltip: 'WH40K.NPC.SkillLevel.Trained' },
+    { cssClass: 'plus10', tooltip: 'WH40K.NPC.SkillLevel.Plus10' },
+    { cssClass: 'plus20', tooltip: 'WH40K.NPC.SkillLevel.Plus20' },
+    { cssClass: 'plus30', tooltip: 'WH40K.NPC.SkillLevel.Plus30' },
+] as const;
+
+/**
+ * Build a trained-skill entry at the requested rank, preserving characteristic and
+ * bonus from the prior state.
+ *
+ * Writes `advance` — the authored source of truth (#503) — alongside the derived
+ * cumulative flags, so a skill the GM cycles on the sheet lands in exactly the shape
+ * the packs author. The flags are cumulative: +20 sets both `plus10` and `plus20`.
+ */
+function buildSkillEntry(skillKey: string, rank: number, prior: NPCV2TrainedSkillData | undefined): NPCV2TrainedSkillData {
     return {
-        name: skillKey,
+        name: prior?.name !== undefined && prior.name !== '' ? prior.name : skillKey,
         characteristic: resolveSkillChar(prior, skillKey),
-        trained: true,
-        plus10: level !== 'trained',
-        plus20: level === 'plus20',
+        advance: rank,
+        trained: rank >= 1,
+        plus10: rank >= 2,
+        plus20: rank >= 3,
+        plus30: rank >= 4,
         bonus: prior?.bonus ?? 0,
     };
 }
@@ -846,69 +873,25 @@ export default class NPCSheet extends CharacterSheet {
         // All basic skills with their characteristics (canonical source, #284).
         const allBasicSkills = NPC_BASIC_SKILLS;
 
-        // Characteristic key mapping
-        const charKeyMap: Record<string, string> = {
-            WS: 'weaponSkill',
-            BS: 'ballisticSkill',
-            S: 'strength',
-            T: 'toughness',
-            Ag: 'agility',
-            Int: 'intelligence',
-            Per: 'perception',
-            WP: 'willpower',
-            Fel: 'fellowship',
-            Inf: 'influence',
-        };
-
-        // Build basic skills list with training states
+        // Build basic skills list with training states. Rank, flags and target all
+        // come from the DataModel (#503) — the sheet no longer re-implements the
+        // ladder or the untrained rule, which is how Veteran (+30) came to be
+        // silently capped at +20 here while getSkillTarget paid it correctly.
         context['basicSkillsList'] = allBasicSkills.map((skill) => {
-            const trainedData = sys.trainedSkills[skill.key];
-            const charKey = charKeyMap[skill.char] ?? 'intelligence';
-            const charData = sys.characteristics[charKey];
-            const isTrained = trainedData !== undefined;
-
-            // Calculate target
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics is Record-indexed
-            let target = charData?.total ?? 0;
-            if (trainedData !== undefined) {
-                if (trainedData.plus20 === true) target += 20;
-                else if (trainedData.plus10 === true) target += 10;
-                target += trainedData.bonus ?? 0;
-            } else {
-                // Aptitude/career family (DH2 + DH1e/BC/DW/OW/IM) applies a
-                // flat -20 for untrained per DH2 core.md p.95; RT/legacy halve
-                // and live on a different sheet class.
-                const systemId = this._resolveGameSystemId();
-                const isAptitudeSystem =
-                    systemId === 'dh2' || systemId === 'dh1' || systemId === 'bc' || systemId === 'dw' || systemId === 'ow' || systemId === 'im';
-                target = isAptitudeSystem ? target - 20 : Math.floor(target / 2);
-            }
-
-            // Proficiency cycle display data
-            const plus10 = trainedData?.plus10 ?? false;
-            const plus20 = trainedData?.plus20 ?? false;
-            let levelClass = 'untrained';
-            let levelTooltip = 'Untrained (click to train)';
-            if (plus20) {
-                levelClass = 'plus20';
-                levelTooltip = '+20 Expert (click to remove)';
-            } else if (plus10) {
-                levelClass = 'plus10';
-                levelTooltip = '+10 Experienced (click for +20)';
-            } else if (isTrained) {
-                levelClass = 'trained';
-                levelTooltip = 'Trained (click for +10)';
-            }
+            const display = this.npcActor.system.skillDisplay(skill.key);
+            const level = SKILL_LEVEL_DISPLAY[display.rank] ?? SKILL_LEVEL_DISPLAY[0];
 
             return {
                 ...skill,
-                isTrained,
-                trained: isTrained,
-                plus10,
-                plus20,
-                target,
-                levelClass,
-                levelTooltip,
+                isTrained: display.trained,
+                trained: display.trained,
+                plus10: display.plus10,
+                plus20: display.plus20,
+                plus30: display.plus30,
+                rank: display.rank,
+                target: display.target,
+                levelClass: level.cssClass,
+                levelTooltip: game.i18n.localize(level.tooltip),
                 isFavorite: favoriteSkillKeys.includes(skill.key),
             };
         });
@@ -1211,20 +1194,29 @@ export default class NPCSheet extends CharacterSheet {
         await this.actor.update({ 'system.trainedSkills': currentSkills });
     }
 
-    /** Compute the next skill-entry state when the user clicks a level button. */
+    /** Rank each level button represents (#503). */
+    static readonly #SKILL_LEVEL_RANKS: Readonly<Partial<Record<string, number>>> = { trained: 1, plus10: 2, plus20: 3, plus30: 4 };
+
+    /**
+     * Compute the next skill-entry state when the user clicks a level button.
+     *
+     * Clicking the level the skill is already at drops it one rank (the toggle-off
+     * gesture); clicking any other level sets it there outright.
+     */
     static #resolveSkillLevelToggle(skillKey: string, level: string, prior: NPCV2TrainedSkillData | undefined): NPCV2TrainedSkillData {
-        if (level === 'trained') {
-            return buildSkillEntry(skillKey, 'trained', prior);
-        }
-        if (level === 'plus10') {
-            // Toggle +10: if already at +10 (and not +20), drop to trained; otherwise set to +10
-            return prior?.plus10 === true && prior.plus20 !== true ? buildSkillEntry(skillKey, 'trained', prior) : buildSkillEntry(skillKey, 'plus10', prior);
-        }
-        if (level === 'plus20') {
-            // Toggle +20: if already at +20, drop to +10; otherwise set to +20
-            return prior?.plus20 === true ? buildSkillEntry(skillKey, 'plus10', prior) : buildSkillEntry(skillKey, 'plus20', prior);
-        }
-        return prior ?? { name: skillKey };
+        const target = NPCSheet.#SKILL_LEVEL_RANKS[level];
+        if (target === undefined) return prior ?? { name: skillKey };
+
+        // Cumulative flags: rank is how many of trained/plus10/plus20/plus30 are set,
+        // unless the entry already carries an authored `advance`.
+        const priorRank =
+            prior === undefined
+                ? 0
+                : typeof prior.advance === 'number' && prior.advance > 0
+                ? prior.advance
+                : (prior.trained === true ? 1 : 0) + (prior.plus10 === true ? 1 : 0) + (prior.plus20 === true ? 1 : 0) + (prior.plus30 === true ? 1 : 0);
+
+        return buildSkillEntry(skillKey, priorRank === target ? target - 1 : target, prior);
     }
 
     /* -------------------------------------------- */
@@ -1241,27 +1233,19 @@ export default class NPCSheet extends CharacterSheet {
         if (skillKey === undefined || skillKey === '') return;
 
         const currentSkills: Record<string, NPCV2TrainedSkillData> = foundry.utils.deepClone(this.npcActor.system.trainedSkills);
-        const current = currentSkills[skillKey];
 
-        // Determine current level and cycle to next
-        // Untrained → Trained → +10 → +20 → Untrained
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: currentSkills is Record-indexed so entries may be absent at runtime
-        if (current === undefined) {
-            // Untrained → Trained
-            currentSkills[skillKey] = buildSkillEntry(skillKey, 'trained', undefined);
-            await this.actor.update({ 'system.trainedSkills': currentSkills });
-        } else if (current.trained === true && current.plus10 !== true && current.plus20 !== true) {
-            // Trained → +10
-            currentSkills[skillKey] = buildSkillEntry(skillKey, 'plus10', current);
-            await this.actor.update({ 'system.trainedSkills': currentSkills });
-        } else if (current.plus10 === true && current.plus20 !== true) {
-            // +10 → +20
-            currentSkills[skillKey] = buildSkillEntry(skillKey, 'plus20', current);
-            await this.actor.update({ 'system.trainedSkills': currentSkills });
-        } else {
-            // +20 → Untrained (remove)
+        // Untrained → Known → +10 → +20 → +30 → Untrained. The rank comes from the
+        // DataModel so the sheet never re-derives the ladder (#503); the cycle now
+        // reaches Veteran (+30), which DH2 stat blocks genuinely print.
+        const rank = this.npcActor.system.skillDisplay(skillKey).rank;
+        const next = rank + 1;
+
+        if (next > MAX_SKILL_RANK) {
             await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
+            return;
         }
+        currentSkills[skillKey] = buildSkillEntry(skillKey, next, currentSkills[skillKey]);
+        await this.actor.update({ 'system.trainedSkills': currentSkills });
     }
 
     /* -------------------------------------------- */

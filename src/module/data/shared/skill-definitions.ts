@@ -95,6 +95,11 @@ export const SKILL_DEFINITIONS: Record<string, SkillDefinition> = {
     scholasticLore: def('Scholastic Lore', 'Int', true, true),
     secretTongue: def('Secret Tongue', 'Int', true, true), // RT/DH1e only
     speakLanguage: def('Speak Language', 'Int', true, true), // RT/DH1e only
+    // DW Core p.104: Advanced, Intelligence, Skill Groups (Air Combat, Armoured
+    // Tactics, Assault Doctrine, Defensive Doctrine, Orbital Drop Procedures,
+    // Recon and Stealth). Absent from this catalogue until #503, so every
+    // Deathwatch NPC printing "Tactics (…)" parsed to a key that matched nothing.
+    tactics: def('Tactics', 'Int', true, true), // DW only
     techUse: def('Tech-Use', 'Int', true), // Standard in DH2e, Group in RT
     trade: def('Trade', 'Int', true, true),
 };

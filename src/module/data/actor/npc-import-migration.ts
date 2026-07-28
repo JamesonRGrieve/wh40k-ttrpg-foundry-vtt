@@ -228,17 +228,44 @@ function splitSkillList(list: string): string[] {
  * No-op when `trainedSkills` is already populated, so a hand-curated NPC is never
  * clobbered.
  */
-export function migrateSkills(source: JsonObject): void {
-    const raw = source['skills'];
-    if (typeof raw !== 'string' || raw.trim() === '') return;
-    const existing = source['trainedSkills'];
-    if (isJsonObject(existing) && Object.keys(existing).length > 0) return;
+/** One parsed entry from a printed skills line, before it is keyed into a map. */
+export interface ParsedSkillEntry {
+    /** Catalogue skill key (`awareness`, `commonLore`, …). */
+    key: string;
+    /** Display name including any specialisation ("Common Lore (Underworld)"). */
+    name: string;
+    /** Specialisation text alone, or `''` for a non-specialist entry. */
+    specialization: string;
+    /** Full characteristic key, or `''` when neither the entry nor the catalogue names one. */
+    characteristic: string;
+    /** Rank 1–4 (Known / +10 / +20 / +30). */
+    advance: number;
+    /**
+     * Any printed advance BEYOND the +30 rank ceiling, kept as a flat modifier so a
+     * homebrew "+50" survives as rank 4 plus a +20 bonus instead of silently
+     * truncating to +30. 0 for every RAW entry.
+     */
+    bonus: number;
+}
 
+/**
+ * Parse a printed skills line into its individual entries, in order.
+ *
+ * Exposed separately from {@link migrateSkills} so the authoring tooling can group
+ * multiple specialisations of one skill into `entries[]` rather than colliding them
+ * on the base key — the map form necessarily keeps only the last of them. One
+ * parser, two consumers.
+ */
+export function parseSkillEntries(raw: string): ParsedSkillEntry[] {
     const shortToFull = new Map<string, string>(Object.entries(CHARACTERISTIC_SHORT_TO_FULL).map(([short, full]) => [short.toLowerCase(), full]));
     const catalogueChar = skillCharacteristicMap();
-    const trained: JsonObject = {};
+    const parsed: ParsedSkillEntry[] = [];
 
-    for (const line of raw.split('\n')) {
+    // Legacy stat blocks separate characteristic groups by newline OR by a pipe
+    // ("S: Intimidate +50, Athletics +10 | T: | Ag: Operate"). Splitting on newline
+    // alone glued the pipe-joined groups into one entry and minted keys like
+    // `athletics+10|T:|Ag:Operate` (#503).
+    for (const line of raw.split(/[\n|]/)) {
         if (line.trim() === '') continue;
 
         // Legacy "Char: skill, skill" form — ONLY when the prefix really is a
@@ -255,37 +282,95 @@ export function migrateSkills(source: JsonObject): void {
             }
         }
 
-        for (const entry of splitSkillList(list)) {
-            const advMatch = /\+(\d+)\s*$/.exec(entry);
-            const plus = advMatch !== null ? toInt(advMatch[1], 0) : 0;
-            let name = entry.replace(/\s*\+\d+\s*$/, '').trim();
+        for (const rawEntry of splitSkillList(list)) {
+            // Sentence-ending punctuation on the last entry of a printed line
+            // ("… Scrutiny (Per).") otherwise rides into the key as `scrutiny.`.
+            let name = rawEntry.replace(/[.;\s]+$/, '').trim();
 
+            // Inverted lore form. Several FFG stat blocks print the lore skills as
+            // "Lore: Scholastic (Imperial Creed)" rather than "Scholastic Lore
+            // (Imperial Creed)", which keys as `lore:Scholastic` and matches nothing.
+            // Reorder generically — the kind is whatever word follows the colon, never
+            // an enumerated list — and let the catalogue check reject a bogus kind.
+            name = name.replace(/^Lore:\s*([A-Za-z]+)\b/, '$1 Lore');
+
+            // The same stat blocks fold the advance INSIDE the specialisation
+            // ("Scholastic Lore (Imperial Creed +10)"); lift it out so the ladder sees it.
+            name = name.replace(/\(([^)]*?)\s*(\+\d+)\s*\)\s*$/, '($1) $2');
+
+            // A printed entry can carry several trailing groups in either order —
+            // "Athletics (S) +30 (Ag) +20", "Operate (Surface) (Ag) +20". Peel them
+            // off until neither matches, keeping the HIGHEST advance seen and the
+            // last recognised characteristic. Peeling only one left the remainder
+            // glued into the key (`athletics+30`).
+            let plus = 0;
             let characteristic = lineCharacteristic;
-            const parenMatch = /\(([^)]*)\)\s*$/.exec(name);
-            if (parenMatch !== null) {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (ESLint's parser project) has the flag off so it types this capture-group read as `string`, while tsconfig.json has it on and requires the fallback.
-                const inner = (parenMatch[1] ?? '').trim();
-                const asCharacteristic = shortToFull.get(inner.toLowerCase());
-                if (asCharacteristic !== undefined) {
-                    characteristic = asCharacteristic;
-                    name = name.slice(0, parenMatch.index).trim();
+            for (;;) {
+                const advMatch = /\+(\d+)\s*$/.exec(name);
+                if (advMatch !== null) {
+                    plus = Math.max(plus, toInt(advMatch[1], 0));
+                    name = name.slice(0, advMatch.index).trim();
+                    continue;
                 }
+                const parenMatch = /\(([^)]*)\)\s*$/.exec(name);
+                if (parenMatch !== null) {
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (ESLint's parser project) has the flag off so it types this capture-group read as `string`, while tsconfig.json has it on and requires the fallback.
+                    const inner = (parenMatch[1] ?? '').trim();
+                    const asCharacteristic = shortToFull.get(inner.toLowerCase());
+                    // Only a characteristic abbreviation is a peelable group; a real
+                    // specialisation ("Common Lore (Underworld)") stays in the name.
+                    if (asCharacteristic !== undefined) {
+                        characteristic = asCharacteristic;
+                        name = name.slice(0, parenMatch.index).trim();
+                        continue;
+                    }
+                }
+                break;
             }
+
+            // Explicit "this creature has no skills" markers. Beasts and constructs
+            // print these; they are an absence of data, not a skill named "None".
+            if (/^(none|n\/a|-{1,2}|—)$/i.test(name)) continue;
 
             const key = skillNameToKey(name);
             if (key === '') continue;
             if (characteristic === '') characteristic = catalogueChar[key] ?? '';
 
-            trained[key] = {
-                name,
-                characteristic,
-                trained: true,
-                plus10: plus >= 10,
-                plus20: plus >= 20,
-                plus30: plus >= 30,
-                bonus: 0,
-            };
+            // Rank ladder: Known(1) / +10(2) / +20(3) / +30(4). `advance` is the
+            // authored source of truth (#503); the flags are cumulative mirrors.
+            const advance = plus >= 30 ? 4 : plus >= 20 ? 3 : plus >= 10 ? 2 : 1;
+            // Anything printed above +30 has no rank to live in — carry the overflow
+            // as a flat bonus rather than truncating it away (homebrew "+50").
+            const bonus = Math.max(0, plus - (advance - 1) * 10);
+
+            // Whatever parenthetical survived the peel is the specialisation.
+            const specMatch = /\(([^)]*)\)\s*$/.exec(name);
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (ESLint's parser project) has the flag off so it types this capture-group read as `string`, while tsconfig.json has it on and requires the fallback.
+            const specialization = specMatch !== null ? (specMatch[1] ?? '').trim() : '';
+            parsed.push({ key, name, specialization, characteristic, advance, bonus });
         }
+    }
+    return parsed;
+}
+
+export function migrateSkills(source: JsonObject): void {
+    const raw = source['skills'];
+    if (typeof raw !== 'string' || raw.trim() === '') return;
+    const existing = source['trainedSkills'];
+    if (isJsonObject(existing) && Object.keys(existing).length > 0) return;
+
+    const trained: JsonObject = {};
+    for (const entry of parseSkillEntries(raw)) {
+        trained[entry.key] = {
+            name: entry.name,
+            characteristic: entry.characteristic,
+            advance: entry.advance,
+            trained: true,
+            plus10: entry.advance >= 2,
+            plus20: entry.advance >= 3,
+            plus30: entry.advance >= 4,
+            bonus: entry.bonus,
+        };
     }
     if (Object.keys(trained).length > 0) source['trainedSkills'] = trained;
 }

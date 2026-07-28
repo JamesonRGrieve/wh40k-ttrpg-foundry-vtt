@@ -46,6 +46,45 @@ export const MAX_SKILL_RANK = 4;
  */
 export const NPC_CHARACTERISTIC_BASELINE = 30;
 
+/**
+ * The rank-bearing fields {@link skillRankFrom} reads. Every field is optional so
+ * both a full trained-skill entry and a specialization row (whose derived flags may
+ * not be populated yet) satisfy it without a cast.
+ */
+export interface SkillRankSource {
+    /** Authored rank 0–4 — the source of truth when present and > 0. */
+    advance?: number | undefined;
+    trained?: boolean | undefined;
+    plus10?: boolean | undefined;
+    plus20?: boolean | undefined;
+    plus30?: boolean | undefined;
+}
+
+/**
+ * Effective rank of a trained-skill entry.
+ *
+ * `advance` is the authored source of truth. Legacy entries (and anything the prose
+ * importer produced before the advancement shape existed) carry only the cumulative
+ * boolean flags, so fall back to counting those — which keeps every un-migrated NPC
+ * resolving exactly as before.
+ */
+export function skillRankFrom(skill: SkillRankSource | undefined): number {
+    if (skill === undefined) return 0;
+    if (typeof skill.advance === 'number' && skill.advance > 0) {
+        return Math.min(skill.advance, MAX_SKILL_RANK);
+    }
+    let rank = skill.trained === true ? 1 : 0;
+    if (skill.plus10 === true) rank += 1;
+    if (skill.plus20 === true) rank += 1;
+    if (skill.plus30 === true) rank += 1;
+    return Math.min(rank, MAX_SKILL_RANK);
+}
+
+/** The cumulative boolean mirrors of an effective rank. */
+export function rankFlags(rank: number): { trained: boolean; plus10: boolean; plus20: boolean; plus30: boolean } {
+    return { trained: rank >= 1, plus10: rank >= 2, plus20: rank >= 3, plus30: rank >= 4 };
+}
+
 /** A printed characteristic split into its unadvanced base and purchased advances. */
 export interface CharacteristicSplit {
     /** Unadvanced value: `printed − advance × CHARACTERISTIC_STEP`. */
@@ -99,7 +138,7 @@ export interface AdvancementCostTables {
 }
 
 /** One advancement the NPC owns, reduced to what pricing needs. */
-export interface PricedAdvance {
+interface PricedAdvance {
     /** Aptitudes this advance is priced against. */
     aptitudes: readonly string[];
     /** Rank / tier count purchased (skills, characteristics), or the talent tier. */
@@ -158,6 +197,7 @@ export function characteristicAdvanceCost(tables: AdvancementCostTables, held: r
 export function talentAdvanceCost(tables: AdvancementCostTables, held: readonly string[], talent: NpcTalentAdvance): number {
     const matches = countMatches(held, talent.aptitudes);
     const row = tables.talent[talent.tier] ?? tables.talent[1];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- parser mismatch: tsconfig.test.json (noUncheckedIndexedAccess off) reports the guard as unnecessary, while tsc under tsconfig.json requires it (TS18048)
     return row?.[matches] ?? 0;
 }
 
@@ -193,7 +233,7 @@ export function deriveNpcXp(tables: AdvancementCostTables, held: readonly string
 }
 
 /** How many aptitudes a derived NPC set holds. DH2 PCs carry 8 (2 homeworld + 2 background + 3 role + Psyker/extra). */
-export const DERIVED_APTITUDE_COUNT = 8;
+const DERIVED_APTITUDE_COUNT = 8;
 
 /**
  * Derive the aptitude set a stat block implies.

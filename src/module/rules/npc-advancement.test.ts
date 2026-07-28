@@ -22,7 +22,9 @@ import {
     deriveAptitudes,
     deriveNpcXp,
     psychicAdvanceCost,
+    rankFlags,
     skillAdvanceCost,
+    skillRankFrom,
     splitCharacteristic,
     talentAdvanceCost,
 } from './npc-advancement.ts';
@@ -35,6 +37,40 @@ const TABLES: AdvancementCostTables = {
 };
 
 const emptyBuild = (): NpcBuild => ({ skills: [], talents: [], characteristics: [], psychic: { psyRating: 0, powerPrCosts: [] } });
+
+describe('skillRankFrom', () => {
+    it('prefers the authored advance over the flags', () => {
+        expect(skillRankFrom({ advance: 3, trained: true, plus10: false, plus20: false, plus30: false })).toBe(3);
+    });
+
+    it('falls back to counting cumulative flags on a legacy entry', () => {
+        expect(skillRankFrom({ trained: true })).toBe(1);
+        expect(skillRankFrom({ trained: true, plus10: true })).toBe(2);
+        expect(skillRankFrom({ trained: true, plus10: true, plus20: true })).toBe(3);
+        expect(skillRankFrom({ trained: true, plus10: true, plus20: true, plus30: true })).toBe(4);
+    });
+
+    it('is 0 for an absent or untrained entry, and clamps at the ceiling', () => {
+        expect(skillRankFrom(undefined)).toBe(0);
+        expect(skillRankFrom({})).toBe(0);
+        expect(skillRankFrom({ advance: 99 })).toBe(MAX_SKILL_RANK);
+    });
+});
+
+describe('rankFlags', () => {
+    it('produces cumulative mirrors of the rank', () => {
+        expect(rankFlags(0)).toEqual({ trained: false, plus10: false, plus20: false, plus30: false });
+        expect(rankFlags(1)).toEqual({ trained: true, plus10: false, plus20: false, plus30: false });
+        expect(rankFlags(3)).toEqual({ trained: true, plus10: true, plus20: true, plus30: false });
+        expect(rankFlags(4)).toEqual({ trained: true, plus10: true, plus20: true, plus30: true });
+    });
+
+    it('round-trips with skillRankFrom at every rank', () => {
+        for (let rank = 0; rank <= MAX_SKILL_RANK; rank += 1) {
+            expect(skillRankFrom(rankFlags(rank))).toBe(rank);
+        }
+    });
+});
 
 describe('splitCharacteristic', () => {
     it('always reconstructs the printed value from base + advance x 5', () => {

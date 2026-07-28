@@ -3721,6 +3721,13 @@
             "LocationArmour": "By Location",
             "TrainedSkills": "Trained Skills",
             "AddSkill": "Add Skill",
+            "SkillLevel": {
+                "Untrained": "Untrained (click to train)",
+                "Trained": "Known (click for +10)",
+                "Plus10": "+10 Trained (click for +20)",
+                "Plus20": "+20 Experienced (click for +30)",
+                "Plus30": "+30 Veteran (click to remove)"
+            },
             "CombatStats": "Combat Stats",
             "Initiative": "Initiative",
             "Dodge": "Dodge",
