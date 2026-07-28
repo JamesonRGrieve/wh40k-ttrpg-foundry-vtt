@@ -247,6 +247,18 @@ export async function createCombatEffect(actor: WH40KBaseActorDocument, type: st
  * already matches on.
  */
 const CONDITION_REGISTRY: Record<string, ConditionDefinition> = {
+    dead: {
+        // Reuses Foundry core's `dead` status id, which
+        // `CONFIG.specialStatusEffects.DEFEATED` already points at — so the token
+        // defeated overlay and the combat tracker's defeated marker come for free
+        // instead of needing a parallel system-only id (#495). Carries no
+        // `changes`: death is a state, and the mechanical consequences (no
+        // actions, lootable body) are driven by the status id itself (#477).
+        name: 'Dead',
+        icon: 'icons/svg/skull.svg',
+        changes: [],
+        flags: { 'wh40k-rpg': { nature: 'harmful', dead: true } },
+    },
     burning: {
         // Set on fire (#108). No static stat change — the per-turn tick is
         // driven by the combat turn-hook, which matches on the `Burning`
@@ -338,6 +350,18 @@ const CONDITION_REGISTRY: Record<string, ConditionDefinition> = {
         changes: [],
         flags: { 'wh40k-rpg': { nature: 'harmful', suffocating: true } },
     },
+    bleeding: {
+        // Reuses Foundry core's `bleeding` status id. Distinct from `bloodloss`:
+        // this is the generic bleeding marker the effect dialog has always
+        // offered (its own per-turn handler is `handleBleeding`), whereas
+        // `bloodloss` is the Heavily-Damaged blood-loss rule below. Both were
+        // matched by DISPLAY NAME before #495, which is why the registry needs
+        // both ids for the automation to keep firing.
+        name: 'Bleeding',
+        icon: 'icons/svg/blood.svg',
+        changes: [],
+        flags: { 'wh40k-rpg': { nature: 'harmful', requiresProcessing: true } },
+    },
     bloodloss: {
         // core.md §"Blood Loss": persistent 1d10 per turn when Heavily
         // Damaged, plus Toughness test or +1 fatigue. The per-turn tick
@@ -390,35 +414,82 @@ const CONDITION_REGISTRY: Record<string, ConditionDefinition> = {
 };
 
 /** The canonical condition registry, for consumers that need the whole table. */
-function conditionRegistry(): Record<string, ConditionDefinition> {
+export function conditionRegistry(): Readonly<Record<string, ConditionDefinition>> {
     return CONDITION_REGISTRY;
 }
 
-// eslint-disable-next-line no-restricted-syntax -- boundary: return propagates Foundry createEmbeddedDocuments which is opaque
-export async function createConditionEffect(actor: WH40KBaseActorDocument, condition: string, options: EffectOptions = {}): Promise<unknown> {
-    const conditionData = CONDITION_REGISTRY[condition.toLowerCase()];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess guard: conditions index may be undefined at runtime
-    if (!conditionData) {
-        ui.notifications.warn(t('WH40K.Warning.UnknownCondition', { condition }));
-        return null;
-    }
+/**
+ * The status id used for "this creature is dead" — Foundry core's own `dead`,
+ * which `CONFIG.specialStatusEffects.DEFEATED` maps to. Exported so the death
+ * appliers and the #477 pile conversion key off ONE constant instead of a
+ * repeated string literal.
+ */
+export const DEAD_STATUS_ID = 'dead';
 
-    return createEffect(actor, {
+/**
+ * Picker rows for any UI that offers the system's conditions (the token HUD via
+ * `CONFIG.statusEffects`, the effect-creation dialog). Derived from the registry
+ * so no surface can carry a second, drifting condition list (#495).
+ * @returns {Array<{id: string, name: string, icon: string, nature: string}>}  One row per condition.
+ */
+export function conditionPickerRows(): Array<{ id: string; name: string; icon: string; nature: string }> {
+    return Object.entries(conditionRegistry()).map(([id, definition]) => {
+        const flags = definition.flags as { 'wh40k-rpg'?: { nature?: string } } | undefined;
+        return {
+            id,
+            name: definition.name,
+            icon: definition.icon,
+            nature: flags?.['wh40k-rpg']?.nature ?? 'neutral',
+        };
+    });
+}
+
+/**
+ * The ActiveEffect creation payload for a registry condition — the PURE half of
+ * {@link createConditionEffect}, with no actor and no database write.
+ *
+ * Exists so every writer builds its condition from the registry instead of
+ * hand-rolling a "mirrors the def" copy (#495). Returns null for an unknown id.
+ * @param {string} condition  Registry key / Foundry status id.
+ * @param {EffectOptions} [options]  Per-application overrides (name, extra flags, duration…).
+ * @returns {EffectDataInput | null}  The payload, or null when the id is unknown.
+ */
+export function conditionEffectData(condition: string, options: EffectOptions = {}): EffectDataInput | null {
+    const id = condition.toLowerCase();
+    const conditionData = CONDITION_REGISTRY[id];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess guard: conditions index may be undefined at runtime
+    if (!conditionData) return null;
+    return {
         ...conditionData,
         ...options,
         changes: options.changes ?? conditionData.changes,
         flags: foundry.utils.mergeObject(conditionData.flags, options.flags ?? {}),
         // `statuses` is what makes an ActiveEffect a STATUS in Foundry (#495): it
-        // drives the token status icon and membership in `actor.statuses`. Without
-        // it, none of these conditions was ever visible on a token — and, worse,
-        // the rules engine already reads that vocabulary
-        // (`unified-roll-dialog` walks `actor.statuses`;
-        // `target-situationals.targetCombatStateFromConditions` matches `prone`,
-        // `stunned`, `unaware`/`surprised`, `helpless`/`unconscious`), so a
-        // condition applied through this registry silently failed to affect rolls.
-        // The registry key IS the status id, so the two vocabularies cannot drift.
-        statuses: [condition.toLowerCase()],
-    });
+        // drives the token status icon and membership in `actor.statuses`. The
+        // registry key IS the status id, so the two vocabularies cannot drift.
+        statuses: [id],
+    };
+}
+
+/**
+ * THE writer for condition effects (#495). Every path that applies a condition —
+ * the token HUD, the effect-creation dialog, a critical-damage rider, fatigue
+ * automation, death — goes through here, so a condition is exactly one document
+ * with one id, one artwork and one set of `changes`, visible on both the sheet
+ * and the token.
+ * @param {WH40KBaseActorDocument} actor  Actor to apply the condition to.
+ * @param {string} condition  Registry key / Foundry status id.
+ * @param {EffectOptions} [options]  Per-application overrides.
+ * @returns {Promise<unknown>}  The created effect, or null for an unknown id.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: return propagates Foundry createEmbeddedDocuments which is opaque
+export async function createConditionEffect(actor: WH40KBaseActorDocument, condition: string, options: EffectOptions = {}): Promise<unknown> {
+    const data = conditionEffectData(condition, options);
+    if (data === null) {
+        ui.notifications.warn(t('WH40K.Warning.UnknownCondition', { condition }));
+        return null;
+    }
+    return createEffect(actor, data);
 }
 
 /**

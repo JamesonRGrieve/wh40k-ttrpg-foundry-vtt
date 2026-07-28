@@ -108,7 +108,8 @@
             "LootPickupDenied": "You do not have permission to pick this up.",
             "LootDropDenied": "You do not have permission to drop this item.",
             "LootTokenLocked": "Loot piles can't be moved. Pick it up from the Token HUD instead.",
-            "GiveTargetNotOwned": "You can't give items to a character you don't control."
+            "GiveTargetNotOwned": "You can't give items to a character you don't control.",
+            "HydrationFailed": "{actor}: {count} item(s) could not load their compendium data and are incomplete — {items}"
         },
         "Confirm": "Confirm",
         "Cancel": "Cancel",
@@ -1007,6 +1008,10 @@
             "MagazineBuilding": {
                 "Name": "Enable Magazine Building",
                 "Hint": "When enabled, the weapon sheet shows a Build Clip action that lets players compose an ordered mixed magazine — loading several ammunition types in firing order (e.g. 3 AP then 2 Hot-shot). RAW loads one ammo type per clip, so this is off by default; the standard Reload is unaffected either way."
+            },
+            "DeathLootPiles": {
+                "Name": "Dead tokens become lootable piles",
+                "Hint": "When a creature gains the Dead status, drop its carried gear as an Item Piles pile at its token, so the party can loot the body without the GM hand-building a container. Requires the Item Piles module. Intrinsic items (talents, traits, skills, powers) and bound items such as the default Unarmed strike are never transferred."
             }
         },
         "ActiveEffect": {

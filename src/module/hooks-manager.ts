@@ -87,7 +87,7 @@ import { buildCareerAdvancementIndex } from './config/advancements/career-advanc
 import type { WH40KSystemConfig } from './config.ts';
 import { SYSTEM_ID } from './constants.ts';
 import * as dataModels from './data/_module.ts';
-import { grantDefaultItemsToActor } from './default-grants.ts';
+import { grantDefaultItemsToActor, repairDuplicateGrants } from './default-grants.ts';
 import * as dice from './dice/_module.ts';
 import * as documents from './documents/_module.ts';
 import { WH40KActorProxy } from './documents/actor-proxy.ts';
@@ -106,7 +106,8 @@ import {
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
 import { registerActionEconomy } from './rules/action-economy.ts';
-import { conditionStatusEffects } from './rules/active-effects.ts';
+import { conditionStatusEffects, DEAD_STATUS_ID } from './rules/active-effects.ts';
+import { convertDeadActorToPile } from './rules/death-loot.ts';
 import { registerCombatTurnHooks } from './rules/combat-turn-hooks.ts';
 import { WH40K } from './rules/config.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
@@ -227,8 +228,32 @@ export class HooksManager {
         // eslint-disable-next-line no-restricted-syntax -- boundary: createActor hook payload is framework-typed; the grant surface is narrowed in default-grants.ts
         hooksOn('createActor', (actor: Parameters<typeof grantDefaultItemsToActor>[0], _options: unknown, userId: string) => {
             if (game.user.id !== userId) return;
-            void grantDefaultItemsToActor(actor);
+            void grantDefaultItemsToActor(actor).then(
+                // Repair actors that accumulated copies before the intra-batch
+                // de-dupe landed (#228 — a live hybrid was carrying ~8 Unarmed).
+                // Runs after the grant so the two can never race on the same list.
+                () => repairDuplicateGrants(actor as Parameters<typeof repairDuplicateGrants>[0]),
+            );
         });
+
+        // Death → lootable pile (#477), keyed off the `dead` status (#495) rather
+        // than a bespoke death hook, so damage, fatigue-death and a GM toggling
+        // the token icon all convert identically. First active GM only: the pile
+        // is a world write that must happen exactly once.
+        const onDeadStatusChange = (effect: { parent?: unknown; statuses?: ReadonlySet<string> }): void => {
+            if (effect.statuses?.has(DEAD_STATUS_ID) !== true) return;
+            const firstGM = game.users.contents.find((u) => u.active && u.isGM)?.id;
+            if (game.user.id !== firstGM) return;
+            const actor = effect.parent;
+            if (actor === null || typeof actor !== 'object' || !('items' in actor)) return;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect#parent is a Document union; narrowed structurally above to the LootableActor surface
+            const lootable = actor as Parameters<typeof convertDeadActorToPile>[0];
+            const token = canvas.tokens?.placeables.find((t) => t.actor?.id === lootable.id)?.document ?? null;
+            const enabled = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.deathLootPiles) === true;
+            void convertDeadActorToPile(lootable, token, enabled);
+        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect hook payloads are framework-typed; narrowed inside the handler
+        hooksOn('createActiveEffect', (effect: Parameters<typeof onDeadStatusChange>[0]) => onDeadStatusChange(effect));
 
         // Compendium actors ship LEAN inventories (compendiumSource / variantOf join
         // keys; see src/packs/CLAUDE.md). Join the canonical body IN MEMORY on import —
@@ -546,6 +571,10 @@ export class HooksManager {
         // the system applied ever became a token status at all.
         // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.statusEffects is a loosely-typed core array; the registry projection is asserted at its source
         CONFIG.statusEffects = conditionStatusEffects();
+        // Bind core's DEFEATED special status to the registry's `dead` id, so the
+        // token defeated overlay and the combat tracker's defeated marker follow
+        // the same state the rules engine sees in `actor.statuses` (#495).
+        CONFIG.specialStatusEffects.DEFEATED = DEAD_STATUS_ID;
 
         // Define custom Document classes
         CONFIG.Actor.documentClass = WH40KActorProxy;

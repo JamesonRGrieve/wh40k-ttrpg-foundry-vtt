@@ -4,6 +4,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { conditionPickerRows, conditionRegistry } from '../../rules/active-effects.ts';
 import { capitalize } from '../../utils/format.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
 
@@ -47,6 +48,8 @@ export interface EffectPayload {
     changes: ActiveEffectChange[];
     flags: { 'wh40k-rpg': { nature: string; requiresProcessing?: boolean } };
     duration?: { rounds: number; startRound: number; startTurn: number } | undefined;
+    /** Foundry status ids conferred — what makes the AE a token status (#495). */
+    statuses?: string[] | undefined;
 }
 
 /** The minimal custom-effect payload (no changes / nature flag, just a named disabled effect). */
@@ -151,18 +154,12 @@ export default class EffectCreationDialog extends DialogV2 {
         context['actor'] = this.actor;
         context['selectedCategory'] = this.selectedCategory;
 
-        // Predefined conditions
-        context['conditions'] = [
-            { id: 'stunned', name: 'Stunned', icon: 'fas fa-dizzy', nature: 'harmful' },
-            { id: 'prone', name: 'Prone', icon: 'fas fa-person-falling', nature: 'harmful' },
-            { id: 'blinded', name: 'Blinded', icon: 'fas fa-eye-slash', nature: 'harmful' },
-            { id: 'deafened', name: 'Deafened', icon: 'fas fa-volume-xmark', nature: 'harmful' },
-            { id: 'grappled', name: 'Grappled', icon: 'fas fa-hand-fist', nature: 'harmful' },
-            { id: 'bleeding', name: 'Bleeding', icon: 'fas fa-droplet', nature: 'harmful' },
-            { id: 'onFire', name: 'On Fire', icon: 'fas fa-fire', nature: 'harmful' },
-            { id: 'inspired', name: 'Inspired', icon: 'fas fa-lightbulb', nature: 'beneficial' },
-            { id: 'blessed', name: 'Blessed', icon: 'fas fa-hand-sparkles', nature: 'beneficial' },
-        ];
+        // Conditions come from the ONE registry (#495). This used to be a second
+        // hardcoded list whose ids (`onFire`, `bleeding`) and `fas fa-*` icons
+        // matched neither the registry's ids nor its artwork, so a condition
+        // applied here was a different thing from the same condition applied by a
+        // crit rider or the token HUD.
+        context['conditions'] = conditionPickerRows();
 
         // Characteristics
         context['characteristics'] = [
@@ -284,87 +281,37 @@ export default class EffectCreationDialog extends DialogV2 {
     /* -------------------------------------------- */
 
     /**
-     * Create condition effect data
+     * Build the effect payload for a picked condition, from the ONE registry.
+     *
+     * This method used to carry a THIRD hand-maintained condition table whose
+     * ids (`bleeding`, `onFire`) and artwork (`sound-off.svg`, `net.svg`,
+     * `angel.svg`) disagreed with both the registry and the dialog's own picker
+     * list — so the same condition meant three different things depending on
+     * which surface applied it (#495). It now reads the registry and stamps
+     * `statuses`, so a condition applied from this dialog is the same document,
+     * with the same token status, as one applied from the token HUD or a crit
+     * rider.
+     * @param {EffectCreationData} data  The submitted dialog form data.
+     * @returns {EffectPayload | null}  The creation payload, or null for an unknown id.
      */
     static _createConditionData(data: EffectCreationData): EffectPayload | null {
         const conditionId = data.conditionId;
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- conditionId is string|undefined from EffectCreationData; falsy check covers both undefined and ''
         if (!conditionId) return null;
 
-        const conditions: Record<string, EffectPayload> = {
-            stunned: {
-                name: 'Stunned',
-                icon: 'icons/svg/daze.svg',
-                changes: [
-                    { key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
-                    { key: 'system.combat.attack', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
-                ],
-                flags: { 'wh40k-rpg': { nature: 'harmful' } },
-            },
-            prone: {
-                name: 'Prone',
-                icon: 'icons/svg/falling.svg',
-                changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
-                flags: { 'wh40k-rpg': { nature: 'harmful' } },
-            },
-            blinded: {
-                name: 'Blinded',
-                icon: 'icons/svg/blind.svg',
-                changes: [
-                    { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
-                    { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
-                ],
-                flags: { 'wh40k-rpg': { nature: 'harmful' } },
-            },
-            deafened: {
-                name: 'Deafened',
-                icon: 'icons/svg/sound-off.svg',
-                changes: [{ key: 'system.characteristics.perception.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
-                flags: { 'wh40k-rpg': { nature: 'harmful' } },
-            },
-            grappled: {
-                name: 'Grappled',
-                icon: 'icons/svg/net.svg',
-                changes: [
-                    { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
-                    { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
-                ],
-                flags: { 'wh40k-rpg': { nature: 'harmful' } },
-            },
-            bleeding: {
-                name: 'Bleeding',
-                icon: 'icons/svg/blood.svg',
-                changes: [],
-                flags: { 'wh40k-rpg': { nature: 'harmful', requiresProcessing: true } },
-            },
-            onFire: {
-                name: 'On Fire',
-                icon: 'icons/svg/fire.svg',
-                changes: [],
-                flags: { 'wh40k-rpg': { nature: 'harmful', requiresProcessing: true } },
-            },
-            inspired: {
-                name: 'Inspired',
-                icon: 'icons/svg/upgrade.svg',
-                changes: [
-                    { key: 'system.characteristics.willpower.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
-                    { key: 'system.characteristics.fellowship.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
-                ],
-                flags: { 'wh40k-rpg': { nature: 'beneficial' } },
-            },
-            blessed: {
-                name: 'Blessed',
-                icon: 'icons/svg/angel.svg',
-                changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }],
-                flags: { 'wh40k-rpg': { nature: 'beneficial' } },
-            },
-        };
-
-        const conditionData = conditions[conditionId];
+        const definition = conditionRegistry()[conditionId];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: index access on Record may return undefined; guard is required at runtime
-        if (!conditionData) return null;
+        if (!definition) return null;
 
-        return this._applyDuration(foundry.utils.deepClone(conditionData), data);
+        const flags = definition.flags as { 'wh40k-rpg'?: { nature?: string; requiresProcessing?: boolean } };
+        const payload: EffectPayload = {
+            name: definition.name,
+            icon: definition.icon,
+            changes: foundry.utils.deepClone(definition.changes),
+            flags: { 'wh40k-rpg': { nature: flags['wh40k-rpg']?.nature ?? 'harmful' } },
+            statuses: [conditionId],
+        };
+        return this._applyDuration(payload, data);
     }
 
     /* -------------------------------------------- */
