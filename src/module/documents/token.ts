@@ -1,5 +1,7 @@
 import { SYSTEM_ID } from '../constants.ts';
-import { hasInteriorScene, openInteriorScene, type SceneLookup } from '../vehicle/vehicle-interior.ts';
+import { disembark, embark, slaveOccupantTokens } from '../rules/vehicle-embark.ts';
+import { readAboard } from '../rules/vehicle-occupancy.ts';
+import { hasInteriorScene, isVehicleActor, openInteriorScene, type SceneLookup } from '../vehicle/vehicle-interior.ts';
 
 type MovementTypeConfig = {
     label: string;
@@ -144,6 +146,17 @@ export class TokenDocumentWH40K extends TokenDocument {
         // that handler returns early for any actor without `system.movement`, and
         // a vehicle's interior should not depend on how its movement is authored.
         Hooks.on('renderTokenHUD', this.onVehicleInteriorHUDRender.bind(this));
+        Hooks.on('renderTokenHUD', this.onVehicleEmbarkHUDRender.bind(this));
+        // Occupant tokens are slaved to the vehicle (#508). `preUpdateToken` is the
+        // hook with BOTH positions available — the document still holds the old
+        // one and the payload holds the new — which is what the delta needs.
+        Hooks.on('preUpdateToken', (doc, changed) => {
+            const changes = {
+                x: typeof changed.x === 'number' ? changed.x : undefined,
+                y: typeof changed.y === 'number' ? changed.y : undefined,
+            };
+            void slaveOccupantTokens(doc, changes, doc.parent as Parameters<typeof slaveOccupantTokens>[2]);
+        });
     }
 
     /**
@@ -194,6 +207,68 @@ export class TokenDocumentWH40K extends TokenDocument {
         });
 
         (root.querySelector('.col.left') ?? root).appendChild(button);
+    }
+
+    /**
+     * Add Enter / Exit Vehicle to a vehicle token's HUD (#508).
+     *
+     * Acts on the CONTROLLED tokens rather than on the vehicle: "put these
+     * characters into that vehicle" is the gesture, and it lets a GM embark the
+     * whole party in one click. A player controls only their own token, so the
+     * ownership rule ("a player may embark their own character; the GM may move
+     * anyone") falls out of Foundry's own control rules rather than needing a
+     * second permission check here.
+     *
+     * The button flips to Exit when every selected token is already aboard this
+     * vehicle, so one control covers both directions without a second icon.
+     * @param {TokenHUDLike} app  The TokenHUD application.
+     * @param {HTMLElement | JQuery} html  The rendered HUD.
+     */
+    static onVehicleEmbarkHUDRender(app: TokenHUDLike, html: HTMLElement | JQuery): void {
+        const vehicleToken = app.object?.document;
+        const vehicle = vehicleToken?.actor;
+        if (!isVehicleActor(vehicle)) return;
+        const root = TokenDocumentWH40K.#hudRoot(html);
+        if (root === null || vehicleToken === undefined) return;
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.classList.add('control-icon', 'wh40k-token-embark');
+        button.dataset['action'] = 'toggleVehicleEmbark';
+        button.title = game.i18n.localize('WH40K.Vehicle.Embark');
+        button.setAttribute('aria-label', button.title);
+        button.innerHTML = '<i class="fa-solid fa-person-to-portal"></i>';
+        button.addEventListener('click', () => {
+            void TokenDocumentWH40K.#toggleEmbark(vehicleToken);
+        });
+
+        (root.querySelector('.col.left') ?? root).appendChild(button);
+    }
+
+    /**
+     * Embark every controlled character token into the vehicle, or disembark them
+     * when they are already aboard it.
+     * @param {TokenDocument} vehicleToken  The vehicle token whose HUD was used.
+     */
+    static async #toggleEmbark(vehicleToken: TokenDocument): Promise<void> {
+        const vehicle = vehicleToken.actor;
+        const selected = (canvas.tokens?.controlled ?? []).map((t) => t.document).filter((doc) => doc.id !== vehicleToken.id);
+        const riders = selected.map((doc) => doc.actor).filter((actor) => actor !== null);
+        if (riders.length === 0) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Vehicle.NoTokenSelected'));
+            return;
+        }
+
+        const vehicleUuid = vehicle?.uuid;
+        /* eslint-disable no-restricted-syntax -- boundary: Foundry types `setFlag`/`unsetFlag` over the DECLARED flag scopes, which is not assignable to the plain `(scope: string, …)` shape the embark module works against; the same reason `TokenWithFlags` exists above. One cast per side, at the boundary. */
+        const target = vehicle as unknown as Parameters<typeof embark>[1];
+        for (const rider of riders) {
+            const aboard = readAboard(rider);
+            const passenger = rider as unknown as Parameters<typeof embark>[0];
+            /* eslint-enable no-restricted-syntax */
+            // eslint-disable-next-line no-await-in-loop -- deliberate: each embark re-reads the roster, so capacity is enforced against the writes already made rather than against a stale snapshot
+            await (aboard !== null && aboard.vehicleUuid === vehicleUuid ? disembark(passenger) : embark(passenger, target));
+        }
     }
 
     /**
