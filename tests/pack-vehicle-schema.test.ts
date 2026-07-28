@@ -90,6 +90,30 @@ describe('vehicle-field-not-in-schema', () => {
     });
 });
 
+describe('vehicle-enum-out-of-range', () => {
+    it('passes the schema choices', () => {
+        expect(rulesFor(craft({ type: 'tank', locomotion: 'tracked', vehicleClass: 'ground' }))).not.toContain(
+            'vehicle-enum-out-of-range',
+        );
+    });
+
+    it("flags a classification outside the choices — 103 craft said 'ground'", () => {
+        expect(rulesFor(craft({ type: 'ground' }))).toContain('vehicle-enum-out-of-range');
+    });
+
+    it('flags a vehicleClass that is really a locomotion', () => {
+        expect(rulesFor(craft({ vehicleClass: 'skimmer' }))).toContain('vehicle-enum-out-of-range');
+    });
+
+    it('accepts a blank Renown, which is every line but Deathwatch', () => {
+        expect(rulesFor(craft({ renown: '' }))).not.toContain('vehicle-enum-out-of-range');
+    });
+
+    it('flags a Renown tier that is not one of the five', () => {
+        expect(rulesFor(craft({ renown: 'legendary' }))).toContain('vehicle-enum-out-of-range');
+    });
+});
+
 describe('vehicle-unstatted', () => {
     it('passes a craft with armour and integrity', () => {
         expect(rulesFor(craft())).not.toContain('vehicle-unstatted');
