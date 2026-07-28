@@ -1,12 +1,13 @@
-{{!-- Craft Components & Upgrades Tab (terracraft / aircraft / watercraft). --}}
+{{!-- Craft Components & Upgrades Tab (terracraft / aircraft / watercraft).
+     Shared panel partial, design tokens only (#502). --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
     <div class="tw-flex tw-flex-col tw-gap-4">
 
         {{!-- Components/Upgrades List --}}
-        {{#> systems/wh40k-rpg/templates/actor/partial/craft-section.hbs icon="fa-cog" titleKey="WH40K.Vehicle.ComponentsAndUpgrades"}}
+        {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-cog" label=(localize "WH40K.Vehicle.ComponentsAndUpgrades") bodyClass="tw-p-4"}}
             <div class="tw-flex tw-flex-col tw-gap-3">
                 {{#each components}}
-                <div class="tw-px-3 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px]" data-item-id="{{this._id}}">
+                <div class="tw-px-3 tw-py-3 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-md" data-item-id="{{this._id}}">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-font-bold tw-mb-1">
                         <input type="checkbox"
                                class="tw-m-0"
@@ -16,7 +17,7 @@
                         {{this.name}}
                     </div>
                     {{#if this.system.description}}
-                    <div class="tw-text-[0.85rem] tw-text-[#888] tw-mt-2">
+                    <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)] tw-mt-2">
                         {{{this.system.description}}}
                     </div>
                     {{/if}}
@@ -24,12 +25,12 @@
                 {{/each}}
 
                 {{#each vehicleUpgrades}}
-                <div class="tw-px-3 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px]" data-item-id="{{this._id}}">
+                <div class="tw-px-3 tw-py-3 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-md" data-item-id="{{this._id}}">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-font-bold tw-mb-1">
                         {{this.name}}
                     </div>
                     {{#if this.system.description}}
-                    <div class="tw-text-[0.85rem] tw-text-[#888] tw-mt-2">
+                    <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)] tw-mt-2">
                         {{{this.system.description}}}
                     </div>
                     {{/if}}
@@ -37,10 +38,10 @@
                 {{/each}}
 
                 {{#unless (or components.length vehicleUpgrades.length)}}
-                <div class="tw-py-8 tw-text-center tw-text-[#888] tw-italic">{{localize "WH40K.Vehicle.NoComponents"}}</div>
+                <div class="tw-py-8 tw-text-center tw-text-[color:var(--wh40k-text-medium)] tw-italic">{{localize "WH40K.Vehicle.NoComponents"}}</div>
                 {{/unless}}
             </div>
-        {{/systems/wh40k-rpg/templates/actor/partial/craft-section.hbs}}
+        {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
     </div>
 </section>

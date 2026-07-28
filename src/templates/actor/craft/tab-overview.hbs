@@ -1,42 +1,45 @@
 {{!-- Craft Overview Tab (terracraft / aircraft / watercraft). Aircraft adds an
-     altitude/ceiling block via {{#if isAircraft}}. --}}
+     altitude/ceiling block via {{#if isAircraft}}.
+
+     Uses the SHARED panel + field-row partials and design tokens only. The craft
+     family used to carry its own dark-theme panel and field implementations with
+     hardcoded hex/rgba, so a craft sheet rendered grey panels and near-white
+     text next to a character sheet's tokenised gothic panels (#502). --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
     <div class="tw-flex tw-flex-col tw-gap-4">
 
-        {{!-- Craft Stats Grid --}}
-        {{#> systems/wh40k-rpg/templates/actor/partial/craft-section.hbs icon="fa-tachometer-alt" titleKey="WH40K.Vehicle.Statistics"}}
-            <div class="tw-grid tw-grid-cols-[repeat(auto-fit,minmax(150px,1fr))] tw-gap-4">
-                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.SpeedCruising" name="system.speed.cruising" value=craftStats.speed.cruising min="0"}}
-                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.SpeedTactical" name="system.speed.tactical" value=craftStats.speed.tactical min="0"}}
-                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.Manoeuverability" name="system.manoeuverability" value=craftStats.manoeuverability}}
-                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.Passengers" name="system.passengers" value=craftStats.passengers min="0"}}
-                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.CarryingCapacity" name="system.carryingCapacity" value=craftStats.carryingCapacity min="0"}}
-                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.Size" name="system.size" value=craftStats.size min="1" max="10"}}
+        {{!-- Craft Stats — a bounded grid, not one flat auto-fit row. The old
+              auto-fit,minmax(150px,1fr) resolved to six 150px inputs across the
+              1000px window with dead space beneath (the #15 failure mode). --}}
+        {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-tachometer-alt" label=(localize "WH40K.Vehicle.Statistics") bodyClass="tw-p-4"}}
+            <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-4 tw-max-w-[48rem]">
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.SpeedCruising") name="system.speed.cruising" value=craftStats.speed.cruising type="number" min="0" dataDtype="Number"}}
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.SpeedTactical") name="system.speed.tactical" value=craftStats.speed.tactical type="number" min="0" dataDtype="Number"}}
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Manoeuverability") name="system.manoeuverability" value=craftStats.manoeuverability type="number" dataDtype="Number"}}
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Passengers") name="system.passengers" value=craftStats.passengers type="number" min="0" dataDtype="Number"}}
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.CarryingCapacity") name="system.carryingCapacity" value=craftStats.carryingCapacity type="number" min="0" dataDtype="Number"}}
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Size") name="system.size" value=craftStats.size type="number" min="1" max="10" dataDtype="Number"}}
             </div>
 
             {{!-- Aircraft-only: altitude tier + service ceiling --}}
             {{#if isAircraft}}
-            <div class="tw-grid tw-grid-cols-[repeat(auto-fit,minmax(150px,1fr))] tw-gap-4 tw-mt-4 tw-pt-4 tw-border-t tw-border-[#444]">
-                <div class="tw-flex tw-flex-col tw-gap-1">
-                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.Altitude"}}</label>
-                    <select name="system.altitude" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]">
-                        <option value="ground" {{#if (eq craftStats.altitude "ground")}}selected{{/if}}>{{localize "WH40K.Vehicle.AltitudeTier.Ground"}}</option>
-                        <option value="low" {{#if (eq craftStats.altitude "low")}}selected{{/if}}>{{localize "WH40K.Vehicle.AltitudeTier.Low"}}</option>
-                        <option value="high" {{#if (eq craftStats.altitude "high")}}selected{{/if}}>{{localize "WH40K.Vehicle.AltitudeTier.High"}}</option>
-                        <option value="orbital" {{#if (eq craftStats.altitude "orbital")}}selected{{/if}}>{{localize "WH40K.Vehicle.AltitudeTier.Orbital"}}</option>
-                    </select>
-                </div>
-                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.Ceiling" name="system.ceiling" value=craftStats.ceiling min="0"}}
+            <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-4 tw-max-w-[48rem] tw-mt-4 tw-pt-4 tw-border-t tw-border-[var(--wh40k-border-color-light)]">
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Altitude") name="system.altitude" value=craftStats.altitude type="select" options=altitudeOptions}}
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Ceiling") name="system.ceiling" value=craftStats.ceiling type="number" min="0" dataDtype="Number"}}
             </div>
             {{/if}}
-        {{/systems/wh40k-rpg/templates/actor/partial/craft-section.hbs}}
+        {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
-        {{!-- Description --}}
-        {{#> systems/wh40k-rpg/templates/actor/partial/craft-section.hbs icon="fa-file-alt" titleKey="WH40K.Vehicle.Description"}}
-            <div class="editor-content" data-edit="system.description">
-                {{{system.description}}}
-            </div>
-        {{/systems/wh40k-rpg/templates/actor/partial/craft-section.hbs}}
+        {{!-- Description — through the standard ProseMirror path. A bare
+              `<div class="editor-content">` never mounts an editor, so the
+              description was not editable at all (CLAUDE.md gotcha #5). --}}
+        {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-file-alt" label=(localize "WH40K.Vehicle.Description") bodyClass="tw-p-4"}}
+            {{#if inEditMode}}
+            {{editor system.description target="system.description" button=true editable=editable engine="prosemirror"}}
+            {{else}}
+            <div class="editor-content">{{{system.description}}}</div>
+            {{/if}}
+        {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
     </div>
 </section>
