@@ -11,6 +11,7 @@ import type { WH40KNPC } from '../../documents/npc.ts';
 import { characteristicFromAbbrev } from '../../helpers/characteristic-labels.ts';
 import { hasDaemonic } from '../../rules/daemonic-immunities.ts';
 import { getInteractionCap } from '../../rules/disposition.ts';
+import { tokenFootprintForSize } from '../../utils/token-footprint.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import InventoryGeneratorDialog from '../dialogs/inventory-generator-dialog.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
@@ -1304,21 +1305,9 @@ export default class NPCSheet extends CharacterSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document update payload is Record<string,unknown>; token/prototypeToken fields are untyped.
         const updates: Record<string, unknown> = {};
 
-        // Size-based dimensions
-        const sizeMap: Record<number, number> = {
-            1: 0.5, // Miniscule
-            2: 0.75, // Tiny
-            3: 1, // Small
-            4: 1, // Average
-            5: 2, // Hulking
-            6: 2, // Enormous
-            7: 3, // Massive
-            8: 3, // Immense
-            9: 4, // Gargantuan
-            10: 4, // Colossal
-        };
-        const npcSize = npc.system.size;
-        const tokenSize = sizeMap[npcSize] ?? 1;
+        // Size-based dimensions — the same ladder `_preCreate` stamps, so the
+        // sheet button and a fresh compendium import can never disagree (#501).
+        const tokenSize = tokenFootprintForSize(npc.system.size);
         updates['width'] = tokenSize;
         updates['height'] = tokenSize;
 
