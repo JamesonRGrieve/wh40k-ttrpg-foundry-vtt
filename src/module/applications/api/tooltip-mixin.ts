@@ -6,6 +6,7 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KArmourLocation, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill } from '../../types/global.d.ts';
 import {
+    type ArmorTooltipEquippedPiece,
     type ModifierTooltipSource,
     prepareArmorTooltipData,
     prepareCharacteristicTooltipData,
@@ -63,11 +64,11 @@ export default function TooltipMixin<T extends ApplicationV2Ctor>(Base: T): T {
         /**
          * Prepare armor tooltip data.
          * @param {string} location     Armor location.
-         * @param {Record<string, unknown>} armorData    Armor data for this location.
-         * @param {unknown[]} [equipped]    Equipped armor pieces.
+         * @param {WH40KArmourLocation} armorData    Armor data for this location.
+         * @param {ArmorTooltipEquippedPiece[]} [equipped]    Equipped armor pieces (display or item).
          * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
-        prepareArmorTooltip(location: string, armorData: WH40KArmourLocation, equipped: WH40KItem[] = []): string {
+        prepareArmorTooltip(location: string, armorData: WH40KArmourLocation, equipped: ArmorTooltipEquippedPiece[] = []): string {
             return prepareArmorTooltipData(location, armorData, equipped);
         }
 

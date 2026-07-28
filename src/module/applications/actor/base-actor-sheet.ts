@@ -9,7 +9,15 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
 import { ItemDropManager } from '../../managers/item-drop-manager.ts';
-import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KWounds, WH40KInitiative, WH40KMovement } from '../../types/global.d.ts';
+import type {
+    WH40KBaseActorDocument,
+    WH40KArmourLocation,
+    WH40KCharacteristic,
+    WH40KSkill,
+    WH40KWounds,
+    WH40KInitiative,
+    WH40KMovement,
+} from '../../types/global.d.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
 import { sortByDisplayName } from '../../utils/talent-trait-sort.ts';
 import { openInteriorScene, vehicleInteriorHeaderControls, type SceneLookup } from '../../vehicle/vehicle-interior.ts';
@@ -28,7 +36,7 @@ import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
 import TooltipMixin from '../api/tooltip-mixin.ts';
 import VisualFeedbackMixin from '../api/visual-feedback-mixin.ts';
 import WhatIfMixin from '../api/what-if-mixin.ts';
-import { ActiveModifiersMixin, ItemPreviewMixin } from '../components/_module.ts';
+import { ActiveModifiersMixin, ItemPreviewMixin, type ArmorTooltipEquippedPiece } from '../components/_module.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 // import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 
@@ -198,7 +206,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     // TooltipMixin
     declare prepareCharacteristicTooltip: (key: string, characteristic: Record<string, unknown>, modifierSources?: Record<string, unknown>) => string;
     declare prepareSkillTooltip: (key: string, skill: Record<string, unknown>, characteristics: Record<string, unknown>) => string;
-    declare prepareArmorTooltip: (location: string, armorData: Record<string, unknown>, equipped?: unknown[]) => string;
+    declare prepareArmorTooltip: (location: string, armorData: WH40KArmourLocation, equipped?: ArmorTooltipEquippedPiece[]) => string;
     declare prepareWeaponTooltip: (weapon: Record<string, unknown>) => string;
     declare prepareModifierTooltip: (title: string, sources: unknown[]) => string;
     declare prepareQualityTooltip: (identifier: string, level?: number | null) => string;

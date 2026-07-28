@@ -6,8 +6,9 @@ import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, comput
 import { buildCharacteristicFields } from '../shared/characteristics.ts';
 import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
 import { computeMovement } from '../shared/movement-math.ts';
+import { CHARACTERISTIC_STEP, MAX_SKILL_RANK } from '../../rules/npc-advancement.ts';
 import { skillCharacteristicMap } from '../shared/skill-definitions.ts';
-import { untrainedSkillBase } from '../shared/skill-math.ts';
+import { computeSkillTarget, untrainedSkillBase } from '../shared/skill-math.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
@@ -47,6 +48,12 @@ interface NPCCharacteristicData {
     base: number;
     modifier: number;
     unnatural: number;
+    /** Purchased +5 advances (#503). 0 on an unsplit legacy stat block. */
+    advance: number;
+    /** XP paid for {@link advance}; derived by the NPC-advancement pass. */
+    cost: number;
+    /** Recoverable characteristic damage, subtracted from the total. */
+    damage: number;
     total: number;
     bonus: number;
     /** Effective (post-modifier) value — alias of `total` (#415). */
@@ -70,15 +77,41 @@ interface NPCV2SimpleWeapon {
     class: 'melee' | 'pistol' | 'basic' | 'heavy' | 'thrown' | 'launcher';
 }
 
-/** Shape of a trained skill entry in the sparse trainedSkills object. */
+/** One specialization row on a specialist skill — mirrors the PC `SkillField` entry shape. */
+interface NPCV2SkillEntry {
+    name: string;
+    specialization?: string;
+    characteristic?: string;
+    /** Purchased rank 0–4; the source of truth for this specialization. */
+    advance: number;
+    bonus?: number;
+    /** Derived at prepare time. */
+    trained?: boolean;
+    plus10?: boolean;
+    plus20?: boolean;
+    plus30?: boolean;
+    current?: number;
+}
+
+/**
+ * Shape of a trained skill entry in the sparse trainedSkills object.
+ *
+ * `advance` (#503) is the authored rank and the source of truth; the boolean
+ * flags are derived mirrors retained for template compatibility. Legacy entries
+ * carry only the flags — {@link NPCData.skillRankOf} falls back to reading them.
+ */
 interface NPCV2TrainedSkill {
     name: string;
     characteristic: string;
+    /** Purchased rank: 0 untrained, 1 known, 2 (+10), 3 (+20), 4 (+30). */
+    advance?: number;
     trained: boolean;
     plus10: boolean;
     plus20: boolean;
     plus30?: boolean;
     bonus: number;
+    /** Per-specialization rows for specialist skills (Common Lore, Trade, …). */
+    entries?: NPCV2SkillEntry[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging -- intentional: declaration-merge with the trailing interface to apply engine mixin Declarations to the class type without per-field `declare` repetition
@@ -127,6 +160,19 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         bonus: number;
     };
     declare trainedSkills: Partial<Record<string, NPCV2TrainedSkill>>;
+    /** Aptitudes derived from the stat block (#503); drives every advancement cost. */
+    declare aptitudes: string[];
+    /** Homologated with `CharacterData.experience`; `total` at spawn is the exact build cost. */
+    declare experience: {
+        used: number;
+        total: number;
+        available: number;
+        /** Derived per-class breakdown, set by the NPC-advancement pass (not persisted). */
+        spentSkills?: number;
+        spentTalents?: number;
+        spentCharacteristics?: number;
+        spentPsychicPowers?: number;
+    };
     declare weapons: {
         mode: 'simple' | 'embedded';
         simple: NPCV2SimpleWeapon[];
@@ -236,7 +282,11 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @private
      */
     static _CharacteristicField(label: string, short: string): foundry.data.fields.DataField.Any {
-        return characteristicField(label, short, { base: 30, total: 30, bonus: 3, advancement: false });
+        // NPCs carry the advancement triplet (#503) so a printed stat block can be
+        // expressed as `base + advance × 5` and advanced through the normal dialog.
+        // Both fields default to 0, so an unsplit legacy stat block (`base` = the
+        // printed value, `advance` = 0) totals exactly as it always did.
+        return characteristicField(label, short, { base: 30, total: 30, bonus: 3, advancement: true });
     }
 
     /** @inheritDoc */
@@ -323,11 +373,32 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             initiative: initiativeField({ nullable: true }),
 
             // === TRAINED SKILLS (SPARSE) ===
-            // Only store skills the NPC actually has, not all 48
+            // Only store skills the NPC actually has, not all 48.
+            // Authored shape (#503, see src/packs/CLAUDE.md → NPC Trained Skills):
+            //   { "awareness": { name, characteristic, advance: 0-4, trained, plus10,
+            //                    plus20, plus30, bonus, entries?: [...] } }
+            // `advance` is the source of truth; the boolean flags are derived mirrors
+            // kept for template compatibility. Specialist skills carry `entries[]`, the
+            // same per-specialization array the PC SkillField uses, so two
+            // specializations of one skill no longer collide on the base key.
             trainedSkills: new ObjectField({
                 required: true,
                 initial: {},
-                // Format: { "awareness": { trained: true, plus10: false, plus20: false, bonus: 10 } }
+            }),
+
+            // === APTITUDES (DERIVED, #503) ===
+            // RAW never prints aptitudes for an NPC; they are derived from the stat
+            // block by the NPC-advancement pass and stored so costs are inspectable.
+            aptitudes: new ArrayField(new StringField({ required: true }), { required: true, initial: [] }),
+
+            // === EXPERIENCE (#503) ===
+            // Homologated with CharacterData.experience so the Advancement Dialog and
+            // sheet partials work identically on an NPC. `total` at spawn is the exact
+            // cost of every advancement the stat block already has.
+            experience: new SchemaField({
+                used: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                total: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                available: new NumberField({ required: true, initial: 0, integer: true }),
             }),
 
             // === WEAPONS (SIMPLE MODE) ===
@@ -665,7 +736,33 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     static SKILL_CHARACTERISTIC_MAP: Record<string, string> = skillCharacteristicMap();
 
     /**
+     * Effective rank of a trained-skill entry (#503).
+     *
+     * `advance` is the authored source of truth. Legacy entries (and anything the
+     * prose importer produced before the advancement shape existed) carry only the
+     * cumulative boolean flags, so fall back to counting those — which keeps every
+     * un-migrated NPC rendering exactly as before.
+     */
+    static skillRankOf(skill: Pick<NPCV2TrainedSkill, 'advance' | 'trained' | 'plus10' | 'plus20' | 'plus30'> | undefined): number {
+        if (skill === undefined) return 0;
+        if (typeof skill.advance === 'number' && skill.advance > 0) {
+            return Math.min(skill.advance, MAX_SKILL_RANK);
+        }
+        // Flags are cumulative: trained(1) + plus10 + plus20 + plus30.
+        let rank = skill.trained ? 1 : 0;
+        if (skill.plus10) rank += 1;
+        if (skill.plus20) rank += 1;
+        if (skill.plus30 === true) rank += 1;
+        return Math.min(rank, MAX_SKILL_RANK);
+    }
+
+    /**
      * Calculate the target number for a skill test.
+     *
+     * Routes through the shared {@link computeSkillTarget} ladder (#503) rather than
+     * re-adding the flags inline, so the NPC path and the PC path can no longer
+     * disagree — the +30 Veteran rank in particular was previously capped at +20 on
+     * the sheet's own recompute.
      * @param {string} skillName - The skill key (e.g., "awareness", "dodge")
      * @returns {number} The target number for the skill test.
      */
@@ -680,19 +777,15 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
 
         const gameSystem = (this.constructor as { gameSystem?: string }).gameSystem;
         const systemConfig = gameSystem !== undefined ? SystemConfigRegistry.getOrNull(gameSystem) : null;
-        let target = char.total;
+        const usesAptitudes = systemConfig?.usesAptitudes === true;
 
-        // Apply training bonuses
+        let target: number;
         if (skill !== undefined) {
-            // trained baseline: no bonus
-            if (skill.plus10) target += 10;
-            if (skill.plus20) target += 10; // cumulative: plus10 + plus20 = +20
-            if (skill.plus30 === true) target += 10; // cumulative: plus10 + plus20 + plus30 = +30 (DH2e Veteran)
-            target += skill.bonus !== 0 ? skill.bonus : 0;
+            target = computeSkillTarget(char.total, NPCData.skillRankOf(skill), skill.bonus !== 0 ? skill.bonus : 0, usesAptitudes).current;
         } else {
             // Untrained: flat -20 in DH2e (Known/Trained/Experienced/Veteran ladder),
             // half characteristic for career-based systems (#423).
-            target = untrainedSkillBase(char.total, systemConfig?.usesAptitudes === true);
+            target = untrainedSkillBase(char.total, usesAptitudes);
         }
 
         // Apply custom override if enabled
@@ -1017,8 +1110,13 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     _prepareCharacteristics(): void {
         for (const [, char] of Object.entries(this.characteristics)) {
-            // total = base + modifier; bonus = unnatural-adjusted tens digit (no advance term for NPCs).
-            const { total, bonus } = computeCharacteristicTotals(char.base, char.modifier, char.unnatural || 0);
+            // total = base + modifier + (advance × 5 − damage); bonus = unnatural-adjusted
+            // tens digit. The advance term (#503) lets a printed stat block be stored split
+            // as `base + advance × 5`; it is 0 on an unsplit legacy NPC, so totals are
+            // unchanged there. Folding it here — not behind the npcAdvancement setting —
+            // keeps a split-authored NPC's printed totals correct with the setting off.
+            const extra = (char.advance ?? 0) * CHARACTERISTIC_STEP - (char.damage ?? 0);
+            const { total, bonus } = computeCharacteristicTotals(char.base, char.modifier, char.unnatural || 0, extra);
             char.total = total;
             char.bonus = bonus;
             // Base-vs-effective split (#415): NPCs have no bonus-only channel, so

@@ -17,6 +17,8 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KArmourLocation } from '../../types/global.d.ts';
+import type { ArmorTooltipEquippedPiece } from '../components/wh40k-tooltip.ts';
 
 /* -------------------------------------------- */
 /*  Individual Mixin Interfaces                 */
@@ -89,7 +91,7 @@ export interface PrimarySheetMixinAPI extends DragDropMixinAPI {
 export interface TooltipMixinAPI {
     prepareCharacteristicTooltip: (key: string, characteristic: Record<string, unknown>, modifierSources?: Record<string, unknown>) => string;
     prepareSkillTooltip: (key: string, skill: Record<string, unknown>, characteristics: Record<string, unknown>) => string;
-    prepareArmorTooltip: (location: string, armorData: Record<string, unknown>, equipped?: unknown[]) => string;
+    prepareArmorTooltip: (location: string, armorData: WH40KArmourLocation, equipped?: ArmorTooltipEquippedPiece[]) => string;
     prepareWeaponTooltip: (weapon: Record<string, unknown>) => string;
     prepareModifierTooltip: (title: string, sources: unknown[]) => string;
     prepareQualityTooltip: (identifier: string, level?: number | null) => string;

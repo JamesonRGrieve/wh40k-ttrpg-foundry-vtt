@@ -7979,6 +7979,18 @@
             "flags": {}
         },
         {
+            "name": "dw-emperor-items-weapons",
+            "label": "DW: The Emperor Protects, Weapons",
+            "path": "packs/deathwatch/dw-emperor-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh1-anathema-actors-bestiary",
             "label": "DH1: Creatures Anathema, Bestiary",
             "path": "packs/dark-heresy-1/dh1-anathema-actors-bestiary",
@@ -10290,7 +10302,8 @@
                     "name": "Emperor",
                     "packs": [
                         "dw-emperor-actors-bestiary",
-                        "dw-emperor-actors-npcs"
+                        "dw-emperor-actors-npcs",
+                        "dw-emperor-items-weapons"
                     ]
                 },
                 {
