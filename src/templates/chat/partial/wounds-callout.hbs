@@ -14,8 +14,12 @@
         valueShadowClass — shadow utility on the value. Defaults to the text-shadow
                            form (bleeding / burning); damage-roll passes the
                            box-shadow form.
-        captionMutedVar  — CSS var name for the caption colour (default
-                           "--wh40k-text-muted"; damage-roll uses "--wh40k-card-muted").
+        captionColorClass — colour utility on the caption. Defaults to the muted
+                           text colour; damage-roll / assign-damage pass the
+                           card-muted form. A whole class (not a bare CSS var
+                           name) so the class attribute never interpolates a
+                           fragment mid-token — a split token reads as non-
+                           Tailwind to the css-coverage ratchet.
         tooltipData      — optional pre-serialised `wh40k-tooltip` payload (#504).
                            When present the value becomes hoverable and shows the
                            wounds/critical/fatigue before → after transition,
@@ -28,5 +32,5 @@
         {{#if badge}}<span class="tw-text-[0.8rem] tw-px-2 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-[3px] tw-text-[var(--wh40k-card-muted)]">{{badge}}</span>{{else if badgeKey}}<span class="tw-text-[0.8rem] tw-px-2 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-[3px] tw-text-[var(--wh40k-card-muted)]">{{localize badgeKey}}</span>{{/if}}
     </div>
     <div class="tw-text-center tw-text-[2rem] tw-font-bold tw-text-[color:var(--wh40k-wounds-secondary)] {{#if valueShadowClass}}{{valueShadowClass}}{{else}}tw-[text-shadow:0_0_10px_rgba(139,0,0,0.5)]{{/if}}{{#if tooltipData}} tw-cursor-help{{/if}}"{{#if tooltipData}} data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{tooltipData}}"{{/if}}>{{value}}</div>
-    <div class="tw-text-center tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var({{#if captionMutedVar}}{{captionMutedVar}}{{else}}--wh40k-text-muted{{/if}})] tw-mt-1">{{#if captionKey}}{{localize captionKey}}{{else}}{{caption}}{{/if}}</div>
+    <div class="tw-text-center tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] {{#if captionColorClass}}{{captionColorClass}}{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}} tw-mt-1">{{#if captionKey}}{{localize captionKey}}{{else}}{{caption}}{{/if}}</div>
 </div>

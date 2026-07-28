@@ -106,10 +106,10 @@ import {
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
 import { registerActionEconomy } from './rules/action-economy.ts';
-import { conditionStatusEffects } from './rules/active-effects.ts';
-import { convertDeadActorToPile } from './rules/death-loot.ts';
 import { registerCombatTurnHooks } from './rules/combat-turn-hooks.ts';
+import { conditionStatusEffects } from './rules/condition-registry.ts';
 import { WH40K } from './rules/config.ts';
+import { convertDeadActorToPile } from './rules/death-loot.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
 import { buildSkillVariantIndex } from './rules/skill-variant-index.ts';
 import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.ts';
@@ -233,7 +233,7 @@ export class HooksManager {
                 // de-dupe landed (#228 — a live hybrid was carrying ~8 Unarmed).
                 // Runs after the grant so the two can never race on the same list.
                 // eslint-disable-next-line no-restricted-syntax -- boundary: the createActor hook payload is a Foundry Actor; the two narrow surfaces here describe disjoint slices of it
-                () => repairDuplicateGrants(actor as unknown as Parameters<typeof repairDuplicateGrants>[0]),
+                async () => repairDuplicateGrants(actor as unknown as Parameters<typeof repairDuplicateGrants>[0]),
             );
         });
 
@@ -241,6 +241,7 @@ export class HooksManager {
         // than a bespoke death hook, so damage, fatigue-death and a GM toggling
         // the token icon all convert identically. First active GM only: the pile
         // is a world write that must happen exactly once.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: `ActiveEffect#parent` is a Document union (Actor | Item); narrowed structurally below before use
         const onDeadStatusChange = (effect: { parent?: unknown; statuses?: ReadonlySet<string> }): void => {
             if (effect.statuses?.has(DEAD_STATUS_ID) !== true) return;
             const firstGM = game.users.contents.find((u) => u.active && u.isGM)?.id;

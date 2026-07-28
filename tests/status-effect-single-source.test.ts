@@ -72,16 +72,26 @@ describe('one status-effect system (#495)', () => {
     it('the `dead` status reuses core’s id via specialStatusEffects.DEFEATED', () => {
         const hooks = read('hooks-manager.ts');
         expect(hooks).toContain('CONFIG.specialStatusEffects.DEFEATED = DEAD_STATUS_ID');
-        // The id lives in `constants.ts`, not the registry: the registry's
-        // module-scope condition table touches the Foundry `CONST` global, so a
-        // consumer that only needs the id (the #477 pile conversion) must be
-        // able to import it without loading a booted-client-only module.
+        // The id lives in `constants.ts`, not the registry: a consumer that only
+        // needs the id (the #477 pile conversion) must be able to import it
+        // without pulling in the condition table.
         expect(read('constants.ts')).toMatch(/DEAD_STATUS_ID\s*=\s*'dead'/);
-        expect(read('rules/active-effects.ts')).toContain("export { DEAD_STATUS_ID } from '../constants.ts'");
+        expect(hooks).toContain("from './constants.ts'");
+    });
+
+    it('the registry lives in a leaf module, not the writer hub', () => {
+        // `rules/active-effects.ts` imports the chat/roll helpers and the actor
+        // document type, so it sits inside a large import cycle. `base-actor`
+        // needs only the pure payload builder; reaching for it through the hub
+        // closed a depcruise `no-circular` loop. The table therefore lives in
+        // `rules/condition-registry.ts`, which imports nothing.
+        expect(read('rules/condition-registry.ts')).toMatch(/const CONDITION_REGISTRY/);
+        expect(read('rules/active-effects.ts')).not.toMatch(/const CONDITION_REGISTRY/);
+        expect(read('documents/base-actor.ts')).toContain("from '../rules/condition-registry.ts'");
     });
 
     it('every condition effect carries `statuses`, so it is visible on the token', () => {
-        const registry = read('rules/active-effects.ts');
+        const registry = read('rules/condition-registry.ts');
         // conditionEffectData — the single payload builder — always stamps it.
         expect(registry).toMatch(/statuses:\s*\[id\]/);
     });

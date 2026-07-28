@@ -55,7 +55,13 @@ describe('craft sheet chrome (#502)', () => {
 
     it('craft panels use the shared panel partial', () => {
         const usingPanels = craftTemplates.filter(({ text }) => text.includes('partial/panel.hbs'));
-        expect(usingPanels.map((t) => t.name).sort()).toEqual(['tab-combat.hbs', 'tab-components.hbs', 'tab-crew.hbs', 'tab-notes.hbs', 'tab-overview.hbs']);
+        expect([...usingPanels.map((t) => t.name)].sort()).toEqual([
+            'tab-combat.hbs',
+            'tab-components.hbs',
+            'tab-crew.hbs',
+            'tab-notes.hbs',
+            'tab-overview.hbs',
+        ]);
     });
 
     it('craft fields use the shared field-row partial', () => {
@@ -69,7 +75,7 @@ describe('craft sheet chrome (#502)', () => {
         // `auto-fit,minmax(150px,1fr)` resolved to six 150px inputs across the
         // 1000px window, the same sprawl #15 was filed for.
         for (const { name, text } of craftTemplates) {
-            expect(`${name}:${/tw-grid-cols-\[repeat\(auto-fit/.test(text)}`).toBe(`${name}:false`);
+            expect(`${name}:${text.includes('tw-grid-cols-[repeat(auto-fit')}`).toBe(`${name}:false`);
         }
     });
 

@@ -35,6 +35,7 @@ export const DEFAULT_TOKEN_FOOTPRINT = 1;
  * @param {unknown} size  A 1–10 size descriptor; anything else yields the default.
  * @returns {number}  Grid squares along each axis.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: `size` arrives from Foundry's raw `_preCreate` create payload (untyped `Record<string, unknown>` index access); the typeof guard on the next line is the narrowing
 export function tokenFootprintForSize(size: unknown): number {
     if (typeof size !== 'number' || !Number.isFinite(size)) return DEFAULT_TOKEN_FOOTPRINT;
     return SIZE_FOOTPRINTS.get(size) ?? DEFAULT_TOKEN_FOOTPRINT;
@@ -47,6 +48,7 @@ export function tokenFootprintForSize(size: unknown): number {
  * @param {unknown} size  A 1–10 size descriptor.
  * @returns {Record<string, number>}  `prototypeToken.width` / `.height`.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: same raw `_preCreate` payload as `tokenFootprintForSize`, which narrows it
 export function prototypeTokenFootprintUpdate(size: unknown): Record<string, number> {
     const footprint = tokenFootprintForSize(size);
     return {
@@ -62,8 +64,10 @@ export function prototypeTokenFootprintUpdate(size: unknown): Record<string, num
  * @param {unknown} createData  The raw `_preCreate` create payload.
  * @returns {boolean}  True when either dimension is explicitly authored.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's `_preCreate` create payload, typed `never` by the framework; the typeof guard on the next line is the narrowing
 export function hasAuthoredFootprint(createData: unknown): boolean {
     if (createData === null || typeof createData !== 'object') return false;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: `Reflect.get` on an untyped Foundry payload returns unknown; narrowed by the typeof guard below
     const proto: unknown = Reflect.get(createData, 'prototypeToken');
     if (proto === null || typeof proto !== 'object') return false;
     return typeof Reflect.get(proto, 'width') === 'number' || typeof Reflect.get(proto, 'height') === 'number';

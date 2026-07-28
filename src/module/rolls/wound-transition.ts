@@ -15,7 +15,7 @@
  */
 
 /** One tracked value's before/after, as stored on the card. */
-export interface ValueTransition {
+interface ValueTransition {
     before: number;
     after: number;
     /** Maximum, for context in the hover (`12 → 4 / 12`). Omitted when unbounded. */

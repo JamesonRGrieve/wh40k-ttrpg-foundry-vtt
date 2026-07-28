@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { applyDefaultGrantPolicy, dedupeByKey, isCreatureActorType, itemKey, selectDuplicateGrantIds, selectGrantsToAdd } from './default-grants.ts';
+import {
+    applyDefaultGrantPolicy,
+    dedupeByKey,
+    isCreatureActorType,
+    itemKey,
+    type RepairableItem,
+    selectDuplicateGrantIds,
+    selectGrantsToAdd,
+} from './default-grants.ts';
 
 describe('default-grants', () => {
     describe('intra-batch de-duplication (#228)', () => {
@@ -24,7 +32,7 @@ describe('default-grants', () => {
     });
 
     describe('selectDuplicateGrantIds — repair for already-accumulated copies (#228)', () => {
-        const granted = (id: string, name = 'Unarmed') => ({ id, name, type: 'weapon', system: { grantedByDefault: true } });
+        const granted = (id: string, name = 'Unarmed'): RepairableItem => ({ id, name, type: 'weapon', system: { grantedByDefault: true } });
 
         it('keeps the first copy and returns every surplus id', () => {
             expect(selectDuplicateGrantIds([granted('a'), granted('b'), granted('c')])).toEqual(['b', 'c']);
