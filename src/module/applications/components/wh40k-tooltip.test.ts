@@ -106,3 +106,47 @@ describe('prepareQualityTooltipData quality lookup (#403)', () => {
         expect(prepareQualityTooltipData('tearing')).toBe('{}');
     });
 });
+
+describe('armour tooltip shows the derivation, not just the parts', () => {
+    const build = (payload: Parameters<typeof TooltipsWH40K.prototype._buildArmorTooltip>[0]): string =>
+        TooltipsWH40K.prototype._buildArmorTooltip.call({} as InstanceType<typeof TooltipsWH40K>, payload);
+
+    it('names every contributor and sums them to the header total', () => {
+        const html = build({
+            location: 'Body',
+            total: 11,
+            toughnessBonus: 3,
+            traitBonus: 4,
+            armorValue: 4,
+            equipped: [{ img: '', name: 'Flak Armour', ap: 4 }],
+        });
+        expect(html).toContain('3 (TB) + 4 (Traits) + 4 (Flak Armour) = 11');
+    });
+
+    it('enumerates each worn piece separately rather than a lumped subtotal', () => {
+        const html = build({
+            location: 'Body',
+            total: 9,
+            toughnessBonus: 3,
+            traitBonus: 0,
+            armorValue: 6,
+            equipped: [
+                { img: '', name: 'Flak Vest', ap: 4 },
+                { img: '', name: 'Carapace Plate', ap: 2 },
+            ],
+        });
+        expect(html).toContain('3 (TB) + 4 (Flak Vest) + 2 (Carapace Plate) = 9');
+    });
+
+    it('falls back to the summed armour value when the worn pieces are unknown', () => {
+        const html = build({ location: 'Head', total: 7, toughnessBonus: 3, traitBonus: 0, armorValue: 4, equipped: [] });
+        // Never both the per-item terms AND the subtotal — that would double-count.
+        expect(html).toContain('3 (TB) + 4 (Armour) = 7');
+    });
+
+    it('omits a zero trait bonus from the formula', () => {
+        const html = build({ location: 'Head', total: 3, toughnessBonus: 3, traitBonus: 0, armorValue: 0, equipped: [] });
+        expect(html).toContain('3 (TB) = 3');
+        expect(html).not.toContain('Traits');
+    });
+});

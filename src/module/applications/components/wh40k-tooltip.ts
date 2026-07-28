@@ -637,6 +637,27 @@ export class TooltipsWH40K {
         if (armorValue > 0) html += tipLine('Armour:', armorValue);
         html += `</div>`;
 
+        // The derivation, not just the parts: a hovering player should be able to
+        // read WHY this limb is at this AP. Each contributor is named — equipped
+        // pieces by item name — and the terms sum to the header value.
+        //
+        // Worn pieces are enumerated individually when known, otherwise the summed
+        // `armorValue` stands in for them; using both would double-count.
+        const terms: string[] = [`${toughnessBonus} (TB)`];
+        if (traitBonus > 0) terms.push(`${traitBonus} (Traits)`);
+        if (equipped.length > 0) {
+            for (const item of equipped) terms.push(`${item.ap ?? 0} (${item.name})`);
+        } else if (armorValue > 0) {
+            terms.push(`${armorValue} (Armour)`);
+        }
+        html += `
+            <div class="wh40k-tooltip__divider"></div>
+            <div class="wh40k-tooltip__formula wh40k-tooltip__line">
+                <span class="wh40k-tooltip__label">Formula:</span>
+                <span class="wh40k-tooltip__value">${terms.join(' + ')} = ${total}</span>
+            </div>
+        `;
+
         if (equipped.length > 0) {
             html += `
                 <div class="wh40k-tooltip__divider"></div>
@@ -890,7 +911,24 @@ interface ArmourItemSystem {
     armour?: Record<string, number>;
 }
 
-export function prepareArmorTooltipData(location: string, armorData: WH40KArmourLocation, equipped: WH40KItem[] = []): string {
+/**
+ * Equipped armour entries for the location tooltip. Callers pass either:
+ * - display pieces already resolved by the sheet (`{ name, img, ap }`), or
+ * - live `WH40KItem`s (AP read from `system.armour[location]`).
+ */
+export interface ArmorTooltipEquippedPiece {
+    name: string;
+    img?: string | null;
+    ap?: number;
+    system?: ArmourItemSystem;
+}
+
+function resolveEquippedArmorAp(piece: ArmorTooltipEquippedPiece, location: string): number {
+    if (typeof piece.ap === 'number') return piece.ap;
+    return piece.system?.armour?.[location] ?? 0;
+}
+
+export function prepareArmorTooltipData(location: string, armorData: WH40KArmourLocation, equipped: ArmorTooltipEquippedPiece[] = []): string {
     const locationLabels: Record<string, string> = {
         head: 'Head',
         rightArm: 'Right Arm',
@@ -905,14 +943,11 @@ export function prepareArmorTooltipData(location: string, armorData: WH40KArmour
         toughnessBonus: armorData.toughnessBonus,
         traitBonus: armorData.traitBonus,
         armorValue: armorData.value,
-        equipped: equipped.map((item) => {
-            const sys = item.system as ArmourItemSystem;
-            return {
-                name: item.name,
-                img: item.img ?? '',
-                ap: sys.armour?.[location] ?? 0,
-            };
-        }),
+        equipped: equipped.map((item) => ({
+            name: item.name,
+            img: item.img ?? '',
+            ap: resolveEquippedArmorAp(item, location),
+        })),
     };
     return JSON.stringify(data);
 }
