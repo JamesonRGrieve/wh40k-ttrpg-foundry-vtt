@@ -439,8 +439,19 @@ describe('criticalRiderConditionIds (#108 — riders → condition registry ids)
         expect(criticalRiderConditionIds({ ...noRiders, lostLimb: true })).toEqual(['uselessLimb']);
     });
 
-    it('never maps the fatal rider — instant death is GM-adjudicated, not an auto-applied AE', () => {
-        expect(criticalRiderConditionIds({ ...noRiders, fatal: true })).toEqual([]);
+    it('maps the fatal rider to the `dead` status (#495)', () => {
+        // Previously unmapped, on the reasoning that instant death was GM
+        // adjudication rather than an auto-applied effect. That left death as
+        // the ONE outcome with no state at all — only chat prose — so nothing
+        // downstream could see it: not the token defeated overlay, not the
+        // combat tracker, not the #477 pile conversion. The status IS the state;
+        // a GM who overrules the result clears it like any other condition.
+        expect(criticalRiderConditionIds({ ...noRiders, fatal: true })).toEqual(['dead']);
+    });
+
+    it('orders `dead` first when a fatal result also carries other riders', () => {
+        const ids = criticalRiderConditionIds({ ...noRiders, fatal: true, stunned: true, bloodLoss: true });
+        expect(ids).toEqual(['dead', 'stunned', 'bloodloss']);
     });
 
     it('combines multiple riders in registry order', () => {

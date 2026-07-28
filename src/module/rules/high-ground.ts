@@ -43,13 +43,34 @@ export function highGroundKey(mode: HighGroundMode): 'higherGround' | 'highGroun
 }
 
 /**
- * Whether the RAW Higher Ground bonus auto-applies: the attacker is strictly
- * above the target AND the line's mode matches the attack type (melee mode →
- * melee attack; ranged mode → ranged attack). Pure — the caller supplies the
- * resolved mode, attack type, and the two token elevations.
+ * Whether the RAW Higher Ground bonus auto-applies: the attacker is above the
+ * target by more than `band` AND the line's mode matches the attack type (melee
+ * mode → melee attack; ranged mode → ranged attack). Pure — the caller supplies
+ * the resolved mode, attack type, the two token elevations, and the band.
+ *
+ * **Levels pairing (#407).** No Levels-specific API is needed: with
+ * theripper93's Levels installed a token's `elevation` IS its floor's base
+ * height, so comparing elevations already compares floors — an attacker on the
+ * upper storey qualifies, two tokens on the same floor never do. Without Levels
+ * the identical comparison runs on raw elevation, which is why this works in
+ * both worlds.
+ *
+ * `band` defaults to 0, which is RAW (strictly above is higher ground). A GM can
+ * raise it so a crate or a half-step of rubble doesn't grant the +10; on a
+ * Levels map any band below the floor height still lets a genuine storey count.
+ * @param {HighGroundMode} mode  The line's high-ground mode.
+ * @param {boolean} isRanged  Whether this is a ranged attack.
+ * @param {number} attackerElevation  Attacker token elevation.
+ * @param {number} targetElevation  Target token elevation.
+ * @param {number} [band]  Minimum elevation delta; 0 (default) is RAW.
+ * @returns {boolean}  True when the bonus applies.
  */
-export function appliesHighGround(mode: HighGroundMode, isRanged: boolean, attackerElevation: number, targetElevation: number): boolean {
+export function appliesHighGround(mode: HighGroundMode, isRanged: boolean, attackerElevation: number, targetElevation: number, band = 0): boolean {
     if (mode === 'none') return false;
-    if (attackerElevation <= targetElevation) return false;
+    if (!Number.isFinite(attackerElevation) || !Number.isFinite(targetElevation)) return false;
+    // A non-finite or negative band is a misconfiguration, not licence to widen
+    // the rule — fall back to RAW rather than granting the bonus more often.
+    const threshold = Number.isFinite(band) && band > 0 ? band : 0;
+    if (attackerElevation - targetElevation <= threshold) return false;
     return mode === 'ranged' ? isRanged : !isRanged;
 }

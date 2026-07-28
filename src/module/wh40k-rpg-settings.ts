@@ -62,12 +62,14 @@ export class WH40KSettings {
         requireCombatToAttack: 'require-combat-to-attack',
         warbandSubtlety: 'warband-subtlety',
         homebrewSelfTargeting: 'homebrew-self-targeting',
+        highGroundBand: 'high-ground-band',
         autoCoverLos: 'auto-cover-los',
         fatigueMode: 'fatigue-mode',
         awarenessSenseSplit: 'awareness-sense-split',
         magazineBuilding: 'magazine-building',
         worldTimeInception: 'world-time-inception',
         campaignInceptionDate: 'campaign-inception-date',
+        npcAdvancement: 'npc-advancement',
     };
 
     /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
@@ -347,6 +349,19 @@ export class WH40KSettings {
         }
     }
 
+    /** When true, NPCs are treated as buildable characters (#503): their stat block is
+     *  split into purchasable advances, aptitudes are derived from it, and XP at spawn
+     *  equals the exact cost of those advances — so a GM can keep advancing them through
+     *  the Advancement Dialog. Off by default: NPCs stay flat stat blocks, and none of the
+     *  derivation runs. Safe to call before the setting is registered (returns false). */
+    static isNpcAdvancementEnabled(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.npcAdvancement) === true;
+        } catch {
+            return false;
+        }
+    }
+
     static getRuleset(): DH2Ruleset {
         try {
             return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.dh2Ruleset) === 'raw' ? 'raw' : 'homebrew';
@@ -384,6 +399,28 @@ export class WH40KSettings {
         } catch {
             return false;
         }
+    }
+
+    /**
+     * How far above the target the attacker must be before RAW Higher Ground
+     * applies (#407), in scene distance units. 0 (the default) is RAW — strictly
+     * above counts. Raising it stops a crate or half a step of rubble granting
+     * the +10; on a Levels map any band below the floor height still lets a
+     * genuine storey qualify, since a token's elevation there is its floor's
+     * base height. Safe to call before the setting is registered (returns 0),
+     * and a negative / non-finite stored value falls back to RAW rather than
+     * widening the rule.
+     * @returns {number}  The configured band, or 0.
+     */
+    static getHighGroundBand(): number {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
+        let raw: unknown;
+        try {
+            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.highGroundBand);
+        } catch {
+            return 0;
+        }
+        return typeof raw === 'number' && Number.isFinite(raw) && raw > 0 ? raw : 0;
     }
 
     /** When true, the attack dialog auto-detects line of sight + full/half cover
@@ -610,6 +647,21 @@ export class WH40KSettings {
                 type: Boolean,
             },
             {
+                // Minimum elevation delta before RAW Higher Ground applies
+                // (#407). Default 0 = RAW: strictly above is higher ground.
+                // Raising it stops a crate or a half-step of rubble from
+                // granting the +10, and on a Levels map a band below the floor
+                // height still lets a genuine storey qualify.
+                key: S.highGroundBand,
+                name: 'WH40K.SETTINGS.HighGroundBand.Name',
+                hint: 'WH40K.SETTINGS.HighGroundBand.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: false,
+                default: 0,
+                type: Number,
+            },
+            {
                 // Auto line-of-sight + full/half cover from scene walls (#406).
                 // Off by default until the canvas geometry is verified on real scenes.
                 key: S.autoCoverLos,
@@ -690,6 +742,16 @@ export class WH40KSettings {
                 hint: 'WH40K.SETTINGS.DeathLootPiles.Hint',
                 scope: 'world',
                 config: true,
+                default: false,
+                type: Boolean,
+            },
+            {
+                key: S.npcAdvancement,
+                name: 'WH40K.SETTINGS.NpcAdvancement.Name',
+                hint: 'WH40K.SETTINGS.NpcAdvancement.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: true,
                 default: false,
                 type: Boolean,
             },

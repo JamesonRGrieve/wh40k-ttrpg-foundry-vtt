@@ -2001,7 +2001,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (mode === 'none') return null;
         const { sourceToken, targetToken } = this.#activeTokenPair();
         if (sourceToken === null || targetToken === null) return null;
-        return appliesHighGround(mode, isRanged, tokenElevation(sourceToken), tokenElevation(targetToken)) ? highGroundKey(mode) : null;
+        // The band (#407) defaults to 0 = RAW. It pairs to Levels for free: a
+        // token's elevation under Levels IS its floor's base height, so this
+        // comparison already compares floors — no Levels API needed, and the
+        // same code runs unchanged without the module.
+        return appliesHighGround(mode, isRanged, tokenElevation(sourceToken), tokenElevation(targetToken), WH40KSettings.getHighGroundBand())
+            ? highGroundKey(mode)
+            : null;
     }
 
     /**
