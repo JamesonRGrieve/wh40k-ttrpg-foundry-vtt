@@ -1114,6 +1114,7 @@
                 "CannotAfford": "Not enough XP to purchase this advancement",
                 "PrerequisitesNotMet": "Prerequisites not met: {reasons}",
                 "InsufficientXP": "Not enough XP (cost: {cost}, available: {available})",
+                "Overspent": "This character is {amount} XP over budget. Remove an advancement to restore the balance.",
                 "TransactionFailed": "Failed to spend XP"
             }
         },

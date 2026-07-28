@@ -25,6 +25,23 @@ import { describe, expect, it } from 'vitest';
 const CHAR_PATH = resolve(__dirname, '../src/module/data/actor/character.ts');
 const charSrc = readFileSync(CHAR_PATH, 'utf8');
 
+/** Read a repo-relative source file, for the source-text guards below. */
+function readRepoFile(relative: string): string {
+    return readFileSync(resolve(__dirname, '..', relative), 'utf8');
+}
+
+/**
+ * Source with comments stripped, so a guard never trips on prose that quotes the
+ * very pattern it forbids — `xp-transaction.ts` documents the write it removed.
+ */
+function codeOnly(text: string): string {
+    return text
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .split('\n')
+        .filter((line) => !/^\s*(\/\/|\*)/.test(line))
+        .join('\n');
+}
+
 /** Extract the body of `#cleanExperience` up to its matching 4-space-indent close brace. */
 function cleanExperienceBody(src: string): string {
     const m = src.match(/static #cleanExperience\s*\([^)]*\)[^{]*\{([\s\S]*?)\n {4}\}/);
@@ -69,9 +86,16 @@ describe('character DataModel experience derivation (#240)', () => {
     it('derives used + available from calculatedTotal', () => {
         expect(body, '_computeExperienceSpent must exist').not.toBe('');
         expect(body, 'used mirrors calculatedTotal').toMatch(/experience\.used\s*=\s*this\.experience\.calculatedTotal/);
-        expect(body, 'available = total - calculatedTotal').toMatch(
-            /experience\.available\s*=\s*this\.experience\.total\s*-\s*this\.experience\.calculatedTotal/,
+        // The balance now goes through the shared `experienceBalance` helper
+        // rather than a bare subtraction, so it is floored and any deficit is
+        // reported as `overspent` instead of rendering as a negative (#509).
+        // The contract this guard exists for is unchanged: the balance is
+        // computed from `calculatedTotal`, never from a persisted `used`.
+        expect(body, 'balance derived from total + calculatedTotal').toMatch(
+            /experienceBalance\(this\.experience\.total,\s*this\.experience\.calculatedTotal\)/,
         );
+        expect(body, 'available comes from that balance').toMatch(/experience\.available\s*=\s*balance\.available/);
+        expect(body, 'a deficit is reported, not rendered as a negative available').toMatch(/experience\.overspent\s*=\s*balance\.overspent/);
     });
 
     it('counts the spend categories that have no per-advance .cost field', () => {
@@ -102,5 +126,50 @@ describe('character DataModel experience purchase breakdown', () => {
         for (const category of ['characteristic', 'skill', 'talent', 'psychicPower', 'psyRating']) {
             expect(body, `pushes a ${category} entry`).toMatch(new RegExp(`category:\\s*'${category}'`));
         }
+    });
+});
+
+/**
+ * #509: `experience.used` is DERIVED, so it must have exactly one writer.
+ *
+ * It previously had five: `spendXP`, the sheet's BC infamy path, the origin-path
+ * builder (twice), and `prepareDerivedData` — which runs last and discards the
+ * other four. That is why the affordability guard could approve a purchase
+ * against a balance that had not absorbed an earlier one, and a character
+ * reached −200. Any new writer reintroduces the same class of bug, silently,
+ * because the derive always wins.
+ */
+describe('experience.used has exactly one writer (#509)', () => {
+    /** Source files that historically wrote `used`, plus the guard itself. */
+    const WRITERS = [
+        'src/module/utils/xp-transaction.ts',
+        'src/module/applications/actor/character-sheet.ts',
+        'src/module/applications/character-creation/origin-path-builder.ts',
+        'src/module/applications/dialogs/advancement-dialog.ts',
+    ];
+
+    it('no code path writes system.experience.used outside the derive', () => {
+        for (const file of WRITERS) {
+            const src = codeOnly(readRepoFile(file));
+            expect(src, `${file} must not write the derived experience.used`).not.toMatch(/['"]system\.experience\.used['"]\s*:/);
+        }
+    });
+
+    it('the derive itself still writes it', () => {
+        expect(charSrc).toMatch(/this\.experience\.used\s*=\s*this\.experience\.calculatedTotal/);
+    });
+
+    it('the affordability guard consults the derived spend, not the persisted used', () => {
+        // Reading the persisted `used` is what let a stale value pass a purchase
+        // the derive then rejected.
+        const xp = readRepoFile('src/module/utils/xp-transaction.ts');
+        expect(xp, 'prefers calculatedTotal').toMatch(/calculatedTotal\s*\?\?\s*experience\.used/);
+        expect(xp, 'uses the shared budget check').toMatch(/fitsBudget\(/);
+    });
+
+    it('a purchase re-verifies the ledger after the debit lands', () => {
+        // The authorization is a check, not a reservation, so two clients can
+        // both pass it; this is the backstop.
+        expect(readRepoFile('src/module/applications/dialogs/advancement-dialog.ts')).toMatch(/assertWithinBudget\(/);
     });
 });

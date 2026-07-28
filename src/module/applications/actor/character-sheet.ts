@@ -5650,7 +5650,9 @@ export default class CharacterSheet extends BaseActorSheet {
         try {
             await this.actor.update({
                 'system.infamy': nextInfamy,
-                'system.experience.used': system.experience.used + cost,
+                // No `experience.used` write: it is derived from the
+                // `chaosAdvancements` ledger below, and the derive is its only
+                // writer (#509).
                 'system.chaosAdvancements': [
                     ...system.chaosAdvancements,
                     {

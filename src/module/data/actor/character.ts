@@ -3,6 +3,7 @@ import { psyRatingTotalCost, psychicPowerCost } from '../../rules/xp-costs.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import { type AptitudeDerivation, type AptitudeGrantSource, collectGrantedAptitudes, deriveAptitudes, extractLegacyElectives } from '../item/origin-path.ts';
 import { parseCharacteristicBonusTerm } from '../shared/characteristic-formula.ts';
+import { experienceBalance } from '../shared/experience-math.ts';
 import { originStepLabel } from '../shared/origin-steps.ts';
 import { bcDaemonPrinceSchemaFields, type BcDaemonPrinceDeclarations } from './mixins/bc-daemon-prince-template.ts';
 import { bcGiftsSchemaFields, type BcGiftsDeclarations } from './mixins/bc-gifts-template.ts';
@@ -182,9 +183,17 @@ export default class CharacterData extends CreatureTemplate {
         chapterUuid: string;
     };
     declare experience: {
+        /**
+         * XP spent. DERIVED — `_computeExperienceSpent` is its only writer (#509).
+         * Do not write it from anywhere else: the derive runs on every prepare and
+         * discards whatever you wrote, so the write is a silent no-op.
+         */
         used: number;
         total: number;
+        /** Derived, floored at 0. A deficit appears in {@link overspent}, not here. */
         available: number;
+        /** Derived: XP spent beyond `total`, or 0. Non-zero means the ledger is in deficit. */
+        overspent: number;
         /** Set during _computeExperienceSpent */
         spentCharacteristics?: number;
         spentSkills?: number;
@@ -456,7 +465,11 @@ export default class CharacterData extends CreatureTemplate {
             experience: new fields.SchemaField({
                 used: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 total: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                available: new fields.NumberField({ required: true, initial: 0, integer: true }), // Derived
+                available: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }), // Derived; floored (#509)
+                // Derived: XP spent BEYOND the total earned, or 0. `available` is
+                // floored at 0, so a deficit lives here where the sheet can render
+                // it as a fault rather than as a negative number (#509).
+                overspent: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             }),
 
             // ===== ROGUE TRADER / WH40K FIELDS =====
@@ -804,7 +817,13 @@ export default class CharacterData extends CreatureTemplate {
      * @protected
      */
     _prepareExperience(): void {
-        this.experience.available = this.experience.total - this.experience.used;
+        // A provisional balance from the persisted `used`; `_computeExperienceSpent`
+        // runs later in the same pass and replaces it with the derived truth. Both
+        // go through `experienceBalance` so the floor and the deficit reporting
+        // cannot differ between the two.
+        const balance = experienceBalance(this.experience.total, this.experience.used);
+        this.experience.available = balance.available;
+        this.experience.overspent = balance.overspent;
     }
 
     // /**
@@ -1049,10 +1068,17 @@ export default class CharacterData extends CreatureTemplate {
 
         // Experience spent is fully derived from purchased advancements (#240): mirror it
         // onto `used` (the field the sheet and affordability checks read) and recompute
-        // `available`, so a stale or externally-imported `used` can no longer drift from
+        // the balance, so a stale or externally-imported `used` can no longer drift from
         // reality (fixes the "1000/1000 with no advancements" report, #224).
+        //
+        // THIS IS THE ONLY WRITER of `used` (#509). It used to be one of five, and the
+        // other four wrote a value this line then discarded — which is why the
+        // affordability guard could approve a purchase against a balance that had not
+        // absorbed an earlier one.
         this.experience.used = this.experience.calculatedTotal;
-        this.experience.available = this.experience.total - this.experience.calculatedTotal;
+        const balance = experienceBalance(this.experience.total, this.experience.calculatedTotal);
+        this.experience.available = balance.available;
+        this.experience.overspent = balance.overspent;
 
         // Sort so the priciest advances surface first, then expose the reconciled list.
         purchases.sort((a, b) => b.cost - a.cost);

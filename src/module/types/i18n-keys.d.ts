@@ -173,6 +173,7 @@ export type I18nKey =
     | 'WH40K.Advancement.Error.CannotAfford'
     | 'WH40K.Advancement.Error.InsufficientXP'
     | 'WH40K.Advancement.Error.MaxedOut'
+    | 'WH40K.Advancement.Error.Overspent'
     | 'WH40K.Advancement.Error.PrerequisitesNotMet'
     | 'WH40K.Advancement.Error.TransactionFailed'
     | 'WH40K.Advancement.ItemNotFound'
