@@ -1,4 +1,5 @@
 import { SYSTEM_ID } from '../constants.ts';
+import { hasInteriorScene, openInteriorScene, type SceneLookup } from '../vehicle/vehicle-interior.ts';
 
 type MovementTypeConfig = {
     label: string;
@@ -139,6 +140,60 @@ export class TokenDocumentWH40K extends TokenDocument {
      */
     static registerHUDListeners(): void {
         Hooks.on('renderTokenHUD', this.onTokenHUDRender.bind(this));
+        // Registered separately from the movement row rather than bolted onto it:
+        // that handler returns early for any actor without `system.movement`, and
+        // a vehicle's interior should not depend on how its movement is authored.
+        Hooks.on('renderTokenHUD', this.onVehicleInteriorHUDRender.bind(this));
+    }
+
+    /**
+     * The HUD's root element. The hook passes an HTMLElement under V14 and a
+     * jQuery wrapper under the V13 shim, so both handlers below resolve it here
+     * rather than repeating the branch.
+     * @param {HTMLElement | JQuery} html  The hook's html argument.
+     * @returns {HTMLElement | null}  The root, or null when the wrapper is empty.
+     */
+    static #hudRoot(html: HTMLElement | JQuery): HTMLElement | null {
+        if (html instanceof HTMLElement) return html;
+        const first = html[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess makes first possibly undefined under strict TS, but eslint's plain rule disagrees
+        return first ?? null;
+    }
+
+    /**
+     * Add "Board Interior" to a vehicle token's HUD (#508).
+     *
+     * The dual-nature vehicle convention makes a vehicle both a combat Actor and a
+     * walkable Scene. `vehicle/vehicle-interior.ts` already resolves that link and
+     * the actor-sheet header already offers the control; this is its TOKEN call
+     * site, off the same module rather than a second implementation.
+     *
+     * `hasInteriorScene` is the whole conditional: a vehicle with a linked Scene
+     * (the Errant Vector) gets the control, one without (a Sentinel Walker) does
+     * not — no new detection logic.
+     * @param {TokenHUDLike} app  The TokenHUD application.
+     * @param {HTMLElement | JQuery} html  The rendered HUD.
+     */
+    static onVehicleInteriorHUDRender(app: TokenHUDLike, html: HTMLElement | JQuery): void {
+        const actor = app.object?.document?.actor;
+        if (!hasInteriorScene(actor, game.scenes as SceneLookup)) return;
+        const root = TokenDocumentWH40K.#hudRoot(html);
+        if (root === null) return;
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        // `control-icon` is Foundry's own HUD button class, so the control inherits
+        // core's HUD styling instead of carrying a hand-rolled copy of it.
+        button.classList.add('control-icon', 'wh40k-token-interior');
+        button.dataset['action'] = 'openVehicleInterior';
+        button.title = game.i18n.localize('WH40K.Vehicle.OpenInterior');
+        button.setAttribute('aria-label', button.title);
+        button.innerHTML = '<i class="fa-solid fa-door-open"></i>';
+        button.addEventListener('click', () => {
+            void openInteriorScene(actor, game.scenes as SceneLookup);
+        });
+
+        (root.querySelector('.col.left') ?? root).appendChild(button);
     }
 
     /**
@@ -155,15 +210,8 @@ export class TokenDocumentWH40K extends TokenDocument {
         const movementTypes = (CONFIG.wh40k as Wh40kTokenConfig).movementTypes;
         if (token === undefined) return;
         const activeType = (token as TokenWithFlags).getFlag(SYSTEM_ID, 'movementAction');
-        let $html: HTMLElement;
-        if (html instanceof HTMLElement) {
-            $html = html;
-        } else {
-            const first = html[0];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess makes first possibly undefined under strict TS, but eslint's plain rule disagrees
-            if (first === undefined) return;
-            $html = first;
-        }
+        const $html = TokenDocumentWH40K.#hudRoot(html);
+        if ($html === null) return;
 
         // Build movement buttons container
         const container = document.createElement('div');
