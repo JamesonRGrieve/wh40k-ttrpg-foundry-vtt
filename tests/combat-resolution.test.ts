@@ -249,6 +249,43 @@ describe('ActionData.maybeAutoRollDamage (hit → auto-damage)', () => {
         expect(post).not.toHaveBeenCalled();
     });
 
+    it('auto-rolls against an NPC target exactly as against a character (#506)', async () => {
+        // The target's TYPE must not decide whether damage rolls. Nothing in the
+        // gate ladder is target-aware, so this pins that it stays that way.
+        installGlobals({ settings: { 'auto-roll-damage': true } });
+        const { action, mods } = await makeWeaponAction(true);
+        (action.rollData as RollDataType & { targetActor?: { name: string; type: string } }).targetActor = {
+            name: 'Aberrant Primus',
+            type: 'dh2-npc',
+        };
+        const post = vi.spyOn(mods.DHBasicActionManager, '_postDamageCard').mockResolvedValue();
+        const calc = vi.spyOn(action, 'calculateHits').mockResolvedValue();
+
+        await action.maybeAutoRollDamage();
+
+        expect(calc).toHaveBeenCalledTimes(1);
+        expect(post).toHaveBeenCalledTimes(1);
+    });
+
+    it('reports a failure instead of aborting silently after the attack card posted (#506)', async () => {
+        // The worst failure mode: the attack card is already in the log, then
+        // nothing — and the call site awaits without a catch, so the rejection
+        // became an unhandled promise rejection rather than anything actionable.
+        installGlobals({ settings: { 'auto-roll-damage': true } });
+        const { action, mods } = await makeWeaponAction(true);
+        vi.spyOn(action, 'calculateHits').mockRejectedValue(new Error('NPC target shape'));
+        const post = vi.spyOn(mods.DHBasicActionManager, '_postDamageCard').mockResolvedValue();
+        const logged = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+        // Must NOT reject — the manual Roll Damage button is the fallback.
+        await expect(action.maybeAutoRollDamage()).resolves.toBeUndefined();
+
+        expect(post).not.toHaveBeenCalled();
+        expect(logged).toHaveBeenCalled();
+        expect(String(logged.mock.calls[0]?.[0])).toMatch(/auto-damage failed/);
+        logged.mockRestore();
+    });
+
     it('is idempotent: does not re-calculate hits that already exist (no double-roll)', async () => {
         installGlobals({ settings: { 'auto-roll-damage': true } });
         const { action, mods } = await makeWeaponAction(true);
