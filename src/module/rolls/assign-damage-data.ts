@@ -12,6 +12,7 @@ import {
 import { hitDropdown } from '../rules/hit-locations.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { postFlattenedInstanceToChat } from './roll-helpers.ts';
+import { buildWoundTransition, prepareWoundTransitionTooltip, type WoundTransition } from './wound-transition.ts';
 
 /**
  * Optional horde state surfaced by NPC actors carrying the HordeTemplate
@@ -30,8 +31,12 @@ interface ActorHordeState {
 export interface ActorLike {
     system: {
         armour: Record<string, { value: number; toughnessBonus: number }>;
-        wounds: { value: number; critical: number };
-        fatigue: { value: number };
+        // `max` is on the DataModel schema for both tracks; this local view
+        // simply hadn't declared it. Needed for the "/ 12" context in the
+        // applied-damage hover (#504) — optional because a track without a
+        // maximum is legal, not because it might be missing from the schema.
+        wounds: { value: number; critical: number; max?: number | undefined };
+        fatigue: { value: number; max?: number | undefined };
         /** Active game-system id from the DataModel (`'dw'`, `'dh2'`, …). */
         gameSystem?: string;
         /** Optional horde state (set on NPC DataModels via the mixin). */
@@ -114,6 +119,23 @@ export class AssignDamageData {
     magnitudeBefore = 0;
     /** Post-hit magnitude (for chat-card display). */
     magnitudeAfter = 0;
+    /**
+     * Wounds/critical/fatigue before → after for this application (#504),
+     * snapshotted at apply time so the card's hover survives a re-render and a
+     * later hit cannot rewrite it. Null on the horde branch, which tracks
+     * Magnitude instead of wounds.
+     */
+    woundTransition: WoundTransition | null = null;
+
+    /**
+     * The wound transition serialised for `data-wh40k-tooltip-data` (#504).
+     * Empty string when there is nothing to show, so the template's `{{#if}}`
+     * leaves the value non-hoverable rather than attaching an empty tooltip.
+     * @returns {string}  The tooltip payload.
+     */
+    get woundTransitionTooltip(): string {
+        return prepareWoundTransitionTooltip(this.woundTransition);
+    }
     /**
      * Break-check resolution from {@link resolveBreakCheck}, computed when
      * a horde lost Magnitude this hit. Drives the follow-up Willpower
@@ -347,6 +369,24 @@ export class AssignDamageData {
                 'system.horde.magnitude.current': this.magnitudeAfter,
             });
         } else {
+            // Snapshot the tracked values BEFORE the write (#504). The card shows
+            // "X damage" with no indication of whether that took the target from
+            // 12 to 4 or from 2 to −6 — and the second case is the one that
+            // matters, because the overflow routes into critical damage. Recorded
+            // here rather than recomputed at render time, so a second hit cannot
+            // rewrite this card's numbers.
+            this.woundTransition = buildWoundTransition(
+                {
+                    wounds: {
+                        value: this.actor.system.wounds.value,
+                        max: this.actor.system.wounds.max,
+                        critical: this.actor.system.wounds.critical,
+                    },
+                    fatigue: { value: this.actor.system.fatigue.value, max: this.actor.system.fatigue.max },
+                },
+                { damageTaken: this.damageTaken, criticalTaken: this.criticalDamageTaken, fatigueTaken: this.fatigueTaken },
+            );
+
             // Assign Damage - use dot notation to avoid overwriting sibling properties
             await this.actor.update({
                 'system.wounds.value': this.actor.system.wounds.value - this.damageTaken,

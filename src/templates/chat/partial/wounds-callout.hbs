@@ -16,12 +16,17 @@
                            box-shadow form.
         captionMutedVar  — CSS var name for the caption colour (default
                            "--wh40k-text-muted"; damage-roll uses "--wh40k-card-muted").
+        tooltipData      — optional pre-serialised `wh40k-tooltip` payload (#504).
+                           When present the value becomes hoverable and shows the
+                           wounds/critical/fatigue before → after transition,
+                           through the SANCTIONED rich-tooltip component — never a
+                           bare `title=` (CLAUDE.md roll-transparency rule).
 --}}
 <div class="tw-p-3 tw-my-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md">
     <div class="tw-flex tw-justify-between tw-items-center tw-mb-2 tw-pb-2 tw-border-b tw-border-[var(--wh40k-wounds-border)]">
         <span class="tw-font-display tw-text-[0.9rem] tw-text-[color:var(--wh40k-wounds-secondary)] tw-uppercase tw-tracking-[0.1em]">{{#if labelKey}}{{localize labelKey}}{{else}}{{label}}{{/if}}</span>
         {{#if badge}}<span class="tw-text-[0.8rem] tw-px-2 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-[3px] tw-text-[var(--wh40k-card-muted)]">{{badge}}</span>{{else if badgeKey}}<span class="tw-text-[0.8rem] tw-px-2 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-[3px] tw-text-[var(--wh40k-card-muted)]">{{localize badgeKey}}</span>{{/if}}
     </div>
-    <div class="tw-text-center tw-text-[2rem] tw-font-bold tw-text-[color:var(--wh40k-wounds-secondary)] {{#if valueShadowClass}}{{valueShadowClass}}{{else}}tw-[text-shadow:0_0_10px_rgba(139,0,0,0.5)]{{/if}}">{{value}}</div>
+    <div class="tw-text-center tw-text-[2rem] tw-font-bold tw-text-[color:var(--wh40k-wounds-secondary)] {{#if valueShadowClass}}{{valueShadowClass}}{{else}}tw-[text-shadow:0_0_10px_rgba(139,0,0,0.5)]{{/if}}{{#if tooltipData}} tw-cursor-help{{/if}}"{{#if tooltipData}} data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{tooltipData}}"{{/if}}>{{value}}</div>
     <div class="tw-text-center tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var({{#if captionMutedVar}}{{captionMutedVar}}{{else}}--wh40k-text-muted{{/if}})] tw-mt-1">{{#if captionKey}}{{localize captionKey}}{{else}}{{caption}}{{/if}}</div>
 </div>
