@@ -114,6 +114,8 @@ interface CraftSheetContext extends Record<string, unknown> {
     isWatercraft?: boolean;
     craftStats?: PreparedCraftStats;
     crew?: PreparedCraftCrew;
+    /** Altitude-tier choices for the aircraft select, as the shared field-row wants them. */
+    altitudeOptions?: Record<string, string>;
     /** Animate-craft profile (daemon-engines / walkers); `null` on ordinary vehicles. */
     characteristics?: VehicleCharacteristics | null;
     /** Talents / traits carried by an animate craft (Unnatural Strength (X), Swift Attack, …). */
@@ -236,6 +238,15 @@ export default class CraftActorSheet extends BaseActorSheet {
 
         context.craftStats = this._prepareCraftStats();
         context.crew = this._prepareCrew();
+        // The altitude tier moved from a hand-written <select> in the template
+        // to the shared field-row partial (#502), which takes its choices as a
+        // value → label map.
+        context.altitudeOptions = {
+            ground: game.i18n.localize('WH40K.Vehicle.AltitudeTier.Ground'),
+            low: game.i18n.localize('WH40K.Vehicle.AltitudeTier.Low'),
+            high: game.i18n.localize('WH40K.Vehicle.AltitudeTier.High'),
+            orbital: game.i18n.localize('WH40K.Vehicle.AltitudeTier.Orbital'),
+        };
         // Animate craft (daemon-engines / walkers) expose a creature profile; ordinary vehicles are null.
         context.characteristics = this.actor.system.characteristics;
 

@@ -1,22 +1,24 @@
-{{!-- Craft Notes Tab (terracraft / aircraft / watercraft). --}}
+{{!-- Craft Notes Tab (terracraft / aircraft / watercraft).
+     Shared panel + field-row partials, design tokens only (#502). --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
     <div class="tw-flex tw-flex-col tw-gap-4">
 
-        {{!-- Special Rules --}}
-        {{#> systems/wh40k-rpg/templates/actor/partial/craft-section.hbs icon="fa-scroll" titleKey="WH40K.Vehicle.SpecialRules"}}
-            <div class="editor-content" data-edit="system.specialRules">
-                {{{system.specialRules}}}
-            </div>
-        {{/systems/wh40k-rpg/templates/actor/partial/craft-section.hbs}}
+        {{!-- Special Rules — standard ProseMirror path; a bare `editor-content`
+              div never mounts an editor (CLAUDE.md gotcha #5). --}}
+        {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-scroll" label=(localize "WH40K.Vehicle.SpecialRules") bodyClass="tw-p-4"}}
+            {{#if inEditMode}}
+            {{editor system.specialRules target="system.specialRules" button=true editable=editable engine="prosemirror"}}
+            {{else}}
+            <div class="editor-content">{{{system.specialRules}}}</div>
+            {{/if}}
+        {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
         {{!-- Source Reference --}}
-        {{#> systems/wh40k-rpg/templates/actor/partial/craft-section.hbs icon="fa-book" titleKey="WH40K.Vehicle.Source"}}
-            <input type="text"
-                   name="system.source"
-                   value="{{source.source}}"
-                   placeholder="{{localize 'WH40K.Vehicle.SourcePlaceholder'}}"
-                   class="tw-w-full tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
-        {{/systems/wh40k-rpg/templates/actor/partial/craft-section.hbs}}
+        {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-book" label=(localize "WH40K.Vehicle.Source") bodyClass="tw-p-4"}}
+            <div class="tw-max-w-[32rem]">
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Source") name="system.source" value=source.source placeholder=(localize "WH40K.Vehicle.SourcePlaceholder")}}
+            </div>
+        {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
     </div>
 </section>

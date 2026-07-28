@@ -1,20 +1,19 @@
 {{!-- Craft Crew Tab (terracraft / aircraft / watercraft). Craft crew is the
      required complement + notes; crew quality is the embarked operators' own
-     skills, not a ship-scale rating. --}}
+     skills, not a ship-scale rating.
+
+     Shared panel + field-row partials, design tokens only (#502). --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
     <div class="tw-flex tw-flex-col tw-gap-4">
 
         {{!-- Crew Stats --}}
-        {{#> systems/wh40k-rpg/templates/actor/partial/craft-section.hbs icon="fa-users" titleKey="WH40K.Vehicle.CrewInformation"}}
-            <div class="tw-grid tw-grid-cols-[repeat(auto-fit,minmax(200px,1fr))] tw-gap-4">
-                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.CrewRequired" name="system.crew.required" value=crew.required min="0"}}
-                {{> systems/wh40k-rpg/templates/actor/partial/craft-field.hbs labelKey="WH40K.Vehicle.Passengers" name="system.passengers" value=craftStats.passengers min="0"}}
-                <div class="tw-flex tw-flex-col tw-gap-1 tw-col-span-2">
-                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">{{localize "WH40K.Vehicle.CrewNotes"}}</label>
-                    <textarea name="system.crew.notes" rows="3" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]">{{crew.notes}}</textarea>
-                </div>
+        {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-users" label=(localize "WH40K.Vehicle.CrewInformation") bodyClass="tw-p-4"}}
+            <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-4 tw-max-w-[40rem]">
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.CrewRequired") name="system.crew.required" value=crew.required type="number" min="0" dataDtype="Number"}}
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Passengers") name="system.passengers" value=craftStats.passengers type="number" min="0" dataDtype="Number"}}
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.CrewNotes") name="system.crew.notes" value=crew.notes type="textarea" rows="3" rowClass="sm:tw-col-span-2"}}
             </div>
-        {{/systems/wh40k-rpg/templates/actor/partial/craft-section.hbs}}
+        {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
     </div>
 </section>
