@@ -46,6 +46,29 @@ describe('actorKnowsSkill', () => {
         expect(actorKnowsSkill({ skills: { medicae: { advance: 2 } } }, null)).toBe(false);
         expect(actorKnowsSkill({ skills: { medicae: { advance: 2 } } }, '')).toBe(false);
     });
+
+    // #488 — the real NPC shapes. Getting these wrong silently narrows the
+    // assistant list to player characters, which is how it was reported.
+    it('accepts an NPC whose trainedSkills entry is the real ENTRY OBJECT, not a number', () => {
+        expect(actorKnowsSkill({ trainedSkills: { medicae: { trained: true, plus10: false } } }, 'medicae')).toBe(true);
+    });
+
+    it('accepts an NPC trained only at a higher rank', () => {
+        expect(actorKnowsSkill({ trainedSkills: { medicae: { trained: false, plus20: true } } }, 'medicae')).toBe(true);
+    });
+
+    it('rejects an NPC entry that is present but explicitly untrained', () => {
+        // The old bare `!== undefined` presence check counted this as knowing it.
+        expect(actorKnowsSkill({ trainedSkills: { medicae: { trained: false, plus10: false, plus20: false } } }, 'medicae')).toBe(false);
+    });
+
+    it('accepts an NPC exposing skills as a flat key → target-number map', () => {
+        expect(actorKnowsSkill({ skills: { medicae: 45 } }, 'medicae')).toBe(true);
+    });
+
+    it('rejects a flat skill map entry of 0', () => {
+        expect(actorKnowsSkill({ skills: { medicae: 0 } }, 'medicae')).toBe(false);
+    });
 });
 
 describe('eligibleAssistants', () => {

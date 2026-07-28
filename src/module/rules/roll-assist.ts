@@ -10,15 +10,37 @@
  * Foundry-free so it is unit-testable; the dialog injects token/actor descriptors.
  */
 
-/** Whether an actor is trained enough in a skill to render aid. */
+/** One NPC trained-skill entry (`NPCV2TrainedSkill` in `data/actor/npc.ts`). */
+export interface AssistTrainedSkill {
+    trained?: boolean;
+    plus10?: boolean;
+    plus20?: boolean;
+    plus30?: boolean;
+}
+
+/**
+ * Whether an actor is trained enough in a skill to render aid.
+ *
+ * Characters and NPCs store skills in genuinely different shapes, and an ally is
+ * offered only if this resolves — so getting the NPC shapes wrong silently
+ * narrows the assistant list to player characters (#488).
+ */
 export interface AssistSkillSource {
-    /** Character actors: `system.skills[key] = { advance }`. */
-    skills?: Record<string, { advance?: number } | undefined> | undefined;
     /**
-     * NPC actors use a separate trained-skill map (skill key → target number)
-     * rather than the full character skill schema.
+     * Character actors: `system.skills[key] = { advance }`.
+     *
+     * NPCs may instead expose a flat `skillKey → target number` map, so a numeric
+     * value is accepted here too rather than being read as `{ advance }` and
+     * silently yielding `undefined`.
      */
-    trainedSkills?: Record<string, number | undefined> | undefined;
+    skills?: Record<string, { advance?: number } | number | undefined> | undefined;
+    /**
+     * NPC actors carry a sparse trained-skill map whose values are ENTRY OBJECTS
+     * (`{ trained, plus10, … }`), not numbers. The previous `number` typing meant
+     * the presence check passed for any entry — including one explicitly marked
+     * untrained.
+     */
+    trainedSkills?: Record<string, AssistTrainedSkill | number | undefined> | undefined;
 }
 
 /** A potential assistant, projected from a token on the active scene. */
@@ -52,9 +74,21 @@ const DISPOSITION_FRIENDLY = 1;
  */
 export function actorKnowsSkill(actor: AssistSkillSource | null | undefined, skillKey: string | null): boolean {
     if (actor == null || skillKey === null || skillKey === '') return false;
-    const advance = actor.skills?.[skillKey]?.advance;
-    if (typeof advance === 'number' && advance > 0) return true;
-    return actor.trainedSkills?.[skillKey] !== undefined;
+
+    // Character shape: an advance rank above 0.
+    const skillEntry = actor.skills?.[skillKey];
+    if (typeof skillEntry === 'object' && typeof skillEntry.advance === 'number' && skillEntry.advance > 0) return true;
+    // NPC flat map: skillKey → target number. A 0/absent target is not training.
+    if (typeof skillEntry === 'number' && skillEntry > 0) return true;
+
+    // NPC trained-skill entry. Values are objects, so a bare presence check would
+    // count an entry explicitly flagged untrained — read the rank flags instead.
+    const trained = actor.trainedSkills?.[skillKey];
+    if (typeof trained === 'number') return trained > 0;
+    if (typeof trained === 'object') {
+        return trained.trained === true || trained.plus10 === true || trained.plus20 === true || trained.plus30 === true;
+    }
+    return false;
 }
 
 /**
