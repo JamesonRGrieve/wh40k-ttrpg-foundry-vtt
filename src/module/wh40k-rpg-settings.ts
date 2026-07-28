@@ -1,6 +1,7 @@
 import { ALL_SYSTEM_IDS, type GameSystemId } from './config/game-systems/types.ts';
 import { SYSTEM_ID } from './constants.ts';
 import type { FatigueMode } from './rules/fatigue.ts';
+import { type ImperialDate, parseImperialDate } from './rules/imperial-date.ts';
 
 export type DH2Ruleset = 'raw' | 'homebrew';
 
@@ -65,6 +66,7 @@ export class WH40KSettings {
         awarenessSenseSplit: 'awareness-sense-split',
         magazineBuilding: 'magazine-building',
         worldTimeInception: 'world-time-inception',
+        campaignInceptionDate: 'campaign-inception-date',
     };
 
     /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
@@ -72,8 +74,36 @@ export class WH40KSettings {
     static WARBAND_SUBTLETY_DEFAULT = 60;
 
     /** Default campaign-inception world-time stamp (#487): 0 = the world's own
-     *  epoch, so "Day 0" is the world-time zero until a GM re-anchors it. */
+     *  epoch. Day 0 is the campaign/mission inception and is fixed, not
+     *  re-anchorable from the widget. */
     static WORLD_TIME_INCEPTION_DEFAULT = 0;
+
+    /**
+     * Neutral placeholder for the campaign-inception Imperial timestamp (#487).
+     *
+     * Deliberately NOT any real campaign's date: which date a campaign began on is
+     * **world data**, set per world by its GM, not something the system ships. This
+     * default exists only so an unconfigured world renders a well-formed stamp
+     * instead of blank.
+     */
+    static CAMPAIGN_INCEPTION_DATE_DEFAULT = '0.000.001.M41';
+
+    /**
+     * Read the campaign-inception Imperial date (#487), falling back to the
+     * default when the setting is unregistered or holds a malformed stamp — a bad
+     * value must not take the world-time widget down.
+     */
+    static getCampaignInceptionDate(): ImperialDate {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed below by parseImperialDate
+        let raw: unknown;
+        try {
+            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.campaignInceptionDate);
+        } catch {
+            raw = undefined;
+        }
+        const parsed = typeof raw === 'string' ? parseImperialDate(raw) : null;
+        return parsed ?? (parseImperialDate(WH40KSettings.CAMPAIGN_INCEPTION_DATE_DEFAULT) as ImperialDate);
+    }
 
     /**
      * Read the durable campaign-inception world-time stamp (#487) — the
@@ -681,9 +711,8 @@ export class WH40KSettings {
             {
                 // Campaign-inception world-time stamp (#487): the game.time.worldTime
                 // value treated as "Day 0" for the day-since-inception counter.
-                // config: false — anchored via the world-time widget's GM control
-                // ("Set Day 0 here"), not the settings menu. Default 0 = the world's
-                // own epoch.
+                // config: false — Day 0 is the campaign/mission inception and is not
+                // re-anchorable from the widget; it is captured once at campaign start.
                 key: S.worldTimeInception,
                 name: 'WH40K.SETTINGS.WorldTimeInception.Name',
                 hint: 'WH40K.SETTINGS.WorldTimeInception.Hint',
@@ -691,6 +720,20 @@ export class WH40KSettings {
                 config: false,
                 default: WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT,
                 type: Number,
+            },
+            {
+                // The campaign's inception date as a canonical Imperial timestamp
+                // (#487). Day 0 IS this date; the widget renders inception + elapsed
+                // world time. Exposed in the settings menu because it is campaign
+                // configuration a GM sets once, not a one-click control beside the
+                // advance buttons.
+                key: S.campaignInceptionDate,
+                name: 'WH40K.SETTINGS.CampaignInceptionDate.Name',
+                hint: 'WH40K.SETTINGS.CampaignInceptionDate.Hint',
+                scope: 'world',
+                config: true,
+                default: WH40KSettings.CAMPAIGN_INCEPTION_DATE_DEFAULT,
+                type: String,
             },
         ];
         for (const d of descriptors) {
