@@ -15,7 +15,7 @@
 
         {{!-- Source Reference --}}
         {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-book" label=(localize "WH40K.Vehicle.Source") bodyClass="tw-p-4"}}
-            <div class="tw-max-w-[32rem]">
+            <div class="tw-max-w-[32rem] {{themeClassFor 'border'}}">
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Source") name="system.source" value=source.source placeholder=(localize "WH40K.Vehicle.SourcePlaceholder")}}
             </div>
         {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

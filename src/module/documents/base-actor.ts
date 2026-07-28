@@ -1,6 +1,6 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import type { FatigueModelDef } from '../config/game-systems/types.ts';
-import { SYSTEM_ID } from '../constants.ts';
+import { DEAD_STATUS_ID, SYSTEM_ID } from '../constants.ts';
 import { applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../data/shared/characteristic-math.ts';
 import { isEffectSuppressedByEquipState, isWeaponAttackBlockedByEquip } from '../data/shared/equip-state.ts';
 import { computeMovement } from '../data/shared/movement-math.ts';
@@ -197,7 +197,7 @@ export class WH40KBaseActor extends Actor {
             // so the token defeated overlay, the combat tracker and the #477 pile
             // conversion see it — previously this route only emitted a chat
             // notice and left the actor mechanically alive.
-            const { conditionEffectData, DEAD_STATUS_ID } = await import('../rules/active-effects.ts');
+            const { conditionEffectData } = await import('../rules/active-effects.ts');
             if (!this.statuses.has(DEAD_STATUS_ID)) {
                 const dead = conditionEffectData(DEAD_STATUS_ID);
                 if (dead !== null) {

@@ -23,7 +23,7 @@
 
             {{!-- Aircraft-only: altitude tier + service ceiling --}}
             {{#if isAircraft}}
-            <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-4 tw-max-w-[48rem] tw-mt-4 tw-pt-4 tw-border-t tw-border-[var(--wh40k-border-color-light)]">
+            <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-4 tw-max-w-[48rem] tw-mt-4 tw-pt-4 tw-border-t tw-border-[var(--wh40k-border-color-light)] {{themeClassFor 'border'}}">
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Altitude") name="system.altitude" value=craftStats.altitude type="select" options=altitudeOptions}}
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Ceiling") name="system.ceiling" value=craftStats.ceiling type="number" min="0" dataDtype="Number"}}
             </div>

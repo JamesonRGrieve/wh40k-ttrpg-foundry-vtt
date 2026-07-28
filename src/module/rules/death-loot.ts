@@ -16,9 +16,8 @@
  * across all seven game lines.
  */
 
-import { SYSTEM_ID } from '../constants.ts';
+import { DEAD_STATUS_ID, SYSTEM_ID } from '../constants.ts';
 import { dropItemAsItemPile } from '../integrations/item-piles.ts';
-import { DEAD_STATUS_ID } from './active-effects.ts';
 
 /** Item types that are never loot: intrinsic capability, not carried gear. */
 const NON_LOOTABLE_TYPES: ReadonlySet<string> = new Set(['talent', 'trait', 'skill', 'psychicPower', 'origin', 'malignancy', 'mutation', 'disorder']);
