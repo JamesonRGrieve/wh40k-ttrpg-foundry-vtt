@@ -1,6 +1,7 @@
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import { applyCharacteristicRollData, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
 import { buildCharacteristicFields } from '../shared/characteristics.ts';
+import { descriptionField, migrateDescriptionAndSource, provenanceField } from '../shared/description-template.ts';
 import { characteristicField } from '../shared/stat-fields.ts';
 import { migrateCharacteristics } from './npc-import-migration.ts';
 
@@ -94,6 +95,21 @@ export const LOCOMOTION_CHOICES = [
 export type Locomotion = (typeof LOCOMOTION_CHOICES)[number];
 
 /**
+ * Imperium Maledictum rates vehicle speed as a named band (IM core p.203 for
+ * the three creature speeds, p.225 for the vehicle-only `swift`), not as the
+ * FFG kph/metres pair. IM craft therefore leave `speed.cruising` / `.tactical`
+ * at 0 and author this instead; the six FFG lines leave it blank.
+ */
+export const SPEED_BAND_CHOICES = ['', 'slow', 'normal', 'fast', 'swift'] as const;
+
+/**
+ * Deathwatch gates vehicle access behind the squad's Renown tier rather than a
+ * generic availability grade (DW: Rites of Battle prints `Renown:` on every
+ * vehicle entry). The other six lines leave this blank and use `availability`.
+ */
+export const RENOWN_CHOICES = ['', 'initiate', 'respected', 'distinguished', 'famed', 'hero'] as const;
+
+/**
  * Build the shared `locomotion` StringField with a craft-specific default (#272).
  * The choices + label are identical across all craft scales; only the default
  * propulsion differs (wheeled / flyer / hull), so the subtypes pass `initial`.
@@ -123,8 +139,15 @@ export default class VehicleData extends ActorDataModel {
     declare specialRules: string;
     declare traitsText: string;
     declare availability: string;
-    declare source: string;
+    /** DW-only acquisition gate; blank on the other six lines. */
+    declare renown: (typeof RENOWN_CHOICES)[number];
+    /** Book flavour + rules prose. Authored per-line, collapsed before validation. */
+    declare description: { value: string; chat: string; summary: string };
+    /** Structured per-line provenance, collapsed to the active line before validation. */
+    declare source: { provenance: string; book: string; page: string; url: string; derivedFrom: string; errata: boolean };
     declare gameSystem: 'rt' | 'dh1' | 'dh2' | 'bc' | 'ow' | 'dw' | 'im';
+    /** Lines that publish this craft, driving the compendium browser's line filter. */
+    declare gameSystems: string[];
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -138,6 +161,12 @@ export default class VehicleData extends ActorDataModel {
                 initial: 'rt',
                 choices: ['rt', 'dh1', 'dh2', 'bc', 'ow', 'dw', 'im'],
             }),
+
+            // Lines that publish this craft. Unlike items — whose cross-line
+            // reach is a runtime, drag-onto-character behaviour — an actor is
+            // never owned by a PC, so its cross-line availability has to be
+            // declared. Drives the compendium browser's per-line filter.
+            gameSystems: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: false, initial: [] }),
 
             // === Locomotion (propulsion adjective) ===
             locomotion: locomotionField('wheeled'),
@@ -180,8 +209,49 @@ export default class VehicleData extends ActorDataModel {
 
             // === Availability & Source ===
             availability: new fields.StringField({ required: false, initial: 'common', blank: true }),
-            source: new fields.StringField({ required: false, initial: '', blank: true }),
+
+            // Deathwatch gates vehicle access on the squad's Renown tier
+            // instead of an availability grade (DW: Rites of Battle prints
+            // `Renown:` on every vehicle). Blank on the other six lines.
+            renown: new fields.StringField({
+                required: false,
+                initial: '',
+                blank: true,
+                choices: [...RENOWN_CHOICES],
+                label: 'WH40K.Vehicle.Renown',
+            }),
+
+            // Book flavour / rules prose. Authored per-line on disk and
+            // collapsed by `flattenSourceLineVariants` (ActorDataModel
+            // `_migrateData`) before validation. The craft sheet's overview tab
+            // binds a ProseMirror editor straight at `system.description`.
+            description: descriptionField(),
+
+            // Structured per-line provenance — same shape items carry via
+            // DescriptionTemplate, so `sourceReference`-style consumers and the
+            // pack validator see one shape across every document class.
+            source: provenanceField(),
         };
+    }
+
+    /* -------------------------------------------- */
+    /*  Migration                                   */
+    /* -------------------------------------------- */
+
+    /**
+     * Normalize `description` / `source` before validation.
+     *
+     * `source` was a bare `StringField` until the structured provenance block
+     * landed, and the craft sheet's overview tab has always bound a ProseMirror
+     * editor straight at `system.description` — a field the schema did not
+     * declare — so live worlds hold both as plain strings. Routing through the
+     * same helper the item template uses keeps one migration path for both
+     * document classes.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData receives untyped Foundry source data before schema validation
+    static override _migrateData(source: Record<string, unknown>): void {
+        super._migrateData(source);
+        migrateDescriptionAndSource(source);
     }
 
     /* -------------------------------------------- */
@@ -239,6 +309,8 @@ export class ConventionalCraftData extends VehicleData {
     declare speed: {
         cruising: number;
         tactical: number;
+        /** IM-only named zone-movement band; blank on the six FFG lines. */
+        band: (typeof SPEED_BAND_CHOICES)[number];
         notes: string;
     };
     declare crew: {
@@ -311,9 +383,20 @@ export class ConventionalCraftData extends VehicleData {
             }),
 
             // === Speed ===
+            // The six FFG lines print a kph cruising speed and a metres-per-turn
+            // tactical speed. Imperium Maledictum instead rates a craft on the
+            // named zone-movement band (`speedBand`), so an IM craft leaves both
+            // numbers at 0 and the FFG lines leave the band blank.
             speed: new fields.SchemaField({
                 cruising: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 tactical: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                band: new fields.StringField({
+                    required: false,
+                    initial: '',
+                    blank: true,
+                    choices: [...SPEED_BAND_CHOICES],
+                    label: 'WH40K.Vehicle.SpeedBand',
+                }),
                 notes: new fields.StringField({ required: false, initial: '', blank: true }),
             }),
 

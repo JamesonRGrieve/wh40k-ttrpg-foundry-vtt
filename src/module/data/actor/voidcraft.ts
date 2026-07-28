@@ -146,6 +146,19 @@ export default class VoidcraftData extends VehicleData {
     declare hullType: string;
     declare hullClass: string;
     declare dimensions: string;
+    /** Printed displacement, e.g. "9 megatonnes approx." (RT core p.190 onward). */
+    declare mass: string;
+    /** Printed maximum acceleration, e.g. "1.6 gravities max acceleration". */
+    declare acceleration: string;
+    /**
+     * Printed crew headcount, e.g. "20,000 crew, approx." — flavour, and NOT
+     * the same quantity as `crew.population`. RAW is explicit that Crew
+     * Population and Morale "are abstract representations, rather than a
+     * concrete measurement of crewmembers" (RT core p.224), both rated ~0–100.
+     * Conflating the two is what put five-digit headcounts into the mechanical
+     * pool across the authored ships.
+     */
+    declare complement: string;
     declare crew: {
         population: number;
         crewRating: number;
@@ -295,10 +308,17 @@ export default class VoidcraftData extends VehicleData {
                 label: 'WH40K.Vehicle.Locomotion',
             }),
 
-            // Hull information (flat fields matching template.json)
+            // Hull information (flat fields matching template.json). RT prints
+            // Dimensions / Mass / Crew / Accel as a four-line italic header above
+            // every hull's characteristic table; all four are RAW, so each gets a
+            // home rather than being folded into prose (crew population lives in
+            // `crew.population` below).
             hullType: new fields.StringField({ required: false, initial: '', blank: true }),
             hullClass: new fields.StringField({ required: false, initial: '', blank: true }),
             dimensions: new fields.StringField({ required: false, initial: '', blank: true }),
+            mass: new fields.StringField({ required: false, initial: '', blank: true, label: 'WH40K.Vehicle.Mass' }),
+            acceleration: new fields.StringField({ required: false, initial: '', blank: true, label: 'WH40K.Vehicle.Acceleration' }),
+            complement: new fields.StringField({ required: false, initial: '', blank: true, label: 'WH40K.Vehicle.Complement' }),
 
             // Crew
             crew: new fields.SchemaField({
