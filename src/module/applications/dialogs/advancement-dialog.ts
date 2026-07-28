@@ -126,10 +126,10 @@ interface PreparedSkillAdvance {
     /**
      * The skill's plain display label, carried as DATA (#498).
      *
-     * The purchase path used to recover it by string-replacing the decoration off
-     * `name` (`name.replace(' — add specialization', '')`), so localising or
-     * rewording that label silently corrupted the skill name in notifications and
-     * purchase records. Carry it instead of re-deriving it.
+     * The purchase path used to recover it by string-replacing a decoration off
+     * `name`, so localising or rewording that label silently corrupted the skill
+     * name in notifications and purchase records. Carry it instead of re-deriving
+     * it. (The decoration itself is gone too — the skill now has one plain row.)
      */
     skillLabel?: string;
     cost: number | null;
@@ -662,13 +662,20 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     });
                 }
 
-                // Also offer "Add new specialization" at Known rank
+                // The skill's OWN row — buying it opens the specialisation picker.
+                //
+                // This used to be an extra "<Skill> — add specialization" pseudo-row
+                // ALONGSIDE the per-specialisation rows, so every specialist skill
+                // padded the list with a permanent decorated entry (#498). It is now
+                // just the skill's row, reading like any other unowned skill; the
+                // per-specialisation rows above are for bumping what is already owned.
                 const addCost = systemConfig.getSkillAdvanceCost(this.actor, skillKey, 0);
                 if (addCost !== null) {
+                    const addNextLabel = ranks[0]?.tooltip ?? 'Known';
                     result.push({
                         id: `skill:${skillKey}:__new`,
-                        name: `${label} — add specialization`,
-                        displayName: `${label} — add specialization`,
+                        name: label,
+                        displayName: addNextLabel.length > 0 ? `${label} (${addNextLabel})` : label,
                         type: 'skill',
                         skillKey,
                         skillLabel: label,
@@ -676,7 +683,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         cost: addCost,
                         currentRank: 0,
                         currentLabel: 'Untrained',
-                        nextLabel: ranks[0]?.tooltip ?? 'Known',
+                        nextLabel: addNextLabel,
                         owned: false,
                         canPurchase: available >= addCost,
                         cantAfford: available < addCost,
