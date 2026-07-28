@@ -1,6 +1,6 @@
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
-type SupportedLineKey = 'dh1' | 'dh2' | 'rt' | 'dw' | 'bc' | 'ow' | 'im';
+export type SupportedLineKey = 'dh1' | 'dh2' | 'rt' | 'dw' | 'bc' | 'ow' | 'im';
 
 /**
  * Minimal item surface the variant helpers read. Structural (not the `WH40KItem`
@@ -142,12 +142,59 @@ function resolveBookVariant(value: { __books: Record<string, unknown>; __canonic
     return undefined;
 }
 
-export function resolveLineVariant<T>(value: T, lineKey: SupportedLineKey, rawLines: readonly SupportedLineKey[] = []): T {
+/**
+ * Outcome of resolving one per-line variant container.
+ *
+ * `resolved: false` means the container could NOT be collapsed — the value is
+ * handed back untouched, which is still a container object. That distinction is
+ * invisible to `resolveLineVariant`'s callers (it returns its input on failure),
+ * and coercing the passed-through container is how a weapon authored
+ * `melee: false` in every line became melee: `Boolean({dh1: false, dh2: false})`
+ * is `true` (#503).
+ */
+export interface LineVariantResolution<T> {
+    /** True when a branch was genuinely selected. */
+    resolved: boolean;
+    /** The selected branch, or the original value when unresolved. */
+    value: T;
+}
+
+/**
+ * Resolve a per-line variant container, reporting whether it actually resolved.
+ *
+ * Prefer this over {@link resolveLineVariant} for any value that will be coerced
+ * (`Boolean(...)`, `Number(...)`, an enum check) or that gates behaviour — an
+ * unresolved container must be treated as an error, never coerced.
+ * @param {T} value  A scalar, or a per-line / per-book variant container.
+ * @param {SupportedLineKey} lineKey  Active game line.
+ * @param {readonly SupportedLineKey[]} [rawLines]  Raw-provenance fallback lines.
+ * @returns {LineVariantResolution<T>}  The branch plus whether it resolved.
+ */
+export function tryResolveLineVariant<T>(value: T, lineKey: SupportedLineKey, rawLines: readonly SupportedLineKey[] = []): LineVariantResolution<T> {
+    const isContainer = isLineVariantContainer(value) || isBookVariantContainer(value);
     // eslint-disable-next-line no-restricted-syntax -- boundary: branch holds untyped variant payload (line then book) resolved from item system data
     let branch: unknown = value;
     if (isLineVariantContainer(value)) branch = value[lineKey] ?? firstRawVariant(value, rawLines) ?? firstDefinedVariant(value);
     if (isBookVariantContainer(branch)) branch = resolveBookVariant(branch);
-    return branch === undefined || branch === value ? value : (deepClone(branch) as T);
+    // A scalar input is trivially "resolved" — there was nothing to collapse.
+    if (!isContainer) return { resolved: true, value };
+    if (branch === undefined || branch === value) return { resolved: false, value };
+    return { resolved: true, value: deepClone(branch) as T };
+}
+
+/**
+ * Resolve a per-line variant container to its active-line branch.
+ *
+ * Returns the input unchanged when it cannot resolve, which makes failure
+ * indistinguishable from success at the call site — use
+ * {@link tryResolveLineVariant} wherever that distinction matters.
+ * @param {T} value  A scalar, or a per-line / per-book variant container.
+ * @param {SupportedLineKey} lineKey  Active game line.
+ * @param {readonly SupportedLineKey[]} [rawLines]  Raw-provenance fallback lines.
+ * @returns {T}  The resolved branch, or the original value.
+ */
+export function resolveLineVariant<T>(value: T, lineKey: SupportedLineKey, rawLines: readonly SupportedLineKey[] = []): T {
+    return tryResolveLineVariant(value, lineKey, rawLines).value;
 }
 
 export function materializeItemVariants(

@@ -20,7 +20,8 @@ import {
     modeWeaponClass,
     type WeaponFiringMode,
 } from '../../rules/weapon-modes.ts';
-import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
+import { SYSTEM_ID } from '../../constants.ts';
+import { inferActiveGameLine, isLineVariantContainer, resolveLineVariant, type SupportedLineKey, tryResolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import AttackTemplate from '../shared/attack-template.ts';
@@ -39,6 +40,43 @@ import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
  * which, for an owned item, drops it from the actor and empties the inventory.
  */
 const WEAPON_CLASS_CHOICES = ['melee', 'pistol', 'basic', 'heavy', 'thrown', 'exotic'] as const;
+
+/** Weapons already reported this session, so a re-render doesn't re-nag the GM. */
+const reportedUnresolvedVariants = new Set<string>();
+
+/**
+ * Resolve a boolean per-line variant, treating an unresolved container as an
+ * ERROR rather than coercing it (#503).
+ *
+ * `Boolean(unresolvedContainer)` is `true`, so the old code turned "I could not
+ * work out which line this weapon belongs to" into "this weapon is melee" — the
+ * one answer that unlocks Charge and WS-based attacks. An unresolved flag now
+ * falls back to `false` (the inert answer) and is surfaced to the GM naming the
+ * weapon and its actor.
+ * @param {unknown} value  Scalar boolean, or a per-line variant container.
+ * @param {SupportedLineKey} lineKey  Active game line.
+ * @param {unknown} parent  Owning item, for the report.
+ * @param {string} field  Field name, for the report.
+ * @returns {boolean}  The resolved flag, or `false` when unresolved.
+ */
+function resolveFlagVariant(value: unknown, lineKey: SupportedLineKey, parent: unknown, field: string): boolean {
+    const outcome = tryResolveLineVariant(value, lineKey);
+    if (outcome.resolved) return outcome.value === true;
+
+    const item = parent as { name?: string | null; uuid?: string; actor?: { name?: string | null } | null } | null;
+    const itemName = item?.name ?? 'Unknown weapon';
+    const key = `${item?.uuid ?? itemName}|${field}`;
+    if (!reportedUnresolvedVariants.has(key)) {
+        reportedUnresolvedVariants.add(key);
+        const actorName = item?.actor?.name ?? 'no actor';
+        console.error(`${SYSTEM_ID} | weapon: could not resolve per-line '${field}' for "${itemName}" (${actorName}); treating as false rather than guessing.`);
+        if (typeof ui !== 'undefined' && typeof game !== 'undefined') {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: `ui.notifications` is undefined until Foundry's `setup` phase
+            ui.notifications?.warn(game.i18n.format('WH40K.Warning.UnresolvedWeaponVariant', { item: itemName, field, actor: actorName }));
+        }
+    }
+    return false;
+}
 const WEAPON_TYPE_CHOICES = [
     'primitive',
     'las',
@@ -521,10 +559,21 @@ export default class WeaponData extends ItemDataModel.mixin(
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors _migrateData source signature for internal migration helpers
     static #coerceEnums(source: Record<string, unknown>): void {
-        if (typeof source['class'] === 'string' && !(WEAPON_CLASS_CHOICES as readonly string[]).includes(source['class'])) {
-            source['class'] = 'melee';
+        // An unresolved variant CONTAINER reaches here as an object and used to
+        // slip past both guards untouched (they only fired for strings), then
+        // rode through to `prepareBaseData` still shaped as an object (#503).
+        // A container is left alone for `prepareBaseData` to resolve per line;
+        // anything else non-string is genuinely corrupt and is normalised.
+        const rawClass = source['class'];
+        if (typeof rawClass === 'string') {
+            if (!(WEAPON_CLASS_CHOICES as readonly string[]).includes(rawClass)) source['class'] = 'exotic';
+        } else if (rawClass !== undefined && rawClass !== null && !isLineVariantContainer(rawClass)) {
+            source['class'] = 'exotic';
         }
-        if (typeof source['type'] === 'string' && !(WEAPON_TYPE_CHOICES as readonly string[]).includes(source['type'])) {
+        const rawType = source['type'];
+        if (typeof rawType === 'string') {
+            if (!(WEAPON_TYPE_CHOICES as readonly string[]).includes(rawType)) source['type'] = 'primitive';
+        } else if (rawType !== undefined && rawType !== null && !isLineVariantContainer(rawType)) {
             source['type'] = 'primitive';
         }
         // `reload` is a strict choice field, but legacy/compendium data is messy:
@@ -622,8 +671,12 @@ export default class WeaponData extends ItemDataModel.mixin(
         const lineKey = inferActiveGameLine(this.parent);
         this.class = resolveLineVariant(this.class, lineKey);
         this.type = resolveLineVariant(this.type, lineKey);
-        this.twoHanded = Boolean(resolveLineVariant(this.twoHanded, lineKey));
-        this.melee = Boolean(resolveLineVariant(this.melee, lineKey));
+        this.twoHanded = resolveFlagVariant(this.twoHanded, lineKey, this.parent, 'twoHanded');
+        // NEVER `Boolean(resolveLineVariant(...))`: an unresolved container is
+        // handed back as-is, and `Boolean({dh1: false, dh2: false})` is `true` —
+        // a weapon authored non-melee in every line became melee, which is what
+        // offered Charge with an autogun (#503).
+        this.melee = resolveFlagVariant(this.melee, lineKey, this.parent, 'melee');
         this.clip = foundry.utils.mergeObject({ max: 0, value: 0, type: '', magazine: [] }, resolveLineVariant(this.clip, lineKey), { inplace: false });
         // `clip.value` is the authoritative round count; when a magazine (special /
         // mixed ammo, #ammo-system) is loaded it mirrors the segment total.
