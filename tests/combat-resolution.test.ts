@@ -254,10 +254,10 @@ describe('ActionData.maybeAutoRollDamage (hit → auto-damage)', () => {
         // gate ladder is target-aware, so this pins that it stays that way.
         installGlobals({ settings: { 'auto-roll-damage': true } });
         const { action, mods } = await makeWeaponAction(true);
-        (action.rollData as RollDataType & { targetActor?: { name: string; type: string } }).targetActor = {
-            name: 'Aberrant Primus',
-            type: 'dh2-npc',
-        };
+        // `Reflect.set` rather than a cast: `targetActor` is typed as a full
+        // WH40KBaseActor, and the gate ladder reads none of it — the point of
+        // the test is precisely that the target's shape is never consulted.
+        Reflect.set(action.rollData, 'targetActor', { name: 'Aberrant Primus', type: 'dh2-npc' });
         const post = vi.spyOn(mods.DHBasicActionManager, '_postDamageCard').mockResolvedValue();
         const calc = vi.spyOn(action, 'calculateHits').mockResolvedValue();
 
