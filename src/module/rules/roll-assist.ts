@@ -11,7 +11,7 @@
  */
 
 /** One NPC trained-skill entry (`NPCV2TrainedSkill` in `data/actor/npc.ts`). */
-export interface AssistTrainedSkill {
+interface AssistTrainedSkill {
     trained?: boolean;
     plus10?: boolean;
     plus20?: boolean;

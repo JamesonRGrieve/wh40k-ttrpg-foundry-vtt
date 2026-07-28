@@ -34,7 +34,11 @@ describe('overview two-column layout (#15)', () => {
     it('places the Resources panel in column 1, under Active Effects', () => {
         const col1 = src.indexOf('COLUMN 1');
         const col2 = src.indexOf('COLUMN 2');
-        const activeEffects = src.indexOf('title="Active Effects"');
+        // The Vitals and Active Effects blocks moved into shared partials so the
+        // Combat tab can render the same panels without duplicating ~160 lines
+        // (#494). The ordering contract is unchanged — only the marker is now the
+        // include rather than the inline `title="Active Effects"` literal.
+        const activeEffects = src.indexOf('overview-active-effects-panel.hbs');
         const resources = src.indexOf('Resources (Influence');
         expect(col1, 'column 1 marker present').toBeGreaterThan(-1);
         expect(activeEffects, 'active effects panel present').toBeGreaterThan(col1);

@@ -357,6 +357,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
               "scope": "world",
               "type": "Number",
             },
+            {
+              "choices": undefined,
+              "config": true,
+              "default": ""0.000.001.M41"",
+              "key": "campaign-inception-date",
+              "requiresReload": undefined,
+              "scope": "world",
+              "type": "String",
+            },
           ]
         `);
     });
