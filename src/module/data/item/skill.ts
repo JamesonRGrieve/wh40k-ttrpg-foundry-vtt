@@ -14,6 +14,15 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     declare characteristic: string;
     declare altCharacteristics: string[];
     declare skillType: string;
+    /**
+     * Whether the skill is taken with a SPECIALISATION (Common Lore, Trade,
+     * Linguistics…). Orthogonal to Advanced-ness, which is why it is its own
+     * field rather than a third value of `skillType` — a skill can be Advanced
+     * AND specialist, and the old enum could only say one (#498). Mirrors the
+     * actor-side catalog, which has carried `advanced` + `hasEntries` separately
+     * all along (`data/shared/skill-definitions.ts`).
+     */
+    declare specialist: boolean;
     declare isBasic: boolean;
     declare aptitudes: string[];
     declare specializations: string[];
@@ -52,12 +61,19 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
             // for the test at hand (core.md §"Untrained Skill Use" and #61).
             altCharacteristics: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
 
-            // Skill type
+            // Skill type. `specialist` is a SEPARATE axis (below) — this field
+            // records Basic vs Advanced. The legacy `'specialist'` value is kept
+            // as an accepted choice so existing documents still validate, but new
+            // content should set `skillType: 'advanced'` + `specialist: true`
+            // rather than conflating the two (#498).
             skillType: new fields.StringField({
                 required: false,
                 initial: 'basic',
                 choices: ['basic', 'advanced', 'specialist'],
             }),
+
+            // Taken with a specialisation. Independent of Advanced-ness.
+            specialist: new fields.BooleanField({ required: true, initial: false }),
 
             // Is this a basic skill (can be used untrained)?
             isBasic: new fields.BooleanField({ required: true, initial: false }),
@@ -65,7 +81,10 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
             // Associated aptitudes
             aptitudes: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
-            // Predefined specializations for specialist skills
+            // The rulebook's specialisations for this skill, in book order. The
+            // advancement picker offers these instead of a free-text box, which is
+            // what stops a typo buying a skill the roll engine cannot match (#498).
+            // Authored from the transcribed source chapters; never invented.
             specializations: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
             // Descriptor (short usage description)

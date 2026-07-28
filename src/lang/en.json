@@ -1116,6 +1116,16 @@
                 "InsufficientXP": "Not enough XP (cost: {cost}, available: {available})",
                 "Overspent": "This character is {amount} XP over budget. Remove an advancement to restore the balance.",
                 "TransactionFailed": "Failed to spend XP"
+            },
+            "Specialization": {
+                "Title": "{skill} — Add Specialisation",
+                "Choose": "Specialisation",
+                "Other": "Other…",
+                "Custom": "Custom specialisation",
+                "Purchase": "Purchase",
+                "Note": "The new {skill} specialisation will be purchased at Known (rank 1).",
+                "Duplicate": "{skill} ({name}) already exists on this character.",
+                "Missing": "{name} is no longer on this character — nothing was purchased."
             }
         },
         "Tabs": {
