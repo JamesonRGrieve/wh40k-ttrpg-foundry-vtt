@@ -12,6 +12,7 @@
 
 import type { VehicleCharacteristics } from '../../data/actor/vehicle.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { occupantsOf, unfilledCrew } from '../../rules/vehicle-occupancy.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 
 /** A single armour facing on a craft (front / side / rear). */
@@ -99,6 +100,21 @@ interface PreparedCraftStats {
 interface PreparedCraftCrew {
     required: number;
     notes: string;
+    /** Who is actually aboard, seat-ordered (#508) — not just how many fit. */
+    occupants: PreparedOccupant[];
+    /** Crew seats still empty, so the tab can say what the vehicle is missing. */
+    unfilled: number;
+}
+
+/** One occupant row on the crew tab. */
+interface PreparedOccupant {
+    name: string;
+    /** Localized seat label. */
+    role: string;
+    /** Actor uuid, so the row can open the character sheet. */
+    uuid: string;
+    /** Portrait. Nullable because Foundry's FilePathField admits null. */
+    img: string | null;
 }
 
 interface PreparedTab {
@@ -168,6 +184,7 @@ export default class CraftActorSheet extends BaseActorSheet {
             repairDamage: CraftActorSheet.#repairDamage,
             toggleComponentActive: CraftActorSheet.#toggleComponentActive,
             damageComponent: CraftActorSheet.#damageComponent,
+            openOccupant: CraftActorSheet.#openOccupant,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
     };
@@ -305,15 +322,35 @@ export default class CraftActorSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Prepare crew info for display. Craft crew is `required` + `notes`.
+     * Prepare crew info for display: the authored capacity, plus who is actually
+     * aboard (#508).
+     *
+     * Occupancy is stored on the passenger, so the roster is a scan of the
+     * world's actors rather than a list held here — see `rules/vehicle-occupancy.ts`
+     * for why that direction was chosen. `unfilled` lets the tab report what the
+     * vehicle is missing rather than only whether it is full.
      * @returns {PreparedCraftCrew} Crew object.
      * @protected
      */
     _prepareCrew(): PreparedCraftCrew {
         const crew = this.actor.system.crew;
+        const uuid = this.actor.uuid;
+        const occupants = uuid === null ? [] : occupantsOf(uuid, game.actors);
+        // Capacity is read off the typed DataModel fields directly rather than
+        // through `capacityOf`: that helper exists to normalise an untyped system
+        // payload, and routing schema-backed numbers through it would throw away
+        // the typing to get the same values back.
+        const capacity = { crew: crew.required, passengers: this.actor.system.passengers };
         return {
             required: crew.required,
             notes: crew.notes,
+            occupants: occupants.map(({ actor, role }) => ({
+                name: actor.name,
+                role: game.i18n.localize(`WH40K.Vehicle.Role.${role}`),
+                uuid: actor.uuid,
+                img: actor.img,
+            })),
+            unfilled: unfilledCrew(occupants, capacity),
         };
     }
 
@@ -529,5 +566,21 @@ export default class CraftActorSheet extends BaseActorSheet {
                 ? game.i18n.format('WH40K.Vehicle.ComponentRepaired', { name: item.name })
                 : game.i18n.format('WH40K.Vehicle.ComponentDamaged', { name: item.name }),
         );
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Open an occupant's character sheet from the crew roster (#508).
+     * @this {CraftActorSheet}
+     * @param {PointerEvent} _event  Triggering click.
+     * @param {HTMLElement} target  The roster row's link, carrying the actor uuid.
+     */
+    static async #openOccupant(this: CraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+        const uuid = target.dataset['uuid'];
+        if (uuid === undefined || uuid === '') return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: `fromUuid` is a Foundry global resolving to an untyped Document union
+        const occupant = (await fromUuid(uuid)) as { sheet?: { render: (force: boolean) => unknown } } | null;
+        occupant?.sheet?.render(true);
     }
 }
