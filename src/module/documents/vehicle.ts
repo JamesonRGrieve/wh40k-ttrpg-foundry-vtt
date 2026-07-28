@@ -1,4 +1,5 @@
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
+import { hasAuthoredFootprint, prototypeTokenFootprintUpdate } from '../utils/token-footprint.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 
 type VehicleSystemData = WH40KBaseActor['system'] & {
@@ -29,7 +30,7 @@ export class WH40KVehicle extends WH40KBaseActor {
 
     protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | undefined> {
         await super._preCreate(data, options, user);
-        const dataWithName = data as { name?: string } | undefined;
+        const dataWithName = data as { name?: string; img?: string; system?: { size?: unknown }; prototypeToken?: { texture?: { src?: string } } } | undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: updateSource expects typed token delta; Record<string,unknown> is the only viable shape for dot-notation token update paths
         const initData: Record<string, unknown> = {
             'prototypeToken.bar1': { attribute: 'integrity' },
@@ -37,7 +38,21 @@ export class WH40KVehicle extends WH40KBaseActor {
             'prototypeToken.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'prototypeToken.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
             'prototypeToken.name': dataWithName?.name,
+            // Footprint from the shared size ladder — an Enormous vehicle drops
+            // 2x2, not as a 1x1 glyph (#500). Authored dimensions win.
+            ...(hasAuthoredFootprint(data) ? {} : prototypeTokenFootprintUpdate(dataWithName?.system?.size)),
         };
+
+        // Mirror the portrait onto the token texture when the actor does not
+        // author one, so a dropped vehicle shows its art rather than the
+        // system's default token image (#500). Vehicles are `img`-only — no
+        // token frame — per the physical-object image convention.
+        const authoredTokenSrc = dataWithName?.prototypeToken?.texture?.src;
+        const portrait = dataWithName?.img;
+        if ((authoredTokenSrc === undefined || authoredTokenSrc === '') && portrait !== undefined && portrait !== '') {
+            initData['prototypeToken.texture.src'] = portrait;
+        }
+
         this.updateSource(initData);
         return undefined;
     }

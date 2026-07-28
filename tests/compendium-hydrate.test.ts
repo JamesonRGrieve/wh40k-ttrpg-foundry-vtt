@@ -101,12 +101,23 @@ describe('hydration wiring (source pins)', () => {
     });
 
     it('the only hydration path never writes the database (updateSource + reset, no updateEmbeddedDocuments)', () => {
-        const fn = hydrate.match(/export async function hydrateActorInMemory[\s\S]*?\n\}/);
+        // `hydrateActorInMemory` now delegates to `hydrateActorReporting`, which
+        // performs the join AND reports unresolved keys (#499). The invariant is
+        // unchanged — it just lives in the delegate, so assert against the
+        // function that actually applies the patches.
+        const fn = hydrate.match(/export async function hydrateActorReporting[\s\S]*?\n\}/);
         expect(fn).not.toBeNull();
         expect(fn?.[0]).toMatch(/updateSource/);
         expect(fn?.[0]).toMatch(/actor\.reset\?\.\(\)/);
         // The join is in-memory only — no DB-write CALL in the function body.
         expect(fn?.[0]).not.toMatch(/updateEmbeddedDocuments\(/);
+    });
+
+    it('the public entry point delegates to that one join, adding no second path', () => {
+        const entry = hydrate.match(/export async function hydrateActorInMemory[\s\S]*?\n\}/);
+        expect(entry).not.toBeNull();
+        expect(entry?.[0]).toMatch(/hydrateActorReporting\(actor\)/);
+        expect(entry?.[0]).not.toMatch(/updateEmbeddedDocuments\(/);
     });
 
     it('no DB-write hydration variant survives anywhere in the module', () => {
