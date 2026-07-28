@@ -11,6 +11,7 @@ export {
     prepareWeaponTooltipData,
     prepareModifierTooltipData,
     prepareQualityTooltipData,
+    type ArmorTooltipEquippedPiece,
 } from './wh40k-tooltip.ts';
 
 export { ItemPreviewMixin } from './item-preview-card.ts';
