@@ -12,10 +12,19 @@
 import { capitalize } from '../utils/format.ts';
 
 /** Shape of a raw ActiveEffect change entry as stored on the document. */
+/** V14 change types. `mode` is the deprecated numeric spelling of the same thing. */
+export type EffectChangeType = 'custom' | 'multiply' | 'add' | 'downgrade' | 'upgrade' | 'override';
+
 export interface EffectChangeRaw {
     key: string;
     value: string | number;
-    mode: number;
+    /**
+     * V14+ string form. Preferred — reading the numeric `mode` logs a
+     * deprecation on every access and is removed in V16 (#507).
+     */
+    type?: EffectChangeType | undefined;
+    /** Legacy numeric form, still present on world data authored before V14. */
+    mode?: number | undefined;
     priority?: number;
 }
 
@@ -77,18 +86,56 @@ export function getChangeLabel(key: string): string {
  * an explicit sign, multiply gets `×`, override gets `=`, upgrade/downgrade
  * get arrows.
  */
+/** Legacy numeric mode → V14 change type. Literals rather than `CONST` so this
+ *  helper works in test environments where the Foundry global is absent. */
+const LEGACY_MODE_TYPES: Readonly<Record<number, EffectChangeType>> = {
+    0: 'custom',
+    1: 'multiply',
+    2: 'add',
+    3: 'downgrade',
+    4: 'upgrade',
+    5: 'override',
+};
+
+/**
+ * The change's type, preferring the V14 string over the deprecated numeric mode.
+ *
+ * Reading `change.mode` logs a Foundry deprecation on EVERY access — five reads
+ * per change, once per effect row, on every sheet render — and the accessor is
+ * removed in V16. The numeric form is consulted only when `type` is absent,
+ * which means legacy world data authored before V14 (#507).
+ * @param {EffectChangeRaw} change  One ActiveEffect change row.
+ * @returns {EffectChangeType | null}  Its type, or null when neither form is set.
+ */
+export function changeType(change: EffectChangeRaw): EffectChangeType | null {
+    if (typeof change.type === 'string') return change.type;
+    if (typeof change.mode === 'number') return LEGACY_MODE_TYPES[change.mode] ?? null;
+    return null;
+}
+
+/**
+ * Format a change's numeric value with type-appropriate prose. Add gets an
+ * explicit sign, multiply gets `×`, override gets `=`, upgrade/downgrade arrows.
+ * @param {EffectChangeRaw} change  One ActiveEffect change row.
+ * @returns {string}  Display string for the effect row.
+ */
 export function formatChangeValue(change: EffectChangeRaw): string {
     const value = Number(change.value);
     const numeric = Number.isFinite(value) ? value : 0;
-    // CONST is provided by Foundry. Use literal mode codes so this helper
-    // works in test environments where `CONST` is absent.
-    // 0=CUSTOM, 1=MULTIPLY, 2=ADD, 3=DOWNGRADE, 4=UPGRADE, 5=OVERRIDE
-    if (change.mode === 2) return numeric > 0 ? `+${numeric}` : `${numeric}`; // ADD
-    if (change.mode === 1) return `×${numeric}`; // MULTIPLY
-    if (change.mode === 5) return `= ${numeric}`; // OVERRIDE
-    if (change.mode === 4) return `↑${numeric}`; // UPGRADE
-    if (change.mode === 3) return `↓${numeric}`; // DOWNGRADE
-    return `${change.value}`;
+    switch (changeType(change)) {
+        case 'add':
+            return numeric > 0 ? `+${numeric}` : `${numeric}`;
+        case 'multiply':
+            return `×${numeric}`;
+        case 'override':
+            return `= ${numeric}`;
+        case 'upgrade':
+            return `↑${numeric}`;
+        case 'downgrade':
+            return `↓${numeric}`;
+        default:
+            return `${change.value}`;
+    }
 }
 
 /**

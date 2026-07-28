@@ -50,7 +50,7 @@ type HydratableActor = {
     reset?: () => void;
     /** Identity used only to report an unresolved join to the GM (#499). */
     name?: string | null;
-    uuid?: string;
+    uuid?: string | null;
     id?: string | null;
 };
 
@@ -119,7 +119,7 @@ export function reportUnresolvedJoins(actorName: string, actorKey: string, unres
     ui.notifications?.warn(
         game.i18n.format('WH40K.Warning.HydrationFailed', {
             actor: actorName,
-            count: unresolved.length,
+            count: String(unresolved.length),
             items,
         }),
     );

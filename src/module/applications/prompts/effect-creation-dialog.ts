@@ -34,7 +34,10 @@ export interface EffectCreationData extends Record<string, unknown> {
 interface ActiveEffectChange {
     key: string;
     mode: number;
-    value: number;
+    /** Foundry stores change values as strings or numbers; the condition
+     *  registry (the sole source of condition changes, #495) types it the same
+     *  way, so narrowing to `number` here would reject a valid registry row. */
+    value: number | string;
 }
 
 /**

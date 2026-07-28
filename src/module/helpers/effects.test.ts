@@ -4,7 +4,74 @@
  * keys / non-numeric values.
  */
 import { describe, expect, it } from 'vitest';
-import { formatChangeValue, getChangeLabel, summarizeChange, summarizeChanges } from './effects';
+import { changeType, formatChangeValue, getChangeLabel, summarizeChange, summarizeChanges } from './effects';
+
+describe('changeType — V14 string over deprecated numeric mode (#507)', () => {
+    it('prefers the string `type`', () => {
+        // `mode` is deliberately contradictory: if it were consulted the answer
+        // would be 'add', so 'override' proves the string wins.
+        expect(changeType({ key: 'k', type: 'override', mode: 2, value: 1 })).toBe('override');
+    });
+
+    it('falls back to the legacy numeric mode for pre-V14 world data', () => {
+        const legacy = [
+            [0, 'custom'],
+            [1, 'multiply'],
+            [2, 'add'],
+            [3, 'downgrade'],
+            [4, 'upgrade'],
+            [5, 'override'],
+        ] as const;
+        for (const [mode, expected] of legacy) {
+            expect(changeType({ key: 'k', mode, value: 1 })).toBe(expected);
+        }
+    });
+
+    it('returns null when neither form is set, rather than guessing a type', () => {
+        expect(changeType({ key: 'k', value: 1 })).toBeNull();
+        expect(changeType({ key: 'k', mode: 99, value: 1 })).toBeNull();
+    });
+
+    it('never READS `mode` when `type` is present', () => {
+        // The property access itself is what logs the Foundry deprecation, so a
+        // throwing getter proves the string path never touches it.
+        const trap = {
+            key: 'k',
+            value: 10,
+            type: 'add' as const,
+            get mode(): number {
+                throw new Error('read the deprecated numeric mode');
+            },
+        };
+        expect(() => formatChangeValue(trap)).not.toThrow();
+        expect(formatChangeValue(trap)).toBe('+10');
+    });
+});
+
+describe('formatChangeValue — V14 string form (#507)', () => {
+    it('formats every type', () => {
+        expect(formatChangeValue({ key: 'k', type: 'add', value: 10 })).toBe('+10');
+        expect(formatChangeValue({ key: 'k', type: 'add', value: -20 })).toBe('-20');
+        expect(formatChangeValue({ key: 'k', type: 'multiply', value: 2 })).toBe('×2');
+        expect(formatChangeValue({ key: 'k', type: 'override', value: 40 })).toBe('= 40');
+        expect(formatChangeValue({ key: 'k', type: 'upgrade', value: 5 })).toBe('↑5');
+        expect(formatChangeValue({ key: 'k', type: 'downgrade', value: 5 })).toBe('↓5');
+        expect(formatChangeValue({ key: 'k', type: 'custom', value: 'weird' })).toBe('weird');
+    });
+
+    it('agrees with the legacy numeric form row for row', () => {
+        const pairs = [
+            ['add', 2],
+            ['multiply', 1],
+            ['override', 5],
+            ['upgrade', 4],
+            ['downgrade', 3],
+        ] as const;
+        for (const [type, mode] of pairs) {
+            expect(formatChangeValue({ key: 'k', type, value: 7 })).toBe(formatChangeValue({ key: 'k', mode, value: 7 }));
+        }
+    });
+});
 
 describe('getChangeLabel', () => {
     it('resolves characteristic keys via the localization fallback', () => {
