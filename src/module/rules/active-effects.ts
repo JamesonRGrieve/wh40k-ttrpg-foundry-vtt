@@ -37,6 +37,12 @@ type EffectDataInput = {
     origin?: string | undefined;
     duration?: Record<string, unknown> | undefined; // eslint-disable-line no-restricted-syntax -- boundary: Foundry duration object is untyped
     flags?: Record<string, unknown> | undefined; // eslint-disable-line no-restricted-syntax -- boundary: Foundry flags object is untyped
+    /**
+     * Foundry status ids this effect confers (#495). Setting it is what makes an
+     * ActiveEffect a *status*: it drives the token status icon and membership in
+     * `actor.statuses`, which the rules engine already reads.
+     */
+    statuses?: string[] | undefined;
 };
 
 type ConditionDefinition = {
@@ -230,153 +236,167 @@ export async function createCombatEffect(actor: WH40KBaseActorDocument, type: st
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
+/**
+ * The canonical condition registry — the ONE definition of this system's
+ * conditions, their artwork, and their mechanical `changes` (#495).
+ *
+ * Hoisted to module scope so `CONFIG.statusEffects` (the token HUD) and
+ * `createConditionEffect` (the applied effect) are two views of the same data
+ * instead of parallel hand-maintained lists that drift. Each key is the Foundry
+ * status id, so `actor.statuses` speaks the same vocabulary the rules engine
+ * already matches on.
+ */
+const CONDITION_REGISTRY: Record<string, ConditionDefinition> = {
+    burning: {
+        // Set on fire (#108). No static stat change — the per-turn tick is
+        // driven by the combat turn-hook, which matches on the `Burning`
+        // name (combat-action-manager.ts → handleOnFire).
+        name: 'Burning',
+        icon: 'icons/svg/fire.svg',
+        changes: [],
+        flags: { 'wh40k-rpg': { nature: 'harmful', onFire: true } },
+    },
+    stunned: {
+        name: 'Stunned',
+        icon: 'icons/svg/daze.svg',
+        changes: [
+            { key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
+            { key: 'system.combat.attack', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
+        ],
+        flags: { 'wh40k-rpg': { nature: 'harmful' } },
+    },
+    prone: {
+        name: 'Prone',
+        icon: 'icons/svg/falling.svg',
+        changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
+        flags: { 'wh40k-rpg': { nature: 'harmful' } },
+    },
+    blinded: {
+        name: 'Blinded',
+        icon: 'icons/svg/blind.svg',
+        changes: [
+            { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
+            { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
+        ],
+        flags: { 'wh40k-rpg': { nature: 'harmful' } },
+    },
+    deafened: {
+        name: 'Deafened',
+        icon: 'icons/svg/deaf.svg',
+        changes: [{ key: 'system.characteristics.perception.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
+        flags: { 'wh40k-rpg': { nature: 'harmful' } },
+    },
+    grappled: {
+        name: 'Grappled',
+        icon: 'icons/svg/combat.svg',
+        changes: [
+            { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
+            { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
+        ],
+        flags: { 'wh40k-rpg': { nature: 'harmful' } },
+    },
+    inspired: {
+        name: 'Inspired',
+        icon: 'icons/svg/upgrade.svg',
+        changes: [
+            { key: 'system.characteristics.willpower.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
+            { key: 'system.characteristics.fellowship.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
+        ],
+        flags: { 'wh40k-rpg': { nature: 'beneficial' } },
+    },
+    blessed: {
+        name: 'Blessed',
+        icon: 'icons/svg/holy-shield.svg',
+        changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }],
+        flags: { 'wh40k-rpg': { nature: 'beneficial' } },
+    },
+    pinned: {
+        // core.md §"Pinning": pinned characters can't move or attack with
+        // ranged weapons; melee attacks against them get +20 WS.
+        name: 'Pinned',
+        icon: 'icons/svg/net.svg',
+        changes: [{ key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
+        flags: { 'wh40k-rpg': { nature: 'harmful' } },
+    },
+    unconscious: {
+        // core.md §"Unconsciousness": helpless target until healed.
+        name: 'Unconscious',
+        icon: 'icons/svg/unconscious.svg',
+        changes: [
+            { key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+            { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+            { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+            { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+        ],
+        flags: { 'wh40k-rpg': { nature: 'harmful' } },
+    },
+    suffocating: {
+        // core.md §"Suffocation": no immediate stat hit, but the GM tracks
+        // ladder-state via the flag. Damage accrues outside the AE pipeline.
+        name: 'Suffocating',
+        icon: 'icons/svg/drowning.svg',
+        changes: [],
+        flags: { 'wh40k-rpg': { nature: 'harmful', suffocating: true } },
+    },
+    bloodloss: {
+        // core.md §"Blood Loss": persistent 1d10 per turn when Heavily
+        // Damaged, plus Toughness test or +1 fatigue. The per-turn tick
+        // hooks into `processActiveEffectsDuringCombat` (see settings).
+        name: 'Blood Loss',
+        icon: 'icons/svg/blood.svg',
+        changes: [],
+        flags: { 'wh40k-rpg': { nature: 'harmful', bloodloss: true } },
+    },
+    uselessLimb: {
+        // core.md §"Useless Limbs": loss of use of the limb until healed.
+        // The flag carries which limb; sheets / item enforcement consume it.
+        name: 'Useless Limb',
+        icon: 'icons/svg/sling.svg',
+        changes: [],
+        flags: { 'wh40k-rpg': { nature: 'harmful', uselessLimb: true } },
+    },
+    manacled: {
+        // Errata p. 176 — Manacles impose −40 to BS and WS tests until removed.
+        name: 'Manacled',
+        icon: 'icons/svg/chains.svg',
+        changes: [
+            { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -40 },
+            { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -40 },
+        ],
+        flags: { 'wh40k-rpg': { nature: 'harmful' } },
+    },
+    fatigued: {
+        // The manually-applied "Fatigued" status condition — a flat −10 to all
+        // characteristics while present. This is DISTINCT from the per-system
+        // fatigue TRACK (`system.fatigue.value`), whose effect is resolved by
+        // game line in `rules/fatigue.ts` (#114): halving for DH1/DH2, a
+        // roll-time flat penalty for RT/DW/OW/BC, IM's condition tiers. This AE
+        // surfaces the condition's impact in a player-readable way.
+        name: 'Fatigued',
+        icon: 'icons/svg/sleep.svg',
+        changes: [
+            { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+            { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+            { key: 'system.characteristics.strength.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+            { key: 'system.characteristics.toughness.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+            { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+            { key: 'system.characteristics.intelligence.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+            { key: 'system.characteristics.perception.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+            { key: 'system.characteristics.willpower.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+            { key: 'system.characteristics.fellowship.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+        ],
+        flags: { 'wh40k-rpg': { nature: 'harmful' } },
+    },
+};
+
+/** The canonical condition registry, for consumers that need the whole table. */
+function conditionRegistry(): Record<string, ConditionDefinition> {
+    return CONDITION_REGISTRY;
+}
+
 // eslint-disable-next-line no-restricted-syntax -- boundary: return propagates Foundry createEmbeddedDocuments which is opaque
 export async function createConditionEffect(actor: WH40KBaseActorDocument, condition: string, options: EffectOptions = {}): Promise<unknown> {
-    // Predefined conditions with their effects
-    const conditions: Record<string, ConditionDefinition> = {
-        burning: {
-            // Set on fire (#108). No static stat change — the per-turn tick is
-            // driven by the combat turn-hook, which matches on the `Burning`
-            // name (combat-action-manager.ts → handleOnFire).
-            name: 'Burning',
-            icon: 'icons/svg/fire.svg',
-            changes: [],
-            flags: { 'wh40k-rpg': { nature: 'harmful', onFire: true } },
-        },
-        stunned: {
-            name: 'Stunned',
-            icon: 'icons/svg/daze.svg',
-            changes: [
-                { key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
-                { key: 'system.combat.attack', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
-            ],
-            flags: { 'wh40k-rpg': { nature: 'harmful' } },
-        },
-        prone: {
-            name: 'Prone',
-            icon: 'icons/svg/falling.svg',
-            changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
-            flags: { 'wh40k-rpg': { nature: 'harmful' } },
-        },
-        blinded: {
-            name: 'Blinded',
-            icon: 'icons/svg/blind.svg',
-            changes: [
-                { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
-                { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
-            ],
-            flags: { 'wh40k-rpg': { nature: 'harmful' } },
-        },
-        deafened: {
-            name: 'Deafened',
-            icon: 'icons/svg/deaf.svg',
-            changes: [{ key: 'system.characteristics.perception.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
-            flags: { 'wh40k-rpg': { nature: 'harmful' } },
-        },
-        grappled: {
-            name: 'Grappled',
-            icon: 'icons/svg/combat.svg',
-            changes: [
-                { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
-                { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
-            ],
-            flags: { 'wh40k-rpg': { nature: 'harmful' } },
-        },
-        inspired: {
-            name: 'Inspired',
-            icon: 'icons/svg/upgrade.svg',
-            changes: [
-                { key: 'system.characteristics.willpower.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
-                { key: 'system.characteristics.fellowship.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
-            ],
-            flags: { 'wh40k-rpg': { nature: 'beneficial' } },
-        },
-        blessed: {
-            name: 'Blessed',
-            icon: 'icons/svg/holy-shield.svg',
-            changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }],
-            flags: { 'wh40k-rpg': { nature: 'beneficial' } },
-        },
-        pinned: {
-            // core.md §"Pinning": pinned characters can't move or attack with
-            // ranged weapons; melee attacks against them get +20 WS.
-            name: 'Pinned',
-            icon: 'icons/svg/net.svg',
-            changes: [{ key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
-            flags: { 'wh40k-rpg': { nature: 'harmful' } },
-        },
-        unconscious: {
-            // core.md §"Unconsciousness": helpless target until healed.
-            name: 'Unconscious',
-            icon: 'icons/svg/unconscious.svg',
-            changes: [
-                { key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
-                { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
-                { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
-                { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
-            ],
-            flags: { 'wh40k-rpg': { nature: 'harmful' } },
-        },
-        suffocating: {
-            // core.md §"Suffocation": no immediate stat hit, but the GM tracks
-            // ladder-state via the flag. Damage accrues outside the AE pipeline.
-            name: 'Suffocating',
-            icon: 'icons/svg/drowning.svg',
-            changes: [],
-            flags: { 'wh40k-rpg': { nature: 'harmful', suffocating: true } },
-        },
-        bloodloss: {
-            // core.md §"Blood Loss": persistent 1d10 per turn when Heavily
-            // Damaged, plus Toughness test or +1 fatigue. The per-turn tick
-            // hooks into `processActiveEffectsDuringCombat` (see settings).
-            name: 'Blood Loss',
-            icon: 'icons/svg/blood.svg',
-            changes: [],
-            flags: { 'wh40k-rpg': { nature: 'harmful', bloodloss: true } },
-        },
-        uselessLimb: {
-            // core.md §"Useless Limbs": loss of use of the limb until healed.
-            // The flag carries which limb; sheets / item enforcement consume it.
-            name: 'Useless Limb',
-            icon: 'icons/svg/sling.svg',
-            changes: [],
-            flags: { 'wh40k-rpg': { nature: 'harmful', uselessLimb: true } },
-        },
-        manacled: {
-            // Errata p. 176 — Manacles impose −40 to BS and WS tests until removed.
-            name: 'Manacled',
-            icon: 'icons/svg/chains.svg',
-            changes: [
-                { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -40 },
-                { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -40 },
-            ],
-            flags: { 'wh40k-rpg': { nature: 'harmful' } },
-        },
-        fatigued: {
-            // The manually-applied "Fatigued" status condition — a flat −10 to all
-            // characteristics while present. This is DISTINCT from the per-system
-            // fatigue TRACK (`system.fatigue.value`), whose effect is resolved by
-            // game line in `rules/fatigue.ts` (#114): halving for DH1/DH2, a
-            // roll-time flat penalty for RT/DW/OW/BC, IM's condition tiers. This AE
-            // surfaces the condition's impact in a player-readable way.
-            name: 'Fatigued',
-            icon: 'icons/svg/sleep.svg',
-            changes: [
-                { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-                { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-                { key: 'system.characteristics.strength.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-                { key: 'system.characteristics.toughness.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-                { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-                { key: 'system.characteristics.intelligence.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-                { key: 'system.characteristics.perception.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-                { key: 'system.characteristics.willpower.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-                { key: 'system.characteristics.fellowship.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
-            ],
-            flags: { 'wh40k-rpg': { nature: 'harmful' } },
-        },
-    };
-
-    const conditionData = conditions[condition.toLowerCase()];
+    const conditionData = CONDITION_REGISTRY[condition.toLowerCase()];
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess guard: conditions index may be undefined at runtime
     if (!conditionData) {
         ui.notifications.warn(t('WH40K.Warning.UnknownCondition', { condition }));
@@ -388,7 +408,37 @@ export async function createConditionEffect(actor: WH40KBaseActorDocument, condi
         ...options,
         changes: options.changes ?? conditionData.changes,
         flags: foundry.utils.mergeObject(conditionData.flags, options.flags ?? {}),
+        // `statuses` is what makes an ActiveEffect a STATUS in Foundry (#495): it
+        // drives the token status icon and membership in `actor.statuses`. Without
+        // it, none of these conditions was ever visible on a token — and, worse,
+        // the rules engine already reads that vocabulary
+        // (`unified-roll-dialog` walks `actor.statuses`;
+        // `target-situationals.targetCombatStateFromConditions` matches `prone`,
+        // `stunned`, `unaware`/`surprised`, `helpless`/`unconscious`), so a
+        // condition applied through this registry silently failed to affect rolls.
+        // The registry key IS the status id, so the two vocabularies cannot drift.
+        statuses: [condition.toLowerCase()],
     });
+}
+
+/**
+ * The condition registry projected into `CONFIG.statusEffects` entries (#495).
+ *
+ * Registering these replaces Foundry's generic default status list — which has no
+ * relationship to this system's conditions, their artwork, or their mechanical
+ * `changes` — so the token HUD offers the real conditions and toggling one applies
+ * the actual effect.
+ *
+ * Derived from the same registry `createConditionEffect` uses, so the HUD, the
+ * effect's `changes`, and `actor.statuses` are three views of one definition
+ * rather than three hand-maintained lists.
+ */
+export function conditionStatusEffects(): Array<{ id: string; name: string; img: string }> {
+    return Object.entries(conditionRegistry()).map(([id, definition]) => ({
+        id,
+        name: definition.name,
+        img: definition.icon,
+    }));
 }
 
 /** A carried munition (grenade / ammunition) that cooked off from a crit. */
