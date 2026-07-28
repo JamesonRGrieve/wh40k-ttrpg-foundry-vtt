@@ -13,10 +13,14 @@
             {{/if}}
         {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
-        {{!-- Source Reference --}}
+        {{!-- Source Reference — structured per-line provenance, the same block
+              items carry. The single free-text row this replaced bound
+              `system.source`, which is a schema object, so it rendered and wrote
+              back `[object Object]`. --}}
         {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-book" label=(localize "WH40K.Vehicle.Source") bodyClass="tw-p-4"}}
-            <div class="tw-max-w-[32rem] {{themeClassFor 'border'}}">
-                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Source") name="system.source" value=source.source placeholder=(localize "WH40K.Vehicle.SourcePlaceholder")}}
+            <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-4 tw-max-w-[40rem] {{themeClassFor 'border'}}">
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Source.Book") name="system.source.book" value=system.source.book placeholder=(localize "WH40K.Vehicle.SourcePlaceholder")}}
+                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Source.Page") name="system.source.page" value=system.source.page}}
             </div>
         {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 

@@ -38,6 +38,7 @@ import { renameKeys } from '../shared/migrate-rename.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
+import { WEAPON_FACING_CHOICES, WEAPON_MOUNTING_CHOICES, type WeaponFacing, type WeaponMounting } from '../shared/vehicle-mounting.ts';
 
 /**
  * Valid weapon `class` / `type` choices. Shared between `defineSchema()` and the
@@ -238,6 +239,10 @@ export default class WeaponData extends ItemDataModel.mixin(
     declare type: string;
     declare twoHanded: boolean;
     declare melee: boolean;
+    /** Vehicle weapon mounting; blank on a personal-scale weapon. */
+    declare mounting: WeaponMounting;
+    /** Facing the mounted weapon's fire arc is measured from; blank when unmounted. */
+    declare facing: WeaponFacing;
     /**
      * When `true`, this weapon is granted to every newly-created creature actor
      * (character / npc) by the default-grant hook, so e.g. an Unarmed strike is
@@ -485,6 +490,29 @@ export default class WeaponData extends ItemDataModel.mixin(
 
             // Required training (for future talent integration)
             requiredTraining: new fields.StringField({ required: false, blank: true }),
+
+            // === Vehicle mounting (OW core p.211-212; printed on every line's
+            // vehicle weapon lines as e.g. "Turret-mounted", "Front Facing") ===
+            // Per-installation, not per-weapon-type: the same Heavy Bolter is
+            // hull-mounted on one tank and sponson-mounted on the next. The
+            // canonical compendium record leaves both blank and the embedded copy
+            // on the craft sets them, exactly like `specialization` on a talent.
+            // The mounting fixes the fire arc; the facing is what that arc is
+            // measured from.
+            mounting: new fields.StringField({
+                required: false,
+                initial: '',
+                blank: true,
+                choices: [...WEAPON_MOUNTING_CHOICES],
+                label: 'WH40K.Weapon.Mounting',
+            }),
+            facing: new fields.StringField({
+                required: false,
+                initial: '',
+                blank: true,
+                choices: [...WEAPON_FACING_CHOICES],
+                label: 'WH40K.Weapon.Facing',
+            }),
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),

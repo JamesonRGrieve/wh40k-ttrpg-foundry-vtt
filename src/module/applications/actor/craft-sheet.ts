@@ -39,6 +39,8 @@ interface CraftSystemData {
     speed: {
         cruising: number;
         tactical: number;
+        /** IM-only named zone-movement band; blank on the six FFG lines. */
+        band: string;
         notes: string;
     };
     crew: {
@@ -62,8 +64,12 @@ interface CraftSystemData {
     /** Aircraft-only altitude tier + service ceiling. */
     altitude?: string;
     ceiling?: number;
-    description?: string;
-    source?: string;
+    /** Shared `{value, chat, summary}` block — same shape items carry. */
+    description: { value: string; chat: string; summary: string };
+    /** Structured per-line provenance, collapsed to the active line. */
+    source: { provenance: string; book: string; page: string; url: string; derivedFrom: string; errata: boolean };
+    /** DW-only acquisition gate; blank on the other six lines. */
+    renown?: string;
 }
 
 /** Craft actor — an Actor whose `system` is one of the craft DataModels. */

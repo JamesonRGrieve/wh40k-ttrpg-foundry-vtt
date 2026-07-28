@@ -10,6 +10,17 @@ interface MigratedChar {
 }
 /** Authoring characteristics block: flat ints pre-migration, rich objects post-migration. */
 type VehicleCharsField = Record<string, number | MigratedChar>;
+/** One line's structured provenance entry, as authored on disk. */
+type ProvenanceEntry = { provenance: string; book: string; page?: string };
+/**
+ * The raw, pre-validation shape `_migrateData` receives — a legacy flat string,
+ * the already-structured block, or the authored per-line variant container.
+ */
+type LegacyCraftSource = {
+    description?: string | { value: string; chat: string; summary: string };
+    source?: string | ProvenanceEntry | { dh2: ProvenanceEntry };
+};
+
 /** A prepared (derived) characteristic entry with modifier + unnatural inputs. */
 interface DerivedChar {
     base: number;
@@ -158,5 +169,42 @@ describe('ConventionalCraftData characteristics profile', () => {
         };
         inst.characteristics = null;
         expect(() => inst._prepareCharacteristics()).not.toThrow();
+    });
+});
+
+/**
+ * `description` and `source` were, respectively, absent from the schema and
+ * declared as a bare `StringField`, while every authored craft carried a
+ * per-line description container and a structured provenance object — so
+ * SchemaField.clean dropped both. These cover the migration that normalises the
+ * legacy string forms live worlds still hold.
+ */
+describe('VehicleData description / source migration', () => {
+    it('promotes a legacy flat description string into the {value, chat, summary} block', async () => {
+        const mod = await importModelOrSkip(import('./vehicle.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        const source: LegacyCraftSource = { description: '<p>A sturdy off-road trike.</p>' };
+        mod.default._migrateData(source);
+        expect(source.description).toEqual({ value: '<p>A sturdy off-road trike.</p>', chat: '', summary: '' });
+    });
+
+    it('promotes a legacy flat source string into structured provenance', async () => {
+        const mod = await importModelOrSkip(import('./vehicle.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        const source: LegacyCraftSource = { source: 'DH2: Enemies Without' };
+        mod.default._migrateData(source);
+        expect(source.source).toMatchObject({ provenance: 'raw', book: 'DH2: Enemies Without' });
+    });
+
+    it('leaves a per-line variant container alone for the resolver to collapse', async () => {
+        const mod = await importModelOrSkip(import('./vehicle.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        const authored = { dh2: { provenance: 'raw', book: 'DH2: Enemies Without', page: '56' } };
+        const source: LegacyCraftSource = { source: authored };
+        mod.default._migrateData(source);
+        expect(source.source).toEqual(authored);
     });
 });
