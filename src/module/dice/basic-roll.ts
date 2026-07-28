@@ -11,6 +11,24 @@ type HooksCompat = typeof Hooks & {
 const HooksExt = Hooks as HooksCompat;
 
 /**
+ * Roll-config keys that carry the roll's DERIVATION to the chat card (#489).
+ *
+ * `modifier-breakdown.hbs` reads these at the top level of the template context —
+ * the full target formula (base ± each provenance-bearing component = target)
+ * plus the ±60 cap accounting. Listed explicitly rather than spreading the whole
+ * config so a future config key can't silently shadow `roll` / `rollData`.
+ */
+const DERIVATION_CONTEXT_KEYS = [
+    'baseTarget',
+    'modifiedTarget',
+    'activeModifiers',
+    'modifierSources',
+    'modifierTotal',
+    'rawModifierTotal',
+    'modifierCapFired',
+] as const;
+
+/**
  * BasicRollWH40K - Extended Roll class for WH40K RPG VTT
  * Implements three-stage roll workflow: Configure → Evaluate → Post
  * Similar to dnd5e's modern roll architecture
@@ -210,6 +228,21 @@ export default class BasicRollWH40K extends Roll {
     static async _prepareTemplateData(roll: BasicRollWH40K, config: Record<string, unknown>): Promise<Record<string, unknown>> {
         return {
             roll: roll,
+            // Forward the derivation at TOP level. `simple-roll-chat.hbs` feeds
+            // `modifier-breakdown.hbs` from top-level `baseTarget` /
+            // `modifierSources` / `modifiedTarget` / cap fields, but this path
+            // previously nested everything under `rollData` — so a test rolled
+            // through the dice pipeline rendered the card with an EMPTY breakdown
+            // and no visible derivation at all (#489). The ActionData pipeline
+            // populates the same template correctly; only this path was starved.
+            //
+            // Undefined keys are harmless: the partial falls back to
+            // `activeModifiers`, and then to rendering just base/target.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: the roll config is an untyped Foundry pass-through bag; these values are forwarded verbatim to Handlebars, which has no schema either
+            ...DERIVATION_CONTEXT_KEYS.reduce<Record<string, unknown>>((acc, key) => {
+                if (config[key] !== undefined) acc[key] = config[key];
+                return acc;
+            }, {}),
             rollData: {
                 name: (config['flavor'] as string | undefined) ?? this.defaultFlavor,
                 roll: roll,
