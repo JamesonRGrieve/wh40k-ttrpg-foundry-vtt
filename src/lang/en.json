@@ -736,6 +736,10 @@
         },
         "EquipmentGranted": "Equipment Granted",
         "Aptitudes": "Aptitudes",
+        "Bio": {
+            "StandardAge": "Age (Standard)",
+            "BiologicalAge": "Age (Biological)"
+        },
         "AptitudesGranted": "Aptitudes Granted",
         "AptitudeUniversalSource": "All characters",
         "OtherBonuses": "Other Bonuses",

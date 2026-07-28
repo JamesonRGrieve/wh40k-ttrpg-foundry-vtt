@@ -104,7 +104,21 @@ export default class CharacterData extends CreatureTemplate {
     declare bio: {
         playerName: string;
         gender: string;
+        /**
+         * Standard (calendar) age — years elapsed by the Imperial reckoning.
+         * The pre-existing `age` field retains this meaning, so no migration is
+         * needed; {@link biologicalAge} is the new companion.
+         */
         age: string;
+        /**
+         * Biological (subjective) age — years actually lived.
+         *
+         * Warp transit desynchronises the two: a passage can advance standard time
+         * by years while the traveller experiences days, or the reverse. So this is
+         * authored independently and is NEVER derived from the world clock or from
+         * {@link age} (#478).
+         */
+        biologicalAge: string;
         build: string;
         complexion: string;
         hair: string;
@@ -369,7 +383,12 @@ export default class CharacterData extends CreatureTemplate {
             bio: new fields.SchemaField({
                 playerName: new fields.StringField({ required: false, blank: true }),
                 gender: new fields.StringField({ required: false, blank: true }),
+                // Standard (calendar) age. Kept as `age` so existing actors' values
+                // retain their meaning without a migration (#478).
                 age: new fields.StringField({ required: false, blank: true }),
+                // Biological (subjective) age — independent of `age` because warp
+                // transit desynchronises them. Never derived (#478).
+                biologicalAge: new fields.StringField({ required: false, blank: true }),
                 build: new fields.StringField({ required: false, blank: true }),
                 complexion: new fields.StringField({ required: false, blank: true }),
                 hair: new fields.StringField({ required: false, blank: true }),
