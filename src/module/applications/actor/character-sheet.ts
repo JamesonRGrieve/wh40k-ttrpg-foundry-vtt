@@ -925,6 +925,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
             // Acquisition actions
             'addAcquisition': CharacterSheet.#addAcquisition,
+            'openAcquisition': CharacterSheet.#openAcquisition,
             'removeAcquisition': CharacterSheet.#removeAcquisition,
             'openAcquisitionDialog': CharacterSheet.#openAcquisitionDialog,
 
@@ -3058,7 +3059,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const acquisitions = Array.isArray(prepared.acquisitions)
             ? prepared.acquisitions
             : prepared.acquisitions !== null && prepared.acquisitions !== undefined
-            ? [{ name: '', availability: '', modifier: 0, notes: prepared.acquisitions, acquired: false }]
+            ? [{ name: '', availability: '', modifier: 0, notes: prepared.acquisitions, acquired: false, uuid: '' }]
             : [];
         prepared.acquisitions = acquisitions;
 
@@ -4535,8 +4536,27 @@ export default class CharacterSheet extends BaseActorSheet {
         const acquisitions = this.actor.system.rogueTrader?.acquisitions;
         const acquisitionList = Array.isArray(acquisitions) ? acquisitions : [];
         const updatedAcquisitions = structuredClone(acquisitionList);
-        updatedAcquisitions.push({ name: '', availability: '', modifier: 0, notes: '', acquired: false });
+        // Blank `uuid`: a hand-added row is a note, not a record of a real
+        // acquisition. Rows written by an actual acquisition test carry the item
+        // that changed hands and render as a link instead (#496).
+        updatedAcquisitions.push({ name: '', availability: '', modifier: 0, notes: '', acquired: false, uuid: '' });
         await this.actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Open the item an acquisition row records (#496).
+     * @this {CharacterSheet}
+     * @param {Event} _event  Triggering click.
+     * @param {HTMLElement} target  The row's link, carrying the item uuid.
+     */
+    static async #openAcquisition(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const uuid = target.dataset['uuid'];
+        if (uuid === undefined || uuid === '') return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: `fromUuid` is a Foundry global resolving to an untyped Document union
+        const item = (await fromUuid(uuid)) as { sheet?: { render: (force: boolean) => unknown } } | null;
+        item?.sheet?.render(true);
     }
 
     /* -------------------------------------------- */
