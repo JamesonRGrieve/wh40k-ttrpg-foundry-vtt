@@ -36,7 +36,11 @@ import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
 import TooltipMixin from '../api/tooltip-mixin.ts';
 import VisualFeedbackMixin from '../api/visual-feedback-mixin.ts';
 import WhatIfMixin from '../api/what-if-mixin.ts';
-import { ActiveModifiersMixin, ItemPreviewMixin, type ArmorTooltipEquippedPiece } from '../components/_module.ts';
+// Direct imports rather than the components barrel, which re-exports every
+// component and widens this sheet's graph far beyond the two mixins it uses.
+import { ActiveModifiersMixin } from '../components/active-modifiers-panel.ts';
+import { ItemPreviewMixin } from '../components/item-preview-card.ts';
+import type { ArmorTooltipEquippedPiece } from '../components/wh40k-tooltip.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 // import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 

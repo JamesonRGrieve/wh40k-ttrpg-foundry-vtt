@@ -1,4 +1,7 @@
-import { ConfirmationDialog } from '../applications/dialogs/_module.ts';
+// Import the dialog DIRECTLY, not through dialogs/_module.ts: the barrel re-exports
+// every dialog, so importing it drags acquisition-dialog and the rest into this
+// module's graph and formed 72 of the repo's import cycles for one symbol.
+import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
 import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.ts';
 import type { ActionData } from '../rolls/action-data.ts';
 import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';

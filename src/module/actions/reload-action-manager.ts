@@ -3,7 +3,10 @@
  * Integrates with WH40KVTT-7jh Combat Actions System
  */
 
-import { AmmoPickerDialog, ConfirmationDialog } from '../applications/dialogs/_module.ts';
+// Direct imports: the dialogs barrel re-exports every dialog, so reaching
+// through it for two of them pulls the rest into this module's graph.
+import AmmoPickerDialog from '../applications/dialogs/ammo-picker-dialog.ts';
+import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
 import type AmmunitionData from '../data/item/ammunition.ts';
 import type WeaponData from '../data/item/weapon.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
