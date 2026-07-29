@@ -52,6 +52,14 @@ type HydratableActor = {
     name?: string | null;
     uuid?: string | null;
     id?: string | null;
+    /**
+     * The actor's OWN system payload. A named individual authored as a
+     * `variantOf` an unnamed class joins its base through this, exactly as an
+     * embedded item joins its compendium source.
+     */
+    system?: Record<string, unknown>;
+    _source?: { system?: Record<string, unknown> };
+    updateSource?: (changes: Record<string, unknown>) => void;
 };
 
 type SourceLike = { img: string | null; system: Record<string, unknown> };
@@ -91,6 +99,104 @@ export function buildHydratedSystem(sourceSystem: Record<string, unknown>, persi
 /** The join key for one item: its compendium source, or its variant base. */
 function joinUuid(item: HydratableItem): string | null {
     return item._stats?.compendiumSource ?? variantOfUuid(item.system);
+}
+
+/**
+ * How many `variantOf` hops to follow before giving up.
+ *
+ * A variant may itself be a variant (a named ship of a pattern of a class), so
+ * the walk is a chain rather than a single hop — but authored data can also
+ * contain a cycle, and this join runs on a hot prep/render path. The bound makes
+ * a malformed chain a logged warning instead of a hang.
+ */
+const MAX_VARIANT_DEPTH = 8;
+
+/**
+ * Order-insensitive structural comparison, for "did the join actually change
+ * anything".
+ *
+ * A plain `JSON.stringify` comparison is key-order sensitive, and the merge
+ * necessarily reorders: the base's keys land first. Comparing raw strings would
+ * therefore report a change on every variant actor whose values already match
+ * its base, patch it needlessly, and `reset()` it on every render.
+ */
+/* eslint-disable no-restricted-syntax -- boundary: compares two untyped Foundry system payloads, which are `unknown` at every depth by construction */
+function sameSystem(a: unknown, b: unknown): boolean {
+    if (isPlainObject(a) && isPlainObject(b)) {
+        const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+        return [...keys].every((key) => sameSystem(a[key], b[key]));
+    }
+    if (Array.isArray(a) && Array.isArray(b)) {
+        return a.length === b.length && a.every((value, index) => sameSystem(value, b[index]));
+    }
+    return a === b;
+}
+/* eslint-enable no-restricted-syntax */
+
+/**
+ * Resolve an actor's `variantOf` chain into the base system layers to sit UNDER
+ * its own values, nearest base first.
+ *
+ * Mirrors the item join: a named individual (the *Excrucian*) stores only what
+ * makes it that individual and points at the unnamed class it instances (the
+ * Devastation-class Cruiser), which holds the stats once. See
+ * src/packs/CLAUDE.md "Actor atomization".
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry system payloads are open-ended Records in and out
+async function resolveVariantChain(system: Record<string, unknown>, unresolved: UnresolvedJoin[], actorName: string): Promise<Array<Record<string, unknown>>> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry system payloads are open-ended Records
+    const layers: Array<Record<string, unknown>> = [];
+    const seen = new Set<string>();
+    let uuid = variantOfUuid(system);
+
+    while (uuid !== null && layers.length < MAX_VARIANT_DEPTH) {
+        if (seen.has(uuid)) {
+            console.warn(`compendium-hydrate: variantOf cycle at ${uuid} on ${actorName}; stopping the walk`);
+            break;
+        }
+        seen.add(uuid);
+
+        let base: SourceLike | null;
+        try {
+            // eslint-disable-next-line no-await-in-loop -- sequential by nature: each hop's uuid comes from the previous base
+            base = (await fromUuid(uuid)) as SourceLike | null;
+        } catch (err) {
+            // Same contract as the item join: best-effort enrichment must never
+            // throw on a render path. The actor keeps its own values.
+            console.warn(`compendium-hydrate: could not resolve base actor ${uuid}; leaving actor unjoined`, err);
+            base = null;
+        }
+        if (base === null || !isPlainObject(base.system)) {
+            unresolved.push({ itemName: actorName, uuid });
+            break;
+        }
+        layers.push(base.system);
+        uuid = variantOfUuid(base.system);
+    }
+    return layers;
+}
+
+/**
+ * The actor's own hydrated system: every base in its `variantOf` chain stacked
+ * furthest-first, with the actor's PERSISTED system last so its own values win.
+ * Returns `null` when the actor is its own base or nothing resolved — callers
+ * skip the patch entirely rather than writing an identical payload.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry system payloads are open-ended Records
+async function buildActorSystemPatch(actor: HydratableActor, unresolved: UnresolvedJoin[]): Promise<Record<string, unknown> | null> {
+    const persisted = actor._source?.system ?? actor.system;
+    if (!isPlainObject(persisted) || variantOfUuid(persisted) === null) return null;
+
+    const layers = await resolveVariantChain(persisted, unresolved, actor.name ?? 'Unknown actor');
+    if (layers.length === 0) return null;
+
+    // Furthest ancestor first, so a nearer base overrides it and the actor's own
+    // values override everything — the item join's "persisted wins" contract.
+    let merged = structuredClone(layers[layers.length - 1] ?? {});
+    for (let i = layers.length - 2; i >= 0; i -= 1) merged = deepMerge(merged, layers[i] ?? {});
+    merged = deepMerge(merged, persisted);
+
+    return sameSystem(merged, persisted) ? null : merged;
 }
 
 /** Actors already reported this session, so a re-render doesn't re-nag the GM. */
@@ -145,12 +251,19 @@ interface HydrationResult {
      * claws" (#499).
      */
     unresolved: UnresolvedJoin[];
+    /**
+     * The actor's OWN joined system when it is a `variantOf` some base class,
+     * else `null`. Separate from `patches`, which are embedded-item payloads.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry system payloads are open-ended Records
+    actorSystem: Record<string, unknown> | null;
 }
 
 /**
- * Build the per-item hydration patches for an actor, plus the list of join keys
- * that did not resolve. Items with neither a `compendiumSource` nor a
- * `variantOf` are left alone (they are self-contained).
+ * Build the per-item hydration patches for an actor, its own variant-chain
+ * join, and the list of join keys that did not resolve. Items with neither a
+ * `compendiumSource` nor a `variantOf` are left alone (they are self-contained),
+ * as is an actor that is its own base.
  */
 async function buildHydration(actor: HydratableActor): Promise<HydrationResult> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payloads are open-ended Records
@@ -194,7 +307,8 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
         if ((item._source?.img ?? item.img) === null && source.img !== null) patch['img'] = source.img;
         patches.push(patch);
     }
-    return { patches, unresolved };
+    const actorSystem = await buildActorSystemPatch(actor, unresolved);
+    return { patches, unresolved, actorSystem };
 }
 
 /**
@@ -204,6 +318,18 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
 // eslint-disable-next-line no-restricted-syntax -- boundary: patches are Foundry updateEmbeddedDocuments payloads
 export async function buildHydrationPatches(actor: HydratableActor): Promise<Array<Record<string, unknown>>> {
     return (await buildHydration(actor)).patches;
+}
+
+/**
+ * The actor's own variant-chain join, as the narrow surface for tests and for
+ * callers that want the joined system without applying it.
+ *
+ * `null` when the actor is its own base, when nothing resolved, or when the join
+ * would be a no-op.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry system payloads are open-ended Records
+export async function buildActorVariantJoin(actor: HydratableActor): Promise<Record<string, unknown> | null> {
+    return buildActorSystemPatch(actor, []);
 }
 
 /**
@@ -229,12 +355,16 @@ export async function hydrateActorInMemory(actor: HydratableActor): Promise<numb
  * as "the hybrid was authored without claws" instead of "the claws didn't load".
  */
 async function hydrateActorReporting(actor: HydratableActor): Promise<{ patched: number; unresolved: UnresolvedJoin[] }> {
-    const { patches, unresolved } = await buildHydration(actor);
+    const { patches, unresolved, actorSystem } = await buildHydration(actor);
     for (const patch of patches) {
         const item = actor.items.contents.find((i) => i.id === patch['_id']);
         item?.updateSource?.({ system: patch['system'], ...(patch['img'] !== undefined ? { img: patch['img'] } : {}) });
     }
-    if (patches.length > 0) actor.reset?.();
+    // The actor's own join, same in-memory contract as its items': `updateSource`
+    // touches only `_source`, so a named individual gains its class's stats at
+    // load while the stored record keeps just what makes it that individual.
+    if (actorSystem !== null) actor.updateSource?.({ system: actorSystem });
+    if (patches.length > 0 || actorSystem !== null) actor.reset?.();
     // Report from the single join site, so EVERY path (boot, import, sheet
     // render) surfaces a failed join without each caller re-implementing it.
     reportUnresolvedJoins(actor.name ?? 'Unknown actor', actor.uuid ?? actor.id ?? actor.name ?? '', unresolved);

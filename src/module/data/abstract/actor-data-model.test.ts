@@ -75,6 +75,7 @@ describe('ActorDataModel', () => {
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
         const field = mod.default.defineSchema()['variantOf'];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json has the flag off so ESLint reads the index access as non-nullish, while the main tsconfig has it on and tsc requires the guard
         expect(field?.initial).toBe('');
     });
 });
