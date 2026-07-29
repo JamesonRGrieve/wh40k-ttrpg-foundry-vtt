@@ -71,6 +71,23 @@ export async function joinAsGM(page: Page): Promise<boolean> {
     // ~180s total (≈ the webServer readiness timeout). Warm joins early-exit on the
     // first attempt, so only a genuine cold boot / failure pays the full budget.
     const JOIN_ATTEMPTS = 8;
+    // The ready wait needs its own retry, for a DIFFERENT reason than the loop
+    // above. Phase one buys time for the user list; `game.ready` is a separate
+    // phase, and on the first client to join a fresh server process it does not
+    // merely run slow — it never arrives. Raising the cap from 60s to 180s was
+    // measured: the wait consumed the whole 180s and still failed, so this is a
+    // wedged client boot, not a slow one. A page reload clears it (which is why
+    // the SECOND spec in a run always joins fine — a later spec arrives on a new
+    // page), so retry with reloads and keep the total budget where it was.
+    //
+    // Left unfixed this is a trap, not just a flake: in a full run `_aa_inventory`
+    // sorts first and absorbs the wedge, so the suite looks green, while ANY
+    // targeted subset fails on whichever spec happens to sort first — presenting
+    // as a product regression in an arbitrary spec. It cost a long bisect proving
+    // an unrelated refactor innocent, because the failure MOVES when you change
+    // which specs you run.
+    const READY_ATTEMPTS = 3;
+    const READY_TIMEOUT_MS = 60_000;
     let populated = false;
     for (let attempt = 0; attempt < JOIN_ATTEMPTS; attempt++) {
         // eslint-disable-next-line no-await-in-loop -- sequential retry: each attempt must fully resolve (and fail) before the next reload; parallelizing defeats the world-boot backoff
@@ -81,13 +98,29 @@ export async function joinAsGM(page: Page): Promise<boolean> {
     await page.selectOption('select[name="userid"]', { label: 'Gamemaster' });
     await page.click('button[name="join"]');
     await page.waitForURL(/\/game/, { timeout: 30_000 });
-    await page.waitForFunction(
-        () =>
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global `game` is injected by the licensed app; no shipped types
-            (globalThis as unknown as { game?: { ready?: boolean } }).game?.ready === true,
-        undefined,
-        { timeout: 60_000 },
-    );
+    let ready = false;
+    for (let attempt = 0; attempt < READY_ATTEMPTS; attempt++) {
+        try {
+            // eslint-disable-next-line no-await-in-loop -- sequential retry: the reload below must not race a still-pending ready wait
+            await page.waitForFunction(
+                () =>
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global `game` is injected by the licensed app; no shipped types
+                    (globalThis as unknown as { game?: { ready?: boolean } }).game?.ready === true,
+                undefined,
+                { timeout: READY_TIMEOUT_MS },
+            );
+            ready = true;
+            break;
+        } catch {
+            // Reload straight back into /game — the session cookie re-joins as the
+            // same user, so this is a fresh client boot rather than a fresh join.
+            if (attempt < READY_ATTEMPTS - 1) {
+                // eslint-disable-next-line no-await-in-loop -- sequential retry: see above
+                await page.reload({ waitUntil: 'domcontentloaded' });
+            }
+        }
+    }
+    if (!ready) return false;
     // Disable the "build your unfinished character" sheet-open prompt so its
     // modal dialog never overlays sheets that other specs render/screenshot.
     // (Specs that exercise the prompt itself re-enable it explicitly.)
