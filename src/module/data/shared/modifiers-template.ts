@@ -225,11 +225,16 @@ function dynamicModifiersSchema(): foundry.data.fields.DataField.Any {
             value: new fields.NumberField({ required: true, initial: 0 }),
             valueFormula: new fields.StringField({ required: false, blank: true, initial: '' }),
             scale: new fields.SchemaField({
-                source: new fields.StringField({ required: true, initial: '', choices: [...DYNAMIC_SCALE_SOURCES] }),
+                // `blank: true` is required even though '' is IN the choices list:
+                // V14's StringField rejects a blank string on its own `blank` flag
+                // before it ever consults `choices`. Without it, every item carrying
+                // a dynamicModifiers entry failed validation on its own defaults
+                // ("multiplier: may not be a blank string") and could not be created.
+                source: new fields.StringField({ required: true, initial: '', blank: true, choices: [...DYNAMIC_SCALE_SOURCES] }),
                 field: new fields.StringField({ required: true, initial: 'bonus', choices: [...DYNAMIC_SCALE_FIELDS] }),
                 factor: new fields.NumberField({ required: true, initial: 1 }),
                 round: new fields.StringField({ required: true, initial: 'up', choices: [...DYNAMIC_SCALE_ROUNDING] }),
-                multiplier: new fields.StringField({ required: true, initial: '', choices: [...DYNAMIC_SCALE_MULTIPLIERS] }),
+                multiplier: new fields.StringField({ required: true, initial: '', blank: true, choices: [...DYNAMIC_SCALE_MULTIPLIERS] }),
                 min: new fields.NumberField({ required: false, nullable: true, initial: null }),
                 max: new fields.NumberField({ required: false, nullable: true, initial: null }),
             }),
@@ -241,7 +246,7 @@ function dynamicModifiersSchema(): foundry.data.fields.DataField.Any {
                 value: new fields.NumberField({ required: true, initial: 0 }),
                 valueFormula: new fields.StringField({ required: false, blank: true, initial: '' }),
                 sustained: new fields.BooleanField({ required: true, initial: false }),
-                upkeep: new fields.StringField({ required: true, initial: '', choices: [...DYNAMIC_DURATION_UPKEEP] }),
+                upkeep: new fields.StringField({ required: true, initial: '', blank: true, choices: [...DYNAMIC_DURATION_UPKEEP] }),
                 stacking: new fields.StringField({ required: true, initial: 'none', choices: [...DYNAMIC_DURATION_STACKING] }),
                 save: new fields.SchemaField({
                     characteristic: new fields.StringField({ required: false, blank: true, initial: '' }),

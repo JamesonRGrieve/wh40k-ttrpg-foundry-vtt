@@ -19,6 +19,9 @@
                 <div class="tw-flex tw-flex-col tw-gap-0.5">
                     <label class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-medium)]">{{localize "WH40K.Vehicle.Locomotion"}}</label>
                     <select name="system.locomotion" class="tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-text-[color:var(--color-text-primary)] tw-px-2 tw-py-1 tw-rounded-sm tw-text-[0.85rem] focus:tw-border-gold focus:tw-outline-none">
+                        <optgroup label="{{localize "WH40K.Vehicle.LocomotionGroup.Emplaced"}}">
+                            <option value="immobile" {{#if (eq system.locomotion "immobile")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Immobile"}}</option>
+                        </optgroup>
                         <optgroup label="{{localize "WH40K.Vehicle.LocomotionGroup.Land"}}">
                             <option value="wheeled" {{#if (eq system.locomotion "wheeled")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Wheeled"}}</option>
                             <option value="tracked" {{#if (eq system.locomotion "tracked")}}selected{{/if}}>{{localize "WH40K.Vehicle.LocomotionType.Tracked"}}</option>

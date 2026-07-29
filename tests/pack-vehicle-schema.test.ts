@@ -107,6 +107,13 @@ describe('vehicle-enum-out-of-range', () => {
         expect(rulesFor(craft({ vehicleClass: 'skimmer' }))).toContain('vehicle-enum-out-of-range');
     });
 
+    // An emplacement has no drive: the Tarantula sentry guns, the Sabre gun platform
+    // and the Scutum bunker all print the Immobile Vehicle Trait, and every other
+    // locomotion is a falsehood on them. `wheeled` was what the default gave a bunker.
+    it('accepts immobile, for an emplacement with no drive at all', () => {
+        expect(rulesFor(craft({ locomotion: 'immobile' }))).not.toContain('vehicle-enum-out-of-range');
+    });
+
     it('accepts a blank Renown, which is every line but Deathwatch', () => {
         expect(rulesFor(craft({ renown: '' }))).not.toContain('vehicle-enum-out-of-range');
     });
