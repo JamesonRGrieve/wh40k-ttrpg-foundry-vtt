@@ -7259,11 +7259,35 @@
             "flags": {}
         },
         {
+            "name": "rt-citadel-items-weapons",
+            "label": "RT: Citadel of Skulls, Weapons",
+            "path": "packs/rogue-trader/rt-citadel-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-citadel-vehicles-voidcraft",
             "label": "RT: Citadel of Skulls, Voidships",
             "path": "packs/rogue-trader/rt-citadel-vehicles-voidcraft",
             "system": "wh40k-rpg",
             "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "rt-frozen-items-weapons",
+            "label": "RT: The Frozen Reaches, Weapons",
+            "path": "packs/rogue-trader/rt-frozen-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
