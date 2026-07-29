@@ -7175,6 +7175,18 @@
             "flags": {}
         },
         {
+            "name": "rt-faith-vehicles-voidcraft",
+            "label": "RT: Faith and Coin, Voidships",
+            "path": "packs/rogue-trader/rt-faith-vehicles-voidcraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-tau-actors-bestiary",
             "label": "RT: Tau Character Guide, Bestiary",
             "path": "packs/rogue-trader/rt-tau-actors-bestiary",
