@@ -162,7 +162,11 @@ export function mockNPCActor(overrides?: Partial<MockActor>): MockActor {
     return { ...base, ...(overrides ?? {}) };
 }
 
-export interface MockVehicleActor extends Omit<MockActor, 'system'> {
+/**
+ * Not exported: this shape is only ever produced by {@link mockVehicleActor},
+ * never named by a caller. Exporting it made it an unused public type.
+ */
+interface MockVehicleActor extends Omit<MockActor, 'system'> {
     system: MockActor['system'] & {
         vehicle: {
             speed: { tactical: number; cruising: number };
