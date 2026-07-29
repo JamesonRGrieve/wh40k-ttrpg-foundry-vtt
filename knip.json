@@ -12,7 +12,12 @@
     "tests/storybook/**/*.ts",
     ".storybook/main.ts",
     "playwright.storybook.config.ts",
-    "vitest.config.ts"
+    "vitest.config.ts",
+    "playwright.foundry.config.ts",
+    "vitest.integration.config.ts",
+    "tests/e2e/**/*.spec.ts",
+    "tests/e2e/global-setup.ts",
+    "tests/e2e/global-teardown.ts"
   ],
   "project": [
     "src/module/**/*.ts",
