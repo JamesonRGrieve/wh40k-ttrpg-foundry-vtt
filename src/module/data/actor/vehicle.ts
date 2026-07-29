@@ -75,6 +75,10 @@ interface VehicleArmourFacing {
  * Grouped by the transit element they suit, but any craft may pick any value.
  */
 export const LOCOMOTION_CHOICES = [
+    // emplaced — no drive at all. First so it reads as the zero value: a Tarantula
+    // sentry gun, a Sabre gun platform and a Scutum bunker all print the Immobile
+    // Vehicle Trait, and none of the drives below is true of them.
+    'immobile',
     // land
     'wheeled',
     'tracked',

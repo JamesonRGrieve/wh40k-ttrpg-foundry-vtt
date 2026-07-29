@@ -4055,12 +4055,14 @@
                 "Orbital": "Orbital"
             },
             "LocomotionGroup": {
+                "Emplaced": "Emplaced",
                 "Land": "Land",
                 "Air": "Air",
                 "Water": "Water",
                 "Void": "Void"
             },
             "LocomotionType": {
+                "Immobile": "Immobile",
                 "Wheeled": "Wheeled",
                 "Tracked": "Tracked",
                 "Walker": "Walker",
