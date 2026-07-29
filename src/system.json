@@ -1943,6 +1943,18 @@
             "type": "Actor"
         },
         {
+            "name": "dh2-forgotten-items-weapons",
+            "label": "DH2: Forgotten Gods, Weapons",
+            "path": "packs/dark-heresy-2/dh2-forgotten-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-forgotten-actors-bestiary",
             "label": "DH2: Forgotten Gods, Bestiary",
             "ownership": {
