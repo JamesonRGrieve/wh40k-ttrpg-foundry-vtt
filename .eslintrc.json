@@ -50,7 +50,7 @@
     "grouped-accessor-pairs": "error",
     "no-constructor-return": "error",
     "no-promise-executor-return": "error",
-    "no-await-in-loop": "warn",
+    "no-await-in-loop": "error",
     "require-atomic-updates": "error",
     "array-callback-return": "error",
     "no-constant-binary-expression": "error",
@@ -233,6 +233,12 @@
         "@vitest/no-conditional-expect": "error",
         "@vitest/valid-expect": "error",
         "@vitest/valid-title": "error"
+      }
+    },
+    {
+      "files": ["tests/e2e/**/*.ts", "tests/storybook/**/*.ts"],
+      "rules": {
+        "no-await-in-loop": "off"
       }
     }
   ]
