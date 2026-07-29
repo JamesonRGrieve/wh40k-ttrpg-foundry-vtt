@@ -40,8 +40,30 @@ export default class ActorDataModel extends SystemDataModel {
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        return this.mergeSchema(super.defineSchema(), {});
+        const fields = foundry.data.fields;
+        return {
+            ...super.defineSchema(),
+            // Variant linkage, the actor mirror of PhysicalItemTemplate's field
+            // (see src/packs/CLAUDE.md "Actor atomization"): the Foundry UUID of
+            // the unnamed class this named individual is a specific instance of
+            // — '' when this actor IS that base class. Declared here rather than
+            // per actor type so npc, vehicle, voidcraft and character share one
+            // shape (Direction #3).
+            //
+            // Content already used this convention before the schema had a slot
+            // for it, so `SchemaField.clean` was silently dropping it on every
+            // affected document. Declaring the field stops the drop; it records
+            // the relationship but does NOT yet inherit stats from the base —
+            // resolution is unimplemented, so a variant still carries its own
+            // values. Tracked in PROBLEMS.md P76.
+            variantOf: new fields.StringField({ required: false, blank: true, initial: '' }),
+        };
     }
+
+    /**
+     * The UUID of the class actor this one is a named instance of, or `''`.
+     */
+    declare variantOf: string;
 
     /* -------------------------------------------- */
     /*  Migration                                   */

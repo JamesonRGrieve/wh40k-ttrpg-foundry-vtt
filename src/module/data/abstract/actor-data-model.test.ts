@@ -58,4 +58,23 @@ describe('ActorDataModel', () => {
         const ActorDataModel = mod.default;
         expect(typeof ActorDataModel.mergeSchema).toBe('function');
     });
+
+    // Content used `system.variantOf` on actors long before the schema had a slot
+    // for it, so SchemaField.clean silently dropped it on every affected document
+    // (PROBLEMS.md P76). These lock the slot open for every actor type.
+    it('declares variantOf so named individuals can link to their class', async () => {
+        const mod = await importModelOrSkip(import('./actor-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        const schema = mod.default.defineSchema();
+        expect(schema['variantOf']).toBeDefined();
+    });
+
+    it('variantOf defaults to the empty string, marking an actor as its own base', async () => {
+        const mod = await importModelOrSkip(import('./actor-data-model.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        const field = mod.default.defineSchema()['variantOf'];
+        expect(field?.initial).toBe('');
+    });
 });
