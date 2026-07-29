@@ -393,7 +393,13 @@ export class WeaponRollData extends RollData {
     usesAmmo: boolean = false;
     ammoText: string = '';
     ammoPerShot: number = 1;
+    /**
+     * Ceiling on hits this attack may score — the mode's rate of fire (#511: NOT
+     * Storm-doubled). Distinct from {@link shotsFired}, which is the ammunition.
+     */
     fireRate: number = 1;
+    /** Rounds/charges that actually leave the weapon — Storm-doubled, clip-clamped. */
+    shotsFired: number = 1;
     ammoUsed: number = 0;
     weaponModifiers: Record<string, number> = {};
 

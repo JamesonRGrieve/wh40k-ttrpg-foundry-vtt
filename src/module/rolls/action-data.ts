@@ -1,6 +1,7 @@
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
+import { hitsForDegrees, isBurstAction } from '../rules/auto-fire.ts';
 import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/opposed.ts';
@@ -375,36 +376,41 @@ export class ActionData {
             const damageData = this.damageData;
             if (actionItem !== undefined && damageData !== undefined) {
                 const itemSystem = actionItem.system as { isRanged?: boolean; isPsychicBarrage?: boolean; isPsychicStorm?: boolean; usesAmmo?: boolean };
-                if (
+                // Which hit PROGRESSION the action uses. Suppressing Fire always
+                // uses the two-DoS one ("every extra two degrees of success"),
+                // whichever mode it fired — so it groups with Semi here even when
+                // its ceiling comes from the full rate of fire.
+                const usesSemiProgression =
                     this.rollData.action === 'Semi-Auto Burst' ||
                     this.rollData.action === 'Swift Attack' ||
                     itemSystem.isPsychicBarrage === true ||
                     this.rollData.action === 'Suppressing Fire - Semi' ||
-                    this.rollData.action === 'Suppressing Fire - Full'
-                ) {
-                    if (itemSystem.isRanged === true && weaponRollData.hasWeaponModification('Fluid Action')) {
+                    this.rollData.action === 'Suppressing Fire - Full';
+                const usesFullProgression =
+                    this.rollData.action === 'Full Auto Burst' || this.rollData.action === 'Lightning Attack' || itemSystem.isPsychicStorm === true;
+
+                if (usesSemiProgression || usesFullProgression) {
+                    if (usesSemiProgression && itemSystem.isRanged === true && weaponRollData.hasWeaponModification('Fluid Action')) {
                         this.rollData.dos += 1;
                     }
 
-                    damageData.additionalHits += Math.floor((this.rollData.dos - 1) / 2);
+                    const progression = usesFullProgression ? 'full' : 'semi';
+                    let hits = hitsForDegrees(progression, this.rollData.dos);
 
                     if (this.rollData.hasAttackSpecial('Storm')) {
-                        damageData.additionalHits *= 2;
+                        hits *= 2;
                     }
 
-                    if (itemSystem.isRanged === true && damageData.additionalHits > weaponRollData.fireRate - 1) {
-                        damageData.additionalHits = weaponRollData.fireRate - 1;
+                    // The rate-of-fire ceiling applies to BURST ACTIONS — a property
+                    // of the weapon's RoF, not of whether it burns ammunition (#512).
+                    // Melee multi-attacks and psychic barrage/storm have no RoF and
+                    // stay uncapped, exactly as before. `fireRate` is the ceiling and
+                    // is never Storm-doubled (#511).
+                    if (isBurstAction(this.rollData.action)) {
+                        hits = Math.min(hits, weaponRollData.fireRate);
                     }
-                } else if (this.rollData.action === 'Full Auto Burst' || this.rollData.action === 'Lightning Attack' || itemSystem.isPsychicStorm === true) {
-                    damageData.additionalHits += Math.floor(this.rollData.dos - 1);
 
-                    if (this.rollData.hasAttackSpecial('Storm')) {
-                        damageData.additionalHits *= 2;
-                    }
-
-                    if (itemSystem.usesAmmo === true && damageData.additionalHits > weaponRollData.fireRate - 1) {
-                        damageData.additionalHits = weaponRollData.fireRate - 1;
-                    }
+                    damageData.additionalHits += Math.max(0, hits - 1);
                 }
             }
 
