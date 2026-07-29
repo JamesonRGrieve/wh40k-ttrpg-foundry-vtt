@@ -100,6 +100,20 @@ interface BackgroundAbility {
     benefit: string;
 }
 
+/**
+ * One itemised advancement purchase on the derived XP display list.
+ *
+ * `category` is a stable key (`characteristic` | `skill` | `talent` |
+ * `psychicPower` | `psyRating`) the template localises; `name` is the entity's
+ * display name; `cost` is the same value summed into the spent totals, so the
+ * list always reconciles with `calculatedTotal`.
+ */
+interface XpPurchase {
+    name: string;
+    cost: number;
+    category: string;
+}
+
 /** Shape of a character generation assignments object. */
 type CharacterGenerationAssignments = Record<string, number | null>;
 
@@ -209,7 +223,7 @@ export default class CharacterData extends CreatureTemplate {
          * stable key (`characteristic` | `skill` | `talent` | `psychicPower` |
          * `psyRating`) the template localises; `name` is the entity's display name.
          */
-        purchases?: Array<{ name: string; cost: number; category: string }>;
+        purchases?: XpPurchase[];
     };
     declare rogueTrader: {
         profitFactor: {
@@ -959,23 +973,15 @@ export default class CharacterData extends CreatureTemplate {
     }
 
     /**
-     * Compute experience spent from items and stats.
-     * @protected
+     * XP spent on Psy Rating, and the purchase row describing it.
+     *
+     * Psy Rating has no per-rank stored cost field, so its spend is derived from
+     * the current rating via the shared DH2 formula (#240). Owned powers add to
+     * the same bucket in {@link #itemSpend}.
+     * @param {XpPurchase[]} purchases  Display list to append the rating row to.
+     * @returns {number}  XP spent on rating above the granted floor.
      */
-    _computeExperienceSpent(): void {
-        const actor = this.parent as ActorParent | null | undefined;
-        if (actor?.items === undefined) return;
-
-        this.experience.spentCharacteristics = 0;
-        this.experience.spentSkills = 0;
-        this.experience.spentTalents = 0;
-
-        // Itemised purchase list, built alongside the sums so it always reconciles
-        // with calculatedTotal. Display-only; consumed by the experience panel.
-        const purchases: Array<{ name: string; cost: number; category: string }> = [];
-
-        // Psy Rating has no per-rank stored cost field, so derive its spend from the
-        // current rating via the shared DH2 formula (#240). Owned powers add to this below.
+    #psyRatingSpend(purchases: XpPurchase[]): number {
         // eslint-disable-next-line no-restricted-syntax -- boundary: psy field is added by CreatureTemplate mixin at runtime; not in CharacterData's own declare list
         const psySelf = this as unknown as { psy?: { rating?: number } };
         const psyRating = Number(psySelf.psy?.rating ?? 0);
@@ -991,20 +997,37 @@ export default class CharacterData extends CreatureTemplate {
             if (granted > grantedPsyRating) grantedPsyRating = granted;
         }
         const ratingSpend = Math.max(0, psyRatingTotalCost(psyRating) - psyRatingTotalCost(grantedPsyRating));
-        this.experience.spentPsychicPowers = ratingSpend;
         if (psyRating > grantedPsyRating) {
             purchases.push({ name: `${grantedPsyRating} → ${psyRating}`, cost: ratingSpend, category: 'psyRating' });
         }
+        return ratingSpend;
+    }
 
+    /**
+     * XP spent on characteristic advances.
+     * @param {XpPurchase[]} purchases  Display list to append each advance to.
+     * @returns {number}  Summed characteristic cost.
+     */
+    #characteristicSpend(purchases: XpPurchase[]): number {
+        let spent = 0;
         for (const characteristic of Object.values(this.characteristics) as Array<{ label?: string; advance?: number; cost: number | string }>) {
             const cost = parseInt(String(characteristic.cost), 10) || 0;
-            this.experience.spentCharacteristics += cost;
+            spent += cost;
             const advance = Number(characteristic.advance ?? 0);
             if (advance > 0 || cost > 0) {
                 purchases.push({ name: `${characteristic.label ?? ''} (+${advance * 5})`.trim(), cost, category: 'characteristic' });
             }
         }
+        return spent;
+    }
 
+    /**
+     * XP spent on skills, counting each specialisation entry separately.
+     * @param {XpPurchase[]} purchases  Display list to append each skill/speciality to.
+     * @returns {number}  Summed skill cost.
+     */
+    #skillSpend(purchases: XpPurchase[]): number {
+        let spent = 0;
         for (const skill of Object.values(this.skills) as Array<{
             label?: string;
             advance?: number;
@@ -1013,51 +1036,92 @@ export default class CharacterData extends CreatureTemplate {
         }>) {
             if (Array.isArray(skill.entries)) {
                 for (const speciality of skill.entries) {
-                    const cost = parseInt(String(speciality.cost ?? 0), 10) || 0;
-                    this.experience.spentSkills += cost;
-                    if (Number(speciality.advance ?? 0) > 0 || cost > 0) {
+                    const specialityCost = parseInt(String(speciality.cost ?? 0), 10) || 0;
+                    spent += specialityCost;
+                    if (Number(speciality.advance ?? 0) > 0 || specialityCost > 0) {
                         const spec = speciality.specialization ?? speciality.name ?? '';
-                        purchases.push({ name: `${skill.label ?? ''}${spec === '' ? '' : ` (${spec})`}`.trim(), cost, category: 'skill' });
+                        purchases.push({ name: `${skill.label ?? ''}${spec === '' ? '' : ` (${spec})`}`.trim(), cost: specialityCost, category: 'skill' });
                     }
                 }
-            } else {
-                const cost = parseInt(String(skill.cost), 10) || 0;
-                this.experience.spentSkills += cost;
-                if (Number(skill.advance ?? 0) > 0 || cost > 0) {
-                    purchases.push({ name: skill.label ?? '', cost, category: 'skill' });
-                }
+                continue;
+            }
+            const cost = parseInt(String(skill.cost), 10) || 0;
+            spent += cost;
+            if (Number(skill.advance ?? 0) > 0 || cost > 0) {
+                purchases.push({ name: skill.label ?? '', cost, category: 'skill' });
             }
         }
+        return spent;
+    }
 
-        // Owned talents/powers via _ownedItems() — NEVER `for…of actor.items` (its
-        // Collection iterator yields [id, doc] entries, which silently dropped every
-        // talent/power from spent XP). See CreatureTemplate._ownedItems.
+    /**
+     * XP spent on owned talents and psychic powers.
+     *
+     * Iterates `_ownedItems()` — NEVER `for…of actor.items`, whose Collection
+     * iterator yields `[id, doc]` entries and silently dropped every talent and
+     * power from spent XP. See CreatureTemplate._ownedItems.
+     * @param {XpPurchase[]} purchases  Display list to append each item to.
+     * @returns {{talents: number, psychicPowers: number}}  Per-bucket totals.
+     */
+    #itemSpend(purchases: XpPurchase[]): { talents: number; psychicPowers: number } {
+        let talents = 0;
+        let psychicPowers = 0;
         for (const item of this._ownedItems()) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: item.system cost/prCost are absent on items without those fields; coerced with defaults
             const sys = item.system as { cost?: number | string; prCost?: number | string };
             if (item.isTalent) {
                 const cost = parseInt(String(sys.cost ?? '0'), 10) || 0;
-                this.experience.spentTalents += cost;
+                talents += cost;
                 purchases.push({ name: item.name, cost, category: 'talent' });
             } else if (item.isPsychicPower) {
                 // Psychic powers carry no XP cost in the compendium; prefer a stored cost
                 // when present, else fall back to the same heuristic the dialog charges.
                 const stored = parseInt(String(sys.cost ?? '0'), 10);
                 const cost = stored > 0 ? stored : psychicPowerCost(Number(sys.prCost ?? 1));
-                this.experience.spentPsychicPowers += cost;
+                psychicPowers += cost;
                 purchases.push({ name: item.name, cost, category: 'psychicPower' });
             }
         }
+        return { talents, psychicPowers };
+    }
 
-        // BC Infamy advances are recorded only in the chaosAdvancements ledger, not in
-        // the per-advance .cost fields, so sum them here. Other ledger categories
-        // (characteristic/skill/talent/psychic-power) are already counted via .cost
-        // above, so only the 'infamy' category is added to avoid double-counting.
-        let spentInfamy = 0;
+    /**
+     * XP spent on BC Infamy advances.
+     *
+     * These are recorded only in the chaosAdvancements ledger, not in the
+     * per-advance `.cost` fields, so they are summed here. The ledger's other
+     * categories (characteristic / skill / talent / psychic-power) are already
+     * counted via `.cost`, so only `infamy` is added — counting the rest would
+     * double-charge them.
+     * @returns {number}  Summed infamy cost.
+     */
+    #infamySpend(): number {
+        let spent = 0;
         for (const adv of this.chaosAdvancements) {
-            if (adv.category === 'infamy') spentInfamy += adv.xpCost;
+            if (adv.category === 'infamy') spent += adv.xpCost;
         }
-        this.experience.spentInfamy = spentInfamy;
+        return spent;
+    }
+
+    /**
+     * Compute experience spent from items and stats.
+     * @protected
+     */
+    _computeExperienceSpent(): void {
+        const actor = this.parent as ActorParent | null | undefined;
+        if (actor?.items === undefined) return;
+
+        // Itemised purchase list, built alongside the sums so it always reconciles
+        // with calculatedTotal. Display-only; consumed by the experience panel.
+        const purchases: XpPurchase[] = [];
+
+        const ratingSpend = this.#psyRatingSpend(purchases);
+        this.experience.spentCharacteristics = this.#characteristicSpend(purchases);
+        this.experience.spentSkills = this.#skillSpend(purchases);
+        const items = this.#itemSpend(purchases);
+        this.experience.spentTalents = items.talents;
+        this.experience.spentPsychicPowers = ratingSpend + items.psychicPowers;
+        this.experience.spentInfamy = this.#infamySpend();
 
         this.experience.calculatedTotal =
             this.experience.spentCharacteristics +

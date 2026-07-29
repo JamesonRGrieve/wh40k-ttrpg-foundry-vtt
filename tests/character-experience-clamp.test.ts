@@ -42,6 +42,42 @@ function codeOnly(text: string): string {
         .join('\n');
 }
 
+/**
+ * Extract one method's source, from its 4-space-indented declaration to the next
+ * 4-space-indented close brace.
+ *
+ * Anchoring the start on `\n    <name>(` matches the DECLARATION only — a call
+ * site reads `this.#name(`, so it can never be picked up by mistake.
+ * @param {string} src  File source text.
+ * @param {string} name  Method name, including a leading `#` for a private one.
+ * @returns {string}  The method's source, or '' when absent.
+ */
+function methodSource(src: string, name: string): string {
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const start = src.search(new RegExp(`\\n {4}${escaped}\\(`));
+    if (start === -1) return '';
+    const end = src.indexOf('\n    }', start);
+    return end === -1 ? '' : src.slice(start, end);
+}
+
+/**
+ * The whole XP-derivation cluster: `_computeExperienceSpent` plus the private
+ * per-category helpers it delegates to.
+ *
+ * The sums originally sat in one 40-branch method. They were split into
+ * `#psyRatingSpend` / `#characteristicSpend` / `#skillSpend` / `#itemSpend` /
+ * `#infamySpend` to bring the function under the `complexity` gate. The guards
+ * below assert WHAT is derived, not where it lives, so they read the cluster
+ * rather than a single method body — anchoring them to one body meant a pure
+ * refactor broke them, which is exactly what happened.
+ * @param {string} src  character.ts source text.
+ * @returns {string}  Concatenated source of the derivation cluster.
+ */
+function spendDerivationSource(src: string): string {
+    const parts = ['_computeExperienceSpent', '#psyRatingSpend', '#characteristicSpend', '#skillSpend', '#itemSpend', '#infamySpend'];
+    return parts.map((name) => methodSource(src, name)).join('\n');
+}
+
 /** Extract the body of `#cleanExperience` up to its matching 4-space-indent close brace. */
 function cleanExperienceBody(src: string): string {
     const m = src.match(/static #cleanExperience\s*\([^)]*\)[^{]*\{([\s\S]*?)\n {4}\}/);
@@ -101,9 +137,15 @@ describe('character DataModel experience derivation (#240)', () => {
     it('counts the spend categories that have no per-advance .cost field', () => {
         // Psy Rating (formula) and BC Infamy (chaosAdvancements ledger) are not
         // captured by the .cost sums, so they must be added to calculatedTotal.
-        expect(body, 'psy rating spend derived from rating').toMatch(/psyRatingTotalCost/);
-        expect(body, 'psychic powers fall back to the shared heuristic').toMatch(/psychicPowerCost/);
-        expect(body, 'BC infamy summed from the chaosAdvancements ledger').toMatch(/category === 'infamy'/);
+        // Read across the derivation cluster: each of these now lives in the
+        // private helper that owns its category.
+        const cluster = spendDerivationSource(charSrc);
+        expect(cluster, 'psy rating spend derived from rating').toMatch(/psyRatingTotalCost/);
+        expect(cluster, 'psychic powers fall back to the shared heuristic').toMatch(/psychicPowerCost/);
+        expect(cluster, 'BC infamy summed from the chaosAdvancements ledger').toMatch(/category === 'infamy'/);
+        // …and each helper's subtotal must actually reach the totals it feeds.
+        expect(body, 'psy rating + owned powers share the psychic bucket').toMatch(/spentPsychicPowers\s*=\s*ratingSpend\s*\+/);
+        expect(body, 'infamy subtotal assigned').toMatch(/spentInfamy\s*=\s*this\.#infamySpend\(\)/);
     });
 });
 
@@ -118,13 +160,24 @@ describe('character DataModel experience purchase breakdown', () => {
 
     it('builds a purchases list and exposes it on experience', () => {
         expect(body, '_computeExperienceSpent must exist').not.toBe('');
-        expect(body, 'purchases array declared').toMatch(/const purchases:\s*Array</);
+        expect(body, 'purchases array declared').toMatch(/const purchases:\s*XpPurchase\[\]/);
         expect(body, 'purchases assigned onto experience').toMatch(/this\.experience\.purchases\s*=\s*purchases/);
     });
 
     it('records an entry for every spend category', () => {
+        // Each category's push lives in the helper that owns that category, so the
+        // guard reads the whole derivation cluster rather than one method body.
+        const cluster = spendDerivationSource(charSrc);
         for (const category of ['characteristic', 'skill', 'talent', 'psychicPower', 'psyRating']) {
-            expect(body, `pushes a ${category} entry`).toMatch(new RegExp(`category:\\s*'${category}'`));
+            expect(cluster, `pushes a ${category} entry`).toMatch(new RegExp(`category:\\s*'${category}'`));
+        }
+    });
+
+    it('every helper that records purchases is handed the shared list', () => {
+        // The list reconciles with calculatedTotal only because all five helpers
+        // append to the SAME array rather than building their own.
+        for (const helper of ['#psyRatingSpend', '#characteristicSpend', '#skillSpend', '#itemSpend']) {
+            expect(body, `${helper} receives the shared purchases list`).toMatch(new RegExp(`this\\.${helper}\\(purchases\\)`));
         }
     });
 });

@@ -72,6 +72,7 @@
     "@vitest/valid-expect",
     "@vitest/valid-title",
     "array-callback-return",
+    "complexity",
     "consistent-return",
     "default-case-last",
     "eqeqeq",
@@ -117,8 +118,6 @@
     "prettier/prettier",
     "require-atomic-updates"
   ],
-  "total": 35,
-  "byRule": {
-    "complexity": 35
-  }
+  "total": 0,
+  "byRule": {}
 }

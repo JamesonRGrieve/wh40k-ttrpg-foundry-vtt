@@ -1085,6 +1085,30 @@ export default class CreatureTemplate extends CommonTemplate {
     }
 
     /**
+     * Append one item's numeric modifiers into a keyed bucket of source lists.
+     *
+     * Characteristics, characteristic bonuses and skills are the same operation —
+     * "for each numeric entry, append a traceable source to that key's list" — so
+     * they share this instead of repeating the loop three times.
+     * @param {Partial<Record<string, ModifierSource[]>>} bucket  The `modifierSources` map to append into. `Partial` because `noUncheckedIndexedAccess` types an index-signature read as possibly-undefined, which is the field's real shape.
+     * @param {Record<string, number> | undefined} entries  Authored key → value pairs, when the item declares any.
+     * @param {Omit<ModifierSource, 'value'>} source  Traceability fields identifying the contributing item.
+     */
+    #collectKeyedModifiers(
+        bucket: Partial<Record<string, ModifierSource[]>>,
+        entries: Record<string, number> | undefined,
+        source: Omit<ModifierSource, 'value'>,
+    ): void {
+        if (entries === undefined) return;
+        for (const [key, value] of Object.entries(entries)) {
+            if (typeof value !== 'number') continue;
+            const list = bucket[key] ?? [];
+            list.push({ ...source, value });
+            bucket[key] = list;
+        }
+    }
+
+    /**
      * Apply modifiers from a single item.
      * @param {Item} item - The item to process modifiers from
      * @protected
@@ -1101,41 +1125,14 @@ export default class CreatureTemplate extends CommonTemplate {
             sourceUuid: compendiumSourceUuidOf(item),
         };
 
-        // Characteristic modifiers
-        if (mods.characteristics !== undefined) {
-            for (const [charKey, value] of Object.entries(mods.characteristics)) {
-                if (typeof value === 'number') {
-                    const list = this.modifierSources.characteristics[charKey] ?? [];
-                    list.push({ ...source, value });
-                    this.modifierSources.characteristics[charKey] = list;
-                }
-            }
-        }
-
+        this.#collectKeyedModifiers(this.modifierSources.characteristics, mods.characteristics, source);
         // Bonus-only characteristic modifiers ("+X Strength Bonus", #415): raise
         // the effective BONUS without changing the underlying characteristic value.
-        if (mods.characteristicBonuses !== undefined) {
-            for (const [charKey, value] of Object.entries(mods.characteristicBonuses)) {
-                if (typeof value === 'number') {
-                    const list = this.modifierSources.characteristicBonuses[charKey] ?? [];
-                    list.push({ ...source, value });
-                    this.modifierSources.characteristicBonuses[charKey] = list;
-                }
-            }
-        }
+        this.#collectKeyedModifiers(this.modifierSources.characteristicBonuses, mods.characteristicBonuses, source);
+        this.#collectKeyedModifiers(this.modifierSources.skills, mods.skills, source);
 
-        // Skill modifiers
-        if (mods.skills !== undefined) {
-            for (const [skillKey, value] of Object.entries(mods.skills)) {
-                if (typeof value === 'number') {
-                    const list = this.modifierSources.skills[skillKey] ?? [];
-                    list.push({ ...source, value });
-                    this.modifierSources.skills[skillKey] = list;
-                }
-            }
-        }
-
-        // Combat modifiers
+        // Combat modifiers differ: the bucket is pre-seeded with a fixed set of keys
+        // and an unknown key is DROPPED rather than created.
         if (mods.combat !== undefined) {
             const combatSources = this.modifierSources.combat;
             for (const [combatKey, value] of Object.entries(mods.combat)) {
