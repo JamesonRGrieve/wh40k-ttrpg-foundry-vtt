@@ -411,12 +411,37 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         notes['weapon-sheet::expendAmmo'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
-                    // loadAmmo — reads target.dataset.ammoUuid; the bogus UUID makes fromUuid return null which triggers a notification path. Either way, dispatch must not throw.
+                    // loadAmmo — reads target.dataset.ammoUuid; the bogus UUID makes
+                    // fromUuid return null, which is the "tell the user" branch.
+                    // That branch calls `ui.notifications.error`, which Foundry
+                    // mirrors to console.error — deliberate here, but indistinguishable
+                    // from a real defect to the global console guard. Capture the
+                    // notification instead of emitting it, and ASSERT on it: the
+                    // branch is then properly covered rather than merely noisy.
                     try {
-                        const res = await runHandler(sheet, 'loadAmmo', makeTarget({ ammoUuid: 'Compendium.wh40k-rpg.bogus.Item.does-not-exist' }));
-                        if (res.called) {
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: `ui.notifications` is a Foundry runtime global with no type surface in the page context
+                        const notifications = (globalThis as unknown as { ui: { notifications: { error: (m: string) => unknown } } }).ui.notifications;
+                        const originalError = notifications.error.bind(notifications);
+                        // Held on an object, not a `let`: TS's control flow cannot
+                        // see the assignment inside the stub and would narrow a
+                        // plain local to `null` at the check below.
+                        const captured: { message: string | null } = { message: null };
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: matches Foundry's own `Notifications#error` return type, which is untyped here
+                        notifications.error = (message: string): unknown => {
+                            captured.message = message;
+                            return undefined;
+                        };
+                        let res: { called: boolean; error: string | null };
+                        try {
+                            res = await runHandler(sheet, 'loadAmmo', makeTarget({ ammoUuid: 'Compendium.wh40k-rpg.bogus.Item.does-not-exist' }));
+                        } finally {
+                            notifications.error = originalError;
+                        }
+                        if (res.called && captured.message !== null) {
                             fired['weapon-sheet::loadAmmo'] = true;
-                            notes['weapon-sheet::loadAmmo'] = 'handler returned for missing-UUID path';
+                            notes['weapon-sheet::loadAmmo'] = `missing-UUID path notified: ${captured.message}`;
+                        } else if (res.called) {
+                            notes['weapon-sheet::loadAmmo'] = 'missing-UUID path did not notify the user';
                         } else {
                             notes['weapon-sheet::loadAmmo'] = res.error ?? 'no error';
                         }
@@ -688,23 +713,27 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                     const { item, sheet } = made;
 
                     // addQuality — reads the inline input named `new-<type>-quality`.
+                    // Drive the sheet's OWN input: item-ammo-sheet.hbs already
+                    // renders one under that name, so appending a second (as this
+                    // probe used to) is never the one `querySelector` returns —
+                    // the handler read the template's empty input and bailed.
                     try {
                         const root = sheet.element ?? null;
-                        const injected = document.createElement('input');
-                        injected.name = 'new-added-quality';
-                        injected.value = 'powerful';
-                        if (root != null) root.appendChild(injected);
-
-                        const res = await runHandler(sheet, 'addQuality', makeTarget({ type: 'added' }));
-                        const fresh = getPc()?.items.get(item.id);
-                        const added = Array.from(fresh?.system?.addedQualities ?? []);
-                        if (res.called && added.includes('powerful')) {
-                            fired['ammo-sheet::addQuality'] = true;
-                            notes['ammo-sheet::addQuality'] = `added now ${JSON.stringify(added)}`;
+                        const field = root?.querySelector<HTMLInputElement>('[name="new-added-quality"]') ?? null;
+                        if (field === null) {
+                            notes['ammo-sheet::addQuality'] = 'sheet has no [name="new-added-quality"] input';
                         } else {
-                            notes['ammo-sheet::addQuality'] = res.error ?? `powerful not in ${JSON.stringify(added)}`;
+                            field.value = 'powerful';
+                            const res = await runHandler(sheet, 'addQuality', makeTarget({ type: 'added' }));
+                            const fresh = getPc()?.items.get(item.id);
+                            const added = Array.from(fresh?.system?.addedQualities ?? []);
+                            if (res.called && added.includes('powerful')) {
+                                fired['ammo-sheet::addQuality'] = true;
+                                notes['ammo-sheet::addQuality'] = `added now ${JSON.stringify(added)}`;
+                            } else {
+                                notes['ammo-sheet::addQuality'] = res.error ?? `powerful not in ${JSON.stringify(added)}`;
+                            }
                         }
-                        if (root != null) root.removeChild(injected);
                     } catch (err) {
                         notes['ammo-sheet::addQuality'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
@@ -1105,7 +1134,10 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
             await probeNpcTemplateSheet();
         } finally {
             // Best-effort cleanup of everything we created.
-            for (const fn of cleanups) {
+            // REVERSE (LIFO): the host actor is registered before the items embedded
+            // in it, so draining in insertion order deletes the parent first and
+            // every child delete then targets a document whose parent is gone.
+            for (const fn of [...cleanups].reverse()) {
                 try {
                     await fn();
                 } catch {

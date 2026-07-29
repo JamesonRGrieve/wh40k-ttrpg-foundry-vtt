@@ -352,7 +352,25 @@ export class ChatMessageWH40K extends ChatMessage {
  * Register chat message event listeners
  * This integrates with the existing renderChatMessageHTML hook pattern
  */
+/**
+ * True when the hook payload really is this subclass.
+ *
+ * `renderChatMessageHTML` fires for EVERY chat message — including ones rendered
+ * before `DocumentClassConfig` applies, and ones another module hands the hook.
+ * The enrichers below read subclass members (`calculateDegrees`,
+ * `speakerActor`), which are undefined on a foreign message; calling them threw,
+ * and a throw inside a hook aborts the whole chain, so one foreign message
+ * silently stopped every later `renderChatMessageHTML` handler from running.
+ * @param {ChatMessageWH40K} message  The hook payload.
+ * @returns {boolean}  True when the enrichers can safely read it.
+ */
+function isWH40KChatMessage(message: ChatMessageWH40K): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: the hook payload is whatever Foundry or another module passes, not necessarily this subclass
+    return typeof message?.calculateDegrees === 'function';
+}
+
 Hooks.on('renderChatMessageHTML', (message: ChatMessageWH40K, html: HTMLElement, _context: ChatMessage.MessageData) => {
+    if (!isWH40KChatMessage(message)) return;
     // Enrich the message HTML
     ChatMessageWH40K.enrichDegreeBadge(html, message);
     ChatMessageWH40K.enrichSpeakerPortrait(html, message);

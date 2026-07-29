@@ -611,7 +611,12 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                 try {
                     const notifications = g.ui?.notifications;
                     const capture: { warnedMessage: string | null } = { warnedMessage: null };
-                    const origWarn = notifications?.warn;
+                    // BIND the original: `Notifications#warn` delegates to
+                    // `this.notify(...)`, so calling the plucked method with an
+                    // undefined `this` throws "Cannot read properties of
+                    // undefined (reading 'notify')" — an uncaught pageerror that
+                    // failed this spec, from the tap rather than the code it taps.
+                    const origWarn = notifications?.warn?.bind(notifications);
                     if (notifications != null && origWarn != null) {
                         const tap: WarnFn = (msg, ...rest) => {
                             capture.warnedMessage = String(msg);
@@ -670,7 +675,10 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                 await probeSceneControlButtons();
                 await probeChatCardButtonClick();
             } finally {
-                for (const fn of cleanups) {
+                // REVERSE (LIFO): the host actor is registered before the items embedded
+                // in it, so draining in insertion order deletes the parent first and
+                // every child delete then targets a document whose parent is gone.
+                for (const fn of [...cleanups].reverse()) {
                     try {
                         await fn();
                     } catch {

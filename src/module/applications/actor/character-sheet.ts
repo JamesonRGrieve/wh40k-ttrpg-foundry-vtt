@@ -96,6 +96,8 @@ import { combatMovementView } from '../../rules/movement-budget.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
 import { MOUNTED_ACTIONS } from '../../rules/ow-mount.ts';
 import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
+import { REGIMENT_BUDGET } from '../../rules/ow-regiment-creation.ts';
+import { buildDrawbackPanel, type MultiComradeRoster } from '../../rules/ow-regiment-drawback.ts';
 import {
     applyMismanifest,
     canUnleashDaemon,
@@ -681,7 +683,20 @@ const PANEL_BUILDERS: Partial<Record<GameSystemId, readonly PanelBuilder[]>> = {
         { key: 'mountPanel', build: (s) => s._prepareOwMountPanel() },
         {
             key: 'drawbackPanel',
-            build: (s) => ({ drawbacks: owSystemRecord(s)['regimentDrawbacks'] ?? [], multiComradeRoster: owSystemRecord(s)['multiComradeRoster'] ?? null }),
+            // The persisted slot holds bare ids; the panel template reads rows
+            // (`drawback.id` / `.description` / `.refund`). Handing it the raw
+            // string array rendered every row blank AND left the remove control's
+            // `data-drawback-id` empty, which `owToggleDrawback` no-ops on — so
+            // the control did nothing (#160). Project through the engine.
+            build: (s) => {
+                const record = owSystemRecord(s);
+                const ids = Array.isArray(record['regimentDrawbacks']) ? (record['regimentDrawbacks'] as string[]) : [];
+                const roster = (record['multiComradeRoster'] ?? null) as MultiComradeRoster | null;
+                // Descriptors live on compendium documents (Direction #7). Until a
+                // drawback content pack exists nothing resolves, and each row falls
+                // back to its own id — which still removes correctly.
+                return buildDrawbackPanel(ids, roster, () => undefined, REGIMENT_BUDGET);
+            },
         },
         {
             key: 'battlefieldPanel',

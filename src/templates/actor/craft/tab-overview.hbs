@@ -16,7 +16,12 @@
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.SpeedCruising") name="system.speed.cruising" value=craftStats.speed.cruising type="number" min="0" dataDtype="Number"}}
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.SpeedTactical") name="system.speed.tactical" value=craftStats.speed.tactical type="number" min="0" dataDtype="Number"}}
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Manoeuverability") name="system.manoeuverability" value=craftStats.manoeuverability type="number" dataDtype="Number"}}
-                {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Passengers") name="system.passengers" value=craftStats.passengers type="number" min="0" dataDtype="Number"}}
+                {{!-- Passenger capacity is edited on the CREW tab, beside crew.required
+                     and the occupancy roster. It used to be a second input here, and
+                     because every ApplicationV2 PART renders into the same <form>,
+                     FormDataExtended collected both into `system.passengers: [0, 0]`
+                     — an array a NumberField rejects. One duplicated name therefore
+                     made EVERY save on this sheet fail, whatever field was edited. --}}
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.CarryingCapacity") name="system.carryingCapacity" value=craftStats.carryingCapacity type="number" min="0" dataDtype="Number"}}
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Size") name="system.size" value=craftStats.size type="number" min="1" max="10" dataDtype="Number"}}
             </div>

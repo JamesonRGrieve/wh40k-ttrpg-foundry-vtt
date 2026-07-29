@@ -3,6 +3,7 @@ import WH40K, { buildQualityLabel, parseQualityLevel } from '../config.ts';
 import { capitalize, formatSigned } from '../utils/format.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass, thresholdLadder } from './degree-ladders.ts';
 import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
 import { formatSourceLabel, type SourceInput } from './source-label.ts';
 
@@ -103,6 +104,15 @@ function getArmourAPForLocation(armour: TplValue, location: string): number {
         return Number.isFinite(value) ? value : 0;
     }
     return 0;
+}
+
+/**
+ * Narrow an arbitrary template value to the degree-ladder boundary shape.
+ * Anything that is not a number or numeric string scores 0, which is what the
+ * ladders already did with it.
+ */
+function asDegreeScore(value: TplValue): DegreeScore {
+    return typeof value === 'number' || typeof value === 'string' ? value : undefined;
 }
 
 export function registerHandlebarsHelpers(): void {
@@ -690,32 +700,7 @@ export function registerHandlebarsHelpers(): void {
         return Number.isFinite(n) ? n : 0;
     };
 
-    /**
-     * First-match threshold ladder: returns the result of the first tier whose
-     * inclusive max is >= points, else the fallback. Backs the corruption /
-     * insanity degree / modifier / css-class helpers (formerly six near-
-     * identical if-chains).
-     */
-    const thresholdLadder = (points: number, tiers: ReadonlyArray<readonly [max: number, result: string]>, fallback: string): string => {
-        for (const [max, result] of tiers) {
-            if (points <= max) return result;
-        }
-        return fallback;
-    };
-
-    Handlebars.registerHelper('corruptionDegree', (corruption: TplValue): string =>
-        thresholdLadder(
-            numberOr0(corruption),
-            [
-                [0, 'PURE'],
-                [30, 'TAINTED'],
-                [60, 'SOILED'],
-                [90, 'DEBASED'],
-                [99, 'PROFANE'],
-            ],
-            'DAMNED',
-        ),
-    );
+    Handlebars.registerHelper('corruptionDegree', (corruption: TplValue): string => corruptionDegree(asDegreeScore(corruption)));
 
     /**
      * Get corruption modifier for checks
@@ -738,19 +723,7 @@ export function registerHandlebarsHelpers(): void {
      * Get insanity degree from insanity points (0-100)
      * STABLE (0-9), UNSETTLED (10-39) +10, DISTURBED (40-59) +0, UNHINGED (60-79) -10, DERANGED (80-99) -20, TERMINALLY INSANE (100)
      */
-    Handlebars.registerHelper('insanityDegree', (insanity: TplValue): string =>
-        thresholdLadder(
-            numberOr0(insanity),
-            [
-                [9, 'STABLE'],
-                [39, 'UNSETTLED'],
-                [59, 'DISTURBED'],
-                [79, 'UNHINGED'],
-                [99, 'DERANGED'],
-            ],
-            'TERMINALLY INSANE',
-        ),
-    );
+    Handlebars.registerHelper('insanityDegree', (insanity: TplValue): string => insanityDegree(asDegreeScore(insanity)));
 
     /**
      * Get insanity modifier for checks
@@ -789,36 +762,12 @@ export function registerHandlebarsHelpers(): void {
     /**
      * Get CSS class for corruption degree
      */
-    Handlebars.registerHelper('corruptionDegreeClass', (corruption: TplValue): string =>
-        thresholdLadder(
-            numberOr0(corruption),
-            [
-                [0, 'wh40k-degree-pure'],
-                [30, 'wh40k-degree-tainted'],
-                [60, 'wh40k-degree-soiled'],
-                [90, 'wh40k-degree-debased'],
-                [99, 'wh40k-degree-profane'],
-            ],
-            'wh40k-degree-damned',
-        ),
-    );
+    Handlebars.registerHelper('corruptionDegreeClass', (corruption: TplValue): string => corruptionDegreeClass(asDegreeScore(corruption)));
 
     /**
      * Get CSS class for insanity degree
      */
-    Handlebars.registerHelper('insanityDegreeClass', (insanity: TplValue): string =>
-        thresholdLadder(
-            numberOr0(insanity),
-            [
-                [9, 'wh40k-degree-stable'],
-                [39, 'wh40k-degree-unsettled'],
-                [59, 'wh40k-degree-disturbed'],
-                [79, 'wh40k-degree-unhinged'],
-                [99, 'wh40k-degree-deranged'],
-            ],
-            'wh40k-degree-terminally',
-        ),
-    );
+    Handlebars.registerHelper('insanityDegreeClass', (insanity: TplValue): string => insanityDegreeClass(asDegreeScore(insanity)));
 
     /**
      * Join an array with a separator

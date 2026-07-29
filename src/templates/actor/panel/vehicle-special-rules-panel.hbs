@@ -3,7 +3,7 @@
     label=(localize "WH40K.Vehicle.SpecialRules")
     icon="fa-scroll"
     rootClass="tw-col-auto"
-    titleClass="tw-text-gold {{themeClassFor 'accent'}}"}}
+    titleClass=(concat "tw-text-gold " (themeClassFor 'accent'))}}
     <div class="tw-flex tw-flex-col tw-gap-1.5">
         {{editor system.specialRules target="system.specialRules" button=true editable=editable}}
         <small class="tw-text-sm tw-opacity-60 tw-italic">{{localize "WH40K.Vehicle.SpecialRules.Hint"}}</small>

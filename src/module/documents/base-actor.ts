@@ -32,6 +32,7 @@ import { firstSystemId } from '../utils/chat-system-id.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { isActorWritable } from './actor-liveness.ts';
 import type { WH40KItem } from './item.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: these utility types intersect with Record<string, unknown> to allow index access on opaque roll/characteristic/skill data models */
@@ -158,6 +159,9 @@ export class WH40KBaseActor extends Actor {
      * this method owns exactly the effect it created; death is surfaced to the GM.
      */
     async checkFatigueThresholds(): Promise<void> {
+        // Reached after an awaited `this.update()` round-trip, so the actor may
+        // already be gone — a deleted actor has no unconsciousness to reconcile.
+        if (!isActorWritable(this)) return;
         const state = this.#fatigueState();
         if (state === null) return;
         const input = { fatigueLevel: state.level, toughnessBonus: state.toughnessBonus, willpowerBonus: state.willpowerBonus };
@@ -523,6 +527,9 @@ export class WH40KBaseActor extends Actor {
     async syncSubtletyAdjusterEffects(): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: gameSystem lives on character.ts only
         if ((this.system as { gameSystem?: string }).gameSystem !== 'dh2') return;
+        // Fire-and-forget off the descendant hooks, so the actor can already be
+        // on its way out by the time this runs — see documents/actor-liveness.ts.
+        if (!isActorWritable(this)) return;
 
         const desired = desiredSubtletyAdjusterEffects(this.collectSubtletyAdjusters());
         const existing: ExistingSubtletyAdjusterEffect[] = [];
@@ -542,6 +549,9 @@ export class WH40KBaseActor extends Actor {
             await this.deleteEmbeddedDocuments('ActiveEffect', plan.toDeleteIds);
         }
         if (plan.toCreate.length > 0) {
+            // The delete above is a socket round-trip; re-check rather than
+            // dispatch a create at an actor that went away during it.
+            if (!isActorWritable(this)) return;
             const data = plan.toCreate.map((descriptor) => WH40KBaseActor.#subtletyEffectCreateData(descriptor));
             // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts Foundry's untyped embedded-document create schema
             await this.createEmbeddedDocuments('ActiveEffect', data as unknown as Parameters<typeof this.createEmbeddedDocuments<'ActiveEffect'>>[1]);
@@ -609,7 +619,12 @@ export class WH40KBaseActor extends Actor {
             if (game.user.id === userId) {
                 for (const item of items) {
                     if (item.type === 'talent' && (item.system as { hasGrants?: boolean }).hasGrants === true) {
-                        setTimeout(() => void processTalentGrants(item, this), 100);
+                        // Deferred 100 ms, which is a wide window for the actor to
+                        // be deleted underneath the grant — re-check at fire time.
+                        setTimeout(() => {
+                            if (!isActorWritable(this)) return;
+                            void processTalentGrants(item, this);
+                        }, 100);
                     }
                 }
                 // Surface any standing Subtlety adjuster the new item carries
@@ -647,7 +662,11 @@ export class WH40KBaseActor extends Actor {
         if (collection === 'items' && game.user.id === userId) {
             for (const item of items) {
                 if (item.type === 'talent' && (item.system as { hasGrants?: boolean }).hasGrants === true) {
-                    setTimeout(() => void handleTalentRemoval(item, this), 100);
+                    // As above: the removal is deferred, the actor may not survive it.
+                    setTimeout(() => {
+                        if (!isActorWritable(this)) return;
+                        void handleTalentRemoval(item, this);
+                    }, 100);
                 }
             }
         }

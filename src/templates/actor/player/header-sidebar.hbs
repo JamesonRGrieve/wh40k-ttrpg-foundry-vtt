@@ -15,7 +15,7 @@
 
 {{#> systems/wh40k-rpg/templates/actor/partial/header-base.hbs
     cardClass="wh40k-character-header wh40k-npc-sidebar-header"
-    innerClass="tw-flex tw-flex-col tw-items-center tw-gap-3 tw-border-0 {{themeClassFor 'border'}}"}}
+    innerClass=(concat "tw-flex tw-flex-col tw-items-center tw-gap-3 tw-border-0 " (themeClassFor 'border'))}}
     {{> systems/wh40k-rpg/templates/actor/partial/sidebar-header.hbs}}
     {{> systems/wh40k-rpg/templates/actor/partial/origin-path-bubbles.hbs}}
     {{#if isDaemonic}}

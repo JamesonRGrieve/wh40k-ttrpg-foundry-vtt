@@ -5,7 +5,7 @@
     rootClass="tw-mt-0 tw-mb-0 tw-w-full tw-box-border tw-self-stretch tw-flex-1 tw-flex tw-flex-col"
     rootAttrs="data-drop-zone=\"general\" data-accepts=\"trait\""
     bodyClass="tw-flex tw-flex-col tw-gap-2 tw-w-full tw-box-border tw-flex-1"
-    titleClass="tw-text-gold {{themeClassFor 'accent'}}"}}
+    titleClass=(concat "tw-text-gold " (themeClassFor 'accent'))}}
     {{!-- Grouped Trait Table --}}
     {{#if traits.length}}
     <div class="tw-flex tw-flex-col tw-gap-3">

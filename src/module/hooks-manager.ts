@@ -90,6 +90,7 @@ import * as dataModels from './data/_module.ts';
 import { grantDefaultItemsToActor, repairDuplicateGrants } from './default-grants.ts';
 import * as dice from './dice/_module.ts';
 import * as documents from './documents/_module.ts';
+import { noteActorDeleting } from './documents/actor-liveness.ts';
 import { WH40KActorProxy } from './documents/actor-proxy.ts';
 import type { WH40KBaseActor } from './documents/base-actor.ts';
 import { WH40KItem } from './documents/item.ts';
@@ -224,6 +225,18 @@ export class HooksManager {
             hooksOn(`update${docType}`, onDocChange);
             hooksOn(`delete${docType}`, onDocDelete);
         }
+
+        // Record a requested actor deletion BEFORE it is dispatched, so the
+        // system's fire-and-forget reactions (default grants, deferred talent
+        // grants, the Subtlety adjuster sync) stop writing to it immediately
+        // rather than a socket round-trip later, when `game.actors` finally drops
+        // it. Without this the write is rejected server-side and Foundry shows
+        // the user a red "does not exist in actors" toast. See
+        // documents/actor-liveness.ts.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: preDeleteActor hook payload is a framework-typed Foundry Actor
+        hooksOn('preDeleteActor', (actor: { id?: string | null }) => {
+            noteActorDeleting(actor.id);
+        });
 
         // Grant content-flagged default weapons (e.g. Unarmed) to every new
         // creature actor. Only the creating client performs the grant — gated on

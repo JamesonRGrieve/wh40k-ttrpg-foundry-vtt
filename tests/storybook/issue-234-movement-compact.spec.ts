@@ -11,7 +11,7 @@ import { expect, test } from '@playwright/test';
 const SHOT_DIR = resolve(__dirname, '..', '..', '.e2e-screenshots');
 const SHOT = resolve(SHOT_DIR, 'issue-234-movement-compact.png');
 
-test('issue #234/#235: compact movement cluster renders Half/Full/Charge/Run/Disengage', async ({ page }) => {
+test('issue #234/#235: compact movement cluster renders Half/Full/Charge/Run', async ({ page }) => {
     mkdirSync(SHOT_DIR, { recursive: true });
     await page.goto('/iframe.html?id=actor-character-movementpanelcompact--out-of-combat&viewMode=story');
     await page.waitForSelector('.wh40k-panel', { timeout: 10_000 });
@@ -19,9 +19,13 @@ test('issue #234/#235: compact movement cluster renders Half/Full/Charge/Run/Dis
 
     // Labels are CSS-uppercased; compare case-insensitively.
     const text = (await page.locator('.wh40k-panel').innerText()).replace(/\s+/g, ' ').toUpperCase();
-    for (const label of ['HALF', 'FULL', 'CHARGE', 'RUN', 'DISENGAGE']) {
+    for (const label of ['HALF', 'FULL', 'CHARGE', 'RUN']) {
         expect(text).toContain(label);
     }
+    // Disengage is NOT a movement speed — #416 made it a Half Action and moved it
+    // to the combat-actions panel. Asserting its ABSENCE here is what keeps it
+    // from drifting back into the speed cluster.
+    expect(text).not.toContain('DISENGAGE');
     // The four rates from the story args (4 / 8 / 12 / 24 m).
     for (const value of ['4M', '8M', '12M', '24M']) {
         expect(text).toContain(value);

@@ -20,9 +20,10 @@ import { test } from './lib/test';
  *
  * Modules exercised:
  *   - `roll-helpers.ts` — `uuid()` (v4 shape), `getDegree()`,
- *     `getOpposedDegrees()` (every branch of the win/lose matrix),
  *     `recursiveUpdate()` / `handleDotNotationUpdate()` (dot-path
  *     traversal + numeric coercion + nested merge + delete branch).
+ *   - `rules/opposed.ts` — `opposedDegrees()` (every branch of the
+ *     win/lose matrix).
  *   - `roll-data.ts` — `clampModifierToCap()` (+ `ROLL_MODIFIER_CAP`),
  *     `RollData` constructor + `modifiedTarget` / `activeModifiers`
  *     getters + `hasAttackSpecial` / `getAttackSpecial` +
@@ -132,9 +133,12 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[] }
         interface HelpersModule {
             uuid: () => string;
             getDegree: (a: number, b: number) => number;
-            getOpposedDegrees: (dos: number, opposedDos: number, a: number, b: number) => number;
             recursiveUpdate: (target: object, source: object) => void;
             handleDotNotationUpdate: (target: object, path: string, value: null) => void;
+        }
+        /** `rules/opposed.ts` — where the opposed-degrees matrix now lives. */
+        interface OpposedModule {
+            opposedDegrees: (initiator: { dos: number; dof: number }, target: { dos: number; dof: number }) => number;
         }
         interface ActionDataInstance {
             id: string;
@@ -225,7 +229,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[] }
                 helpersMod = null;
             }
             if (helpersMod != null) {
-                const { uuid, getDegree, getOpposedDegrees, recursiveUpdate, handleDotNotationUpdate } = helpersMod;
+                const { uuid, getDegree, recursiveUpdate, handleDotNotationUpdate } = helpersMod;
 
                 try {
                     const id = uuid();
@@ -248,11 +252,14 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[] }
                 }
 
                 try {
-                    // Drive every branch of the opposed-degrees matrix.
-                    const winBoth = getOpposedDegrees(3, 0, 1, 0); // dos>0, opposedDos>0 → 3-1=2
-                    const winLose = getOpposedDegrees(3, 0, 0, 2); // dos>0, opposedDos<=0 → 3+2=5
-                    const loseWin = getOpposedDegrees(0, 2, 1, 0); // dos<=0, opposedDos>0 → -(2+1)=-3
-                    const loseLose = getOpposedDegrees(0, 2, 0, 1); // dos<=0, opposedDos<=0 → -(2-1)=-1
+                    // Drive every branch of the opposed-degrees matrix. The matrix
+                    // moved out of roll-helpers into `rules/opposed.ts` and took a
+                    // per-side object signature with it, so this probes there.
+                    const { opposedDegrees } = await dynImport<OpposedModule>(`${base}/rules/opposed.js`);
+                    const winBoth = opposedDegrees({ dos: 3, dof: 0 }, { dos: 1, dof: 0 }); // both succeed → 3-1=2
+                    const winLose = opposedDegrees({ dos: 3, dof: 0 }, { dos: 0, dof: 2 }); // initiator wins → 3+2=5
+                    const loseWin = opposedDegrees({ dos: 0, dof: 2 }, { dos: 1, dof: 0 }); // target wins → -(2+1)=-3
+                    const loseLose = opposedDegrees({ dos: 0, dof: 2 }, { dos: 0, dof: 1 }); // both fail → -(2-1)=-1
                     const ok = winBoth === 2 && winLose === 5 && loseWin === -3 && loseLose === -1;
                     record('helpers-opposed-degrees-matrix', ok, `winBoth=${winBoth} winLose=${winLose} loseWin=${loseWin} loseLose=${loseLose}`);
                 } catch (err) {

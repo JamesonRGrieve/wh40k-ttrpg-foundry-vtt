@@ -101,7 +101,10 @@ function prefixOf(packId: string): string {
 }
 
 // Source-line partitions. Mirrors the prefixes present in src/system.json.
-const PACK_PREFIXES = ['bc', 'dh1', 'dh2', 'dw', 'hb', 'ow', 'rt'] as const;
+// All SEVEN lines plus homebrew — `im` (Imperium Maledictum) was absent, so its
+// ~37 packs were never materialised by this spec at all. Direction #3 holds the
+// seventh line to the same bar as the other six.
+const PACK_PREFIXES = ['bc', 'dh1', 'dh2', 'dw', 'hb', 'im', 'ow', 'rt'] as const;
 
 test.describe.serial('compendium packs (Tier B)', () => {
     let allPackIds: string[] = [];

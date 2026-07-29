@@ -98,7 +98,7 @@ interface CorruptionLikeContext {
 }
 
 function corruptionContext(value: number, systemId: SystemId): CorruptionLikeContext {
-    const baseActor = mockActor({ system: { corruption: { value, max: 100 } } });
+    const baseActor = mockActor({ system: { corruption: value } });
     const actor = withSystem(baseActor, systemId);
     return {
         key: 'corruption',

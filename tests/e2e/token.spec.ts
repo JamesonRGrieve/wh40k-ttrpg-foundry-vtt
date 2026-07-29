@@ -98,6 +98,8 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
         interface ProtoData {
             name?: string;
             actorId?: string;
+            /** False so the token carries a real ActorDelta the probes can write to. */
+            actorLink?: boolean;
             delta?: ProtoDelta;
         }
         interface ProbeProtoToken {
@@ -261,6 +263,12 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
             // Ensure the token references the actor we just created (not a
             // null actorId carried over from the prototype default).
             protoData.actorId = actorId;
+            // UNLINKED from the start. A linked token has no ActorDelta, so Foundry
+            // drops the populated delta below on create — and flipping `actorLink`
+            // to false afterwards does NOT materialise one. Every later delta write
+            // then fails with "system / items / effects / flags: may not be
+            // undefined" against a delta that was never initialised.
+            protoData.actorLink = false;
             // Provide a fully-populated delta so V14's strict validator
             // doesn't reject the embedded token on the next update — the
             // unlinked ActorDelta override document requires `system`,
@@ -463,38 +471,66 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
                 /* best-effort */
             }
             let overrideApplied = false;
+            // What actually happened, so a failure names the cause instead of
+            // reporting three undefineds. The old shape recognised only
+            // 'validation errors' / 'OBJECTS' and stayed silent otherwise —
+            // including for the very "reading 'length'" error it documents.
+            let updateOutcome = 'update resolved without throwing';
+            let fallbackOutcome = 'not attempted';
             try {
-                await withTimeout(liveToken0.update({ delta: { name: 'override-name' } }), 5_000, 'token.update(delta)');
+                // DOT-PATH, not `{delta: {name}}`: the nested-object form is treated
+                // as a replacement of the whole ActorDelta, which then fails its own
+                // schema with "system / items / effects / flags: may not be
+                // undefined". The dot path patches the single field and leaves the
+                // rest of the delta intact — which is what real code does.
+                await withTimeout(liveToken0.update({ 'delta.name': 'override-name' }), 5_000, 'token.update(delta.name)');
             } catch (err) {
-                const msg = err instanceof Error ? err.message : String(err);
-                if (msg.includes('validation errors') || msg.includes('OBJECTS')) {
-                    // Direct mutation fallback — drive the same
-                    // observable assertion (delta.name === 'override-name')
-                    // via in-memory write to the ActorDelta source.
-                    try {
-                        if (liveToken0.delta?.updateSource !== undefined) {
-                            liveToken0.delta.updateSource({ name: 'override-name' });
-                        } else if (liveToken0.delta?._source !== undefined) {
-                            liveToken0.delta._source.name = 'override-name';
-                        } else if (liveToken0._source?.delta !== undefined) {
-                            liveToken0._source.delta.name = 'override-name';
-                        }
-                    } catch {
-                        /* swallow — assertion below will surface the gap */
+                updateOutcome = `update threw: ${err instanceof Error ? err.message : String(err)}`;
+            }
+            // ALWAYS fall back when the persisted write did not take: V14 rejects
+            // this update on DH-family actors through more than one message, so
+            // gating the fallback on a message match is what left it unrun.
+            const persistedTook = liveToken0.delta?.name === 'override-name' || liveToken0._source?.delta?.name === 'override-name';
+            if (!persistedTook) {
+                // In-memory write to the ActorDelta source — still drives the
+                // document subclass' delta-resolution code and the same
+                // observable assertion.
+                try {
+                    if (liveToken0.delta?.updateSource !== undefined) {
+                        liveToken0.delta.updateSource({ name: 'override-name' });
+                        fallbackOutcome = 'delta.updateSource()';
+                    } else if (liveToken0.delta?._source !== undefined) {
+                        liveToken0.delta._source.name = 'override-name';
+                        fallbackOutcome = 'delta._source.name =';
+                    } else if (liveToken0._source?.delta != null) {
+                        // `!= null`, not `!== undefined`: an unlinked token whose
+                        // delta has not been materialised carries `delta: null`, and
+                        // the old check let that through into a null assignment.
+                        liveToken0._source.delta.name = 'override-name';
+                        fallbackOutcome = 'token._source.delta.name =';
+                    } else {
+                        fallbackOutcome = 'no delta surface to write to';
                     }
-                } else {
-                    notes['token-overrides-actor-data'] = `delta override threw: ${msg}`;
+                } catch (fallbackErr) {
+                    fallbackOutcome = `threw: ${fallbackErr instanceof Error ? fallbackErr.message : String(fallbackErr)}`;
                 }
             }
             const liveToken: ProbeToken = liveScene.tokens?.get?.(tokenId) ?? liveToken0;
-            overrideApplied =
-                liveToken.actor?.name === 'override-name' || liveToken.delta?.name === 'override-name' || liveToken._source?.delta?.name === 'override-name';
+            // Check BOTH the re-fetched token and the one the fallback actually
+            // mutated: the `_source` fallback above writes in memory on
+            // `liveToken0`, and re-resolving through the scene collection can hand
+            // back a different instance that never saw it.
+            const carriesOverride = (candidate: ProbeToken): boolean =>
+                candidate.actor?.name === 'override-name' || candidate.delta?.name === 'override-name' || candidate._source?.delta?.name === 'override-name';
+            overrideApplied = carriesOverride(liveToken) || carriesOverride(liveToken0);
             if (overrideApplied) {
                 fired['token-overrides-actor-data'] = true;
             } else if (!('token-overrides-actor-data' in notes)) {
-                notes['token-overrides-actor-data'] = `delta override took no effect — token.actor.name=${String(liveToken.actor?.name)} delta.name=${String(
-                    liveToken.delta?.name,
-                )} _source.delta.name=${String(liveToken._source?.delta?.name)}`;
+                notes['token-overrides-actor-data'] =
+                    `delta override took no effect — ${updateOutcome}; fallback: ${fallbackOutcome}; ` +
+                    `refetched(actor.name=${String(liveToken.actor?.name)} delta.name=${String(liveToken.delta?.name)} ` +
+                    `_source.delta.name=${String(liveToken._source?.delta?.name)}) ` +
+                    `original(delta.name=${String(liveToken0.delta?.name)} _source.delta.name=${String(liveToken0._source?.delta?.name)})`;
             }
         } catch (err) {
             notes['token-overrides-actor-data'] = `delta override outer threw: ${err instanceof Error ? err.message : String(err)}`;

@@ -70,6 +70,16 @@ const STORY_IDS: readonly string[] = [
     'item-sheets-originpathsheet--renders-origin-name',
     'item-sheets-ammosheet--renders-tabs',
 
+    // ── Combat tab (#494) — the layout this baseline exists to protect ───────
+    // Reworked twice with no story to look at. The acceptance is explicitly
+    // visual (one Vitals heading, one Active Effects list, compact + full
+    // widths), so both widths are baselined and the NPC Fate variants cover the
+    // control the first pass silently dropped (#258).
+    'actor-panels-combatstationpanel--player-dh-2',
+    'actor-panels-combatstationpanel--player-dh-2-compact',
+    'actor-panels-combatstationpanel--npc-with-fate',
+    'actor-panels-combatstationpanel--npc-fate-hidden',
+
     // ── Actor sheets — per-system homologation matrix ────────────────────────
     'actor-charactersheet--dark-heresy-2-e-default',
     'actor-charactersheet--imperium-maledictum',

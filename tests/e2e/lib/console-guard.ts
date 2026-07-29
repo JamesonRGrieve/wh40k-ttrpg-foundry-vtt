@@ -33,6 +33,16 @@ const IGNORED_PATTERNS: readonly RegExp[] = [
     // extensions on a context that isn't fully backed).
     /Cannot read properties of (?:undefined|null) \(reading 'getExtension'\)/i,
     /WebGL|Failed to create WebGL context|Automatic fallback to software WebGL/i,
+    // Foundry's own `RenderFlags#set` ends with
+    // `canvas.pendingRenderFlags[priority].add(object)`, and `canvas.pendingRenderFlags`
+    // does not exist until the canvas initialises. On a client with no canvas —
+    // which is every headless spec that never activates a scene — any token
+    // animation frame or dependent-token refresh throws
+    // "Cannot read properties of undefined (reading 'OBJECTS')" from a stack that
+    // is entirely foundry.mjs. Requiring the `RenderFlags.set` frame keeps this
+    // to Foundry's own canvas bookkeeping: it cannot match a wh40k-rpg error,
+    // because the system never calls RenderFlags directly.
+    /at RenderFlags\.set[\s\S]*'OBJECTS'|reading 'OBJECTS'[\s\S]*at RenderFlags\.set/,
     // Foundry V14 deprecation shims occasionally log at error level.
     /\bis deprecated\b/i,
     // Foundry client-side document validation for compendium sources predating a
@@ -53,9 +63,29 @@ function isIgnoredError(text: string): boolean {
 export interface CapturedError {
     kind: 'pageerror' | 'console.error';
     text: string;
+    /**
+     * The uncaught exception's stack, when there is one. A `pageerror` reported
+     * as a bare message ("Cannot read properties of undefined (reading 'notify')")
+     * is close to undiagnosable — nothing says which of Foundry's, a module's or
+     * this system's frames threw it. The stack is what makes the failure
+     * actionable, so it is captured here and printed with the failure.
+     */
+    stack?: string;
 }
 
 /** Filter a batch of captured errors down to the unexpected (non-allowlisted) ones. */
 export function unexpectedErrors(errors: readonly CapturedError[]): CapturedError[] {
     return errors.filter((e) => !isIgnoredError(e.text));
+}
+
+/** Render one captured error for the failure message, stack included when known. */
+export function formatCapturedError(error: CapturedError): string {
+    const head = `  [${error.kind}] ${error.text}`;
+    if (error.stack === undefined || error.stack === '') return head;
+    const stackFrames = error.stack
+        .split('\n')
+        .slice(1, 9)
+        .map((line) => `      ${line.trim()}`)
+        .join('\n');
+    return stackFrames === '' ? head : `${head}\n${stackFrames}`;
 }

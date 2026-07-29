@@ -415,7 +415,10 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
             notes['token-hud-renders'] = notes['token-hud-renders'] ?? 'canvas not ready and synthesized hook did not fire';
         }
 
-        for (const fn of cleanups) {
+        // REVERSE (LIFO): the host actor is registered before the items embedded
+        // in it, so draining in insertion order deletes the parent first and
+        // every child delete then targets a document whose parent is gone.
+        for (const fn of [...cleanups].reverse()) {
             // eslint-disable-next-line no-await-in-loop -- best-effort serial cleanup; parallel deletes race on Foundry's collection writes
             await fn();
         }

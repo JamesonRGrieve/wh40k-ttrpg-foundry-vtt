@@ -184,9 +184,25 @@ export interface MockActor {
         };
         wounds: { value: number; max: number };
         fate: { value: number; max: number };
-        corruption: { value: number; max: number };
-        insanity: { value: number; max: number };
+        /**
+         * Plain numbers, matching `CharacterData` (`declare corruption: number`).
+         * They were `{value, max}` here, which does not match the schema — the
+         * Combat tab's mental rows pass `system.corruption` straight to the value
+         * span, so the story rendered a literal `[object Object]` (#494 visual
+         * baseline). A mock that disagrees with the DataModel makes the baseline
+         * lie about what the sheet does.
+         */
+        corruption: number;
+        insanity: number;
         fatigue: { value: number; max: number };
+        /**
+         * Derived move rates. Absent here, every composed panel that renders the
+         * movement cluster showed a bare "m" with no distance — the rows were
+         * present so nothing failed, they just said nothing.
+         */
+        movement: { half: number; full: number; charge: number; run: number };
+        /** Derived carry limits, rendered beside the move rates. */
+        lifting: { lift: number; push: number };
         xp: { total: number; spent: number; available: number };
     };
 }
@@ -217,9 +233,13 @@ export function mockActor(overrides?: DeepPartial<MockActor>): MockActor {
             },
             wounds: { value: 12, max: 12 },
             fate: { value: 3, max: 3 },
-            corruption: { value: 0, max: 100 },
-            insanity: { value: 0, max: 100 },
+            corruption: 0,
+            insanity: 0,
             fatigue: { value: 0, max: 12 },
+            // AB 4 → Half 4, Full 8, Charge 12, Run 24 (the RAW ladder), matching
+            // the dedicated MovementPanelCompact story's fixed rates.
+            movement: { half: 4, full: 8, charge: 12, run: 24 },
+            lifting: { lift: 90, push: 225 },
             xp: { total: 1500, spent: 1200, available: 300 },
         },
     };
@@ -590,6 +610,11 @@ export function mockWeaponSheetContext(overrides?: DeepPartial<MockObjectMap>): 
                 rateOfFireLabel: 'S/3/-',
                 usesAmmo: true,
                 clip: { value: 18 },
+                // The header tile reads the DERIVED pair, not `clip.value` — a
+                // combi-weapon's active single-use mode reports its own remaining
+                // shots (WeaponData#effectiveClipValue). Without it the tile
+                // rendered a bare "/24".
+                effectiveClipValue: 18,
                 effectiveClipMax: 24,
                 ammoStatus: 'high',
                 ammoPercentage: 75,

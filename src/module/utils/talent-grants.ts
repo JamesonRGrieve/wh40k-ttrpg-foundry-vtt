@@ -14,6 +14,7 @@
  * that eval, exactly as the former GrantsProcessor bridge did.
  */
 
+import { isActorWritable } from '../documents/actor-liveness.ts';
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.d.ts';
 
 /**
@@ -29,6 +30,11 @@ export async function processTalentGrants(talent: WH40KItemDocument, actor: WH40
     if (talent.system.hasGrants !== true) return;
 
     const { GrantsManager } = await import('../managers/grants-manager.ts');
+    // The dynamic import above is the async gap: both talent paths are reached
+    // from a deferred descendant hook, so the actor can be deleted while the
+    // module loads. Writing to a deleted actor is rejected by Foundry with a red
+    // toast the user can do nothing about — see documents/actor-liveness.ts.
+    if (!isActorWritable(actor)) return;
     await GrantsManager.applyItemGrants(talent, actor, {
         showNotification: depth === 0,
         depth,
@@ -46,5 +52,7 @@ export async function processTalentGrants(talent: WH40KItemDocument, actor: WH40
 export async function handleTalentRemoval(talent: WH40KItemDocument, actor: WH40KBaseActorDocument): Promise<void> {
     if (talent.type !== 'talent') return;
     const { GrantsManager } = await import('../managers/grants-manager.ts');
+    // As above — and a deleted actor needs nothing reversed off it.
+    if (!isActorWritable(actor)) return;
     await GrantsManager.reverseAppliedGrants(actor, GrantsManager.sourceKeyFor(talent));
 }

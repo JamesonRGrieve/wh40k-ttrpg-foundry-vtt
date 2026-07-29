@@ -153,8 +153,10 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 };
             };
             'fatigue': {
-                getFatigueThreshold: (input: { toughnessBonus: number; willpowerBonus: number }) => number;
-                isFatigueUnconscious: (input: { toughnessBonus: number; willpowerBonus: number; fatigueLevel: number }) => boolean;
+                /** Per-system fatigue rule sets (#114) — `halving` / `flat` / `condition`. */
+                FATIGUE_MODES: Record<'halving' | 'flat' | 'condition', { threshold: string }>;
+                getFatigueThreshold: (input: { toughnessBonus: number; willpowerBonus: number }, def: { threshold: string }) => number;
+                isFatigueUnconscious: (input: { toughnessBonus: number; willpowerBonus: number; fatigueLevel: number }, def: { threshold: string }) => boolean;
                 isCharacteristicHalvedByFatigue: (fatigueLevel: number, threshold: number) => boolean;
             };
             'fear': {
@@ -353,10 +355,25 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         if (isImportError(fatigue)) {
             for (const k of ['fatigue-threshold', 'fatigue-unconscious', 'fatigue-characteristic-halved'] as const) record(k, false, fatigue.__importError);
         } else {
-            guarded('fatigue-threshold', () => fatigue.getFatigueThreshold({ toughnessBonus: 4, willpowerBonus: 3 }) === 7);
+            // Both take the active per-system model def (#114): DH2 is `halving`
+            // (threshold TB+WPB), so TB 4 + WPB 3 = 7. The `flat` model thresholds
+            // on TB alone and `condition` has no threshold at all — asserting all
+            // three is what keeps the def parameter from being ignorable again.
+            const { halving, flat, condition } = fatigue.FATIGUE_MODES;
+            guarded(
+                'fatigue-threshold',
+                () =>
+                    fatigue.getFatigueThreshold({ toughnessBonus: 4, willpowerBonus: 3 }, halving) === 7 &&
+                    fatigue.getFatigueThreshold({ toughnessBonus: 4, willpowerBonus: 3 }, flat) === 4 &&
+                    fatigue.getFatigueThreshold({ toughnessBonus: 4, willpowerBonus: 3 }, condition) === 0,
+            );
             guarded('fatigue-unconscious', () => {
                 const profile = { toughnessBonus: 4, willpowerBonus: 3 };
-                return !fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 7 }) && fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 8 });
+                return (
+                    !fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 7 }, halving) &&
+                    fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 8 }, halving) &&
+                    !fatigue.isFatigueUnconscious({ ...profile, fatigueLevel: 8 }, condition)
+                );
             });
             guarded(
                 'fatigue-characteristic-halved',

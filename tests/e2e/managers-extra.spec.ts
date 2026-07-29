@@ -62,6 +62,15 @@ type FlowName = (typeof MANAGERS_EXTRA_FLOWS)[number];
 interface ProbeResult {
     flowsFired: Record<FlowName, boolean>;
     flowNotes: Partial<Record<FlowName, string>>;
+    /**
+     * Whether the PIXI canvas actually came up. Foundry's `RenderFlags#set`
+     * ends with `canvas.pendingRenderFlags[priority].add(...)`, so ANY document
+     * write against an actor that has a placed token throws
+     * "Cannot read properties of undefined (reading 'OBJECTS')" on a client
+     * whose canvas never initialised. The three token-touching flows below are
+     * gated on this rather than reported as product failures.
+     */
+    canvasReady: boolean;
 }
 
 /** Minimal item-document shape consumed by the item-drop / inventory probes. */
@@ -164,8 +173,11 @@ interface XGlobal {
         actors?: { get?: (id: string) => XActor | undefined };
         settings?: { get?: (namespace: string, key: string) => object | string | number | boolean | null | undefined };
         user?: { isGM?: boolean };
+        /** Used to tell the Item Piles drop path from the loot-actor fallback (#385). */
+        modules?: { get?: (id: string) => { active?: boolean } | undefined };
     };
     ui?: { windows?: Record<string, XWindow> };
+    canvas?: { ready?: boolean };
 }
 
 const EVENT_TRACKER_MODULE_URL = '/systems/wh40k-rpg/module/managers/event-tracker.js';
@@ -184,7 +196,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
             eventTrackerUrl: string;
             itemDropUrl: string;
             inventoryGeneratorUrl: string;
-        }): Promise<{ flowsFired: Record<string, boolean>; flowNotes: Record<string, string> }> => {
+        }): Promise<{ flowsFired: Record<string, boolean>; flowNotes: Record<string, string>; canvasReady: boolean }> => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `globalThis` is untyped; narrowed to XGlobal
             const g = globalThis as unknown as XGlobal;
             const ActorGbl = g.Actor;
@@ -234,6 +246,19 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
             // Populated by probeSharedActors() and the loot-pile flow.
             let pc: XActor | null = null;
             const getPc = (): XActor | null => (pc?.id != null ? gameGbl?.actors?.get?.(pc.id) ?? null : null);
+            // Mirrors `integrations/item-piles.ts` itemPilesApi()'s own gate.
+            const itemPilesActive = (): boolean => gameGbl?.modules?.get?.('item-piles')?.active === true;
+            /** Queue a created loot pile for teardown. No-op without an id. */
+            const registerLootCleanup = (lootId: string | null | undefined): void => {
+                if (lootId == null) return;
+                cleanups.push(async () => {
+                    try {
+                        await gameGbl?.actors?.get?.(lootId)?.delete?.();
+                    } catch {
+                        /* ignore */
+                    }
+                });
+            };
             let lootActor: LootActor | null = null;
 
             /* ============================================================
@@ -814,23 +839,25 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 const gearGone = refreshed?.items?.get?.(gear.id ?? '') === undefined;
                                 const lootHasItem =
                                     dropResult3?.type === 'loot' && (dropResult3.items?.contents ?? []).some((i) => i.name === 'probe-drop-gear');
-                                if (dropResult3 != null && gearGone && lootHasItem) {
-                                    const lootId = dropResult3.id;
-                                    if (lootId != null) {
-                                        cleanups.push(async () => {
-                                            try {
-                                                await gameGbl?.actors?.get?.(lootId)?.delete?.();
-                                            } catch {
-                                                /* ignore */
-                                            }
-                                        });
-                                    }
+                                // When Item Piles is active the manager hands the drop to
+                                // that module — Item Piles owns the pile actor, so
+                                // `dropItemFromActor` deliberately returns null after
+                                // removing the source item (#385). The item leaving the
+                                // actor IS the success condition on that path; scoring it
+                                // as a failure is what made this probe red in a world with
+                                // the module installed.
+                                const viaItemPiles = dropResult3 == null && gearGone && itemPilesActive();
+                                if (viaItemPiles) {
+                                    fired['item-drop-creates-loot-pile'] = true;
+                                    notes['item-drop-creates-loot-pile'] = 'Item Piles active: pile created by the module, item moved off the PC';
+                                } else if (dropResult3 != null && gearGone && lootHasItem) {
+                                    registerLootCleanup(dropResult3.id);
                                     fired['item-drop-creates-loot-pile'] = true;
                                     notes['item-drop-creates-loot-pile'] = 'loot Actor created, item moved off the PC into the pile';
                                 } else {
                                     notes['item-drop-creates-loot-pile'] = `result=${
                                         dropResult3 == null ? 'null' : dropResult3.type ?? 'unknown'
-                                    } gearGone=${gearGone} lootHasItem=${String(lootHasItem)} (canvas may be headless)`;
+                                    } gearGone=${gearGone} lootHasItem=${String(lootHasItem)} itemPiles=${String(itemPilesActive())} (canvas may be headless)`;
                                 }
                             }
                         } else {
@@ -1076,7 +1103,10 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                 await probePermissionDenied();
             } finally {
                 // Best-effort cleanup of everything we created.
-                for (const fn of cleanups) {
+                // REVERSE (LIFO): the host actor is registered before the items embedded
+                // in it, so draining in insertion order deletes the parent first and
+                // every child delete then targets a document whose parent is gone.
+                for (const fn of [...cleanups].reverse()) {
                     try {
                         await fn();
                     } catch {
@@ -1090,7 +1120,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                 }
             }
 
-            return { flowsFired: fired, flowNotes: notes };
+            return { flowsFired: fired, flowNotes: notes, canvasReady: g.canvas?.ready === true };
         },
         {
             flows: MANAGERS_EXTRA_FLOWS,
@@ -1103,6 +1133,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
     return {
         flowsFired: result.flowsFired,
         flowNotes: result.flowNotes,
+        canvasReady: result.canvasReady,
     };
 }
 
@@ -1115,13 +1146,25 @@ test.describe.serial('managers/* extra coverage (Tier B)', () => {
         const probe = await probeManagersExtraFlows(page);
 
         const failures: string[] = [];
+        // Flows that place a token on a scene and then write to its actor. Every
+        // such write reaches Foundry's `RenderFlags#set`, which dereferences
+        // `canvas.pendingRenderFlags` — undefined until the canvas initialises.
+        // Without a canvas these cannot run at all, so they are SKIPPED rather
+        // than failed, and deliberately left out of recordCoverage so the
+        // dimension percentage keeps reporting the gap honestly (the same
+        // treatment scene-controls-hud.spec.ts gives its canvas-gated flow).
+        const canvasGatedFlows: Set<FlowName> = new Set(['item-drop-creates-loot-pile', 'item-drop-pickup-loot', 'inventory-generator-apply-to-actor']);
         for (const flow of MANAGERS_EXTRA_FLOWS) {
             if (probe.flowsFired[flow]) {
                 recordCoverage('managers-extra.flow', flow);
-            } else {
-                const note = probe.flowNotes[flow] ?? 'flow did not fire and no diagnostic note recorded';
-                failures.push(`flow ${flow}: ${note}`);
+                continue;
             }
+            const note = probe.flowNotes[flow] ?? 'flow did not fire and no diagnostic note recorded';
+            if (canvasGatedFlows.has(flow) && !probe.canvasReady) {
+                console.warn(`managers-extra.flow ${flow} skipped (no canvas): ${note}`);
+                continue;
+            }
+            failures.push(`flow ${flow}: ${note}`);
         }
 
         expect(failures, `${failures.length}/${MANAGERS_EXTRA_FLOWS.length} managers-extra probes failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);

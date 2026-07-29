@@ -993,7 +993,10 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
             await probeLootFlows();
         } finally {
             // Best-effort teardown of every created doc + lingering dialog.
-            for (const fn of cleanups) {
+            // REVERSE (LIFO): the host actor is registered before the items embedded
+            // in it, so draining in insertion order deletes the parent first and
+            // every child delete then targets a document whose parent is gone.
+            for (const fn of [...cleanups].reverse()) {
                 try {
                     // eslint-disable-next-line no-await-in-loop -- best-effort serial cleanup; parallel deletes race on Foundry's collection writes
                     await fn();

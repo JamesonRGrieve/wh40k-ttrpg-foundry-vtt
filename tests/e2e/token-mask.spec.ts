@@ -42,7 +42,9 @@ interface ProbeState {
 // A real RECTANGULAR portrait (1458x2087) — must exist and serve: a missing
 // path silently becomes Foundry's 512x512 fallback texture on EVERY token,
 // which once produced a false "bust applied" pass here.
-const PORTRAIT = 'systems/wh40k-rpg/images/bestiary/dh2/death-jester.webp';
+// Bestiary art lives in the src/packs content submodule, so it serves from
+// `packs/images/...` — the same path every bestiary actor's `img` records.
+const PORTRAIT = 'systems/wh40k-rpg/packs/images/bestiary/dh2/death-jester.webp';
 
 interface TokenDocLike {
     id: string;

@@ -1,4 +1,5 @@
 import { SYSTEM_ID } from './constants.ts';
+import { isActorWritable } from './documents/actor-liveness.ts';
 
 /**
  * Default item grants.
@@ -131,6 +132,8 @@ interface GrantableActor {
     type: string;
     items: Iterable<{ name: string; type: string }>;
     createEmbeddedDocuments: (embeddedName: 'Item', data: ItemSourceData[]) => Promise<ItemSourceData[]>;
+    /** Foundry sets this false once the document is deleted. */
+    readonly _id?: string | null | undefined;
 }
 
 /** Minimal actor surface the duplicate repair touches (Foundry boundary). */
@@ -140,6 +143,8 @@ interface RepairableActor {
     items: Iterable<RepairableItem>;
     /* eslint-disable-next-line no-restricted-syntax -- boundary: `Document#deleteEmbeddedDocuments` resolves to Foundry's untyped deleted-document array; the result is not inspected */
     deleteEmbeddedDocuments: (embeddedName: 'Item', ids: string[]) => Promise<unknown>;
+    /** Foundry clears this once the document is deleted. */
+    readonly _id?: string | null | undefined;
 }
 
 /**
@@ -154,10 +159,14 @@ export async function repairDuplicateGrants(actor: RepairableActor): Promise<num
         if (!isCreatureActorType(actor.type)) return 0;
         const surplus = selectDuplicateGrantIds([...actor.items]);
         if (surplus.length === 0) return 0;
+        // Chained off the grant, so the actor may already be gone by the time
+        // this runs — a deleted actor has no duplicates worth repairing.
+        if (!isActorWritable(actor)) return 0;
         await actor.deleteEmbeddedDocuments('Item', surplus);
         console.warn(`${SYSTEM_ID} | default-grants: removed ${surplus.length} duplicate default-granted item(s) from ${actor.name ?? actor.type}`);
         return surplus.length;
     } catch (error) {
+        if (isMissingDocumentError(error)) return 0;
         console.error(`${SYSTEM_ID} | default-grants: failed repairing duplicate grants`, error);
         return 0;
     }
@@ -225,6 +234,32 @@ async function collectDefaultGrantSources(): Promise<ItemSourceData[]> {
  * any it already carries (by name + type). No-op for non-creature actors
  * (vehicles, ships) and when nothing is flagged. Never throws.
  */
+/** True when the error is Foundry's "document no longer exists" for a deleted actor. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: a caught rejection value is genuinely untyped; the message test below IS the narrowing
+function isMissingDocumentError(error: unknown): boolean {
+    const message = error instanceof Error ? error.message : String(error);
+    return /does not exist in actors/i.test(message);
+}
+
+/**
+ * True when the failure came from Foundry's POST-COMMIT token re-render rather
+ * than from the write itself.
+ *
+ * `createEmbeddedDocuments` resolves through Foundry's own descendant-document
+ * hook chain, which calls `_updateDependentTokens` → `_onRelatedUpdate` →
+ * `RenderFlags.set`. On a client with no initialised canvas (a headless browser,
+ * a scene-less world) that last step throws — *after* the documents are already
+ * created. Reporting it as "failed granting default items" is simply wrong: the
+ * grant succeeded, and the canvas bookkeeping is not something a user can act on.
+ * @param {unknown} error  The caught rejection value.
+ * @returns {boolean}  True for a canvas render-flag failure raised after the commit.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: a caught rejection value is genuinely untyped; the stack test below IS the narrowing
+function isPostCommitRenderError(error: unknown): boolean {
+    if (!(error instanceof Error)) return false;
+    return typeof error.stack === 'string' && /RenderFlags\.set|_onRelatedUpdate/.test(error.stack);
+}
+
 export async function grantDefaultItemsToActor(actor: GrantableActor): Promise<void> {
     try {
         if (!isCreatureActorType(actor.type)) return;
@@ -246,8 +281,17 @@ export async function grantDefaultItemsToActor(actor: GrantableActor): Promise<v
         // Bind every default-granted item before embedding: intrinsic fallbacks
         // can't be dropped or traded (#228 / #390).
         const boundToAdd = applyDefaultGrantPolicy(toAdd);
+
+        // The grant is async (it awaits the compendium scan), so the actor can be
+        // DELETED while it is in flight — routine when a caller creates an actor
+        // and tears it down, and the common shape in the e2e suite. Writing to a
+        // deleted document is rejected by Foundry with a red toast, so re-check
+        // before dispatching; the narrower race that still slips through is
+        // absorbed by `isMissingDocumentError` below rather than logged.
+        if (!isActorWritable(actor)) return;
         await actor.createEmbeddedDocuments('Item', boundToAdd);
     } catch (error) {
+        if (isMissingDocumentError(error) || isPostCommitRenderError(error)) return;
         console.error(`${SYSTEM_ID} | default-grants: failed granting default items to actor`, error);
     }
 }
