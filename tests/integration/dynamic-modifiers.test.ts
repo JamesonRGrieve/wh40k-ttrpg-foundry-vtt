@@ -156,7 +156,10 @@ function assertCrushingBlowDefaults(hook: DynamicModifierRead): void {
 // clear reason rather than being forced.
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `fromUuid` (typeof-guarded below before use)
 const globalWithFromUuid = globalThis as { fromUuid?: unknown };
-const gamePacks = (runtime.game as { packs?: { size?: number } }).packs;
+// `runtime.game` is `{}` when the boot skipped, so read defensively — this line
+// threw "Cannot read properties of undefined (reading 'packs')" and failed the
+// file at import time, before any test could report its skip.
+const gamePacks = (runtime.game as { packs?: { size?: number } } | undefined)?.packs;
 const hydrateFullReachable = !skipAll && typeof globalWithFromUuid.fromUuid === 'function' && (gamePacks?.size ?? 0) > 0;
 if (!skipAll && !hydrateFullReachable) {
     // eslint-disable-next-line no-console
