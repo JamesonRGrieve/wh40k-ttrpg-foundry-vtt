@@ -1121,12 +1121,11 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                     setTimeout(r, 260);
                                 });
                                 const isClosed = sheetRoot.querySelector('.wh40k-item-preview') === null;
-                                if (isOpened && isClosed) {
-                                    fired['item-preview-card-toggle'] = true;
-                                    notes['item-preview-card-toggle'] = 'toggleItemPreview injected then removed the preview card';
-                                } else {
-                                    notes['item-preview-card-toggle'] = `opened=${String(isOpened)} closed=${String(isClosed)}`;
-                                }
+                                const toggled = isOpened && isClosed;
+                                fired['item-preview-card-toggle'] = toggled;
+                                notes['item-preview-card-toggle'] = toggled
+                                    ? 'toggleItemPreview injected then removed the preview card'
+                                    : `opened=${String(isOpened)} closed=${String(isClosed)}`;
                             }
                         }
                     }

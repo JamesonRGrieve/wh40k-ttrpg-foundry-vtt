@@ -81,6 +81,7 @@
     "import/no-self-import",
     "import/no-useless-path-segments",
     "import/order",
+    "max-depth",
     "no-console",
     "no-constant-binary-expression",
     "no-constructor-return",
@@ -115,10 +116,9 @@
     "prettier/prettier",
     "require-atomic-updates"
   ],
-  "total": 117,
+  "total": 116,
   "byRule": {
     "complexity": 35,
-    "max-depth": 1,
     "no-await-in-loop": 81
   }
 }
