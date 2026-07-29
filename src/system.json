@@ -3743,6 +3743,18 @@
             "flags": {}
         },
         {
+            "name": "rt-battlefleet-items-weapons",
+            "label": "RT: Battlefleet Koronus, Weapons",
+            "path": "packs/rogue-trader/rt-battlefleet-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "rt-battlefleet-vehicles-aircraft",
             "label": "RT: Battlefleet Koronus, Aircraft",
             "path": "packs/rogue-trader/rt-battlefleet-vehicles-aircraft",
@@ -5812,6 +5824,18 @@
             "path": "packs/deathwatch/dw-jericho-actors-bestiary",
             "system": "wh40k-rpg",
             "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dw-outer-items-weapons",
+            "label": "DW: The Outer Reach, Weapons",
+            "path": "packs/deathwatch/dw-outer-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
