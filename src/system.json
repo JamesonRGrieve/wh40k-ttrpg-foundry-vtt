@@ -3455,6 +3455,18 @@
             "flags": {}
         },
         {
+            "name": "ow-surrender-items-weapons",
+            "label": "OW: No Surrender, Weapons",
+            "path": "packs/only-war/ow-surrender-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "ow-surrender-actors-bestiary",
             "label": "OW: No Surrender, Bestiary",
             "path": "packs/only-war/ow-surrender-actors-bestiary",
