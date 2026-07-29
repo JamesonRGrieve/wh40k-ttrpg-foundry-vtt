@@ -216,7 +216,7 @@
         "import/no-self-import": "error",
         "import/no-useless-path-segments": "error",
         "import/no-duplicates": "error",
-        "complexity": ["warn", 25],
+        "complexity": ["error", 25],
         "max-depth": ["error", 5],
         "@vitest/no-focused-tests": "error",
         "@vitest/expect-expect": ["error", { "assertFunctionNames": ["expect", "assert*"] }],
@@ -238,7 +238,8 @@
     {
       "files": ["tests/e2e/**/*.ts", "tests/storybook/**/*.ts"],
       "rules": {
-        "no-await-in-loop": "off"
+        "no-await-in-loop": "off",
+        "complexity": "off"
       }
     }
   ]
