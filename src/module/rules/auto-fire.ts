@@ -27,7 +27,7 @@
 export type BurstMode = 'semi' | 'full';
 
 /** A weapon's three rate-of-fire entries (`S/2/4` → single, semi 2, full 4). */
-export interface RateOfFire {
+interface RateOfFire {
     readonly semi: number;
     readonly full: number;
 }
