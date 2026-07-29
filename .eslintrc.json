@@ -217,7 +217,7 @@
         "import/no-useless-path-segments": "error",
         "import/no-duplicates": "error",
         "complexity": ["warn", 25],
-        "max-depth": ["warn", 5],
+        "max-depth": ["error", 5],
         "@vitest/no-focused-tests": "error",
         "@vitest/expect-expect": ["error", { "assertFunctionNames": ["expect", "assert*"] }],
         "@vitest/no-disabled-tests": "error",
