@@ -1,6 +1,9 @@
 import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.ts';
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
-import { D100Roll } from '../dice/_module.ts';
+// Direct, not via dice/_module.ts: that barrel also re-exports
+// RollConfigurationDialog, so importing it drags the applications layer into
+// every document that just wants a roll class.
+import D100Roll from '../dice/d100-roll.ts';
 import {
     type ActionData,
     applySkillUseToRollData,

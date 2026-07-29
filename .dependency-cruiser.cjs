@@ -18,9 +18,10 @@ module.exports = {
         {
             name: 'no-circular',
             severity: 'warn',
-            comment: 'Modules should not depend on themselves transitively.',
+            comment:
+                'Modules should not depend on themselves transitively. Type-only edges are excluded: `import type` is erased at compile time, so it cannot participate in the runtime initialisation cycle this rule exists to catch. Counting them reported ~99 phantom cycles routed through types/global.d.ts, whose every import is `import type`. Same treatment the layer rules below already give type-only edges.',
             from: {},
-            to: { circular: true },
+            to: { circular: true, dependencyTypesNot: ['type-only'] },
         },
         {
             name: 'no-orphans',
