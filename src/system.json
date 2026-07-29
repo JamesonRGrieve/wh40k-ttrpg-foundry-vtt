@@ -10311,6 +10311,7 @@
                     "packs": [
                         "dh2-forgotten-actors-bestiary",
                         "dh2-forgotten-actors-npcs",
+                        "dh2-forgotten-items-weapons",
                         "dh2-forgotten-journals",
                         "dh2-forgotten-rolltables",
                         "dh2-forgotten-vehicles-terracraft"
@@ -10510,6 +10511,7 @@
                     "packs": [
                         "dw-outer-actors-bestiary",
                         "dw-outer-actors-npcs",
+                        "dw-outer-items-weapons",
                         "dw-outer-journals",
                         "dw-outer-vehicles-aircraft"
                     ]
@@ -10730,6 +10732,7 @@
                     "packs": [
                         "ow-surrender-actors-bestiary",
                         "ow-surrender-actors-npcs",
+                        "ow-surrender-items-weapons",
                         "ow-surrender-journals",
                         "ow-surrender-vehicles-aircraft",
                         "ow-surrender-vehicles-terracraft"
@@ -10773,6 +10776,7 @@
                     "packs": [
                         "rt-battlefleet-items-ship-components",
                         "rt-battlefleet-items-ship-weapons",
+                        "rt-battlefleet-items-weapons",
                         "rt-battlefleet-journals",
                         "rt-battlefleet-rolltables",
                         "rt-battlefleet-vehicles-aircraft",
@@ -10782,6 +10786,7 @@
                 {
                     "name": "Citadel",
                     "packs": [
+                        "rt-citadel-items-weapons",
                         "rt-citadel-vehicles-aircraft",
                         "rt-citadel-vehicles-voidcraft"
                     ]
@@ -10819,7 +10824,8 @@
                         "rt-faith-items-weapon-mods",
                         "rt-faith-items-weapons",
                         "rt-faith-journals",
-                        "rt-faith-rolltables"
+                        "rt-faith-rolltables",
+                        "rt-faith-vehicles-voidcraft"
                     ]
                 },
                 {
@@ -10831,6 +10837,7 @@
                 {
                     "name": "Frozen",
                     "packs": [
+                        "rt-frozen-items-weapons",
                         "rt-frozen-vehicles-terracraft",
                         "rt-frozen-vehicles-voidcraft"
                     ]

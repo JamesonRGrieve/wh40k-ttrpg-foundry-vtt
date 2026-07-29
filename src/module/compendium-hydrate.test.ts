@@ -10,7 +10,7 @@
  * `createActor` hook / a crashed sheet render.
  */
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildHydratedSystem, buildHydrationPatches } from './compendium-hydrate.ts';
+import { buildActorVariantJoin, buildHydratedSystem, buildHydrationPatches } from './compendium-hydrate.ts';
 
 /** Minimal structural shape matching the slice of an owned item `buildHydrationPatches` reads. */
 interface MockItem {
@@ -69,5 +69,74 @@ describe('buildHydrationPatches — resilience on the hot prep/render path', () 
         const patches = await buildHydrationPatches(actorWith(leanWeapon));
         expect(patches).toHaveLength(1);
         expect(patches[0]).toMatchObject({ _id: 'i1', system: { damage: '1d10+5', cost: 7 } });
+    });
+});
+
+/**
+ * The actor-level join: a named individual authored as a `variantOf` an unnamed
+ * class (the *Excrucian* → the Devastation-class Cruiser) stores only what makes
+ * it that individual and inherits the class's stats at load.
+ *
+ * Same contract as the item join it mirrors — persisted wins, in memory only,
+ * best-effort on a hot render path — plus a bound on the chain walk, because
+ * authored data can contain a cycle and this must not hang.
+ */
+describe('buildActorVariantJoin — a named individual inherits its class', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        vi.restoreAllMocks();
+    });
+
+    /** A named individual: no inventory, just its own system payload and a name. */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: an untyped Foundry actor system payload is the input under test
+    const named = (system: Record<string, unknown>): { items: { contents: [] }; name: string; system: Record<string, unknown> } => ({
+        items: { contents: [] },
+        name: 'Excrucian',
+        system,
+    });
+
+    it('returns null for an actor that is its own base, without calling fromUuid', async () => {
+        const fromUuidSpy = vi.fn();
+        vi.stubGlobal('fromUuid', fromUuidSpy);
+        await expect(buildActorVariantJoin(named({ variantOf: '', armour: 20 }))).resolves.toBeNull();
+        expect(fromUuidSpy).not.toHaveBeenCalled();
+    });
+
+    it('inherits the class stats the individual does not state', async () => {
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, system: { armour: 20, hullIntegrity: { max: 70 }, turretRating: 2 } }));
+        const joined = await buildActorVariantJoin(named({ variantOf: 'Compendium.x.Actor.base', notes: { rt: 'Karrad Vall honour guard' } }));
+        expect(joined).toMatchObject({ armour: 20, hullIntegrity: { max: 70 }, turretRating: 2, notes: { rt: 'Karrad Vall honour guard' } });
+    });
+
+    it('lets the individual OVERRIDE a class stat it does state', async () => {
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, system: { armour: 20, turretRating: 2 } }));
+        const joined = await buildActorVariantJoin(named({ variantOf: 'Compendium.x.Actor.base', turretRating: 5 }));
+        expect(joined).toMatchObject({ armour: 20, turretRating: 5 });
+    });
+
+    it('walks a chain, nearer base overriding the further one', async () => {
+        const chainedResolve = vi
+            .fn()
+            .mockResolvedValueOnce({ img: null, system: { variantOf: 'Compendium.x.Actor.root', armour: 22, speed: 5 } })
+            .mockResolvedValueOnce({ img: null, system: { armour: 20, speed: 4, detection: 10 } });
+        vi.stubGlobal('fromUuid', chainedResolve);
+        const joined = await buildActorVariantJoin(named({ variantOf: 'Compendium.x.Actor.mid', speed: 9 }));
+        expect(joined).toMatchObject({ armour: 22, speed: 9, detection: 10 });
+    });
+
+    it('stops on a variantOf cycle instead of hanging', async () => {
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, system: { variantOf: 'Compendium.x.Actor.self', armour: 20 } }));
+        const joined = await buildActorVariantJoin(named({ variantOf: 'Compendium.x.Actor.self', speed: 5 }));
+        expect(joined).toMatchObject({ armour: 20, speed: 5 });
+    });
+
+    it('returns null — never throws — when the base cannot be resolved', async () => {
+        vi.stubGlobal('fromUuid', vi.fn().mockRejectedValue(new Error("Cannot read properties of undefined (reading 'database')")));
+        await expect(buildActorVariantJoin(named({ variantOf: 'Compendium.x.Actor.base', speed: 5 }))).resolves.toBeNull();
+    });
+
+    it('returns null when the join would be a no-op, so the actor is not reset needlessly', async () => {
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, system: { armour: 20 } }));
+        await expect(buildActorVariantJoin(named({ variantOf: 'Compendium.x.Actor.base', armour: 20 }))).resolves.toBeNull();
     });
 });
