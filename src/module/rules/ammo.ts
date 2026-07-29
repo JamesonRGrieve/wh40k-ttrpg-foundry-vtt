@@ -5,6 +5,7 @@
 import type { ActionData } from '../rolls/action-data.ts';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KItemDocument } from '../types/global.d.ts';
+import { resolveBurst } from './auto-fire.ts';
 import { consumeRounds, type MagazineSegment, refundRounds } from './magazine.ts';
 
 /** The loaded (chambered) round's cached effect fields, read from the weapon's front segment. */
@@ -158,12 +159,6 @@ export function calculateAmmoSpecials(actionData: AmmoActionData, hit: AmmoHit):
  * @param rollData {WeaponRollData}
  */
 export function calculateAmmoInformation(rollData: AmmoRollData): void {
-    const availableAmmo = rollData.weapon.system.clip.value;
-
-    if (!rollData.weapon.usesAmmo) {
-        return;
-    }
-
     // Calculate Ammo *PER* shot
     let ammoPerShot = 1;
     if (rollData.hasAttackSpecial('Overcharge')) {
@@ -179,34 +174,37 @@ export function calculateAmmoInformation(rollData: AmmoRollData): void {
         ammoPerShot *= 3;
     }
 
-    // Max hits with available ammo
-    const maximumHits = Math.floor(availableAmmo / ammoPerShot);
-    let fireRate = 1;
+    // A weapon that consumes no ammunition still has a rate of fire, and RAW caps
+    // its burst by it — so the ceiling is resolved for EVERY weapon and only the
+    // clip arithmetic is skipped (#512). `null` = nothing to draw down.
+    const usesAmmo = rollData.weapon.usesAmmo;
+    const affordableShots = usesAmmo ? Math.floor(rollData.weapon.system.clip.value / ammoPerShot) : null;
 
-    if (rollData.action === 'Full Auto Burst' || rollData.action === 'Semi-Auto Burst') {
-        const rateOfFire = rollData.weapon.system.attack?.rateOfFire;
-        if (rollData.action === 'Full Auto Burst') {
-            fireRate = rateOfFire?.full ?? 0;
-        } else {
-            fireRate = rateOfFire?.semi ?? 0;
-        }
-        if (rollData.hasAttackSpecial('Storm')) {
-            fireRate *= 2;
-        }
-    }
-
-    // Not enough ammo available -- lower to max hits
-    if (maximumHits < fireRate) {
-        fireRate = maximumHits;
-    }
+    const burst = resolveBurst({
+        action: rollData.action,
+        rateOfFire: {
+            semi: rollData.weapon.system.attack?.rateOfFire?.semi ?? 0,
+            full: rollData.weapon.system.attack?.rateOfFire?.full ?? 0,
+        },
+        storm: rollData.hasAttackSpecial('Storm'),
+        affordableShots,
+    });
 
     // Ammunition fire-rate override (e.g. Hot-shot Charge Packs → single shot),
-    // data-driven from the chambered round's `fireRateOverride`.
+    // data-driven from the chambered round's `fireRateOverride`. It caps both the
+    // rounds fired and the hits, since it re-rates the weapon itself.
     const override = rollData.weapon.system.loadedAmmo?.fireRateOverride;
-    if (override !== undefined && override !== null) fireRate = Math.min(fireRate, override);
+    const shotsFired = override === undefined || override === null ? burst.shotsFired : Math.min(burst.shotsFired, override);
+    const maxHits = Math.min(burst.maxHits, shotsFired);
 
     rollData.ammoPerShot = ammoPerShot;
-    rollData.fireRate = fireRate;
-    rollData.ammoUsed = fireRate * ammoPerShot;
+    rollData.fireRate = maxHits;
+    rollData.shotsFired = shotsFired;
     rollData.ammoText = ammoText(rollData.weapon) ?? '';
+
+    if (!usesAmmo) {
+        rollData.ammoUsed = 0;
+        return;
+    }
+    rollData.ammoUsed = shotsFired * ammoPerShot;
 }
