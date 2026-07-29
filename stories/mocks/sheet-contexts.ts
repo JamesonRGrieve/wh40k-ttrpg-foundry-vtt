@@ -24,15 +24,15 @@ import type { GameSystemId, SidebarHeaderField } from '../../src/module/config/g
 import type { WH40KBaseActor } from '../../src/module/documents/base-actor';
 import { randomId, withSystem, type SystemId } from './extended';
 import { localizeKey } from './lang-localize';
-import { mockActor, type MockActor, type MockItem } from './index';
+import { mockActor, type MockActor } from './index';
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
 /** The mock actor accepts a deep-partial of MockActor; this matches mockActor's signature. */
-export type MockActorInput = NonNullable<Parameters<typeof mockActor>[0]>;
+type MockActorInput = NonNullable<Parameters<typeof mockActor>[0]>;
 
 /** A single tab descriptor passed to `tabs.hbs`. */
-export interface SheetTab {
+interface SheetTab {
     tab: string;
     group: string;
     label: string;
@@ -41,7 +41,7 @@ export interface SheetTab {
 }
 
 /** Active-tab descriptor passed to `tab` in a sheet context. */
-export interface ActiveTabDescriptor {
+interface ActiveTabDescriptor {
     id: string;
     group: string;
     cssClass: string;
@@ -49,7 +49,7 @@ export interface ActiveTabDescriptor {
 }
 
 /** One bubble in the origin-path strip rendered in the sidebar header. */
-export interface OriginPathStep {
+interface OriginPathStep {
     label: string;
     icon: string;
     item?: { _id: string; img: string; name: string } | null;
@@ -57,14 +57,14 @@ export interface OriginPathStep {
 }
 
 /** Mock journal-entry summary row used by tab-biography.hbs. */
-export interface MockJournalEntrySummary {
+interface MockJournalEntrySummary {
     id: string;
     name: string;
     system: { time: string; place: string; description: string };
 }
 
 /** The biography-tab payload. */
-export interface SheetBiographyContext {
+interface SheetBiographyContext {
     source: { notes: string };
     enriched: { notes: string };
 }
@@ -416,6 +416,12 @@ export interface VehicleSheetContextOptions {
  * Vehicle sheet context. Currently shares the NPC-style chrome — vehicles
  * don't have a player identity panel, so the header fields are minimal.
  */
+// `GameSystemId` is re-exported so story files can take it from the same import
+// they already use for the context factories. The other three re-exports here
+// (SidebarHeaderField / MockActor / MockItem) had no consumer at all and were
+// removed — every caller reaches for them at their canonical source.
+export type { GameSystemId };
+
 export function mockVehicleSheetContext(opts: VehicleSheetContextOptions = {}): SheetContextLike {
     ensureGameI18nStub();
     const systemId: GameSystemId = opts.systemId ?? 'dh2';
@@ -537,6 +543,3 @@ function mergeActorInput(base: MockActorInput, override?: MockActorInput): MockA
         system: mergedSystem,
     };
 }
-
-// Re-export utility types so consumers don't need a second import path.
-export type { GameSystemId, SidebarHeaderField, MockActor, MockItem };

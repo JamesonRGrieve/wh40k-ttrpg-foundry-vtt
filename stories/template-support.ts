@@ -1,5 +1,7 @@
 import HandlebarsLib from 'handlebars';
 import enLang from '../src/lang/en.json';
+import { type GameSystemId, SystemConfigRegistry, type SystemThemeRole, themeClassFor } from '../src/module/config/game-systems/index.ts';
+import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass } from '../src/module/handlebars/degree-ladders.ts';
 import { formatSourceLabel, type SourceInput } from '../src/module/handlebars/source-label.ts';
 import { ICON_REGISTRY } from '../src/module/icons/registry.generated.ts';
 
@@ -269,8 +271,21 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
     });
     HandlebarsLib.registerHelper('isError', (value: HbsValue): boolean => value === 'error' || value === false);
     HandlebarsLib.registerHelper('isSuccess', (value: HbsValue): boolean => value === 'success' || value === true);
-    HandlebarsLib.registerHelper('themeClassFor', (role: HbsValue): string => {
-        return typeof role === 'string' ? `wh40k-theme-${role}` : '';
+    // Delegates to the REAL resolver rather than inventing a class name. The old
+    // stub emitted `wh40k-theme-<role>`, which matches no CSS rule anywhere — so
+    // every themed element in a story rendered unstyled, and a themed badge with
+    // dark text on its (now absent) light background was invisible in the
+    // screenshots. Same drift the degree ladders had: a story-registry
+    // reimplementation that silently diverges from what the app does.
+    HandlebarsLib.registerHelper('themeClassFor', function themeClassForStoryHelper(this: HbsValue, role: HbsValue, ...rest: HbsValue[]): string {
+        if (typeof role !== 'string') return '';
+        const userArgs = rest.slice(0, -1);
+        const opts = rest[rest.length - 1] as { data?: { root?: { _gameSystemId?: string; gameSystemId?: string } } } | undefined;
+        const explicit = typeof userArgs[0] === 'string' ? userArgs[0] : undefined;
+        const fromRoot = opts?.data?.root?._gameSystemId ?? opts?.data?.root?.gameSystemId;
+        const candidate = explicit ?? fromRoot ?? 'rt';
+        const systemId: GameSystemId = SystemConfigRegistry.has(candidate) ? (candidate as GameSystemId) : 'rt';
+        return themeClassFor(systemId, role as SystemThemeRole);
     });
     HandlebarsLib.registerHelper('select', function selectHelper(this: HbsValue, selected: HbsValue, options: { fn: (ctx: HbsValue) => string }): string {
         const html = options.fn(this);
@@ -329,6 +344,24 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         const n = Number(strength ?? 0);
         return n > 0 ? String(n) : '-';
     });
+    /**
+     * Narrow an arbitrary template value to the degree-ladder boundary shape.
+     * Anything that is not a number or numeric string scores 0, which is what the
+     * ladders already did with it.
+     */
+    function asDegreeScore(value: HbsValue): DegreeScore {
+        return typeof value === 'number' || typeof value === 'string' ? value : undefined;
+    }
+
+    // The Corruption / Insanity degree helpers, from the SAME module the runtime
+    // registry uses (`handlebars/degree-ladders.ts`). The story registry used to
+    // omit them entirely, so any template reaching them — the shared Vitals body,
+    // and therefore the whole Combat tab — could not be rendered in a story at all.
+    HandlebarsLib.registerHelper('corruptionDegree', (v: HbsValue): string => corruptionDegree(asDegreeScore(v)));
+    HandlebarsLib.registerHelper('corruptionDegreeClass', (v: HbsValue): string => corruptionDegreeClass(asDegreeScore(v)));
+    HandlebarsLib.registerHelper('insanityDegree', (v: HbsValue): string => insanityDegree(asDegreeScore(v)));
+    HandlebarsLib.registerHelper('insanityDegreeClass', (v: HbsValue): string => insanityDegreeClass(asDegreeScore(v)));
+
     HandlebarsLib.registerHelper('displayCrit', (crit: HbsValue): string => {
         const n = Number(crit ?? 0);
         return n > 0 ? `${n}+` : '-';

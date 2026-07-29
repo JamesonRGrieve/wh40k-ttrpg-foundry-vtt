@@ -98,6 +98,8 @@ describe('Status panels relocated to Overview (#263 — no silent data loss)', (
     // duplicate full panel was removed; this guards that the at-a-glance
     // Active Effects display is not silently lost from Overview.
     it('keeps an Active Effects display on Overview (compact dashboard zone)', () => {
-        expect(OVERVIEW).toContain('title="Active Effects"');
+        // The zone title is localized (`WH40K.Effects.ActiveLabel`), not a literal
+        // English string — matching on the key is what survives a copy change.
+        expect(OVERVIEW).toContain('WH40K.Effects.ActiveLabel');
     });
 });

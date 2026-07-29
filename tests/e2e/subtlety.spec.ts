@@ -119,6 +119,23 @@ async function resetSubtlety(page: Page, actorId: string, value: number): Promis
             } catch {
                 /* best-effort */
             }
+            // SETTLE. `settings.set` is a socket round-trip and the actor's
+            // `system.subtlety.value` only reflects it once the broadcast lands.
+            // Returning early let the next probe read a mid-flight baseline and
+            // then measure its delta against the settled one — the value would be
+            // "wrong" by exactly the amount still in flight (60 vs 56 → the
+            // -7 adjustment looked like -3).
+            await new Promise<void>((resolve) => {
+                let waited = 0;
+                const read = (): number | null => gameGlobal?.actors?.get?.(id)?.system?.subtlety?.value ?? null;
+                const tick = setInterval(() => {
+                    waited += 50;
+                    if (read() === v || waited >= 2000) {
+                        clearInterval(tick);
+                        resolve();
+                    }
+                }, 50);
+            });
         },
         { id: actorId, v: value },
     );

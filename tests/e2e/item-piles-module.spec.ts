@@ -140,13 +140,30 @@ async function probeRealModule(page: Page): Promise<{ results: FlowResult[] }> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals + third-party module globals have no shipped types
         const g = globalThis as unknown as FoundryGlobal;
         const out: FlowResult[] = [];
+        // Bound EVERY call that crosses into the Item Piles API or the document
+        // layer. This spec drives a third-party module against a live socket, and
+        // it was the only heavy Tier B spec with no such guard: one blocking
+        // await hung the whole page.evaluate and burned the 600s test timeout
+        // (8.2s → 20m) rather than failing the one flow that stalled. Same 5s
+        // bound managers-extra / weapon-attack already use, for the same reason.
+        const withTimeout = async <T>(promise: Promise<T>, label: string, ms = 5_000): Promise<T> => {
+            const timer = { id: null as ReturnType<typeof setTimeout> | null };
+            const timeout = new Promise<T>((_, reject) => {
+                timer.id = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+            });
+            try {
+                return await Promise.race([promise, timeout]);
+            } finally {
+                if (timer.id !== null) clearTimeout(timer.id);
+            }
+        };
         const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
             out.push({ name, ok, detail });
         };
         const api = g.game.itempiles?.API;
         const trash: ActorRef[] = [];
         const mkActor = async (name: string): Promise<ActorRef | null> => {
-            const actor = (await g.Actor.create({ name, type: 'dh1-character', system: { gameSystem: 'dh1' } })) ?? null;
+            const actor = (await withTimeout(g.Actor.create({ name, type: 'dh1-character', system: { gameSystem: 'dh1' } }), `Actor.create(${name})`)) ?? null;
             if (actor !== null) trash.push(actor);
             return actor;
         };
@@ -173,14 +190,14 @@ async function probeRealModule(page: Page): Promise<{ results: FlowResult[] }> {
             const donor = await mkActor('IPM Donor');
             try {
                 if (donor === null || api.addCurrencies === undefined) throw new Error('setup/API unavailable');
-                await api.addCurrencies(donor, '5tg');
+                await withTimeout(api.addCurrencies(donor, '5tg'), 'api.addCurrencies');
                 record('currency-add-and-read', wallet(donor) === 5, wallet(donor) === 5 ? null : `throneGelt=${String(wallet(donor))} after +5tg`);
             } catch (err) {
                 record('currency-add-and-read', false, String((err as Error).message));
             }
             try {
                 if (donor === null || api.removeCurrencies === undefined) throw new Error('setup/API unavailable');
-                await api.removeCurrencies(donor, '2tg');
+                await withTimeout(api.removeCurrencies(donor, '2tg'), 'api.removeCurrencies');
                 record('currency-remove', wallet(donor) === 3, wallet(donor) === 3 ? null : `throneGelt=${String(wallet(donor))} after -2tg`);
             } catch (err) {
                 record('currency-remove', false, String((err as Error).message));
@@ -189,7 +206,7 @@ async function probeRealModule(page: Page): Promise<{ results: FlowResult[] }> {
                 const payee = await mkActor('IPM Payee');
                 if (donor === null || payee === null || api.transferCurrencies === undefined) throw new Error('setup/API unavailable');
                 const before = wallet(donor);
-                await api.transferCurrencies(donor, payee, '1tg');
+                await withTimeout(api.transferCurrencies(donor, payee, '1tg'), 'api.transferCurrencies');
                 const ok = wallet(payee) === 1 && wallet(donor) === before - 1;
                 record('currency-transfer-between-actors', ok, ok ? null : `donor=${String(wallet(donor))} payee=${String(wallet(payee))}`);
             } catch (err) {
@@ -202,7 +219,7 @@ async function probeRealModule(page: Page): Promise<{ results: FlowResult[] }> {
             const holder = await mkActor('IPM Holder');
             try {
                 if (holder === null || api.addItems === undefined) throw new Error('setup/API unavailable');
-                await api.addItems(holder, [{ name: 'IPM Frag Grenade', type: 'weapon', system: { quantity: 2 } }]);
+                await withTimeout(api.addItems(holder, [{ name: 'IPM Frag Grenade', type: 'weapon', system: { quantity: 2 } }]), 'api.addItems');
                 record('item-add-and-read', hasItem(holder, 'IPM Frag Grenade'), hasItem(holder, 'IPM Frag Grenade') ? null : 'item absent after addItems');
             } catch (err) {
                 record('item-add-and-read', false, String((err as Error).message));
@@ -213,7 +230,7 @@ async function probeRealModule(page: Page): Promise<{ results: FlowResult[] }> {
                 // transferItems matches items by their real _id on the source, not by a name projection.
                 const held = Array.from(holder.items ?? []).find((i) => i.name === 'IPM Frag Grenade');
                 if (held?.id == null) throw new Error('holder lacks the item to transfer (item-add must pass first)');
-                await api.transferItems(holder, recipient, [{ _id: held.id, quantity: 1 }]);
+                await withTimeout(api.transferItems(holder, recipient, [{ _id: held.id, quantity: 1 }]), 'api.transferItems');
                 record(
                     'item-transfer-between-actors',
                     hasItem(recipient, 'IPM Frag Grenade'),
@@ -232,10 +249,13 @@ async function probeRealModule(page: Page): Promise<{ results: FlowResult[] }> {
             try {
                 const pileActor = await mkActor('IPM Pile');
                 if (pileActor?.setFlag === undefined) throw new Error('actor.setFlag unavailable');
-                await pileActor.setFlag('item-piles', 'data', { enabled: true });
+                await withTimeout(pileActor.setFlag('item-piles', 'data', { enabled: true }), 'pileActor.setFlag');
                 const integ = '/systems/wh40k-rpg/module/integrations/item-piles.js';
+                // Bounded like every other blocking call here: a runtime ESM import
+                // of a Foundry-served URL can stall indefinitely, and being the one
+                // unwrapped await it was what hung the entire page.evaluate.
                 // eslint-disable-next-line no-restricted-syntax -- boundary: runtime ESM import of a Foundry-served module has no static type
-                const mod = (await import(/* @vite-ignore */ integ)) as IntegrationModule;
+                const mod = (await withTimeout(import(/* @vite-ignore */ integ), `import(${integ})`)) as IntegrationModule;
                 const oursSaysPile = mod.isItemPilesPile?.(pileActor) === true;
                 // Module-side validity is a bonus assertion only when the public API exposes it.
                 const moduleSaysPile = typeof api.isValidItemPile === 'function' ? api.isValidItemPile(pileActor) : true;
@@ -251,14 +271,17 @@ async function probeRealModule(page: Page): Promise<{ results: FlowResult[] }> {
 
         try {
             runIntegrationFlow();
-            await runCurrencyFlows();
-            await runItemFlows();
-            await runPileFlagFlow();
+            // Each flow gets its own outer bound too, so a stall inside one is
+            // reported as that flow failing rather than taking the whole probe —
+            // and the run — down with it.
+            await withTimeout(runCurrencyFlows(), 'runCurrencyFlows', 30_000);
+            await withTimeout(runItemFlows(), 'runItemFlows', 30_000);
+            await withTimeout(runPileFlagFlow(), 'runPileFlagFlow', 30_000);
         } finally {
             for (const doc of trash) {
                 try {
                     // eslint-disable-next-line no-await-in-loop -- best-effort serial teardown; parallel deletes race Foundry's collection writes
-                    await doc.delete?.();
+                    await withTimeout(Promise.resolve(doc.delete?.()), 'cleanup delete');
                 } catch {
                     /* best-effort */
                 }

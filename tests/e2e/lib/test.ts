@@ -1,7 +1,7 @@
 import { appendFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { test as base } from '@playwright/test';
-import { type CapturedError, unexpectedErrors } from './console-guard';
+import { type CapturedError, formatCapturedError, unexpectedErrors } from './console-guard';
 
 /**
  * Playwright `test` extended with two things every Tier B spec gets for free by
@@ -35,7 +35,7 @@ export const test = base.extend({
         // ── Browser-error guard: capture BEFORE the test runs so nothing is missed.
         const errors: CapturedError[] = [];
         const onPageError = (err: Error): void => {
-            errors.push({ kind: 'pageerror', text: err.message });
+            errors.push(err.stack === undefined ? { kind: 'pageerror', text: err.message } : { kind: 'pageerror', text: err.message, stack: err.stack });
         };
         const onConsole = (msg: { type: () => string; text: () => string }): void => {
             if (msg.type() === 'error') errors.push({ kind: 'console.error', text: msg.text() });
@@ -81,10 +81,7 @@ export const test = base.extend({
         if (testInfo.status !== 'passed') return;
         const unexpected = unexpectedErrors(errors);
         if (unexpected.length > 0) {
-            const list = unexpected
-                .slice(0, 10)
-                .map((e) => `  [${e.kind}] ${e.text}`)
-                .join('\n');
+            const list = unexpected.slice(0, 10).map(formatCapturedError).join('\n');
             throw new Error(`Browser emitted ${unexpected.length} unexpected error(s) (global console guard; allowlist in lib/console-guard.ts):\n${list}`);
         }
     },

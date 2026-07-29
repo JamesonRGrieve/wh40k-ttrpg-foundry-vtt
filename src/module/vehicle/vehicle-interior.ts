@@ -51,7 +51,14 @@ export type SceneLookup = { get: (id: string) => InteriorSceneLike | undefined }
 /** True when the actor is any per-system vehicle/craft type. */
 export function isVehicleActor(actor: VehicleActorLike | null | undefined): boolean {
     if (actor === null || actor === undefined) return false;
-    return VEHICLE_TYPE_SUFFIXES.some((suffix) => actor.type.endsWith(`-${suffix}`) || actor.type === suffix);
+    // `type` is narrowed rather than trusted: this predicate is reached straight
+    // from `renderTokenHUD` payloads, where the token's actor can be a synthetic
+    // or partially-initialised document with no type yet. A throw here aborts the
+    // whole hook chain, taking every other listener's HUD control down with it.
+    const { type } = actor;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: `type` is declared string because a real vehicle actor has one; the hook payload is whatever Foundry hands over, which is what this narrow is for
+    if (typeof type !== 'string') return false;
+    return VEHICLE_TYPE_SUFFIXES.some((suffix) => type.endsWith(`-${suffix}`) || type === suffix);
 }
 
 /** The linked interior Scene id stamped on the vehicle, or null when none. */

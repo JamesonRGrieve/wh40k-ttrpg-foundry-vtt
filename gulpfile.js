@@ -47,6 +47,14 @@ const STATIC_FILES = [
   "!src/module/foundry-core/**",
   "src/templates/**/*",
   "src/images/**/*",
+  // Bestiary / content art lives in the src/packs submodule beside the pack
+  // sources, and every actor there references it as
+  // `systems/wh40k-rpg/packs/images/...`. Without this glob the art never
+  // reaches dist/, so every one of those portraits 404s in a built system —
+  // which is what the token-mask and token-ring-art e2e specs caught.
+  // The glob has magic, so it is simply empty when the submodule is not
+  // checked out (the same tolerance compilePacks has).
+  "src/packs/images/**/*",
   "src/lang/**/*",
   "src/*.json"
 ];

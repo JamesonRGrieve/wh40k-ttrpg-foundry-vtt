@@ -140,6 +140,9 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
                     rosterCountBefore = actor.system?.multiComradeRoster?.additionalIds?.length ?? null;
                     const sheet = actor.sheet;
                     if (sheet == null) return { error: 'actor.sheet is null' };
+                    // Park the sheet for teardown BEFORE any await, so the spec can
+                    // always close it even if a probe below throws mid-flight.
+                    g.__c160sheet = sheet;
                     await sheet.render({ force: true });
                     await new Promise<void>((r) => {
                         setTimeout(r, 120);
@@ -154,18 +157,33 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
                         hasBudgetRow = el.querySelector('[data-adjusted-budget]') !== null;
                         hasRoster = el.querySelector('[data-field="multi-comrade-roster"]') !== null;
 
+                        // Read the LIVE actor each time: the captured reference can
+                        // be replaced out from under us by a re-render.
+                        const drawbackCount = (): number => (g.game?.actors?.get?.(id)?.system?.regimentDrawbacks ?? []).length;
+                        // `owToggleDrawback` routes through `actor.update()`, a full
+                        // socket round-trip — the fixed 150 ms sleep this used to do
+                        // raced it. Settle on the observed change instead, capped.
+                        const settle = async (from: number): Promise<void> =>
+                            new Promise<void>((resolve) => {
+                                let waited = 0;
+                                const tick = setInterval(() => {
+                                    waited += 100;
+                                    if (drawbackCount() !== from || waited >= 2000) {
+                                        clearInterval(tick);
+                                        resolve();
+                                    }
+                                }, 100);
+                            });
+
                         const toggleBtn = el.querySelector('button[data-action="owToggleDrawback"]');
                         if (toggleBtn instanceof HTMLButtonElement && !toggleBtn.disabled) {
+                            const startCount = drawbackCount();
                             toggleBtn.click();
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 150);
-                            });
+                            await settle(startCount);
                             toggleDispatched = true;
                         }
-                        drawbacksAfter = (actor.system?.regimentDrawbacks ?? []).length;
+                        drawbacksAfter = drawbackCount();
                     }
-
-                    g.__c160sheet = sheet;
                 } catch (err) {
                     probeError = err instanceof Error ? err.message : String(err);
                 }

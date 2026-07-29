@@ -133,6 +133,9 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
                     recoveryBefore = actor.system?.comradeRecoveryDays ?? null;
                     const sheet = actor.sheet;
                     if (sheet == null) return { error: 'actor.sheet is null' };
+                    // Park the sheet for teardown BEFORE any await, so the spec can
+                    // always close it even if a probe below throws mid-flight.
+                    g.__c157sheet = sheet;
                     await sheet.render({ force: true });
                     await new Promise<void>((r) => {
                         setTimeout(r, 120);
@@ -148,18 +151,32 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
                         hasReplaceBtn = el.querySelector('button[data-action="owComradeReplace2"]') !== null;
                         hasStatusBadge = el.querySelector('[data-recovery-status]') !== null;
 
+                        // Read the LIVE actor: the captured reference can be replaced
+                        // by a re-render, and the click routes through `actor.update()`
+                        // — a full socket round-trip that a fixed 150 ms sleep raced
+                        // under parallel load. Settle on the observed change, capped.
+                        const recoveryDays = (): number | null => g.game?.actors?.get?.(id)?.system?.comradeRecoveryDays ?? null;
+                        const settle = async (from: number | null): Promise<void> =>
+                            new Promise<void>((resolve) => {
+                                let waited = 0;
+                                const tick = setInterval(() => {
+                                    waited += 100;
+                                    if (recoveryDays() !== from || waited >= 2000) {
+                                        clearInterval(tick);
+                                        resolve();
+                                    }
+                                }, 100);
+                            });
+
                         const tickBtn = el.querySelector<HTMLButtonElement>('button[data-action="owComradeTickDay"]');
                         if (tickBtn !== null && !tickBtn.disabled) {
+                            const startDays = recoveryDays();
                             tickBtn.click();
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 150);
-                            });
+                            await settle(startDays);
                             tickDispatched = true;
                         }
-                        recoveryAfter = actor.system?.comradeRecoveryDays ?? null;
+                        recoveryAfter = recoveryDays();
                     }
-
-                    g.__c157sheet = sheet;
                 } catch (err) {
                     probeError = err instanceof Error ? err.message : String(err);
                 }

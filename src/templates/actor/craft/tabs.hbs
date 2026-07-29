@@ -4,5 +4,5 @@
       as a separate application (#502). --}}
 {{> systems/wh40k-rpg/templates/actor/partial/tab-strip.hbs
     tabs=tabs
-    navClass="{{themeClassFor 'border'}}"
-    itemClass="tw-px-4 tw-py-2 tw-bg-transparent tw-border tw-border-transparent tw-text-[color:var(--wh40k-text-medium)] tw-cursor-pointer tw-transition-all tw-no-underline hover:tw-text-[color:var(--wh40k-gold)] {{themeClassFor 'accent'}} hover:tw-border-[var(--wh40k-border-color-light)] [&.active]:tw-text-[color:var(--color-text-primary)] [&.active]:tw-bg-[var(--wh40k-bg-input)] [&.active]:tw-border-[var(--wh40k-gold)] {{themeClassFor 'border'}}"}}
+    navClass=(themeClassFor 'border')
+    itemClass=(concat "tw-px-4 tw-py-2 tw-bg-transparent tw-border tw-border-transparent tw-text-[color:var(--wh40k-text-medium)] tw-cursor-pointer tw-transition-all tw-no-underline hover:tw-text-[color:var(--wh40k-gold)] " (themeClassFor 'accent') " hover:tw-border-[var(--wh40k-border-color-light)] [&.active]:tw-text-[color:var(--color-text-primary)] [&.active]:tw-bg-[var(--wh40k-bg-input)] [&.active]:tw-border-[var(--wh40k-gold)] " (themeClassFor 'border'))}}

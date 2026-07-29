@@ -281,11 +281,18 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
      * @protected
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareSubmitData returns untyped record
-    _prepareSubmitData(event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Record<string, unknown> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: super signature varies between V13/V14 typings
-        type SuperWithPrepare = { _prepareSubmitData?: (e: SubmitEvent, f: HTMLFormElement, fd: FormDataExtended) => Record<string, unknown> };
+    _prepareSubmitData(event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended, updateData?: object): Record<string, unknown> {
+        // `updateData` is core's FOURTH argument — the payload a programmatic
+        // `sheet.submit({updateData})` carries, which core merges over the form
+        // data. Omitting it here silently discarded every programmatic submit
+        // against an item sheet (the form itself still worked, so it looked
+        // fine); accept it and pass it straight through.
+        type SuperWithPrepare = {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: super signature varies between V13/V14 typings
+            _prepareSubmitData?: (e: SubmitEvent, f: HTMLFormElement, fd: FormDataExtended, ud?: object) => Record<string, unknown>;
+        };
         const proto = Object.getPrototypeOf(BaseItemSheet.prototype) as SuperWithPrepare;
-        let submitData = proto._prepareSubmitData?.call(this, event, form, formData) ?? {};
+        let submitData = proto._prepareSubmitData?.call(this, event, form, formData, updateData) ?? {};
 
         // CRITICAL FIX: Clean img field if present to prevent validation errors
         // Foundry V13 has very strict validation on img field

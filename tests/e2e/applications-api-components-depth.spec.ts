@@ -143,6 +143,8 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
             }
             interface ProbeItem {
                 id: string;
+                /** Present on every embedded document; used to look probes up by name. */
+                name?: string;
                 delete?: () => Promise<void>;
             }
             interface ProbeWindow {
@@ -427,9 +429,18 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             5_000,
                             'embed gear stack',
                         );
-                        const stack = live.items.get(created[0].id);
-                        const single = live.items.get(created[1].id);
-                        const talent = live.items.get(created[2].id);
+                        // Look the three up by NAME, not by position:
+                        // `createEmbeddedDocuments` does not guarantee the returned
+                        // order matches the input, and when it came back reordered
+                        // this probe silently tested the talent as if it were the
+                        // 5-quantity gear stack (stackType=talent, stackQty=undefined).
+                        const byName = (name: string): ProbeItem | null | undefined => {
+                            const match = created.find((doc) => doc.name === name);
+                            return match == null ? undefined : live.items.get(match.id);
+                        };
+                        const stack = byName('probe-stack');
+                        const single = byName('probe-single');
+                        const talent = byName('probe-notsplittable');
                         for (const it of [stack, single, talent]) {
                             if (it != null) {
                                 cleanups.push(async () => {
@@ -1783,7 +1794,10 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                 await probeCollapsiblePreset();
                 await probeEnhancedAnimations();
             } finally {
-                for (const fn of cleanups) {
+                // REVERSE (LIFO): the host actor is registered before the items embedded
+                // in it, so draining in insertion order deletes the parent first and
+                // every child delete then targets a document whose parent is gone.
+                for (const fn of [...cleanups].reverse()) {
                     try {
                         await fn();
                     } catch {

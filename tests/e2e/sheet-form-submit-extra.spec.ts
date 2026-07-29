@@ -220,7 +220,9 @@ const SHEET_SPECS: Record<string, SheetSpec> = {
         gameSystem: 'dh2',
         initialSystem: {
             gameSystem: 'dh2',
-            integrity: { max: 20, value: 20, critical: 0 },
+            // As with the starship above: `integrity.value` is clamped to `max`,
+            // so the probe needs headroom to move it up by one.
+            integrity: { max: 21, value: 20, critical: 0 },
             armour: { front: { value: 0, descriptor: '' }, side: { value: 0, descriptor: '' }, rear: { value: 0, descriptor: '' } },
             speed: { cruising: 0, tactical: 0, notes: '' },
             crew: { required: 1, notes: '' },
@@ -232,7 +234,11 @@ const SHEET_SPECS: Record<string, SheetSpec> = {
         gameSystem: 'rt',
         initialSystem: {
             gameSystem: 'rt',
-            hullIntegrity: { max: 40, value: 40 },
+            // `max` is deliberately ABOVE `value`: `prepareDerivedData` clamps
+            // `value` to `max`, so probing a value already at its cap (+1) is
+            // clamped straight back and reads as a failed round-trip when the
+            // sheet did exactly the right thing.
+            hullIntegrity: { max: 41, value: 40 },
             speed: 0,
             armour: 0,
             voidShields: 0,
@@ -325,8 +331,28 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                 submit: (options: { updateData: Record<string, unknown>; preventClose: boolean }) => Promise<void>;
                 render: (force: boolean) => Promise<void>;
                 close: () => Promise<void>;
+                /** Present once rendered; the diagnostic below reads the live form. */
+                element?: HTMLElement | null;
             }
-            interface FoundryItem {
+            /**
+             * The `FormDataExtended` constructor off the Foundry runtime global.
+             * `.object` is the expanded, `data-dtype`-coerced payload a submit
+             * actually sends — the thing the document rejects.
+             */
+            interface FoundryFormDataGlobal {
+                foundry?: {
+                    applications?: {
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: FormDataExtended's expanded payload is genuinely an untyped path→value bag
+                        ux?: { FormDataExtended?: new (f: HTMLFormElement) => { object: Record<string, unknown> } };
+                    };
+                };
+            }
+
+            /** `DataModel#validate` in its non-strict, changes-only form. */
+            interface Validatable {
+                validate?: (options: { changes: object; strict: boolean }) => boolean;
+            }
+            interface FoundryItem extends Validatable {
                 id: string;
                 // sheet may be absent before first render; the guard below relies on it.
                 sheet?: FoundrySheet;
@@ -335,7 +361,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
             interface FoundryItemCollection {
                 get: (id: string) => FoundryItem | undefined;
             }
-            interface FoundryDoc {
+            interface FoundryDoc extends Validatable {
                 id: string;
                 sheet?: FoundrySheet;
                 items: FoundryItemCollection;
@@ -405,6 +431,106 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
             // the root and narrows each step through the FieldNode guard.
             const getPath = (obj: object | null | undefined, path: string): FieldValue =>
                 path.split('.').reduce<object | FieldValue>((acc, key) => (isFieldNode(acc) ? acc[key] : undefined), obj ?? undefined) as FieldValue;
+
+            // A DataModelValidationError's `message` stops one level down
+            // ("system: SchemaField#_updateDiff") — the marker for "a nested
+            // field failed", with no clue WHICH one. `getAllFailures()` flattens
+            // the tree to `path → failure`, which is the only useful form here;
+            // without it a validation failure in this probe is undiagnosable.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a caught rejection value is genuinely untyped; the two narrowings below ARE the validation
+            const describeSubmitError = (err: unknown): string => {
+                const base = err instanceof Error ? err.message : String(err);
+                // eslint-disable-next-line no-restricted-syntax -- boundary: DataModelValidationError#getAllFailures is a Foundry API absent from the Error type
+                const all = (err as { getAllFailures?: () => Record<string, { message?: string }> }).getAllFailures?.();
+                if (all === undefined) return base;
+                const detail = Object.entries(all)
+                    .map(([field, failure]) => `${field}: ${failure.message ?? '?'}`)
+                    .join('; ');
+                return detail === '' ? base : `${base} [${detail}]`;
+            };
+
+            /** Render one submitted payload value without ever hitting `[object Object]`. */
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a FormDataExtended payload value is genuinely untyped; the switch below IS the narrowing
+            const describePayloadValue = (value: unknown): string => {
+                if (value === null) return 'null';
+                if (value === undefined) return 'undefined';
+                if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value);
+                try {
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- JSON.stringify is typed as returning string but genuinely returns undefined for a function/symbol
+                    return JSON.stringify(value) ?? '<unserialisable>';
+                } catch {
+                    return '<unserialisable>';
+                }
+            };
+
+            /**
+             * When a submit is rejected, the failure message stops at
+             * "system: SchemaField#_updateDiff" — it names the branch, never the
+             * field. So re-validate each of the FORM's own `system.*` inputs on
+             * its own and report the ones the document refuses: that is the
+             * offending field, and without it the failure is un-actionable.
+             */
+            const offendingFormFields = (sheet: FoundrySheet, target: FoundryDoc | FoundryItem | null): string => {
+                const root = sheet.element ?? null;
+                if (root === null || target === null) return '';
+                if (typeof target.validate !== 'function') return ' [document has no validate(); cannot isolate the field]';
+                // eslint-disable-next-line no-restricted-syntax -- boundary: `foundry.utils.expandObject` is a Foundry global with no type surface in the page context
+                const utils = (globalThis as unknown as { foundry?: { utils?: { expandObject?: (flat: object) => object } } }).foundry?.utils;
+                if (utils?.expandObject === undefined) return ' [foundry.utils.expandObject unavailable; cannot isolate the field]';
+                const expand = utils.expandObject;
+
+                // EVERY named control, not just input/select: a textarea or a
+                // ProseMirror-backed field is submitted too, and excluding them is
+                // how this diagnostic previously reported "nothing reproduces it".
+                const fields: Array<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> = Array.from(root.querySelectorAll('[name]'));
+                const flat: Record<string, string> = {};
+                const bad: string[] = [];
+                for (const field of fields) {
+                    const name = field.name;
+                    if (name === '') continue;
+                    flat[name] = field.value;
+                    try {
+                        if (!target.validate({ changes: expand({ [name]: field.value }), strict: false })) bad.push(name);
+                    } catch (fieldErr) {
+                        bad.push(`${name} (threw: ${fieldErr instanceof Error ? fieldErr.message : String(fieldErr)})`);
+                    }
+                }
+                if (bad.length > 0) return ` [offending form field(s): ${bad.join(', ')}]`;
+
+                // No single field reproduces it — check whether the WHOLE form does,
+                // which distinguishes "a combination is invalid" from "the
+                // diagnostic cannot see the failure at all".
+                let wholeFormFails = false;
+                try {
+                    wholeFormFails = !target.validate({ changes: expand(flat), strict: false });
+                } catch {
+                    wholeFormFails = true;
+                }
+                if (wholeFormFails) {
+                    const names = Object.keys(flat).join(', ');
+                    return ` [no single field fails, but the whole form does — a field COMBINATION is invalid. form fields: ${names}]`;
+                }
+
+                // The raw `input.value` strings validate (schema cleaning coerces
+                // them), yet the real submit does not — so the difference is
+                // FormDataExtended's own `data-dtype` coercion. Report the payload
+                // Foundry actually builds, which is the thing being rejected.
+                const form = root.querySelector('form') ?? (root instanceof HTMLFormElement ? root : null);
+                if (form === null) return ' [no <form> in the sheet element to reconstruct the payload from]';
+                try {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: `foundry.applications.ux.FormDataExtended` is a Foundry runtime global with no type surface in the page context
+                    const withFoundry = globalThis as unknown as FoundryFormDataGlobal;
+                    const FDE = withFoundry.foundry?.applications?.ux?.FormDataExtended;
+                    if (FDE === undefined) return ' [FormDataExtended unavailable; cannot reconstruct the submitted payload]';
+                    const payload = new FDE(form).object;
+                    const rendered = Object.entries(payload)
+                        .map(([k, v]) => `${k}=${describePayloadValue(v)}:${typeof v}`)
+                        .join(', ');
+                    return ` [submitted payload: ${rendered}]`;
+                } catch (payloadErr) {
+                    return ` [payload reconstruction threw: ${payloadErr instanceof Error ? payloadErr.message : String(payloadErr)}]`;
+                }
+            };
 
             // Deterministic "next" value chooser per field type. Booleans
             // toggle; numbers add a small constant; strings get a stable
@@ -564,7 +690,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                         try {
                             await withTimeout(liveSheet.submit({ updateData, preventClose: true }), 5_000, `${slug} sheet.submit ${path}`);
                         } catch (submitErr) {
-                            notes[key] = `submit threw: ${submitErr instanceof Error ? submitErr.message : String(submitErr)}`;
+                            notes[key] = `submit threw: ${describeSubmitError(submitErr)}${offendingFormFields(liveSheet, doc)}`;
                             continue;
                         }
                         // Foundry's submit chain resolves before the document
@@ -662,7 +788,10 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
             } finally {
                 // Best-effort: drop every created doc so subsequent
                 // specs don't trip over our residue.
-                for (const fn of cleanups) {
+                // REVERSE (LIFO): the host actor is registered before the items embedded
+                // in it, so draining in insertion order deletes the parent first and
+                // every child delete then targets a document whose parent is gone.
+                for (const fn of [...cleanups].reverse()) {
                     try {
                         await fn();
                     } catch {

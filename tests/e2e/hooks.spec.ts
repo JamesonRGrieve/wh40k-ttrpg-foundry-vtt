@@ -323,7 +323,10 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                     /* ignore */
                 }
             }
-            for (const fn of cleanups) {
+            // REVERSE (LIFO): the host actor is registered before the items embedded
+            // in it, so draining in insertion order deletes the parent first and
+            // every child delete then targets a document whose parent is gone.
+            for (const fn of [...cleanups].reverse()) {
                 await fn();
             }
         }

@@ -225,12 +225,12 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
             record('owned-item-sheet-canEdit', false, `createEmbeddedDocuments threw: ${String(err instanceof Error ? err.message : err)}`);
         }
 
-        // Item-sheet editing is now gated behind the `freeform-items` world
-        // setting (read-only by default — BaseItemSheet.canEdit). Enable it so the
-        // owned-item canEdit + edit-mode-toggle flows below exercise the editable
-        // path; the prior value is restored before the compendium-readonly flows.
-        const priorFreeform = gameMgr?.settings?.get?.('wh40k-rpg', 'freeform-items') === true;
-        await gameMgr?.settings?.set?.('wh40k-rpg', 'freeform-items', true);
+        // NOTE: item-sheet editing is NOT gated behind a world setting. This spec
+        // used to enable a `freeform-items` setting here; that setting never
+        // existed under that name (the real one is `freeform-creation`, and it
+        // gates Talents/Traits drop-to-add — #396), and `BaseItemSheet.canEdit`
+        // consults only `isCompendiumItem` / `isEditable`. Setting an unregistered
+        // key throws, which is what failed this whole spec.
 
         /* ---------- flow 3: owned-item-sheet-canEdit ---------- */
         if (ownedItem != null) {
@@ -387,9 +387,6 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
         } catch (err) {
             record('drop-event-on-sheet', false, String(err instanceof Error ? err.message : err));
         }
-
-        // Restore the freeform-items setting before the read-only flows.
-        await gameMgr?.settings?.set?.('wh40k-rpg', 'freeform-items', priorFreeform);
 
         /* ---------- flow 4: compendium-item-sheet-readonly ---------- */
         /* ---------- flow 7: prosemirror-gated-in-readonly --------- */

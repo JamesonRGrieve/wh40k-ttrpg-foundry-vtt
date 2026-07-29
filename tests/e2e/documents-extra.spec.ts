@@ -1002,7 +1002,10 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
             // synthetic DOM node we created. Drained in registration
             // order; failures are swallowed so a tombstoned entry
             // can't block downstream cleanup.
-            for (const fn of cleanups) {
+            // REVERSE (LIFO): the host actor is registered before the items embedded
+            // in it, so draining in insertion order deletes the parent first and
+            // every child delete then targets a document whose parent is gone.
+            for (const fn of [...cleanups].reverse()) {
                 try {
                     await fn();
                 } catch {

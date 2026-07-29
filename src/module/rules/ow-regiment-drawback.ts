@@ -271,3 +271,132 @@ export function removeComrade(roster: MultiComradeRoster, comradeId: string): Mu
         additionalIds: next,
     };
 }
+
+/* -------------------------------------------------------------------- */
+/*  Sheet projection                                                    */
+/* -------------------------------------------------------------------- */
+
+/** One rendered drawback row. `id` is what the remove control dispatches on. */
+interface DrawbackPanelRow {
+    readonly id: string;
+    readonly description: string;
+    readonly refund: number;
+}
+
+/**
+ * The merged penalty as the panel renders it. `characteristics` is a ROW LIST,
+ * not the engine's `Record<string, number>`: the template iterates it and reads
+ * `char.key` / `char.value`, and a Record has no `.length`, so the engine shape
+ * silently rendered nothing.
+ */
+interface DrawbackPanelPenalty {
+    readonly characteristics: ReadonlyArray<{ readonly key: string; readonly value: number }>;
+    readonly skills: ReadonlyArray<string>;
+    readonly talents: ReadonlyArray<string>;
+    readonly wounds: number;
+    readonly logistics: number;
+    readonly kitModifier: number;
+}
+
+/** Everything `actor/panel/ow-drawback-panel.hbs` reads. */
+export interface DrawbackPanelData {
+    readonly drawbacks: readonly DrawbackPanelRow[];
+    readonly hasDrawbacks: boolean;
+    readonly baseBudget: number;
+    readonly appliedRefund: number;
+    readonly adjustedBudget: number;
+    readonly hasPenaltyRow: boolean;
+    readonly penalty: DrawbackPanelPenalty;
+    readonly roster: {
+        readonly present: boolean;
+        readonly primaryId: string;
+        readonly additionalIds: readonly string[];
+        readonly totalCount: number;
+    };
+}
+
+/** Resolve a stored drawback id to its compendium descriptor, or undefined. */
+export type DrawbackResolver = (id: string) => RegimentDrawback | undefined;
+
+/** Project the engine's optional grant shape into the panel's render shape. */
+function toPanelPenalty(grants: RegimentGrants): DrawbackPanelPenalty {
+    return {
+        characteristics: Object.entries(grants.characteristics ?? {}).map(([key, value]) => ({ key, value })),
+        skills: grants.skills ?? [],
+        talents: grants.talents ?? [],
+        wounds: grants.wounds ?? 0,
+        logistics: grants.logistics ?? 0,
+        kitModifier: grants.kitModifier ?? 0,
+    };
+}
+
+/** True when any field of a merged penalty is worth rendering. */
+function hasAnyPenalty(penalty: DrawbackPanelPenalty): boolean {
+    return (
+        penalty.characteristics.length > 0 ||
+        penalty.skills.length > 0 ||
+        penalty.talents.length > 0 ||
+        penalty.wounds !== 0 ||
+        penalty.logistics !== 0 ||
+        penalty.kitModifier !== 0
+    );
+}
+
+/**
+ * Project the persisted selection into the shape the panel renders.
+ *
+ * `system.regimentDrawbacks` stores bare ids (Direction #7 — the descriptors
+ * live on compendium documents). The panel was previously handed that raw
+ * string array while its template read `drawback.id` / `.description` /
+ * `.refund`, so every row rendered blank AND every remove button carried
+ * `data-drawback-id=""` — which `owToggleDrawback` treats as a no-op. The
+ * control therefore did nothing at all.
+ *
+ * `resolve` supplies the descriptor for an id. An id that does not resolve
+ * still gets a row carrying its own id, so the remove control keeps working
+ * for a selection whose content pack is absent or renamed — a drawback you
+ * cannot remove is strictly worse than one with a bare label.
+ * @param {readonly string[]} ids  The persisted drawback ids.
+ * @param {MultiComradeRoster | null} roster  The Multiple Comrades roster, or null for the RAW default.
+ * @param {DrawbackResolver} resolve  Id → descriptor lookup.
+ * @param {number} baseBudget  The pre-refund Regiment Creation budget.
+ * @returns {DrawbackPanelData}  The panel context.
+ */
+export function buildDrawbackPanel(
+    ids: readonly string[],
+    roster: MultiComradeRoster | null,
+    resolve: DrawbackResolver,
+    baseBudget: number,
+): DrawbackPanelData {
+    const descriptors: RegimentDrawback[] = [];
+    const rows: DrawbackPanelRow[] = [];
+    for (const id of ids) {
+        if (id === '') continue;
+        const descriptor = resolve(id);
+        if (descriptor !== undefined) descriptors.push(descriptor);
+        rows.push({
+            id,
+            description: descriptor?.description ?? id,
+            refund: descriptor?.refund ?? 0,
+        });
+    }
+
+    const budget = applyDrawbacksToBudget(baseBudget, descriptors);
+    const penalty = toPanelPenalty(mergeDrawbackPenalties(descriptors));
+
+    return {
+        drawbacks: rows,
+        hasDrawbacks: rows.length > 0,
+        baseBudget,
+        appliedRefund: budget.appliedRefund,
+        adjustedBudget: budget.adjustedBudget,
+        hasPenaltyRow: hasAnyPenalty(penalty),
+        penalty,
+        roster: {
+            present: roster !== null,
+            primaryId: roster?.primaryId ?? '',
+            additionalIds: roster?.additionalIds ?? [],
+            totalCount: roster === null ? 0 : totalComradeCount(roster),
+        },
+    };
+}
