@@ -14,6 +14,12 @@
                     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
                         <span class="tw-w-6 tw-h-6 tw-flex tw-items-center tw-justify-center tw-bg-[var(--wh40k-card-gold)] tw-text-[var(--color-bg-primary)] tw-font-bold tw-text-[0.8rem] tw-rounded-full tw-border {{themeClassFor 'border'}}">{{inc @index}}</span>
                         <span class="tw-text-[0.85rem] tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-card-text)]">{{hit.location}}</span>
+                        {{!-- A burst's extra hits can land on different enemies (#513), so
+                              each hit names its own target. Hidden for a single-target
+                              attack, where repeating one name on every row is just noise. --}}
+                        {{#if hit.targetName}}
+                        <span class="tw-ml-auto tw-text-[0.75rem] tw-text-[var(--wh40k-card-muted)] tw-truncate tw-max-w-[12rem]" data-hit-target>{{hit.targetName}}</span>
+                        {{/if}}
                     </div>
 
                     <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">

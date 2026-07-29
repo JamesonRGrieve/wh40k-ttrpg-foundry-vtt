@@ -7,6 +7,7 @@ import { calculateCombatActionModifier, updateAvailableCombatActions } from '../
 import { WH40K } from '../rules/config.ts';
 import { rollDifficulties } from '../rules/difficulties.ts';
 import { type DynamicModifierItemLike, ownsActivatableHook } from '../rules/dynamic-modifiers.ts';
+import type { AllocationStrategy, AllocationTarget } from '../rules/hit-allocation.ts';
 import { hitDropdown } from '../rules/hit-locations.ts';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.ts';
 import { targetSizeModifier } from '../rules/target-size.ts';
@@ -400,6 +401,16 @@ export class WeaponRollData extends RollData {
     fireRate: number = 1;
     /** Rounds/charges that actually leave the weapon — Storm-doubled, clip-clamped. */
     shotsFired: number = 1;
+    /**
+     * How a burst's extra hits are spread (#513). `'original'` keeps everything on
+     * the declared target — the single-target default.
+     */
+    hitAllocation: AllocationStrategy = 'original';
+    /**
+     * Targets the extra hits may be moved onto, already filtered for RAW's two-metre
+     * radius and not-harder-to-hit constraint by whoever populates it.
+     */
+    spreadTargets: AllocationTarget[] = [];
     ammoUsed: number = 0;
     weaponModifiers: Record<string, number> = {};
 

@@ -164,6 +164,13 @@ export class Hit {
     location = 'Body';
 
     /**
+     * Which target this hit landed on (#513). A burst's extra hits may be spread
+     * across nearby enemies, so the target is a property of the HIT, not of the
+     * attack. Empty when the attack had no declared target.
+     */
+    targetName = '';
+
+    /**
      * Cover armour bonus the target benefits from at this hit location.
      * Populated from active Cover situational modifiers in the roll dialog
      * (see `attack-options.ts`); consumed by `AssignDamageData.update()`.
@@ -243,6 +250,9 @@ export class Hit {
             const initialHit = getHitLocationForRoll(roll?.total ?? 0) ?? 'Body';
             // eslint-disable-next-line no-restricted-syntax -- boundary: additionalHitLocations() returns a plain object from legacy JS with no TypeScript schema
             const locationTable = additionalHitLocations() as Record<string, Record<number, string>>;
+            // `hitNumber` is this hit's index WITHIN ITS OWN TARGET (#513), so a hit
+            // spread onto a second enemy starts that enemy's Table 7-2 walk over
+            // rather than inheriting the original target's position in it.
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: table lookup may return undefined at runtime despite the cast type
             hit.location = locationTable[initialHit]?.[hitNumber <= 5 ? hitNumber : 5] ?? 'Body';
         }

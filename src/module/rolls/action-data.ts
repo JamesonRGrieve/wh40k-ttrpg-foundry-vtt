@@ -3,6 +3,7 @@ import { SYSTEM_ID } from '../constants.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { hitsForDegrees, isBurstAction } from '../rules/auto-fire.ts';
 import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
+import { type AllocationTarget, allocateHits } from '../rules/hit-allocation.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/opposed.ts';
 import type { RerollOption } from '../rules/reroll.ts';
@@ -458,15 +459,41 @@ export class ActionData {
         if ((this.rollData.success || weaponRollData.isThrown) && this.damageData !== undefined) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔AttackDataLike are duck-typed siblings
             const attackData = this as unknown as AttackDataLike;
-            let hit = await Hit.createHit(attackData, 0);
-            this.damageData.hits.push(hit);
 
-            for (let i = 0; i < this.damageData.additionalHits; i++) {
+            // Spread the burst across the eligible targets (#513). Each hit carries
+            // its index WITHIN ITS OWN TARGET, so Table 7-2 restarts per enemy
+            // instead of walking one sequence across all of them.
+            const allocation = allocateHits({
+                hitCount: 1 + Math.max(0, this.damageData.additionalHits),
+                originalTarget: this.#declaredTarget(),
+                extraTargets: this.#spreadTargets(weaponRollData),
+                strategy: weaponRollData.hitAllocation,
+            });
+
+            for (const allocated of allocation) {
                 // eslint-disable-next-line no-await-in-loop -- sequential roll generation; each createHit advances dice state
-                hit = await Hit.createHit(attackData, i + 1);
+                const hit = await Hit.createHit(attackData, allocated.hitIndexForTarget);
+                hit.targetName = allocated.target.name;
                 this.damageData.hits.push(hit);
             }
         }
+    }
+
+    /** The declared target, as an allocation entry. Falls back to an unnamed placeholder. */
+    #declaredTarget(): AllocationTarget {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor kept untyped to avoid a circular import
+        const target = this.rollData.targetActor as { id?: string; name?: string } | undefined;
+        return { id: target?.id ?? 'original', name: target?.name ?? '' };
+    }
+
+    /**
+     * Further targets a burst's extra hits may land on. RAW gates these on being
+     * within two metres of the original target and no harder to hit; the caller
+     * that populates `rollData.spreadTargets` owns that filtering, so this layer
+     * stays free of positional data.
+     */
+    #spreadTargets(weaponRollData: WeaponRollData): AllocationTarget[] {
+        return weaponRollData.spreadTargets;
     }
 
     addEffect(name: string, effect: string): void {
