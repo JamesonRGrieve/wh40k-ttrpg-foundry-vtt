@@ -1,4 +1,5 @@
 import type { DynamicModifierEntry, GrantedEffectEntry, GrantEffectKind } from '../data/shared/modifiers-template.ts';
+import { normalizeTag, TARGET_TAG_AXES, type TargetTagAxis, type TargetTagsByAxis } from './situation-tags.ts';
 
 /**
  * The runtime context a dynamic modifier hook is evaluated against — the live
@@ -43,10 +44,26 @@ export interface DynamicModifierSituation {
     isParry?: boolean;
     /** The combat action name (for `when: onAction` / `condition: action`). */
     action?: string;
-    /** The range band to the target (`point-blank | short | …`; for `atRangeBand` / `condition: rangeBand`). */
-    rangeBand?: string;
-    /** Tags describing the target — creature type, faction, alignment (for `vsType` / `vsFaction` / `vsAlignment`). */
+    /**
+     * The range band to the target (`point-blank | short | …`; for `atRangeBand` /
+     * `condition: rangeBand`). Built by `rangeBandOf` from the roll's computed
+     * bracket; `undefined` means the roll never computed one, which is NOT the
+     * same as "the band did not match" — see {@link findInertTriggers}.
+     */
+    rangeBand?: string | undefined;
+    /**
+     * Tags describing the target — creature type, faction, alignment (for
+     * `vsType` / `vsFaction` / `vsAlignment`). Built by `collectTargetTags`.
+     */
     targetTags?: readonly string[];
+    /**
+     * The same target tags grouped by the axis that produced them, carried
+     * alongside the flat {@link targetTags} purely so an axis that contributed
+     * NOTHING is distinguishable from one whose tags simply did not match.
+     * Without it a `vsFaction` hook against a factionless target is
+     * indistinguishable from a working hook aimed at the wrong enemy.
+     */
+    targetTagAxes?: TargetTagsByAxis | undefined;
     /** States on the acting actor — `fatigued`, `frenzied`, `aiming`, `sustained`, `braced` (for `whileState`). */
     states?: readonly string[];
     /** Ids of per-attack effects the attacker activated this roll (for `condition: activated`; e.g. `eyeOfVengeance`). */
@@ -170,7 +187,32 @@ function whenMatches(trigger: DynamicTrigger, situation: DynamicModifierSituatio
     if (w === 'onParry') return situation.isParry === true;
     if (w === 'onAction') return trigger.conditionValue === '' || situation.action === trigger.conditionValue;
     // The only remaining `when` member is `atRangeBand`.
-    return situation.rangeBand === trigger.conditionValue;
+    return situation.rangeBand === normalizeTag(trigger.conditionValue);
+}
+
+/** Is `condition` one of the three target-tag axes? */
+function isTargetTagAxis(condition: string): condition is TargetTagAxis {
+    return (TARGET_TAG_AXES as readonly string[]).includes(condition);
+}
+
+/**
+ * Does the target carry `value` on the `axis` the condition names?
+ *
+ * Both sides are slugged, so an authored `Daemonic` / `daemonic` / `DAEMONIC`
+ * meets the derived tag in one spelling.
+ *
+ * The axis is honoured when the situation supplies the per-axis grouping: a
+ * `vsType` hook must match something the target IS, never the organisation it
+ * belongs to, or `vsType: 'Blood Pact'` would fire on every axis at once. A
+ * situation carrying only the flat {@link DynamicModifierSituation.targetTags}
+ * falls back to it — the field is the declared, documented surface, and a caller
+ * that hands over a plain tag list still gets a working predicate.
+ */
+function targetTagMatches(axis: TargetTagAxis, value: string, situation: DynamicModifierSituation): boolean {
+    const tag = normalizeTag(value);
+    const scoped = situation.targetTagAxes?.[axis];
+    if (scoped !== undefined) return scoped.includes(tag);
+    return (situation.targetTags ?? []).includes(tag);
 }
 
 /** Does the trigger's `condition` predicate match the situation? */
@@ -180,9 +222,9 @@ function conditionMatches(trigger: DynamicTrigger, situation: DynamicModifierSit
     if (c === '') return true;
     if (c === 'melee') return situation.isMelee === true;
     if (c === 'ranged') return situation.isRanged === true;
-    if (c === 'whileState') return (situation.states ?? []).includes(value);
-    if (c === 'vsType' || c === 'vsFaction' || c === 'vsAlignment') return (situation.targetTags ?? []).includes(value);
-    if (c === 'rangeBand') return situation.rangeBand === value;
+    if (c === 'whileState') return (situation.states ?? []).includes(normalizeTag(value));
+    if (isTargetTagAxis(c)) return targetTagMatches(c, value, situation);
+    if (c === 'rangeBand') return situation.rangeBand === normalizeTag(value);
     if (c === 'action') return situation.action === value;
     if (c === 'activated') return (situation.activated ?? []).includes(value);
     // The owning item's specialization ('Melee' / 'Ranged') must match the attack mode —
@@ -202,6 +244,80 @@ function conditionMatches(trigger: DynamicTrigger, situation: DynamicModifierSit
  */
 export function hookApplies(hook: DynamicTrigger, situation: DynamicModifierSituation, itemSpecialization = ''): boolean {
     return whenMatches(hook, situation) && conditionMatches(hook, situation, itemSpecialization);
+}
+
+/**
+ * One authored trigger the situation is structurally incapable of ever matching
+ * — the hook is not "not applying right now", it CANNOT apply at all.
+ */
+export interface InertTrigger {
+    /** The owning item's name (provenance). */
+    source: string;
+    /** The trigger field that can never be satisfied (`vsType`, `whileState`, `rangeBand`, `atRangeBand`). */
+    condition: string;
+    /** The value the trigger tests for. */
+    value: string;
+}
+
+/**
+ * Whether the situation can never satisfy this trigger, whatever the authored
+ * value is — because the input the trigger reads was never supplied.
+ *
+ * This is the distinction that let #518 hide: a `vsType` hook that does not fire
+ * because the target is an Ork looks exactly like one that does not fire because
+ * nothing ever populated `targetTags`. The first is correct play, the second is
+ * a broken engine. An axis with zero tags means no value on it could match, so
+ * an empty axis counts as "never supplied" alongside a missing one.
+ */
+function triggerIsInert(trigger: DynamicTrigger, situation: DynamicModifierSituation): boolean {
+    const c = trigger.condition;
+    if (isTargetTagAxis(c)) {
+        const axis = situation.targetTagAxes?.[c];
+        return axis === undefined || axis.length === 0;
+    }
+    if (c === 'whileState') return situation.states === undefined;
+    if (c === 'rangeBand' || trigger.when === 'atRangeBand') return situation.rangeBand === undefined;
+    return false;
+}
+
+/** The trigger field to report for an inert hook — its condition, else its timing. */
+function inertTriggerField(trigger: DynamicTrigger): string {
+    return trigger.condition !== '' ? trigger.condition : trigger.when;
+}
+
+/**
+ * Walk a set of owned items and return every authored trigger the ATTACK-path
+ * situation can never satisfy, de-duplicated and order-stable. Pure: the caller
+ * decides how to surface them (the damage pipeline raises a GM notification).
+ *
+ * Scanning grants as well as numeric hooks matters — a conditional grant is gated
+ * by the exact same trigger primitives, so it goes inert the same way.
+ *
+ * Defender-side numeric hooks are skipped: they are evaluated during damage
+ * ASSIGNMENT against a different, deliberately narrower situation, so judging
+ * them from the attack path would report a false positive on every actor that
+ * carries one. Grants have no side — they always modify the attack.
+ */
+export function findInertTriggers(items: Iterable<DynamicModifierItemLike>, situation: DynamicModifierSituation): InertTrigger[] {
+    const out: InertTrigger[] = [];
+    const seen = new Set<string>();
+    const record = (item: DynamicModifierItemLike, trigger: DynamicTrigger): void => {
+        if (!triggerIsInert(trigger, situation)) return;
+        const entry: InertTrigger = { source: item.name ?? '', condition: inertTriggerField(trigger), value: trigger.conditionValue };
+        const key = `${entry.source}|${entry.condition}|${entry.value}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        out.push(entry);
+    };
+    for (const item of items) {
+        const mods = item.system.modifiers;
+        for (const hook of mods?.dynamicModifiers ?? []) {
+            if (hook.side === 'defender') continue;
+            record(item, hook);
+        }
+        for (const grant of mods?.grantedEffects ?? []) record(item, grant);
+    }
+    return out;
 }
 
 /** The minimal owned-item surface the collectors read. */

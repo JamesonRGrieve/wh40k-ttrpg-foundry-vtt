@@ -111,7 +111,8 @@
             "GiveTargetNotOwned": "You can't give items to a character you don't control.",
             "HydrationFailed": "{actor}: {count} item(s) could not load their compendium data and are incomplete — {items}",
             "UnresolvedWeaponVariant": "{item}: could not determine the '{field}' value for this game line ({actor}). Treated as not-set rather than guessed — check the weapon's per-line authoring.",
-            "AutoDamageFailed": "Auto-roll damage failed for {attacker} ({weapon}) against {target}. Use the Roll Damage button on the attack card; see the console for details."
+            "AutoDamageFailed": "Auto-roll damage failed for {attacker} ({weapon}) against {target}. Use the Roll Damage button on the attack card; see the console for details.",
+            "InertModifierHook": "Modifier hook could not apply — this attack carried nothing for it to test against: {hooks}. Select a target, or check the condition value authored on the item."
         },
         "Confirm": "Confirm",
         "Cancel": "Cancel",

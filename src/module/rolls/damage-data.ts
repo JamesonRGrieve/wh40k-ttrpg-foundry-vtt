@@ -1,3 +1,4 @@
+import { t } from '../i18n/t.ts';
 import { calculateAmmoSpecials } from '../rules/ammo.ts';
 import { getCriticalDamage } from '../rules/critical-damage.ts';
 import {
@@ -6,10 +7,13 @@ import {
     type DynamicModifierContext,
     type DynamicModifierItemLike,
     type DynamicModifierSituation,
+    findInertTriggers,
+    type InertTrigger,
     modeDelta,
 } from '../rules/dynamic-modifiers.ts';
 import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { scatterDirection } from '../rules/scatter.ts';
+import { type ActorStateSource, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
 import {
     applyKeepHighestToDie,
@@ -63,7 +67,7 @@ export interface AttackDataLike {
     rollData: {
         weapon?: ActionItemLike;
         power?: ActionItemLike;
-        sourceActor: {
+        sourceActor: ActorStateSource & {
             // `effectiveBonus` carries the base bonus PLUS the bonus-only modifier
             // channel and fatigue halving (#415); outcome consumers read it, falling
             // back to `bonus` for any actor path that hasn't populated it.
@@ -75,14 +79,26 @@ export interface AttackDataLike {
             /** Active game line, used to resolve the line's critical-injury pack (#439). */
             system?: { gameSystem?: string };
         };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor; typing omitted to avoid circular imports
-        targetActor?: unknown;
+        /**
+         * The declared target. Typed as the tag-derivation surface only (#518) —
+         * the live Foundry Actor satisfies it structurally, and narrowing it here
+         * avoids the circular import a full actor type would need.
+         */
+        targetActor?: TargetTagSource | null | undefined;
         roll: { total: number } | null;
         isCalledShot?: boolean;
         calledShotLocation?: string;
         coverAP?: number;
         action: string;
         rangeName: string;
+        /**
+         * The computed range bracket (`pointBlank` / `short` / … / `melee`), set by
+         * `rules/range.ts`. Slugged into the situation's `rangeBand` so `rangeBand` /
+         * `atRangeBand` hooks can fire; absent when the roll never computed one.
+         */
+        rangeBracket?: string | undefined;
+        /** Roll-time modifier map, read for the derived `aiming` state. */
+        modifiers?: Readonly<Partial<Record<string, number>>> | undefined;
         attackSpecials: { name: string; level?: number }[];
         dos: number;
         eyeOfVengeance: boolean;
@@ -91,6 +107,93 @@ export interface AttackDataLike {
     };
     // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor; kept unknown to avoid circular imports
     damageData?: { targetActor?: unknown };
+}
+
+/**
+ * The `whileState` slug for a declared Aim. Aim is a roll option rather than an
+ * actor condition, so it is the one state not already carried by `actor.statuses`.
+ */
+const AIM_STATE = 'aiming';
+
+/** The acting actor's states for `condition: whileState` — its conditions plus a declared Aim. */
+function attackStates(rollData: AttackDataLike['rollData']): string[] {
+    const states = collectActorStates(rollData.sourceActor);
+    if ((rollData.modifiers?.['aim'] ?? 0) > 0 && !states.includes(AIM_STATE)) states.push(AIM_STATE);
+    return states;
+}
+
+/**
+ * Assemble the dynamic-modifier situation for one attack (#518) — the single
+ * builder BOTH the numeric-hook pass ({@link Hit.applyDynamicModifiers}) and the
+ * conditional-grant pass ({@link Hit._calculateSpecials}) use, so the two cannot
+ * drift on which trigger inputs they supply.
+ *
+ * Every input the engine's predicates read is supplied here. Omitting one is
+ * exactly how `vsType` / `vsFaction` / `vsAlignment` came to be inert: the
+ * condition tested an array that nothing ever wrote, so it was permanently false
+ * with no error to show for it.
+ */
+function buildAttackSituation(attackData: AttackDataLike, opts: { isCrit: boolean }): DynamicModifierSituation {
+    const rollData = attackData.rollData;
+    const actionItem = rollData.weapon ?? rollData.power;
+    // A burst's extra hits are allocated by target NAME (#513), so every hit reads
+    // the DECLARED target's tags. Per-hit tags would need the allocator to carry
+    // the target actor, not just its id/name.
+    const targetTags = collectTargetTags(rollData.targetActor);
+    return {
+        isMelee: actionItem?.isMelee === true,
+        isRanged: actionItem?.isRanged === true,
+        isCrit: opts.isCrit,
+        action: rollData.action,
+        rangeBand: rangeBandOf(rollData.rangeBracket),
+        states: attackStates(rollData),
+        targetTags: targetTags.all,
+        targetTagAxes: targetTags.byAxis,
+        // Per-attack activated effects (Eye of Vengeance, …) for `condition: activated` hooks.
+        activated: rollData.eyeOfVengeance ? ['eyeOfVengeance'] : [],
+    };
+}
+
+/**
+ * Inert triggers already reported on this client, so a full-auto burst raises one
+ * warning per dead hook rather than one per hit. Mirrors the same memo
+ * `data/item/weapon.ts` keeps for unresolved per-line variants.
+ */
+const reportedInertTriggers = new Set<string>();
+
+/** Identity of one inert trigger for the report memo. */
+function inertKey(entry: InertTrigger): string {
+    return `${entry.source}|${entry.condition}|${entry.value}`;
+}
+
+/** Clear the inert-trigger report memo. Test seam — in play the memo lives for the session. */
+export function resetInertTriggerReports(): void {
+    reportedInertTriggers.clear();
+}
+
+/**
+ * Tell the GM about authored hooks the situation can never satisfy (#518).
+ *
+ * Silence is what made the inert target conditions invisible for so long: a hook
+ * that quietly contributes nothing reads exactly like one that works. This turns
+ * "can never match" into a visible warning. Diagnostic only — it never alters a
+ * roll, and a hook that merely does not match the current enemy is not reported.
+ */
+function warnInertTriggers(items: Iterable<DynamicModifierItemLike>, situation: DynamicModifierSituation): void {
+    const inert = findInertTriggers(items, situation);
+    if (inert.length === 0) return;
+    if (typeof game === 'undefined' || typeof ui === 'undefined') return;
+    // `game.user` and `ui.notifications` only exist on a booted client — the same
+    // code runs under vitest and headless pack tooling. Read through locals whose
+    // declared type says so, rather than suppressing an "unnecessary" check.
+    const session: { user?: { isGM?: boolean } } = game;
+    const notifier: { notifications?: { warn: (message: string) => void } } = ui;
+    if (session.user?.isGM !== true) return;
+    const fresh = inert.filter((entry) => !reportedInertTriggers.has(inertKey(entry)));
+    if (fresh.length === 0) return;
+    for (const entry of fresh) reportedInertTriggers.add(inertKey(entry));
+    const hooks = fresh.map((entry) => `${entry.source} (${entry.condition}: ${entry.value})`).join(', ');
+    notifier.notifications?.warn(t('WH40K.Warning.InertModifierHook', { hooks }));
 }
 
 /** A single resolvable damage-die result from a Foundry Roll term. */
@@ -286,7 +389,6 @@ export class Hit {
         const sourceActor = attackData.rollData.sourceActor;
         const items = sourceActor.items;
         if (items === undefined) return;
-        const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         const charBonus: Record<string, number> = {};
         for (const [short, fuzzy] of Object.entries(DAMAGE_CHAR_FUZZY)) {
             // Effective bonus so dynamic-modifier hooks that scale by a characteristic
@@ -304,14 +406,8 @@ export class Hit {
             penetration: this.penetration,
             armourPoints: 0,
         };
-        const situation: DynamicModifierSituation = {
-            isMelee: actionItem?.isMelee === true,
-            isRanged: actionItem?.isRanged === true,
-            isCrit: this.righteousFury.length > 0,
-            action: attackData.rollData.action,
-            // Per-attack activated effects (Eye of Vengeance, …) for `condition: activated` hooks.
-            activated: attackData.rollData.eyeOfVengeance ? ['eyeOfVengeance'] : [],
-        };
+        const situation = buildAttackSituation(attackData, { isCrit: this.righteousFury.length > 0 });
+        warnInertTriggers(items, situation);
         for (const component of collectDynamicComponents(items, ctx, situation)) {
             if (component.side !== 'attacker') continue;
             if (component.target !== 'damage' && component.target !== 'penetration') continue;
@@ -640,11 +736,7 @@ export class Hit {
         // adding Concussive (2) [DH2/OW/BC] or Shocking [DW/DH1] on an All-Out
         // Attack. Read from each talent's `grantedEffects` data (per line) rather
         // than name-matched here, so the correct quality applies per game line.
-        const grantSituation: DynamicModifierSituation = {
-            action: attackData.rollData.action,
-            isMelee: actionItem.isMelee,
-            isRanged: actionItem.isRanged,
-        };
+        const grantSituation = buildAttackSituation(attackData, { isCrit: this.righteousFury.length > 0 });
         for (const granted of collectGrantedQualities(sourceActor.items ?? [], grantSituation)) {
             if (attackData.rollData.attackSpecials.some((s) => s.name === granted.name)) continue;
             attackData.rollData.attackSpecials.push({ name: granted.name, level: granted.level });
