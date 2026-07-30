@@ -356,6 +356,13 @@ function isTwOrExempt(token) {
  * @returns {Generator<string>}
  */
 export function* classTokens(src) {
+    // Drop Handlebars comments first. Their contents never reach the DOM, so a
+    // class attribute inside one cannot carry project CSS — yet item-header.hbs
+    // documents its block-partial slot with a literal
+    // `<div class="...">…stat bar…</div>` example, and counting that example's
+    // `...` as a project class held the template in `mixed` on documentation
+    // alone. Both comment forms: `{{!-- … --}}` (may contain `}}`) and `{{! … }}`.
+    src = src.replace(/\{\{!--[\s\S]*?--\}\}/g, ' ').replace(/\{\{![^}]*\}\}/g, ' ');
     // Pre-sanitize: replace " inside HBS expressions with a visually-distinct
     // non-ASCII character so CLASS_ATTR_RE (which uses [^"] as its class-value
     // stopper) does not terminate early when a class attr contains a HBS helper
