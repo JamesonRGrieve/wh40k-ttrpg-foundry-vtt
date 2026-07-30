@@ -1,5 +1,6 @@
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import { hitLocationNames } from './hit-locations.ts';
+import { resolveTwoWeaponPenalties } from './two-weapon-fighting.ts';
 
 type CombatAction = {
     name: string;
@@ -14,7 +15,29 @@ type CombatAction = {
 /** The slice of {@link WeaponRollData} that {@link calculateCombatActionModifier}
  *  reads/writes — narrowed so callers (and structural test mocks) satisfy it
  *  without fabricating a whole WeaponRollData. */
-export type CombatActionModifierInput = Pick<WeaponRollData, 'actions' | 'action' | 'isCalledShot' | 'calledShotLocation' | 'modifiers'>;
+export type CombatActionModifierInput = Pick<
+    WeaponRollData,
+    'actions' | 'action' | 'isCalledShot' | 'calledShotLocation' | 'modifiers' | 'sourceActor' | 'weapon' | 'twoWeaponPlan'
+>;
+
+/** The canonical action name whose penalties {@link resolveTwoWeaponPenalties} owns. */
+const TWO_WEAPON_ACTION = 'Two-Weapon Fighting';
+
+/**
+ * Canonical talent names owned by an actor, as the talent-gated rules expect them.
+ *
+ * Reads the owned `talent` items rather than asking the actor for each name, so
+ * the rule receives the actor's real talent state in one pass.
+ * @param {CombatActionModifierInput['sourceActor']} actor  The acting actor, if any.
+ * @returns {ReadonlySet<string>}  Trimmed talent names.
+ */
+function talentNames(actor: CombatActionModifierInput['sourceActor']): ReadonlySet<string> {
+    const names = new Set<string>();
+    for (const item of actor?.items ?? []) {
+        if (item.type === 'talent' && typeof item.name === 'string') names.add(item.name.trim());
+    }
+    return names;
+}
 
 /**
  * @param rollData {WeaponRollData}
@@ -40,6 +63,22 @@ export function calculateCombatActionModifier(rollData: CombatActionModifierInpu
     // whichever ran last won, silently dropping the Called Shot −20 (#408).
     const actionInfo = allCombatActions().find((action: CombatAction) => action.name === currentAction);
     rollData.modifiers['combat-action'] = actionInfo?.attack?.modifier ?? 0;
+
+    // Two-Weapon Fighting's penalties are talent-dependent, so they cannot be a
+    // fixed `attack.modifier` on the action entry like Called Shot's −20 (#517).
+    // Without this the action carried no modifier at all: its description promised
+    // −20/−20 with Wielder/Master/Ambidextrous handling and named the resolver
+    // that implements it, while the resolver had no caller and the attack went in
+    // unmodified — strictly BETTER than RAW, which is why nobody reported it.
+    if (rollData.action === TWO_WEAPON_ACTION) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-unnecessary-boolean-literal-compare -- defensive: `weapon` is declared optional but the non-strict config widens it to always-present, so the compiler reports this guard as redundant; a two-weapon action can still be selected before a weapon is chosen
+        const isMelee = rollData.weapon?.isMelee === true;
+        const penalties = resolveTwoWeaponPenalties({ isMelee, talents: talentNames(rollData.sourceActor) });
+        rollData.modifiers['combat-action'] = penalties.mainPenalty;
+        // The off-hand figure is carried rather than applied: it belongs to the
+        // Free-Action follow-up, which is a second attack the player declares.
+        rollData.twoWeaponPlan = { isMelee, mainPenalty: penalties.mainPenalty, offPenalty: penalties.offPenalty };
+    }
 }
 
 /**

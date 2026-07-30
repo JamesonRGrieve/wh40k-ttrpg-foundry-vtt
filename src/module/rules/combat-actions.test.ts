@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { allCombatActions, calculateCombatActionModifier, type CombatActionModifierInput } from './combat-actions';
 
-function mockRollData(action: string, weaponAttackBonus: number): CombatActionModifierInput {
+function mockRollData(action: string, weaponAttackBonus: number, talents: string[] = [], isMelee = true): CombatActionModifierInput {
     return {
         actions: { [action]: action },
         action,
@@ -9,6 +9,11 @@ function mockRollData(action: string, weaponAttackBonus: number): CombatActionMo
         calledShotLocation: '',
         // The weapon's own attackBonus lives on modifiers['attack'] (set by RollData.update()).
         modifiers: { attack: weaponAttackBonus },
+        // eslint-disable-next-line no-restricted-syntax -- test: minimal structural stand-in for the talent-owning actor (#517)
+        sourceActor: { items: talents.map((name) => ({ type: 'talent', name })) } as unknown as CombatActionModifierInput['sourceActor'],
+        // eslint-disable-next-line no-restricted-syntax -- test: minimal structural stand-in for the weapon's melee/ranged flavour
+        weapon: { isMelee, isRanged: !isMelee } as unknown as CombatActionModifierInput['weapon'],
+        twoWeaponPlan: null,
     };
 }
 
@@ -124,14 +129,15 @@ describe('combat-actions registry (#119)', () => {
     });
 });
 
+/** Stub the `game.wh40k.log` the modifier calculator writes to. Shared by both suites below. */
+function stubGame(): void {
+    vi.stubGlobal('game', { wh40k: { log: (): void => {} } });
+}
+
 describe('calculateCombatActionModifier — combat-action modifier keying (#408)', () => {
     afterEach(() => {
         vi.unstubAllGlobals();
     });
-
-    function stubGame(): void {
-        vi.stubGlobal('game', { wh40k: { log: (): void => {} } });
-    }
 
     it('Called Shot applies -20 via its OWN key without clobbering the weapon attackBonus', () => {
         stubGame();
@@ -162,5 +168,68 @@ describe('calculateCombatActionModifier — combat-action modifier keying (#408)
         const allOut = mockRollData('All Out Attack', 0);
         calculateCombatActionModifier(allOut);
         expect(allOut.modifiers['combat-action']).toBe(30);
+    });
+});
+
+/**
+ * Two-Weapon Fighting applies its RAW penalties (#517).
+ *
+ * The action was selectable, its description promised −20/−20 with
+ * Wielder/Master/Ambidextrous handling and named `resolveTwoWeaponRefocus()`, and
+ * no modifier was applied at all — the resolver had no caller. Attacking at no
+ * penalty is strictly better than RAW, which is why it went unreported.
+ *
+ * Each case asserts the applied number, never its absence: an assertion that the
+ * modifier is merely "not undefined" would have passed before the fix too.
+ */
+describe('Two-Weapon Fighting penalties (#517)', () => {
+    afterEach(() => vi.unstubAllGlobals());
+
+    it('applies the baseline −20 to the main hand with no talents', () => {
+        stubGame();
+        const rd = mockRollData('Two-Weapon Fighting', 0);
+        calculateCombatActionModifier(rd);
+        expect(rd.modifiers['combat-action']).toBe(-20);
+        expect(rd.twoWeaponPlan).toEqual({ isMelee: true, mainPenalty: -20, offPenalty: -20 });
+    });
+
+    it('Two-Weapon Wielder (Melee) drops the main-hand penalty to 0 and leaves the off hand at −20', () => {
+        stubGame();
+        const rd = mockRollData('Two-Weapon Fighting', 0, ['Two-Weapon Wielder (Melee)']);
+        calculateCombatActionModifier(rd);
+        expect(rd.modifiers['combat-action']).toBe(0);
+        expect(rd.twoWeaponPlan?.offPenalty).toBe(-20);
+    });
+
+    it('Two-Weapon Master (Melee) drops both hands to 0', () => {
+        stubGame();
+        const rd = mockRollData('Two-Weapon Fighting', 0, ['Two-Weapon Master (Melee)']);
+        calculateCombatActionModifier(rd);
+        expect(rd.modifiers['combat-action']).toBe(0);
+        expect(rd.twoWeaponPlan?.offPenalty).toBe(0);
+    });
+
+    it('Ambidextrous reduces the off-hand penalty by a further 10', () => {
+        stubGame();
+        const rd = mockRollData('Two-Weapon Fighting', 0, ['Ambidextrous']);
+        calculateCombatActionModifier(rd);
+        expect(rd.modifiers['combat-action']).toBe(-20);
+        expect(rd.twoWeaponPlan?.offPenalty).toBe(-10);
+    });
+
+    it('gates the Wielder talent on weapon flavour — the melee talent does not help a ranged pair', () => {
+        stubGame();
+        const rd = mockRollData('Two-Weapon Fighting', 0, ['Two-Weapon Wielder (Melee)'], false);
+        calculateCombatActionModifier(rd);
+        expect(rd.modifiers['combat-action']).toBe(-20);
+        expect(rd.twoWeaponPlan?.isMelee).toBe(false);
+    });
+
+    it('leaves other actions untouched, so the plan is only set for this action', () => {
+        stubGame();
+        const rd = mockRollData('Standard Attack', 0, ['Two-Weapon Master (Melee)']);
+        calculateCombatActionModifier(rd);
+        expect(rd.modifiers['combat-action']).toBe(0);
+        expect(rd.twoWeaponPlan).toBeNull();
     });
 });
