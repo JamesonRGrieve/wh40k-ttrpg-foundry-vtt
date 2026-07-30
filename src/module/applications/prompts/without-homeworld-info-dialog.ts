@@ -108,7 +108,6 @@ const WithoutHomeworldInfoDialog = defineInfoCardDialog({
     contextKey: 'homeworlds',
     cards: buildWithoutCards,
 });
-export default WithoutHomeworldInfoDialog;
 
 /** Convenience opener for menu entries / macros. */
 export function openWithoutHomeworldInfoDialog(): void {

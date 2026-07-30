@@ -53,7 +53,7 @@ function buildTalentCards(): TalentCard[] {
  * `data-wh40k-system="dh2"`.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class SisterOfBattleDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class SisterOfBattleDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     /* -------------------------------------------- */
 
     /** @override */

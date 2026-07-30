@@ -33,7 +33,7 @@ interface AnyGame {
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class MutationRollDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class MutationRollDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     declare track: MutationTrack;
 
     /** Lazily-loaded Mutations table (compendium content); null until first render. */
