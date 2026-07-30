@@ -534,6 +534,18 @@ export class WeaponRollData extends RollData {
     weaponModifiers: Record<string, number> = {};
 
     /**
+     * Two-Weapon Fighting's resolved per-hand penalties (#517), set by
+     * `calculateCombatActionModifier` when that action is selected.
+     *
+     * `mainPenalty` is already applied to this roll via `modifiers['combat-action']`.
+     * `offPenalty` is carried, not applied: it belongs to the errata's Free-Action
+     * follow-up with the other weapon, which is a separate attack the player
+     * declares. Surfacing it means the off-hand figure is visible rather than
+     * something the table has to recompute by hand.
+     */
+    twoWeaponPlan: { isMelee: boolean; mainPenalty: number; offPenalty: number } | null = null;
+
+    /**
      * Live aggregate test target shown at the top of the attack dialog:
      * base characteristic + every active modifier (weapon, training, combat
      * action, difficulty, aim, range, attack-mode, …) with the ±60 cap applied.
