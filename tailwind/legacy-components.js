@@ -110,27 +110,46 @@ const actorSheetOverrides = {
             overflow: 'visible !important',
             zIndex: '10 !important',
         },
+        // The nav strip rendered by actor/partial/tab-strip.hbs. At (0,4,1) this
+        // out-specifies every plain `tw-*` utility the partial carries — utilities
+        // emit as `.wh40k-rpg .tw-x` (0,2,0) under `important: '.wh40k-rpg'` — so
+        // `tw-flex-nowrap`, `tw-items-stretch`, `tw-gap-[2px]` and
+        // `tw-py-[10px] tw-px-[8px]` all lose here without any priority flag.
+        //
+        // actor/player/tabs.hbs additionally passes IMPORTANT-modifier utilities in
+        // `navClass`, which beat this rule at any specificity. Three of them meet a
+        // declaration below and are deliberately value-identical to it, so the PC/NPC
+        // nav renders the same whoever wins: `!tw-gap-1` is 0.25rem = the 4px
+        // `--wh40k-space-xs`, `!tw-p-2` is 0.5rem = 8px (no stylesheet in either
+        // cascade sets a root font-size, so 1rem is the 16px default), and
+        // `!tw-shrink-0 !tw-grow-0` are the 0/0 of `flex: 0 0 auto` (whose `auto`
+        // basis still comes from here). The fourth, background, was NOT identical —
+        // it is `tw-bg-transparent` now, demoted so this rule keeps the tint.
         '& nav.wh40k-navigation': {
-            display: 'flex !important',
-            flexWrap: 'wrap !important',
-            alignItems: 'center !important',
-            gap: 'var(--wh40k-space-xs) !important',
-            padding: '8px !important',
-            background: 'rgba(0, 0, 0, 0.2) !important',
-            flex: '0 0 auto !important',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: 'var(--wh40k-space-xs)',
+            padding: '8px',
+            background: 'rgba(0, 0, 0, 0.2)',
+            flex: '0 0 auto',
+            // Every tab-strip caller's `itemClass` is plain utilities only, so this
+            // (0,6,1) block owns the shared nav-item dressing outright. The per-caller
+            // accents (craft's `[&.active]:tw-bg-…`, voidcraft's `[&.active]:tw-border-…`)
+            // are (0,3,0) and style properties this block leaves alone.
             '& .wh40k-nav-item': {
-                padding: '6px 12px !important',
-                borderRadius: 'var(--wh40k-radius-md) !important',
-                cursor: 'pointer !important',
-                transition: 'background-color 0.2s !important',
-                textTransform: 'uppercase !important',
-                fontSize: '0.85em !important',
+                padding: '6px 12px',
+                borderRadius: 'var(--wh40k-radius-md)',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s',
+                textTransform: 'uppercase',
+                fontSize: '0.85em',
                 '&:hover': {
-                    background: 'rgba(255, 255, 255, 0.1) !important',
+                    background: 'rgba(255, 255, 255, 0.1)',
                 },
                 '&.active': {
-                    background: 'rgba(196, 135, 29, 0.3) !important',
-                    borderBottom: '2px solid #c4871d !important',
+                    background: 'rgba(196, 135, 29, 0.3)',
+                    borderBottom: '2px solid #c4871d',
                 },
             },
         },
