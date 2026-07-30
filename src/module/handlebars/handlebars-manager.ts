@@ -246,13 +246,11 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/unified/panels/psychic-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/unified/panels/force-field-panel.hbs',
 
-            // Roll prompt templates
-            'systems/wh40k-rpg/templates/prompt/enhanced-skill-roll.hbs',
-            'systems/wh40k-rpg/templates/prompt/simple-roll-prompt.hbs',
-            'systems/wh40k-rpg/templates/prompt/weapon-roll-prompt.hbs',
+            // Roll prompt templates. The five belonging to the dialogs superseded by
+            // `unified-roll-dialog` were removed with them (#516) — a preloaded
+            // template with no renderer is exactly what made those dialogs look
+            // present while being unreachable.
             'systems/wh40k-rpg/templates/prompt/damage-roll-prompt.hbs',
-            'systems/wh40k-rpg/templates/prompt/psychic-power-roll-prompt.hbs',
-            'systems/wh40k-rpg/templates/prompt/force-field-prompt.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs',
