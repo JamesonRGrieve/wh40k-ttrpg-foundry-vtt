@@ -73,8 +73,7 @@
     </div>
 
     {{!-- Regimental Awards roster --}}
-    <div class="wh40k-ow-battlefield-panel__awards tw-flex tw-flex-col tw-gap-1.5 tw-px-2 tw-py-2 tw-rounded
-                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]">
+    <div data-wh40k-hook="ow-battlefield-panel__awards" class="tw-flex tw-flex-col tw-gap-1.5 tw-px-2 tw-py-2 tw-rounded tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]">
         <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem]">
             <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
                 {{localize "WH40K.OW.RegimentalAward.Label"}}
@@ -85,7 +84,7 @@
         </div>
 
         {{#if battlefieldPanel.availableAwards.length}}
-            <ul class="wh40k-ow-battlefield-panel__award-list tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-1">
+            <ul data-wh40k-hook="ow-battlefield-panel__award-list" class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-1">
                 {{#each battlefieldPanel.availableAwards}}
                     <li class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem]"
                         data-award-id="{{this.id}}"

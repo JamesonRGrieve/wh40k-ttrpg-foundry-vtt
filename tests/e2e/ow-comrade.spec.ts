@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -140,7 +141,7 @@ test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
 
                     if (rendered && sheet.element != null) {
                         const el: HTMLElement = sheet.element;
-                        const panel = el.querySelector('.wh40k-ow-comrade-panel');
+                        const panel = el.querySelector('[data-wh40k-hook="ow-comrade-panel"]');
                         hasPanel = panel !== null;
                         hasWoundBtn = el.querySelector('button[data-action="owComradeWound"]') !== null;
                         hasHealBtn = el.querySelector('button[data-action="owComradeHeal"]') !== null;
@@ -180,6 +181,8 @@ test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
                 };
             }, actorId);
 
+            const hookCounts = await countHooks(page);
+
             await snap(page, 'ow-comrade-panel');
 
             // Tear down so the open sheet doesn't leak into the next test's DOM.
@@ -196,6 +199,7 @@ test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.rendered, 'sheet did not render').toBe(true);
+            expectHooks(hookCounts, ['ow-comrade-panel']);
             // Panel + buttons only render once the orchestrator wires the
             // include into tab-status.hbs; the probe asserts presence so
             // post-wire-up the spec exercises the full interaction. Until

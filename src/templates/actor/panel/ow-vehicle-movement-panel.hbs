@@ -61,7 +61,7 @@
     <div class="tw-flex tw-flex-col tw-gap-1">
         {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" labelKey="WH40K.OW.VehicleMovement.Chase.Title"}}
         {{#if vehicleMovementPanel.chaseState}}
-            <div class="wh40k-ow-vehicle-movement-chase-readout tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-brass/40"
+            <div data-wh40k-hook="ow-vehicle-movement-chase-readout" class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-brass/40"
                  data-chase-distance="{{vehicleMovementPanel.chaseState.pursuerDistance}}"
                  data-chase-turn="{{vehicleMovementPanel.chaseState.turnCount}}"
                  data-chase-danger="{{vehicleMovementPanel.chaseState.dangerZone}}">

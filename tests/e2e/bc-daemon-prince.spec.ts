@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -116,10 +117,10 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                 document.body.appendChild(host);
 
                 notAscendedRendered = host.firstElementChild instanceof HTMLElement;
-                const ascendBtn = host.querySelector('button.wh40k-bc-dp-ascend-btn');
+                const ascendBtn = host.querySelector('button[data-wh40k-hook="bc-dp-ascend-btn"]');
                 hasAscendButton = ascendBtn !== null;
                 ascendButtonDisabled = ascendBtn instanceof HTMLButtonElement ? ascendBtn.disabled : true;
-                hasThresholdReadout = host.querySelector('.wh40k-bc-dp-thresholds') !== null;
+                hasThresholdReadout = host.querySelector('[data-wh40k-hook="bc-dp-thresholds"]') !== null;
 
                 // Drive at least one interaction: click the ascend
                 // button. The action handler is wired by the
@@ -165,8 +166,8 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                 document.body.appendChild(ascendedHost);
 
                 ascendedRendered = ascendedHost.firstElementChild instanceof HTMLElement;
-                hasBoostBlock = ascendedHost.querySelector('.wh40k-bc-dp-boost') !== null;
-                boostListItems = ascendedHost.querySelectorAll('.wh40k-bc-dp-boost li').length;
+                hasBoostBlock = ascendedHost.querySelector('[data-wh40k-hook="bc-dp-boost"]') !== null;
+                boostListItems = ascendedHost.querySelectorAll('[data-wh40k-hook="bc-dp-boost"] li').length;
 
                 g.__bcDaemonPrincePanelHostAscended = ascendedHost;
             } catch (err) {
@@ -185,6 +186,8 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                 error,
             };
         });
+
+        const hookCounts = await countHooks(page);
 
         await snap(page, 'bc-daemon-prince-panel');
 
@@ -216,6 +219,7 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.notAscendedRendered, 'not-ascended panel should render').toBe(true);
         expect(result.ascendedRendered, 'ascended panel should render').toBe(true);
+        expectHooks(hookCounts, ['bc-dp-boost', 'bc-dp-thresholds', 'bc-dp-ascend-btn']);
         expect(result.hasAscendButton, 'ascend button should render when not ascended').toBe(true);
         expect(result.ascendButtonDisabled, 'ascend button should be enabled when thresholds met').toBe(false);
         expect(result.hasThresholdReadout, 'threshold readout should render in not-ascended state').toBe(true);

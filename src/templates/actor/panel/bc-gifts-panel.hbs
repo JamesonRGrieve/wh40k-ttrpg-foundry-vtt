@@ -44,7 +44,7 @@
     {{#if giftsPanel.gifts.length}}
         <ul class="tw-flex tw-flex-col tw-gap-2 tw-list-none tw-m-0 tw-p-0">
             {{#each giftsPanel.gifts as |gift|}}
-                <li class="wh40k-bc-gift-entry tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                <li data-wh40k-hook="bc-gift-entry" class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                     data-gift-id="{{gift.id}}"
                     data-applied-alignment="{{gift.appliedAlignment}}">
                     <div class="tw-flex tw-items-center tw-justify-between tw-gap-2">
@@ -75,7 +75,7 @@
                     {{/if}}
 
                     {{#if gift.subTableLabel}}
-                        <div class="wh40k-bc-gift-subtable tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
+                        <div data-wh40k-hook="bc-gift-subtable" class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
                             {{gift.subTableLabel}}
                         </div>
                     {{/if}}
@@ -83,7 +83,7 @@
                     {{#if gift.characteristicDelta.length}}
                         <div class="tw-flex tw-flex-wrap tw-gap-1">
                             {{#each gift.characteristicDelta as |delta|}}
-                                <span class="wh40k-bc-gift-delta tw-tabular-nums tw-text-[0.7rem] tw-px-1 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.25)] tw-text-[color:var(--wh40k-text-bright)]"
+                                <span data-wh40k-hook="bc-gift-delta" class="tw-tabular-nums tw-text-[0.7rem] tw-px-1 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.25)] tw-text-[color:var(--wh40k-text-bright)]"
                                       data-delta-key="{{delta.key}}"
                                       data-delta-value="{{delta.value}}">
                                     {{delta.key}} {{#if (gt delta.value 0)}}+{{/if}}{{delta.value}}
@@ -103,14 +103,14 @@
 
     {{!-- Merged characteristic-delta summary (across all gifts, current alignment) --}}
     {{#if giftsPanel.mergedDelta.length}}
-        <footer class="wh40k-bc-gifts-merged tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.25)]"
+        <footer data-wh40k-hook="bc-gifts-merged" class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.25)]"
                 data-merged-delta-count="{{giftsPanel.mergedDelta.length}}">
             <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
                 {{localize "WH40K.BC.Gifts.Resolved.AppliedAlignment"}}: <span class="tw-text-[color:var(--wh40k-text-bright)]">{{giftsPanel.currentAlignment}}</span>
             </span>
             <div class="tw-flex tw-flex-wrap tw-gap-1">
                 {{#each giftsPanel.mergedDelta as |delta|}}
-                    <span class="wh40k-bc-gifts-merged-delta tw-tabular-nums tw-text-[0.75rem] tw-font-semibold tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson tw-text-[color:var(--wh40k-text-bright)]"
+                    <span data-wh40k-hook="bc-gifts-merged-delta" class="tw-tabular-nums tw-text-[0.75rem] tw-font-semibold tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson tw-text-[color:var(--wh40k-text-bright)]"
                           data-delta-key="{{delta.key}}"
                           data-delta-value="{{delta.value}}">
                         {{delta.key}} {{#if (gt delta.value 0)}}+{{/if}}{{delta.value}}

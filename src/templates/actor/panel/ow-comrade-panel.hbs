@@ -39,10 +39,7 @@
     Rendered only for OW actors; the include in the appropriate
     tab-*.hbs gates on `isOW` from context.
 --}}
-<section class="wh40k-ow-comrade-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
-                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
-                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
-                ow:tw-border-brass"
+<section data-wh40k-hook="ow-comrade-panel" class="tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))] ow:tw-border-brass"
          data-ow-comrade-state="{{comradePanel.state}}"
          data-ow-comrade-cohesion="{{#if comradePanel.inCohesion}}in{{else}}out{{/if}}">
 

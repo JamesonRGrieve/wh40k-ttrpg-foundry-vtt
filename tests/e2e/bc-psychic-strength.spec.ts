@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -94,14 +95,14 @@ test.describe.serial('BcPsychicStrengthPanel (Tier B)', () => {
                 rendered = host.firstElementChild instanceof HTMLElement;
 
                 if (rendered) {
-                    hasClassSelect = host.querySelector('select.wh40k-bc-psyker-class-select') !== null;
-                    hasModeSelect = host.querySelector('select.wh40k-bc-psy-mode-select') !== null;
-                    hasPushSlider = host.querySelector('input.wh40k-bc-push-level-input') !== null;
-                    hasSustainInput = host.querySelector('input.wh40k-bc-sustain-count-input') !== null;
-                    hasTestButton = host.querySelector('button.wh40k-bc-psychic-test-btn[data-action="bcPsychicTest"]') !== null;
-                    effectivePR = host.querySelector('.wh40k-bc-psychic-effective')?.getAttribute('data-effective-pr') ?? '';
-                    phenomenaRolls = host.querySelector('.wh40k-bc-psychic-phenomena')?.getAttribute('data-phenomena-rolls') ?? '';
-                    sustainPenalty = host.querySelector('.wh40k-bc-psychic-sustain-penalty')?.getAttribute('data-sustain-penalty') ?? '';
+                    hasClassSelect = host.querySelector('select[data-wh40k-hook="bc-psyker-class-select"]') !== null;
+                    hasModeSelect = host.querySelector('select[data-wh40k-hook="bc-psy-mode-select"]') !== null;
+                    hasPushSlider = host.querySelector('input[data-wh40k-hook="bc-push-level-input"]') !== null;
+                    hasSustainInput = host.querySelector('input[data-wh40k-hook="bc-sustain-count-input"]') !== null;
+                    hasTestButton = host.querySelector('button[data-wh40k-hook="bc-psychic-test-btn"][data-action="bcPsychicTest"]') !== null;
+                    effectivePR = host.querySelector('[data-wh40k-hook="bc-psychic-effective"]')?.getAttribute('data-effective-pr') ?? '';
+                    phenomenaRolls = host.querySelector('[data-wh40k-hook="bc-psychic-phenomena"]')?.getAttribute('data-phenomena-rolls') ?? '';
+                    sustainPenalty = host.querySelector('[data-wh40k-hook="bc-psychic-sustain-penalty"]')?.getAttribute('data-sustain-penalty') ?? '';
                     psykerClassAttr = host.querySelector('section.wh40k-bc-psychic-panel')?.getAttribute('data-bc-psyker-class') ?? '';
                     modeAttr = host.querySelector('section.wh40k-bc-psychic-panel')?.getAttribute('data-bc-psy-mode') ?? '';
                 }
@@ -131,6 +132,8 @@ test.describe.serial('BcPsychicStrengthPanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+
         await snap(page, 'bc-psychic-strength-panel');
 
         // Panel captured; tear it down so it doesn't leak into the next
@@ -148,6 +151,16 @@ test.describe.serial('BcPsychicStrengthPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, [
+            'bc-psychic-test-btn',
+            'bc-psyker-class-select',
+            'bc-psy-mode-select',
+            'bc-push-level-input',
+            'bc-sustain-count-input',
+            'bc-psychic-effective',
+            'bc-psychic-phenomena',
+            'bc-psychic-sustain-penalty',
+        ]);
         expect(result.hasClassSelect, 'psyker class selector should render').toBe(true);
         expect(result.hasModeSelect, 'mode selector should render').toBe(true);
         expect(result.hasPushSlider, 'push level slider should render').toBe(true);

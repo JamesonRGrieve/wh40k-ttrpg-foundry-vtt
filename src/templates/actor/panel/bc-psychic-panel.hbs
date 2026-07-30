@@ -28,7 +28,7 @@
     {{!-- Header right slot: psychic test button --}}
     {{#*inline "rightSlot"}}
         <button type="button"
-                class="wh40k-bc-psychic-test-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
+                data-wh40k-hook="bc-psychic-test-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
                 data-action="bcPsychicTest"
                 title="{{localize 'WH40K.BC.Psychic.TestButton'}}">
             {{localize "WH40K.BC.Psychic.TestButton"}}
@@ -43,7 +43,7 @@
         </label>
         <select id="bc-psyker-class"
                 name="system.psykerClass"
-                class="wh40k-bc-psyker-class-select tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]">
+                data-wh40k-hook="bc-psyker-class-select" class="tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]">
             <option value="bound" {{#if (eq psychicPanel.psykerClass "bound")}}selected{{/if}}>{{localize "WH40K.BC.Psychic.Class.Bound"}}</option>
             <option value="unbound" {{#if (eq psychicPanel.psykerClass "unbound")}}selected{{/if}}>{{localize "WH40K.BC.Psychic.Class.Unbound"}}</option>
             <option value="daemonic" {{#if (eq psychicPanel.psykerClass "daemonic")}}selected{{/if}}>{{localize "WH40K.BC.Psychic.Class.Daemonic"}}</option>
@@ -73,7 +73,7 @@
         </label>
         <select id="bc-psy-mode"
                 name="psychicPanel.mode"
-                class="wh40k-bc-psy-mode-select tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]"
+                data-wh40k-hook="bc-psy-mode-select" class="tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]"
                 data-action="bcPsychicSetMode">
             <option value="fettered" {{#if (eq psychicPanel.mode "fettered")}}selected{{/if}}>{{localize "WH40K.BC.Psychic.Mode.Fettered"}}</option>
             <option value="unfettered" {{#if (eq psychicPanel.mode "unfettered")}}selected{{/if}}>{{localize "WH40K.BC.Psychic.Mode.Unfettered"}}</option>
@@ -96,7 +96,7 @@
                    step="1"
                    value="{{psychicPanel.pushLevel}}"
                    {{#unless (eq psychicPanel.mode "push")}}disabled{{/unless}}
-                   class="wh40k-bc-push-level-input tw-w-24"
+                   data-wh40k-hook="bc-push-level-input" class="tw-w-24"
                    data-action="bcPsychicSetPushLevel" />
             <span class="tw-text-[0.78rem] tw-font-semibold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
                 {{psychicPanel.pushLevel}} / {{psychicPanel.maxPushLevel}}
@@ -116,24 +116,24 @@
                min="0"
                step="1"
                value="{{psychicPanel.sustainedPowerCount}}"
-               class="wh40k-bc-sustain-count-input tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-w-16 tw-text-right tw-tabular-nums tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]" />
+               data-wh40k-hook="bc-sustain-count-input" class="tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-w-16 tw-text-right tw-tabular-nums tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]" />
     </div>
 
     {{!-- Computed readouts --}}
     <div class="tw-grid tw-grid-cols-3 tw-gap-1 tw-mt-1">
-        <div class="wh40k-bc-psychic-effective tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-effective-pr="{{psychicPanel.effectivePR}}">
+        <div data-wh40k-hook="bc-psychic-effective" class="tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-effective-pr="{{psychicPanel.effectivePR}}">
             {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Psychic.EffectivePR"}}
             <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
                 {{psychicPanel.effectivePR}}
             </span>
         </div>
-        <div class="wh40k-bc-psychic-phenomena tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-phenomena-rolls="{{psychicPanel.phenomenaRolls}}">
+        <div data-wh40k-hook="bc-psychic-phenomena" class="tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-phenomena-rolls="{{psychicPanel.phenomenaRolls}}">
             {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Psychic.Phenomena.RollCount"}}
             <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
                 {{psychicPanel.phenomenaRolls}}
             </span>
         </div>
-        <div class="wh40k-bc-psychic-sustain-penalty tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-sustain-penalty="{{psychicPanel.sustainPenalty}}">
+        <div data-wh40k-hook="bc-psychic-sustain-penalty" class="tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-sustain-penalty="{{psychicPanel.sustainPenalty}}">
             {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Psychic.Sustain.Penalty"}}
             <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
                 {{psychicPanel.sustainPenalty}}
