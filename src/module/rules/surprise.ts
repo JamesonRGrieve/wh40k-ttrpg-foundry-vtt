@@ -8,34 +8,22 @@
  *
  * The condition expires at the start of round 2.
  *
- * Pure helpers — combat-tracker hook + condition-application + GM
- * encounter-setup dialog remain follow-up scope.
+ * **The +30 is NOT here.** It is already live by a better route: a target
+ * carrying the `surprised` condition is mapped to `isUnaware` by
+ * `rules/target-situationals.ts`, which auto-selects the `unawareTarget`
+ * circumstance modifier (`rules/combat-circumstance-modifiers.ts`, +30). A second
+ * implementation of the same bonus previously sat in this module with no caller,
+ * free to drift from the live one — it was deleted rather than wired (#514).
+ *
+ * What remains here is the part that route does NOT cover: the condition's
+ * lifetime, and the turn/reaction loss.
  */
-
-/** Bonus emitted to WS/BS rolls against a Surprised target. */
-export const SURPRISED_TO_HIT_BONUS = 30;
 
 /** Round at which the Surprised condition automatically expires. */
 export const SURPRISED_EXPIRES_AT_ROUND = 2;
 
-export interface SurpriseModifierInput {
-    /** True if the target carries the Surprised condition. */
-    targetIsSurprised: boolean;
-    /** Current combat round (1-indexed). 1 = the surprise round. */
-    currentRound: number;
-}
-
-/**
- * Compute the to-hit bonus an attacker emits against a Surprised
- * target. The bonus applies only during the surprise round (round 1);
- * round 2 onward, the condition has expired.
- */
-export function getSurpriseToHitBonus(input: SurpriseModifierInput): number {
-    if (!input.targetIsSurprised) return 0;
-    const round = Number.isFinite(input.currentRound) ? Math.trunc(input.currentRound) : 1;
-    if (round >= SURPRISED_EXPIRES_AT_ROUND) return 0;
-    return SURPRISED_TO_HIT_BONUS;
-}
+/** Foundry status id for the Surprised condition, as the content packs author it. */
+export const SURPRISED_STATUS_ID = 'surprised';
 
 /**
  * Whether the actor can take a turn this round. Surprised actors lose
@@ -54,4 +42,20 @@ export function canActThisRound(targetIsSurprised: boolean, currentRound: number
  */
 export function canUseReactions(targetIsSurprised: boolean, currentRound: number): boolean {
     return canActThisRound(targetIsSurprised, currentRound);
+}
+
+/**
+ * Whether the Surprised condition should be cleared now that this round has begun.
+ *
+ * RAW gives the condition a one-round life: it applies during the surprise round
+ * and is gone from round 2. Nothing enforced that, so a GM who applied Surprised
+ * left the target permanently easier to hit — the +30 circumstance modifier keeps
+ * auto-selecting for as long as the condition sits on the token. Expiring it is
+ * what bounds that bonus to the round RAW gives it.
+ * @param {number} round  The round that has just started (1-indexed).
+ * @returns {boolean}  Whether Surprised has outlived its round.
+ */
+export function surpriseHasExpired(round: number): boolean {
+    const current = Number.isFinite(round) ? Math.trunc(round) : 1;
+    return current >= SURPRISED_EXPIRES_AT_ROUND;
 }
