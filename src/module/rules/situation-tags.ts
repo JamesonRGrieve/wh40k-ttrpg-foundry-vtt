@@ -16,8 +16,9 @@
  * an owned item (`trait` / `vehicleTrait`). No content name, faction, or
  * creature-group string is written here; the specific value a hook tests
  * (`'daemon'`, `'khorne'`, `'chaos-space-marines'`) is authored on the
- * compendium item. That inversion is the point — it is what makes a
- * name-matcher such as `rules/hatred.ts` retirable instead of load-bearing.
+ * compendium item. That inversion is the point — it is what RETIRED
+ * `rules/hatred.ts`, whose 107 lines of stem-matching a talent's `(X)` against a
+ * target's trait/species/name strings are now one authored hook per talent.
  *
  * The target's NAME is deliberately NOT a tag. Matching on a display name is the
  * offender pattern this channel exists to replace; a tag has to come from a

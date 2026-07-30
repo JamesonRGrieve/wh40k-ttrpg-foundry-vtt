@@ -259,6 +259,30 @@ function targetTagMatches(axis: TargetTagAxis, value: string, situation: Dynamic
 }
 
 /** Does the trigger's `condition` predicate match the situation? */
+/**
+ * Whether any of the target's tags matches the owning item's specialisation.
+ *
+ * Compared on the singular STEM, because the two vocabularies are shaped
+ * differently and always will be: a Hatred specialisation is a plural group
+ * ("Daemons", "Mutants"), while the tag it must meet comes from the target's trait
+ * or type and is adjectival or singular ("Daemonic", "Mutant"). Exact matching
+ * would fail on every canonical specialisation in the book, and requiring authors
+ * to write "Daemonic" would contradict the printed list.
+ *
+ * A prefix match on the stem is deliberately a little generous — the stem
+ * `daemon` also matches `daemonhost` — which reads correctly for this rule: a
+ * daemonhost IS something a Daemon-hater hates.
+ * @param {string} itemSpecialization  The owned item's `system.specialization`.
+ * @param {DynamicModifierSituation} situation  The situation carrying the target's tags.
+ * @returns {boolean}  Whether the specialisation applies to this target.
+ */
+function specialisationMatchesTarget(itemSpecialization: string, situation: DynamicModifierSituation): boolean {
+    const slug = normalizeTag(itemSpecialization);
+    if (slug === '') return false;
+    const stem = slug.endsWith('s') ? slug.slice(0, -1) : slug;
+    return (situation.targetTags ?? []).some((tag) => tag.startsWith(stem));
+}
+
 function conditionMatches(trigger: DynamicTrigger, situation: DynamicModifierSituation, itemSpecialization: string): boolean {
     const c = trigger.condition;
     const value = trigger.conditionValue;
@@ -270,6 +294,13 @@ function conditionMatches(trigger: DynamicTrigger, situation: DynamicModifierSit
     if (c === 'rangeBand') return situation.rangeBand === normalizeTag(value);
     if (c === 'action') return situation.action === value;
     if (c === 'activated') return (situation.activated ?? []).includes(value);
+    // The target must match THIS ITEM'S OWN specialisation, rather than a value
+    // authored on the hook. A specialist talent is one compendium document whose
+    // `(X)` is chosen per character — Hatred (Daemons) and Hatred (Orks) are the
+    // same talent — so a static `conditionValue` cannot express it, and the only
+    // alternative was to name-match the talent in `src/` (Direction #7's offender).
+    // One authored hook now serves every pick, including GM-invented ones.
+    if (c === 'vsSpecialization') return specialisationMatchesTarget(itemSpecialization, situation);
     // The owning item's specialization ('Melee' / 'Ranged') must match the attack mode —
     // e.g. Deathdealer (Melee) fires only on melee attacks (Ranged only on ranged).
     if (c === 'specializationMode') {

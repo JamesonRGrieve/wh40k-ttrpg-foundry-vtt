@@ -68,6 +68,11 @@ function item(name: string, hooks: DynamicModifierEntry[]): DynamicModifierItemL
     return { name, system: { modifiers: { dynamicModifiers: hooks } } };
 }
 
+/** An owned item with a per-character `(X)` pick, as a specialist talent carries. */
+function specialistItem(name: string, specialization: string, hooks: DynamicModifierEntry[]): DynamicModifierItemLike {
+    return { name, system: { modifiers: { dynamicModifiers: hooks }, specialization } };
+}
+
 /** A target actor carrying the given creature traits, as `collectTargetTags` reads them. */
 function target(traits: string[]): object {
     return { type: 'dh2-npc', system: { nature: 'none' }, items: traits.map((name) => ({ type: 'trait', name })) };
@@ -170,6 +175,63 @@ describe('dynamic to-hit modifiers reach the roll (#519)', () => {
 
     it('is a no-op for an actor with no items, rather than throwing', async () => {
         const rd = makeRoll([], null);
+        await rd.applyDynamicAttackModifiers();
+        expect(rd.dynamicAttackModifiers).toEqual({});
+    });
+});
+
+/**
+ * `vsSpecialization` — the condition that made Hatred authorable (#514).
+ *
+ * A specialist talent is ONE compendium document whose `(X)` is chosen per
+ * character, so a hook cannot carry a static `conditionValue`. This condition
+ * tests the target against the owned item's own specialisation instead, which is
+ * what let `rules/hatred.ts` — a name-matcher in `src/` — be deleted rather than
+ * wired.
+ */
+describe('vsSpecialization condition (#514, replaces rules/hatred.ts)', () => {
+    /** The hook exactly as authored on the Hatred talents in `src/packs`. */
+    const hatredHook = makeHook({ target: 'attack', condition: 'vsSpecialization', value: 10 });
+
+    it('fires when the target carries a trait matching the character’s pick', async () => {
+        const rd = makeRoll([specialistItem('Hatred', 'Daemons', [hatredHook])], target(['Daemonic']));
+        await rd.applyDynamicAttackModifiers();
+        // The printed specialisation is plural ("Daemons") and the trait is
+        // adjectival ("Daemonic"); matching on the stem is what bridges them.
+        expect(rd.dynamicAttackModifiers).toEqual({ Hatred: 10 });
+    });
+
+    it('does not fire against a target outside the pick', async () => {
+        const rd = makeRoll([specialistItem('Hatred', 'Daemons', [hatredHook])], target(['Machine']));
+        await rd.applyDynamicAttackModifiers();
+        expect(rd.dynamicAttackModifiers).toEqual({});
+    });
+
+    it('distinguishes two characters with different picks of the same talent', async () => {
+        const orkHater = makeRoll([specialistItem('Hatred', 'Orks', [hatredHook])], target(['Daemonic']));
+        await orkHater.applyDynamicAttackModifiers();
+        expect(orkHater.dynamicAttackModifiers).toEqual({});
+
+        const daemonHater = makeRoll([specialistItem('Hatred', 'Daemons', [hatredHook])], target(['Daemonic']));
+        await daemonHater.applyDynamicAttackModifiers();
+        expect(daemonHater.dynamicAttackModifiers).toEqual({ Hatred: 10 });
+    });
+
+    it('matches the other canonical specialisations from the printed list', async () => {
+        for (const [pick, trait] of [
+            ['Mutants', 'Mutant'],
+            ['Psykers', 'Psyker'],
+            ['Xenos', 'Xenos'],
+        ] as const) {
+            const rd = makeRoll([specialistItem('Hatred', pick, [hatredHook])], target([trait]));
+            // eslint-disable-next-line no-await-in-loop -- sequential: each pick is asserted independently
+            await rd.applyDynamicAttackModifiers();
+            expect(rd.dynamicAttackModifiers, `${pick} vs ${trait}`).toEqual({ Hatred: 10 });
+        }
+    });
+
+    it('does not fire when the character never chose a specialisation', async () => {
+        const rd = makeRoll([specialistItem('Hatred', '', [hatredHook])], target(['Daemonic']));
         await rd.applyDynamicAttackModifiers();
         expect(rd.dynamicAttackModifiers).toEqual({});
     });
