@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks, expectHooksAuthored, fetchAuthoredHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -142,10 +143,10 @@ test.describe.serial('DwAstartesPanel (Tier B)', () => {
                 rendered = host.firstElementChild instanceof HTMLElement;
 
                 if (rendered) {
-                    implantCount = host.querySelectorAll('button.wh40k-dw-astartes-implant').length;
-                    hasUnnaturalSb = host.querySelector('.wh40k-dw-astartes-sb') !== null;
-                    hasUnnaturalTb = host.querySelector('.wh40k-dw-astartes-tb') !== null;
-                    hasBlackCarapaceBanner = host.querySelector('.wh40k-dw-astartes-bc-banner') !== null;
+                    implantCount = host.querySelectorAll('button[data-wh40k-hook="dw-astartes-implant"]').length;
+                    hasUnnaturalSb = host.querySelector('[data-wh40k-hook="dw-astartes-sb"]') !== null;
+                    hasUnnaturalTb = host.querySelector('[data-wh40k-hook="dw-astartes-tb"]') !== null;
+                    hasBlackCarapaceBanner = host.querySelector('[data-wh40k-hook="dw-astartes-bc-banner"]') !== null;
 
                     const bcBtn = host.querySelector<HTMLButtonElement>('button[data-implant-id="black-carapace"]');
                     blackCarapaceInitialPressed = bcBtn?.getAttribute('aria-pressed') ?? '';
@@ -182,6 +183,9 @@ test.describe.serial('DwAstartesPanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+        const authoredHooks = await fetchAuthoredHooks(page, '/systems/wh40k-rpg/templates/actor/panel/dw-astartes-panel.hbs');
+
         await snap(page, 'dw-astartes-panel');
 
         await page.evaluate(() => {
@@ -197,6 +201,12 @@ test.describe.serial('DwAstartesPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, ['dw-astartes-sb', 'dw-astartes-tb', 'dw-astartes-implant']);
+        // The Black Carapace banner IS asserted present below, at probe time —
+        // but the probe then toggles the implant OFF, so by the time the hook
+        // tally is taken the banner is legitimately gone. Its presence guard is
+        // `hasBlackCarapaceBanner` (toBe(true)); the authored check pins the id.
+        expectHooksAuthored(authoredHooks, ['dw-astartes-bc-banner']);
         expect(result.implantCount, 'expected 19 implant badges').toBe(19);
         expect(result.hasUnnaturalSb, 'Unnatural Strength readout should render').toBe(true);
         expect(result.hasUnnaturalTb, 'Unnatural Toughness readout should render').toBe(true);

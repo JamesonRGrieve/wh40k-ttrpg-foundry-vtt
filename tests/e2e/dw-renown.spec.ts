@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -99,15 +100,15 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
                 rendered = host.firstElementChild instanceof HTMLElement;
 
                 if (rendered) {
-                    const rankSpan = host.querySelector('.wh40k-dw-renown-rank');
+                    const rankSpan = host.querySelector('[data-wh40k-hook="dw-renown-rank"]');
                     rankReadout = rankSpan?.textContent.trim() ?? '';
                     rankAttr = rankSpan?.getAttribute('data-rank') ?? '';
                     renownAttr = host.querySelector('section.wh40k-dw-renown-panel')?.getAttribute('data-dw-renown') ?? '';
-                    const fill = host.querySelector('.wh40k-dw-renown-progress-fill');
+                    const fill = host.querySelector('[data-wh40k-hook="dw-renown-progress-fill"]');
                     hasProgressBar = fill !== null;
                     progressPercent = parseInt(fill?.getAttribute('data-progress') ?? '0', 10);
-                    hasAwardButton = host.querySelector('button.wh40k-dw-renown-award-btn[data-action="dwRenownAward"]') !== null;
-                    hasLossButton = host.querySelector('button.wh40k-dw-renown-loss-btn[data-action="dwRenownLoss"]') !== null;
+                    hasAwardButton = host.querySelector('button[data-wh40k-hook="dw-renown-award-btn"][data-action="dwRenownAward"]') !== null;
+                    hasLossButton = host.querySelector('button[data-wh40k-hook="dw-renown-loss-btn"][data-action="dwRenownLoss"]') !== null;
                 }
 
                 // Anchor the rendered DOM so snap() captures live pixels.
@@ -133,6 +134,8 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+
         await snap(page, 'dw-renown-panel');
 
         // Tear down so the host doesn't leak into the next serial test.
@@ -153,6 +156,7 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, ['dw-renown-rank', 'dw-renown-progress-fill', 'dw-renown-award-btn', 'dw-renown-loss-btn']);
         // Renown 50 must resolve to the Distinguished band (RAW TABLE 5-2).
         expect(result.rankAttr, 'rank data attr should be "distinguished"').toBe('distinguished');
         expect(result.rankReadout, 'rank label should be "Distinguished"').toBe('Distinguished');

@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -81,16 +82,16 @@ test.describe.serial('DwVehicleCritPanel (Tier B)', () => {
                 rendered = host.firstElementChild instanceof HTMLElement;
 
                 if (rendered) {
-                    hasIntegrityRow = host.querySelector('.wh40k-dw-vehicle-integrity-row') !== null;
-                    hasOverRow = host.querySelector('.wh40k-dw-vehicle-over-row') !== null;
-                    const critBtn = host.querySelector('button.wh40k-dw-vehicle-crit-btn');
-                    const repairBtn = host.querySelector('button.wh40k-dw-vehicle-repair-btn');
+                    hasIntegrityRow = host.querySelector('[data-wh40k-hook="dw-vehicle-integrity-row"]') !== null;
+                    hasOverRow = host.querySelector('[data-wh40k-hook="dw-vehicle-over-row"]') !== null;
+                    const critBtn = host.querySelector('button[data-wh40k-hook="dw-vehicle-crit-btn"]');
+                    const repairBtn = host.querySelector('button[data-wh40k-hook="dw-vehicle-repair-btn"]');
                     hasCritButton = critBtn !== null;
                     hasRepairButton = repairBtn !== null;
                     critButtonEnabled = critBtn instanceof HTMLButtonElement && !critBtn.disabled;
                     repairButtonEnabled = repairBtn instanceof HTMLButtonElement && !repairBtn.disabled;
-                    integrityValue = (host.querySelector('.wh40k-dw-vehicle-integrity-value')?.textContent ?? '').trim();
-                    overValue = (host.querySelector('.wh40k-dw-vehicle-over-value')?.textContent ?? '').trim();
+                    integrityValue = (host.querySelector('[data-wh40k-hook="dw-vehicle-integrity-value"]')?.textContent ?? '').trim();
+                    overValue = (host.querySelector('[data-wh40k-hook="dw-vehicle-over-value"]')?.textContent ?? '').trim();
                 }
 
                 // Hold the host on a global handle so snap() (called
@@ -115,6 +116,8 @@ test.describe.serial('DwVehicleCritPanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+
         await snap(page, 'dw-vehicle-crit-panel');
 
         // Panel captured; tear it down so it doesn't leak into the next
@@ -132,6 +135,14 @@ test.describe.serial('DwVehicleCritPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, [
+            'dw-vehicle-integrity-row',
+            'dw-vehicle-integrity-value',
+            'dw-vehicle-over-row',
+            'dw-vehicle-over-value',
+            'dw-vehicle-crit-btn',
+            'dw-vehicle-repair-btn',
+        ]);
         expect(result.hasIntegrityRow, 'integrity row should render').toBe(true);
         expect(result.hasOverRow, 'over-integrity row should render').toBe(true);
         expect(result.hasCritButton, 'roll-crit button should render').toBe(true);

@@ -25,7 +25,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-oath-panel" accentBorderClass="dw:tw-border-bronze" accentIconClass="dw:tw-text-bronze" icon="fa-scroll" label=(localize "WH40K.DW.Oath.Label") rootAttrs=(safeAttrs "data-dw-oath-active" oathPanel.active "data-dw-oath-id" oathPanel.activeOathId) hasRightSlot=true}}
     {{!-- Header right slot: current oath readout --}}
     {{#*inline "rightSlot"}}
-        <span class="wh40k-dw-oath-current tw-font-bold tw-text-[0.9rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze">
+        <span data-wh40k-hook="dw-oath-current" class="tw-font-bold tw-text-[0.9rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze">
             {{#if oathPanel.active}}
                 {{oathPanel.activeLabel}}
             {{else}}

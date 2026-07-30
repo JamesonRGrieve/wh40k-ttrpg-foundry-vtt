@@ -24,7 +24,7 @@
     {{!-- Header right slot: current rank --}}
     {{#*inline "rightSlot"}}
         {{#if requisitionPanel.renownRank}}
-            <span class="wh40k-dw-renown-rank tw-text-[0.78rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]"
+            <span data-wh40k-hook="dw-renown-rank" class="tw-text-[0.78rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]"
                   data-rank="{{requisitionPanel.renownRank}}"
                   title="{{localize 'WH40K.DW.Renown.Label'}}">
                 {{requisitionPanel.renownRank}}

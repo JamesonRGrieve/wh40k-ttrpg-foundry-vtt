@@ -23,7 +23,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-renown-panel" accentBorderClass="dw:tw-border-bronze" accentIconClass="dw:tw-text-bronze" icon="fa-medal" label=(localize "WH40K.DW.Renown.Label") rootAttrs=(safeAttrs "data-dw-renown" renownPanel.value "data-dw-rank" renownPanel.rank) hasRightSlot=true}}
     {{!-- Header right slot: rank readout --}}
     {{#*inline "rightSlot"}}
-        <span class="wh40k-dw-renown-rank tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
+        <span data-wh40k-hook="dw-renown-rank" class="tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
               data-rank="{{renownPanel.rank}}"
               title="{{localize 'WH40K.DW.Renown.Current'}}">
             {{renownPanel.rankLabel}}
@@ -48,7 +48,7 @@
          aria-valuemin="0"
          aria-valuemax="100"
          aria-valuenow="{{renownPanel.progressPercent}}">
-        <div class="wh40k-dw-renown-progress-fill tw-absolute tw-top-0 tw-left-0 tw-h-full tw-bg-bronze dw:tw-bg-bronze"
+        <div data-wh40k-hook="dw-renown-progress-fill" class="tw-absolute tw-top-0 tw-left-0 tw-h-full tw-bg-bronze dw:tw-bg-bronze"
              style="width: {{renownPanel.progressPercent}}%;"
              data-progress="{{renownPanel.progressPercent}}"></div>
     </div>
@@ -63,14 +63,14 @@
     {{!-- Award / Loss mini-buttons --}}
     <div class="tw-flex tw-items-center tw-justify-end tw-gap-1">
         <button type="button"
-                class="wh40k-dw-renown-award-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-bronze hover:tw-bg-bronze hover:tw-text-white dw:tw-border-bronze dw:tw-text-bronze"
+                data-wh40k-hook="dw-renown-award-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-bronze hover:tw-bg-bronze hover:tw-text-white dw:tw-border-bronze dw:tw-text-bronze"
                 data-action="dwRenownAward"
                 title="{{localize 'WH40K.DW.Renown.Award'}}">
             <i class="fas fa-plus tw-mr-1"></i>
             {{localize "WH40K.DW.Renown.Award"}}
         </button>
         <button type="button"
-                class="wh40k-dw-renown-loss-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
+                data-wh40k-hook="dw-renown-loss-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
                 data-action="dwRenownLoss"
                 title="{{localize 'WH40K.DW.Renown.Loss'}}">
             <i class="fas fa-minus tw-mr-1"></i>

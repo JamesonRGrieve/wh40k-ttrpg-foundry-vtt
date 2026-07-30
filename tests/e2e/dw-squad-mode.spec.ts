@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks, expectHooksAuthored, fetchAuthoredHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -105,11 +106,12 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
                     const panel = host.querySelector('section.wh40k-dw-mode-panel');
                     mode = panel?.getAttribute('data-dw-combat-mode') ?? '';
                     renownRank = panel?.getAttribute('data-dw-renown-rank') ?? '';
-                    visualDistance = host.querySelector('[data-channel="visual"] .wh40k-dw-mode-support-value')?.getAttribute('data-distance') ?? '';
-                    vocalDistance = host.querySelector('[data-channel="vocal"] .wh40k-dw-mode-support-value')?.getAttribute('data-distance') ?? '';
-                    sustainedRows = host.querySelectorAll('.wh40k-dw-mode-sustained-item').length;
-                    hasLeaveButton = host.querySelector('button.wh40k-dw-mode-leave-btn[data-action="dwLeaveSquadMode"]') !== null;
-                    hasEnterButton = host.querySelector('button.wh40k-dw-mode-enter-btn[data-action="dwEnterSquadMode"]') !== null;
+                    visualDistance =
+                        host.querySelector('[data-channel="visual"] [data-wh40k-hook="dw-mode-support-value"]')?.getAttribute('data-distance') ?? '';
+                    vocalDistance = host.querySelector('[data-channel="vocal"] [data-wh40k-hook="dw-mode-support-value"]')?.getAttribute('data-distance') ?? '';
+                    sustainedRows = host.querySelectorAll('[data-wh40k-hook="dw-mode-sustained-item"]').length;
+                    hasLeaveButton = host.querySelector('button[data-wh40k-hook="dw-mode-leave-btn"][data-action="dwLeaveSquadMode"]') !== null;
+                    hasEnterButton = host.querySelector('button[data-wh40k-hook="dw-mode-enter-btn"][data-action="dwEnterSquadMode"]') !== null;
                 }
 
                 // Hold the host on a global handle so snap() (called
@@ -136,6 +138,9 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+        const authoredHooks = await fetchAuthoredHooks(page, '/systems/wh40k-rpg/templates/actor/panel/dw-mode-panel.hbs');
+
         await snap(page, 'dw-squad-mode-panel');
 
         // Panel captured; tear it down so it doesn't leak into the
@@ -157,6 +162,11 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, ['dw-mode-support-value', 'dw-mode-sustained-item', 'dw-mode-leave-btn']);
+        // `dw-mode-enter-btn` is absent BY DESIGN in this fixture (already in a
+        // squad mode), and that absence is asserted below — so prove the hook is
+        // still authored, or a rename would satisfy the negative for free.
+        expectHooksAuthored(authoredHooks, ['dw-mode-enter-btn']);
         expect(result.mode, 'data-dw-combat-mode should round-trip').toBe('squad');
         expect(result.renownRank, 'data-dw-renown-rank should round-trip').toBe('respected');
         // Support range table — Renown rank `respected` is 60 m on both channels (Table 7-9).

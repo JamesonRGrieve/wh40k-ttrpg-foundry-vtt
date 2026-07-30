@@ -24,15 +24,15 @@
 
     {{!-- Pool readouts --}}
     <div class="tw-flex tw-flex-col tw-gap-1 tw-text-[0.8rem]">
-        <div class="wh40k-dw-vehicle-integrity-row tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <div data-wh40k-hook="dw-vehicle-integrity-row" class="tw-flex tw-items-center tw-justify-between tw-gap-2">
             <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.DW.Vehicle.Integrity"}}</span>
-            <span class="wh40k-dw-vehicle-integrity-value tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
+            <span data-wh40k-hook="dw-vehicle-integrity-value" class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
                 {{vehiclePanel.integrity}}
             </span>
         </div>
-        <div class="wh40k-dw-vehicle-over-row tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <div data-wh40k-hook="dw-vehicle-over-row" class="tw-flex tw-items-center tw-justify-between tw-gap-2">
             <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.DW.Vehicle.OverIntegrity"}}</span>
-            <span class="wh40k-dw-vehicle-over-value tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze">
+            <span data-wh40k-hook="dw-vehicle-over-value" class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze">
                 +{{vehiclePanel.overIntegrity}}
             </span>
         </div>
@@ -41,7 +41,7 @@
     {{!-- Action affordances --}}
     <div class="tw-flex tw-flex-wrap tw-gap-1.5">
         <button type="button"
-                class="wh40k-dw-vehicle-crit-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-wh40k-hook="dw-vehicle-crit-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
                 data-action="dwVehicleRollCrit"
                 title="{{localize 'WH40K.DW.Vehicle.RollCritTooltip'}}"
                 {{#unless vehiclePanel.canRollCrit}}disabled aria-disabled="true"{{/unless}}>
@@ -49,7 +49,7 @@
             {{localize "WH40K.DW.Vehicle.RollCrit"}}
         </button>
         <button type="button"
-                class="wh40k-dw-vehicle-repair-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-wh40k-hook="dw-vehicle-repair-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
                 data-action="dwVehicleRepair"
                 title="{{localize 'WH40K.DW.Vehicle.RepairTestTooltip'}}"
                 {{#unless vehiclePanel.canRepair}}disabled aria-disabled="true"{{/unless}}>
