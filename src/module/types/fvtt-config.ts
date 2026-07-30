@@ -8,6 +8,16 @@
  * This file must be kept in sync with the runtime registrations in
  * hooks-manager.ts (CONFIG.Actor.documentClass, CONFIG.Item.documentClass,
  * CONFIG.Actor.dataModels, CONFIG.Item.dataModels).
+ *
+ * **It has no importers, by design, and must not acquire one.** The file exports
+ * nothing: its entire body is `declare module 'fvtt-types/configuration'`, which
+ * takes effect purely by being inside the compilation. TypeScript reaches it via
+ * `tsconfig.json`'s `include`, not via an import — `import`ing an augmentation is
+ * not how augmentations apply. So it is listed in `knip.json`'s `ignore`
+ * alongside `foundry-v14-overrides.d.ts` / `i18n-keys.d.ts` / `icon-keys.d.ts`:
+ * a file that *cannot* have an importer is a knip false positive, not an unused
+ * file. That is the only thing an `ignore` entry may be used for — never to
+ * silence a module that could be wired, merged, or deleted.
  */
 
 // Actor data models (concrete per-system classes)
