@@ -9,10 +9,10 @@
     "unresolved"
   ],
   "totals": {
-    "total": 260
+    "total": 259
   },
   "counts": {
-    "files": 33,
+    "files": 32,
     "dependencies": 1,
     "devDependencies": 2,
     "optionalPeerDependencies": 0,
