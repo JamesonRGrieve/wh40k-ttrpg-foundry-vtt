@@ -1217,16 +1217,25 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const index = await pack.getIndex({ fields: ['name', 'type', 'system.step', 'system.description.value'] });
             for (const rawEntry of index) {
                 const entry = rawEntry as CompendiumIndexEntry;
-                const eliteSys = entry['system'] as { step?: string; description?: { value?: string } } | null | undefined;
+                const eliteSys = entry['system'] as { step?: string; xpCost?: number; description?: { value?: string } } | null | undefined;
                 if (eliteSys?.step !== 'elite') continue;
                 const key = entry.name.toLowerCase();
                 if (elitesByName.has(key)) continue;
                 const owned = ownedElites.has(key);
-                // Parse XP cost from description HTML (falls back to 1000)
-                /* eslint-disable @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: eliteSys is a cast Record; description/value may be absent at runtime */
+                /* eslint-disable @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: eliteSys is a cast Record; xpCost/description/value may be absent at runtime */
                 const descHtml = eliteSys?.description?.value ?? '';
+                // The authored `system.xpCost` is authoritative. It previously was not
+                // read at all: the cost was SCRAPED out of the description HTML, and
+                // since no elite item carried a matching string, every one of them fell
+                // through to the hardcoded 1000 — pricing Inquisitor at a third of RAW
+                // (3000), Untouchable at half (2000), and overcharging Sister of Battle
+                // (750). Rewording a description could also silently change a price.
+                // The scrape is kept only as a fallback for content that has not been
+                // authored yet, and it must stay below the authored value.
+                const authored = eliteSys?.xpCost;
                 const xpMatch = descHtml.match(/Experience Cost<\/h3>\s*<p>\s*([\d,]+)\s*xp/i) ?? descHtml.match(/([\d,]+)\s*xp/i);
-                const cost = xpMatch ? parseInt((xpMatch[1] ?? '0').replace(/,/g, ''), 10) : 1000;
+                const scraped = xpMatch ? parseInt((xpMatch[1] ?? '0').replace(/,/g, ''), 10) : 1000;
+                const cost = typeof authored === 'number' && authored > 0 ? authored : scraped;
                 /* eslint-enable @typescript-eslint/no-unnecessary-condition */
                 // Short blurb: first <p> after <h2>
                 const summaryMatch = descHtml.match(/<h2>[^<]*<\/h2>\s*<p>([^<]+)<\/p>/);
