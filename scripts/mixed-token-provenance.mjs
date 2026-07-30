@@ -23,6 +23,14 @@
  *             BEM identifier with no backing rule and no consumer: deleting it
  *             from the template is a no-op.
  *
+ * The `js` / `test` / `param` probes are whole-WORD matches, so a class whose name
+ * is an ordinary English word can be claimed by something unrelated — `framed`
+ * reports as a hook purely because a Tier B spec has a local `const framed` and a
+ * story comment says "framed under each of the 7 systems". That bias is deliberate:
+ * a false positive keeps a class, a false negative deletes one. Treat `dead` as
+ * trustworthy and the hook categories as an upper bound; confirm by eye before
+ * concluding a short-named class is load-bearing.
+ *
  * Usage:
  *   node scripts/mixed-token-provenance.mjs            # per-token table
  *   node scripts/mixed-token-provenance.mjs --files    # group by template
