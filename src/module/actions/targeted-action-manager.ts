@@ -4,6 +4,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { t } from '../i18n/t.ts';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.ts';
+import { findSpreadTargets } from '../rules/burst-spread-canvas.ts';
 import { isActorInActiveCombat } from '../rules/combat-state.ts';
 import { calculateTokenDistance } from '../utils/range-calculator.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
@@ -17,6 +18,12 @@ export interface SourceAndTargetData {
     actor: WH40KBaseActor;
     target: WH40KBaseActor | null;
     distance: number;
+    /**
+     * The declared target's TOKEN, carried alongside its actor because burst
+     * hit-spreading (#513) needs a scene position — RAW measures its two-metre
+     * radius around the target's location, which the actor alone cannot give.
+     */
+    targetToken: CanvasToken | undefined;
 }
 
 /**
@@ -153,6 +160,7 @@ export class TargetedActionManager {
             actor: sourceActorData,
             target: targetActorData,
             distance: targetDistance,
+            targetToken,
         };
     }
 
@@ -192,6 +200,11 @@ export class TargetedActionManager {
         weaponRollData.sourceActor = rollData.actor;
         weaponRollData.targetActor = rollData.target;
         weaponRollData.distance = rollData.distance;
+        // Eligible targets for a burst's extra hits (#513). Computed once here,
+        // where the declared target's token is in hand, rather than at allocation
+        // time — the allocator is pure and has no scene access. Empty for a lone
+        // enemy, which leaves allocation in its existing single-target mode.
+        weaponRollData.spreadTargets = findSpreadTargets(rollData.targetToken);
         prepareUnifiedRoll(weaponAttack);
     }
 
