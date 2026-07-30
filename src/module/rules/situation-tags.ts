@@ -102,6 +102,15 @@ const TYPE_TAG_ITEM_TYPES: ReadonlySet<string> = new Set(['trait', 'vehicleTrait
 const NATURE_NONE = 'none';
 
 /**
+ * The `whileState` slug for a declared Aim. Aim is a roll option rather than an
+ * actor condition, so it is the one state not already carried by `actor.statuses`
+ * and each channel derives it. Shared so the to-hit and damage channels cannot
+ * disagree on its spelling — a hook keyed on `aiming` must mean the same thing to
+ * both, or it fires on one and not the other.
+ */
+export const AIM_STATE = 'aiming';
+
+/**
  * Normalise a raw value to a tag slug: camelCase and word boundaries become
  * hyphens, everything lower-cases, and any run of non-alphanumerics collapses.
  * `'Point Blank'`, `'pointBlank'` and `'POINT_BLANK'` all slug to `point-blank`,

@@ -2,6 +2,7 @@ import { t } from '../i18n/t.ts';
 import { calculateAmmoSpecials } from '../rules/ammo.ts';
 import { getCriticalDamage } from '../rules/critical-damage.ts';
 import {
+    buildCharBonus,
     collectDynamicComponents,
     collectGrantedQualities,
     type DynamicModifierContext,
@@ -13,7 +14,7 @@ import {
 } from '../rules/dynamic-modifiers.ts';
 import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { scatterDirection } from '../rules/scatter.ts';
-import { type ActorStateSource, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
+import { AIM_STATE, type ActorStateSource, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
 import {
     applyKeepHighestToDie,
@@ -24,19 +25,6 @@ import {
     getRighteousFuryThreshold,
     resolveDieOpDamageAdjust,
 } from '../rules/weapon-quality-effects.ts';
-
-/** Short characteristic key → the fuzzy name `getCharacteristicFuzzy` resolves, for the dynamic-modifier context. */
-const DAMAGE_CHAR_FUZZY: Readonly<Record<string, string>> = {
-    ws: 'WeaponSkill',
-    bs: 'BallisticSkill',
-    s: 'Strength',
-    t: 'Toughness',
-    ag: 'Agility',
-    int: 'Intelligence',
-    per: 'Perception',
-    wp: 'Willpower',
-    fel: 'Fellowship',
-};
 
 /**
  * Minimal interface for the attackData parameter passed to Hit calculation methods.
@@ -108,12 +96,6 @@ export interface AttackDataLike {
     // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor; kept unknown to avoid circular imports
     damageData?: { targetActor?: unknown };
 }
-
-/**
- * The `whileState` slug for a declared Aim. Aim is a roll option rather than an
- * actor condition, so it is the one state not already carried by `actor.statuses`.
- */
-const AIM_STATE = 'aiming';
 
 /** The acting actor's states for `condition: whileState` — its conditions plus a declared Aim. */
 function attackStates(rollData: AttackDataLike['rollData']): string[] {
@@ -389,13 +371,7 @@ export class Hit {
         const sourceActor = attackData.rollData.sourceActor;
         const items = sourceActor.items;
         if (items === undefined) return;
-        const charBonus: Record<string, number> = {};
-        for (const [short, fuzzy] of Object.entries(DAMAGE_CHAR_FUZZY)) {
-            // Effective bonus so dynamic-modifier hooks that scale by a characteristic
-            // bonus (Crushing Blow ½SB, Mighty Shot ½BS) reflect fatigue/traits/drugs (#415).
-            const char = sourceActor.getCharacteristicFuzzy(fuzzy);
-            charBonus[short] = char.effectiveBonus ?? char.bonus;
-        }
+        const charBonus = buildCharBonus(sourceActor);
         const ctx: DynamicModifierContext = {
             charBonus,
             charTotal: {},

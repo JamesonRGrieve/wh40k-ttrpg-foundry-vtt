@@ -27,6 +27,49 @@ export interface DynamicModifierContext {
     armourPoints: number;
 }
 
+/** Short characteristic key → the fuzzy name `getCharacteristicFuzzy` resolves. */
+const CHARACTERISTIC_FUZZY: Readonly<Record<string, string>> = {
+    ws: 'WeaponSkill',
+    bs: 'BallisticSkill',
+    s: 'Strength',
+    t: 'Toughness',
+    ag: 'Agility',
+    int: 'Intelligence',
+    per: 'Perception',
+    wp: 'Willpower',
+    fel: 'Fellowship',
+};
+
+/**
+ * The read-surface {@link buildCharBonus} needs — structural, so this module stays
+ * Foundry-free. The lookup returns `undefined` for a characteristic the actor does
+ * not have (a vehicle has no Fellowship), which is why the builder guards it.
+ */
+export interface CharacteristicSource {
+    getCharacteristicFuzzy: (fuzzy: string) => { bonus: number; effectiveBonus?: number | undefined } | undefined;
+}
+
+/**
+ * Build the `charBonus` half of a {@link DynamicModifierContext} from an actor.
+ *
+ * Shared by every collector so the key set is defined once: a hook scaling by
+ * `sb` must mean the same characteristic on the attack channel as on the damage
+ * channel. Uses the EFFECTIVE bonus, so hooks that scale by a characteristic
+ * (Crushing Blow ½SB, Mighty Shot ½BS) reflect fatigue / traits / drugs (#415).
+ * @param {CharacteristicSource} actor  The acting actor.
+ * @returns {Record<string, number>}  Bonus by short characteristic key.
+ */
+export function buildCharBonus(actor: CharacteristicSource): Record<string, number> {
+    const charBonus: Record<string, number> = {};
+    for (const [short, fuzzy] of Object.entries(CHARACTERISTIC_FUZZY)) {
+        const char = actor.getCharacteristicFuzzy(fuzzy);
+        // Absent characteristic contributes 0 rather than throwing, matching the
+        // context's documented "missing entries default to 0" contract.
+        charBonus[short] = char === undefined ? 0 : char.effectiveBonus ?? char.bonus;
+    }
+    return charBonus;
+}
+
 /**
  * The situation a hook's trigger is tested against — what kind of roll this is and
  * the state around it. All optional; an unset field reads as "not that case".

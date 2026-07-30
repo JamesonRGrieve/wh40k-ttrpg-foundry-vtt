@@ -6,10 +6,18 @@ import { calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../ru
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.ts';
 import { WH40K } from '../rules/config.ts';
 import { rollDifficulties } from '../rules/difficulties.ts';
-import { type DynamicModifierItemLike, ownsActivatableHook } from '../rules/dynamic-modifiers.ts';
+import {
+    buildCharBonus,
+    collectDynamicComponents,
+    type DynamicModifierContext,
+    type DynamicModifierItemLike,
+    type DynamicModifierSituation,
+    ownsActivatableHook,
+} from '../rules/dynamic-modifiers.ts';
 import type { AllocationStrategy, AllocationTarget } from '../rules/hit-allocation.ts';
 import { hitDropdown } from '../rules/hit-locations.ts';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.ts';
+import { AIM_STATE, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
 import { targetSizeModifier } from '../rules/target-size.ts';
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
 import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
@@ -102,6 +110,14 @@ export class RollData {
     maxRange: number = 0;
     distance: number = 0;
     rangeName: string = '';
+    /**
+     * The computed range bracket key (`pointBlank` / `short` / … / `melee`), as
+     * opposed to the display `rangeName`. Written by `rules/range.ts` and read by
+     * the dynamic-modifier situation builders, which slug it into `rangeBand`.
+     * Declared here rather than only assigned through a cast, so the readers can
+     * see it without one.
+     */
+    rangeBracket: string = '';
     rangeBonus: number = 0;
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: combat action info populated by per-system rule modules
@@ -137,6 +153,22 @@ export class RollData {
         aim: 0,
     };
     specialModifiers: Record<string, number> = {};
+
+    /**
+     * Data-driven to-hit modifiers (#519), keyed by each hook's label so each lands
+     * on the roll card named and attributed rather than as an unexplained total.
+     *
+     * Cached rather than recomputed where the modifiers are assembled: a hook's
+     * magnitude may be a dice formula needing `await roll.evaluate()`, while the
+     * weapon path's assembler runs on every render to refresh `displayTarget` and
+     * must stay synchronous. {@link applyDynamicAttackModifiers} fills this during
+     * `finalize()`.
+     *
+     * On the base class so weapon AND psychic attacks both get it — scoping it to
+     * the weapon subclass would have left psychic rolls silently unmodified, which
+     * is the same shape as the defect this fixes.
+     */
+    dynamicAttackModifiers: Record<string, number> = {};
     modifierTotal: number = 0;
     /** The un-clamped sum of modifiers (un-capped). Equals `modifierTotal`
      *  except when the ±60 cap fired, in which case this exposes what the
@@ -373,6 +405,93 @@ export class RollData {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) sees items[0] as defined, tsconfig.json (flag on) types it `WH40KItem | undefined` and requires this guard
         if (first !== undefined) RollData.setSelected(first, true);
         return { hasMultiple: items.length > 1, first };
+    }
+
+    /**
+     * Collect the attacker's `target: 'attack'` dynamic-modifier hooks into
+     * {@link dynamicAttackModifiers} (#519).
+     *
+     * #518 made this channel's CONDITIONS reachable; this is the consumption half.
+     * Before it, a hook such as "+10 to hit vs Daemons" matched its trigger
+     * correctly and the resulting component was then dropped, because the only two
+     * collectors filter to damage/penetration and critReduction respectively. The
+     * hook data is authored on the item, so nothing here name-matches content
+     * (Direction #7).
+     *
+     * `dos` is 0 by necessity: a to-hit modifier applies BEFORE the roll it
+     * modifies, so it cannot scale by that roll's degrees of success without being
+     * circular. A hook scaling by `dos` therefore contributes its base magnitude on
+     * this channel — which is why `dos`-scaled hooks belong on the damage channel,
+     * where the roll has already resolved.
+     */
+    async applyDynamicAttackModifiers(): Promise<void> {
+        this.dynamicAttackModifiers = {};
+        const sourceActor = this.sourceActor;
+        const items = sourceActor?.items;
+        if (sourceActor === null || items === undefined) return;
+
+        const ctx: DynamicModifierContext = {
+            charBonus: buildCharBonus(sourceActor),
+            charTotal: {},
+            dos: 0,
+            pr: 0,
+            cb: 0,
+            level: 0,
+            penetration: 0,
+            armourPoints: 0,
+        };
+        // Narrowed to the tag-derivation read-surface, the same way `AttackDataLike`
+        // types its own `targetActor` slot: the live Actor satisfies it structurally,
+        // but its `system` union carries an index signature, so TypeScript cannot see
+        // the optional slots without being told which surface is being read.
+        const targetTags = collectTargetTags(this.targetActor as TargetTagSource | null);
+        const states = collectActorStates(sourceActor);
+        // A declared Aim is a roll option rather than a condition, so it is derived
+        // here the same way the damage channel derives it — otherwise a hook keyed
+        // on `aiming` would fire on damage but not on the to-hit test it modifies.
+        if ((this.modifiers['aim'] ?? 0) > 0 && !states.includes(AIM_STATE)) states.push(AIM_STATE);
+        // Weapon OR power, matching the damage channel's builder: a psychic attack
+        // has no weapon, and treating "no weapon" as melee would fire every melee
+        // hook on every psychic test. Widened to `| undefined` because this pass
+        // also runs for skill and characteristic tests, where neither is set —
+        // the declared types say otherwise, as the existing `if (this.weapon)`
+        // guard elsewhere in this class already acknowledges.
+        /* eslint-disable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-unnecessary-boolean-literal-compare -- defensive: `weapon` and `power` are declared optional, but this project's non-strict config widens them to always-present, so the compiler reports these guards as redundant. They are not: this pass runs on every roll, including skill and characteristic tests where neither is set. The same acknowledgement is already made by the `if (this.weapon)` guard in `finalize()`. */
+        // Read into locals first: `no-restricted-syntax` bans `??` directly on
+        // `this.*` (it targets schema defaults), while `prefer-nullish-coalescing`
+        // rejects the ternary that would avoid it. Coalescing two locals satisfies
+        // both, and this is a choice between alternatives rather than a default.
+        const weaponItem = this.weapon;
+        const powerItem = this.power;
+        const actionItem = weaponItem ?? powerItem;
+        const isRanged = actionItem?.isRanged === true;
+        const isMelee = actionItem?.isMelee === true;
+        /* eslint-enable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-unnecessary-boolean-literal-compare */
+        const situation: DynamicModifierSituation = {
+            isRanged,
+            isMelee,
+            action: this.action,
+            rangeBand: rangeBandOf(this.rangeBracket),
+            targetTags: targetTags.all,
+            targetTagAxes: targetTags.byAxis,
+            states,
+        };
+
+        const totals: Record<string, number> = {};
+        for (const component of collectDynamicComponents(items as Iterable<DynamicModifierItemLike>, ctx, situation)) {
+            if (component.side !== 'attacker' || component.target !== 'attack') continue;
+            let value = component.value;
+            if (component.valueFormula !== '') {
+                const roll = new Roll(component.valueFormula, {});
+                // eslint-disable-next-line no-await-in-loop -- sequential by design: each dice-valued hook rolls its own magnitude
+                await roll.evaluate();
+                value = roll.total ?? 0;
+            }
+            // Sum rather than overwrite: two hooks may share a label (the item name
+            // when none is authored), and dropping one would silently under-modify.
+            totals[component.label] = (totals[component.label] ?? 0) + value;
+        }
+        this.dynamicAttackModifiers = totals;
     }
 }
 
@@ -611,11 +730,15 @@ export class WeaponRollData extends RollData {
             ...this.modifiers,
             ...this.specialModifiers,
             ...this.weaponModifiers,
+            ...this.dynamicAttackModifiers,
             range: this.rangeBonus,
         };
     }
 
     async finalize(): Promise<void> {
+        // Before assembling: this resolves dice-valued magnitudes, which the
+        // synchronous assembler cannot, and caches the result for it to merge.
+        await this.applyDynamicAttackModifiers();
         this.modifiers = this.assembleFinalModifiers();
 
         // Unselect Weapon -- UI issues if it's selected on start
@@ -760,7 +883,12 @@ export class PsychicRollData extends RollData {
 
     async finalize(): Promise<void> {
         calculateAttackSpecialAttackBonuses(this);
-        this.modifiers = { ...this.modifiers, ...this.specialModifiers };
+        // Psychic attacks take the same data-driven to-hit hooks as weapon attacks
+        // (#519). Omitting them here would leave a hook like "+10 vs Daemons"
+        // working on a bolter and silently doing nothing on a smite — the same
+        // shape of invisible gap this channel was fixed for.
+        await this.applyDynamicAttackModifiers();
+        this.modifiers = { ...this.modifiers, ...this.specialModifiers, ...this.dynamicAttackModifiers };
         await this.calculateTotalModifiers();
     }
 }
