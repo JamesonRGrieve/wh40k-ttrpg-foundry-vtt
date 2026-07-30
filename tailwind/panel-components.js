@@ -40,19 +40,34 @@ module.exports = {
             color: 'var(--panel-accent, var(--wh40k-accent-gold))',
         },
     },
+    // Unlike the `.wh40k-rpg.sheet.actor` rules in legacy-components.js, this is a
+    // single-class selector — (0,1,0) — so it LOSES to any Tailwind utility on the
+    // same element, which emits at (0,2,0) under `important: '.wh40k-rpg'`. The
+    // layout declarations below therefore govern only headers written as a bare
+    // `class="wh40k-panel-header"`; the three wrapper partials (panel.hbs,
+    // vital-panel-shell.hbs, panel-header.hbs) spell the identical values out as
+    // inline utilities and legitimately govern their own elements.
+    //
+    // That equivalence is the invariant these declarations now rest on, since the
+    // CSS priority flag that used to arbitrate is gone. `pnpm css:utility-audit
+    // 'wh40k-panel-header:display,flex-direction,align-items,width,box-sizing,min-width'`
+    // lists every co-location to check. Watch the flex shorthand in particular:
+    // `tw-flex-1` is `flex: 1 1 0%`, NOT the `flex: 1 1 auto` set on
+    // `.wh40k-panel-title` below — panel-header.hbs uses `tw-flex-auto` for
+    // exactly that reason.
     '.wh40k-panel-header': {
-        display: 'flex !important',
-        flexDirection: 'row !important',
-        alignItems: 'center !important',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
         gap: 'var(--wh40k-space-sm)',
         padding: 'var(--wh40k-space-sm) var(--wh40k-space-md)',
         background:
             'linear-gradient(180deg, rgb(from var(--wh40k-accent-gold) r g b / 0.15) 0%, rgb(from var(--wh40k-accent-gold) r g b / 0.05) 100%)',
         borderBottom: '1px solid var(--wh40k-border-color-light)',
         transition: 'box-shadow 0.2s ease, background 0.2s ease',
-        width: '100% !important',
-        boxSizing: 'border-box !important',
-        minWidth: '0 !important',
+        width: '100%',
+        boxSizing: 'border-box',
+        minWidth: '0',
         // Typography contributed by the legacy gothic-theme rule (unified-components
         // didn't override these, so they survived the cascade).
         fontFamily: 'var(--wh40k-font-header)',
@@ -72,7 +87,7 @@ module.exports = {
             fontSize: '1rem',
         },
         '& .wh40k-panel-title': {
-            flex: '1 1 auto !important',
+            flex: '1 1 auto',
             fontFamily: "var(--wh40k-font-display, 'Modesto Condensed', serif)",
             fontSize: 'var(--wh40k-text-h3, 1.1rem)',
             fontWeight: '600',
@@ -83,11 +98,11 @@ module.exports = {
             // so the title reads as bright gold and matches the chevron.
             color: 'var(--wh40k-gold)',
             letterSpacing: '0.02em',
-            whiteSpace: 'nowrap !important',
+            whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            display: 'flex !important',
-            alignItems: 'center !important',
+            display: 'flex',
+            alignItems: 'center',
             gap: 'var(--wh40k-space-sm)',
             minWidth: '0',
             '& i': {
@@ -98,7 +113,7 @@ module.exports = {
         },
         // Buttons / labels in a header dock to the right and never shrink.
         '& > button, & > label': {
-            flexShrink: '0 !important',
+            flexShrink: '0',
             marginLeft: 'auto',
         },
     },
