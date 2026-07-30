@@ -17,21 +17,23 @@
 
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { MUTANT_STARTING_CORRUPTION } from '../../rules/chaos-backgrounds.ts';
+import type { WH40KMutantBackgroundTarget } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-/** Minimal actor surface the dialog touches — kept narrow to avoid Document coupling. */
-interface MutantTargetActor {
-    id?: string | undefined;
-    name?: string | undefined;
-    system?: { corruption?: { value?: number } | number };
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update accepts a path-keyed payload and resolves to the updated Document (framework signature)
-    update?: (data: Record<string, unknown>) => Promise<unknown>;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.setFlag stores arbitrary serializable values keyed by scope/key (framework signature)
-    setFlag?: (scope: string, key: string, value: unknown) => Promise<unknown>;
-}
+/**
+ * Minimal actor surface the dialog touches — kept narrow to avoid Document
+ * coupling, and tolerant of both `corruption` schema shapes (a bare number on
+ * some lines, `{ value }` on others).
+ *
+ * Declared in `types/global.d.ts` rather than here because the launcher
+ * signature on `game.wh40k.prompts` needs the same shape, and that interface
+ * cannot import this module (see the note on `WH40KPromptLaunchers` — a `typeof`
+ * import there closes a `no-circular` cycle per launcher).
+ */
+type MutantTargetActor = WH40KMutantBackgroundTarget;
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface MutantBackgroundContext extends Record<string, unknown> {
@@ -52,7 +54,7 @@ function localize(key: string): string {
  * surface the conversion option.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class MutantBackgroundDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class MutantBackgroundDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     /** Optional target actor; null when the GM opens the dialog without a selection. */
     declare actor: MutantTargetActor | null;
 

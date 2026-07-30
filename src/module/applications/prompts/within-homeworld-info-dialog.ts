@@ -135,7 +135,6 @@ const WithinHomeworldInfoDialog = defineInfoCardDialog({
     extraClasses: ['standard-form'],
     cards: buildWithinCards,
 });
-export default WithinHomeworldInfoDialog;
 
 /** Convenience opener for the dialog. */
 export function openWithinHomeworldInfoDialog(): void {

@@ -109,7 +109,6 @@ const BeyondHomeworldInfoDialog = defineInfoCardDialog({
     contextKey: 'homeworlds',
     cards: buildBeyondCards,
 });
-export default BeyondHomeworldInfoDialog;
 
 /** Convenience opener for menu entries / macros. */
 export function openBeyondHomeworldInfoDialog(): void {

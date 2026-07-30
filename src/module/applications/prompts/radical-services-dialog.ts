@@ -6,7 +6,7 @@
  * and applies the Subtlety hit.
  */
 
-import type { WH40KAcolyte } from '../../documents/acolyte.ts';
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { RADICAL_SERVICES, type RadicalServiceDefinition, type RadicalServiceId } from '../../rules/radical-services.ts';
 import { getRequisitionTestTarget } from '../../rules/requisition-test.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
@@ -41,7 +41,7 @@ interface ServiceRow {
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context bag matches the mixin's Record<string, unknown> return type
 interface RadicalServicesContext extends Record<string, unknown> {
-    actor: WH40KAcolyte;
+    actor: WH40KBaseActor;
     influence: number;
     services: ServiceRow[];
     selectedServiceId: RadicalServiceId | null;
@@ -53,11 +53,11 @@ type ActionHandler = (this: RadicalServicesDialog, event: Event, target: HTMLEle
  * GM dialog for picking and rolling a Radical Services Requisition.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class RadicalServicesDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
-    declare actor: WH40KAcolyte;
+class RadicalServicesDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+    declare actor: WH40KBaseActor;
     declare selectedServiceId: RadicalServiceId | null;
 
-    constructor(actor: WH40KAcolyte, options: ApplicationV2Config.DefaultOptions = {}) {
+    constructor(actor: WH40KBaseActor, options: ApplicationV2Config.DefaultOptions = {}) {
         super(options);
         this.actor = actor;
         this.selectedServiceId = null;
@@ -209,7 +209,7 @@ export default class RadicalServicesDialog extends ApplicationV2Mixin(Applicatio
 /*  Helper Function                             */
 /* -------------------------------------------- */
 
-export function openRadicalServicesDialog(actor: WH40KAcolyte): void {
+export function openRadicalServicesDialog(actor: WH40KBaseActor): void {
     const dialog = new RadicalServicesDialog(actor);
     void dialog.render({ force: true });
 }

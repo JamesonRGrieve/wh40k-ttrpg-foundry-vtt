@@ -81,7 +81,7 @@ interface InstallDialogOptions {
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class CyberneticsInstallDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class CyberneticsInstallDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     declare deviceName: string;
     declare baseDifficulty: number;
     declare craftsmanship: CyberneticCraftsmanship;

@@ -55,7 +55,7 @@ interface DaemonhostBindingContext extends Record<string, unknown> {
  * card. The chat card is system-themed via `data-wh40k-system="dh2"`.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class DaemonhostBindingDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class DaemonhostBindingDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     /** Currently selected tier id (defaults to the lowest tier). */
     declare selectedTier: BindingStrength;
 
