@@ -181,7 +181,15 @@ export class WH40KItem extends WH40KItemContainer {
     get totalWeight(): number {
         // eslint-disable-next-line no-restricted-syntax -- boundary: system.weight optional in shared item schema
         let weight: number = this.system.weight ?? 0;
-        if (this.items.size > 0) {
+        // `items` is assigned by `WH40KItemContainer#prepareEmbeddedDocuments`, which
+        // seeds an empty Collection for every item type precisely so this getter can
+        // read it. That makes it present once preparation has run — but NOT on a
+        // freshly-constructed document, where this getter would throw
+        // "Cannot read properties of undefined (reading 'size')". A weight
+        // accessor must not depend on preparation order; an unprepared item simply
+        // contains nothing.
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: `items` is populated during preparation and is genuinely absent before it
+        if ((this.items?.size ?? 0) > 0) {
             this.items.forEach((item) => {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: nested Item store typed as base Foundry Item
                 weight += (item as unknown as WH40KItem).totalWeight;

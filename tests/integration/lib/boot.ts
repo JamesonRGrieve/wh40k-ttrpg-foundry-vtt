@@ -170,6 +170,48 @@ interface BrowserGlobals {
  * @param {BrowserGlobals} g  The test global they are installed onto.
  * @returns {void}
  */
+/**
+ * Serve `systems/wh40k-rpg/**` requests out of the built `dist/` directory.
+ *
+ * Foundry loads Handlebars templates with `fetch('systems/wh40k-rpg/templates/…')`,
+ * which in a real game is answered by its own web server. Tier A has no server, so
+ * every such request hangs — and because the sheet render awaits it, the whole
+ * test sits until vitest's 60s timeout rather than failing with anything that
+ * names the cause. That is what made `sheet-render` look like a mysterious hang
+ * (#515).
+ *
+ * Anything outside the system path 404s rather than reaching the network: a Tier A
+ * run must not depend on egress, and a silent real request would be a far more
+ * confusing failure than a missing file.
+ * @param {BrowserGlobals} g  The writable global view.
+ */
+function installTemplateFetch(g: BrowserGlobals): void {
+    const distRoot = resolve(import.meta.dirname, '..', '..', '..', 'dist');
+    const SYSTEM_PREFIX = 'systems/wh40k-rpg/';
+
+    const serve = (rawUrl: string): { body: string; ok: boolean } => {
+        // Foundry passes root-relative paths; jsdom may hand back an absolute URL.
+        const path = rawUrl.replace(/^https?:\/\/[^/]+\//, '').replace(/^\//, '');
+        if (!path.startsWith(SYSTEM_PREFIX)) return { body: '', ok: false };
+        const filePath = resolve(distRoot, path.slice(SYSTEM_PREFIX.length));
+        if (!existsSync(filePath)) return { body: '', ok: false };
+        return { body: readFileSync(filePath, 'utf8'), ok: true };
+    };
+
+    g['fetch'] = async (input: string | { url?: string }): Promise<object> => {
+        const url = typeof input === 'string' ? input : String(input.url ?? '');
+        const { body, ok } = serve(url);
+        return Promise.resolve({
+            ok,
+            status: ok ? 200 : 404,
+            statusText: ok ? 'OK' : 'Not Found',
+            url,
+            text: async () => Promise.resolve(body),
+            json: async () => Promise.resolve(body === '' ? {} : JSON.parse(body)),
+        });
+    };
+}
+
 function installPageGlobals(win: BrowserGlobals, g: BrowserGlobals): void {
     // Force the Event constructors to come from the SAME jsdom window whose
     // dispatchEvent we bind below. Vitest's own environment supplies rival
@@ -560,6 +602,7 @@ async function doBoot(): Promise<BootResult> {
     pinNavigatorIdentity(g);
     forceFoundryGlobals(win, g);
 
+    installTemplateFetch(g);
     installPageGlobals(win, g);
 
     await import(pathToFileURL(foundryEntryPath).href);
