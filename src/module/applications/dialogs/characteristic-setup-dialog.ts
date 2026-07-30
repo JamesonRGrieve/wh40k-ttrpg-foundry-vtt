@@ -339,7 +339,11 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         event.dataTransfer.setData('text/plain', JSON.stringify(this.#dragData));
 
         this.element.classList.add('drag-active');
-        this.element.querySelectorAll<HTMLElement>('[data-wh40k-hook="csd-char-slot"]:not([data-wh40k-hook="has-roll"])').forEach((slot) => {
+        // Only the slots still WAITING for a roll pulse. `data-has-roll` is set by
+        // char-gen-characteristic-grid.hbs under `{{#if hasRoll}}`; an element carries
+        // exactly one `data-wh40k-hook`, so the filled state needs its own attribute
+        // rather than a second hook value.
+        this.element.querySelectorAll<HTMLElement>('[data-wh40k-hook="csd-char-slot"]:not([data-has-roll])').forEach((slot) => {
             slot.classList.add('tw-animate-csd-pulse-border');
         });
     }
