@@ -29,6 +29,7 @@
     "src/module/types/i18n-keys.d.ts",
     "src/module/types/icon-keys.d.ts",
     "foundry-v14-overrides.d.ts",
+    "src/module/types/fvtt-config.ts",
     "dist/**"
   ],
   "ignoreBinaries": [
