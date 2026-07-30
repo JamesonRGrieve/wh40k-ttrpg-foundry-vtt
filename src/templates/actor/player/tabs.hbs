@@ -1,8 +1,14 @@
 {{!-- Sidebar tab navigation — rendered inside the wh40k-sidebar container.
      Single vertical column of full-width buttons (#320): the nav stacks in one
      column on every sheet width rather than reflowing into two columns when wide.
-     Styling applies to PC and NPC sheets. --}}
+     Styling applies to PC and NPC sheets.
+
+     The nav background is NOT set here: tailwind/legacy-components.js's
+     `nav.wh40k-navigation` gives it rgba(0,0,0,0.2), and that is what has always
+     rendered. A priority-flagged `tw-bg-transparent` used to sit in navClass and
+     never took effect (the legacy rule out-specified it while both were flagged);
+     re-adding it would strip the strip's tint on every PC and NPC sheet. --}}
 {{> systems/wh40k-rpg/templates/actor/partial/tab-strip.hbs
     tabs=tabs
-    navClass="!tw-flex !tw-flex-col !tw-gap-1 !tw-m-0 !tw-p-2 !tw-w-full !tw-shrink-0 !tw-grow-0 !tw-bg-transparent"
+    navClass="!tw-flex !tw-flex-col !tw-gap-1 !tw-m-0 !tw-p-2 !tw-w-full !tw-shrink-0 !tw-grow-0"
     itemClass="wh40k-nav-item tw-flex tw-w-full tw-items-center tw-justify-center tw-text-center tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis tw-rounded-md tw-px-2 tw-py-1.5 tw-text-xs tw-border-b-2 tw-border-b-gold bc:tw-border-b-crimson-light dh1:tw-border-b-gold-raw-l5 dh2:tw-border-b-gold-raw dw:tw-border-b-accent-combat ow:tw-border-b-brass-l20 rt:tw-border-b-gold im:tw-border-b-failure tw-border-b-transparent"}}
