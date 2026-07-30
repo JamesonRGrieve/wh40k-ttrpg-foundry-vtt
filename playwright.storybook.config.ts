@@ -2,16 +2,24 @@ import { defineConfig, devices } from '@playwright/test';
 
 const port = Number(process.env.STORYBOOK_TEST_PORT ?? 6007);
 
+// Default of 2 — this suite runs from the pre-commit pipeline alongside ~20
+// other CPU-heavy ratchets (3 tsc passes, type-coverage, knip, deps, eslint,
+// biome, vitest, …). With the default 50%-of-cores fanout, screenshot capture
+// starves and `toHaveScreenshot`'s 5s budget expires across dozens of stories.
+// 2 keeps the suite stable under contention; total runtime stays within the
+// pre-commit envelope.
+//
+// STANDALONE runs (`pnpm test:storybook:integration` on an otherwise idle box)
+// have the whole machine to themselves, so raise the fan-out per-invocation via
+// STORYBOOK_WORKERS. Same opt-in shape `playwright.foundry.config.ts` uses for
+// E2E_WORKERS. Pixel suites do get flakier under load — re-confirm any failure
+// at the default of 2 before believing it.
+const WORKERS = Math.max(1, Number(process.env.STORYBOOK_WORKERS ?? 2));
+
 export default defineConfig({
     testDir: './tests/storybook',
     fullyParallel: true,
-    // Cap workers at 2 — this suite runs from the pre-commit pipeline alongside
-    // ~20 other CPU-heavy ratchets (3 tsc passes, type-coverage, knip, deps,
-    // eslint, biome, vitest, …). With the default 50%-of-cores fanout, screenshot
-    // capture starves and `toHaveScreenshot`'s 5s budget expires across dozens of
-    // stories. 2 keeps the suite stable under contention; total runtime stays
-    // within the pre-commit envelope.
-    workers: 2,
+    workers: WORKERS,
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 2 : 0,
     reporter: 'list',
