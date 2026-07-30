@@ -572,14 +572,14 @@ export class HooksManager {
             rollMutation: async () => RollTableUtils.rollMutation(),
             rollMalignancy: async () => RollTableUtils.rollMalignancy(),
             showRollTableDialog: async () => Promise.resolve(RollTableUtils.showRollTableDialog()),
-            // GM-facing prompt launchers (#516). Twelve implemented dialogs had
+            // GM-facing prompt launchers (#516). Fourteen implemented dialogs had
             // no way to be opened; they are reachable here as
             // `game.wh40k.prompts.openFearTestDialog()` and friends — the same
             // macro surface the compendium browser and EventTracker use.
             //
             // Listed one by one rather than spread from a barrel: an
             // `import * as` namespace hides which members are actually consumed,
-            // which is exactly how twenty dialogs stayed invisible behind
+            // which is exactly how twenty-two dialogs stayed invisible behind
             // `prompts/_module.ts`. Naming each launcher keeps the wiring
             // enumerable by knip and readable here.
             prompts: {
