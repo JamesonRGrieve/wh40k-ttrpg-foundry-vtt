@@ -1,5 +1,5 @@
-import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import type NPCData from '../data/actor/npc.ts';
+import { openRollPrompt } from '../rolls/roll-prompt.ts';
 import { hasAuthoredFootprint, prototypeTokenFootprintUpdate } from '../utils/token-footprint.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 
@@ -157,7 +157,7 @@ export class WH40KNPC extends WH40KBaseActor {
             target: char.total,
             nameOverride: flavor !== undefined && flavor !== '' ? flavor : undefined,
         });
-        prepareUnifiedRoll(simpleSkillData);
+        openRollPrompt(simpleSkillData);
     }
 
     /**
@@ -187,7 +187,7 @@ export class WH40KNPC extends WH40KBaseActor {
             label: `${weapon.name} Attack`,
             target: char.total,
         });
-        prepareUnifiedRoll(simpleSkillData);
+        openRollPrompt(simpleSkillData);
     }
 
     /**
@@ -222,7 +222,7 @@ export class WH40KNPC extends WH40KBaseActor {
             target,
             nameOverride: flavor !== undefined && flavor !== '' ? flavor : undefined,
         });
-        prepareUnifiedRoll(simpleSkillData);
+        openRollPrompt(simpleSkillData);
     }
 
     /* -------------------------------------------- */

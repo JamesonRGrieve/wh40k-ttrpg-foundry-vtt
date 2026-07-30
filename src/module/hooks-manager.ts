@@ -80,6 +80,8 @@ import {
     NPCTemplateSheet,
 } from './applications/item/_module.ts';
 import * as npcApplications from './applications/npc/_module.ts';
+import { prepareDamageRoll } from './applications/prompts/damage-roll-dialog.ts';
+import { prepareUnifiedRoll } from './applications/prompts/unified-roll-dialog.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { onRefreshToken } from './canvas/token-mask.ts';
 import { hydrateActorInMemory } from './compendium-hydrate.ts';
@@ -107,6 +109,8 @@ import {
 import { EventTracker } from './managers/event-tracker.ts';
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
+import type { ActionData } from './rolls/action-data.ts';
+import { registerRollPrompts } from './rolls/roll-prompt.ts';
 import { registerActionEconomy } from './rules/action-economy.ts';
 import { ensureInquisitionArmoury } from './rules/armoury.ts';
 import { registerCombatTurnHooks } from './rules/combat-turn-hooks.ts';
@@ -517,6 +521,23 @@ export class HooksManager {
     static init(): void {
         // eslint-disable-next-line no-console -- system bootstrap log before game.wh40k.log is defined
         console.log('Loading WH40K RPG System v1.0.0');
+
+        // Install the roll-prompt openers (#516). This is the composition root
+        // for the `rolls/roll-prompt.ts` port: `documents/*` calls
+        // `openRollPrompt` / `openDamagePrompt` and never names a dialog class,
+        // which is what `documents-must-not-depend-on-applications` is for. Done
+        // first in init() so a Document reaching a prompt during world load
+        // always finds the port wired.
+        //
+        // The port carries its payload opaquely so it can stay an import leaf
+        // (see roll-prompt.ts — naming `ActionData` there re-creates the
+        // no-circular cycles the direct dialog import produced). `ActionData` is
+        // the concrete type every Document builds and the dialog renders; it is
+        // restored here, at the one place that already sees both layers.
+        registerRollPrompts({
+            openRoll: (payload) => prepareUnifiedRoll(payload as ActionData),
+            openDamage: prepareDamageRoll,
+        });
 
         const consolePrefix = 'WH40K RPG | ';
         game.wh40k = {

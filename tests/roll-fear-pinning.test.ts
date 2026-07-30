@@ -1,24 +1,25 @@
 /**
  * Regression guard: `WH40KBaseActor.rollFearTest` / `rollPinningTest` /
  * `rollEscapePinningTest` must route their Willpower test through the UNIFIED
- * roll pipeline (`prepareUnifiedRoll`) with `type='Characteristic'`,
+ * roll pipeline (via the `rolls/roll-prompt.ts` port) with `type='Characteristic'`,
  * `rollKey='willpower'`, and the situational-modifier collector keyed on
  * `willpower` — that is what surfaces conditional Willpower talents/traits
  * (Resistance(Fear), Jaded, …) as selectable modifiers BEFORE the test resolves.
  *
- * We mock `prepareUnifiedRoll` to capture the ActionData each method builds,
- * then assert its rollData shape. The pure target math is covered separately by
- * `src/module/rules/fear.test.ts` and `src/module/rules/pinning.test.ts`.
+ * We install a capturing opener on the real `rolls/roll-prompt.ts` port (#516)
+ * to collect the ActionData each method builds, then assert its rollData shape.
+ * No module mock: the port exists precisely so a Document's roll path can be
+ * driven without an `ApplicationV2`, so the test uses the production seam.
+ * The pure target math is covered separately by `src/module/rules/fear.test.ts`
+ * and `src/module/rules/pinning.test.ts`.
  */
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { registerRollPrompts, resetRollPrompts } from '../src/module/rolls/roll-prompt.ts';
 import { buildApplicationV2Api, type ApplicationV2Api } from '../src/module/testing/app-v2-stub.ts';
 
-// --- Mock the unified-roll entry so methods can be inspected, not rendered. ---
-// eslint-disable-next-line no-restricted-syntax -- boundary: prepareUnifiedRoll receives the opaque SimpleSkillData ActionData; the mock captures it as unknown and narrows in lastRollData()
-const prepareUnifiedRoll = vi.fn<(data: unknown) => void>();
-vi.mock('../src/module/applications/prompts/unified-roll-dialog.ts', () => ({
-    prepareUnifiedRoll,
-}));
+// --- Capture what the Document hands the roll-prompt port, don't render it. ---
+// eslint-disable-next-line no-restricted-syntax -- boundary: the port forwards the opaque SimpleSkillData ActionData; the spy captures it as unknown and narrows in lastRollData()
+const openedRolls = vi.fn<(data: unknown) => void>();
 
 // --- Stub Foundry globals before importing system modules (see ----------------
 //     build-simple-skill-roll.test.ts for the rationale). -----------------------
@@ -90,6 +91,7 @@ stubs.game = {
 const { WH40KBaseActor } = await import('../src/module/documents/base-actor.ts');
 
 afterAll(() => {
+    resetRollPrompts();
     stubs.foundry = ORIGINAL_FOUNDRY;
     stubs.game = ORIGINAL_GAME;
     stubs.Actor = ORIGINAL_ACTOR;
@@ -112,21 +114,22 @@ function makeActor(willpowerTotal: number): WH40KBaseActorInstance {
     return actor;
 }
 
-/** Pull the rollData out of the SimpleSkillData passed to the last prepareUnifiedRoll call. */
+/** Pull the rollData out of the SimpleSkillData the Document last handed the port. */
 function lastRollData(): CapturedRollData {
-    const arg = prepareUnifiedRoll.mock.calls.at(-1)?.[0];
-    // eslint-disable-next-line no-restricted-syntax -- boundary: prepareUnifiedRoll is mocked; its arg is the opaque SimpleSkillData, narrowed to the rollData fields under test.
+    const arg = openedRolls.mock.calls.at(-1)?.[0];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the port's payload is the opaque SimpleSkillData, narrowed to the rollData fields under test.
     return (arg as { rollData: unknown }).rollData as CapturedRollData;
 }
 
 beforeEach(() => {
-    prepareUnifiedRoll.mockClear();
+    openedRolls.mockClear();
+    registerRollPrompts({ openRoll: openedRolls, openDamage: () => undefined });
 });
 
 describe('rollFearTest', () => {
     it('routes a Willpower characteristic test through unified with the Fear penalty as a named modifier', () => {
         makeActor(45).rollFearTest(2);
-        expect(prepareUnifiedRoll).toHaveBeenCalledTimes(1);
+        expect(openedRolls).toHaveBeenCalledTimes(1);
         const rd = lastRollData();
         expect(rd.type).toBe('Characteristic');
         expect(rd.rollKey).toBe('willpower');
@@ -137,7 +140,7 @@ describe('rollFearTest', () => {
 
     it('is a no-op at Fear rating 0 (no Fear trait)', () => {
         makeActor(45).rollFearTest(0);
-        expect(prepareUnifiedRoll).not.toHaveBeenCalled();
+        expect(openedRolls).not.toHaveBeenCalled();
     });
 });
 

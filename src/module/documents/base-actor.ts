@@ -1,4 +1,3 @@
-import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import type { FatigueModelDef } from '../config/game-systems/types.ts';
 import { DEAD_STATUS_ID, SYSTEM_ID } from '../constants.ts';
 import { applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../data/shared/characteristic-math.ts';
@@ -8,6 +7,7 @@ import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shar
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { t } from '../i18n/t.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
+import { openRollPrompt } from '../rolls/roll-prompt.ts';
 import { type AddictionTier, resolveAddictionCheck } from '../rules/addiction.ts';
 import { conditionEffectData } from '../rules/condition-registry.ts';
 import { clampDisposition } from '../rules/disposition.ts';
@@ -883,7 +883,7 @@ export class WH40KBaseActor extends Actor {
             target: characteristic.total,
             ...(override !== undefined ? { typeOverride: override } : {}),
         });
-        prepareUnifiedRoll(simpleSkillData);
+        openRollPrompt(simpleSkillData);
     }
 
     /**
@@ -909,7 +909,7 @@ export class WH40KBaseActor extends Actor {
             situationalKey: 'willpower',
             extraModifiers: { fear: -getFearTestPenalty(rating) },
         });
-        prepareUnifiedRoll(simpleSkillData);
+        openRollPrompt(simpleSkillData);
     }
 
     /**
@@ -932,7 +932,7 @@ export class WH40KBaseActor extends Actor {
             target,
             situationalKey: 'willpower',
         });
-        prepareUnifiedRoll(simpleSkillData);
+        openRollPrompt(simpleSkillData);
     }
 
     /**
@@ -957,7 +957,7 @@ export class WH40KBaseActor extends Actor {
             target,
             situationalKey: 'willpower',
         });
-        prepareUnifiedRoll(simpleSkillData);
+        openRollPrompt(simpleSkillData);
     }
 
     /* -------------------------------------------- */

@@ -1,5 +1,3 @@
-import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.ts';
-import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 // Direct, not via dice/_module.ts: that barrel also re-exports
 // RollConfigurationDialog, so importing it drags the applications layer into
 // every document that just wants a roll class.
@@ -20,6 +18,7 @@ import {
     SkillUseActionData,
 } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
+import { openDamagePrompt, openRollPrompt } from '../rolls/roll-prompt.ts';
 import { firstTargetedActor, promptItemChoice, promptSkillUse } from '../rolls/skill-use-picker.ts';
 import { getSkillReadout, hasSkillUses, type SkillUseDef, skillUsesAreInline } from '../rules/skill-uses.ts';
 import type {
@@ -380,7 +379,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 situationalKey: 'influence',
                 nameOverride: flavorOverride !== undefined && flavorOverride !== '' ? flavorOverride : undefined,
             });
-            prepareUnifiedRoll(influenceRollData);
+            openRollPrompt(influenceRollData);
             return;
         }
 
@@ -398,7 +397,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             situationalKey: charKey,
             nameOverride: flavorOverride !== undefined && flavorOverride !== '' ? flavorOverride : undefined,
         });
-        prepareUnifiedRoll(simpleSkillData);
+        openRollPrompt(simpleSkillData);
     }
 
     /**
@@ -456,7 +455,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             ...(readoutFamily !== null ? { instance: new DosReadoutActionData(readoutFamily) } : {}),
             ...(skillRank !== undefined ? { skillRank } : {}),
         });
-        prepareUnifiedRoll(simpleSkillData);
+        openRollPrompt(simpleSkillData);
     }
 
     /**
@@ -492,7 +491,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             // let the player pick (or change) it in the dialog otherwise.
             action.rollData.targetActor = firstTargetedActor();
             action.syncSkillUse();
-            prepareUnifiedRoll(action);
+            openRollPrompt(action);
             return true;
         }
 
@@ -557,7 +556,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         });
         action.rollData.targetActor = targetActor;
         applySkillUseToRollData(action.rollData, use, skillLabel);
-        prepareUnifiedRoll(action);
+        openRollPrompt(action);
     }
 
     /**
@@ -615,7 +614,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             ...(skillRank !== undefined ? { skillRank } : {}),
         });
         chemAction.rollData.targetActor = targetActor;
-        prepareUnifiedRoll(chemAction);
+        openRollPrompt(chemAction);
     }
 
     /**
@@ -661,7 +660,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         palm.rollData.targetActor = targetActor;
         palm.rollData.isOpposed = true;
         palm.rollData.opposedChar = use.opposedChar ?? 'Per';
-        prepareUnifiedRoll(palm);
+        openRollPrompt(palm);
     }
 
     /**
@@ -718,7 +717,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             instance: objectAction,
             ...(skillRank !== undefined ? { skillRank } : {}),
         });
-        prepareUnifiedRoll(objectAction);
+        openRollPrompt(objectAction);
     }
 
     /**
@@ -767,7 +766,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             instance: demo,
             ...(skillRank !== undefined ? { skillRank } : {}),
         });
-        prepareUnifiedRoll(demo);
+        openRollPrompt(demo);
     }
 
     /**
@@ -802,7 +801,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             bonus: damageBonus + strengthBonus,
         };
 
-        prepareDamageRoll({
+        openDamagePrompt({
             name: weapon.name,
             damage: damageData,
             damageType: weapon.system['damageType'],
@@ -824,7 +823,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     // eslint-disable-next-line @typescript-eslint/require-await -- signature returns Promise for caller compat
     async rollPsychicPowerDamage(power: WH40KItem): Promise<void> {
-        prepareDamageRoll({
+        openDamagePrompt({
             psychicPower: true,
             pr: this.psy.rating,
             name: power.name,
@@ -851,7 +850,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 return;
             }
             // eslint-disable-next-line no-restricted-syntax -- boundary: ForceFieldData ctor accepts the item document via per-system-typed slot
-            prepareUnifiedRoll(new ForceFieldData(this, item as unknown as ConstructorParameters<typeof ForceFieldData>[1]) as unknown as ActionData);
+            openRollPrompt(new ForceFieldData(this, item as unknown as ConstructorParameters<typeof ForceFieldData>[1]) as unknown as ActionData);
             return;
         }
 
