@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { eligibleSpreadTargets, SPREAD_RADIUS_METRES, type SpreadCandidate } from './burst-spread.ts';
+import { allocateHits } from './hit-allocation.ts';
 
 /**
  * RAW eligibility for a burst's extra hits (#513).
@@ -62,5 +63,36 @@ describe('eligibleSpreadTargets (#513)', () => {
 
     it('pins the RAW radius so a silent change to it is caught', () => {
         expect(SPREAD_RADIUS_METRES).toBe(2);
+    });
+});
+
+/**
+ * End-to-end shape of the choice the dialog offers (#513).
+ *
+ * The control is only meaningful when eligibility and strategy agree, and the
+ * failure this guards is the one the feature spent its whole life in: eligible
+ * targets computed, strategy left at 'original', so nothing ever spread.
+ */
+describe('spread eligibility feeds allocation (#513)', () => {
+    it('allocates every hit to the declared target under the original strategy', () => {
+        const eligible = eligibleSpreadTargets({ originalToHitModifier: 0, candidates: [candidate({ id: 'cultist' })] });
+        const hits = allocateHits({ hitCount: 3, originalTarget: { id: 'boss', name: 'boss' }, extraTargets: eligible, strategy: 'original' });
+        expect(hits.map((h) => h.target.id)).toEqual(['boss', 'boss', 'boss']);
+    });
+
+    it('spreads the extra hits onto the eligible targets under the spread strategy', () => {
+        const eligible = eligibleSpreadTargets({ originalToHitModifier: 0, candidates: [candidate({ id: 'cultist' })] });
+        const hits = allocateHits({ hitCount: 3, originalTarget: { id: 'boss', name: 'boss' }, extraTargets: eligible, strategy: 'spread' });
+        // RAW pins the FIRST hit to the declared target; only extras may move.
+        expect(hits[0]?.target.id).toBe('boss');
+        expect(hits.map((h) => h.target.id)).toContain('cultist');
+    });
+
+    it('falls back to the declared target when nothing is eligible, even under spread', () => {
+        // The dialog hides the control in this case; allocation must still be safe
+        // if a stale strategy survives on the roll data.
+        const eligible = eligibleSpreadTargets({ originalToHitModifier: 0, candidates: [candidate({ id: 'far', metresFromOriginal: 9 })] });
+        const hits = allocateHits({ hitCount: 2, originalTarget: { id: 'boss', name: 'boss' }, extraTargets: eligible, strategy: 'spread' });
+        expect(hits.map((h) => h.target.id)).toEqual(['boss', 'boss']);
     });
 });

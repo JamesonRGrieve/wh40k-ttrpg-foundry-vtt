@@ -27,6 +27,7 @@ import {
     getSituationalModifiers,
     isMeleeSpecialOption,
 } from '../../rules/attack-options.ts';
+import { isBurstAction } from '../../rules/auto-fire.ts';
 import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
 import { computeGangUpModifier, gangUpConfigFor, type GangUpTokenLike } from '../../rules/gang-up.ts';
 import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/high-ground.ts';
@@ -94,6 +95,17 @@ type AttackOptionWeaponLike = WH40KItemDocument & {
  * the owning item's name and doubles as the provenance label on the chat card;
  * `sourceType` is its document type, used only to group gear chips (#480).
  */
+/**
+ * The roll-data slots {@link UnifiedRollDialog} reads to build the burst
+ * hit-spread control (#513), named so the dialog's index-signature roll-data view
+ * can be narrowed without an `unknown` cast.
+ */
+interface SpreadContextSource {
+    action?: string | undefined;
+    hitAllocation?: string | undefined;
+    spreadTargets?: ReadonlyArray<{ id: string; name: string }> | undefined;
+}
+
 interface SituationalModifierEntry {
     key: string;
     source: string;
@@ -278,6 +290,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             toggleDifficultyPicker: UnifiedRollDialog.#onToggleDifficultyPicker,
             selectDifficulty: UnifiedRollDialog.#onSelectDifficulty,
             toggleSituational: UnifiedRollDialog.#onToggleSituational,
+            toggleHitSpread: UnifiedRollDialog.#onToggleHitSpread,
             customModUp: UnifiedRollDialog.#onCustomModUp,
             customModDown: UnifiedRollDialog.#onCustomModDown,
             toggleCustomModifier: UnifiedRollDialog.#onToggleCustomModifier,
@@ -1150,6 +1163,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             rangeModifiedBy: rd['rangeModifiedBy'],
             isMeltaRange: rd['isMeltaRange'],
             maxRange,
+            // Burst hit-spreading (#513). Offered only when the choice is real: the
+            // action must be a burst (a single hit has nothing to spread) AND the
+            // scene must have supplied eligible neighbours — `spreadTargets` is
+            // already filtered to those within RAW's two metres that are no harder
+            // to hit. Showing the control otherwise would imply a choice that
+            // allocation cannot act on.
+            ...UnifiedRollDialog.#spreadContext(rd),
             // Existing data we still need
             fireRate: rd['fireRate'],
             usesAmmo: rd['usesAmmo'],
@@ -1570,6 +1590,39 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (key === undefined) return;
         this._situationalModifiers[key] = !this._situationalModifiers[key];
         await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    /**
+     * Toggle whether a burst's extra hits may spread onto nearby enemies (#513).
+     *
+     * RAW makes this the attacker's choice — extra hits "can either be allocated to
+     * the original target or any other targets within two metres" — so it is a
+     * per-roll decision rather than a setting. `rollData.spreadTargets` is already
+     * filtered to the eligible ones; this only picks which allocation strategy
+     * `allocateHits` runs.
+     */
+    /**
+     * Weapon-panel context for the burst hit-spread control (#513).
+     *
+     * Extracted rather than inlined so `_getWeaponContext` stays under the
+     * complexity ceiling, which this pushed it over.
+     * @param {SpreadContextSource} rd  The dialog's roll-data view, narrowed to the slots this reads.
+     * @returns {object}  Whether the control applies, its state, and what it would spread onto.
+     */
+    static #spreadContext(rd: SpreadContextSource): { canSpreadHits: boolean; spreadHits: boolean; spreadTargetCount: number; spreadTargetNames: string } {
+        const targets = rd.spreadTargets ?? [];
+        return {
+            canSpreadHits: isBurstAction(rd.action ?? '') && targets.length > 0,
+            spreadHits: rd.hitAllocation === 'spread',
+            spreadTargetCount: targets.length,
+            spreadTargetNames: targets.map((t) => t.name).join(', '),
+        };
+    }
+
+    static async #onToggleHitSpread(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
+        const rd = this.rollData;
+        rd['hitAllocation'] = rd['hitAllocation'] === 'spread' ? 'original' : 'spread';
+        await this.render(false, { parts: ['weaponPanel'] });
     }
 
     static async #onCustomModUp(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
