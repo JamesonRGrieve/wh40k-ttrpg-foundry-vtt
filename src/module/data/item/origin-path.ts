@@ -69,6 +69,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     declare positions: number[];
     declare gameSystem: string;
     declare xpCost: number;
+    declare prerequisites: Array<{ type: string; key: string; value?: number }>;
     declare source: { book: string; page: string; custom: string };
     declare isAdvancedOrigin: boolean;
     declare replacesOrigins: string[];
@@ -185,6 +186,19 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
             // XP cost (for Into The Storm advanced origins)
             xpCost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+
+            /**
+             * Structured gates a character must meet to take this step, in the shape
+             * `utils/prerequisite-validator.ts` consumes: `{type, key, value}` where
+             * `type` is `characteristic` | `skill` | `talent`.
+             *
+             * Elite Advances are the motivating case (#514): RAW gates each behind
+             * characteristic / skill / talent minimums, the definitions lived in a
+             * table in `src/` that nothing imported, and the dialog offered every
+             * elite to every character on affordability alone. Authoring them here
+             * is what lets the live validator do the checking.
+             */
+            prerequisites: new fields.ArrayField(new fields.ObjectField({ required: true }), { required: false, initial: [] }),
 
             // Source book information
             source: new fields.SchemaField({
