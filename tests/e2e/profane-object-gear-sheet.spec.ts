@@ -113,10 +113,10 @@ async function probeProfaneObjectSheet(page: Page): Promise<ProfaneProbeResult> 
         }
 
         const root = item.sheet?.element;
-        const badge = root?.querySelector?.('.wh40k-gear-profane-badge') ?? null;
-        const panel = root?.querySelector?.('.wh40k-gear-profane-panel') ?? null;
-        const aura = root?.querySelector?.('.wh40k-gear-profane-aura') ?? null;
-        const hook = root?.querySelector?.('.wh40k-gear-profane-hook') ?? null;
+        const badge = root?.querySelector?.('[data-wh40k-hook="gear-profane-badge"]') ?? null;
+        const panel = root?.querySelector?.('[data-wh40k-hook="gear-profane-panel"]') ?? null;
+        const aura = root?.querySelector?.('[data-wh40k-hook="gear-profane-aura"]') ?? null;
+        const hook = root?.querySelector?.('[data-wh40k-hook="gear-profane-hook"]') ?? null;
 
         g.__profaneObjectProbeId = item.id;
         return {
@@ -174,9 +174,9 @@ test.describe.serial('profane object gear sheet', () => {
 
         const failures: string[] = [];
         if (!probe.rendered) failures.push(`sheet did not render: ${probe.createError ?? 'unknown'}`);
-        if (!probe.badgePresent) failures.push('expected .wh40k-gear-profane-badge or .wh40k-gear-profane-panel to be present');
-        if (!probe.auraPresent) failures.push('expected .wh40k-gear-profane-aura to be present (Eye of Tzeentch has an aura)');
-        if (!probe.hookPresent) failures.push('expected .wh40k-gear-profane-hook to be present (Eye of Tzeentch has a hook)');
+        if (!probe.badgePresent) failures.push('expected [data-wh40k-hook="gear-profane-badge"] or [data-wh40k-hook="gear-profane-panel"] to be present');
+        if (!probe.auraPresent) failures.push('expected [data-wh40k-hook="gear-profane-aura"] to be present (Eye of Tzeentch has an aura)');
+        if (!probe.hookPresent) failures.push('expected [data-wh40k-hook="gear-profane-hook"] to be present (Eye of Tzeentch has a hook)');
 
         expect(failures, `profane-object gear sheet failures:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });

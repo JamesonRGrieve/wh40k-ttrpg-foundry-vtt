@@ -24,11 +24,11 @@
                 {{> "systems/wh40k-rpg/templates/prompt/unified/panels/force-field-panel.hbs"}}
             {{/if}}
             {{#if isAthletics}}
-                <div class="wh40k-climb-surface-picker tw-mb-3">
+                <div data-wh40k-hook="climb-surface-picker" class="tw-mb-3">
                     <h4 class="tw-font-display tw-text-xs tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">
                         {{localize "WH40K.Climbing.SurfaceLabel"}}
                     </h4>
-                    <select class="wh40k-climb-surface-picker__select tw-py-2.5 tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-text-[#e8e4d9] tw-text-base tw-font-medium tw-w-full tw-transition-all hover:tw-border-[rgba(255,255,255,0.15)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)]"
+                    <select data-wh40k-hook="climb-surface-picker__select" class="tw-py-2.5 tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-text-[#e8e4d9] tw-text-base tw-font-medium tw-w-full tw-transition-all hover:tw-border-[rgba(255,255,255,0.15)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)]"
                             name="climbSurface"
                             data-action="setClimbSurface">
                         {{#each climbSurfaceOptions as |opt|}}
@@ -50,7 +50,7 @@
                             <h4 class="tw-font-display tw-text-xs tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">
                                 {{localize "WH40K.UntrainedSkill.CharacteristicLabel"}}
                             </h4>
-                            <select class="wh40k-skill-char-override__select tw-py-2.5 tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-text-[#e8e4d9] tw-text-base tw-font-medium tw-w-full tw-transition-all hover:tw-border-[rgba(255,255,255,0.15)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)]"
+                            <select data-wh40k-hook="skill-char-override__select" class="tw-py-2.5 tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-text-[#e8e4d9] tw-text-base tw-font-medium tw-w-full tw-transition-all hover:tw-border-[rgba(255,255,255,0.15)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)]"
                                     name="characteristicOverride"
                                     data-action="setCharacteristicOverride">
                                 {{#each panel.altOptions as |opt|}}

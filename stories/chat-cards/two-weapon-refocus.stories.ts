@@ -49,7 +49,7 @@ export const RangedSingleShotWielder: Story = {
         await expect(view.getByText(/\(Half\)/)).toBeTruthy();
         await expect(view.getByText(/\(Free\)/)).toBeTruthy();
         // Per-system + outside-sheet cascade anchors must be present.
-        const root = canvasElement.querySelector('.wh40k-twr-card');
+        const root = canvasElement.querySelector('[data-wh40k-hook="twr-card"]');
         await expect(root?.classList.contains('wh40k-rpg')).toBe(true);
         await expect(root?.getAttribute('data-wh40k-system')).toBe('dh2');
     },
@@ -83,7 +83,7 @@ export const MeleeSwiftAttackVariant: Story = {
     render: () => renderSheet(refocusChatSrc, cardContext({ isMelee: true, mode: 'Swift Attack', talents: new Set(['Two-Weapon Wielder (Melee)']) }, 'rt')),
     play: async ({ canvasElement }) => {
         // Per-system variant anchor differs across the seven systems.
-        const root = canvasElement.querySelector('.wh40k-twr-card');
+        const root = canvasElement.querySelector('[data-wh40k-hook="twr-card"]');
         await expect(root?.getAttribute('data-wh40k-system')).toBe('rt');
     },
 };

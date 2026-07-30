@@ -31,7 +31,7 @@
             <div class="tw-px-[4px]">{{localize "WH40K.DarkPact.Bane"}}</div>
         </div>
         {{#each system.pacts as |pact index|}}
-            <div class="wh40k-dark-pact-row tw-grid tw-grid-cols-[2fr_2fr_1fr_1fr_2fr_2fr] tw-items-center tw-px-[4px] tw-py-[6px]" data-pact-index="{{index}}" data-pact-uuid="{{pact.pactUuid}}">
+            <div data-wh40k-hook="dark-pact-row" class="tw-grid tw-grid-cols-[2fr_2fr_1fr_1fr_2fr_2fr] tw-items-center tw-px-[4px] tw-py-[6px]" data-pact-index="{{index}}" data-pact-uuid="{{pact.pactUuid}}">
                 <div class="tw-px-[4px] tw-truncate">
                     {{uuid-name pact.pactUuid}}
                 </div>

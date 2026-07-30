@@ -10,7 +10,7 @@ import { expect, test } from './lib/test';
  * disposition -1 and current payment), opens the actor sheet, and snaps
  * the rendered status tab.
  *
- * Asserts the panel renders at least one `.wh40k-dark-pact-row` so a
+ * Asserts the panel renders at least one `[data-wh40k-hook="dark-pact-row"]` so a
  * template / preload regression that drops the panel surfaces as a test
  * failure rather than a silent visual diff.
  */
@@ -100,7 +100,7 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
             /* sheets without changeTab fall back to whatever tab is open */
         }
 
-        const rows = createdActor.sheet.element?.querySelectorAll?.('.wh40k-dark-pact-row');
+        const rows = createdActor.sheet.element?.querySelectorAll?.('[data-wh40k-hook="dark-pact-row"]');
         const rowCount = rows?.length ?? 0;
         return { setupOk: true, rowCount, error: null };
     });
@@ -109,7 +109,7 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
 
     await snap(page, 'dark-pact-panel-with-pacts');
 
-    expect(result.rowCount, `expected at least one .wh40k-dark-pact-row; got ${result.rowCount}`).toBeGreaterThanOrEqual(2);
+    expect(result.rowCount, `expected at least one [data-wh40k-hook="dark-pact-row"]; got ${result.rowCount}`).toBeGreaterThanOrEqual(2);
 
     // Cleanup
     await page.evaluate(async (): Promise<void> => {

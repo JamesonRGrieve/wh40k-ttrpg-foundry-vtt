@@ -68,11 +68,11 @@ test('grapple-controller-panel renders five actions when state=grappling (#120)'
         }
 
         const root = actor.sheet.element;
-        const panel = root?.querySelector('.wh40k-grapple-panel') ?? null;
+        const panel = root?.querySelector('[data-wh40k-hook="grapple-panel"]') ?? null;
         const btnCount =
             panel !== null
                 ? panel.querySelectorAll(
-                      '.wh40k-grapple-damage-btn, .wh40k-grapple-throw-btn, .wh40k-grapple-break-btn, .wh40k-grapple-stand-btn, .wh40k-grapple-move-btn',
+                      '[data-wh40k-hook="grapple-damage-btn"], [data-wh40k-hook="grapple-throw-btn"], [data-wh40k-hook="grapple-break-btn"], [data-wh40k-hook="grapple-stand-btn"], [data-wh40k-hook="grapple-move-btn"]',
                   ).length
                 : 0;
         const hasTitle = Boolean(panel?.querySelector('h3'));

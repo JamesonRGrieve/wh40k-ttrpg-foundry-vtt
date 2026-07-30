@@ -77,9 +77,9 @@ test('shock-panel renders value/Snap-Out for dh2 actors (#66)', async ({ page })
             /* sheets without changeTab fall back to whatever tab is open */
         }
 
-        const valueEl = actor.sheet.element?.querySelector?.('.wh40k-shock-value');
+        const valueEl = actor.sheet.element?.querySelector?.('[data-wh40k-hook="shock-value"]');
         const valueText = valueEl?.textContent.trim() ?? '';
-        const hasButton = Boolean(actor.sheet.element?.querySelector?.('.wh40k-shock-snap-btn'));
+        const hasButton = Boolean(actor.sheet.element?.querySelector?.('[data-wh40k-hook="shock-snap-btn"]'));
         return { setupOk: true, valueText, hasButton, error: null };
     });
 
@@ -99,8 +99,8 @@ test('shock-panel renders value/Snap-Out for dh2 actors (#66)', async ({ page })
         /* non-fatal — primary snap already wrote a PNG */
     }
 
-    expect(result.valueText, `expected .wh40k-shock-value to show '3'; got '${result.valueText}'`).toBe('3');
-    expect(result.hasButton, 'expected .wh40k-shock-snap-btn to be in the panel DOM').toBe(true);
+    expect(result.valueText, `expected [data-wh40k-hook="shock-value"] to show '3'; got '${result.valueText}'`).toBe('3');
+    expect(result.hasButton, 'expected [data-wh40k-hook="shock-snap-btn"] to be in the panel DOM').toBe(true);
 
     // Cleanup
     await page.evaluate(async (): Promise<void> => {

@@ -15,7 +15,7 @@
       ]
     }
 --}}
-<div class="wh40k-panel wh40k-npc-interactions-panel">
+<div data-wh40k-hook="npc-interactions-panel" class="wh40k-panel">
     <div class="wh40k-panel-header">
         <i class="fa-solid fa-comments"></i>
         <span class="tw-text-gold {{themeClassFor 'accent'}}">{{localize "WH40K.NpcInteractions.Header"}}</span>
@@ -37,7 +37,7 @@
                 </thead>
                 <tbody>
                     {{#each npcInteractions.rows}}
-                        <tr class="wh40k-npc-interactions-row tw-border-t tw-border-[color:var(--wh40k-border-color-light)]" data-pc-id="{{pcId}}">
+                        <tr data-wh40k-hook="npc-interactions-row" class="tw-border-t tw-border-[color:var(--wh40k-border-color-light)]" data-pc-id="{{pcId}}">
                             <td class="tw-py-1 tw-pr-2 tw-truncate">
                                 <span class="tw-font-semibold">{{pcName}}</span>
                                 {{#if atCap}}

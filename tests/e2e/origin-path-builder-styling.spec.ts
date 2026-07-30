@@ -185,7 +185,7 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
                 await new Promise<void>((r) => {
                     setTimeout(r, 120);
                 });
-                const workspace = root?.querySelector('.csd-workspace') ?? null;
+                const workspace = root?.querySelector('[data-wh40k-hook="csd-workspace"]') ?? null;
                 if (workspace) {
                     const cls = workspace.getAttribute('class') ?? '';
                     workspaceHasTwGrid = /\btw-grid\b/.test(cls);

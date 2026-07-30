@@ -34,7 +34,7 @@
         {{#if hasAppliedModifiers}}
             <ul class="tw-flex tw-flex-col tw-gap-1">
                 {{#each buildSummaryRows as |row|}}
-                    <li class="wh40k-ship-build-summary__row tw-rounded tw-border tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-panel-body-bg)]"
+                    <li data-wh40k-hook="ship-build-summary__row" class="tw-rounded tw-border tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-panel-body-bg)]"
                         data-stat="{{row.statKey}}">
                         <details class="tw-group">
                             <summary class="tw-flex tw-flex-row tw-items-center tw-justify-between tw-gap-2 tw-cursor-pointer tw-px-2 tw-py-1.5 hover:tw-bg-gold/10">

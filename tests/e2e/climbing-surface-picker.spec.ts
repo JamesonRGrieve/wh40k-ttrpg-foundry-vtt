@@ -90,8 +90,8 @@ test.describe.serial('climbing surface picker (#146)', () => {
                 sheerVisible: boolean;
             }
             function readState(label: string): SurfaceState {
-                const wrapper = rootEl.querySelector<HTMLElement>('.wh40k-climb-surface-picker');
-                const select = rootEl.querySelector<HTMLSelectElement>('.wh40k-climb-surface-picker__select');
+                const wrapper = rootEl.querySelector<HTMLElement>('[data-wh40k-hook="climb-surface-picker"]');
+                const select = rootEl.querySelector<HTMLSelectElement>('[data-wh40k-hook="climb-surface-picker__select"]');
                 const sheerIndicator = rootEl.querySelector<HTMLElement>('.wh40k-climb-surface-picker__sheer-indicator');
                 return {
                     label,
@@ -102,7 +102,7 @@ test.describe.serial('climbing surface picker (#146)', () => {
             }
 
             async function setSurface(value: string): Promise<void> {
-                const select = rootEl.querySelector<HTMLSelectElement>('.wh40k-climb-surface-picker__select');
+                const select = rootEl.querySelector<HTMLSelectElement>('[data-wh40k-hook="climb-surface-picker__select"]');
                 if (select === null) return;
                 select.value = value;
                 select.dispatchEvent(new Event('change', { bubbles: true }));
@@ -138,7 +138,7 @@ test.describe.serial('climbing surface picker (#146)', () => {
         // Visual record with the picker on Sheer.
         await page.evaluate(async () => {
             const root = document.querySelector<HTMLElement>('.application[data-application-part]');
-            const select = root?.querySelector<HTMLSelectElement>('.wh40k-climb-surface-picker__select');
+            const select = root?.querySelector<HTMLSelectElement>('[data-wh40k-hook="climb-surface-picker__select"]');
             if (select !== null && select !== undefined && select.value !== 'sheer') {
                 select.value = 'sheer';
                 select.dispatchEvent(new Event('change', { bubbles: true }));

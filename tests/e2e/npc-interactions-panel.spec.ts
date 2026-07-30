@@ -81,8 +81,8 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
         });
 
         const root = npc.sheet.element;
-        const panel = root?.querySelector('.wh40k-npc-interactions-panel') ?? null;
-        const rows = root?.querySelectorAll('.wh40k-npc-interactions-row') ?? { length: 0 };
+        const panel = root?.querySelector('[data-wh40k-hook="npc-interactions-panel"]') ?? null;
+        const rows = root?.querySelectorAll('[data-wh40k-hook="npc-interactions-row"]') ?? { length: 0 };
         const panelPresent = panel !== null;
 
         return { setupOk: true, panelPresent, rowCount: rows.length, error: null };
@@ -92,7 +92,7 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
 
     await snap(page, 'npc-interactions-panel');
 
-    expect(result.panelPresent, 'expected .wh40k-npc-interactions-panel on the NPC tab').toBe(true);
+    expect(result.panelPresent, 'expected [data-wh40k-hook="npc-interactions-panel"] on the NPC tab').toBe(true);
 
     // Cleanup
     await page.evaluate(async (): Promise<void> => {

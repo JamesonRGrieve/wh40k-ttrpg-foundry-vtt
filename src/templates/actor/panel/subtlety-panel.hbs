@@ -24,20 +24,20 @@
     carries NO pale parchment outer border of its own (#323). The manual
     stepper + adjuster list render beneath the value row.
 --}}
-<section class="wh40k-subtlety-panel tw-flex tw-flex-col tw-gap-1.5"
+<section data-wh40k-hook="subtlety-panel" class="tw-flex tw-flex-col tw-gap-1.5"
          data-subtlety-value="{{system.subtlety.value}}">
 
     {{!-- Value row — styled to match the Corruption / Insanity mental rows --}}
-    <div class="wh40k-mental-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 tw-border-l-2 tw-border-l-gold bc:tw-border-l-crimson-light dh1:tw-border-l-gold-raw-l5 dh2:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure tw-pl-1">
-        <span class="wh40k-mental-label-group">
-            <span class="wh40k-mental-icon"><i class="fas fa-user-secret"></i></span>
-            <span class="wh40k-mental-label">{{localize "WH40K.SubtletyPanel.Header"}}</span>
+    <div data-wh40k-hook="mental-row" class="tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 tw-border-l-2 tw-border-l-gold bc:tw-border-l-crimson-light dh1:tw-border-l-gold-raw-l5 dh2:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure tw-pl-1">
+        <span data-wh40k-hook="mental-label-group">
+            <span data-wh40k-hook="mental-icon"><i class="fas fa-user-secret"></i></span>
+            <span data-wh40k-hook="mental-label">{{localize "WH40K.SubtletyPanel.Header"}}</span>
         </span>
-        <span class="wh40k-mental-value tw-ml-auto tw-font-bold tw-text-[color:var(--color-text-primary)]"
+        <span data-wh40k-hook="mental-value" class="tw-ml-auto tw-font-bold tw-text-[color:var(--color-text-primary)]"
               title="{{localize 'WH40K.SubtletyPanel.Value'}} / {{localize 'WH40K.SubtletyPanel.Max'}}">
-            <span class="wh40k-subtlety-value">{{system.subtlety.value}}</span>
+            <span data-wh40k-hook="subtlety-value">{{system.subtlety.value}}</span>
             <span class="tw-text-[color:var(--color-text-tertiary)]"> / </span>
-            <span class="wh40k-subtlety-max">{{system.subtlety.max}}</span>
+            <span data-wh40k-hook="subtlety-max">{{system.subtlety.max}}</span>
         </span>
         <button type="button"
                 class="tw-inline-flex tw-items-center tw-justify-center tw-ml-1 tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 tw-cursor-pointer hover:tw-opacity-100 tw-text-[color:var(--color-text-secondary)]"
@@ -52,7 +52,7 @@
              Non-GM sees the controls greyed and disabled rather than hidden.
              The handler (#adjustSubtletyManually) re-checks game.user.isGM, so
              the disabled attribute is defence-in-depth, not the sole gate. --}}
-        <div class="wh40k-subtlety-manual tw-flex tw-items-center tw-justify-center tw-gap-3 tw-py-1{{#unless isGM}} tw-opacity-50{{/unless}}">
+        <div data-wh40k-hook="subtlety-manual" class="tw-flex tw-items-center tw-justify-center tw-gap-3 tw-py-1{{#unless isGM}} tw-opacity-50{{/unless}}">
             <button type="button"
                     class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-p-0 tw-transition-[opacity,transform] tw-duration-200 {{#if isGM}}tw-cursor-pointer tw-opacity-80 hover:tw-opacity-100 hover:tw-scale-110{{else}}tw-cursor-not-allowed tw-opacity-80{{/if}}"
                     data-action="adjustSubtletyManually"
@@ -73,26 +73,26 @@
         </div>
 
         {{!-- Adjuster list --}}
-        <div class="wh40k-subtlety-adjusters tw-flex tw-flex-col tw-gap-1">
+        <div data-wh40k-hook="subtlety-adjusters" class="tw-flex tw-flex-col tw-gap-1">
             <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-tertiary)]">{{localize "WH40K.SubtletyPanel.AdjusterList"}}</span>
             {{#if subtletyAdjusters.length}}
                 {{#each subtletyAdjusters as |adj|}}
-                    <div class="wh40k-subtlety-adjuster-row tw-grid tw-grid-cols-[1fr_auto] tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-[color:rgba(0,0,0,0.25)] dh2:tw-border-bronze"
+                    <div data-wh40k-hook="subtlety-adjuster-row" class="tw-grid tw-grid-cols-[1fr_auto] tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-[color:rgba(0,0,0,0.25)] dh2:tw-border-bronze"
                          data-adjuster-kind="{{adj.kind}}">
                         <span class="tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)] tw-truncate" title="{{adj.label}}">{{adj.label}}</span>
                         {{#if (eq adj.kind 'clamp')}}
-                            <span class="wh40k-subtlety-adjuster-clamp tw-text-[0.72rem] tw-font-semibold tw-text-[color:var(--wh40k-text-medium)]" title="{{adj.label}}">
+                            <span data-wh40k-hook="subtlety-adjuster-clamp" class="tw-text-[0.72rem] tw-font-semibold tw-text-[color:var(--wh40k-text-medium)]" title="{{adj.label}}">
                                 <i class="fas fa-shield"></i> {{localize "WH40K.SubtletyPanel.Clamped" value=adj.minAbsoluteDelta}}
                             </span>
                         {{else}}
-                            <span class="wh40k-subtlety-adjuster-delta tw-text-[0.85rem] tw-font-bold {{#if (gt adj.delta 0)}}tw-text-success{{else}}tw-text-crimson dh2:tw-text-crimson-light{{/if}}">
+                            <span data-wh40k-hook="subtlety-adjuster-delta" class="tw-text-[0.85rem] tw-font-bold {{#if (gt adj.delta 0)}}tw-text-success{{else}}tw-text-crimson dh2:tw-text-crimson-light{{/if}}">
                                 {{#if (gt adj.delta 0)}}+{{/if}}{{adj.delta}}
                             </span>
                         {{/if}}
                     </div>
                 {{/each}}
             {{else}}
-                <div class="wh40k-subtlety-adjusters-empty tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                <div data-wh40k-hook="subtlety-adjusters-empty" class="tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
                     {{localize "WH40K.SubtletyPanel.EmptyAdjusters"}}
                 </div>
             {{/if}}

@@ -114,7 +114,7 @@ export const ShotDown: Story = {
         critB: 5,
     }),
     play: async ({ canvasElement }) => {
-        await expect(canvasElement.querySelector('.wh40k-ship-har-card')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-har-card"]')).toBeTruthy();
         await expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).toBeTruthy();
         const view = within(canvasElement);
         await expect(view.getByText(/WH40K\.Starship\.HitAndRun\.OutcomeShotDown/)).toBeTruthy();

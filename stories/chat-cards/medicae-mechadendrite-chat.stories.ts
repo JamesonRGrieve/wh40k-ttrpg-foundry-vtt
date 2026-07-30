@@ -80,7 +80,7 @@ export const SuccessRogueTraderTheme: Story = {
 export const RenderSmoke: Story = {
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
-        const card = canvasElement.querySelector('.wh40k-medicae-mechadendrite-card');
+        const card = canvasElement.querySelector('[data-wh40k-hook="medicae-mechadendrite-card"]');
         await expect(card).toBeTruthy();
         // Card carries the per-system anchor and the wh40k-rpg cascade scope.
         await expect(card?.getAttribute('data-wh40k-system')).toBe('dh2');

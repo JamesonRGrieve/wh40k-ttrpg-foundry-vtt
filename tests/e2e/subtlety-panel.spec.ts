@@ -123,9 +123,9 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
                 const el = actor.sheet?.element ?? null;
                 rendered = el instanceof HTMLElement;
                 if (rendered && el !== null) {
-                    hasPanel = el.querySelector('.wh40k-subtlety-panel') !== null;
-                    valueText = el.querySelector('.wh40k-subtlety-value')?.textContent.trim() ?? '';
-                    maxText = el.querySelector('.wh40k-subtlety-max')?.textContent.trim() ?? '';
+                    hasPanel = el.querySelector('[data-wh40k-hook="subtlety-panel"]') !== null;
+                    valueText = el.querySelector('[data-wh40k-hook="subtlety-value"]')?.textContent.trim() ?? '';
+                    maxText = el.querySelector('[data-wh40k-hook="subtlety-max"]')?.textContent.trim() ?? '';
                     const steppers = el.querySelectorAll('[data-action="adjustSubtletyManually"]');
                     stepperButtons = steppers.length;
                     hasStepper = steppers.length > 0;

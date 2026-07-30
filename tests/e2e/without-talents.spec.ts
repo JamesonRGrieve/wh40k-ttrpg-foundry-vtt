@@ -98,7 +98,7 @@ test.describe.serial('Without talents — Push the Limit chat card (Tier B)', ()
 
         expect(result.error, `chat-card probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'push-the-limit card did not render').toBe(true);
-        expect(result.hasCardRoot, 'card root .wh40k-push-the-limit-card missing').toBe(true);
+        expect(result.hasCardRoot, 'card root [data-wh40k-hook="push-the-limit-card"] missing').toBe(true);
         expect(result.hasSystemAnchor, 'per-system data-wh40k-system anchor missing').toBe(true);
         expect(result.hasCriticalBanner, 'critical banner should render at 4+ DoF').toBe(true);
         expect(result.messageId, 'ChatMessage.create returned no id').not.toBeNull();

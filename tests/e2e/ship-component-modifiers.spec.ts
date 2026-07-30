@@ -156,7 +156,7 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
 
         const root = actor.sheet?.element;
         const panel = root?.querySelector('.wh40k-ship-build-summary-panel') ?? null;
-        const rowCount = panel !== null ? panel.querySelectorAll('.wh40k-ship-build-summary__row').length : 0;
+        const rowCount = panel !== null ? panel.querySelectorAll('[data-wh40k-hook="ship-build-summary__row"]').length : 0;
 
         const applied = actor.system?.appliedModifiers ?? {};
         const detectionTotal = applied['detection']?.total ?? 0;

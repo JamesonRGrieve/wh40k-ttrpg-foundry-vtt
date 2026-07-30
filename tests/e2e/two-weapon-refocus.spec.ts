@@ -105,7 +105,7 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
                 }
                 host.innerHTML = html;
 
-                const card = host.querySelector('.wh40k-twr-card');
+                const card = host.querySelector('[data-wh40k-hook="twr-card"]');
                 rendered = card instanceof HTMLElement;
                 if (rendered && card) {
                     hasSystemAttr = card.getAttribute('data-wh40k-system') === 'dh2';

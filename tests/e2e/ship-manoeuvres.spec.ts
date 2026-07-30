@@ -174,7 +174,7 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
 
         expect(result.error, `partial probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'action-bar partial did not render').toBe(true);
-        expect(result.hasBarRoot, 'action-bar root .wh40k-voidcraft-manoeuvre-bar missing').toBe(true);
+        expect(result.hasBarRoot, 'action-bar root [data-wh40k-hook="voidcraft-manoeuvre-bar"] missing').toBe(true);
         expect(result.hasAdjustBearing, 'Adjust Bearing tile missing').toBe(true);
         expect(result.hasAdjustSpeed, 'Adjust Speed tile missing').toBe(true);
         expect(result.hasAdjustSpeedAndBearing, 'Adjust Speed & Bearing tile missing').toBe(true);

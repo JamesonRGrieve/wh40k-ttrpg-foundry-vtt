@@ -121,7 +121,7 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                 }
                 host.innerHTML = html;
 
-                const card = host.querySelector('.wh40k-sd-card');
+                const card = host.querySelector('[data-wh40k-hook="sd-card"]');
                 rendered = card instanceof HTMLElement;
                 if (rendered && card) {
                     hasSystemAttr = card.getAttribute('data-wh40k-system') === 'dh2';

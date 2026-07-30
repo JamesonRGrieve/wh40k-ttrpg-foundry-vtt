@@ -199,7 +199,7 @@ test.describe.serial('WeaponQualityEffectChat (Tier B)', () => {
                         host.innerHTML = html;
                         document.body.appendChild(host);
 
-                        const card = host.querySelector('.wh40k-quality-card');
+                        const card = host.querySelector('[data-wh40k-hook="quality-card"]');
                         rendered = card instanceof HTMLElement;
                         hasCardRoot = card !== null;
                         hasSystemAttr = card?.getAttribute('data-wh40k-system') === 'dh2';
@@ -230,7 +230,7 @@ test.describe.serial('WeaponQualityEffectChat (Tier B)', () => {
 
             expect(result.error, `card probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.rendered, 'card root did not render').toBe(true);
-            expect(result.hasCardRoot, 'expected .wh40k-quality-card element').toBe(true);
+            expect(result.hasCardRoot, 'expected [data-wh40k-hook="quality-card"] element').toBe(true);
             expect(result.hasSystemAttr, 'expected data-wh40k-system="dh2"').toBe(true);
             expect(result.hasWh40kAncestor, 'card needs .wh40k-rpg ancestor for Tailwind scoping (Gotcha 3a)').toBe(true);
             expect(result.hasQualityKeyAttr, `expected data-quality-key="${qcase.qualityKey}"`).toBe(true);

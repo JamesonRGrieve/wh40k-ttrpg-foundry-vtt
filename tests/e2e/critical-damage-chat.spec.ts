@@ -85,12 +85,12 @@ test.describe.serial('CriticalDamageChat (Tier B)', () => {
                     host.innerHTML = html;
                     document.body.appendChild(host);
 
-                    const card = host.querySelector('.wh40k-critdmg-card');
+                    const card = host.querySelector('[data-wh40k-hook="critdmg-card"]');
                     rendered = card instanceof HTMLElement;
                     hasCardRoot = card !== null;
                     hasSystemAttr = card?.getAttribute('data-wh40k-system') === 'dh2';
                     hasWh40kAncestor = card?.closest('.wh40k-rpg') !== null;
-                    riderPills = host.querySelectorAll('.wh40k-critdmg-card span.tw-rounded-full').length;
+                    riderPills = host.querySelectorAll('[data-wh40k-hook="critdmg-card"] span.tw-rounded-full').length;
                     hasEffectText = (card?.textContent ?? '').includes('Stunned for 1 round');
                 }
             } catch (outerErr) {

@@ -75,7 +75,7 @@ export const SuccessWithBonus: Story = {
             ),
         ),
     play: async ({ canvasElement }) => {
-        await expect(canvasElement.querySelector('.wh40k-push-the-limit-card')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="push-the-limit-card"]')).toBeTruthy();
         await expect(canvasElement.querySelector('[data-wh40k-system="dh2"]')).toBeTruthy();
     },
 };

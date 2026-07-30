@@ -6,7 +6,7 @@
       the data-action="rollShipManoeuvre" + data-manoeuvre-id="<id>"
       pair to a combined Pilot+Manoeuvrability roll. Difficulty,
       label, and benefit are read from src/module/rules/ship-manoeuvres.ts. --}}
-<section class="wh40k-voidcraft-manoeuvre-bar tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-border-t tw-border-gold rt:tw-border-gold dh2:tw-border-bronze">
+<section data-wh40k-hook="voidcraft-manoeuvre-bar" class="tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-border-t tw-border-gold rt:tw-border-gold dh2:tw-border-bronze">
     <header class="tw-flex tw-items-baseline tw-justify-between tw-gap-3">
         <h2 class="tw-text-base tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gold rt:tw-text-gold dh2:tw-text-bronze">{{localize "WH40K.Voidcraft.Manoeuvre.BarTitle"}}</h2>
         {{#if helmsmanName}}
@@ -17,7 +17,7 @@
     {{#if manoeuvres.length}}
         <ul class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-2 tw-list-none tw-p-0 tw-m-0">
             {{#each manoeuvres as |m|}}
-                <li class="wh40k-voidcraft-manoeuvre-tile tw-flex tw-flex-col tw-gap-1 tw-px-2.5 tw-py-2 tw-rounded-md tw-border tw-border-[rgba(74,55,40,0.25)] tw-bg-white/70" data-manoeuvre-id="{{m.id}}">
+                <li data-wh40k-hook="voidcraft-manoeuvre-tile" class="tw-flex tw-flex-col tw-gap-1 tw-px-2.5 tw-py-2 tw-rounded-md tw-border tw-border-[rgba(74,55,40,0.25)] tw-bg-white/70" data-manoeuvre-id="{{m.id}}">
                     <div class="tw-flex tw-items-baseline tw-justify-between tw-gap-2">
                         <span class="tw-font-semibold tw-text-[0.95em] tw-text-[#4a3728] tw-uppercase tw-tracking-wide">{{localize m.labelKey}}</span>
                         <span class="tw-text-[0.75em] tw-text-[#6a5239] tw-uppercase">{{m.difficultyLabel}}</span>
@@ -27,7 +27,7 @@
                         <span class="tw-text-[0.78em] tw-text-[#4a3728]">
                             {{localize "WH40K.Voidcraft.Manoeuvre.Target"}}: <strong>{{m.target}}</strong>
                             {{#if m.opposed}}
-                                <span class="wh40k-voidcraft-manoeuvre-tile__opposed tw-text-[0.7em] tw-uppercase tw-px-1 tw-py-0.5 tw-rounded-sm tw-border tw-border-[#5a3a2a] tw-bg-[#f4e9d8] tw-text-[#5a3a2a] tw-ml-1">{{localize "WH40K.Voidcraft.Manoeuvre.Opposed"}}</span>
+                                <span data-wh40k-hook="voidcraft-manoeuvre-tile__opposed" class="tw-text-[0.7em] tw-uppercase tw-px-1 tw-py-0.5 tw-rounded-sm tw-border tw-border-[#5a3a2a] tw-bg-[#f4e9d8] tw-text-[#5a3a2a] tw-ml-1">{{localize "WH40K.Voidcraft.Manoeuvre.Opposed"}}</span>
                             {{/if}}
                         </span>
                         <button type="button"

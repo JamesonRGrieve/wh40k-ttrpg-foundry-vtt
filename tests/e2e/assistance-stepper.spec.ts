@@ -98,8 +98,8 @@ test.describe.serial('assistance chips (#60)', () => {
                 legacyIncrement: root.querySelector('[data-action="incrementAssistant"]') !== null,
                 legacyDecrement: root.querySelector('[data-action="decrementAssistant"]') !== null,
                 // With no eligible ally the whole group is suppressed.
-                chipGroup: root.querySelector('.wh40k-assist-chips') !== null,
-                chips: root.querySelectorAll('.wh40k-assist-chip').length,
+                chipGroup: root.querySelector('[data-wh40k-hook="assist-chips"]') !== null,
+                chips: root.querySelectorAll('[data-wh40k-hook="assist-chip"]').length,
             };
 
             try {
