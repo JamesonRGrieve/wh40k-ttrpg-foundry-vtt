@@ -46,7 +46,7 @@
             {{#if hasSkillPanel}}
                 {{#with skillPanel as |panel|}}
                     {{#if panel.altOptions.length}}
-                        <div class="tw-mb-3 wh40k-skill-char-override">
+                        <div class="tw-mb-3">
                             <h4 class="tw-font-display tw-text-xs tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">
                                 {{localize "WH40K.UntrainedSkill.CharacteristicLabel"}}
                             </h4>
@@ -60,13 +60,13 @@
                         </div>
                     {{/if}}
                     {{#if panel.halved}}
-                        <div class="wh40k-skill-char-override__halved tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded-md tw-bg-amber-900/15 tw-border tw-border-amber-400/40 tw-text-[0.8rem] tw-text-amber-200 tw-mb-2" data-testid="skill-untrained-halved">
+                        <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded-md tw-bg-amber-900/15 tw-border tw-border-amber-400/40 tw-text-[0.8rem] tw-text-amber-200 tw-mb-2" data-testid="skill-untrained-halved">
                             <i class="fas fa-percentage tw-text-amber-300"></i>
                             <span>{{localize "WH40K.UntrainedSkill.HalvedIndicator"}}</span>
                         </div>
                     {{/if}}
                     {{#if panel.untrainedAdvanced}}
-                        <div class="wh40k-skill-char-override__blocked tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded-md tw-bg-red-900/15 tw-border tw-border-red-400/40 tw-text-[0.8rem] tw-text-red-200" data-testid="skill-untrained-advanced">
+                        <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded-md tw-bg-red-900/15 tw-border tw-border-red-400/40 tw-text-[0.8rem] tw-text-red-200" data-testid="skill-untrained-advanced">
                             <i class="fas fa-ban tw-text-red-300"></i>
                             <span>{{localize "WH40K.UntrainedSkill.UntrainedAdvancedBlocked"}}</span>
                         </div>

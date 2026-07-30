@@ -35,7 +35,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-daemon-prince-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson" icon="fa-crown" label=(localize "WH40K.BC.DaemonPrince.PanelHeader") rootAttrs=(safeAttrs "data-bc-ascended" daemonPrincePanel.ascended "data-bc-alignment" daemonPrincePanel.alignmentAtAscension) hasRightSlot=true}}
     {{!-- Header right slot: ascension status --}}
     {{#*inline "rightSlot"}}
-        <span class="wh40k-bc-dp-status tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] {{#if daemonPrincePanel.ascended}}bc:tw-text-crimson tw-font-bold{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}">
+        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] {{#if daemonPrincePanel.ascended}}bc:tw-text-crimson tw-font-bold{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}">
             {{#if daemonPrincePanel.ascended}}
                 {{localize "WH40K.BC.DaemonPrince.Status.Ascended"}}
             {{else}}
@@ -46,7 +46,7 @@
 
     {{#if daemonPrincePanel.ascended}}
         {{!-- Ascended: show record + applied boost --}}
-        <div class="wh40k-bc-dp-record tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-text-[0.78rem]">
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-text-[0.78rem]">
             <span class="tw-text-[color:var(--wh40k-text-muted)]">
                 {{localize "WH40K.BC.DaemonPrince.Status.AscendedAt" when=daemonPrincePanel.ascendedAt}}
             </span>
@@ -58,22 +58,22 @@
         <div class="wh40k-bc-dp-boost tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
             {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.DaemonPrince.Chat.BoostHeader"}}
             <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]">
-                <li class="wh40k-bc-dp-boost-str tw-flex tw-justify-between tw-gap-2">
+                <li class="tw-flex tw-justify-between tw-gap-2">
                     <span>{{localize "WH40K.BC.DaemonPrince.Boost.UnnaturalStrength" multiplier=daemonPrincePanel.boost.strengthBonusMultiplier}}</span>
                 </li>
-                <li class="wh40k-bc-dp-boost-tou tw-flex tw-justify-between tw-gap-2">
+                <li class="tw-flex tw-justify-between tw-gap-2">
                     <span>{{localize "WH40K.BC.DaemonPrince.Boost.UnnaturalToughness" multiplier=daemonPrincePanel.boost.toughnessBonusMultiplier}}</span>
                 </li>
-                <li class="wh40k-bc-dp-boost-wounds tw-flex tw-justify-between tw-gap-2">
+                <li class="tw-flex tw-justify-between tw-gap-2">
                     <span>{{localize "WH40K.BC.DaemonPrince.Boost.BonusWounds" wounds=daemonPrincePanel.boost.bonusWounds}}</span>
                 </li>
-                <li class="wh40k-bc-dp-boost-fear tw-flex tw-justify-between tw-gap-2">
+                <li class="tw-flex tw-justify-between tw-gap-2">
                     <span>{{localize "WH40K.BC.DaemonPrince.Boost.FearRating" rating=daemonPrincePanel.boost.fearRating}}</span>
                 </li>
-                <li class="wh40k-bc-dp-boost-daemonic tw-flex tw-justify-between tw-gap-2">
+                <li class="tw-flex tw-justify-between tw-gap-2">
                     <span>{{localize "WH40K.BC.DaemonPrince.Boost.DaemonicTrait"}}</span>
                 </li>
-                <li class="wh40k-bc-dp-boost-immunity tw-flex tw-flex-col tw-gap-0.5">
+                <li class="tw-flex tw-flex-col tw-gap-0.5">
                     <span class="tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em]">
                         {{localize "WH40K.BC.DaemonPrince.Boost.ImmuneToConditions"}}
                     </span>

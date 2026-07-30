@@ -41,12 +41,12 @@
         subtitle=comradeName
         imageIcon="fa-staff-snake"
         gameSystem=gameSystem}}
-    <div class="wh40k-ow-comrade-healing-chat tw-flex tw-flex-col tw-gap-2 tw-p-3"
+    <div class="tw-flex tw-flex-col tw-gap-2 tw-p-3"
          data-healing-event="{{event.kind}}">
 
         {{#if (eq event.kind "tick")}}
-            <div class="wh40k-ow-comrade-healing-chat__tick tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
-                        tw-border-l-2 tw-border-gold tw-bg-[var(--wh40k-panel-bg-translucent)]"
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
+ tw-border-l-2 tw-border-gold tw-bg-[var(--wh40k-panel-bg-translucent)]"
                  data-remaining-days="{{event.remainingDays}}">
                 <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">
                     <i class="fas fa-clock tw-mr-1 tw-text-gold"></i>
@@ -64,8 +64,8 @@
         {{/if}}
 
         {{#if (eq event.kind "medicae")}}
-            <div class="wh40k-ow-comrade-healing-chat__medicae tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
-                        tw-border-l-2 tw-border-brass tw-bg-[var(--wh40k-panel-bg-translucent)]"
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
+ tw-border-l-2 tw-border-brass tw-bg-[var(--wh40k-panel-bg-translucent)]"
                  data-degrees-of-success="{{event.degreesOfSuccess}}"
                  data-reduced-by="{{event.reducedBy}}">
                 <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">
@@ -76,7 +76,7 @@
                     {{localize "WH40K.OW.ComradeHealing.Medicae.ReducedBy" days=event.reducedBy}}
                 </span>
             </div>
-            <div class="wh40k-ow-comrade-healing-chat__medicae-remaining tw-text-[0.78rem] tw-italic tw-text-[color:var(--wh40k-text-muted)] tw-px-3">
+            <div class="tw-text-[0.78rem] tw-italic tw-text-[color:var(--wh40k-text-muted)] tw-px-3">
                 {{#if event.recovered}}
                     <i class="fas fa-check tw-text-success tw-mr-1"></i>
                     {{localize "WH40K.OW.ComradeHealing.Recovery.Complete"}}
@@ -87,8 +87,8 @@
         {{/if}}
 
         {{#if (eq event.kind "replace")}}
-            <div class="wh40k-ow-comrade-healing-chat__replace tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
-                        tw-border tw-border-solid tw-border-[var(--wh40k-border-color)]"
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
+ tw-border tw-border-solid tw-border-[var(--wh40k-border-color)]"
                  data-replaced="{{#if event.replaced}}true{{else}}false{{/if}}"
                  data-reason="{{event.reason}}">
                 <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">
@@ -96,7 +96,7 @@
                     {{localize "WH40K.OW.ComradeHealing.Chat.ReplaceTitle"}}
                 </span>
                 <span class="tw-text-[0.85rem] tw-font-semibold
-                             {{#if event.replaced}}tw-text-success{{else}}tw-text-crimson{{/if}}">
+ {{#if event.replaced}}tw-text-success{{else}}tw-text-crimson{{/if}}">
                     {{#if event.replaced}}
                         {{localize "WH40K.OW.ComradeHealing.Replacement.Available"}}
                     {{else if (eq event.reason "not-dead")}}

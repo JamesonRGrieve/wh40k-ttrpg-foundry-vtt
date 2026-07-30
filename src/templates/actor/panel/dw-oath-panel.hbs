@@ -35,13 +35,13 @@
     {{/inline}}
 
     {{#if oathPanel.active}}
-        <div class="wh40k-dw-oath-sworn tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded">
+        <div class="tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded">
             <i class="fas fa-check"></i>
             {{localize "WH40K.DW.Oath.Sworn"}}
         </div>
     {{else}}
         {{#unless oathPanel.isLeader}}
-            <div class="wh40k-dw-oath-not-leader tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)] tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded">
+            <div class="tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)] tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded">
                 <i class="fas fa-circle-info"></i>
                 {{localize "WH40K.DW.Oath.Validation.NotLeader"}}
             </div>
@@ -49,9 +49,9 @@
     {{/if}}
 
     {{!-- Action affordances --}}
-    <div class="wh40k-dw-oath-actions tw-flex tw-flex-wrap tw-gap-1.5">
+    <div class="tw-flex tw-flex-wrap tw-gap-1.5">
         <button type="button"
-                class="wh40k-dw-oath-swear-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-bronze hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
                 data-action="dwSwearOath"
                 title="{{localize 'WH40K.DW.Oath.Label'}}"
                 {{#unless oathPanel.canSwear}}disabled aria-disabled="true"{{/unless}}>
@@ -59,7 +59,7 @@
             {{localize "WH40K.DW.Oath.Sworn"}}
         </button>
         <button type="button"
-                class="wh40k-dw-oath-release-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
                 data-action="dwReleaseOath"
                 title="{{localize 'WH40K.DW.Oath.Released'}}"
                 {{#unless oathPanel.canRelease}}disabled aria-disabled="true"{{/unless}}>

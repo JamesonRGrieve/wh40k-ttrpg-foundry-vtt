@@ -1,5 +1,5 @@
 {{!-- Radical Services Requisition Dialog (within.md p. 72, Table 2-10) --}}
-<div class="wh40k-rsv tw-p-4 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]">
+<div class="tw-p-4 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]">
 
     {{!-- Header --}}
     <div class="tw-mb-3 tw-flex tw-items-center tw-justify-between tw-gap-3 tw-px-3 tw-py-2 tw-bg-gradient-to-br tw-from-[rgba(0,0,0,0.3)] tw-to-[rgba(0,0,0,0.2)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-md">
@@ -8,7 +8,7 @@
     </div>
 
     {{!-- Services table --}}
-    <table class="wh40k-rsv-table tw-w-full tw-border-collapse tw-text-[0.85rem]">
+    <table class="tw-w-full tw-border-collapse tw-text-[0.85rem]">
         <thead>
             <tr class="tw-text-left tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em]">
                 <th class="tw-p-2 tw-font-semibold">{{localize "WH40K.RadicalServices.ServiceLabel"}}</th>
@@ -22,11 +22,11 @@
             {{#each services}}
             <tr data-action="selectService"
                 data-service-id="{{this.id}}"
-                class="wh40k-rsv-row tw-cursor-pointer tw-border-t tw-border-[rgba(201,162,39,0.15)] hover:tw-bg-[rgba(201,162,39,0.08)] {{#if this.selected}}tw-bg-[rgba(201,162,39,0.18)]{{/if}}">
+                class="tw-cursor-pointer tw-border-t tw-border-[rgba(201,162,39,0.15)] hover:tw-bg-[rgba(201,162,39,0.08)] {{#if this.selected}}tw-bg-[rgba(201,162,39,0.18)]{{/if}}">
                 <td class="tw-p-2 tw-font-semibold tw-text-[#e8e4d9]">{{this.label}}</td>
                 <td class="tw-p-2 tw-text-[#cfcab8]">{{this.availabilityLabel}}</td>
                 <td class="tw-p-2 tw-text-center">
-                    <span class="wh40k-rsv-threat tw-inline-block tw-min-w-[2rem] tw-px-2 tw-py-0.5 tw-rounded tw-font-bold tw-text-[#0a0a0f] {{this.threatBadgeClass}}">{{this.threatLevel}}</span>
+                    <span class="tw-inline-block tw-min-w-[2rem] tw-px-2 tw-py-0.5 tw-rounded tw-font-bold tw-text-[#0a0a0f] {{this.threatBadgeClass}}">{{this.threatLevel}}</span>
                 </td>
                 <td class="tw-p-2 tw-text-center tw-tabular-nums tw-text-[#f87171]">{{this.subtletyOnHire}}</td>
                 <td class="tw-p-2 tw-text-center tw-tabular-nums tw-text-gold">{{this.target}}</td>

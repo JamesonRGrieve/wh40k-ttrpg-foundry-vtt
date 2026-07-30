@@ -1,7 +1,7 @@
 {{!-- Only War Mounted Combat action dispatch chat card (#159 — Hammer of the Emperor §"MOUNT SPECIAL ACTIONS"). --}}
 {{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
 {{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
-<div class="wh40k-rpg wh40k-ow-mount-action-card tw-p-4 tw-rounded-md tw-border tw-border-brass tw-bg-[rgba(28,22,8,0.88)]"
+<div class="wh40k-rpg tw-p-4 tw-rounded-md tw-border tw-border-brass tw-bg-[rgba(28,22,8,0.88)]"
      data-wh40k-system="{{gameSystem}}"
      data-action-id="{{actionId}}">
 
@@ -28,15 +28,15 @@
 
     {{!-- Mount readout (when the rider is mounted) --}}
     {{#if mount}}
-        <div class="wh40k-ow-mount-action-mount tw-p-2 tw-rounded-sm tw-border tw-border-brass/60 tw-bg-[rgba(60,40,8,0.22)] tw-flex tw-flex-col tw-gap-1"
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-brass/60 tw-bg-[rgba(60,40,8,0.22)] tw-flex tw-flex-col tw-gap-1"
              data-mount-id="{{mount.mountId}}">
             <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-brass tw-mb-1">
                 {{localize "WH40K.OW.Mount.Label"}}
             </div>
             {{#if mount.traits.length}}
-                <ul class="wh40k-ow-mount-action-traits tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-wrap tw-gap-1">
+                <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-wrap tw-gap-1">
                     {{#each mount.traits}}
-                        <li class="wh40k-ow-mount-action-trait-badge tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-solid tw-border-brass/60 tw-bg-[rgba(60,40,8,0.35)] tw-text-[0.68rem] tw-uppercase tw-tracking-[0.04em] tw-text-brass"
+                        <li class="tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-solid tw-border-brass/60 tw-bg-[rgba(60,40,8,0.35)] tw-text-[0.68rem] tw-uppercase tw-tracking-[0.04em] tw-text-brass"
                             data-trait-id="{{this}}">
                             {{this}}
                         </li>

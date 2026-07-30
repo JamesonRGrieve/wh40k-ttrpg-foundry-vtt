@@ -315,6 +315,23 @@ function isTwOrExempt(token) {
     // wrapped in brackets. Not a project CSS class name; unambiguously Tailwind syntax.
     if (/^\[[a-z][a-z-]*:[^\]]+\]$/.test(token)) return true;
 
+    // `wh40k-rpg` is the Tailwind IMPORTANT-SCOPE SELECTOR, not a project CSS class.
+    // tailwind.config.js sets `important: '.wh40k-rpg'`, so every generated utility
+    // emits as `.wh40k-rpg .tw-foo` and only applies inside an element carrying this
+    // class. Sheets get it from `DEFAULT_OPTIONS.classes`, but anything Foundry
+    // renders outside a sheet root does not — hence the `renderChatMessageHTML` hook
+    // in src/module/actions/basic-action-manager.ts doing `classList.add('wh40k-rpg')`,
+    // and the 38 chat templates that also spell it on their own root so the utilities
+    // resolve when the card DOM is built directly (Storybook, inline `<div>` emitters).
+    //
+    // So the token is what ENABLES Tailwind on those cards — removing it would strip
+    // every utility, the exact opposite of migrating. And there is nothing to migrate:
+    // no bare `.wh40k-rpg { … }` rule exists in tailwind/*.js or src/css/**; every
+    // occurrence is a compound (`.wh40k-rpg.sheet.actor`, `.wh40k-rpg.sheet.item`) that
+    // a chat card, having no `.sheet`, can never match. It belongs with the Tailwind
+    // constructs above, not with the project CSS classes this metric counts.
+    if (token === 'wh40k-rpg') return true;
+
     // Strip one Tailwind variant prefix by finding the last colon at bracket-depth 0.
     // This handles all variant forms: `hover:`, `[&>label]:`, `data-[active=true]:`, etc.
     const sep = lastTopLevelColon(token);

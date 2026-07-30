@@ -18,7 +18,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-possession-panel" accentBorderClass="dh2:tw-border-bronze rt:tw-border-amber-700 im:tw-border-failure" accentIconClass="tw-text-crimson dh2:tw-text-crimson rt:tw-text-amber-700 im:tw-text-failure" icon="fa-ghost" label=(localize "WH40K.Possession.Title") rootAttrs=(safeAttrs "data-possession-state" system.possession.state) hasRightSlot=true}}
     {{!-- Header right slot: state badge --}}
     {{#*inline "rightSlot"}}
-        <span class="wh40k-possession-state-badge tw-px-2 tw-py-0.5 tw-rounded tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]
+        <span class="tw-px-2 tw-py-0.5 tw-rounded tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]
                      {{#if (eq system.possession.state 'possessed')}}tw-bg-crimson/30 tw-text-crimson-light tw-border tw-border-solid tw-border-crimson{{else}}{{#if (eq system.possession.state 'latent')}}tw-bg-gold-dark/20 tw-text-gold tw-border tw-border-solid tw-border-gold-raw{{else}}tw-bg-black/20 tw-text-[color:var(--wh40k-text-muted)]{{/if}}{{/if}}">
             {{#if (eq system.possession.state 'possessed')}}{{localize "WH40K.Possession.StatePossessed"}}{{else}}{{#if (eq system.possession.state 'latent')}}{{localize "WH40K.Possession.StateLatent"}}{{else}}{{localize "WH40K.Possession.StateNone"}}{{/if}}{{/if}}
         </span>
@@ -30,17 +30,17 @@
             <i class="fas fa-bolt"></i>
             <span>{{localize "WH40K.Possession.UnleashCount"}}</span>
         </span>
-        <span class="wh40k-possession-counter tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]">
-            <span class="wh40k-possession-used">{{system.possession.unleashUsed}}</span>
+        <span class="tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]">
+            <span>{{system.possession.unleashUsed}}</span>
             <span class="tw-text-[color:var(--wh40k-text-muted)]"> / </span>
-            <span class="wh40k-possession-max">{{system.possession.unleashMax}}</span>
+            <span>{{system.possession.unleashMax}}</span>
         </span>
     </div>
 
     {{!-- Action buttons --}}
     <div class="tw-flex tw-items-center tw-gap-2">
         <button type="button"
-                class="wh40k-possession-unleash-btn tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5
                        tw-px-2 tw-py-1.5 tw-rounded tw-bg-crimson/20 tw-border tw-border-solid tw-border-crimson/60
                        tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-bright)]
                        tw-cursor-pointer tw-transition-colors hover:tw-bg-crimson/40
@@ -55,7 +55,7 @@
 
         {{#if isGM}}
             <button type="button"
-                    class="wh40k-possession-reset-btn tw-flex tw-items-center tw-justify-center tw-gap-1.5
+                    class="tw-flex tw-items-center tw-justify-center tw-gap-1.5
                            tw-px-2 tw-py-1.5 tw-rounded tw-bg-transparent tw-border tw-border-solid
                            tw-border-[color:var(--wh40k-border-color-light)]
                            tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-medium)]
@@ -72,7 +72,7 @@
           (contested / latent state). The terminal possessed state hides
           these because the daemon already won the contest. --}}
     {{#if (eq system.possession.state 'latent')}}
-        <div class="wh40k-possession-frenzy-loop tw-flex tw-flex-col tw-gap-2 tw-pt-2 tw-mt-1
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-pt-2 tw-mt-1
                     tw-border-t tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]">
             <p class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.72rem] tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-muted)]">
                 <i class="fas fa-arrows-rotate" aria-hidden="true"></i>

@@ -9,7 +9,7 @@
     gameSystem=gameSystem
     footerLabel=actorName
 }}
-    <div class="wh40k-extended-action-chat-body tw-p-3 tw-flex tw-flex-col tw-gap-2 tw-text-sm">
+    <div class="tw-p-3 tw-flex tw-flex-col tw-gap-2 tw-text-sm">
         {{#if action.typeAndAction}}
             <div class="tw-text-[0.85em] tw-uppercase tw-tracking-wide tw-text-[#8b6914] tw-font-semibold">{{action.typeAndAction}}</div>
         {{/if}}
@@ -22,7 +22,7 @@
             {{#if action.duration}}<span><strong>{{localize "WH40K.Voidcraft.ExtendedAction.Duration"}}:</strong> {{action.duration}}</span>{{/if}}
         </div>
         {{#if action.description}}
-            <div class="wh40k-extended-action-description tw-mt-1 tw-text-sm">{{{action.description}}}</div>
+            <div class="tw-mt-1 tw-text-sm">{{{action.description}}}</div>
         {{/if}}
     </div>
 {{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}

@@ -35,25 +35,25 @@
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-craftsmanship-panel" accentBorderClass="ow:tw-border-amber-700" accentIconClass="ow:tw-text-amber-500" icon="fa-hammer" label=(localize "WH40K.OW.Craftsmanship.Label")}}
     {{#unless craftsmanshipPanel.hasEntries}}
-        <div class="wh40k-ow-craftsmanship-empty tw-px-2 tw-py-2 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+        <div class="tw-px-2 tw-py-2 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
             {{localize "WH40K.OW.Craftsmanship.Empty"}}
         </div>
     {{/unless}}
 
     {{#if craftsmanshipPanel.weapons.length}}
-        <div class="wh40k-ow-craftsmanship-weapons tw-flex tw-flex-col tw-gap-1">
+        <div class="tw-flex tw-flex-col tw-gap-1">
             {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" labelKey="WH40K.OW.Craftsmanship.WeaponsHeader"}}
             {{#each craftsmanshipPanel.weapons as |entry|}}
-                <div class="wh40k-ow-craftsmanship-row tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                      data-item-id="{{entry.itemId}}"
                      data-weapon-kind="{{entry.kind}}"
                      data-tier="{{entry.tier}}">
                     <div class="tw-flex tw-flex-col tw-min-w-[8rem]">
-                        <span class="wh40k-ow-craftsmanship-name tw-text-[0.8rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">{{entry.name}}</span>
+                        <span class="tw-text-[0.8rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">{{entry.name}}</span>
                         {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" rootClass="wh40k-ow-craftsmanship-tier" labelKey=(concat "WH40K.OW.Craftsmanship.Tier." (capitalize entry.tier))}}
                     </div>
                     {{#if (eq entry.kind "ranged")}}
-                        <span class="wh40k-ow-craftsmanship-effect tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-bright)]"
+                        <span class="tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-bright)]"
                               data-reliability-shift="{{entry.effect.reliabilityShift}}">
                             {{#if (eq entry.effect.reliabilityShift "unreliable")}}
                                 <i class="fas fa-exclamation-triangle ow:tw-text-amber-500"></i>
@@ -71,7 +71,7 @@
                             {{/if}}
                         </span>
                     {{else}}
-                        <span class="wh40k-ow-craftsmanship-effect tw-flex tw-items-center tw-gap-2 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-bright)]"
+                        <span class="tw-flex tw-items-center tw-gap-2 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-bright)]"
                               data-ws-modifier="{{entry.effect.weaponSkillModifier}}"
                               data-damage-bonus="{{entry.effect.damageBonus}}">
                             <span title="{{localize 'WH40K.OW.Craftsmanship.Melee.WeaponSkillModifier'}}">
@@ -90,18 +90,18 @@
     {{/if}}
 
     {{#if craftsmanshipPanel.armours.length}}
-        <div class="wh40k-ow-craftsmanship-armours tw-flex tw-flex-col tw-gap-1">
+        <div class="tw-flex tw-flex-col tw-gap-1">
             {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" labelKey="WH40K.OW.Craftsmanship.ArmoursHeader"}}
             {{#each craftsmanshipPanel.armours as |entry|}}
-                <div class="wh40k-ow-craftsmanship-row tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                      data-item-id="{{entry.itemId}}"
                      data-armour-row="true"
                      data-tier="{{entry.tier}}">
                     <div class="tw-flex tw-flex-col tw-min-w-[8rem]">
-                        <span class="wh40k-ow-craftsmanship-name tw-text-[0.8rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">{{entry.name}}</span>
+                        <span class="tw-text-[0.8rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">{{entry.name}}</span>
                         {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" rootClass="wh40k-ow-craftsmanship-tier" labelKey=(concat "WH40K.OW.Craftsmanship.Tier." (capitalize entry.tier))}}
                     </div>
-                    <span class="wh40k-ow-craftsmanship-effect tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-bright)]"
+                    <span class="tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-bright)]"
                           data-agility-modifier="{{entry.effect.agilityModifier}}"
                           data-ap-first-hit="{{entry.effect.apFirstHit}}"
                           data-half-weight="{{entry.effect.halfWeight}}"

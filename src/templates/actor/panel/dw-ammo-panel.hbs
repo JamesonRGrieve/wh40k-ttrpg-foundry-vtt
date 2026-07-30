@@ -46,13 +46,13 @@
     {{/inline}}
 
     {{!-- Radio-select picker --}}
-    <fieldset class="wh40k-dw-ammo-picker tw-flex tw-flex-col tw-gap-1 tw-m-0 tw-p-0 tw-border-0"
+    <fieldset class="tw-flex tw-flex-col tw-gap-1 tw-m-0 tw-p-0 tw-border-0"
               data-action-target="dwSelectAmmo">
         <legend class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-1">
             {{localize "WH40K.DW.SpecialAmmo.Select"}}
         </legend>
         {{#each ammoPanel.options}}
-            <label class="wh40k-dw-ammo-option tw-flex tw-items-start tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-cursor-pointer hover:tw-bg-[rgba(255,255,255,0.05)]
+            <label class="tw-flex tw-items-start tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-cursor-pointer hover:tw-bg-[rgba(255,255,255,0.05)]
                           {{#if this.selected}}tw-bg-[rgba(255,255,255,0.08)] dw:tw-border dw:tw-border-solid dw:tw-border-bronze{{/if}}"
                    data-ammo-id="{{this.id}}">
                 <input type="radio"
@@ -63,10 +63,10 @@
                        data-ammo-id="{{this.id}}"
                        {{#if this.selected}}checked{{/if}} />
                 <span class="tw-flex tw-flex-col tw-gap-0.5">
-                    <span class="wh40k-dw-ammo-name tw-font-semibold tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]">
+                    <span class="tw-font-semibold tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]">
                         {{this.label}}
                     </span>
-                    <span class="wh40k-dw-ammo-summary tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                    <span class="tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
                         {{this.summary}}
                     </span>
                 </span>
@@ -76,7 +76,7 @@
 
     {{!-- Effect summary for the selected ammo --}}
     {{#if ammoPanel.effect}}
-        <div class="wh40k-dw-ammo-effect tw-flex tw-flex-col tw-gap-0.5 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+        <div class="tw-flex tw-flex-col tw-gap-0.5 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
             {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" labelKey="WH40K.DW.SpecialAmmo.Effects"}}
             <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-0.5">
                 {{#if ammoPanel.effect.bonusDamageDice}}
@@ -132,7 +132,7 @@
             </ul>
         </div>
     {{else}}
-        <p class="wh40k-dw-ammo-no-selection tw-m-0 tw-px-2 tw-py-1 tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+        <p class="tw-m-0 tw-px-2 tw-py-1 tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
             {{localize "WH40K.DW.SpecialAmmo.NoSelection"}}
         </p>
     {{/if}}

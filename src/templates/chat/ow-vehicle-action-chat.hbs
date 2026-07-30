@@ -1,7 +1,7 @@
 {{!-- Only War Vehicle Movement action dispatch chat card (#156 — core.md §"VEHICLE MOVEMENT"). --}}
 {{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
 {{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
-<div class="wh40k-rpg wh40k-ow-vehicle-action-card tw-p-4 tw-rounded-md tw-border tw-border-brass tw-bg-[rgba(28,22,8,0.88)]"
+<div class="wh40k-rpg tw-p-4 tw-rounded-md tw-border tw-border-brass tw-bg-[rgba(28,22,8,0.88)]"
      data-wh40k-system="{{gameSystem}}"
      data-action-id="{{actionId}}">
 
@@ -28,7 +28,7 @@
 
     {{!-- Optional chase readout (posted when an active chase tick was rolled into this action) --}}
     {{#if chase}}
-        <div class="wh40k-ow-vehicle-action-chase tw-p-2 tw-rounded-sm tw-border tw-border-brass/60 tw-bg-[rgba(60,40,8,0.22)] tw-flex tw-flex-col tw-gap-1">
+        <div class="tw-p-2 tw-rounded-sm tw-border tw-border-brass/60 tw-bg-[rgba(60,40,8,0.22)] tw-flex tw-flex-col tw-gap-1">
             <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-brass tw-mb-1">
                 {{localize "WH40K.OW.VehicleMovement.Chase.Title"}}
             </div>

@@ -39,13 +39,13 @@
         titleKey="WH40K.OW.Battlefield.Label"
         imageIcon="fa-satellite-dish"
         gameSystem=gameSystem}}
-    <div class="wh40k-ow-battlefield-chat tw-flex tw-flex-col tw-gap-2 tw-p-3"
+    <div class="tw-flex tw-flex-col tw-gap-2 tw-p-3"
          data-battlefield-event="{{event.kind}}">
 
         {{#if (eq event.kind "request")}}
-            <div class="wh40k-ow-battlefield-chat__request tw-flex tw-flex-col tw-gap-1 tw-px-3 tw-py-2 tw-rounded
-                        tw-border-l-2 tw-bg-[var(--wh40k-panel-bg-translucent)]
-                        {{#if event.successful}}tw-border-success{{else}}tw-border-crimson{{/if}}"
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-px-3 tw-py-2 tw-rounded
+ tw-border-l-2 tw-bg-[var(--wh40k-panel-bg-translucent)]
+ {{#if event.successful}}tw-border-success{{else}}tw-border-crimson{{/if}}"
                  data-asset-kind="{{event.assetKind}}"
                  data-successful="{{#if event.successful}}true{{else}}false{{/if}}">
                 <div class="tw-flex tw-items-center tw-justify-between tw-gap-2">
@@ -54,7 +54,7 @@
                         {{localize event.assetNameKey}}
                     </span>
                     <span class="tw-text-[0.78rem] tw-font-semibold
-                                 {{#if event.successful}}tw-text-success{{else}}tw-text-crimson{{/if}}">
+ {{#if event.successful}}tw-text-success{{else}}tw-text-crimson{{/if}}">
                         {{#if event.successful}}
                             {{localize "WH40K.OW.Battlefield.Support.Request.Success"}}
                         {{else}}
@@ -84,8 +84,8 @@
         {{/if}}
 
         {{#if (eq event.kind "award")}}
-            <div class="wh40k-ow-battlefield-chat__award tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
-                        tw-border-l-2 tw-border-gold tw-bg-[var(--wh40k-panel-bg-translucent)]"
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
+ tw-border-l-2 tw-border-gold tw-bg-[var(--wh40k-panel-bg-translucent)]"
                  data-award-id="{{event.awardId}}"
                  data-toggled-on="{{#if event.toggledOn}}true{{else}}false{{/if}}">
                 <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">
