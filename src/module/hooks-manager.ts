@@ -134,6 +134,7 @@ import { convertDeadActorToPile } from './rules/death-loot.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
 import { buildSkillSpecializationIndex } from './rules/skill-specialization-index.ts';
 import { buildSkillVariantIndex } from './rules/skill-variant-index.ts';
+import { SURPRISED_STATUS_ID, surpriseHasExpired } from './rules/surprise.ts';
 import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.ts';
 import { DHTourMain } from './tours/main-tour.ts';
 import type { WH40KGameSystem } from './types/global.d.ts';
@@ -333,9 +334,13 @@ export class HooksManager {
         // once-per-round attack re-roll) reset at the start of each new combat
         // round. First active GM only (the reset writes a flag to the DB).
         // eslint-disable-next-line no-restricted-syntax -- boundary: combatRound hook payload is framework-typed; we read only combatants → actor
-        hooksOn('combatRound', (combat: { combatants?: { contents?: Array<{ actor?: WH40KBaseActor | null }> } }) => {
+        hooksOn('combatRound', (combat: { round?: number | null; combatants?: { contents?: Array<{ actor?: WH40KBaseActor | null }> } }) => {
             const firstGM = game.users.contents.find((u) => u.active && u.isGM)?.id;
             if (game.user.id !== firstGM) return;
+            // RAW gives Surprised a one-round life. Nothing expired it, so the +30
+            // `unawareTarget` circumstance modifier — which auto-selects off this
+            // condition — stayed on the target for the rest of the encounter (#514).
+            const expireSurprise = surpriseHasExpired(combat.round ?? 1);
             const seen = new Set<string>();
             for (const combatant of combat.combatants?.contents ?? []) {
                 const actor = combatant.actor;
@@ -347,6 +352,23 @@ export class HooksManager {
                 actor.resetRerollUses('per-round').catch((err: unknown) => {
                     console.error('reroll-reset: combatRound per-round reset failed', err);
                 });
+                if (expireSurprise && actor.statuses.has(SURPRISED_STATUS_ID)) {
+                    // Delete the backing ActiveEffect(s) rather than toggling: that is
+                    // how the rest of this system removes a condition, and `statuses`
+                    // membership is a projection of those effects.
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect documents are framework-typed; only `statuses` and `id` are read
+                    const effects = actor.effects as unknown as Iterable<{ id?: string | null; statuses?: Set<string> }>;
+                    const ids: string[] = [];
+                    for (const effect of effects) {
+                        if (effect.statuses?.has(SURPRISED_STATUS_ID) === true && typeof effect.id === 'string') ids.push(effect.id);
+                    }
+                    if (ids.length > 0) {
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+                        actor.deleteEmbeddedDocuments('ActiveEffect', ids).catch((err: unknown) => {
+                            console.error('surprise: failed to expire the Surprised condition', err);
+                        });
+                    }
+                }
             }
         });
     }
