@@ -78,37 +78,52 @@ const armourChatCard = {
 };
 
 // ── from src/css/actor/_actor-scroll.css ──────────────────────────────────
-// ApplicationV2 scroll/flex overrides for actor sheets. Heavy `!important`
-// usage because Foundry V14's default ApplicationV2 templates set their own
-// flex/overflow on .window-content / form.sheet-body that we need to undo.
+// ApplicationV2 scroll/flex overrides for actor sheets. These undo the
+// flex/overflow Foundry V14's own ApplicationV2 rules set on .window-content /
+// form.sheet-body, and they do it on specificity alone — no priority flags.
+// Foundry ships foundry2.css almost entirely inside `@layer` blocks while this
+// stylesheet is unlayered, and an unlayered normal declaration outranks a
+// layered one at ANY specificity; foundry2.css's handful of flagged
+// declarations sit on CodeMirror, ProseMirror and `[hidden]`, none of this DOM.
 // Scoped under .wh40k-rpg.sheet.actor so PC and NPC sheets share the layout.
+//
+// Note the flags were actively counterproductive against Foundry: for important
+// declarations the layer order inverts, so a flagged unlayered rule ranks BELOW
+// a flagged layered one.
 const actorSheetOverrides = {
     '.wh40k-rpg.sheet.actor': {
+        // .window-content and form.sheet-body are emitted by ApplicationV2, not by
+        // a template, so no `tw-*` utility is ever co-located on them.
+        // tailwind/npc-sheet.js overrides .window-content to a grid for
+        // `.sheet.actor.player`; at (0,5,0) against this (0,4,0) it still wins.
         '& .window-content': {
-            display: 'flex !important',
-            flexDirection: 'column !important',
-            overflow: 'hidden !important',
-            height: '100% !important',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            height: '100%',
         },
         '& .wh40k-sheet': {
-            display: 'flex !important',
-            flexDirection: 'column !important',
-            flex: '1 1 auto !important',
-            minHeight: '0 !important',
-            overflow: 'hidden !important',
+            display: 'flex',
+            flexDirection: 'column',
+            flex: '1 1 auto',
+            minHeight: '0',
+            overflow: 'hidden',
         },
         '& form.sheet-body, & .window-app.wh40k-rpg form': {
-            display: 'flex !important',
-            flexDirection: 'column !important',
-            flex: '1 1 auto !important',
-            minHeight: '0 !important',
-            overflow: 'hidden !important',
-            gap: '0 !important',
+            display: 'flex',
+            flexDirection: 'column',
+            flex: '1 1 auto',
+            minHeight: '0',
+            overflow: 'hidden',
+            gap: '0',
         },
+        // actor/partial/header-base.hbs already spells all three inline —
+        // `tw-flex-none` IS `flex: 0 0 auto`, plus `tw-overflow-visible tw-z-10` —
+        // so the two sides agree; this (0,4,0) rule wins over their (0,2,0) anyway.
         '& .wh40k-character-header': {
-            flex: '0 0 auto !important',
-            overflow: 'visible !important',
-            zIndex: '10 !important',
+            flex: '0 0 auto',
+            overflow: 'visible',
+            zIndex: '10',
         },
         // The nav strip rendered by actor/partial/tab-strip.hbs. At (0,4,1) this
         // out-specifies every plain `tw-*` utility the partial carries — utilities
