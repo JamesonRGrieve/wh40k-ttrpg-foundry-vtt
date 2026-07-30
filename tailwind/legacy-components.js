@@ -179,27 +179,37 @@ const actorSheetOverrides = {
                 },
             },
         },
+        // The scroll container. tailwind/npc-sheet.js restates flex / overflow /
+        // min-height on `.player.npc .wh40k-body` at (0,5,0) with byte-identical
+        // values, so which of the two wins is unobservable; actor/player/body.hbs's
+        // `tw-flex-1` (flex: 1 1 0%) does differ but is (0,2,0) and loses to this
+        // rule's (0,4,0) with or without a flag.
         '& .wh40k-body, & #tab-body': {
-            overflowY: 'auto !important',
-            overflowX: 'hidden !important',
-            minHeight: '0 !important',
-            flex: '1 1 auto !important',
-            gridColumn: 'auto !important',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            minHeight: '0',
+            flex: '1 1 auto',
+            gridColumn: 'auto',
         },
+        // Tab show/hide. This pair (0,5,0)–(0,6,1) owns it: the `tw-hidden` +
+        // `{{#if tab.active}}tw-flex{{/if}}` pattern the combat / equipment /
+        // voidcraft tab templates carry is (0,2,0), and actor/player/tab-powers.hbs's
+        // `[&.active]:tw-block` — the one important-modifier utility that used to
+        // reach these declarations — is (0,3,0) since its flag was dropped.
         '& .wh40k-body .tab, & #tab-body .tab, & .wh40k-body section.tab, & #tab-body section.tab': {
-            display: 'none !important',
+            display: 'none',
         },
         '& .wh40k-body .tab.active, & #tab-body .tab.active, & .wh40k-body section.tab.active, & #tab-body section.tab.active': {
-            display: 'flex !important',
-            flexDirection: 'column !important',
-            gap: 'var(--wh40k-space-md) !important',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--wh40k-space-md)',
             // No top padding: tab content top-aligns with the header/sidebar column
             // top (#398); keep horizontal + bottom breathing room.
-            padding: '0 12px 12px !important',
+            padding: '0 12px 12px',
         },
         '& .wh40k-body section.tab-combat.active, & #tab-body section.tab-combat.active': {
-            minHeight: '100% !important',
-            boxSizing: 'border-box !important',
+            minHeight: '100%',
+            boxSizing: 'border-box',
         },
         '& .wh40k-char-hud-circle': {
             position: 'relative !important',
