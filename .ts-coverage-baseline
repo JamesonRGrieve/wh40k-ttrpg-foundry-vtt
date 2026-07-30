@@ -5,7 +5,7 @@
   "totals": {
     "any": 1,
     "asAny": 5,
-    "tsExpectError": 10,
+    "tsExpectError": 8,
     "tsIgnore": 0
   },
   "byDir": {
@@ -21,16 +21,10 @@
       "tsExpectError": 0,
       "tsIgnore": 0
     },
-    "actor": {
-      "any": 0,
-      "asAny": 0,
-      "tsExpectError": 0,
-      "tsIgnore": 0
-    },
     "applications": {
       "any": 0,
       "asAny": 4,
-      "tsExpectError": 9,
+      "tsExpectError": 7,
       "tsIgnore": 0
     },
     "canvas": {
@@ -87,6 +81,12 @@
       "tsExpectError": 0,
       "tsIgnore": 0
     },
+    "integrations": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
     "inventory": {
       "any": 0,
       "asAny": 0,
@@ -117,13 +117,13 @@
       "tsExpectError": 0,
       "tsIgnore": 0
     },
-    "tours": {
+    "testing": {
       "any": 0,
       "asAny": 0,
       "tsExpectError": 0,
       "tsIgnore": 0
     },
-    "transactions": {
+    "tours": {
       "any": 0,
       "asAny": 0,
       "tsExpectError": 0,
@@ -136,6 +136,12 @@
       "tsIgnore": 0
     },
     "utils": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "vehicle": {
       "any": 0,
       "asAny": 0,
       "tsExpectError": 0,
