@@ -42,12 +42,16 @@ module.exports = {
             "min-height": "0",
             "min-width": "0",
             "padding": "0.75rem",
-            ".tab": {
-                "display": "none",
-                "&.active": {
-                    "display": "block",
-                },
-            },
+            // NO `.tab` visibility rules here. Tab show/hide belongs to
+            // tailwind/legacy-components.js's `.wh40k-body .tab{.active}` pair,
+            // which lays the active tab out as a flex column with a
+            // --wh40k-space-md gap between panels. The `display: none` this block
+            // used to declare only restated that pair's value; the `display: block`
+            // beside it was (0,8,0) against the pair's (0,6,1) and so only ever
+            // lost because the pair carried a priority flag. With that flag retired
+            // it would have won and collapsed every NPC sheet's inter-panel gap
+            // (~36px of content shift across all 14), so the never-rendered
+            // declarations are deleted rather than left to take over.
         },
         ".wh40k-npc-sidebar-header": {
             "background": "var(--color-bg-secondary, #252525)",

@@ -1,6 +1,14 @@
 {{!-- Acolyte Sheet Powers Tab --}}
 {{!-- Modern powers management with psychic powers, navigator powers, rituals, and orders --}}
-<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-p-3 [&.active]:!tw-block bc:tw-bg-crimson/[2%] dh1:tw-bg-gold-dark/[2%] dh2:tw-bg-gold-dark/[2%] dw:tw-bg-accent-combat/[2%] ow:tw-bg-brass/[2%] rt:tw-bg-gold/[2%] im:tw-bg-failure/[2%]" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+{{!-- `[&.active]:tw-block` is deliberately NOT important. At (0,3,0) it loses to
+     tailwind/legacy-components.js's `.wh40k-body .tab.active` (0,6,0), which lays
+     this tab out as a flex column with a --wh40k-space-md gap — that rule is what
+     renders inside Foundry and always has. In Storybook, where the sheet root is
+     `div.wh40k-rpg.sheet` with no `.actor`, that rule never matches and this
+     utility is the declaration that shows the active tab. Adding the important
+     modifier back would win in Foundry too and collapse the gap between this
+     tab's panels; deleting the utility takes the Storybook render with it. --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-p-3 [&.active]:tw-block bc:tw-bg-crimson/[2%] dh1:tw-bg-gold-dark/[2%] dh2:tw-bg-gold-dark/[2%] dw:tw-bg-accent-combat/[2%] ow:tw-bg-brass/[2%] rt:tw-bg-gold/[2%] im:tw-bg-failure/[2%]" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     <div class="tw-grid tw-grid-cols-2 tw-gap-4 tw-min-h-0">
         {{!-- Left Column: Psyker Control & Psychic Powers --}}
         <div class="tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
