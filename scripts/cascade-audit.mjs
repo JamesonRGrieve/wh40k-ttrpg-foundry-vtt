@@ -17,16 +17,50 @@
  * A competitor that is ALSO `!important` and lives in a plugin file we are
  * clearing in the same pass is annotated, since both sides drop together.
  *
+ * ESCAPED-BANG SELECTORS ARE TWO DIFFERENT THINGS. Both look like `.\!foo`:
+ *
+ *   `.\!tw-…`          a REAL Tailwind important-modifier utility (`!tw-bg-transparent`
+ *                      on a template). It carries `!important`, so it beats any
+ *                      unflagged rule at ANY specificity — the single most
+ *                      dangerous competitor in a flag-retirement pass.
+ *   `.sheet.\!actor`   an INERT shadow rule. Tailwind emits one per plugin class it
+ *                      also sees as a `!<name>` candidate in the content globs —
+ *                      `if (!actor)` in src/module produces `.\!actor`. No element
+ *                      ever carries a literal `!actor` class, so it can never match.
+ *
+ * Only the second kind may be ignored, and the prefix test below is the
+ * discriminator. Note this makes `.\!tw-…` ELIGIBLE as a competitor here but does
+ * not make it VISIBLE: a utility and a component class meet on one element in a
+ * template, which is co-location, not a shared selector key — so it still fails
+ * `canMatchSameElement`. Catching it is scripts/utility-conflict-audit.mjs's job,
+ * from the template side. Run BOTH before retiring a flag; a `!tw-bg-transparent`
+ * co-located with a flagged rule wins the moment the flag comes off, whatever this
+ * script says about the declaration being uncontested.
+ *
  * Usage:
- *   node scripts/cascade-audit.mjs '.wh40k-rpg.sheet.actor'
+ *   node scripts/cascade-audit.mjs '.wh40k-rpg.sheet.actor' [path/to/entry.css]
  */
 import { readFileSync } from 'node:fs';
 
-const CSS = 'dist/css/entry.css';
 const prefix = process.argv[2];
+const CSS = process.argv[3] ?? 'dist/css/entry.css';
 if (prefix === undefined) {
-    console.error('usage: node scripts/cascade-audit.mjs <selector-prefix>');
+    console.error('usage: node scripts/cascade-audit.mjs <selector-prefix> [css-path]');
     process.exit(2);
+}
+
+/** Tailwind's utility prefix (`prefix: 'tw-'` in tailwind.config.js). */
+const UTILITY_PREFIX = 'tw-';
+
+/**
+ * True for an inert Tailwind shadow duplicate of a plugin rule — an escaped `!`
+ * on a class that is NOT a prefixed utility, so no rendered element can match it.
+ * A `.\!tw-…` utility returns false: it is a live, important-carrying competitor.
+ */
+function isInertShadowSelector(sel) {
+    const escaped = sel.match(/\\!([\w-]*)/g);
+    if (escaped === null) return false;
+    return escaped.some((m) => !m.slice(2).startsWith(UTILITY_PREFIX));
 }
 
 /** Specificity as [ids, classes, elements]; good enough for our flat selectors. */
@@ -109,7 +143,7 @@ while ((m = RULE_RE.exec(css)) !== null) {
     }
 }
 
-const audited = rules.filter((r) => r.sel.startsWith(prefix) && !r.sel.includes('\\!'));
+const audited = rules.filter((r) => r.sel.startsWith(prefix) && !isInertShadowSelector(r.sel));
 console.log(`${rules.length} rules parsed from ${CSS}; ${audited.length} match prefix ${prefix}\n`);
 
 let risky = 0;
@@ -122,7 +156,7 @@ for (const r of audited) {
         // set is a subset or superset of ours (e.g. `.window-content` vs
         // `.window-content.foo`), or when the keys are identical element names.
         const competitors = rules.filter((o) => {
-            if (o === r || o.sel.includes('\\!')) return false;
+            if (o === r || isInertShadowSelector(o.sel)) return false;
             if (!o.decls.some((od) => od.prop === d.prop)) return false;
             return canMatchSameElement(r, o);
         });

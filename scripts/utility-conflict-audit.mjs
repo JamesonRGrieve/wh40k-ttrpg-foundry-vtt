@@ -13,7 +13,7 @@
  * No conflict means the `!important` is inert and safe to remove.
  *
  * Usage:
- *   node scripts/utility-conflict-audit.mjs <legacy-class>:<prop>[,<prop>…] …
+ *   node scripts/utility-conflict-audit.mjs [--root <dir>] <legacy-class>:<prop>[,<prop>…] …
  *
  * Example (panel-components.js's .wh40k-panel-header block):
  *   node scripts/utility-conflict-audit.mjs \
@@ -66,7 +66,13 @@ const PROP_UTILITIES = {
     'margin': [/^tw-m-/, /^tw-mx-/, /^tw-my-/, /^tw-mt-/, /^tw-mr-/, /^tw-mb-/, /^tw-ml-/],
 };
 
-const targets = process.argv.slice(2).map((spec) => {
+// `--root <dir>` retargets the template scan (fixtures, or a subtree) so the
+// audit's own behaviour is checkable without editing src/templates.
+const argv = process.argv.slice(2);
+const rootFlag = argv.indexOf('--root');
+const ROOT = rootFlag === -1 ? 'src/templates' : (argv[rootFlag + 1] ?? 'src/templates');
+const specs = rootFlag === -1 ? argv : [...argv.slice(0, rootFlag), ...argv.slice(rootFlag + 2)];
+const targets = specs.map((spec) => {
     const [cls, props] = spec.split(':');
     return { cls, props: (props ?? '').split(',').filter(Boolean) };
 });
@@ -75,7 +81,19 @@ if (targets.length === 0) {
     process.exit(2);
 }
 
-/** Strip a Tailwind variant prefix (`hover:`, `[&>x]:`) at bracket depth 0. */
+/**
+ * Reduce a class token to the utility it names, dropping any Tailwind variant
+ * prefix (`hover:`, `[&>x]:`) at bracket depth 0 and the `!` important modifier.
+ *
+ * The `!` matters enormously and used to be missed: `!tw-bg-transparent` never
+ * matched `/^tw-bg-/`, so the audit reported "no conflict" for the one kind of
+ * utility that ALWAYS wins. Tailwind's important modifier emits real
+ * `!important`, which beats an unflagged component rule at any specificity — so
+ * a flagged rule that co-locates with one is not safe to unflag, whereas a plain
+ * utility only wins when its specificity is at least as high (utilities emit at
+ * `.wh40k-rpg .tw-x`, i.e. two classes, so a `.wh40k-rpg.sheet.actor …` rule
+ * out-specifies them). Returns the bare utility plus that distinction.
+ */
 function bare(token) {
     let depth = 0;
     let last = -1;
@@ -85,14 +103,17 @@ function bare(token) {
         else if (ch === ']') depth--;
         else if (ch === ':' && depth === 0) last = i;
     }
-    return last === -1 ? token : token.slice(last + 1);
+    const afterVariant = last === -1 ? token : token.slice(last + 1);
+    const important = afterVariant.startsWith('!');
+    return { name: important ? afterVariant.slice(1) : afterVariant, important };
 }
 
 const CLASS_ATTR_RE = /class\s*=\s*"([^"]*)"/g;
 let conflicts = 0;
+let importantConflicts = 0;
 let elements = 0;
 
-for (const file of walkFiles('src/templates', { ext: '.hbs' })) {
+for (const file of walkFiles(ROOT, { ext: '.hbs' })) {
     const src = readFileSync(file, 'utf8');
     CLASS_ATTR_RE.lastIndex = 0;
     let m;
@@ -106,6 +127,7 @@ for (const file of walkFiles('src/templates', { ext: '.hbs' })) {
             if (!tokens.includes(target.cls)) continue;
             elements++;
             const hits = [];
+            const importantHits = [];
             for (const prop of target.props) {
                 const pats = PROP_UTILITIES[prop];
                 if (pats === undefined) {
@@ -114,10 +136,23 @@ for (const file of walkFiles('src/templates', { ext: '.hbs' })) {
                 }
                 for (const t of tokens) {
                     const b = bare(t);
-                    if (pats.some((p) => p.test(b))) hits.push(`${prop}←${t}`);
+                    if (!pats.some((p) => p.test(b.name))) continue;
+                    if (b.important) {
+                        importantHits.push(`${prop}←${t}`);
+                    } else {
+                        hits.push(`${prop}←${t}`);
+                    }
                 }
             }
             const line = src.slice(0, m.index).split('\n').length;
+            if (importantHits.length > 0) {
+                conflicts++;
+                importantConflicts++;
+                // An important-modifier utility outranks the plugin rule the
+                // moment its flag is dropped, at any specificity. Removing the
+                // flag WILL change rendering unless the utility goes too.
+                console.log(`WINS-ANY ${relative(process.cwd(), file)}:${line}  [${target.cls}]  ${importantHits.join(' ')}`);
+            }
             if (hits.length > 0) {
                 conflicts++;
                 console.log(`CONFLICT ${relative(process.cwd(), file)}:${line}  [${target.cls}]  ${hits.join(' ')}`);
@@ -126,3 +161,4 @@ for (const file of walkFiles('src/templates', { ext: '.hbs' })) {
     }
 }
 console.log(`\n${elements} elements carry an audited class; ${conflicts} co-locate a contested utility.`);
+console.log(`${importantConflicts} of those are WINS-ANY: an important-modifier utility that beats the rule at ANY specificity once its flag is dropped.`);
