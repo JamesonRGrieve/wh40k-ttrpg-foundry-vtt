@@ -29,7 +29,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-astartes-panel" accentBorderClass="dw:tw-border-accent-combat" accentIconClass="dw:tw-text-accent-combat" icon="fa-shield-alt" label=(localize "WH40K.DW.Astartes.Label") rootAttrs=(safeAttrs "data-dw-has-black-carapace" astartesPanel.hasBlackCarapace) hasRightSlot=true}}
     {{!-- Header right slot: Unnatural Str/Tgh readouts --}}
     {{#*inline "rightSlot"}}
-        <div class="wh40k-dw-astartes-unnatural tw-flex tw-items-center tw-gap-2">
+        <div class="tw-flex tw-items-center tw-gap-2">
             <span class="wh40k-dw-astartes-sb tw-text-[0.72rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
                   data-strength-bonus="{{astartesPanel.strengthBonus}}"
                   title="{{localize 'WH40K.DW.Astartes.Unnatural.Strength'}}">
@@ -52,7 +52,7 @@
     {{/if}}
 
     {{!-- Implant grid: 19 toggleable badges --}}
-    <div class="wh40k-dw-astartes-implants tw-grid tw-grid-cols-2 tw-gap-1.5 tw-mt-1
+    <div class="tw-grid tw-grid-cols-2 tw-gap-1.5 tw-mt-1
                 md:tw-grid-cols-3 lg:tw-grid-cols-4">
         {{#each astartesPanel.implants}}
             <button type="button"
@@ -63,7 +63,7 @@
                     data-implanted="{{#if this.has}}true{{else}}false{{/if}}"
                     aria-pressed="{{#if this.has}}true{{else}}false{{/if}}"
                     title="{{localize this.nameKey}}">
-                <span class="wh40k-dw-astartes-implant-name tw-text-[0.78rem] tw-font-semibold">
+                <span class="tw-text-[0.78rem] tw-font-semibold">
                     <i class="fas {{#if this.has}}fa-check-circle{{else}}fa-circle{{/if}} tw-mr-1"></i>
                     {{localize this.nameKey}}
                 </span>

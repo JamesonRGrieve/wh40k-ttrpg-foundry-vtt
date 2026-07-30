@@ -30,7 +30,7 @@
     {{#if opposed}}
     <div class="tw-mt-2">
         <div class="tw-text-xs tw-uppercase tw-opacity-70 tw-mb-1">{{localize "WH40K.NavigatorPowers.OpposedTest"}}</div>
-        <ul class="wh40k-navpwr-card__opposed tw-text-sm tw-list-none tw-m-0 tw-p-0">
+        <ul class="tw-text-sm tw-list-none tw-m-0 tw-p-0">
             <li>{{localize "WH40K.NavigatorPowers.NavigatorRoll"}}: {{opposed.navigatorRoll}} / {{opposed.navigatorTarget}} ({{opposed.navigatorDos}})</li>
             <li>{{localize "WH40K.NavigatorPowers.OpponentRoll"}}: {{opposed.opponentRoll}} / {{opposed.opponentTarget}} ({{opposed.opponentDos}})</li>
             <li>{{localize "WH40K.NavigatorPowers.NetDoS"}}: {{opposed.netDos}}</li>
@@ -41,7 +41,7 @@
     {{#if effectTiers}}
     <div class="tw-mt-2">
         <div class="tw-text-xs tw-uppercase tw-opacity-70 tw-mb-1">{{localize "WH40K.NavigatorPowers.EffectByLevel"}}</div>
-        <ul class="wh40k-navpwr-card__tiers tw-text-sm tw-list-none tw-m-0 tw-p-0">
+        <ul class="tw-text-sm tw-list-none tw-m-0 tw-p-0">
             {{#each effectTiers}}
             <li><strong>{{localize this.levelLabelKey}}:</strong> {{this.effect}}</li>
             {{/each}}

@@ -25,18 +25,18 @@
         <div class="tw-flex tw-flex-row tw-items-center tw-justify-between tw-gap-3">
             <div class="tw-flex tw-flex-col">
                 <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Voidcraft.Build.SpentLabel"}}</span>
-                <span class="wh40k-ship-points-budget__spent tw-text-2xl tw-font-semibold {{#if buildValidation.isOverBudget}}tw-text-crimson{{else}}tw-text-success{{/if}}"
+                <span class="tw-text-2xl tw-font-semibold {{#if buildValidation.isOverBudget}}tw-text-crimson{{else}}tw-text-success{{/if}}"
                       data-field="spent">{{buildValidation.spent}}</span>
             </div>
             <div class="tw-text-3xl tw-opacity-40">/</div>
             <div class="tw-flex tw-flex-col tw-items-end">
                 <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Voidcraft.Build.BudgetLabel"}}</span>
-                <span class="wh40k-ship-points-budget__budget tw-text-2xl tw-font-semibold" data-field="budget">{{buildValidation.budget}}</span>
+                <span class="tw-text-2xl tw-font-semibold" data-field="budget">{{buildValidation.budget}}</span>
             </div>
         </div>
 
         {{#if buildValidation.isOverBudget}}
-            <div class="wh40k-ship-points-budget__over-budget tw-rounded tw-border tw-border-crimson tw-bg-crimson/10 tw-p-2 tw-text-sm tw-text-crimson"
+            <div class="tw-rounded tw-border tw-border-crimson tw-bg-crimson/10 tw-p-2 tw-text-sm tw-text-crimson"
                  data-state="over-budget" role="alert">
                 {{localize "WH40K.Voidcraft.Build.OverBudget"}}
             </div>
@@ -46,15 +46,15 @@
             <h4 class="tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-opacity-80">
                 {{localize "WH40K.Voidcraft.Build.EssentialSlots"}}
             </h4>
-            <ul class="wh40k-ship-points-budget__slots tw-flex tw-flex-col tw-gap-0.5 tw-text-sm">
+            <ul class="tw-flex tw-flex-col tw-gap-0.5 tw-text-sm">
                 {{#each essentialSlots as |slot|}}
-                    <li class="wh40k-ship-points-budget__slot tw-flex tw-flex-row tw-items-center tw-justify-between tw-gap-2 tw-rounded tw-px-2 tw-py-1 {{#unless slot.filled}}wh40k-ship-points-budget__slot--missing tw-bg-crimson/10 tw-border tw-border-crimson{{/unless}}"
+                    <li class="tw-flex tw-flex-row tw-items-center tw-justify-between tw-gap-2 tw-rounded tw-px-2 tw-py-1 {{#unless slot.filled}}tw-bg-crimson/10 tw-border tw-border-crimson{{/unless}}"
                         data-slot="{{slot.id}}" data-filled="{{slot.filled}}">
-                        <span class="wh40k-ship-points-budget__slot-label">{{localize slot.labelKey}}</span>
+                        <span>{{localize slot.labelKey}}</span>
                         {{#if slot.filled}}
-                            <span class="wh40k-ship-points-budget__slot-status tw-text-success">{{localize "WH40K.Voidcraft.Build.SlotFilled"}}</span>
+                            <span class="tw-text-success">{{localize "WH40K.Voidcraft.Build.SlotFilled"}}</span>
                         {{else}}
-                            <span class="wh40k-ship-points-budget__slot-status tw-text-crimson tw-font-semibold">{{localize "WH40K.Voidcraft.Build.SlotMissing"}}</span>
+                            <span class="tw-text-crimson tw-font-semibold">{{localize "WH40K.Voidcraft.Build.SlotMissing"}}</span>
                         {{/if}}
                     </li>
                 {{/each}}
@@ -62,7 +62,7 @@
         </div>
 
         <div class="tw-flex tw-flex-row tw-items-center tw-justify-end tw-gap-2">
-            <span class="wh40k-ship-points-budget__status tw-text-sm {{#if buildValidation.isValid}}tw-text-success{{else}}tw-text-crimson{{/if}}"
+            <span class="tw-text-sm {{#if buildValidation.isValid}}tw-text-success{{else}}tw-text-crimson{{/if}}"
                   data-state="{{#if buildValidation.isValid}}valid{{else}}invalid{{/if}}">
                 {{#if buildValidation.isValid}}
                     {{localize "WH40K.Voidcraft.Build.Valid"}}
@@ -71,13 +71,13 @@
                 {{/if}}
             </span>
             <button type="button"
-                    class="wh40k-ship-points-budget__validate tw-rounded tw-border tw-border-gold tw-px-3 tw-py-1 tw-text-sm hover:tw-bg-gold/10 disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                    class="tw-rounded tw-border tw-border-gold tw-px-3 tw-py-1 tw-text-sm hover:tw-bg-gold/10 disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
                     data-action="validateBuild"
                     {{#unless buildValidation.isValid}}data-commit-blocked="true"{{/unless}}>
                 {{localize "WH40K.Voidcraft.Build.Validate"}}
             </button>
             <button type="button"
-                    class="wh40k-ship-points-budget__commit tw-rounded tw-border tw-border-gold tw-px-3 tw-py-1 tw-text-sm tw-bg-gold/20 hover:tw-bg-gold/40 disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                    class="tw-rounded tw-border tw-border-gold tw-px-3 tw-py-1 tw-text-sm tw-bg-gold/20 hover:tw-bg-gold/40 disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
                     data-action="commitBuild"
                     {{#unless buildValidation.isValid}}disabled aria-disabled="true"{{/unless}}>
                 {{localize "WH40K.Voidcraft.Build.Commit"}}

@@ -31,9 +31,9 @@
     {{/inline}}
 
     {{!-- Current value + thresholds --}}
-    <div class="wh40k-dw-renown-readout tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+    <div class="tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.DW.Renown.Current"}}
-        <span class="wh40k-dw-renown-value tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
+        <span class="tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
             {{#if renownPanel.nextRankMin}}
                 {{renownPanel.value}} / {{renownPanel.nextRankMin}}
             {{else}}
@@ -43,7 +43,7 @@
     </div>
 
     {{!-- Progress bar to next threshold --}}
-    <div class="wh40k-dw-renown-progress tw-relative tw-h-2 tw-w-full tw-rounded tw-overflow-hidden tw-bg-[rgba(0,0,0,0.35)]"
+    <div class="tw-relative tw-h-2 tw-w-full tw-rounded tw-overflow-hidden tw-bg-[rgba(0,0,0,0.35)]"
          role="progressbar"
          aria-valuemin="0"
          aria-valuemax="100"
@@ -54,14 +54,14 @@
     </div>
 
     {{#if renownPanel.nextRankLabel}}
-        <p class="wh40k-dw-renown-next tw-m-0 tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]"
+        <p class="tw-m-0 tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]"
            data-next-rank="{{renownPanel.nextRank}}">
             &rarr; {{renownPanel.nextRankLabel}}
         </p>
     {{/if}}
 
     {{!-- Award / Loss mini-buttons --}}
-    <div class="wh40k-dw-renown-actions tw-flex tw-items-center tw-justify-end tw-gap-1">
+    <div class="tw-flex tw-items-center tw-justify-end tw-gap-1">
         <button type="button"
                 class="wh40k-dw-renown-award-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-bronze tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-bronze hover:tw-bg-bronze hover:tw-text-white dw:tw-border-bronze dw:tw-text-bronze"
                 data-action="dwRenownAward"

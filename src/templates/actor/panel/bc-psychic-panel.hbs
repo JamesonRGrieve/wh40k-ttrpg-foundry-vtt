@@ -36,7 +36,7 @@
     {{/inline}}
 
     {{!-- Psyker Class selector --}}
-    <div class="wh40k-bc-psychic-class tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+    <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
                for="bc-psyker-class">
             {{localize "WH40K.BC.Psychic.ClassLabel"}}
@@ -51,7 +51,7 @@
     </div>
 
     {{!-- Base Psy Rating --}}
-    <div class="wh40k-bc-psychic-pr tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+    <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
                for="bc-psy-rating">
             {{localize "WH40K.BC.Psychic.BasePR"}}
@@ -62,11 +62,11 @@
                min="0"
                step="1"
                value="{{psychicPanel.psyRating}}"
-               class="wh40k-bc-psy-rating-input tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-w-16 tw-text-right tw-tabular-nums tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]" />
+               class="tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-w-16 tw-text-right tw-tabular-nums tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]" />
     </div>
 
     {{!-- Mode selector --}}
-    <div class="wh40k-bc-psychic-mode tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+    <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
                for="bc-psy-mode">
             {{localize "WH40K.BC.Psychic.ModeLabel"}}
@@ -82,7 +82,7 @@
     </div>
 
     {{!-- Push Level slider (active only when mode === 'push') --}}
-    <div class="wh40k-bc-psychic-push tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+    <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
                for="bc-push-level">
             {{localize "WH40K.BC.Psychic.Push.Level"}}
@@ -98,14 +98,14 @@
                    {{#unless (eq psychicPanel.mode "push")}}disabled{{/unless}}
                    class="wh40k-bc-push-level-input tw-w-24"
                    data-action="bcPsychicSetPushLevel" />
-            <span class="wh40k-bc-push-level-readout tw-text-[0.78rem] tw-font-semibold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
+            <span class="tw-text-[0.78rem] tw-font-semibold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
                 {{psychicPanel.pushLevel}} / {{psychicPanel.maxPushLevel}}
             </span>
         </div>
     </div>
 
     {{!-- Sustained powers count --}}
-    <div class="wh40k-bc-psychic-sustain tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+    <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
                for="bc-sustain-count">
             {{localize "WH40K.BC.Psychic.Sustain.Count"}}
@@ -120,7 +120,7 @@
     </div>
 
     {{!-- Computed readouts --}}
-    <div class="wh40k-bc-psychic-readout tw-grid tw-grid-cols-3 tw-gap-1 tw-mt-1">
+    <div class="tw-grid tw-grid-cols-3 tw-gap-1 tw-mt-1">
         <div class="wh40k-bc-psychic-effective tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-effective-pr="{{psychicPanel.effectivePR}}">
             {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Psychic.EffectivePR"}}
             <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">

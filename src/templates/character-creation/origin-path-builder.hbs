@@ -224,14 +224,14 @@
  {{> "systems/wh40k-rpg/templates/character-creation/partials/char-gen-pointbuy.hbs"}}
  {{else if charGen.isModeRoll}}
  {{!-- Roll mode: one value rolled per characteristic, locked in order (no draggable bank). --}}
- <div class="csd-roll-mode tw-flex tw-flex-col tw-gap-4">
+ <div class="tw-flex tw-flex-col tw-gap-4">
  <section class="csd-section tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
  <div class="csd-section-header-row tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
  <h3 class="csd-section-header tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
  <i class="fa-solid fa-user-gear"></i>
  {{localize "WH40K.CharacteristicSetup.Characteristics"}}
  </h3>
- <div class="csd-header-actions tw-flex tw-items-center tw-gap-2">
+ <div class="tw-flex tw-items-center tw-gap-2">
  <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="charToggleAdvanced" data-tooltip="{{#if charGen.advancedMode}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOn'}}{{else}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOff'}}{{/if}}">
  <i class="fa-solid {{#if charGen.advancedMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
  </button>
@@ -257,13 +257,13 @@
  <i class="fa-solid fa-dice"></i>
  </button>
  </div>
- <div class="csd-rolls-container csd-rolls-container--bank tw-grid tw-grid-cols-2 tw-gap-2 max-[900px]:tw-grid-cols-[repeat(auto-fit,minmax(110px,1fr))]">
+ <div class="tw-grid tw-grid-cols-2 tw-gap-2 max-[900px]:tw-grid-cols-[repeat(auto-fit,minmax(110px,1fr))]">
  {{#each charGen.rollsBank}}
  <div class="csd-roll-chip tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-16 tw-w-full tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.2)] tw-to-[rgba(36,107,131,0.1)] tw-border-2 tw-border-[rgba(36,107,131,0.4)] tw-rounded-[var(--wh40k-radius-lg)] tw-relative tw-transition-all {{#if isEmpty}}empty tw-border-dashed tw-opacity-60{{/if}} {{#if isAssigned}}assigned tw-opacity-30 tw-cursor-not-allowed{{else if isEmpty}}tw-cursor-pointer hover:tw-opacity-90 hover:tw-border-[var(--csd-gold,#b08d57)]{{else}}tw-cursor-grab hover:tw--translate-y-[3px] hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:tw-border-[rgba(36,107,131,0.9)]{{/if}} {{#if @last}}{{#if (eq ../charGen.rollsBank.length 5)}}tw-col-span-2 tw-justify-self-center tw-w-[calc(50%-0.25rem)] max-[900px]:tw-col-span-1 max-[900px]:tw-w-full{{/if}}{{/if}}"
  data-roll-index="{{index}}"
  {{#unless isEmpty}}{{#unless isAssigned}}draggable="true"{{/unless}}{{/unless}}>
  <span class="csd-roll-value tw-text-[1.4rem] tw-font-bold tw-leading-none {{#if isEmpty}}tw-text-[color:rgba(232,220,196,0.5)]{{else}}tw-text-[color:var(--csd-bone,#e8dcc4)]{{/if}}">{{#if isEmpty}}—{{else}}{{value}}{{/if}}</span>
- <span class="csd-roll-label tw-mt-1 tw-text-[0.65rem] tw-font-bold tw-uppercase tw-text-[color:rgba(232,220,196,0.6)]">{{localize "WH40K.CharacteristicSetup.Roll"}} {{displayIndex}}</span>
+ <span class="tw-mt-1 tw-text-[0.65rem] tw-font-bold tw-uppercase tw-text-[color:rgba(232,220,196,0.6)]">{{localize "WH40K.CharacteristicSetup.Roll"}} {{displayIndex}}</span>
  {{#if isAssigned}}<span class="tw-pointer-events-none tw-absolute tw-top-0.5 tw-right-1 tw-text-[0.7rem] tw-text-[#4caf50]">✓</span>{{/if}}
  </div>
  {{/each}}
@@ -271,14 +271,14 @@
  <p class="tw-text-center tw-text-xs tw-text-[rgba(232,220,196,0.5)] tw-mt-2 tw-m-0 tw-italic">{{localize "WH40K.CharacteristicSetup.ClickToEdit"}}</p>
  </section>
 
- <div class="csd-main-column tw-flex tw-flex-col tw-gap-4">
- <section class="csd-section csd-characteristics tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
+ <div class="tw-flex tw-flex-col tw-gap-4">
+ <section class="csd-section tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
  <div class="csd-section-header-row tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
  <h3 class="csd-section-header tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
  <i class="fa-solid fa-user-gear"></i>
  {{localize "WH40K.CharacteristicSetup.Characteristics"}}
  </h3>
- <div class="csd-header-actions tw-flex tw-items-center tw-gap-2">
+ <div class="tw-flex tw-items-center tw-gap-2">
  <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="charToggleAdvanced" data-tooltip="{{#if charGen.advancedMode}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOn'}}{{else}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOff'}}{{/if}}">
  <i class="fa-solid {{#if charGen.advancedMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
  </button>
@@ -714,7 +714,7 @@
  </div>
  {{/if}}
  {{#if preview.unresolvedAptitudeCollisions.length}}
- <div class="wh40k-opb-aptitude-warning tw-col-span-full tw-mb-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[color:var(--wh40k-accent-warn,#f39c12)] tw-bg-[rgba(243,156,18,0.08)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-light)]" data-testid="aptitude-collision-banner">
+ <div class="tw-col-span-full tw-mb-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[color:var(--wh40k-accent-warn,#f39c12)] tw-bg-[rgba(243,156,18,0.08)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-light)]" data-testid="aptitude-collision-banner">
  <div class="tw-flex tw-items-start tw-gap-[var(--wh40k-space-xs)]">
  <i class="fa-solid fa-triangle-exclamation tw-text-[color:var(--wh40k-accent-warn,#f39c12)] tw-mt-[2px]"></i>
  <div class="tw-flex-1">
@@ -733,7 +733,7 @@
  </div>
  {{/if}}
  {{#if preview.resolvedAptitudeCollisions.length}}
- <div class="wh40k-opb-aptitude-resolved tw-col-span-full tw-mb-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[color:var(--wh40k-gold)] tw-bg-[rgba(var(--wh40k-gold-rgb),0.06)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-light)]" data-testid="aptitude-collision-resolved-banner">
+ <div class="tw-col-span-full tw-mb-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[color:var(--wh40k-gold)] tw-bg-[rgba(var(--wh40k-gold-rgb),0.06)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-light)]" data-testid="aptitude-collision-resolved-banner">
  <div class="tw-flex tw-items-start tw-gap-[var(--wh40k-space-xs)]">
  <i class="fa-solid fa-circle-check tw-text-[color:var(--wh40k-gold)] tw-mt-[2px]"></i>
  <div class="tw-flex-1">

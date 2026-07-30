@@ -32,39 +32,39 @@
     titleClass=(concat "tw-text-gold " (themeClassFor 'accent'))}}
     <div class="tw-flex tw-flex-col tw-gap-2 tw-p-3" data-component="ship-build-summary">
         {{#if hasAppliedModifiers}}
-            <ul class="wh40k-ship-build-summary__rows tw-flex tw-flex-col tw-gap-1">
+            <ul class="tw-flex tw-flex-col tw-gap-1">
                 {{#each buildSummaryRows as |row|}}
                     <li class="wh40k-ship-build-summary__row tw-rounded tw-border tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-panel-body-bg)]"
                         data-stat="{{row.statKey}}">
                         <details class="tw-group">
                             <summary class="tw-flex tw-flex-row tw-items-center tw-justify-between tw-gap-2 tw-cursor-pointer tw-px-2 tw-py-1.5 hover:tw-bg-gold/10">
-                                <span class="wh40k-ship-build-summary__stat-label tw-font-semibold">
+                                <span class="tw-font-semibold">
                                     {{localize row.labelKey}}
                                 </span>
-                                <span class="wh40k-ship-build-summary__stat-values tw-flex tw-flex-row tw-items-baseline tw-gap-2 tw-text-sm">
-                                    <span class="wh40k-ship-build-summary__base tw-opacity-70" data-field="base">{{row.base}}</span>
-                                    <span class="wh40k-ship-build-summary__modifier {{#if (gt row.modifier 0)}}tw-text-success{{else}}{{#if (lt row.modifier 0)}}tw-text-crimson{{/if}}{{/if}}"
+                                <span class="tw-flex tw-flex-row tw-items-baseline tw-gap-2 tw-text-sm">
+                                    <span class="tw-opacity-70" data-field="base">{{row.base}}</span>
+                                    <span class="{{#if (gt row.modifier 0)}}tw-text-success{{else}}{{#if (lt row.modifier 0)}}tw-text-crimson{{/if}}{{/if}}"
                                           data-field="modifier">
                                         {{#if (gt row.modifier 0)}}+{{/if}}{{row.modifier}}
                                     </span>
                                     <span class="tw-opacity-40">=</span>
-                                    <span class="wh40k-ship-build-summary__total tw-text-lg tw-font-semibold tw-text-gold {{themeClassFor 'accent'}}"
+                                    <span class="tw-text-lg tw-font-semibold tw-text-gold {{themeClassFor 'accent'}}"
                                           data-field="total">{{row.total}}</span>
                                 </span>
                             </summary>
-                            <ul class="wh40k-ship-build-summary__sources tw-flex tw-flex-col tw-gap-0.5 tw-px-3 tw-py-2 tw-text-sm tw-border-t tw-border-[var(--wh40k-border-color-light)]">
+                            <ul class="tw-flex tw-flex-col tw-gap-0.5 tw-px-3 tw-py-2 tw-text-sm tw-border-t tw-border-[var(--wh40k-border-color-light)]">
                                 {{#each row.sources as |src|}}
-                                    <li class="wh40k-ship-build-summary__source tw-flex tw-flex-row tw-items-center tw-justify-between tw-gap-2"
+                                    <li class="tw-flex tw-flex-row tw-items-center tw-justify-between tw-gap-2"
                                         data-source-uuid="{{src.uuid}}"
                                         data-source-compendium="{{src.sourceUuid}}"
                                         data-source-type="{{src.type}}">
-                                        <span class="wh40k-ship-build-summary__source-name tw-opacity-90">
+                                        <span class="tw-opacity-90">
                                             {{src.name}}
                                             <span class="tw-text-xs tw-opacity-50 tw-ml-1">
                                                 ({{localize (concat "WH40K.Voidcraft.Build.SourceType." src.type)}})
                                             </span>
                                         </span>
-                                        <span class="wh40k-ship-build-summary__source-value tw-font-semibold {{#if (gt src.value 0)}}tw-text-success{{else}}{{#if (lt src.value 0)}}tw-text-crimson{{/if}}{{/if}}">
+                                        <span class="tw-font-semibold {{#if (gt src.value 0)}}tw-text-success{{else}}{{#if (lt src.value 0)}}tw-text-crimson{{/if}}{{/if}}">
                                             {{#if (gt src.value 0)}}+{{/if}}{{src.value}}
                                         </span>
                                     </li>
@@ -75,7 +75,7 @@
                 {{/each}}
             </ul>
         {{else}}
-            <p class="wh40k-ship-build-summary__empty tw-text-sm tw-opacity-70 tw-italic">
+            <p class="tw-text-sm tw-opacity-70 tw-italic">
                 {{localize "WH40K.Voidcraft.Build.SummaryEmpty"}}
             </p>
         {{/if}}

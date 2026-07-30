@@ -39,7 +39,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-battlefield-panel" accentBorderClass="ow:tw-border-brass" accentIconClass="ow:tw-text-brass" icon="fa-satellite-dish" label=(localize "WH40K.OW.Battlefield.Label") rootAttrs=(safeAttrs "data-ow-battlefield-cooldown" battlefieldPanel.supportCooldown "data-ow-battlefield-cooldown-active" battlefieldPanel.cooldownActive) hasRightSlot=true}}
     {{!-- Header right slot: cooldown badge --}}
     {{#*inline "rightSlot"}}
-        <span class="wh40k-ow-battlefield-panel__cooldown-badge tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-px-2 tw-py-0.5 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]
+        <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-px-2 tw-py-0.5 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]
                      {{#if battlefieldPanel.cooldownActive}}tw-border-crimson tw-text-crimson tw-bg-crimson/10{{else}}tw-border-success tw-text-success tw-bg-success/10{{/if}}"
               data-cooldown-status="{{#if battlefieldPanel.cooldownActive}}active{{else}}ready{{/if}}">
             <i class="fas {{#if battlefieldPanel.cooldownActive}}fa-hourglass-half{{else}}fa-check{{/if}}"></i>
@@ -52,7 +52,7 @@
     {{/inline}}
 
     {{!-- Support Asset Request affordance --}}
-    <div class="wh40k-ow-battlefield-panel__support tw-flex tw-flex-col tw-gap-1.5 tw-px-2 tw-py-2 tw-rounded
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-px-2 tw-py-2 tw-rounded
                 tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]">
         <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem]">
             <span class="tw-text-[color:var(--wh40k-text-muted)]">
@@ -63,7 +63,7 @@
             </span>
         </div>
         <button type="button"
-                class="wh40k-ow-battlefield-panel__request-btn tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-1 tw-cursor-pointer tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-1 tw-cursor-pointer tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
                 data-action="owRequestSupport"
                 title="{{localize 'WH40K.OW.Battlefield.Support.Request.Title'}}"
                 {{#unless battlefieldPanel.canRequestSupport}}disabled aria-disabled="true"{{/unless}}>
@@ -87,7 +87,7 @@
         {{#if battlefieldPanel.availableAwards.length}}
             <ul class="wh40k-ow-battlefield-panel__award-list tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-1">
                 {{#each battlefieldPanel.availableAwards}}
-                    <li class="wh40k-ow-battlefield-panel__award-row tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem]"
+                    <li class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem]"
                         data-award-id="{{this.id}}"
                         data-conferred="{{#if this.conferred}}true{{else}}false{{/if}}">
                         <span class="tw-flex tw-items-center tw-gap-1.5 tw-truncate">
@@ -96,7 +96,7 @@
                                   title="{{this.description}}">{{this.name}}</span>
                         </span>
                         <button type="button"
-                                class="wh40k-ow-battlefield-panel__award-toggle tw-inline-flex tw-items-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1.5 tw-py-0.5 tw-cursor-pointer tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-bright)] hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white"
+                                class="tw-inline-flex tw-items-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1.5 tw-py-0.5 tw-cursor-pointer tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-bright)] hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white"
                                 data-action="owToggleAward"
                                 data-award-id="{{this.id}}"
                                 title="{{localize 'WH40K.OW.RegimentalAward.Label'}}">
@@ -112,7 +112,7 @@
         {{/if}}
 
         {{#if battlefieldPanel.merged.hasAny}}
-            <div class="wh40k-ow-battlefield-panel__award-merged tw-flex tw-flex-col tw-gap-0.5 tw-mt-1 tw-px-2 tw-py-1 tw-rounded
+            <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mt-1 tw-px-2 tw-py-1 tw-rounded
                         tw-border-l-2 tw-border-gold tw-bg-[color:var(--wh40k-panel-bg-translucent,rgba(0,0,0,0.12))]
                         tw-text-[0.75rem]"
                  data-field="award-merged">

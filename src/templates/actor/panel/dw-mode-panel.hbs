@@ -28,7 +28,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-mode-panel" accentBorderClass="dw:tw-border-accent-combat" accentIconClass="dw:tw-text-accent-combat" icon="fa-shield-halved" label=(localize "WH40K.DW.Mode.Label") rootAttrs=(safeAttrs "data-dw-combat-mode" modePanel.mode "data-dw-renown-rank" modePanel.renownRank) hasRightSlot=true}}
     {{!-- Header right slot: current mode badge --}}
     {{#*inline "rightSlot"}}
-        <span class="wh40k-dw-mode-current tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
+        <span class="tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
               data-mode="{{modePanel.mode}}">
             {{#if (eq modePanel.mode "squad")}}
                 {{localize "WH40K.DW.Mode.Squad"}}
@@ -39,13 +39,13 @@
     {{/inline}}
 
     {{!-- Support Range table (Table 7-9) for the actor's Renown rank --}}
-    <div class="wh40k-dw-mode-support-range tw-flex tw-flex-col tw-gap-1"
+    <div class="tw-flex tw-flex-col tw-gap-1"
          data-renown-rank="{{modePanel.renownRank}}">
         <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
             {{localize "WH40K.DW.Renown.Label"}}: {{localize (concat "WH40K.DW.Renown.Rank." modePanel.renownRankKey)}}
         </span>
-        <div class="wh40k-dw-mode-support-grid tw-grid tw-grid-cols-2 tw-gap-1">
-            <div class="wh40k-dw-mode-support-row tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+        <div class="tw-grid tw-grid-cols-2 tw-gap-1">
+            <div class="tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                  data-channel="visual">
                 <span class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-muted)]">
                     {{localize "WH40K.DW.Mode.SupportRange.Visual"}}
@@ -55,7 +55,7 @@
                     {{modePanel.supportRange.visual}} m
                 </span>
             </div>
-            <div class="wh40k-dw-mode-support-row tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+            <div class="tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                  data-channel="vocal">
                 <span class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-muted)]">
                     {{localize "WH40K.DW.Mode.SupportRange.Vocal"}}
@@ -70,10 +70,10 @@
 
     {{!-- Sustained abilities (RAW: only meaningful in Squad Mode). --}}
     {{#if (eq modePanel.mode "squad")}}
-        <div class="wh40k-dw-mode-sustained tw-flex tw-flex-col tw-gap-1">
+        <div class="tw-flex tw-flex-col tw-gap-1">
             {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" labelKey="WH40K.DW.Mode.Ability.Sustained"}}
             {{#if modePanel.sustainedAbilities.length}}
-                <ul class="wh40k-dw-mode-sustained-list tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1">
+                <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1">
                     {{#each modePanel.sustainedAbilities}}
                         <li class="wh40k-dw-mode-sustained-item tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                             data-ability-id="{{this.id}}">
@@ -83,7 +83,7 @@
                     {{/each}}
                 </ul>
             {{else}}
-                <span class="wh40k-dw-mode-sustained-empty tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                <span class="tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
                     —
                 </span>
             {{/if}}
@@ -91,7 +91,7 @@
     {{/if}}
 
     {{!-- Mode-transition controls --}}
-    <div class="wh40k-dw-mode-controls tw-flex tw-items-center tw-justify-end tw-gap-2">
+    <div class="tw-flex tw-items-center tw-justify-end tw-gap-2">
         {{#if (eq modePanel.mode "solo")}}
             <button type="button"
                     class="wh40k-dw-mode-enter-btn tw-inline-flex tw-items-center tw-justify-center tw-gap-1.5 tw-bg-transparent tw-border tw-border-solid tw-border-accent-combat tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.75rem] tw-text-accent-combat hover:tw-bg-accent-combat hover:tw-text-white"

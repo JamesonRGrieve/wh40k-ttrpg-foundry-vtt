@@ -34,7 +34,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-supplements-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson" icon="fa-skull-crossbones" label=(localize "WH40K.BC.Supplements.PanelHeader") rootAttrs=(safeAttrs "data-bc-daemon-engine-rating" supplementsPanel.daemonEngineRating "data-bc-quick-and-the-dead-active" supplementsPanel.quickAndTheDeadActive)}}
 
     {{!-- Daemon Engine(X) rating --}}
-    <div class="wh40k-bc-daemon-engine tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+    <div class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         <div class="tw-flex tw-items-center tw-justify-between tw-gap-2">
             <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
                    for="bc-daemon-engine-rating">
@@ -62,7 +62,7 @@
     </div>
 
     {{!-- Quick and the Dead toggle --}}
-    <div class="wh40k-bc-quick-and-the-dead tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+    <div class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         <div class="tw-flex tw-items-center tw-justify-between tw-gap-2">
             <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
                    for="bc-quick-and-the-dead">
@@ -82,7 +82,7 @@
             </button>
         </div>
         {{#if supplementsPanel.quickAndTheDeadActive}}
-            <div class="wh40k-bc-quick-and-the-dead-readout tw-grid tw-grid-cols-2 tw-gap-1 tw-mt-1">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-1 tw-mt-1">
                 <div class="wh40k-bc-quick-and-the-dead-bonus tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                      data-alignment-bonus="{{supplementsPanel.quickAndTheDeadBonus}}">
                     {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Supplements.QuickAndTheDead.AlignmentBonusLabel"}}

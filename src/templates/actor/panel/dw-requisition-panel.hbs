@@ -33,9 +33,9 @@
     {{/inline}}
 
     {{!-- RP pool readout --}}
-    <div class="wh40k-dw-rp tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+    <div class="tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.DW.Requisition.RP.Available"}}
-        <input class="wh40k-dw-rp-input tw-w-20 tw-text-right tw-text-[0.85rem] tw-font-semibold tw-tabular-nums tw-bg-transparent tw-border-0"
+        <input class="tw-w-20 tw-text-right tw-text-[0.85rem] tw-font-semibold tw-tabular-nums tw-bg-transparent tw-border-0"
                type="number"
                data-dtype="Number"
                name="system.requisitionPoints"
@@ -45,9 +45,9 @@
     </div>
 
     {{!-- Mission rating selector --}}
-    <div class="wh40k-dw-mission tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
+    <div class="tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.DW.Requisition.Mission.Rating"}}
-        <select class="wh40k-dw-mission-select tw-w-32 tw-text-[0.78rem] tw-bg-transparent"
+        <select class="tw-w-32 tw-text-[0.78rem] tw-bg-transparent"
                 name="system.missionRating">
             <option value="standard" {{#if (eq requisitionPanel.missionRating "standard")}}selected{{/if}}>
                 {{localize "WH40K.DW.Requisition.Mission.Standard"}}
@@ -65,16 +65,16 @@
     </div>
 
     {{!-- Action row --}}
-    <div class="wh40k-dw-requisition-actions tw-flex tw-items-center tw-justify-end tw-gap-2">
+    <div class="tw-flex tw-items-center tw-justify-end tw-gap-2">
         <button type="button"
-                class="wh40k-dw-requisition-pool-btn tw-inline-flex tw-items-center tw-gap-1 tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] hover:tw-bg-[color:var(--wh40k-border-color-light)] dw:hover:tw-bg-accent-combat dw:hover:tw-text-white"
+                class="tw-inline-flex tw-items-center tw-gap-1 tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] hover:tw-bg-[color:var(--wh40k-border-color-light)] dw:hover:tw-bg-accent-combat dw:hover:tw-text-white"
                 data-action="dwRequisitionPool"
                 title="{{localize 'WH40K.DW.Requisition.Pool.Title'}}">
             <i class="fas fa-users"></i>
             <span>{{localize "WH40K.DW.Requisition.Pool.Title"}}</span>
         </button>
         <button type="button"
-                class="wh40k-dw-requisition-item-btn tw-inline-flex tw-items-center tw-gap-1 tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-accent-combat tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-accent-combat hover:tw-bg-[color:var(--wh40k-border-color-light)] dw:hover:tw-bg-accent-combat dw:hover:tw-text-white"
+                class="tw-inline-flex tw-items-center tw-gap-1 tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-accent-combat tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] dw:tw-text-accent-combat hover:tw-bg-[color:var(--wh40k-border-color-light)] dw:hover:tw-bg-accent-combat dw:hover:tw-text-white"
                 data-action="dwRequisitionItem"
                 title="{{localize 'WH40K.DW.Requisition.Label'}}">
             <i class="fas fa-hand-holding"></i>

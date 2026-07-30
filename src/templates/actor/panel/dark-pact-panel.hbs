@@ -32,32 +32,32 @@
         </div>
         {{#each system.pacts as |pact index|}}
             <div class="wh40k-dark-pact-row tw-grid tw-grid-cols-[2fr_2fr_1fr_1fr_2fr_2fr] tw-items-center tw-px-[4px] tw-py-[6px]" data-pact-index="{{index}}" data-pact-uuid="{{pact.pactUuid}}">
-                <div class="wh40k-dark-pact-name tw-px-[4px] tw-truncate">
+                <div class="tw-px-[4px] tw-truncate">
                     {{uuid-name pact.pactUuid}}
                 </div>
-                <div class="wh40k-dark-pact-disposition tw-px-[4px] tw-flex tw-items-center tw-justify-center tw-gap-2">
+                <div class="tw-px-[4px] tw-flex tw-items-center tw-justify-center tw-gap-2">
                     <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 tw-transition-[opacity,transform] tw-duration-200 hover:tw-opacity-100 hover:tw-scale-110" data-action="adjustPactDisposition" data-pact-index="{{index}}" data-delta="-1" title="-1">
                         <span class="material-icons">remove_circle</span>
                     </button>
-                    <span class="wh40k-dark-pact-disposition-value tw-min-w-[2ch] tw-text-center tw-font-semibold">{{pact.disposition}}</span>
+                    <span class="tw-min-w-[2ch] tw-text-center tw-font-semibold">{{pact.disposition}}</span>
                     <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 tw-transition-[opacity,transform] tw-duration-200 hover:tw-opacity-100 hover:tw-scale-110" data-action="adjustPactDisposition" data-pact-index="{{index}}" data-delta="1" title="+1">
                         <span class="material-icons">add_circle</span>
                     </button>
                 </div>
-                <div class="wh40k-dark-pact-discovered tw-px-[4px] tw-text-center">
+                <div class="tw-px-[4px] tw-text-center">
                     <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100" data-action="togglePactDiscovered" data-pact-index="{{index}}" title="{{localize 'WH40K.DarkPact.Discovered'}}">
                         <span class="material-icons">{{#if pact.discovered}}visibility{{else}}visibility_off{{/if}}</span>
                     </button>
                 </div>
-                <div class="wh40k-dark-pact-payment tw-px-[4px] tw-text-center">
+                <div class="tw-px-[4px] tw-text-center">
                     <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100" data-action="togglePactPayment" data-pact-index="{{index}}" title="{{localize 'WH40K.DarkPact.PaymentCurrent'}}">
                         <span class="material-icons">{{#if pact.paymentCurrent}}check_circle{{else}}cancel{{/if}}</span>
                     </button>
                 </div>
-                <div class="wh40k-dark-pact-boon tw-px-[4px] tw-text-[0.9em]">
+                <div class="tw-px-[4px] tw-text-[0.9em]">
                     {{#if pact.boon}}{{pact.boon}}{{else}}<span class="tw-opacity-60">—</span>{{/if}}
                 </div>
-                <div class="wh40k-dark-pact-bane tw-px-[4px] tw-text-[0.9em]">
+                <div class="tw-px-[4px] tw-text-[0.9em]">
                     {{#if pact.bane}}{{pact.bane}}{{else}}<span class="tw-opacity-60">—</span>{{/if}}
                 </div>
             </div>

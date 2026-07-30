@@ -37,17 +37,17 @@
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-mount-panel" accentBorderClass="ow:tw-border-brass" accentIconClass="ow:tw-text-brass" icon="fa-horse" label=(localize "WH40K.OW.Mount.Label") rootAttrs=(safeAttrs "data-mounted" (iff mountPanel.mount "true" "false"))}}
     {{!-- Current mount + trait badges --}}
-    <div class="wh40k-ow-mount-current tw-flex tw-flex-col tw-gap-1">
+    <div class="tw-flex tw-flex-col tw-gap-1">
         {{#if mountPanel.mount}}
             <div class="wh40k-ow-mount-current-readout tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-brass/40"
                  data-mount-id="{{mountPanel.mount.mountId}}">
-                <span class="wh40k-ow-mount-name tw-font-bold tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-bright)]">
+                <span class="tw-font-bold tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-bright)]">
                     <i class="fas fa-horse-head ow:tw-text-brass tw-mr-1"></i>
                     {{mountPanel.mount.mountName}}
                 </span>
-                <ul class="wh40k-ow-mount-traits tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-wrap tw-gap-1 tw-justify-end">
+                <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-wrap tw-gap-1 tw-justify-end">
                     {{#each mountPanel.mount.traits}}
-                        <li class="wh40k-ow-mount-trait-badge tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-solid tw-border-brass/60 tw-bg-[rgba(60,40,8,0.25)] tw-text-[0.68rem] tw-uppercase tw-tracking-[0.04em] tw-text-brass"
+                        <li class="tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-solid tw-border-brass/60 tw-bg-[rgba(60,40,8,0.25)] tw-text-[0.68rem] tw-uppercase tw-tracking-[0.04em] tw-text-brass"
                             data-trait-id="{{this.id}}">
                             {{localize this.labelKey}}
                         </li>
@@ -55,30 +55,30 @@
                 </ul>
             </div>
         {{else}}
-            <div class="wh40k-ow-mount-current-empty tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+            <div class="tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
                 {{localize "WH40K.OW.Mount.Dismounted"}}
             </div>
         {{/if}}
     </div>
 
     {{!-- Available mounted actions --}}
-    <div class="wh40k-ow-mount-actions tw-flex tw-flex-col tw-gap-1">
+    <div class="tw-flex tw-flex-col tw-gap-1">
         <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1.5">
             {{#each mountPanel.actions}}
-                <li class="wh40k-ow-mount-row tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                <li class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                     data-action-id="{{this.actionId}}"
                     data-action-timing="{{this.timing}}">
                     <div class="tw-flex tw-flex-col tw-flex-1 tw-min-w-0 tw-gap-0.5">
-                        <span class="wh40k-ow-mount-action-name tw-text-[0.85rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">
+                        <span class="tw-text-[0.85rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">
                             {{localize this.nameKey}}
                         </span>
-                        <span class="wh40k-ow-mount-action-effect tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                        <span class="tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
                             {{localize this.descriptionKey}}
                         </span>
                         {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" rootClass="wh40k-ow-mount-action-cost ow:tw-text-brass" labelKey=this.timingKey}}
                     </div>
                     <button type="button"
-                            class="wh40k-ow-mount-issue-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-brass hover:tw-bg-brass hover:tw-text-black disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                            class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-brass hover:tw-bg-brass hover:tw-text-black disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
                             data-action="owMountedAction"
                             data-action-id="{{this.actionId}}"
                             title="{{localize 'WH40K.OW.Mount.Issue.Title'}}"

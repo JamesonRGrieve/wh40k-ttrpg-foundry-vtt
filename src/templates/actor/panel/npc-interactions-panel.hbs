@@ -27,7 +27,7 @@
         {{#if npcInteractions.empty}}
             <p class="tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-muted)] tw-italic">{{localize "WH40K.NpcInteractions.Empty"}}</p>
         {{else}}
-            <table class="wh40k-npc-interactions-table tw-w-full tw-text-sm tw-border-collapse">
+            <table class="tw-w-full tw-text-sm tw-border-collapse">
                 <thead>
                     <tr class="tw-text-xs tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">
                         <th class="tw-text-left tw-py-1 tw-pr-2 tw-font-semibold">{{localize "WH40K.NpcInteractions.PCColumn"}}</th>
@@ -41,11 +41,11 @@
                             <td class="tw-py-1 tw-pr-2 tw-truncate">
                                 <span class="tw-font-semibold">{{pcName}}</span>
                                 {{#if atCap}}
-                                    <span class="wh40k-npc-interactions-atcap tw-ml-2 tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-wide tw-bg-gold/20 tw-text-gold-raw" data-tooltip="{{localize "WH40K.NpcInteractions.CapTooltip"}}">{{localize "WH40K.NpcInteractions.AtCapBadge"}}</span>
+                                    <span class="tw-ml-2 tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-wide tw-bg-gold/20 tw-text-gold-raw" data-tooltip="{{localize "WH40K.NpcInteractions.CapTooltip"}}">{{localize "WH40K.NpcInteractions.AtCapBadge"}}</span>
                                 {{/if}}
                             </td>
                             <td class="tw-py-1 tw-px-2 tw-text-right tw-font-mono">
-                                <span class="wh40k-npc-interactions-count">{{count}}</span>
+                                <span>{{count}}</span>
                                 <span class="tw-text-[color:var(--wh40k-text-muted)]"> / {{cap}}</span>
                             </td>
                             <td class="tw-py-1 tw-pl-2 tw-text-right">

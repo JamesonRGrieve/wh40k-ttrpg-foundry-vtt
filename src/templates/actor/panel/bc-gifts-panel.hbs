@@ -34,7 +34,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-gifts-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson" icon="fa-gift" label=(localize "WH40K.BC.Gifts.Label") rootAttrs=(safeAttrs "data-bc-current-alignment" giftsPanel.currentAlignment) hasRightSlot=true}}
     {{!-- Header right slot: gift count --}}
     {{#*inline "rightSlot"}}
-        <span class="wh40k-bc-gifts-count tw-text-[0.72rem] tw-tabular-nums tw-text-[color:var(--wh40k-text-muted)]"
+        <span class="tw-text-[0.72rem] tw-tabular-nums tw-text-[color:var(--wh40k-text-muted)]"
               data-gift-count="{{giftsPanel.gifts.length}}">
             {{giftsPanel.gifts.length}}
         </span>
@@ -42,16 +42,16 @@
 
     {{!-- Gifts list --}}
     {{#if giftsPanel.gifts.length}}
-        <ul class="wh40k-bc-gifts-list tw-flex tw-flex-col tw-gap-2 tw-list-none tw-m-0 tw-p-0">
+        <ul class="tw-flex tw-flex-col tw-gap-2 tw-list-none tw-m-0 tw-p-0">
             {{#each giftsPanel.gifts as |gift|}}
                 <li class="wh40k-bc-gift-entry tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                     data-gift-id="{{gift.id}}"
                     data-applied-alignment="{{gift.appliedAlignment}}">
                     <div class="tw-flex tw-items-center tw-justify-between tw-gap-2">
-                        <span class="wh40k-bc-gift-name tw-font-semibold tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-bright)]">
+                        <span class="tw-font-semibold tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-bright)]">
                             {{gift.name}}
                         </span>
-                        <span class="wh40k-bc-gift-rider-tag tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson tw-text-crimson bc:tw-text-crimson-light">
+                        <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson tw-text-crimson bc:tw-text-crimson-light">
                             {{#if (eq gift.appliedAlignment "khorne")}}{{localize "WH40K.BC.Gifts.Rider.Khorne"}}{{/if}}
                             {{#if (eq gift.appliedAlignment "slaanesh")}}{{localize "WH40K.BC.Gifts.Rider.Slaanesh"}}{{/if}}
                             {{#if (eq gift.appliedAlignment "nurgle")}}{{localize "WH40K.BC.Gifts.Rider.Nurgle"}}{{/if}}
@@ -61,16 +61,16 @@
                     </div>
 
                     {{#if gift.baseDescription}}
-                        <div class="wh40k-bc-gift-base tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-muted)]">
+                        <div class="tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-muted)]">
                             <span class="tw-uppercase tw-tracking-[0.05em] tw-text-[0.65rem]">{{localize "WH40K.BC.Gifts.Resolved.BaseDescription"}}:</span>
-                            <span class="wh40k-bc-gift-base-text tw-italic">{{gift.baseDescription}}</span>
+                            <span class="tw-italic">{{gift.baseDescription}}</span>
                         </div>
                     {{/if}}
 
                     {{#if gift.riderDescription}}
-                        <div class="wh40k-bc-gift-rider tw-text-[0.72rem] tw-text-crimson bc:tw-text-crimson-light"
+                        <div class="tw-text-[0.72rem] tw-text-crimson bc:tw-text-crimson-light"
                              data-rider-alignment="{{gift.appliedAlignment}}">
-                            <span class="wh40k-bc-gift-rider-text tw-italic">{{gift.riderDescription}}</span>
+                            <span class="tw-italic">{{gift.riderDescription}}</span>
                         </div>
                     {{/if}}
 
@@ -81,7 +81,7 @@
                     {{/if}}
 
                     {{#if gift.characteristicDelta.length}}
-                        <div class="wh40k-bc-gift-deltas tw-flex tw-flex-wrap tw-gap-1">
+                        <div class="tw-flex tw-flex-wrap tw-gap-1">
                             {{#each gift.characteristicDelta as |delta|}}
                                 <span class="wh40k-bc-gift-delta tw-tabular-nums tw-text-[0.7rem] tw-px-1 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.25)] tw-text-[color:var(--wh40k-text-bright)]"
                                       data-delta-key="{{delta.key}}"
@@ -95,7 +95,7 @@
             {{/each}}
         </ul>
     {{else}}
-        <div class="wh40k-bc-gifts-empty tw-px-2 tw-py-2 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+        <div class="tw-px-2 tw-py-2 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
             <i class="fas fa-skull"></i>
             {{localize "WH40K.BC.Gifts.Label"}} &mdash; 0
         </div>
@@ -108,7 +108,7 @@
             <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
                 {{localize "WH40K.BC.Gifts.Resolved.AppliedAlignment"}}: <span class="tw-text-[color:var(--wh40k-text-bright)]">{{giftsPanel.currentAlignment}}</span>
             </span>
-            <div class="wh40k-bc-gifts-merged-row tw-flex tw-flex-wrap tw-gap-1">
+            <div class="tw-flex tw-flex-wrap tw-gap-1">
                 {{#each giftsPanel.mergedDelta as |delta|}}
                     <span class="wh40k-bc-gifts-merged-delta tw-tabular-nums tw-text-[0.75rem] tw-font-semibold tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson tw-text-[color:var(--wh40k-text-bright)]"
                           data-delta-key="{{delta.key}}"

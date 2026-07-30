@@ -1,13 +1,13 @@
 {{!-- Fate Uses reference dialog — read-only listing of canonical Fate Point uses. --}}
-<div class="wh40k-fate-uses tw-p-3 tw-flex tw-flex-col tw-gap-2" data-wh40k-system="{{gameSystem}}">
+<div class="tw-p-3 tw-flex tw-flex-col tw-gap-2" data-wh40k-system="{{gameSystem}}">
     <p class="tw-text-[0.85rem] tw-leading-snug tw-m-0 tw-text-[color:var(--color-text-secondary)]">
         {{localize "WH40K.FateUses.Intro"}}
     </p>
 
     <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1.5">
         {{#each uses as |use|}}
-            <li class="wh40k-fate-uses__entry tw-flex tw-gap-2 tw-items-start tw-p-2 tw-rounded tw-border tw-border-solid tw-border-[color:var(--color-border-light)] tw-bg-[rgba(0,0,0,0.10)]
-                       {{#if use.burn}}tw-border-l-4 tw-border-l-crimson bc:tw-border-l-crimson-light dh1:tw-border-l-gold-raw dh2:tw-border-l-crimson dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure{{/if}}">
+            <li class="tw-flex tw-gap-2 tw-items-start tw-p-2 tw-rounded tw-border tw-border-solid tw-border-[color:var(--color-border-light)] tw-bg-[rgba(0,0,0,0.10)]
+ {{#if use.burn}}tw-border-l-4 tw-border-l-crimson bc:tw-border-l-crimson-light dh1:tw-border-l-gold-raw dh2:tw-border-l-crimson dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure{{/if}}">
                 {{#if use.icon}}
                     <i class="fas {{use.icon}} tw-text-[1.1rem] tw-mt-[2px] {{themeClassFor 'accent'}}"></i>
                 {{/if}}

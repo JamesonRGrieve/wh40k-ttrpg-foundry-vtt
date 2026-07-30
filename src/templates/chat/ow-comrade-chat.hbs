@@ -37,10 +37,10 @@
         subtitle=comradeName
         imageIcon="fa-user-shield"
         gameSystem=gameSystem}}
-    <div class="wh40k-ow-comrade-chat tw-flex tw-flex-col tw-gap-2 tw-p-3" data-comrade-event="{{event.kind}}">
+    <div class="tw-flex tw-flex-col tw-gap-2 tw-p-3" data-comrade-event="{{event.kind}}">
         {{#if (eq event.kind "hit-transfer")}}
-            <div class="wh40k-ow-comrade-chat__hit tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded
-                        tw-border-l-2 tw-border-crimson tw-bg-[var(--wh40k-panel-bg-translucent)]"
+            <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded
+ tw-border-l-2 tw-border-crimson tw-bg-[var(--wh40k-panel-bg-translucent)]"
                  data-reason="{{event.reason}}">
                 <i class="fas fa-crosshairs tw-text-crimson"></i>
                 <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">
@@ -55,26 +55,26 @@
 
         {{#if (eq event.kind "state-change")}}
             {{#if event.transitioned}}
-                <div class="wh40k-ow-comrade-chat__state tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
-                            tw-border tw-border-solid tw-border-[var(--wh40k-border-color)]"
+                <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
+ tw-border tw-border-solid tw-border-[var(--wh40k-border-color)]"
                      data-previous-state="{{event.previousState}}" data-new-state="{{event.newState}}">
                     {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.78rem]" labelKey=event.previousStateKey}}
                     <i class="fas fa-arrow-right tw-text-[color:var(--wh40k-text-muted)]"></i>
                     <span class="tw-text-[0.85rem] tw-font-semibold
-                                 {{#if (eq event.newState 'unharmed')}}tw-text-success{{/if}}
-                                 {{#if (eq event.newState 'wounded')}}tw-text-gold{{/if}}
-                                 {{#if (eq event.newState 'dead')}}tw-text-crimson{{/if}}">
+ {{#if (eq event.newState 'unharmed')}}tw-text-success{{/if}}
+ {{#if (eq event.newState 'wounded')}}tw-text-gold{{/if}}
+ {{#if (eq event.newState 'dead')}}tw-text-crimson{{/if}}">
                         {{localize event.newStateKey}}
                     </span>
                 </div>
                 {{#if event.replaced}}
-                    <div class="wh40k-ow-comrade-chat__replaced tw-text-[0.78rem] tw-italic tw-text-success tw-px-3">
+                    <div class="tw-text-[0.78rem] tw-italic tw-text-success tw-px-3">
                         <i class="fas fa-user-plus tw-mr-1"></i>
                         {{localize "WH40K.OW.ComradeHealing.Replacement.Available"}}
                     </div>
                 {{/if}}
             {{else}}
-                <div class="wh40k-ow-comrade-chat__no-op tw-text-[0.78rem] tw-italic tw-text-[color:var(--wh40k-text-muted)] tw-px-3 tw-py-2">
+                <div class="tw-text-[0.78rem] tw-italic tw-text-[color:var(--wh40k-text-muted)] tw-px-3 tw-py-2">
                     <i class="fas fa-circle-info tw-mr-1"></i>
                     {{localize "WH40K.OW.Comrade.Chat.NoOp"}}
                 </div>
