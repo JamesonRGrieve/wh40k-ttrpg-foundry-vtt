@@ -52,19 +52,24 @@ module.exports = {
         ".wh40k-npc-sidebar-header": {
             "background": "var(--color-bg-secondary, #252525)",
         },
+        // Nav-item dressing that survived the css→Tailwind port. The properties
+        // an NPC-specific value was authored for but NEVER rendered are gone:
+        // tailwind/legacy-components.js's `nav.wh40k-navigation .wh40k-nav-item`
+        // block owns padding / border-radius / font-size / transition, the
+        // `:hover` background and the `.active` background+bottom-border, and it
+        // always won here — first by carrying a priority flag, and once that flag
+        // is retired by nothing at all, because the declarations below were deleted
+        // rather than allowed to take over (the shipped look is the spec). Do NOT re-add
+        // them: they would silently restyle every NPC sheet's nav.
         ".wh40k-nav-item": {
             "display": "flex",
             "align-items": "center",
             "gap": "0.5rem",
-            "padding": "0.5rem 0.6rem",
             "background": "transparent",
             "border": "1px solid transparent",
-            "border-radius": "6px",
             "color": "var(--color-text-light-secondary, #888)",
-            "font-size": "0.8rem",
             "font-weight": "500",
             "cursor": "pointer",
-            "transition": "all var(--wh40k-transition-fast)",
             "text-decoration": "none",
             "width": "100%",
             "text-align": "left",
@@ -75,14 +80,16 @@ module.exports = {
                 "flex-shrink": "0",
             },
             "&:hover": {
-                "background": "rgba(255, 255, 255, 0.05)",
                 "color": "var(--color-text-light-primary, #f0f0f0)",
                 "border-color": "var(--color-border-secondary, #444)",
             },
             "&.active": {
-                "background": "rgb(from var(--npc-accent-primary) r g b / 0.15)",
                 "color": "var(--npc-accent-primary)",
-                "border-color": "var(--npc-accent-primary)",
+                // Three longhands, not `border-color`: the bottom edge is the
+                // legacy block's `border-bottom: 2px solid #c4871d` accent bar.
+                "border-top-color": "var(--npc-accent-primary)",
+                "border-right-color": "var(--npc-accent-primary)",
+                "border-left-color": "var(--npc-accent-primary)",
                 "font-weight": "600",
                 "i": {
                     "color": "var(--npc-accent-primary)",
