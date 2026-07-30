@@ -218,6 +218,8 @@ interface PreparedEliteAdvance {
     owned: boolean;
     canPurchase: boolean;
     cantAfford: boolean;
+    /** Human-readable reasons the character does not qualify; empty when they do. */
+    unmet: string[];
 }
 
 interface PreparedTraitPanel {
@@ -1217,7 +1219,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const index = await pack.getIndex({ fields: ['name', 'type', 'system.step', 'system.description.value'] });
             for (const rawEntry of index) {
                 const entry = rawEntry as CompendiumIndexEntry;
-                const eliteSys = entry['system'] as { step?: string; xpCost?: number; description?: { value?: string } } | null | undefined;
+                const eliteSys = entry['system'] as
+                    | { step?: string; xpCost?: number; prerequisites?: Prerequisite[]; description?: { value?: string } }
+                    | null
+                    | undefined;
                 if (eliteSys?.step !== 'elite') continue;
                 const key = entry.name.toLowerCase();
                 if (elitesByName.has(key)) continue;
@@ -1242,6 +1247,15 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: regex capture groups may be undefined */
                 const summary = summaryMatch ? (summaryMatch[1] ?? '').trim() : '';
 
+                // RAW gates each Elite Advance behind characteristic / skill / talent
+                // minimums. They were defined in a table in `src/` that nothing
+                // imported, so every elite was offered to every character on
+                // affordability alone — a 35-Willpower acolyte could buy Astropath.
+                // The gates are now authored on the item and checked by the live
+                // validator (#514).
+                /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: eliteSys is a cast Record; prerequisites may be absent on content not yet authored */
+                const prereqs = eliteSys?.prerequisites ?? [];
+                const unmet = prereqs.length > 0 ? checkPrerequisites(this.actor, prereqs).unmet : [];
                 elitesByName.set(key, {
                     id: `elite:${entry.name}`,
                     uuid: entry.uuid ?? '',
@@ -1249,8 +1263,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     summary,
                     cost,
                     owned,
-                    canPurchase: !owned && available >= cost,
+                    canPurchase: !owned && available >= cost && unmet.length === 0,
                     cantAfford: !owned && available < cost,
+                    unmet,
                 });
             }
         }
