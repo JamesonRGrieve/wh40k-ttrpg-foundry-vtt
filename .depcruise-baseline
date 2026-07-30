@@ -3,11 +3,11 @@
     "documents-must-not-depend-on-applications"
   ],
   "totals": {
-    "totalViolations": 127
+    "totalViolations": 126
   },
   "byRule": {
     "no-circular": 117,
-    "no-orphans": 7,
+    "no-orphans": 6,
     "sheets-must-not-import-data-models-directly": 3
   }
 }
