@@ -1004,7 +1004,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             if (bracket) {
                 rd.rangeName = bracket.label;
                 rd.rangeBonus = bracket.modifier;
-                rd['rangeBracket'] = this._selectedRangeBracket;
+                rd.rangeBracket = this._selectedRangeBracket;
             }
         }
 
@@ -1028,7 +1028,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                           modifierLabel: b.modifier >= 0 ? `+${b.modifier}` : `${b.modifier}`,
                           rangeText,
                           // eslint-disable-next-line no-restricted-syntax -- boundary: _selectedRangeBracket is dialog state (string | null), not a DataModel field
-                          isSelected: (this._selectedRangeBracket ?? rd['rangeBracket']) === key,
+                          isSelected: (this._selectedRangeBracket ?? rd.rangeBracket) === key,
                       };
                   })
                 : [];
@@ -1094,7 +1094,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Selected range summary for collapsed header
         // eslint-disable-next-line no-restricted-syntax -- boundary: _selectedRangeBracket is dialog state (string | null), not a DataModel field
-        const currentRangeKey = this._selectedRangeBracket ?? rd['rangeBracket'];
+        const currentRangeKey = this._selectedRangeBracket ?? rd.rangeBracket;
         const currentRangeBracket = rangeBrackets.find((b) => b.key === currentRangeKey) ?? rangeBrackets.find((b) => b.key === 'standard') ?? rangeBrackets[0];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- currentRangeBracket may be undefined due to noUncheckedIndexedAccess
         const selectedRangeSummary = currentRangeBracket
@@ -1146,7 +1146,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // Range data
             rangeBrackets,
             // eslint-disable-next-line no-restricted-syntax -- boundary: _selectedRangeBracket is dialog state (string | null), not a DataModel field
-            selectedRangeBracket: this._selectedRangeBracket ?? rd['rangeBracket'],
+            selectedRangeBracket: this._selectedRangeBracket ?? rd.rangeBracket,
             rangeModifiedBy: rd['rangeModifiedBy'],
             isMeltaRange: rd['isMeltaRange'],
             maxRange,
@@ -1877,7 +1877,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             const rd = this.rollData;
             rd.rangeName = bracketData.label;
             rd.rangeBonus = bracketData.modifier;
-            rd['rangeBracket'] = bracket;
+            rd.rangeBracket = bracket;
         }
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
