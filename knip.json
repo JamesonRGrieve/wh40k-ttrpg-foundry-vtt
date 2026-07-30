@@ -30,6 +30,8 @@
     "src/module/types/icon-keys.d.ts",
     "foundry-v14-overrides.d.ts",
     "src/module/types/fvtt-config.ts",
+    ".storybook/storybook.d.ts",
+    "tests/ambient-modules.d.ts",
     "dist/**"
   ],
   "ignoreBinaries": [
