@@ -10,6 +10,7 @@ import {
     type DynamicModifierSituation,
 } from '../rules/dynamic-modifiers.ts';
 import { hitDropdown } from '../rules/hit-locations.ts';
+import { type ActorStateSource, collectActorStates } from '../rules/situation-tags.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { postFlattenedInstanceToChat } from './roll-helpers.ts';
 import { buildWoundTransition, prepareWoundTransitionTooltip, type WoundTransition } from './wound-transition.ts';
@@ -28,7 +29,7 @@ interface ActorHordeState {
 }
 
 /** Minimal actor shape needed for damage assignment. Exported for tests. */
-export interface ActorLike {
+export interface ActorLike extends ActorStateSource {
     system: {
         armour: Record<string, { value: number; toughnessBonus: number }>;
         // `max` is on the DataModel schema for both tracks; this local view
@@ -352,7 +353,13 @@ export class AssignDamageData {
             penetration: 0,
             armourPoints: 0,
         };
-        const situation: DynamicModifierSituation = { isCrit: true };
+        // The "acting actor" for a defender-side hook is the defender, so `states`
+        // comes from ITS conditions (#518). Target tags and a range band are
+        // deliberately absent: assignment knows neither the attacker nor the
+        // distance, so a defender hook gated on `vs*` / `rangeBand` has no subject
+        // here. That is why the attack-path inert-trigger diagnostic skips
+        // defender-side hooks — it would otherwise fault them for this gap.
+        const situation: DynamicModifierSituation = { isCrit: true, states: collectActorStates(this.actor) };
         let total = 0;
         for (const component of collectDynamicComponents(items, ctx, situation)) {
             if (component.side === 'defender' && component.target === 'critReduction' && component.mode === 'add') {

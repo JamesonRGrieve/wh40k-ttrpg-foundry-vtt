@@ -8,6 +8,7 @@ import {
     type DynamicModifierItemLike,
     type DynamicModifierSituation,
     evaluateScale,
+    findInertTriggers,
     hookApplies,
     modeDelta,
     ownsActivatableHook,
@@ -180,6 +181,23 @@ describe('hookApplies — trigger filtering', () => {
         expect(hookApplies(hook, { isCrit: false, isRanged: true })).toBe(false);
     });
 
+    it('scopes a target condition to ITS axis once the situation supplies the grouping (#518)', () => {
+        const axes = { vsType: ['daemon'], vsFaction: ['blood-pact'], vsAlignment: ['khorne'] };
+        expect(hookApplies(makeHook({ condition: 'vsType', conditionValue: 'daemon' }), { targetTagAxes: axes })).toBe(true);
+        // The faction tag is on the target, but not on the axis `vsType` names.
+        expect(hookApplies(makeHook({ condition: 'vsType', conditionValue: 'blood-pact' }), { targetTagAxes: axes })).toBe(false);
+        expect(hookApplies(makeHook({ condition: 'vsFaction', conditionValue: 'blood-pact' }), { targetTagAxes: axes })).toBe(true);
+        expect(hookApplies(makeHook({ condition: 'vsAlignment', conditionValue: 'khorne' }), { targetTagAxes: axes })).toBe(true);
+    });
+
+    it('slugs the authored value so casing and spacing never decide a match (#518)', () => {
+        for (const authored of ['Blood Pact', 'blood-pact', 'BLOOD  PACT']) {
+            expect(hookApplies(makeHook({ condition: 'vsFaction', conditionValue: authored }), { targetTags: ['blood-pact'] })).toBe(true);
+        }
+        expect(hookApplies(makeHook({ condition: 'whileState', conditionValue: 'On Fire' }), { states: ['on-fire'] })).toBe(true);
+        expect(hookApplies(makeHook({ when: 'atRangeBand', conditionValue: 'Point Blank' }), { rangeBand: 'point-blank' })).toBe(true);
+    });
+
     it('specializationMode gates on the owning item specialization vs the attack mode (Deathdealer)', () => {
         const hook = makeHook({ when: 'onCrit', condition: 'specializationMode' });
         // Deathdealer (Melee) on a melee crit fires; on a ranged crit it does not.
@@ -231,6 +249,80 @@ describe('collectDynamicComponents', () => {
     it('tolerates items with no hooks', () => {
         const bare: DynamicModifierItemLike = { name: 'Plain', system: {} };
         expect(collectDynamicComponents([bare], makeCtx(), {})).toEqual([]);
+    });
+});
+
+describe('findInertTriggers', () => {
+    function item(name: string, hooks: DynamicModifierEntry[]): DynamicModifierItemLike {
+        return { name, system: { modifiers: { dynamicModifiers: hooks } } };
+    }
+
+    const emptyAxes = { vsType: [], vsFaction: [], vsAlignment: [] };
+    const daemonAxes = { vsType: ['daemon'], vsFaction: [], vsAlignment: [] };
+
+    it('reports a target condition whose axis carries nothing — no value could ever match', () => {
+        const hook = item('Daemonbane', [makeHook({ condition: 'vsType', conditionValue: 'daemon' })]);
+        expect(findInertTriggers([hook], { targetTagAxes: emptyAxes })).toEqual([{ source: 'Daemonbane', condition: 'vsType', value: 'daemon' }]);
+    });
+
+    it('reports a target condition when the situation carries no tag grouping at all', () => {
+        const hook = item('Daemonbane', [makeHook({ condition: 'vsFaction', conditionValue: 'blood-pact' })]);
+        expect(findInertTriggers([hook], {})).toHaveLength(1);
+    });
+
+    it('stays silent once the axis is populated — a non-match is not a defect', () => {
+        const hook = item('Daemonbane', [makeHook({ condition: 'vsType', conditionValue: 'ork' })]);
+        expect(findInertTriggers([hook], { targetTagAxes: daemonAxes })).toEqual([]);
+    });
+
+    it('separates "no states supplied" from "actor has no states"', () => {
+        const hook = item('Berserk', [makeHook({ condition: 'whileState', conditionValue: 'frenzy' })]);
+        expect(findInertTriggers([hook], {})).toHaveLength(1);
+        expect(findInertTriggers([hook], { states: [] })).toEqual([]);
+    });
+
+    it('reports a rangeBand condition and an atRangeBand timing on a bandless situation', () => {
+        const banded = item('Melta Surge', [makeHook({ condition: 'rangeBand', conditionValue: 'point-blank' })]);
+        const timed = item('Marksman', [makeHook({ when: 'atRangeBand', conditionValue: 'extreme' })]);
+        expect(findInertTriggers([banded, timed], {})).toEqual([
+            { source: 'Melta Surge', condition: 'rangeBand', value: 'point-blank' },
+            { source: 'Marksman', condition: 'atRangeBand', value: 'extreme' },
+        ]);
+        expect(findInertTriggers([banded, timed], { rangeBand: 'point-blank' })).toEqual([]);
+    });
+
+    it('scans conditional grants too — they use the same trigger primitives', () => {
+        const grant: DynamicModifierItemLike = {
+            name: 'Daemon Slayer',
+            system: {
+                modifiers: {
+                    grantedEffects: [{ kind: 'quality', name: 'Felling', uuid: '', level: 2, when: 'always', condition: 'vsType', conditionValue: 'daemon' }],
+                },
+            },
+        };
+        expect(findInertTriggers([grant], { targetTagAxes: emptyAxes })).toEqual([{ source: 'Daemon Slayer', condition: 'vsType', value: 'daemon' }]);
+    });
+
+    it('de-duplicates repeats of the same dead trigger', () => {
+        const twice = item('Daemonbane', [
+            makeHook({ condition: 'vsType', conditionValue: 'daemon' }),
+            makeHook({ condition: 'vsType', conditionValue: 'daemon' }),
+        ]);
+        expect(findInertTriggers([twice], { targetTagAxes: emptyAxes })).toHaveLength(1);
+    });
+
+    it('skips defender-side hooks — they are judged on the assignment path, not this one', () => {
+        const trueGrit = item('True Grit', [makeHook({ side: 'defender', target: 'critReduction', condition: 'vsType', conditionValue: 'daemon' })]);
+        expect(findInertTriggers([trueGrit], { targetTagAxes: emptyAxes })).toEqual([]);
+    });
+
+    it('never reports a hook whose trigger reads an input the situation always supplies', () => {
+        const plain = item('Crushing Blow', [
+            makeHook({ condition: 'melee' }),
+            makeHook({ when: 'onCrit' }),
+            makeHook({ condition: 'action', conditionValue: 'Charge' }),
+        ]);
+        expect(findInertTriggers([plain], {})).toEqual([]);
     });
 });
 

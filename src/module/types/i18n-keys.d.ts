@@ -4002,6 +4002,7 @@ export type I18nKey =
     | 'WH40K.Warning.AutoDamageFailed'
     | 'WH40K.Warning.GiveTargetNotOwned'
     | 'WH40K.Warning.HydrationFailed'
+    | 'WH40K.Warning.InertModifierHook'
     | 'WH40K.Warning.InvalidAmmunition'
     | 'WH40K.Warning.InvalidCharacteristic'
     | 'WH40K.Warning.InvalidItem'
