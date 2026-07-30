@@ -5,22 +5,21 @@
 
 module.exports = {
     ".wh40k-rpg.sheet.actor.player": {
-        // !important is required: tailwind/legacy-components.js's
-        // actorSheetOverrides scope-rule
-        // `.wh40k-rpg.sheet.actor .window-content { display: flex !important }`
-        // would otherwise win the cascade despite our higher specificity.
-        // Matches the original `_npc-sheet.css` which carried !important here.
+        // Wins over tailwind/legacy-components.js's actorSheetOverrides
+        // `.wh40k-rpg.sheet.actor .window-content { display: flex }` on
+        // specificity alone: (0,5,0) against (0,4,0). Both rules used to carry a
+        // priority flag purely to cancel each other out; neither does now.
         ".window-content": {
-            "display": "grid !important",
+            "display": "grid",
             // Sidebar column hugs the portrait width (#320): the portrait caps at
             // 160px (actor-identity.hbs `tw-max-w-[160px]`) inside the header's
             // px-3 padding + 2px right border ≈ 186px, so a 192px max removes the
             // dead space the old 220px left around the centred portrait while
             // still letting the column shrink to a 180px floor.
-            "grid-template-columns": "minmax(180px, 192px) minmax(0, 1fr) !important",
-            "grid-template-rows": "minmax(0, 1fr) !important",
-            "overflow": "hidden !important",
-            "height": "100% !important",
+            "grid-template-columns": "minmax(180px, 192px) minmax(0, 1fr)",
+            "grid-template-rows": "minmax(0, 1fr)",
+            "overflow": "hidden",
+            "height": "100%",
             "background": "var(--color-bg-primary, #1a1a1a)",
         },
         ".wh40k-navigation .wh40k-nav-item": {
@@ -42,12 +41,14 @@ module.exports = {
             "min-height": "0",
             "min-width": "0",
             "padding": "0.75rem",
-            ".tab": {
-                "display": "none",
-                "&.active": {
-                    "display": "block",
-                },
-            },
+            // NO `.tab` visibility rules here. Tab show/hide belongs to
+            // tailwind/legacy-components.js's `.wh40k-body .tab{.active}` pair,
+            // which lays the active tab out as a flex column with a
+            // --wh40k-space-md gap between panels. The `display:block` this
+            // block used to declare was (0,8,0) against that rule's (0,6,1), so
+            // it only ever lost because the legacy rule carried a priority flag;
+            // once the flag went it would have won and collapsed every NPC
+            // sheet's inter-panel gap (~36px of content shift on all 14).
         },
         ".wh40k-npc-sidebar-header": {
             "background": "var(--color-bg-secondary, #252525)",
