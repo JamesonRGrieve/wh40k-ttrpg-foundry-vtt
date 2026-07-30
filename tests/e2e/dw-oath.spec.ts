@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -37,6 +38,7 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
             let releaseDisabled = false;
             let activeAttr = '';
             let idAttr = '';
+            let hasReadout = false;
             let readout = '';
 
             try {
@@ -52,6 +54,7 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
                         releaseDisabled,
                         activeAttr,
                         idAttr,
+                        hasReadout,
                         readout,
                         error: 'fetch not available on globalThis',
                     };
@@ -67,6 +70,7 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
                         releaseDisabled,
                         activeAttr,
                         idAttr,
+                        hasReadout,
                         readout,
                         error: 'Handlebars not available on globalThis',
                     };
@@ -102,13 +106,14 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
                     const section = host.querySelector('section.wh40k-dw-oath-panel');
                     const swearBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwSwearOath"]');
                     const releaseBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwReleaseOath"]');
-                    const readoutEl = host.querySelector('.wh40k-dw-oath-current');
+                    const readoutEl = host.querySelector('[data-wh40k-hook="dw-oath-current"]');
                     hasSwearButton = swearBtn !== null;
                     hasReleaseButton = releaseBtn !== null;
                     swearDisabled = swearBtn?.disabled === true;
                     releaseDisabled = releaseBtn?.disabled === true;
                     activeAttr = section?.getAttribute('data-dw-oath-active') ?? '';
                     idAttr = section?.getAttribute('data-dw-oath-id') ?? '';
+                    hasReadout = readoutEl !== null;
                     readout = readoutEl?.textContent.trim().replace(/\s+/g, ' ') ?? '';
                 }
 
@@ -131,10 +136,13 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
                 releaseDisabled,
                 activeAttr,
                 idAttr,
+                hasReadout,
                 readout,
                 error,
             };
         });
+
+        const hookCounts = await countHooks(page);
 
         await snap(page, 'dw-oath-panel');
 
@@ -156,12 +164,14 @@ test.describe.serial('DwOathPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, ['dw-oath-current']);
         expect(result.hasSwearButton, 'swear button should render').toBe(true);
         expect(result.hasReleaseButton, 'release button should render').toBe(true);
         expect(result.swearDisabled, 'swear button should be enabled (leader, no active oath)').toBe(false);
         expect(result.releaseDisabled, 'release button should be disabled (no active oath)').toBe(true);
         expect(result.activeAttr, 'data-dw-oath-active should be "false"').toBe('false');
         expect(result.idAttr, 'data-dw-oath-id should be empty when no Oath sworn').toBe('');
+        expect(result.hasReadout, 'the [data-wh40k-hook="dw-oath-current"] readout element must exist').toBe(true);
         expect(result.readout, 'readout should show an em-dash placeholder when no Oath sworn').toContain('—');
 
         recordCoverage('panel.render', 'DwOathPanel');

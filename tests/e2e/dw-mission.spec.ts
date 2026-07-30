@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -135,20 +136,20 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
                 if (rendered) {
                     const section = host.querySelector('section.wh40k-dw-mission-panel');
                     missionActiveAttr = section?.getAttribute('data-dw-mission-active') ?? '';
-                    missionNameText = host.querySelector('.wh40k-dw-mission-name')?.textContent.trim() ?? '';
-                    ratingAttr = host.querySelector('.wh40k-dw-mission-rating')?.getAttribute('data-rating') ?? '';
+                    missionNameText = host.querySelector('[data-wh40k-hook="dw-mission-name"]')?.textContent.trim() ?? '';
+                    ratingAttr = host.querySelector('[data-wh40k-hook="dw-mission-rating"]')?.getAttribute('data-rating') ?? '';
 
-                    const objectiveButtons = Array.from(host.querySelectorAll('button.wh40k-dw-mission-objective-toggle'));
+                    const objectiveButtons = Array.from(host.querySelectorAll('button[data-wh40k-hook="dw-mission-objective-toggle"]'));
                     objectiveButtonCount = objectiveButtons.length;
                     firstObjectiveAction = objectiveButtons[0]?.getAttribute('data-action') ?? '';
                     firstObjectiveId = objectiveButtons[0]?.getAttribute('data-objective-id') ?? '';
 
-                    const complicationButtons = Array.from(host.querySelectorAll('button.wh40k-dw-mission-complication-toggle'));
+                    const complicationButtons = Array.from(host.querySelectorAll('button[data-wh40k-hook="dw-mission-complication-toggle"]'));
                     complicationButtonCount = complicationButtons.length;
                     firstComplicationAction = complicationButtons[0]?.getAttribute('data-action') ?? '';
                     firstComplicationId = complicationButtons[0]?.getAttribute('data-complication-id') ?? '';
 
-                    const completeBtn = host.querySelector('button.wh40k-dw-mission-complete-btn');
+                    const completeBtn = host.querySelector('button[data-wh40k-hook="dw-mission-complete-btn"]');
                     hasCompleteBtn = completeBtn !== null;
                     completeBtnAction = completeBtn?.getAttribute('data-action') ?? '';
                 }
@@ -179,6 +180,8 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+
         await snap(page, 'dw-mission-panel');
 
         // Tear down so the host doesn't leak into the next serial test.
@@ -199,6 +202,13 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, [
+            'dw-mission-rating',
+            'dw-mission-name',
+            'dw-mission-objective-toggle',
+            'dw-mission-complication-toggle',
+            'dw-mission-complete-btn',
+        ]);
         expect(result.missionActiveAttr, 'mission-active flag should be true').toBe('true');
         expect(result.missionNameText, 'mission name should render').toContain('Strike on Blackthorn VII');
         expect(result.ratingAttr, 'rating attribute should round-trip').toBe('priority');

@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -120,18 +121,18 @@ test.describe.serial('DwSpecialAmmoPanel (Tier B)', () => {
                 rendered = host.firstElementChild instanceof HTMLElement;
 
                 if (rendered) {
-                    const loadedSpan = host.querySelector('.wh40k-dw-ammo-loaded');
+                    const loadedSpan = host.querySelector('[data-wh40k-hook="dw-ammo-loaded"]');
                     loadedText = loadedSpan?.textContent.trim() ?? '';
                     loadedAttr = loadedSpan?.getAttribute('data-loaded') ?? '';
 
-                    const radios = host.querySelectorAll<HTMLInputElement>('input.wh40k-dw-ammo-radio');
+                    const radios = host.querySelectorAll<HTMLInputElement>('input[data-wh40k-hook="dw-ammo-radio"]');
                     radioCount = radios.length;
-                    const selected = host.querySelector<HTMLInputElement>('input.wh40k-dw-ammo-radio[checked]');
+                    const selected = host.querySelector<HTMLInputElement>('input[data-wh40k-hook="dw-ammo-radio"][checked]');
                     selectedRadioId = selected?.getAttribute('data-ammo-id') ?? '';
                     selectedRadioChecked = selected !== null;
-                    actionAttr = host.querySelector('input.wh40k-dw-ammo-radio')?.getAttribute('data-action') ?? '';
+                    actionAttr = host.querySelector('input[data-wh40k-hook="dw-ammo-radio"]')?.getAttribute('data-action') ?? '';
 
-                    hasPenetrationLine = host.querySelector('li.wh40k-dw-ammo-effect-line[data-effect="bonusPenetration"]') !== null;
+                    hasPenetrationLine = host.querySelector('li[data-wh40k-hook="dw-ammo-effect-line"][data-effect="bonusPenetration"]') !== null;
                 }
 
                 // Anchor the rendered DOM so snap() captures live pixels.
@@ -157,6 +158,8 @@ test.describe.serial('DwSpecialAmmoPanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+
         await snap(page, 'dw-special-ammo-panel');
 
         // Tear down so the host doesn't leak into the next serial test.
@@ -177,6 +180,7 @@ test.describe.serial('DwSpecialAmmoPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, ['dw-ammo-loaded', 'dw-ammo-radio', 'dw-ammo-effect-line']);
         expect(result.loadedAttr, 'loaded data attr should be "kraken"').toBe('kraken');
         expect(result.loadedText, 'loaded label should be "Kraken"').toBe('Kraken');
         // Eight radios: 'standard' + the seven Special-Issue ids.

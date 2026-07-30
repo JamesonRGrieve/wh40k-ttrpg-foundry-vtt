@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -201,12 +202,12 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
                 rendered = host.firstElementChild instanceof HTMLElement;
 
                 if (rendered) {
-                    distinctionEntryCount = host.querySelectorAll('button.wh40k-dw-distinction-entry').length;
-                    markCount = host.querySelectorAll('button.wh40k-dw-distinction-mark').length;
-                    hasMergedReadout = host.querySelector('.wh40k-dw-distinction-merged') !== null;
-                    mergedCharBadgeCount = host.querySelectorAll('.wh40k-dw-distinction-merged-char').length;
-                    mergedTraitBadgeCount = host.querySelectorAll('.wh40k-dw-distinction-merged-trait').length;
-                    lockedEntries = host.querySelectorAll('.wh40k-dw-distinction-locked').length;
+                    distinctionEntryCount = host.querySelectorAll('button[data-wh40k-hook="dw-distinction-entry"]').length;
+                    markCount = host.querySelectorAll('button[data-wh40k-hook="dw-distinction-mark"]').length;
+                    hasMergedReadout = host.querySelector('[data-wh40k-hook="dw-distinction-merged"]') !== null;
+                    mergedCharBadgeCount = host.querySelectorAll('[data-wh40k-hook="dw-distinction-merged-char"]').length;
+                    mergedTraitBadgeCount = host.querySelectorAll('[data-wh40k-hook="dw-distinction-merged-trait"]').length;
+                    lockedEntries = host.querySelectorAll('[data-wh40k-hook="dw-distinction-locked"]').length;
 
                     const dutyBtn = host.querySelector<HTMLButtonElement>('button[data-distinction-id="duty-unto-death"]');
                     toggleInitialPressed = dutyBtn?.getAttribute('aria-pressed') ?? '';
@@ -241,6 +242,8 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+
         await snap(page, 'dw-distinction-panel');
 
         await page.evaluate(() => {
@@ -256,6 +259,14 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, [
+            'dw-distinction-entry',
+            'dw-distinction-locked',
+            'dw-distinction-mark',
+            'dw-distinction-merged',
+            'dw-distinction-merged-char',
+            'dw-distinction-merged-trait',
+        ]);
         expect(result.distinctionEntryCount, 'expected 4 Distinction entries').toBe(4);
         expect(result.markCount, 'expected 3 Mark entries (catalogue Marks)').toBe(3);
         expect(result.hasMergedReadout, 'merged-effects readout should render').toBe(true);

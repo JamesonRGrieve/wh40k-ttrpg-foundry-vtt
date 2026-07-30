@@ -30,12 +30,12 @@
     {{!-- Header right slot: Unnatural Str/Tgh readouts --}}
     {{#*inline "rightSlot"}}
         <div class="tw-flex tw-items-center tw-gap-2">
-            <span class="wh40k-dw-astartes-sb tw-text-[0.72rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
+            <span data-wh40k-hook="dw-astartes-sb" class="tw-text-[0.72rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
                   data-strength-bonus="{{astartesPanel.strengthBonus}}"
                   title="{{localize 'WH40K.DW.Astartes.Unnatural.Strength'}}">
                 SB ×2 = {{astartesPanel.strengthBonus}}
             </span>
-            <span class="wh40k-dw-astartes-tb tw-text-[0.72rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
+            <span data-wh40k-hook="dw-astartes-tb" class="tw-text-[0.72rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
                   data-toughness-bonus="{{astartesPanel.toughnessBonus}}"
                   title="{{localize 'WH40K.DW.Astartes.Unnatural.Toughness'}}">
                 TB ×2 = {{astartesPanel.toughnessBonus}}
@@ -45,7 +45,7 @@
 
     {{!-- Black Carapace power-armour interface banner (only when active) --}}
     {{#if astartesPanel.hasBlackCarapace}}
-        <div class="wh40k-dw-astartes-bc-banner tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-bright)] tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded dw:tw-border-accent-combat">
+        <div data-wh40k-hook="dw-astartes-bc-banner" class="tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-bright)] tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded dw:tw-border-accent-combat">
             <i class="fas fa-link dw:tw-text-accent-combat"></i>
             {{localize "WH40K.DW.Astartes.BlackCarapace.PowerArmorInterface"}}
         </div>
@@ -56,8 +56,7 @@
                 md:tw-grid-cols-3 lg:tw-grid-cols-4">
         {{#each astartesPanel.implants}}
             <button type="button"
-                    class="wh40k-dw-astartes-implant tw-flex tw-flex-col tw-items-start tw-gap-0.5 tw-px-2 tw-py-1.5 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-text-left tw-transition-colors
-                           {{#if this.has}}tw-bg-[color:var(--wh40k-accent-combat,rgba(120,40,40,0.25))] tw-border-[color:var(--wh40k-accent-combat)] tw-text-[color:var(--wh40k-text-bright)] dw:tw-border-accent-combat{{else}}tw-bg-[rgba(0,0,0,0.18)] tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+                    data-wh40k-hook="dw-astartes-implant" class="tw-flex tw-flex-col tw-items-start tw-gap-0.5 tw-px-2 tw-py-1.5 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-text-left tw-transition-colors {{#if this.has}}tw-bg-[color:var(--wh40k-accent-combat,rgba(120,40,40,0.25))] tw-border-[color:var(--wh40k-accent-combat)] tw-text-[color:var(--wh40k-text-bright)] dw:tw-border-accent-combat{{else}}tw-bg-[rgba(0,0,0,0.18)] tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
                     data-action="dwAstartesToggleImplant"
                     data-implant-id="{{this.id}}"
                     data-implanted="{{#if this.has}}true{{else}}false{{/if}}"

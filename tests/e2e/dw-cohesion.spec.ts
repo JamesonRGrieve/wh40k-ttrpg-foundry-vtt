@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -103,7 +104,7 @@ test.describe.serial('DwCohesionPanel (Tier B)', () => {
 
                 if (rendered) {
                     const section = host.querySelector('section.wh40k-dw-cohesion-panel');
-                    const readoutEl = host.querySelector('.wh40k-dw-cohesion-readout');
+                    const readoutEl = host.querySelector('[data-wh40k-hook="dw-cohesion-readout"]');
                     readout = (readoutEl?.textContent ?? '').trim().replace(/\s+/g, ' ');
                     const rallyBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwCohesionRally"]');
                     const recoverBtn = host.querySelector<HTMLButtonElement>('button[data-action="dwCohesionRecoverObjective"]');
@@ -142,6 +143,8 @@ test.describe.serial('DwCohesionPanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+
         await snap(page, 'dw-cohesion-panel');
 
         // Tear down so the next serial test starts clean.
@@ -162,6 +165,7 @@ test.describe.serial('DwCohesionPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, ['dw-cohesion-readout']);
         expect(result.readout, 'pool readout should be "3 / 6"').toBe('3 / 6');
         expect(result.hasRallyButton, 'rally button should render').toBe(true);
         expect(result.hasRecoverButton, 'recover-objective button should render').toBe(true);

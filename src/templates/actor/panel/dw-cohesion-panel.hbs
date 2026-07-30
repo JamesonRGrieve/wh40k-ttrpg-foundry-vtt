@@ -27,7 +27,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-cohesion-panel" accentBorderClass="dw:tw-border-bronze" accentIconClass="dw:tw-text-bronze" icon="fa-shield-halved" label=(localize "WH40K.DW.Cohesion.Label") rootAttrs=(safeAttrs "data-dw-cohesion-current" cohesionPanel.current "data-dw-cohesion-max" cohesionPanel.max) hasRightSlot=true}}
     {{!-- Header right slot: pool readout --}}
     {{#*inline "rightSlot"}}
-        <span class="wh40k-dw-cohesion-readout tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] tw-tabular-nums"
+        <span data-wh40k-hook="dw-cohesion-readout" class="tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] tw-tabular-nums"
               title="{{localize 'WH40K.DW.Cohesion.Pool'}}">
             {{cohesionPanel.current}} / {{cohesionPanel.max}}
         </span>

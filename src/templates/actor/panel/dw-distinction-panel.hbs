@@ -54,9 +54,7 @@
         {{#if distinctionPanel.distinctions.length}}
             {{#each distinctionPanel.distinctions}}
                 <button type="button"
-                        class="wh40k-dw-distinction-entry tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-text-left tw-transition-colors
-                               {{#if this.earned}}tw-bg-[color:var(--wh40k-accent-combat,rgba(120,40,40,0.25))] tw-border-[color:var(--wh40k-accent-combat)] tw-text-[color:var(--wh40k-text-bright)] dw:tw-border-accent-combat{{else}}tw-bg-[rgba(0,0,0,0.18)] tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}
-                               {{#if this.rankTooLow}}tw-opacity-60{{/if}}"
+                        data-wh40k-hook="dw-distinction-entry" class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-text-left tw-transition-colors {{#if this.earned}}tw-bg-[color:var(--wh40k-accent-combat,rgba(120,40,40,0.25))] tw-border-[color:var(--wh40k-accent-combat)] tw-text-[color:var(--wh40k-text-bright)] dw:tw-border-accent-combat{{else}}tw-bg-[rgba(0,0,0,0.18)] tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}} {{#if this.rankTooLow}}tw-opacity-60{{/if}}"
                         data-action="dwToggleDistinction"
                         data-distinction-id="{{this.id}}"
                         data-earned="{{#if this.earned}}true{{else}}false{{/if}}"
@@ -75,7 +73,7 @@
                             +{{this.renownReward}}
                         </span>
                         {{#if this.rankTooLow}}
-                            <span class="wh40k-dw-distinction-locked tw-italic" title="{{localize 'WH40K.DW.Distinction.Earn.RankTooLow'}}">
+                            <span data-wh40k-hook="dw-distinction-locked" class="tw-italic" title="{{localize 'WH40K.DW.Distinction.Earn.RankTooLow'}}">
                                 <i class="fas fa-lock"></i>
                             </span>
                         {{/if}}
@@ -102,8 +100,7 @@
         {{#if distinctionPanel.marks.length}}
             {{#each distinctionPanel.marks}}
                 <button type="button"
-                        class="wh40k-dw-distinction-mark tw-flex tw-flex-col tw-items-start tw-gap-0.5 tw-px-2 tw-py-1.5 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-text-left tw-transition-colors
-                               {{#if this.borne}}tw-bg-[color:var(--wh40k-accent-combat,rgba(120,40,40,0.25))] tw-border-[color:var(--wh40k-accent-combat)] tw-text-[color:var(--wh40k-text-bright)] dw:tw-border-accent-combat{{else}}tw-bg-[rgba(0,0,0,0.18)] tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+                        data-wh40k-hook="dw-distinction-mark" class="tw-flex tw-flex-col tw-items-start tw-gap-0.5 tw-px-2 tw-py-1.5 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-text-left tw-transition-colors {{#if this.borne}}tw-bg-[color:var(--wh40k-accent-combat,rgba(120,40,40,0.25))] tw-border-[color:var(--wh40k-accent-combat)] tw-text-[color:var(--wh40k-text-bright)] dw:tw-border-accent-combat{{else}}tw-bg-[rgba(0,0,0,0.18)] tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
                         data-action="dwToggleMark"
                         data-mark-id="{{this.id}}"
                         data-borne="{{#if this.borne}}true{{else}}false{{/if}}"
@@ -128,9 +125,7 @@
     </div>
 
     {{!-- Merged characteristic deltas + traits readout --}}
-    <section class="wh40k-dw-distinction-merged tw-flex tw-flex-col tw-gap-1 tw-mt-1 tw-px-2 tw-py-1.5 tw-rounded
-                    tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
-                    tw-bg-[rgba(0,0,0,0.18)] dw:tw-border-accent-combat">
+    <section data-wh40k-hook="dw-distinction-merged" class="tw-flex tw-flex-col tw-gap-1 tw-mt-1 tw-px-2 tw-py-1.5 tw-rounded tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-bg-[rgba(0,0,0,0.18)] dw:tw-border-accent-combat">
         <header class="tw-flex tw-items-center tw-gap-1.5">
             <i class="fas fa-balance-scale dw:tw-text-accent-combat"></i>
             <h5 class="tw-m-0 tw-text-[0.72rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
@@ -144,7 +139,7 @@
             </span>
             {{#if distinctionPanel.merged.characteristicDelta.length}}
                 {{#each distinctionPanel.merged.characteristicDelta}}
-                    <span class="wh40k-dw-distinction-merged-char tw-px-1.5 tw-py-0.5 tw-rounded tw-text-[0.7rem] tw-font-semibold tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-accent-combat">
+                    <span data-wh40k-hook="dw-distinction-merged-char" class="tw-px-1.5 tw-py-0.5 tw-rounded tw-text-[0.7rem] tw-font-semibold tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-accent-combat">
                         {{this.key}} {{this.displayValue}}
                     </span>
                 {{/each}}
@@ -161,7 +156,7 @@
             </span>
             {{#if distinctionPanel.merged.traits.length}}
                 {{#each distinctionPanel.merged.traits}}
-                    <span class="wh40k-dw-distinction-merged-trait tw-px-1.5 tw-py-0.5 tw-rounded tw-text-[0.7rem] tw-font-semibold tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-accent-combat">
+                    <span data-wh40k-hook="dw-distinction-merged-trait" class="tw-px-1.5 tw-py-0.5 tw-rounded tw-text-[0.7rem] tw-font-semibold tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dw:tw-border-accent-combat">
                         {{this}}
                     </span>
                 {{/each}}
