@@ -12,9 +12,7 @@
                 {{!-- Crimson + green branches handled below; this no-op preserves iteration order. --}}
             {{/unless}}
 
-            <div class="without-homeworld-card without-homeworld-card--{{accent}}
-                        tw-flex tw-flex-col tw-gap-3 tw-p-4 tw-rounded-md tw-border-2 tw-bg-[rgba(0,0,0,0.35)]
-                        {{#if (eq accent "crimson")}}tw-border-[rgba(204,41,54,0.55)] dh2:tw-border-crimson{{/if}}
+            <div data-wh40k-hook="without-homeworld-card" class="without-homeworld-card--{{accent}} tw-flex tw-flex-col tw-gap-3 tw-p-4 tw-rounded-md tw-border-2 tw-bg-[rgba(0,0,0,0.35)] {{#if (eq accent"crimson")}}tw-border-[rgba(204,41,54,0.55)] dh2:tw-border-crimson{{/if}}
                         {{#if (eq accent "grey")}}tw-border-[rgba(180,180,180,0.35)] dh2:tw-border-slate-400{{/if}}
                         {{#if (eq accent "green")}}tw-border-[rgba(80,170,90,0.5)] dh2:tw-border-emerald-500{{/if}}"
                  data-homeworld-id="{{id}}">

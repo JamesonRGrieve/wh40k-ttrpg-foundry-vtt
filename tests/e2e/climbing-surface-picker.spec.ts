@@ -92,7 +92,7 @@ test.describe.serial('climbing surface picker (#146)', () => {
             function readState(label: string): SurfaceState {
                 const wrapper = rootEl.querySelector<HTMLElement>('[data-wh40k-hook="climb-surface-picker"]');
                 const select = rootEl.querySelector<HTMLSelectElement>('[data-wh40k-hook="climb-surface-picker__select"]');
-                const sheerIndicator = rootEl.querySelector<HTMLElement>('.wh40k-climb-surface-picker__sheer-indicator');
+                const sheerIndicator = rootEl.querySelector<HTMLElement>('[data-wh40k-hook="climb-surface-picker__sheer-indicator"]');
                 return {
                     label,
                     rendered: wrapper !== null,

@@ -36,7 +36,7 @@ test('issue #199: divination section renders a non-empty roll result', async ({ 
     // and the `Rolled` named export, kebab-cased by Storybook.
     await page.goto('/iframe.html?id=character-creation-divination-section-issue-199--rolled');
 
-    const input = page.locator('input.csd-divination-input');
+    const input = page.locator('input[data-wh40k-hook="csd-divination-input"]');
     await expect(input).toBeVisible();
 
     // The Rolled story seeds the input with a real DH2 RAW Table 2-9
@@ -59,7 +59,7 @@ test('issue #199: divination section renders a non-empty roll result', async ({ 
 test('issue #199: divination section renders the table-unavailable fallback message', async ({ page }) => {
     await page.goto('/iframe.html?id=character-creation-divination-section-issue-199--table-unavailable-fallback');
 
-    const input = page.locator('input.csd-divination-input');
+    const input = page.locator('input[data-wh40k-hook="csd-divination-input"]');
     await expect(input).toBeVisible();
 
     // The fallback message format must include the rolled value and

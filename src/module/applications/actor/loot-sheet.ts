@@ -51,7 +51,7 @@ export default class LootActorSheet extends BaseActorSheet {
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/actor/loot/loot-sheet.hbs',
-            scrollable: ['.wh40k-loot-list'],
+            scrollable: ['[data-wh40k-hook="loot-list"]'],
         },
     };
 

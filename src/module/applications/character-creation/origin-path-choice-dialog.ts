@@ -457,7 +457,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @private
      */
     _saveScrollPosition(): void {
-        const list = this.element.querySelector('.choices-list');
+        const list = this.element.querySelector('[data-wh40k-hook="choices-list"]');
         this._savedScrollTop = list !== null ? list.scrollTop : 0;
     }
 
@@ -471,7 +471,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
 
         // Restore scroll position after re-render
         if (this._savedScrollTop !== 0) {
-            const list = this.element.querySelector('.choices-list');
+            const list = this.element.querySelector('[data-wh40k-hook="choices-list"]');
             if (list !== null) list.scrollTop = this._savedScrollTop;
             this._savedScrollTop = 0;
         }

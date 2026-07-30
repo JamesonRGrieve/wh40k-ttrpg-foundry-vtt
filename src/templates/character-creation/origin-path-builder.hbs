@@ -144,9 +144,9 @@
  </div>
 
  <div class="tw-flex tw-items-center tw-gap-2">
- <input type="search" class="equip-search tw-flex-1 tw-px-2 tw-py-1 tw-text-sm"
+ <input type="search" data-wh40k-hook="equip-search" class="tw-flex-1 tw-px-2 tw-py-1 tw-text-sm"
  placeholder="{{localize 'WH40K.OriginPath.EquipmentSearchPlaceholder'}}" value="{{equipment.search}}" />
- <select class="equip-type-filter tw-basis-44 tw-px-2 tw-py-1 tw-text-sm">
+ <select data-wh40k-hook="equip-type-filter" class="tw-basis-44 tw-px-2 tw-py-1 tw-text-sm">
  {{#each equipment.typeOptions as |option|}}
  <option value="{{option.value}}" {{#if (eq option.value ../equipment.typeFilter)}}selected{{/if}}>{{option.label}}</option>
  {{/each}}
@@ -173,11 +173,11 @@
  </thead>
  <tbody>
  {{#each equipment.items as |item|}}
- <tr class="equip-row tw-border-b tw-border-white/5 tw-cursor-pointer hover:tw-bg-white/5 {{#if item.isSelected}}tw-bg-amber-400/10{{/if}} {{#if item.isDisabled}}tw-opacity-40 tw-cursor-not-allowed{{/if}}"
+ <tr data-wh40k-hook="equip-row" class="tw-border-b tw-border-white/5 tw-cursor-pointer hover:tw-bg-white/5 {{#if item.isSelected}}tw-bg-amber-400/10{{/if}} {{#if item.isDisabled}}tw-opacity-40 tw-cursor-not-allowed{{/if}}"
  data-action="toggleEquipmentItem"
  data-uuid="{{item.uuid}}">
  <td class="tw-w-8 tw-text-center tw-px-2 tw-py-1">
- <input type="checkbox" class="equip-check"
+ <input type="checkbox" data-wh40k-hook="equip-check"
  
  {{#if item.isSelected}}checked{{/if}}
  {{#if item.isDisabled}}disabled{{/if}} />
@@ -225,17 +225,17 @@
  {{else if charGen.isModeRoll}}
  {{!-- Roll mode: one value rolled per characteristic, locked in order (no draggable bank). --}}
  <div class="tw-flex tw-flex-col tw-gap-4">
- <section class="csd-section tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
- <div class="csd-section-header-row tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
- <h3 class="csd-section-header tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
+ <section data-wh40k-hook="csd-section" class="tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
+ <div data-wh40k-hook="csd-section-header-row" class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
+ <h3 data-wh40k-hook="csd-section-header" class="tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
  <i class="fa-solid fa-user-gear"></i>
  {{localize "WH40K.CharacteristicSetup.Characteristics"}}
  </h3>
  <div class="tw-flex tw-items-center tw-gap-2">
- <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="charToggleAdvanced" data-tooltip="{{#if charGen.advancedMode}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOn'}}{{else}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOff'}}{{/if}}">
+ <button type="button" data-wh40k-hook="csd-icon-btn" class="tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="charToggleAdvanced" data-tooltip="{{#if charGen.advancedMode}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOn'}}{{else}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOff'}}{{/if}}">
  <i class="fa-solid {{#if charGen.advancedMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
  </button>
- <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-px-3 tw-items-center tw-justify-center tw-gap-2 tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="rollCharacteristics" data-tooltip="{{localize 'WH40K.CharGen.RollAllHint'}}">
+ <button type="button" data-wh40k-hook="csd-icon-btn" class="tw-inline-flex tw-h-9 tw-px-3 tw-items-center tw-justify-center tw-gap-2 tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="rollCharacteristics" data-tooltip="{{localize 'WH40K.CharGen.RollAllHint'}}">
  <i class="fa-solid fa-dice"></i>
  <span class="tw-text-sm tw-font-semibold">{{localize "WH40K.CharGen.RollAll"}}</span>
  </button>
@@ -247,22 +247,22 @@
  </div>
  {{else}}
  <div data-wh40k-hook="csd-workspace" class="tw-grid tw-grid-cols-[280px_minmax(0,1fr)] tw-gap-4 tw-items-start max-[900px]:tw-grid-cols-1">
- <section class="csd-section csd-rolls-bank tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4" data-drop-zone="bank">
- <div class="csd-section-header-row tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b {{themeClassFor 'border'}}">
- <h3 class="csd-section-header tw-flex tw-items-center tw-gap-2 tw-m-0 {{themeClassFor 'accent'}} tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">
+ <section data-wh40k-hook="csd-rolls-bank" data-wh40k-hook="csd-section" class="tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4" data-drop-zone="bank">
+ <div data-wh40k-hook="csd-section-header-row" class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b {{themeClassFor 'border'}}">
+ <h3 data-wh40k-hook="csd-section-header" class="tw-flex tw-items-center tw-gap-2 tw-m-0 {{themeClassFor 'accent'}} tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">
  <i class="fa-solid fa-dice-d20"></i>
  {{localize "WH40K.CharacteristicSetup.RollsBank"}}
  </h3>
- <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)] tw-max-w-full tw-whitespace-nowrap" data-action="rollCharacteristicsBank" data-tooltip="{{localize 'WH40K.CharacteristicSetup.RollBank'}}">
+ <button type="button" data-wh40k-hook="csd-icon-btn" class="tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)] tw-max-w-full tw-whitespace-nowrap" data-action="rollCharacteristicsBank" data-tooltip="{{localize 'WH40K.CharacteristicSetup.RollBank'}}">
  <i class="fa-solid fa-dice"></i>
  </button>
  </div>
  <div class="tw-grid tw-grid-cols-2 tw-gap-2 max-[900px]:tw-grid-cols-[repeat(auto-fit,minmax(110px,1fr))]">
  {{#each charGen.rollsBank}}
- <div class="csd-roll-chip tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-16 tw-w-full tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.2)] tw-to-[rgba(36,107,131,0.1)] tw-border-2 tw-border-[rgba(36,107,131,0.4)] tw-rounded-[var(--wh40k-radius-lg)] tw-relative tw-transition-all {{#if isEmpty}}empty tw-border-dashed tw-opacity-60{{/if}} {{#if isAssigned}}assigned tw-opacity-30 tw-cursor-not-allowed{{else if isEmpty}}tw-cursor-pointer hover:tw-opacity-90 hover:tw-border-[var(--csd-gold,#b08d57)]{{else}}tw-cursor-grab hover:tw--translate-y-[3px] hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:tw-border-[rgba(36,107,131,0.9)]{{/if}} {{#if @last}}{{#if (eq ../charGen.rollsBank.length 5)}}tw-col-span-2 tw-justify-self-center tw-w-[calc(50%-0.25rem)] max-[900px]:tw-col-span-1 max-[900px]:tw-w-full{{/if}}{{/if}}"
+ <div data-wh40k-hook="csd-roll-chip" class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-16 tw-w-full tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.2)] tw-to-[rgba(36,107,131,0.1)] tw-border-2 tw-border-[rgba(36,107,131,0.4)] tw-rounded-[var(--wh40k-radius-lg)] tw-relative tw-transition-all {{#if isEmpty}}empty tw-border-dashed tw-opacity-60{{/if}} {{#if isAssigned}}assigned tw-opacity-30 tw-cursor-not-allowed{{else if isEmpty}}tw-cursor-pointer hover:tw-opacity-90 hover:tw-border-[var(--csd-gold,#b08d57)]{{else}}tw-cursor-grab hover:tw--translate-y-[3px] hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:tw-border-[rgba(36,107,131,0.9)]{{/if}} {{#if @last}}{{#if (eq ../charGen.rollsBank.length 5)}}tw-col-span-2 tw-justify-self-center tw-w-[calc(50%-0.25rem)] max-[900px]:tw-col-span-1 max-[900px]:tw-w-full{{/if}}{{/if}}"
  data-roll-index="{{index}}"
  {{#unless isEmpty}}{{#unless isAssigned}}draggable="true"{{/unless}}{{/unless}}>
- <span class="csd-roll-value tw-text-[1.4rem] tw-font-bold tw-leading-none {{#if isEmpty}}tw-text-[color:rgba(232,220,196,0.5)]{{else}}tw-text-[color:var(--csd-bone,#e8dcc4)]{{/if}}">{{#if isEmpty}}—{{else}}{{value}}{{/if}}</span>
+ <span data-wh40k-hook="csd-roll-value" class="tw-text-[1.4rem] tw-font-bold tw-leading-none {{#if isEmpty}}tw-text-[color:rgba(232,220,196,0.5)]{{else}}tw-text-[color:var(--csd-bone,#e8dcc4)]{{/if}}">{{#if isEmpty}}—{{else}}{{value}}{{/if}}</span>
  <span class="tw-mt-1 tw-text-[0.65rem] tw-font-bold tw-uppercase tw-text-[color:rgba(232,220,196,0.6)]">{{localize "WH40K.CharacteristicSetup.Roll"}} {{displayIndex}}</span>
  {{#if isAssigned}}<span class="tw-pointer-events-none tw-absolute tw-top-0.5 tw-right-1 tw-text-[0.7rem] tw-text-[#4caf50]">✓</span>{{/if}}
  </div>
@@ -272,17 +272,17 @@
  </section>
 
  <div class="tw-flex tw-flex-col tw-gap-4">
- <section class="csd-section tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
- <div class="csd-section-header-row tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
- <h3 class="csd-section-header tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
+ <section data-wh40k-hook="csd-section" class="tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
+ <div data-wh40k-hook="csd-section-header-row" class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
+ <h3 data-wh40k-hook="csd-section-header" class="tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
  <i class="fa-solid fa-user-gear"></i>
  {{localize "WH40K.CharacteristicSetup.Characteristics"}}
  </h3>
  <div class="tw-flex tw-items-center tw-gap-2">
- <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="charToggleAdvanced" data-tooltip="{{#if charGen.advancedMode}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOn'}}{{else}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOff'}}{{/if}}">
+ <button type="button" data-wh40k-hook="csd-icon-btn" class="tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="charToggleAdvanced" data-tooltip="{{#if charGen.advancedMode}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOn'}}{{else}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOff'}}{{/if}}">
  <i class="fa-solid {{#if charGen.advancedMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
  </button>
- <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="charReset" data-tooltip="{{localize 'WH40K.CharacteristicSetup.Reset'}}">
+ <button type="button" data-wh40k-hook="csd-icon-btn" class="tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="charReset" data-tooltip="{{localize 'WH40K.CharacteristicSetup.Reset'}}">
  <i class="fa-solid fa-rotate-left"></i>
  </button>
  </div>

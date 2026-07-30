@@ -1793,7 +1793,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if (this.showEquipment) {
             const equipRoot = this.element;
-            const search = equipRoot.querySelector('.equip-search');
+            const search = equipRoot.querySelector('[data-wh40k-hook="equip-search"]');
             if (search) {
                 search.addEventListener('input', (e) => {
                     this._equipmentFilter.search = (e.currentTarget as HTMLInputElement).value;
@@ -1801,7 +1801,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     void this.render();
                 });
             }
-            const typeSelect = equipRoot.querySelector('.equip-type-filter');
+            const typeSelect = equipRoot.querySelector('[data-wh40k-hook="equip-type-filter"]');
             if (typeSelect) {
                 typeSelect.addEventListener('change', (e) => {
                     const v = (e.currentTarget as HTMLSelectElement).value;
@@ -1813,10 +1813,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Bind row and checkbox clicks directly. The data-action on the row already
             // triggers toggleEquipmentItem for clicks on row body, but clicks on the checkbox
             // input need to be intercepted before the browser's default toggle stomps our state.
-            equipRoot.querySelectorAll('.equip-row').forEach((row) => {
+            equipRoot.querySelectorAll('[data-wh40k-hook="equip-row"]').forEach((row) => {
                 const rowEl = row as HTMLElement;
                 const uuid = rowEl.dataset['uuid'];
-                const checkbox = rowEl.querySelector('.equip-check');
+                const checkbox = rowEl.querySelector('[data-wh40k-hook="equip-check"]');
                 if (!checkbox || uuid === undefined || uuid === '') return;
                 checkbox.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1832,14 +1832,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const html = this.element;
 
         // Roll chip click-to-edit and drag
-        html.querySelectorAll('.csd-roll-chip').forEach((chip) => {
+        html.querySelectorAll('[data-wh40k-hook="csd-roll-chip"]').forEach((chip) => {
             chip.addEventListener('click', this._onCharRollChipClick.bind(this));
             chip.addEventListener('dragstart', this._onCharDragStart.bind(this));
             chip.addEventListener('dragend', this._onCharDragEnd.bind(this));
         });
 
         // Characteristic slots as drop targets
-        html.querySelectorAll('.csd-char-slot').forEach((slot) => {
+        html.querySelectorAll('[data-wh40k-hook="csd-char-slot"]').forEach((slot) => {
             slot.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 (e.currentTarget as HTMLElement).classList.add('drop-valid', 'drop-hover');
@@ -1848,7 +1848,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 (e.currentTarget as HTMLElement).classList.remove('drop-hover');
             });
             slot.addEventListener('drop', this._onCharDrop.bind(this));
-            const rollChip = slot.querySelector('.csd-assigned-roll');
+            const rollChip = slot.querySelector('[data-wh40k-hook="csd-assigned-roll"]');
             if (rollChip) {
                 rollChip.addEventListener('dragstart', this._onCharDragStart.bind(this));
                 rollChip.addEventListener('dragend', this._onCharDragEnd.bind(this));
@@ -1856,7 +1856,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         });
 
         // Rolls bank as drop target
-        const rollsBank = html.querySelector('.csd-rolls-bank');
+        const rollsBank = html.querySelector('[data-wh40k-hook="csd-rolls-bank"]');
         if (rollsBank) {
             rollsBank.addEventListener('dragover', (e) => {
                 if (this._charDragData?.type !== 'assigned') return;
@@ -1870,7 +1870,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         // Base value inputs (advanced mode)
-        html.querySelectorAll('.csd-base-input').forEach((input) => {
+        html.querySelectorAll('[data-wh40k-hook="csd-base-input"]').forEach((input) => {
             input.addEventListener('change', (e) => {
                 const el = e.currentTarget as HTMLInputElement;
                 const key = el.dataset['characteristic'];
@@ -1891,7 +1891,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Point-buy numeric inputs: type an absolute allocation per
         // characteristic. Validation (floor 0, cap at the remaining pool) lives
         // in the pure `_setPointBuy`; we re-render so the clamp is reflected.
-        html.querySelectorAll('.csd-pointbuy-input').forEach((input) => {
+        html.querySelectorAll('[data-wh40k-hook="csd-pointbuy-input"]').forEach((input) => {
             input.addEventListener('change', (e) => {
                 const el = e.currentTarget as HTMLInputElement;
                 const key = el.dataset['characteristic'];
@@ -1902,7 +1902,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             });
         });
 
-        const divinationInput = html.querySelector('.csd-divination-input');
+        const divinationInput = html.querySelector('[data-wh40k-hook="csd-divination-input"]');
         if (divinationInput) {
             divinationInput.addEventListener('change', (e) => {
                 this._divination = (e.currentTarget as HTMLInputElement).value;
@@ -1945,7 +1945,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
         });
 
-        const valueEl = chip.querySelector<HTMLElement>('.csd-roll-value');
+        const valueEl = chip.querySelector<HTMLElement>('[data-wh40k-hook="csd-roll-value"]');
         if (valueEl) valueEl.style.display = 'none';
         chip.appendChild(input);
         input.focus();

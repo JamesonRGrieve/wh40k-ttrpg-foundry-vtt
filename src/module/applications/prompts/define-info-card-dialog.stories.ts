@@ -51,7 +51,7 @@ export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()
 export const RendersACardPerEntry: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
-        const card = canvasElement.querySelector('.without-homeworld-card');
+        const card = canvasElement.querySelector('[data-wh40k-hook="without-homeworld-card"]');
         await expect(card).toBeTruthy();
         await expect(canvasElement.textContent).toContain('Death World');
         await expect(canvasElement.textContent).toContain('+Strength, +Toughness');

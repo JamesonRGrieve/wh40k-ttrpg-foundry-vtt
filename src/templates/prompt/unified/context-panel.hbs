@@ -36,7 +36,7 @@
                         {{/each}}
                     </select>
                     {{#if (eq climbSurface "sheer")}}
-                        <div class="wh40k-climb-surface-picker__sheer-indicator tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-mt-2 tw-rounded-md tw-bg-blue-900/40 tw-text-blue-200 tw-border tw-border-blue-400/40 tw-text-[0.8rem]" title="{{localize "WH40K.Climbing.SheerTooltip"}}">
+                        <div data-wh40k-hook="climb-surface-picker__sheer-indicator" class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-mt-2 tw-rounded-md tw-bg-blue-900/40 tw-text-blue-200 tw-border tw-border-blue-400/40 tw-text-[0.8rem]" title="{{localize "WH40K.Climbing.SheerTooltip"}}">
                             <i class="fas fa-icicles tw-text-blue-300"></i>
                             <span>{{localize "WH40K.Climbing.SheerTooltip"}}</span>
                         </div>

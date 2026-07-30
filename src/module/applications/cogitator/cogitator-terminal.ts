@@ -105,7 +105,7 @@ export class CogitatorTerminal extends ApplicationV2Mixin(ApplicationV2 as unkno
     static override PARTS = {
         terminal: {
             template: 'systems/wh40k-rpg/templates/applications/cogitator-terminal.hbs',
-            scrollable: ['.wh40k-cog-index', '.wh40k-cog-body'],
+            scrollable: ['[data-wh40k-hook="cog-index"]', '[data-wh40k-hook="cog-body"]'],
         },
     } as Record<string, ApplicationV2Config.PartConfiguration>;
     /* eslint-enable no-restricted-syntax */
@@ -204,7 +204,7 @@ export class CogitatorTerminal extends ApplicationV2Mixin(ApplicationV2 as unkno
 
         // Cross-link interception: a content-link to a record IN THIS terminal turns
         // the page in-place; anything else falls through to Foundry's default handler.
-        const body = root.querySelector('.wh40k-cog-body');
+        const body = root.querySelector('[data-wh40k-hook="cog-body"]');
         body?.querySelectorAll<HTMLAnchorElement>('a.content-link[data-uuid]').forEach((anchor) => {
             const uuid = anchor.dataset['uuid'];
             if (uuid === undefined || !isInternalRecord(uuid, this.#resolvedUuids)) return;

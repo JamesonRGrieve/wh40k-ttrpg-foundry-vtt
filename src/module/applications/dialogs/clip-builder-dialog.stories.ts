@@ -41,7 +41,7 @@ export const MixedLoadout: Story = {
         const storyCanvas = within(canvasElement);
         await expect(storyCanvas.getByText('Kraken Rounds')).toBeTruthy();
         // Every ammo type gets an ordered count input.
-        const counts = canvasElement.querySelectorAll('input.clip-builder-count');
+        const counts = canvasElement.querySelectorAll('input[data-wh40k-hook="clip-builder-count"]');
         await expect(counts.length).toBe(3);
     },
 };

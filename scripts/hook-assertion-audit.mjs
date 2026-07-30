@@ -35,8 +35,33 @@ for (const root of ROOTS) {
     }
 }
 
+/**
+ * Whether a file is production code, as opposed to something that would notice a
+ * selector breaking. Tests and stories live under `src/module` too (co-located),
+ * so the path prefix alone is not enough.
+ */
+const isProduction = (file) => file.startsWith('src/module') && !file.endsWith('.test.ts') && !file.endsWith('.stories.ts');
+
+/** Hooks any TEST or STORY queries — i.e. hooks something would notice breaking. */
+const coveredHooks = new Set();
+for (const [file, { hooks }] of consumers) {
+    if (isProduction(file)) continue;
+    for (const hook of hooks) coveredHooks.add(hook);
+}
+
 const unguarded = [];
 for (const [file, { hooks, text }] of consumers) {
+    // Production consumers are not tests and have no assertions to make. The risk
+    // they carry is different: a selector nothing exercises can be silently broken
+    // by a template edit and no suite will notice. So the question for them is
+    // coverage, not assertion.
+    if (isProduction(file)) {
+        const uncovered = [...hooks].filter((h) => !coveredHooks.has(h));
+        if (uncovered.length > 0) {
+            unguarded.push({ file, hooks: uncovered, reason: 'production selector with no test or story querying it' });
+        }
+        continue;
+    }
     // A spec that never asserts anything cannot fail on a broken selector.
     if (!text.includes('expect(')) {
         unguarded.push({ file, hooks: [...hooks], reason: 'no expect() in file' });

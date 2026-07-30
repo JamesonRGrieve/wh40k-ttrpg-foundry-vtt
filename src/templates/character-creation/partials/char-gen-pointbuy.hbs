@@ -6,9 +6,9 @@
   A flat 1 point per +1 above base is spent; the pool size comes from settings.
 --}}
 <div class="tw-flex tw-flex-col tw-gap-4">
- <section class="csd-section tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
- <div class="csd-section-header-row tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
- <h3 class="csd-section-header tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
+ <section data-wh40k-hook="csd-section" class="tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
+ <div data-wh40k-hook="csd-section-header-row" class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
+ <h3 data-wh40k-hook="csd-section-header" class="tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
  <i class="fa-solid fa-coins"></i>
  {{localize "WH40K.CharGen.PointBuyPoints"}}
  </h3>
@@ -16,7 +16,7 @@
  <span class="tw-text-[1.1rem] tw-font-bold {{#if charGen.pointBuyOverspent}}tw-text-failure{{else}}{{themeClassFor 'accent'}}{{/if}}" aria-live="polite">
  {{localize "WH40K.CharGen.PointsRemaining"}}: {{charGen.pointBuyRemaining}} / {{charGen.pointBuyPool}}
  </span>
- <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="charReset" data-tooltip="{{localize 'WH40K.CharGen.PointBuyResetHint'}}">
+ <button type="button" data-wh40k-hook="csd-icon-btn" class="tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="charReset" data-tooltip="{{localize 'WH40K.CharGen.PointBuyResetHint'}}">
  <i class="fa-solid fa-rotate-left"></i>
  </button>
  </div>
@@ -28,7 +28,7 @@
  {{#each charGen.pointBuyRows}}
  <div class="tw-flex tw-gap-3 tw-justify-center">
  {{#each this}}
- <div class="csd-char-slot tw-flex-1 tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.15)] tw-to-[rgba(36,107,131,0.05)] tw-border-2 tw-border-[rgba(36,107,131,0.35)] tw-rounded-[var(--wh40k-radius-lg)] tw-p-3 {{#if (gt points 0)}}tw-border-[rgba(176,141,87,0.5)]{{/if}}"
+ <div data-wh40k-hook="csd-char-slot" class="tw-flex-1 tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.15)] tw-to-[rgba(36,107,131,0.05)] tw-border-2 tw-border-[rgba(36,107,131,0.35)] tw-rounded-[var(--wh40k-radius-lg)] tw-p-3 {{#if (gt points 0)}}tw-border-[rgba(176,141,87,0.5)]{{/if}}"
  data-characteristic="{{key}}">
  <div class="tw-flex tw-items-baseline tw-gap-2 tw-mb-2 tw-pb-[0.35rem] tw-border-b tw-border-[rgba(36,107,131,0.2)]">
  {{!-- Full characteristic name (e.g. "Weapon Skill"), matching the Aptitudes section (#330). --}}
@@ -45,7 +45,7 @@
  <button type="button" class="tw-inline-flex tw-h-7 tw-w-7 tw-items-center tw-justify-center tw-rounded tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] disabled:tw-opacity-30 disabled:tw-cursor-not-allowed" data-action="adjustPointBuy" data-characteristic="{{key}}" data-delta="-1" {{#unless canDecrease}}disabled{{/unless}} aria-label="{{localize 'WH40K.CharGen.DecreasePoints'}}">
  <i class="fa-solid fa-minus"></i>
  </button>
- <input type="number" class="csd-pointbuy-input tw-w-[44px] tw-h-[28px] tw-text-center tw-text-[1rem] tw-font-semibold tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[rgba(176,141,87,0.5)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--csd-bone,#e8dcc4)] focus:tw-outline-none focus:tw-border-[var(--csd-gold,#b08d57)]" value="{{points}}" data-characteristic="{{key}}" min="0" max="99" />
+ <input type="number" data-wh40k-hook="csd-pointbuy-input" class="tw-w-[44px] tw-h-[28px] tw-text-center tw-text-[1rem] tw-font-semibold tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[rgba(176,141,87,0.5)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--csd-bone,#e8dcc4)] focus:tw-outline-none focus:tw-border-[var(--csd-gold,#b08d57)]" value="{{points}}" data-characteristic="{{key}}" min="0" max="99" />
  <button type="button" class="tw-inline-flex tw-h-7 tw-w-7 tw-items-center tw-justify-center tw-rounded tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] disabled:tw-opacity-30 disabled:tw-cursor-not-allowed" data-action="adjustPointBuy" data-characteristic="{{key}}" data-delta="1" {{#unless canIncrease}}disabled{{/unless}} aria-label="{{localize 'WH40K.CharGen.IncreasePoints'}}">
  <i class="fa-solid fa-plus"></i>
  </button>

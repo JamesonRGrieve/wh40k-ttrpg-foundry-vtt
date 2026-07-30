@@ -15,7 +15,7 @@
     <div class="tw-flex tw-flex-1 tw-min-h-0">
 
         {{!-- Record index (left rail) --}}
-        <nav class="wh40k-cog-index tw-w-56 tw-shrink-0 tw-overflow-y-auto tw-border-r tw-border-[#1e3b1e] tw-p-2">
+        <nav data-wh40k-hook="cog-index" class="tw-w-56 tw-shrink-0 tw-overflow-y-auto tw-border-r tw-border-[#1e3b1e] tw-p-2">
             <div class="tw-text-xs tw-uppercase tw-tracking-widest tw-text-[#4e7a4e] tw-mb-2">{{localize "WH40K.Cogitator.Index"}}</div>
             {{#if hasRecords}}
             <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-0.5">
@@ -40,7 +40,7 @@
         </nav>
 
         {{!-- Record body (right pane) --}}
-        <section class="wh40k-cog-body tw-flex-1 tw-overflow-y-auto tw-p-4">
+        <section data-wh40k-hook="cog-body" class="tw-flex-1 tw-overflow-y-auto tw-p-4">
             {{#if activeName}}
             <h2 class="tw-text-lg tw-uppercase tw-tracking-wide tw-text-[#c6ffb0] tw-border-b tw-border-[#1e3b1e] tw-pb-1 tw-mb-3">{{activeName}}</h2>
                 {{#if restricted}}
@@ -48,7 +48,7 @@
                     {{localize "WH40K.Cogitator.Redacted"}}
                 </div>
                 {{else}}
-                <div class="wh40k-cog-content tw-leading-relaxed">{{{bodyHtml}}}</div>
+                <div data-wh40k-hook="cog-content" class="tw-leading-relaxed">{{{bodyHtml}}}</div>
                 {{/if}}
             {{else}}
             <div class="tw-h-full tw-flex tw-items-center tw-justify-center tw-text-[#4e7a4e] tw-uppercase tw-tracking-widest tw-text-center">
