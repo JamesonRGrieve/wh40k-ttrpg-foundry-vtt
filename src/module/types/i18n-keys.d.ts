@@ -2889,6 +2889,8 @@ export type I18nKey =
     | 'WH40K.Roll.SituationalModifiers'
     | 'WH40K.Roll.SituationalTotal'
     | 'WH40K.Roll.SkillTest'
+    | 'WH40K.Roll.SpreadHits'
+    | 'WH40K.Roll.SpreadHitsHint'
     | 'WH40K.Roll.Success'
     | 'WH40K.Roll.TargetFirst'
     | 'WH40K.Roll.TargetLabel'

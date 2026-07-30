@@ -228,4 +228,21 @@
             {{/if}}
         </div>
     {{/if}}
+
+    {{!-- Burst hit-spreading (#513). Only rendered when the action is a burst AND
+          the scene supplied targets within RAW's two metres that are no harder to
+          hit — otherwise there is nothing to choose between. --}}
+    {{#if canSpreadHits}}
+        <div class="tw-mt-2">
+            <button type="button"
+                    data-wh40k-hook="spread-hits-toggle"
+                    class="tw-inline-flex tw-items-center tw-gap-[5px] tw-py-1 tw-px-2.5 tw-border tw-rounded-2xl tw-cursor-pointer tw-text-[0.78rem] tw-transition-all {{#if spreadHits}}tw-bg-[rgba(201,162,39,0.15)] tw-border-[rgba(201,162,39,0.5)] tw-text-[#e8e4d9] tw-shadow-[0_0_8px_rgba(201,162,39,0.15)]{{else}}tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a] hover:tw-bg-[rgba(201,162,39,0.08)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-text-[#b8b8a8]{{/if}}"
+                    data-action="toggleHitSpread"
+                    data-tooltip="{{localize 'WH40K.Roll.SpreadHitsHint'}} {{spreadTargetNames}}">
+                <i class="fa-solid fa-arrows-split-up-and-left tw-text-[0.7rem] tw-opacity-70"></i>
+                <span class="tw-font-medium">{{localize 'WH40K.Roll.SpreadHits'}}</span>
+                <span class="tw-font-bold tw-text-sm tw-text-gold-raw">{{spreadTargetCount}}</span>
+            </button>
+        </div>
+    {{/if}}
 {{/if}}
