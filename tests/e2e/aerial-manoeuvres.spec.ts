@@ -99,7 +99,7 @@ test.describe.serial('AerialManoeuvre chat card (Tier B)', () => {
 
         expect(result.error, `chat-card probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'aerial-manoeuvre card did not render').toBe(true);
-        expect(result.hasCardRoot, 'card root .wh40k-aerial-card missing').toBe(true);
+        expect(result.hasCardRoot, 'card root [data-wh40k-hook="aerial-card"] missing').toBe(true);
         expect(result.hasSystemAnchor, 'per-system data-wh40k-system anchor missing').toBe(true);
         expect(result.hasFreeAttackBanner, 'Free Action banner should render at 3+ DoS').toBe(true);
         expect(result.messageId, 'ChatMessage.create returned no id').not.toBeNull();

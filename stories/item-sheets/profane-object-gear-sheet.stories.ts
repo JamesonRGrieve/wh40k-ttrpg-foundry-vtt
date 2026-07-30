@@ -116,7 +116,7 @@ export const OrdinaryGearHidesPanel: Story = {
     },
     play: ({ canvasElement }) => {
         // Profane panel should be absent for ordinary gear.
-        const panel = canvasElement.querySelector('.wh40k-gear-profane-panel');
+        const panel = canvasElement.querySelector('[data-wh40k-hook="gear-profane-panel"]');
         void expect(panel).toBeNull();
     },
 };
@@ -125,10 +125,10 @@ export const RendersPanel: Story = {
     play: ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         void expect(storyCanvas.getByText('Profane Object')).toBeTruthy();
-        const panel = canvasElement.querySelector('.wh40k-gear-profane-panel');
+        const panel = canvasElement.querySelector('[data-wh40k-hook="gear-profane-panel"]');
         void expect(panel).toBeTruthy();
-        const aura = canvasElement.querySelector('.wh40k-gear-profane-aura');
-        const hook = canvasElement.querySelector('.wh40k-gear-profane-hook');
+        const aura = canvasElement.querySelector('[data-wh40k-hook="gear-profane-aura"]');
+        const hook = canvasElement.querySelector('[data-wh40k-hook="gear-profane-hook"]');
         void expect(aura).toBeTruthy();
         void expect(hook).toBeTruthy();
     },

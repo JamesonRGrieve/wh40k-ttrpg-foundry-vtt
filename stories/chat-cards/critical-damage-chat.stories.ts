@@ -113,14 +113,14 @@ export const RenderSmoke: Story = {
     play: ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         // Card root carries the per-system anchor and wh40k-rpg scope.
-        const card = canvasElement.querySelector('.wh40k-critdmg-card');
+        const card = canvasElement.querySelector('[data-wh40k-hook="critdmg-card"]');
         void expect(card).toBeTruthy();
         void expect(card?.getAttribute('data-wh40k-system')).toBe('dh2');
         void expect(card?.classList.contains('wh40k-rpg')).toBe(true);
         // Effect text surfaces.
         void expect(storyCanvas.getByText(/Stunned for 1 round/i)).toBeTruthy();
         // Rider pills render (two for the default args).
-        const pills = canvasElement.querySelectorAll('.wh40k-critdmg-card span.tw-rounded-full');
+        const pills = canvasElement.querySelectorAll('[data-wh40k-hook="critdmg-card"] span.tw-rounded-full');
         void expect(pills.length).toBe(2);
     },
 };

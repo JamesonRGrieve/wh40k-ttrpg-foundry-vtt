@@ -72,7 +72,7 @@ export const Hit: Story = {
         }),
     },
     play: async ({ canvasElement }) => {
-        const card = canvasElement.querySelector('.wh40k-ship-ramming-card');
+        const card = canvasElement.querySelector('[data-wh40k-hook="ship-ramming-card"]');
         await expect(card).toBeTruthy();
         await expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).toBeTruthy();
         // Damage block must render hull-damage rows when the ram lands.

@@ -69,7 +69,7 @@ export const Breach: Story = {
         }),
     },
     play: async ({ canvasElement }) => {
-        const card = canvasElement.querySelector('.wh40k-ship-boarding-card');
+        const card = canvasElement.querySelector('[data-wh40k-hook="ship-boarding-card"]');
         await expect(card).toBeTruthy();
         await expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).toBeTruthy();
         const withinCanvas = within(canvasElement);

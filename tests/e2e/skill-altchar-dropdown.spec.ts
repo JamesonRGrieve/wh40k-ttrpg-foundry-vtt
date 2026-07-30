@@ -123,7 +123,7 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
             const root: HTMLElement = rawRoot;
 
             function readState(label: string): SkillDropdownState {
-                const charSelect = root.querySelector<HTMLSelectElement>('.wh40k-skill-char-override__select');
+                const charSelect = root.querySelector<HTMLSelectElement>('[data-wh40k-hook="skill-char-override__select"]');
                 const target = root.querySelector<HTMLElement>('.urd-target__number');
                 const halved = root.querySelector<HTMLElement>('[data-testid="skill-untrained-halved"]');
                 const blocked = root.querySelector<HTMLElement>('[data-testid="skill-untrained-advanced"]');
@@ -141,7 +141,7 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
             const initial = readState('initial');
 
             // Switch the dropdown to toughness.
-            const select = root.querySelector<HTMLSelectElement>('.wh40k-skill-char-override__select');
+            const select = root.querySelector<HTMLSelectElement>('[data-wh40k-hook="skill-char-override__select"]');
             if (select !== null) {
                 select.value = 'toughness';
                 select.dispatchEvent(new Event('change', { bubbles: true }));

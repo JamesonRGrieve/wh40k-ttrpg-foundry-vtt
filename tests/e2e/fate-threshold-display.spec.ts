@@ -69,7 +69,7 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
         await new Promise<void>((r) => {
             setTimeout(r, 200);
         });
-        const visibleEl = withThreshold.sheet.element?.querySelector('.wh40k-fate-threshold') ?? null;
+        const visibleEl = withThreshold.sheet.element?.querySelector('[data-wh40k-hook="fate-threshold"]') ?? null;
         const visibleText = visibleEl?.textContent.trim() ?? '';
         const withThresholdOk = visibleEl !== null && visibleText.includes('2');
 
@@ -77,7 +77,7 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
         await new Promise<void>((r) => {
             setTimeout(r, 200);
         });
-        const hiddenEl = withoutThreshold.sheet.element?.querySelector('.wh40k-fate-threshold') ?? null;
+        const hiddenEl = withoutThreshold.sheet.element?.querySelector('[data-wh40k-hook="fate-threshold"]') ?? null;
         const withoutThresholdOk = hiddenEl === null;
 
         return { setupOk: true, withThresholdOk, withoutThresholdOk, visibleText, error: null };
@@ -124,8 +124,8 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
     });
     await snap(page, 'fate-panel-without-threshold');
 
-    expect(result.withThresholdOk, `expected .wh40k-fate-threshold to render with "2"; got text="${result.visibleText ?? ''}"`).toBe(true);
-    expect(result.withoutThresholdOk, 'expected .wh40k-fate-threshold to be absent when threshold=0').toBe(true);
+    expect(result.withThresholdOk, `expected [data-wh40k-hook="fate-threshold"] to render with "2"; got text="${result.visibleText ?? ''}"`).toBe(true);
+    expect(result.withoutThresholdOk, 'expected [data-wh40k-hook="fate-threshold"] to be absent when threshold=0').toBe(true);
 
     // Cleanup
     await page.evaluate(async (): Promise<void> => {

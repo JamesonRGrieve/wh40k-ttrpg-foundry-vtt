@@ -115,8 +115,8 @@ test.describe.serial('trying again warning (#62)', () => {
                 return { error: 'dialog.element is not an HTMLElement', rendered: false };
             }
 
-            const banner = root.querySelector<HTMLElement>('.wh40k-try-again-warning');
-            const hint = root.querySelector<HTMLElement>('.wh40k-try-again-warning__hint');
+            const banner = root.querySelector<HTMLElement>('[data-wh40k-hook="try-again-warning"]');
+            const hint = root.querySelector<HTMLElement>('[data-wh40k-hook="try-again-warning__hint"]');
             return {
                 error: null,
                 rendered: banner !== null,

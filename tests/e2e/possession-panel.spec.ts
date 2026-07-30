@@ -67,7 +67,9 @@ test('possession-panel renders Frenzy-loop actions when state=latent (#132)', as
         const root = actor.sheet.element;
         const panel = root?.querySelector('.wh40k-possession-panel');
         const btnCount =
-            panel !== null && panel !== undefined ? panel.querySelectorAll('.wh40k-possession-frenzy-btn, .wh40k-possession-mismanifest-btn').length : 0;
+            panel !== null && panel !== undefined
+                ? panel.querySelectorAll('[data-wh40k-hook="possession-frenzy-btn"], [data-wh40k-hook="possession-mismanifest-btn"]').length
+                : 0;
         const hasTitle = panel?.querySelector('h3') != null;
         return { setupOk: true, btnCount, hasTitle, error: null };
     });

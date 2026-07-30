@@ -115,7 +115,7 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
     await snap(page, 'fanatic-button-clicked');
 
     // Capture JUST the button element clearly (see tests/storybook/issue-191-endeavour-tracker.spec.ts).
-    const buttonLocator = page.locator('.wh40k-fanatic-button').first();
+    const buttonLocator = page.locator('[data-wh40k-hook="fanatic-button"]').first();
     if ((await buttonLocator.count()) > 0) {
         await buttonLocator.screenshot({ path: '.e2e-screenshots/fanatic-button-element.png' });
     }

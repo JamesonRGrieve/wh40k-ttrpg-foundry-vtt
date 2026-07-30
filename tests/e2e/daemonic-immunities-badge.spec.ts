@@ -67,9 +67,9 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
                 });
                 sheetRendered = sheet.element instanceof HTMLElement;
                 if (sheetRendered && sheet.element) {
-                    const badge = sheet.element.querySelector('.wh40k-daemonic-immunities-badge');
+                    const badge = sheet.element.querySelector('[data-wh40k-hook="daemonic-immunities-badge"]');
                     badgeFound = badge !== null;
-                    labelText = badge?.querySelector('.wh40k-daemonic-immunities-badge__label')?.textContent.trim() ?? null;
+                    labelText = badge?.querySelector('[data-wh40k-hook="daemonic-immunities-badge__label"]')?.textContent.trim() ?? null;
                 }
             } catch (err) {
                 error = String((err as Error).message);

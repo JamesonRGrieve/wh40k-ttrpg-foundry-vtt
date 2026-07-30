@@ -37,12 +37,12 @@ function render(isGM: boolean): HTMLElement {
 describe('subtlety-panel — manual stepper gating (#317)', () => {
     it('renders the stepper disabled for a non-GM (visible, not hidden)', () => {
         const root = render(false);
-        expect(root.querySelector('.wh40k-subtlety-manual')).not.toBeNull();
+        expect(root.querySelector('[data-wh40k-hook="subtlety-manual"]')).not.toBeNull();
         const buttons = root.querySelectorAll<HTMLButtonElement>('[data-action="adjustSubtletyManually"]');
         expect(buttons).toHaveLength(2);
         expect(Array.from(buttons).every((b) => b.disabled)).toBe(true);
         // The adjuster list still renders beneath the stepper.
-        expect(root.querySelector('.wh40k-subtlety-adjusters')).not.toBeNull();
+        expect(root.querySelector('[data-wh40k-hook="subtlety-adjusters"]')).not.toBeNull();
     });
 
     it('renders the stepper enabled for a GM', () => {
@@ -58,8 +58,8 @@ describe('subtlety-panel — manual stepper gating (#317)', () => {
     it('always renders the value readout', () => {
         for (const isGM of [false, true]) {
             const root = render(isGM);
-            expect(root.querySelector('.wh40k-subtlety-value')?.textContent.trim()).toBe('60');
-            expect(root.querySelector('.wh40k-subtlety-max')?.textContent.trim()).toBe('100');
+            expect(root.querySelector('[data-wh40k-hook="subtlety-value"]')?.textContent.trim()).toBe('60');
+            expect(root.querySelector('[data-wh40k-hook="subtlety-max"]')?.textContent.trim()).toBe('100');
         }
     });
 });

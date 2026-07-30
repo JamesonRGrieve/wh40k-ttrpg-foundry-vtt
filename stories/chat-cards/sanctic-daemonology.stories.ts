@@ -67,7 +67,7 @@ export const UnfetteredNoPhenomena: Story = {
         const withinCanvas = within(canvasElement);
         await expect(withinCanvas.getByText(/Banishment/i)).toBeTruthy();
         // Per-system + outside-sheet cascade anchors must be present.
-        const root = canvasElement.querySelector('.wh40k-sd-card');
+        const root = canvasElement.querySelector('[data-wh40k-hook="sd-card"]');
         await expect(root?.classList.contains('wh40k-rpg')).toBe(true);
         await expect(root?.getAttribute('data-wh40k-system')).toBe('dh2');
     },

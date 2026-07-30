@@ -230,7 +230,7 @@ test.describe.serial('Ace · Right Stuff (Tier B)', () => {
 
         expect(result.error, `chat-card probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'right-stuff chat card did not render').toBe(true);
-        expect(result.hasCardRoot, 'card root .wh40k-right-stuff-card missing').toBe(true);
+        expect(result.hasCardRoot, 'card root [data-wh40k-hook="right-stuff-card"] missing').toBe(true);
         expect(result.hasSystemAnchor, 'per-system data-wh40k-system anchor missing').toBe(true);
         expect(result.hasAutoSuccessBanner, 'auto-success banner should render').toBe(true);
         expect(result.messageId, 'ChatMessage.create returned no id').not.toBeNull();

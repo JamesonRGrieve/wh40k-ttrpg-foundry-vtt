@@ -12,11 +12,11 @@
      Pure presentation: no actions, no data attributes, no event
      handlers. Composes with the underlying engine helpers in
      `src/module/rules/daemonic-immunities.ts`. --}}
-<div class="wh40k-daemonic-immunities-badge tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded-md tw-border tw-border-solid tw-border-crimson tw-bg-crimson/20 tw-text-crimson-light tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-wide tw-select-none"
+<div data-wh40k-hook="daemonic-immunities-badge" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded-md tw-border tw-border-solid tw-border-crimson tw-bg-crimson/20 tw-text-crimson-light tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-wide tw-select-none"
      data-tooltip="{{localize "WH40K.DaemonicImmunities.Tooltip"}}"
      aria-label="{{localize "WH40K.DaemonicImmunities.BadgeLabel"}}">
     <i class="fa-solid fa-skull tw-text-crimson-light" aria-hidden="true"></i>
-    <span class="wh40k-daemonic-immunities-badge__label">{{localize "WH40K.DaemonicImmunities.BadgeLabel"}}</span>
+    <span data-wh40k-hook="daemonic-immunities-badge__label">{{localize "WH40K.DaemonicImmunities.BadgeLabel"}}</span>
     <span class="tw-font-normal tw-normal-case tw-tracking-normal tw-opacity-90">
         {{localize "WH40K.DaemonicImmunities.DiseaseImmune"}} · {{localize "WH40K.DaemonicImmunities.PoisonImmune"}} · {{localize "WH40K.DaemonicImmunities.Undying"}}
     </span>

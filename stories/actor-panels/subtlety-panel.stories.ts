@@ -97,17 +97,17 @@ export const PlayerView: Story = {
     play: ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         // Pool readout shows current / max.
-        void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent.trim()).toBe('60');
-        void expect(canvasElement.querySelector('.wh40k-subtlety-max')?.textContent.trim()).toBe('100');
+        void expect(canvasElement.querySelector('[data-wh40k-hook="subtlety-value"]')?.textContent.trim()).toBe('60');
+        void expect(canvasElement.querySelector('[data-wh40k-hook="subtlety-max"]')?.textContent.trim()).toBe('100');
         // Player view (#317): the manual stepper renders for everyone but its
         // buttons are disabled (visible, greyed) for non-GM rather than hidden.
-        void expect(canvasElement.querySelector('.wh40k-subtlety-manual')).not.toBeNull();
+        void expect(canvasElement.querySelector('[data-wh40k-hook="subtlety-manual"]')).not.toBeNull();
         const playerSteppers = canvasElement.querySelectorAll('[data-action="adjustSubtletyManually"]');
         void expect(playerSteppers.length).toBe(2);
         void expect(Array.from(playerSteppers).every((b) => (b as HTMLButtonElement).disabled)).toBe(true);
         // Both adjuster rows render; the clamp row shows its shield affordance.
-        void expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(2);
-        void expect(canvasElement.querySelector('.wh40k-subtlety-adjuster-clamp')).not.toBeNull();
+        void expect(canvasElement.querySelectorAll('[data-wh40k-hook="subtlety-adjuster-row"]').length).toBe(2);
+        void expect(canvasElement.querySelector('[data-wh40k-hook="subtlety-adjuster-clamp"]')).not.toBeNull();
         void expect(storyCanvas.getByText('Dark Pact — Hunger for Knowledge (discovered)')).toBeTruthy();
         // Breakdown affordance is always available.
         void expect(canvasElement.querySelector('[data-action="viewSubtletyBreakdown"]')).not.toBeNull();
@@ -148,7 +148,7 @@ export const GmViewWithAdjusters: Story = {
     },
     render: (args) => renderPanel(args),
     play: ({ canvasElement }) => {
-        void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent.trim()).toBe('45');
+        void expect(canvasElement.querySelector('[data-wh40k-hook="subtlety-value"]')?.textContent.trim()).toBe('45');
         // GM view: the manual stepper renders both +1 / -1 buttons, enabled.
         const steppers = canvasElement.querySelectorAll('[data-action="adjustSubtletyManually"]');
         void expect(steppers.length).toBe(2);
@@ -158,11 +158,11 @@ export const GmViewWithAdjusters: Story = {
         void expect(deltas).toContain('-1');
         // Three adjuster rows; the gains row (+5) and losses row (-3) render
         // signed deltas, the clamp row renders the shield affordance.
-        void expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(3);
-        const deltaCells = Array.from(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-delta')).map((n) => n.textContent.trim());
+        void expect(canvasElement.querySelectorAll('[data-wh40k-hook="subtlety-adjuster-row"]').length).toBe(3);
+        const deltaCells = Array.from(canvasElement.querySelectorAll('[data-wh40k-hook="subtlety-adjuster-delta"]')).map((n) => n.textContent.trim());
         void expect(deltaCells).toContain('+5');
         void expect(deltaCells).toContain('-3');
-        void expect(canvasElement.querySelector('.wh40k-subtlety-adjuster-clamp')).not.toBeNull();
+        void expect(canvasElement.querySelector('[data-wh40k-hook="subtlety-adjuster-clamp"]')).not.toBeNull();
     },
 };
 
@@ -175,8 +175,8 @@ export const EmptyAdjusters: Story = {
     },
     render: (args) => renderPanel(args),
     play: ({ canvasElement }) => {
-        void expect(canvasElement.querySelector('.wh40k-subtlety-value')?.textContent.trim()).toBe('80');
-        void expect(canvasElement.querySelectorAll('.wh40k-subtlety-adjuster-row').length).toBe(0);
-        void expect(canvasElement.querySelector('.wh40k-subtlety-adjusters-empty')).not.toBeNull();
+        void expect(canvasElement.querySelector('[data-wh40k-hook="subtlety-value"]')?.textContent.trim()).toBe('80');
+        void expect(canvasElement.querySelectorAll('[data-wh40k-hook="subtlety-adjuster-row"]').length).toBe(0);
+        void expect(canvasElement.querySelector('[data-wh40k-hook="subtlety-adjusters-empty"]')).not.toBeNull();
     },
 };

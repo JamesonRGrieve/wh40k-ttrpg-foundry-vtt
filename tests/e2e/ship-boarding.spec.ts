@@ -88,7 +88,7 @@ test.describe.serial('Ship Boarding chat card (Tier B)', () => {
 
         expect(result.error, `chat-card probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'ship-boarding card did not render').toBe(true);
-        expect(result.hasCardRoot, 'card root .wh40k-ship-boarding-card missing').toBe(true);
+        expect(result.hasCardRoot, 'card root [data-wh40k-hook="ship-boarding-card"] missing').toBe(true);
         expect(result.hasSystemAnchor, 'per-system data-wh40k-system anchor missing').toBe(true);
         expect(result.hasDamageBlock, 'damage block should render on a breach').toBe(true);
         expect(result.messageId, 'ChatMessage.create returned no id').not.toBeNull();

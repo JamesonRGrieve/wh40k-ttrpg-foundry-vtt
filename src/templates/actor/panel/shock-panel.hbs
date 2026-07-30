@@ -29,9 +29,9 @@
          raising it stays the ± steppers' job (there is no pip above `value`).
 
          The tw-sr-only span inside wh40k-shock-value preserves the numeric text so the
-         e2e spec's .wh40k-shock-value.textContent.trim() === String(value) assertion
+         e2e spec's [data-wh40k-hook="shock-value"].textContent.trim() === String(value) assertion
          still holds — the pip buttons themselves contribute no text. --}}
-    <div class="wh40k-shock-value tw-flex tw-items-center tw-ml-auto"
+    <div data-wh40k-hook="shock-value" class="tw-flex tw-items-center tw-ml-auto"
          data-shock-value="{{system.shock.value}}">
         <span class="tw-sr-only">{{system.shock.value}}</span>
         {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
@@ -46,7 +46,7 @@
     {{!-- Snap Out of It — trailing affordance, matching the Fate row's info/restore
          buttons which sit after the pips (#293). Disabled at zero. --}}
     <button type="button"
-            class="wh40k-shock-snap-btn tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-bright)] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+            data-wh40k-hook="shock-snap-btn" class="tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-bright)] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
             data-action="snapOutOfShock"
             title="{{localize 'WH40K.Shock.SnapOutTooltip'}}"
             {{#if (lte system.shock.value 0)}}disabled{{/if}}>

@@ -87,9 +87,9 @@ test.describe.serial('extended test toggle (#59)', () => {
                 thresholdValue: string | null;
             }
             function readState(label: string): ExtendedTestState {
-                const wrapper = rootEl.querySelector<HTMLElement>('.wh40k-extended-test-controls');
-                const checkbox = rootEl.querySelector<HTMLInputElement>('.wh40k-extended-test-controls__checkbox');
-                const thresholdInput = rootEl.querySelector<HTMLInputElement>('.wh40k-extended-test-controls__threshold-input');
+                const wrapper = rootEl.querySelector<HTMLElement>('[data-wh40k-hook="extended-test-controls"]');
+                const checkbox = rootEl.querySelector<HTMLInputElement>('[data-wh40k-hook="extended-test-controls__checkbox"]');
+                const thresholdInput = rootEl.querySelector<HTMLInputElement>('[data-wh40k-hook="extended-test-controls__threshold-input"]');
                 return {
                     label,
                     rendered: wrapper !== null,
@@ -100,7 +100,7 @@ test.describe.serial('extended test toggle (#59)', () => {
             }
 
             async function clickCheckbox(): Promise<void> {
-                const cb = rootEl.querySelector<HTMLInputElement>('.wh40k-extended-test-controls__checkbox');
+                const cb = rootEl.querySelector<HTMLInputElement>('[data-wh40k-hook="extended-test-controls__checkbox"]');
                 cb?.click();
                 await new Promise<void>((r) => {
                     setTimeout(r, 60);
@@ -138,7 +138,7 @@ test.describe.serial('extended test toggle (#59)', () => {
         // Visual record with the toggle on.
         await page.evaluate(async () => {
             const root = document.querySelector<HTMLElement>('.application[data-application-part]');
-            const cb = root?.querySelector<HTMLInputElement>('.wh40k-extended-test-controls__checkbox');
+            const cb = root?.querySelector<HTMLInputElement>('[data-wh40k-hook="extended-test-controls__checkbox"]');
             if (cb !== null && cb !== undefined && !cb.checked) {
                 cb.click();
                 await new Promise<void>((r) => {

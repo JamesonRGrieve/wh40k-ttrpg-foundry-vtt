@@ -66,10 +66,10 @@ export const GmView: Story = {
         const storyCanvas = within(canvasElement);
         // Readout: day counter, full date, elapsed.
         void expect(storyCanvas.getByText('Day 5')).toBeTruthy();
-        void expect(canvasElement.querySelector('.wh40k-wt-date')?.textContent.trim()).toBe('0000-01-06 14:05:09');
-        void expect(canvasElement.querySelector('.wh40k-wt-elapsed')?.textContent.trim()).toBe('5d 14h');
+        void expect(canvasElement.querySelector('[data-wh40k-hook="wt-date"]')?.textContent.trim()).toBe('0000-01-06 14:05:09');
+        void expect(canvasElement.querySelector('[data-wh40k-hook="wt-elapsed"]')?.textContent.trim()).toBe('5d 14h');
         // GM controls: quick advance, custom advance amount + unit, set inception.
-        void expect(canvasElement.querySelector('.wh40k-wt-gm-controls')).not.toBeNull();
+        void expect(canvasElement.querySelector('[data-wh40k-hook="wt-gm-controls"]')).not.toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceHour"]')).not.toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceDay"]')).not.toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceCustom"]')).not.toBeNull();
@@ -87,9 +87,9 @@ export const PlayerView: Story = {
         const storyCanvas = within(canvasElement);
         // The counter and date are visible to players...
         void expect(storyCanvas.getByText('Day 5')).toBeTruthy();
-        void expect(canvasElement.querySelector('.wh40k-wt-date')?.textContent.trim()).toBe('0000-01-06 14:05:09');
+        void expect(canvasElement.querySelector('[data-wh40k-hook="wt-date"]')?.textContent.trim()).toBe('0000-01-06 14:05:09');
         // ...but every GM advance control is absent.
-        void expect(canvasElement.querySelector('.wh40k-wt-gm-controls')).toBeNull();
+        void expect(canvasElement.querySelector('[data-wh40k-hook="wt-gm-controls"]')).toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceHour"]')).toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceDay"]')).toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceCustom"]')).toBeNull();

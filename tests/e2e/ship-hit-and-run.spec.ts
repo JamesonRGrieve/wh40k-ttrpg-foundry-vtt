@@ -104,7 +104,7 @@ test.describe.serial('Ship Hit-and-Run chat card (Tier B)', () => {
 
         expect(result.error, `chat-card probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'ship-hit-and-run card did not render').toBe(true);
-        expect(result.hasCardRoot, 'card root .wh40k-ship-har-card missing').toBe(true);
+        expect(result.hasCardRoot, 'card root [data-wh40k-hook="ship-har-card"] missing').toBe(true);
         expect(result.hasSystemAnchor, 'per-system data-wh40k-system anchor missing').toBe(true);
         expect(result.hasCritPick, 'AppliedCrit block should render on a critical success').toBe(true);
         expect(result.hasHullDamage, 'HullDamage row should render on a critical success').toBe(true);

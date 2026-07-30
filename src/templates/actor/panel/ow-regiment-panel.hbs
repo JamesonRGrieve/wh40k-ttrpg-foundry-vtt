@@ -44,7 +44,7 @@
     {{!-- 12-point Regiment budget readout --}}
     <div class="tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.OW.Regiment.Budget.Total"}}
-        <span class="wh40k-ow-regiment-budget-readout tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
+        <span data-wh40k-hook="ow-regiment-budget-readout" class="tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
               data-budget-spent="{{regimentPanel.regiment.spent}}"
               data-budget-total="{{regimentPanel.regiment.budget}}">
             {{regimentPanel.regiment.spent}} / {{regimentPanel.regiment.budget}}
@@ -69,27 +69,27 @@
 
     {{!-- Per-category breakdown --}}
     <div class="tw-grid tw-grid-cols-2 tw-gap-1">
-        <div class="wh40k-ow-regiment-category tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.12)]" data-category="homeWorld">
+        <div data-wh40k-hook="ow-regiment-category" class="tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.12)]" data-category="homeWorld">
             <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OW.Regiment.Category.HomeWorld"}}</span>
             <span class="tw-text-[0.75rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">{{regimentPanel.regiment.perCategory.homeWorld}}</span>
         </div>
-        <div class="wh40k-ow-regiment-category tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.12)]" data-category="commandingOfficer">
+        <div data-wh40k-hook="ow-regiment-category" class="tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.12)]" data-category="commandingOfficer">
             <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OW.Regiment.Category.CommandingOfficer"}}</span>
             <span class="tw-text-[0.75rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">{{regimentPanel.regiment.perCategory.commandingOfficer}}</span>
         </div>
-        <div class="wh40k-ow-regiment-category tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.12)]" data-category="regimentType">
+        <div data-wh40k-hook="ow-regiment-category" class="tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.12)]" data-category="regimentType">
             <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OW.Regiment.Category.RegimentType"}}</span>
             <span class="tw-text-[0.75rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">{{regimentPanel.regiment.perCategory.regimentType}}</span>
         </div>
-        <div class="wh40k-ow-regiment-category tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.12)]" data-category="trainingDoctrine">
+        <div data-wh40k-hook="ow-regiment-category" class="tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.12)]" data-category="trainingDoctrine">
             <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OW.Regiment.Category.TrainingDoctrine"}}</span>
             <span class="tw-text-[0.75rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">{{regimentPanel.regiment.perCategory.trainingDoctrine}}</span>
         </div>
-        <div class="wh40k-ow-regiment-category tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.12)]" data-category="specialEquipmentDoctrine">
+        <div data-wh40k-hook="ow-regiment-category" class="tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.12)]" data-category="specialEquipmentDoctrine">
             <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OW.Regiment.Category.SpecialEquipmentDoctrine"}}</span>
             <span class="tw-text-[0.75rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">{{regimentPanel.regiment.perCategory.specialEquipmentDoctrine}}</span>
         </div>
-        <div class="wh40k-ow-regiment-category tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.12)]" data-category="favouredWeapons">
+        <div data-wh40k-hook="ow-regiment-category" class="tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(0,0,0,0.12)]" data-category="favouredWeapons">
             <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OW.Regiment.Category.FavouredWeapons"}}</span>
             <span class="tw-text-[0.75rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">{{regimentPanel.regiment.perCategory.favouredWeapons}}</span>
         </div>
@@ -98,7 +98,7 @@
     {{!-- 30-point Standard Kit budget readout --}}
     <div class="tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.OW.Regiment.Kit.Total"}}
-        <span class="wh40k-ow-regiment-kit-readout tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
+        <span data-wh40k-hook="ow-regiment-kit-readout" class="tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
               data-kit-spent="{{regimentPanel.kit.spent}}"
               data-kit-total="{{regimentPanel.kit.budget}}">
             {{regimentPanel.kit.spent}} / {{regimentPanel.kit.budget}}

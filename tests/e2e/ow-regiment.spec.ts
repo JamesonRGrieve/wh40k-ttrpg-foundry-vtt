@@ -84,10 +84,10 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
                 if (rendered && el) {
                     const panel = el.querySelector('.wh40k-ow-regiment-panel');
                     if (panel !== null) {
-                        hasBudget = panel.querySelector('.wh40k-ow-regiment-budget-readout') !== null;
-                        hasKit = panel.querySelector('.wh40k-ow-regiment-kit-readout') !== null;
+                        hasBudget = panel.querySelector('[data-wh40k-hook="ow-regiment-budget-readout"]') !== null;
+                        hasKit = panel.querySelector('[data-wh40k-hook="ow-regiment-kit-readout"]') !== null;
                         hasEditBtn = panel.querySelector('button[data-action="owRegimentEdit"]') !== null;
-                        categoryCount = panel.querySelectorAll('.wh40k-ow-regiment-category').length;
+                        categoryCount = panel.querySelectorAll('[data-wh40k-hook="ow-regiment-category"]').length;
                     }
                 }
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globalThis handle is runtime-only, no shipped types

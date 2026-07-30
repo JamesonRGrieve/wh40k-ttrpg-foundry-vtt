@@ -125,7 +125,7 @@ export const SprayTemplate: Story = {
             }),
         ),
     play: async ({ canvasElement }) => {
-        const card = canvasElement.querySelector('.wh40k-quality-card');
+        const card = canvasElement.querySelector('[data-wh40k-hook="quality-card"]');
         await expect(card).toBeTruthy();
         await expect(card?.getAttribute('data-quality-key')).toBe('spray');
         await expect(canvasElement.querySelector('[data-row="template-shape"]')).toBeTruthy();

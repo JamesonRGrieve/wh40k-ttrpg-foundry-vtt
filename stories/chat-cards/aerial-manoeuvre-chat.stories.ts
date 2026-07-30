@@ -76,7 +76,7 @@ export const TightTurnSuccess: Story = {
     name: 'Tight Turn — success, climb one tier',
     render: () => renderSheet(aerialChatSrc, cardContext(resolveAerialManoeuvre('tight-turn', true, { currentAltitude: 'low', altitudeDelta: 1 }))),
     play: ({ canvasElement }) => {
-        void expect(canvasElement.querySelector('.wh40k-aerial-card')).toBeTruthy();
+        void expect(canvasElement.querySelector('[data-wh40k-hook="aerial-card"]')).toBeTruthy();
         void expect(canvasElement.querySelector('[data-wh40k-system="dh2"]')).toBeTruthy();
     },
 };
