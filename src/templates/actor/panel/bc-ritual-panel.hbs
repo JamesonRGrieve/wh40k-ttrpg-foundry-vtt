@@ -20,7 +20,7 @@
     {{!-- Header right slot: perform-ritual button --}}
     {{#*inline "rightSlot"}}
         <button type="button"
-                class="wh40k-bc-ritual-perform-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
+                data-wh40k-hook="bc-ritual-perform-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
                 data-action="bcPerformRitual"
                 title="{{localize 'WH40K.BC.Ritual.PerformButton'}}">
             {{localize "WH40K.BC.Ritual.PerformButton"}}
@@ -39,6 +39,6 @@
                min="0"
                step="1"
                value="{{ritualPanel.ritualMastery}}"
-               class="wh40k-bc-ritual-mastery-input tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-w-16 tw-text-right tw-tabular-nums tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]" />
+               data-wh40k-hook="bc-ritual-mastery-input" class="tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-w-16 tw-text-right tw-tabular-nums tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]" />
     </div>
 {{/systems/wh40k-rpg/templates/actor/partial/system-card.hbs}}

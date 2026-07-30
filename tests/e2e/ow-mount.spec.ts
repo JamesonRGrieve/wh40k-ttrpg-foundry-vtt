@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -132,7 +133,7 @@ test.describe.serial('OW Mounted Combat panel (Tier B, #159)', () => {
                         hasTrampleRow = el.querySelector('[data-action-id="trample"]') !== null;
                         hasRunDownRow = el.querySelector('[data-action-id="run-down"]') !== null;
                         hasMountedAttackRow = el.querySelector('[data-action-id="mounted-attack"]') !== null;
-                        hasMountReadout = el.querySelector('.wh40k-ow-mount-current-readout') !== null;
+                        hasMountReadout = el.querySelector('[data-wh40k-hook="ow-mount-current-readout"]') !== null;
                         const issueBtn = el.querySelector<HTMLButtonElement>('button[data-action="owMountedAction"][data-action-id="charge"]');
                         hasIssueButton = issueBtn !== null;
 
@@ -166,6 +167,8 @@ test.describe.serial('OW Mounted Combat panel (Tier B, #159)', () => {
                 };
             }, actorId);
 
+            const hookCounts = await countHooks(page);
+
             await snap(page, 'ow-mount-panel');
 
             await page.evaluate(async () => {
@@ -188,6 +191,7 @@ test.describe.serial('OW Mounted Combat panel (Tier B, #159)', () => {
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.rendered, 'sheet did not render').toBe(true);
+            expectHooks(hookCounts, ['ow-mount-current-readout']);
             expect(result.hasPanel, 'OW Mount panel should render in OW sheet').toBe(true);
             expect(result.hasChargeRow, 'Charge row should render').toBe(true);
             expect(result.hasTrampleRow, 'Trample row should render').toBe(true);

@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -78,10 +79,10 @@ test.describe.serial('BcChaosRitualPanel (Tier B)', () => {
                 rendered = host.firstElementChild instanceof HTMLElement;
 
                 if (rendered) {
-                    hasMasteryInput = host.querySelector('input.wh40k-bc-ritual-mastery-input') !== null;
-                    hasPerformButton = host.querySelector('button.wh40k-bc-ritual-perform-btn[data-action="bcPerformRitual"]') !== null;
+                    hasMasteryInput = host.querySelector('input[data-wh40k-hook="bc-ritual-mastery-input"]') !== null;
+                    hasPerformButton = host.querySelector('button[data-wh40k-hook="bc-ritual-perform-btn"][data-action="bcPerformRitual"]') !== null;
                     masteryAttr = host.querySelector('section.wh40k-bc-ritual-panel')?.getAttribute('data-bc-ritual-mastery') ?? '';
-                    masteryValue = host.querySelector<HTMLInputElement>('input.wh40k-bc-ritual-mastery-input')?.value ?? '';
+                    masteryValue = host.querySelector<HTMLInputElement>('input[data-wh40k-hook="bc-ritual-mastery-input"]')?.value ?? '';
                 }
 
                 interface BcRitualHostGlobal {
@@ -103,6 +104,8 @@ test.describe.serial('BcChaosRitualPanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+
         await snap(page, 'bc-chaos-ritual-panel');
 
         await page.evaluate(() => {
@@ -122,6 +125,7 @@ test.describe.serial('BcChaosRitualPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, ['bc-ritual-perform-btn', 'bc-ritual-mastery-input']);
         expect(result.hasMasteryInput, 'Daemonic Mastery input should render').toBe(true);
         expect(result.hasPerformButton, 'Perform Ritual button should render').toBe(true);
         expect(result.masteryAttr, 'mastery data attribute should round-trip').toBe('5');

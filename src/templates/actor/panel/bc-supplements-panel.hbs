@@ -46,10 +46,10 @@
                    min="0"
                    step="1"
                    value="{{supplementsPanel.daemonEngineRating}}"
-                   class="wh40k-bc-daemon-engine-rating-input tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-w-16 tw-text-right tw-tabular-nums tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]" />
+                   data-wh40k-hook="bc-daemon-engine-rating-input" class="tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1 tw-py-0.5 tw-w-16 tw-text-right tw-tabular-nums tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]" />
         </div>
         {{#if supplementsPanel.daemonEngineActive}}
-            <div class="wh40k-bc-daemon-engine-rage tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]"
+            <div data-wh40k-hook="bc-daemon-engine-rage" class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)]"
                  data-rage-bonus="{{supplementsPanel.daemonEngineRageBonus}}">
                 <span class="tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
                     {{localize "WH40K.BC.Supplements.DaemonEngine.RageBonusLabel"}}
@@ -70,7 +70,7 @@
             </label>
             <button type="button"
                     id="bc-quick-and-the-dead"
-                    class="wh40k-bc-quick-and-the-dead-toggle tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] {{#if supplementsPanel.quickAndTheDeadActive}}tw-border-crimson tw-text-crimson{{else}}tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+                    data-wh40k-hook="bc-quick-and-the-dead-toggle" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] {{#if supplementsPanel.quickAndTheDeadActive}}tw-border-crimson tw-text-crimson{{else}}tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
                     data-action="bcToggleQuickAndTheDead"
                     aria-pressed="{{supplementsPanel.quickAndTheDeadActive}}"
                     title="{{localize 'WH40K.BC.Supplements.QuickAndTheDead.ToggleTitle'}}">
@@ -83,14 +83,14 @@
         </div>
         {{#if supplementsPanel.quickAndTheDeadActive}}
             <div class="tw-grid tw-grid-cols-2 tw-gap-1 tw-mt-1">
-                <div class="wh40k-bc-quick-and-the-dead-bonus tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                <div data-wh40k-hook="bc-quick-and-the-dead-bonus" class="tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                      data-alignment-bonus="{{supplementsPanel.quickAndTheDeadBonus}}">
                     {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Supplements.QuickAndTheDead.AlignmentBonusLabel"}}
                     <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
                         +{{supplementsPanel.quickAndTheDeadBonus}}
                     </span>
                 </div>
-                <div class="wh40k-bc-quick-and-the-dead-initiative tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
+                <div data-wh40k-hook="bc-quick-and-the-dead-initiative" class="tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
                      data-initiative="{{supplementsPanel.quickAndTheDeadInitiative}}">
                     {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Supplements.QuickAndTheDead.InitiativeLabel"}}
                     <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">

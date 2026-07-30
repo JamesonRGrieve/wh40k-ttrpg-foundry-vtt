@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -85,11 +86,11 @@ test.describe.serial('BcAlignmentAdvancementPanel (Tier B)', () => {
                 rendered = host.firstElementChild instanceof HTMLElement;
 
                 if (rendered) {
-                    tallyRows = host.querySelectorAll('.wh40k-bc-tally-row').length;
-                    hasPendingFlip = host.querySelector('.wh40k-bc-pending-flip') !== null;
-                    hasPsykerLock = host.querySelector('.wh40k-bc-psyker-lock') !== null;
-                    hasInfamyButton = host.querySelector('button.wh40k-bc-infamy-buy-btn') !== null;
-                    currentAlignment = host.querySelector('.wh40k-bc-current-alignment')?.getAttribute('data-alignment') ?? '';
+                    tallyRows = host.querySelectorAll('[data-wh40k-hook="bc-tally-row"]').length;
+                    hasPendingFlip = host.querySelector('[data-wh40k-hook="bc-pending-flip"]') !== null;
+                    hasPsykerLock = host.querySelector('[data-wh40k-hook="bc-psyker-lock"]') !== null;
+                    hasInfamyButton = host.querySelector('button[data-wh40k-hook="bc-infamy-buy-btn"]') !== null;
+                    currentAlignment = host.querySelector('[data-wh40k-hook="bc-current-alignment"]')?.getAttribute('data-alignment') ?? '';
                     derivedAlignment = host.querySelector('section.wh40k-bc-alignment-panel')?.getAttribute('data-bc-derived-alignment') ?? '';
                 }
 
@@ -114,6 +115,8 @@ test.describe.serial('BcAlignmentAdvancementPanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+
         await snap(page, 'bc-alignment-advancement-panel');
 
         // Panel captured; tear it down so it doesn't leak into the next
@@ -131,6 +134,7 @@ test.describe.serial('BcAlignmentAdvancementPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, ['bc-current-alignment', 'bc-pending-flip', 'bc-psyker-lock', 'bc-tally-row', 'bc-infamy-buy-btn']);
         expect(result.tallyRows, 'expected four per-god tally rows').toBe(4);
         expect(result.hasPendingFlip, 'pending-flip banner should render when current !== derived').toBe(true);
         expect(result.hasPsykerLock, 'psyker-lock warning should render when psykerLocked=true').toBe(true);

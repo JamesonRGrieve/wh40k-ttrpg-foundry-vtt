@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks, expectHooksAuthored, fetchAuthoredHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -117,7 +118,9 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
                         hasRequestBtn = requestBtn !== null;
                         requestBtnDisabled = requestBtn?.disabled ?? null;
                         hasCooldownBadge = el.querySelector('[data-cooldown-status]') !== null;
-                        hasAwardListOrEmpty = el.querySelector('.wh40k-ow-battlefield-panel__award-list, .wh40k-ow-battlefield-panel__awards p') !== null;
+                        hasAwardListOrEmpty =
+                            el.querySelector('[data-wh40k-hook="ow-battlefield-panel__award-list"], [data-wh40k-hook="ow-battlefield-panel__awards"] p') !==
+                            null;
                     }
 
                     g.__c161sheet = sheet;
@@ -138,6 +141,9 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
                 };
             }, actorId);
 
+            const hookCounts = await countHooks(page);
+            const authoredHooks = await fetchAuthoredHooks(page, '/systems/wh40k-rpg/templates/actor/panel/ow-battlefield-panel.hbs');
+
             await snap(page, 'ow-battlefield-panel');
 
             // Tear down so the open sheet doesn't leak into the next test's DOM.
@@ -157,6 +163,12 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.rendered, 'sheet did not render').toBe(true);
+            expectHooks(hookCounts, ['ow-battlefield-panel__awards']);
+            // The roster falls back to its empty-state <p> for this fixture, so the
+            // <ul> hook is legitimately unrendered — `hasAwardListOrEmpty` below accepts
+            // either branch. Pin the id in the template so that either-branch selector
+            // cannot quietly stop matching the list half.
+            expectHooksAuthored(authoredHooks, ['ow-battlefield-panel__award-list']);
             expect(result.hasPanel, 'battlefield panel should render in OW sheet').toBe(true);
             expect(result.hasRequestBtn, 'Request Support button should render').toBe(true);
             // With supportCooldown=3 (>0), the button must be disabled.

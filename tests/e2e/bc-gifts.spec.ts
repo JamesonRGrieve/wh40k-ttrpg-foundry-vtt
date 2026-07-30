@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -111,13 +112,13 @@ test.describe.serial('BcGiftsPanel (Tier B)', () => {
                 rendered = host.firstElementChild instanceof HTMLElement;
 
                 if (rendered) {
-                    giftEntries = host.querySelectorAll('.wh40k-bc-gift-entry').length;
-                    hasMergedFooter = host.querySelector('.wh40k-bc-gifts-merged') !== null;
-                    firstGiftRider = host.querySelector('.wh40k-bc-gift-entry')?.getAttribute('data-applied-alignment') ?? '';
-                    mergedDeltaCount = host.querySelectorAll('.wh40k-bc-gifts-merged-delta').length;
+                    giftEntries = host.querySelectorAll('[data-wh40k-hook="bc-gift-entry"]').length;
+                    hasMergedFooter = host.querySelector('[data-wh40k-hook="bc-gifts-merged"]') !== null;
+                    firstGiftRider = host.querySelector('[data-wh40k-hook="bc-gift-entry"]')?.getAttribute('data-applied-alignment') ?? '';
+                    mergedDeltaCount = host.querySelectorAll('[data-wh40k-hook="bc-gifts-merged-delta"]').length;
                     currentAlignment = host.querySelector('section.wh40k-bc-gifts-panel')?.getAttribute('data-bc-current-alignment') ?? '';
-                    hasDeltaChips = host.querySelectorAll('.wh40k-bc-gift-delta').length > 0;
-                    hasSubTable = host.querySelector('.wh40k-bc-gift-subtable') !== null;
+                    hasDeltaChips = host.querySelectorAll('[data-wh40k-hook="bc-gift-delta"]').length > 0;
+                    hasSubTable = host.querySelector('[data-wh40k-hook="bc-gift-subtable"]') !== null;
                 }
 
                 // Hold the host on a global handle so snap() (called
@@ -142,6 +143,8 @@ test.describe.serial('BcGiftsPanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+
         await snap(page, 'bc-gifts-panel');
 
         // Panel captured; tear it down so it doesn't leak into the next
@@ -159,6 +162,7 @@ test.describe.serial('BcGiftsPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, ['bc-gift-entry', 'bc-gift-subtable', 'bc-gift-delta', 'bc-gifts-merged', 'bc-gifts-merged-delta']);
         expect(result.giftEntries, 'expected two gift entries').toBe(2);
         expect(result.hasMergedFooter, 'merged-delta footer should render when any deltas present').toBe(true);
         expect(result.firstGiftRider, 'first gift should report Khorne as applied alignment').toBe('khorne');

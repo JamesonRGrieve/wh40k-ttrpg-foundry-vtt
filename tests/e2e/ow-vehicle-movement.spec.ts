@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -149,7 +150,7 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
                             hasHitAndRunRow = el.querySelector('[data-action-id="hit-and-run"]') !== null;
                             hasJinkRow = el.querySelector('[data-action-id="jink"]') !== null;
                             hasTacticalRow = el.querySelector('[data-action-id="tactical-manoeuvring"]') !== null;
-                            hasChaseReadout = el.querySelector('.wh40k-ow-vehicle-movement-chase-readout') !== null;
+                            hasChaseReadout = el.querySelector('[data-wh40k-hook="ow-vehicle-movement-chase-readout"]') !== null;
                             const issueBtn = el.querySelector<HTMLButtonElement>('button[data-action="owVehicleAction"][data-action-id="evasive-manoeuvring"]');
                             hasIssueButton = issueBtn !== null;
 
@@ -186,6 +187,8 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
                 actorId,
             );
 
+            const hookCounts = await countHooks(page);
+
             await snap(page, 'ow-vehicle-movement-panel');
 
             await page.evaluate(async (): Promise<void> => {
@@ -204,6 +207,7 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.rendered, 'sheet did not render').toBe(true);
+            expectHooks(hookCounts, ['ow-vehicle-movement-chase-readout']);
             expect(result.hasPanel, 'OW Vehicle Movement panel should render in OW sheet').toBe(true);
             expect(result.hasEvasiveRow, 'Evasive Manoeuvring row should render').toBe(true);
             expect(result.hasFloorItRow, 'Floor It! row should render').toBe(true);

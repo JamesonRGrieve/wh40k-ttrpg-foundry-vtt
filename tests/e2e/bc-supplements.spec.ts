@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -86,11 +87,12 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
                 rendered = host.firstElementChild instanceof HTMLElement;
 
                 if (rendered) {
-                    hasDaemonEngineInput = host.querySelector('input.wh40k-bc-daemon-engine-rating-input') !== null;
-                    hasQuickToggle = host.querySelector('button.wh40k-bc-quick-and-the-dead-toggle[data-action="bcToggleQuickAndTheDead"]') !== null;
-                    rageBonus = host.querySelector('.wh40k-bc-daemon-engine-rage')?.getAttribute('data-rage-bonus') ?? '';
-                    alignmentBonus = host.querySelector('.wh40k-bc-quick-and-the-dead-bonus')?.getAttribute('data-alignment-bonus') ?? '';
-                    initiative = host.querySelector('.wh40k-bc-quick-and-the-dead-initiative')?.getAttribute('data-initiative') ?? '';
+                    hasDaemonEngineInput = host.querySelector('input[data-wh40k-hook="bc-daemon-engine-rating-input"]') !== null;
+                    hasQuickToggle =
+                        host.querySelector('button[data-wh40k-hook="bc-quick-and-the-dead-toggle"][data-action="bcToggleQuickAndTheDead"]') !== null;
+                    rageBonus = host.querySelector('[data-wh40k-hook="bc-daemon-engine-rage"]')?.getAttribute('data-rage-bonus') ?? '';
+                    alignmentBonus = host.querySelector('[data-wh40k-hook="bc-quick-and-the-dead-bonus"]')?.getAttribute('data-alignment-bonus') ?? '';
+                    initiative = host.querySelector('[data-wh40k-hook="bc-quick-and-the-dead-initiative"]')?.getAttribute('data-initiative') ?? '';
                     daemonEngineRatingAttr = host.querySelector('section.wh40k-bc-supplements-panel')?.getAttribute('data-bc-daemon-engine-rating') ?? '';
                     quickActiveAttr = host.querySelector('section.wh40k-bc-supplements-panel')?.getAttribute('data-bc-quick-and-the-dead-active') ?? '';
                 }
@@ -117,6 +119,8 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
             };
         });
 
+        const hookCounts = await countHooks(page);
+
         await snap(page, 'bc-supplements-panel');
 
         // Panel captured; tear it down so it doesn't leak into the
@@ -134,6 +138,13 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
+        expectHooks(hookCounts, [
+            'bc-daemon-engine-rating-input',
+            'bc-daemon-engine-rage',
+            'bc-quick-and-the-dead-toggle',
+            'bc-quick-and-the-dead-bonus',
+            'bc-quick-and-the-dead-initiative',
+        ]);
         expect(result.hasDaemonEngineInput, 'daemon engine rating input should render').toBe(true);
         expect(result.hasQuickToggle, 'Quick & the Dead toggle should render').toBe(true);
         expect(result.rageBonus, 'rage bonus data attr should round-trip').toBe('5');

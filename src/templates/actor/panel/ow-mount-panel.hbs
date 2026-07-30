@@ -39,7 +39,7 @@
     {{!-- Current mount + trait badges --}}
     <div class="tw-flex tw-flex-col tw-gap-1">
         {{#if mountPanel.mount}}
-            <div class="wh40k-ow-mount-current-readout tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-brass/40"
+            <div data-wh40k-hook="ow-mount-current-readout" class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-brass/40"
                  data-mount-id="{{mountPanel.mount.mountId}}">
                 <span class="tw-font-bold tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-bright)]">
                     <i class="fas fa-horse-head ow:tw-text-brass tw-mr-1"></i>
