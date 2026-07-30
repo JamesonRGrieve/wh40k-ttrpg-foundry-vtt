@@ -82,3 +82,31 @@ export const DIRECTION_LABELS: ReadonlyArray<string> = [
 export function labelForDirection(direction: ScatterDirection): string {
     return DIRECTION_LABELS[direction - 1] ?? 'Unknown';
 }
+
+/**
+ * A synchronous source of a uniform draw in `[0, 1)`. Injectable so the
+ * scatter roll is deterministic under test; the chat-card call sites use
+ * the default.
+ */
+export type ScatterRng = () => number;
+
+/** Roll a scatter direction on the canonical 1..10 diagram. */
+export function rollScatterDirection(rng: ScatterRng = Math.random): ScatterDirection {
+    return clampScatterDirection(Math.floor(rng() * 10) + 1);
+}
+
+/**
+ * Roll a scatter direction and return its display label — the form the
+ * chat-card deviation effects embed ("…deviates 1d5m off course to
+ * {@link DIRECTION_LABELS}[n]!").
+ *
+ * This is the ONE scatter direction resolver. `rolls/damage-data.ts` used
+ * to carry a second copy that mapped the same 1d10 onto absolute compass
+ * points ('north west', 'south east', …); it collapsed 6+7 and 9+10 onto
+ * one label each, so only 8 of the 10 diagram directions were reachable,
+ * and a compass bearing is meaningless for a diagram RAW defines relative
+ * to the firer's line of fire. Both roll sites now come here.
+ */
+export function scatterDirection(rng: ScatterRng = Math.random): string {
+    return labelForDirection(rollScatterDirection(rng));
+}

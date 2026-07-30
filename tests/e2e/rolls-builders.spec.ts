@@ -38,8 +38,9 @@ import { test } from './lib/test';
  *     `isComplete` / `isFailed` / `remaining` getters.
  *   - `damage-data.ts` — `replaceDamageDieWithDoS()` free function +
  *     `Hit` constructor + `Hit.replaceDamageDieWithDoS` method +
- *     `_totalDamage` / `_totalPenetration` + `DamageData.reset()` +
- *     `scatterDirection()` (returns one of the 8 compass strings).
+ *     `_totalDamage` / `_totalPenetration` + `DamageData.reset()`.
+ *   - `rules/scatter.ts` — `scatterDirection()` (returns one of the ten
+ *     `DIRECTION_LABELS` on the RAW scatter diagram).
  *   - `dice/basic-roll.ts` — `BasicRollWH40K.constructFormula()` (pure
  *     formula assembly: base default + signed flat modifier).
  *
@@ -199,7 +200,10 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[] }
             replaceDamageDieWithDoS: (dice: Array<{ result: number }>, dos: number) => { replacedIndex: number; previous: number; delta: number } | null;
             Hit: new () => HitInstance;
             WeaponDamageData: new () => WeaponDamageDataInstance;
+        }
+        interface ScatterModule {
             scatterDirection: () => string;
+            DIRECTION_LABELS: readonly string[];
         }
         interface BasicRollModule {
             default?: { constructFormula: (opts: { base?: string; modifier?: string }) => string };
@@ -579,7 +583,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[] }
                 damageMod = null;
             }
             if (damageMod != null) {
-                const { replaceDamageDieWithDoS, Hit, WeaponDamageData, scatterDirection } = damageMod;
+                const { replaceDamageDieWithDoS, Hit, WeaponDamageData } = damageMod;
 
                 try {
                     // Replaces the lowest active die by default; returns null
@@ -636,11 +640,26 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[] }
                 } catch (err) {
                     record('damage-hit-totals-and-reset', false, err instanceof Error ? err.message : String(err));
                 }
+            }
+        }
 
+        // ---------- rules/scatter ----------
+        // `scatterDirection()` moved out of damage-data.ts into rules/scatter.ts
+        // when the duplicate compass-label copy was merged away (#514); the
+        // deviation chat effects in damage-data / action-data both call it there.
+        async function probeScatter(): Promise<void> {
+            let scatterMod: ScatterModule | null;
+            try {
+                scatterMod = await dynImport<ScatterModule>(`${base}/rules/scatter.js`);
+            } catch (err) {
+                record('damage-scatter-direction', false, `import: ${err instanceof Error ? err.message : String(err)}`);
+                scatterMod = null;
+            }
+            if (scatterMod != null) {
                 try {
-                    const dir = scatterDirection();
-                    const valid = ['north west', 'north', 'north east', 'west', 'east', 'south west', 'south', 'south east'];
-                    record('damage-scatter-direction', valid.includes(String(dir)), `dir="${String(dir)}"`);
+                    const { scatterDirection, DIRECTION_LABELS } = scatterMod;
+                    const dir = String(scatterDirection());
+                    record('damage-scatter-direction', DIRECTION_LABELS.includes(dir), `dir="${dir}"`);
                 } catch (err) {
                     record('damage-scatter-direction', false, err instanceof Error ? err.message : String(err));
                 }
@@ -679,6 +698,7 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[] }
         await probeActionData();
         await probeExtendedTestData();
         await probeDamageData();
+        await probeScatter();
         await probeBasicRoll();
 
         return out;

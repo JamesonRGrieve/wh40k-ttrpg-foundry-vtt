@@ -9,6 +9,7 @@ import {
     modeDelta,
 } from '../rules/dynamic-modifiers.ts';
 import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.ts';
+import { scatterDirection } from '../rules/scatter.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
 import {
     applyKeepHighestToDie,
@@ -717,18 +718,4 @@ export class PsychicDamageData extends DamageData {
         super();
         this.template = 'systems/wh40k-rpg/templates/chat/weapon-roll-chat.hbs';
     }
-}
-
-export function scatterDirection(): string {
-    let direction = '';
-    const directionInt = Math.floor(Math.random() * 10) + 1;
-    if (directionInt === 1) direction = 'north west';
-    if (directionInt === 2) direction = 'north';
-    if (directionInt === 3) direction = 'north east';
-    if (directionInt === 4) direction = 'west';
-    if (directionInt === 5) direction = 'east';
-    if (directionInt === 6 || directionInt === 7) direction = 'south west';
-    if (directionInt === 8) direction = 'south';
-    if (directionInt === 9 || directionInt === 10) direction = 'south east';
-    return direction;
 }

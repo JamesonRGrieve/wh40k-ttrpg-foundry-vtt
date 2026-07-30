@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildScatterVector, DIRECTION_LABELS, labelForDirection, scaleScatterForArea } from './scatter';
+import { buildScatterVector, DIRECTION_LABELS, labelForDirection, rollScatterDirection, scaleScatterForArea, scatterDirection } from './scatter';
 
 describe('buildScatterVector (#112)', () => {
     it('returns valid {direction, metres} for in-range inputs', () => {
@@ -43,5 +43,31 @@ describe('DIRECTION_LABELS / labelForDirection (#112)', () => {
         expect(labelForDirection(1)).toBe('Behind (1)');
         expect(labelForDirection(7)).toBe('Forward (7)');
         expect(labelForDirection(10)).toBe('Left (10)');
+    });
+});
+
+describe('rollScatterDirection / scatterDirection — the ONE resolver the chat cards call', () => {
+    it('maps the 1d10 draw onto all ten diagram directions', () => {
+        // rng() in [0,1) → floor(rng*10)+1, so the tenth of the range picks the direction.
+        const rolled = Array.from({ length: 10 }, (_, i) => rollScatterDirection(() => i / 10));
+        expect(rolled).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    });
+
+    it('labels every direction distinctly (the deleted compass copy collapsed 6+7 and 9+10)', () => {
+        const labels = Array.from({ length: 10 }, (_, i) => scatterDirection(() => i / 10));
+        expect(labels).toEqual([...DIRECTION_LABELS]);
+        expect(new Set(labels).size).toBe(10);
+    });
+
+    it('clamps a degenerate rng into the diagram', () => {
+        expect(rollScatterDirection(() => 0)).toBe(1);
+        expect(rollScatterDirection(() => 0.999999)).toBe(10);
+        expect(rollScatterDirection(() => Number.NaN)).toBe(1);
+    });
+
+    it('defaults to Math.random and always yields a known label', () => {
+        for (let i = 0; i < 50; i++) {
+            expect(DIRECTION_LABELS).toContain(scatterDirection());
+        }
     });
 });

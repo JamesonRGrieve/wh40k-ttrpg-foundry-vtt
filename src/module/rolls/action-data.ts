@@ -7,6 +7,7 @@ import { type AllocationTarget, allocateHits } from '../rules/hit-allocation.ts'
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/opposed.ts';
 import type { RerollOption } from '../rules/reroll.ts';
+import { scatterDirection } from '../rules/scatter.ts';
 import {
     applyFirstAidOutcome,
     blatherRounds,
@@ -29,7 +30,7 @@ import { DAY_SECONDS } from '../rules/world-time.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
-import { type AttackDataLike, Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
+import { type AttackDataLike, Hit, PsychicDamageData, WeaponDamageData } from './damage-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
 
