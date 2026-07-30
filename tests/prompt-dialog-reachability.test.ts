@@ -37,11 +37,9 @@ const MODULE_ROOT = resolve(__dirname, '..', 'src', 'module');
  * only ever shrink, which the size assertion below enforces.
  */
 const AWAITING_DECISION: ReadonlyMap<string, string> = new Map([
-    ['enhanced-skill-dialog', 'superseded by unified-roll-dialog (see its @file header); removal pending the mixed-template pass'],
-    ['force-field-dialog', 'superseded by unified-roll-dialog; removal pending the mixed-template pass'],
-    ['psychic-power-dialog', 'superseded by unified-roll-dialog; removal pending the mixed-template pass'],
-    ['simple-roll-dialog', 'superseded by unified-roll-dialog; removal pending the mixed-template pass'],
-    ['weapon-attack-dialog', 'superseded by unified-roll-dialog; removal pending the mixed-template pass'],
+    // The five superseded by `unified-roll-dialog` were DELETED (#516) rather than
+    // left here awaiting a decision — its own @file header named them as replaced,
+    // and their templates and preload entries went with them.
     ['incorruptible-devotion-dialog', 'wants a call site in the Corruption-gain path (Adepta Sororitas 1:1 trade)'],
     ['righteous-fury-dialog', 'wants a call site in the damage pipeline at the RF confirmation step'],
     ['sanctic-purity-prompt', 'wants a call site in the Psychic Phenomena dispatch path'],
