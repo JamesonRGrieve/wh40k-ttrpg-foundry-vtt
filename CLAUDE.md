@@ -74,12 +74,25 @@ Every direction in the previous section is backed by a coverage script and a rat
 | Sheet → story / data → test pairing | `pnpm symmetry` | `pnpm symmetry:ratchet` | `.symmetry-baseline` |
 | `!important` in `tailwind/*.js` | `pnpm important:coverage` | `pnpm important:ratchet` | `.important-baseline` |
 | Preload-list integrity (Handlebars partials) | `pnpm preload:drift` | hard gate (no ratchet) | — |
+| Orphaned `data-wh40k-hook` selectors (selector with no producing element) | `pnpm hooks:orphan-audit` | hard gate (no ratchet) | — |
 | Dead `tailwind/*.js` rules (no live `wh40k-*` consumer) | `pnpm css:plugin-audit` | hard gate (no ratchet) | — |
 | i18n key codegen freshness | `pnpm i18n:check` | hard gate (auto-regen pre-commit) | — |
 | `pnpm-lock.yaml` resolution host allow-list | `pnpm lockfile:validate` | hard gate (no ratchet) | — |
 | Tier B e2e: `passed` count + per-dimension % + source coverage (lines / statements / functions / branches). Per-dimension **auto-flips to strict at 100%**. Not in pre-commit; runs in the licensed CI lane only. | `pnpm e2e:coverage` | `pnpm e2e:ratchet` | `.e2e-baseline` |
 
-The hard gates (preload-drift, plugin-audit, i18n, lockfile-validate) cannot be ratcheted because regression is a real bug, not a velocity tradeoff. Fix the underlying issue. The plugin-audit gate specifically guards against the addBase dedup trap: a rule that's "dead by class" is invisible at the source level but a rule that's "dead by cascade" silently shadows live rules — extending the audit to walk nested selectors keeps the lights-on selector inventory honest.
+The hard gates (preload-drift, hook-orphan-audit, plugin-audit, i18n, lockfile-validate) cannot be ratcheted because regression is a real bug, not a velocity tradeoff. Fix the underlying issue. The plugin-audit gate specifically guards against the addBase dedup trap: a rule that's "dead by class" is invisible at the source level but a rule that's "dead by cascade" silently shadows live rules — extending the audit to walk nested selectors keeps the lights-on selector inventory honest.
+
+**`hooks:orphan-audit` guards the `class` → `data-wh40k-hook` migration's silent failure mode.** An element carries exactly ONE `data-wh40k-hook`, so a selector rewritten mechanically from a multi-class one breaks in two ways the type system and the tests both miss:
+- **Duplicate attribute** — `<section data-wh40k-hook="a" data-wh40k-hook="b">` is invalid HTML; the parser keeps the first and silently drops the second. Whichever hook was written second stops existing.
+- **Orphaned selector** — `.slot:not(.has-roll)` ported to `[data-wh40k-hook="slot"]:not([data-wh40k-hook="has-roll"])` while `has-roll` stayed a class. The `:not()` then excludes nothing and the filter becomes a no-op — no error, no failing test, just the wrong element set. (This shipped; it made every characteristic slot pulse during a drag, including the filled ones.)
+
+The audit fails on **both**: any `[data-wh40k-hook="X"]` selector where no template or TS emitter ever writes that hook, and any element declaring `data-wh40k-hook` more than once. **When one element needs two markers, the state marker gets its own attribute** (`data-has-roll`), not a second hook value.
+
+Two traps if you extend it, both found by mutation-testing the audit against itself:
+- It strips selector occurrences before scanning for producers. `[data-wh40k-hook="foo"]` literally *contains* `data-wh40k-hook="foo"`, so a naive scan makes every selector its own producer and the gate passes vacuously.
+- **Duplicates must be caught in SOURCE, never in a rendered DOM.** The parser keeps the first duplicate attribute and discards the rest, so a test asserting "this element has exactly one hook" reads one either way and passes against the very bug it names. `tests/char-gen-slot-has-roll.test.ts` documents why that test is deliberately absent.
+
+Since the audit does not parse comments, do not quote a hook selector literally in a comment inside `src/` / `stories/` / `tests/` — it reads as a real orphaned selector. Describe it in prose instead. Always mutation-test a change here: introduce the defect, confirm exit 1, remove it.
 
 #### Auto-flip semantics ("graduates to strict")
 
@@ -315,7 +328,9 @@ Cheap workers can be wrong. The pre-commit ratchets and the typecheck/lint/vites
 
 ### Parallel Claude-subagent refactor batches (deferred-verification mode)
 
-A distinct mode from the cheap-LLM `ai` grinder above: the Claude Code orchestrator fans out several concurrent **`Agent` subagents** to execute a partitioned DRY/refactor workload (typically the actionable findings of a codebase audit). Use this when a large refactor cleanly partitions into disjoint file-scope chunks, or when several independent abstraction-adoption tasks can run at once. The recipe:
+> **⛔ ONE background agent at a time unless the operator explicitly authorized concurrency this session (user CLAUDE.md TOP RULE 7).** Running several `Agent` subagents at once burns the operator's usage window in minutes and, when the window is hit, strands every task mid-write with unresumable half-work — this has happened more than once. The default is **sequential**: run one subagent, let it finish its disjoint slice, verify/merge it, then run the next. The partitioning + single-owner-file + deferred-verification recipe below applies unchanged one-at-a-time; only run the slices concurrently when the operator says so (a count, "in parallel", "fan out").
+
+A mode distinct from the cheap-LLM `ai` grinder above: the Claude Code orchestrator executes a partitioned DRY/refactor workload (typically the actionable findings of a codebase audit) via **`Agent` subagents** — **sequentially by default** (concurrent only with explicit authorization, see the gate above). Use this when a large refactor cleanly partitions into disjoint file-scope chunks, or when several independent abstraction-adoption tasks can run. The recipe:
 
 1. **Sync first.** Merge `origin/main` into the working branch before spawning anything, so every worktree branches from current HEAD.
 2. **Partition into disjoint file sets.** Scope each subagent so no two touch the same file — partition by file type or directory (e.g. item-sheet `.hbs` vs item-sheet `.ts` vs `config/` vs an actor panel). This is what makes the worktree branches merge cleanly without conflicts.
@@ -386,8 +401,9 @@ Per-file logs land in `.auto-fix/file-logs/<sanitized-path>.attempt<N>.<runner>-
 18. `lockfile:validate` — every resolution URL in `pnpm-lock.yaml` must point at an allow-listed host (hard gate).
 19. `symmetry:ratchet` — missing-story / missing-test counts cannot rise.
 20. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
-21. Pack validation if `gulpfile.js` or `src/packs/` changed.
-22. `vitest run` — full Vitest suite must pass.
+21. `hooks:orphan-audit` — every `[data-wh40k-hook="X"]` selector must have an element that actually carries that hook (hard gate).
+22. Pack validation if `gulpfile.js` or `src/packs/` changed.
+23. `vitest run` — full Vitest suite must pass.
 
 The Storybook Playwright visual suite (storybook build + ~700 screenshot tests)
 is **not** in the pre-commit hook — it is the browser-based, multi-minute long

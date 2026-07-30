@@ -75,6 +75,7 @@
     "symmetry:ratchet": "node scripts/symmetry-ratchet.mjs",
     "symmetry:ratchet:update": "node scripts/symmetry-ratchet.mjs --update",
     "preload:drift": "node scripts/preload-drift.mjs",
+    "hooks:orphan-audit": "node scripts/hook-orphan-audit.mjs",
     "dry-todo:ratchet": "node scripts/dry-todo-ratchet.mjs",
     "dry-todo:ratchet:update": "node scripts/dry-todo-ratchet.mjs --update",
     "dry-todo:coverage": "node scripts/dry-todo-ratchet.mjs --list",

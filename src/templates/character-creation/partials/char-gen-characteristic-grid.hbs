@@ -13,7 +13,8 @@
  {{#each rows}}
  <div class="tw-flex tw-gap-3 tw-justify-center">
  {{#each this}}
- <div data-wh40k-hook="csd-char-slot" class="tw-flex-1 tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.15)] tw-to-[rgba(36,107,131,0.05)] tw-border-2 tw-border-[rgba(36,107,131,0.35)] tw-rounded-[var(--wh40k-radius-lg)] tw-p-3 tw-transition-all hover:tw-border-[rgba(36,107,131,0.6)] {{#if hasRoll}}has-roll tw-border-[rgba(76,175,80,0.5)] tw-bg-[linear-gradient(135deg,rgba(76,175,80,0.1),rgba(36,107,131,0.05))]{{else}}empty{{/if}}"
+ <div data-wh40k-hook="csd-char-slot" class="tw-flex-1 tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.15)] tw-to-[rgba(36,107,131,0.05)] tw-border-2 tw-border-[rgba(36,107,131,0.35)] tw-rounded-[var(--wh40k-radius-lg)] tw-p-3 tw-transition-all hover:tw-border-[rgba(36,107,131,0.6)] {{#if hasRoll}}tw-border-[rgba(76,175,80,0.5)] tw-bg-[linear-gradient(135deg,rgba(76,175,80,0.1),rgba(36,107,131,0.05))]{{/if}}"
+ {{#if hasRoll}}data-has-roll="true"{{/if}}
  data-characteristic="{{key}}">
  <div class="tw-flex tw-items-baseline tw-gap-2 tw-mb-2 tw-pb-[0.35rem] tw-border-b tw-border-[rgba(36,107,131,0.2)]">
  {{!-- Full characteristic name (e.g. "Weapon Skill"), matching the Aptitudes section (#330). --}}

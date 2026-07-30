@@ -12,39 +12,37 @@
  * `dark-heresy-2/dh2-core-rolltables/_source/divination_*.json` with 22
  * weighted result rows covering 1–100.
  *
- * This story renders the same `<section class="csd-divination">` markup
- * that lives in the builder template (`origin-path-builder.hbs`, the
- * `currentStep.isCharacteristics` branch) in three states — empty,
- * post-roll with a populated result, and post-fallback with the
- * "table unavailable" message — so a regression in the section's chrome
+ * This story renders the same `[data-wh40k-hook="csd-divination"]` markup
+ * that lives in the shared partial
+ * `templates/character-creation/partials/char-gen-divination.hbs` in three
+ * states — empty, post-roll with a populated result, and post-fallback with
+ * the "table unavailable" message — so a regression in the section's chrome
  * or in the surrounding `data-action="rollDivination"` button is caught
  * during visual review and screenshot diffing.
- *
- * The template source is inlined here intentionally; this section is
- * not yet a standalone partial of the main template, and extracting it
- * would broaden the scope of the issue-199 fix.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 
-// Markup mirrors `<section class="csd-divination">` from
-// `src/templates/character-creation/origin-path-builder.hbs` lines
-// 332–343. If that block changes shape, update this snippet to match —
-// the screenshot diff in `tests/storybook/issue-199-divination-roll.spec.ts`
-// will catch silent drift between the two.
+// Markup mirrors the `[data-wh40k-hook="csd-divination"]` section in
+// `src/templates/character-creation/partials/char-gen-divination.hbs`,
+// with the partial's `{{localize}}` calls resolved to literals and its
+// `charGen.divination` binding replaced by a story arg. If that partial
+// changes shape, update this snippet to match — the screenshot diff in
+// `tests/storybook/issue-199-divination-roll.spec.ts` will catch silent
+// drift between the two.
 const TEMPLATE_SRC = `
-<section class="wh40k-rpg csd-section csd-divination tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
-    <div class="csd-section-header-row tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
-        <h3 class="csd-section-header tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
+<section data-wh40k-hook="csd-divination" class="wh40k-rpg tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
+    <div data-wh40k-hook="csd-section-header-row" class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)]">
+        <h3 data-wh40k-hook="csd-section-header" class="tw-flex tw-items-center tw-gap-2 tw-m-0 tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-gold">
             <i class="fa-solid fa-eye"></i>
             Divination
         </h3>
-        <button type="button" class="csd-icon-btn tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="rollDivination" data-tooltip="{{rollTooltip}}">
+        <button type="button" data-wh40k-hook="csd-icon-btn" class="tw-inline-flex tw-h-9 tw-w-9 tw-items-center tw-justify-center tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.45)] tw-bg-[rgba(36,107,131,0.2)] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-transition-all hover:tw-border-[rgba(176,141,87,0.55)] hover:tw-bg-[rgba(176,141,87,0.18)] hover:tw-text-[color:var(--csd-gold,#b08d57)]" data-action="rollDivination" data-tooltip="{{rollTooltip}}">
             <i class="fa-solid fa-dice"></i>
         </button>
     </div>
-    <input type="text" class="csd-divination-input tw-w-full tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[rgba(36,107,131,0.35)] tw-bg-[rgba(0,0,0,0.35)] tw-px-3 tw-py-2 tw-text-[0.9rem] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-placeholder:text-[color:rgba(232,220,196,0.4)] focus:tw-outline-none focus:tw-border-[var(--csd-gold,#b08d57)] focus:tw-shadow-[0_0_8px_rgba(176,141,87,0.25)]" name="charGen.divination" value="{{divination}}" placeholder="{{placeholder}}" />
+    <input type="text" data-wh40k-hook="csd-divination-input" class="tw-w-full tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[rgba(36,107,131,0.35)] tw-bg-[rgba(0,0,0,0.35)] tw-px-3 tw-py-2 tw-text-[0.9rem] tw-text-[color:var(--csd-bone,#e8dcc4)] tw-placeholder:text-[color:rgba(232,220,196,0.4)] focus:tw-outline-none focus:tw-border-[var(--csd-gold,#b08d57)] focus:tw-shadow-[0_0_8px_rgba(176,141,87,0.25)]" name="charGen.divination" value="{{divination}}" placeholder="{{placeholder}}" />
 </section>
 `;
 

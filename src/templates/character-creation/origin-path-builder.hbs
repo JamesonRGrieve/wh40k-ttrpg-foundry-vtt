@@ -247,7 +247,7 @@
  </div>
  {{else}}
  <div data-wh40k-hook="csd-workspace" class="tw-grid tw-grid-cols-[280px_minmax(0,1fr)] tw-gap-4 tw-items-start max-[900px]:tw-grid-cols-1">
- <section data-wh40k-hook="csd-rolls-bank" data-wh40k-hook="csd-section" class="tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4" data-drop-zone="bank">
+ <section data-wh40k-hook="csd-rolls-bank" class="tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4" data-drop-zone="bank">
  <div data-wh40k-hook="csd-section-header-row" class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-pb-2 tw-border-b {{themeClassFor 'border'}}">
  <h3 data-wh40k-hook="csd-section-header" class="tw-flex tw-items-center tw-gap-2 tw-m-0 {{themeClassFor 'accent'}} tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">
  <i class="fa-solid fa-dice-d20"></i>
@@ -259,7 +259,7 @@
  </div>
  <div class="tw-grid tw-grid-cols-2 tw-gap-2 max-[900px]:tw-grid-cols-[repeat(auto-fit,minmax(110px,1fr))]">
  {{#each charGen.rollsBank}}
- <div data-wh40k-hook="csd-roll-chip" class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-16 tw-w-full tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.2)] tw-to-[rgba(36,107,131,0.1)] tw-border-2 tw-border-[rgba(36,107,131,0.4)] tw-rounded-[var(--wh40k-radius-lg)] tw-relative tw-transition-all {{#if isEmpty}}empty tw-border-dashed tw-opacity-60{{/if}} {{#if isAssigned}}assigned tw-opacity-30 tw-cursor-not-allowed{{else if isEmpty}}tw-cursor-pointer hover:tw-opacity-90 hover:tw-border-[var(--csd-gold,#b08d57)]{{else}}tw-cursor-grab hover:tw--translate-y-[3px] hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:tw-border-[rgba(36,107,131,0.9)]{{/if}} {{#if @last}}{{#if (eq ../charGen.rollsBank.length 5)}}tw-col-span-2 tw-justify-self-center tw-w-[calc(50%-0.25rem)] max-[900px]:tw-col-span-1 max-[900px]:tw-w-full{{/if}}{{/if}}"
+ <div data-wh40k-hook="csd-roll-chip" class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-16 tw-w-full tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.2)] tw-to-[rgba(36,107,131,0.1)] tw-border-2 tw-border-[rgba(36,107,131,0.4)] tw-rounded-[var(--wh40k-radius-lg)] tw-relative tw-transition-all {{#if isEmpty}}tw-border-dashed tw-opacity-60{{/if}} {{#if isAssigned}}tw-opacity-30 tw-cursor-not-allowed{{else if isEmpty}}tw-cursor-pointer hover:tw-opacity-90 hover:tw-border-[var(--csd-gold,#b08d57)]{{else}}tw-cursor-grab hover:tw--translate-y-[3px] hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:tw-border-[rgba(36,107,131,0.9)]{{/if}} {{#if @last}}{{#if (eq ../charGen.rollsBank.length 5)}}tw-col-span-2 tw-justify-self-center tw-w-[calc(50%-0.25rem)] max-[900px]:tw-col-span-1 max-[900px]:tw-w-full{{/if}}{{/if}}"
  data-roll-index="{{index}}"
  {{#unless isEmpty}}{{#unless isAssigned}}draggable="true"{{/unless}}{{/unless}}>
  <span data-wh40k-hook="csd-roll-value" class="tw-text-[1.4rem] tw-font-bold tw-leading-none {{#if isEmpty}}tw-text-[color:rgba(232,220,196,0.5)]{{else}}tw-text-[color:var(--csd-bone,#e8dcc4)]{{/if}}">{{#if isEmpty}}—{{else}}{{value}}{{/if}}</span>
