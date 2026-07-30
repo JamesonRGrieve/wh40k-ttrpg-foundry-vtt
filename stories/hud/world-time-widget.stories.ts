@@ -74,8 +74,8 @@ export const GmView: Story = {
         void expect(canvasElement.querySelector('[data-action="advanceDay"]')).not.toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceCustom"]')).not.toBeNull();
         void expect(canvasElement.querySelector('[data-action="setInception"]')).not.toBeNull();
-        void expect(canvasElement.querySelector('.wh40k-wt-amount')).not.toBeNull();
-        void expect(canvasElement.querySelector('.wh40k-wt-unit')).not.toBeNull();
+        void expect(canvasElement.querySelector('[data-wh40k-hook="wt-amount"]')).not.toBeNull();
+        void expect(canvasElement.querySelector('[data-wh40k-hook="wt-unit"]')).not.toBeNull();
     },
 };
 

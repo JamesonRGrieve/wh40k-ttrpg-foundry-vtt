@@ -261,8 +261,8 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     static async #advanceCustom(this: WorldTimeWidget, _event: Event, _target: HTMLElement): Promise<void> {
-        const amountInput = this.element.querySelector<HTMLInputElement>('.wh40k-wt-amount');
-        const unitSelect = this.element.querySelector<HTMLSelectElement>('.wh40k-wt-unit');
+        const amountInput = this.element.querySelector<HTMLInputElement>('[data-wh40k-hook="wt-amount"]');
+        const unitSelect = this.element.querySelector<HTMLSelectElement>('[data-wh40k-hook="wt-unit"]');
         const count = Number(amountInput?.value ?? '0');
         const unit: TimeAdvanceUnit = unitSelect?.value === 'day' ? 'day' : 'hour';
         // Forward-only: ignore a non-positive / non-finite custom amount.

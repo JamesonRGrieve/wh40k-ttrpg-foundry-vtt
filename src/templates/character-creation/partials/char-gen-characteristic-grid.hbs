@@ -13,7 +13,7 @@
  {{#each rows}}
  <div class="tw-flex tw-gap-3 tw-justify-center">
  {{#each this}}
- <div class="csd-char-slot tw-flex-1 tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.15)] tw-to-[rgba(36,107,131,0.05)] tw-border-2 tw-border-[rgba(36,107,131,0.35)] tw-rounded-[var(--wh40k-radius-lg)] tw-p-3 tw-transition-all hover:tw-border-[rgba(36,107,131,0.6)] {{#if hasRoll}}has-roll tw-border-[rgba(76,175,80,0.5)] tw-bg-[linear-gradient(135deg,rgba(76,175,80,0.1),rgba(36,107,131,0.05))]{{else}}empty{{/if}}"
+ <div data-wh40k-hook="csd-char-slot" class="tw-flex-1 tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.15)] tw-to-[rgba(36,107,131,0.05)] tw-border-2 tw-border-[rgba(36,107,131,0.35)] tw-rounded-[var(--wh40k-radius-lg)] tw-p-3 tw-transition-all hover:tw-border-[rgba(36,107,131,0.6)] {{#if hasRoll}}has-roll tw-border-[rgba(76,175,80,0.5)] tw-bg-[linear-gradient(135deg,rgba(76,175,80,0.1),rgba(36,107,131,0.05))]{{else}}empty{{/if}}"
  data-characteristic="{{key}}">
  <div class="tw-flex tw-items-baseline tw-gap-2 tw-mb-2 tw-pb-[0.35rem] tw-border-b tw-border-[rgba(36,107,131,0.2)]">
  {{!-- Full characteristic name (e.g. "Weapon Skill"), matching the Aptitudes section (#330). --}}
@@ -22,7 +22,7 @@
  <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-[0.4rem]">
  <div class="tw-flex tw-flex-col tw-items-center">
  {{#if @root.charGen.advancedMode}}
- <input type="number" class="csd-base-input tw-w-[40px] tw-h-[26px] tw-text-center tw-text-[1rem] tw-font-semibold tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[rgba(176,141,87,0.5)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--csd-bone,#e8dcc4)] focus:tw-outline-none focus:tw-border-[var(--csd-gold,#b08d57)] focus:tw-shadow-[0_0_6px_rgba(176,141,87,0.4)]"
+ <input type="number" data-wh40k-hook="csd-base-input" class="tw-w-[40px] tw-h-[26px] tw-text-center tw-text-[1rem] tw-font-semibold tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[rgba(176,141,87,0.5)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--csd-bone,#e8dcc4)] focus:tw-outline-none focus:tw-border-[var(--csd-gold,#b08d57)] focus:tw-shadow-[0_0_6px_rgba(176,141,87,0.4)]"
  value="{{base}}"
  data-characteristic="{{key}}"
  min="0" max="99">
@@ -34,7 +34,7 @@
  <span class="tw-text-[1rem] tw-font-bold tw-text-[color:rgba(232,220,196,0.6)]">+</span>
  <div class="tw-flex tw-h-[40px] tw-w-[45px] tw-items-center tw-justify-center">
  {{#if hasRoll}}
- <div class="csd-assigned-roll tw-flex tw-h-[36px] tw-w-[40px] tw-items-center tw-justify-center tw-bg-gradient-to-br tw-from-[rgba(76,175,80,0.3)] tw-to-[rgba(76,175,80,0.15)] tw-border-2 tw-border-[rgba(76,175,80,0.6)] tw-rounded-[6px] tw-text-[1.2rem] tw-font-bold tw-text-[color:var(--csd-bone,#e8dcc4)] {{#if @root.charGen.isModeRollPoolHB}}tw-cursor-grab tw-transition-all hover:tw-scale-110 hover:tw-shadow-[0_2px_8px_rgba(0,0,0,0.3)] hover:tw-border-[var(--csd-gold,#b08d57)]{{/if}}"
+ <div data-wh40k-hook="csd-assigned-roll" class="tw-flex tw-h-[36px] tw-w-[40px] tw-items-center tw-justify-center tw-bg-gradient-to-br tw-from-[rgba(76,175,80,0.3)] tw-to-[rgba(76,175,80,0.15)] tw-border-2 tw-border-[rgba(76,175,80,0.6)] tw-rounded-[6px] tw-text-[1.2rem] tw-font-bold tw-text-[color:var(--csd-bone,#e8dcc4)] {{#if @root.charGen.isModeRollPoolHB}}tw-cursor-grab tw-transition-all hover:tw-scale-110 hover:tw-shadow-[0_2px_8px_rgba(0,0,0,0.3)] hover:tw-border-[var(--csd-gold,#b08d57)]{{/if}}"
  {{#if @root.charGen.isModeRollPoolHB}}draggable="true"{{/if}}
  data-roll-index="{{assignedIndex}}"
  data-characteristic="{{key}}">

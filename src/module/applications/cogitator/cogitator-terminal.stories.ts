@@ -68,7 +68,7 @@ export const RestrictedRecord: Story = {
         bodyHtml: null,
     },
     play: ({ canvasElement }) => {
-        void expect(canvasElement.querySelector('.wh40k-cog-content')).toBeNull();
+        void expect(canvasElement.querySelector('[data-wh40k-hook="cog-content"]')).toBeNull();
         void expect(canvasElement.textContent).toContain('Record sealed');
     },
 };

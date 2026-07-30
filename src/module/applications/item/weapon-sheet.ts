@@ -1028,7 +1028,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
 
         // Update button label and tooltip so the click is visibly reflected.
         const label = game.i18n.localize(this.#bodyCollapsed ? 'WH40K.Weapon.ShowDetails' : 'WH40K.Weapon.HideDetails');
-        const labelEl = target.querySelector('.wh40k-body-toggle__label');
+        const labelEl = target.querySelector('[data-wh40k-hook="body-toggle__label"]');
         if (labelEl !== null) {
             labelEl.textContent = label;
         }

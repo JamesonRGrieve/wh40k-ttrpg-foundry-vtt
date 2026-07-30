@@ -98,8 +98,8 @@ export default class ClipBuilderDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     static async #onConfirm(this: ClipBuilderDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        const form = this.element.querySelector('.clip-builder-content');
-        const rows = form?.querySelectorAll<HTMLInputElement>('input.clip-builder-count') ?? [];
+        const form = this.element.querySelector('[data-wh40k-hook="clip-builder-content"]');
+        const rows = form?.querySelectorAll<HTMLInputElement>('input[data-wh40k-hook="clip-builder-count"]') ?? [];
         const segments: Array<{ ammoUuid: string; count: number }> = [];
         let total = 0;
         for (const row of rows) {

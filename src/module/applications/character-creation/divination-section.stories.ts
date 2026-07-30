@@ -77,7 +77,7 @@ export const Empty: Story = {
         const storyCanvas = within(canvasElement);
         const heading = storyCanvas.getByText('Divination');
         await expect(heading).toBeTruthy();
-        const input = canvasElement.querySelector<HTMLInputElement>('input.csd-divination-input');
+        const input = canvasElement.querySelector<HTMLInputElement>('input[data-wh40k-hook="csd-divination-input"]');
         await expect(input).toBeTruthy();
         await expect(input?.value).toBe('');
         await expect(input?.placeholder).toBe('Enter divination');
@@ -98,7 +98,7 @@ export const Rolled: Story = {
         divination: 'Trust in your fear.',
     },
     play: async ({ canvasElement }) => {
-        const input = canvasElement.querySelector<HTMLInputElement>('input.csd-divination-input');
+        const input = canvasElement.querySelector<HTMLInputElement>('input[data-wh40k-hook="csd-divination-input"]');
         await expect(input).toBeTruthy();
         await expect(input?.value).toBe('Trust in your fear.');
         await expect(input?.value.length ?? 0).toBeGreaterThan(0);
@@ -116,7 +116,7 @@ export const TableUnavailableFallback: Story = {
         divination: 'The Divination table is unavailable — rolled 42 on 1d100. Record the corresponding maxim from the rulebook by hand.',
     },
     play: async ({ canvasElement }) => {
-        const input = canvasElement.querySelector<HTMLInputElement>('input.csd-divination-input');
+        const input = canvasElement.querySelector<HTMLInputElement>('input[data-wh40k-hook="csd-divination-input"]');
         await expect(input).toBeTruthy();
         await expect(input?.value).toContain('rolled 42 on 1d100');
     },

@@ -226,31 +226,31 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     #activateListeners(): void {
         const html = this.element;
 
-        html.querySelectorAll('.csd-roll-chip').forEach((chip) => {
+        html.querySelectorAll('[data-wh40k-hook="csd-roll-chip"]').forEach((chip) => {
             chip.addEventListener('click', (e) => this.#onRollChipClick(e));
             chip.addEventListener('dragstart', (e) => this.#onDragStart(e as DragEvent));
             chip.addEventListener('dragend', (e) => this.#onDragEnd(e as DragEvent));
         });
 
-        html.querySelectorAll('.csd-char-slot').forEach((slot) => {
+        html.querySelectorAll('[data-wh40k-hook="csd-char-slot"]').forEach((slot) => {
             slot.addEventListener('dragover', (e) => this.#onDragOver(e as DragEvent));
             slot.addEventListener('dragleave', (e) => this.#onDragLeave(e as DragEvent));
             slot.addEventListener('drop', (e) => this.#onDrop(e as DragEvent));
-            const rollChip = slot.querySelector('.csd-assigned-roll');
+            const rollChip = slot.querySelector('[data-wh40k-hook="csd-assigned-roll"]');
             if (rollChip) {
                 rollChip.addEventListener('dragstart', (e) => this.#onDragStart(e as DragEvent));
                 rollChip.addEventListener('dragend', (e) => this.#onDragEnd(e as DragEvent));
             }
         });
 
-        const rollsBank = html.querySelector('.csd-rolls-bank');
+        const rollsBank = html.querySelector('[data-wh40k-hook="csd-rolls-bank"]');
         if (rollsBank) {
             rollsBank.addEventListener('dragover', (e) => this.#onBankDragOver(e as DragEvent));
             rollsBank.addEventListener('dragleave', (e) => this.#onDragLeave(e as DragEvent));
             rollsBank.addEventListener('drop', (e) => this.#onBankDrop(e as DragEvent));
         }
 
-        html.querySelectorAll('.csd-base-input').forEach((input) => {
+        html.querySelectorAll('[data-wh40k-hook="csd-base-input"]').forEach((input) => {
             input.addEventListener('change', (e) => this.#onBaseValueChange(e));
         });
     }
@@ -276,7 +276,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         input.addEventListener('blur', (e) => this.#onRollInputBlur(e));
         input.addEventListener('keydown', (e) => this.#onRollInputKeydown(e));
 
-        const valueEl = chip.querySelector<HTMLElement>('.csd-roll-value');
+        const valueEl = chip.querySelector<HTMLElement>('[data-wh40k-hook="csd-roll-value"]');
         if (valueEl) valueEl.style.display = 'none';
         chip.appendChild(input);
         input.focus();
@@ -339,7 +339,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         event.dataTransfer.setData('text/plain', JSON.stringify(this.#dragData));
 
         this.element.classList.add('drag-active');
-        this.element.querySelectorAll<HTMLElement>('.csd-char-slot:not(.has-roll)').forEach((slot) => {
+        this.element.querySelectorAll<HTMLElement>('[data-wh40k-hook="csd-char-slot"]:not([data-wh40k-hook="has-roll"])').forEach((slot) => {
             slot.classList.add('tw-animate-csd-pulse-border');
         });
     }
@@ -349,7 +349,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     #onDragEnd(event: DragEvent): void {
         (event.currentTarget as HTMLElement).classList.remove('dragging');
         this.element.classList.remove('drag-active');
-        this.element.querySelectorAll('.csd-char-slot').forEach((slot) => {
+        this.element.querySelectorAll('[data-wh40k-hook="csd-char-slot"]').forEach((slot) => {
             slot.classList.remove('tw-animate-csd-pulse-border');
         });
         this.element.querySelectorAll('.drop-valid, .drop-hover').forEach((el) => {

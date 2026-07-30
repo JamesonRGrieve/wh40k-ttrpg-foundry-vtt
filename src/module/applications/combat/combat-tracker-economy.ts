@@ -16,7 +16,18 @@
 import { actionBudgetForActor } from '../../rules/action-economy.ts';
 
 const TRACKER_ECONOMY_TEMPLATE = 'systems/wh40k-rpg/templates/combat/tracker-action-economy.hbs';
-const INJECTED_CLASS = 'wh40k-tracker-economy';
+/**
+ * Selector for the row this module injects, used to avoid injecting it twice.
+ *
+ * A `data-wh40k-hook` attribute rather than a class: the marker is behavioural,
+ * not styling, so as a class it kept `tracker-action-economy.hbs` out of
+ * tailwind-only for no benefit. Written as the full selector because it is built
+ * into a template literal below — the automated class→hook migration only rewrites
+ * literal `.class` selectors, so a dynamically-composed one like this would have
+ * been left pointing at a class the template no longer carries, and the dedup
+ * guard would have silently re-injected the row on every render.
+ */
+const INJECTED_SELECTOR = '[data-wh40k-hook="tracker-economy"]';
 const ACTIONS_SPENT_FLAG = 'actionsSpentThisTurn';
 
 /* eslint-disable no-restricted-syntax -- boundary: Foundry CombatTracker / Combatant / hook payloads are loosely-typed framework surfaces; reads are structural and guarded */
@@ -59,7 +70,7 @@ async function onRenderCombatTracker(_app: unknown, html: HTMLElement | JQuery):
         if (root === null) return;
         const rows = Array.from(root.querySelectorAll<HTMLElement>('.combatant[data-combatant-id]'));
         for (const row of rows) {
-            if (row.querySelector(`.${INJECTED_CLASS}`) !== null) continue;
+            if (row.querySelector(INJECTED_SELECTOR) !== null) continue;
             const combatant = combatantForRow(row);
             const actorId = combatant?.actorId ?? null;
             if (actorId === null) continue;

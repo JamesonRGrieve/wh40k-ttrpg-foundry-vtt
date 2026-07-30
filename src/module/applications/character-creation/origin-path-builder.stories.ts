@@ -1147,7 +1147,7 @@ export const PointBuyMode: Story = {
         // Remaining-points budget is surfaced (100 pool − 23 spent = 77).
         await expect(view.getByText(/77 \/ 100/)).toBeTruthy();
         // Characteristic edit controls: one numeric input + inc/dec per characteristic.
-        const inputs = canvasElement.querySelectorAll('.csd-pointbuy-input');
+        const inputs = canvasElement.querySelectorAll('[data-wh40k-hook="csd-pointbuy-input"]');
         await expect(inputs.length).toBe(9);
         const incButtons = canvasElement.querySelectorAll('[data-action="adjustPointBuy"][data-delta="1"]');
         await expect(incButtons.length).toBe(9);
@@ -1182,9 +1182,9 @@ export const RollMode: Story = {
         await expect(rollTab?.getAttribute('aria-selected')).toBe('true');
         // Roll mode exposes the Roll-All action (not the draggable bank).
         await expect(canvasElement.querySelector('[data-action="rollCharacteristics"]')).toBeTruthy();
-        await expect(canvasElement.querySelector('.csd-rolls-bank')).toBeNull();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="csd-rolls-bank"]')).toBeNull();
         // The assigned rolls are NOT draggable in roll mode (locked in order).
-        const draggables = canvasElement.querySelectorAll('.csd-assigned-roll[draggable="true"]');
+        const draggables = canvasElement.querySelectorAll('[data-wh40k-hook="csd-assigned-roll"][draggable="true"]');
         await expect(draggables.length).toBe(0);
         // Mode switch + characteristic edit: switch tab and roll.
         clickAction(canvasElement, 'setCharGenMode');
@@ -1247,7 +1247,7 @@ export const PointBuyModeAllSystems: Story = {
             (['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt', 'im'] as const).map(async (system) => {
                 const root = canvasElement.querySelector<HTMLElement>(`[data-story-system="${system}"]`);
                 await expect(root).toBeTruthy();
-                await expect(root?.querySelectorAll('.csd-pointbuy-input').length).toBe(9);
+                await expect(root?.querySelectorAll('[data-wh40k-hook="csd-pointbuy-input"]').length).toBe(9);
                 // 100 pool − 20 spent = 80 remaining.
                 await expect(within(root as HTMLElement).getByText(/80 \/ 100/)).toBeTruthy();
             }),

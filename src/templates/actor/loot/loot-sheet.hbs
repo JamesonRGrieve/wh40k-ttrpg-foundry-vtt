@@ -32,7 +32,7 @@
             <span>{{localize "WH40K.Loot.Contents"}}</span>
             <span class="tw-ml-auto tw-rounded-full tw-bg-[var(--wh40k-bg-input)] tw-px-1.5 tw-py-0.5 tw-text-[0.65rem] tw-font-bold">{{lootItems.length}}</span>
         </div>
-        <div class="wh40k-loot-list tw-flex-1 tw-overflow-y-auto">
+        <div data-wh40k-hook="loot-list" class="tw-flex-1 tw-overflow-y-auto">
             {{#if isEmpty}}
                 <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
                     <i class="fas fa-feather tw-text-[2rem] tw-mb-2 tw-opacity-50"></i>

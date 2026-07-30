@@ -143,7 +143,7 @@ export const AthleticsClimb: Story = {
     }),
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('select[name="climbSurface"]')).toBeTruthy();
-        await expect(canvasElement.querySelector('.wh40k-climb-surface-picker__sheer-indicator')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="climb-surface-picker__sheer-indicator"]')).toBeTruthy();
     },
 };
 

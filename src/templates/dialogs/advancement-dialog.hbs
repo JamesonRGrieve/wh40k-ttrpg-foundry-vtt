@@ -53,9 +53,9 @@
   </nav>
 
   {{!-- Content Area — scrollable so options below the window edge are reachable (#22). The
-       PARTS.scrollable selector targets .wh40k-adv__content; this class also lets the parent
+       PARTS.scrollable selector targets [data-wh40k-hook="adv__content"]; this class also lets the parent
        flex container claim remaining height via tw-flex-1 tw-min-h-0. --}}
-  <div class="wh40k-adv__content tw-flex-1 tw-min-h-0 tw-overflow-y-auto">
+  <div data-wh40k-hook="adv__content" class="tw-flex-1 tw-min-h-0 tw-overflow-y-auto">
 
     {{!-- Characteristics Tab --}}
     {{#if (eq activeTab "characteristics")}}

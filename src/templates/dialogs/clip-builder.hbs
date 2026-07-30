@@ -1,5 +1,5 @@
 {{! Clip Builder Dialog — compose an ordered mixed magazine (#ammo-system) }}
-<div class="clip-builder-content tw-p-2 tw-flex tw-flex-col tw-gap-3">
+<div data-wh40k-hook="clip-builder-content" class="tw-p-2 tw-flex tw-flex-col tw-gap-3">
     <p class="tw-m-0 tw-text-base {{themeClassFor 'accent'}}">
         {{localize "WH40K.ClipBuilder.Prompt" weaponName=weaponName clipMax=clipMax}}
     </p>
@@ -15,7 +15,7 @@
                     {{#if ammo.modifierSummary}}<span class="tw-italic">{{ammo.modifierSummary}}</span>{{/if}}
                 </span>
             </div>
-            <input type="number" class="clip-builder-count tw-w-16 tw-text-center" min="0" max="{{ammo.quantity}}" value="0"
+            <input type="number" data-wh40k-hook="clip-builder-count" class="tw-w-16 tw-text-center" min="0" max="{{ammo.quantity}}" value="0"
                    data-ammo-uuid="{{ammo.uuid}}" aria-label="{{localize "WH40K.ClipBuilder.Rounds"}}: {{ammo.name}}" />
         </label>
         {{/each}}
