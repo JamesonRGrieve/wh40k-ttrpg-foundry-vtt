@@ -69,6 +69,7 @@ Every direction in the previous section is backed by a coverage script and a rat
 | Inferred type-coverage % (`type-coverage --strict`; covered count cannot fall, **auto-flips to strict at 100%**) | `pnpm type-coverage` | `pnpm type-coverage:ratchet` | `.type-coverage-baseline` |
 | `knip` per-category unused detection (files, exports, types, deps, binaries, …) — **per-category, auto-flips to strict at 0** | `pnpm knip` | `pnpm knip:ratchet` | `.knip-baseline` |
 | Dependency-cruiser 3-layer + correctness rules (sheets ↛ data, docs ↛ apps, no-circular, no-test-into-prod, no-orphans, …) — **per-rule, auto-flips to strict at 0** | `pnpm deps:check` | `pnpm deps:ratchet` | `.depcruise-baseline` |
+| Modules under `src/module/` with **no production importer** — **auto-flips to strict at 0** | `pnpm unconsumed:coverage` | `pnpm unconsumed:ratchet` | `.unconsumed-baseline` |
 | ESLint warnings (strong config over `src/module/ src/templates/ stories/ tests/` — app, story, and test code, same ruleset) | (built into ratchet) | `pnpm lint:ratchet` | `.eslint-warning-baseline` |
 | Biome diagnostics (errors + warnings) | (built into ratchet) | `pnpm biome:ratchet` | `.biome-warning-baseline` |
 | Sheet → story / data → test pairing | `pnpm symmetry` | `pnpm symmetry:ratchet` | `.symmetry-baseline` |
@@ -166,6 +167,16 @@ Combined with the boundary `unknown` rule in `.eslintrc.json` (no `unknown` past
   - Plus baseline correctness: `no-circular`, `no-orphans`, `no-test-into-prod`, `no-non-package-json`, `no-deprecated-core`.
 
 All rules currently emit at `warn` level because the codebase has pre-existing violations (mostly Documents reaching into prompt dialogs from the roll API). The ratchet (`pnpm deps:ratchet`) gates regression and auto-flips each rule to strict at 0 — at which point the rule's severity in `.dependency-cruiser.cjs` can be promoted to `error` and the ratchet's enforcement is redundant.
+
+#### `no-orphans` does NOT measure "nothing imports this" — use `unconsumed:ratchet` for that
+
+**Do not treat `no-orphans` as the dead-code metric; it is far weaker than it reads.** dependency-cruiser defines an orphan as a module with neither dependents **nor** dependencies, so a dead module that imports even one helper is skipped entirely. Measured: `no-orphans` reported **5** while the real count of modules no production module imports was **37**.
+
+The clean example is `src/module/rules/dw-distinction.ts` — 161 lines, fully unit-tested, **zero production callers**, and unflagged, purely because it imports `dw-renown.ts`. Its only non-test importer is a `.stories.ts`, and stories/tests are excluded from the graph (`exclude.path`), which is correct: being imported by your own spec is exactly the state worth catching.
+
+`pnpm unconsumed:coverage` (report, `--list` to enumerate) and `pnpm unconsumed:ratchet` measure the real thing — reachability from a real entry point — and the ratchet auto-flips to strict at 0. Entry points (`wh40k-rpg.ts`, `*.d.ts`, generated registries, `src/module/testing/`) are exempt, mirroring `no-orphans`'s own `pathNot` list.
+
+This matters because a module nothing reaches is a **feature the player cannot get to**, and its green tests are coverage over code that never runs — which inflates confidence in exactly the wrong direction. When this count drops, wire the module to a real consumer or delete it *with its tests*; never satisfy it by adding an import that only exists to satisfy it.
 
 ### CSS architecture
 
@@ -402,8 +413,9 @@ Per-file logs land in `.auto-fix/file-logs/<sanitized-path>.attempt<N>.<runner>-
 19. `symmetry:ratchet` — missing-story / missing-test counts cannot rise.
 20. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
 21. `hooks:orphan-audit` — every `[data-wh40k-hook="X"]` selector must have an element that actually carries that hook (hard gate).
-22. Pack validation if `gulpfile.js` or `src/packs/` changed.
-23. `vitest run` — full Vitest suite must pass.
+22. `unconsumed:ratchet` — the count of `src/module/` modules with no production importer cannot rise; auto-flips to strict at 0.
+23. Pack validation if `gulpfile.js` or `src/packs/` changed.
+24. `vitest run` — full Vitest suite must pass.
 
 The Storybook Playwright visual suite (storybook build + ~700 screenshot tests)
 is **not** in the pre-commit hook — it is the browser-based, multi-minute long
