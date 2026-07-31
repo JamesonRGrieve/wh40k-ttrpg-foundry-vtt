@@ -31,6 +31,7 @@ import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, WeaponDamageData } from './damage-data.ts';
+import type { ExtendedTestChatContext } from './extended-test-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
 
@@ -46,6 +47,13 @@ export class ActionData {
     // so that re-rolling does not also reset the single-spend lockout (unless the homebrew
     // `multipleFateBurnPerRoll` setting is enabled, in which case the handlers ignore these).
     fateUses: { reroll: boolean; addDoS: boolean } = { reroll: false, addDoS: false };
+    /**
+     * Extended Test ladder for this attempt (#59), or undefined when the roll is not
+     * part of one. `postFlattenedInstanceToChat` flattens this instance, so the field
+     * lands at TOP level — which is where `simple-roll-chat.hbs` reads `extendedTest`
+     * before handing it to `chat/partial/extended-test-progress.hbs`.
+     */
+    extendedTest: ExtendedTestChatContext | undefined;
 
     constructor() {
         this.rollData = new RollData();

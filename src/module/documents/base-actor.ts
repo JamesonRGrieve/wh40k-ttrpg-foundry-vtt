@@ -7,6 +7,7 @@ import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shar
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { t } from '../i18n/t.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
+import type { ExtendedTestState } from '../rolls/extended-test-data.ts';
 import { openRollPrompt } from '../rolls/roll-prompt.ts';
 import { type AddictionTier, resolveAddictionCheck } from '../rules/addiction.ts';
 import { conditionEffectData } from '../rules/condition-registry.ts';
@@ -257,6 +258,36 @@ export class WH40KBaseActor extends Actor {
      */
     async clearTimeGate(key: string): Promise<void> {
         await this.unsetFlag('wh40k-rpg', `timeGates.${key}`);
+    }
+
+    /**
+     * Read this actor's in-progress Extended Test ladder for `key` (#59), or `null`
+     * when no test is running. `key` is the roll key the test exercises, so two
+     * concurrent Extended Tests on different skills do not share a ladder.
+     *
+     * An Extended Test accumulates degrees of success across SEPARATE rolls, so its
+     * state cannot live in the roll dialog — that instance dies when the dialog
+     * closes. It is persisted here for the same reason time gates are: one shared
+     * mechanism instead of a per-rule flag.
+     */
+    getExtendedTest(key: string): ExtendedTestState | null {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor#flags is Foundry's untyped per-module flag bag
+        const tests = (this.flags as { 'wh40k-rpg'?: { extendedTests?: Record<string, ExtendedTestState> } })['wh40k-rpg']?.extendedTests;
+        return tests?.[key] ?? null;
+    }
+
+    /** Persist the Extended Test ladder for `key` (#59) after an attempt is recorded. */
+    async setExtendedTest(key: string, state: ExtendedTestState): Promise<void> {
+        await this.setFlag('wh40k-rpg', `extendedTests.${key}`, state);
+    }
+
+    /**
+     * Clear this actor's Extended Test ladder for `key` (#59) — the test completed,
+     * blew its failure budget, or the GM abandoned it. The next attempt starts a
+     * fresh ladder rather than resuming a finished one.
+     */
+    async clearExtendedTest(key: string): Promise<void> {
+        await this.unsetFlag('wh40k-rpg', `extendedTests.${key}`);
     }
 
     /**
