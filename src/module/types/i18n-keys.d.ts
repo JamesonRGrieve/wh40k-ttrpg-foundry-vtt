@@ -3003,6 +3003,8 @@ export type I18nKey =
     | 'WH40K.SancticPurity.PromptBody'
     | 'WH40K.SancticPurity.PromptTitle'
     | 'WH40K.SancticPurity.SpendButton'
+    | 'WH40K.Scene.WarpWeakness.Hint'
+    | 'WH40K.Scene.WarpWeakness.Label'
     | 'WH40K.Sheet.Acolyte'
     | 'WH40K.Sheet.Ammunition'
     | 'WH40K.Sheet.Armour'

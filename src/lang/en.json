@@ -5517,6 +5517,12 @@
                 "Realm": "Realm",
                 "Other": "Other"
             }
+        },
+        "Scene": {
+            "WarpWeakness": {
+                "Label": "Warp Weakness",
+                "Hint": "The veil is thin in this scene: +10 to Focus Power tests, Psychic Phenomena are one step more severe, and they also trigger on a 9 or any odd result."
+            }
         }
     }
 }

@@ -12,6 +12,14 @@ type RollTableRollOptions = {
      * systems (e.g. "Critical Hit") can't mis-resolve to another system's copy.
      */
     pack?: string;
+    /**
+     * Escalate the drawn result by N rows along the table's own ordering, after
+     * the roll resolves. Used for "one step more severe on the ladder" riders
+     * (per-scene Warp weakness, #137), which are a POSITION shift rather than a
+     * numeric bonus: table rows are not evenly sized, so adding to the roll would
+     * escalate by an arbitrary and table-dependent amount. Clamped to the last row.
+     */
+    escalateRows?: number;
 };
 
 /**
@@ -37,7 +45,7 @@ export class RollTableUtils {
      * @returns {Promise<TableResult | null>} The table result
      */
     static async rollTable(tableName: string, options: RollTableRollOptions = {}): Promise<RollTableResult | null> {
-        const { displayChat = true, roll = null, pack } = options;
+        const { displayChat = true, roll = null, pack, escalateRows = 0 } = options;
 
         // Find the table in world tables first, then compendiums (scoped to
         // `pack` when given, so a shared table name can't mis-resolve).
@@ -77,6 +85,27 @@ export class RollTableUtils {
             if (clamped.result !== null) {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's RollTable result Collection is untyped; structural [{range}] satisfies the shape at runtime
                 rollResult.results = [clamped.result] as unknown as typeof rollResult.results;
+            }
+        }
+
+        // Ladder escalation (#137). Applied AFTER the out-of-range clamp above so a
+        // clamped result escalates from where it actually landed, not from nothing.
+        if (escalateRows > 0 && rollResult.results.length > 0 && Array.isArray(table.results) && table.results.length > 0) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: table.results is Foundry's untyped Collection; ordering is the ladder
+            const ordered = Array.from(table.results as Iterable<{ range: [number, number] }>);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: rollResult.results is Foundry's untyped result array; matched against the ordered rows by identity then range
+            const drawn = rollResult.results[0] as unknown as { range: [number, number] };
+            let index = ordered.indexOf(drawn);
+            if (index < 0) index = ordered.findIndex((row) => row.range[0] === drawn.range[0] && row.range[1] === drawn.range[1]);
+            if (index >= 0) {
+                // `.at()` rather than `[…]`: it is typed `T | undefined` under BOTH
+                // tsconfigs, so the guard below is not a noUncheckedIndexedAccess
+                // parser mismatch that would need suppressing.
+                const escalated = ordered.at(Math.min(ordered.length - 1, index + Math.trunc(escalateRows)));
+                if (escalated !== undefined) {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's RollTable result Collection is untyped; structural [{range}] satisfies the shape at runtime
+                    rollResult.results = [escalated] as unknown as typeof rollResult.results;
+                }
             }
         }
 
@@ -122,17 +151,27 @@ export class RollTableUtils {
 
     /**
      * Roll on the Psychic Phenomena table.
+     *
+     * `ladderStep` shifts the drawn result UP the ladder — per-scene Warp weakness
+     * makes results one step more severe (#137). It is applied as a step along the
+     * table's own row ordering rather than as a numeric bonus, because "one step
+     * more severe" is a position on the ladder, not a modifier: the rows are not
+     * evenly sized, so adding a number would shift by an arbitrary amount. The row
+     * ordering is table structure, not content, so this stays Direction #7-clean.
+     *
      * @param {WH40KBaseActor} actor - The actor rolling
      * @param {number} modifier - Modifier to the roll (e.g., from Psy Rating)
+     * @param {number} ladderStep - Rows to escalate the drawn result by (0 = RAW)
      * @returns {Promise<TableResult | null>}
      */
-    static async rollPsychicPhenomena(actor: WH40KBaseActor, modifier = 0): Promise<RollTableResult | null> {
+    static async rollPsychicPhenomena(actor: WH40KBaseActor, modifier = 0, ladderStep = 0): Promise<RollTableResult | null> {
         const roll = new Roll(`1d100 + ${modifier}`);
         await roll.evaluate();
 
         const result = await this.rollTable('Psychic Phenomena', {
             displayChat: true,
             roll: roll,
+            escalateRows: ladderStep,
         });
 
         // Check if result triggers Perils of the Warp (typically on 75+)
