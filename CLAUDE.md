@@ -424,6 +424,21 @@ parallel ratchet fanout and dominated wall-clock. Run it **on command** with
 `pnpm test:storybook:integration` (it also runs in the licensed CI lane). Keep it
 green before pushing UI/template/CSS/story changes.
 
+**Reading its result correctly matters more than running it.** Two traps, both hit
+in practice:
+
+- **Never judge it by a piped exit code.** `pnpm test:storybook:integration | tail -N`
+  reports `tail`'s status, so it says 0 even when every test failed. Redirect the
+  whole run to a file and grep the file for Playwright's own `N passed` / `N failed`
+  summary — the summary line is the evidence, not the exit code. `test-results/.last-run.json`
+  (`status`, `failedTests[]`) is the machine-readable cross-check.
+- **Kill its web server when you abort a run.** `playwright.storybook.config.ts` uses
+  `reuseExistingServer: !CI` against a `python3 -m http.server` on the storybook port.
+  Aborting a run can orphan that server; a later run then silently *reuses* it, and if
+  the orphan dies mid-suite **every** test fails with a `page.goto` timeout — which reads
+  like a catastrophic code regression and is not one. All-tests-timed-out means look at
+  the server first. After aborting, confirm nothing is left listening on the port.
+
 Hooks run for 30–60s on large commits. Wait for them; do not interrupt or `--no-verify` past failures. If a hook fails, investigate and fix; do not silence.
 
 ---
