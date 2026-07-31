@@ -172,11 +172,80 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
             expect(result.hasPanel, 'battlefield panel should render in OW sheet').toBe(true);
             expect(result.hasRequestBtn, 'Request Support button should render').toBe(true);
             // With supportCooldown=3 (>0), the button must be disabled.
+            //
+            // NOTE: this assertion alone cannot detect a broken gate. The template
+            // renders `disabled` via `{{#unless canRequestSupport}}`, so a context
+            // that omits the field entirely ALSO yields a disabled button — which is
+            // exactly the bug that shipped (the button was permanently disabled and
+            // Support could never be requested). The cooldown-cleared case below is
+            // the half that actually discriminates; keep both.
             expect(result.requestBtnDisabled, 'Request Support button should be disabled while cooldown > 0').toBe(true);
             expect(result.hasCooldownBadge, 'cooldown status badge should render').toBe(true);
             expect(result.cooldownBefore, 'initial cooldown should be 3').toBe(3);
             expect(result.awardRosterSize, 'initial award roster should hold 2 ids').toBe(2);
             expect(result.hasAwardListOrEmpty, 'awards section should render either the list or the empty-state notice').toBe(true);
+
+            // The discriminating half: clear the cooldown, re-render, and require the
+            // button to come back. A context missing `canRequestSupport` leaves it
+            // disabled here, so this is what fails when the gate regresses to a
+            // constant.
+            const ready = await page.evaluate(async (id: string) => {
+                interface ReadySheet {
+                    render: (options: { force: boolean }) => Promise<void>;
+                    element?: HTMLElement | null;
+                    close?: () => Promise<void>;
+                }
+                interface ReadyActor {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update() accepts an arbitrary diff record and resolves to the updated Document or undefined
+                    update?: (diff: Record<string, unknown>) => Promise<unknown>;
+                    sheet?: ReadySheet | null;
+                }
+                interface ReadyGlobals {
+                    game?: { actors?: { get?: (id: string) => ReadyActor | undefined } };
+                    __c161ready?: ReadySheet | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-context globalThis (game namespace + cross-callback sheet handle, no shipped browser-side types)
+                const g = globalThis as unknown as ReadyGlobals;
+                const actor = g.game?.actors?.get?.(id);
+                if (actor == null) return { error: 'actor lookup failed', disabled: null, badge: null };
+                try {
+                    await actor.update?.({ 'system.supportCooldown': 0 });
+                    const sheet = actor.sheet;
+                    if (sheet == null) return { error: 'actor.sheet is null', disabled: null, badge: null };
+                    await sheet.render({ force: true });
+                    await new Promise((r) => {
+                        setTimeout(r, 120);
+                    });
+                    g.__c161ready = sheet;
+                    const el = sheet.element;
+                    if (!(el instanceof HTMLElement)) return { error: 'sheet element missing', disabled: null, badge: null };
+                    return {
+                        error: null,
+                        disabled: el.querySelector<HTMLButtonElement>('button[data-action="owRequestSupport"]')?.disabled ?? null,
+                        badge: el.querySelector('[data-cooldown-status]')?.getAttribute('data-cooldown-status') ?? null,
+                    };
+                } catch (err) {
+                    return { error: err instanceof Error ? err.message : String(err), disabled: null, badge: null };
+                }
+            }, actorId);
+
+            expect(ready.error, `cooldown-cleared probe error: ${ready.error ?? ''}`).toBeNull();
+            expect(ready.disabled, 'Request Support button must be ENABLED once cooldown reaches 0').toBe(false);
+            expect(ready.badge, 'cooldown badge must report ready once cooldown reaches 0').toBe('ready');
+
+            await page.evaluate(async () => {
+                interface ReadyCleanup {
+                    __c161ready?: { close?: () => Promise<void> } | undefined;
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: cross-callback sheet handle stashed on globalThis (no shipped browser-side type)
+                const g = globalThis as unknown as ReadyCleanup;
+                try {
+                    await g.__c161ready?.close?.();
+                } catch {
+                    /* ignore */
+                }
+                g.__c161ready = undefined;
+            });
 
             recordCoverage('panel.render', 'OwBattlefieldPanel');
         } finally {
