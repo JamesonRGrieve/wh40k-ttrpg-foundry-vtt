@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mergeRegimentalAwards, awardableForMission, type RegimentalAward } from './ow-regimental-award';
+import { mergeRegimentalAwards, awardableForMission, buildBattlefieldPanel, type RegimentalAward } from './ow-regimental-award';
 
 const VALOUR: RegimentalAward = {
     id: 'award-valour',
@@ -104,5 +104,76 @@ describe('awardableForMission', () => {
         const result = awardableForMission({ awards: inputs, missionRating: 1 });
         result.push(WOUND_BADGE);
         expect(inputs).toHaveLength(1);
+    });
+});
+
+describe('buildBattlefieldPanel', () => {
+    const CATALOGUE: Record<string, RegimentalAward> = {
+        [VALOUR.id]: VALOUR,
+        [WOUND_BADGE.id]: WOUND_BADGE,
+    };
+    const resolve = (id: string): RegimentalAward | undefined => CATALOGUE[id];
+
+    it('gates the Request Support button on the cooldown, in both directions', () => {
+        // The live defect this builder fixes: the sheet supplied no `canRequestSupport`
+        // at all. The template gates the button on `{{#unless canRequestSupport}}`, and
+        // undefined is falsy, so `disabled` was rendered unconditionally — Support could
+        // never be requested, cooldown or not. The ready case below is the half that was
+        // broken; assert both so the gate cannot regress to a constant in either
+        // direction.
+        const onCooldown = buildBattlefieldPanel([], 3, resolve);
+        expect(onCooldown.canRequestSupport).toBe(false);
+        expect(onCooldown.cooldownActive).toBe(true);
+        expect(onCooldown.supportCooldown).toBe(3);
+
+        const ready = buildBattlefieldPanel([], 0, resolve);
+        expect(ready.canRequestSupport).toBe(true);
+        expect(ready.cooldownActive).toBe(false);
+    });
+
+    it('normalises a negative or non-finite cooldown to ready', () => {
+        for (const bad of [-1, Number.NaN, Number.POSITIVE_INFINITY]) {
+            const panel = buildBattlefieldPanel([], bad, resolve);
+            expect(panel.supportCooldown).toBe(0);
+            expect(panel.canRequestSupport).toBe(true);
+        }
+    });
+
+    it('projects conferred ids into rows and merges their bonuses', () => {
+        const panel = buildBattlefieldPanel([VALOUR.id, WOUND_BADGE.id], 0, resolve);
+
+        expect(panel.availableAwards.map((r) => r.name)).toEqual(['Medallion Crimson', 'Wound Badge']);
+        expect(panel.availableAwards.every((r) => r.conferred)).toBe(true);
+        expect(panel.merged.characteristicDelta).toEqual({ WP: 3, T: 2 });
+        expect(panel.merged.bonusFatePoints).toBe(1);
+        expect(panel.merged.entryCount).toBe(2);
+        expect(panel.merged.hasAny).toBe(true);
+    });
+
+    it('keeps an unresolved id togglable, labelled by its own id', () => {
+        // A row whose content pack is absent must still carry a non-empty
+        // `data-award-id`, or `owToggleAward` no-ops and the award can never be
+        // removed — strictly worse than a bare label.
+        const panel = buildBattlefieldPanel(['award-missing'], 0, resolve);
+
+        expect(panel.availableAwards).toHaveLength(1);
+        expect(panel.availableAwards[0]?.id).toBe('award-missing');
+        expect(panel.availableAwards[0]?.name).toBe('award-missing');
+        // Unresolved ids contribute no bonus, so they do not inflate the readout.
+        expect(panel.merged.entryCount).toBe(0);
+        expect(panel.merged.hasAny).toBe(false);
+    });
+
+    it('skips empty ids without emitting a dead row', () => {
+        const panel = buildBattlefieldPanel(['', VALOUR.id, ''], 0, resolve);
+        expect(panel.availableAwards).toHaveLength(1);
+        expect(panel.availableAwards[0]?.id).toBe(VALOUR.id);
+    });
+
+    it('reports hasAny false when nothing is conferred', () => {
+        const panel = buildBattlefieldPanel([], 0, resolve);
+        expect(panel.availableAwards).toEqual([]);
+        expect(panel.merged.hasAny).toBe(false);
+        expect(panel.merged.entryCount).toBe(0);
     });
 });

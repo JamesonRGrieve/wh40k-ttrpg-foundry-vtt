@@ -142,3 +142,100 @@ export function awardableForMission(input: AwardableForMissionInput): Regimental
     void input.missionRating;
     return Array.from(input.awards);
 }
+
+/* -------------------------------------------------------------------- */
+/*  Panel context                                                       */
+/* -------------------------------------------------------------------- */
+
+/** Id → Award descriptor lookup, supplied by the caller from compendium content. */
+export type RegimentalAwardResolver = (id: string) => RegimentalAward | undefined;
+
+/**
+ * One roster row as `ow-battlefield-panel.hbs` reads it. Deliberately not
+ * exported — it is reachable as `BattlefieldPanelData['availableAwards'][number]`
+ * and a second exported name for the same shape is surface with no consumer.
+ */
+interface BattlefieldAwardRow {
+    id: string;
+    name: string;
+    description: string;
+    conferred: boolean;
+}
+
+/** The full context `ow-battlefield-panel.hbs` declares in its header comment. */
+export interface BattlefieldPanelData {
+    supportCooldown: number;
+    canRequestSupport: boolean;
+    cooldownActive: boolean;
+    availableAwards: BattlefieldAwardRow[];
+    merged: MergedRegimentalAwards & {
+        /** Number of conferred Awards contributing to the merge. */
+        entryCount: number;
+        /** True when the merge produced anything worth rendering. */
+        hasAny: boolean;
+    };
+}
+
+/**
+ * Build the Battlefield panel context from persisted actor state.
+ *
+ * Same shape and the same reason as `ow-regiment-drawback.ts`
+ * `buildDrawbackPanel`: the sheet was passing the raw persisted id array
+ * (`{ supportCooldown, awards }`) while the template reads
+ * `availableAwards[].name` / `.description` / `.conferred`, `merged.*`,
+ * `canRequestSupport` and `cooldownActive`. Three of the five declared
+ * context fields were absent, which produced two live defects:
+ *
+ *   - The template gates the button with
+ *     `{{#unless battlefieldPanel.canRequestSupport}}disabled{{/unless}}`.
+ *     An absent field is undefined, so `unless` always fired and the
+ *     Request Support button was PERMANENTLY DISABLED — Support could
+ *     never be requested at all, cooldown or not.
+ *   - The cooldown badge reads `{{#if battlefieldPanel.cooldownActive}}`,
+ *     also always false, so it showed the green "ready" state while the
+ *     button beneath it was disabled. The panel contradicted itself.
+ *
+ * The roster additionally always rendered its empty state and the
+ * merged-bonus readout never appeared.
+ *
+ * `resolve` supplies the descriptor for an id. An id that does not resolve
+ * still gets a row carrying its own id as the label, so the toggle keeps
+ * working when the content pack is absent or an award was renamed — an
+ * award you cannot remove is strictly worse than one with a bare label.
+ * Unresolved ids contribute no bonus, which is why `entryCount` counts
+ * resolved descriptors rather than rows.
+ *
+ * Content-agnostic per Direction #7: this engine never enumerates Awards.
+ *
+ * @param conferredIds The actor's persisted `system.regimentalAwards`.
+ * @param supportCooldown The actor's persisted `system.supportCooldown` (rounds remaining).
+ * @param resolve Id → descriptor lookup.
+ */
+export function buildBattlefieldPanel(conferredIds: readonly string[], supportCooldown: number, resolve: RegimentalAwardResolver): BattlefieldPanelData {
+    const cooldown = Number.isFinite(supportCooldown) && supportCooldown > 0 ? Math.trunc(supportCooldown) : 0;
+
+    const descriptors: RegimentalAward[] = [];
+    const availableAwards: BattlefieldAwardRow[] = [];
+    for (const id of conferredIds) {
+        if (id === '') continue;
+        const descriptor = resolve(id);
+        if (descriptor !== undefined) descriptors.push(descriptor);
+        availableAwards.push({
+            id,
+            name: descriptor?.name ?? id,
+            description: descriptor?.description ?? '',
+            conferred: true,
+        });
+    }
+
+    const merged = mergeRegimentalAwards(descriptors);
+    const hasAny = Object.keys(merged.characteristicDelta).length > 0 || merged.traits.length > 0 || merged.bonusFatePoints > 0;
+
+    return {
+        supportCooldown: cooldown,
+        canRequestSupport: cooldown === 0,
+        cooldownActive: cooldown > 0,
+        availableAwards,
+        merged: { ...merged, entryCount: descriptors.length, hasAny },
+    };
+}

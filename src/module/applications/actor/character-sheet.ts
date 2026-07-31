@@ -98,6 +98,7 @@ import { MOUNTED_ACTIONS } from '../../rules/ow-mount.ts';
 import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
 import { REGIMENT_BUDGET } from '../../rules/ow-regiment-creation.ts';
 import { buildDrawbackPanel, type MultiComradeRoster } from '../../rules/ow-regiment-drawback.ts';
+import { buildBattlefieldPanel } from '../../rules/ow-regimental-award.ts';
 import {
     applyMismanifest,
     canUnleashDaemon,
@@ -700,7 +701,24 @@ const PANEL_BUILDERS: Partial<Record<GameSystemId, readonly PanelBuilder[]>> = {
         },
         {
             key: 'battlefieldPanel',
-            build: (s) => ({ supportCooldown: owSystemRecord(s)['supportCooldown'] ?? 0, awards: owSystemRecord(s)['regimentalAwards'] ?? [] }),
+            // Same defect as drawbackPanel above: the persisted slots hold a bare id
+            // array and a cooldown number, but the template reads five fields —
+            // `availableAwards[]` rows, the `merged.*` readout, `cooldownActive` and
+            // `canRequestSupport`. Three were absent. Because the template gates the
+            // button on `{{#unless canRequestSupport}}` and undefined is falsy, the
+            // Request Support button was PERMANENTLY disabled — the feature could
+            // never be used — while the badge (`{{#if cooldownActive}}`, also always
+            // false) showed the green "ready" state beside it. Project through the
+            // engine.
+            build: (s) => {
+                const record = owSystemRecord(s);
+                const ids = Array.isArray(record['regimentalAwards']) ? (record['regimentalAwards'] as string[]) : [];
+                const cooldown = typeof record['supportCooldown'] === 'number' ? record['supportCooldown'] : 0;
+                // Award descriptors live on compendium documents (Direction #7). Until an
+                // award content pack exists nothing resolves and each row falls back to
+                // its own id — which still toggles off correctly.
+                return buildBattlefieldPanel(ids, cooldown, () => undefined);
+            },
         },
     ],
 };
