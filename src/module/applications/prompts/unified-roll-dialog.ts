@@ -12,6 +12,7 @@
 
 import { isBasicSkill } from '../../helpers/skill-classification.ts';
 import type { ActionData } from '../../rolls/action-data.ts';
+import { advanceExtendedTest } from '../../rolls/extended-test-data.ts';
 import type { RollData, RollModifierComponent } from '../../rolls/roll-data.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { ASSIST_BONUS_PER_ALLY, DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
@@ -2516,12 +2517,64 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // A real (manual) roll resolved — run the skill-use resolution hooks so
             // opposed contests and auto-resolve/readout effects fire on this path too.
             await this._resolveSimpleActionHooks();
+            // Only a resolved roll advances the ladder; a target-only post is not an attempt.
+            await this._advanceExtendedTest();
         } else {
             // No roll entered - post target info only
             this.rollData['isTargetOnly'] = true;
         }
 
         await sendActionDataToChat(this.actionData);
+    }
+
+    /**
+     * Advance the Extended Test ladder for this roll (#59) and hand its state to
+     * the chat card.
+     *
+     * Every piece of this feature already existed and none of them were connected:
+     * the dialog's `_extended` / `_extendedThreshold` toggle set state nothing read,
+     * `rolls/extended-test-data.ts` had no production consumer at all, and
+     * `chat/partial/extended-test-progress.hbs` is included by `simple-roll-chat.hbs`
+     * but was never given an `extendedTest` context — so it rendered nothing.
+     * Toggling "Extended Test" was inert.
+     *
+     * The ladder is persisted on the ACTOR rather than on the dialog or the card
+     * because the mechanic is defined across rolls ("progress carries over between
+     * rolls instead of each attempt standing alone") and a dialog instance does not
+     * outlive its own roll. Keyed by roll key so two concurrent Extended Tests on
+     * different skills keep separate ladders.
+     *
+     * A completed or blown test clears its flag, so the next toggle starts fresh
+     * instead of resuming a finished ladder — the card still shows the final state
+     * for the attempt that ended it.
+     */
+    async _advanceExtendedTest(): Promise<void> {
+        if (!this._extended) return;
+        const actor = this.rollData.sourceActor;
+        if (actor === null) return;
+
+        // Roll key identifies WHICH test is accumulating. Fall back to a shared
+        // bucket rather than dropping the attempt when the path has no key.
+        const rollKey = typeof this.rollData.rollKey === 'string' && this.rollData.rollKey !== '' ? this.rollData.rollKey : 'unkeyed';
+
+        // The ladder arithmetic is rules logic and lives in rolls/extended-test-data.ts;
+        // this method owns only the actor I/O around it.
+        const outcome = advanceExtendedTest(actor.getExtendedTest(rollKey), {
+            threshold: this._extendedThreshold,
+            success: this.rollData.success,
+            dos: this.rollData.dos,
+            rollKey,
+        });
+
+        if (outcome.nextState === null) {
+            await actor.clearExtendedTest(rollKey);
+        } else {
+            await actor.setExtendedTest(rollKey, outcome.nextState);
+        }
+
+        // Flattened onto the ActionData so `postFlattenedInstanceToChat` surfaces it
+        // at top level, which is where `simple-roll-chat.hbs` reads `extendedTest`.
+        this.actionData.extendedTest = outcome.chatContext;
     }
 
     async _submitWeaponRoll(manualTotal: number | null): Promise<void> {
