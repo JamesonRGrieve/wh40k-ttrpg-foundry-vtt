@@ -135,6 +135,7 @@ import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
 import { buildSkillSpecializationIndex } from './rules/skill-specialization-index.ts';
 import { buildSkillVariantIndex } from './rules/skill-variant-index.ts';
 import { SURPRISED_STATUS_ID, surpriseHasExpired } from './rules/surprise.ts';
+import { buildWarpWeaknessField, isWarpWeak, WARP_WEAKNESS_INPUT_NAME, type WarpWeaknessScene } from './rules/warp-weakness.ts';
 import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.ts';
 import { DHTourMain } from './tours/main-tour.ts';
 import type { WH40KGameSystem } from './types/global.d.ts';
@@ -150,6 +151,16 @@ interface DirectoryContextOption {
     icon: string;
     condition: (element: HTMLElement) => boolean;
     callback: (element: HTMLElement) => void | Promise<void>;
+}
+
+/**
+ * Minimal SceneConfig shape needed by the Warp-weakness toggle injection.
+ * Both `document` (ApplicationV2) and `object` (V1 sheets) are read so the hook
+ * works across Foundry's sheet generations.
+ */
+interface WarpWeaknessSceneConfig {
+    document?: WarpWeaknessScene | null;
+    object?: WarpWeaknessScene | null;
 }
 
 /** Minimal Token HUD shape needed by the loot pickup-button injection. */
@@ -200,6 +211,10 @@ export class HooksManager {
             HooksManager.renderDocumentSheetConfig(app, html, data),
         );
         /* eslint-enable no-restricted-syntax, @typescript-eslint/no-deprecated */
+        // Per-scene Warp weakness (#137). Injects the GM toggle into Scene Config;
+        // Foundry submits `flags.<scope>.<key>` inputs onto the document itself, so
+        // the checkbox name is the entire wiring — no submit handler needed.
+        hooksOn('renderSceneConfig', (app: WarpWeaknessSceneConfig, html: HTMLElement | JQuery) => HooksManager.onRenderSceneConfig(app, html));
         hooksOn('getActorDirectoryEntryContext', (_html: JQuery, options: DirectoryContextOption[]) => HooksManager.getActorDirectoryEntryContext(options));
         hooksOn('renderTokenHUD', (app: LootTokenHUDLike, html: HTMLElement | JQuery) => HooksManager.onLootTokenHUD(app, html));
         // Loot piles are dropped in place — non-GM players can't drag them around.
@@ -494,6 +509,52 @@ export class HooksManager {
      * Pickup target resolution + transfer is shared with the loot sheet via
      * {@link ItemDropManager}.
      */
+    /**
+     * Inject the per-scene Warp weakness toggle into Scene Config (#137).
+     *
+     * Without this the flag `phenomena-modifier.ts` reads would have no way to be
+     * set outside a console macro — a rule nobody can turn on is the same defect
+     * class as a rule nothing reads.
+     *
+     * GM-only: the riders make Phenomena more likely and more severe, so it is a
+     * GM authoring control, not a player one. Foundry's SceneConfig submits any
+     * `flags.<scope>.<key>` input directly onto the document, so no submit handler
+     * is required.
+     */
+    static onRenderSceneConfig(app: WarpWeaknessSceneConfig, html: HTMLElement | JQuery): void {
+        if (!game.user.isGM) return;
+
+        let root: HTMLElement | undefined;
+        if (html instanceof HTMLElement) {
+            root = html;
+        } else {
+            const first = html[0];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: jQuery[0] may be undefined under strict TS
+            if (first === undefined) return;
+            root = first;
+        }
+        // Re-renders reuse the same element; a second copy would post a duplicate
+        // checkbox and the last one submitted would win at random.
+        if (root.querySelector(`input[name="${WARP_WEAKNESS_INPUT_NAME}"]`) !== null) return;
+
+        const scene = app.document ?? app.object ?? null;
+        if (scene === null) return;
+
+        const field = buildWarpWeaknessField(
+            document,
+            {
+                label: game.i18n.localize('WH40K.Scene.WarpWeakness.Label'),
+                hint: game.i18n.localize('WH40K.Scene.WarpWeakness.Hint'),
+            },
+            isWarpWeak(scene),
+        );
+
+        // Append to the ambience/environment tab when present, else the form body,
+        // so the control lands somewhere sensible across Foundry's config layouts.
+        const host = root.querySelector('.tab[data-tab="ambience"]') ?? root.querySelector('.tab[data-tab="basic"]') ?? root.querySelector('form') ?? root;
+        host.appendChild(field);
+    }
+
     static onLootTokenHUD(app: LootTokenHUDLike, html: HTMLElement | JQuery): void {
         const lootActor = app.object?.document?.actor ?? null;
         if (lootActor == null || (lootActor.type as string) !== 'loot') return;

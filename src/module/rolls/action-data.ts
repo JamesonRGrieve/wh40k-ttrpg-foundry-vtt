@@ -6,6 +6,7 @@ import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
 import { type AllocationTarget, allocateHits } from '../rules/hit-allocation.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/opposed.ts';
+import { resolvePhenomenaTrigger } from '../rules/phenomena-modifier.ts';
 import type { RerollOption } from '../rules/reroll.ts';
 import { scatterDirection } from '../rules/scatter.ts';
 import {
@@ -25,6 +26,7 @@ import {
     type SkillUseKind,
     useNeedsItemChoice,
 } from '../rules/skill-uses.ts';
+import { isWarpWeak, type WarpWeaknessScene } from '../rules/warp-weakness.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
 import { DAY_SECONDS } from '../rules/world-time.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
@@ -102,6 +104,20 @@ export class ActionData {
         // No-op default — subclasses (e.g. PsychicActionData) can override
     }
 
+    /**
+     * Warp weakness of the scene the roll happens in (#137). Guarded because rolls
+     * can resolve before the canvas exists (early-boot, headless test runs), where
+     * `game.scenes` is not yet populated — an absent scene is simply not Warp-weak.
+     */
+    #activeSceneWarpWeakness(): boolean {
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: game.scenes.active is a Foundry Scene document projected onto the local read-surface
+            return isWarpWeak(game.scenes.active as unknown as WarpWeaknessScene | null | undefined);
+        } catch {
+            return false;
+        }
+    }
+
     async checkForPerils(): Promise<void> {
         if (this.rollData.power === undefined) return;
 
@@ -113,12 +129,35 @@ export class ActionData {
         const rollTotal = this.rollData.roll?.total;
         if (rollTotal === undefined) return;
 
-        const isDoubles = /^(.)\1+$/.test(rollTotal.toString());
-        const overchannelling = psyRating < (this.rollData as PsychicRollData).pr;
-        // RAW DH2e: overchannelling triggers phenomena on any non-double; normal
-        // casts trigger phenomena only on doubles.
-        const phenomenaTriggered = overchannelling ? !isDoubles : isDoubles;
-        if (!phenomenaTriggered) return;
+        const power = this.rollData.power;
+        const powerSystem = power.system as { phenomenaModifier?: number };
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- `.system ??` defaults are banned by repo policy; explicit undefined handling is intentional here
+        const powerPhenomenaModifier = powerSystem.phenomenaModifier === undefined ? 0 : powerSystem.phenomenaModifier;
+
+        // Push's phenomena consequences are computed by `resolvePsyMode` in the roll
+        // dialog and written here; until #514 nothing read them, so pushing a power
+        // neither forced the draw nor escalated it.
+        const rd = this.rollData as PsychicRollData & { psyForcePhenomena?: boolean; psyPhenomenaModifier?: number };
+
+        const outcome = resolvePhenomenaTrigger({
+            rollTotal: rollTotal,
+            isDoubles: /^(.)\1+$/.test(rollTotal.toString()),
+            overchannelling: psyRating < (this.rollData as PsychicRollData).pr,
+            psyForcePhenomena: rd.psyForcePhenomena === true && this.rollData.success,
+            psyPhenomenaModifier: rd.psyPhenomenaModifier ?? 0,
+            powerPhenomenaModifier,
+            warpWeakness: this.#activeSceneWarpWeakness(),
+            // RAW (within.md p. 58) adds +5 per Corruption Point the psyker gained
+            // FROM THIS PUSH. That award does not exist anywhere in the system yet —
+            // nothing grants CP on a push — and deciding which talent gates it would
+            // hardcode content in `src/`, which Direction #7 forbids. The rider is
+            // therefore wired but contributes 0 until a Tainted Psyker CP award is
+            // authored on the compendium talent and read from the actor; the
+            // arithmetic for it is already covered by `composePhenomenaModifier`.
+            taintedPsykerPushCP: 0,
+        });
+
+        if (!outcome.triggered) return;
 
         this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
 
@@ -130,11 +169,7 @@ export class ActionData {
         }
         if (!autoRoll) return;
 
-        const power = this.rollData.power;
-        const powerSystem = power.system as { phenomenaModifier?: number };
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- `.system ??` defaults are banned by repo policy; explicit undefined handling is intentional here
-        const phenomenaModifier = powerSystem.phenomenaModifier === undefined ? 0 : powerSystem.phenomenaModifier;
-        await RollTableUtils.rollPsychicPhenomena(sourceActor, phenomenaModifier);
+        await RollTableUtils.rollPsychicPhenomena(sourceActor, outcome.modifier, outcome.ladderStep);
     }
 
     /**

@@ -60,3 +60,69 @@ export function composePhenomenaModifier(input: PhenomenaModifierInput): Phenome
         autoTriggerOnOddOr9: warpWeakness,
     };
 }
+
+/* -------------------------------------------------------------------- */
+/*  Trigger resolution — the single composition point                   */
+/* -------------------------------------------------------------------- */
+
+/** Everything the phenomena decision depends on, resolved by the caller. */
+export interface PhenomenaTriggerInput extends PhenomenaModifierInput {
+    /** The Focus Power roll total (used for the RAW doubles rule and the odd/9 rider). */
+    rollTotal: number;
+    /** True when the roll total is a repeated digit (11, 22, …) — the RAW base trigger. */
+    isDoubles: boolean;
+    /** True when the cast used more PR than the psyker's rating. */
+    overchannelling: boolean;
+    /** Push mode forces a phenomena draw on success (`resolvePsyMode().forcePhenomena`). */
+    psyForcePhenomena: boolean;
+    /** Push mode's own phenomena-roll modifier (`resolvePsyMode().phenomenaModifier`). */
+    psyPhenomenaModifier: number;
+    /** The power item's authored `phenomenaModifier` (content, Direction #7). */
+    powerPhenomenaModifier: number;
+}
+
+export interface PhenomenaTriggerResult {
+    /** Whether a Psychic Phenomena draw fires at all. */
+    triggered: boolean;
+    /** Total modifier applied to the phenomena roll. */
+    modifier: number;
+    /** Rows to shift the drawn result up the ladder (severity increase). */
+    ladderStep: number;
+}
+
+/**
+ * Decide whether Psychic Phenomena fire, and with what modifier and severity shift.
+ *
+ * This is the single place the phenomena decision is made, because the inputs were
+ * previously scattered and two of them were silently DROPPED:
+ *
+ *   - `unified-roll-dialog.ts` computes Push's `forcePhenomena` and
+ *     `phenomenaModifier` via `resolvePsyMode` and writes them onto the roll data
+ *     as `psyForcePhenomena` / `psyPhenomenaModifier` — and nothing ever read them.
+ *     Pushing a power therefore had NO phenomena consequence beyond the ordinary
+ *     doubles rule: neither the guaranteed draw on success nor the +5-per-push-level
+ *     escalation applied.
+ *   - `composePhenomenaModifier`'s per-scene Warp-weakness riders had no consumer at
+ *     all (this module is its #514 entry).
+ *
+ * Trigger rules, in RAW precedence:
+ *   - overchannelling casts draw on any NON-double (the inverse of the normal rule);
+ *   - an ordinary cast draws on doubles;
+ *   - Push forces a draw regardless (the caller passes `psyForcePhenomena` only on
+ *     a successful cast, which is where RAW scopes it);
+ *   - per-scene Warp weakness additionally draws on a 9 or any odd total.
+ */
+export function resolvePhenomenaTrigger(input: PhenomenaTriggerInput): PhenomenaTriggerResult {
+    const composed = composePhenomenaModifier(input);
+
+    const total = Number.isFinite(input.rollTotal) ? Math.trunc(input.rollTotal) : 0;
+    const oddOr9 = composed.autoTriggerOnOddOr9 && (total === 9 || Math.abs(total) % 2 === 1);
+    const byDegree = input.overchannelling ? !input.isDoubles : input.isDoubles;
+
+    const triggered = byDegree || input.psyForcePhenomena || oddOr9;
+
+    const safe = (value: number): number => (Number.isFinite(value) ? value : 0);
+    const modifier = safe(input.powerPhenomenaModifier) + safe(input.psyPhenomenaModifier) + composed.phenomenaModifier;
+
+    return { triggered, modifier, ladderStep: composed.ladderStepIncrement };
+}
