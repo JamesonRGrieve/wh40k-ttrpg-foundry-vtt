@@ -57,6 +57,7 @@ playwright-report/
 .animation-coverage.json
 .theme-coverage.json
 .important-coverage.json
+.unconsumed-coverage.json
 .compendium-uuid-index.json
 .compendium-uuid-migration.json
 .integration-coverage.json
