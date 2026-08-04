@@ -1141,7 +1141,7 @@
                 "Status": "Status — wounds, fate, fatigue, corruption, insanity & conditions",
                 "Skills": "Statistics — characteristics, skills & aptitudes",
                 "Combat": "Combat — weapons, attacks & the combat station",
-                "Equipment": "Equipment — weapons, armour, gear & carried items",
+                "Equipment": "Inventory — weapons, armour, gear & carried items",
                 "Biography": "Biography — origin, divination, background & notes"
             },
             "Overview": "Overview",
@@ -1152,7 +1152,7 @@
             "Statistics": "Statistics",
             "Talents": "Talents",
             "Powers": "Powers",
-            "Equipment": "Equipment",
+            "Equipment": "Inventory",
             "OriginPath": "Origin Path",
             "Dynasty": "Dynasty",
             "Biography": "Biography",
