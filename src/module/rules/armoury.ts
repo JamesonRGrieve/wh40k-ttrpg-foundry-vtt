@@ -155,6 +155,24 @@ export async function ensureInquisitionArmoury(): Promise<void> {
             exists: findArmoury(game.actors) !== undefined,
             itemPilesActive: game.modules.get('item-piles')?.active === true,
         };
+
+        if (context.exists && context.isGM) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors.contents is Foundry's Actor collection
+            const allArmouries = (game.actors.contents as unknown as FlaggedActorLike[]).filter(
+                (a) => a.flags?.[SYSTEM_ID]?.[ARMOURY_FLAG] === true,
+            );
+            const keeper = allArmouries[0];
+            for (let i = 1; i < allArmouries.length; i++) {
+                // eslint-disable-next-line no-restricted-syntax, no-await-in-loop -- boundary: Actor.deleteDocuments takes string[]; sequential to avoid race
+                await Actor.deleteDocuments([(allArmouries[i] as { id: string }).id]);
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor update surface
+            const k = keeper as { img?: string; update?: (data: Record<string, unknown>) => Promise<unknown> };
+            if (k.img !== ARMOURY_IMAGE && typeof k.update === 'function') {
+                await k.update({ img: ARMOURY_IMAGE });
+            }
+        }
+
         if (!shouldSpawnArmoury(context)) return;
 
         const name = game.i18n.localize('WH40K.Armoury.Name');
