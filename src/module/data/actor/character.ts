@@ -1,5 +1,6 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import { psyRatingTotalCost, psychicPowerCost } from '../../rules/xp-costs.ts';
+import { parseImperialDate } from '../../rules/imperial-date.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import { type AptitudeDerivation, type AptitudeGrantSource, collectGrantedAptitudes, deriveAptitudes, extractLegacyElectives } from '../item/origin-path.ts';
 import { parseCharacteristicBonusTerm } from '../shared/characteristic-formula.ts';
@@ -129,20 +130,8 @@ export default class CharacterData extends CreatureTemplate {
     declare bio: {
         playerName: string;
         gender: string;
-        /**
-         * Standard (calendar) age — years elapsed by the Imperial reckoning.
-         * The pre-existing `age` field retains this meaning, so no migration is
-         * needed; {@link biologicalAge} is the new companion.
-         */
+        birthdate: string;
         age: string;
-        /**
-         * Biological (subjective) age — years actually lived.
-         *
-         * Warp transit desynchronises the two: a passage can advance standard time
-         * by years while the traveller experiences days, or the reverse. So this is
-         * authored independently and is NEVER derived from the world clock or from
-         * {@link age} (#478).
-         */
         biologicalAge: string;
         build: string;
         complexion: string;
@@ -416,11 +405,10 @@ export default class CharacterData extends CreatureTemplate {
             bio: new fields.SchemaField({
                 playerName: new fields.StringField({ required: false, blank: true }),
                 gender: new fields.StringField({ required: false, blank: true }),
-                // Standard (calendar) age. Kept as `age` so existing actors' values
-                // retain their meaning without a migration (#478).
+                birthdate: new fields.StringField({ required: false, blank: true }),
+                // Standard (calendar) age — derived from birthdate + campaign clock
+                // in prepareDerivedData. Editable as fallback when birthdate is blank.
                 age: new fields.StringField({ required: false, blank: true }),
-                // Biological (subjective) age — independent of `age` because warp
-                // transit desynchronises them. Never derived (#478).
                 biologicalAge: new fields.StringField({ required: false, blank: true }),
                 build: new fields.StringField({ required: false, blank: true }),
                 complexion: new fields.StringField({ required: false, blank: true }),
@@ -799,6 +787,17 @@ export default class CharacterData extends CreatureTemplate {
     override prepareDerivedData(): void {
         super.prepareDerivedData();
         this._prepareExperience();
+        this._deriveStandardAge();
+    }
+
+    _deriveStandardAge(): void {
+        const bd = this.bio.birthdate;
+        if (typeof bd !== 'string' || bd.trim() === '') return;
+        const birthParsed = parseImperialDate(bd);
+        if (birthParsed === null) return;
+        const current = WH40KSettings.getCampaignInceptionDate();
+        const diff = current.year - birthParsed.year;
+        if (diff >= 0) this.bio.age = String(diff);
     }
 
     /** @inheritDoc */

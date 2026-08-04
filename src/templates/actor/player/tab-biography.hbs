@@ -12,10 +12,10 @@
             <div class="wh40k-panel-body">
                 <div class="tw-grid tw-grid-cols-2 tw-gap-2">
                     {{> systems/wh40k-rpg/templates/shared/field-row.hbs label="Gender" name="system.bio.gender" value=system.bio.gender}}
-                    {{!-- Two ages, tracked independently: warp transit desynchronises
-                          calendar time from time actually lived, so neither is derived
-                          from the other or from the world clock (#478). --}}
-                    {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Bio.StandardAge") name="system.bio.age" value=system.bio.age}}
+                    {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Bio.Birthdate") name="system.bio.birthdate" value=system.bio.birthdate}}
+                    {{!-- Standard age derived from birthdate + campaign clock (#478).
+                          Biological age is edited independently (warp desync). --}}
+                    {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Bio.StandardAge") name="system.bio.age" value=system.bio.age disabled=true}}
                     {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Bio.BiologicalAge") name="system.bio.biologicalAge" value=system.bio.biologicalAge}}
                     {{> systems/wh40k-rpg/templates/shared/field-row.hbs label="Build" name="system.bio.build" value=system.bio.build}}
                     {{> systems/wh40k-rpg/templates/shared/field-row.hbs label="Complexion" name="system.bio.complexion" value=system.bio.complexion}}
