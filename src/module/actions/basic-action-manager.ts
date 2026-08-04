@@ -108,25 +108,6 @@ export class BasicActionManager {
             });
         });
 
-        // Initialize Scene Control Buttons
-        // V14: controls is Record<string, SceneControl> keyed by control name, not an array
-        Hooks.on('getSceneControlButtons', (controls: Record<string, foundry.applications.ui.SceneControls.Control>) => {
-            const bar = controls['tokens'];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard; controls['tokens'] may be undefined at runtime
-            if (bar === undefined) return;
-            const toolOrder = Object.keys(bar.tools).length;
-            bar.tools['assignDamage'] = {
-                name: 'Assign Damage',
-                title: 'Assign Damage',
-                icon: 'fas fa-shield',
-                visible: true,
-                onChange: () => {
-                    this.assignDamageTool();
-                },
-                button: true,
-                order: toolOrder,
-            };
-        });
     }
 
     _toggleExpandChatMessage(event: Event): void {

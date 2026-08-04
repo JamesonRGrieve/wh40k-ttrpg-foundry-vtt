@@ -229,6 +229,52 @@ export class HooksManager {
         DHBasicActionManager.initializeHooks();
         DHCombatActionManager.initializeHooks();
 
+        // #521: top-level WH40K scene control group with all system tools
+        hooksOn('getSceneControlButtons', (controls: Record<string, foundry.applications.ui.SceneControls.Control>) => {
+            const tools: Record<string, foundry.applications.ui.SceneControls.Tool> = {};
+            let order = 0;
+            try {
+                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls) !== true) {
+                    tools['attack'] = {
+                        name: 'attack',
+                        title: 'WH40K.SceneControls.Attack',
+                        icon: 'fas fa-swords',
+                        visible: true,
+                        onChange: () => { DHTargetedActionManager.performWeaponAttack(); },
+                        button: true,
+                        order: order++,
+                    };
+                }
+            } catch { /* setting not yet registered */ }
+            tools['assignDamage'] = {
+                name: 'assignDamage',
+                title: 'WH40K.SceneControls.AssignDamage',
+                icon: 'fas fa-shield',
+                visible: true,
+                onChange: () => { DHBasicActionManager.assignDamageTool(); },
+                button: true,
+                order: order++,
+            };
+            tools['worldTime'] = {
+                name: 'worldTime',
+                title: 'WH40K.WorldTime.Title',
+                icon: 'fa-solid fa-hourglass-half',
+                visible: true,
+                onChange: () => { WorldTimeWidget.show(); },
+                button: true,
+                order: order++,
+            };
+            controls['wh40k'] = {
+                name: 'wh40k',
+                title: 'WH40K.SceneControls.GroupTitle',
+                icon: 'fa-solid fa-skull',
+                layer: 'tokens',
+                visible: true,
+                tools,
+                order: Object.keys(controls).length,
+            };
+        });
+
         // Single system-level turn-start / turn-end boundary derivation (#413);
         // downstream features subscribe through it (must register before them).
         registerCombatTurnHooks();

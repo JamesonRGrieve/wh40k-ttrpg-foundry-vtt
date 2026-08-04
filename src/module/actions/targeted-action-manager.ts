@@ -34,30 +34,6 @@ export class TargetedActionManager {
      * Initialize hooks for TargetedActionManager
      */
     initializeHooks(): void {
-        // Initialize Scene Control Buttons
-        Hooks.on('getSceneControlButtons', (controls: Record<string, foundry.applications.ui.SceneControls.Control>) => {
-            const tokenControl = controls['tokens'];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; controls['tokens'] may be undefined
-            if (tokenControl === undefined) return;
-            try {
-                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls) !== true) {
-                    const toolOrder = Object.keys(tokenControl.tools).length;
-                    tokenControl.tools['Attack'] = {
-                        name: 'Attack',
-                        title: 'Attack',
-                        icon: 'fas fa-swords',
-                        visible: true,
-                        onChange: () => {
-                            this.performWeaponAttack();
-                        },
-                        button: true,
-                        order: toolOrder,
-                    };
-                }
-            } catch (error) {
-                game.wh40k.log('Unable to add game bar icon.', error);
-            }
-        });
     }
 
     /**

@@ -179,24 +179,6 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
      * `updateSetting` subscription.
      */
     static registerSceneControl(): void {
-        if (WorldTimeWidget.#sceneControlRegistered) return;
-        WorldTimeWidget.#sceneControlRegistered = true;
-        Hooks.on('getSceneControlButtons', (controls: Record<string, foundry.applications.ui.SceneControls.Control>) => {
-            const bar = controls['tokens'];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard; controls['tokens'] may be undefined at runtime
-            if (bar === undefined) return;
-            bar.tools['wh40kWorldTime'] = {
-                name: 'wh40kWorldTime',
-                title: 'WH40K.WorldTime.Title',
-                icon: 'fa-solid fa-hourglass-half',
-                visible: true,
-                onChange: () => {
-                    WorldTimeWidget.show();
-                },
-                button: true,
-                order: Object.keys(bar.tools).length,
-            };
-        });
     }
 
     /** Re-render the widget if it is open (no-op otherwise). Called when the world
