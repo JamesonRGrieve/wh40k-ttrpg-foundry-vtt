@@ -115,12 +115,22 @@ export const SKILL_DEFINITIONS: Record<string, SkillDefinition> = {
     trade: def('Trade', 'Int', true, true),
 };
 
+const skillKeyCache = new Map<string, Set<string>>();
+
 /**
- * Return only the skills belonging to the given game system.
- * Skills with no `systems` field belong to all systems.
+ * Return the set of skill keys belonging to the given game system.
+ * Memoized — SKILL_DEFINITIONS is a module constant and there are ~6 system IDs.
  */
-export function skillsForSystem(systemId: string): Record<string, SkillDefinition> {
-    return Object.fromEntries(Object.entries(SKILL_DEFINITIONS).filter(([, d]) => d.systems === undefined || d.systems.includes(systemId)));
+export function skillKeysForSystem(systemId: string): Set<string> {
+    let cached = skillKeyCache.get(systemId);
+    if (cached !== undefined) return cached;
+    cached = new Set(
+        Object.entries(SKILL_DEFINITIONS)
+            .filter(([, d]) => d.systems === undefined || d.systems.includes(systemId))
+            .map(([key]) => key),
+    );
+    skillKeyCache.set(systemId, cached);
+    return cached;
 }
 
 /**

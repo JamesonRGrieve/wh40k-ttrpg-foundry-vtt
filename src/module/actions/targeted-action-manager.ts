@@ -30,11 +30,6 @@ export interface SourceAndTargetData {
  */
 export class TargetedActionManager {
     /**
-     * Initialize hooks for TargetedActionManager
-     */
-    initializeHooks(): void {}
-
-    /**
      * Calculate distance between two tokens
      */
     tokenDistance(token1: CanvasToken, token2: CanvasToken): number {

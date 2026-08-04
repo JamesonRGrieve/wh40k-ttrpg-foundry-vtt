@@ -225,7 +225,6 @@ export class HooksManager {
             HooksManager.getActorSheetClass(actor, sheetData),
         );
 
-        DHTargetedActionManager.initializeHooks();
         DHBasicActionManager.initializeHooks();
         DHCombatActionManager.initializeHooks();
 
@@ -1145,11 +1144,6 @@ export class HooksManager {
             DHCombatActionManager.disableHooks();
         }
 
-        // #487: surface the in-universe clock as a persistent, table-visible
-        // widget. System-agnostic; the GM-only advance controls are gated inside.
-        // The scene-control button is what makes the panel reopenable after it is
-        // closed — register it before the first render so it is present from boot.
-        WorldTimeWidget.registerSceneControl();
         WorldTimeWidget.show();
     }
 
