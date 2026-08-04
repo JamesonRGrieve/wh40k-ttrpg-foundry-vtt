@@ -19,8 +19,8 @@ import {
 } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { openDamagePrompt, openRollPrompt } from '../rolls/roll-prompt.ts';
-import { firstTargetedActor, promptItemChoice, promptSkillUse } from '../rolls/skill-use-picker.ts';
-import { getSkillReadout, hasSkillUses, type SkillUseDef, skillUsesAreInline } from '../rules/skill-uses.ts';
+import { firstTargetedActor, promptItemChoice } from '../rolls/skill-use-picker.ts';
+import { getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
 import type {
     WH40KActorBio,
     WH40KActorSystemData,
@@ -475,53 +475,20 @@ export class WH40KAcolyte extends WH40KBaseActor {
      *   they keep the pop-up that gathers it.
      */
     async _dispatchSkillUse(skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<boolean> {
-        if (skillUsesAreInline(skillKey)) {
-            const action = new SkillUseActionData(skillKey, skillLabel);
-            this._buildSimpleSkillRoll({
-                key: skillKey,
-                type: 'skill',
-                label: `${skillLabel} Test`,
-                target: targetValue,
-                situationalKey: skillKey,
-                instance: action,
-                ...(skillRank !== undefined ? { skillRank } : {}),
-            });
-            // Pre-targeting is now a CONVENIENCE pre-fill, not a precondition: seed the
-            // dialog's target selector from the canvas when something is targeted, and
-            // let the player pick (or change) it in the dialog otherwise.
-            action.rollData.targetActor = firstTargetedActor();
-            action.syncSkillUse();
-            openRollPrompt(action);
-            return true;
-        }
-
-        const use = await promptSkillUse(skillKey, skillLabel);
-        if (use === null) return true; // picker dismissed — do not fall through to a plain roll
-        // Chem-Use (#441): pick the chem (and, when coating, the weapon) before rolling.
-        if (use.kind === 'applyChem' || use.kind === 'coatWeapon') {
-            await this._rollChemUse(use, skillKey, skillLabel, targetValue, skillRank);
-            return true;
-        }
-        // Sleight of Hand plant/steal (#442): pick the item to move before rolling.
-        if (use.kind === 'steal' || use.kind === 'plant') {
-            await this._rollPalm(use, skillKey, skillLabel, targetValue, skillRank);
-            return true;
-        }
-        // Object-interaction appliers (#444 repair / #443 bypass lock / #448 break): pick the item.
-        if (use.kind === 'repair' || use.kind === 'bypassLock' || use.kind === 'breakObject') {
-            await this._rollObjectState(use, skillKey, skillLabel, targetValue, skillRank);
-            return true;
-        }
-        // Demolition (#445): pick the explosive to place or defuse before rolling.
-        if (use.kind === 'placeCharge' || use.kind === 'defuse') {
-            await this._rollDemolition(use, skillKey, skillLabel, targetValue, skillRank);
-            return true;
-        }
-        if (use.needsTarget) {
-            this._rollTargetedSkillUse(use, skillKey, skillLabel, targetValue, skillRank);
-            return true;
-        }
-        return false; // general / informational — fall through to the normal test
+        const action = new SkillUseActionData(skillKey, skillLabel);
+        this._buildSimpleSkillRoll({
+            key: skillKey,
+            type: 'skill',
+            label: `${skillLabel} Test`,
+            target: targetValue,
+            situationalKey: skillKey,
+            instance: action,
+            ...(skillRank !== undefined ? { skillRank } : {}),
+        });
+        action.rollData.targetActor = firstTargetedActor();
+        action.syncSkillUse();
+        openRollPrompt(action);
+        return true;
     }
 
     /**
