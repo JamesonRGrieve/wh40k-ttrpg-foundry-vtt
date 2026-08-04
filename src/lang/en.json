@@ -243,7 +243,7 @@
         },
         "PassiveModifiers": {
             "Label": "Passive Effects",
-            "AlreadyApplied": "Already included in the target number."
+            "AlreadyApplied": "Included in base skill."
         },
         "GearAssist": {
             "Label": "Gear"
