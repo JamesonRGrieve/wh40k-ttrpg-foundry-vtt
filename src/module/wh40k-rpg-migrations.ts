@@ -42,8 +42,9 @@ export async function checkAndMigrateWorld(): Promise<void> {
             }
         }
         // Update Items
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.items.contents is Foundry's Item collection
-        for (const item of game.items.contents as unknown as MigratableDocument[]) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.items is Foundry's Item collection surface; narrowed to MigratableDocument by the same contract as game.actors above
+        const itemCollection = game.items as { contents?: MigratableDocument[] } | undefined;
+        for (const item of itemCollection?.contents ?? []) {
             try {
                 // eslint-disable-next-line no-await-in-loop -- sequential
                 await migrateDocumentImg(item, currentVersion);

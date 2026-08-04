@@ -140,8 +140,6 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
 
     static #settingHookRegistered = false;
 
-    static #sceneControlRegistered = false;
-
     /**
      * Show the singleton widget, rendering it if not already open. Registers the
      * `updateSetting` listener once so re-anchoring inception on any client keeps
@@ -178,8 +176,7 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
      * existing instance rather than stacking duplicates, and it re-establishes the
      * `updateSetting` subscription.
      */
-    static registerSceneControl(): void {
-    }
+    static registerSceneControl(): void {}
 
     /** Re-render the widget if it is open (no-op otherwise). Called when the world
      *  clock advances or the inception stamp changes. */

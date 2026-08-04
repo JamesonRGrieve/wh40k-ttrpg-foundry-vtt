@@ -360,6 +360,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
             {
               "choices": undefined,
               "config": true,
+              "default": "false",
+              "key": "allow-manual-roll",
+              "requiresReload": undefined,
+              "scope": "world",
+              "type": "Boolean",
+            },
+            {
+              "choices": undefined,
+              "config": true,
               "default": "true",
               "key": "reconcile-origin-grants-on-ready",
               "requiresReload": undefined,

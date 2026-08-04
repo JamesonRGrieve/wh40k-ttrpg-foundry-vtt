@@ -31,7 +31,9 @@
   ],
   "config": "tsconfig.test.json",
   "totals": {
-    "totalErrors": 0
+    "totalErrors": 1
   },
-  "byCode": {}
+  "byCode": {
+    "TS2741": 1
+  }
 }

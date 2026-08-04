@@ -240,18 +240,24 @@ export class HooksManager {
                         title: 'WH40K.SceneControls.Attack',
                         icon: 'fas fa-swords',
                         visible: true,
-                        onChange: () => { DHTargetedActionManager.performWeaponAttack(); },
+                        onChange: () => {
+                            DHTargetedActionManager.performWeaponAttack();
+                        },
                         button: true,
                         order: order++,
                     };
                 }
-            } catch { /* setting not yet registered */ }
+            } catch {
+                /* setting not yet registered */
+            }
             tools['assignDamage'] = {
                 name: 'assignDamage',
                 title: 'WH40K.SceneControls.AssignDamage',
                 icon: 'fas fa-shield',
                 visible: true,
-                onChange: () => { DHBasicActionManager.assignDamageTool(); },
+                onChange: () => {
+                    DHBasicActionManager.assignDamageTool();
+                },
                 button: true,
                 order: order++,
             };
@@ -260,7 +266,9 @@ export class HooksManager {
                 title: 'WH40K.WorldTime.Title',
                 icon: 'fa-solid fa-hourglass-half',
                 visible: true,
-                onChange: () => { WorldTimeWidget.show(); },
+                onChange: () => {
+                    WorldTimeWidget.show();
+                },
                 button: true,
                 order: order++,
             };
@@ -268,8 +276,8 @@ export class HooksManager {
                 name: 'wh40k',
                 title: 'WH40K.SceneControls.GroupTitle',
                 icon: 'fa-solid fa-skull',
-                layer: 'tokens',
                 visible: true,
+                activeTool: '',
                 tools,
                 order: Object.keys(controls).length,
             };
