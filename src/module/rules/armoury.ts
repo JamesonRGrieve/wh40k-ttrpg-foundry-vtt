@@ -158,9 +158,7 @@ export async function ensureInquisitionArmoury(): Promise<void> {
 
         if (context.exists && context.isGM) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors.contents is Foundry's Actor collection
-            const allArmouries = (game.actors.contents as unknown as FlaggedActorLike[]).filter(
-                (a) => a.flags?.[SYSTEM_ID]?.[ARMOURY_FLAG] === true,
-            );
+            const allArmouries = (game.actors.contents as unknown as FlaggedActorLike[]).filter((a) => a.flags?.[SYSTEM_ID]?.[ARMOURY_FLAG] === true);
             const keeper = allArmouries[0];
             for (let i = 1; i < allArmouries.length; i++) {
                 // eslint-disable-next-line no-restricted-syntax, no-await-in-loop -- boundary: Actor.deleteDocuments takes string[]; sequential to avoid race
