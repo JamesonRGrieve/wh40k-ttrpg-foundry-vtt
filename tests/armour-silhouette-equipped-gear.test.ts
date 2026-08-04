@@ -100,7 +100,7 @@ describe('armour-silhouette — body-model geometry (#485)', () => {
     // it, and -40px pull margins dragged them back over it. Pin the corrected shape:
     // legs occupy their own row, in the two middle columns, with no pull margins.
     it('places the legs side by side on their own row beneath the body', () => {
-        expect(silhouetteSrc).toContain("[grid-template-areas:'._head_head_.'_'rarm_body_body_larm'_'._rleg_lleg_.']");
+        expect(silhouetteSrc).toContain("[grid-template-areas:'gear_head_head_.'_'rarm_body_body_larm'_'._rleg_lleg_.']");
     });
 
     it('uses four columns so the legs get middle tracks under a 2-wide body', () => {
