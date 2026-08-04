@@ -4664,6 +4664,11 @@
             "DrawTooltip": "Draw weapon",
             "NoDrawTooltip": "No weapons to draw"
         },
+        "SceneControls": {
+            "GroupTitle": "WH40K RPG",
+            "Attack": "Attack",
+            "AssignDamage": "Assign Damage"
+        },
         "WorldTime": {
             "Title": "In-Universe Time",
             "DayCounter": "Day {day}",
