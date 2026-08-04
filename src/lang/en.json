@@ -1030,6 +1030,10 @@
             "HighGroundBand": {
                 "Name": "Higher Ground elevation band",
                 "Hint": "How far above the target the attacker must be, in scene distance units, before the RAW Higher Ground +10 applies. 0 (default) is RAW — strictly above counts. Raise it so a crate or a half-step of rubble does not grant the bonus; on a map using the Levels module, any value below the floor height still lets a genuine storey qualify, since a token’s elevation there is its floor’s base height."
+            },
+            "AllowManualRoll": {
+                "Name": "Allow manual roll input",
+                "Hint": "Show the manual dice entry field in roll dialogs, for importing physical dice results. Hidden by default."
             }
         },
         "ActiveEffect": {

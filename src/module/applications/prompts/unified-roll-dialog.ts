@@ -867,6 +867,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             tryAgainPenalty,
             tryAgainPenaltyLabel: tryAgainPenalty < 0 ? `${tryAgainPenalty}` : tryAgainPenalty > 0 ? `+${tryAgainPenalty}` : '0',
             rollResult,
+            allowManualRoll: WH40KSettings.isManualRollEnabled(),
             manualRollTens: this._manualRollTens,
             manualRollUnits: this._manualRollUnits,
             singleRollValue: this._singleRollValue,
