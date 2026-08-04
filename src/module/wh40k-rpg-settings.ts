@@ -70,6 +70,7 @@ export class WH40KSettings {
         worldTimeInception: 'world-time-inception',
         campaignInceptionDate: 'campaign-inception-date',
         npcAdvancement: 'npc-advancement',
+        allowManualRoll: 'allow-manual-roll',
     };
 
     /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
@@ -357,6 +358,17 @@ export class WH40KSettings {
     static isNpcAdvancementEnabled(): boolean {
         try {
             return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.npcAdvancement) === true;
+        } catch {
+            return false;
+        }
+    }
+
+    /** When true, the manual roll input (physical dice entry) is shown in the
+     *  roll dialog. Off by default — most tables use digital dice exclusively.
+     *  Safe to call before the setting is registered (returns false). */
+    static isManualRollEnabled(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.allowManualRoll) === true;
         } catch {
             return false;
         }
@@ -752,6 +764,15 @@ export class WH40KSettings {
                 scope: 'world',
                 config: true,
                 requiresReload: true,
+                default: false,
+                type: Boolean,
+            },
+            {
+                key: S.allowManualRoll,
+                name: 'WH40K.SETTINGS.AllowManualRoll.Name',
+                hint: 'WH40K.SETTINGS.AllowManualRoll.Hint',
+                scope: 'world',
+                config: true,
                 default: false,
                 type: Boolean,
             },
