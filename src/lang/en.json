@@ -744,6 +744,7 @@
         "EquipmentGranted": "Equipment Granted",
         "Aptitudes": "Aptitudes",
         "Bio": {
+            "Birthdate": "Birthdate",
             "StandardAge": "Age (Standard)",
             "BiologicalAge": "Age (Biological)"
         },
