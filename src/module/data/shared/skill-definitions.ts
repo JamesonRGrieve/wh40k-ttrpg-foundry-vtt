@@ -23,7 +23,7 @@
 import { CHARACTERISTIC_SHORT_TO_FULL } from './characteristics.ts';
 
 /** One skill's catalog entry. */
-interface SkillDefinition {
+export interface SkillDefinition {
     /** Display label stored in the schema's `label` field (e.g. `'Common Lore'`). */
     label: string;
     /** Governing characteristic, short form (e.g. `'Ag'`, `'Int'`); see {@link CHARACTERISTIC_SHORT_TO_FULL}. */
@@ -32,77 +32,93 @@ interface SkillDefinition {
     advanced: boolean;
     /** Specialist group — carries an `entries` array of per-specialization sub-skills. */
     hasEntries: boolean;
+    /** Game systems this skill belongs to. Undefined = all systems. */
+    systems?: readonly string[];
 }
 
-const def = (label: string, char: string, advanced: boolean, hasEntries = false): SkillDefinition => ({ label, char, advanced, hasEntries });
+const ALL = undefined;
+const DH1_RT = ['dh1', 'rt'] as const;
+const DH2_PLUS = ['dh2', 'bc', 'ow', 'dw'] as const;
+
+const def = (label: string, char: string, advanced: boolean, hasEntries = false, systems?: readonly string[]): SkillDefinition => ({ label, char, advanced, hasEntries, ...(systems !== undefined ? { systems } : {}) });
 
 /** Skill key → definition. Order is schema-significant (see file header). */
 export const SKILL_DEFINITIONS: Record<string, SkillDefinition> = {
     // === RT/DH1e Standard Skills ===
     acrobatics: def('Acrobatics', 'Ag', true),
     awareness: def('Awareness', 'Per', false),
-    barter: def('Barter', 'Fel', false), // RT/DH1e only
-    blather: def('Blather', 'Fel', true), // RT/DH1e only
-    carouse: def('Carouse', 'T', false), // RT/DH1e only
+    barter: def('Barter', 'Fel', false, false, DH1_RT),
+    blather: def('Blather', 'Fel', true, false, DH1_RT),
+    carouse: def('Carouse', 'T', false, false, DH1_RT),
     charm: def('Charm', 'Fel', false),
-    chemUse: def('Chem-Use', 'Int', true), // RT/DH1e only
-    climb: def('Climb', 'S', false), // RT/DH1e only
+    chemUse: def('Chem-Use', 'Int', true, false, DH1_RT),
+    climb: def('Climb', 'S', false, false, DH1_RT),
     command: def('Command', 'Fel', false),
-    commerce: def('Commerce', 'Fel', true),
-    concealment: def('Concealment', 'Ag', false), // RT/DH1e only
-    contortionist: def('Contortionist', 'Ag', false), // RT/DH1e only
+    commerce: def('Commerce', 'Fel', true, false, DH1_RT),
+    concealment: def('Concealment', 'Ag', false, false, DH1_RT),
+    contortionist: def('Contortionist', 'Ag', false, false, DH1_RT),
     deceive: def('Deceive', 'Fel', false),
-    demolition: def('Demolition', 'Int', true), // RT/DH1e only
-    disguise: def('Disguise', 'Fel', false), // RT/DH1e only
+    demolition: def('Demolition', 'Int', true, false, DH1_RT),
+    disguise: def('Disguise', 'Fel', false, false, DH1_RT),
     dodge: def('Dodge', 'Ag', false),
-    evaluate: def('Evaluate', 'Int', false), // RT/DH1e only
-    gamble: def('Gamble', 'Int', false), // RT/DH1e only
+    evaluate: def('Evaluate', 'Int', false, false, DH1_RT),
+    gamble: def('Gamble', 'Int', false, false, DH1_RT),
     inquiry: def('Inquiry', 'Fel', false),
     interrogation: def('Interrogation', 'WP', true),
     intimidate: def('Intimidate', 'S', false),
-    invocation: def('Invocation', 'WP', true), // RT/DH1e only
-    literacy: def('Literacy', 'Int', false), // RT/DH1e only
+    invocation: def('Invocation', 'WP', true, false, DH1_RT),
+    literacy: def('Literacy', 'Int', false, false, DH1_RT),
     logic: def('Logic', 'Int', false),
     medicae: def('Medicae', 'Int', true),
     psyniscience: def('Psyniscience', 'Per', true),
     scrutiny: def('Scrutiny', 'Per', false),
-    search: def('Search', 'Per', false), // RT/DH1e only
+    search: def('Search', 'Per', false, false, DH1_RT),
     security: def('Security', 'Ag', true),
-    shadowing: def('Shadowing', 'Ag', true), // RT/DH1e only
-    silentMove: def('Silent Move', 'Ag', false), // RT/DH1e only
+    shadowing: def('Shadowing', 'Ag', true, false, DH1_RT),
+    silentMove: def('Silent Move', 'Ag', false, false, DH1_RT),
     sleightOfHand: def('Sleight of Hand', 'Ag', true),
     survival: def('Survival', 'Int', false),
-    swim: def('Swim', 'S', false), // RT/DH1e only
-    tracking: def('Tracking', 'Int', true), // RT/DH1e only
-    wrangling: def('Wrangling', 'Int', true), // RT/DH1e only
+    swim: def('Swim', 'S', false, false, DH1_RT),
+    tracking: def('Tracking', 'Int', true, false, DH1_RT),
+    wrangling: def('Wrangling', 'Int', true, false, DH1_RT),
 
     // === DH2e/BC/OW Standard Skills (not in RT) ===
-    athletics: def('Athletics', 'S', false), // DH2e/BC/OW
-    linguistics: def('Linguistics', 'Int', true, true), // DH2e/BC/OW, Group
-    navigate: def('Navigate', 'Int', true, true), // DH2e/BC/OW, Group
-    operate: def('Operate', 'Ag', true, true), // DH2e/BC/OW, Group
-    parry: def('Parry', 'WS', true), // DH2e/BC/OW
-    stealth: def('Stealth', 'Ag', false), // DH2e/BC/OW
+    athletics: def('Athletics', 'S', false, false, DH2_PLUS),
+    linguistics: def('Linguistics', 'Int', true, true, DH2_PLUS),
+    navigate: def('Navigate', 'Int', true, true, DH2_PLUS),
+    operate: def('Operate', 'Ag', true, true, DH2_PLUS),
+    parry: def('Parry', 'WS', true, false, DH2_PLUS),
+    stealth: def('Stealth', 'Ag', false, false, DH2_PLUS),
 
     // === Specialist Skill Groups (all systems) ===
-    ciphers: def('Ciphers', 'Int', true, true), // RT/DH1e only
+    ciphers: def('Ciphers', 'Int', true, true, DH1_RT),
     commonLore: def('Common Lore', 'Int', true, true),
-    drive: def('Drive', 'Ag', true, true), // RT/DH1e only
+    drive: def('Drive', 'Ag', true, true, DH1_RT),
     forbiddenLore: def('Forbidden Lore', 'Int', true, true),
-    navigation: def('Navigation', 'Int', true, true), // RT/DH1e only
-    performer: def('Performer', 'Fel', true, true), // RT/DH1e only
-    pilot: def('Pilot', 'Ag', true, true), // RT/DH1e only
+    navigation: def('Navigation', 'Int', true, true, DH1_RT),
+    performer: def('Performer', 'Fel', true, true, DH1_RT),
+    pilot: def('Pilot', 'Ag', true, true, DH1_RT),
     scholasticLore: def('Scholastic Lore', 'Int', true, true),
-    secretTongue: def('Secret Tongue', 'Int', true, true), // RT/DH1e only
-    speakLanguage: def('Speak Language', 'Int', true, true), // RT/DH1e only
+    secretTongue: def('Secret Tongue', 'Int', true, true, DH1_RT),
+    speakLanguage: def('Speak Language', 'Int', true, true, DH1_RT),
     // DW Core p.104: Advanced, Intelligence, Skill Groups (Air Combat, Armoured
     // Tactics, Assault Doctrine, Defensive Doctrine, Orbital Drop Procedures,
     // Recon and Stealth). Absent from this catalogue until #503, so every
     // Deathwatch NPC printing "Tactics (…)" parsed to a key that matched nothing.
-    tactics: def('Tactics', 'Int', true, true), // DW only
+    tactics: def('Tactics', 'Int', true, true, ['dw']),
     techUse: def('Tech-Use', 'Int', true), // Standard in DH2e, Group in RT
     trade: def('Trade', 'Int', true, true),
 };
+
+/**
+ * Return only the skills belonging to the given game system.
+ * Skills with no `systems` field belong to all systems.
+ */
+export function skillsForSystem(systemId: string): Record<string, SkillDefinition> {
+    return Object.fromEntries(
+        Object.entries(SKILL_DEFINITIONS).filter(([, d]) => d.systems === undefined || d.systems.includes(systemId)),
+    );
+}
 
 /**
  * Derive a `skillKey → full-characteristic-key` map from {@link SKILL_DEFINITIONS}
