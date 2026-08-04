@@ -2334,7 +2334,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const variant = target.dataset['variant'] ?? null;
         // Re-selecting the active variant clears it (back to the un-gated test).
         this._selectedSkillVariant = variant !== null && variant === this._selectedSkillVariant ? null : variant;
-        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+        await this.render(false, { parts: ['modifiers', 'contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
     /**
