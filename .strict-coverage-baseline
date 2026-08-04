@@ -5,6 +5,7 @@
     "TS2339",
     "TS2345",
     "TS2352",
+    "TS2353",
     "TS2375",
     "TS2379",
     "TS2412",
@@ -23,9 +24,7 @@
   ],
   "config": "tsconfig.strict.json",
   "totals": {
-    "totalErrors": 1
+    "totalErrors": 0
   },
-  "byCode": {
-    "TS2353": 1
-  }
+  "byCode": {}
 }
