@@ -159,7 +159,7 @@ export class WH40KItem extends WH40KItemContainer {
             skill: 'icons/svg/target.svg',
             cybernetic: 'icons/svg/upgrade.svg',
             forceField: 'icons/svg/shield.svg',
-            shipComponent: 'icons/svg/mech.svg',
+            shipComponent: 'icons/svg/clockwork.svg',
             shipWeapon: 'icons/svg/cannon.svg',
             condition: 'icons/svg/daze.svg',
             criticalInjury: 'icons/svg/blood.svg',
