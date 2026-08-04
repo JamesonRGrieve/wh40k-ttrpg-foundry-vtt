@@ -1,6 +1,6 @@
 {{!-- Unified Roll Dialog: Dice Input Zone --}}
+<div class="{{#if allowManualRoll}}tw-px-5 tw-py-4 tw-border-t tw-border-[rgba(255,255,255,0.06)] tw-bg-[rgba(0,0,0,0.1)]{{else}}tw-hidden{{/if}}">
 {{#if allowManualRoll}}
-<div class="tw-px-5 tw-py-4 tw-border-t tw-border-[rgba(255,255,255,0.06)] tw-bg-[rgba(0,0,0,0.1)]">
     <div class="tw-flex tw-items-center tw-justify-between tw-mb-3">
         <span class="tw-text-sm tw-font-semibold tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.08em]">Manual Roll</span>
         <button type="button" class="tw-text-xs tw-text-[rgba(201,162,39,0.7)] tw-bg-transparent tw-border-0 tw-cursor-pointer tw-underline tw-p-0 hover:tw-text-gold-raw" data-action="toggleDiceMode">
@@ -66,5 +66,5 @@
             <i class="fas fa-times"></i> Clear
         </button>
     {{/if}}
-</div>
 {{/if}}
+</div>
