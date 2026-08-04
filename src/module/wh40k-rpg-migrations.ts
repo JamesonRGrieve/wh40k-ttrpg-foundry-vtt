@@ -11,19 +11,22 @@ import { WH40KSettings } from './wh40k-rpg-settings.ts';
 // `migrateActorData` and bump WORLD_VERSION to N. Each step is gated on
 // `currentVersion < N`, runs exactly once per world, then WORLD_VERSION is
 // persisted so it never re-runs.
-const WORLD_VERSION = 1;
+const WORLD_VERSION = 2;
 
 /**
  * Minimal shape of a world Actor for migration purposes — only the surface a
  * migration step touches is modelled, so structural typing covers real Foundry
  * Actors without the full Document type.
  */
-interface MigratableActor {
+interface MigratableDocument {
     type: string;
+    img?: string;
     system?: { gameSystem?: string };
     // eslint-disable-next-line no-restricted-syntax -- boundary: models Foundry Document#update (open-ended payload, Promise return)
     update: (data: Record<string, unknown>) => Promise<unknown>;
 }
+
+type MigratableActor = MigratableDocument;
 
 export async function checkAndMigrateWorld(): Promise<void> {
     const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion) as number;
@@ -33,7 +36,17 @@ export async function checkAndMigrateWorld(): Promise<void> {
         for (const actor of game.actors.contents as unknown as MigratableActor[]) {
             try {
                 // eslint-disable-next-line no-await-in-loop -- sequential is intentional: each actor.update persists independently and ordering avoids overlapping writes
-                await migrateActorData(actor, currentVersion);
+                await migrateDocumentImg(actor, currentVersion);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        // Update Items
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.items.contents is Foundry's Item collection
+        for (const item of game.items.contents as unknown as MigratableDocument[]) {
+            try {
+                // eslint-disable-next-line no-await-in-loop -- sequential
+                await migrateDocumentImg(item, currentVersion);
             } catch (e) {
                 console.error(e);
             }
@@ -59,11 +72,15 @@ export async function checkAndMigrateWorld(): Promise<void> {
  * @param _actor   The world actor to migrate (unused — no active steps at v1).
  * @param _version The world's last-migrated version (unused — no active steps).
  */
-async function migrateActorData(_actor: MigratableActor, _version: number): Promise<void> {
-    // No active migration steps at the v1 pre-release baseline (the previous
-    // v189 step is preserved in the doc comment above). The trivial await keeps
-    // this a valid async entry point for future `if (version < N)` steps.
-    await Promise.resolve();
+const OLD_IMG_PREFIX = 'systems/wh40k-rpg/images/';
+const NEW_IMG_PREFIX = 'systems/wh40k-rpg/packs/images/';
+
+async function migrateDocumentImg(doc: MigratableDocument, version: number): Promise<void> {
+    if (version < 2) {
+        if (typeof doc.img === 'string' && doc.img.startsWith(OLD_IMG_PREFIX) && !doc.img.startsWith(NEW_IMG_PREFIX)) {
+            await doc.update({ img: NEW_IMG_PREFIX + doc.img.slice(OLD_IMG_PREFIX.length) });
+        }
+    }
 }
 
 /* ---------------------------------------------------------------------------
