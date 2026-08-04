@@ -5,7 +5,7 @@
 
 import { hydrateActorInMemory } from '../../compendium-hydrate.ts';
 import WH40K from '../../config.ts';
-import { skillsForSystem } from '../../data/shared/skill-definitions.ts';
+import { skillKeysForSystem } from '../../data/shared/skill-definitions.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
@@ -74,7 +74,6 @@ export type SkillLike = Partial<
         breakdown: string;
         tooltipData: string;
         isFavorite: boolean;
-        showFavorite: boolean;
         isGranted: boolean;
     }
 > &
@@ -776,7 +775,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies across actor types; gameSystem is only on creature subtypes
         const actorSys = this.actor.system as { gameSystem?: string };
         const actorGameSystem = typeof actorSys.gameSystem === 'string' ? actorSys.gameSystem : '';
-        const systemSkillKeys = actorGameSystem !== '' ? new Set(Object.keys(skillsForSystem(actorGameSystem))) : null;
+        const systemSkillKeys = actorGameSystem !== '' ? skillKeysForSystem(actorGameSystem) : null;
         const visibleSkills = (Object.entries(skills) as Array<[string, SkillLike]>).filter(([key, data]) => {
             if (data.hidden === true) return false;
             if (systemSkillKeys !== null && !systemSkillKeys.has(key)) return false;
@@ -985,7 +984,6 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         } else {
             data.isFavorite = favorites.includes(key);
         }
-        data.showFavorite = true;
 
         // Check if advanced skill is granted (for locking)
         data.isGranted = this._isSkillGranted(key, data);

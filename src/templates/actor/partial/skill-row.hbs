@@ -25,13 +25,11 @@
                     title="Roll {{entry.[1].label}} Test">
                 <i class="fas fa-dice-d20"></i>
             </button>
-            {{#if entry.[1].showFavorite}}
             <button type="button" class="tw-shrink-0 tw-bg-transparent tw-border-none tw-px-1 tw-py-0.5 tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-text-[0.85rem] hover:tw-text-[color:var(--wh40k-color-gold)] hover:tw-scale-110 {{#if entry.[1].isFavorite}}active tw-text-[color:var(--wh40k-color-gold)]{{/if}}"
                     data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
                     title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
                 <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
             </button>
-            {{/if}}
         </div>
     </div>
     <div class="tw-flex tw-gap-0.5 tw-p-0.5 tw-bg-[var(--color-bg-secondary)] tw-rounded-md tw-border tw-border-solid tw-border-[var(--color-border-tertiary)] tw-shrink-0">

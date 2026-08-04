@@ -26,17 +26,19 @@ interface MigratableDocument {
     update: (data: Record<string, unknown>) => Promise<unknown>;
 }
 
-type MigratableActor = MigratableDocument;
-
 export async function checkAndMigrateWorld(): Promise<void> {
     const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion) as number;
     if (WORLD_VERSION !== currentVersion && game.user.isGM) {
-        // Update Actors
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors.contents is Foundry's Actor collection; narrowed to the MigratableActor surface
-        for (const actor of game.actors.contents as unknown as MigratableActor[]) {
+        // Update Actors + their embedded items
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors.contents is Foundry's Actor collection; narrowed to MigratableDocument
+        for (const actor of game.actors.contents as unknown as (MigratableDocument & { items?: { contents?: MigratableDocument[] } })[]) {
             try {
                 // eslint-disable-next-line no-await-in-loop -- sequential is intentional: each actor.update persists independently and ordering avoids overlapping writes
                 await migrateDocumentImg(actor, currentVersion);
+                for (const item of actor.items?.contents ?? []) {
+                    // eslint-disable-next-line no-await-in-loop -- sequential
+                    await migrateDocumentImg(item, currentVersion);
+                }
             } catch (e) {
                 console.error(e);
             }

@@ -176,7 +176,6 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
      * existing instance rather than stacking duplicates, and it re-establishes the
      * `updateSetting` subscription.
      */
-    static registerSceneControl(): void {}
 
     /** Re-render the widget if it is open (no-op otherwise). Called when the world
      *  clock advances or the inception stamp changes. */
