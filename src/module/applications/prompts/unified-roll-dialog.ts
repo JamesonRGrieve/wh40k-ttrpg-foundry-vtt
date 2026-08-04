@@ -1780,7 +1780,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             .map((entry) => ({
                 label: entry.name ?? '',
                 value: entry.value,
-                valueLabel: entry.value >= 0 ? `+${entry.value}` : `${entry.value}`,
+                valueLabel: '–',
                 type: entry.type ?? '',
             }));
     }
