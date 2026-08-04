@@ -773,7 +773,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const filterSearch = typeof filters.search === 'string' ? filters.search : '';
         const filterCharacteristic = typeof filters.characteristic === 'string' ? filters.characteristic : '';
         const filterTraining = typeof filters.training === 'string' ? filters.training : '';
-        const actorGameSystem = (this.actor.system as { gameSystem?: string }).gameSystem ?? '';
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies across actor types; gameSystem is only on creature subtypes
+        const actorSys = this.actor.system as { gameSystem?: string };
+        const actorGameSystem = typeof actorSys.gameSystem === 'string' ? actorSys.gameSystem : '';
         const systemSkillKeys = actorGameSystem !== '' ? new Set(Object.keys(skillsForSystem(actorGameSystem))) : null;
         const visibleSkills = (Object.entries(skills) as Array<[string, SkillLike]>).filter(([key, data]) => {
             if (data.hidden === true) return false;

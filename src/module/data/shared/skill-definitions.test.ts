@@ -89,7 +89,7 @@ describe('SKILL_DEFINITIONS', () => {
 
     it('preserves the historical SkillField arguments for sampled skills', () => {
         expect(SKILL_DEFINITIONS['dodge']).toEqual({ label: 'Dodge', char: 'Ag', advanced: false, hasEntries: false });
-        expect(SKILL_DEFINITIONS['parry']).toEqual({ label: 'Parry', char: 'WS', advanced: true, hasEntries: false });
+        expect(SKILL_DEFINITIONS['parry']).toEqual({ label: 'Parry', char: 'WS', advanced: true, hasEntries: false, systems: ['dh2', 'bc', 'ow', 'dw'] });
         expect(SKILL_DEFINITIONS['commonLore']).toEqual({ label: 'Common Lore', char: 'Int', advanced: true, hasEntries: true });
         expect(SKILL_DEFINITIONS['techUse']).toEqual({ label: 'Tech-Use', char: 'Int', advanced: true, hasEntries: false });
     });

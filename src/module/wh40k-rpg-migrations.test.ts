@@ -24,6 +24,7 @@ interface GameStub {
     user: { isGM: boolean };
     settings: { get: () => number; set: ReturnType<typeof vi.fn> };
     actors: { contents: ActorStub[] };
+    items: { contents: ActorStub[] };
 }
 
 interface GlobalShim {
@@ -44,6 +45,7 @@ function installGame(opts: { isGM: boolean; storedVersion: number; actors: Actor
         user: { isGM: opts.isGM },
         settings: { get: (): number => opts.storedVersion, set },
         actors: { contents: opts.actors },
+        items: { contents: [] },
     };
     return { set };
 }
@@ -53,22 +55,21 @@ afterEach(() => {
     vi.restoreAllMocks();
 });
 
-describe('checkAndMigrateWorld — v1 pre-release baseline (no active steps)', () => {
-    it('bumps a pre-baseline world to version 1 (GM) without modifying actors', async () => {
-        // Stale gameSystem must NOT be touched — the v189 step is commented out.
+describe('checkAndMigrateWorld — v2 (img path migration)', () => {
+    it('bumps a pre-baseline world to version 2 (GM) without modifying actors with correct paths', async () => {
         const actor = makeActor('dh2-character', 'rt');
-        const { set } = installGame({ isGM: true, storedVersion: 188, actors: [actor] });
+        const { set } = installGame({ isGM: true, storedVersion: 1, actors: [actor] });
 
         await checkAndMigrateWorld();
 
         expect(set).toHaveBeenCalledTimes(1);
-        expect(set.mock.calls[0]?.[2]).toBe(1);
+        expect(set.mock.calls[0]?.[2]).toBe(2);
         expect(actor.update).not.toHaveBeenCalled();
     });
 
-    it('does nothing when already at version 1', async () => {
+    it('does nothing when already at version 2', async () => {
         const actor = makeActor('dh2-character', 'rt');
-        const { set } = installGame({ isGM: true, storedVersion: 1, actors: [actor] });
+        const { set } = installGame({ isGM: true, storedVersion: 2, actors: [actor] });
 
         await checkAndMigrateWorld();
 
@@ -78,7 +79,7 @@ describe('checkAndMigrateWorld — v1 pre-release baseline (no active steps)', (
 
     it('does not run for a non-GM user', async () => {
         const actor = makeActor('dh2-character', 'rt');
-        const { set } = installGame({ isGM: false, storedVersion: 188, actors: [actor] });
+        const { set } = installGame({ isGM: false, storedVersion: 1, actors: [actor] });
 
         await checkAndMigrateWorld();
 

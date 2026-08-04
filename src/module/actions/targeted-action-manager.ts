@@ -1,5 +1,4 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
-import { SYSTEM_ID } from '../constants.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { t } from '../i18n/t.ts';
@@ -33,8 +32,7 @@ export class TargetedActionManager {
     /**
      * Initialize hooks for TargetedActionManager
      */
-    initializeHooks(): void {
-    }
+    initializeHooks(): void {}
 
     /**
      * Calculate distance between two tokens

@@ -1,6 +1,6 @@
 import type { WH40KItem } from '../../documents/item.ts';
-import { psyRatingTotalCost, psychicPowerCost } from '../../rules/xp-costs.ts';
 import { parseImperialDate } from '../../rules/imperial-date.ts';
+import { psyRatingTotalCost, psychicPowerCost } from '../../rules/xp-costs.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import { type AptitudeDerivation, type AptitudeGrantSource, collectGrantedAptitudes, deriveAptitudes, extractLegacyElectives } from '../item/origin-path.ts';
 import { parseCharacteristicBonusTerm } from '../shared/characteristic-formula.ts';

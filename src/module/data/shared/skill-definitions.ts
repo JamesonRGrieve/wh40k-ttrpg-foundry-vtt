@@ -36,11 +36,16 @@ export interface SkillDefinition {
     systems?: readonly string[];
 }
 
-const ALL = undefined;
 const DH1_RT = ['dh1', 'rt'] as const;
 const DH2_PLUS = ['dh2', 'bc', 'ow', 'dw'] as const;
 
-const def = (label: string, char: string, advanced: boolean, hasEntries = false, systems?: readonly string[]): SkillDefinition => ({ label, char, advanced, hasEntries, ...(systems !== undefined ? { systems } : {}) });
+const def = (label: string, char: string, advanced: boolean, hasEntries = false, systems?: readonly string[]): SkillDefinition => ({
+    label,
+    char,
+    advanced,
+    hasEntries,
+    ...(systems !== undefined ? { systems } : {}),
+});
 
 /** Skill key → definition. Order is schema-significant (see file header). */
 export const SKILL_DEFINITIONS: Record<string, SkillDefinition> = {
@@ -115,9 +120,7 @@ export const SKILL_DEFINITIONS: Record<string, SkillDefinition> = {
  * Skills with no `systems` field belong to all systems.
  */
 export function skillsForSystem(systemId: string): Record<string, SkillDefinition> {
-    return Object.fromEntries(
-        Object.entries(SKILL_DEFINITIONS).filter(([, d]) => d.systems === undefined || d.systems.includes(systemId)),
-    );
+    return Object.fromEntries(Object.entries(SKILL_DEFINITIONS).filter(([, d]) => d.systems === undefined || d.systems.includes(systemId)));
 }
 
 /**

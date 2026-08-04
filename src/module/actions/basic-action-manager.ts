@@ -107,7 +107,6 @@ export class BasicActionManager {
                 });
             });
         });
-
     }
 
     _toggleExpandChatMessage(event: Event): void {
