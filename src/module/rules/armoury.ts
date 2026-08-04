@@ -34,8 +34,7 @@ const ARMOURY_ACTOR_TYPE = 'loot';
 /** Item Piles' own `CONSTANTS.PILE_TYPES.MERCHANT`, verified against the installed 3.3.2 build. */
 const MERCHANT_PILE_TYPE = 'merchant';
 
-/** Artwork for the spawned actor. A core Foundry icon, so nothing needs shipping. */
-const ARMOURY_IMAGE = 'icons/environment/settlement/armory.webp';
+const ARMOURY_IMAGE = 'icons/environment/settlement/ship.webp';
 
 /**
  * The Item Piles pile-config flag for the armoury.
