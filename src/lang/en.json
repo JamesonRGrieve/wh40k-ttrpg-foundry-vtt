@@ -4677,6 +4677,8 @@
             "DateLabel": "Date",
             "TimeLabel": "Time",
             "ElapsedLabel": "Elapsed",
+            "LocalDay": "Local Day",
+            "LocalTime": "Local Time",
             "GmControls": "GM Time Controls",
             "AdvanceHour": "+1 Hour",
             "AdvanceDay": "+1 Day",
