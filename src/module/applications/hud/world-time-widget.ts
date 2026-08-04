@@ -34,6 +34,7 @@
 import { SYSTEM_ID } from '../../constants.ts';
 import { t } from '../../i18n/t.ts';
 import { addSecondsToImperialDate, formatImperialDate } from '../../rules/imperial-date.ts';
+import { type CelestialBody, localDayNumber, localTimeOfDay, SOLENNE_SYSTEM } from '../../rules/planetary-calendar.ts';
 import { advanceSeconds, dayNumberSince, formatClock, formatRemaining, type TimeAdvanceUnit } from '../../rules/world-time.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 
@@ -198,12 +199,22 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
         const inception = WH40KSettings.getWorldTimeInception();
         const day = dayNumberSince(inception, now);
 
+        const elapsed = now - inception;
+
+        const body: CelestialBody = SOLENNE_SYSTEM['solenne-minoris'];
+        const localDay = localDayNumber(elapsed, body);
+        const localTime = localTimeOfDay(elapsed, body);
+
         context['dayNumber'] = day;
         context['dayCounterLabel'] = t('WH40K.WorldTime.DayCounter', { day });
         context['fullDate'] = currentImperialDateLabel(clock);
         context['timeOfDay'] = currentClockLabel(clock);
-        context['elapsed'] = formatRemaining(now - inception);
+        context['elapsed'] = formatRemaining(elapsed);
         context['isGM'] = game.user.isGM;
+        context['localBodyName'] = body.name;
+        context['localDay'] = localDay;
+        context['localTimeOfDay'] = formatClock(localTime.hour, localTime.minute);
+        context['localRotationHours'] = body.rotationHours;
 
         return context;
     }
