@@ -6,14 +6,30 @@
  * seconds — this is a pure display-layer conversion.
  */
 
-import { HOUR_SECONDS } from './world-time.ts';
+import { DAY_SECONDS, HOUR_SECONDS } from './world-time.ts';
 
 export interface CelestialBody {
     name: string;
     rotationHours: number;
+    orbitalDays?: number;
+    axialTilt?: number;
 }
 
-const TERRAN_DAY_SECONDS = 24 * HOUR_SECONDS;
+export interface SeasonInfo {
+    name: string;
+    icon: string;
+}
+
+const SEASONS: SeasonInfo[] = [
+    { name: 'Early Spring', icon: 'seedling' },
+    { name: 'Late Spring', icon: 'leaf' },
+    { name: 'Early Summer', icon: 'sun' },
+    { name: 'Late Summer', icon: 'sun' },
+    { name: 'Early Autumn', icon: 'wind' },
+    { name: 'Late Autumn', icon: 'wind' },
+    { name: 'Early Winter', icon: 'snowflake' },
+    { name: 'Deep Winter', icon: 'snowflake' },
+];
 
 export function localDaySeconds(body: CelestialBody): number {
     return body.rotationHours * HOUR_SECONDS;
@@ -35,20 +51,22 @@ export function localTimeOfDay(elapsedTerranSeconds: number, body: CelestialBody
     return { hour, minute };
 }
 
-export function terranDayNumber(elapsedTerranSeconds: number): number {
-    return Math.floor(elapsedTerranSeconds / TERRAN_DAY_SECONDS);
+export function localSeason(elapsedTerranSeconds: number, body: CelestialBody): SeasonInfo | null {
+    if (body.orbitalDays === undefined || body.orbitalDays <= 0) return null;
+    const orbitalSeconds = body.orbitalDays * DAY_SECONDS;
+    const intoOrbit = ((elapsedTerranSeconds % orbitalSeconds) + orbitalSeconds) % orbitalSeconds;
+    const fraction = intoOrbit / orbitalSeconds;
+    const index = Math.floor(fraction * SEASONS.length) % SEASONS.length;
+    return SEASONS[index];
 }
 
-export function terranTimeOfDay(elapsedTerranSeconds: number): { hour: number; minute: number } {
-    const intoDay = ((elapsedTerranSeconds % TERRAN_DAY_SECONDS) + TERRAN_DAY_SECONDS) % TERRAN_DAY_SECONDS;
-    const hour = Math.floor(intoDay / HOUR_SECONDS);
-    const minute = Math.floor((intoDay % HOUR_SECONDS) / 60);
-    return { hour, minute };
+export function terranDayNumber(elapsedTerranSeconds: number): number {
+    return Math.floor(elapsedTerranSeconds / (24 * HOUR_SECONDS));
 }
 
 export const SOLENNE_SYSTEM: Record<string, CelestialBody> = {
-    'solenne-majoris': { name: 'Solenne Majoris', rotationHours: 26 },
-    'solenne-minoris': { name: 'Solenne Minoris', rotationHours: 19 },
+    'solenne-majoris': { name: 'Solenne Majoris', rotationHours: 26, orbitalDays: 340, axialTilt: 18 },
+    'solenne-minoris': { name: 'Solenne Minoris', rotationHours: 19, orbitalDays: 340, axialTilt: 5 },
     'terran-standard': { name: 'Terran Standard', rotationHours: 24 },
 };
 

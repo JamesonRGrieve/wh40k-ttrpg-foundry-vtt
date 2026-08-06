@@ -4677,6 +4677,8 @@
             "DateLabel": "Date",
             "TimeLabel": "Time",
             "ElapsedLabel": "Elapsed",
+            "StandardDate": "Standard Date",
+            "TimeElapsedTerran": "Time Elapsed (Terran)",
             "LocalDay": "Local Day",
             "LocalTime": "Local Time",
             "GmControls": "GM Time Controls",
