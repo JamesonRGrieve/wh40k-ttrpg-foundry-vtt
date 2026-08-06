@@ -11,7 +11,7 @@ import { WH40KSettings } from './wh40k-rpg-settings.ts';
 // `migrateActorData` and bump WORLD_VERSION to N. Each step is gated on
 // `currentVersion < N`, runs exactly once per world, then WORLD_VERSION is
 // persisted so it never re-runs.
-const WORLD_VERSION = 2;
+const WORLD_VERSION = 3;
 
 /**
  * Minimal shape of a world Actor for migration purposes — only the surface a
@@ -53,6 +53,18 @@ export async function checkAndMigrateWorld(): Promise<void> {
             } catch (e) {
                 console.error(e);
             }
+        }
+
+        // v3: repair campaign-inception-date if it was stored via raw LevelDB
+        // write (wrong encoding). Re-set via the Foundry API to fix encoding.
+        if (currentVersion < 3) {
+            try {
+                const raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.campaignInceptionDate);
+                const cleaned = typeof raw === 'string' ? raw.replace(/^"+|"+$/g, '') : raw;
+                if (typeof cleaned === 'string' && cleaned !== '') {
+                    await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.campaignInceptionDate, cleaned);
+                }
+            } catch { /* setting not yet registered */ }
         }
 
         await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, WORLD_VERSION);
