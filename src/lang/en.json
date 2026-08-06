@@ -4667,8 +4667,7 @@
         },
         "SceneControls": {
             "GroupTitle": "WH40K RPG",
-            "Attack": "Attack",
-            "AssignDamage": "Assign Damage"
+            "EventTracker": "Event Tracker"
         },
         "WorldTime": {
             "Title": "In-Universe Time",
