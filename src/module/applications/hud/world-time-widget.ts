@@ -34,7 +34,7 @@
 import { SYSTEM_ID } from '../../constants.ts';
 import { t } from '../../i18n/t.ts';
 import { addSecondsToImperialDate, formatImperialDate } from '../../rules/imperial-date.ts';
-import { type CelestialBody, localDayNumber, localTimeOfDay, SOLENNE_SYSTEM } from '../../rules/planetary-calendar.ts';
+import { type CelestialBody, localDayNumber, localSeason, localTimeOfDay, SOLENNE_SYSTEM } from '../../rules/planetary-calendar.ts';
 import { advanceSeconds, dayNumberSince, formatClock, formatRemaining, type TimeAdvanceUnit } from '../../rules/world-time.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 
@@ -215,6 +215,9 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
         context['localDay'] = localDay;
         context['localTimeOfDay'] = formatClock(localTime.hour, localTime.minute);
         context['localRotationHours'] = body.rotationHours;
+        const season = localSeason(elapsed, body);
+        context['localSeason'] = season?.name ?? '';
+        context['localSeasonIcon'] = season?.icon ?? '';
 
         return context;
     }
