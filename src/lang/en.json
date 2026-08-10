@@ -869,17 +869,17 @@
                 "Carrying": "Carrying"
             },
             "Tooltip": {
-                "Half": "Click to set Half Move as active movement mode (half action)",
-                "Full": "Click to set Full Move as active movement mode (full action)",
-                "Charge": "Click to set Charge as active movement mode (full action) — raises your turn allowance to the Charge rate",
-                "Run": "Click to set Run as active movement mode (full action) — raises your turn allowance to the Run rate",
-                "Disengage": "Click to set Disengage as active movement mode (full action) — move up to your Half rate without provoking reactions",
-                "LeapVertical": "Standing vertical leap height",
-                "LeapHorizontal": "Running horizontal leap distance",
+                "Half": "Half Move (Half Action): Move up to your Agility Bonus in metres. You can still take another Half Action this turn (attack, use a skill, etc.).",
+                "Full": "Full Move (Full Action): Move up to your Agility Bonus × 2 in metres. Uses your entire turn — no other actions.",
+                "Charge": "Charge (Full Action): Move up to your Agility Bonus × 3 in metres in a straight line, ending with a melee attack at +10 WS. Must move at least 4m. Uses your entire turn.",
+                "Run": "Run (Full Action): Move up to your Agility Bonus × 6 in metres. Uses your entire turn, and you cannot take any other actions — not even free actions. You are easier to hit (+20 BS against you).",
+                "Disengage": "Disengage (Full Action): Move up to your Half Move rate without provoking free attacks from enemies you are engaged with in melee.",
+                "LeapVertical": "Standing vertical leap height (SB/4 metres, +2m per DoS on Athletics)",
+                "LeapHorizontal": "Running horizontal leap distance (SB metres, +1m per DoS on Athletics)",
                 "Jump": "Vertical jump height in centimeters",
-                "Lift": "Brief lifting over head",
-                "Carry": "Sustained carrying capacity",
-                "Push": "Pushing/dragging capacity",
+                "Lift": "Maximum weight you can briefly lift over your head (SB × 2 kg for characters, ×Carry for vehicles)",
+                "Carry": "Maximum weight you can carry without being encumbered (SB × Carry multiplier kg)",
+                "Push": "Maximum weight you can push or drag along the ground (SB × 2 × Carry kg)",
                 "Carrying": "Current carried weight of your inventory vs. your Carry capacity"
             }
         },
