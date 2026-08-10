@@ -4677,6 +4677,7 @@
             "TimeLabel": "Time",
             "ElapsedLabel": "Elapsed",
             "StandardDate": "Standard Date",
+            "StandardDateTooltip": "Imperial Date format: Check.Fraction.Year.Millennium\n\nCheck (0-9): reliability of the timestamp\n  0 = Earth-verified  3 = approximate  9 = non-Imperial source\n\nFraction (000-999): position within the year\n  Each unit ≈ 8.76 hours (1000 fractions per Terran year)\n\nYear (001-999): year within the millennium\n\nMillennium: M41 = 41st millennium",
             "TimeElapsedTerran": "Time Elapsed (Terran)",
             "LocalDay": "Local Day",
             "LocalTime": "Local Time",
