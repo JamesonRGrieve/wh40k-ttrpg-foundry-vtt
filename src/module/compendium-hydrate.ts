@@ -364,6 +364,17 @@ async function hydrateActorReporting(actor: HydratableActor): Promise<{ patched:
     // The actor's own join, same in-memory contract as its items': `updateSource`
     // touches only `_source`, so a named individual gains its class's stats at
     // load while the stored record keeps just what makes it that individual.
+    // Sync the actor's own img from its compendium source (#558)
+    const actorSourceUuid = actor._stats?.compendiumSource;
+    if (typeof actorSourceUuid === 'string' && actorSourceUuid !== '') {
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns an untyped Document
+            const canonical = await (globalThis as { fromUuid?: (uuid: string) => Promise<{ img?: string } | null> }).fromUuid?.(actorSourceUuid);
+            if (canonical !== null && canonical !== undefined && typeof canonical.img === 'string' && canonical.img !== '' && canonical.img !== actor.img) {
+                actor.updateSource?.({ img: canonical.img });
+            }
+        } catch { /* compendium not loaded yet */ }
+    }
     if (actorSystem !== null) actor.updateSource?.({ system: actorSystem });
     if (patches.length > 0 || actorSystem !== null) actor.reset?.();
     // Report from the single join site, so EVERY path (boot, import, sheet
