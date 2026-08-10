@@ -196,9 +196,36 @@ export default class CraftActorSheet extends BaseActorSheet {
         ...(BaseActorSheet as typeof BaseActorSheet & { PARTS?: Record<string, ApplicationV2Config.PartConfiguration> }).PARTS,
         header: {
             template: 'systems/wh40k-rpg/templates/actor/craft/header.hbs',
+            container: {
+                classes: [
+                    'wh40k-sidebar',
+                    'tw-flex',
+                    'tw-flex-col',
+                    'tw-h-full',
+                    'tw-min-h-0',
+                    'tw-min-w-0',
+                    'tw-overflow-y-auto',
+                    'tw-overflow-x-hidden',
+                    'tw-bg-[var(--color-bg-secondary,#252525)]',
+                    'tw-border-r-2',
+                    'tw-border-solid',
+                    'tw-border-[var(--wh40k-sidebar-accent,var(--wh40k-color-gold,#d4af37))]',
+                ],
+                id: 'sidebar',
+            },
         },
         tabs: {
             template: 'systems/wh40k-rpg/templates/actor/craft/tabs.hbs',
+            container: {
+                classes: [
+                    'wh40k-sidebar',
+                    'tw-flex',
+                    'tw-flex-col',
+                    'tw-h-full',
+                    'tw-min-h-0',
+                ],
+                id: 'sidebar',
+            },
         },
         overview: {
             template: 'systems/wh40k-rpg/templates/actor/craft/tab-overview.hbs',
