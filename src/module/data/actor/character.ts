@@ -130,6 +130,7 @@ export default class CharacterData extends CreatureTemplate {
     declare bio: {
         playerName: string;
         gender: string;
+        ageMode: string;
         birthdate: string;
         age: string;
         biologicalAge: string;
@@ -405,6 +406,7 @@ export default class CharacterData extends CreatureTemplate {
             bio: new fields.SchemaField({
                 playerName: new fields.StringField({ required: false, blank: true }),
                 gender: new fields.StringField({ required: false, blank: true }),
+                ageMode: new fields.StringField({ required: true, initial: 'age', choices: ['age', 'birthdate'] }),
                 birthdate: new fields.StringField({ required: false, blank: true }),
                 // Standard (calendar) age — derived from birthdate + campaign clock
                 // in prepareDerivedData. Editable as fallback when birthdate is blank.
@@ -791,13 +793,23 @@ export default class CharacterData extends CreatureTemplate {
     }
 
     _deriveStandardAge(): void {
-        const bd = this.bio.birthdate;
-        if (typeof bd !== 'string' || bd.trim() === '') return;
-        const birthParsed = parseImperialDate(bd);
-        if (birthParsed === null) return;
         const current = WH40KSettings.getCampaignInceptionDate();
-        const diff = current.year - birthParsed.year;
-        if (diff >= 0) this.bio.age = String(diff);
+        if (this.bio.ageMode === 'birthdate') {
+            const bd = this.bio.birthdate;
+            if (typeof bd !== 'string' || bd.trim() === '') return;
+            const birthParsed = parseImperialDate(bd);
+            if (birthParsed === null) return;
+            const diff = current.year - birthParsed.year;
+            if (diff >= 0) this.bio.age = String(diff);
+        } else {
+            const age = parseInt(this.bio.age, 10);
+            if (Number.isFinite(age) && age >= 0) {
+                const birthYear = current.year - age;
+                if (birthYear >= 0) {
+                    this.bio.birthdate = `${current.check}.${String(current.fraction).padStart(3, '0')}.${String(birthYear).padStart(3, '0')}.M${current.millennium}`;
+                }
+            }
+        }
     }
 
     /** @inheritDoc */
