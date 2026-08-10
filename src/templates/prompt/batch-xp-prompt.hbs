@@ -1,0 +1,57 @@
+{{!-- Batch Add XP Dialog Template (#553) --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]">
+
+    {{!-- Character Selection --}}
+    <div class="tw-mb-4">
+        <div class="tw-flex tw-items-center tw-justify-between tw-mb-2">
+            <span class="tw-text-[0.85rem] tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.XP.SelectCharacters"}}</span>
+            <button type="button" class="tw-text-[0.7rem] tw-text-[rgba(201,162,39,0.7)] tw-bg-transparent tw-border-0 tw-cursor-pointer tw-underline" data-action="toggleAll">
+                {{localize "WH40K.XP.SelectAll"}}
+            </button>
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-max-h-[200px] tw-overflow-y-auto tw-bg-[rgba(0,0,0,0.2)] tw-rounded-md tw-p-2">
+            {{#each characters}}
+            <label class="tw-flex tw-items-center tw-gap-2 tw-p-1.5 tw-rounded tw-cursor-pointer hover:tw-bg-[rgba(201,162,39,0.08)]">
+                <input type="checkbox" name="selected" value="{{this.id}}" {{#if this.selected}}checked{{/if}} class="tw-w-4 tw-h-4 tw-cursor-pointer tw-accent-[var(--wh40k-color-gold)]" />
+                <img src="{{this.img}}" alt="{{this.name}}" class="tw-w-6 tw-h-6 tw-rounded tw-object-cover tw-border tw-border-[rgba(201,162,39,0.3)]" />
+                <span class="tw-text-[0.85rem] tw-font-medium">{{this.name}}</span>
+                <span class="tw-ml-auto tw-text-[0.7rem] tw-tabular-nums tw-text-[#9a9a8a]">{{this.currentXP}} XP</span>
+            </label>
+            {{/each}}
+        </div>
+    </div>
+
+    {{!-- XP Input --}}
+    <div class="tw-mb-4">
+        <label class="tw-flex tw-flex-col tw-gap-2">
+            <span class="tw-text-[0.85rem] tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.XP.AmountLabel"}}</span>
+            <input type="number"
+                   name="xpAmount"
+                   value="{{xpAmount}}"
+                   data-dtype="Number"
+                   class="tw-w-full tw-px-4 tw-py-3 tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[1rem] tw-font-medium tw-text-center"
+                   placeholder="0"
+                   step="1" />
+        </label>
+    </div>
+
+    {{!-- Preview --}}
+    {{#if (ne xpAmount 0)}}
+    <div class="tw-mb-4 tw-p-3 tw-rounded-md tw-border {{#if isAddition}}tw-bg-[rgba(42,139,74,0.1)] tw-border-[rgba(74,222,128,0.3)]{{else}}tw-bg-[rgba(139,42,42,0.1)] tw-border-[rgba(248,113,113,0.3)]{{/if}}">
+        <div class="tw-text-center tw-text-[1rem] tw-font-semibold {{#if isAddition}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
+            {{#if isAddition}}+{{else}}-{{/if}}{{absAmount}} XP to {{selectedCount}} character(s)
+        </div>
+    </div>
+    {{/if}}
+
+    {{!-- Action Buttons --}}
+    {{> systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs
+        rootClass="tw-border-[rgba(201,162,39,0.2)]"
+        confirmAction="apply"
+        confirmIcon="fa-check"
+        confirmLabel="Apply"
+        confirmClass="tw-border-none tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]"
+        confirmDisabled=(eq xpAmount 0)
+        cancelLabel="Cancel"}}
+
+</div>

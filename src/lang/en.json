@@ -4680,7 +4680,14 @@
         },
         "SceneControls": {
             "GroupTitle": "WH40K RPG",
-            "EventTracker": "Event Tracker"
+            "EventTracker": "Event Tracker",
+            "BatchXP": "Award XP"
+        },
+        "XP": {
+            "BatchTitle": "Award XP to Characters",
+            "SelectCharacters": "Characters",
+            "SelectAll": "Toggle All",
+            "AmountLabel": "XP to Award"
         },
         "WorldTime": {
             "Title": "In-Universe Time",

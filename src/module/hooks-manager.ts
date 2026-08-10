@@ -254,6 +254,18 @@ export class HooksManager {
                 button: true,
                 order: order++,
             };
+            tools['batchXP'] = {
+                name: 'batchXP',
+                title: 'WH40K.SceneControls.BatchXP',
+                icon: 'fa-solid fa-coins',
+                visible: game.user?.isGM === true,
+                onChange: async () => {
+                    const { openBatchXPDialog } = await import('./applications/prompts/batch-xp-dialog.ts');
+                    openBatchXPDialog();
+                },
+                button: true,
+                order: order++,
+            };
             controls['wh40k'] = {
                 name: 'wh40k',
                 title: 'WH40K.SceneControls.GroupTitle',
