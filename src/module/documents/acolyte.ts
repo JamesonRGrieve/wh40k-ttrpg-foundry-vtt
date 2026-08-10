@@ -439,7 +439,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // for a target and routes through MedicaeActionData, which auto-applies the
         // healing on resolution. General / informational uses fall through to the
         // normal test below.
-        if (hasSkillUses(resolvedSkillName) && (await this._dispatchSkillUse(resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank))) {
+        if (hasSkillUses(resolvedSkillName) && this._dispatchSkillUse(resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank)) {
             return;
         }
 
@@ -474,7 +474,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      *   item, which charge — before their action data can be constructed at all, so
      *   they keep the pop-up that gathers it.
      */
-    async _dispatchSkillUse(skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<boolean> {
+    _dispatchSkillUse(skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): boolean {
         const action = new SkillUseActionData(skillKey, skillLabel);
         this._buildSimpleSkillRoll({
             key: skillKey,

@@ -8,7 +8,6 @@
 
 import { DHBasicActionManager } from './actions/basic-action-manager.ts';
 import { DHCombatActionManager } from './actions/combat-action-manager.ts';
-import { DHTargetedActionManager } from './actions/targeted-action-manager.ts';
 import {
     // Player sheets (default for {system}-character)
     DarkHeresy1PlayerSheet,
@@ -247,7 +246,7 @@ export class HooksManager {
                 name: 'eventTracker',
                 title: 'WH40K.SceneControls.EventTracker',
                 icon: 'fa-solid fa-project-diagram',
-                visible: game.user?.isGM === true,
+                visible: game.user.isGM,
                 onChange: () => {
                     EventTracker.open();
                 },
@@ -258,10 +257,9 @@ export class HooksManager {
                 name: 'batchXP',
                 title: 'WH40K.SceneControls.BatchXP',
                 icon: 'fa-solid fa-coins',
-                visible: game.user?.isGM === true,
-                onChange: async () => {
-                    const { openBatchXPDialog } = await import('./applications/prompts/batch-xp-dialog.ts');
-                    openBatchXPDialog();
+                visible: game.user.isGM,
+                onChange: () => {
+                    void import('./applications/prompts/batch-xp-dialog.ts').then(({ openBatchXPDialog }) => openBatchXPDialog());
                 },
                 button: true,
                 order: order++,

@@ -201,7 +201,7 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
 
         const elapsed = now - inception;
 
-        const body: CelestialBody = SOLENNE_SYSTEM['solenne-minoris'];
+        const body: CelestialBody = SOLENNE_SYSTEM['solenne-minoris'] ?? { name: 'Terran Standard', rotationHours: 24 };
         const localDay = localDayNumber(elapsed, body);
         const localTime = localTimeOfDay(elapsed, body);
 
@@ -222,7 +222,9 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
         const ratio = (24 / body.rotationHours).toFixed(2);
         const orbitalInfo = body.orbitalDays !== undefined ? `\nOrbital period: ${body.orbitalDays} Terran days` : '';
         const tiltInfo = body.axialTilt !== undefined ? `\nAxial tilt: ${body.axialTilt}°` : '';
-        context['localBodyTooltip'] = `${body.name}\nLocal day: ${body.rotationHours} Terran hours\n1 Terran day = ${ratio} local days${orbitalInfo}${tiltInfo}${season !== null ? `\nCurrent season: ${season.name}` : ''}`;
+        context['localBodyTooltip'] = `${body.name}\nLocal day: ${
+            body.rotationHours
+        } Terran hours\n1 Terran day = ${ratio} local days${orbitalInfo}${tiltInfo}${season !== null ? `\nCurrent season: ${season.name}` : ''}`;
 
         return context;
     }

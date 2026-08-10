@@ -2972,7 +2972,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // Extract combat talents for display in combat actions panel
         const talents = this.actor.items.filter((i) => i.type === 'talent') as TalentLike[];
         sheetContext.combatTalents = talents
-            .filter((t) => t.system.category === 'combat' && t.system.isPassive !== true)
+            .filter((t) => t.system.category === 'combat' && t.system['isPassive'] !== true)
             .map((t) => {
                 return {
                     id: t.id,

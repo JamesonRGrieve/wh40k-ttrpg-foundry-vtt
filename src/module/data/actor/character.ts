@@ -806,7 +806,9 @@ export default class CharacterData extends CreatureTemplate {
             if (Number.isFinite(age) && age >= 0) {
                 const birthYear = current.year - age;
                 if (birthYear >= 0) {
-                    this.bio.birthdate = `${current.check}.${String(current.fraction).padStart(3, '0')}.${String(birthYear).padStart(3, '0')}.M${current.millennium}`;
+                    this.bio.birthdate = `${current.check}.${String(current.fraction).padStart(3, '0')}.${String(birthYear).padStart(3, '0')}.M${
+                        current.millennium
+                    }`;
                 }
             }
         }

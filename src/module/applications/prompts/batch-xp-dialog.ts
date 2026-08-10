@@ -36,9 +36,7 @@ export default class BatchXPDialog extends ApplicationV2Mixin(ApplicationV2 as u
         this.xpAmount = 0;
         this.selectedIds = new Set(
             // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors typed as Foundry collection
-            (game.actors.contents as Array<{ id: string; type: string }>)
-                .filter((a) => (a.type as string).includes('character'))
-                .map((a) => a.id),
+            (game.actors.contents as Array<{ id: string; type: string }>).filter((a) => a.type.includes('character')).map((a) => a.id),
         );
     }
 
@@ -51,7 +49,7 @@ export default class BatchXPDialog extends ApplicationV2Mixin(ApplicationV2 as u
             // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: BatchXPDialog.#onCancel as ActionHandler,
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            toggleAll: BatchXPDialog.#onToggleAll as ActionHandler,
+            toggleAll: BatchXPDialog.#onToggleAll,
         },
         form: {
             // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -79,7 +77,7 @@ export default class BatchXPDialog extends ApplicationV2Mixin(ApplicationV2 as u
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors is Foundry's actor collection
         const allActors = game.actors.contents as Array<{ id: string; name: string; img: string; type: string; system?: { experience?: { total?: number } } }>;
         const characters: CharacterEntry[] = allActors
-            .filter((a) => (a.type as string).includes('character'))
+            .filter((a) => a.type.includes('character'))
             .map((a) => ({
                 id: a.id,
                 name: a.name,
@@ -110,7 +108,10 @@ export default class BatchXPDialog extends ApplicationV2Mixin(ApplicationV2 as u
 
     static async #onApply(this: BatchXPDialog, event: PointerEvent, _target: HTMLElement): Promise<void> {
         event.preventDefault();
-        if (this.xpAmount === 0 || this.selectedIds.size === 0) { await this.close(); return; }
+        if (this.xpAmount === 0 || this.selectedIds.size === 0) {
+            await this.close();
+            return;
+        }
 
         let count = 0;
         for (const actorId of this.selectedIds) {
@@ -132,9 +133,7 @@ export default class BatchXPDialog extends ApplicationV2Mixin(ApplicationV2 as u
 
     static async #onToggleAll(this: BatchXPDialog, _event: Event, _target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors
-        const allIds = (game.actors.contents as Array<{ id: string; type: string }>)
-            .filter((a) => (a.type as string).includes('character'))
-            .map((a) => a.id);
+        const allIds = (game.actors.contents as Array<{ id: string; type: string }>).filter((a) => a.type.includes('character')).map((a) => a.id);
         const allSelected = allIds.every((id) => this.selectedIds.has(id));
         this.selectedIds = allSelected ? new Set() : new Set(allIds);
         await this.render();
@@ -148,7 +147,7 @@ export default class BatchXPDialog extends ApplicationV2Mixin(ApplicationV2 as u
 
 export function openBatchXPDialog(): void {
     if (!game.user.isGM) {
-        ui.notifications.warn('Only the GM can award XP to multiple characters.');
+        ui.notifications.warn(game.i18n.localize('WH40K.XP.GmOnly'));
         return;
     }
     const dialog = new BatchXPDialog();
