@@ -37,7 +37,7 @@
                 <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-12">{{localize "WH40K.Combat.PsyRatingShort"}}</span>
             </div>
             {{#each psychicPowers as |power|}}
-            <div class="tw-group tw-relative tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer tw-border-b tw-border-b-[rgba(0,0,0,0.08)] tw-transition-[background] hover:tw-bg-[rgb(from_var(--wh40k-accent-info)_r_g_b_/_0.04)] item-drag item-edit" data-item-id="{{power.id}}" data-item-type="psychicPower">
+            <div class="tw-group tw-relative tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer tw-border-b tw-border-b-[rgba(0,0,0,0.08)] tw-transition-[background] hover:tw-bg-[rgb(from_var(--wh40k-accent-info)_r_g_b_/_0.04)] item-drag" data-action="rollPower" data-item-id="{{power.id}}" data-item-type="psychicPower">
                 <span class="tw-flex tw-items-center tw-gap-1 tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-text-sm">
                     {{#if power.isAttack}}<i class="fas fa-burst tw-text-[color:var(--wh40k-accent-combat)] tw-mr-[var(--wh40k-space-xs)] tw-text-[0.8em]" title="{{localize "WH40K.Combat.AttackPower"}}"></i>{{/if}}
                     {{power.name}}
