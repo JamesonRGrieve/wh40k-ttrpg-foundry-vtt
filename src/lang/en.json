@@ -603,6 +603,17 @@
             "OpposedOvercome": "{target} fails to resist — the power takes hold (by {margin} degree(s)).",
             "OpposedResisted": "{target} resists the power — it fails."
         },
+        "PsychicDiscipline": {
+            "Biomancy": "Biomancy",
+            "Daemonic": "Daemonic",
+            "Divination": "Divination",
+            "Pyromancy": "Pyromancy",
+            "Telekinesis": "Telekinesis",
+            "Telepathy": "Telepathy",
+            "Minor": "Minor",
+            "Sanctic": "Sanctic",
+            "Malefic": "Malefic"
+        },
         "Disposition": {
             "Hostile": "Hostile",
             "Antagonistic": "Antagonistic",
