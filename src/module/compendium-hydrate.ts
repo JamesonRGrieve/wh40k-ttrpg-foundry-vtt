@@ -304,7 +304,8 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payload
         const patch: Record<string, unknown> = { _id: item.id, system: merged };
-        if ((item._source?.img ?? item.img) === null && source.img !== null) patch['img'] = source.img;
+        const persistedImg = item._source?.img ?? item.img;
+        if (source.img !== null && persistedImg !== source.img) patch['img'] = source.img;
         patches.push(patch);
     }
     const actorSystem = await buildActorSystemPatch(actor, unresolved);
