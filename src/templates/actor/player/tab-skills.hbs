@@ -96,7 +96,7 @@
          so the two-panel side-by-side layout collapses earlier, giving each panel its
          full width at narrower sheet sizes — consistent with the lower per-entry floors
          in talent-panel.hbs and trait-panel.hbs. --}}
-    <div class="tw-grid tw-gap-3 tw-w-full tw-items-stretch" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));">
+    <div class="tw-grid tw-grid-cols-[2fr_1fr] tw-gap-3 tw-w-full tw-items-stretch">
         <div class="tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{> systems/wh40k-rpg/templates/actor/panel/talent-panel.hbs}}
         </div>
