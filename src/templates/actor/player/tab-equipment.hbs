@@ -1,5 +1,15 @@
 {{!-- Acolyte Sheet Equipment Tab --}}
 {{!-- This part renders the Equipment tab content --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-hidden tw-flex-col tw-h-full tw-box-border tw-overflow-hidden tw-gap-3 tw-p-3 {{#if tab.active}}tw-flex{{/if}} bc:tw-bg-crimson/[2%] dh1:tw-bg-gold-dark/[2%] dh2:tw-bg-gold-dark/[2%] dw:tw-bg-accent-combat/[2%] ow:tw-bg-brass/[2%] rt:tw-bg-gold/[2%] im:tw-bg-failure/[2%]" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    {{!-- Encumbrance bar --}}
+    {{#if encumbrancePercent}}
+    <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-bg-black/20 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-border-light)]">
+        <span class="tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-shrink-0">{{localize "WH40K.Encumbrance.Label"}}</span>
+        <div class="tw-flex-1 tw-h-2 tw-bg-black/30 tw-rounded-full tw-overflow-hidden">
+            <div class="tw-h-full tw-rounded-full tw-transition-all {{#if (gt encumbrancePercent 100)}}tw-bg-[var(--wh40k-accent-combat)]{{else if (gt encumbrancePercent 75)}}tw-bg-[#fbbf24]{{else}}tw-bg-[var(--wh40k-color-success)]{{/if}}" style="width: {{encumbrancePercent}}%"></div>
+        </div>
+        <span class="tw-text-[0.65rem] tw-font-semibold tw-tabular-nums tw-text-[color:var(--wh40k-text-secondary)] tw-shrink-0">{{system.encumbrance.value}} / {{system.encumbrance.max}} kg</span>
+    </div>
+    {{/if}}
     {{> systems/wh40k-rpg/templates/actor/panel/loadout-equipment-panel.hbs}}
 </section>

@@ -4929,6 +4929,7 @@
             "ShowStatBreakdown": "Show stat breakdown"
         },
         "Encumbrance": {
+            "Label": "Carrying",
             "Title": "Encumbrance",
             "TitleOverweight": "Encumbrance (overweight)",
             "Current": "Current Enc.",
