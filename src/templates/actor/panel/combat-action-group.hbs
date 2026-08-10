@@ -38,7 +38,9 @@
         <span class="tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">{{heading}}</span>
     </div>
     <div class="tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
+        {{> @partial-block}}
         {{#each items as |entry|}}
+          {{#if (or entry.label entry.name)}}
             {{#if (eq ../mode "item")}}
                 <button
                     type="button"
@@ -76,6 +78,7 @@
                     {{/if}}
                 </button>
             {{/if}}
+          {{/if}}
         {{/each}}
     </div>
 </div>
