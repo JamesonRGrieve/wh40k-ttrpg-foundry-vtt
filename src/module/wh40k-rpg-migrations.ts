@@ -27,48 +27,29 @@ interface MigratableDocument {
 }
 
 export async function checkAndMigrateWorld(): Promise<void> {
-    const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion) as number;
-    if (WORLD_VERSION !== currentVersion && game.user.isGM) {
-        // Update Actors + their embedded items
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors.contents is Foundry's Actor collection; narrowed to MigratableDocument
-        for (const actor of game.actors.contents as unknown as (MigratableDocument & { items?: { contents?: MigratableDocument[] } })[]) {
-            try {
-                // eslint-disable-next-line no-await-in-loop -- sequential is intentional: each actor.update persists independently and ordering avoids overlapping writes
-                await migrateDocumentImg(actor, currentVersion);
-                for (const item of actor.items?.contents ?? []) {
-                    // eslint-disable-next-line no-await-in-loop -- sequential
-                    await migrateDocumentImg(item, currentVersion);
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        }
-        // Update Items
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.items is Foundry's Item collection surface; narrowed to MigratableDocument by the same contract as game.actors above
-        const itemCollection = game.items as { contents?: MigratableDocument[] } | undefined;
-        for (const item of itemCollection?.contents ?? []) {
-            try {
-                // eslint-disable-next-line no-await-in-loop -- sequential
-                await migrateDocumentImg(item, currentVersion);
-            } catch (e) {
-                console.error(e);
-            }
-        }
-
-        // v3: repair campaign-inception-date if it was stored via raw LevelDB
-        // write (wrong encoding). Re-set via the Foundry API to fix encoding.
-        if (currentVersion < 3) {
-            try {
-                const raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.campaignInceptionDate);
-                const cleaned = typeof raw === 'string' ? raw.replace(/^"+|"+$/g, '') : raw;
-                if (typeof cleaned === 'string' && cleaned !== '') {
-                    await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.campaignInceptionDate, cleaned);
-                }
-            } catch { /* setting not yet registered */ }
-        }
-
-        await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, WORLD_VERSION);
-    }
+    // const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion) as number;
+    // if (WORLD_VERSION !== currentVersion && game.user.isGM) {
+    //     // v2: rewrite img paths from systems/wh40k-rpg/images/ to packs/images/
+    //     for (const actor of game.actors.contents as unknown as (MigratableDocument & { items?: { contents?: MigratableDocument[] } })[]) {
+    //         try {
+    //             await migrateDocumentImg(actor, currentVersion);
+    //             for (const item of actor.items?.contents ?? []) {
+    //                 await migrateDocumentImg(item, currentVersion);
+    //             }
+    //         } catch (e) { console.error(e); }
+    //     }
+    //     const itemCollection = game.items as { contents?: MigratableDocument[] } | undefined;
+    //     for (const item of itemCollection?.contents ?? []) {
+    //         try { await migrateDocumentImg(item, currentVersion); }
+    //         catch (e) { console.error(e); }
+    //     }
+    //     // v3: set campaign inception date
+    //     if (currentVersion < 3) {
+    //         try { await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.campaignInceptionDate, '3.542.998.M41'); }
+    //         catch { /* setting not yet registered */ }
+    //     }
+    //     await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, WORLD_VERSION);
+    // }
 }
 
 /**

@@ -247,7 +247,7 @@ export class HooksManager {
                 name: 'eventTracker',
                 title: 'WH40K.SceneControls.EventTracker',
                 icon: 'fa-solid fa-project-diagram',
-                visible: game.user.isGM,
+                visible: game.user?.isGM === true,
                 onChange: () => {
                     EventTracker.open();
                 },
