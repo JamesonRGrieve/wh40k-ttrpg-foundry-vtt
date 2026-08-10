@@ -57,7 +57,7 @@ export function localSeason(elapsedTerranSeconds: number, body: CelestialBody): 
     const intoOrbit = ((elapsedTerranSeconds % orbitalSeconds) + orbitalSeconds) % orbitalSeconds;
     const fraction = intoOrbit / orbitalSeconds;
     const index = Math.floor(fraction * SEASONS.length) % SEASONS.length;
-    return SEASONS[index];
+    return SEASONS[index] ?? null;
 }
 
 export function terranDayNumber(elapsedTerranSeconds: number): number {
@@ -70,9 +70,9 @@ export const SOLENNE_SYSTEM: Record<string, CelestialBody> = {
     'terran-standard': { name: 'Terran Standard', rotationHours: 24 },
 };
 
+export const TERRAN_STANDARD: CelestialBody = { name: 'Terran Standard', rotationHours: 24 };
+
 export function resolveBody(locationKey: string | null): CelestialBody {
-    if (locationKey !== null && SOLENNE_SYSTEM[locationKey] !== undefined) {
-        return SOLENNE_SYSTEM[locationKey];
-    }
-    return SOLENNE_SYSTEM['terran-standard'];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (ESLint's parser project) has the flag off, tsconfig.json has it on
+    return (locationKey !== null ? SOLENNE_SYSTEM[locationKey] : undefined) ?? TERRAN_STANDARD;
 }

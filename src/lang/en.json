@@ -27,7 +27,29 @@
             "dw-vehicle": "Deathwatch Vehicle",
             "im-character": "Imperium Maledictum Character",
             "im-npc": "Imperium Maledictum NPC",
-            "im-vehicle": "Imperium Maledictum Vehicle"
+            "im-vehicle": "Imperium Maledictum Vehicle",
+            "dh2-terracraft": "Dark Heresy 2e Ground Vehicle",
+            "dh2-aircraft": "Dark Heresy 2e Aircraft",
+            "dh2-watercraft": "Dark Heresy 2e Watercraft",
+            "dh1-terracraft": "Dark Heresy 1e Ground Vehicle",
+            "dh1-aircraft": "Dark Heresy 1e Aircraft",
+            "dh1-watercraft": "Dark Heresy 1e Watercraft",
+            "rt-terracraft": "Rogue Trader Ground Vehicle",
+            "rt-aircraft": "Rogue Trader Aircraft",
+            "rt-watercraft": "Rogue Trader Watercraft",
+            "bc-terracraft": "Black Crusade Ground Vehicle",
+            "bc-aircraft": "Black Crusade Aircraft",
+            "bc-watercraft": "Black Crusade Watercraft",
+            "ow-terracraft": "Only War Ground Vehicle",
+            "ow-aircraft": "Only War Aircraft",
+            "ow-watercraft": "Only War Watercraft",
+            "dw-terracraft": "Deathwatch Ground Vehicle",
+            "dw-aircraft": "Deathwatch Aircraft",
+            "dw-watercraft": "Deathwatch Watercraft",
+            "im-terracraft": "Imperium Maledictum Ground Vehicle",
+            "im-aircraft": "Imperium Maledictum Aircraft",
+            "im-watercraft": "Imperium Maledictum Watercraft",
+            "rt-voidcraft": "Rogue Trader Voidcraft"
         },
         "Item": {
             "ammunition": "Ammunition",
@@ -4687,7 +4709,8 @@
             "BatchTitle": "Award XP to Characters",
             "SelectCharacters": "Characters",
             "SelectAll": "Toggle All",
-            "AmountLabel": "XP to Award"
+            "AmountLabel": "XP to Award",
+            "GmOnly": "Only the GM can award XP to multiple characters."
         },
         "WorldTime": {
             "Title": "In-Universe Time",

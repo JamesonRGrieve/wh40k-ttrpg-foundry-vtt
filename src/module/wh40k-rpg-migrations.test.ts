@@ -43,7 +43,7 @@ function installGame(opts: { isGM: boolean; storedVersion: number; actors: Actor
     const set = vi.fn().mockResolvedValue(undefined);
     G.game = {
         user: { isGM: opts.isGM },
-        settings: { get: (_ns: string, key: string): unknown => key === 'world-version' ? opts.storedVersion : '', set },
+        settings: { get: (): number => opts.storedVersion, set },
         actors: { contents: opts.actors },
         items: { contents: [] },
     };
@@ -55,20 +55,10 @@ afterEach(() => {
     vi.restoreAllMocks();
 });
 
-describe('checkAndMigrateWorld — v3 (img paths + inception date)', () => {
-    it('bumps a pre-baseline world to version 3 (GM)', async () => {
+describe('checkAndMigrateWorld — all migrations commented out', () => {
+    it('is a no-op regardless of version (all steps commented out)', async () => {
         const actor = makeActor('dh2-character', 'rt');
         const { set } = installGame({ isGM: true, storedVersion: 1, actors: [actor] });
-
-        await checkAndMigrateWorld();
-
-        expect(set).toHaveBeenCalled();
-        expect(set.mock.calls[set.mock.calls.length - 1]?.[2]).toBe(3);
-    });
-
-    it('does nothing when already at version 3', async () => {
-        const actor = makeActor('dh2-character', 'rt');
-        const { set } = installGame({ isGM: true, storedVersion: 3, actors: [actor] });
 
         await checkAndMigrateWorld();
 
@@ -76,7 +66,7 @@ describe('checkAndMigrateWorld — v3 (img paths + inception date)', () => {
         expect(actor.update).not.toHaveBeenCalled();
     });
 
-    it('does not run for a non-GM user', async () => {
+    it('is a no-op for non-GM', async () => {
         const actor = makeActor('dh2-character', 'rt');
         const { set } = installGame({ isGM: false, storedVersion: 1, actors: [actor] });
 
