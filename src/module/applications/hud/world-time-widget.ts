@@ -219,6 +219,11 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
         context['localSeason'] = season?.name ?? '';
         context['localSeasonIcon'] = season?.icon ?? '';
 
+        const ratio = (24 / body.rotationHours).toFixed(2);
+        const orbitalInfo = body.orbitalDays !== undefined ? `\nOrbital period: ${body.orbitalDays} Terran days` : '';
+        const tiltInfo = body.axialTilt !== undefined ? `\nAxial tilt: ${body.axialTilt}°` : '';
+        context['localBodyTooltip'] = `${body.name}\nLocal day: ${body.rotationHours} Terran hours\n1 Terran day = ${ratio} local days${orbitalInfo}${tiltInfo}${season !== null ? `\nCurrent season: ${season.name}` : ''}`;
+
         return context;
     }
 
