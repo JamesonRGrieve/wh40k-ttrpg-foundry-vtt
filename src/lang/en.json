@@ -757,7 +757,9 @@
         "Bio": {
             "Birthdate": "Birthdate",
             "StandardAge": "Age (Standard)",
-            "BiologicalAge": "Age (Biological)"
+            "BiologicalAge": "Age (Biological)",
+            "AgeIsBase": "Age → derive birthdate",
+            "BirthdateIsBase": "Birthdate → derive age"
         },
         "AptitudesGranted": "Aptitudes Granted",
         "AptitudeUniversalSource": "All characters",
