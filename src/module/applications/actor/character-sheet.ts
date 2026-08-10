@@ -5447,6 +5447,7 @@ export default class CharacterSheet extends BaseActorSheet {
     async #maybePromptOriginPathIncomplete(): Promise<void> {
         if (!this.actor.isOwner) return;
         if (!WH40KSettings.isOriginPathPromptEnabled()) return;
+        if ((this.actor.type as string).includes('npc')) return;
         const op = this.actor.system.originPath;
         const built = op.homeWorld !== '' && op.background !== '' && op.role !== '';
         if (built) return;
