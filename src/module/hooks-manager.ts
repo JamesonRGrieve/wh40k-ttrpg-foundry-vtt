@@ -130,6 +130,7 @@ import { registerCombatTurnHooks } from './rules/combat-turn-hooks.ts';
 import { conditionStatusEffects } from './rules/condition-registry.ts';
 import { WH40K } from './rules/config.ts';
 import { convertDeadActorToPile } from './rules/death-loot.ts';
+import { registerGMProxy } from './rules/gm-proxy.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
 import { buildSkillSpecializationIndex } from './rules/skill-specialization-index.ts';
 import { buildSkillVariantIndex } from './rules/skill-variant-index.ts';
@@ -1107,6 +1108,7 @@ export class HooksManager {
         // the world-data steps below, so registering it up front guarantees it
         // lands even if a later await throws on a minimal/seed world.
         game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
+        registerGMProxy();
 
         await checkAndMigrateWorld();
         await HooksManager.hydrateWorldActorsOnReady();
