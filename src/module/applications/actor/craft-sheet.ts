@@ -167,7 +167,7 @@ export default class CraftActorSheet extends BaseActorSheet {
     /** @override */
     static override DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         ...BaseActorSheet.DEFAULT_OPTIONS,
-        classes: ['wh40k-rpg', 'sheet', 'actor', 'craft'],
+        classes: ['wh40k-rpg', 'sheet', 'actor', 'player', 'craft'],
         position: {
             width: 1000,
             height: 800,
