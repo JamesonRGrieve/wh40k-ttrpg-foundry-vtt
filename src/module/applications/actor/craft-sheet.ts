@@ -218,13 +218,7 @@ export default class CraftActorSheet extends BaseActorSheet {
         tabs: {
             template: 'systems/wh40k-rpg/templates/actor/craft/tabs.hbs',
             container: {
-                classes: [
-                    'wh40k-sidebar',
-                    'tw-flex',
-                    'tw-flex-col',
-                    'tw-h-full',
-                    'tw-min-h-0',
-                ],
+                classes: ['wh40k-sidebar', 'tw-flex', 'tw-flex-col', 'tw-h-full', 'tw-min-h-0'],
                 id: 'sidebar',
             },
         },
@@ -621,9 +615,9 @@ export default class CraftActorSheet extends BaseActorSheet {
             return;
         }
         for (const token of controlled) {
-            if (token.actor === undefined || token.actor === null) continue;
-            // eslint-disable-next-line no-restricted-syntax, no-await-in-loop -- boundary: embark takes actor-shaped args; sequential for capacity enforcement
-            await embark(token.actor as Parameters<typeof embark>[0], this.actor as unknown as Parameters<typeof embark>[1]);
+            if (token.actor === undefined) continue;
+            // eslint-disable-next-line no-restricted-syntax, no-await-in-loop -- boundary: sheet/token actor types don't structurally match EmbarkableActor/VehicleActorish; sequential for capacity enforcement
+            await (embark as (a: unknown, v: unknown) => Promise<boolean>)(token.actor, this.actor);
         }
         await this.render();
     }

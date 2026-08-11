@@ -488,19 +488,17 @@ describe('applySkillUseToRollData — roll shaping', () => {
         expect('useDifficulty' in shaped(action).modifiers).toBe(false);
     });
 
-    it('scales the First Aid difficulty against the CURRENT patient, re-deriving on retarget', () => {
+    it('First Aid is always Ordinary (0) regardless of patient condition (#561)', () => {
         const action = freshAction();
         const firstAid = useOf('medicae', 'firstAid');
 
-        // Unharmed patient: Ordinary (no modifier at all).
         shaped(action).targetActor = makeTarget({ wounds: { value: 12, max: 12, critical: 0 } });
         applySkillUseToRollData(action.rollData, firstAid, 'Medicae');
         expect('useDifficulty' in shaped(action).modifiers).toBe(false);
 
-        // Retarget onto a heavily-damaged patient: Hard.
         shaped(action).targetActor = makeTarget({ wounds: { value: 1, max: 12, critical: 0 } });
         applySkillUseToRollData(action.rollData, firstAid, 'Medicae');
-        expect(shaped(action).modifiers['useDifficulty']).toBe(-20);
+        expect('useDifficulty' in shaped(action).modifiers).toBe(false);
     });
 });
 

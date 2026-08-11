@@ -13,7 +13,6 @@ import {
     applyFirstAidOutcome,
     blatherRounds,
     evaluateSkillUseGate,
-    firstAidDifficultyForTier,
     type FirstAidPatient,
     getSkillUse,
     getSkillUses,
@@ -1398,16 +1397,8 @@ export class SocialBuffActionData extends SimpleSkillData {
 /** Named modifier slot the chosen use's RAW difficulty occupies on the roll. */
 const USE_DIFFICULTY_MODIFIER_KEY = 'useDifficulty';
 
-/**
- * The RAW test modifier for a use against a given target. First Aid is the one use
- * whose difficulty is not flat — it scales with how hurt the CURRENT patient is — so
- * it resolves against the live target rather than the definition's constant.
- */
-function skillUseDifficulty(use: SkillUseDef, target: WH40KBaseActorDocument | null): number {
-    if (use.kind !== 'firstAid' || target === null) return use.difficultyMod;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor.wounds is the loosely-typed system wounds block
-    const wounds = target.wounds as { value?: number; max?: number } | undefined;
-    return firstAidDifficultyForTier(wounds?.value ?? 0, wounds?.max ?? 0);
+function skillUseDifficulty(use: SkillUseDef, _target: WH40KBaseActorDocument | null): number {
+    return use.difficultyMod;
 }
 
 /**
