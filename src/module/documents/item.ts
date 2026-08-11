@@ -122,7 +122,7 @@ export class WH40KItem extends WH40KItemContainer {
                     console.warn(`WH40K | cleanData: Invalid img path "${imgValue}" for type "${typeStr}", using default: ${String(source['img'])}`);
                 } else {
                     const imgPath = imgStr.split('?')[0] ?? imgStr;
-                    const hasValidExtension = validExtensions.some((ext) => imgPath.endsWith(ext) || imgPath.includes(ext + '/'));
+                    const hasValidExtension = validExtensions.some((ext) => imgPath.endsWith(ext) || imgPath.includes(`${ext}/`));
 
                     if (!hasValidExtension) {
                         // Invalid extension - use type-specific default

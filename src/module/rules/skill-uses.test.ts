@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
     applyFirstAidOutcome,
-    firstAidDifficultyForTier,
     type FirstAidPatient,
     blatherRounds,
     evaluateSkillUseGate,
@@ -259,14 +258,6 @@ describe('evaluateSkillUseGate (#458 — resolution-time enforcement)', () => {
         expect(block?.key).toBe('interrogate');
         expect(block?.remainingLabel).toBe('2d');
         expect(block?.messageKey).toBe('WH40K.SkillUse.GateCooldown');
-    });
-});
-
-describe('firstAidDifficultyForTier (#432)', () => {
-    it('is harder the more damaged the patient is', () => {
-        expect(firstAidDifficultyForTier(12, 12)).toBe(0); // unharmed
-        expect(firstAidDifficultyForTier(7, 12)).toBe(-10); // lightly (>= half)
-        expect(firstAidDifficultyForTier(2, 12)).toBe(-20); // heavily (< half)
     });
 });
 

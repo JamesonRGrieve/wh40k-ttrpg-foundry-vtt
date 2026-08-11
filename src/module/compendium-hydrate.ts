@@ -52,6 +52,8 @@ type HydratableActor = {
     name?: string | null;
     uuid?: string | null;
     id?: string | null;
+    img?: string | null;
+    _stats?: { compendiumSource?: string | null };
     /**
      * The actor's OWN system payload. A named individual authored as a
      * `variantOf` an unnamed class joins its base through this, exactly as an
@@ -373,7 +375,9 @@ async function hydrateActorReporting(actor: HydratableActor): Promise<{ patched:
             if (canonical !== null && canonical !== undefined && typeof canonical.img === 'string' && canonical.img !== '' && canonical.img !== actor.img) {
                 actor.updateSource?.({ img: canonical.img });
             }
-        } catch { /* compendium not loaded yet */ }
+        } catch {
+            /* compendium not loaded yet */
+        }
     }
     if (actorSystem !== null) actor.updateSource?.({ system: actorSystem });
     if (patches.length > 0 || actorSystem !== null) actor.reset?.();

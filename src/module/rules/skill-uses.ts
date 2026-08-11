@@ -19,7 +19,7 @@
  * unit-testable, mirroring `rules/weapon-modes.ts` and `aptitude-derivation.ts`.
  */
 
-import { type DamageTier, getDamageTier, MEDICAE_ACTIONS, type MedicaeActionKind } from './healing.ts';
+import { MEDICAE_ACTIONS, type MedicaeActionKind } from './healing.ts';
 import { DAY_SECONDS, formatRemaining, gateRemaining, isGateOpen } from './world-time.ts';
 
 /** How a use resolves once the roll lands. `general` is a plain pass/fail test. */
@@ -601,18 +601,4 @@ export async function applyFirstAidOutcome(patient: FirstAidPatient, outcome: Fi
         await patient.update(patch);
     }
     return patch;
-}
-
-/**
- * RAW First-Aid difficulty scales with how hurt the patient is (the dialog can
- * surface this as the default difficulty when a target is chosen): treating a
- * heavily-damaged patient is harder. Content-agnostic mapping over `getDamageTier`.
- */
-export function firstAidDifficultyForTier(woundsValue: number, woundsMax: number): number {
-    const byTier: Record<DamageTier, number> = {
-        unharmed: 0, // Ordinary (stabilising)
-        lightlyDamaged: -10, // Difficult
-        heavilyDamaged: -20, // Hard
-    };
-    return byTier[getDamageTier(woundsValue, woundsMax)];
 }
