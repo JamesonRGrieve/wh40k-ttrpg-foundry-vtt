@@ -185,6 +185,7 @@ export default class CraftActorSheet extends BaseActorSheet {
             toggleComponentActive: CraftActorSheet.#toggleComponentActive,
             damageComponent: CraftActorSheet.#damageComponent,
             openOccupant: CraftActorSheet.#openOccupant,
+            embarkSelected: CraftActorSheet.#embarkSelected,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
     };
@@ -609,5 +610,21 @@ export default class CraftActorSheet extends BaseActorSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: `fromUuid` is a Foundry global resolving to an untyped Document union
         const occupant = (await fromUuid(uuid)) as { sheet?: { render: (force: boolean) => unknown } } | null;
         occupant?.sheet?.render(true);
+    }
+
+    static async #embarkSelected(this: CraftActorSheet): Promise<void> {
+        const { embark } = await import('../../rules/vehicle-embark.ts');
+        // eslint-disable-next-line no-restricted-syntax -- boundary: canvas.tokens.controlled is Foundry's selected token array
+        const controlled = (canvas as { tokens?: { controlled?: Array<{ actor?: { uuid?: string } }> } }).tokens?.controlled ?? [];
+        if (controlled.length === 0) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Vehicle.SelectTokenFirst'));
+            return;
+        }
+        for (const token of controlled) {
+            if (token.actor === undefined || token.actor === null) continue;
+            // eslint-disable-next-line no-restricted-syntax, no-await-in-loop -- boundary: embark takes actor-shaped args; sequential for capacity enforcement
+            await embark(token.actor as Parameters<typeof embark>[0], this.actor as unknown as Parameters<typeof embark>[1]);
+        }
+        await this.render();
     }
 }
