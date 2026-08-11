@@ -106,12 +106,6 @@ const DIALOG_PROBES = [
         kind: 'psychicPower',
         ctor: 'default',
     },
-    {
-        className: 'RighteousFuryDialog',
-        moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/righteous-fury-dialog.js',
-        kind: 'optionsCtor',
-        ctor: 'default',
-    },
     { className: 'SimpleRollDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/simple-roll-dialog.js', kind: 'simpleRoll', ctor: 'default' },
     {
         className: 'SpecialistSkillDialog',

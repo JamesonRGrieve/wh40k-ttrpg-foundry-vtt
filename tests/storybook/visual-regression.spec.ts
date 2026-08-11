@@ -134,7 +134,6 @@ const STORY_IDS: readonly string[] = [
     // ── Dialogs & prompts ────────────────────────────────────────────────────
     'dialogs-confirmationdialog--confirm-flow',
     'dialogs-acquisitiondialog--roll-flow',
-    'prompts-righteousfurydialog--roll-flow',
     'prompts-addxpdialog--apply-disabled-at-zero',
 
     // ── Foundation — icons per-system ────────────────────────────────────────

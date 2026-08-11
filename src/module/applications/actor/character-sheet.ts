@@ -794,6 +794,8 @@ export default class CharacterSheet extends BaseActorSheet {
             'spendAction': CharacterSheet.#spendAction,
             'resetActions': CharacterSheet.#resetActions,
 
+            'toggleAgeMode': CharacterSheet.#toggleAgeMode,
+
             // Stat adjustment actions — extracted to api/stat-adjustment-actions.ts
             'adjustStat': StatActions.adjustStat,
             'increment': StatActions.increment,
@@ -5543,6 +5545,12 @@ export default class CharacterSheet extends BaseActorSheet {
             return;
         }
         sheet.render(true);
+    }
+
+    static async #toggleAgeMode(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const mode = target.dataset['mode'];
+        if (mode !== 'age' && mode !== 'birthdate') return;
+        await this.actor.update({ 'system.bio.ageMode': mode });
     }
 
     /**

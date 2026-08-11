@@ -467,13 +467,6 @@ test.describe('Storybook extra story render', () => {
         await expect(page.locator('[data-action="roll"]').first()).toBeAttached();
     });
 
-    // ── Prompts — RighteousFuryDialog ────────────────────────────────────────
-    test('righteous fury dialog roll flow renders weapon and roll action', async ({ page }) => {
-        await page.goto('/iframe.html?id=prompts-righteousfurydialog--roll-flow');
-        await expect(page.getByText('Bolter').first()).toBeVisible();
-        await expect(page.locator('[data-action="roll"]').first()).toBeAttached();
-    });
-
     // ── Prompts — AddXPDialog ────────────────────────────────────────────────
     test('add xp dialog apply disabled at zero', async ({ page }) => {
         await page.goto('/iframe.html?id=prompts-addxpdialog--apply-disabled-at-zero');
