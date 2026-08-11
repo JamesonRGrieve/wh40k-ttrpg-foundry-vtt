@@ -12,18 +12,25 @@
             <div class="wh40k-panel-body">
                 <div class="tw-grid tw-grid-cols-2 tw-gap-2">
                     {{> systems/wh40k-rpg/templates/shared/field-row.hbs label="Gender" name="system.bio.gender" value=system.bio.gender}}
-                    <div class="tw-col-span-2 tw-flex tw-items-center tw-gap-2">
-                        <label class="tw-flex tw-items-center tw-gap-1 tw-text-[0.7rem] tw-cursor-pointer">
-                            <input type="radio" name="system.bio.ageMode" value="age" {{#if (eq system.bio.ageMode "age")}}checked{{/if}} />
-                            <span>{{localize "WH40K.Bio.AgeIsBase"}}</span>
-                        </label>
-                        <label class="tw-flex tw-items-center tw-gap-1 tw-text-[0.7rem] tw-cursor-pointer">
-                            <input type="radio" name="system.bio.ageMode" value="birthdate" {{#if (eq system.bio.ageMode "birthdate")}}checked{{/if}} />
-                            <span>{{localize "WH40K.Bio.BirthdateIsBase"}}</span>
-                        </label>
+                    <div class="tw-col-span-1">
+                        <div class="tw-flex tw-items-center tw-gap-2 tw-mb-1">
+                            <label class="tw-text-[0.65rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)] tw-flex-1">{{localize "WH40K.Bio.Birthdate"}}</label>
+                            <button type="button" data-action="toggleAgeMode" data-mode="birthdate" title="{{localize "WH40K.Bio.BirthdateIsBase"}}"
+                                class="tw-relative tw-w-7 tw-h-4 tw-rounded-full tw-border-0 tw-cursor-pointer tw-transition-colors tw-shrink-0 {{#if (eq system.bio.ageMode "birthdate")}}tw-bg-[var(--wh40k-gold)]{{else}}tw-bg-[rgba(255,255,255,0.15)]{{/if}}">
+                                <span class="tw-absolute tw-top-[2px] tw-left-[2px] tw-h-3 tw-w-3 tw-rounded-full tw-bg-white tw-transition-transform {{#if (eq system.bio.ageMode "birthdate")}}tw-translate-x-3{{/if}}"></span>
+                            </button>
+                        </div>
+                        <input type="text" name="system.bio.birthdate" value="{{system.bio.birthdate}}" class="tw-w-full tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-text-[color:var(--color-text-primary)] tw-px-2 tw-py-1 tw-rounded-sm tw-text-[0.85rem] {{#if (eq system.bio.ageMode "age")}}tw-opacity-50{{/if}}" {{#if (eq system.bio.ageMode "age")}}readonly{{/if}} />
                     </div>
-                    {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Bio.Birthdate") name="system.bio.birthdate" value=system.bio.birthdate readonly=(eq system.bio.ageMode "age")}}
-                    {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Bio.StandardAge") name="system.bio.age" value=system.bio.age readonly=(eq system.bio.ageMode "birthdate")}}
+                    <div class="tw-col-span-1">
+                        <div class="tw-flex tw-items-center tw-gap-2 tw-mb-1">
+                            <label class="tw-text-[0.65rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)] tw-flex-1">{{localize "WH40K.Bio.StandardAge"}}</label>
+                            <button type="button" data-action="toggleAgeMode" data-mode="age" title="{{localize "WH40K.Bio.AgeIsBase"}}"
+                                class="tw-relative tw-w-7 tw-h-4 tw-rounded-full tw-border-0 tw-cursor-pointer tw-transition-colors tw-shrink-0 {{#if (eq system.bio.ageMode "age")}}tw-bg-[var(--wh40k-gold)]{{else}}tw-bg-[rgba(255,255,255,0.15)]{{/if}}">
+                                <span class="tw-absolute tw-top-[2px] tw-left-[2px] tw-h-3 tw-w-3 tw-rounded-full tw-bg-white tw-transition-transform {{#if (eq system.bio.ageMode "age")}}tw-translate-x-3{{/if}}"></span>
+                            </button>
+                        </div>
+                        <input type="number" name="system.bio.age" value="{{system.bio.age}}" class="tw-w-full tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-text-[color:var(--color-text-primary)] tw-px-2 tw-py-1 tw-rounded-sm tw-text-[0.85rem] {{#if (eq system.bio.ageMode "birthdate")}}tw-opacity-50{{/if}}" {{#if (eq system.bio.ageMode "birthdate")}}readonly{{/if}} />
                     {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Bio.BiologicalAge") name="system.bio.biologicalAge" value=system.bio.biologicalAge}}
                     {{> systems/wh40k-rpg/templates/shared/field-row.hbs label="Build" name="system.bio.build" value=system.bio.build}}
                     {{> systems/wh40k-rpg/templates/shared/field-row.hbs label="Complexion" name="system.bio.complexion" value=system.bio.complexion}}

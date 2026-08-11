@@ -469,7 +469,6 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult> {
             // Dynamic import fallback. Module path is stable per the
             // build's emitted dist layout.
             const PATHS: Record<string, string> = {
-                CombatQuickPanel: '/systems/wh40k-rpg/module/applications/hud/combat-quick-panel.js',
                 EncounterBuilder: '/systems/wh40k-rpg/module/applications/npc/encounter-builder.js',
                 CombatPresetDialog: '/systems/wh40k-rpg/module/applications/npc/combat-preset-dialog.js',
                 DifficultyCalculatorDialog: '/systems/wh40k-rpg/module/applications/npc/difficulty-calculator-dialog.js',
