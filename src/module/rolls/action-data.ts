@@ -3,6 +3,7 @@ import { SYSTEM_ID } from '../constants.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { hitsForDegrees, isBurstAction } from '../rules/auto-fire.ts';
 import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
+import { gmProxyActorUpdate } from '../rules/gm-proxy.ts';
 import { type AllocationTarget, allocateHits } from '../rules/hit-allocation.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/opposed.ts';
@@ -934,15 +935,17 @@ export class MedicaeActionData extends SimpleSkillData {
             return;
         }
 
+        const targetId = target.id;
         const patient: FirstAidPatient = {
             woundsValue,
             woundsMax,
             criticalDamage,
             update: async (patch): Promise<void> => {
-                const upd: Record<string, number> = {};
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payload is an untyped Record
+                const upd: Record<string, unknown> = {};
                 if (patch.woundsValue !== undefined) upd['system.wounds.value'] = patch.woundsValue;
                 if (patch.criticalDamage !== undefined) upd['system.wounds.critical'] = patch.criticalDamage;
-                await target.update(upd);
+                if (targetId !== null) await gmProxyActorUpdate(targetId, upd);
             },
         };
         await applyFirstAidOutcome(patient, outcome);
@@ -950,8 +953,10 @@ export class MedicaeActionData extends SimpleSkillData {
         // RAW cooldown (#458): close the patient's gate so the same use cannot be
         // repeated on them until the in-universe window elapses (First Aid: 24h).
         const gate = getSkillUse('medicae', this.useKind)?.timeGate;
-        if (gate?.windowSeconds !== undefined) {
-            await target.setTimeGate(gate.key, Number(game.time.worldTime) + gate.windowSeconds);
+        if (gate?.windowSeconds !== undefined && targetId !== null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flag path is a string key
+            const flagPath = `flags.wh40k-rpg.timeGates.${gate.key}`;
+            await gmProxyActorUpdate(targetId, { [flagPath]: Number(game.time.worldTime) + gate.windowSeconds });
         }
 
         const parts = [game.i18n.format('WH40K.SkillUse.Applied', { medic: this.rollData.sourceActor?.name ?? '', use: useLabel, patient: target.name })];
@@ -980,7 +985,15 @@ export class InterrogationActionData extends SimpleSkillData {
 
         const degrees = this.rollData.success ? Math.max(1, this.rollData.dos) : 0;
         const outcome = resolveInterrogation(degrees);
-        if (outcome.fatigue > 0) await target.applyFatigue(outcome.fatigue);
+        const interrogateTargetId = target.id;
+        if (outcome.fatigue > 0 && interrogateTargetId !== null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies by subclass
+            const fatigue = (target.system as { fatigue?: { value: number; max: number } }).fatigue;
+            if (fatigue !== undefined) {
+                const next = Math.max(0, fatigue.value + Math.trunc(outcome.fatigue));
+                await gmProxyActorUpdate(interrogateTargetId, { 'system.fatigue.value': next });
+            }
+        }
         if (outcome.success) {
             this.addEffect(
                 'Interrogation',
@@ -995,13 +1008,14 @@ export class InterrogationActionData extends SimpleSkillData {
                 'Interrogation',
                 game.i18n.format('WH40K.SkillUse.Interrogation.Resisted', { subject: target.name, fatigue: String(outcome.fatigue) }),
             );
-            // RAW (#458): a badly botched session (2+ degrees of failure) leaves the
-            // subject unable to be interrogated again for 1d5 days.
-            if (this.rollData.dof >= 2) {
+            if (this.rollData.dof >= 2 && interrogateTargetId !== null) {
                 const lockout = new Roll('1d5');
                 await lockout.evaluate();
                 const days = lockout.total ?? 1;
-                await target.setTimeGate('interrogate', Number(game.time.worldTime) + days * DAY_SECONDS);
+                const expiry = Math.trunc(Number(game.time.worldTime) + days * DAY_SECONDS);
+                await gmProxyActorUpdate(interrogateTargetId, {
+                    'flags.wh40k-rpg.timeGates.interrogate': expiry,
+                });
                 this.addEffect('Interrogation', game.i18n.format('WH40K.SkillUse.Interrogation.Lockout', { subject: target.name, days: String(days) }));
             }
         }

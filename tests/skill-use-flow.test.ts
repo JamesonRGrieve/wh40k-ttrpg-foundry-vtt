@@ -29,6 +29,9 @@ interface FoundryStub {
 }
 interface GameStub {
     i18n: { localize: (key: string) => string; format: (key: string, data?: Record<string, string>) => string };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: test registry returns untyped objects standing in for real Foundry actors
+    actors: { get: (id: string) => unknown };
+    socket: { emit: () => void; on: () => void };
     time: { worldTime: number };
     user: { id: string };
     settings: { get: () => boolean };
@@ -67,6 +70,10 @@ class FakeActor {
 /** Deterministic 1d5 stand-in for the Interrogation lockout roll (always 3 days). */
 const LOCKOUT_ROLL_TOTAL = 3;
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: test registry returns untyped objects standing in for real Foundry actors
+const fakeActorRegistry: Map<string, unknown> = new Map();
+let fakeActorCounter = 0;
+
 stubs.foundry = {
     applications: { api: buildApplicationV2Api(), handlebars: { renderTemplate: async (): Promise<string> => Promise.resolve('') } },
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's foundry.utils.Collection extends Map with arbitrary key/value types per the framework type.
@@ -100,6 +107,9 @@ stubs.game = {
         localize: (key: string): string => key,
         format: (key: string, data?: Record<string, string>): string => `${key}|${JSON.stringify(data ?? {})}`,
     },
+    // eslint-disable-next-line no-restricted-syntax -- boundary: test stub returns untyped objects standing in for real Foundry actors
+    actors: { get: (id: string): unknown => fakeActorRegistry.get(id) },
+    socket: { emit: (): void => {}, on: (): void => {} },
     time: { worldTime: 0 },
     user: { id: 'test' },
     settings: { get: (): boolean => false },
@@ -138,25 +148,33 @@ afterAll(() => {
 
 /** A patient/subject standing in for a real actor — only the surface the resolvers read. */
 interface FakeTarget {
+    id: string;
+    isOwner: boolean;
     name: string;
     wounds: { value: number; max: number; critical: number };
+    system: { fatigue?: { value: number; max: number } };
     characteristics: Record<string, { effectiveBonus: number }>;
     /** Per-key gate expiries, exactly as `WH40KBaseActor.getTimeGate` would return them. */
     gates: Record<string, number>;
-    /** Every `actor.update(...)` payload applied — empty proves nothing was written. */
-    updates: Record<string, number>[];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.update payloads are open-ended Records
+    updates: Array<Record<string, unknown>>;
     /** Fatigue levels inflicted through `applyFatigue`. */
     fatigueApplied: number[];
     getTimeGate: (key: string) => number | null;
     setTimeGate: (key: string, expiry: number) => Promise<void>;
-    update: (patch: Record<string, number>) => Promise<void>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.update payloads are open-ended Records
+    update: (patch: Record<string, unknown>) => Promise<void>;
     applyFatigue: (levels: number) => Promise<void>;
 }
 
 function makeTarget(opts: { name?: string; wounds?: { value: number; max: number; critical: number }; gates?: Record<string, number> } = {}): FakeTarget {
+    const id = `fake-${++fakeActorCounter}`;
     const target: FakeTarget = {
+        id,
+        isOwner: true,
         name: opts.name ?? 'Patient',
         wounds: opts.wounds ?? { value: 4, max: 12, critical: 0 },
+        system: { fatigue: { value: 0, max: 10 } },
         characteristics: { toughness: { effectiveBonus: 3 } },
         gates: opts.gates ?? {},
         updates: [],
@@ -166,8 +184,14 @@ function makeTarget(opts: { name?: string; wounds?: { value: number; max: number
             target.gates[key] = expiry;
             return Promise.resolve();
         },
-        update: async (patch: Record<string, number>): Promise<void> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.update payloads are open-ended Records
+        update: async (patch: Record<string, unknown>): Promise<void> => {
             target.updates.push(patch);
+            for (const [key, val] of Object.entries(patch)) {
+                const gateMatch = key.match(/^flags\.wh40k-rpg\.timeGates\.(.+)$/);
+                if (gateMatch !== null && typeof val === 'number') target.gates[gateMatch[1]] = val;
+                if (key === 'system.fatigue.value' && typeof val === 'number') target.fatigueApplied.push(val);
+            }
             return Promise.resolve();
         },
         applyFatigue: async (levels: number): Promise<void> => {
@@ -175,6 +199,7 @@ function makeTarget(opts: { name?: string; wounds?: { value: number; max: number
             return Promise.resolve();
         },
     };
+    fakeActorRegistry.set(id, target);
     return target;
 }
 
@@ -236,9 +261,10 @@ describe('MedicaeActionData — resolution-time time gate (#458)', () => {
 
         await action.descriptionText();
 
-        expect(target.updates).toHaveLength(1);
+        expect(target.updates).toHaveLength(2);
         expect(target.updates[0]).toEqual({ 'system.wounds.value': 5 });
         expect(target.gates['firstAid']).toBe(DAY_SECONDS);
+        expect(target.updates[1]).toEqual({ 'flags.wh40k-rpg.timeGates.firstAid': DAY_SECONDS });
         expect(warnings).toHaveLength(0);
     });
 
@@ -292,7 +318,7 @@ describe('MedicaeActionData — resolution-time time gate (#458)', () => {
 
         await action.descriptionText();
 
-        expect(target.updates).toHaveLength(1);
+        expect(target.updates).toHaveLength(2);
         expect(warnings).toHaveLength(0);
         expect(target.gates['firstAid']).toBe(2 * DAY_SECONDS);
     });
@@ -310,7 +336,7 @@ describe('MedicaeActionData — resolution-time time gate (#458)', () => {
         await allowed.descriptionText();
 
         expect(locked.updates).toEqual([]);
-        expect(fresh.updates).toHaveLength(1);
+        expect(fresh.updates).toHaveLength(2);
     });
 
     it('leaves ungated uses (Surgery) unaffected by a First Aid cooldown on the same patient', async () => {
@@ -562,7 +588,7 @@ describe('SkillUseActionData — inline use selection', () => {
         bind(action, target, { success: true, dos: 1 });
         await action.descriptionText();
 
-        expect(target.updates).toEqual([{ 'system.wounds.value': 5 }]);
+        expect(target.updates[0]).toEqual({ 'system.wounds.value': 5 });
     });
 
     it('folds the delegate chat-card rows onto the shell (the action the card renders)', async () => {
