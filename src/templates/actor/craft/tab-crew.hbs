@@ -39,6 +39,12 @@
                 {{localize "WH40K.Vehicle.UnfilledCrew" count=crew.unfilled}}
             </p>
             {{/if}}
+            {{#if isGM}}
+            <button type="button" class="tw-mt-3 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-w-full tw-py-2 tw-px-3 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[0.8rem] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary)] tw-cursor-pointer hover:tw-border-gold hover:tw-text-gold tw-transition-all" data-action="embarkSelected">
+                <i class="fas fa-user-plus"></i>
+                {{localize "WH40K.Vehicle.EmbarkSelected"}}
+            </button>
+            {{/if}}
         {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
     </div>

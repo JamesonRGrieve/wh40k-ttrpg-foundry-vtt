@@ -4074,6 +4074,8 @@
             "Occupants": "Aboard",
             "NoOccupants": "Nobody is aboard.",
             "UnfilledCrew": "{count} crew position(s) unfilled",
+            "EmbarkSelected": "Embark Selected Tokens",
+            "SelectTokenFirst": "Select one or more character tokens on the canvas first.",
             "Role": {
                 "driver": "Driver",
                 "gunner": "Gunner",

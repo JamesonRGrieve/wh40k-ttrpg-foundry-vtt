@@ -1,8 +1,5 @@
-{{!-- Craft Sheet Tab Navigation. Design tokens only — the hex fallbacks the
-      craft family used to carry (`var(--wh40k-text-muted,#888)` and friends)
-      could not follow a theme change, which is part of why craft surfaces read
-      as a separate application (#502). --}}
+{{!-- Craft Sheet Tab Navigation — matches the character sheet sidebar nav. --}}
 {{> systems/wh40k-rpg/templates/actor/partial/tab-strip.hbs
     tabs=tabs
-    navClass=(themeClassFor 'border')
-    itemClass=(concat "tw-px-4 tw-py-2 tw-bg-transparent tw-border tw-border-transparent tw-text-[color:var(--wh40k-text-medium)] tw-cursor-pointer tw-transition-all tw-no-underline hover:tw-text-[color:var(--wh40k-gold)] " (themeClassFor 'accent') " hover:tw-border-[var(--wh40k-border-color-light)] [&.active]:tw-text-[color:var(--color-text-primary)] [&.active]:tw-bg-[var(--wh40k-bg-input)] [&.active]:tw-border-[var(--wh40k-gold)] " (themeClassFor 'border'))}}
+    navClass="!tw-flex !tw-flex-col !tw-gap-1 !tw-m-0 !tw-p-2 !tw-w-full !tw-shrink-0 !tw-grow-0 tw-bg-transparent"
+    itemClass="wh40k-nav-item tw-flex tw-w-full tw-items-center tw-justify-center tw-text-center tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis tw-rounded-md tw-px-2 tw-py-1.5 tw-text-xs tw-border-b-2 tw-border-b-gold tw-border-b-transparent"}}
