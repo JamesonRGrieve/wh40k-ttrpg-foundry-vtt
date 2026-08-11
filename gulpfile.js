@@ -273,9 +273,23 @@ async function compilePacks() {
             }
           }
           
-          // Use the Foundry V13 key format: !{collectionType}!{id}
+          // Use the Foundry V14 key format: !{collectionType}!{id}
+          // Embedded items on actors are written as sublevel records so
+          // Foundry's boot-time migration doesn't strip them (#560).
           if (doc._id) {
             const key = `!${collectionType}!${doc._id}`;
+            const embeddedItems = Array.isArray(doc.items) ? doc.items : [];
+            if (collectionType === 'actors' && embeddedItems.length > 0) {
+              const itemIds = [];
+              for (const item of embeddedItems) {
+                if (item && item._id) {
+                  const itemKey = `!actors.items!${doc._id}.${item._id}`;
+                  await db.put(itemKey, item);
+                  itemIds.push(item._id);
+                }
+              }
+              doc.items = itemIds;
+            }
             await db.put(key, doc);
           }
         } catch (parseErr) {
