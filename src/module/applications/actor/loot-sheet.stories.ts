@@ -63,8 +63,8 @@ export const Populated: Story = {
         const takeAll = canvasElement.querySelector<HTMLButtonElement>('[data-action="pickupAll"]');
         await expect(takeAll).not.toBeNull();
         await expect((takeAll as HTMLButtonElement).disabled).toBe(false);
-        // Per-row take/delete control wired to the inherited base action.
         await expect(canvasElement.querySelector('[data-action="itemDelete"][data-item-id="i2"]')).not.toBeNull();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="loot-list"]')).not.toBeNull();
     },
 };
 
