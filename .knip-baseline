@@ -3,16 +3,17 @@
     "binaries",
     "classMembers",
     "enumMembers",
+    "files",
     "namespaceMembers",
     "optionalPeerDependencies",
     "unlisted",
     "unresolved"
   ],
   "totals": {
-    "total": 234
+    "total": 227
   },
   "counts": {
-    "files": 7,
+    "files": 0,
     "dependencies": 1,
     "devDependencies": 2,
     "optionalPeerDependencies": 0,

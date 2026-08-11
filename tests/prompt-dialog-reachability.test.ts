@@ -36,14 +36,7 @@ const MODULE_ROOT = resolve(__dirname, '..', 'src', 'module');
  * that keeps it here. Every entry is a commitment, not a waiver: the list must
  * only ever shrink, which the size assertion below enforces.
  */
-const AWAITING_DECISION: ReadonlyMap<string, string> = new Map([
-    // The five superseded by `unified-roll-dialog` were DELETED (#516) rather than
-    // left here awaiting a decision — its own @file header named them as replaced,
-    // and their templates and preload entries went with them.
-    ['incorruptible-devotion-dialog', 'wants a call site in the Corruption-gain path (Adepta Sororitas 1:1 trade)'],
-    ['righteous-fury-dialog', 'wants a call site in the damage pipeline at the RF confirmation step'],
-    ['sanctic-purity-prompt', 'wants a call site in the Psychic Phenomena dispatch path'],
-]);
+const AWAITING_DECISION: ReadonlyMap<string, string> = new Map([]);
 
 /** Every non-test, non-story `.ts` module under `applications/prompts/`. */
 function promptModuleNames(): string[] {
@@ -186,6 +179,6 @@ describe('every prompt dialog is reachable', () => {
     it('ratchets the awaiting-decision list down, never up', () => {
         // Was 20 unreachable prompt modules when #516 was filed. Lower this bound
         // with the change that wires or removes an entry; never raise it.
-        expect(AWAITING_DECISION.size).toBeLessThanOrEqual(8);
+        expect(AWAITING_DECISION.size).toBeLessThanOrEqual(0);
     });
 });
