@@ -1,6 +1,8 @@
-# WH40K RPG for Foundry VTT
+# WH40K RPG for Foundry VTT (Unofficial)
 
-Foundry VTT system for Warhammer 40,000 roleplaying games. The repo currently carries support for the FFG d100 lines and Imperium Maledictum under a shared TypeScript codebase, with per-system variants where the rules or presentation diverge.
+Unofficial, fan-made Foundry VTT system for the Warhammer 40,000 d100 RPG family. Not affiliated with or endorsed by Games Workshop, Fantasy Flight Games, or Cubicle 7 Entertainment.
+
+The repo currently carries support for the FFG d100 lines and Imperium Maledictum under a shared TypeScript codebase, with per-system variants where the rules or presentation diverge.
 
 This project is in active migration:
 
@@ -177,6 +179,22 @@ It pulls:
 
 ## Content and Licensing
 
-This repo includes local campaign and pack material that is not suitable for public redistribution as-is. Treat `src/packs/` and related backup/export content as private working data unless the release tooling has explicitly stripped it.
+This is an unofficial, fan-made game system for Foundry VTT. It is not affiliated with, endorsed by, or licensed by Games Workshop, Fantasy Flight Games, or Cubicle 7 Entertainment.
 
-Project package metadata currently declares the code license as `MIT` in `package.json`.
+**Warhammer 40,000**, **Dark Heresy**, **Rogue Trader**, **Deathwatch**, **Black Crusade**, **Only War**, and **Imperium Maledictum** are trademarks and/or registered trademarks of Games Workshop Ltd and/or their respective publishers. All rights belong to their respective owners.
+
+### What this repository contains
+
+- **System code** (TypeScript, Handlebars templates, CSS) — original work under the project license.
+- **UI chrome images** in `src/images/` — inherited from the upstream forks ([mrkeathley/dark-heresy-2nd-vtt](https://github.com/mrkeathley/dark-heresy-2nd-vtt), [AndruQuiroga/RogueTraderVTT](https://github.com/AndruQuiroga/RogueTraderVTT)). These include thematic decorative elements (borders, textures, icons) consistent with the setting's visual identity.
+- **Icon assets** in `src/icons/` — game-icons.net (CC BY 3.0) and GameDevMarket (purchased pro license). See `src/icons/ATTRIBUTION.md` and `src/icons/LICENSE`.
+
+### What this repository does NOT contain
+
+- **No copyrighted game text.** No rules text, item descriptions, talent descriptions, or stat blocks are included in the public repository. Combat-action labels and modifier values in `src/module/rules/` are original functional paraphrases, not quotations.
+- **No compendium content.** `src/packs/` is a private submodule and is not included in public clones or releases. Users must supply their own content packs or use the system as a bare framework.
+- **No copyrighted artwork.** The system does not bundle artwork from any Games Workshop, FFG, or Cubicle 7 publication.
+
+### License
+
+The code in this repository is licensed under **AGPL-3.0-or-later**. See the `LICENSE` file for details.

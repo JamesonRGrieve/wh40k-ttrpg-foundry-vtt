@@ -1,7 +1,7 @@
 {
   "name": "wh40k-rpg",
   "version": "0.0.1",
-  "description": "Warhammer 40K RPG Foundry VTT System",
+  "description": "Unofficial Foundry VTT system for the Warhammer 40,000 d100 RPG family. Not affiliated with or endorsed by Games Workshop.",
   "scripts": {
     "version": "json -I -f package.json -e \"this.version='$NEXT_VERSION'\" && json -I -f src/system.json -e \"this.version='$NEXT_VERSION'\"",
     "clean": "gulp clean",
@@ -116,8 +116,8 @@
   "browserslist": [
     "last 3 versions"
   ],
-  "author": "Andru Quiroga",
-  "license": "MIT",
+  "author": "Jameson R. Grieve",
+  "license": "AGPL-3.0-or-later",
   "private": true,
   "packageManager": "pnpm@11.1.1+sha512.d1fdf5f73c617b64fa1a56a81c3c8dfe0e966e33a6010aa256b517ae77be21d93e05affc0de1a83b0e4f29d569f68b446ae8f068cd7247c0bb3df0fb4d7bdf9a",
   "lint-staged": {
