@@ -81,3 +81,4 @@ stories/**/*.js.map
 .aider.input.history
 .aider*
 coverage/
+backups/
