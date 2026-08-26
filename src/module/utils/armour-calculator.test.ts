@@ -17,6 +17,7 @@ import { type ArmourSystemLike, computeArmour, getArmourAPForLocation } from './
 
 interface ItemSystemLike {
     level?: number;
+    specialization?: string;
     state?: { equipped?: boolean };
     craftsmanship?: string;
     armourPoints?: Record<string, number>;
@@ -160,6 +161,71 @@ describe('computeArmour (#144 errata: Machine + worn-armour stacking)', () => {
         });
         const body = bodyOf(computeArmour(actor));
         expect(body.traitBonus).toBe(4);
+    });
+});
+
+/**
+ * The Natural Armour / Machine rating is authored via the SPEC pattern (#261),
+ * which parks the rating in `system.specialization` (e.g. "Natural Armour" with
+ * `specialization: "3"`), not `system.level`. Reading only `level` silently
+ * returned 0 for that content — under-protecting every creature (and PC) whose
+ * natural armour is SPEC-authored. These pin the specialization fallback.
+ */
+describe('computeArmour — SPEC-carried natural-armour rating', () => {
+    it('reads the rating from `specialization` when `level` is absent', () => {
+        const actor = mockActor({
+            toughnessBonus: 3,
+            items: [{ type: 'trait', name: 'Natural Armour', system: { specialization: '3' } }],
+        });
+        const body = bodyOf(computeArmour(actor));
+        expect(body.traitBonus).toBe(3);
+        expect(body.total).toBe(6); // TB 3 + natural 3
+    });
+
+    it('parses the leading integer of a composed specialization string', () => {
+        const actor = mockActor({
+            toughnessBonus: 0,
+            items: [{ type: 'trait', name: 'Machine', system: { specialization: '6 (adamantium)' } }],
+        });
+        expect(bodyOf(computeArmour(actor)).traitBonus).toBe(6);
+    });
+
+    it('prefers a positive `level` over `specialization`', () => {
+        const actor = mockActor({
+            toughnessBonus: 0,
+            items: [{ type: 'trait', name: 'Natural Armour', system: { level: 5, specialization: '3' } }],
+        });
+        expect(bodyOf(computeArmour(actor)).traitBonus).toBe(5);
+    });
+});
+
+/**
+ * `equippedOnly` distinguishes the PC model (armour is worn only when its
+ * `state.equipped` flag is set) from the NPC model (a stat-block's listed armour
+ * items ARE worn — the lean items carry no equip toggle). NPC armour derivation
+ * calls with `equippedOnly: false`.
+ */
+describe('computeArmour — equippedOnly option', () => {
+    function makeUnequippedArmour(name: string, ap: number): ItemLike {
+        return {
+            type: 'armour',
+            name,
+            system: { armourPoints: { body: ap, head: ap, leftArm: ap, rightArm: ap, leftLeg: ap, rightLeg: ap } },
+        };
+    }
+
+    it('default (equippedOnly) ignores armour with no equipped flag — body total = TB only', () => {
+        const actor = mockActor({ toughnessBonus: 3, items: [makeUnequippedArmour('Flak', 4)] });
+        const body = bodyOf(computeArmour(actor));
+        expect(body.value).toBe(0);
+        expect(body.total).toBe(3);
+    });
+
+    it('equippedOnly:false counts the listed armour — body value = AP 4, total = TB 3 + AP 4 = 7', () => {
+        const actor = mockActor({ toughnessBonus: 3, items: [makeUnequippedArmour('Flak', 4)] });
+        const body = bodyOf(computeArmour(actor, { equippedOnly: false }));
+        expect(body.value).toBe(4);
+        expect(body.total).toBe(7);
     });
 });
 

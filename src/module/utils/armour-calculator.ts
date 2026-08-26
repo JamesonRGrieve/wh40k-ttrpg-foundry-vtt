@@ -24,7 +24,37 @@ export interface ArmourSystemLike {
     getAPForLocation?: (location: string) => number;
 }
 
+/** Options controlling how {@link computeArmour} gathers armour sources. */
+export interface ComputeArmourOptions {
+    /**
+     * When `true` (default), only armour/cybernetic items whose `state.equipped`
+     * is `true` contribute — the PC model, where gear is explicitly worn. When
+     * `false`, every owned armour/cybernetic item counts, which is the NPC model:
+     * a stat-block NPC wears the armour listed in its inventory (its lean items
+     * carry no equip toggle).
+     */
+    equippedOnly?: boolean;
+}
+
 const BODY_LOCATIONS: string[] = ['body', 'head', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+
+/**
+ * Read the armour rating carried by a Machine / Natural Armour trait. The rating
+ * lives in `level` for level-based traits, but the SPEC-philosophy authoring
+ * (#261) parks it in `specialization` (e.g. "Natural Armour" with
+ * `specialization: "3"`), so fall back to the first integer in that string.
+ * @param {object} system - The trait item's system data
+ * @returns {number} The armour rating, or 0 when none is authored
+ */
+function traitArmourRating(system: { level?: number; specialization?: string }): number {
+    if (system.level !== undefined && system.level > 0) return system.level;
+    const spec = system.specialization;
+    if (typeof spec === 'string') {
+        const match = /\d+/.exec(spec);
+        if (match !== null) return Number(match[0]);
+    }
+    return 0;
+}
 
 /**
  * Gets the armourPoints object from an item's system data.
@@ -68,7 +98,10 @@ function getArmourAPForLocation(armourSystem: ArmourSystemLike, location: string
  * @param {Actor} actor - The actor to compute armour for
  * @returns {object} Armour object with totals for each location
  */
-export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocationData> {
+export function computeArmour(actor: WH40KBaseActor, options: ComputeArmourOptions = {}): Record<string, ArmourLocationData> {
+    const equippedOnly = options.equippedOnly !== false;
+    const isWorn = (item: WH40KItem): boolean => !equippedOnly || (item.system as { state?: { equipped?: boolean } }).state?.equipped === true;
+
     const toughness = actor.characteristics['toughness'] as (typeof actor.characteristics)[string] | undefined;
     const toughnessBonus = toughness?.bonus ?? 0;
     let traitBonus = 0;
@@ -78,9 +111,9 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
     const traits = actor.items.filter((item: WH40KItem) => item.type === 'trait');
     for (const trait of traits) {
         if (!ARMOUR_TRAIT_NAMES.has(trait.name)) continue;
-        const system = trait.system as { level?: number };
-        if (system.level !== undefined && system.level > traitBonus) {
-            traitBonus = system.level;
+        const rating = traitArmourRating(trait.system as { level?: number; specialization?: string });
+        if (rating > traitBonus) {
+            traitBonus = rating;
         }
     }
 
@@ -101,7 +134,7 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
     // Add cybernetic armour (cumulative)
     actor.items
         .filter((item: WH40KItem) => item.type === 'cybernetic')
-        .filter((item: WH40KItem) => (item.system as { state?: { equipped?: boolean } }).state?.equipped === true)
+        .filter(isWorn)
         .filter((item: WH40KItem) => (item.system as { hasArmourPoints?: boolean }).hasArmourPoints === true)
         .forEach((cybernetic: WH40KItem) => {
             const armourPoints = getArmourPointsObject(cybernetic.system as ArmourSystemLike);
@@ -119,9 +152,7 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
     );
     let hasGoodArmour = false;
 
-    const equippedArmour = actor.items
-        .filter((item: WH40KItem) => item.type === 'armour')
-        .filter((item: WH40KItem) => (item.system as { state?: { equipped?: boolean } }).state?.equipped === true);
+    const equippedArmour = actor.items.filter((item: WH40KItem) => item.type === 'armour').filter(isWorn);
 
     for (const armourItem of equippedArmour) {
         // Check for Good craftsmanship armour

@@ -385,13 +385,23 @@ export function migrateSkills(source: JsonObject): void {
  */
 export function migrateArmourPoints(source: JsonObject): void {
     const raw = source['armourPoints'];
+    // No authored AP line → leave `armour.authored` false so the NPC DataModel
+    // derives armour from Toughness + worn items at prepare time.
     if (typeof raw !== 'string' || raw.trim() === '') return;
     delete source['armourPoints'];
     const m = /H\s*(\d+)\s+AR\s*(\d+)\s+AL\s*(\d+)\s+B\s*(\d+)\s+LR\s*(\d+)\s+LL\s*(\d+)/i.exec(raw);
-    if (m === null) return;
+    if (m === null) {
+        // Present but unparseable: still a raw/source-material intent. Mark it
+        // authored so the runtime keeps the (possibly zero) authored value rather
+        // than silently deriving over what a book printed.
+        const existing = isJsonObject(source['armour']) ? source['armour'] : {};
+        source['armour'] = { ...existing, authored: true };
+        return;
+    }
     source['armour'] = {
         mode: 'locations',
         total: toInt(m[4]),
+        authored: true,
         locations: {
             head: toInt(m[1]),
             body: toInt(m[4]),

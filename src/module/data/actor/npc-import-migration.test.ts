@@ -421,6 +421,7 @@ describe('migrateArmourPoints', () => {
         const armour = asObject(source['armour'], 'armour');
         expect(armour['mode']).toBe('locations');
         expect(armour['total']).toBe(10); // body
+        expect(armour['authored']).toBe(true); // a printed AP overrides the toughness+armour derivation
         const loc = asObject(armour['locations'], 'locations');
         expect(loc).toEqual({ head: 5, body: 10, leftArm: 8, rightArm: 8, leftLeg: 7, rightLeg: 7 });
     });
@@ -441,10 +442,23 @@ describe('migrateArmourPoints', () => {
         expect(asObject(already['armour'], 'armour')['total']).toBe(4); // no armourPoints → no-op
     });
 
-    it('drops an unparseable armourPoints string without inventing armour', () => {
+    it('drops an unparseable armourPoints string but marks it authored (no invented locations)', () => {
+        // A present-but-unparseable line is still a raw/source-material intent, so
+        // it is flagged authored — the runtime keeps it rather than deriving over
+        // what a book printed. No location AP is invented from the garbled string.
         const source: JsonObject = { armourPoints: 'None' };
         migrateArmourPoints(source);
         expect(source['armourPoints']).toBeUndefined();
+        const armour = asObject(source['armour'], 'armour');
+        expect(armour['authored']).toBe(true);
+        expect(armour['locations']).toBeUndefined();
+    });
+
+    it('leaves armour underived (authored unset) when there is no armourPoints line', () => {
+        // The strip case: no authored AP → armour.authored stays falsy so the NPC
+        // DataModel derives armour from Toughness + worn items at prepare time.
+        const source: JsonObject = {};
+        migrateArmourPoints(source);
         expect(source['armour']).toBeUndefined();
     });
 });
