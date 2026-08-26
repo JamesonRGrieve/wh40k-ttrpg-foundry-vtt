@@ -41,6 +41,7 @@ export default class CommonTemplate extends ActorDataModel {
                         tokenFrame: new SchemaField({
                             cx: new NumberField({ required: false, nullable: true, min: 0, max: 1, initial: null }),
                             cy: new NumberField({ required: false, nullable: true, min: 0, max: 1, initial: null }),
+                            zoom: new NumberField({ required: false, nullable: true, min: 0, initial: null }),
                         }),
                     }),
                     { required: false, initial: [] },

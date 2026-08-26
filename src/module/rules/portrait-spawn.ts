@@ -35,7 +35,9 @@ export interface PortraitActorLike {
 function readPrototypeTokenFrame(actor: PortraitActorLike): TokenFrame | null {
     const raw = actor.prototypeToken?.flags?.[SYSTEM_ID]?.tokenFrame;
     if (raw === null || raw === undefined) return null;
-    return { cx: typeof raw.cx === 'number' ? raw.cx : null, cy: typeof raw.cy === 'number' ? raw.cy : null };
+    const frame: TokenFrame = { cx: typeof raw.cx === 'number' ? raw.cx : null, cy: typeof raw.cy === 'number' ? raw.cy : null };
+    if (typeof raw.zoom === 'number') frame.zoom = raw.zoom;
+    return frame;
 }
 
 /** The actor's default portrait (pool index 0): its own img + prototype frame. */
