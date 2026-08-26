@@ -804,7 +804,7 @@ export class PsychicRollData extends RollData {
         if (found !== undefined) this.power = found;
     }
 
-    async update(): Promise<void> {
+    update(): void {
         if (!this.sourceActor) return;
         type ActorWithPsy = WH40KBaseActorDocument & { psy?: WH40KPsy };
         const sourceActor = this.sourceActor as ActorWithPsy;
@@ -829,7 +829,7 @@ export class PsychicRollData extends RollData {
 
         updateAttackSpecials(this);
         this.updateBaseTarget();
-        await calculatePsychicPowerRange(this);
+        calculatePsychicPowerRange(this);
     }
 
     updateBaseTarget(): void {

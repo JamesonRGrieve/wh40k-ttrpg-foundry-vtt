@@ -1,6 +1,8 @@
+import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
 import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
 import { calculateRangeModifier } from '../utils/range-calculator.ts';
+import { parsePsychicRange } from './psychic-range.ts';
 
 type RangeAnnotatedRollData = RollData & {
     rangeBracket?: string;
@@ -78,9 +80,15 @@ function calculateWeaponMaxRange(rollData: WeaponRollData): void {
 }
 
 /**
+ * Resolve a psychic power's maximum range (metres) from its authored `range`
+ * string via {@link parsePsychicRange} — NOT by evaluating it as a dice formula.
+ * Power ranges ("5 metres x Psy Rating", "Self", "—") are natural-language
+ * content, not `Roll` formulas; feeding them to `new Roll` threw, defaulted the
+ * range to 0, and raised a spurious user warning (#568). An unrecognised value
+ * logs a diagnostic and falls back to 0 rather than warning the user.
  * @param rollData {PsychicRollData}
  */
-async function calculatePsychicAbilityMaxRange(rollData: PsychicRollData): Promise<void> {
+function calculatePsychicAbilityMaxRange(rollData: PsychicRollData): void {
     const data = rollData;
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess guard: power is declared non-optional but may be unset before initialize() runs
     if (!data.power) {
@@ -89,24 +97,11 @@ async function calculatePsychicAbilityMaxRange(rollData: PsychicRollData): Promi
     }
 
     const powerSystem = data.power.system as PsychicPowerRangeSystem;
-    let range = 0;
-    if (Number.isInteger(powerSystem.range)) {
-        range = Number(powerSystem.range);
-    } else if (powerSystem.range === '') {
-        range = 0;
-    } else {
-        try {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Roll formula data context is an arbitrary plain object
-            const rangeCalculation = new Roll(String(powerSystem.range ?? ''), data as unknown as Record<string, unknown>);
-            await rangeCalculation.evaluate();
-            range = rangeCalculation.total ?? 0;
-        } catch {
-            ui.notifications.warn(t('WH40K.Warning.RangeFormulaFailed'));
-            range = 0;
-        }
+    const parsed = parsePsychicRange(powerSystem.range, data.pr);
+    if (parsed === null) {
+        console.warn(`${SYSTEM_ID} | unrecognised psychic range "${String(powerSystem.range)}" on "${data.power.name}" — max range defaulting to 0`);
     }
-
-    data.maxRange = range;
+    data.maxRange = parsed ?? 0;
 }
 
 /**
@@ -170,8 +165,10 @@ export function calculateWeaponRange(rollData: WeaponRollData): void {
 /**
  * @param rollData {PsychicRollData}
  */
-export async function calculatePsychicPowerRange(rollData: PsychicRollData): Promise<void> {
-    await calculatePsychicAbilityMaxRange(rollData);
+export function calculatePsychicPowerRange(rollData: PsychicRollData): void {
+    // Fully synchronous now that the range is parsed rather than evaluated as a
+    // dice formula (#568) — no Roll.evaluate to await.
+    calculatePsychicAbilityMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
     // Ignore Bonus for Psychic Powers
     rollData.rangeBonus = 0;
