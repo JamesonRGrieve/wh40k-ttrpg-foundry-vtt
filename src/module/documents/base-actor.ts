@@ -15,6 +15,7 @@ import { clampDisposition } from '../rules/disposition.ts';
 import { getFatigueAfterRest, isFatigueDeath, isFatigueUnconscious } from '../rules/fatigue.ts';
 import { clampFearRating, getFearTestPenalty } from '../rules/fear.ts';
 import { resolveEscapePinningTest, resolvePinningTest } from '../rules/pinning.ts';
+import { type PortraitActorLike, rerollSpawnPortrait } from '../rules/portrait-spawn.ts';
 import { type RerollOption, type RerollRollContext, type RerollSpec, rerollApplies, rerollLedgerKey, rerollUseAvailable } from '../rules/reroll.ts';
 import {
     type DesiredSubtletyAdjusterEffect,
@@ -110,6 +111,27 @@ export class WH40KBaseActor extends Actor {
     }
 
     async spendFate(): Promise<void> {}
+
+    /**
+     * Re-roll this actor's portrait from its pool (#567): a fresh random pick
+     * over the effective pool (the default `img` plus `system.portraits.variants`),
+     * ignoring any pinned index. Applies the chosen image and its token-bust
+     * frame (`prototypeToken.flags.wh40k-rpg.tokenFrame`). Exposes the
+     * "GM re-roll on a placed actor" action as a Document API surface.
+     *
+     * @param rng injected RNG in [0, 1); defaults to Math.random.
+     * @returns true if a new portrait was applied, false if the pool has no
+     *   alternatives to roll.
+     */
+    async rerollPortrait(rng: () => number = Math.random): Promise<boolean> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: narrow `this` to the portrait-pool surface (img / system.portraits / prototypeToken); WH40KActorSystemData does not model the schema-only `portraits` slot
+        const chosen = rerollSpawnPortrait(this as unknown as PortraitActorLike, rng);
+        if (chosen === null) return false;
+        // Flat dotted flag key (matching the `flags.wh40k-rpg.*` update idiom
+        // elsewhere in this file) so Foundry's typed flags shape accepts it.
+        await this.update({ 'img': chosen.img, 'prototypeToken.flags.wh40k-rpg.tokenFrame': chosen.tokenFrame });
+        return true;
+    }
 
     /**
      * Apply fatigue to the actor (core.md §"Fatigue"). Knock-Down, Forced
