@@ -4,6 +4,7 @@ import { type GameSystemId, SystemConfigRegistry, type SystemThemeRole, themeCla
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass } from '../src/module/handlebars/degree-ladders.ts';
 import { formatSourceLabel, type SourceInput } from '../src/module/handlebars/source-label.ts';
 import { ICON_REGISTRY } from '../src/module/icons/registry.generated.ts';
+import { combatActionIcon, combatTimingKey } from '../src/module/rules/combat-action-display.ts';
 
 const TEMPLATE_PREFIX = 'systems/wh40k-rpg/templates/';
 const SOURCE_ROOT = '../src/templates/';
@@ -149,6 +150,10 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         args.pop();
         return args.join('');
     });
+    HandlebarsLib.registerHelper('combatTimingKey', (value: HbsValue) => combatTimingKey(typeof value === 'string' ? value : undefined));
+    HandlebarsLib.registerHelper('combatActionIcon', (icon: HbsValue, timing: HbsValue) =>
+        combatActionIcon(typeof icon === 'string' ? icon : undefined, typeof timing === 'string' ? timing : undefined),
+    );
     HandlebarsLib.registerHelper('isExpanded', () => false);
     HandlebarsLib.registerHelper('hideIfNot', (check: HbsValue) => {
         const b = Boolean(check);

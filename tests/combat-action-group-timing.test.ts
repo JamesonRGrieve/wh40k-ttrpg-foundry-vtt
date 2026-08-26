@@ -110,3 +110,41 @@ describe('combat-action-group — tooltip never degrades to a bare ":" (#245)', 
         expect(aria).toBe('');
     });
 });
+
+/** The Font Awesome glyph class on a button's action icon (the `fa-*` token). */
+function iconClass(button: Element | null): string {
+    const i = button?.querySelector('i.fas');
+    const cls = i?.getAttribute('class') ?? '';
+    return cls.split(/\s+/).find((c) => c.startsWith('fa-')) ?? '';
+}
+
+describe('combat-action-group — present-but-invalid type renders NO badge (#245)', () => {
+    it('never emits a raw WH40K.Combat.Actions.Timing.<type> key for a non-timing type', () => {
+        for (const type of ['weapon', 'talent', 'originPath', 'trait']) {
+            const root = render([{ key: 'k', label: 'WH40K.Combat.Action.Move', description: 'WH40K.Combat.Action.MoveDesc', type, icon: 'fa-walking' }]);
+            const button = root.querySelector('button[data-action-key="k"]');
+            // No timing badge span (accent bar + label only).
+            expect(button?.querySelectorAll('span').length).toBe(2);
+            // And the unresolved key must not leak into the rendered text.
+            expect(button?.textContent ?? '').not.toContain('WH40K.Combat.Actions.Timing.');
+            expect(badgeText(button)).toBe('');
+        }
+    });
+});
+
+describe('combat-action-group — every action button has an icon (#245)', () => {
+    it('uses the entry icon when present', () => {
+        const root = render([{ key: 'k', label: 'WH40K.Combat.Action.Move', type: 'reaction', icon: 'fa-running' }]);
+        expect(iconClass(root.querySelector('button[data-action-key="k"]'))).toBe('fa-running');
+    });
+
+    it('falls back to a per-timing icon when the entry has none — never iconless', () => {
+        const root = render([{ key: 'k', label: 'WH40K.Combat.Action.Move', type: 'reaction' }]);
+        expect(iconClass(root.querySelector('button[data-action-key="k"]'))).toBe('fa-bolt');
+    });
+
+    it('falls back to a generic glyph for a degraded entry (no icon, non-timing type)', () => {
+        const root = render([{ key: 'k', label: 'WH40K.Combat.Action.Move', type: 'weapon' }]);
+        expect(iconClass(root.querySelector('button[data-action-key="k"]'))).toBe('fa-circle-dot');
+    });
+});
