@@ -13,6 +13,7 @@ import {
     skillRankFrom,
     splitCharacteristic,
 } from '../../rules/npc-advancement.ts';
+import { computeArmour } from '../../utils/armour-calculator.ts';
 import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
@@ -253,6 +254,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     declare armour: {
         mode: 'simple' | 'locations';
         total: number;
+        authored: boolean;
         locations: {
             head: number;
             body: number;
@@ -509,7 +511,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
                 ),
             }),
 
-            // === ARMOUR (SIMPLE MODE) ===
+            // === ARMOUR ===
             armour: new SchemaField({
                 mode: new StringField({
                     required: true,
@@ -517,6 +519,11 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
                     choices: ['simple', 'locations'],
                 }),
                 total: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                // `true` when a raw/source-material AP was authored (via the legacy
+                // `armourPoints` line, migrated in). Such a value OVERRIDES the
+                // toughness+worn-armour derivation; when `false` (no authored AP)
+                // the armour is derived at prepare time from equipped items + TB.
+                authored: new BooleanField({ required: true, initial: false }),
                 // Location-based (if mode is "locations")
                 locations: new SchemaField({
                     head: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
@@ -1059,6 +1066,39 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     /* -------------------------------------------- */
 
     /**
+     * Derive armour from Toughness + worn armour when no raw AP was authored.
+     *
+     * A stat-block NPC has no equip toggle, so its listed armour items and its
+     * Natural Armour / Machine traits ARE what it wears: {@link computeArmour}
+     * (shared with PCs, `equippedOnly: false`) folds worn-item AP, natural-armour
+     * trait rating, and craftsmanship into a per-location total that already
+     * includes the Toughness bonus. This field stores the AP portion ONLY
+     * (`total − toughnessBonus`), because the damage path adds TB separately —
+     * storing the full total would double-count it.
+     *
+     * Skipped when `armour.authored` is set: a raw/source-material AP overrides
+     * the derivation (see `migrateArmourPoints` in npc-import-migration.ts).
+     * @protected
+     */
+    _prepareArmour(): void {
+        if (this.armour.authored) return;
+        const actor = this.parent as Parameters<typeof computeArmour>[0] | null | undefined;
+        if (actor === null || actor === undefined) return;
+        const derived = computeArmour(actor, { equippedOnly: false });
+        let maxLocation = 0;
+        // computeArmour returns exactly the BODY_LOCATIONS keys; each value's
+        // `total` already folds in the Toughness bonus, so subtract it back out —
+        // the field stores the AP portion only (the damage path re-adds TB).
+        for (const [location, loc] of Object.entries(derived)) {
+            const ap = Math.max(0, loc.total - loc.toughnessBonus);
+            this.armour.locations[location] = ap;
+            if (ap > maxLocation) maxLocation = ap;
+        }
+        this.armour.mode = 'locations';
+        this.armour.total = maxLocation;
+    }
+
+    /**
      * Switch armour mode between simple and locations.
      * @param {string} mode - The mode to switch to: "simple" or "locations"
      * @returns {Promise<Actor>}
@@ -1202,6 +1242,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     override prepareDerivedData(): void {
         super.prepareDerivedData();
         this._prepareCharacteristics();
+        this._prepareArmour();
         this._prepareMovement();
         this._prepareInitiative();
         this._prepareAdvancement();
