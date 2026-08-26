@@ -1,5 +1,6 @@
 import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
 import WH40K, { buildQualityLabel, parseQualityLevel } from '../config.ts';
+import { combatActionIcon, combatTimingKey } from '../rules/combat-action-display.ts';
 import { capitalize, formatSigned } from '../utils/format.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
@@ -206,6 +207,19 @@ export function registerHandlebarsHelpers(): void {
         }
         return outStr;
     });
+
+    // The langpack key for a combat-action's timing badge, or '' when the
+    // entry's `type` is not a real action-economy timing (a raw item type from a
+    // malformed feeder), so the template renders no badge instead of an
+    // unresolved key (#245).
+    Handlebars.registerHelper('combatTimingKey', (value: TplValue): string => combatTimingKey(typeof value === 'string' ? value : undefined));
+
+    // A combat-action button's Font Awesome class: the entry's own icon, else a
+    // per-timing default, else a generic glyph — never empty, so no button is
+    // ever iconless (#245).
+    Handlebars.registerHelper('combatActionIcon', (icon: TplValue, timing: TplValue): string =>
+        combatActionIcon(typeof icon === 'string' ? icon : undefined, typeof timing === 'string' ? timing : undefined),
+    );
 
     // Build a SafeString of `name="value"` attribute pairs from alternating
     // key/value args, for partials that own an element's root tag but let callers
