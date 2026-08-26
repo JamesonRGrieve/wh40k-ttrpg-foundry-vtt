@@ -132,6 +132,7 @@ import { WH40K } from './rules/config.ts';
 import { convertDeadActorToPile } from './rules/death-loot.ts';
 import { registerGMProxy } from './rules/gm-proxy.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
+import { applyPortraitOnPreCreate } from './rules/portrait-spawn.ts';
 import { buildSkillSpecializationIndex } from './rules/skill-specialization-index.ts';
 import { buildSkillVariantIndex } from './rules/skill-variant-index.ts';
 import { SURPRISED_STATUS_ID, surpriseHasExpired } from './rules/surprise.ts';
@@ -367,6 +368,18 @@ export class HooksManager {
             hydrateActorInMemory(actor).catch((err: unknown) => {
                 console.error('compendium-hydrate: createActor hydration failed', err);
             });
+        });
+
+        // Portrait pool (#567): when an actor is spawned into the world (compendium
+        // import, or dropped as a linked world actor), pick a portrait from its
+        // pool — the default `img` plus system.portraits.variants — and stamp it
+        // onto the pending source (img + prototype-token bust frame). preCreate
+        // mutates the source before the write, so the choice is baked in with no
+        // post-create DB write and no per-client divergence. A no-op for actors
+        // with no extra variants. `system.portraits.pinned` disables the roll.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: preCreateActor payload is a framework-typed Actor; narrowed to PortraitActorLike inside portrait-spawn.ts
+        hooksOn('preCreateActor', (actor: Parameters<typeof applyPortraitOnPreCreate>[0]) => {
+            applyPortraitOnPreCreate(actor);
         });
 
         // Per-encounter re-roll uses (talent/trait `reroll` variants with
