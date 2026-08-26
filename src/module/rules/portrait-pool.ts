@@ -14,10 +14,16 @@
  * so stories/tests are deterministic; runtime defaults to `Math.random`.
  */
 
-/** A source-image fraction pair marking the centre of the circular token bust. */
+/**
+ * The circular token-bust frame for a portrait — the subset of the system's
+ * `flags.wh40k-rpg.tokenFrame` shape a pool variant needs to carry so its bust
+ * crops correctly: the source-fraction centre (`cx`/`cy`) and the subject `zoom`.
+ */
 export interface TokenFrame {
     cx: number | null;
     cy: number | null;
+    /** Subject zoom for the bust crop (source scaled by content × zoom); default 1. */
+    zoom?: number | null;
 }
 
 /** One portrait choice: an image and the frame its bust crops from. */

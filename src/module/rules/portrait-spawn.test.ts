@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { PortraitVariant } from './portrait-pool.ts';
+import type { PortraitVariant, TokenFrame } from './portrait-pool.ts';
 import {
     applyPortraitOnPreCreate,
     applySpawnPortrait,
@@ -15,9 +15,7 @@ interface MockActor extends PortraitActorLike {
     updates: PortraitUpdate[];
 }
 
-function mockActor(
-    opts: { img?: string | null; variants?: PortraitVariant[]; pinned?: number | null; frame?: { cx: number | null; cy: number | null } | null } = {},
-): MockActor {
+function mockActor(opts: { img?: string | null; variants?: PortraitVariant[]; pinned?: number | null; frame?: TokenFrame | null } = {}): MockActor {
     const updates: PortraitUpdate[] = [];
     return {
         img: opts.img ?? 'default.webp',
@@ -51,6 +49,11 @@ describe('decideSpawnPortrait', () => {
     it("carries the default portrait's prototype-token frame at index 0", () => {
         const actor = mockActor({ frame: { cx: 0.5, cy: 0.3 }, variants: [{ img: 'b.webp', tokenFrame: null }] });
         expect(decideSpawnPortrait(actor, rngOf(0))?.tokenFrame).toEqual({ cx: 0.5, cy: 0.3 });
+    });
+
+    it('carries the frame zoom onto the chosen default portrait', () => {
+        const actor = mockActor({ frame: { cx: 0.5, cy: 0.3, zoom: 1.67 }, variants: [{ img: 'b.webp', tokenFrame: null }] });
+        expect(decideSpawnPortrait(actor, rngOf(0))?.tokenFrame).toEqual({ cx: 0.5, cy: 0.3, zoom: 1.67 });
     });
 
     it('honours a pinned index and ignores the RNG', () => {
