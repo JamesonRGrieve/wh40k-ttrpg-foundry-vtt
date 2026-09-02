@@ -34,7 +34,7 @@ const ARMOURY_ACTOR_TYPE = 'loot';
 /** Item Piles' own `CONSTANTS.PILE_TYPES.MERCHANT`, verified against the installed 3.3.2 build. */
 const MERCHANT_PILE_TYPE = 'merchant';
 
-const ARMOURY_IMAGE = 'systems/wh40k-rpg/packs/images/items/dh2/inquisitorial-rosette.png';
+const ARMOURY_IMAGE = 'icons/svg/item-bag.svg';
 
 /**
  * The Item Piles pile-config flag for the armoury.

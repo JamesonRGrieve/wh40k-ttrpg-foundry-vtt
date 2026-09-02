@@ -42,9 +42,10 @@ interface ProbeState {
 // A real RECTANGULAR portrait (1458x2087) — must exist and serve: a missing
 // path silently becomes Foundry's 512x512 fallback texture on EVERY token,
 // which once produced a false "bust applied" pass here.
-// Bestiary art lives in the src/packs content submodule, so it serves from
-// `packs/images/...` — the same path every bestiary actor's `img` records.
-const PORTRAIT = 'systems/wh40k-rpg/packs/images/bestiary/dh2/death-jester.webp';
+// Use a permissive, always-present Foundry-core portrait so this test never
+// depends on the private content submodule; the token mask geometry is what it
+// asserts, and any texture exercises it.
+const PORTRAIT = 'icons/svg/mystery-man.svg';
 
 interface TokenDocLike {
     id: string;
