@@ -1,7 +1,7 @@
 {
     "id": "wh40k-rpg",
     "title": "WH40K RPG (Unofficial)",
-    "description": "Unofficial Foundry VTT system for the Warhammer 40,000 d100 RPG family (Dark Heresy 1e/2e, Rogue Trader, Black Crusade, Only War, Deathwatch). Not affiliated with or endorsed by Games Workshop or Fantasy Flight Games.",
+    "description": "Unofficial Foundry VTT system for the Warhammer 40,000 d100 RPG family (Dark Heresy 1e/2e, Rogue Trader, Black Crusade, Only War, Deathwatch). Not affiliated with or endorsed by Games Workshop, Fantasy Flight Games, or Cubicle 7.",
     "version": "0.0.1-alpha.2",
     "compatibility": {
         "minimum": 13,
