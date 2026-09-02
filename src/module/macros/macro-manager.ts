@@ -121,7 +121,7 @@ export async function createSkillMacro(data: Record<string, unknown>, slot: numb
     if (speciality !== undefined && speciality !== '') {
         command = `game.wh40k.rollSkillMacro("${data['actorId'] as string}", "${skill}", "${speciality}");`;
     }
-    await createBoundMacro({ name: macroName, img: 'systems/wh40k-rpg/icons/talents/red/r_36.png', command, flag: 'skillMacro', slot });
+    await createBoundMacro({ name: macroName, img: 'icons/svg/dice-target.svg', command, flag: 'skillMacro', slot });
 }
 
 export async function rollSkillMacro(actorId: string, skillName: string, speciality?: string): Promise<void> {
@@ -155,7 +155,7 @@ export async function createCharacteristicMacro(data: Record<string, unknown>, s
 
     // Create the macro command
     const command = `game.wh40k.rollCharacteristicMacro("${data['actorId'] as string}","${characteristic}");`;
-    await createBoundMacro({ name: macroName, img: 'systems/wh40k-rpg/icons/talents/violet/p_05.png', command, flag: 'characteristicMacro', slot });
+    await createBoundMacro({ name: macroName, img: 'icons/svg/dice-target.svg', command, flag: 'characteristicMacro', slot });
 }
 
 export async function rollCharacteristicMacro(actorId: string, characteristic: string): Promise<void> {
