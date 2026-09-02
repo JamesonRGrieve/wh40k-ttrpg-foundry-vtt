@@ -3,7 +3,7 @@
  * must be foldered exactly once in `packFolders`, and `packFolders` must not
  * reference a pack that no longer exists. `packFolders` is Foundry's declarative
  * compendium-directory folder tree; when it drifts, packs fall to the root
- * unfoldered (the "fuck ton of misorganised packs" symptom). `pnpm packs:folders`
+ * unfoldered (the "heap of misorganised packs" symptom). `pnpm packs:folders`
  * regenerates it; this test fails the build if it is ever out of sync.
  */
 
