@@ -54,9 +54,6 @@ const STATIC_FILES = [
   // The glob has magic, so it is simply empty when the submodule is not
   // checked out (the same tolerance compilePacks has).
   "src/packs/images/**/*",
-  // Vendored/legacy icon set moved out of the public repo for licensing; served
-  // from the submodule so compendium item/talent/psychic-power art resolves.
-  "src/packs/_vendored-ui/icons/**/*",
   "src/lang/**/*",
   "src/*.json"
 ];
