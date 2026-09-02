@@ -25,7 +25,7 @@ Fork lineage: [AndruQuiroga/RogueTraderVTT](https://github.com/AndruQuiroga/Rogu
 - Foundry runtime mirror for local tooling: `.foundry-release/`
 - Cartography and campaign asset pipeline: `cartography/`
 
-The repo also contains local compendium content under `src/packs/` and backup/export material used for personal campaign work. Public releases strip copyrighted pack payloads from the release zip.
+The published system ships as a standalone framework. Compendium content lives in the private `src/packs/` submodule, which is not part of public clones or release archives, so users supply their own content packs.
 
 ## Supported Systems
 
