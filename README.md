@@ -185,8 +185,7 @@ This is an unofficial, fan-made game system for Foundry VTT. It is not affiliate
 ### What this repository contains
 
 - **System code** (TypeScript, Handlebars templates, CSS) — original work under the project license.
-- **UI chrome images** in `src/images/` — inherited from the upstream forks ([mrkeathley/dark-heresy-2nd-vtt](https://github.com/mrkeathley/dark-heresy-2nd-vtt), [AndruQuiroga/RogueTraderVTT](https://github.com/AndruQuiroga/RogueTraderVTT)). These include thematic decorative elements (borders, textures, icons) consistent with the setting's visual identity.
-- **Icon assets** in `src/icons/` — game-icons.net (CC BY 3.0) and GameDevMarket (purchased pro license). See `src/icons/ATTRIBUTION.md` and `src/icons/LICENSE`.
+- **Icon references** — the system uses [game-icons.net](https://game-icons.net/) icons (CC BY 3.0); see `src/icons/ATTRIBUTION.md`. No image or icon assets are bundled — UI chrome is styled with CSS/Tailwind.
 
 ### What this repository does NOT contain
 
