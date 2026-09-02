@@ -23,7 +23,6 @@ Fork lineage: [AndruQuiroga/RogueTraderVTT](https://github.com/AndruQuiroga/Rogu
 - Build / coverage / ratchet scripts: `scripts/`
 - Tailwind migration helpers: `tailwind/`
 - Foundry runtime mirror for local tooling: `.foundry-release/`
-- Cartography and campaign asset pipeline: `cartography/`
 
 No copyrighted compendium content ships with this system.
 
@@ -136,8 +135,7 @@ These scripts exist to make the migration measurable. If you are touching an are
 ```text
 src/
   css/           Legacy CSS still being migrated away from
-  icons/         Generated / curated icon assets
-  images/        System images
+  icons/         Icon attribution only (game-icons.net, CC BY 3.0) — no icons bundled
   lang/          Localization files
   module/        TypeScript application, document, data model, rules, and hook code
   packs/         Local compendium source
@@ -147,8 +145,7 @@ stories/         Storybook stories, mocks, and rendering helpers
 tests/           Vitest coverage
 scripts/         Repo maintenance, ratchet, and scaffolding scripts
 tailwind/        Legacy Tailwind plugin/component bridge during migration
-.foundry-release/ Mirrored Foundry runtime assets for local compatibility work
-cartography/     Campaign map, token, overlay, and presentation pipeline
+.foundry-release/ Mirrored Foundry runtime assets for local compatibility work (gitignored)
 ```
 
 ## Release Notes
