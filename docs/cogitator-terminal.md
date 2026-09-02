@@ -7,7 +7,7 @@ It is **content-agnostic** (Direction #7): the system code hard-codes no records
 A terminal is opened against whatever Items a GM (or an importer) groups together,
 and it renders each Item's description as a "record". This makes it reusable for
 any archive — medicae files, Administratum dossiers, Mechanicus logs, a ship's
-memory core — across all seven game lines.
+memory core — across all six game lines.
 
 ## What it does
 

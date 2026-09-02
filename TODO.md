@@ -58,9 +58,9 @@
 
 **Goal:** keep `_source` adventure docs DRY (scenario flag + `@UUID`/UUID refs); at `gulp packs` build, resolve into valid Foundry **Adventure** documents that **embed copies** of referenced Actors/Items/Scenes/Tables into the `journal`/`scenes`/`actors`/`items` `SetField`s. Define the `flags['wh40k-rpg'].scenario` schema formally + write the runtime consumer (none exists yet).
 
-**Scope:** `gulpfile.js` already has reference-stub resolution (`resolveReferencePath`, `compilePacks`) to model on. 7 existing adventure docs (ow×3, bc×3, im×1) — normalize to the DRY source shape the resolver expects. Foundry schema: `.foundry-release/common/documents/adventure.mjs`.
+**Scope:** `gulpfile.js` already has reference-stub resolution (`resolveReferencePath`, `compilePacks`) to model on. Existing adventure docs (ow×3, bc×3) — normalize to the DRY source shape the resolver expects. Foundry schema: `.foundry-release/common/documents/adventure.mjs`.
 
-**Partition:** **me** (build transform in gulpfile + a `scenario` schema/validator + source-shape normalization of the 7 docs). **Verify:** build a sample line, import-shape check against the Foundry Adventure schema; `packs:validate`. **Depends on:** R1/R2 lightly (UUIDs stable). Independent enough to run in parallel.
+**Partition:** **me** (build transform in gulpfile + a `scenario` schema/validator + source-shape normalization of the adventure docs). **Verify:** build a sample line, import-shape check against the Foundry Adventure schema; `packs:validate`. **Depends on:** R1/R2 lightly (UUIDs stable). Independent enough to run in parallel.
 
 ---
 
@@ -68,15 +68,15 @@
 
 **Goal:** structured `location` type (fields: parent/region/coords/sector/tags + metadata), across all lines, replacing prose-only location handling. Mostly metadata-flavour but queryable.
 
-**Scope:** existing content `dh2-core-locations`, `dh2-within-locations` (migrate to the new type). Pack scheme `<line>-<book>-locations`. New DataModel + registration + sheet + template + langpack. IM Macharian Sector worlds → locations (R6 overlap).
+**Scope:** existing content `dh2-core-locations`, `dh2-within-locations` (migrate to the new type). Pack scheme `<line>-<book>-locations`. New DataModel + registration + sheet + template + langpack.
 
-**Partition:** **me** (DataModel + sheet/template + registration) + a content agent (migrate dh2 locations, author IM worlds). **Verify:** typecheck/test/story. **Depends on:** nothing; parallel-safe.
+**Partition:** **me** (DataModel + sheet/template + registration) + a content agent (migrate dh2 locations). **Verify:** typecheck/test/story. **Depends on:** nothing; parallel-safe.
 
 ---
 
 ## R5 — Journal → mechanical-object graduations (assessment first)
 
-**Goal:** decide which currently-journal/prose content graduates to structured DataModel-backed types. Candidates: IM **Endeavours** (downtime activities w/ tests/costs), **Subtlety** system, **Patrons** (kept as journal per decision), conditions/critical-injuries (already item-typed — confirm). 
+**Goal:** decide which currently-journal/prose content graduates to structured DataModel-backed types. Candidates: **Endeavours** (downtime activities w/ tests/costs), **Subtlety** system, **Patrons** (kept as journal per decision), conditions/critical-injuries (already item-typed — confirm). 
 
 **Partition:** **me** — produce an assessment doc + proposed schemas; no build until you pick which graduate. **Depends on:** R1 patterns. **Output:** a decision list appended here.
 
@@ -85,8 +85,8 @@
 ## R6 — Untracked book sections (gap-fill)
 
 **Goal:** represent sections no pack type currently covers.
-- **Food/drink → `items-consumables`** (official) — IM Amasec/Corpse-Starch/Recaf, etc.
-- **Locations** — handled by R4 (Macharian Sector worlds, etc.).
+- **Food/drink → `items-consumables`** (official) — Amasec/Corpse-Starch/Recaf, etc.
+- **Locations** — handled by R4 (worlds, etc.).
 - **Curios / mission-generator / GM-screen / skill-specialisation extensions** — enumerate, decide track-or-skip (some are GM-reference, some are RollTables).
 
 **Partition:** content agents per line/section (disjoint), after R4 (locations) lands. **Depends on:** R4.
@@ -99,35 +99,17 @@ Threaded through R1–R6: document the vehicle hierarchy + `vehicles-<craft>` pa
 
 ---
 
-## R8 — IM divergent-stat reconciliation (homologation-first; minimal IM-specific code)
-
-**Goal:** full IM support reusing existing FFG mechanics; add only what FFG genuinely lacks. **Verified analogues (no new engine/types):** Critical Wounds → existing `wounds.critical`; Resolve → existing **Fate** resource; Success Levels → existing `degreesOfSuccess()` (parameterized); force fields → `force-field.ts` (`protectionRating`/overload); Warp Rating → psychic `psy`/`focusPower.threshold`. IM skills already fit the shared skill-map; characteristics fit the shared full-name block.
-
-**Work (mapping/normalization, not new code):**
-- **Content field-normalization** — align IM actor JSON to the shared NPC model: `attacks[]`→`weapons[]`, `traits[]`→`talents_traits`, `Str/Tgh/Wil`→`strength/toughness/willpower` (skills-map already aligns).
-- **Thin shared-base additions** (benefit all lines): promote crit track to `{value,max}`; add `role`/`tier` (Troop/Elite/Leader ≈ FFG Troops/Elite/Master).
-- **Variantize divergent ITEM stats** via the `im` branch (reuses R2/R4 machinery): weapon `N×StrB` / qualitative range bands, condition Minor/Major split, single-roll-per-location crit + Treatment, Warp Rating value. DataModels read the resolved `im`-branch value.
-- **`im-config.ts`** — set IM's degrees-of-success/SL parameters + crit-table refs.
-- **Templates** — render IM through the **shared** actor/item templates with minimal conditional sections (Resolve/Warp Rating labels); **no separate `*-im.hbs` set**.
-
-**Micro-defaults (override if you disagree):** Resolve = shared Fate field, IM-labelled; crit track → `{value,max}` for all lines; `role`/`tier` shared NPC metadata.
-
-**Partition:** mostly single-surface (im concrete models + shared-base tweaks + `im-config` + a content-normalization pass) → me + one content agent. **Verify:** typecheck/test + render an IM NPC / weapon / psychic power. **Depends on:** R1 (actor types), R2 (variant resolver on actors).
-
----
-
 ## Ordering / dependencies
 
 ```
-R1 (vehicle/voidcraft) ──┬──> R2 (actor variants) ──> R8 (IM reconciliation)
+R1 (vehicle/voidcraft) ──┬──> R2 (actor variants)
                          └──> R7 (docs, per-workstream)
 R3 (adventure resolver) ── independent ──> R7
 R4 (location type) ── independent ──┬──> R6 (gap-fill)
                                     └──> R7
 R5 (journal graduations) — assessment, gated on your picks
-R8 (IM reconciliation) — needs R1 (actor types) + R2 (variant resolver)
 ```
-**Suggested launch order:** R1 first (foundational, biggest), then R3 + R4 in parallel (independent), then R2 (needs R1) → R8 (needs R1+R2), then R6, with R5 as an assessment running alongside. R7 commits land with each.
+**Suggested launch order:** R1 first (foundational, biggest), then R3 + R4 in parallel (independent), then R2 (needs R1), then R6, with R5 as an assessment running alongside. R7 commits land with each.
 
 ## Parallel-agent launch checklist (when authorized)
 - Sync `origin/main` into the working branch first.
@@ -136,7 +118,6 @@ R8 (IM reconciliation) — needs R1 (actor types) + R2 (variant resolver)
 
 ## Deferred / carried-over
 - P57 dw-xenos `__books` divergences → **R2**. P65 BC Necron reprints → **R2** (optional re-home). Vespid divergence → re-verify in R2 (looked spurious).
-- `im-npc`/`im` DataModel rendering for IM's divergent stat shape → now planned as **R8** (homologation-first; verified to need almost no IM-specific code).
 
 ---
 
