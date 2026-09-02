@@ -64,7 +64,8 @@ PROGRESS_FILES = {
     "css": AUTOFIX / "progress-css.json",
 }
 
-os.environ["OPENAI_API_BASE"] = "http://198.51.100.9/v1"
+LOCAL_LLM_BASE = os.environ.get("VLLM_BASE_URL", "http://localhost:8000/v1")
+os.environ["OPENAI_API_BASE"] = LOCAL_LLM_BASE
 os.environ["OPENAI_API_KEY"] = "dummy"
 
 MODEL_NAME = "openai/cyankiwi/Qwen3-Coder-30B-A3B-Instruct-AWQ-4bit"
@@ -565,7 +566,7 @@ def check_vllm() -> bool:
     import urllib.request
     try:
         req = urllib.request.Request(
-            "http://198.51.100.9/v1/models",
+            LOCAL_LLM_BASE + "/models",
             headers={"Authorization": "Bearer dummy"},
         )
         urllib.request.urlopen(req, timeout=5)
@@ -1376,7 +1377,7 @@ def process_css_file(
             from openai import OpenAI
             client = OpenAI(
                 api_key="dummy",
-                base_url="http://198.51.100.9/v1",
+                base_url=LOCAL_LLM_BASE,
                 timeout=180,
                 max_retries=0,
             )
@@ -1990,7 +1991,7 @@ def call_local(filepath: str, items: list[str], mode: str) -> tuple[str, str]:
     user_msg = _build_user_msg(filepath, items, mode)
     client = OpenAI(
         api_key="dummy",
-        base_url="http://198.51.100.9/v1",
+        base_url=LOCAL_LLM_BASE,
         timeout=180,
         max_retries=0,
     )
