@@ -21,6 +21,21 @@ interface ToObjectActor {
     toObject?: () => object;
 }
 
+interface WeaponModifierBlock {
+    damage: number;
+    penetration: number;
+    toHit: number;
+    range: number;
+    weight: number;
+}
+
+interface ModdedWeapon {
+    system: {
+        modifications: Array<{ cachedModifiers: WeaponModifierBlock }>;
+        _modificationModifiers: WeaponModifierBlock;
+    };
+}
+
 describe.skipIf(skipAll)('document lifecycle (Tier A)', () => {
     it('creates an Actor and prepareData runs without throwing', async () => {
         const actor = await createActor(runtime, { type: 'character', name: 'Lifecycle Actor' });
@@ -55,6 +70,33 @@ describe.skipIf(skipAll)('document lifecycle (Tier A)', () => {
             items: [{ type: 'skill', name: 'Awareness' }],
         });
         expect(actor).toBeDefined();
+    });
+
+    // Regression guard: a weapon modification authored/imported before the
+    // `cachedModifiers` block existed stored no such key. Its schema field was
+    // `required: false` with no initial, so cleaning left `cachedModifiers`
+    // undefined and WeaponData._aggregateModificationModifiers dereferenced
+    // `mod.cachedModifiers.damage` — "Cannot read properties of undefined
+    // (reading 'damage')" — during prepareDerivedData, which took down every
+    // actor sheet and token carrying such a weapon. The field is now
+    // `required: true`, so a missing block backfills to a fully-zeroed numeric
+    // block and the aggregation completes. `active: true` is what walks the
+    // crash branch, so the fixture must set it.
+    it('creates a weapon whose active modification omits cachedModifiers; prepareData backfills a zeroed block (no crash)', async () => {
+        const item = (await createItem(runtime, {
+            type: 'weapon',
+            name: 'Modded Autogun',
+            system: {
+                modifications: [{ uuid: 'Compendium.wh40k-rpg.weapon-mods.Item.legacy', name: 'Red-Dot Sight', active: true, category: 'sight' }],
+            },
+        })) as ModdedWeapon;
+
+        const zeroed: WeaponModifierBlock = { damage: 0, penetration: 0, toHit: 0, range: 0, weight: 0 };
+        const cached = item.system.modifications[0]?.cachedModifiers;
+        expect(cached).toBeDefined();
+        expect(cached).toEqual(zeroed);
+        // The aggregation that previously threw now completes and sums to zero.
+        expect(item.system._modificationModifiers).toEqual(zeroed);
     });
 
     it('cleanData(_state) round-trips without dropping fields (V14 gotcha #9)', async () => {

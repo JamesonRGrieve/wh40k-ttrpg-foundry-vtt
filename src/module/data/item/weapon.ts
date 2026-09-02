@@ -473,16 +473,25 @@ export default class WeaponData extends ItemDataModel.mixin(
                     name: new fields.StringField({ required: true }),
                     active: new fields.BooleanField({ required: true, initial: true }),
                     category: new fields.StringField({ required: false, initial: 'accessory' }),
-                    // Cached modifier values for display and aggregation
+                    // Cached modifier values for display and aggregation. `required: true`
+                    // (matching armour.ts and the `declare modifications` type above): a
+                    // non-required SchemaField whose source object omits the key stays
+                    // `undefined` after cleaning, so a modification authored before this
+                    // block existed (or imported without it) left `cachedModifiers`
+                    // undefined and crashed the aggregation in prepareDerivedData and the
+                    // weapon sheet with "Cannot read properties of undefined (reading
+                    // 'damage')". Required-with-initial backfills a zeroed block instead.
+                    // The leaves are `required: true` too so a partially-authored block
+                    // cannot fold an `undefined` into the running sum as `NaN`.
                     cachedModifiers: new fields.SchemaField(
                         {
-                            damage: new fields.NumberField({ required: false, initial: 0, integer: true }),
-                            penetration: new fields.NumberField({ required: false, initial: 0, integer: true }),
-                            toHit: new fields.NumberField({ required: false, initial: 0, integer: true }),
-                            range: new fields.NumberField({ required: false, initial: 0, integer: true }),
-                            weight: new fields.NumberField({ required: false, initial: 0 }),
+                            damage: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                            penetration: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                            toHit: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                            range: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                            weight: new fields.NumberField({ required: true, initial: 0 }),
                         },
-                        { required: false },
+                        { required: true },
                     ),
                 }),
                 { required: true, initial: [] },
