@@ -82,3 +82,25 @@ stories/**/*.js.map
 .aider*
 coverage/
 backups/
+
+## Internal working state — untracked from the public repo, kept locally
+/COMBAT_FIX_STATUS.md
+/TODO.md
+/TYPING.md
+/.migration-manifest.json
+/.migration-manifest-b.json
+/.migration-manifest-c.json
+/.conditions-status
+/.conditions-phase-progress
+/.perles/
+/.codex
+/.css-coverage-baseline.bak
+
+## Internal audit / planning reports (point-in-time; not shipped)
+/docs/audits/
+/docs/plans/
+/docs/WEAPON_PACK_CLEANUP_PLAN.md
+/docs/WEAPON_PACK_VALIDATION_REPORT.md
+/docs/WEAPON_QUALITIES_AUDIT.md
+/docs/WEAPON_CLEANUP_QUICK_REF.md
+/docs/TICKET_PRIORITY_RANKING.md
