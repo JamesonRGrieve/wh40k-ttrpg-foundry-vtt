@@ -46,7 +46,6 @@ const STATIC_FILES = [
   "!src/module/**/*.ts",
   "!src/module/foundry-core/**",
   "src/templates/**/*",
-  "src/images/**/*",
   // Bestiary / content art lives in the src/packs submodule beside the pack
   // sources, and every actor there references it as
   // `systems/wh40k-rpg/packs/images/...`. Without this glob the art never
