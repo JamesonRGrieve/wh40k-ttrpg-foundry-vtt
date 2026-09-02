@@ -1004,16 +1004,24 @@ export class HooksManager {
         type SheetReg = { sheet: Parameters<typeof DocumentSheetConfig.registerSheet>[2]; types?: string[]; label: string };
 
         const ACTOR_SHEETS: SheetReg[] = [
-            // Per-system default PC sheets
-            { sheet: DarkHeresy2PlayerSheet, types: ['dh2-character'], label: 'WH40K.Sheet.DarkHeresy2' },
+            // Per-system default PC sheets. `character` is also the legacy/generic
+            // fallback type (see CONFIG.Actor.dataModels above, which already maps it
+            // to DH2CharacterData) — without it here, a `character`-typed actor has a
+            // data model but no registered sheet, so it silently rendered with only a
+            // bare core fallback (name only, no fields). Craft sheets already handle
+            // their legacy aliases this way (see DarkHeresy2CraftSheet below); PC/NPC
+            // sheets did not, which was the actual gap, not the craft sheets being
+            // special-cased.
+            { sheet: DarkHeresy2PlayerSheet, types: ['dh2-character', 'character'], label: 'WH40K.Sheet.DarkHeresy2' },
             { sheet: DarkHeresy1PlayerSheet, types: ['dh1-character'], label: 'WH40K.Sheet.DarkHeresy1' },
             { sheet: RogueTraderPlayerSheet, types: ['rt-character'], label: 'WH40K.Sheet.RogueTrader' },
             { sheet: BlackCrusadePlayerSheet, types: ['bc-character'], label: 'WH40K.Sheet.BlackCrusade' },
             { sheet: OnlyWarPlayerSheet, types: ['ow-character'], label: 'WH40K.Sheet.OnlyWar' },
             { sheet: DeathwatchPlayerSheet, types: ['dw-character'], label: 'WH40K.Sheet.Deathwatch' },
             { sheet: ImperiumMaledictumPlayerSheet, types: ['im-character'], label: 'WH40K.Sheet.ImperiumMaledictum' },
-            // Per-system default NPC sheets
-            { sheet: DarkHeresy2NPCSheet, types: ['dh2-npc'], label: 'WH40K.Sheet.DarkHeresy2NPC' },
+            // Per-system default NPC sheets. `npc` is the same kind of legacy/generic
+            // fallback as `character` above (already mapped to DH2NPCData); same fix.
+            { sheet: DarkHeresy2NPCSheet, types: ['dh2-npc', 'npc'], label: 'WH40K.Sheet.DarkHeresy2NPC' },
             { sheet: DarkHeresy1NPCSheet, types: ['dh1-npc'], label: 'WH40K.Sheet.DarkHeresy1NPC' },
             { sheet: RogueTraderNPCSheet, types: ['rt-npc'], label: 'WH40K.Sheet.RogueTraderNPC' },
             { sheet: BlackCrusadeNPCSheet, types: ['bc-npc'], label: 'WH40K.Sheet.BlackCrusadeNPC' },
