@@ -48,7 +48,7 @@ Base commit: `7ad1d29de` (inner Foundry repo, `.git/modules/.foundry-system`)
 
 - **`src/module/documents/base-actor.ts`** — added `rollWeaponAttack(weaponId, options)`
   on `WH40KBaseActor`; delegates to `rollItem` (→ targeted-action manager). Available to
-  all 7 systems + PC/NPC subclasses. Fixes bugs #1 and #2.
+  all 6 systems + PC/NPC subclasses. Fixes bugs #1 and #2.
 - **`src/module/applications/hud/combat-quick-panel.ts`** — `CombatPanelActor.rollWeaponAttack`
   is now non-optional; the three attack handlers call `rollWeaponAttack(...)` without the
   `?.` no-op.
@@ -91,7 +91,7 @@ Base commit: `7ad1d29de` (inner Foundry repo, `.git/modules/.foundry-system`)
       with `play` assertions that (a) click each combat action control and assert the
       dispatched outcome, and (b) assert the rendered breakdown incl. the new
       "Roll vs Target" audit row and the auto-rolled damage card. Use `withSystem(...)`
-      to cover all 7 systems (DH2 flat −20 untrained, NOT ÷2).
+      to cover all 6 systems (DH2 flat −20 untrained, NOT ÷2).
 - [ ] **Run the orchestrator's batched verification** — I did NOT run the full
       `pnpm check`, ratchets (`*:ratchet`), `storybook-pw`, `preload:drift`, or `i18n:gen`
       (per the brief). Expect to:
@@ -122,7 +122,7 @@ Base commit: `7ad1d29de` (inner Foundry repo, `.git/modules/.foundry-system`)
 - [ ] Verify the `.wh40k-rpg` ancestor still lands on the auto-posted damage card so it
       isn't an unstyled white box (it goes through the same `postChatCard` +
       `renderChatMessageHTML` hook as the manual path, so expected fine).
-- [ ] Homologation spot-check across all 7 systems (BC/DH1/DH2/DW/OW/RT/IM) that the
+- [ ] Homologation spot-check across all 6 systems (BC/DH1/DH2/DW/OW/RT) that the
       new base-actor `rollWeaponAttack` and auto-damage behave (the changes are on shared
       base classes / shared ActionData, so expected uniform).
 

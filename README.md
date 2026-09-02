@@ -1,15 +1,15 @@
 # WH40K RPG for Foundry VTT (Unofficial)
 
-Unofficial, fan-made Foundry VTT system for the Warhammer 40,000 d100 RPG family. Not affiliated with or endorsed by Games Workshop, Fantasy Flight Games, or Cubicle 7 Entertainment.
+Unofficial, fan-made Foundry VTT system for the Warhammer 40,000 d100 RPG family. Not affiliated with or endorsed by Games Workshop or Fantasy Flight Games.
 
-The repo currently carries support for the FFG d100 lines and Imperium Maledictum under a shared TypeScript codebase, with per-system variants where the rules or presentation diverge.
+The repo currently carries support for the FFG d100 lines under a shared TypeScript codebase, with per-system variants where the rules or presentation diverge.
 
 This project is in active migration:
 
 - TypeScript-first, with ratchets to reduce weak typing over time.
 - Tailwind-first for new UI work, while legacy CSS is still being retired.
 - Storybook and Vitest are part of the normal component workflow.
-- Per-system support is being homologated across DH1, DH2, RT, BC, OW, DW, and IM.
+- Per-system support is being homologated across DH1, DH2, RT, BC, OW, and DW.
 
 Fork lineage: [AndruQuiroga/RogueTraderVTT](https://github.com/AndruQuiroga/RogueTraderVTT), itself forked from [mrkeathley/dark-heresy-2nd-vtt](https://github.com/mrkeathley/dark-heresy-2nd-vtt).
 
@@ -37,9 +37,8 @@ The codebase currently includes concrete actor/data model wiring for:
 - Black Crusade
 - Only War
 - Deathwatch
-- Imperium Maledictum
 
-The sheet architecture uses explicit per-system actor types such as `dh2-character`, `rt-starship`, and `im-npc` rather than relying on one generic sheet path.
+The sheet architecture uses explicit per-system actor types such as `dh2-character`, `rt-starship`, and `dh1-npc` rather than relying on one generic sheet path.
 
 ## Requirements
 
@@ -179,9 +178,9 @@ It pulls:
 
 ## Content and Licensing
 
-This is an unofficial, fan-made game system for Foundry VTT. It is not affiliated with, endorsed by, or licensed by Games Workshop, Fantasy Flight Games, or Cubicle 7 Entertainment.
+This is an unofficial, fan-made game system for Foundry VTT. It is not affiliated with, endorsed by, or licensed by Games Workshop or Fantasy Flight Games.
 
-**Warhammer 40,000**, **Dark Heresy**, **Rogue Trader**, **Deathwatch**, **Black Crusade**, **Only War**, and **Imperium Maledictum** are trademarks and/or registered trademarks of Games Workshop Ltd and/or their respective publishers. All rights belong to their respective owners.
+**Warhammer 40,000**, **Dark Heresy**, **Rogue Trader**, **Deathwatch**, **Black Crusade**, and **Only War** are trademarks and/or registered trademarks of Games Workshop Ltd and/or their respective publishers. All rights belong to their respective owners.
 
 ### What this repository contains
 
@@ -193,7 +192,7 @@ This is an unofficial, fan-made game system for Foundry VTT. It is not affiliate
 
 - **No copyrighted game text.** No rules text, item descriptions, talent descriptions, or stat blocks are included in the public repository. Combat-action labels and modifier values in `src/module/rules/` are original functional paraphrases, not quotations.
 - **No compendium content.** `src/packs/` is a private submodule and is not included in public clones or releases. Users must supply their own content packs or use the system as a bare framework.
-- **No copyrighted artwork.** The system does not bundle artwork from any Games Workshop, FFG, or Cubicle 7 publication.
+- **No copyrighted artwork.** The system does not bundle artwork from any Games Workshop or FFG publication.
 
 ### License
 

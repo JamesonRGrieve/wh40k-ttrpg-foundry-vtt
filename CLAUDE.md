@@ -1,20 +1,20 @@
 # Claude Code Instructions — wh40k-rpg
 
-This is the **Warhammer 40K RPG** Foundry VTT system. It implements seven d100-family 40K tabletop RPGs — six FFG-era lines (Black Crusade [BC], Dark Heresy 1e [DH1], Dark Heresy 2e [DH2], Deathwatch [DW], Only War [OW], Rogue Trader [RT]) plus Cubicle 7's Imperium Maledictum (IM) — on Foundry **V14**, in TypeScript.
+This is the **Warhammer 40K RPG** Foundry VTT system. It implements six d100-family FFG-era 40K tabletop RPGs — Black Crusade [BC], Dark Heresy 1e [DH1], Dark Heresy 2e [DH2], Deathwatch [DW], Only War [OW], Rogue Trader [RT] — on Foundry **V14**, in TypeScript.
 
-DH2 is the canonical default of the FFG family (the bare `header-dh.hbs`); DH1 is a separate variant (`header-dh1.hbs`). IM shares the d100 roll-under engine but layers Patrons, Factions, Endeavours, and WFRP-style critical hits over it; its divergences are opt-in via `*-im.hbs` templates and `im-*` DataModels. Actor types follow `<system>-<role>` (e.g., `dh2-character`, `dh1-npc`, `im-character`, `rt-starship`).
+DH2 is the canonical default of the FFG family (the bare `header-dh.hbs`); DH1 is a separate variant (`header-dh1.hbs`). Actor types follow `<system>-<role>` (e.g., `dh2-character`, `dh1-npc`, `rt-starship`).
 
 ---
 
 ## Direction (every change must advance these)
 
-These are not optional polish items. Every PR, refactor, and new component must move the codebase in these directions, or it does not land. A change that is neutral on all seven is suspicious — ask whether it's worth doing.
+These are not optional polish items. Every PR, refactor, and new component must move the codebase in these directions, or it does not land. A change that is neutral on all six is suspicious — ask whether it's worth doing.
 
 1. **Full strong TypeScript coverage.** No new `any`. No new `@ts-ignore` / `@ts-expect-error` (existing suppressions may stay until the underlying issue is fixed, but every PR should reduce, not grow, that count). Migrate any `.js` / `.mjs` you touch to `.ts`. New code is fully typed at signatures and return values; prefer narrow types over `unknown`. **Never resort to `any`** for convenience, even for complex hook signatures; use generics (`<T extends Function>`) or precise interfaces. **Fix the root cause, not the symptom**: if the compiler complains about a 'possibly undefined' property, do not sprinkle null coalescers (`??`) or optional chaining (`?.`) throughout the logic. Instead, tighten the underlying DataModel or interface definitions so the compiler can safely infer property existence. Inference is always preferred over casting.
 
 2. **Full migration from CSS/SCSS to Tailwind.** New styling uses `tw-` utility classes inline on templates and PARTS classes — no new rules in `src/css/`, no new SCSS files. When you edit a `.hbs` template, opportunistically port its existing CSS rules to inline Tailwind and remove the now-unused selectors. The CSS pipeline is being phased out.
 
-3. **Full homologated support of all 7 game systems.** BC, DH1, DH2, DW, OW, RT, IM all share data structure, behavior, and visual treatment. Per-system divergence is opt-in via explicit per-system templates (e.g., `header-bc.hbs`, `header-rt.hbs`, `header-im.hbs`) or explicit branching — never accidental. A change that improves one system must improve, or at minimum not regress, the other six. When you add a feature, verify it works across all seven before considering the work done. IM-specific surfaces (Patrons, Factions, Endeavours, critical-hit tables) are scoped extensions, not exceptions to homologation — the underlying actor / item / roll plumbing stays shared.
+3. **Full homologated support of all 6 game systems.** BC, DH1, DH2, DW, OW, RT all share data structure, behavior, and visual treatment. Per-system divergence is opt-in via explicit per-system templates (e.g., `header-bc.hbs`, `header-rt.hbs`) or explicit branching — never accidental. A change that improves one system must improve, or at minimum not regress, the other five. When you add a feature, verify it works across all six before considering the work done.
 
 4. **Full DRY.** No copy-paste between sheets, mixins, templates, helpers, or DataModels. Extract partials, mixins, and utility functions. If you write similar logic twice, the third time you extract — and prefer extracting on the second instance when the abstraction is obvious.
 
@@ -35,7 +35,7 @@ These are not aspirational. Code without these is incomplete.
 - **Interactive unit testing in stories.** Stories with behavior use Storybook's `play` function (or Vitest + happy-dom against the rendered output) to assert on clicks, form submission, action dispatch, and drag/drop where applicable. A "renders without throwing" story is not enough for a component with interactivity.
 - **CSS composition testing.** Full-sheet stories render multiple partials together (header + tabs + panels) so layout regressions, theme cascade breaks, and Tailwind class conflicts show up in visual review. Single-partial stories alone do not satisfy this. Use `renderSheetParts(...)` from `stories/test-helpers.ts` for the composed-tree pattern.
 - **Live partials must be preloaded.** If a sheet or dialog references a new Handlebars partial at runtime, also add it to `HandlebarManager.preloadHandlebarsTemplates()` in `src/module/handlebars/handlebars-manager.ts`. Storybook's glob-based partial registration can hide this mistake; Foundry runtime will not. The `preload-drift` gate (run pre-commit) catches the omission for you — if it fails, fix the preload list, do not silence the gate.
-- **Per-system homologation in stories.** When a story exercises actor or item data, run it through `withSystem(actor, 'im')` (and the other six system IDs) at least once so DH2-only assumptions surface. Without per-system mocks, "works in DH2 but not the other six" regressions are invisible.
+- **Per-system homologation in stories.** When a story exercises actor or item data, run it through `withSystem(actor, 'rt')` (and the other five system IDs) at least once so DH2-only assumptions surface. Without per-system mocks, "works in DH2 but not the other five" regressions are invisible.
 - **Seeded RNG in stories and tests.** Replace `Math.random()` calls in stories/mocks with `randomId(prefix, rng)` from `stories/mocks/extended.ts`, seeded via `seedRandom(seed)`. Determinism makes screenshot diffs and `play`-function assertions stable across runs.
 
 When you add a component, the story and tests are part of the same PR. When you fix a component, also add the story/tests if they don't exist — leave the area better covered than you found it. The `coverage-symmetry` ratchet (pre-commit) blocks commits where missing-pair counts increase.
@@ -183,7 +183,7 @@ This matters because a module nothing reaches is a **feature the player cannot g
 Styling is now expressed almost entirely through Tailwind configuration patterns. The complete inventory of CSS-bearing files in this repo:
 
 - `src/css/entry.css` — sole CSS source. Twelve lines: Google Fonts `@import url(...)` + the three `@tailwind base/components/utilities` directives. Do not add rules here.
-- `tailwind.config.js` — Tailwind v3 config with `important: '.wh40k-rpg'` (utility specificity) and `prefix: 'tw-'` (utility namespace). Animations live under `theme.extend.keyframes` / `theme.extend.animation`. Per-system variants (`bc:`, `dh1:`, `dh2:`, `dw:`, `ow:`, `rt:`, `im:`) live in the `addVariant` plugin call.
+- `tailwind.config.js` — Tailwind v3 config with `important: '.wh40k-rpg'` (utility specificity) and `prefix: 'tw-'` (utility namespace). Animations live under `theme.extend.keyframes` / `theme.extend.animation`. Per-system variants (`bc:`, `dh1:`, `dh2:`, `dw:`, `ow:`, `rt:`) live in the `addVariant` plugin call.
 - `tailwind/*.js` — nine CSS-in-JS plugin objects, registered via a single `addBase(...)` call. They hold (a) the `:root`/`body.theme-*` design tokens (`design-tokens.js`) and (b) every legacy gothic-theme component class (`panel-components.js`, `legacy-components.js`, `item-preview.js`, `wh40k-tooltip.js`, `compendium-browser.js`, `npc-sheet.js`, `foundry-chrome.js`, `weapon.js`).
 
 Why `addBase` and not `addComponents`: Tailwind's `prefix: 'tw-'` config prepends `tw-` to every class registered through `addComponents`, mangling the bare `wh40k-*` class names that templates author. `addBase` emits selectors literally and produces the cascade order we want (legacy components → utilities), since `@tailwind base` precedes `@tailwind utilities` in `entry.css`.
@@ -211,7 +211,7 @@ Some legacy gothic-theme components in `tailwind/*.js` still carry `animation: <
 
 ### Per-system theme tooling — the ultimate target
 
-The 7 game systems (`bc`, `dh1`, `dh2`, `dw`, `ow`, `rt`, `im`, matching `src/module/config/game-systems/types.ts` `GameSystemId`) each get a Tailwind variant in `tailwind.config.js`. Use the variant in templates to gate utilities by system:
+The 6 game systems (`bc`, `dh1`, `dh2`, `dw`, `ow`, `rt`, matching `src/module/config/game-systems/types.ts` `GameSystemId`) each get a Tailwind variant in `tailwind.config.js`. Use the variant in templates to gate utilities by system:
 
 ```hbs
 <div class="tw-bg-gold dh2:tw-bg-bronze rt:tw-bg-amber-700">…</div>
@@ -347,7 +347,7 @@ A mode distinct from the cheap-LLM `ai` grinder above: the Claude Code orchestra
 2. **Partition into disjoint file sets.** Scope each subagent so no two touch the same file — partition by file type or directory (e.g. item-sheet `.hbs` vs item-sheet `.ts` vs `config/` vs an actor panel). This is what makes the worktree branches merge cleanly without conflicts.
 3. **Single-owner shared files.** Any file multiple tasks might edit — the Handlebars preload list (`handlebars-manager.ts`), `tailwind.config.js`, a barrel `index.ts` — is assigned to **exactly one** subagent, and every other brief explicitly forbids touching it.
 4. **Worktree isolation, background.** Launch each subagent with `isolation: "worktree"` and `run_in_background: true`. One worktree branch per task; the orchestrator owns the merge-back.
-5. **The brief is a contract.** Each subagent prompt MUST: enumerate precise in-scope files and explicit out-of-scope files; require behavior-preserving edits that stay homologation-safe across all 7 systems; **forbid running any verification** (`pnpm check`/`test`/`typecheck`/`lint`/`build`/`storybook`, any `*:coverage`/`*:ratchet`, `preload:drift`, `i18n`) and the pre-commit hooks; require `git commit --no-verify`, **no push, no PR**; and require a closing report of files changed, net LOC delta (`git diff --stat`), commit hash, and worktree branch.
+5. **The brief is a contract.** Each subagent prompt MUST: enumerate precise in-scope files and explicit out-of-scope files; require behavior-preserving edits that stay homologation-safe across all 6 systems; **forbid running any verification** (`pnpm check`/`test`/`typecheck`/`lint`/`build`/`storybook`, any `*:coverage`/`*:ratchet`, `preload:drift`, `i18n`) and the pre-commit hooks; require `git commit --no-verify`, **no push, no PR**; and require a closing report of files changed, net LOC delta (`git diff --stat`), commit hash, and worktree branch.
 6. **Deferred batched verification — the point of this mode.** Per-agent verification burns context and wall-clock re-validating overlapping surfaces that one batched pass would cover anyway. So subagents skip it and the **orchestrator** merges all worktree branches into the working branch, resolves any conflict, then runs **one** full `pnpm check` + ratchet pass and fixes the fallout — once — before the final pre-PR commit (that last commit IS verified normally). The safety invariant from the cheap-LLM section still holds where it matters: **nothing reaches a PR or the remote default branch unverified**. Verification is deferred and batched in this mode, never skipped.
 
 Keep granular brief templates, model flags, and partition-shape recipes in `PROMPTING_AGENTS.md`; this section is the doctrine, not the notebook.
@@ -530,7 +530,7 @@ be carried through to the card, never summed away at commit
 provenance-loss site). `modifiersToRollData()` already builds a formula string
 today and throws it away — surface it. New roll surfaces are incomplete until the
 card renders full target + result formulas with hoverable per-component
-provenance; homologate across all seven systems.
+provenance; homologate across all six systems.
 
 ### 2. All calculation-modifying content routes through the central path — no monkey-patching the roll
 
@@ -575,7 +575,7 @@ the schema whenever a new hook shape is needed:
   descriptor over a stringly-typed formula.
 - Author the value in the compendium `src/packs/*/_source/*.json` for the item
   (Crushing Blow, Mighty Shot, Deathdealer, Hammer Blow, Eye of Vengeance, …), and
-  homologate the field across the seven lines' packs.
+  homologate the field across the six lines' packs.
 - The central collector walks the actor's owned items, evaluates each declared
   hook against the live roll context, and emits provenance-bearing components.
   Then **delete the name-match TS**. `src/packs` is a submodule — its schema/data

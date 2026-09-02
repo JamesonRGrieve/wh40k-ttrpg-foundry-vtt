@@ -25,7 +25,7 @@ The win is incremental. A single PR may port one template's worth of rules and t
 3. **`addBase`, not `addComponents`, for legacy class registration.** Tailwind's `prefix: 'tw-'` config prepends `tw-` to every class registered through `addComponents`, mangling the bare `wh40k-*` class names. `addBase` emits selectors literally and produces the cascade order we want (legacy → utilities).
 4. **Foundry chrome stays.** Any selector targeting `.ProseMirror`, `.editor-content`, `#chat-log`, `#chat-controls`, `.app`, `.application`, `.window-content`, `.form-fields`, `.filepicker`, or other Foundry-V14 internals stays in `tailwind/foundry-chrome.js` indefinitely. They are scoped global overrides, not component CSS, and have no template-side equivalent.
 5. **Never delete a plugin object whose template still uses the rules.** Verify the target template has been fully ported (`pnpm css:coverage` shows it as `tailwind-only`) before stripping the corresponding entries from a `tailwind/*.js` file.
-6. **Per-system homologation.** A migrated template should serve all 7 game systems unless an explicit per-system variant exists (`header-bc.hbs`, `header-im.hbs`, etc.). When porting, do not introduce `wh40k-rpg`-keyed branches that did not exist in the source — keep system-agnostic.
+6. **Per-system homologation.** A migrated template should serve all 6 game systems unless an explicit per-system variant exists (`header-bc.hbs`, `header-rt.hbs`, etc.). When porting, do not introduce `wh40k-rpg`-keyed branches that did not exist in the source — keep system-agnostic.
 
 ## Workflow per template
 
@@ -79,7 +79,7 @@ For arbitrary values (e.g. an unusual `min-height`), use Tailwind's bracket synt
 
 ## Per-system templates
 
-`header-dh.hbs` (DH2 default), `header-dh1.hbs`, `header-im.hbs`, `header-bc.hbs`, `header-rt.hbs` etc. are sibling files. Port each independently — do not collapse them into one. The whole point of the per-system variant pattern is that each system can diverge visually without polluting the others. A change that improves one of them must, at minimum, not regress the other six; verify by spot-checking the corresponding sheet in Storybook for each system you can.
+`header-dh.hbs` (DH2 default), `header-dh1.hbs`, `header-bc.hbs`, `header-rt.hbs` etc. are sibling files. Port each independently — do not collapse them into one. The whole point of the per-system variant pattern is that each system can diverge visually without polluting the others. A change that improves one of them must, at minimum, not regress the other five; verify by spot-checking the corresponding sheet in Storybook for each system you can.
 
 ## When to extract a Tailwind component plugin
 
