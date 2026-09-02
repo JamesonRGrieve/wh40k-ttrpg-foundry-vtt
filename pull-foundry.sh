@@ -12,7 +12,7 @@
 #   FOUNDRY_PASS         — SSH password for FOUNDRY_USER@FOUNDRY_HOST
 #
 # Optional env (with defaults):
-#   FOUNDRY_HOST         (192.168.5.40)
+#   FOUNDRY_HOST         (foundry.example.com)
 #   FOUNDRY_USER         (root)
 #   FOUNDRY_APP_PATH     (/opt/foundry-vtt/current)
 #   FOUNDRY_DATA_PATH    (/opt/foundry-vtt/data/Data)
@@ -32,9 +32,9 @@
 
 set -euo pipefail
 
-: "${FOUNDRY_HOST:=192.168.5.40}"
+: "${FOUNDRY_HOST:=foundry.example.com}"
 : "${FOUNDRY_USER:=root}"
-: "${FOUNDRY_PASS:?Set FOUNDRY_PASS env var (see ../VTT_WIKI.md)}"
+: "${FOUNDRY_PASS:?Set FOUNDRY_PASS env var (SSH password for the Foundry host)}"
 : "${FOUNDRY_APP_PATH:=/opt/foundry-vtt/current}"
 : "${FOUNDRY_DATA_PATH:=/opt/foundry-vtt/data/Data}"
 : "${FOUNDRY_RELEASE_DIR:=.foundry-release}"
