@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from 'vitest';
 // eslint-disable-next-line no-restricted-syntax -- boundary: pack _source docs are open authored JSON
-import { hasRealArt, imageClassOf } from '../src/packs/validate-images.cjs';
+import { hasRealArt, imageClassOf, NO_ART_CLASSES } from '../src/packs/validate-images.cjs';
 
 describe('hasRealArt', () => {
     it('counts curated …/images/** assets and https hotlinks as real art', () => {
@@ -66,5 +66,15 @@ describe('imageClassOf', () => {
     it('falls back to Other for a typeless, collection-less document', () => {
         expect(imageClassOf({})).toBe('Other');
         expect(imageClassOf(null)).toBe('Other');
+    });
+});
+
+describe('art-exempt classes', () => {
+    it('exempts RollTables (a d20 icon is the final state, not a placeholder)', () => {
+        // The tally in validateImagePacks drops these classes entirely rather than
+        // tracking them at 0% arted.
+        expect(NO_ART_CLASSES.has('RollTable')).toBe(true);
+        expect(NO_ART_CLASSES.has('Actor')).toBe(false);
+        expect(NO_ART_CLASSES.has('Item')).toBe(false);
     });
 });
