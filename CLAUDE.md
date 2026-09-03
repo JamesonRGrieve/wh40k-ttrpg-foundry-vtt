@@ -80,6 +80,8 @@ Every direction in the previous section is backed by a coverage script and a rat
 | i18n key codegen freshness | `pnpm i18n:check` | hard gate (auto-regen pre-commit) | — |
 | `pnpm-lock.yaml` resolution host allow-list | `pnpm lockfile:validate` | hard gate (no ratchet) | — |
 | Tier B e2e: `passed` count + per-dimension % + source coverage (lines / statements / functions / branches). Per-dimension **auto-flips to strict at 100%**. Not in pre-commit; runs in the licensed CI lane only. | `pnpm e2e:coverage` | `pnpm e2e:ratchet` | `.e2e-baseline` |
+| Pack actor-completeness — hard defects (dangling inventory refs, inline-only weapons, un-migrated prose skills, missing stats) per rule, **auto-flips to strict at 0**. Runs only when `src/packs/` changed. | `pnpm packs:validate:actors` | `pnpm actors:ratchet` | `.actors-baseline` |
+| Pack image coverage — real-art count (curated `…/images/**` asset or `https://` hotlink) per Foundry document class (Actor / Item / JournalEntry / RollTable / Adventure), **count must NOT FALL** (adoption ratchet like theme; bounded by source-art availability, so it never graduates). Runs only when `src/packs/` changed. | `pnpm packs:validate:images` | `pnpm images:ratchet` | `.images-baseline` |
 
 The hard gates (preload-drift, hook-orphan-audit, plugin-audit, i18n, lockfile-validate) cannot be ratcheted because regression is a real bug, not a velocity tradeoff. Fix the underlying issue. The plugin-audit gate specifically guards against the addBase dedup trap: a rule that's "dead by class" is invisible at the source level but a rule that's "dead by cascade" silently shadows live rules — extending the audit to walk nested selectors keeps the lights-on selector inventory honest.
 
@@ -414,7 +416,7 @@ Per-file logs land in `.auto-fix/file-logs/<sanitized-path>.attempt<N>.<runner>-
 20. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
 21. `hooks:orphan-audit` — every `[data-wh40k-hook="X"]` selector must have an element that actually carries that hook (hard gate).
 22. `unconsumed:ratchet` — the count of `src/module/` modules with no production importer cannot rise; auto-flips to strict at 0.
-23. Pack validation if `gulpfile.js` or `src/packs/` changed.
+23. Pack validation if `gulpfile.js` or `src/packs/` changed — schema (`packs`), the actor-completeness ratchet (`actors:ratchet`), and the image-coverage ratchet (`images:ratchet`, real-art count per document class must not fall).
 24. `vitest run` — full Vitest suite must pass.
 
 The Storybook Playwright visual suite (storybook build + ~700 screenshot tests)
