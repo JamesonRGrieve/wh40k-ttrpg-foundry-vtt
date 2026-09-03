@@ -7946,6 +7946,18 @@
             "flags": {}
         },
         {
+            "name": "dw-jericho-items-weapons",
+            "label": "DW: The Jericho Reach, Weapons",
+            "path": "packs/deathwatch/dw-jericho-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dw-jericho-rolltables",
             "label": "DW: The Jericho Reach, Tables",
             "path": "packs/deathwatch/dw-jericho-rolltables",
@@ -10505,6 +10517,7 @@
                         "dw-jericho-actors-bestiary",
                         "dw-jericho-actors-npcs",
                         "dw-jericho-items-talents",
+                        "dw-jericho-items-weapons",
                         "dw-jericho-journals",
                         "dw-jericho-rolltables"
                     ]
