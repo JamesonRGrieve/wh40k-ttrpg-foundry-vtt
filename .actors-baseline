@@ -1,10 +1,10 @@
 {
   "byRule": {
     "weapons-inline-not-embedded": 59,
-    "stats-no-wounds": 9,
-    "skills-prose-not-migrated": 1
+    "stats-no-wounds": 9
   },
   "strict": [
-    "inventory-dangling-ref"
+    "inventory-dangling-ref",
+    "skills-prose-not-migrated"
   ]
 }
