@@ -69,6 +69,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
                 doublesAdditionalHits: new fields.BooleanField({ required: false, initial: false }),
                 reliable: new fields.BooleanField({ required: false, initial: false }),
                 unreliable: new fields.BooleanField({ required: false, initial: false }),
+                destroyOnCriticalFail: new fields.BooleanField({ required: false, initial: false }),
                 ignoresDaemonResistance: new fields.BooleanField({ required: false, initial: false }),
                 powerFieldDestroysOnParry: new fields.BooleanField({ required: false, initial: false }),
                 overheats: new fields.BooleanField({ required: false, initial: false }),

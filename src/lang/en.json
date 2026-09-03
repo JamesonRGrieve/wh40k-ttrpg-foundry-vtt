@@ -1882,7 +1882,9 @@
                 "haywire": "Technological items roll on the Haywire table.",
                 "poisoned": "Target suffers 1d10 additional damage from the toxin.",
                 "crippled": "Target gains the Crippled condition.",
-                "armour-melt": "Armour points are reduced by 1d10; overflow bypasses Toughness."
+                "armour-melt": "Armour points are reduced by 1d10; overflow bypasses Toughness.",
+                "corruption": "Target gains Corruption points from the warp-tainted attack.",
+                "degradation": "Target suffers nonpermanent characteristic damage."
             },
             "PowerField": {
                 "Destroyed": "The parried weapon is destroyed by the power field!",
@@ -4479,6 +4481,8 @@
             "ConcealedHint": "Unidentified — stats hidden from players",
             "Jams": "Jams",
             "NeverJams": "Never Jams",
+            "Destroyed": "Weapon Destroyed",
+            "DestroyedOnCritFail": "The weapon fails catastrophically and falls apart — it is destroyed and unusable until repaired.",
             "Name": "Name",
             "Class": "Class",
             "Type": "Type",

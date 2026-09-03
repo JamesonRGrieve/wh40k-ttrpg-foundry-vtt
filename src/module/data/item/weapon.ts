@@ -1678,6 +1678,18 @@ export default class WeaponData extends ItemDataModel.mixin(
     }
 
     /**
+     * Mark this weapon broken/destroyed. Persisted on the shared equippable state
+     * (`system.state.broken`) — the same flag the critical-damage applier sets and
+     * the Repair action clears, so the break is reversible. Called from the
+     * firing-resolution path when a `destroyOnCriticalFail` quality fires on an
+     * unmodified 00 (rules/weapon-destroy.ts trigger).
+     * @returns {Promise<Item>}
+     */
+    async markBroken(): Promise<WH40KItem | undefined> {
+        return this.parent.update({ 'system.state.broken': true });
+    }
+
+    /**
      * Select the active firing mode by index (#430). Clamps to a valid mode;
      * no-op for a weapon without modes or when already active. The chosen mode's
      * stats flow through the effective getters into attack, damage, and range.

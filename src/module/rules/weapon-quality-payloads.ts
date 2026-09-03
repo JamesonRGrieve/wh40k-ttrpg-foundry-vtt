@@ -41,6 +41,7 @@ function defaultWeaponQualityMechanics(): WeaponQualityMechanics {
         doublesAdditionalHits: false,
         reliable: false,
         unreliable: false,
+        destroyOnCriticalFail: false,
         ignoresDaemonResistance: false,
         powerFieldDestroysOnParry: false,
         overheats: false,
