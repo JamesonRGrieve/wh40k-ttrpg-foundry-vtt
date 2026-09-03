@@ -27,6 +27,7 @@ import {
     useNeedsItemChoice,
 } from '../rules/skill-uses.ts';
 import { isWarpWeak, type WarpWeaknessScene } from '../rules/warp-weakness.ts';
+import { shouldDestroyOnCriticalFail, weaponDestroysOnCriticalFail } from '../rules/weapon-destroy.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
 import { DAY_SECONDS } from '../rules/world-time.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
@@ -408,6 +409,26 @@ export class ActionData {
                     this.addEffect('Near Jam', 'The weapon nearly jams, but its superior craftsmanship prevents it. Attack misses.');
                 }
             }
+
+            // A weapon carrying a `destroyOnCriticalFail` quality (Scavenged) falls
+            // apart on an unmodified 00 — for melee AND ranged alike, so this sits
+            // outside the ranged-only jam block above. Data-driven per Direction #7:
+            // the trigger reads the quality's mechanic off the weapon's own
+            // qualities (rules/weapon-destroy.ts is the pure roll gate, mirroring
+            // rules/weapon-jam.ts). The break is persisted in useResources().
+            const destroyRollTotal = this.rollData.roll?.total ?? 0;
+            const destroySystemId = (this.rollData.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.weapon is a typed WH40KItemDocument; weaponDestroysOnCriticalFail accepts a duck-typed QualityItem
+            const destroyWeapon = this.rollData.weapon as Parameters<typeof weaponDestroysOnCriticalFail>[0];
+            if (
+                shouldDestroyOnCriticalFail({
+                    rollTotal: destroyRollTotal,
+                    hasDestroyQuality: weaponDestroysOnCriticalFail(destroyWeapon, destroySystemId),
+                })
+            ) {
+                this.effects.push('weapon-broken');
+                this.rollData.success = false;
+            }
         }
 
         // Degrees method resolves from the `degreesMode` setting + the source
@@ -555,6 +576,8 @@ export class ActionData {
                 this.addEffect('Overheats', `The weapon overheats forcing it to be dropped on the ground!`);
             } else if (effect === 'jam') {
                 this.addEffect('Jam', `The weapon jams!`);
+            } else if (effect === 'weapon-broken') {
+                this.addEffect(game.i18n.localize('WH40K.Weapon.Destroyed'), game.i18n.localize('WH40K.Weapon.DestroyedOnCritFail'));
             }
         }
     }
@@ -568,6 +591,11 @@ export class ActionData {
         // skip the spend). Then persist the jam onto the weapon item so it is
         // per-weapon and survives across turns (#411).
         await this._persistWeaponJam(true);
+
+        // Persist a destroy-on-crit-fail break onto the weapon (Scavenged on an
+        // unmodified 00) alongside the jam, so both per-weapon states land in the
+        // same resolution step and survive across turns.
+        await this._persistWeaponBroken();
 
         if (this.rollData.eyeOfVengeance) {
             const sourceActor = this.rollData.sourceActor;
@@ -596,6 +624,20 @@ export class ActionData {
         } else {
             await weaponSystem.clearJam?.({ loseAmmo: false });
         }
+    }
+
+    /**
+     * Persist a destroy-on-crit-fail break onto the weapon item (Scavenged fires
+     * on an unmodified 00). Routes through the WeaponData `markBroken` API so the
+     * mutation has a single source, mirroring {@link _persistWeaponJam}. The break
+     * sets `system.state.broken`, which the Repair action clears (reversible).
+     * No-op for non-weapon rolls or when the roll did not destroy the weapon.
+     */
+    private async _persistWeaponBroken(): Promise<void> {
+        if (!this.effects.includes('weapon-broken')) return;
+        if (!(this.rollData instanceof WeaponRollData)) return;
+        const weaponSystem = this.rollData.weapon.system as { markBroken?: () => Promise<void> };
+        await weaponSystem.markBroken?.();
     }
 
     async refundResources(): Promise<void> {

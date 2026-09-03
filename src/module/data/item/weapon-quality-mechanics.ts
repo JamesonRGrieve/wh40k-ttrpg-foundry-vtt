@@ -110,6 +110,14 @@ export interface WeaponQualityMechanics {
     doublesAdditionalHits: boolean;
     reliable: boolean;
     unreliable: boolean;
+    /**
+     * The weapon is destroyed on an unmodified 00 (a `rollTotal` of 100) attack
+     * roll — it falls apart. Enforced in `rolls/action-data.ts` via the pure
+     * `rules/weapon-destroy.ts` helper, which sets `system.state.broken`
+     * (cleared by the Repair action). Content-declared (Scavenged); the engine
+     * never name-matches the quality in `src/` (Direction #7).
+     */
+    destroyOnCriticalFail: boolean;
     ignoresDaemonResistance: boolean;
     powerFieldDestroysOnParry: boolean;
     overheats: boolean;

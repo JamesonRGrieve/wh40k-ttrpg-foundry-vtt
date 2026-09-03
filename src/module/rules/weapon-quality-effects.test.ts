@@ -11,6 +11,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import type { WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
+import { weaponDestroysOnCriticalFail } from './weapon-destroy.ts';
 import {
     applyKeepHighestToDie,
     collectWeaponQualityDieOps,
@@ -80,6 +81,23 @@ describe('weaponQuality pack is populated with mechanics', () => {
         expect(mech('defensive').parryBonus).toBe(15);
         expect(mech('fast').enemyParryPenalty).toBe(-20);
         expect(mech('unbalanced').parryPenalty).toBe(-10);
+    });
+});
+
+describe('Scavenged — destroyOnCriticalFail', () => {
+    it('pins the RAW destroy-on-crit-fail mechanic on the canonical Scavenged doc', () => {
+        // The RT-core Scavenged doc is the #303 canonical; the six line stubs mirror it by ref.
+        expect(mech('scavenged').destroyOnCriticalFail).toBe(true);
+    });
+
+    it('reports a Scavenged weapon as destroy-on-crit-fail (data-driven, no name-match)', () => {
+        expect(weaponDestroysOnCriticalFail(weaponWith(['scavenged']))).toBe(true);
+    });
+
+    it('reports a plain weapon (or one with unrelated qualities) as not destroy-on-crit-fail', () => {
+        expect(weaponDestroysOnCriticalFail(weaponWith([]))).toBe(false);
+        expect(weaponDestroysOnCriticalFail(weaponWith(['tearing', 'balanced']))).toBe(false);
+        expect(weaponDestroysOnCriticalFail(null)).toBe(false);
     });
 });
 
