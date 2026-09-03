@@ -128,6 +128,7 @@ changed="$(git diff --cached --name-only --diff-filter=ACMR)"
 if printf '%s\n' "$changed" | grep -qE '^(gulpfile\.js|src/packs(/|$))'; then
     run_bg "packs"      pnpm -s packs
     run_bg "actors"     pnpm -s actors:ratchet
+    run_bg "images"     pnpm -s images:ratchet
 fi
 
 wait_all
