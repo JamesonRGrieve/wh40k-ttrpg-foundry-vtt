@@ -2,7 +2,7 @@
   "byRule": {
     "weapons-inline-not-embedded": 59,
     "inventory-dangling-ref": 30,
-    "stats-no-wounds": 16,
+    "stats-no-wounds": 9,
     "skills-prose-not-migrated": 1
   },
   "strict": []
