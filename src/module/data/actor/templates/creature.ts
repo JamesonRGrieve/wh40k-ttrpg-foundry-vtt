@@ -1563,6 +1563,24 @@ export default class CreatureTemplate extends CommonTemplate {
                     });
                 }
             }
+
+            // Flat skill MODIFIERS (+N to a skill) from the origin's ModifiersTemplate,
+            // e.g. a homeworld trait's unconditional "+10 to Tech-Use". Distinct from the
+            // grants.skills TRAINING above: applied at runtime like any item skill
+            // modifier (summed by _getTotalSkillModifier -> _applyModifiersToSkills).
+            // Characteristics are deliberately NOT applied here — origin characteristic
+            // bonuses are baked into base at char-gen (_getOriginPathCharacteristicModifier
+            // returns 0), so re-applying them at runtime would double-count. Skills are
+            // not baked, so this is the sole application path for them.
+            const skillMods = (item.system.modifiers as { skills?: Record<string, number> } | null | undefined)?.skills;
+            if (skillMods !== undefined) {
+                for (const [skillKey, value] of Object.entries(skillMods)) {
+                    if (typeof value !== 'number' || value === 0) continue;
+                    const list = this.modifierSources.skills[skillKey] ?? [];
+                    this.modifierSources.skills[skillKey] = list;
+                    list.push({ name: item.name, type: 'originPath', id: item.id, value });
+                }
+            }
         }
     }
 

@@ -281,6 +281,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 doc.isTalent ||
                 doc.isTrait ||
                 doc.isCondition ||
+                // Origin paths (homeworld/background/role/...) carry scoped situational
+                // skill bonuses — e.g. Hive World "+20 Navigate(Surface) in enclosed
+                // spaces". Always present (no equipped state), so they surface as roll
+                // toggles like talent/trait situationals (#432 origin wiring).
+                doc.isOriginPath ||
                 (item.type === 'armour' && item.system.state.equipped === true) ||
                 (item.type === 'cybernetic' && item.system.state.equipped === true) ||
                 (item.type === 'gear' && item.system.state.equipped === true)

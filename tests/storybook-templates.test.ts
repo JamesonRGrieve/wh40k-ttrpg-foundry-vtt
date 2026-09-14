@@ -53,9 +53,22 @@ describe('storybook shared component templates', () => {
     it('renders expanded modifier groups and counts', () => {
         const element = compileToElement(activeModifiersPanelSrc, mockModifiersPanel());
 
-        expect((element.querySelector('.wh40k-modifier-count')?.textContent ?? '').trim()).toBe('5');
+        // conditions(1) + talents(1) + traits(1) + equipment(2) + origins(3) + effects(1)
+        expect((element.querySelector('.wh40k-modifier-count')?.textContent ?? '').trim()).toBe('9');
+        // Only talents and effects sections expose a toggle (the mock's talent + effect).
         expect(element.querySelectorAll('[data-action="toggleModifier"]')).toHaveLength(2);
         expect(element.textContent).toContain('On Fire');
+    });
+
+    it('renders the #432 Origins section with flat, situational, and craftsmanship axes', () => {
+        const element = compileToElement(activeModifiersPanelSrc, mockModifiersPanel());
+        const text = element.textContent;
+
+        expect(text).toContain('Origins');
+        expect(text).toContain('Hive World');
+        expect(text).toContain('In an enclosed space'); // situational condition surfaced
+        expect(text).toContain('best+ craftsmanship'); // craftsmanship gate surfaced
+        expect(text).toContain('techUse +10'); // flat origin skill
     });
 
     it('renders compact condition quick actions with stack and remove controls', () => {
