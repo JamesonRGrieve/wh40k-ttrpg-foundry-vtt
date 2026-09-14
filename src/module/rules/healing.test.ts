@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getDamageTier, getNaturalHealingDays, MEDICAE_ACTIONS } from './healing';
+import { DAMAGE_TIER_LABEL_KEYS, type DamageTier, getDamageTier, getNaturalHealingDays, MEDICAE_ACTIONS } from './healing';
 
 describe('getDamageTier', () => {
     it('returns unharmed when wounds == max', () => {
@@ -21,6 +21,24 @@ describe('getDamageTier', () => {
         expect(getDamageTier(4, 7)).toBe('lightlyDamaged');
         expect(getDamageTier(3, 7)).toBe('heavilyDamaged');
     });
+    it('returns critical when the patient carries critical damage (#432)', () => {
+        // Critical outranks the wound-based tiers regardless of remaining wounds.
+        expect(getDamageTier(0, 10, 1)).toBe('critical');
+        expect(getDamageTier(6, 10, 3)).toBe('critical');
+    });
+    it('ignores zero/absent critical damage', () => {
+        expect(getDamageTier(8, 10, 0)).toBe('lightlyDamaged');
+        expect(getDamageTier(8, 10)).toBe('lightlyDamaged');
+    });
+});
+
+describe('DAMAGE_TIER_LABEL_KEYS', () => {
+    it('has a label key for every tier', () => {
+        const tiers: DamageTier[] = ['unharmed', 'lightlyDamaged', 'heavilyDamaged', 'critical'];
+        for (const tier of tiers) {
+            expect(DAMAGE_TIER_LABEL_KEYS[tier]).toMatch(/^WH40K\.SkillUse\.Tier\./);
+        }
+    });
 });
 
 describe('getNaturalHealingDays', () => {
@@ -32,6 +50,9 @@ describe('getNaturalHealingDays', () => {
     });
     it('returns 7 days for heavily damaged', () => {
         expect(getNaturalHealingDays('heavilyDamaged')).toBe(7);
+    });
+    it('returns 7 days for critical (no faster than heavily damaged)', () => {
+        expect(getNaturalHealingDays('critical')).toBe(7);
     });
 });
 
