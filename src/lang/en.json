@@ -471,10 +471,17 @@
             "EffectLabel": "Skill Use",
             "NoTarget": "Choose a target for {use} before rolling.",
             "Applied": "{medic} applies {use} to {patient}.",
+            "PatientTier": "Patient is {tier}.",
             "HealedWounds": "Restored {wounds} wound(s).",
             "ResolvedCritical": "Removed {tiers} critical-injury tier(s).",
             "BloodLossStopped": "Blood loss closed.",
             "Failed": "The {use} attempt fails.",
+            "Tier": {
+                "Unharmed": "Unharmed",
+                "LightlyDamaged": "Lightly Damaged",
+                "HeavilyDamaged": "Heavily Damaged",
+                "Critical": "suffering Critical damage"
+            },
             "Medicae": {
                 "FirstAid": "First Aid",
                 "ExtendedCare": "Extended Care",

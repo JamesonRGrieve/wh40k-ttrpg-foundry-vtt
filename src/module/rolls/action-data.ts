@@ -4,6 +4,7 @@ import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { hitsForDegrees, isBurstAction } from '../rules/auto-fire.ts';
 import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
 import { gmProxyActorUpdate } from '../rules/gm-proxy.ts';
+import { DAMAGE_TIER_LABEL_KEYS, getDamageTier } from '../rules/healing.ts';
 import { type AllocationTarget, allocateHits } from '../rules/hit-allocation.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/opposed.ts';
@@ -969,8 +970,14 @@ export class MedicaeActionData extends SimpleSkillData {
         const toughness = target.characteristics['toughness'] as { effectiveBonus?: number } | undefined;
         const toughnessBonus = toughness?.effectiveBonus ?? 0;
 
+        // Determine the patient's damage tier (incl. Critical) so it can be surfaced
+        // on the card and drive tier-specific effects (#432).
+        const tier = getDamageTier(woundsValue, woundsMax, criticalDamage);
+
         const useLabel = game.i18n.localize(getSkillUse('medicae', this.useKind)?.labelKey ?? '');
-        const outcome = resolveFirstAid(this.useKind, { woundsValue, woundsMax, criticalDamage, toughnessBonus }, this.rollData.success ? 1 : 0);
+        // Pass the real degrees of success (0 on failure) so the outcome scales
+        // rather than treating every success as a single degree.
+        const outcome = resolveFirstAid(this.useKind, { woundsValue, woundsMax, criticalDamage, toughnessBonus }, this.rollData.dos);
 
         if (!outcome.success) {
             this.addEffect('Medicae', game.i18n.format('WH40K.SkillUse.Failed', { use: useLabel }));
@@ -978,6 +985,8 @@ export class MedicaeActionData extends SimpleSkillData {
         }
 
         const targetId = target.id;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor; narrow to the ownership + update surface used here
+        const patientActor = target as unknown as { isOwner?: boolean; update?: (data: Record<string, unknown>) => Promise<unknown> };
         const patient: FirstAidPatient = {
             woundsValue,
             woundsMax,
@@ -987,7 +996,16 @@ export class MedicaeActionData extends SimpleSkillData {
                 const upd: Record<string, unknown> = {};
                 if (patch.woundsValue !== undefined) upd['system.wounds.value'] = patch.woundsValue;
                 if (patch.criticalDamage !== undefined) upd['system.wounds.critical'] = patch.criticalDamage;
-                if (targetId !== null) await gmProxyActorUpdate(targetId, upd);
+                if (Object.keys(upd).length === 0) return;
+                // Prefer a direct update when we own the target: this reaches an
+                // UNLINKED token patient (whose actor `id` is null and so cannot be
+                // reached through the id-keyed GM proxy). Otherwise route through the
+                // proxy so a player can heal a target they do not own.
+                if (patientActor.isOwner === true && typeof patientActor.update === 'function') {
+                    await patientActor.update(upd);
+                } else if (targetId !== null) {
+                    await gmProxyActorUpdate(targetId, upd);
+                }
             },
         };
         await applyFirstAidOutcome(patient, outcome);
@@ -1002,6 +1020,7 @@ export class MedicaeActionData extends SimpleSkillData {
         }
 
         const parts = [game.i18n.format('WH40K.SkillUse.Applied', { medic: this.rollData.sourceActor?.name ?? '', use: useLabel, patient: target.name })];
+        parts.push(game.i18n.format('WH40K.SkillUse.PatientTier', { tier: game.i18n.localize(DAMAGE_TIER_LABEL_KEYS[tier]) }));
         if (outcome.woundsRestored > 0) parts.push(game.i18n.format('WH40K.SkillUse.HealedWounds', { wounds: String(outcome.woundsRestored) }));
         if (outcome.criticalResolved > 0) parts.push(game.i18n.format('WH40K.SkillUse.ResolvedCritical', { tiers: String(outcome.criticalResolved) }));
         if (outcome.bloodLossStopped) parts.push(game.i18n.localize('WH40K.SkillUse.BloodLossStopped'));

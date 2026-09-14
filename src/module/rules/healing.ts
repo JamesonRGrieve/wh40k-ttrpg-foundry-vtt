@@ -13,19 +13,37 @@
  * picks the right difficulty modifier and duration.
  */
 
-export type DamageTier = 'unharmed' | 'lightlyDamaged' | 'heavilyDamaged';
+export type DamageTier = 'unharmed' | 'lightlyDamaged' | 'heavilyDamaged' | 'critical';
 
-export function getDamageTier(woundsValue: number, woundsMax: number): DamageTier {
+/**
+ * Classify a patient's damage tier (#432). Critical damage (a character reduced
+ * past 0 wounds who is now taking Critical damage) is its own tier — First Aid
+ * stabilises rather than simply heals, and Superior Chirurgeon's penalty text
+ * keys off it explicitly. `criticalDamage` is `system.wounds.critical`.
+ */
+export function getDamageTier(woundsValue: number, woundsMax: number, criticalDamage = 0): DamageTier {
+    if (criticalDamage > 0) return 'critical';
     if (woundsMax <= 0) return 'unharmed';
     if (woundsValue >= woundsMax) return 'unharmed';
     if (woundsValue >= Math.ceil(woundsMax / 2)) return 'lightlyDamaged';
     return 'heavilyDamaged';
 }
 
+/** Langpack key for a damage tier, for surfacing the determined tier on a card. */
+export const DAMAGE_TIER_LABEL_KEYS: Record<DamageTier, string> = {
+    unharmed: 'WH40K.SkillUse.Tier.Unharmed',
+    lightlyDamaged: 'WH40K.SkillUse.Tier.LightlyDamaged',
+    heavilyDamaged: 'WH40K.SkillUse.Tier.HeavilyDamaged',
+    critical: 'WH40K.SkillUse.Tier.Critical',
+};
+
 const NATURAL_HEALING_DAYS: Record<DamageTier, number> = {
     unharmed: 0,
     lightlyDamaged: 1,
     heavilyDamaged: 7,
+    // Critical damage does not recover faster than Heavily Damaged through rest;
+    // clearing a specific Critical Injury follows that injury's own recovery.
+    critical: 7,
 };
 
 /** Days of natural rest required to recover 1 wound at the given tier. */
