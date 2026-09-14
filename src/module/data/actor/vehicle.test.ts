@@ -208,3 +208,85 @@ describe('VehicleData description / source migration', () => {
         expect(source.source).toEqual(authored);
     });
 });
+
+/**
+ * Manoeuverability and carrying capacity are nullable so a chassis with none
+ * (a Dreadnought's `—`, a walker with no manoeuverability bonus) is distinct
+ * from a real 0. The label getters print `—` for null and the number otherwise
+ * (#572/#27 — the "manoeuverability/carry shows 0" reports).
+ */
+describe('ConventionalCraftData not-applicable stat labels', () => {
+    it('manoeuverabilityLabel is an em-dash for null and the number otherwise', async () => {
+        const mod = await importModelOrSkip(import('./vehicle.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        const inst = Object.create(mod.ConventionalCraftData.prototype) as { manoeuverability: number | null; manoeuverabilityLabel: string };
+        inst.manoeuverability = null;
+        expect(inst.manoeuverabilityLabel).toBe('—');
+        inst.manoeuverability = 0;
+        expect(inst.manoeuverabilityLabel).toBe('0');
+        inst.manoeuverability = 15;
+        expect(inst.manoeuverabilityLabel).toBe('15');
+    });
+
+    it('carryingCapacityLabel is an em-dash for null and the number otherwise', async () => {
+        const mod = await importModelOrSkip(import('./vehicle.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        const inst = Object.create(mod.ConventionalCraftData.prototype) as { carryingCapacity: number | null; carryingCapacityLabel: string };
+        inst.carryingCapacity = null;
+        expect(inst.carryingCapacityLabel).toBe('—');
+        inst.carryingCapacity = 12;
+        expect(inst.carryingCapacityLabel).toBe('12');
+    });
+
+    it('a trait manoeuverability modifier does not conjure a value where the chassis has none', async () => {
+        const mod = await importModelOrSkip(import('./vehicle.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        const inst = Object.create(mod.ConventionalCraftData.prototype) as {
+            manoeuverability: number | null;
+            speed: { cruising: number; tactical: number };
+            armour: { front: { value: number }; side: { value: number }; rear: { value: number } };
+            integrity: { max: number; value: number };
+            _applyVehicleTraitModifiers: () => void;
+            parent: { items: Array<{ type: string; system: { modifiers: { manoeuvrability: number } } }> };
+        };
+        inst.manoeuverability = null;
+        inst.speed = { cruising: 0, tactical: 0 };
+        inst.armour = { front: { value: 0 }, side: { value: 0 }, rear: { value: 0 } };
+        inst.integrity = { max: 10, value: 10 };
+        inst.parent = { items: [{ type: 'vehicleTrait', system: { modifiers: { manoeuvrability: 5 } } }] };
+        inst._applyVehicleTraitModifiers();
+        expect(inst.manoeuverability).toBeNull();
+    });
+});
+
+/**
+ * The named-hardpoint loadout model (#572/#27): the vehicle CLASS declares its
+ * weapon hardpoints, and vehicle-profile characteristics carry a `source` marker
+ * so pilot-provided (`*`) and not-applicable (`—`) stats are distinct from 0.
+ */
+describe('VehicleData hardpoints + characteristic source marker', () => {
+    it('declares a hardpoints field in the schema', async () => {
+        const mod = await importModelOrSkip(import('./vehicle.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        expect(Object.keys(mod.default.defineSchema())).toContain('hardpoints');
+    });
+
+    it('_migrateData preserves a content-authored per-characteristic source marker', async () => {
+        const mod = await importModelOrSkip(import('./vehicle.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        // Dreadnought profile: S fixed, T not-applicable, WS pilot-provided.
+        const source: { characteristics: Record<string, number | { base: number; source: string }> } = {
+            characteristics: { s: { base: 70, source: 'fixed' }, t: { base: 0, source: 'na' }, ws: { base: 0, source: 'pilot' } },
+        };
+        mod.ConventionalCraftData._migrateData(source);
+        const chars = source.characteristics;
+        expect(chars['strength']).toEqual({ base: 70, source: 'fixed' });
+        expect(chars['toughness']).toEqual({ base: 0, source: 'na' });
+        expect(chars['weaponSkill']).toEqual({ base: 0, source: 'pilot' });
+    });
+});

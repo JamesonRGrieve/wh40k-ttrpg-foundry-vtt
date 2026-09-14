@@ -163,6 +163,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/craft/tabs.hbs',
             'systems/wh40k-rpg/templates/actor/craft/tab-overview.hbs',
             'systems/wh40k-rpg/templates/actor/craft/tab-combat.hbs',
+            'systems/wh40k-rpg/templates/actor/craft/weapon-row.hbs',
             'systems/wh40k-rpg/templates/actor/craft/tab-crew.hbs',
             'systems/wh40k-rpg/templates/actor/craft/tab-components.hbs',
             'systems/wh40k-rpg/templates/actor/craft/tab-notes.hbs',

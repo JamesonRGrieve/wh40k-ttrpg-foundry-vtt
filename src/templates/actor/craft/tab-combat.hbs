@@ -10,8 +10,18 @@
                 {{#each characteristics}}
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-md tw-p-2">
                     <button type="button" class="tw-text-[0.75rem] tw-uppercase tw-text-[color:var(--wh40k-text-medium)] hover:tw-text-[color:var(--wh40k-gold)] {{themeClassFor 'accent'}} tw-bg-transparent tw-border-0 tw-cursor-pointer" data-action="rollCharacteristic" data-characteristic="{{@key}}" title="{{this.label}}">{{this.short}}</button>
+                    {{#if (eq this.source "pilot")}}
+                    {{!-- Pilot-provided characteristic: the crewing character supplies it; printed as an asterisk (RAW), never a false 0. --}}
+                    <span class="tw-w-full tw-text-center tw-text-[1.1rem] tw-font-bold tw-text-[color:var(--color-text-primary)]" title="{{localize 'WH40K.Vehicle.PilotStatHint'}}">*</span>
+                    <span class="tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-medium)]">{{localize "WH40K.Vehicle.PilotStat"}}</span>
+                    {{else if (eq this.source "na")}}
+                    {{!-- Not applicable to a vehicle (e.g. a Dreadnought's Toughness): printed as an em-dash. --}}
+                    <span class="tw-w-full tw-text-center tw-text-[1.1rem] tw-font-bold tw-text-[color:var(--wh40k-text-medium)]" title="{{localize 'WH40K.Vehicle.NotApplicable'}}">—</span>
+                    <span class="tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-medium)]">{{localize "WH40K.Vehicle.NotApplicable"}}</span>
+                    {{else}}
                     <input type="number" name="system.characteristics.{{@key}}.base" value="{{this.base}}" data-dtype="Number" class="tw-w-full tw-text-center tw-bg-transparent tw-border-0 tw-text-[1.1rem] tw-font-bold tw-text-[color:var(--color-text-primary)]" />
                     <span class="tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-medium)]">{{localize "WH40K.Skills.Bonus"}} {{this.bonus}}</span>
+                    {{/if}}
                 </div>
                 {{/each}}
             </div>
@@ -37,23 +47,72 @@
             </div>
         {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
-        {{!-- Weapons List --}}
+        {{!-- Weapons — named-hardpoint loadout (#572/#27). Each hardpoint shows
+              its mounted weapons and, in edit mode, an "available" picker filtered
+              to that hardpoint's accepted categories and disabled at capacity.
+              A vehicle that declares no hardpoints falls back to a flat list. --}}
         {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-crosshairs" label=(localize "WH40K.Vehicle.Weapons") bodyClass="tw-p-4"}}
-            <div class="tw-flex tw-flex-col tw-gap-2">
-                {{#each weapons}}
-                <div class="tw-flex tw-justify-between tw-items-center tw-px-3 tw-py-3 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-md tw-transition-all" data-item-id="{{this._id}}">
-                    <div class="tw-font-bold tw-cursor-pointer hover:tw-text-[color:var(--wh40k-gold)] {{themeClassFor 'accent'}}" data-action="rollWeapon" data-item-id="{{this._id}}">
-                        {{this.name}}
+            {{#if hardpointGroups.length}}
+            <div class="tw-flex tw-flex-col tw-gap-4">
+                {{#each hardpointGroups}}
+                <div class="tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-md tw-p-3">
+                    <div class="tw-flex tw-justify-between tw-items-center tw-mb-2">
+                        <strong class="tw-text-[color:var(--wh40k-gold)] {{themeClassFor 'accent'}}">{{this.label}}</strong>
+                        <span class="tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-medium)]">{{this.used}} / {{this.capacity}}</span>
                     </div>
-                    <div class="tw-flex tw-gap-4 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)]">
-                        <span>{{this.system.damageLabel}}</span>
-                        <span>{{this.system.rangeLabel}}</span>
+                    <div class="tw-flex tw-flex-col tw-gap-2">
+                        {{#each this.mounted}}
+                        {{> systems/wh40k-rpg/templates/actor/craft/weapon-row.hbs weapon=this showUnmount=@root.inEditMode}}
+                        {{else}}
+                        <div class="tw-text-[0.85rem] tw-italic tw-text-[color:var(--wh40k-text-medium)]">{{localize "WH40K.Vehicle.HardpointEmpty"}}</div>
+                        {{/each}}
+                    </div>
+                    {{#if @root.inEditMode}}
+                    <div class="tw-mt-2 tw-pt-2 tw-border-t tw-border-[var(--wh40k-border-color-light)]">
+                        <span class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-medium)]">{{localize "WH40K.Vehicle.AvailableWeapons"}}</span>
+                        <div class="tw-flex tw-flex-wrap tw-gap-2 tw-mt-1">
+                            {{#each this.available}}
+                            <button type="button" class="tw-px-2 tw-py-1 tw-text-[0.8rem] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-md tw-cursor-pointer hover:tw-text-[color:var(--wh40k-gold)] {{themeClassFor 'accent'}} disabled:tw-opacity-50 disabled:tw-cursor-not-allowed" data-action="mountWeapon" data-item-id="{{this._id}}" data-hardpoint="{{../id}}" {{#if ../full}}disabled{{/if}}><i class="fa-solid fa-plus"></i> {{this.name}}</button>
+                            {{else}}
+                            <span class="tw-text-[0.8rem] tw-italic tw-text-[color:var(--wh40k-text-medium)]">{{localize "WH40K.Vehicle.NoAvailableWeapons"}}</span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+                {{/each}}
+
+                {{#if innateWeapons.length}}
+                <div>
+                    <span class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-medium)]">{{localize "WH40K.Vehicle.InnateWeapons"}}</span>
+                    <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-1">
+                        {{#each innateWeapons}}
+                        {{> systems/wh40k-rpg/templates/actor/craft/weapon-row.hbs weapon=this showUnmount=false}}
+                        {{/each}}
                     </div>
                 </div>
+                {{/if}}
+
+                {{#if unassignedWeapons.length}}
+                <div>
+                    <span class="tw-text-[0.7rem] tw-uppercase tw-text-[color:var(--wh40k-text-medium)]">{{localize "WH40K.Vehicle.OtherWeapons"}}</span>
+                    <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-1">
+                        {{#each unassignedWeapons}}
+                        {{> systems/wh40k-rpg/templates/actor/craft/weapon-row.hbs weapon=this showUnmount=false}}
+                        {{/each}}
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+            {{else}}
+            <div class="tw-flex tw-flex-col tw-gap-2">
+                {{#each weapons}}
+                {{> systems/wh40k-rpg/templates/actor/craft/weapon-row.hbs weapon=this showUnmount=false}}
                 {{else}}
                 <div class="tw-py-8 tw-text-center tw-text-[color:var(--wh40k-text-medium)] tw-italic">{{localize "WH40K.Vehicle.NoWeapons"}}</div>
                 {{/each}}
             </div>
+            {{/if}}
         {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
         {{!-- Traits --}}

@@ -31,7 +31,21 @@ export interface CharacteristicFieldOptions {
      * NPCs use flat stat blocks and omit them.
      */
     advancement: boolean;
+    /**
+     * Include the vehicle-profile `source` marker (`fixed` / `pilot` / `na`).
+     * Animate craft (Dreadnoughts, daemon-engines) have a mixed profile: some
+     * characteristics are fixed by the chassis (Strength, Agility), some come
+     * from the interred/crewing pilot (`pilot`, printed `*`), and some do not
+     * apply to a vehicle at all (`na`, printed `—`, e.g. a Dreadnought's
+     * Toughness). Without the marker a pilot/N-A characteristic is stored as `0`
+     * and mis-renders as a real zero. Only the vehicle path sets this.
+     */
+    withSource?: boolean;
 }
+
+/** How a vehicle-profile characteristic is sourced (drives its display). */
+export const CHARACTERISTIC_SOURCE_CHOICES = ['fixed', 'pilot', 'na'] as const;
+export type CharacteristicSource = (typeof CHARACTERISTIC_SOURCE_CHOICES)[number];
 
 /** A single characteristic (WS / BS / S / …) sub-schema. */
 export function characteristicField(label: string, short: string, opts: CharacteristicFieldOptions): DataField {
@@ -47,6 +61,14 @@ export function characteristicField(label: string, short: string, opts: Characte
 
     schema['modifier'] = new NumberField({ required: true, initial: 0, integer: true });
     schema['unnatural'] = new NumberField({ required: true, initial: 0, min: 0, integer: true });
+
+    if (opts.withSource === true) {
+        // Vehicle profile only: `fixed` (chassis stat), `pilot` (uses the crewing
+        // character's characteristic, printed `*`), or `na` (does not apply to a
+        // vehicle, printed `—`). Defaults to `fixed` so an unmarked profile stat is
+        // a plain number, matching the pre-marker behaviour.
+        schema['source'] = new StringField({ required: false, initial: 'fixed', blank: false, choices: [...CHARACTERISTIC_SOURCE_CHOICES] });
+    }
 
     if (opts.advancement) {
         schema['cost'] = new NumberField({ required: true, initial: 0, min: 0, integer: true });

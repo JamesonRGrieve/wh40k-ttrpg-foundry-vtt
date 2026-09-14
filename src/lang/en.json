@@ -4096,6 +4096,16 @@
             "NoComponents": "No components installed.",
             "NoTraits": "No traits.",
             "NoWeapons": "No weapons.",
+            "NotApplicable": "Not applicable",
+            "PilotStat": "Pilot",
+            "PilotStatHint": "Uses the crewing character's characteristic.",
+            "AvailableWeapons": "Available to mount",
+            "NoAvailableWeapons": "No eligible weapons",
+            "HardpointEmpty": "Empty",
+            "HardpointFull": "This hardpoint is already at capacity.",
+            "InnateWeapons": "Innate Weapons",
+            "OtherWeapons": "Other Weapons",
+            "UnmountWeapon": "Remove from hardpoint",
             "Source": "Source",
             "SourcePlaceholder": "e.g. Core Rulebook p. 100",
             "SpeedCruising": "Cruising Speed",
@@ -4505,7 +4515,8 @@
             "HideDetails": "Hide Details",
             "FiringMode": "Firing Mode",
             "Mounting": "Mounting",
-            "Facing": "Facing"
+            "Facing": "Facing",
+            "MountCategory": "Mount Category"
         },
         "Reload": {
             "Free": "Free Action",

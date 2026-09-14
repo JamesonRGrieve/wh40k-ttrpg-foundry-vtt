@@ -37,3 +37,23 @@ export type WeaponMounting = (typeof WEAPON_MOUNTING_CHOICES)[number];
 
 /** The facing a mounted weapon's arc is measured from. Empty string = unmounted. */
 export type WeaponFacing = (typeof WEAPON_FACING_CHOICES)[number];
+
+/**
+ * A named weapon hardpoint on a vehicle (a Dreadnought arm, a tank turret ring,
+ * a sponson). The vehicle CLASS declares its hardpoints; a weapon is eligible to
+ * occupy one when its `mountCategory` is listed in that hardpoint's `accepts`,
+ * and at most `capacity` weapons may be installed in it at once. This is the
+ * "what CAN be mounted" definition, held separately from what a given vehicle
+ * instance actually has equipped (a weapon's `hardpoint` field). The `accepts`
+ * strings are a content-authored vocabulary (Direction #7), never enumerated here.
+ */
+export interface VehicleHardpoint {
+    /** Stable slug, unique within a vehicle (e.g. `left-arm`, `turret`). */
+    id: string;
+    /** Player-facing label (localization key or already-localized display name). */
+    label: string;
+    /** Maximum weapons that may be installed in this hardpoint at once. */
+    capacity: number;
+    /** Mount categories this hardpoint accepts (matched against a weapon's `mountCategory`). */
+    accepts: string[];
+}

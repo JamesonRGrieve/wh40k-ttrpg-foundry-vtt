@@ -15,14 +15,30 @@
             <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-4 tw-max-w-[48rem]">
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.SpeedCruising") name="system.speed.cruising" value=craftStats.speed.cruising type="number" min="0" dataDtype="Number"}}
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.SpeedTactical") name="system.speed.tactical" value=craftStats.speed.tactical type="number" min="0" dataDtype="Number"}}
+                {{#if inEditMode}}
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Manoeuverability") name="system.manoeuverability" value=craftStats.manoeuverability type="number" dataDtype="Number"}}
+                {{else}}
+                {{!-- Read-only: `—` when the chassis has no manoeuverability (null), distinct from a real 0. --}}
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <span class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] {{themeClassFor 'accent'}}">{{localize "WH40K.Vehicle.Manoeuverability"}}</span>
+                    <span class="tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem]">{{craftStats.manoeuverabilityLabel}}</span>
+                </div>
+                {{/if}}
                 {{!-- Passenger capacity is edited on the CREW tab, beside crew.required
                      and the occupancy roster. It used to be a second input here, and
                      because every ApplicationV2 PART renders into the same <form>,
                      FormDataExtended collected both into `system.passengers: [0, 0]`
                      — an array a NumberField rejects. One duplicated name therefore
                      made EVERY save on this sheet fail, whatever field was edited. --}}
+                {{#if inEditMode}}
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.CarryingCapacity") name="system.carryingCapacity" value=craftStats.carryingCapacity type="number" min="0" dataDtype="Number"}}
+                {{else}}
+                {{!-- Read-only: `—` when carrying capacity is none / not applicable (null), distinct from a real 0. --}}
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <span class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] {{themeClassFor 'accent'}}">{{localize "WH40K.Vehicle.CarryingCapacity"}}</span>
+                    <span class="tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem]">{{craftStats.carryingCapacityLabel}}</span>
+                </div>
+                {{/if}}
                 {{#if inEditMode}}
                 {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Vehicle.Size") name="system.size" value=craftStats.size type="number" min="1" max="10" dataDtype="Number"}}
                 {{else}}

@@ -2,7 +2,8 @@ import ActorDataModel from '../abstract/actor-data-model.ts';
 import { applyCharacteristicRollData, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
 import { buildCharacteristicFields } from '../shared/characteristics.ts';
 import { descriptionField, migrateDescriptionAndSource, provenanceField } from '../shared/description-template.ts';
-import { characteristicField } from '../shared/stat-fields.ts';
+import { characteristicField, type CharacteristicSource } from '../shared/stat-fields.ts';
+import type { VehicleHardpoint } from '../shared/vehicle-mounting.ts';
 import { migrateCharacteristics } from './npc-import-migration.ts';
 
 /**
@@ -19,6 +20,12 @@ interface VehicleCharacteristic {
     unnatural: number;
     total: number;
     bonus: number;
+    /**
+     * How this profile characteristic is sourced: `fixed` (chassis value),
+     * `pilot` (uses the crewing character's stat, printed `*`), or `na` (does
+     * not apply to a vehicle, printed `—`). Defaults to `fixed`.
+     */
+    source: CharacteristicSource;
 }
 
 /**
@@ -152,6 +159,14 @@ export default class VehicleData extends ActorDataModel {
     declare gameSystem: 'rt' | 'dh1' | 'dh2' | 'bc' | 'ow' | 'dw' | 'im';
     /** Lines that publish this craft, driving the compendium browser's line filter. */
     declare gameSystems: string[];
+    /**
+     * Named weapon hardpoints this vehicle class declares (Dreadnought arms, a
+     * turret ring, sponsons). Each accepts one or more content-authored mount
+     * categories up to a capacity; a weapon occupies one via its `hardpoint`
+     * field. The "what CAN be mounted" definition, held separately from what a
+     * given instance has equipped.
+     */
+    declare hardpoints: VehicleHardpoint[];
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -235,6 +250,21 @@ export default class VehicleData extends ActorDataModel {
             // DescriptionTemplate, so `sourceReference`-style consumers and the
             // pack validator see one shape across every document class.
             source: provenanceField(),
+
+            // === Weapon hardpoints (named-hardpoint loadout model) ===
+            // The vehicle class declares its weapon slots; a weapon's
+            // `mountCategory` must be in a hardpoint's `accepts` list to be
+            // installed there, up to `capacity`. The `accepts` strings are a
+            // content vocabulary authored in the compendium (Direction #7).
+            hardpoints: new fields.ArrayField(
+                new fields.SchemaField({
+                    id: new fields.StringField({ required: true, blank: false }),
+                    label: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    capacity: new fields.NumberField({ required: true, initial: 1, min: 0, integer: true }),
+                    accepts: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: false, initial: [] }),
+                }),
+                { required: false, initial: [] },
+            ),
         };
     }
 
@@ -322,8 +352,10 @@ export class ConventionalCraftData extends VehicleData {
         notes: string;
     };
     declare passengers: number;
-    declare manoeuverability: number;
-    declare carryingCapacity: number;
+    /** Manoeuverability bonus; `null` means "not applicable" (printed `—`), e.g. a Dreadnought. */
+    declare manoeuverability: number | null;
+    /** Carrying capacity; `null` means "none / not applicable" (printed `—`). */
+    declare carryingCapacity: number | null;
     declare integrity: {
         max: number;
         value: number;
@@ -340,9 +372,9 @@ export class ConventionalCraftData extends VehicleData {
      */
     declare characteristics: VehicleCharacteristics | null;
 
-    /** A single vehicle-profile characteristic sub-field (base 0; no advancement). */
+    /** A single vehicle-profile characteristic sub-field (base 0; no advancement; carries a `source` marker). */
     static _CharacteristicField(label: string, short: string): foundry.data.fields.DataField.Any {
-        return characteristicField(label, short, { base: 0, total: 0, bonus: 0, advancement: false });
+        return characteristicField(label, short, { base: 0, total: 0, bonus: 0, advancement: false, withSource: true });
     }
 
     /** @inheritdoc */
@@ -413,10 +445,14 @@ export class ConventionalCraftData extends VehicleData {
             passengers: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
             // === Manoeuverability ===
-            manoeuverability: new fields.NumberField({ required: true, initial: 0, integer: true }),
+            // Nullable: `null` = "not applicable" (printed `—`). Many walkers
+            // (Dreadnoughts) and emplaced guns have no manoeuverability bonus,
+            // which is distinct from a real 0. Existing data keeps its 0.
+            manoeuverability: new fields.NumberField({ required: true, initial: 0, integer: true, nullable: true }),
 
             // === Carrying Capacity ===
-            carryingCapacity: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            // Nullable: `null` = "none / not applicable" (printed `—`).
+            carryingCapacity: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true, nullable: true }),
 
             // === Structural Integrity ===
             integrity: new fields.SchemaField({
@@ -502,7 +538,9 @@ export class ConventionalCraftData extends VehicleData {
                 this.speed.cruising = Math.max(0, this.speed.cruising + mods.speed);
                 this.speed.tactical = Math.max(0, this.speed.tactical + mods.speed);
             }
-            if (typeof mods.manoeuvrability === 'number') {
+            // A trait bonus does not conjure a manoeuverability where the chassis
+            // has none (null = not applicable); it only adjusts a real value.
+            if (typeof mods.manoeuvrability === 'number' && this.manoeuverability !== null) {
                 this.manoeuverability += mods.manoeuvrability;
             }
             if (typeof mods.armour === 'number') {
@@ -565,6 +603,24 @@ export class ConventionalCraftData extends VehicleData {
     }
 
     /**
+     * Manoeuverability for display: the number, or an em-dash when the chassis
+     * has none (`null` = not applicable), e.g. a Dreadnought. Distinct from a 0.
+     * @type {string}
+     */
+    get manoeuverabilityLabel(): string {
+        return this.manoeuverability === null ? '—' : String(this.manoeuverability);
+    }
+
+    /**
+     * Carrying capacity for display: the number, or an em-dash when none / not
+     * applicable (`null`). Distinct from a real 0.
+     * @type {string}
+     */
+    get carryingCapacityLabel(): string {
+        return this.carryingCapacity === null ? '—' : String(this.carryingCapacity);
+    }
+
+    /**
      * Get vehicle class label from config.
      * @type {string}
      */
@@ -596,7 +652,9 @@ export class ConventionalCraftData extends VehicleData {
     override getRollData(): Record<string, unknown> {
         const data = super.getRollData();
 
-        data['man'] = this.manoeuverability;
+        // Roll formulas need a number; a not-applicable manoeuverability (null) contributes 0.
+        const man = this.manoeuverability;
+        data['man'] = man ?? 0;
         data['armF'] = this.armour.front.value;
         data['armS'] = this.armour.side.value;
         data['armR'] = this.armour.rear.value;

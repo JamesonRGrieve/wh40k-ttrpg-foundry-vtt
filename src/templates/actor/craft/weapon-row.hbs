@@ -1,0 +1,16 @@
+{{!-- One vehicle weapon row: rollable name + damage/range labels, with an
+     optional unmount control. Shared by the hardpoint groups, the innate and
+     unassigned lists, and the no-hardpoint flat fallback (DRY, #572/#27).
+     Params: weapon (the item), showUnmount (bool). --}}
+<div class="tw-flex tw-justify-between tw-items-center tw-px-3 tw-py-3 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-md" data-item-id="{{weapon._id}}">
+    <div class="tw-font-bold tw-cursor-pointer hover:tw-text-[color:var(--wh40k-gold)] {{themeClassFor 'accent'}}" data-action="rollWeapon" data-item-id="{{weapon._id}}">
+        {{weapon.name}}
+    </div>
+    <div class="tw-flex tw-gap-4 tw-items-center tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)]">
+        <span>{{weapon.system.damageLabel}}</span>
+        <span>{{weapon.system.rangeLabel}}</span>
+        {{#if showUnmount}}
+        <button type="button" class="tw-bg-transparent tw-border-0 tw-cursor-pointer tw-text-[color:var(--wh40k-text-medium)] hover:tw-text-[color:var(--wh40k-crimson)]" data-action="unmountWeapon" data-item-id="{{weapon._id}}" title="{{localize 'WH40K.Vehicle.UnmountWeapon'}}"><i class="fa-solid fa-xmark"></i></button>
+        {{/if}}
+    </div>
+</div>

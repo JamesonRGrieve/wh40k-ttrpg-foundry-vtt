@@ -244,6 +244,24 @@ export default class WeaponData extends ItemDataModel.mixin(
     /** Facing the mounted weapon's fire arc is measured from; blank when unmounted. */
     declare facing: WeaponFacing;
     /**
+     * Vehicle hardpoint category this weapon is eligible to occupy (a
+     * content-authored tag matched against a hardpoint's `accepts` list, e.g.
+     * `dread-weapon` / `dread-auxiliary`). Blank on a personal-scale weapon.
+     * Content-agnostic: the string vocabulary lives in the compendium, never here.
+     */
+    declare mountCategory: string;
+    /**
+     * Id of the vehicle hardpoint this weapon is currently installed in; blank
+     * means available/unmounted. The craft sheet toggles this to mount/unmount a
+     * weapon into one of the owning vehicle's declared hardpoints.
+     */
+    declare hardpoint: string;
+    /**
+     * Always-on weapon that is not mounted into a hardpoint and cannot be
+     * unmounted (e.g. a Dreadnought's innate Basic Melee Attack). Content-declared.
+     */
+    declare innate: boolean;
+    /**
      * When `true`, this weapon is granted to every newly-created creature actor
      * (character / npc) by the default-grant hook, so e.g. an Unarmed strike is
      * always present. Content-declared policy (read by `default-grants.ts`); the
@@ -522,6 +540,17 @@ export default class WeaponData extends ItemDataModel.mixin(
                 choices: [...WEAPON_FACING_CHOICES],
                 label: 'WH40K.Weapon.Facing',
             }),
+
+            // === Vehicle hardpoint loadout (named-hardpoint mount model) ===
+            // A vehicle declares hardpoints (`system.hardpoints`), each accepting
+            // one or more mount categories up to a capacity. A weapon is eligible
+            // for a hardpoint when its `mountCategory` is in that hardpoint's
+            // `accepts` list; `hardpoint` records which one it is installed in
+            // (blank = available). `innate` weapons are always-on and never occupy
+            // a hardpoint. Vocabulary is content-authored (Direction #7).
+            mountCategory: new fields.StringField({ required: false, initial: '', blank: true, label: 'WH40K.Weapon.MountCategory' }),
+            hardpoint: new fields.StringField({ required: false, initial: '', blank: true }),
+            innate: new fields.BooleanField({ required: false, initial: false }),
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
