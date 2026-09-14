@@ -289,6 +289,15 @@ test.describe('Storybook extra story render', () => {
         expect(await page.getByText('—', { exact: true }).count()).toBeGreaterThanOrEqual(2);
     });
 
+    test('craft sheet renders vehicle traits as items, not [object Object]', async ({ page }) => {
+        await page.goto('/iframe.html?id=actor-craftactorsheet--vehicle-traits');
+        // Trait name renders as a heading (the locomotion select also has a "Walker" option — scope to <strong>).
+        await expect(page.locator('strong', { hasText: 'Walker' }).first()).toBeVisible();
+        // The description renders from the object's `.value`, never the raw object.
+        await expect(page.getByText('Ignores difficult terrain.')).toBeVisible();
+        await expect(page.getByText('[object Object]')).toHaveCount(0);
+    });
+
     // ── Inventory — Item Table panels, per-system homologation ───────────────
     test('weapon panel DH2e renders lasgun and roll actions', async ({ page }) => {
         await page.goto('/iframe.html?id=inventory-item-table--weapon-panel-dh-2');

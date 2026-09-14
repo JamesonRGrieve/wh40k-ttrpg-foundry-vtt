@@ -343,6 +343,33 @@ export const DreadnoughtProfile: Story = {
     },
 };
 
+// ── Vehicle traits rendered as items (not [object Object]) ────────────────────
+
+export const VehicleTraits: Story = {
+    name: 'Vehicle traits — rendered as items with descriptions',
+    args: {
+        ...defaultCraftCtx,
+        vehicleTraits: [
+            {
+                _id: 'vt-walker',
+                name: 'Walker',
+                system: { description: { value: '<p>Ignores difficult terrain.</p>' }, descriptionText: 'Ignores difficult terrain.' },
+            },
+            { _id: 'vt-rein', name: 'Reinforced Hull', system: { description: { value: '' }, descriptionText: 'Halve Critical Hit results, rounding up.' } },
+        ],
+    },
+    render: (args) => renderCraftCombat(args),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        // Trait names render as items; descriptions render from `.value` (or the
+        // plain descriptionText fallback) — never the raw object ("[object Object]").
+        await expect(view.getByText('Walker')).toBeVisible();
+        await expect(view.getByText('Ignores difficult terrain.')).toBeVisible();
+        await expect(view.getByText('Halve Critical Hit results, rounding up.')).toBeVisible();
+        await expect(view.queryByText('[object Object]')).toBeNull();
+    },
+};
+
 // ── Not-applicable stats (Dreadnought manoeuverability / carry) ────────────────
 
 export const NotApplicableStats: Story = {
