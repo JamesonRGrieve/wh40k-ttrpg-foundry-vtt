@@ -260,6 +260,35 @@ test.describe('Storybook extra story render', () => {
         await expect(page.locator('input[value="Despoiler-class Battleship"]').first()).toBeVisible();
     });
 
+    // ── Actor — CraftActorSheet (vehicle hardpoints, #572/#27) ───────────────
+    test('craft sheet renders named hardpoints with mount picker', async ({ page }) => {
+        await page.goto('/iframe.html?id=actor-craftactorsheet--hardpoint-loadout');
+        await expect(page.getByText('Left Arm')).toBeVisible();
+        await expect(page.getByText('Right Arm')).toBeVisible();
+        // A mounted weapon in one arm, and an "available to mount" button for the empty arm.
+        await expect(page.getByText('Twin-linked Lascannons')).toBeVisible();
+        await expect(page.locator('[data-action="mountWeapon"][data-hardpoint="right-arm"]').first()).toBeAttached();
+        // The innate Basic Melee Attack is always shown, in its own section.
+        await expect(page.getByText('Dreadnought Basic Melee Attack')).toBeVisible();
+    });
+
+    test('craft sheet prints pilot (*) and not-applicable (—) characteristics', async ({ page }) => {
+        await page.goto('/iframe.html?id=actor-craftactorsheet--dreadnought-profile');
+        // Fixed chassis Strength renders as an editable base value.
+        await expect(page.locator('input[name="system.characteristics.strength.base"]').first()).toBeVisible();
+        // Pilot-provided characteristic prints `*` (its cell carries the pilot hint), not a false 0.
+        await expect(page.locator('[title*="crewing character"]').first()).toBeVisible();
+        // Toughness is not applicable to a vehicle: an em-dash cell titled "Not applicable".
+        await expect(page.locator('span[title="Not applicable"]').first()).toBeVisible();
+    });
+
+    test('craft sheet prints em-dash for not-applicable manoeuverability / carry', async ({ page }) => {
+        await page.goto('/iframe.html?id=actor-craftactorsheet--not-applicable-stats');
+        await expect(page.getByText('Enormous').first()).toBeVisible();
+        // Both manoeuverability and carrying capacity print an em-dash (not 0).
+        expect(await page.getByText('—', { exact: true }).count()).toBeGreaterThanOrEqual(2);
+    });
+
     // ── Inventory — Item Table panels, per-system homologation ───────────────
     test('weapon panel DH2e renders lasgun and roll actions', async ({ page }) => {
         await page.goto('/iframe.html?id=inventory-item-table--weapon-panel-dh-2');

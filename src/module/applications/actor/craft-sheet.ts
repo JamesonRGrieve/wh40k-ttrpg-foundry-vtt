@@ -11,6 +11,7 @@
  */
 
 import type { VehicleCharacteristics } from '../../data/actor/vehicle.ts';
+import type { VehicleHardpoint } from '../../data/shared/vehicle-mounting.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { occupantsOf, unfilledCrew } from '../../rules/vehicle-occupancy.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
@@ -50,8 +51,15 @@ interface CraftSystemData {
         notes: string;
     };
     passengers: number;
-    manoeuverability: number;
-    carryingCapacity: number;
+    /** `null` = not applicable (printed `—`). */
+    manoeuverability: number | null;
+    /** `null` = none / not applicable (printed `—`). */
+    carryingCapacity: number | null;
+    /** Display labels from the DataModel getters: the number, or `—` when null. */
+    manoeuverabilityLabel: string;
+    carryingCapacityLabel: string;
+    /** Weapon hardpoints this vehicle class declares (named-hardpoint loadout). */
+    hardpoints: VehicleHardpoint[];
     integrity: {
         max: number;
         value: number;
@@ -91,12 +99,35 @@ interface PreparedCraftStats {
     sizeLabel: string;
     speed: { cruising: number; tactical: number; notes: string };
     armour: { front: number; side: number; rear: number };
-    manoeuverability: number;
+    /** Raw value for the edit-mode input; `null` = not applicable. */
+    manoeuverability: number | null;
+    /** Read-only display: the number, or `—` when not applicable. */
+    manoeuverabilityLabel: string;
     passengers: number;
-    carryingCapacity: number;
+    /** Raw value for the edit-mode input; `null` = none / not applicable. */
+    carryingCapacity: number | null;
+    /** Read-only display: the number, or `—` when none / not applicable. */
+    carryingCapacityLabel: string;
     integrity: { value: number; max: number; critical: number; percent: number };
     altitude: string;
     ceiling: number;
+}
+
+/**
+ * One declared hardpoint prepared for the combat tab: the weapons currently
+ * installed in it, plus the eligible-but-unmounted weapons the "add" picker
+ * offers (filtered to this hardpoint's accepted categories, capped at capacity).
+ */
+interface PreparedHardpoint {
+    id: string;
+    /** Localized label (or the raw slug when none was authored). */
+    label: string;
+    capacity: number;
+    used: number;
+    /** True when `used >= capacity` — the add picker is disabled. */
+    full: boolean;
+    mounted: WH40KItem[];
+    available: WH40KItem[];
 }
 
 interface PreparedCraftCrew {
@@ -145,6 +176,12 @@ interface CraftSheetContext extends Record<string, unknown> {
     /** Talents / traits carried by an animate craft (Unnatural Strength (X), Swift Attack, …). */
     profileAbilities?: WH40KItem[];
     weapons?: WH40KItem[];
+    /** Per-hardpoint loadout groups; empty when the vehicle declares no hardpoints (flat list fallback). */
+    hardpointGroups?: PreparedHardpoint[];
+    /** Always-on weapons that occupy no hardpoint (e.g. a Dreadnought's Basic Melee Attack). */
+    innateWeapons?: WH40KItem[];
+    /** Weapons that match no declared hardpoint category, shown so nothing is hidden. */
+    unassignedWeapons?: WH40KItem[];
     vehicleTraits?: WH40KItem[];
     vehicleUpgrades?: WH40KItem[];
     components?: WH40KItem[];
@@ -181,6 +218,8 @@ export default class CraftActorSheet extends BaseActorSheet {
             rollCharacteristic: CraftActorSheet.#rollCharacteristic,
             rollSkill: CraftActorSheet.#rollSkill,
             rollWeapon: CraftActorSheet.#rollWeapon,
+            mountWeapon: CraftActorSheet.#mountWeapon,
+            unmountWeapon: CraftActorSheet.#unmountWeapon,
             rollInitiative: CraftActorSheet.#rollInitiative,
             adjustIntegrity: CraftActorSheet.#adjustIntegrity,
             repairDamage: CraftActorSheet.#repairDamage,
@@ -300,6 +339,10 @@ export default class CraftActorSheet extends BaseActorSheet {
         // Categorize items
         this._prepareItems(context);
 
+        // Group weapons into the vehicle's declared hardpoints (named-hardpoint
+        // loadout); ordinary vehicles with no hardpoints keep the flat list.
+        this._prepareHardpoints(context);
+
         // Prepare tabs
         context.tabs = this._prepareCraftTabs();
 
@@ -331,8 +374,10 @@ export default class CraftActorSheet extends BaseActorSheet {
                 rear: sys.armour.rear.value,
             },
             manoeuverability: sys.manoeuverability,
+            manoeuverabilityLabel: sys.manoeuverabilityLabel,
             passengers: sys.passengers,
             carryingCapacity: sys.carryingCapacity,
+            carryingCapacityLabel: sys.carryingCapacityLabel,
             integrity: {
                 value: integrity.value,
                 max,
@@ -413,6 +458,91 @@ export default class CraftActorSheet extends BaseActorSheet {
         context.profileAbilities = profileAbilities;
         context.components = vehicleUpgrades;
         context.otherItems = other;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Group the actor's weapons into the vehicle's declared hardpoints
+     * (named-hardpoint loadout model). Each hardpoint lists the weapons currently
+     * installed in it plus the eligible-but-unmounted weapons the "add" picker
+     * offers — a weapon is eligible when its `mountCategory` is in the
+     * hardpoint's `accepts` and it is not already mounted elsewhere.
+     *
+     * `innate` weapons (a Dreadnought's Basic Melee Attack) occupy no hardpoint
+     * and are surfaced separately. Weapons matching no declared category are kept
+     * in `unassignedWeapons` so nothing is ever hidden. A vehicle that declares
+     * no hardpoints leaves `hardpointGroups` empty and the template falls back to
+     * the flat `weapons` list — so ordinary vehicles are unaffected.
+     * @param {CraftSheetContext} context - The render context.
+     * @protected
+     */
+    _prepareHardpoints(context: CraftSheetContext): void {
+        const hardpoints = this.actor.system.hardpoints;
+        const allWeapons = context.weapons ?? [];
+
+        const isInnate = (w: WH40KItem): boolean => (w.system as { innate?: boolean }).innate === true;
+        const mountCategoryOf = (w: WH40KItem): string => {
+            const cat = (w.system as { mountCategory?: string }).mountCategory;
+            return cat ?? '';
+        };
+        const hardpointOf = (w: WH40KItem): string => {
+            const hp = (w.system as { hardpoint?: string }).hardpoint;
+            return hp ?? '';
+        };
+
+        context.innateWeapons = allWeapons.filter((w) => isInnate(w));
+
+        if (hardpoints.length === 0) {
+            // No hardpoints declared → ordinary vehicle: keep the flat weapon list.
+            context.hardpointGroups = [];
+            context.unassignedWeapons = [];
+            return;
+        }
+
+        const mountable = allWeapons.filter((w) => !isInnate(w));
+        const groups: PreparedHardpoint[] = hardpoints.map((hp) => {
+            const accepts = new Set(hp.accepts);
+            const mounted = mountable.filter((w) => hardpointOf(w) === hp.id);
+            const available = mountable.filter((w) => {
+                const cat = mountCategoryOf(w);
+                return hardpointOf(w) === '' && cat !== '' && accepts.has(cat);
+            });
+            return {
+                id: hp.id,
+                label: this._localizeHardpointLabel(hp.label, hp.id),
+                capacity: hp.capacity,
+                used: mounted.length,
+                full: mounted.length >= hp.capacity,
+                mounted,
+                available,
+            };
+        });
+        context.hardpointGroups = groups;
+
+        // Weapons that are neither innate nor eligible for any declared hardpoint
+        // (a category no hardpoint accepts) — surface them so nothing is hidden.
+        // Keyed by object identity (a WH40KItem's `id` may be null).
+        const assigned = new Set<WH40KItem>();
+        for (const group of groups) {
+            for (const weapon of group.mounted) assigned.add(weapon);
+            for (const weapon of group.available) assigned.add(weapon);
+        }
+        context.unassignedWeapons = mountable.filter((w) => !assigned.has(w));
+    }
+
+    /**
+     * Localize a hardpoint's authored label. Authors may write either a
+     * localization key (`WH40K.…`) or already-localized display text; fall back
+     * to the hardpoint id when no label was authored.
+     * @param {string} label - Authored label (key or literal).
+     * @param {string} id - Hardpoint id, used as the last-resort label.
+     * @returns {string} Display label.
+     * @protected
+     */
+    _localizeHardpointLabel(label: string, id: string): string {
+        if (label === '') return id;
+        return label.startsWith('WH40K.') ? game.i18n.localize(label) : label;
     }
 
     /* -------------------------------------------- */
@@ -507,6 +637,51 @@ export default class CraftActorSheet extends BaseActorSheet {
         if (!item) return;
 
         await item.roll();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Install a weapon into one of the vehicle's declared hardpoints (#572/#27).
+     * Refuses when the hardpoint is already at capacity — the picker also disables
+     * itself, but the guard keeps the invariant if two clients race.
+     * @this {CraftActorSheet}
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The picker option, carrying the weapon + hardpoint ids.
+     */
+    static async #mountWeapon(this: CraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+        const itemId = target.dataset['itemId'];
+        const hardpointId = target.dataset['hardpoint'];
+        if (itemId === undefined || itemId === '' || hardpointId === undefined || hardpointId === '') return;
+
+        const hardpoint = this.actor.system.hardpoints.find((h) => h.id === hardpointId);
+        if (hardpoint === undefined) return;
+
+        const used = this.actor.items.filter((i) => i.type === 'weapon' && (i.system as { hardpoint?: string }).hardpoint === hardpointId).length;
+        if (used >= hardpoint.capacity) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Vehicle.HardpointFull'));
+            return;
+        }
+
+        const item = this.actor.items.get(itemId);
+        if (!item) return;
+        await item.update({ 'system.hardpoint': hardpointId });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Remove a weapon from its hardpoint, returning it to the available pool.
+     * @this {CraftActorSheet}
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The mounted-weapon row, carrying the weapon id.
+     */
+    static async #unmountWeapon(this: CraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+        const itemId = target.dataset['itemId'];
+        if (itemId === undefined || itemId === '') return;
+        const item = this.actor.items.get(itemId);
+        if (!item) return;
+        await item.update({ 'system.hardpoint': '' });
     }
 
     /* -------------------------------------------- */

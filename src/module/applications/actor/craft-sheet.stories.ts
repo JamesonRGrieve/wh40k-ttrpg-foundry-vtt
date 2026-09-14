@@ -78,8 +78,10 @@ const craftStats = {
     speed: { cruising: 18, tactical: 12, notes: '' },
     armour: { front: 22, side: 18, rear: 14 },
     manoeuverability: 5,
+    manoeuverabilityLabel: '5',
     passengers: 12,
     carryingCapacity: 500,
+    carryingCapacityLabel: '500',
     integrity: { value: 30, max: 30, critical: 0, percent: 100 },
     altitude: 'ground',
     ceiling: 0,
@@ -130,8 +132,10 @@ export const Default: Story = {
         // Craft name in header
         await expect(view.getByDisplayValue('Chimera APC')).toBeVisible();
         await expect(view.getAllByText('Enormous').length).toBeGreaterThan(0);
-        // Overview tab renders manoeuverability field
-        assertField(canvasElement, 'system.manoeuverability', 5);
+        // Read-only overview renders the manoeuverability label ("5") and the
+        // speed input; manoeuverability is a label out of edit mode (#572/#27).
+        await expect(view.getByText('5')).toBeVisible();
+        assertField(canvasElement, 'system.speed.cruising', 18);
     },
 };
 
@@ -256,6 +260,114 @@ export const MountedLoadout: Story = {
     },
 };
 
+// ── Named-hardpoint loadout (Dreadnought arms) ────────────────────────────────
+
+export const HardpointLoadout: Story = {
+    name: 'Hardpoints — Dreadnought arms with available picker',
+    args: {
+        ...defaultCraftCtx,
+        inEditMode: true,
+        editable: true,
+        hardpointGroups: [
+            {
+                id: 'left-arm',
+                label: 'Left Arm',
+                capacity: 1,
+                used: 1,
+                full: true,
+                mounted: [{ _id: 'w-las', name: 'Twin-linked Lascannons', system: { damageLabel: '6d10+10 E', rangeLabel: '300m' } }],
+                available: [],
+            },
+            {
+                id: 'right-arm',
+                label: 'Right Arm',
+                capacity: 1,
+                used: 0,
+                full: false,
+                mounted: [],
+                available: [
+                    { _id: 'w-ac', name: 'Assault Cannon', system: { damageLabel: '3d10+6 I', rangeLabel: '150m' } },
+                    { _id: 'w-mm', name: 'Multi-melta', system: { damageLabel: '4d10+6 E', rangeLabel: '60m' } },
+                ],
+            },
+        ],
+        innateWeapons: [{ _id: 'w-melee', name: 'Dreadnought Basic Melee Attack', system: { damageLabel: '1d10+14 I', rangeLabel: 'Melee' } }],
+        unassignedWeapons: [],
+    },
+    render: (args) => renderCraftCombat(args),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        // Each hardpoint renders with its capacity readout.
+        await expect(view.getByText('Left Arm')).toBeVisible();
+        await expect(view.getByText('Right Arm')).toBeVisible();
+        // The mounted weapon shows in its hardpoint; the empty arm offers its eligible options.
+        await expect(view.getByText('Twin-linked Lascannons')).toBeVisible();
+        const addAssault = view.getByText('Assault Cannon').closest('button');
+        await expect(addAssault).not.toBeNull();
+        await expect(addAssault).toHaveAttribute('data-action', 'mountWeapon');
+        await expect(addAssault).toHaveAttribute('data-hardpoint', 'right-arm');
+        // The innate Basic Melee Attack is always present, in its own section.
+        await expect(view.getByText('Dreadnought Basic Melee Attack')).toBeVisible();
+    },
+};
+
+// ── Dreadnought profile: pilot-provided / not-applicable characteristics ───────
+
+const dreadnoughtCharacteristics = {
+    weaponSkill: { label: 'Weapon Skill', short: 'WS', base: 0, modifier: 0, unnatural: 0, total: 0, bonus: 0, source: 'pilot' },
+    ballisticSkill: { label: 'Ballistic Skill', short: 'BS', base: 0, modifier: 0, unnatural: 0, total: 0, bonus: 0, source: 'pilot' },
+    strength: { label: 'Strength', short: 'S', base: 70, modifier: 0, unnatural: 0, total: 70, bonus: 14, source: 'fixed' },
+    toughness: { label: 'Toughness', short: 'T', base: 0, modifier: 0, unnatural: 0, total: 0, bonus: 0, source: 'na' },
+    agility: { label: 'Agility', short: 'Ag', base: 20, modifier: 0, unnatural: 0, total: 20, bonus: 2, source: 'fixed' },
+    intelligence: { label: 'Intelligence', short: 'Int', base: 0, modifier: 0, unnatural: 0, total: 0, bonus: 0, source: 'pilot' },
+    perception: { label: 'Perception', short: 'Per', base: 0, modifier: 0, unnatural: 0, total: 0, bonus: 0, source: 'pilot' },
+    willpower: { label: 'Willpower', short: 'WP', base: 0, modifier: 0, unnatural: 0, total: 0, bonus: 0, source: 'pilot' },
+    fellowship: { label: 'Fellowship', short: 'Fel', base: 0, modifier: 0, unnatural: 0, total: 0, bonus: 0, source: 'pilot' },
+};
+
+export const DreadnoughtProfile: Story = {
+    name: 'Dreadnought profile — pilot (*) and N/A (—) characteristics',
+    args: {
+        ...defaultCraftCtx,
+        characteristics: dreadnoughtCharacteristics,
+    },
+    render: (args) => renderCraftCombat(args),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        // Fixed chassis stat renders its number as an editable base.
+        assertField(canvasElement, 'system.characteristics.strength.base', 70);
+        // Pilot-provided characteristics print `*`, not a false 0.
+        await expect(view.getAllByText('*').length).toBeGreaterThan(0);
+        // Toughness is not applicable to a vehicle: printed `—`.
+        await expect(view.getAllByText('—').length).toBeGreaterThan(0);
+    },
+};
+
+// ── Not-applicable stats (Dreadnought manoeuverability / carry) ────────────────
+
+export const NotApplicableStats: Story = {
+    name: 'Not-applicable stats — Dreadnought (— manoeuverability / carry)',
+    args: {
+        ...defaultCraftCtx,
+        craftStats: {
+            ...craftStats,
+            size: 6,
+            manoeuverability: null,
+            manoeuverabilityLabel: '—',
+            carryingCapacity: null,
+            carryingCapacityLabel: '—',
+        },
+        system: { ...craftSystem, sizeLabel: 'Enormous' },
+    },
+    render: (args) => renderCraftSheet(args),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        // Manoeuverability AND carrying capacity both print an em-dash, not 0.
+        await expect(view.getAllByText('—').length).toBeGreaterThanOrEqual(2);
+        await expect(view.getAllByText('Enormous').length).toBeGreaterThan(0);
+    },
+};
+
 // ── Per-system: Only War ──────────────────────────────────────────────────────
 
 export const OnlyWarVariant: Story = {
@@ -308,7 +420,7 @@ function makePerSystemCraftStory(systemId: SystemId, craftName: string): Story {
             // Header renders the craft name and the overview tab keeps its fields
             // regardless of which game line owns the actor.
             await expect(view.getByDisplayValue(craftName)).toBeVisible();
-            assertField(canvasElement, 'system.manoeuverability', 5);
+            assertField(canvasElement, 'system.speed.cruising', 18);
         },
     };
 }
