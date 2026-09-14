@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { choosePortrait, effectivePortraitPool, type PortraitVariant } from './portrait-pool.ts';
+import { choosePortrait, choosePortraitAvoiding, effectivePortraitPool, type PortraitVariant } from './portrait-pool.ts';
 
 const v = (img: string, cx: number | null = null, cy: number | null = null): PortraitVariant => ({ img, tokenFrame: { cx, cy } });
 
@@ -64,5 +64,48 @@ describe('choosePortrait', () => {
         const first = choosePortrait(pool, null, rngOf(0))?.img;
         const second = choosePortrait(pool, null, rngOf(0.67))?.img;
         expect(first).not.toBe(second);
+    });
+});
+
+describe('choosePortraitAvoiding', () => {
+    const pool = [v('a.webp'), v('b.webp'), v('c.webp')];
+
+    it('with no used images behaves exactly like choosePortrait', () => {
+        const empty = new Set<string>();
+        expect(choosePortraitAvoiding(pool, null, empty, rngOf(0))?.img).toBe('a.webp');
+        expect(choosePortraitAvoiding(pool, null, empty, rngOf(0.34))?.img).toBe('b.webp');
+        expect(choosePortraitAvoiding(pool, null, empty, rngOf(0.67))?.img).toBe('c.webp');
+    });
+
+    it('excludes portraits already used in the world', () => {
+        // a + b taken → only c is available, so the RNG is irrelevant.
+        const used = new Set(['a.webp', 'b.webp']);
+        expect(choosePortraitAvoiding(pool, null, used, rngOf(0))?.img).toBe('c.webp');
+        expect(choosePortraitAvoiding(pool, null, used, rngOf(0.99))?.img).toBe('c.webp');
+    });
+
+    it('maps the RNG uniformly across the REMAINING (available) variants', () => {
+        // a taken → available = [b, c]; rng maps across 2, not 3.
+        const used = new Set(['a.webp']);
+        expect(choosePortraitAvoiding(pool, null, used, rngOf(0))?.img).toBe('b.webp');
+        expect(choosePortraitAvoiding(pool, null, used, rngOf(0.99))?.img).toBe('c.webp');
+    });
+
+    it('falls back to the full pool once every variant is exhausted', () => {
+        const used = new Set(['a.webp', 'b.webp', 'c.webp']);
+        // All taken → repeats are allowed, chosen from the full pool.
+        expect(choosePortraitAvoiding(pool, null, used, rngOf(0))?.img).toBe('a.webp');
+        expect(choosePortraitAvoiding(pool, null, used, rngOf(0.67))?.img).toBe('c.webp');
+    });
+
+    it('honours a valid pin even when that portrait is already used', () => {
+        const used = new Set(['a.webp', 'b.webp']);
+        // A GM pin is an explicit override — never dodged for variety.
+        expect(choosePortraitAvoiding(pool, 0, used, rngOf(0.99))?.img).toBe('a.webp');
+    });
+
+    it('returns null when there is nothing to vary regardless of used set', () => {
+        expect(choosePortraitAvoiding([], null, new Set(['x']))).toBeNull();
+        expect(choosePortraitAvoiding([v('only.webp')], null, new Set(['other.webp']))).toBeNull();
     });
 });

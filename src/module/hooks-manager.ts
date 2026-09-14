@@ -132,7 +132,7 @@ import { WH40K } from './rules/config.ts';
 import { convertDeadActorToPile } from './rules/death-loot.ts';
 import { registerGMProxy } from './rules/gm-proxy.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
-import { applyPortraitOnPreCreate } from './rules/portrait-spawn.ts';
+import { applyPortraitOnPreCreate, collectUsedPortraitImgs } from './rules/portrait-spawn.ts';
 import { buildSkillSpecializationIndex } from './rules/skill-specialization-index.ts';
 import { buildSkillVariantIndex } from './rules/skill-variant-index.ts';
 import { SURPRISED_STATUS_ID, surpriseHasExpired } from './rules/surprise.ts';
@@ -377,9 +377,14 @@ export class HooksManager {
         // mutates the source before the write, so the choice is baked in with no
         // post-create DB write and no per-client divergence. A no-op for actors
         // with no extra variants. `system.portraits.pinned` disables the roll.
+        // The pick avoids portraits already used by actors in the world (sampling
+        // without replacement across the placed set), repeating only once the
+        // pool is exhausted, so a crowd of the same statblock stays varied.
         // eslint-disable-next-line no-restricted-syntax -- boundary: preCreateActor payload is a framework-typed Actor; narrowed to PortraitActorLike inside portrait-spawn.ts
         hooksOn('preCreateActor', (actor: Parameters<typeof applyPortraitOnPreCreate>[0]) => {
-            applyPortraitOnPreCreate(actor);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors is a Foundry WorldCollection typed loosely by fvtt-types; narrowed to the { img } surface collectUsedPortraitImgs reads
+            const worldActors = game.actors as unknown as Iterable<{ img?: string | null }>;
+            applyPortraitOnPreCreate(actor, Math.random, collectUsedPortraitImgs(worldActors));
         });
 
         // Per-encounter re-roll uses (talent/trait `reroll` variants with

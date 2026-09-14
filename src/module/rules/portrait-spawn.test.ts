@@ -3,6 +3,7 @@ import type { PortraitVariant, TokenFrame } from './portrait-pool.ts';
 import {
     applyPortraitOnPreCreate,
     applySpawnPortrait,
+    collectUsedPortraitImgs,
     decideSpawnPortrait,
     type PortraitActorLike,
     type PortraitUpdate,
@@ -65,6 +66,38 @@ describe('decideSpawnPortrait', () => {
             pinned: 2,
         });
         expect(decideSpawnPortrait(actor, rngOf(0))?.img).toBe('c.webp');
+    });
+
+    it('avoids a portrait already used in the world (#567 no-duplicate)', () => {
+        const actor = mockActor({
+            variants: [
+                { img: 'b.webp', tokenFrame: null },
+                { img: 'c.webp', tokenFrame: null },
+            ],
+        });
+        // pool = [default.webp, b.webp, c.webp]; default + b taken → only c left,
+        // so rng 0 (which would otherwise pick the default) yields c.
+        const used = new Set(['default.webp', 'b.webp']);
+        expect(decideSpawnPortrait(actor, rngOf(0), used)?.img).toBe('c.webp');
+    });
+
+    it('repeats only once every world portrait is exhausted', () => {
+        const actor = mockActor({ variants: [{ img: 'b.webp', tokenFrame: null }] });
+        const used = new Set(['default.webp', 'b.webp']);
+        // Both taken → fall back to the full pool; rng 0 → the default.
+        expect(decideSpawnPortrait(actor, rngOf(0), used)?.img).toBe('default.webp');
+    });
+});
+
+describe('collectUsedPortraitImgs', () => {
+    it('collects non-blank img refs and dedupes', () => {
+        const used = collectUsedPortraitImgs([{ img: 'a.webp' }, { img: 'b.webp' }, { img: 'a.webp' }]);
+        expect([...used].sort()).toEqual(['a.webp', 'b.webp']);
+    });
+
+    it('skips blank, whitespace, and missing img', () => {
+        const used = collectUsedPortraitImgs([{ img: '' }, { img: '   ' }, { img: null }, {}, { img: 'real.webp' }]);
+        expect([...used]).toEqual(['real.webp']);
     });
 });
 
