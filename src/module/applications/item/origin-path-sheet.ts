@@ -6,6 +6,7 @@
 import { capitalize } from '../../utils/format.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import BaseItemSheet from './base-item-sheet.ts';
+import { freeformOwnedGate } from './freeform-gated-item-sheet.ts';
 
 /**
  * Sheet for origin path items
@@ -43,6 +44,20 @@ const GRANT_ROW_DEFAULTS: Record<EditableGrantKey, () => GrantRow> = {
 
 // @ts-expect-error - TS2417 static side inheritance
 export default class OriginPathSheet extends BaseItemSheet {
+    /**
+     * Editing an origin-path step **owned by a character** is a direct-edit
+     * bypass of the sanctioned path (the origin-path creator), so it requires the
+     * "Freeform Characters" world setting (#571). Authoring a world / compendium
+     * origin path is unaffected. See {@link freeformOwnedGate}.
+     */
+    override get canEdit(): boolean {
+        return super.canEdit && freeformOwnedGate(this.isOwnedByActor);
+    }
+
+    override get inEditMode(): boolean {
+        return super.inEditMode && freeformOwnedGate(this.isOwnedByActor);
+    }
+
     /** @override */
     static override DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'origin-path-sheet'],

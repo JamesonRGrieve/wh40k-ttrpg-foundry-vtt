@@ -21,6 +21,18 @@ import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
+/**
+ * Freeform-bypass gate for an item that is **owned by an actor** (#571).
+ * Editing a character's own copy of content (a weapon, an origin-path step) is a
+ * direct-edit bypass of the sanctioned path (compendium import / origin-path
+ * creator), so it is only permitted when the "Freeform Characters" world setting
+ * is on. A world / compendium copy (authoring, `isOwnedByActor === false`) is
+ * unaffected. Combine with the base `canEdit` / `inEditMode` via `&&`.
+ */
+export function freeformOwnedGate(isOwnedByActor: boolean): boolean {
+    return !isOwnedByActor || WH40KSettings.isFreeformCharactersEnabled();
+}
+
 export default class FreeformGatedItemSheet<TItem extends WH40KItemDocument = WH40KItemDocument> extends BaseItemSheet<TItem> {
     /**
      * Whether the sheet should show edit controls. In addition to the base
