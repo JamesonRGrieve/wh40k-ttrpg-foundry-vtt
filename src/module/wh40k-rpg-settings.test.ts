@@ -587,6 +587,25 @@ describe('WH40KSettings — system-parameter value spaces (parameterized)', () =
         });
     });
 
+    // --- freeformOwnedGate (#571): owned copies gate on the bypass, world copies don't ---
+    describe('freeformOwnedGate', () => {
+        it('always allows a world / compendium copy (not owned)', () => {
+            stubSetting(false);
+            expect(WH40KSettings.freeformOwnedGate(false)).toBe(true);
+            stubSetting(true);
+            expect(WH40KSettings.freeformOwnedGate(false)).toBe(true);
+        });
+        it('gates an owned copy on the freeform-characters setting', () => {
+            stubSetting(true);
+            expect(WH40KSettings.freeformOwnedGate(true)).toBe(true);
+            stubSetting(false);
+            expect(WH40KSettings.freeformOwnedGate(true)).toBe(false);
+        });
+        it('locks an owned copy pre-registration (no game)', () => {
+            expect(WH40KSettings.freeformOwnedGate(true)).toBe(false);
+        });
+    });
+
     // --- Enum: movement automation (full | display | none) ---
     describe('getMovementAutomation', () => {
         const cases: ReadonlyArray<readonly [string, 'full' | 'display' | 'none']> = [

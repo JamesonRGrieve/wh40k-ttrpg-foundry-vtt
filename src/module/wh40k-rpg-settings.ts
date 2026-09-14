@@ -338,6 +338,19 @@ export class WH40KSettings {
         }
     }
 
+    /**
+     * Freeform-bypass gate for an item that is **owned by an actor** (#571).
+     * Editing a character's own copy of content (a weapon, an origin-path step)
+     * is a direct-edit bypass of the sanctioned path (compendium import /
+     * origin-path creator), so it is only permitted when {@link
+     * isFreeformCharactersEnabled} is on. A world / compendium copy (authoring,
+     * `isOwnedByActor === false`) is always allowed. Combine with a sheet's base
+     * `canEdit` / `inEditMode` via `&&`.
+     */
+    static freeformOwnedGate(isOwnedByActor: boolean): boolean {
+        return !isOwnedByActor || WH40KSettings.isFreeformCharactersEnabled();
+    }
+
     /** When true, the Build Clip action lets players compose an ordered mixed
      *  magazine (#ammo-system). Off by default — RAW loads one ammo type per clip;
      *  enabling this exposes the mixed-loadout builder. Safe to call before the

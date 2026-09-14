@@ -5,8 +5,8 @@
 
 import { capitalize } from '../../utils/format.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import BaseItemSheet from './base-item-sheet.ts';
-import { freeformOwnedGate } from './freeform-gated-item-sheet.ts';
 
 /**
  * Sheet for origin path items
@@ -51,11 +51,11 @@ export default class OriginPathSheet extends BaseItemSheet {
      * origin path is unaffected. See {@link freeformOwnedGate}.
      */
     override get canEdit(): boolean {
-        return super.canEdit && freeformOwnedGate(this.isOwnedByActor);
+        return super.canEdit && WH40KSettings.freeformOwnedGate(this.isOwnedByActor);
     }
 
     override get inEditMode(): boolean {
-        return super.inEditMode && freeformOwnedGate(this.isOwnedByActor);
+        return super.inEditMode && WH40KSettings.freeformOwnedGate(this.isOwnedByActor);
     }
 
     /** @override */

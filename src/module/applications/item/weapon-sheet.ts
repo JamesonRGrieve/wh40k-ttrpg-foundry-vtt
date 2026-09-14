@@ -16,7 +16,6 @@ import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
 import ClipBuilderDialog from '../dialogs/clip-builder-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
-import { freeformOwnedGate } from './freeform-gated-item-sheet.ts';
 
 /** Weapon item document narrowed to its DataModel. */
 type WeaponItem = WH40KItemDocument & { system: WeaponData };
@@ -86,11 +85,11 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
      * unaffected. See {@link freeformOwnedGate}.
      */
     override get canEdit(): boolean {
-        return super.canEdit && freeformOwnedGate(this.isOwnedByActor);
+        return super.canEdit && WH40KSettings.freeformOwnedGate(this.isOwnedByActor);
     }
 
     override get inEditMode(): boolean {
-        return super.inEditMode && freeformOwnedGate(this.isOwnedByActor);
+        return super.inEditMode && WH40KSettings.freeformOwnedGate(this.isOwnedByActor);
     }
 
     /** @override */
