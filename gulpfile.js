@@ -65,8 +65,11 @@ function readJsonFile(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
-// A reference stub is `{ reference: "<path>" }` plus OPTIONAL per-line override
-// keys (typically `img`) that are merged onto the resolved canonical document.
+// A reference stub is `{ reference: "<path>" }` plus OPTIONAL identity/presentation
+// override keys (`name` / `_id` / `img`) that are merged onto the resolved
+// canonical document — a shared body under a divergent local identity (e.g. an
+// Astartes-named weapon over a DH2 weapon body, or an RT item with its own art).
+// The validator's STUB_OVERRIDE_KEYS whitelist mirrors this set.
 //
 // The override form used to be rejected here (the check demanded exactly one
 // key), which made a `{reference, img}` document neither a stub nor a valid
