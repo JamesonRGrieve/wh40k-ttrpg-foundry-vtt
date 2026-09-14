@@ -1,3 +1,4 @@
+import { CRAFTSMANSHIP_TIERS, type Craftsmanship } from '../../rules/ow-craftsmanship.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
 
 /* -------------------------------------------------------------------------- */
@@ -203,6 +204,55 @@ function grantedEffectsSchema(): foundry.data.fields.DataField.Any {
             when: new fields.StringField({ required: true, initial: 'always', choices: [...DYNAMIC_MODIFIER_WHEN] }),
             condition: new fields.StringField({ required: false, blank: true, initial: '' }),
             conditionValue: new fields.StringField({ required: false, blank: true, initial: '' }),
+        }),
+        { required: true, initial: [] },
+    );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Craftsmanship-gated modifiers (data-driven, Direction #7)                 */
+/* -------------------------------------------------------------------------- */
+
+/** Which bucket a craftsmanship-gated bonus lands in — a skill test or a characteristic test. */
+const CRAFTSMANSHIP_GATE_TARGETS = ['skill', 'characteristic'] as const;
+
+/**
+ * A flat test bonus an item confers ONLY once its own craftsmanship reaches a given
+ * tier (#432 follow-up). Bionic Arm grants +10 Agility at Good and +10 Strength at
+ * Best; a Common-craftsmanship arm grants neither. The gate lives in data
+ * (Direction #7): the central collector reads the owning item's shared
+ * `system.craftsmanship`, compares it against `minCraftsmanship` in the fixed order
+ * Poor < Common < Good < Best, and — when met — applies `value` into the
+ * characteristic / skill modifier bucket exactly as a flat
+ * `modifiers.characteristics` / `.skills` entry would, with the same provenance.
+ * No item-name matching.
+ *
+ * This is the tier-gated counterpart to the always-on `modifiers.characteristics` /
+ * `.skills` maps: a bonus whose applicability is conditional on the item's OWN
+ * quality, not on any roll-time context (that is {@link DynamicModifierEntry}).
+ */
+export interface CraftsmanshipGatedEntry {
+    /** Whether the bonus lands in the skill bucket or the characteristic bucket. */
+    target: (typeof CRAFTSMANSHIP_GATE_TARGETS)[number];
+    /** The skill or characteristic key the bonus applies to (e.g. `strength`, `medicae`). */
+    key: string;
+    /** The flat test bonus granted once the gate tier is met. */
+    value: number;
+    /** The minimum craftsmanship tier that unlocks the bonus. */
+    minCraftsmanship: Craftsmanship;
+}
+
+/** The `ArrayField` of {@link CraftsmanshipGatedEntry} tier-gated bonuses. */
+function craftsmanshipGatedSchema(): foundry.data.fields.DataField.Any {
+    const fields = foundry.data.fields;
+    return new fields.ArrayField(
+        new fields.SchemaField({
+            target: new fields.StringField({ required: true, initial: 'skill', choices: [...CRAFTSMANSHIP_GATE_TARGETS] }),
+            key: new fields.StringField({ required: true, blank: false }),
+            value: new fields.NumberField({ required: true, initial: 0 }),
+            // The tier order is the single source in ow-craftsmanship.ts; the gate
+            // predicate that reads it lives there too.
+            minCraftsmanship: new fields.StringField({ required: true, initial: 'good', choices: [...CRAFTSMANSHIP_TIERS] }),
         }),
         { required: true, initial: [] },
     );
@@ -474,6 +524,8 @@ export default class ModifiersTemplate extends SystemDataModel {
         dynamicModifiers: DynamicModifierEntry[];
         /** Data-driven conditional grants (Direction #7, survey §D8) — see {@link GrantedEffectEntry}. */
         grantedEffects: GrantedEffectEntry[];
+        /** Data-driven craftsmanship-gated bonuses (Direction #7) — see {@link CraftsmanshipGatedEntry}. */
+        craftsmanshipGated: CraftsmanshipGatedEntry[];
     };
 
     /** @inheritdoc */
@@ -523,6 +575,12 @@ export default class ModifiersTemplate extends SystemDataModel {
                 // items; authored per line on content that grants a quality on a
                 // trigger (Hammer Blow → Concussive/Shocking on All-Out).
                 grantedEffects: grantedEffectsSchema(),
+                // Data-driven craftsmanship-gated bonuses (Direction #7). Empty on
+                // legacy items; authored on equipment whose skill/characteristic bonus
+                // unlocks only at a given craftsmanship tier (Bionic Arm: +10 Agility
+                // at Good, +10 Strength at Best). The central collector reads the
+                // item's own `system.craftsmanship` against each `minCraftsmanship`.
+                craftsmanshipGated: craftsmanshipGatedSchema(),
             }),
         };
     }
@@ -559,6 +617,7 @@ export default class ModifiersTemplate extends SystemDataModel {
         if (!('other' in mods) || mods['other'] === undefined) mods['other'] = [];
         if (!('situational' in mods) || mods['situational'] === undefined) mods['situational'] = { characteristics: [], skills: [], combat: [] };
         if (!('dynamicModifiers' in mods) || mods['dynamicModifiers'] === undefined) mods['dynamicModifiers'] = [];
+        if (!('craftsmanshipGated' in mods) || mods['craftsmanshipGated'] === undefined) mods['craftsmanshipGated'] = [];
         ModifiersTemplate.#normalizeGrantedEffects(mods);
     }
 
@@ -614,6 +673,7 @@ export default class ModifiersTemplate extends SystemDataModel {
         if (mods.situational.combat.length > 0) return true;
         if (mods.dynamicModifiers.length > 0) return true;
         if (mods.grantedEffects.length > 0) return true;
+        if (mods.craftsmanshipGated.length > 0) return true;
         return false;
     }
 
