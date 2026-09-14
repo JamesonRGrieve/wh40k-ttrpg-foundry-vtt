@@ -412,6 +412,8 @@ export interface FirstAidTargetVitals {
     readonly criticalDamage: number;
     /** The medic-relevant Toughness bonus of the PATIENT (RAW Extended Care restores TB wounds). */
     readonly toughnessBonus: number;
+    /** The MEDIC's Intelligence bonus (RAW First Aid removes IntB + degrees of success). */
+    readonly intelligenceBonus: number;
 }
 
 /** Outcome of a resolved Medicae target action, ready to apply to the patient. */
@@ -429,7 +431,8 @@ export interface FirstAidOutcome {
  * Resolve a Medicae target action against a patient's vitals (RAW, per the
  * `MEDICAE_ACTIONS` descriptions). Pure: the caller applies the returned deltas.
  *
- * - **First Aid** — on success, close Blood Loss and restore 1 wound.
+ * - **First Aid** — on success, close Blood Loss and remove (medic Intelligence
+ *   Bonus + one per degree of success) damage, Critical damage before normal (RAW).
  * - **Extended Care** — on success, restore Toughness-bonus wounds.
  * - **Surgery** — on success, remove one Critical-injury severity tier.
  * - **Extract Embedded Object** — on success, no wound gain (removal only); failure
@@ -448,7 +451,12 @@ export function resolveFirstAid(kind: SkillUseKind, vitals: FirstAidTargetVitals
     const clampWounds = (n: number): number => Math.max(0, Math.min(n, headroom));
 
     if (kind === 'firstAid') {
-        return { success: true, woundsRestored: clampWounds(1), criticalResolved: 0, bloodLossStopped: true };
+        // RAW (DH2 Core p.110): on success remove (Intelligence Bonus + one per
+        // degree of success) damage, taking Critical damage before normal wounds.
+        const total = Math.max(0, vitals.intelligenceBonus) + Math.max(0, degrees);
+        const criticalResolved = Math.min(total, Math.max(0, vitals.criticalDamage));
+        const woundsRestored = clampWounds(total - criticalResolved);
+        return { success: true, woundsRestored, criticalResolved, bloodLossStopped: true };
     }
     if (kind === 'extendedCare') {
         return { success: true, woundsRestored: clampWounds(Math.max(0, vitals.toughnessBonus)), criticalResolved: 0, bloodLossStopped: false };

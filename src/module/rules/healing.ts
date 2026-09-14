@@ -51,6 +51,19 @@ export function getNaturalHealingDays(tier: DamageTier): number {
     return NATURAL_HEALING_DAYS[tier];
 }
 
+/**
+ * RAW First-Aid test penalty for the patient's condition (DH2 Core p.110):
+ * Challenging (+0) base, **−10 if Heavily Damaged**, **−10 per point of Critical
+ * damage** if Critically Damaged. Lightly Damaged / Unharmed carry no penalty.
+ * Content-agnostic — it is the First Aid rule keyed off the patient's tier, not a
+ * per-item value. Returns a non-positive modifier to add to the roll's target.
+ */
+export function firstAidTierPenalty(tier: DamageTier, criticalDamage = 0): number {
+    if (tier === 'critical') return -10 * Math.max(1, criticalDamage);
+    if (tier === 'heavilyDamaged') return -10;
+    return 0;
+}
+
 export type MedicaeActionKind = 'firstAid' | 'extendedCare' | 'surgery' | 'diagnose' | 'extractBullet';
 
 export interface MedicaeAction {

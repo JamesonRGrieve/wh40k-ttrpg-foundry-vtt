@@ -64,6 +64,7 @@ describe('resolveFirstAid (#432)', () => {
         woundsMax: 12,
         criticalDamage: 0,
         toughnessBonus: 4,
+        intelligenceBonus: 4,
         ...over,
     });
 
@@ -72,12 +73,32 @@ describe('resolveFirstAid (#432)', () => {
         expect(out).toEqual({ success: false, woundsRestored: 0, criticalResolved: 0, bloodLossStopped: false });
     });
 
-    it('First Aid restores 1 wound and closes blood loss on success', () => {
+    it('First Aid removes IntB + degrees of success in wounds, and closes blood loss (RAW)', () => {
+        // IntB 4 + 1 degree = 5 removed; 9 wounds missing → all 5 land as wounds.
         const out = resolveFirstAid('firstAid', vitals(), 1);
         expect(out.success).toBe(true);
-        expect(out.woundsRestored).toBe(1);
+        expect(out.woundsRestored).toBe(5);
         expect(out.bloodLossStopped).toBe(true);
         expect(out.criticalResolved).toBe(0);
+    });
+
+    it('First Aid scales the amount with degrees of success', () => {
+        // IntB 4 + 3 degrees = 7 removed (headroom 9).
+        expect(resolveFirstAid('firstAid', vitals(), 3).woundsRestored).toBe(7);
+    });
+
+    it('First Aid removes Critical damage before normal wounds (RAW)', () => {
+        // IntB 4 + 1 degree = 5 removed; 2 go to critical first, 3 to wounds.
+        const out = resolveFirstAid('firstAid', vitals({ criticalDamage: 2 }), 1);
+        expect(out.criticalResolved).toBe(2);
+        expect(out.woundsRestored).toBe(3);
+    });
+
+    it('First Aid with more critical than the total only clears critical', () => {
+        // IntB 4 + 1 = 5 removed, all absorbed by 6 points of critical.
+        const out = resolveFirstAid('firstAid', vitals({ criticalDamage: 6 }), 1);
+        expect(out.criticalResolved).toBe(5);
+        expect(out.woundsRestored).toBe(0);
     });
 
     it('Extended Care restores Toughness-bonus wounds', () => {
