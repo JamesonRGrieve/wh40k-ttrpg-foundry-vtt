@@ -15,7 +15,10 @@
  */
 
 import { SYSTEM_ID } from '../constants.ts';
-import { choosePortrait, effectivePortraitPool, type PortraitVariant, type TokenFrame } from './portrait-pool.ts';
+import { choosePortrait, choosePortraitAvoiding, effectivePortraitPool, type PortraitVariant, type TokenFrame } from './portrait-pool.ts';
+
+/** No portraits taken — the default when spawn dedup is not in play. */
+const NO_USED_IMGS: ReadonlySet<string> = new Set<string>();
 
 /** The pending-source update {@link applySpawnPortrait} writes on spawn. */
 export interface PortraitUpdate {
@@ -48,13 +51,31 @@ function defaultVariant(actor: PortraitActorLike): PortraitVariant | null {
 }
 
 /**
- * Decide which portrait a spawning actor should use, or `null` to leave it
- * unchanged. Pure — the RNG is injected for deterministic tests.
+ * Collect the portrait images already used by entities in the world (#567), so a
+ * fresh spawn can avoid repeating one until the pool is exhausted. Pure over the
+ * iterable of actor-likes; the caller supplies `game.actors` at runtime.
  */
-export function decideSpawnPortrait(actor: PortraitActorLike, rng: () => number = Math.random): PortraitVariant | null {
+export function collectUsedPortraitImgs(actors: Iterable<{ img?: string | null }>): Set<string> {
+    const used = new Set<string>();
+    for (const a of actors) {
+        if (typeof a.img === 'string' && a.img.trim() !== '') used.add(a.img);
+    }
+    return used;
+}
+
+/**
+ * Decide which portrait a spawning actor should use, or `null` to leave it
+ * unchanged. Pure — the RNG is injected for deterministic tests. `usedImgs`
+ * (images already placed in the world) is avoided until the pool is exhausted.
+ */
+export function decideSpawnPortrait(
+    actor: PortraitActorLike,
+    rng: () => number = Math.random,
+    usedImgs: ReadonlySet<string> = NO_USED_IMGS,
+): PortraitVariant | null {
     const portraits = actor.system?.portraits ?? null;
     const pool = effectivePortraitPool(defaultVariant(actor), portraits?.variants ?? null);
-    return choosePortrait(pool, portraits?.pinned ?? null, rng);
+    return choosePortraitAvoiding(pool, portraits?.pinned ?? null, usedImgs, rng);
 }
 
 /** Stamp a chosen portrait onto a pending actor source (img + bust frame). */
@@ -65,9 +86,12 @@ export function applySpawnPortrait(actor: PortraitActorLike, chosen: PortraitVar
     });
 }
 
-/** `preCreateActor` handler: choose and apply a portrait, or no-op. */
-export function applyPortraitOnPreCreate(actor: PortraitActorLike, rng: () => number = Math.random): void {
-    const chosen = decideSpawnPortrait(actor, rng);
+/**
+ * `preCreateActor` handler: choose and apply a portrait, or no-op. `usedImgs`
+ * (portraits already placed in the world) is avoided until the pool is exhausted.
+ */
+export function applyPortraitOnPreCreate(actor: PortraitActorLike, rng: () => number = Math.random, usedImgs: ReadonlySet<string> = NO_USED_IMGS): void {
+    const chosen = decideSpawnPortrait(actor, rng, usedImgs);
     if (chosen === null) return;
     applySpawnPortrait(actor, chosen);
 }
