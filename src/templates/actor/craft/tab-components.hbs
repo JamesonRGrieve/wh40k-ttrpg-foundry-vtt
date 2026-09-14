@@ -24,20 +24,7 @@
                 </div>
                 {{/each}}
 
-                {{#each vehicleUpgrades}}
-                <div class="tw-px-3 tw-py-3 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] {{themeClassFor 'border'}} tw-rounded-md" data-item-id="{{this._id}}">
-                    <div class="tw-flex tw-items-center tw-gap-2 tw-font-bold tw-mb-1">
-                        {{this.name}}
-                    </div>
-                    {{#if this.system.description}}
-                    <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)] tw-mt-2">
-                        {{{this.system.description}}}
-                    </div>
-                    {{/if}}
-                </div>
-                {{/each}}
-
-                {{#unless (or components.length vehicleUpgrades.length)}}
+                {{#unless components.length}}
                 <div class="tw-py-8 tw-text-center tw-text-[color:var(--wh40k-text-medium)] tw-italic">{{localize "WH40K.Vehicle.NoComponents"}}</div>
                 {{/unless}}
             </div>

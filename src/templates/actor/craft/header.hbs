@@ -43,7 +43,11 @@
         </div>
         <div class="tw-flex tw-items-center tw-justify-between tw-px-1">
             <span class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.Size"}}</span>
+            {{#if inEditMode}}
             <input type="number" name="system.size" value="{{source.size}}" min="1" max="10" class="tw-w-8 tw-text-center tw-bg-transparent tw-border-0 tw-font-bold tw-text-[color:var(--color-text-primary)] focus:tw-outline-none" />
+            {{else}}
+            <span class="tw-font-bold tw-text-[color:var(--color-text-primary)]">{{system.sizeLabel}}</span>
+            {{/if}}
         </div>
     </div>
 </div>

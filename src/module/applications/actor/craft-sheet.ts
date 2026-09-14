@@ -32,6 +32,7 @@ interface CraftSystemData {
     faction?: string;
     subfaction?: string;
     size: number;
+    sizeLabel: string;
     armour: {
         front: CraftArmourFacing;
         side: CraftArmourFacing;
@@ -87,6 +88,7 @@ type RollableItem = WH40KItem & { roll: () => Promise<void> };
 /** Prepared armour-by-facing rollup for the overview/combat panels. */
 interface PreparedCraftStats {
     size: number;
+    sizeLabel: string;
     speed: { cruising: number; tactical: number; notes: string };
     armour: { front: number; side: number; rear: number };
     manoeuverability: number;
@@ -317,6 +319,7 @@ export default class CraftActorSheet extends BaseActorSheet {
         const max = integrity.max;
         return {
             size: sys.size,
+            sizeLabel: this.actor.system.sizeLabel,
             speed: {
                 cruising: sys.speed.cruising,
                 tactical: sys.speed.tactical,
@@ -388,12 +391,13 @@ export default class CraftActorSheet extends BaseActorSheet {
         const vehicleTraits: WH40KItem[] = [];
         const vehicleUpgrades: WH40KItem[] = [];
         const profileAbilities: WH40KItem[] = [];
-        const components: WH40KItem[] = [];
         const other: WH40KItem[] = [];
 
         const buckets: Record<string, WH40KItem[]> = {
             weapon: weapons,
             vehicleTrait: vehicleTraits,
+            // Conventional craft components are represented by the shared
+            // vehicle-upgrade item type in compendium/world inventory.
             vehicleUpgrade: vehicleUpgrades,
             // Animate craft (daemon-engines / walkers) carry creature talents/traits.
             talent: profileAbilities,
@@ -407,7 +411,7 @@ export default class CraftActorSheet extends BaseActorSheet {
         context.vehicleTraits = vehicleTraits;
         context.vehicleUpgrades = vehicleUpgrades;
         context.profileAbilities = profileAbilities;
-        context.components = components;
+        context.components = vehicleUpgrades;
         context.otherItems = other;
     }
 
