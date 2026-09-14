@@ -162,3 +162,39 @@ export function getMeleeCraftsmanshipEffect(craftsmanship: Craftsmanship): Melee
 export function getArmourCraftsmanshipEffect(craftsmanship: Craftsmanship): ArmourCraftsmanshipEffect {
     return OW_ARMOUR_CRAFTSMANSHIP[craftsmanship];
 }
+
+/* -------------------------------------------------------------------- */
+/*  Craftsmanship-gated modifiers (cross-line, data-driven — Dir. #7)   */
+/* -------------------------------------------------------------------- */
+
+/**
+ * The tier ORDER (Poor < Common < Good < Best) is shared across all six game
+ * lines, so this gate predicate is cross-line even though the effect TABLES above
+ * are OW-specific. It underpins craftsmanship-gated equipment bonuses: a bonus an
+ * item confers only at (or above) a given tier — Bionic Arm grants +10 Agility at
+ * Good, +10 Strength at Best; a Common arm grants neither (#432 follow-up).
+ *
+ * Whether an item whose own craftsmanship is `itemCraftsmanship` meets the gate
+ * `minCraftsmanship`. An unresolvable tier on either side (a non-physical item's
+ * missing craftsmanship, an unknown authored value) never opens the gate — treated
+ * as unmet rather than always-open, so a typo can only under-apply, never leak a
+ * bonus onto a plain item.
+ */
+export function craftsmanshipMeetsGate(itemCraftsmanship: string | undefined, minCraftsmanship: string): boolean {
+    const tiers = CRAFTSMANSHIP_TIERS as ReadonlyArray<string>;
+    const itemIndex = itemCraftsmanship === undefined ? -1 : tiers.indexOf(itemCraftsmanship);
+    const minIndex = tiers.indexOf(minCraftsmanship);
+    if (itemIndex < 0 || minIndex < 0) return false;
+    return itemIndex >= minIndex;
+}
+
+/**
+ * Select the craftsmanship-gated entries whose gate opens for an item of the given
+ * craftsmanship tier. Pure: the caller (the creature modifier aggregator) pushes
+ * each returned entry into the characteristic / skill modifier bucket with
+ * provenance, exactly as a flat modifier would be applied. Entries with an
+ * unauthored `minCraftsmanship` are treated as ungated-unmet and dropped.
+ */
+export function resolveCraftsmanshipGatedModifiers<T extends { minCraftsmanship?: string }>(entries: readonly T[], itemCraftsmanship: string | undefined): T[] {
+    return entries.filter((entry) => entry.minCraftsmanship !== undefined && craftsmanshipMeetsGate(itemCraftsmanship, entry.minCraftsmanship));
+}

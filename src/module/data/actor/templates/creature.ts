@@ -4,6 +4,7 @@ import type { FatigueModelDef } from '../../../config/game-systems/types.ts';
 import type { WH40KItem } from '../../../documents/item.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
 import { FATIGUE_MODES, getFatigueHalvedCharacteristic, getFatigueTestModifier, getFatigueThreshold, resolveFatigueModel } from '../../../rules/fatigue.ts';
+import { resolveCraftsmanshipGatedModifiers } from '../../../rules/ow-craftsmanship.ts';
 import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
 import { WH40KSettings } from '../../../wh40k-rpg-settings.ts';
@@ -141,6 +142,12 @@ interface ItemModifiersBlock {
     combat?: Record<string, number>;
     resources?: { wounds?: number; fate?: number };
     other?: Array<{ key?: string; value?: number; label?: string }>;
+    /**
+     * Craftsmanship-gated bonuses (Direction #7): a flat characteristic/skill test
+     * bonus applied only when the OWNING item's own craftsmanship tier meets
+     * `minCraftsmanship` (Poor < Common < Good < Best). See ModifiersTemplate.
+     */
+    craftsmanshipGated?: Array<{ target?: string; key?: string; value?: number; minCraftsmanship?: string }>;
 }
 
 /** Shape of an active-modifier entry from origin path items. */
@@ -1109,6 +1116,43 @@ export default class CreatureTemplate extends CommonTemplate {
     }
 
     /**
+     * Append an item's craftsmanship-gated modifiers into the characteristic / skill
+     * source buckets — but only the entries whose `minCraftsmanship` tier the item's
+     * OWN craftsmanship meets or exceeds (Poor < Common < Good < Best).
+     *
+     * Data-driven (Direction #7): the gate lives on the item as
+     * `modifiers.craftsmanshipGated`, resolved against the item's shared
+     * `system.craftsmanship` field by the pure {@link resolveCraftsmanshipGatedModifiers}
+     * predicate — never by matching the item's name. Non-physical items (talents /
+     * traits / conditions) carry no `craftsmanship`, so their gate never opens. A
+     * qualifying entry is appended exactly as a flat `modifiers.characteristics` /
+     * `modifiers.skills` value would be, so it flows through the identical total +
+     * provenance path (`_getTotalCharacteristicModifier` / `_getTotalSkillModifier`).
+     * @param {WH40KItem} item  The owned item declaring the gated entries.
+     * @param {ItemModifiersBlock} mods  The item's already-resolved modifiers block.
+     * @param {Omit<ModifierSource, 'value'>} source  Traceability fields for the item.
+     */
+    #collectCraftsmanshipGatedModifiers(item: WH40KItem, mods: ItemModifiersBlock, source: Omit<ModifierSource, 'value'>): void {
+        const gated = mods.craftsmanshipGated;
+        if (!Array.isArray(gated) || gated.length === 0) return;
+
+        // The item's own craftsmanship tier; only physical items carry the field.
+        const rawTier = (item.system as { craftsmanship?: string }).craftsmanship;
+        const itemTier = typeof rawTier === 'string' && rawTier.length > 0 ? rawTier : undefined;
+
+        for (const entry of resolveCraftsmanshipGatedModifiers(gated, itemTier)) {
+            if (typeof entry.value !== 'number') continue;
+            if (typeof entry.key !== 'string' || entry.key.length === 0) continue;
+            const bucket =
+                entry.target === 'characteristic' ? this.modifierSources.characteristics : entry.target === 'skill' ? this.modifierSources.skills : null;
+            if (bucket === null) continue;
+            const list = bucket[entry.key] ?? [];
+            list.push({ ...source, value: entry.value });
+            bucket[entry.key] = list;
+        }
+    }
+
+    /**
      * Apply modifiers from a single item.
      * @param {Item} item - The item to process modifiers from
      * @protected
@@ -1130,6 +1174,10 @@ export default class CreatureTemplate extends CommonTemplate {
         // the effective BONUS without changing the underlying characteristic value.
         this.#collectKeyedModifiers(this.modifierSources.characteristicBonuses, mods.characteristicBonuses, source);
         this.#collectKeyedModifiers(this.modifierSources.skills, mods.skills, source);
+
+        // Craftsmanship-gated bonuses: fold in only the entries whose tier gate the
+        // item's own craftsmanship opens, into the same characteristic/skill buckets.
+        this.#collectCraftsmanshipGatedModifiers(item, mods, source);
 
         // Combat modifiers differ: the bucket is pre-seeded with a fixed set of keys
         // and an unknown key is DROPPED rather than created.
