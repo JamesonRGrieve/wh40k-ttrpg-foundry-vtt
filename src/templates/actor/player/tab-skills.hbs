@@ -51,7 +51,11 @@
                                 <i class="fa-solid fa-dice-d20 tw-text-[1rem] tw-leading-none tw-drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)] {{themeClassFor 'accent'}}"></i>
                             </button>
                         </div>
-                        {{#if ../inEditMode}}
+                        {{!-- Direct base-value editing is the freeform bypass of the sanctioned
+                             path (origin-path creator / advancement). It appears only in edit
+                             mode AND when the "Freeform Characters" setting is on (#571);
+                             otherwise the characteristic shows its read-only total. --}}
+                        {{#if (and ../inEditMode (isFreeformCharacters))}}
                         <div class="tw-text-[0.65em] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted,rgba(60,50,40,0.75))] tw-text-center">
                             <input type="number" class="wh40k-char-direct-input" data-characteristic="{{name}}" data-field="base" data-dtype="Number" value="{{this.base}}" title="Base {{this.label}}" />
                         </div>

@@ -142,7 +142,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/trait-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/loadout-equipment-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/backpack-split-panel.hbs',
-            'systems/wh40k-rpg/templates/actor/panel/psy-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/psy-rating-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/psychic-powers-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/navigator-powers-panel.hbs',
@@ -156,7 +155,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/endeavour-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-role-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/journal-panel.hbs',
-            'systems/wh40k-rpg/templates/actor/panel/characteristic-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/characteristic-roller-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/bonuses-panel.hbs',
 

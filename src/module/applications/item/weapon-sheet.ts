@@ -16,6 +16,7 @@ import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
 import ClipBuilderDialog from '../dialogs/clip-builder-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
+import { freeformOwnedGate } from './freeform-gated-item-sheet.ts';
 
 /** Weapon item document narrowed to its DataModel. */
 type WeaponItem = WH40KItemDocument & { system: WeaponData };
@@ -78,6 +79,20 @@ interface WeaponSheetContext extends Record<string, unknown> {
  * Redesigned as a single-page layout with FAB action buttons.
  */
 export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
+    /**
+     * Editing a weapon **owned by a character** is a direct-edit bypass of the
+     * sanctioned path (compendium import), so it requires the "Freeform
+     * Characters" world setting (#571). Authoring a world / compendium weapon is
+     * unaffected. See {@link freeformOwnedGate}.
+     */
+    override get canEdit(): boolean {
+        return super.canEdit && freeformOwnedGate(this.isOwnedByActor);
+    }
+
+    override get inEditMode(): boolean {
+        return super.inEditMode && freeformOwnedGate(this.isOwnedByActor);
+    }
+
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {

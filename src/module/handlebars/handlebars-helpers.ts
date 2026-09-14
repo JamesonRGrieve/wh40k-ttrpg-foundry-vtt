@@ -287,6 +287,16 @@ export function registerHandlebarsHelpers(): void {
      */
     Handlebars.registerHelper('isFreeformCreation', (): boolean => WH40KSettings.isFreeformCreation());
 
+    /**
+     * Returns true when the world-level "freeform characters" setting is enabled
+     * (#571) — the direct-edit bypass of the sanctioned paths (origin-path
+     * creator / advancement for characters, compendium import for everything
+     * else). Use as a subexpression guard so a surface's direct-edit affordances
+     * only appear when the GM has opted into the bypass:
+     *   {{#if (and inEditMode (isFreeformCharacters))}}…{{/if}}
+     */
+    Handlebars.registerHelper('isFreeformCharacters', (): boolean => WH40KSettings.isFreeformCharactersEnabled());
+
     Handlebars.registerHelper('toLowerCase', (str: string) => {
         return str.toLowerCase();
     });

@@ -42,9 +42,14 @@
                     <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem]" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Chat">
                         <i class="{{concat 'fas fa-comment'}}"></i>
                     </button>
+                    {{!-- Direct removal is the freeform bypass of the sanctioned path
+                         (advancement / compendium import): shown only in edit mode AND
+                         when the "Freeform Characters" setting is on (#571). --}}
+                    {{#if (and @root.inEditMode (isFreeformCharacters))}}
                     <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem]" data-action="itemDelete" data-item-id="{{talent.id}}" title="Delete">
                         <i class="{{concat 'fas fa-trash'}}"></i>
                     </button>
+                    {{/if}}
                 </div>
             </div>
             {{/each}}
