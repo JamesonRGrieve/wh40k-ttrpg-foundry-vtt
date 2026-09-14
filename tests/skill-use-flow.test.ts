@@ -514,17 +514,24 @@ describe('applySkillUseToRollData — roll shaping', () => {
         expect('useDifficulty' in shaped(action).modifiers).toBe(false);
     });
 
-    it('First Aid is always Ordinary (0) regardless of patient condition (#561)', () => {
+    it("First Aid difficulty scales with the patient's damage tier (RAW, #432)", () => {
         const action = freshAction();
         const firstAid = useOf('medicae', 'firstAid');
 
+        // Unharmed / undamaged → Challenging (+0), no useDifficulty modifier.
         shaped(action).targetActor = makeTarget({ wounds: { value: 12, max: 12, critical: 0 } });
         applySkillUseToRollData(action.rollData, firstAid, 'Medicae');
         expect('useDifficulty' in shaped(action).modifiers).toBe(false);
 
+        // Heavily Damaged (< half wounds) → −10.
         shaped(action).targetActor = makeTarget({ wounds: { value: 1, max: 12, critical: 0 } });
         applySkillUseToRollData(action.rollData, firstAid, 'Medicae');
-        expect('useDifficulty' in shaped(action).modifiers).toBe(false);
+        expect(shaped(action).modifiers['useDifficulty']).toBe(-10);
+
+        // Critically Damaged → −10 per point of critical damage.
+        shaped(action).targetActor = makeTarget({ wounds: { value: 0, max: 12, critical: 2 } });
+        applySkillUseToRollData(action.rollData, firstAid, 'Medicae');
+        expect(shaped(action).modifiers['useDifficulty']).toBe(-20);
     });
 });
 

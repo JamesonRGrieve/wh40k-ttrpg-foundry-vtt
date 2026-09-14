@@ -4,7 +4,7 @@ import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { hitsForDegrees, isBurstAction } from '../rules/auto-fire.ts';
 import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
 import { gmProxyActorUpdate } from '../rules/gm-proxy.ts';
-import { DAMAGE_TIER_LABEL_KEYS, getDamageTier } from '../rules/healing.ts';
+import { DAMAGE_TIER_LABEL_KEYS, firstAidTierPenalty, getDamageTier } from '../rules/healing.ts';
 import { type AllocationTarget, allocateHits } from '../rules/hit-allocation.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/opposed.ts';
@@ -969,6 +969,12 @@ export class MedicaeActionData extends SimpleSkillData {
         // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics[key] is the runtime characteristic record; effectiveBonus is the bonus-only channel
         const toughness = target.characteristics['toughness'] as { effectiveBonus?: number } | undefined;
         const toughnessBonus = toughness?.effectiveBonus ?? 0;
+        // RAW First Aid removes the MEDIC's Intelligence bonus (+ degrees), so read
+        // it from the source actor, not the patient.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: sourceActor is an opaque Foundry Actor; narrow to the characteristics surface
+        const medicChars = (this.rollData.sourceActor as unknown as { characteristics?: Record<string, { effectiveBonus?: number } | undefined> } | null)
+            ?.characteristics;
+        const intelligenceBonus = medicChars?.['intelligence']?.effectiveBonus ?? 0;
 
         // Determine the patient's damage tier (incl. Critical) so it can be surfaced
         // on the card and drive tier-specific effects (#432).
@@ -977,7 +983,7 @@ export class MedicaeActionData extends SimpleSkillData {
         const useLabel = game.i18n.localize(getSkillUse('medicae', this.useKind)?.labelKey ?? '');
         // Pass the real degrees of success (0 on failure) so the outcome scales
         // rather than treating every success as a single degree.
-        const outcome = resolveFirstAid(this.useKind, { woundsValue, woundsMax, criticalDamage, toughnessBonus }, this.rollData.dos);
+        const outcome = resolveFirstAid(this.useKind, { woundsValue, woundsMax, criticalDamage, toughnessBonus, intelligenceBonus }, this.rollData.dos);
 
         if (!outcome.success) {
             this.addEffect('Medicae', game.i18n.format('WH40K.SkillUse.Failed', { use: useLabel }));
@@ -1472,8 +1478,20 @@ export class SocialBuffActionData extends SimpleSkillData {
 /** Named modifier slot the chosen use's RAW difficulty occupies on the roll. */
 const USE_DIFFICULTY_MODIFIER_KEY = 'useDifficulty';
 
-function skillUseDifficulty(use: SkillUseDef, _target: WH40KBaseActorDocument | null): number {
-    return use.difficultyMod;
+function skillUseDifficulty(use: SkillUseDef, target: WH40KBaseActorDocument | null): number {
+    let difficulty = use.difficultyMod;
+    // First Aid's RAW difficulty scales with the PATIENT's condition (DH2 Core
+    // p.110): −10 Heavily Damaged, −10 per point of Critical damage. Recomputed
+    // whenever the player retargets (via applySkillUseToRollData / syncSkillUse).
+    if (use.kind === 'firstAid' && target !== null) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: target is an opaque Foundry Actor; narrow to the wounds surface firstAidTierPenalty needs
+        const wounds = (target as unknown as { wounds?: { value?: number; max?: number; critical?: number } }).wounds;
+        const wv = wounds?.value ?? 0;
+        const wm = wounds?.max ?? 0;
+        const crit = wounds?.critical ?? 0;
+        difficulty += firstAidTierPenalty(getDamageTier(wv, wm, crit), crit);
+    }
+    return difficulty;
 }
 
 /**

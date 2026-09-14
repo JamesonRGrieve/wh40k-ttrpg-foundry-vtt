@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DAMAGE_TIER_LABEL_KEYS, type DamageTier, getDamageTier, getNaturalHealingDays, MEDICAE_ACTIONS } from './healing';
+import { DAMAGE_TIER_LABEL_KEYS, type DamageTier, firstAidTierPenalty, getDamageTier, getNaturalHealingDays, MEDICAE_ACTIONS } from './healing';
 
 describe('getDamageTier', () => {
     it('returns unharmed when wounds == max', () => {
@@ -29,6 +29,22 @@ describe('getDamageTier', () => {
     it('ignores zero/absent critical damage', () => {
         expect(getDamageTier(8, 10, 0)).toBe('lightlyDamaged');
         expect(getDamageTier(8, 10)).toBe('lightlyDamaged');
+    });
+});
+
+describe('firstAidTierPenalty (#432, RAW DH2 Core p.110)', () => {
+    it('no penalty for unharmed or lightly damaged', () => {
+        expect(firstAidTierPenalty('unharmed')).toBe(0);
+        expect(firstAidTierPenalty('lightlyDamaged')).toBe(0);
+    });
+    it('-10 for a Heavily Damaged patient', () => {
+        expect(firstAidTierPenalty('heavilyDamaged')).toBe(-10);
+    });
+    it('-10 per point of Critical damage', () => {
+        expect(firstAidTierPenalty('critical', 1)).toBe(-10);
+        expect(firstAidTierPenalty('critical', 3)).toBe(-30);
+        // Critical tier with an unspecified count still penalises at least -10.
+        expect(firstAidTierPenalty('critical')).toBe(-10);
     });
 });
 
