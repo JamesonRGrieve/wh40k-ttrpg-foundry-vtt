@@ -121,8 +121,13 @@
                 {{#each vehicleTraits}}
                 <div class="tw-px-3 tw-py-3 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-md">
                     <strong class="tw-text-[color:var(--wh40k-gold)] {{themeClassFor 'accent'}}">{{this.name}}</strong>
-                    {{#if this.system.description}}
-                    <p class="tw-mt-2 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)]">{{{this.system.description}}}</p>
+                    {{!-- `system.description` is the {value,chat,summary} block (VehicleTraitData mixes
+                          DescriptionTemplate); render `.value`, falling back to the plain descriptionText.
+                          Rendering the object itself printed "[object Object]". --}}
+                    {{#if this.system.description.value}}
+                    <p class="tw-mt-2 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)]">{{{this.system.description.value}}}</p>
+                    {{else if this.system.descriptionText}}
+                    <p class="tw-mt-2 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)]">{{this.system.descriptionText}}</p>
                     {{/if}}
                 </div>
                 {{else}}
