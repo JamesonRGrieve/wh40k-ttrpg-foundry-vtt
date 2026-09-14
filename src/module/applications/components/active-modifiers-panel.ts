@@ -151,6 +151,7 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
             const talentsList: ModifierEntry[] = [];
             const traitsList: ModifierEntry[] = [];
             const equipmentList: ModifierEntry[] = [];
+            const originsList: ModifierEntry[] = [];
             const effectsList: ModifierEntry[] = [];
 
             // Collect conditions
@@ -209,7 +210,7 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
 
             // Collect equipped items with bonuses
             const equipment = actor.items.filter(
-                (i) => ['weapon', 'armour', 'gear'].includes(i.type) && (i.system as EquippableSystem).state?.equipped === true,
+                (i) => ['weapon', 'armour', 'gear', 'cybernetic'].includes(i.type) && (i.system as EquippableSystem).state?.equipped === true,
             );
             for (const item of equipment) {
                 const system = item.system as EquippableSystem;
@@ -221,6 +222,25 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
                         img: item.img ?? undefined,
                         description: this.#formatModifierDescription(mods),
                         duration: 'While Equipped',
+                        active: true,
+                        canToggle: false,
+                    });
+                }
+            }
+
+            // Collect origin paths with modifiers (homeworld/background/role/... traits;
+            // #432 origin wiring). Origins are always active — their flat skill bonuses
+            // apply at runtime and their scoped ones surface as roll toggles.
+            const origins = actor.items.filter((i) => i.type === 'originPath');
+            for (const item of origins) {
+                const mods = (item.system as { modifiers?: WH40KItemModifiers }).modifiers;
+                if (mods !== undefined && this.#hasActiveModifiers(mods)) {
+                    originsList.push({
+                        id: item.id,
+                        name: item.name,
+                        img: item.img ?? undefined,
+                        description: this.#formatModifierDescription(mods),
+                        duration: 'Origin',
                         active: true,
                         canToggle: false,
                     });
@@ -252,6 +272,7 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
                 talents: talentsList,
                 traits: traitsList,
                 equipment: equipmentList,
+                origins: originsList,
                 effects: effectsList,
                 collapsed: this.#modifiersPanelCollapsed,
             };
@@ -272,6 +293,27 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
 
             if (modifiers.other !== undefined && modifiers.other.length > 0) {
                 return true;
+            }
+
+            if (modifiers.combat) {
+                for (const value of Object.values(modifiers.combat)) {
+                    if (value !== 0) return true;
+                }
+            }
+
+            const sit = modifiers.situational;
+            if (sit !== undefined && ((sit.characteristics?.length ?? 0) > 0 || (sit.skills?.length ?? 0) > 0 || (sit.combat?.length ?? 0) > 0)) {
+                return true;
+            }
+
+            if (modifiers.craftsmanshipGated !== undefined && modifiers.craftsmanshipGated.length > 0) {
+                return true;
+            }
+
+            if (modifiers.resources !== undefined) {
+                for (const value of Object.values(modifiers.resources)) {
+                    if (typeof value === 'number' && value !== 0) return true;
+                }
             }
 
             return false;
@@ -304,7 +346,40 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
                 }
             }
 
+            parts.push(...this.#formatExtraModifierParts(modifiers));
+
             return parts.length > 0 ? parts.join(', ') : 'Various modifiers';
+        }
+
+        /**
+         * Labels for the combat, craftsmanship-gated, and situational channels. Split
+         * out of {@link #formatModifierDescription} to keep that method under the
+         * cyclomatic-complexity gate while still surfacing every modifier axis.
+         */
+        #formatExtraModifierParts(modifiers: WH40KItemModifiers): string[] {
+            const parts: string[] = [];
+            const signed = (v: number): string => `${v > 0 ? '+' : ''}${v}`;
+
+            if (modifiers.combat) {
+                for (const [key, value] of Object.entries(modifiers.combat)) {
+                    if (value) parts.push(`${key} ${signed(Number(value))}`);
+                }
+            }
+
+            for (const entry of modifiers.craftsmanshipGated ?? []) {
+                parts.push(`${entry.key} ${signed(entry.value)} (${entry.minCraftsmanship}+ craftsmanship)`);
+            }
+
+            const sit = modifiers.situational;
+            if (sit !== undefined) {
+                for (const channel of [sit.characteristics, sit.skills, sit.combat]) {
+                    for (const entry of channel ?? []) {
+                        parts.push(`${entry.key} ${signed(entry.value)} (${entry.condition})`);
+                    }
+                }
+            }
+
+            return parts;
         }
 
         #formatEffectDescription(effect: WH40KActiveEffect): string {

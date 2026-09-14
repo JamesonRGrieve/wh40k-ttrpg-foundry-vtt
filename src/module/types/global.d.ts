@@ -160,6 +160,14 @@ export interface WH40KItemModifiers {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.modifiers.resources` open map (per-system resource keys vary)
     resources?: { wounds?: number; fate?: number; [key: string]: unknown };
     other?: Array<{ key: string; value: number; label?: string }>;
+    /** Opt-in (roll-dialog checkbox) modifiers, one array per axis. */
+    situational?: {
+        characteristics?: Array<{ key: string; value: number; condition: string; icon?: string }>;
+        skills?: Array<{ key: string; value: number; condition: string; icon?: string }>;
+        combat?: Array<{ key: string; value: number; condition: string; icon?: string }>;
+    };
+    /** Bonuses gated on the owning item's craftsmanship tier (#432). */
+    craftsmanshipGated?: Array<{ target: string; key: string; value: number; minCraftsmanship: string }>;
     wounds?: number;
     fate?: number;
     talents?: string[];

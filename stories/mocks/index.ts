@@ -376,6 +376,40 @@ export function mockModifiersPanel(overrides?: DeepPartial<MockObjectMap>): Mock
                         description: '+10 bonus at short range.',
                         canToggle: false,
                     }),
+                    // Craftsmanship-gated bonus (#432): applies only when the
+                    // equipped item meets the craftsmanship tier.
+                    mockModifierEntry({
+                        name: 'Power Sword',
+                        img: 'icons/weapons/swords/sword-guard-purple.webp',
+                        description: 'weaponSkill +10 (best+ craftsmanship)',
+                        duration: 'While Equipped',
+                        canToggle: false,
+                    }),
+                ],
+                // Origin-path bonuses (#432): flat skills apply at runtime,
+                // scoped ones surface as roll toggles with their condition.
+                origins: [
+                    mockModifierEntry({
+                        name: 'Hive World',
+                        img: 'icons/environment/settlement/city-industrial.webp',
+                        description: 'navigate +20 (In an enclosed space (Navigate Surface))',
+                        duration: 'Origin',
+                        canToggle: false,
+                    }),
+                    mockModifierEntry({
+                        name: 'Frontier World',
+                        img: 'icons/environment/wilderness/tent-camp.webp',
+                        description: 'techUse +20 (When applying personal weapon modifications)',
+                        duration: 'Origin',
+                        canToggle: false,
+                    }),
+                    mockModifierEntry({
+                        name: 'The Lathe Worlds',
+                        img: 'icons/environment/settlement/watchtower-cliff.webp',
+                        description: 'techUse +10',
+                        duration: 'Origin',
+                        canToggle: false,
+                    }),
                 ],
                 effects: [
                     mockModifierEntry({

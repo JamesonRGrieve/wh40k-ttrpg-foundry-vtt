@@ -26,6 +26,8 @@ const FLOW_UNEQUIP = 'unequip-removes-modifier';
 const FLOW_STACK = 'stackable-modifier-stacks';
 const FLOW_SKILL = 'modifier-on-skill';
 const FLOW_CONDITION_MAG = 'modifier-condition-applied';
+const FLOW_ORIGIN_SKILL = 'origin-flat-skill-applies';
+const FLOW_ORIGIN_SIT = 'origin-situational-surfaces';
 
 interface ActorRef {
     id: string;
@@ -48,6 +50,7 @@ interface FoundryActorHandle {
     createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
     deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<void>;
     items?: { get?: (id: string) => { update?: (data: object) => Promise<void> } | undefined };
+    getSituationalModifiers?: (type: string, key?: string) => Array<{ key: string; source: string }>;
 }
 interface FoundryWindow {
     Actor: { create?: (data: object) => Promise<FoundryActorHandle | null> };
@@ -354,6 +357,58 @@ async function probeSkillModifier(page: Page, actorId: string): Promise<FlowResu
 }
 
 /**
+ * Origin path with a flat skill modifier (+10 dodge) — verify it lands on
+ * skills.dodge.current via `_registerOriginPathSkillSources` (#432). Origin
+ * characteristics stay char-gen-baked (not runtime-applied), so only the skill
+ * channel is exercised here.
+ */
+async function probeOriginSkillModifier(page: Page, actorId: string): Promise<FlowResult> {
+    const baseline = (await readActorPath(page, actorId, 'system.skills.dodge.current')) ?? 0;
+    const ids = await createItems(page, actorId, [
+        {
+            name: 'probe-origin-dodge-10',
+            type: 'originPath',
+            system: { modifiers: { skills: { dodge: 10 } } },
+        },
+    ]);
+    if (ids.length === 0) return { ok: false, error: 'origin skill-mod create failed' };
+    try {
+        const after = (await readActorPath(page, actorId, 'system.skills.dodge.current')) ?? 0;
+        const ok = after === baseline + 10;
+        return { ok, error: ok ? null : `expected ${baseline + 10} skills.dodge.current from origin, got ${after}` };
+    } finally {
+        await deleteItems(page, actorId, ids);
+    }
+}
+
+/**
+ * Origin path with a scoped (situational) skill modifier — verify it surfaces via
+ * `WH40KAcolyte.getSituationalModifiers('skills')` as a roll-dialog toggle (#432).
+ */
+async function probeOriginSituational(page: Page, actorId: string): Promise<FlowResult> {
+    const ids = await createItems(page, actorId, [
+        {
+            name: 'probe-origin-situational',
+            type: 'originPath',
+            system: { modifiers: { situational: { skills: [{ key: 'navigate', value: 20, condition: 'In an enclosed space' }] } } },
+        },
+    ]);
+    if (ids.length === 0) return { ok: false, error: 'origin situational create failed' };
+    try {
+        const found = await page.evaluate((idArg: string) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
+            const gameGlobal = (globalThis as unknown as FoundryWindow).game;
+            const actor = gameGlobal.actors?.get?.(idArg);
+            if (typeof actor?.getSituationalModifiers !== 'function') return false;
+            return actor.getSituationalModifiers('skills').some((m) => m.key === 'navigate' && m.source === 'probe-origin-situational');
+        }, actorId);
+        return { ok: found, error: found ? null : 'origin situational navigate toggle did not surface via getSituationalModifiers' };
+    } finally {
+        await deleteItems(page, actorId, ids);
+    }
+}
+
+/**
  * Verify a condition-style AE with a NEGATIVE characteristic modifier lands at
  * the expected magnitude. Mirrors `createConditionEffect`'s Blinded definition
  * (system.characteristics.weaponSkill.modifier -= 30) by creating the AE
@@ -423,6 +478,8 @@ test.describe.serial('modifiers / equipment-effect pipeline (Tier B)', () => {
                 { flow: FLOW_UNEQUIP, run: async () => probeUnequipRollback(page, actorId) },
                 { flow: FLOW_STACK, run: async () => probeStackable(page, actorId) },
                 { flow: FLOW_SKILL, run: async () => probeSkillModifier(page, actorId) },
+                { flow: FLOW_ORIGIN_SKILL, run: async () => probeOriginSkillModifier(page, actorId) },
+                { flow: FLOW_ORIGIN_SIT, run: async () => probeOriginSituational(page, actorId) },
                 { flow: FLOW_CONDITION_MAG, run: async () => probeConditionMagnitude(page, actorId) },
             ];
             for (const probe of probes) {
