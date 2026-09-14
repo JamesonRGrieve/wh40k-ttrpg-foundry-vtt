@@ -16,6 +16,7 @@ import { initializeStoryHandlebars } from '../../../../stories/template-support'
 import { assertField, submitForm, renderSheetParts } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/actor/craft/header.hbs?raw';
 import combatTabSrc from '../../../templates/actor/craft/tab-combat.hbs?raw';
+import componentsTabSrc from '../../../templates/actor/craft/tab-components.hbs?raw';
 import overviewTabSrc from '../../../templates/actor/craft/tab-overview.hbs?raw';
 import tabsSrc from '../../../templates/actor/craft/tabs.hbs?raw';
 
@@ -38,6 +39,12 @@ function renderCraftSheet(ctx: SheetContextLike): HTMLElement {
 /** Render the combat tab (holds the animate-craft characteristics profile grid). */
 function renderCraftCombat(ctx: SheetContextLike): HTMLElement {
     return renderSheetParts([{ template: headerSrc }, { template: tabsSrc }, { template: combatTabSrc, partClass: 'wh40k-body tw-p-2' }], ctx, {
+        systemId: systemIdOf(ctx),
+    });
+}
+
+function renderCraftComponents(ctx: SheetContextLike): HTMLElement {
+    return renderSheetParts([{ template: headerSrc }, { template: tabsSrc }, { template: componentsTabSrc, partClass: 'wh40k-body tw-p-2' }], ctx, {
         systemId: systemIdOf(ctx),
     });
 }
@@ -92,8 +99,14 @@ const craftSource = {
     source: '',
 };
 
+const craftSystem = {
+    ...mockVehicleSheetContext({ systemId: 'dh2' }).system,
+    sizeLabel: 'Enormous',
+};
+
 const defaultCraftCtx: SheetContextLike = {
     ...mockVehicleSheetContext({ systemId: 'dh2' }),
+    system: craftSystem,
     isCraft: true,
     isTerracraft: true,
     isAircraft: false,
@@ -116,6 +129,7 @@ export const Default: Story = {
         const view = within(canvasElement);
         // Craft name in header
         await expect(view.getByDisplayValue('Chimera APC')).toBeVisible();
+        await expect(view.getAllByText('Enormous').length).toBeGreaterThan(0);
         // Overview tab renders manoeuverability field
         assertField(canvasElement, 'system.manoeuverability', 5);
     },
@@ -190,6 +204,55 @@ export const DaemonEngine: Story = {
         assertField(canvasElement, 'system.characteristics.strength.base', 75);
         const view = within(canvasElement);
         await expect(view.getByText('Unnatural Strength (7)')).toBeVisible();
+    },
+};
+
+export const Components: Story = {
+    name: 'Components — owned vehicle upgrades',
+    args: {
+        ...defaultCraftCtx,
+        components: [
+            {
+                _id: 'component-1',
+                name: 'Reinforced Hull',
+                system: { description: '<p>Improves structural resilience.</p>', active: true },
+            },
+        ],
+        vehicleUpgrades: [],
+    },
+    render: (args) => renderCraftComponents(args),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(view.getByText('Reinforced Hull')).toBeVisible();
+    },
+};
+
+export const MountedLoadout: Story = {
+    name: 'Mounted loadout — readable weapon stats and components',
+    args: {
+        ...defaultCraftCtx,
+        weapons: [
+            {
+                _id: 'weapon-1',
+                name: 'Twin-linked Autocannon',
+                system: { damageLabel: '4d10+5 I', rangeLabel: '300m' },
+            },
+        ],
+        components: [
+            {
+                _id: 'component-1',
+                name: 'Reinforced Hull',
+                system: { description: '<p>Improves structural resilience.</p>', active: true },
+            },
+        ],
+        vehicleUpgrades: [],
+    },
+    render: (args) => renderCraftCombat(args),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(view.getByText('Twin-linked Autocannon')).toBeVisible();
+        await expect(view.getByText('4d10+5 I')).toBeVisible();
+        await expect(view.getByText('300m')).toBeVisible();
     },
 };
 
