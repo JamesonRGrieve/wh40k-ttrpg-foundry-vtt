@@ -80,6 +80,14 @@ function collectionForPack(folder) {
     const segment = (name) => new RegExp(`(^|-)${name}(-|$)`).test(folder);
     if (segment('adventures')) return 'adventures';
     if (segment('actors')) return 'actors';
+    // Vehicle / ship ACTOR packs are named `<line>-<book>-vehicles-<craft>`
+    // (terracraft / aircraft / watercraft / voidcraft) with no `actors`
+    // segment — they are still Actor documents, so an adventure that embeds a
+    // vehicle by `…vehicles-terracraft.Actor.<id>` must index it under `actors`,
+    // not fall through to the `items` default (which mis-keyed it as `.Item.`
+    // and left the reference unresolved). Item vehicle/ship packs use the
+    // singular `items-vehicle-*` / `items-ship-*` form and are unaffected.
+    if (segment('terracraft') || segment('aircraft') || segment('watercraft') || segment('voidcraft')) return 'actors';
     if (segment('scenes')) return 'scenes';
     if (segment('items')) return 'items';
     if (segment('journals')) return 'journal';
