@@ -4039,6 +4039,18 @@
             "Deadly": "Deadly",
             "Apocalyptic": "Apocalyptic"
         },
+        "Size": {
+            "Miniscule": "Miniscule",
+            "Puny": "Puny",
+            "Scrawny": "Scrawny",
+            "Average": "Average",
+            "Hulking": "Hulking",
+            "Enormous": "Enormous",
+            "Massive": "Massive",
+            "Immense": "Immense",
+            "Monumental": "Monumental",
+            "Titanic": "Titanic"
+        },
         "Vehicle": {
             "OpenInterior": "Board Interior",
             "NoInterior": "This vehicle has no linked interior scene.",
