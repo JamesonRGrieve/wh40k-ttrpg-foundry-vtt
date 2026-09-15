@@ -298,6 +298,13 @@ test.describe('Storybook extra story render', () => {
         await expect(page.getByText('[object Object]')).toHaveCount(0);
     });
 
+    // ── Roll dialog — distance/size sections collapse with the auto-set flavour ──
+    test('roll dialog labels distance + target size as select-target-to-set-automatically overrides', async ({ page }) => {
+        await page.goto('/iframe.html?id=prompts-unifiedrolldialog--weapon-target-dropdown');
+        await expect(page.getByText('Distance Override (Select Target to Set Automatically)')).toBeVisible();
+        await expect(page.getByText('Target Size (Select Target to Set Automatically)')).toBeVisible();
+    });
+
     // ── Inventory — Item Table panels, per-system homologation ───────────────
     test('weapon panel DH2e renders lasgun and roll actions', async ({ page }) => {
         await page.goto('/iframe.html?id=inventory-item-table--weapon-panel-dh-2');

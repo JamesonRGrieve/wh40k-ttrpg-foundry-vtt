@@ -201,6 +201,8 @@
             "SelectATarget": "Select a Target",
             "NoTargetSelected": "No target — target a token, then Select Target",
             "TargetLabel": "Target",
+            "DistanceOverride": "Distance Override (Select Target to Set Automatically)",
+            "TargetSizeOverride": "Target Size (Select Target to Set Automatically)",
             "TestVariant": "Test Variant",
             "TestVariantsDisabled": "This skill has test variants — enable “Awareness sense split” (or the homebrew ruleset) in system settings to choose one.",
             "NotEnoughAmmo": "Not enough ammo to perform action. Do you need to reload?",

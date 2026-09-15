@@ -154,6 +154,7 @@ export const WeaponTargetDropdown: Story = {
         rollSubtitle: 'Hand Cannon',
         hasContextPanel: true,
         isWeapon: true,
+        isRanged: true,
         contextExpanded: true,
         weapon: { name: 'Hand Cannon', img: 'icons/svg/item-bag.svg', isRanged: true },
         hasCombat: true,
