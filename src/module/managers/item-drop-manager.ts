@@ -13,7 +13,7 @@
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { t } from '../i18n/t.ts';
-import { dropItemAsItemPile } from '../integrations/item-piles.ts';
+import { addItemToItemPile, dropItemAsItemPile, isItemPilesPile } from '../integrations/item-piles.ts';
 import { NON_DROPPABLE_TYPES } from './non-droppable-types.ts';
 
 /** Minimal position shape used by the pure placement helpers. */
@@ -253,6 +253,22 @@ export class ItemDropManager {
         const itemData = item.toObject();
         // eslint-disable-next-line no-restricted-syntax -- boundary: toObject() returns untyped document source; _id is stripped before re-create
         delete (itemData as { _id?: unknown })._id;
+
+        // Same-tile auto-merge (#573): if an Item Piles pile already occupies this
+        // grid cell, add the item to THAT pile instead of dropping a second
+        // overlapping pile on top of it. `findMergeablePileIndex` already located a
+        // loot token on the cell; merge only when it is an Item Piles pile (the
+        // plain loot-actor fallback below handles its own same-tile merge via
+        // `mergeIndex`). Falls through to a fresh pile if the add fails.
+        if (mergeIndex >= 0) {
+            const existing = sceneTokens[mergeIndex];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: index access is possibly undefined under strict TS
+            if (existing !== undefined && isItemPilesPile(existing.actor ?? null) && (await addItemToItemPile(existing, itemData))) {
+                if (item.id != null) await sourceActor.deleteEmbeddedDocuments('Item', [item.id]);
+                ui.notifications.info(t('WH40K.Loot.Dropped', { actor: sourceActor.name, item: item.name }));
+                return (existing.actor as WH40KBaseActor | null) ?? null;
+            }
+        }
 
         // Prefer Item Piles when installed: it owns its own pile actors, so the
         // dropped pile doesn't add a "Dropped: X" actor to the Actors sidebar
