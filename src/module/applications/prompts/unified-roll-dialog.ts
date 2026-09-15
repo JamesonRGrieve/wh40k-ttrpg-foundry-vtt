@@ -217,6 +217,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _initialized: boolean;
     declare _cachedSituationalModifiers: SituationalModifierEntry[] | null;
     declare _pickerOutsideHandler: ((e: PointerEvent) => void) | null;
+    /** Foundry `targetToken` hook id while open, so the range/situational preview tracks target changes live (#233). */
+    declare _targetHookId: number | null;
     declare _psyMode: PsyMode;
     declare _pushLevel: number;
     /**
@@ -271,6 +273,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._initialized = false;
         this._cachedSituationalModifiers = null;
         this._pickerOutsideHandler = null;
+        this._targetHookId = null;
         this._psyMode = 'unfettered';
         this._pushLevel = 1;
         this._selectedAssistantIds = new Set<string>();
@@ -910,6 +913,29 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
+        // Keep the auto-range/situational preview live as the target changes (#233).
+        // On open and via "select target" the range band/bonus already resolve from
+        // the target distance, but retargeting a firearm while the dialog stays open
+        // left the previewed range stale (`#applyTargetDistance` runs only on init).
+        // Register a `targetToken` hook (weapon rolls only), re-resolving distance +
+        // situationals and re-rendering when THIS user retargets; torn down in `_onClose`.
+        if (this._targetHookId === null && this.rollType === 'weapon') {
+            const onTarget = (user: { id?: string }): void => {
+                if (user.id !== game.user.id) return;
+                // A fresh target should follow the calculated bracket, not a stale manual override.
+                this._selectedRangeBracket = null;
+                this.#applyTargetDistance(false);
+                this.#applyTargetSituationals();
+                void this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
+            };
+            // Foundry's Hooks.on is deprecated in V14's typings and its payload typing
+            // varies by hook name; bind a minimal typed shim at this framework boundary
+            // (mirrors the hooksOn shim in hooks-manager.ts / combat-tracker-economy.ts).
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-deprecated, no-restricted-syntax -- framework boundary: Hooks.on payload typing varies by hook name and is deprecated in the V14 typings; the runtime API is current
+            const hooksOn = Hooks.on.bind(Hooks) as (event: string, fn: (...args: any[]) => unknown) => number;
+            this._targetHookId = hooksOn('targetToken', onTarget);
+        }
+
         // Auto-select number inputs on focus
         this._el.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
             input.addEventListener('focus', (e) => (e.target as HTMLInputElement).select());
@@ -1002,6 +1028,19 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 void this._submitToChat();
             }
         });
+    }
+
+    /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onClose has a loose Foundry options signature
+    override _onClose(options: Record<string, unknown>): void {
+        // Release the live target-tracking hook (#233) so it does not fire (and
+        // render) against a closed dialog.
+        if (this._targetHookId !== null) {
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- framework boundary: Hooks.off is deprecated in the V14 typings; the runtime API is current
+            Hooks.off('targetToken', this._targetHookId);
+            this._targetHookId = null;
+        }
+        super._onClose(options);
     }
 
     /* -------------------------------------------- */

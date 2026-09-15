@@ -5366,6 +5366,18 @@
             "flags": {}
         },
         {
+            "name": "hb-dh2-vehicles-terracraft",
+            "label": "Homebrew DH2 Vehicles",
+            "path": "packs/homebrew/hb-dh2-vehicles-terracraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "hb-dh2-items-psychic-powers",
             "label": "Homebrew DH2 Psychic Powers",
             "path": "packs/homebrew/hb-dh2-items-psychic-powers",
@@ -10559,6 +10571,7 @@
                         "hb-dh2-items-psychic-powers",
                         "hb-dh2-items-talents",
                         "hb-dh2-items-weapons",
+                        "hb-dh2-vehicles-terracraft",
                         "hb-dw-items-gear",
                         "hb-dw-items-psychic-powers",
                         "hb-dw-items-talents",
