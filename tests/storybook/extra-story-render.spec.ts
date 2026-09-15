@@ -302,7 +302,7 @@ test.describe('Storybook extra story render', () => {
     test('roll dialog labels distance + target size as select-target-to-set-automatically overrides', async ({ page }) => {
         await page.goto('/iframe.html?id=prompts-unifiedrolldialog--weapon-target-dropdown');
         await expect(page.getByText('Distance Override (Select Target to Set Automatically)')).toBeVisible();
-        await expect(page.getByText('Target Size (Select Target to Set Automatically)')).toBeVisible();
+        await expect(page.getByText('Target Size Override (Select Target to Set Automatically)')).toBeVisible();
     });
 
     // ── Inventory — Item Table panels, per-system homologation ───────────────
