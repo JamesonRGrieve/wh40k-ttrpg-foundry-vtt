@@ -1,5 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { dropItemAsItemPile, isItemPilesPile, pileUuidFromCreateResult, registerItemPilesValuation, shouldSeedPileActorType } from './item-piles.ts';
+import {
+    addItemToItemPile,
+    dropItemAsItemPile,
+    isItemPilesPile,
+    pileUuidFromCreateResult,
+    registerItemPilesValuation,
+    shouldSeedPileActorType,
+} from './item-piles.ts';
 
 /**
  * Unit coverage for the #385 Item Piles drop routing. Exercises the
@@ -76,6 +83,35 @@ describe('dropItemAsItemPile (#385)', () => {
         const addItems = vi.fn();
         stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: { createItemPile, addItems } } });
         expect(await dropItemAsItemPile({ name: 'X' }, POS, 'scene1')).toBe(false);
+    });
+});
+
+describe('addItemToItemPile — same-tile merge (#573)', () => {
+    it('returns false when Item Piles is not installed/active', async () => {
+        stubGame({ modules: { get: () => undefined } });
+        expect(await addItemToItemPile({ id: 'pile-token' }, { name: 'X' })).toBe(false);
+    });
+
+    it('returns false when the API exposes no addItems', async () => {
+        stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: {} } });
+        expect(await addItemToItemPile({ id: 'pile-token' }, { name: 'X' })).toBe(false);
+    });
+
+    it('adds the item to the EXISTING pile token (not a new pile) and returns true', async () => {
+        const addItems = vi.fn().mockResolvedValue([]);
+        stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: { addItems } } });
+        const pileToken = { id: 'existing-pile-token' };
+        const item = { name: 'Multi-melta', type: 'weapon' };
+        expect(await addItemToItemPile(pileToken, item)).toBe(true);
+        // Targets the existing pile token — no createItemPile, so no second pile.
+        expect(addItems).toHaveBeenCalledWith(pileToken, [item]);
+    });
+
+    it('returns false (so the caller creates a fresh pile) when addItems throws', async () => {
+        vi.spyOn(console, 'warn').mockImplementation((): void => {});
+        const addItems = vi.fn().mockRejectedValue(new Error('boom'));
+        stubGame({ modules: { get: () => ({ active: true }) }, itempiles: { API: { addItems } } });
+        expect(await addItemToItemPile({ id: 'p' }, { name: 'X' })).toBe(false);
     });
 });
 

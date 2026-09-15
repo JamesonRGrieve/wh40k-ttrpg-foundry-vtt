@@ -248,6 +248,26 @@ export async function dropItemAsItemPile(itemData: object, position: { x: number
     }
 }
 
+/**
+ * Merge an item into an EXISTING Item Piles pile (#573) instead of creating a
+ * second overlapping pile on the same tile. `pileToken` is the pile's scene
+ * TokenDocument — the pile Item Piles tracks (the pile ACTOR is the shared
+ * "Default Item Pile" template on the unlinked path, so it must NOT be the
+ * target). Returns true when the add resolved, false when Item Piles is absent,
+ * the API is missing, or the call throws (caller then creates a fresh pile).
+ */
+export async function addItemToItemPile(pileToken: object, itemData: object): Promise<boolean> {
+    const api = itemPilesApi();
+    if (typeof api?.addItems !== 'function') return false;
+    try {
+        await api.addItems(pileToken, [itemData]);
+        return true;
+    } catch (err) {
+        console.warn(`${SYSTEM_ID} | Item Piles addItems (same-tile merge) failed; creating a new pile instead.`, err);
+        return false;
+    }
+}
+
 /** Actor surface the pile check reads — Foundry's per-module flag bag. */
 export interface FlaggableActor {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.flags is an untyped per-module flag bag (any actor type assigns here); narrowed structurally below
