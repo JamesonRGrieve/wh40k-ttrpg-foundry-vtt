@@ -118,7 +118,7 @@
     {{#if isRanged}}
         <div class="tw-flex tw-flex-col tw-gap-1 tw-py-2 tw-pb-1 tw-border-t tw-border-[rgba(255,255,255,0.06)]">
             <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-font-ui tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#9a9a8a] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-cursor-pointer tw-w-full tw-justify-start hover:tw-text-[#e8e4d9] [&_i:first-child]:tw-text-gold-raw [&_i:first-child]:tw-text-xs" data-action="toggleRangeSection">
-                <i class="fas fa-ruler"></i> Range
+                <i class="fas fa-ruler"></i> {{localize "WH40K.Roll.DistanceOverride"}}
                 {{#unless rangeExpanded}}
                     <span class="tw-ml-auto tw-flex tw-items-center tw-gap-1 tw-text-2xs tw-font-normal tw-normal-case tw-tracking-normal">
                         <span class="tw-text-[#e8e4d9]">{{selectedRangeSummary.label}}</span>
@@ -204,7 +204,7 @@
     {{#if isRanged}}
         <div class="tw-flex tw-flex-col tw-gap-1 tw-py-2 tw-pb-1 tw-border-t tw-border-[rgba(255,255,255,0.06)]">
             <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-font-ui tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#9a9a8a] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-cursor-pointer tw-w-full tw-justify-start hover:tw-text-[#e8e4d9] [&_i:first-child]:tw-text-gold-raw [&_i:first-child]:tw-text-xs" data-action="toggleSizeSection">
-                <i class="fas fa-expand-arrows-alt"></i> Target Size
+                <i class="fas fa-expand-arrows-alt"></i> {{localize "WH40K.Roll.TargetSizeOverride"}}
                 {{#unless sizeExpanded}}
                     <span class="tw-ml-auto tw-flex tw-items-center tw-gap-1 tw-text-2xs tw-font-normal tw-normal-case tw-tracking-normal">
                         <span class="tw-text-[#e8e4d9]">{{selectedSizeSummary.label}}</span>
