@@ -13,6 +13,7 @@
 import { isBasicSkill } from '../../helpers/skill-classification.ts';
 import type { ActionData } from '../../rolls/action-data.ts';
 import { advanceExtendedTest } from '../../rolls/extended-test-data.ts';
+import { type ModifierSourcesShape, type PassiveModifierRow, selectPassiveModifierRows } from '../../rolls/passive-modifiers.ts';
 import type { RollData, RollModifierComponent } from '../../rolls/roll-data.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { ASSIST_BONUS_PER_ALLY, DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
@@ -130,28 +131,6 @@ interface AssistTokenLike {
     id?: string | null;
     actor?: ({ name?: string; system?: AssistSkillSource } & object) | null | undefined;
     document?: { disposition?: number } | undefined;
-}
-
-/** One passive modifier as `creature.ts _applyItemModifiers` writes it. */
-interface PassiveModifierEntry {
-    name?: string;
-    type?: string;
-    value?: number;
-}
-
-/** `actor.system.modifierSources` — per-bucket passive provenance (#484). */
-interface ModifierSourcesShape {
-    characteristics?: Record<string, PassiveModifierEntry[] | undefined> | undefined;
-    skills?: Record<string, PassiveModifierEntry[] | undefined> | undefined;
-    combat?: Record<string, PassiveModifierEntry[] | undefined> | undefined;
-}
-
-/** A read-only passive row rendered in the modifiers panel (#484). */
-interface PassiveModifierRow {
-    label: string;
-    value: number;
-    valueLabel: string;
-    type: string;
 }
 
 interface ConditionSource {
@@ -1806,22 +1785,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      */
     _passiveModifierRows(): PassiveModifierRow[] {
         const rd = this.rollData;
-        const rollKey = rd.rollKey;
-        if (rollKey === '') return [];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.sourceActor.system is the untyped Foundry actor payload; narrowed to the modifierSources provenance slice
         const withSources = rd.sourceActor?.system as { modifierSources?: ModifierSourcesShape } | undefined;
-        const sources = withSources?.modifierSources;
-        if (sources === undefined) return [];
-        const bucket = rd.type === 'Skill' ? sources.skills : rd.type === 'Characteristic' ? sources.characteristics : sources.combat;
-        const entries = bucket?.[rollKey];
-        if (entries === undefined) return [];
-        return entries
-            .filter((entry): entry is PassiveModifierEntry & { value: number } => typeof entry.value === 'number' && entry.value !== 0)
-            .map((entry) => ({
-                label: entry.name ?? '',
-                value: entry.value,
-                valueLabel: '–',
-                type: entry.type ?? '',
-            }));
+        return selectPassiveModifierRows(rd.type, rd.rollKey, withSources?.modifierSources);
     }
 
     static async #onToggleAssistant(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
