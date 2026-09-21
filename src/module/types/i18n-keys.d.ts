@@ -577,6 +577,8 @@ export type I18nKey =
     | 'WH40K.BodyPart.Label'
     | 'WH40K.BodyPart.Leg'
     | 'WH40K.Cancel'
+    | 'WH40K.Canvas.StackedPicker.Label'
+    | 'WH40K.Canvas.StackedPicker.SelectToken'
     | 'WH40K.Career.ArchMilitant'
     | 'WH40K.Career.ArchMilitantDesc'
     | 'WH40K.Career.Astropath'

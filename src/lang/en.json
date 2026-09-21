@@ -1098,6 +1098,12 @@
                 "Custom": "Custom"
             }
         },
+        "Canvas": {
+            "StackedPicker": {
+                "Label": "Stacked tokens",
+                "SelectToken": "Select {name}"
+            }
+        },
         "Character": {
             "Name": "Name",
             "Player": "Player",
