@@ -4,6 +4,12 @@ import { buildCharacteristicFields } from '../shared/characteristics.ts';
 import { descriptionField, migrateDescriptionAndSource, provenanceField } from '../shared/description-template.ts';
 import { characteristicField, type CharacteristicSource } from '../shared/stat-fields.ts';
 import type { VehicleHardpoint } from '../shared/vehicle-mounting.ts';
+import {
+    aggregateVehicleTraitEffects,
+    emptyAggregatedVehicleTraitEffects,
+    type AggregatedVehicleTraitEffects,
+    type VehicleTraitEffects,
+} from '../shared/vehicle-trait-effects-template.ts';
 import { migrateCharacteristics } from './npc-import-migration.ts';
 
 /**
@@ -362,6 +368,14 @@ export class ConventionalCraftData extends VehicleData {
         critical: number;
     };
     /**
+     * Derived (not schema): the resolved, enforceable effects folded from every
+     * vehicle-trait this craft owns — crit mitigation, crew exposure, per-test
+     * bonuses, terrain/movement/deployment. Computed in {@link prepareDerivedData}
+     * by {@link aggregateVehicleTraitEffects}; consumed by damage/test/movement
+     * resolution (phased — content issue #28).
+     */
+    declare traitEffects: AggregatedVehicleTraitEffects;
+    /**
      * Optional creature-style characteristics profile. Populated only on animate
      * craft — daemon-engines (Defiler, Soul Grinder), Chaos walkers, Imperial
      * Dreadnoughts / Penitent Engines — which roll attacks (WS claws, BS cannons)
@@ -497,7 +511,34 @@ export class ConventionalCraftData extends VehicleData {
     override prepareDerivedData(): void {
         super.prepareDerivedData();
         this._applyVehicleTraitModifiers();
+        this._aggregateTraitEffects();
         this._prepareCharacteristics();
+    }
+
+    /**
+     * Fold every owned vehicle-trait's structured `effects` into the derived
+     * `traitEffects` summary (crit mitigation, crew exposure, per-test bonuses,
+     * terrain/movement/deployment) via the pure central aggregator. This makes
+     * the effects real, typed, computed values on the actor; runtime consumption
+     * (damage/crit, test rolls, crew targeting, movement) is phased — content
+     * issue #28.
+     */
+    _aggregateTraitEffects(): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: parent.items is an EmbeddedCollection; iteration is typed loose
+        const parent = (this as unknown as { parent?: { items?: Iterable<{ type: string; system: unknown }> } }).parent;
+        const items = parent?.items;
+        if (!items) {
+            this.traitEffects = emptyAggregatedVehicleTraitEffects();
+            return;
+        }
+        const effects: VehicleTraitEffects[] = [];
+        for (const item of items) {
+            if (item.type !== 'vehicleTrait') continue;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: per-item system shape narrowed by the type guard above
+            const traitEffects = (item.system as { effects?: VehicleTraitEffects }).effects;
+            if (traitEffects) effects.push(traitEffects);
+        }
+        this.traitEffects = aggregateVehicleTraitEffects(effects);
     }
 
     /**

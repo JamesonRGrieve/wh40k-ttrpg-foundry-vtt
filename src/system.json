@@ -9350,6 +9350,18 @@
             "flags": {}
         },
         {
+            "name": "hb-dh2-items-ammo",
+            "label": "Homebrew DH2 Ammunition",
+            "path": "packs/homebrew-generic/hb-dh2-items-ammo",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "hb-dh2-items-armour",
             "label": "Homebrew DH2 Armour",
             "path": "packs/homebrew-gw-copyright/hb-dh2-items-armour",
@@ -10820,6 +10832,7 @@
                         "hb-dh2-actors-reinforcements",
                         "hb-dh2-actors-ships",
                         "hb-dh2-items-actors",
+                        "hb-dh2-items-ammo",
                         "hb-dh2-items-armour",
                         "hb-dh2-items-conditions",
                         "hb-dh2-items-misc",

@@ -8,6 +8,7 @@ import {
     type VehicleModifierEntry,
     type VehicleStatModifiers,
 } from '../shared/vehicle-stat-modifiers-template.ts';
+import { vehicleTraitEffectsSchema, type VehicleTraitEffects } from '../shared/vehicle-trait-effects-template.ts';
 
 /**
  * Data model for Vehicle Trait items.
@@ -23,6 +24,8 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
     declare hasLevel: boolean;
     declare level: number | null;
     declare notes: string;
+    // Structured, enforceable effects (crit/crew/test/terrain/movement/deployment) — content issue #28.
+    declare effects: VehicleTraitEffects;
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -45,6 +48,9 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
+
+            // Structured enforceable effects beyond the flat stat block (content issue #28).
+            effects: vehicleTraitEffectsSchema(),
         };
     }
 
