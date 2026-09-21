@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 #
 # build-system.sh — Install toolchain and build the wh40k-rpg Foundry VTT
-# system, then compile compendiums when the src/packs submodule is present.
+# system, then compile the public generic compendiums from src/packs. (The
+# private copyrighted content in src/packs-private is compiled and shipped ONLY
+# by the campaign deploy — see deploy.sh — never by this public system build.)
 #
 # Usage:
 #   ./build-system.sh           # install toolchain (if needed), deps, build
@@ -59,7 +61,7 @@ build_system_dist() {
 build_compendiums() {
     local script="${REPO_ROOT}/src/packs/build-compendium.sh"
     if [ ! -f "$script" ]; then
-        echo "=== src/packs submodule is unavailable; skipping compendium build ==="
+        echo "=== src/packs/build-compendium.sh is unavailable; skipping compendium build ==="
         return 0
     fi
 

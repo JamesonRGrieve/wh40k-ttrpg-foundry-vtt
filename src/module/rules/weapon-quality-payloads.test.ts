@@ -34,7 +34,7 @@ const PACKS: ReadonlyArray<{ systemId: string; dir: string; pack: string }> = [
 const NON_RT = PACKS.filter((p) => p.systemId !== 'rt');
 
 function loadDocs(dir: string, pack: string): PackDoc[] {
-    const srcDir = resolve(__dirname, `../../packs/${dir}/${pack}/_source`);
+    const srcDir = resolve(__dirname, `../../packs-private/${dir}/${pack}/_source`);
     if (!existsSync(srcDir)) return [];
     return readdirSync(srcDir)
         .filter((f) => f.endsWith('.json'))

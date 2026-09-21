@@ -17,8 +17,8 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { materializeItemVariants } from '../src/module/utils/item-variant-utils.ts';
 
-const CANON = resolve(__dirname, '../src/packs/only-war/ow-core-origins-homeworlds/_source/fortress-world_a51ce4de508a699d.json');
-const DH2_STUB = resolve(__dirname, '../src/packs/dark-heresy-2/dh2-core-origins-homeworlds/_source/fortress-world_a51ce4de508a699d.json');
+const CANON = resolve(__dirname, '../src/packs-private/only-war/ow-core-origins-homeworlds/_source/fortress-world_a51ce4de508a699d.json');
+const DH2_STUB = resolve(__dirname, '../src/packs-private/dark-heresy-2/dh2-core-origins-homeworlds/_source/fortress-world_a51ce4de508a699d.json');
 
 interface ResolvedFortress {
     grants: { aptitudes: string[]; skills: object[] };

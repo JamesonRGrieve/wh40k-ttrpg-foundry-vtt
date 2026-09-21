@@ -10,7 +10,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const PACKS_ROOT = resolve(__dirname, '../../src/packs');
+const PACKS_ROOT = resolve(__dirname, '../../src/packs-private');
 
 /** Locate a pack's `_source` directory under any game-line group dir. */
 function packSourceDir(packName: string): string | null {

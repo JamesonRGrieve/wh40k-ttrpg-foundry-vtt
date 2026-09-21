@@ -12,7 +12,7 @@ import { weaponQualityMechanicsFromRaw } from './weapon-quality-payloads.ts';
  * default-merge) instead of the former in-`src/` WEAPON_QUALITY_EFFECTS registry.
  */
 
-const PACK_DIR = resolve(__dirname, '../../packs/rogue-trader/rt-core-items-weapon-qualities/_source');
+const PACK_DIR = resolve(__dirname, '../../packs-private/rogue-trader/rt-core-items-weapon-qualities/_source');
 const mechanicsById = new Map<string, WeaponQualityMechanics>();
 if (existsSync(PACK_DIR)) {
     for (const file of readdirSync(PACK_DIR).filter((f) => f.endsWith('.json'))) {

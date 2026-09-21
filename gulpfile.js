@@ -14,19 +14,21 @@ const path = require("path");
 const zip = require("gulp-zip");
 const { ClassicLevel } = require("classic-level");
 const { exec } = require("child_process");
-// src/packs is a private submodule of copyrighted content that is intentionally
-// absent from the public CI build. validatePackSources is only used by
-// compilePacks (build:compendium), which the public nightly build never runs, so
-// load it lazily and fail clearly only if compendium compilation is attempted
-// without the submodule.
+// `src/packs` holds the public, hand-authored generic content packs plus the
+// canonical pack tooling (validators, templates, this schema doc). The
+// copyrighted book content lives in the `src/packs-private` submodule and is
+// compiled only when `WH40K_PACKS_SRC` points a build at it (the private deploy
+// does this — see deploy.sh). validatePackSources is the canonical validator
+// shipped in `src/packs`; load it lazily so a system-only build still succeeds
+// if the file is somehow missing.
 let validatePackSources;
 try {
   ({ validatePackSources } = require("./src/packs/validate-schema.cjs"));
 } catch {
   validatePackSources = () => {
     throw new Error(
-      "src/packs submodule is not checked out — cannot build compendiums (compilePacks). " +
-      "Run a system-only build (build:system) instead, or check out the private content submodule."
+      "src/packs/validate-schema.cjs is missing — cannot build compendiums (compilePacks). " +
+      "Run a system-only build (build:system) instead, or restore the pack tooling in src/packs."
     );
   };
 }
@@ -46,18 +48,25 @@ const STATIC_FILES = [
   "!src/module/**/*.ts",
   "!src/module/foundry-core/**",
   "src/templates/**/*",
-  // Bestiary / content art lives in the src/packs submodule beside the pack
-  // sources, and every actor there references it as
-  // `systems/wh40k-rpg/packs/images/...`. Without this glob the art never
-  // reaches dist/, so every one of those portraits 404s in a built system —
-  // which is what the token-mask and token-ring-art e2e specs caught.
-  // The glob has magic, so it is simply empty when the submodule is not
-  // checked out (the same tolerance compilePacks has).
+  // Public pack art lives in src/packs/images beside the generic pack sources,
+  // and pack documents reference it as `systems/wh40k-rpg/packs/images/...`.
+  // Without this glob the art never reaches dist/, so those portraits 404 in a
+  // built system — which is what the token-mask and token-ring-art e2e specs
+  // caught. The glob has magic, so it is simply empty when there is no public
+  // pack art. (Copyrighted art in the src/packs-private submodule is NOT copied
+  // by buildSystem — build-compendium.sh stages it beside the compiled packs, so
+  // it only ships via the private deploy, never the public release.)
   "src/packs/images/**/*",
   "src/lang/**/*",
   "src/*.json"
 ];
-const PACK_SRC = "src/packs";
+// Pack source root. Defaults to the public generic packs in `src/packs`; a build
+// overrides it (e.g. `WH40K_PACKS_SRC=src/packs-private`) to compile the private
+// copyrighted content instead. Accepts a repo-relative or absolute path.
+const PACK_SRC = process.env.WH40K_PACKS_SRC || "src/packs";
+// Absolute active pack root — the anchor for pack-tree-rooted `reference` stubs
+// ("packs/…" / "src/packs/…"), which name a sibling pack within THIS root.
+const PACK_SRC_ABS = path.resolve(__dirname, PACK_SRC);
 const BUILD_DIR = "dist";
 const PACK_BUILD_DIR = process.env.WH40K_PACKS_BUILD_DIR || path.join(BUILD_DIR, "packs");
 
@@ -93,8 +102,19 @@ function referenceOverrides(doc) {
 
 function resolveReferencePath(reference, fromFile) {
   if (path.isAbsolute(reference)) return reference;
+  // "packs/<group>/…" and "src/packs/<group>/…" name a sibling pack within the
+  // ACTIVE pack root (PACK_SRC — src/packs for the public generics, or
+  // src/packs-private for the copyrighted content), so anchor them at
+  // PACK_SRC_ABS rather than a hardcoded src/packs. For the public build both
+  // forms still resolve under src/packs exactly as before; for the private build
+  // they correctly resolve the cross-pack stubs that live in src/packs-private.
+  if (reference.startsWith('packs/')) {
+    return path.resolve(PACK_SRC_ABS, reference.slice('packs/'.length));
+  }
+  if (reference.startsWith('src/packs/')) {
+    return path.resolve(PACK_SRC_ABS, reference.slice('src/packs/'.length));
+  }
   if (reference.startsWith('src/')) return path.resolve(__dirname, reference);
-  if (reference.startsWith('packs/')) return path.resolve(__dirname, 'src', reference);
   return path.resolve(path.dirname(fromFile), reference);
 }
 

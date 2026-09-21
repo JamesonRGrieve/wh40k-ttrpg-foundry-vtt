@@ -21,7 +21,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-const PACKS_ROOT = resolve(__dirname, '../src/packs');
+const PACKS_ROOT = resolve(__dirname, '../src/packs-private');
 /** `Compendium.<system>.<pack>.<DocType>.<id>` */
 const UUID_RE = /^Compendium\.([^.]+)\.([^.]+)\.([^.]+)\.([^.]+)$/;
 

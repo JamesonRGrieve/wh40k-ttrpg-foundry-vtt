@@ -1,5 +1,7 @@
 ## Do Not Distribute
-src/packs-gw
+# Copyrighted book content now lives in the src/packs-private submodule (a
+# separate private repo — its content is never stored in this public parent, so
+# a plain clone without --recurse-submodules omits it). Nothing to ignore here.
 
 ## IDE
 .idea
@@ -18,6 +20,7 @@ src/module/foundry-core
 node_modules
 /css
 build
+src/packs/.build/
 archive
 dist
 *.zip

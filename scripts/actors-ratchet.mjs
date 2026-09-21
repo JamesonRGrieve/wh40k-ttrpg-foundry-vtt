@@ -20,10 +20,17 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const { validateActorPacks, SOFT_RULES } = require('../src/packs/validate-actors.cjs');
 
-const BASELINE = resolve(process.cwd(), '.actors-baseline');
+// Audit root: default `src/packs` (the public generics — gated by the normal
+// build + CI); deploy.sh sets WH40K_PACKS_SRC=src/packs-private to gate the
+// private content before shipping it. Each root keeps its own baseline file
+// (`.actors-baseline` for the public root, `.actors-baseline.private` for the
+// private content).
+const PACK_ROOT = process.env.WH40K_PACKS_SRC || 'src/packs';
+const PRIVATE = /packs-private/.test(PACK_ROOT);
+const BASELINE = resolve(process.cwd(), PRIVATE ? '.actors-baseline.private' : '.actors-baseline');
 const updateMode = process.argv.includes('--update');
 
-const report = validateActorPacks({ rootDir: resolve(process.cwd(), 'src/packs'), log: () => {} });
+const report = validateActorPacks({ rootDir: resolve(process.cwd(), PACK_ROOT), log: () => {} });
 
 /** Hard-rule counts only (soft rules are report-only). */
 const cur = {};

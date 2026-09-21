@@ -13,7 +13,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-const PACKS_ROOT = resolve(__dirname, '../src/packs');
+const PACKS_ROOT = resolve(__dirname, '../src/packs-private');
 
 /** Recursively collect every *.json file under a directory. */
 function jsonFiles(dir: string): string[] {
@@ -103,7 +103,11 @@ describe('compendium image paths (#239)', () => {
 
         const broken = new Map<string, number>();
         for (const [ref, count] of refCounts) {
-            const onDisk = resolve(SRC_ROOT, ref.slice(PREFIX.length));
+            // Pack-bundled art (`packs/...`) lives in the private content root
+            // (src/packs-private); other bundled assets (`icons/...`, `ui/...`)
+            // are public under src/.
+            const rest = ref.slice(PREFIX.length);
+            const onDisk = rest.startsWith('packs/') ? resolve(SRC_ROOT, 'packs-private', rest.slice('packs/'.length)) : resolve(SRC_ROOT, rest);
             // existsSync is case-sensitive on Linux, which is the property
             // that makes the `.png` vs `.PNG` class of bug detectable here.
             if (!existsSync(onDisk)) broken.set(ref, count);

@@ -3,15 +3,18 @@ name: CI
 # Code-quality gate for every push and pull request (including forks). This is
 # intentionally self-contained — it does NOT need the licensed Foundry runtime
 # or the compendium content:
-#   * The `src/packs` submodule (copyright content, private) is NOT checked out.
-#     No unit test or ratchet reads it; vitest excludes tests/integration +
-#     tests/e2e, and the build/release that bundles packs is handled elsewhere.
+#   * `src/packs` (public, hand-authored generic content) IS present, and its
+#     pack ratchets (actors/images) run here against it. The private copyrighted
+#     content in the `src/packs-private` submodule is NOT checked out
+#     (submodules: false) and is compiled + shipped only by the campaign deploy.
+#     vitest excludes tests/integration + tests/e2e.
 #   * Tier A integration + Tier B e2e require `.foundry-release/` (licensed,
 #     gitignored) and self-skip; they are not run here.
 #
 # Building the distributable + publishing it for the Foundry manifest is
-# deliberately NOT done here, because it would require the copyright packs. That
-# lives in the private CI (Forgejo) where the content can be present.
+# deliberately NOT done here, because the full content release requires the
+# private src/packs-private content. That lives in the private CI (Forgejo) /
+# the campaign deploy where the content can be present.
 #
 # Portability: only actions/checkout, pnpm/action-setup, actions/setup-node are
 # used (all available on Forgejo Actions), and the work is plain `pnpm` scripts,
@@ -37,7 +40,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: false # packs are private/copyright and not needed here
+          submodules: false # src/packs-private (private/copyright) is not needed here
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:

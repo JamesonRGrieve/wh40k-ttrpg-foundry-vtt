@@ -20,10 +20,17 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const { validateImagePacks } = require('../src/packs/validate-images.cjs');
 
-const BASELINE = resolve(process.cwd(), '.images-baseline');
+// Audit root: default `src/packs` (the public generics — gated by the normal
+// build + CI); deploy.sh sets WH40K_PACKS_SRC=src/packs-private to gate the
+// private content before shipping it. Each root keeps its own baseline file
+// (`.images-baseline` for the public root, `.images-baseline.private` for the
+// private content), so the two never fight over one number.
+const PACK_ROOT = process.env.WH40K_PACKS_SRC || 'src/packs';
+const PRIVATE = /packs-private/.test(PACK_ROOT);
+const BASELINE = resolve(process.cwd(), PRIVATE ? '.images-baseline.private' : '.images-baseline');
 const updateMode = process.argv.includes('--update');
 
-const report = validateImagePacks({ rootDir: resolve(process.cwd(), 'src/packs'), log: () => {} });
+const report = validateImagePacks({ rootDir: resolve(process.cwd(), PACK_ROOT), log: () => {} });
 
 /** Per-class arted (real-art) counts — the covered totals the ratchet protects. */
 const cur = report.arted;
