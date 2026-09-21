@@ -140,6 +140,16 @@ const JS_HOOKS = new Set([
     'scrollable',
     'form-group',
     'form-row',
+    // Foundry V14 native form/button chrome — defined and styled by Foundry's own
+    // foundry2.css (each verified present there), with NO backing rule in
+    // tailwind/*.js or src/css. Like `form-group` / `dialog-content` above, they
+    // are Foundry chrome that STAYS (Tailwind-migration invariant #4), not project
+    // CSS to port. Used on the roll/damage prompt <form>/<footer>/<button> roots.
+    'standard-form',
+    'framed',
+    'form-footer',
+    'divider',
+    'bright',
     // actor-drag and roll-characteristic are set and queried by character-sheet.ts for
     // drag registration and roll dispatch; they are not CSS classes.
     'actor-drag',
@@ -173,6 +183,13 @@ const JS_HOOKS = new Set([
     'wh40k-tab',
     'wh40k-tabs',
     'wh40k-tab-content',
+    // `.wh40k-talent-panel:not(.active)` is a tab-content VISIBILITY rule kept in
+    // tailwind/panel-components.js: Foundry's tab JS toggles `.active`, and the
+    // static `:not(.active){display:none}` form is deliberate — the inline
+    // arbitrary-variant `[&:not(.active)]:tw-hidden` did NOT emit under the
+    // `important: '.wh40k-rpg'` scope and regressed every panel to visible (#201).
+    // A permanent JS / tab-state hook, not a project CSS class to inline.
+    'wh40k-talent-panel',
     // base-item-sheet.ts DEFAULT_OPTIONS.classes includes 'wh40k-item-sheet' — added programmatically
     // by Foundry's sheet infrastructure, not a CSS class to migrate.
     'wh40k-item-sheet',
