@@ -77,7 +77,7 @@ export async function embark(actor: EmbarkableActor, vehicle: VehicleActorish, r
     }
 
     const capacity = capacityOf(vehicle.system);
-    const occupants = occupantsOf(vehicle.uuid, game.actors);
+    const occupants = occupantsOf(vehicle.uuid, occupantCandidateActors());
     const seat = role ?? defaultRole(occupants, capacity);
     if (seat === null) {
         ui.notifications.warn(game.i18n.format('WH40K.Vehicle.Full', { name: vehicle.name ?? '' }));
@@ -93,6 +93,34 @@ export async function embark(actor: EmbarkableActor, vehicle: VehicleActorish, r
     await actor.setFlag(SYSTEM_ID, ABOARD_FLAG, { vehicleUuid: vehicle.uuid, role: seat });
     ui.notifications.info(game.i18n.format('WH40K.Vehicle.Embarked', { actor: actor.name ?? '', vehicle: vehicle.name ?? '', role: seat }));
     return true;
+}
+
+/**
+ * Every actor that could be recorded aboard a vehicle: the world's actors PLUS
+ * the actors of tokens placed on the current canvas.
+ *
+ * Occupancy is a flag on the passenger (see {@link occupantsOf}), and #479 makes
+ * every placed token an UNLINKED actor copy — whose synthetic actor is NOT in
+ * `game.actors`. Scanning only the world collection therefore misses the common
+ * case: a character embarked via its canvas token never appears in the crew
+ * roster. Deduped by identity so a linked token (whose `.actor` IS its world
+ * actor) is not scanned twice.
+ * @returns {OccupantLike[]}  Candidate occupant actors, world ∪ canvas, deduped.
+ */
+export function occupantCandidateActors(): Actor.Implementation[] {
+    const out: Actor.Implementation[] = [];
+    const seen = new Set<Actor.Implementation>();
+    const add = (actor: Actor.Implementation | null | undefined): void => {
+        if (actor == null || seen.has(actor)) return;
+        seen.add(actor);
+        out.push(actor);
+    };
+    for (const actor of game.actors) add(actor);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: `canvas.tokens.placeables` is Foundry's untyped placeable array; each placeable's `.actor` is its synthetic (unlinked) or world actor
+    const placeables =
+        (canvas as { tokens?: { placeables?: ReadonlyArray<{ actor?: Actor.Implementation | null | undefined }> } | undefined }).tokens?.placeables ?? [];
+    for (const token of placeables) add(token.actor);
+    return out;
 }
 
 /**

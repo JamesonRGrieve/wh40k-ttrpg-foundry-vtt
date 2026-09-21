@@ -120,18 +120,26 @@ export class WH40KVehicle extends WH40KBaseActor {
             ui.notifications.warn('WH40K.Vehicle.Errors.ItemNotFound', { localize: true });
             return;
         }
-        const character = game.user.character;
-        if (character === null) {
+        if (item.type !== 'weapon') {
+            ui.notifications.warn(game.i18n.format('WH40K.Vehicle.Errors.NoActionForItemType', { type: item.type }));
+            return;
+        }
+
+        // An animate craft (Dreadnought / walker / daemon-engine) carries its own
+        // combat profile and attacks as ITSELF; an ordinary vehicle's weapon is
+        // fired by its operator — the controlling player's character. The vehicle
+        // DataModel holds `characteristics` as the profile or `null`, but the
+        // document's shared `system` union types it non-null, so read the true
+        // nullable value to tell an animate craft from an ordinary vehicle.
+        const profile = (this.system as { characteristics: object | null }).characteristics;
+        const attacker: WH40KBaseActor | null = profile !== null ? this : game.user.character;
+        if (attacker === null) {
             // eslint-disable-next-line no-restricted-syntax -- string is a localization key passed via { localize: true }
             ui.notifications.warn('WH40K.Vehicle.Errors.NoCharacterForRoll', { localize: true });
             return;
         }
 
-        game.wh40k.log(`Vehicle ${this.name} is rolling ${item.name} for character ${character.name}`);
-        if (item.type === 'weapon') {
-            DHTargetedActionManager.performWeaponAttack(character, null, item);
-        } else {
-            ui.notifications.warn(game.i18n.format('WH40K.Vehicle.Errors.NoActionForItemType', { type: item.type }));
-        }
+        game.wh40k.log(`Vehicle ${this.name} is rolling ${item.name} for ${attacker.name}`);
+        DHTargetedActionManager.performWeaponAttack(attacker, null, item);
     }
 }
