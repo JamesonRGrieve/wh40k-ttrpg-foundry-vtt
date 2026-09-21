@@ -58,7 +58,7 @@ interface UpdatableItem {
  */
 export default class EquippableTemplate extends SystemDataModel {
     // Transient runtime state — shared (never variantized), namespaced
-    // under system.state (see src/packs/CLAUDE.md "Stateful Fields Live
+    // under system.state (see docs/pack-authoring.md "Stateful Fields Live
     // Under system.state"). activated/overloaded live here too so the one
     // state container covers force-field runtime state without fragile
     // per-mixin SchemaField merging.

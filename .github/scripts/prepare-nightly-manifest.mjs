@@ -12,6 +12,8 @@
 //   TAG       — release tag the assets live under (default "nightly").
 //   MANIFEST_FILE — file to rewrite (default dist/system.json; overridable for tests).
 import { readFileSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { presentPacks } from '../../scripts/filter-manifest-packs.mjs';
 
 const FILE = process.env.MANIFEST_FILE ?? 'dist/system.json';
 const run = process.env.RUN ?? '0';
@@ -39,8 +41,11 @@ sys.version = `${base}.${run}`;
 sys.manifest = `${repoUrl}/releases/download/${tag}/system.json`;
 sys.download = `${repoUrl}/releases/download/${tag}/wh40k-rpg.zip`;
 
-// Drop compendium declarations — packs are private and not shipped here.
-sys.packs = [];
+// Declare exactly the packs compiled into this build's dist/packs (the public
+// generic packs in src/packs — [] until authored). The copyrighted packs the
+// source manifest declares live in the src/packs-private submodule and are never
+// built here, so they drop out. See scripts/filter-manifest-packs.mjs.
+sys.packs = presentPacks(sys.packs, dirname(resolve(FILE)));
 
 writeFileSync(FILE, `${JSON.stringify(sys, null, 4)}\n`);
 console.log(`nightly manifest → version=${sys.version} packs=${sys.packs.length} manifest=${sys.manifest}`);

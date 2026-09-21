@@ -7,12 +7,12 @@ name: Nightly prerelease
 #
 # What testers get / DON'T get:
 #   * System code only — sheets, rules engine, settings, lang, templates.
-#   * NO compendium content. The copyrighted book content is the
-#     `src/packs-private` submodule, never checked out here; the public generic
-#     packs in `src/packs` are not compiled into the nightly, and the packs[]
-#     array is stripped from the published system.json (see
-#     .github/scripts/prepare-nightly-manifest.mjs) so Foundry doesn't hunt for
-#     pack dirs that aren't in the zip.
+#   * The PUBLIC generic packs (src/packs), compiled here — empty until authored,
+#     so early nightlies carry no compendium content. The copyrighted book content
+#     is the `src/packs-private` submodule, never checked out here. The published
+#     system.json declares exactly the packs built into dist/packs (see
+#     .github/scripts/prepare-nightly-manifest.mjs), so Foundry never hunts for a
+#     declared pack dir that isn't in the zip.
 #
 # Versioning: this workflow's run_number IS the alpha counter. A fresh workflow
 # file starts at run 1, so the first push to main publishes 0.0.1-alpha.1 and
@@ -54,23 +54,25 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # System code only. build:system runs buildSystem (no compilePacks), so
-      # dist/packs is never created.
+      # System code + the public generic packs in src/packs (empty until
+      # authored). build:compendium compiles src/packs into dist/packs; the
+      # copyrighted content in the src/packs-private submodule is not checked out
+      # here, so it is never built or shipped.
       - run: pnpm build:system
+      - run: pnpm build:compendium
 
-      - name: Stamp version + manifest URLs, strip packs[]
+      - name: Stamp version + manifest URLs; declare only the built packs
         env:
           RUN: ${{ github.run_number }}
           REPO_URL: https://github.com/${{ github.repository }}
           TAG: nightly
         run: node .github/scripts/prepare-nightly-manifest.mjs
 
-      - name: Package system zip (system.json at zip root, no packs)
+      - name: Package system zip (system.json at zip root)
         run: |
           test -f dist/system.json
-          test ! -d dist/packs
           cd dist
-          zip -r -9 ../wh40k-rpg.zip . -x 'packs/*'
+          zip -r -9 ../wh40k-rpg.zip .
 
       - name: Publish rolling `nightly` prerelease
         uses: softprops/action-gh-release@v2
@@ -80,7 +82,7 @@ jobs:
           prerelease: true
           target_commitish: ${{ github.sha }} # re-point the nightly tag at this build
           body: |
-            Automated rolling build of `main`. Ephemeral, pre-release, **no compendium content**.
+            Automated rolling build of `main`. Ephemeral, pre-release. Ships the public generic packs only (no copyrighted content).
             Commit: ${{ github.sha }}
 
             Install in Foundry → Game Systems → Install System → paste Manifest URL:

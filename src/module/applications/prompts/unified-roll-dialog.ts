@@ -585,7 +585,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 | undefined;
             const altCharacteristics = Array.isArray(skillItem?.system?.altCharacteristics) ? skillItem.system.altCharacteristics : [];
             // NPCs hold skills as the `system.skills` value-map and carry NO skill Items
-            // (src/packs/CLAUDE.md: "Skills are not items"), so `skillItem` is undefined and
+            // (docs/pack-authoring.md: "Skills are not items"), so `skillItem` is undefined and
             // the NPC map entry has no `basic` flag. Falling through to a literal `false`
             // classified every NPC skill as Advanced and blocked even Basic ones (#476).
             // Resolve from the catalog via the leaf `isBasicSkill` helper — the fact still

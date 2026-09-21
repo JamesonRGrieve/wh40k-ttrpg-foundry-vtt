@@ -356,7 +356,7 @@ export class HooksManager {
         hooksOn('createActiveEffect', (effect: Parameters<typeof onDeadStatusChange>[0]) => onDeadStatusChange(effect));
 
         // Compendium actors ship LEAN inventories (compendiumSource / variantOf join
-        // keys; see src/packs/CLAUDE.md). Join the canonical body IN MEMORY on import —
+        // keys; see docs/pack-authoring.md). Join the canonical body IN MEMORY on import —
         // updateSource + reset, never a database write. NOT gated on the triggering
         // userId: every client must hydrate its own in-memory copy of the new actor
         // (unlike a DB write, which only one client should perform).

@@ -421,7 +421,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext returns Record<string,unknown>; concrete fields declared below in the intersection type.
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // Items ship LEAN (compendiumSource / variantOf join keys — see
-        // src/packs/CLAUDE.md). Join the canonical body IN MEMORY before rendering
+        // docs/pack-authoring.md). Join the canonical body IN MEMORY before rendering
         // (updateSource + reset; no database write, packs stay locked). Covers pack
         // browsing AND world actors whose inventory changed since the boot hydrate
         // (e.g. an item dropped this session). Idempotent — an already-full actor

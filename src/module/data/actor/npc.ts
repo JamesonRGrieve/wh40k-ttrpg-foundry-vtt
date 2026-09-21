@@ -449,7 +449,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
 
             // === TRAINED SKILLS (SPARSE) ===
             // Only store skills the NPC actually has, not all 48.
-            // Authored shape (#503, see src/packs/CLAUDE.md → NPC Trained Skills):
+            // Authored shape (#503, see docs/pack-authoring.md → NPC Trained Skills):
             //   { "awareness": { name, characteristic, advance: 0-4, trained, plus10,
             //                    plus20, plus30, bonus, entries?: [...] } }
             // `advance` is the source of truth; the boolean flags are derived mirrors

@@ -316,7 +316,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
             // `system` (their content is results[] / pages[]), so the
             // system-object / schema / round-trip assertions below don't apply.
             // Skip them for those kinds (consistent with the validator's
-            // identity-type exemption — see src/packs/CLAUDE.md).
+            // identity-type exemption — see docs/pack-authoring.md).
             if (doc.documentName === 'RollTable' || doc.documentName === 'JournalEntry') {
                 return { failures, brokenRefs: 0, uuidRefsSeen: 0, perDocFailures: 0 };
             }

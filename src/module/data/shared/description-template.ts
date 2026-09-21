@@ -17,7 +17,7 @@ export function descriptionField(): foundry.data.fields.DataField.Any {
 }
 
 /**
- * The structured per-line provenance block (see src/packs/CLAUDE.md
+ * The structured per-line provenance block (see docs/pack-authoring.md
  * "Source & Provenance"), as a standalone field builder. On disk this is
  * authored as a per-line variant container; the variant resolver collapses it
  * to the active line's entry — this shape — before validation.
