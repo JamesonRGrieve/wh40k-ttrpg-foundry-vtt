@@ -42,7 +42,7 @@ function weaponWith(qualities: ReadonlyArray<string>): QualityWeapon {
 
 // Read the real weaponQuality pack `_source` and build the by-identifier mechanics
 // map the boot index would build, then seed the resolver index from it.
-const PACK_DIR = resolve(__dirname, '../../packs/rogue-trader/rt-core-items-weapon-qualities/_source');
+const PACK_DIR = resolve(__dirname, '../../packs-private/rogue-trader/rt-core-items-weapon-qualities/_source');
 const mechanicsById = new Map<string, WeaponQualityMechanics>();
 if (existsSync(PACK_DIR)) {
     for (const file of readdirSync(PACK_DIR).filter((f) => f.endsWith('.json'))) {

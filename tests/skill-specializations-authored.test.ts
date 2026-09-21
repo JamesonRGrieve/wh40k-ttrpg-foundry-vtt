@@ -15,7 +15,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-const SKILLS_DIR = resolve(__dirname, '../src/packs/dark-heresy-2/dh2-core-items-skills/_source');
+const SKILLS_DIR = resolve(__dirname, '../src/packs-private/dark-heresy-2/dh2-core-items-skills/_source');
 
 interface SkillDoc {
     name?: string;

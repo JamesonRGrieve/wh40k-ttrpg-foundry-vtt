@@ -1,7 +1,8 @@
 // Stamps the rolling-prerelease version + fixed-tag manifest/download URLs onto
 // the built dist/system.json and strips the packs[] array. The public nightly
-// build ships system code only — src/packs is a private submodule of
-// copyrighted content and is NOT distributed — so the published manifest must
+// build ships system code only — the copyrighted book content is the
+// src/packs-private submodule (NOT distributed), and the public generic packs in
+// src/packs are not compiled into the nightly — so the published manifest must
 // not declare compendium packs that aren't in the zip (Foundry errors on
 // missing pack dirs). Driven by .github/workflows/release.yml.
 //

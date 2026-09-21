@@ -37,7 +37,7 @@ const LINE_LABELS = {
 const CATEGORY_PREFIXES = new Set(['items', 'origins', 'actors', 'journals', 'rolltables', 'vehicles', 'adventures', 'patrons', 'endeavours', 'locations']);
 
 /** Book slug → display label, for books with no pack currently foldered (so the
- *  tree can't supply the label). Mirrors the Book-slug registry in src/packs/CLAUDE.md. */
+ *  tree can't supply the label). Mirrors the Book-slug registry in docs/pack-authoring.md. */
 const BOOK_REGISTRY = {
     core: 'Core Rulebook',
     // DH1

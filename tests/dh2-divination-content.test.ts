@@ -16,7 +16,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { readRepoFile } from './lib/repo-file.ts';
 
-const PACK_DIR = resolve(__dirname, '../src/packs/dark-heresy-2/dh2-core-origins-divinations/_source');
+const PACK_DIR = resolve(__dirname, '../src/packs-private/dark-heresy-2/dh2-core-origins-divinations/_source');
 
 interface DivinationDoc {
     name: string;

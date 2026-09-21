@@ -319,7 +319,7 @@ describe('migrateSkills (#256)', () => {
 });
 
 describe('real bestiary pack data migrates to a usable shape', () => {
-    const PACK_DIR = resolve(__dirname, '../../../packs/dark-heresy-2/dh2-core-actors-bestiary/_source');
+    const PACK_DIR = resolve(__dirname, '../../../packs-private/dark-heresy-2/dh2-core-actors-bestiary/_source');
     const files = existsSync(PACK_DIR) ? readdirSync(PACK_DIR).filter((f) => f.endsWith('.json')) : [];
     // Whole-file reference stubs carry no system; relinked actors are canonically
     // weapons.mode 'embedded' (UUID-linked items; simple[] keeps any original

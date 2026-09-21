@@ -7,10 +7,12 @@ name: Nightly prerelease
 #
 # What testers get / DON'T get:
 #   * System code only — sheets, rules engine, settings, lang, templates.
-#   * NO compendium content. src/packs is a private submodule of copyrighted
-#     material; it is never checked out here, and the packs[] array is stripped
-#     from the published system.json (see .github/scripts/prepare-nightly-manifest.mjs)
-#     so Foundry doesn't hunt for pack dirs that aren't in the zip.
+#   * NO compendium content. The copyrighted book content is the
+#     `src/packs-private` submodule, never checked out here; the public generic
+#     packs in `src/packs` are not compiled into the nightly, and the packs[]
+#     array is stripped from the published system.json (see
+#     .github/scripts/prepare-nightly-manifest.mjs) so Foundry doesn't hunt for
+#     pack dirs that aren't in the zip.
 #
 # Versioning: this workflow's run_number IS the alpha counter. A fresh workflow
 # file starts at run 1, so the first push to main publishes 0.0.1-alpha.1 and
@@ -42,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: false # src/packs is private/copyright and is NOT shipped
+          submodules: false # src/packs-private (private/copyright) is not checked out or shipped
 
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
