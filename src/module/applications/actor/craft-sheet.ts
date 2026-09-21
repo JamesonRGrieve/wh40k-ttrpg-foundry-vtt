@@ -13,6 +13,7 @@
 import type { VehicleCharacteristics } from '../../data/actor/vehicle.ts';
 import type { VehicleHardpoint } from '../../data/shared/vehicle-mounting.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { occupantCandidateActors } from '../../rules/vehicle-embark.ts';
 import { occupantsOf, unfilledCrew } from '../../rules/vehicle-occupancy.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 
@@ -88,10 +89,8 @@ type CraftActor = Actor.Implementation & {
     rollCharacteristic: (characteristic: string) => void;
     rollSkill: (skill: string, specialization?: string) => void;
     rollInitiative: (options: { createCombatants?: boolean }) => Promise<void>;
+    rollItem: (itemId: string) => Promise<void>;
 };
-
-/** Item with a roll() method (weapons). */
-type RollableItem = WH40KItem & { roll: () => Promise<void> };
 
 /** Prepared armour-by-facing rollup for the overview/combat panels. */
 interface PreparedCraftStats {
@@ -405,7 +404,10 @@ export default class CraftActorSheet extends BaseActorSheet {
     _prepareCrew(): PreparedCraftCrew {
         const crew = this.actor.system.crew;
         const uuid = this.actor.uuid;
-        const occupants = uuid === null ? [] : occupantsOf(uuid, game.actors);
+        // Scan world actors AND canvas token actors: every placed token is an
+        // unlinked actor copy (#479), whose synthetic actor is not in `game.actors`,
+        // so a character embarked via its token would otherwise never appear here.
+        const occupants = uuid === null ? [] : occupantsOf(uuid, occupantCandidateActors());
         // Capacity is read off the typed DataModel fields directly rather than
         // through `capacityOf`: that helper exists to normalise an untyped system
         // payload, and routing schema-backed numbers through it would throw away
@@ -417,7 +419,10 @@ export default class CraftActorSheet extends BaseActorSheet {
             occupants: occupants.map(({ actor, role }) => ({
                 name: actor.name,
                 role: game.i18n.localize(`WH40K.Vehicle.Role.${role}`),
-                uuid: actor.uuid,
+                // `uuid` is null only on an unsaved actor, which an aboard occupant
+                // never is; coerce so the roster row's open-sheet link stays typed
+                // (the action guards the empty string).
+                uuid: actor.uuid ?? '',
                 img: actor.img,
             })),
             unfilled: unfilledCrew(occupants, capacity),
@@ -633,10 +638,11 @@ export default class CraftActorSheet extends BaseActorSheet {
         const itemId = target.dataset['itemId'];
         if (itemId === undefined || itemId === '') return;
 
-        const item = this.actor.items.get(itemId) as RollableItem | undefined;
-        if (!item) return;
-
-        await item.roll();
+        // Route through the actor's roll API (WH40KItem has no `roll()` — the old
+        // call threw `item.roll is not a function`). `rollItem` resolves the weapon
+        // attack: an animate craft attacks with its own profile, an ordinary
+        // vehicle with its operator's.
+        await this.actor.rollItem(itemId);
     }
 
     /* -------------------------------------------- */
