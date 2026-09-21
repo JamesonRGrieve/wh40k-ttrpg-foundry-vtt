@@ -3002,114 +3002,6 @@
             "flags": {}
         },
         {
-            "name": "hb-items-backgrounds",
-            "label": "Homebrew Backgrounds",
-            "path": "packs/homebrew/hb-items-backgrounds",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dh2-actors-bestiary",
-            "label": "Homebrew: DH2 Bestiary",
-            "path": "packs/homebrew/hb-dh2-actors-bestiary",
-            "system": "wh40k-rpg",
-            "type": "Actor",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dh2-actors-reinforcements",
-            "label": "Homebrew: DH2 Reinforcements",
-            "path": "packs/homebrew/hb-dh2-actors-reinforcements",
-            "system": "wh40k-rpg",
-            "type": "Actor",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dh2-actors-ships",
-            "label": "Homebrew: DH2 Campaign Ships",
-            "path": "packs/homebrew/hb-dh2-actors-ships",
-            "system": "wh40k-rpg",
-            "type": "Actor",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dh2-items-actors",
-            "label": "Homebrew: DH2 Misc NPCs",
-            "path": "packs/homebrew/hb-dh2-items-actors",
-            "system": "wh40k-rpg",
-            "type": "Actor",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-items-armour",
-            "label": "Homebrew Armour",
-            "path": "packs/homebrew/hb-items-armour",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-items-gear",
-            "label": "Homebrew Gear",
-            "path": "packs/homebrew/hb-items-gear",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-psychic-powers",
-            "label": "Homebrew Psychic Powers",
-            "path": "packs/homebrew/hb-psychic-powers",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-items-weapons",
-            "label": "Homebrew Weapons",
-            "path": "packs/homebrew/hb-items-weapons",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
             "name": "ow-core-items-ammo",
             "label": "OW: Core Rulebook, Ammunition",
             "path": "packs/only-war/ow-core-items-ammo",
@@ -4490,18 +4382,6 @@
             "flags": {}
         },
         {
-            "name": "hb-rt-items-ship-orders",
-            "label": "Homebrew RT Ship Orders",
-            "path": "packs/homebrew/hb-rt-items-ship-orders",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
             "name": "rt-core-journals-character-actions",
             "label": "RT: Core Rulebook, Character Actions",
             "path": "packs/rogue-trader/rt-core-journals-character-actions",
@@ -4541,18 +4421,6 @@
             "name": "dh2-core-journals-daemon-binding",
             "label": "DH2: Core Rulebook, Daemon Binding",
             "path": "packs/dark-heresy-2/dh2-core-journals-daemon-binding",
-            "system": "wh40k-rpg",
-            "type": "JournalEntry",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-rt-journals-navigation",
-            "label": "Homebrew Navigation",
-            "path": "packs/homebrew/hb-rt-journals-navigation",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
             "ownership": {
@@ -5335,246 +5203,6 @@
             "path": "packs/dark-heresy-2/dh2-without-journals",
             "system": "wh40k-rpg",
             "type": "JournalEntry",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dh2-items-talents",
-            "label": "Homebrew DH2 Talents",
-            "path": "packs/homebrew/hb-dh2-items-talents",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dh2-items-misc",
-            "label": "Homebrew DH2 Miscellanea",
-            "path": "packs/homebrew/hb-dh2-items-misc",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dh2-vehicles-terracraft",
-            "label": "Homebrew DH2 Vehicles",
-            "path": "packs/homebrew/hb-dh2-vehicles-terracraft",
-            "system": "wh40k-rpg",
-            "type": "Actor",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dh2-items-psychic-powers",
-            "label": "Homebrew DH2 Psychic Powers",
-            "path": "packs/homebrew/hb-dh2-items-psychic-powers",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dh2-items-conditions",
-            "label": "Homebrew DH2 Conditions",
-            "path": "packs/homebrew/hb-dh2-items-conditions",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dh2-items-armour",
-            "label": "Homebrew DH2 Armour",
-            "path": "packs/homebrew/hb-dh2-items-armour",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dh2-items-weapons",
-            "label": "Homebrew DH2 Weapons",
-            "path": "packs/homebrew/hb-dh2-items-weapons",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-generic-items-wearables",
-            "label": "Generic Homebrew Wearables",
-            "path": "packs/homebrew/hb-generic-items-wearables",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-generic-items-vehicle-traits",
-            "label": "Generic Homebrew Vehicle Traits",
-            "path": "packs/homebrew/hb-generic-items-vehicle-traits",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-generic-items-consumables",
-            "label": "Generic Homebrew Consumables",
-            "path": "packs/homebrew/hb-generic-items-consumables",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-generic-items-tools",
-            "label": "Generic Homebrew Tools",
-            "path": "packs/homebrew/hb-generic-items-tools",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-generic-items-gear",
-            "label": "Generic Homebrew Gear",
-            "path": "packs/homebrew/hb-generic-items-gear",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-rt-items-armour",
-            "label": "Homebrew RT Armour",
-            "path": "packs/homebrew/hb-rt-items-armour",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-rt-items-traits",
-            "label": "Homebrew RT Traits",
-            "path": "packs/homebrew/hb-rt-items-traits",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-rt-actors-bestiary",
-            "label": "Homebrew RT Bestiary",
-            "path": "packs/homebrew/hb-rt-actors-bestiary",
-            "system": "wh40k-rpg",
-            "type": "Actor",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-rt-actors-npcs",
-            "label": "Homebrew RT NPCs",
-            "path": "packs/homebrew/hb-rt-actors-npcs",
-            "system": "wh40k-rpg",
-            "type": "Actor",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-rt-items-talents",
-            "label": "Homebrew RT Talents",
-            "path": "packs/homebrew/hb-rt-items-talents",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-bc-items-traits",
-            "label": "Homebrew BC Traits",
-            "path": "packs/homebrew/hb-bc-items-traits",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-items-actors",
-            "label": "Homebrew Actors",
-            "path": "packs/homebrew/hb-items-actors",
-            "system": "wh40k-rpg",
-            "type": "Actor",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-rt-vehicles-terracraft",
-            "label": "Homebrew RT Vehicles",
-            "path": "packs/homebrew/hb-rt-vehicles-terracraft",
-            "system": "wh40k-rpg",
-            "type": "Actor",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -7838,90 +7466,6 @@
             "flags": {}
         },
         {
-            "name": "hb-dw-items-gear",
-            "label": "DW Homebrew (Index Astartes Vol.1), Gear",
-            "path": "packs/homebrew/hb-dw-items-gear",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dw-items-psychic-powers",
-            "label": "DW Homebrew (Index Astartes Vol.1), Psychic Powers",
-            "path": "packs/homebrew/hb-dw-items-psychic-powers",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dw-items-talents",
-            "label": "DW Homebrew (Index Astartes Vol.1), Talents",
-            "path": "packs/homebrew/hb-dw-items-talents",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dw-items-weapons",
-            "label": "DW Homebrew (Index Astartes Vol.1), Weapons",
-            "path": "packs/homebrew/hb-dw-items-weapons",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dw-journals",
-            "label": "DW Homebrew (Index Astartes Vol.1), Rules & Lore",
-            "path": "packs/homebrew/hb-dw-journals",
-            "system": "wh40k-rpg",
-            "type": "JournalEntry",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dw-origins-chapters",
-            "label": "DW Homebrew (Index Astartes Vol.1), Chapters",
-            "path": "packs/homebrew/hb-dw-origins-chapters",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dw-rolltables",
-            "label": "DW Homebrew (Index Astartes Vol.1), Tables",
-            "path": "packs/homebrew/hb-dw-rolltables",
-            "system": "wh40k-rpg",
-            "type": "RollTable",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
             "name": "dw-adventures",
             "label": "DW: Adventures",
             "path": "packs/deathwatch/dw-adventures",
@@ -9650,30 +9194,6 @@
             "flags": {}
         },
         {
-            "name": "hb-ow-items-psychic-powers",
-            "label": "Homebrew OW Psychic Powers",
-            "path": "packs/homebrew/hb-ow-items-psychic-powers",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-ow-items-ammo",
-            "label": "Homebrew OW Ammunition",
-            "path": "packs/homebrew/hb-ow-items-ammo",
-            "system": "wh40k-rpg",
-            "type": "Item",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
             "name": "ow-shield-items-cybernetics",
             "label": "OW: Shield of Humanity, Cybernetics",
             "path": "packs/only-war/ow-shield-items-cybernetics",
@@ -9727,6 +9247,738 @@
             "path": "packs/only-war/ow-enemies-items-weapons",
             "system": "wh40k-rpg",
             "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-bc-items-traits",
+            "label": "Homebrew BC Traits",
+            "path": "packs/homebrew-generic/hb-bc-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-bc-items-traits-gw-copyright",
+            "label": "Homebrew BC Traits (gw-copyright)",
+            "path": "packs/homebrew-gw-copyright/hb-bc-items-traits-gw-copyright",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-actors-bestiary",
+            "label": "Homebrew: DH2 Bestiary",
+            "path": "packs/homebrew-gw-copyright/hb-dh2-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-actors-bestiary-generic",
+            "label": "Homebrew: DH2 Bestiary (generic)",
+            "path": "packs/homebrew-generic/hb-dh2-actors-bestiary-generic",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-actors-bestiary-gw-mild",
+            "label": "Homebrew: DH2 Bestiary (gw-mild)",
+            "path": "packs/homebrew-gw-mild/hb-dh2-actors-bestiary-gw-mild",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-actors-reinforcements",
+            "label": "Homebrew: DH2 Reinforcements",
+            "path": "packs/homebrew-gw-copyright/hb-dh2-actors-reinforcements",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-actors-ships",
+            "label": "Homebrew: DH2 Campaign Ships",
+            "path": "packs/homebrew-gw-copyright/hb-dh2-actors-ships",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-actors",
+            "label": "Homebrew: DH2 Misc NPCs",
+            "path": "packs/homebrew-gw-copyright/hb-dh2-items-actors",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-armour",
+            "label": "Homebrew DH2 Armour",
+            "path": "packs/homebrew-gw-copyright/hb-dh2-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-conditions",
+            "label": "Homebrew DH2 Conditions",
+            "path": "packs/homebrew-generic/hb-dh2-items-conditions",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-misc",
+            "label": "Homebrew DH2 Miscellanea",
+            "path": "packs/homebrew-generic/hb-dh2-items-misc",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-misc-gw-copyright",
+            "label": "Homebrew DH2 Miscellanea (gw-copyright)",
+            "path": "packs/homebrew-gw-copyright/hb-dh2-items-misc-gw-copyright",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-misc-gw-mild",
+            "label": "Homebrew DH2 Miscellanea (gw-mild)",
+            "path": "packs/homebrew-gw-mild/hb-dh2-items-misc-gw-mild",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-psychic-powers",
+            "label": "Homebrew DH2 Psychic Powers",
+            "path": "packs/homebrew-gw-copyright/hb-dh2-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-talents",
+            "label": "Homebrew DH2 Talents",
+            "path": "packs/homebrew-generic/hb-dh2-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-talents-gw-copyright",
+            "label": "Homebrew DH2 Talents (gw-copyright)",
+            "path": "packs/homebrew-gw-copyright/hb-dh2-items-talents-gw-copyright",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-weapons",
+            "label": "Homebrew DH2 Weapons",
+            "path": "packs/homebrew-generic/hb-dh2-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-items-weapons-gw-copyright",
+            "label": "Homebrew DH2 Weapons (gw-copyright)",
+            "path": "packs/homebrew-gw-copyright/hb-dh2-items-weapons-gw-copyright",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-vehicles-terracraft",
+            "label": "Homebrew DH2 Vehicles",
+            "path": "packs/homebrew-gw-copyright/hb-dh2-vehicles-terracraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-items-gear",
+            "label": "DW Homebrew (Index Astartes Vol.1), Gear",
+            "path": "packs/homebrew-gw-copyright/hb-dw-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-items-psychic-powers",
+            "label": "DW Homebrew (Index Astartes Vol.1), Psychic Powers",
+            "path": "packs/homebrew-gw-copyright/hb-dw-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-items-talents",
+            "label": "DW Homebrew (Index Astartes Vol.1), Talents",
+            "path": "packs/homebrew-gw-copyright/hb-dw-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-items-weapons",
+            "label": "DW Homebrew (Index Astartes Vol.1), Weapons",
+            "path": "packs/homebrew-gw-copyright/hb-dw-items-weapons",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-journals",
+            "label": "DW Homebrew (Index Astartes Vol.1), Rules & Lore",
+            "path": "packs/homebrew-gw-copyright/hb-dw-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-origins-chapters",
+            "label": "DW Homebrew (Index Astartes Vol.1), Chapters",
+            "path": "packs/homebrew-gw-copyright/hb-dw-origins-chapters",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-rolltables",
+            "label": "DW Homebrew (Index Astartes Vol.1), Tables",
+            "path": "packs/homebrew-generic/hb-dw-rolltables",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dw-rolltables-gw-copyright",
+            "label": "DW Homebrew (Index Astartes Vol.1), Tables (gw-copyright)",
+            "path": "packs/homebrew-gw-copyright/hb-dw-rolltables-gw-copyright",
+            "system": "wh40k-rpg",
+            "type": "RollTable",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-consumables",
+            "label": "Generic Homebrew Consumables",
+            "path": "packs/homebrew-generic/hb-generic-items-consumables",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-consumables-gw-copyright",
+            "label": "Generic Homebrew Consumables (gw-copyright)",
+            "path": "packs/homebrew-gw-copyright/hb-generic-items-consumables-gw-copyright",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-consumables-gw-mild",
+            "label": "Generic Homebrew Consumables (gw-mild)",
+            "path": "packs/homebrew-gw-mild/hb-generic-items-consumables-gw-mild",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-gear",
+            "label": "Generic Homebrew Gear",
+            "path": "packs/homebrew-generic/hb-generic-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-gear-gw-copyright",
+            "label": "Generic Homebrew Gear (gw-copyright)",
+            "path": "packs/homebrew-gw-copyright/hb-generic-items-gear-gw-copyright",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-gear-gw-mild",
+            "label": "Generic Homebrew Gear (gw-mild)",
+            "path": "packs/homebrew-gw-mild/hb-generic-items-gear-gw-mild",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-tools",
+            "label": "Generic Homebrew Tools",
+            "path": "packs/homebrew-generic/hb-generic-items-tools",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-tools-gw-copyright",
+            "label": "Generic Homebrew Tools (gw-copyright)",
+            "path": "packs/homebrew-gw-copyright/hb-generic-items-tools-gw-copyright",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-tools-gw-mild",
+            "label": "Generic Homebrew Tools (gw-mild)",
+            "path": "packs/homebrew-gw-mild/hb-generic-items-tools-gw-mild",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-vehicle-traits",
+            "label": "Generic Homebrew Vehicle Traits",
+            "path": "packs/homebrew-generic/hb-generic-items-vehicle-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-vehicle-traits-gw-copyright",
+            "label": "Generic Homebrew Vehicle Traits (gw-copyright)",
+            "path": "packs/homebrew-gw-copyright/hb-generic-items-vehicle-traits-gw-copyright",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-vehicle-traits-gw-mild",
+            "label": "Generic Homebrew Vehicle Traits (gw-mild)",
+            "path": "packs/homebrew-gw-mild/hb-generic-items-vehicle-traits-gw-mild",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-wearables",
+            "label": "Generic Homebrew Wearables",
+            "path": "packs/homebrew-generic/hb-generic-items-wearables",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-generic-items-wearables-gw-mild",
+            "label": "Generic Homebrew Wearables (gw-mild)",
+            "path": "packs/homebrew-gw-mild/hb-generic-items-wearables-gw-mild",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-items-gear",
+            "label": "Homebrew Gear",
+            "path": "packs/homebrew-gw-copyright/hb-items-gear",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-items-gear-generic",
+            "label": "Homebrew Gear (generic)",
+            "path": "packs/homebrew-generic/hb-items-gear-generic",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-items-gear-gw-mild",
+            "label": "Homebrew Gear (gw-mild)",
+            "path": "packs/homebrew-gw-mild/hb-items-gear-gw-mild",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-ow-items-ammo",
+            "label": "Homebrew OW Ammunition",
+            "path": "packs/homebrew-generic/hb-ow-items-ammo",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-ow-items-psychic-powers",
+            "label": "Homebrew OW Psychic Powers",
+            "path": "packs/homebrew-gw-copyright/hb-ow-items-psychic-powers",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-actors-bestiary",
+            "label": "Homebrew RT Bestiary",
+            "path": "packs/homebrew-gw-mild/hb-rt-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-actors-bestiary-generic",
+            "label": "Homebrew RT Bestiary (generic)",
+            "path": "packs/homebrew-generic/hb-rt-actors-bestiary-generic",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-actors-bestiary-gw-copyright",
+            "label": "Homebrew RT Bestiary (gw-copyright)",
+            "path": "packs/homebrew-gw-copyright/hb-rt-actors-bestiary-gw-copyright",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-actors-npcs",
+            "label": "Homebrew RT NPCs",
+            "path": "packs/homebrew-gw-copyright/hb-rt-actors-npcs",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-items-armour",
+            "label": "Homebrew RT Armour",
+            "path": "packs/homebrew-gw-copyright/hb-rt-items-armour",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-items-ship-orders",
+            "label": "Homebrew RT Ship Orders",
+            "path": "packs/homebrew-generic/hb-rt-items-ship-orders",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-items-ship-orders-gw-copyright",
+            "label": "Homebrew RT Ship Orders (gw-copyright)",
+            "path": "packs/homebrew-gw-copyright/hb-rt-items-ship-orders-gw-copyright",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-items-talents",
+            "label": "Homebrew RT Talents",
+            "path": "packs/homebrew-gw-copyright/hb-rt-items-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-items-talents-generic",
+            "label": "Homebrew RT Talents (generic)",
+            "path": "packs/homebrew-generic/hb-rt-items-talents-generic",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-items-traits",
+            "label": "Homebrew RT Traits",
+            "path": "packs/homebrew-gw-copyright/hb-rt-items-traits",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-items-traits-gw-mild",
+            "label": "Homebrew RT Traits (gw-mild)",
+            "path": "packs/homebrew-gw-mild/hb-rt-items-traits-gw-mild",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-journals-navigation",
+            "label": "Homebrew Navigation",
+            "path": "packs/homebrew-gw-copyright/hb-rt-journals-navigation",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-vehicles-terracraft",
+            "label": "Homebrew RT Vehicles",
+            "path": "packs/homebrew-gw-copyright/hb-rt-vehicles-terracraft",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-vehicles-terracraft-generic",
+            "label": "Homebrew RT Vehicles (generic)",
+            "path": "packs/homebrew-generic/hb-rt-vehicles-terracraft-generic",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-rt-vehicles-terracraft-gw-mild",
+            "label": "Homebrew RT Vehicles (gw-mild)",
+            "path": "packs/homebrew-gw-mild/hb-rt-vehicles-terracraft-gw-mild",
+            "system": "wh40k-rpg",
+            "type": "Actor",
             "ownership": {
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
@@ -10561,16 +10813,23 @@
                     "name": "Homebrew",
                     "packs": [
                         "hb-bc-items-traits",
+                        "hb-bc-items-traits-gw-copyright",
                         "hb-dh2-actors-bestiary",
+                        "hb-dh2-actors-bestiary-generic",
+                        "hb-dh2-actors-bestiary-gw-mild",
                         "hb-dh2-actors-reinforcements",
                         "hb-dh2-actors-ships",
                         "hb-dh2-items-actors",
                         "hb-dh2-items-armour",
                         "hb-dh2-items-conditions",
                         "hb-dh2-items-misc",
+                        "hb-dh2-items-misc-gw-copyright",
+                        "hb-dh2-items-misc-gw-mild",
                         "hb-dh2-items-psychic-powers",
                         "hb-dh2-items-talents",
+                        "hb-dh2-items-talents-gw-copyright",
                         "hb-dh2-items-weapons",
+                        "hb-dh2-items-weapons-gw-copyright",
                         "hb-dh2-vehicles-terracraft",
                         "hb-dw-items-gear",
                         "hb-dw-items-psychic-powers",
@@ -10579,27 +10838,41 @@
                         "hb-dw-journals",
                         "hb-dw-origins-chapters",
                         "hb-dw-rolltables",
+                        "hb-dw-rolltables-gw-copyright",
                         "hb-generic-items-consumables",
+                        "hb-generic-items-consumables-gw-copyright",
+                        "hb-generic-items-consumables-gw-mild",
                         "hb-generic-items-gear",
+                        "hb-generic-items-gear-gw-copyright",
+                        "hb-generic-items-gear-gw-mild",
                         "hb-generic-items-tools",
+                        "hb-generic-items-tools-gw-copyright",
+                        "hb-generic-items-tools-gw-mild",
                         "hb-generic-items-vehicle-traits",
+                        "hb-generic-items-vehicle-traits-gw-copyright",
+                        "hb-generic-items-vehicle-traits-gw-mild",
                         "hb-generic-items-wearables",
-                        "hb-items-actors",
-                        "hb-items-armour",
-                        "hb-items-backgrounds",
+                        "hb-generic-items-wearables-gw-mild",
                         "hb-items-gear",
-                        "hb-items-weapons",
+                        "hb-items-gear-generic",
+                        "hb-items-gear-gw-mild",
                         "hb-ow-items-ammo",
                         "hb-ow-items-psychic-powers",
-                        "hb-psychic-powers",
                         "hb-rt-actors-bestiary",
+                        "hb-rt-actors-bestiary-generic",
+                        "hb-rt-actors-bestiary-gw-copyright",
                         "hb-rt-actors-npcs",
                         "hb-rt-items-armour",
                         "hb-rt-items-ship-orders",
+                        "hb-rt-items-ship-orders-gw-copyright",
                         "hb-rt-items-talents",
+                        "hb-rt-items-talents-generic",
                         "hb-rt-items-traits",
+                        "hb-rt-items-traits-gw-mild",
                         "hb-rt-journals-navigation",
-                        "hb-rt-vehicles-terracraft"
+                        "hb-rt-vehicles-terracraft",
+                        "hb-rt-vehicles-terracraft-generic",
+                        "hb-rt-vehicles-terracraft-gw-mild"
                     ]
                 }
             ]
