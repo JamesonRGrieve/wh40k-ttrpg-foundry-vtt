@@ -24,34 +24,10 @@ export default class CommonTemplate extends ActorDataModel {
     /*  Model Configuration                         */
     /* -------------------------------------------- */
 
-    /** @inheritDoc */
-    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const { ArrayField, NumberField, SchemaField, StringField } = foundry.data.fields;
-        return this.mergeSchema(super.defineSchema(), {
-            // Portrait pool (#567): extra portrait variants beyond the actor's
-            // default `img`. Authored in the compendium _source; on spawn one is
-            // chosen (at random, or the `pinned` one) and stamped onto the
-            // created actor's img + token-bust frame. Each variant carries its
-            // own tokenFrame because the circular bust is cropped from the
-            // portrait per-image. Shared across ALL actor types and all 7 systems.
-            portraits: new SchemaField({
-                variants: new ArrayField(
-                    new SchemaField({
-                        img: new StringField({ required: true, blank: false }),
-                        tokenFrame: new SchemaField({
-                            cx: new NumberField({ required: false, nullable: true, min: 0, max: 1, initial: null }),
-                            cy: new NumberField({ required: false, nullable: true, min: 0, max: 1, initial: null }),
-                            zoom: new NumberField({ required: false, nullable: true, min: 0, initial: null }),
-                        }),
-                    }),
-                    { required: false, initial: [] },
-                ),
-                // Pin a specific index in the effective pool (0 = the default
-                // img); null pins nothing, so spawn picks at random.
-                pinned: new NumberField({ required: false, nullable: true, integer: true, min: 0, initial: null }),
-            }),
-        });
-    }
+    // The portrait pool (#567) lives on ActorDataModel (the universal actor base),
+    // not here: CommonTemplate is bypassed by NPCData (HordeTemplate(ActorDataModel)),
+    // and the bestiary/reinforcement NPCs are exactly what the pool is for. See
+    // ActorDataModel.defineSchema `portraits`.
 
     /* -------------------------------------------- */
     /*  Data Migration                              */

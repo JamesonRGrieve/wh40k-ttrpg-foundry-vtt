@@ -57,6 +57,32 @@ export default class ActorDataModel extends SystemDataModel {
             // resolution is unimplemented, so a variant still carries its own
             // values. Tracked in PROBLEMS.md P76.
             variantOf: new fields.StringField({ required: false, blank: true, initial: '' }),
+            // Portrait pool (#567): extra portrait variants beyond the actor's
+            // default `img`. Authored in the compendium _source; on spawn one is
+            // chosen (at random, or the `pinned` one) and stamped onto the created
+            // actor's img + token-bust frame. Each variant carries its own
+            // tokenFrame because the circular bust is cropped per-image. Declared
+            // HERE (the universal actor base), not on CommonTemplate — NPCData
+            // extends HordeTemplate(ActorDataModel) and does NOT go through
+            // CommonTemplate, so an NPC (the bestiary/reinforcement mobs this pool
+            // exists for) would otherwise have `SchemaField.clean` silently drop
+            // the field, exactly like variantOf above. Shared by all 7 systems.
+            portraits: new fields.SchemaField({
+                variants: new fields.ArrayField(
+                    new fields.SchemaField({
+                        img: new fields.StringField({ required: true, blank: false }),
+                        tokenFrame: new fields.SchemaField({
+                            cx: new fields.NumberField({ required: false, nullable: true, min: 0, max: 1, initial: null }),
+                            cy: new fields.NumberField({ required: false, nullable: true, min: 0, max: 1, initial: null }),
+                            zoom: new fields.NumberField({ required: false, nullable: true, min: 0, initial: null }),
+                        }),
+                    }),
+                    { required: false, initial: [] },
+                ),
+                // Pin a specific index in the effective pool (0 = the default img);
+                // null pins nothing, so spawn picks at random.
+                pinned: new fields.NumberField({ required: false, nullable: true, integer: true, min: 0, initial: null }),
+            }),
         };
     }
 
