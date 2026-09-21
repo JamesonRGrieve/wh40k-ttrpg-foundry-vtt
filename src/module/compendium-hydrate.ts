@@ -33,6 +33,8 @@
  * because it never persists.
  */
 
+import { inferActiveGameLine, materializeItemVariants } from './utils/item-variant-utils.ts';
+
 /* eslint-disable no-restricted-syntax -- boundary: Foundry item/actor types carry open-ended Record<string,unknown> at framework boundaries */
 type HydratableItem = {
     id: string | null;
@@ -83,7 +85,19 @@ function deepMerge(base: Record<string, unknown>, overlay: Record<string, unknow
     const out: Record<string, unknown> = { ...base };
     for (const [key, value] of Object.entries(overlay)) {
         const current = out[key];
-        out[key] = isPlainObject(current) && isPlainObject(value) ? deepMerge(current, value) : value;
+        if (isPlainObject(current) && isPlainObject(value)) {
+            out[key] = deepMerge(current, value);
+            continue;
+        }
+        // A LEAN embed persists no `system` on disk, so the overlay reaching this
+        // join is the schema-prepared defaults (or the derived data), NOT authored
+        // blanks: an empty-string field — `description.value` / `descriptionText` /
+        // `summary` — is "unset", and must not clobber the canonical body's real
+        // text (the #574 defect). A NON-empty overlay string still wins — a value
+        // the actor genuinely customised — so "persisted wins" holds for everything
+        // actually authored, and only the empty schema default defers to canonical.
+        if (value === '' && typeof current === 'string' && current !== '') continue;
+        out[key] = value;
     }
     return out;
 }
@@ -272,6 +286,9 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
     const patches: Array<Record<string, unknown>> = [];
     const unresolved: UnresolvedJoin[] = [];
     const cache = new Map<string, SourceLike | null>();
+    // The line all of this actor's embedded items resolve their per-line variant
+    // containers to (their owning actor's line), computed once for the pass.
+    const lineKey = inferActiveGameLine({ actor });
 
     for (const item of actor.items.contents) {
         const uuid = joinUuid(item);
@@ -300,9 +317,18 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
             continue;
         }
 
+        // Resolve the canonical body's per-line variant containers to the owning
+        // actor's line BEFORE the merge. `updateSource` (the hydration write path)
+        // re-cleans WITHOUT running `_migrateData`, so an unresolved container
+        // (e.g. `description: { rt: { value } }`) would be stripped by the schema —
+        // exactly what `ItemDataModel._migrateData` → `materializeItemVariants`
+        // prevents on the normal load path (#574). A no-op when already flat.
+        const materializedSource = materializeItemVariants(structuredClone(source.system), lineKey);
         const persisted = item._source?.system ?? item.system;
-        const merged = buildHydratedSystem(source.system, persisted);
-        if (JSON.stringify(merged) === JSON.stringify(persisted)) continue; // already full — no-op
+        const merged = buildHydratedSystem(materializedSource, persisted);
+        // Order-insensitive no-op check (as the actor path uses), so a re-render of
+        // an already-hydrated item does not needlessly re-patch and `reset()`.
+        if (sameSystem(merged, persisted)) continue; // already full — no-op
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payload
         const patch: Record<string, unknown> = { _id: item.id, system: merged };
