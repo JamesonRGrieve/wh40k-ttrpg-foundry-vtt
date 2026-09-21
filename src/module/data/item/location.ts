@@ -19,7 +19,7 @@ export interface LocationSampleCharacter {
  * (controlling faction, population, coordinates) alongside per-line lore.
  *
  * Description and source provenance come from {@link DescriptionTemplate} as
- * per-line variant containers (see src/packs/CLAUDE.md "Variantized Fields"),
+ * per-line variant containers (see docs/pack-authoring.md "Variantized Fields"),
  * so location lore stays homologation-friendly.
  *
  * @extends ItemDataModel
@@ -118,7 +118,7 @@ export default class LocationData extends ItemDataModel.mixin(DescriptionTemplat
      *
      * The original location content carried a `gameSystems` array (e.g.
      * `["dh2"]`) which is no longer part of the schema — coverage is derived
-     * from variant containers and pack membership (see src/packs/CLAUDE.md
+     * from variant containers and pack membership (see docs/pack-authoring.md
      * "Homologation Model"). Drop it so strict V14 validation does not choke.
      *
      * @param {object} source  The raw source data.

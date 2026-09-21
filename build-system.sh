@@ -83,6 +83,16 @@ build_archive() {
     pnpm build:archive
 }
 
+filter_release_manifest() {
+    # Declare only the packs actually compiled into dist/packs. src/system.json
+    # hand-declares every CAMPAIGN pack (the src/packs-private content); a public
+    # release compiles only src/packs, so narrow packs[] to what shipped — else
+    # Foundry errors on a declared pack whose dir is absent. Only the manual
+    # `release` mode runs this; the campaign deploy keeps the full packs[].
+    echo "=== Declaring only the packs built into dist/packs (public generics) ==="
+    node scripts/filter-manifest-packs.mjs dist/system.json
+}
+
 stage_release() {
     echo "=== Staging Foundry install manifest pair ==="
     local version
@@ -98,25 +108,16 @@ stage_release() {
         echo "ERROR: dist/system.json not found — build must run first." >&2
         exit 1
     fi
-    if ! command -v zip >/dev/null 2>&1; then
-        echo "ERROR: 'zip' is required to strip copyrighted packs from the release." >&2
-        exit 1
-    fi
-
     mkdir -p "$out_dir"
     cp -f "dist/system.json" "${out_dir}/system.json"
     cp -f "$versioned_zip" "${out_dir}/wh40k-rpg.zip"
 
-    echo "  Stripping packs/ (copyrighted content) from release zip…"
-    zip -d "${out_dir}/wh40k-rpg.zip" 'packs/*' 'packs' >/dev/null 2>&1 || [ $? -eq 12 ]
-
-    if unzip -l "${out_dir}/wh40k-rpg.zip" 2>/dev/null | grep -qE '^\s*[0-9]+.*\spacks/'; then
-        echo "ERROR: packs/ entries still present in ${out_dir}/wh40k-rpg.zip — refusing to publish." >&2
-        exit 1
-    fi
-
+    # No packs are stripped: a public build only ever compiles the clean generic
+    # packs in src/packs (the copyrighted content in the src/packs-private
+    # submodule is never built into dist/packs). filter_release_manifest already
+    # narrowed system.json packs[] to exactly the packs shipped in dist/packs.
     echo "  Manifest : ${out_dir}/system.json  (v${version})"
-    echo "  Package  : ${out_dir}/wh40k-rpg.zip  (packs stripped)"
+    echo "  Package  : ${out_dir}/wh40k-rpg.zip"
     echo "  Upload both to a GitHub release; Foundry installs from the manifest URL in system.json."
 }
 
@@ -140,6 +141,7 @@ main() {
             install_deps
             build_system_dist
             build_compendiums
+            filter_release_manifest
             build_archive
             stage_release
             ;;

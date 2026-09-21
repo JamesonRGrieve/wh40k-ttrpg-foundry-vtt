@@ -2,7 +2,7 @@
  * Runtime hydration of LEAN embedded inventory items.
  *
  * Both world actors and compendium (pack) actors store their inventory DRY (see
- * src/packs/CLAUDE.md): each embedded item carries only `_stats.compendiumSource`
+ * docs/pack-authoring.md): each embedded item carries only `_stats.compendiumSource`
  * (a UUID join key) plus the per-actor fields that genuinely belong to the actor
  * (`specialization`, `level`, equipped/quantity state, XP `cost`), or — for
  * quest-specific variants — `system.variantOf` pointing at the generic base plus
@@ -142,7 +142,7 @@ function sameSystem(a: unknown, b: unknown): boolean {
  * Mirrors the item join: a named individual (the *Excrucian*) stores only what
  * makes it that individual and points at the unnamed class it instances (the
  * Devastation-class Cruiser), which holds the stats once. See
- * src/packs/CLAUDE.md "Actor atomization".
+ * docs/pack-authoring.md "Actor atomization".
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry system payloads are open-ended Records in and out
 async function resolveVariantChain(system: Record<string, unknown>, unresolved: UnresolvedJoin[], actorName: string): Promise<Array<Record<string, unknown>>> {

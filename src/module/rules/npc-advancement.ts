@@ -40,7 +40,7 @@ export const MAX_SKILL_RANK = 4;
  * therefore costs nothing.
  *
  * RAW never states a starting value for an NPC, so this split is an explicit
- * documented convention rather than rules-as-written — see `src/packs/CLAUDE.md`
+ * documented convention rather than rules-as-written — see `docs/pack-authoring.md`
  * → *NPC Advancement*. It is defined exactly once, here, so it can be retuned in
  * one place instead of being re-derived per actor.
  */

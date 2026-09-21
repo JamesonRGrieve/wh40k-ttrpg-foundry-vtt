@@ -9,7 +9,7 @@
  *
  * Item references stay compendium-linked: the pile receives each item's source
  * object, which for a lean pack item is its join key plus per-actor overlay —
- * the canonical body is never deep-copied (`src/packs/CLAUDE.md`).
+ * the canonical body is never deep-copied (`docs/pack-authoring.md`).
  *
  * Content-agnostic and line-agnostic: nothing here names an item, a line or an
  * actor type beyond the creature/non-creature split, so it works identically

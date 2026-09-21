@@ -7,7 +7,7 @@ Enhanced Journal, …).
 ## Source of truth: `system.cost`
 
 Authored item value lives in the structured, per-line `system.cost` object
-(see `src/packs/CLAUDE.md` → *Standard Cost Shape*): a native RAW acquisition
+(see `docs/pack-authoring.md` → *Standard Cost Shape*): a native RAW acquisition
 field per line plus an asymmetric `homebrew` block. This is the canonical,
 hand-authored data and is never written to by the compatibility layer.
 

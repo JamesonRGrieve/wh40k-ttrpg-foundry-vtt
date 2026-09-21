@@ -101,7 +101,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
             // another actor (#390) — used for the default Unarmed weapon (#228),
             // quest items, and bound gear. GM-editable on the item sheet.
             bound: new fields.BooleanField({ required: true, initial: false }),
-            // Variant linkage (see src/packs/CLAUDE.md "Variants"). `variantOf`
+            // Variant linkage (see docs/pack-authoring.md "Variants"). `variantOf`
             // is the Foundry UUID of the standard / most-vanilla variant this
             // item is a variant of — '' when this item IS that base variant.
             // A manufacturing pattern (Godwyn-Pattern Bolter) is just one kind
@@ -241,7 +241,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
         }
         const cost = source['cost'] as CostShape;
 
-        // Asymmetric homebrew shape (see src/packs/CLAUDE.md "Standard Cost
+        // Asymmetric homebrew shape (see docs/pack-authoring.md "Standard Cost
         // Shape"): dh1 carries no homebrew block; homebrew.requisition is
         // dh2-only; homebrew.throneGelt exists on every line except dh1.
         // Legacy uniform-homebrew sources are tolerated — extra keys are

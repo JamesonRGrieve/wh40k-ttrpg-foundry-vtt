@@ -2,7 +2,7 @@
  * Regression guard (#499): every LEAN embedded item on a pack actor must have a
  * join key that resolves to a document that actually exists in the pack tree.
  *
- * Bug history: pack actors ship LEAN inventories (`src/packs/CLAUDE.md`) — each
+ * Bug history: pack actors ship LEAN inventories (`docs/pack-authoring.md`) — each
  * embedded item carries `_stats.compendiumSource` (or `system.variantOf`) and no
  * `system` body. The canonical body is joined IN MEMORY at runtime. When that
  * join fails the item is left as a name with no mechanics — a weapon with no

@@ -631,7 +631,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     const fullName = talent.system?.fullName;
                     const rollable = talent.system?.isRollable;
                     // The "(X)" placeholder is stripped before composing (SPEC
-                    // philosophy — see src/packs/CLAUDE.md), so the spec name is
+                    // philosophy — see docs/pack-authoring.md), so the spec name is
                     // "probe-talent (Las) x3", never the doubled "(X) (Las)".
                     if (hasSpec === true && fullName === 'probe-talent (Las) x3' && rollable === true) {
                         fired['talent-specialization-fullname'] = true;

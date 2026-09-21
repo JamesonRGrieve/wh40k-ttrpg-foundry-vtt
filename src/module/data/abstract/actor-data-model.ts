@@ -44,7 +44,7 @@ export default class ActorDataModel extends SystemDataModel {
         return {
             ...super.defineSchema(),
             // Variant linkage, the actor mirror of PhysicalItemTemplate's field
-            // (see src/packs/CLAUDE.md "Actor atomization"): the Foundry UUID of
+            // (see docs/pack-authoring.md "Actor atomization"): the Foundry UUID of
             // the unnamed class this named individual is a specific instance of
             // — '' when this actor IS that base class. Declared here rather than
             // per actor type so npc, vehicle, voidcraft and character share one

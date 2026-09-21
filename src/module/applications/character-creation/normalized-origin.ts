@@ -256,7 +256,7 @@ const SUPPORTED_LINES = new Set(['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow', 'im']);
  * the line keys — so the map yields nothing and every origin reads as homebrew.
  * In that case fall back to the document's `gameSystems` membership, which by the
  * content model carries exactly the line(s) where the item is RAW (see
- * `src/packs/CLAUDE.md`). This recovers all three states: active line ∈ raw lines
+ * `docs/pack-authoring.md`). This recovers all three states: active line ∈ raw lines
  * → official (no badge); ∉ but non-empty → adaptation; empty → pure homebrew.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: doc/system are raw Foundry compendium data with no schema; asRecord narrows every access below
