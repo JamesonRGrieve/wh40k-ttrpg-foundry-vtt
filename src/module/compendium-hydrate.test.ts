@@ -70,6 +70,83 @@ describe('buildHydrationPatches — resilience on the hot prep/render path', () 
         expect(patches).toHaveLength(1);
         expect(patches[0]).toMatchObject({ _id: 'i1', system: { damage: '1d10+5', cost: 7 } });
     });
+
+    /**
+     * #574: a LEAN embed (no `system` on disk) lost its canonical description on
+     * hydration. Two mechanisms, both exercised here against the exact shapes of
+     * the Adeptus Astartes Dreadnought's Walker trait:
+     *   - the canonical `description` is a per-line variant container
+     *     (`{ rt: { value } }`). `updateSource` re-cleans WITHOUT `_migrateData`,
+     *     so the container must be materialized to the owning line here or the
+     *     schema strips the unknown `rt` key → empty description.
+     *   - the lean overlay's schema-default empty strings (`description.value`,
+     *     `descriptionText`) must not clobber the canonical's real text.
+     */
+    it('resolves a canonical per-line description and keeps flat text through the lean overlay (#574)', async () => {
+        vi.stubGlobal(
+            'fromUuid',
+            vi.fn().mockResolvedValue({
+                img: null,
+                system: {
+                    description: { rt: { value: '<p>Walker rules</p>' } },
+                    descriptionText: 'Walker rules',
+                    gameSystems: ['rt'],
+                },
+            }),
+        );
+        const patches = await buildHydrationPatches({
+            system: { gameSystem: 'dw' },
+            items: {
+                contents: [
+                    {
+                        id: 't1',
+                        name: 'Walker',
+                        img: null,
+                        type: 'vehicleTrait',
+                        // The derived defaults a lean embed presents: empty description text.
+                        system: { description: { value: '', chat: '', summary: '' }, descriptionText: '' },
+                        _stats: { compendiumSource: 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits.Item.fLE0SYIIfp7Ecx09' },
+                    },
+                ],
+            },
+        });
+        expect(patches).toHaveLength(1);
+        const sys = patches[0]?.['system'] as { description?: { value?: string }; descriptionText?: string };
+        // The per-line container is collapsed to its branch — never left as `{ rt: … }`.
+        expect(sys.description).not.toHaveProperty('rt');
+        expect(sys.description?.value).toBe('<p>Walker rules</p>');
+        // The flat canonical text is NOT clobbered by the overlay's empty default.
+        expect(sys.descriptionText).toBe('Walker rules');
+    });
+
+    it('still lets a genuinely customised (non-empty) persisted description win — no over-correction (#574)', async () => {
+        // Canonical carries an extra field (`weight`) the lean overlay lacks, so a
+        // patch is produced (the join is not a no-op) and we can assert the
+        // authored, non-empty description still wins over the canonical body.
+        vi.stubGlobal(
+            'fromUuid',
+            vi.fn().mockResolvedValue({ img: null, system: { description: { value: 'Canonical text', chat: '', summary: '' }, weight: 5 } }),
+        );
+        const patches = await buildHydrationPatches({
+            system: { gameSystem: 'dh2' },
+            items: {
+                contents: [
+                    {
+                        id: 'c1',
+                        name: 'Custom',
+                        img: null,
+                        type: 'trait',
+                        system: { description: { value: 'Actor override', chat: '', summary: '' } },
+                        _stats: { compendiumSource: 'Compendium.wh40k-rpg.dh2-core-items-traits.Item.c' },
+                    },
+                ],
+            },
+        });
+        expect(patches).toHaveLength(1);
+        const sys = patches[0]?.['system'] as { description?: { value?: string }; weight?: number };
+        expect(sys.description?.value).toBe('Actor override');
+        expect(sys.weight).toBe(5);
+    });
 });
 
 /**

@@ -16,12 +16,15 @@ import { expect, test } from './lib/test';
  *   - size resolves to "Enormous" and the description is non-empty;
  *   - three named hardpoints exist and weapons carry mount categories / innate;
  *   - Walker / Combat Walker / Reinforced Hull embed as trait ITEMS (not a
- *     plaintext blob) and render in the combat tab with no "[object Object]".
+ *     plaintext blob) and render in the combat tab with no "[object Object]";
+ *   - those trait items carry their canonical DESCRIPTIONS after hydration
+ *     (the #574 lean-embed hydration defect, now fixed).
  *
- * NOTE: the embedded traits' compendium DESCRIPTIONS do not yet render — a
- * pre-existing general hydration defect (a lean embed's schema-default empty
- * system clobbers the canonical body on join). Tracked separately; the trait
- * items themselves (the #7 structural requirement) are asserted here.
+ * #574: a lean embed (compendiumSource only, no authored `system`) used to lose
+ * its canonical description on join — the schema-default empty `description` /
+ * `descriptionText` clobbered the canonical body, and a per-line `description`
+ * container (`{ rt: { value } }`) was stripped because `updateSource` re-cleans
+ * without `_migrateData`. Both are fixed in compendium-hydrate.ts; asserted here.
  */
 
 interface WeaponInfo {
@@ -43,6 +46,8 @@ interface ProbeData {
     hardpointIds: string[];
     weapons: WeaponInfo[];
     traitNames: string[];
+    /** Per-trait hydrated description length (#574): name → chars of description.value/descriptionText. */
+    traitDescLens: Record<string, number>;
 }
 interface ProbeResult {
     error: string | null;
@@ -83,7 +88,7 @@ test('Adeptus Astartes Dreadnought loads with hardpoints, pilot/N-A profile, and
         interface ItemProbe {
             type: string;
             name: string;
-            system: { mountCategory?: string; innate?: boolean };
+            system: { mountCategory?: string; innate?: boolean; description?: { value?: string }; descriptionText?: string };
         }
         interface CharProbe {
             base?: number;
@@ -146,7 +151,17 @@ test('Adeptus Astartes Dreadnought loads with hardpoints, pilot/N-A profile, and
                     const isys = it.system;
                     return { name: it.name, cat: isys.mountCategory ?? '', innate: isys.innate === true };
                 });
-            const traitNames: string[] = allItems.filter((it) => it.type === 'vehicleTrait').map((it) => it.name);
+            const traitItems = allItems.filter((it) => it.type === 'vehicleTrait');
+            const traitNames: string[] = traitItems.map((it) => it.name);
+            const traitDescLens: Record<string, number> = {};
+            for (const it of traitItems) {
+                // Local bindings so the `??` fallbacks don't sit on a `.system.*`
+                // access (the probe interface types both fields as optional).
+                const descValue: string | undefined = it.system.description?.value;
+                const descText: string | undefined = it.system.descriptionText;
+                const text = (descValue ?? '') || (descText ?? '');
+                traitDescLens[it.name] = text.length;
+            }
             const probeData: ProbeData = {
                 manoeuverability: sys.manoeuverability,
                 carryingCapacity: sys.carryingCapacity,
@@ -161,6 +176,7 @@ test('Adeptus Astartes Dreadnought loads with hardpoints, pilot/N-A profile, and
                 hardpointIds: sys.hardpoints.map((h) => h.id),
                 weapons,
                 traitNames,
+                traitDescLens,
             };
 
             return { error: null, data: probeData, rendered, hasLeftArm, hasObjectObject, domHasReinforcedHull, domHasCombatWalker };
@@ -210,6 +226,12 @@ test('Adeptus Astartes Dreadnought loads with hardpoints, pilot/N-A profile, and
     expect(data.traitNames).toEqual(expect.arrayContaining(['Walker', 'Combat Walker', 'Reinforced Hull']));
     expect(result.domHasReinforcedHull, 'Reinforced Hull trait should render in the combat tab').toBe(true);
     expect(result.domHasCombatWalker, 'Combat Walker trait should render in the combat tab').toBe(true);
+
+    // #574: each trait carries its canonical description after hydration (a lean
+    // embed no longer clobbers the canonical body with schema-default empties).
+    for (const traitName of ['Walker', 'Combat Walker', 'Reinforced Hull']) {
+        expect(data.traitDescLens[traitName] ?? 0, `${traitName} should hydrate a non-empty description (#574)`).toBeGreaterThan(0);
+    }
 
     // The sheet renders, shows the hardpoint, and never prints the raw object.
     expect(result.rendered, 'sheet did not render').toBe(true);
