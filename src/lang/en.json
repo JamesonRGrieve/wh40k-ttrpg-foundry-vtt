@@ -412,6 +412,11 @@
             "PointBuyOverspent": "You have spent more points than the pool allows. Reduce a characteristic before continuing.",
             "PointBuyResetHint": "Refund all spent points"
         },
+        "Portrait": {
+            "Reroll": "Re-roll portrait",
+            "Pin": "Pin this portrait (spawns stop rolling)",
+            "Unpin": "Unpin portrait (resume random)"
+        },
         "Utility": {
             "MenuTooltip": "Utility Actions",
             "SetupCharacteristics": "Setup Characteristic Rolls",

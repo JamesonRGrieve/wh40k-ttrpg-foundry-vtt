@@ -15,7 +15,7 @@ import { clampDisposition } from '../rules/disposition.ts';
 import { getFatigueAfterRest, isFatigueDeath, isFatigueUnconscious } from '../rules/fatigue.ts';
 import { clampFearRating, getFearTestPenalty } from '../rules/fear.ts';
 import { resolveEscapePinningTest, resolvePinningTest } from '../rules/pinning.ts';
-import { type PortraitActorLike, rerollSpawnPortrait } from '../rules/portrait-spawn.ts';
+import { type PortraitActorLike, rerollSpawnPortrait, togglePinnedIndex } from '../rules/portrait-spawn.ts';
 import { type RerollOption, type RerollRollContext, type RerollSpec, rerollApplies, rerollLedgerKey, rerollUseAvailable } from '../rules/reroll.ts';
 import {
     type DesiredSubtletyAdjusterEffect,
@@ -130,6 +130,24 @@ export class WH40KBaseActor extends Actor {
         // Flat dotted flag key (matching the `flags.wh40k-rpg.*` update idiom
         // elsewhere in this file) so Foundry's typed flags shape accepts it.
         await this.update({ 'img': chosen.img, 'prototypeToken.flags.wh40k-rpg.tokenFrame': chosen.tokenFrame });
+        return true;
+    }
+
+    /**
+     * Toggle the portrait-pool pin (#567): pin spawn to the portrait currently
+     * showing (so every spawn of this actor uses it and the random roll stops),
+     * or, when already pinned, clear the pin to resume the random roll. Writes
+     * `system.portraits.pinned` (the current portrait's pool index, or `null`).
+     * The "pin / unpin on a placed actor" GM action as a Document API surface.
+     *
+     * @returns true if the pin state changed, false when there is nothing to pin
+     *   (the current image is not part of the actor's pool).
+     */
+    async togglePortraitPin(): Promise<boolean> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: narrow `this` to the portrait-pool surface (img / system.portraits); WH40KActorSystemData does not model the schema-only `portraits` slot
+        const next = togglePinnedIndex(this as unknown as PortraitActorLike);
+        if (next === undefined) return false;
+        await this.update({ 'system.portraits.pinned': next });
         return true;
     }
 

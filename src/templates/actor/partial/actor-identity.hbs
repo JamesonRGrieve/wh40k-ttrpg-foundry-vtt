@@ -55,6 +55,20 @@
            data-action="openOriginPathBuilder"
            data-tooltip="{{localize 'WH40K.Utility.SetupOriginPath'}}"></i>
         {{/if}}
+        {{!-- Portrait-pool control (#567): GM re-roll / pin, shown only when this
+             actor carries a pool of two or more portraits. Sibling icons with
+             their own data-action, so a click dispatches re-roll / pin rather
+             than the portrait's editImage. --}}
+        {{#if isGM}}{{#if hasPortraitPool}}
+        <div class="tw-absolute tw-top-2 tw-right-2 tw-z-10 tw-flex tw-flex-col tw-gap-1.5">
+            <i class="fa-solid fa-dice tw-cursor-pointer tw-text-lg tw-text-gold {{themeClassFor 'accent'}} tw-opacity-60 tw-transition-all hover:tw-opacity-100 hover:tw-text-[#f0d060] hover:tw-drop-shadow-[0_0_8px_rgba(212,175,55,0.9)]"
+               data-action="rerollPortrait"
+               data-tooltip="{{localize 'WH40K.Portrait.Reroll'}}"></i>
+            <i class="fa-solid fa-thumbtack tw-cursor-pointer tw-text-lg tw-transition-all hover:tw-drop-shadow-[0_0_8px_rgba(212,175,55,0.9)] {{#if portraitPinned}}tw-text-[#f0d060] tw-opacity-100{{else}}tw-text-gold {{themeClassFor 'accent'}} tw-opacity-60 hover:tw-opacity-100{{/if}}"
+               data-action="togglePortraitPin"
+               data-tooltip="{{#if portraitPinned}}{{localize 'WH40K.Portrait.Unpin'}}{{else}}{{localize 'WH40K.Portrait.Pin'}}{{/if}}"></i>
+        </div>
+        {{/if}}{{/if}}
         <img class="tw-h-full tw-w-full tw-object-cover tw-bg-[rgba(0,0,0,0.25)]" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
     </div>
 </div>

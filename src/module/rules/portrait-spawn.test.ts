@@ -4,10 +4,13 @@ import {
     applyPortraitOnPreCreate,
     applySpawnPortrait,
     collectUsedPortraitImgs,
+    currentPortraitIndex,
     decideSpawnPortrait,
+    effectivePoolSize,
     type PortraitActorLike,
     type PortraitUpdate,
     rerollSpawnPortrait,
+    togglePinnedIndex,
 } from './portrait-spawn.ts';
 
 const SYSTEM_ID = 'wh40k-rpg';
@@ -137,5 +140,73 @@ describe('rerollSpawnPortrait', () => {
 
     it('returns null when there is nothing to re-roll', () => {
         expect(rerollSpawnPortrait(mockActor(), rngOf(0.9))).toBeNull();
+    });
+});
+
+// The sheet-control helpers (#567): drive the "has a pool" gate, resolve the
+// current portrait's pool index, and toggle the pin on the current portrait.
+describe('effectivePoolSize', () => {
+    it('counts the default portrait alone as a pool of one', () => {
+        expect(effectivePoolSize(mockActor())).toBe(1);
+    });
+
+    it('counts the default plus its authored variants', () => {
+        expect(
+            effectivePoolSize(
+                mockActor({
+                    variants: [
+                        { img: 'b.webp', tokenFrame: null },
+                        { img: 'c.webp', tokenFrame: null },
+                    ],
+                }),
+            ),
+        ).toBe(3);
+    });
+
+    it('drops a blank default so only real images count', () => {
+        expect(effectivePoolSize(mockActor({ img: '  ', variants: [{ img: 'b.webp', tokenFrame: null }] }))).toBe(1);
+    });
+});
+
+describe('currentPortraitIndex', () => {
+    it('finds the current img at its pool position (default is index 0)', () => {
+        expect(currentPortraitIndex(mockActor({ variants: [{ img: 'b.webp', tokenFrame: null }] }))).toBe(0);
+    });
+
+    it('finds a variant that is the current img', () => {
+        const actor = mockActor({
+            img: 'b.webp',
+            variants: [
+                { img: 'a.webp', tokenFrame: null },
+                { img: 'b.webp', tokenFrame: null },
+            ],
+        });
+        // Pool = [b.webp (default), a.webp, b.webp]; the current img matches index 0.
+        expect(currentPortraitIndex(actor)).toBe(0);
+    });
+
+    it('returns null when the current img is not in the pool', () => {
+        const actor = mockActor({ img: 'hand-set.webp', variants: [] });
+        // Pool = [hand-set.webp] — actually index 0; force a genuine miss instead:
+        const missing = mockActor({ img: '  ', variants: [{ img: 'b.webp', tokenFrame: null }] });
+        expect(currentPortraitIndex(actor)).toBe(0);
+        expect(currentPortraitIndex(missing)).toBeNull();
+    });
+});
+
+describe('togglePinnedIndex', () => {
+    it('pins to the current portrait index when not already pinned', () => {
+        const actor = mockActor({ variants: [{ img: 'b.webp', tokenFrame: null }] });
+        expect(togglePinnedIndex(actor)).toBe(0);
+    });
+
+    it('unpins (null) when a pin is already set', () => {
+        const actor = mockActor({ variants: [{ img: 'b.webp', tokenFrame: null }], pinned: 1 });
+        expect(togglePinnedIndex(actor)).toBeNull();
+    });
+
+    it('returns undefined (no-op) when the current img is not in the pool', () => {
+        const actor = mockActor({ img: '  ', variants: [{ img: 'b.webp', tokenFrame: null }] });
+        expect(togglePinnedIndex(actor)).toBeUndefined();
     });
 });
