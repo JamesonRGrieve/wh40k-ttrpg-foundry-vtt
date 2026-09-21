@@ -96,6 +96,7 @@ import { openWarpTravelDialog } from './applications/prompts/warp-travel-dialog.
 import { openWithinHomeworldInfoDialog } from './applications/prompts/within-homeworld-info-dialog.ts';
 import { openWithoutHomeworldInfoDialog } from './applications/prompts/without-homeworld-info-dialog.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
+import { registerStackedTokenPicker } from './canvas/stacked-token-picker-hook.ts';
 import { onRefreshToken } from './canvas/token-mask.ts';
 import { hydrateActorInMemory } from './compendium-hydrate.ts';
 import { buildCareerAdvancementIndex } from './config/advancements/career-advancement-cache.ts';
@@ -222,6 +223,9 @@ export class HooksManager {
         hooksOn('preUpdateToken', (doc: LootMoveTokenLike, change: { x?: number; y?: number }) => HooksManager.onPreUpdateToken(doc, change));
         // Runtime circular busts from plain portraits (flags.wh40k-rpg.tokenFrame)
         hooksOn('refreshToken', (token: Parameters<typeof onRefreshToken>[0]) => onRefreshToken(token));
+        // Stacked-token bust palette: pick a specific token out of an overlapping
+        // stack instead of Foundry's invisible click-to-cycle (#569).
+        registerStackedTokenPicker();
         hooksOn('getActorSheetClass', (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
             HooksManager.getActorSheetClass(actor, sheetData),
         );
