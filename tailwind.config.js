@@ -39,16 +39,14 @@ module.exports = {
   // `@tailwind base;` in entry.css so the design-tokens addBase plugin emits.
   corePlugins: { preflight: false },
   safelist: [
-    // The legacy CSS files under src/css/** still carry `animation: <name> ...`
-    // rules on selectors like `.wh40k-panel`, `.wh40k-prompt::before`, etc. Those
-    // rules reference @keyframes by name, and the @keyframes definitions now live
-    // in theme.extend.keyframes below. Without this safelist, Tailwind would
-    // tree-shake the @keyframes out (no `tw-animate-*` utility appears in any
-    // template yet) and the legacy CSS's animation rules would silently fail.
-    // Drop this safelist once every animation is invoked via tw-animate-<name>
-    // on its template AND the matching `animation:` rule is removed from the
-    // legacy CSS.
-    { pattern: /^tw-animate-/ },
+    // NOTE: the `{ pattern: /^tw-animate-/ }` blanket safelist was dropped (#575).
+    // Its purpose was to keep @keyframes alive for legacy `animation: <name>`
+    // rules in src/css / tailwind/*.js — and there are now ZERO such rules (the
+    // animation ratchet baseline is 0). Every animation used in production is
+    // invoked via a literal `tw-animate-<name>` on a template or in src/module/**
+    // (both in Tailwind's content globs), so the JIT scan emits exactly those and
+    // tree-shakes the genuinely-unused ones. Animations demoed only in stories are
+    // emitted by Storybook's own content scan (which includes stories/**).
     // Per-system theme tokens emitted by `themeClassFor(systemId, role)` in
     // `src/module/config/game-systems/index.ts` — the helper produces these
     // class names dynamically at render time, so Tailwind's static template
