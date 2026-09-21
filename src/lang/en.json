@@ -1084,6 +1084,43 @@
             "AllowManualRoll": {
                 "Name": "Allow manual roll input",
                 "Hint": "Show the manual dice entry field in roll dialogs, for importing physical dice results. Hidden by default."
+            },
+            "TokenImageGenMode": {
+                "Name": "Auto-Generate Token Image",
+                "Hint": "When an actor is dragged in from a compendium, optionally generate its image from a configured OpenAI-compatible image endpoint (see the endpoint/model settings below). Never: off. If no image: only when the actor has no real art. Ask: prompt before generating. Always: generate every time.",
+                "Choices": {
+                    "Never": "Never",
+                    "IfNoImage": "Only if the actor has no image",
+                    "Ask": "Ask each time",
+                    "Always": "Always"
+                }
+            },
+            "TokenImageGenEndpoint": {
+                "Name": "Image Endpoint URL",
+                "Hint": "Base URL of an OpenAI-compatible image API (e.g. a Bifrost gateway). The system posts to /v1/images/generations. Leave blank to disable generation."
+            },
+            "TokenImageGenModel": {
+                "Name": "Image Model",
+                "Hint": "Model name passed to the image endpoint (the OpenAI 'model' field)."
+            },
+            "TokenImageGenApiKey": {
+                "Name": "Image API Key",
+                "Hint": "Optional bearer token for the image endpoint. Sent as an Authorization header when set; leave blank if the endpoint needs no key."
+            },
+            "TokenImageGenSize": {
+                "Name": "Image Size",
+                "Hint": "Requested image size, e.g. 1024x1024."
+            }
+        },
+        "TokenImageGen": {
+            "Generating": "Generating token image for {name}…",
+            "Done": "Generated token image for {name}.",
+            "Failed": "Token image generation failed for {name}: {error}",
+            "BadResponse": "Token image endpoint returned no usable image for {name}.",
+            "NoEndpoint": "Token image generation is enabled but no endpoint URL is configured.",
+            "Confirm": {
+                "Title": "Generate Token Image?",
+                "Content": "Generate an image for {name} from the configured image endpoint?"
             }
         },
         "ActiveEffect": {

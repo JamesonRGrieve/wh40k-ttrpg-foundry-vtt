@@ -2,6 +2,7 @@ import { ALL_SYSTEM_IDS, type GameSystemId } from './config/game-systems/types.t
 import { SYSTEM_ID } from './constants.ts';
 import type { FatigueMode } from './rules/fatigue.ts';
 import { type ImperialDate, parseImperialDate } from './rules/imperial-date.ts';
+import { coerceTokenImageGenMode, type TokenImageGenConfig, type TokenImageGenMode } from './rules/token-image-gen.ts';
 
 export type DH2Ruleset = 'raw' | 'homebrew';
 
@@ -71,6 +72,11 @@ export class WH40KSettings {
         campaignInceptionDate: 'campaign-inception-date',
         npcAdvancement: 'npc-advancement',
         allowManualRoll: 'allow-manual-roll',
+        tokenImageGenMode: 'token-image-gen-mode',
+        tokenImageGenEndpoint: 'token-image-gen-endpoint',
+        tokenImageGenModel: 'token-image-gen-model',
+        tokenImageGenApiKey: 'token-image-gen-api-key',
+        tokenImageGenSize: 'token-image-gen-size',
     };
 
     /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
@@ -385,6 +391,38 @@ export class WH40KSettings {
         } catch {
             return false;
         }
+    }
+
+    /** A world setting read as a plain string, with a fallback when unregistered
+     *  or non-string (#576). */
+    private static readStringSetting(key: string, fallback: string): string {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
+        let raw: unknown;
+        try {
+            raw = game.settings.get(SYSTEM_ID, key);
+        } catch {
+            return fallback;
+        }
+        return typeof raw === 'string' ? raw : fallback;
+    }
+
+    /** When/whether to auto-generate an actor image on compendium drop (#576).
+     *  Defaults to `never`. Safe to call before the setting is registered. */
+    static getTokenImageGenMode(): TokenImageGenMode {
+        return coerceTokenImageGenMode(WH40KSettings.readStringSetting(WH40KSettings.SETTINGS.tokenImageGenMode, 'never'));
+    }
+
+    /** The resolved token-image-generation config (#576) — mode + endpoint + model +
+     *  API key + size, each with a safe fallback. */
+    static getTokenImageGenConfig(): TokenImageGenConfig {
+        const S = WH40KSettings.SETTINGS;
+        return {
+            mode: WH40KSettings.getTokenImageGenMode(),
+            endpoint: WH40KSettings.readStringSetting(S.tokenImageGenEndpoint, ''),
+            model: WH40KSettings.readStringSetting(S.tokenImageGenModel, ''),
+            apiKey: WH40KSettings.readStringSetting(S.tokenImageGenApiKey, ''),
+            size: WH40KSettings.readStringSetting(S.tokenImageGenSize, '1024x1024'),
+        };
     }
 
     static getRuleset(): DH2Ruleset {
@@ -839,6 +877,60 @@ export class WH40KSettings {
                 scope: 'world',
                 config: true,
                 default: WH40KSettings.CAMPAIGN_INCEPTION_DATE_DEFAULT,
+                type: String,
+            },
+            {
+                // Auto-generate an actor image on compendium drop via an OpenAI-
+                // compatible image endpoint (#576). Default `never` (off).
+                key: S.tokenImageGenMode,
+                name: 'WH40K.SETTINGS.TokenImageGenMode.Name',
+                hint: 'WH40K.SETTINGS.TokenImageGenMode.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: false,
+                default: 'never',
+                type: String,
+                choices: {
+                    'never': 'WH40K.SETTINGS.TokenImageGenMode.Choices.Never',
+                    'if-no-image': 'WH40K.SETTINGS.TokenImageGenMode.Choices.IfNoImage',
+                    'ask': 'WH40K.SETTINGS.TokenImageGenMode.Choices.Ask',
+                    'always': 'WH40K.SETTINGS.TokenImageGenMode.Choices.Always',
+                },
+            },
+            {
+                key: S.tokenImageGenEndpoint,
+                name: 'WH40K.SETTINGS.TokenImageGenEndpoint.Name',
+                hint: 'WH40K.SETTINGS.TokenImageGenEndpoint.Hint',
+                scope: 'world',
+                config: true,
+                default: '',
+                type: String,
+            },
+            {
+                key: S.tokenImageGenModel,
+                name: 'WH40K.SETTINGS.TokenImageGenModel.Name',
+                hint: 'WH40K.SETTINGS.TokenImageGenModel.Hint',
+                scope: 'world',
+                config: true,
+                default: '',
+                type: String,
+            },
+            {
+                key: S.tokenImageGenApiKey,
+                name: 'WH40K.SETTINGS.TokenImageGenApiKey.Name',
+                hint: 'WH40K.SETTINGS.TokenImageGenApiKey.Hint',
+                scope: 'world',
+                config: true,
+                default: '',
+                type: String,
+            },
+            {
+                key: S.tokenImageGenSize,
+                name: 'WH40K.SETTINGS.TokenImageGenSize.Name',
+                hint: 'WH40K.SETTINGS.TokenImageGenSize.Hint',
+                scope: 'world',
+                config: true,
+                default: '1024x1024',
                 type: String,
             },
         ];
