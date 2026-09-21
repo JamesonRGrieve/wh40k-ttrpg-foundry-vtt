@@ -11,6 +11,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
 import { ItemDropManager } from '../../managers/item-drop-manager.ts';
 import { effectivePoolSize, type PortraitActorLike } from '../../rules/portrait-spawn.ts';
+import { generateActorImageOnDemand, type TokenImageActor } from '../../rules/token-image-gen-runtime.ts';
 import type {
     WH40KBaseActorDocument,
     WH40KArmourLocation,
@@ -323,6 +324,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             editImage: BaseActorSheet.#onEditImage,
             rerollPortrait: BaseActorSheet.#onRerollPortrait,
             togglePortraitPin: BaseActorSheet.#onTogglePortraitPin,
+            generatePortrait: BaseActorSheet.#onGeneratePortrait,
             roll: BaseActorSheet.#roll,
             itemRoll: BaseActorSheet.#itemRoll,
             itemEdit: BaseActorSheet.#itemEdit,
@@ -1913,6 +1915,20 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     static async #onTogglePortraitPin(this: BaseActorSheet, _event: Event, _target: HTMLElement): Promise<void> {
         if (!game.user.isGM) return;
         await this.actor.togglePortraitPin();
+    }
+
+    /**
+     * GM on-demand portrait generation (#577): generate an image from the
+     * configured OpenAI-compatible endpoint (#576) and stamp it onto the actor's
+     * `img` + prototype-token texture. GM-gated (the control renders GM-only, but
+     * re-check on dispatch); a no-op with a notice when no endpoint is configured
+     * (surfaced by the runtime). Files are still chosen via the portrait's own
+     * click-to-select (`editImage`).
+     */
+    static async #onGeneratePortrait(this: BaseActorSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        if (!game.user.isGM) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the sheet's rich WH40KBaseActor narrowed to the generator's TokenImageActor slice
+        await generateActorImageOnDemand(this.actor as unknown as TokenImageActor);
     }
 
     static async #onEditImage(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {

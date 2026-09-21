@@ -415,7 +415,8 @@
         "Portrait": {
             "Reroll": "Re-roll portrait",
             "Pin": "Pin this portrait (spawns stop rolling)",
-            "Unpin": "Unpin portrait (resume random)"
+            "Unpin": "Unpin portrait (resume random)",
+            "Generate": "Generate portrait (AI)"
         },
         "Utility": {
             "MenuTooltip": "Utility Actions",
