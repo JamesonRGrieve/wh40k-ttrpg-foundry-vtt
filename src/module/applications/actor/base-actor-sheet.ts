@@ -10,6 +10,7 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
 import { ItemDropManager } from '../../managers/item-drop-manager.ts';
+import { effectivePoolSize, type PortraitActorLike } from '../../rules/portrait-spawn.ts';
 import type {
     WH40KBaseActorDocument,
     WH40KArmourLocation,
@@ -320,6 +321,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         /* eslint-disable @typescript-eslint/unbound-method -- Foundry's action dispatcher binds `this` to the sheet instance at invocation time. */
         actions: {
             editImage: BaseActorSheet.#onEditImage,
+            rerollPortrait: BaseActorSheet.#onRerollPortrait,
+            togglePortraitPin: BaseActorSheet.#onTogglePortraitPin,
             roll: BaseActorSheet.#roll,
             itemRoll: BaseActorSheet.#itemRoll,
             itemEdit: BaseActorSheet.#itemEdit,
@@ -484,6 +487,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         context['isGM'] = game.user.isGM;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- CONFIG.wh40k may be unset in test/Storybook environments before system init
         context['dh'] = CONFIG.wh40k ?? WH40K;
+        // Portrait pool (#567): the re-roll / pin control on the portrait renders
+        // only when the actor actually carries a pool (two or more effective
+        // portraits) — a single-portrait actor shows nothing new.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: narrow the actor to the portrait-pool surface (img / system.portraits); the schema-only `portraits` slot is not on WH40KActorSystemData
+        const portraitActor = this.actor as unknown as PortraitActorLike;
+        context['hasPortraitPool'] = effectivePoolSize(portraitActor) > 1;
+        context['portraitPinned'] = (portraitActor.system?.portraits?.pinned ?? null) !== null;
     }
 
     /* -------------------------------------------- */
@@ -1883,6 +1893,26 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (!this.isEditable) return;
         this.#editMode = !this.#editMode;
         void this.render();
+    }
+
+    /**
+     * GM re-roll of the portrait pool (#567): pick a fresh random portrait
+     * (ignoring any pin) and stamp its image + token-bust frame. GM-gated — the
+     * pool control renders GM-only, but re-check on dispatch so a non-GM cannot
+     * drive it through a crafted event.
+     */
+    static async #onRerollPortrait(this: BaseActorSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        if (!game.user.isGM) return;
+        await this.actor.rerollPortrait();
+    }
+
+    /**
+     * GM pin/unpin of the portrait pool (#567): pin spawn to the portrait now
+     * showing, or clear the pin to resume the random roll. GM-gated.
+     */
+    static async #onTogglePortraitPin(this: BaseActorSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        if (!game.user.isGM) return;
+        await this.actor.togglePortraitPin();
     }
 
     static async #onEditImage(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {

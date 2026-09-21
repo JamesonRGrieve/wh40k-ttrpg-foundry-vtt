@@ -105,3 +105,39 @@ export function rerollSpawnPortrait(actor: PortraitActorLike, rng: () => number 
     const pool = effectivePortraitPool(defaultVariant(actor), actor.system?.portraits?.variants ?? null);
     return choosePortrait(pool, null, rng);
 }
+
+/**
+ * The size of the actor's effective portrait pool (default `img` + variants).
+ * Drives the sheet's "this actor has a pool to re-roll / pin" UI gate — the
+ * control only makes sense at two or more.
+ */
+export function effectivePoolSize(actor: PortraitActorLike): number {
+    return effectivePortraitPool(defaultVariant(actor), actor.system?.portraits?.variants ?? null).length;
+}
+
+/**
+ * The index of the actor's current `img` within its effective pool, or `null`
+ * when the current image is not in the pool (e.g. a hand-set portrait). Used to
+ * pin the pool to whatever portrait is showing now.
+ */
+export function currentPortraitIndex(actor: PortraitActorLike): number | null {
+    const pool = effectivePortraitPool(defaultVariant(actor), actor.system?.portraits?.variants ?? null);
+    const img = typeof actor.img === 'string' ? actor.img : '';
+    const idx = pool.findIndex((p) => p.img === img);
+    return idx >= 0 ? idx : null;
+}
+
+/**
+ * The `system.portraits.pinned` value after toggling the pin on the CURRENT
+ * portrait: `null` (unpin — resume the random roll) when a pin is already set,
+ * otherwise the current portrait's pool index (pin spawn to what is showing).
+ * Returns `undefined` when there is nothing to pin (the current image is not in
+ * the pool) so the caller can no-op rather than write a meaningless pin.
+ */
+export function togglePinnedIndex(actor: PortraitActorLike): number | null | undefined {
+    const pinned = actor.system?.portraits?.pinned ?? null;
+    if (pinned !== null) return null; // already pinned → unpin
+    // `null` (not found) → undefined (no-op); a real index, 0 included, is kept.
+    const idx = currentPortraitIndex(actor);
+    return idx ?? undefined;
+}
