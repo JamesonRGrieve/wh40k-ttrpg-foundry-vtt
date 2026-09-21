@@ -2593,6 +2593,7 @@ export type I18nKey =
     | 'WH40K.Pinning.FavourableBonus'
     | 'WH40K.Pinning.Pinned'
     | 'WH40K.Pinning.TestLabel'
+    | 'WH40K.Portrait.Generate'
     | 'WH40K.Portrait.Pin'
     | 'WH40K.Portrait.Reroll'
     | 'WH40K.Portrait.Unpin'

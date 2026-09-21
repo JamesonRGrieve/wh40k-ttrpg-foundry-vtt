@@ -55,6 +55,14 @@
            data-action="openOriginPathBuilder"
            data-tooltip="{{localize 'WH40K.Utility.SetupOriginPath'}}"></i>
         {{/if}}
+        {{!-- Generate portrait (#577): GM-only AI image generation via the configured
+             OpenAI-compatible endpoint (#576). Sits under the d20 builder icon; the
+             portrait itself remains click-to-select (editImage) for choosing a file. --}}
+        {{#if isGM}}
+        <i class="fa-solid fa-wand-magic-sparkles tw-absolute tw-text-2xl tw-top-11 tw-left-2 tw-z-10 tw-cursor-pointer tw-text-gold {{themeClassFor 'accent'}} tw-opacity-60 tw-transition-all hover:tw-opacity-100 hover:tw-text-[#f0d060] hover:tw-drop-shadow-[0_0_8px_rgba(212,175,55,0.9)]"
+           data-action="generatePortrait"
+           data-tooltip="{{localize 'WH40K.Portrait.Generate'}}"></i>
+        {{/if}}
         {{!-- Portrait-pool control (#567): GM re-roll / pin, shown only when this
              actor carries a pool of two or more portraits. Sibling icons with
              their own data-action, so a click dispatches re-roll / pin rather
