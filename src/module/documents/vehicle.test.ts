@@ -46,17 +46,23 @@ describe('WH40KVehicle', () => {
     //   - armour structure has front/side/rear locations
 });
 
-describe('WH40KVehicle.rollItem — weapon attacker selection (item.roll TypeError fix)', () => {
-    const weapon = { type: 'weapon', name: 'Assault Cannon (Dreadnought)' };
+describe('WH40KVehicle.rollItem — fires with the OPERATOR characteristics (RAW: no inherent vehicle skill)', () => {
+    const SYSTEM_ID = 'wh40k-rpg';
+    const VEH_UUID = 'Actor.veh1';
+    const weapon = { type: 'weapon', name: 'Twin-linked Autocannons (Dreadnought)' };
+
+    /** A crew actor aboard the test vehicle in the given seat. */
+    function crewman(role: string, name: string): object {
+        return { name, flags: { [SYSTEM_ID]: { aboard: { vehicleUuid: VEH_UUID, role } } } };
+    }
 
     /**
-     * Load the model + the SAME action-manager singleton `rollItem` dispatches to,
-     * build a prototype-only vehicle, and spy on `performWeaponAttack`. Imports are
-     * dynamic (and skip-guarded) because these modules evaluate `foundry.*` globals
-     * at load, which happy-dom lacks — the assertions run under the Tier A boot.
+     * Load the model + the action-manager singleton, build a prototype-only vehicle,
+     * stub the crew (game.actors) / canvas / user, and spy on `performWeaponAttack`.
+     * Skip-guarded dynamic imports (happy-dom lacks `foundry.*`); asserts under Tier A.
      */
     async function setup(
-        characteristics: object | null,
+        worldActors: object[],
         character: object | null,
     ): Promise<{ vehicle: { rollItem: (id: string) => Promise<void> }; spy: ReturnType<typeof vi.fn> } | undefined> {
         const mod = await importModelOrSkip(import('./vehicle.ts'));
@@ -65,11 +71,12 @@ describe('WH40KVehicle.rollItem — weapon attacker selection (item.roll TypeErr
         if (actions === undefined) return undefined;
 
         const vehicle = Object.create(mod.WH40KVehicle.prototype) as { rollItem: (id: string) => Promise<void> };
-        Object.defineProperty(vehicle, 'system', { value: { characteristics }, writable: true });
+        Object.defineProperty(vehicle, 'uuid', { value: VEH_UUID, writable: true });
         Object.defineProperty(vehicle, 'items', { value: { get: (): typeof weapon => weapon }, writable: true });
         Object.defineProperty(vehicle, 'name', { value: 'Adeptus Astartes Dreadnought', writable: true });
 
-        vi.stubGlobal('game', { user: { character }, wh40k: { log: (): void => undefined }, i18n: { format: (k: string): string => k } });
+        vi.stubGlobal('game', { actors: worldActors, user: { character }, wh40k: { log: (): void => undefined }, i18n: { format: (k: string): string => k } });
+        vi.stubGlobal('canvas', { tokens: { placeables: [] } });
         vi.stubGlobal('ui', { notifications: { warn: (): void => undefined } });
         const spy = vi.spyOn(actions.DHTargetedActionManager, 'performWeaponAttack').mockImplementation(() => undefined);
         return { vehicle, spy };
@@ -80,19 +87,20 @@ describe('WH40KVehicle.rollItem — weapon attacker selection (item.roll TypeErr
         vi.unstubAllGlobals();
     });
 
-    it('an animate craft (has characteristics) attacks as ITSELF, not the player character', async () => {
-        const ctx = await setup({ weaponSkill: { base: 40 } }, { name: 'Some Player PC' });
+    it('fires with the embarked GUNNER, preferred over other crew', async () => {
+        const gunner = crewman('gunner', 'Gunner Vex');
+        const ctx = await setup([crewman('driver', 'Driver Kord'), gunner], { name: 'Some PC' });
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom
         if (ctx === undefined) return;
         await ctx.vehicle.rollItem('w1');
         expect(ctx.spy).toHaveBeenCalledTimes(1);
-        expect(ctx.spy.mock.calls[0]?.[0]).toBe(ctx.vehicle); // attacker is the craft itself
+        expect(ctx.spy.mock.calls[0]?.[0]).toBe(gunner); // operator's skill, not the vehicle's
         expect(ctx.spy.mock.calls[0]?.[2]).toBe(weapon);
     });
 
-    it('an ordinary vehicle (no characteristics) fires with the operating character', async () => {
-        const character = { name: 'Gunner' };
-        const ctx = await setup(null, character);
+    it('falls back to the controlling character when nobody is crewing it', async () => {
+        const character = { name: 'Lone PC' };
+        const ctx = await setup([], character);
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom
         if (ctx === undefined) return;
         await ctx.vehicle.rollItem('w1');
@@ -100,8 +108,8 @@ describe('WH40KVehicle.rollItem — weapon attacker selection (item.roll TypeErr
         expect(ctx.spy.mock.calls[0]?.[0]).toBe(character);
     });
 
-    it('an ordinary vehicle with no assigned character does not attack', async () => {
-        const ctx = await setup(null, null);
+    it('does not attack when there is no operator and no assigned character', async () => {
+        const ctx = await setup([], null);
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom
         if (ctx === undefined) return;
         await ctx.vehicle.rollItem('w1');
