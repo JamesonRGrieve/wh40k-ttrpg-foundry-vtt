@@ -30,6 +30,7 @@ import {
 import { isWarpWeak, type WarpWeaknessScene } from '../rules/warp-weakness.ts';
 import { shouldDestroyOnCriticalFail, weaponDestroysOnCriticalFail } from '../rules/weapon-destroy.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
+import { playWeaponAttackSoundsForRoll } from '../rules/weapon-sounds.ts';
 import { DAY_SECONDS } from '../rules/world-time.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
@@ -689,6 +690,11 @@ export class ActionData {
         }
 
         await sendActionDataToChat(this);
+
+        // Play the weapon's authored attack sound(s): one per shot, so a burst
+        // plays several times and full-auto in rapid succession, broadcast to all
+        // clients. A non-weapon roll carries no `weapon`, so this is a no-op there.
+        playWeaponAttackSoundsForRoll(this.rollData);
 
         await this.maybeAutoRollDamage();
     }
