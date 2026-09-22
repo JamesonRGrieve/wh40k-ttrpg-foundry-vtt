@@ -1,4 +1,6 @@
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
+import { occupantCandidateActors } from '../rules/vehicle-embark.ts';
+import { occupantsOf } from '../rules/vehicle-occupancy.ts';
 import { hasAuthoredFootprint, prototypeTokenFootprintUpdate } from '../utils/token-footprint.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 
@@ -112,7 +114,6 @@ export class WH40KVehicle extends WH40KBaseActor {
     }
 
     override async rollItem(itemId: string): Promise<void> {
-        // Foundry's base rollItem opens a roll dialog; for vehicles we delegate to the character
         await Promise.resolve();
         const item = this.items.get(itemId);
         if (item === undefined) {
@@ -125,21 +126,36 @@ export class WH40KVehicle extends WH40KBaseActor {
             return;
         }
 
-        // An animate craft (Dreadnought / walker / daemon-engine) carries its own
-        // combat profile and attacks as ITSELF; an ordinary vehicle's weapon is
-        // fired by its operator — the controlling player's character. The vehicle
-        // DataModel holds `characteristics` as the profile or `null`, but the
-        // document's shared `system` union types it non-null, so read the true
-        // nullable value to tell an animate craft from an ordinary vehicle.
-        const profile = (this.system as { characteristics: object | null }).characteristics;
-        const attacker: WH40KBaseActor | null = profile !== null ? this : game.user.character;
-        if (attacker === null) {
+        // RAW: a vehicle has no inherent combat skill — its weapon is fired by the
+        // OPERATOR crewing it, using THEIR Ballistic/Weapon Skill (this is why the
+        // vehicle's own characteristics are authored `source: "pilot"` at 0). Resolve
+        // the operator from the crew and attack as them; do NOT roll against the
+        // vehicle's zeroed pilot-sourced stats.
+        const operator = this.resolveWeaponOperator();
+        if (operator === null) {
             // eslint-disable-next-line no-restricted-syntax -- string is a localization key passed via { localize: true }
-            ui.notifications.warn('WH40K.Vehicle.Errors.NoCharacterForRoll', { localize: true });
+            ui.notifications.warn('WH40K.Vehicle.Errors.NoOperator', { localize: true });
             return;
         }
 
-        game.wh40k.log(`Vehicle ${this.name} is rolling ${item.name} for ${attacker.name}`);
-        DHTargetedActionManager.performWeaponAttack(attacker, null, item);
+        game.wh40k.log(`Vehicle ${this.name} weapon ${item.name} fired by operator ${operator.name}`);
+        DHTargetedActionManager.performWeaponAttack(operator, null, item);
+    }
+
+    /**
+     * The character operating this vehicle's weapons, whose Ballistic/Weapon Skill
+     * the attack uses. Prefers an embarked gunner, then driver, then any crew member;
+     * falls back to the controlling player's character. `null` when nobody is crewing
+     * it and no character is assigned — the attack cannot resolve a skill to roll.
+     * @returns {WH40KBaseActor | null}  The operating character, or null.
+     */
+    resolveWeaponOperator(): WH40KBaseActor | null {
+        if (this.uuid !== null) {
+            const crew = occupantsOf(this.uuid, occupantCandidateActors());
+            const inSeat = (role: string): WH40KBaseActor | undefined => crew.find((o) => o.role === role)?.actor;
+            const operator = inSeat('gunner') ?? inSeat('driver') ?? inSeat('crew');
+            if (operator !== undefined) return operator;
+        }
+        return game.user.character;
     }
 }

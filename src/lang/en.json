@@ -4122,6 +4122,7 @@
             "Errors": {
                 "ItemNotFound": "Vehicle item not found: {id}",
                 "NoCharacterForRoll": "Vehicle items are rolled using the current user's character. However, no character found.",
+                "NoOperator": "This vehicle's weapon is fired by its operator's skill — embark a crew member (gunner/driver) or assign your character first.",
                 "NoActionForItemType": "No actions implemented for item type: {type}"
             },
             "Altitude": "Altitude",

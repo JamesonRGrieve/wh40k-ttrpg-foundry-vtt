@@ -3702,6 +3702,7 @@ export type I18nKey =
     | 'WH40K.Vehicle.Errors.ItemNotFound'
     | 'WH40K.Vehicle.Errors.NoActionForItemType'
     | 'WH40K.Vehicle.Errors.NoCharacterForRoll'
+    | 'WH40K.Vehicle.Errors.NoOperator'
     | 'WH40K.Vehicle.FactionPlaceholder'
     | 'WH40K.Vehicle.Full'
     | 'WH40K.Vehicle.HardpointEmpty'
