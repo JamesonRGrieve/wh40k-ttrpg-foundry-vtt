@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { aggregateVehicleTraitEffects, emptyAggregatedVehicleTraitEffects, type VehicleTraitEffects } from './vehicle-trait-effects-template.ts';
+import {
+    aggregateVehicleTraitEffects,
+    emptyAggregatedVehicleTraitEffects,
+    type VehicleTraitEffects,
+    vehicleTraitEffectsSchema,
+} from './vehicle-trait-effects-template.ts';
 
 /** Build a full trait-effects object with the given overrides. */
 function eff(over: Partial<VehicleTraitEffects> = {}): VehicleTraitEffects {
@@ -81,5 +86,24 @@ describe('aggregateVehicleTraitEffects', () => {
         const agg = aggregateVehicleTraitEffects([eff({ enhancedMovement: true, testModifiers: [{ test: 'floorIt', value: 20 }] })]);
         expect(agg.enhancedMovement).toBe(true);
         expect(agg.testModifiers).toStrictEqual([{ test: 'floorIt', value: 20 }]);
+    });
+});
+
+describe('vehicleTraitEffectsSchema', () => {
+    it('allows the neutral blank crewExposure default (V14 "may not be a blank string" regression)', () => {
+        // A trait that does not touch crew exposure carries the '' default, which is
+        // not one of the choices; the field MUST permit blank or the item fails to
+        // initialize and breaks actor hydration. Skips when the Foundry field runtime
+        // is absent (happy-dom) — the assertion runs under the Tier A boot.
+        let blank: boolean | undefined;
+        try {
+            // `.fields` is Foundry's untyped DataSchema at this boundary; cast to the
+            // one field's option shape rather than a Record (schema-typing preserved).
+            const field = (vehicleTraitEffectsSchema().fields as { crewExposure?: { options?: { blank?: boolean } } }).crewExposure;
+            blank = field?.options?.blank;
+        } catch {
+            return;
+        }
+        expect(blank).toBe(true);
     });
 });
