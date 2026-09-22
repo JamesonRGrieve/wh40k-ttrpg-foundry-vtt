@@ -57,6 +57,49 @@ export function prototypeTokenFootprintUpdate(size: unknown): Record<string, num
     };
 }
 
+/** The actor/token facts the token preset reads. */
+export interface TokenPresetInput {
+    /** The token's current width/height (inherited from the prototype or authored). */
+    currentWidth?: number | null | undefined;
+    currentHeight?: number | null | undefined;
+    /** The owning actor's 1–10 size descriptor. */
+    size?: number | null | undefined;
+    /** The owning actor's type (`dh2-terracraft`, `dh2-npc`, …), gating vehicle vision. */
+    actorType?: string | undefined;
+    /** Whether the token's sight is currently enabled. */
+    sightEnabled?: boolean | null | undefined;
+}
+
+/**
+ * Token field updates to preset from the owning actor's compendium data, as a
+ * dotted-path payload for `TokenDocument#updateSource`. Empty when nothing needs
+ * changing.
+ *
+ * - **Footprint**: a token still at the default 1×1 grows to its size-ladder
+ *   footprint (Hulking → 2×2, Massive → 3×3, …). A token that already carries a
+ *   custom footprint is left alone, so a hand-resized token is never clobbered.
+ * - **Vision**: a vehicle whose sight is off is given vision (crews see out of
+ *   their vehicle); other actor types are left as authored.
+ * @param {TokenPresetInput} input  The actor/token facts.
+ * @returns {Record<string, number | boolean>}  Dotted-path updates (may be empty).
+ */
+export function tokenPresetFromActor(input: TokenPresetInput): Record<string, number | boolean> {
+    const update: Record<string, number | boolean> = {};
+
+    const footprint = tokenFootprintForSize(input.size);
+    if (footprint > 1 && (input.currentWidth ?? 1) === 1 && (input.currentHeight ?? 1) === 1) {
+        update['width'] = footprint;
+        update['height'] = footprint;
+    }
+
+    const isVehicle = /craft|vehicle/.test(input.actorType ?? '');
+    if (isVehicle && input.sightEnabled !== true) {
+        update['sight.enabled'] = true;
+    }
+
+    return update;
+}
+
 /**
  * Does the incoming `_preCreate` payload already declare a token footprint?
  * The size ladder supplies a DEFAULT — a pack author (or a duplicated actor)
