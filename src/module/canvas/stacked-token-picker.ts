@@ -47,6 +47,12 @@ export interface StackTokenLike {
     img: string;
     /** Whether the LOCAL user may select this token (visible AND controllable). */
     selectable: boolean;
+    /**
+     * Canvas stacking order within an elevation band; higher renders on top.
+     * Optional (treated as 0) because only {@link raiseToTopSort} reads it — the
+     * palette's own display order is {@link orderStack}, not this.
+     */
+    sort?: number;
 }
 
 /** True when `point` lies within (inclusive) the rectangle `rect`. */
@@ -84,6 +90,24 @@ export function orderStack(stack: readonly StackTokenLike[]): StackTokenLike[] {
         if (a.name !== b.name) return a.name < b.name ? -1 : 1;
         return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
     });
+}
+
+/**
+ * The `sort` value that raises the token `id` to the top of the stack — one above
+ * the highest `sort` among the OTHER tokens, so the clicked token renders on top.
+ * Returns null when the token is not in the stack, or is already strictly the
+ * highest (nothing to reorder). Missing `sort` is treated as 0.
+ * @param {readonly StackTokenLike[]} stack  The co-located stack.
+ * @param {string} id  The token to raise.
+ * @returns {number | null}  The new sort value, or null when no change is needed.
+ */
+export function raiseToTopSort(stack: readonly StackTokenLike[], id: string): number | null {
+    const target = stack.find((token) => token.id === id);
+    if (target === undefined) return null;
+    const others = stack.filter((token) => token.id !== id);
+    if (others.length === 0) return null;
+    const othersMax = Math.max(...others.map((token) => token.sort ?? 0));
+    return (target.sort ?? 0) > othersMax ? null : othersMax + 1;
 }
 
 /** Which side of the anchor the palette was placed on. */
