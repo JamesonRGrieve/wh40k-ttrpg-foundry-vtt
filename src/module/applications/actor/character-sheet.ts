@@ -798,6 +798,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
             // Stat adjustment actions — extracted to api/stat-adjustment-actions.ts
             'adjustStat': StatActions.adjustStat,
+            'applyCharacteristicDamage': CharacterSheet.#applyCharacteristicDamage,
             'increment': StatActions.increment,
             'decrement': StatActions.decrement,
             'setCriticalPip': StatActions.setCriticalPip,
@@ -5409,6 +5410,64 @@ export default class CharacterSheet extends BaseActorSheet {
             favourable = Boolean(result);
         }
         this.actor.rollEscapePinningTest({ inCover: favourable, notBeingShotAt: false });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Apply (or heal) recoverable characteristic damage (core.md §"Characteristic
+     * Damage"). Prompts for the characteristic + amount, then routes through the
+     * document's `applyCharacteristicDamage` — positive damages, negative heals
+     * (clamped at 0). The effective value is `total − damage`.
+     * @this {CharacterSheet}
+     */
+    static async #applyCharacteristicDamage(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        const DialogV2 = (foundry.applications.api as { DialogV2?: typeof foundry.applications.api.DialogV2 }).DialogV2;
+        if (DialogV2 === undefined) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is a dynamic record keyed by characteristic slug on the actor's DataModel
+        const chars = (this.actor.system as { characteristics?: Record<string, { label?: string; damage?: number } | undefined> }).characteristics ?? {};
+        const options = Object.entries(chars)
+            .map(([key, char]) => {
+                const label = game.i18n.localize(char?.label ?? key);
+                const dmg = char?.damage ?? 0;
+                return `<option value="${key}">${label}${dmg > 0 ? ` (−${dmg})` : ''}</option>`;
+            })
+            .join('');
+        const content = `<div class="form-group"><label>${game.i18n.localize(
+            'WH40K.Characteristic.SelectLabel',
+        )}</label><select name="characteristic">${options}</select></div><div class="form-group"><label>${game.i18n.localize(
+            'WH40K.Characteristic.AmountLabel',
+        )}</label><input type="number" name="amount" value="1" step="1" autofocus /></div><p class="notes">${game.i18n.localize(
+            'WH40K.Characteristic.DamageHint',
+        )}</p>`;
+
+        // Capture the picked values in the OK callback via a box (a bare local would
+        // stay narrowed to `null` past the await, since TS can't see the callback
+        // run); the prompt's resolved value only signals cancel. Avoids casting the
+        // string|null return type onto our object shape.
+        const picked: { value: { characteristic: string; amount: number } | null } = { value: null };
+        const result = await DialogV2.prompt({
+            window: { title: 'WH40K.Characteristic.ApplyDamageTitle' },
+            content,
+            ok: {
+                label: 'WH40K.Common.Apply',
+                callback: (_evt: Event, button: HTMLButtonElement): boolean => {
+                    const form = button.form ?? null;
+                    const char = (form?.elements.namedItem('characteristic') as HTMLSelectElement | null)?.value ?? '';
+                    const amt = Number.parseInt((form?.elements.namedItem('amount') as HTMLInputElement | null)?.value ?? '0', 10);
+                    picked.value = { characteristic: char, amount: amt };
+                    return true;
+                },
+            },
+            rejectClose: false,
+        });
+        if (result === null || picked.value === null) return;
+        const { characteristic, amount } = picked.value;
+        if (characteristic === '' || !Number.isFinite(amount) || amount === 0) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Characteristic.NoneSelected'));
+            return;
+        }
+        await this.actor.applyCharacteristicDamage(characteristic, amount);
     }
 
     /* -------------------------------------------- */
