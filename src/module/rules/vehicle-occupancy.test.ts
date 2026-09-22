@@ -10,6 +10,7 @@ import {
     movementDelta,
     type Occupant,
     type OccupantLike,
+    occupantSortBelowVehicle,
     occupantsOf,
     readAboard,
     slavedPosition,
@@ -203,5 +204,18 @@ describe('droppedOnto — the drag-onto-vehicle gesture (#508)', () => {
 
     it('centres a token on its own footprint', () => {
         expect(centreOf({ x: 40, y: 60, width: 100, height: 200 })).toEqual({ x: 90, y: 160 });
+    });
+});
+
+describe('occupantSortBelowVehicle', () => {
+    it('sinks an occupant at or above the vehicle to just below it', () => {
+        expect(occupantSortBelowVehicle(5, 5)).toBe(4); // tied → sink under
+        expect(occupantSortBelowVehicle(5, 9)).toBe(4); // above → sink under
+        expect(occupantSortBelowVehicle(0, 0)).toBe(-1);
+    });
+
+    it('leaves an occupant already strictly below alone', () => {
+        expect(occupantSortBelowVehicle(5, 4)).toBeNull();
+        expect(occupantSortBelowVehicle(5, -3)).toBeNull();
     });
 });

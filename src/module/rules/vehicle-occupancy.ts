@@ -160,6 +160,18 @@ export function unfilledCrew(occupants: readonly Occupant<OccupantLike>[], capac
 }
 
 /**
+ * The `sort` value that sinks an occupant's token just below the vehicle it
+ * boarded, so the vehicle renders on top of the passengers riding inside it.
+ * Returns null when the occupant already sits strictly below (nothing to change).
+ * @param {number} vehicleSort  The vehicle token's stacking sort.
+ * @param {number} occupantSort  The occupant token's current sort.
+ * @returns {number | null}  The occupant's new sort, or null when no change is needed.
+ */
+export function occupantSortBelowVehicle(vehicleSort: number, occupantSort: number): number | null {
+    return occupantSort < vehicleSort ? null : vehicleSort - 1;
+}
+
+/**
  * The seat a character should take by default when they embark.
  *
  * Driver first (a vehicle nobody is driving is the useless case), then the

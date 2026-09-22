@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { occupantCandidateActors } from './vehicle-embark.ts';
+import { occupantCandidateActors, sinkOccupantBelowVehicle } from './vehicle-embark.ts';
 import { ABOARD_FLAG, type OccupantLike, occupantsOf } from './vehicle-occupancy.ts';
 
 const SYSTEM_ID = 'wh40k-rpg';
@@ -48,5 +48,26 @@ describe('occupantCandidateActors (#557 — embarked occupant missing from the c
         const worldPc = aboard(VEHICLE, 'passenger');
         stubWorldAndCanvas([worldPc], [null]);
         expect(occupantCandidateActors()).toEqual([worldPc]);
+    });
+});
+
+describe('sinkOccupantBelowVehicle', () => {
+    it('lowers an occupant at/above the vehicle to just below it', async () => {
+        const update = vi.fn().mockResolvedValue(undefined);
+        await sinkOccupantBelowVehicle({ sort: 5, update }, { sort: 5 });
+        expect(update).toHaveBeenCalledWith({ sort: 4 });
+    });
+
+    it('is a no-op when the occupant already sits below the vehicle', async () => {
+        const update = vi.fn().mockResolvedValue(undefined);
+        await sinkOccupantBelowVehicle({ sort: 1, update }, { sort: 5 });
+        expect(update).not.toHaveBeenCalled();
+    });
+
+    it('is a no-op when the token cannot be updated or the vehicle is missing', async () => {
+        const update = vi.fn().mockResolvedValue(undefined);
+        await sinkOccupantBelowVehicle({ sort: 9 }, { sort: 5 }); // no update fn
+        await sinkOccupantBelowVehicle({ sort: 9, update }, null); // no vehicle
+        expect(update).not.toHaveBeenCalled();
     });
 });
