@@ -13,7 +13,7 @@
 import type { VehicleCharacteristics } from '../../data/actor/vehicle.ts';
 import type { VehicleHardpoint } from '../../data/shared/vehicle-mounting.ts';
 import type { WH40KItem } from '../../documents/item.ts';
-import { occupantCandidateActors } from '../../rules/vehicle-embark.ts';
+import { occupantCandidateActors, type TokenSortDoc } from '../../rules/vehicle-embark.ts';
 import { occupantsOf, unfilledCrew } from '../../rules/vehicle-occupancy.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 
@@ -792,17 +792,23 @@ export default class CraftActorSheet extends BaseActorSheet {
     }
 
     static async #embarkSelected(this: CraftActorSheet): Promise<void> {
-        const { embark } = await import('../../rules/vehicle-embark.ts');
-        // eslint-disable-next-line no-restricted-syntax -- boundary: canvas.tokens.controlled is Foundry's selected token array
-        const controlled = (canvas as { tokens?: { controlled?: Array<{ actor?: { uuid?: string } }> } }).tokens?.controlled ?? [];
+        const { embark, sinkOccupantBelowVehicle } = await import('../../rules/vehicle-embark.ts');
+        // eslint-disable-next-line no-restricted-syntax -- boundary: canvas.tokens.controlled is Foundry's selected token array; each carries the occupant actor and its token document
+        const controlled =
+            (canvas as { tokens?: { controlled?: Array<{ actor?: { uuid?: string } | undefined; document?: TokenSortDoc }> } }).tokens?.controlled ?? [];
         if (controlled.length === 0) {
             ui.notifications.warn(game.i18n.localize('WH40K.Vehicle.SelectTokenFirst'));
             return;
         }
+        // The vehicle's own token, so each boarder can be sunk just below it.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor#getActiveTokens returns framework token objects; only the sort/update slice is read
+        const vehicleToken = (this.actor as { getActiveTokens?: (linked?: boolean, asDocument?: boolean) => TokenSortDoc[] }).getActiveTokens?.(false, true)[0];
         for (const token of controlled) {
             if (token.actor === undefined) continue;
             // eslint-disable-next-line no-restricted-syntax, no-await-in-loop -- boundary: sheet/token actor types don't structurally match EmbarkableActor/VehicleActorish; sequential for capacity enforcement
-            await (embark as (a: unknown, v: unknown) => Promise<boolean>)(token.actor, this.actor);
+            const boarded = await (embark as (a: unknown, v: unknown) => Promise<boolean>)(token.actor, this.actor);
+            // eslint-disable-next-line no-await-in-loop -- sequential: one sort update per occupant, after its embark commits
+            if (boarded) await sinkOccupantBelowVehicle(token.document, vehicleToken);
         }
         await this.render();
     }

@@ -24,6 +24,7 @@ import {
     droppedOnto,
     movementDelta,
     type OccupantLike,
+    occupantSortBelowVehicle,
     occupantsOf,
     readAboard,
     slavedPosition,
@@ -138,8 +139,30 @@ export async function disembark(actor: EmbarkableActor): Promise<boolean> {
     return true;
 }
 
+/** A token document's stacking slice: its `sort` and the update to change it. */
+export interface TokenSortDoc {
+    readonly sort?: number | null | undefined;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `TokenDocument#update` takes a free-form data bag and resolves to the opaque updated document
+    update?: ((data: object) => Promise<unknown>) | undefined;
+}
+
+/**
+ * Sink an occupant's token just below the vehicle it boarded, so the vehicle
+ * renders on top of the passengers riding inside it. No-op when the token is
+ * already below the vehicle or cannot be updated.
+ * @param {TokenSortDoc | null | undefined} occupant  The occupant token document.
+ * @param {TokenSortDoc | null | undefined} vehicle  The vehicle token document.
+ * @returns {Promise<void>}
+ */
+export async function sinkOccupantBelowVehicle(occupant: TokenSortDoc | null | undefined, vehicle: TokenSortDoc | null | undefined): Promise<void> {
+    if (occupant?.update === undefined || vehicle == null) return;
+    const newSort = occupantSortBelowVehicle(vehicle.sort ?? 0, occupant.sort ?? 0);
+    if (newSort === null) return;
+    await occupant.update({ sort: newSort });
+}
+
 /** The token surface the slaving and drop-detection paths read. */
-interface SlavableToken {
+interface SlavableToken extends TokenSortDoc {
     readonly id: string | null;
     readonly x: number;
     readonly y: number;
@@ -246,14 +269,23 @@ export async function embarkOnDropOnto(
         height: moverToken.height,
     };
 
+    // Find the (first) vehicle the mover was dropped onto, THEN act — so the
+    // awaits stay out of the loop (a token is dropped onto one vehicle).
+    let hit: { candidate: EmbarkableActor & VehicleActorish; vehicleToken: SlavableToken } | undefined;
     for (const token of scene.tokens) {
         if (token.id === moverToken.id) continue;
         const candidate = token.actor;
         if (candidate == null || !isVehicleActor(candidate)) continue;
         if (!droppedOnto(destination, { x: token.x, y: token.y, width: token.width, height: token.height })) continue;
-        return embark(mover, candidate);
+        hit = { candidate, vehicleToken: token };
+        break;
     }
-    return false;
+    if (hit === undefined) return false;
+
+    const boarded = await embark(mover, hit.candidate);
+    // Sink the boarder below the vehicle so it rides underneath rather than on top.
+    if (boarded) await sinkOccupantBelowVehicle(moverToken, hit.vehicleToken);
+    return boarded;
 }
 
 /**
