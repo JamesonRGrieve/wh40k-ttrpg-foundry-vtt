@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { computeCharacteristicTotals } from '../data/shared/characteristic-math.ts';
 import { computeMovement } from '../data/shared/movement-math.ts';
 import { importModelOrSkip } from '../testing/model-import.ts';
@@ -197,5 +197,44 @@ describe('isCharacterActorType (#479 linked-token gate)', () => {
         for (const type of ['npc', 'dh2-npc', 'im-npc', 'vehicle', 'dh2-vehicle', 'rt-starship', 'starship', 'loot', 'acolyte']) {
             expect(mod.isCharacterActorType(type), `${type} should NOT be a character type`).toBe(false);
         }
+    });
+});
+
+describe('WH40KBaseActor.applyCharacteristicDamage', () => {
+    async function makeActor(
+        damage: number,
+    ): Promise<{ actor: { applyCharacteristicDamage: (c: string, a: number) => Promise<void> }; update: ReturnType<typeof vi.fn> } | undefined> {
+        const mod = await importModelOrSkip(import('./base-actor.ts'));
+        if (mod === undefined) return undefined;
+        const actor = Object.create(mod.WH40KBaseActor.prototype) as { applyCharacteristicDamage: (c: string, a: number) => Promise<void> };
+        const update = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(actor, 'system', { value: { characteristics: { toughness: { damage } } }, writable: true });
+        Object.defineProperty(actor, 'update', { value: update, writable: true });
+        return { actor, update };
+    }
+
+    it('adds recoverable damage to the characteristic slot', async () => {
+        const ctx = await makeActor(0);
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom
+        if (ctx === undefined) return;
+        await ctx.actor.applyCharacteristicDamage('toughness', 4);
+        expect(ctx.update).toHaveBeenCalledWith({ 'system.characteristics.toughness.damage': 4 });
+    });
+
+    it('heals damage but clamps at 0', async () => {
+        const ctx = await makeActor(3);
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom
+        if (ctx === undefined) return;
+        await ctx.actor.applyCharacteristicDamage('toughness', -5);
+        expect(ctx.update).toHaveBeenCalledWith({ 'system.characteristics.toughness.damage': 0 });
+    });
+
+    it('is a no-op for a zero amount or an unknown characteristic', async () => {
+        const ctx = await makeActor(2);
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom
+        if (ctx === undefined) return;
+        await ctx.actor.applyCharacteristicDamage('toughness', 0);
+        await ctx.actor.applyCharacteristicDamage('nonexistent', 3);
+        expect(ctx.update).not.toHaveBeenCalled();
     });
 });

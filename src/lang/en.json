@@ -1157,7 +1157,15 @@
             "Perception": "Perception",
             "Willpower": "Willpower",
             "Fellowship": "Fellowship",
-            "Influence": "Influence"
+            "Influence": "Influence",
+            "ApplyDamageTitle": "Apply Characteristic Damage",
+            "ApplyDamageButton": "Damage",
+            "SelectLabel": "Characteristic",
+            "AmountLabel": "Amount",
+            "DamageHint": "Positive values apply damage; negative values heal it. The effective value is total − damage.",
+            "NoneSelected": "Select a characteristic and a non-zero amount.",
+            "Damaged": "{name}: {amount} damage applied.",
+            "Healed": "{name}: {amount} damage healed."
         },
         "Experience": {
             "PurchasesTitle": "XP Purchases",
@@ -5037,6 +5045,7 @@
             "Edit": "Edit",
             "Delete": "Delete",
             "Roll": "Roll",
+            "Apply": "Apply",
             "Add": "Add",
             "AddArmour": "Add Armour",
             "AddShipWeapon": "Add Ship Weapon",
