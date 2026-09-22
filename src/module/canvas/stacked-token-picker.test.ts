@@ -6,12 +6,22 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { bustObjectPosition, computePalettePlacement, detectStackAt, isStack, orderStack, type Rect, type StackTokenLike } from './stacked-token-picker.ts';
+import {
+    bustObjectPosition,
+    computePalettePlacement,
+    detectStackAt,
+    isStack,
+    orderStack,
+    raiseToTopSort,
+    type Rect,
+    type StackTokenLike,
+} from './stacked-token-picker.ts';
 
 const tok = (over: Partial<StackTokenLike> & { id: string }): StackTokenLike => ({
     id: over.id,
     name: over.name ?? over.id,
     elevation: over.elevation ?? 0,
+    sort: over.sort ?? 0,
     bounds: over.bounds ?? { x: 0, y: 0, width: 100, height: 100 },
     img: over.img ?? `${over.id}.webp`,
     selectable: over.selectable ?? true,
@@ -68,6 +78,35 @@ describe('orderStack', () => {
         const stack = [tok({ id: 'b' }), tok({ id: 'a' })];
         orderStack(stack);
         expect(stack.map((t) => t.id)).toEqual(['b', 'a']);
+    });
+});
+
+describe('raiseToTopSort', () => {
+    it('returns one above the highest other sort, so the clicked token renders on top', () => {
+        const stack = [tok({ id: 'a', sort: 0 }), tok({ id: 'b', sort: 5 }), tok({ id: 'c', sort: 3 })];
+        expect(raiseToTopSort(stack, 'a')).toBe(6);
+        expect(raiseToTopSort(stack, 'c')).toBe(6);
+    });
+
+    it('returns null when the token is already strictly on top (nothing to reorder)', () => {
+        const stack = [tok({ id: 'a', sort: 0 }), tok({ id: 'b', sort: 9 })];
+        expect(raiseToTopSort(stack, 'b')).toBeNull();
+    });
+
+    it('raises a token tied for the top so it wins the tie', () => {
+        const stack = [tok({ id: 'a', sort: 4 }), tok({ id: 'b', sort: 4 })];
+        expect(raiseToTopSort(stack, 'a')).toBe(5);
+    });
+
+    it('returns null for a token not in the stack, or a lone token', () => {
+        const stack = [tok({ id: 'a', sort: 1 }), tok({ id: 'b', sort: 2 })];
+        expect(raiseToTopSort(stack, 'missing')).toBeNull();
+        expect(raiseToTopSort([tok({ id: 'solo', sort: 0 })], 'solo')).toBeNull();
+    });
+
+    it('treats a missing sort as 0', () => {
+        const stack = [tok({ id: 'a' }), tok({ id: 'b' })];
+        expect(raiseToTopSort(stack, 'a')).toBe(1);
     });
 });
 

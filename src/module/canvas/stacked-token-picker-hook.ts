@@ -18,6 +18,7 @@ import {
     isStack,
     orderStack,
     type Point,
+    raiseToTopSort,
     type Rect,
     type StackTokenLike,
 } from './stacked-token-picker.ts';
@@ -32,7 +33,14 @@ interface LiveToken {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Token#bounds is a PIXI.Rectangle; only the plain x/y/width/height are read
     bounds?: { x: number; y: number; width: number; height: number };
     center?: { x: number; y: number };
-    document?: { elevation?: number | null; getFlag: (scope: string, key: string) => object | boolean | undefined; texture?: { src?: string | null } };
+    document?: {
+        elevation?: number | null;
+        sort?: number | null;
+        getFlag: (scope: string, key: string) => object | boolean | undefined;
+        texture?: { src?: string | null };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `TokenDocument#update` takes a free-form data bag and resolves to the opaque updated document
+        update?: (data: object) => Promise<unknown>;
+    };
     actor?: { img?: string | null; prototypeToken?: { getFlag?: (scope: string, key: string) => object | boolean | undefined } | null } | null;
     control?: (options?: { releaseOthers?: boolean }) => void;
 }
@@ -62,6 +70,8 @@ class StackedTokenPicker {
     #palette: HTMLElement | null = null;
     #dismissTimer: number | null = null;
     #onKeydown: ((event: KeyboardEvent) => void) | null = null;
+    /** The stack the open palette is showing, so a click can raise the token to its top. */
+    #currentStack: StackTokenLike[] = [];
 
     /** Register the hover hook. Idempotent-safe: Foundry dedupes identical fns. */
     install(): void {
@@ -105,6 +115,7 @@ class StackedTokenPicker {
                 id: token.id,
                 name: token.name ?? '',
                 elevation: token.document?.elevation ?? 0,
+                sort: token.document?.sort ?? 0,
                 bounds: this.#toScreenRect(token.bounds, transform),
                 img: token.actor?.img ?? token.document?.texture?.src ?? '',
                 selectable: true,
@@ -148,6 +159,9 @@ class StackedTokenPicker {
     #render(stack: StackTokenLike[], anchor: Rect): void {
         this.#clearDismiss();
         this.#dismiss();
+        // Remember the stack AFTER dismiss (which clears it) so #select can raise
+        // the clicked token above its neighbours.
+        this.#currentStack = stack;
 
         const palette = document.createElement('div');
         palette.id = PALETTE_ID;
@@ -227,9 +241,15 @@ class StackedTokenPicker {
     }
 
     #select(id: string): void {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: canvas.tokens.get returns the framework Token placeable; only .control is called
+        // eslint-disable-next-line no-restricted-syntax -- boundary: canvas.tokens.get returns the framework Token placeable; adapted to LiveToken (.control / .document.update)
         const token = canvas.tokens?.get(id) as unknown as LiveToken | undefined;
         token?.control?.({ releaseOthers: true });
+        // Raise the clicked token to the top of the stack so it is the one now on
+        // top on the canvas — the whole point of picking it out of the stack.
+        const newSort = raiseToTopSort(this.#currentStack, id);
+        if (newSort !== null && token?.document?.update !== undefined) {
+            void token.document.update({ sort: newSort });
+        }
         this.#dismiss();
     }
 
@@ -255,6 +275,7 @@ class StackedTokenPicker {
         }
         this.#palette?.remove();
         this.#palette = null;
+        this.#currentStack = [];
     }
 }
 
