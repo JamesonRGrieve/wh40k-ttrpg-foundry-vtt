@@ -93,7 +93,11 @@ export function vehicleTraitEffectsSchema(): foundry.data.fields.SchemaField.Any
         critDamageMultiplier: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
         critExcludesRighteousFury: new fields.BooleanField({ required: true, initial: false }),
         mitigatesMotiveCrit: new fields.BooleanField({ required: true, initial: false }),
-        crewExposure: new fields.StringField({ required: true, initial: '', choices: [...CREW_EXPOSURE_CHOICES] }),
+        // `blank: true` is required: '' is the neutral default (a trait that
+        // does not touch crew exposure) and is NOT one of the choices, so without
+        // it V14 rejects the default with "may not be a blank string" and the item
+        // fails to initialize (breaking actor hydration).
+        crewExposure: new fields.StringField({ required: true, blank: true, initial: '', choices: [...CREW_EXPOSURE_CHOICES] }),
         ignoresDifficultTerrain: new fields.BooleanField({ required: true, initial: false }),
         amphibious: new fields.BooleanField({ required: true, initial: false }),
         cannotRam: new fields.BooleanField({ required: true, initial: false }),
