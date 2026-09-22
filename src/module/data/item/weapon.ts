@@ -308,6 +308,8 @@ export default class WeaponData extends ItemDataModel.mixin(
     declare special: Set<string>;
     declare modes: WeaponFiringMode[];
     declare activeMode: number;
+    /** Content-authored attack sound file paths; one is chosen at random per attack. */
+    declare sounds: string[];
 
     // Properties from AttackTemplate
     declare attack: {
@@ -456,6 +458,12 @@ export default class WeaponData extends ItemDataModel.mixin(
             ),
             // Live selected firing-mode index — per-weapon transient state, like `jammed`.
             activeMode: new fields.NumberField({ required: false, initial: 0, min: 0, integer: true }),
+
+            // Attack sounds (content-driven, Direction #7): file paths played when
+            // this weapon attacks. Authored in the compendium `_source`; when more
+            // than one is listed, the central attack path picks one at random per
+            // attack and repeats it once per shot (burst / full-auto). Empty = silent.
+            sounds: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: false, initial: [] }),
 
             // (Loaded ammunition is no longer stored — the chambered round is the
             // front of `clip.magazine`; `loadedAmmo` is a derived getter.)
