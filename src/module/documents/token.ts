@@ -1,6 +1,7 @@
 import { SYSTEM_ID } from '../constants.ts';
 import { disembark, embark, embarkOnDropOnto, slaveOccupantTokens } from '../rules/vehicle-embark.ts';
 import { readAboard } from '../rules/vehicle-occupancy.ts';
+import { tokenPresetFromActor } from '../utils/token-footprint.ts';
 import { hasInteriorScene, isVehicleActor, openInteriorScene, type SceneLookup } from '../vehicle/vehicle-interior.ts';
 
 type MovementTypeConfig = {
@@ -54,6 +55,41 @@ type TokenWithFlags = TokenDocument & {
  * Foundry V13's CONFIG.Token.movement.actions system.
  */
 export class TokenDocumentWH40K extends TokenDocument {
+    /* -------------------------------------------- */
+    /*  Creation presets                            */
+    /* -------------------------------------------- */
+
+    /**
+     * Preset a new token's footprint and vision from its actor's compendium data,
+     * so a dropped vehicle/creature arrives at the right grid size (and a vehicle
+     * can see) without the GM resizing it by hand. Runs at token creation — which
+     * also covers placing an EXISTING actor whose prototype token stayed 1×1
+     * (the actor `_preCreate` footprint stamp only fires on actor creation).
+     * @param {never} data  The create payload (typed `never` by the framework).
+     * @param {never} options  Create options.
+     * @param {never} user  The requesting user.
+     * @returns {Promise<boolean | void>}  The base result (false aborts creation).
+     */
+    protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | void> {
+        const result = await super._preCreate(data, options, user);
+        if (result === false) return false;
+
+        const actor = this.actor;
+        if (actor === null) return result;
+        const update = tokenPresetFromActor({
+            currentWidth: this.width,
+            currentHeight: this.height,
+            size: (actor.system as { size?: number }).size,
+            actorType: actor.type,
+            sightEnabled: this.sight.enabled,
+        });
+        if (Object.keys(update).length > 0) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: updateSource takes a dotted-path token delta (width/height/sight.enabled); Record<string, number|boolean> is the payload shape
+            this.updateSource(update);
+        }
+        return result;
+    }
+
     /* -------------------------------------------- */
     /*  Movement                                    */
     /* -------------------------------------------- */
