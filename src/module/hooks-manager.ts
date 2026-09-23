@@ -109,7 +109,7 @@ import * as dice from './dice/_module.ts';
 import * as documents from './documents/_module.ts';
 import { noteActorDeleting } from './documents/actor-liveness.ts';
 import { WH40KActorProxy } from './documents/actor-proxy.ts';
-import type { WH40KBaseActor } from './documents/base-actor.ts';
+import { isCharacterActorType, type WH40KBaseActor } from './documents/base-actor.ts';
 import { WH40KItem } from './documents/item.ts';
 import { HandlebarManager } from './handlebars/handlebars-manager.ts';
 import { type FlaggableActor, isItemPilesPile, registerItemPilesValuation } from './integrations/item-piles.ts';
@@ -129,6 +129,13 @@ import { registerRollPrompts } from './rolls/roll-prompt.ts';
 import { registerActionEconomy } from './rules/action-economy.ts';
 import { ensureInquisitionArmoury } from './rules/armoury.ts';
 import { registerCombatTurnHooks } from './rules/combat-turn-hooks.ts';
+import {
+    type ActorCanvasDrop,
+    ensureCompendiumTokenActor,
+    placeCompendiumToken,
+    preloadCompendiumTokenActors,
+    shouldPlaceTokenOnly,
+} from './rules/compendium-token-actors.ts';
 import { conditionStatusEffects } from './rules/condition-registry.ts';
 import { WH40K } from './rules/config.ts';
 import { convertDeadActorToPile } from './rules/death-loot.ts';
@@ -235,6 +242,23 @@ export class HooksManager {
         // its plain portrait (flags.wh40k-rpg.tokenFrame).
         hooksOn('refreshToken', (token: Parameters<typeof onRefreshRoundedToken>[0] & Parameters<typeof onRefreshToken>[0]) => {
             if (!onRefreshRoundedToken(token)) onRefreshToken(token);
+        });
+        // Token-only compendium drops (#586): an NPC/vehicle dragged from a
+        // compendium becomes a compendium-backed unlinked token, not a world Actor.
+        // Every client caches the compendium actors behind such tokens — at world
+        // setup for existing tokens, and as new ones are created.
+        hooksOn('dropCanvasData', (_canvas: object, data: ActorCanvasDrop, event: DragEvent) => HooksManager.onDropCanvasData(data, event));
+        hooksOn('setup', () => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+            preloadCompendiumTokenActors(game.scenes).catch((err: unknown) => {
+                console.error('compendium-token-actors: preload failed', err);
+            });
+        });
+        hooksOn('createToken', (token: Parameters<typeof ensureCompendiumTokenActor>[0]) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+            ensureCompendiumTokenActor(token).catch((err: unknown) => {
+                console.error('compendium-token-actors: token actor load failed', err);
+            });
         });
         // Stacked-token bust palette: pick a specific token out of an overlapping
         // stack instead of Foundry's invisible click-to-cycle (#569).
@@ -728,6 +752,31 @@ export class HooksManager {
      * {@link ItemDropManager.blocksLootTokenMove} helper; returning false aborts
      * the position update.
      */
+    /**
+     * `dropCanvasData`: take over a compendium NPC/vehicle drop and place it as a
+     * token-only, compendium-backed token (#586). Returns `false` to stop
+     * Foundry's world-actor import; `true` lets every other drop through.
+     */
+    static onDropCanvasData(data: ActorCanvasDrop, event: DragEvent): boolean {
+        const entry = data.type === 'Actor' && data.uuid.startsWith('Compendium.') ? fromUuidSync(data.uuid) : null;
+        const indexedType = entry !== null && 'type' in entry ? entry['type'] : undefined;
+        const actorType = typeof indexedType === 'string' ? indexedType : undefined;
+        const tokenOnly = shouldPlaceTokenOnly({
+            type: data.type,
+            uuid: data.uuid,
+            actorType,
+            isCharacter: actorType !== undefined && isCharacterActorType(actorType),
+            ctrlKey: event.ctrlKey || event.metaKey,
+            importSetting: WH40KSettings.isCompendiumDropImportEnabled(),
+        });
+        if (!tokenOnly) return true;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+        placeCompendiumToken(data, event).catch((err: unknown) => {
+            console.error('compendium-token-actors: drop failed', err);
+        });
+        return false;
+    }
+
     static onPreUpdateToken(doc: LootMoveTokenLike, change: { x?: number; y?: number }): boolean {
         // Item Piles applies its own movement lock to its piles; defer to it.
         if (isItemPilesPile(doc.actor)) return true;
