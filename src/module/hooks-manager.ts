@@ -133,7 +133,13 @@ import { WH40K } from './rules/config.ts';
 import { convertDeadActorToPile } from './rules/death-loot.ts';
 import { registerGMProxy } from './rules/gm-proxy.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
-import { applyPortraitOnPreCreate, collectUsedPortraitImgs } from './rules/portrait-spawn.ts';
+import {
+    applyPortraitOnPreCreate,
+    applyPortraitOnPreCreateToken,
+    collectUsedPortraitImgs,
+    type PortraitActorLike,
+    type PortraitTokenLike,
+} from './rules/portrait-spawn.ts';
 import { buildSkillSpecializationIndex } from './rules/skill-specialization-index.ts';
 import { buildSkillVariantIndex } from './rules/skill-variant-index.ts';
 import { SURPRISED_STATUS_ID, surpriseHasExpired } from './rules/surprise.ts';
@@ -392,6 +398,36 @@ export class HooksManager {
             const worldActors = game.actors as unknown as Iterable<{ img?: string | null }>;
             applyPortraitOnPreCreate(actor, Math.random, collectUsedPortraitImgs(worldActors));
         });
+
+        // Per-token portrait variance (#567): when an UNLINKED token of a pooled
+        // actor is placed (dragging a mob from the sidebar or the compendium),
+        // roll a distinct portrait for THAT token so the squad doesn't share one
+        // face. Avoids portraits already on sibling tokens of the same actor on the
+        // scene. Linked tokens and pool-less actors are a no-op inside the handler.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: preCreateToken payload is a framework-typed TokenDocument; narrowed to the slice the per-token roll reads
+        hooksOn(
+            'preCreateToken',
+            (
+                token: PortraitTokenLike & {
+                    actor?: PortraitActorLike | null;
+                    actorId?: string | null;
+                    parent?: { tokens?: Iterable<{ actorId?: string | null; texture?: { src?: string | null } | null }> } | null;
+                },
+            ) => {
+                const poolActor = token.actor ?? null;
+                if (poolActor === null) return;
+                const used = new Set<string>();
+                const siblings = token.parent?.tokens;
+                if (siblings !== undefined) {
+                    for (const sib of siblings) {
+                        if (sib.actorId !== token.actorId) continue;
+                        const src = sib.texture?.src;
+                        if (typeof src === 'string' && src.trim() !== '') used.add(src);
+                    }
+                }
+                applyPortraitOnPreCreateToken(token, poolActor, Math.random, used);
+            },
+        );
 
         // Auto-generate an actor image on spawn via a configured OpenAI-compatible
         // endpoint (#576), gated behind the token-image-gen mode setting. GM-only and

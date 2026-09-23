@@ -10,8 +10,10 @@
  * forces a specific index and disables the roll.
  *
  * The decision is a pure, RNG-injected function so it is fully testable; the
- * runtime default is `Math.random`. Per-unlinked-token variance (a different
- * portrait per token in a placed mob) is a separate surface — see #567.
+ * runtime default is `Math.random`. Per-unlinked-token variance — a different
+ * portrait per token in a placed mob — is handled by
+ * {@link applyPortraitOnPreCreateToken} on the `preCreateToken` hook (#567), so a
+ * squad dropped from one pooled actor gets a distinct face per token.
  */
 
 import { SYSTEM_ID } from '../constants.ts';
@@ -20,10 +22,18 @@ import { choosePortrait, choosePortraitAvoiding, effectivePortraitPool, type Por
 /** No portraits taken — the default when spawn dedup is not in play. */
 const NO_USED_IMGS: ReadonlySet<string> = new Set<string>();
 
+/**
+ * Ring subject scale that seats the generated circular bust inside the ring band,
+ * matching player-character tokens. It applies on a fresh draw (not the
+ * animation path), so a spawned bust is sized like the party's instead of
+ * overflowing the ring.
+ */
+const DEFAULT_RING_SUBJECT_SCALE = 0.8;
+
 /** The pending-source update {@link applySpawnPortrait} writes on spawn. */
 export interface PortraitUpdate {
     img: string;
-    prototypeToken: { flags: { [scope: string]: { tokenFrame: TokenFrame | null } } };
+    prototypeToken: { flags: { [scope: string]: { tokenFrame: TokenFrame | null } }; ring: { subject: { scale: number } } };
 }
 
 /** The narrow slice of an Actor (document or pending source) this logic touches. */
@@ -78,11 +88,14 @@ export function decideSpawnPortrait(
     return choosePortraitAvoiding(pool, portraits?.pinned ?? null, usedImgs, rng);
 }
 
-/** Stamp a chosen portrait onto a pending actor source (img + bust frame). */
+/** Stamp a chosen portrait onto a pending actor source (img + bust frame + ring scale). */
 export function applySpawnPortrait(actor: PortraitActorLike, chosen: PortraitVariant): void {
     actor.updateSource({
         img: chosen.img,
-        prototypeToken: { flags: { [SYSTEM_ID]: { tokenFrame: chosen.tokenFrame } } },
+        prototypeToken: {
+            flags: { [SYSTEM_ID]: { tokenFrame: chosen.tokenFrame } },
+            ring: { subject: { scale: DEFAULT_RING_SUBJECT_SCALE } },
+        },
     });
 }
 
@@ -94,6 +107,44 @@ export function applyPortraitOnPreCreate(actor: PortraitActorLike, rng: () => nu
     const chosen = decideSpawnPortrait(actor, rng, usedImgs);
     if (chosen === null) return;
     applySpawnPortrait(actor, chosen);
+}
+
+/** The pending-token-source update {@link applyPortraitOnPreCreateToken} writes. */
+export interface TokenPortraitUpdate {
+    texture: { src: string };
+    ring: { subject: { scale: number } };
+    flags: { [scope: string]: { tokenFrame: TokenFrame | null } };
+}
+
+/** The narrow slice of a Token document (pending source) the per-token roll touches. */
+export interface PortraitTokenLike {
+    actorLink?: boolean | null;
+    updateSource: (changes: TokenPortraitUpdate) => void;
+}
+
+/**
+ * `preCreateToken` handler: give an UNLINKED token of a pooled actor its own
+ * random portrait (+ bust frame + ring subject scale), so each token in a placed
+ * mob varies instead of all sharing the actor's single image (#567). No-op for a
+ * LINKED token (it mirrors its actor's sheet image) or an actor with no pool.
+ * `usedImgs` are the portraits already on sibling tokens of the same actor on the
+ * scene, avoided until the pool is exhausted. Pure; the RNG is injected for tests.
+ */
+export function applyPortraitOnPreCreateToken(
+    token: PortraitTokenLike,
+    poolActor: PortraitActorLike | null,
+    rng: () => number = Math.random,
+    usedImgs: ReadonlySet<string> = NO_USED_IMGS,
+): void {
+    if (token.actorLink === true) return;
+    if (poolActor === null) return;
+    const chosen = decideSpawnPortrait(poolActor, rng, usedImgs);
+    if (chosen === null) return;
+    token.updateSource({
+        texture: { src: chosen.img },
+        ring: { subject: { scale: DEFAULT_RING_SUBJECT_SCALE } },
+        flags: { [SYSTEM_ID]: { tokenFrame: chosen.tokenFrame } },
+    });
 }
 
 /**
