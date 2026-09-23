@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeFrameTransform, type FrameFlagSource, parseTokenFrameFlag, resolveTokenFrameFlag } from './token-mask.ts';
+import { computeFrameTransform, type FrameFlagSource, parseTokenFrameFlag, resolveBustContent, resolveTokenFrameFlag } from './token-mask.ts';
 
 describe('computeFrameTransform', () => {
     it('spans the content circle with the short side of portrait art', () => {
@@ -145,5 +145,30 @@ describe('resolveTokenFrameFlag', () => {
         expect(resolveTokenFrameFlag(src(undefined, undefined))).toBeUndefined();
         expect(resolveTokenFrameFlag({ document: { getFlag: () => undefined }, actor: null })).toBeUndefined();
         expect(resolveTokenFrameFlag({ document: { getFlag: () => undefined } })).toBeUndefined();
+    });
+});
+
+describe('resolveBustContent (global no-clip enforcement)', () => {
+    it('normalises to a constant final bust regardless of ring subject scale', () => {
+        const atScale1 = resolveBustContent(0, true, 1);
+        const atScale08 = resolveBustContent(0, true, 0.8);
+        expect(atScale1).toBeCloseTo(0.6, 6); // scale 1 → content 0.6
+        expect(atScale08).toBeCloseTo(0.75, 6); // scale 0.8 → content 0.75
+        // final size (content × subjectScale) is identical → never clips
+        expect(atScale1 * 1).toBeCloseTo(atScale08 * 0.8, 6);
+    });
+
+    it('honours an explicit authored content, clamped to 1', () => {
+        expect(resolveBustContent(0.5, true, 1)).toBe(0.5);
+        expect(resolveBustContent(2, true, 1)).toBe(1);
+    });
+
+    it('uses the full frame for a ringless bust', () => {
+        expect(resolveBustContent(0, false, 1)).toBe(1);
+    });
+
+    it('clamps to 1 and guards a zero/negative subject scale', () => {
+        expect(resolveBustContent(0, true, 0.5)).toBe(1); // 0.6 / 0.5 = 1.2 → clamp
+        expect(resolveBustContent(0, true, 0)).toBeCloseTo(0.6, 6); // scale 0 → treated as 1
     });
 });

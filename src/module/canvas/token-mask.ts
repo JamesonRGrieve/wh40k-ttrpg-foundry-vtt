@@ -48,6 +48,15 @@ export interface FrameTransform {
 const RT_SIZE = 512;
 /** Content-circle fraction when the Dynamic Ring needs band clearance. */
 const RING_CONTENT = 0.75;
+/** Ring subject scale the player-character tokens use. The enforced final bust
+ * fraction is derived against it so every token matches the party look. */
+const REFERENCE_SUBJECT_SCALE = 0.8;
+/** The on-token bust diameter (fraction of the token) enforced for EVERY
+ * ring-enabled token, regardless of its ring subject scale. `content ×
+ * subjectScale` is normalised to this, so a freshly spawned token (subject scale
+ * 1) seats inside the band exactly like a PC token (subject scale 0.8) — the
+ * global no-clip guarantee, independent of per-token data. */
+const ENFORCED_BUST_FRACTION = RING_CONTENT * REFERENCE_SUBJECT_SCALE; // 0.6
 
 /**
  * Pure geometry: place a `srcWidth`x`srcHeight` portrait into a `size`-px
@@ -146,7 +155,7 @@ interface MaskableToken extends FrameFlagSource {
     document: {
         getFlag: (scope: string, key: string) => object | boolean | undefined;
         texture: { src: string | null };
-        ring: { enabled: boolean };
+        ring: { enabled: boolean; subject?: { scale?: number | null } | null };
     };
     mesh: MeshLike | null;
     /** Core-protected resize: recomputes mesh scale from the CURRENT texture.
@@ -179,17 +188,42 @@ function buildBustTexture(source: PIXI.Texture, frame: Required<TokenFrameFlag>,
 }
 
 /**
- * `refreshToken` hook: apply the flagged circular bust to the token mesh.
+ * The content-circle fraction to bake into the bust so the FINAL rendered bust
+ * (`content × the token's ring subject scale`) is constant. An explicit authored
+ * `content` wins; otherwise a ring-enabled token normalises against its subject
+ * scale to {@link ENFORCED_BUST_FRACTION} (clamped ≤ 1), and a ringless bust uses
+ * the full frame. This is the global no-clip enforcement: it holds for ANY
+ * subject scale, so a token spawned at the default scale of 1 cannot overflow the
+ * ring band. Pure, so it is unit-tested.
+ */
+export function resolveBustContent(authoredContent: number, ringEnabled: boolean, subjectScale: number): number {
+    if (authoredContent > 0) return Math.min(1, authoredContent);
+    if (!ringEnabled) return 1;
+    const scale = subjectScale > 0 ? subjectScale : 1;
+    return Math.min(1, ENFORCED_BUST_FRACTION / scale);
+}
+
+/**
+ * `refreshToken` hook: apply the circular bust to the token mesh.
  * Foundry re-assigns the source texture on every full draw, so this runs on
  * each refresh and is a no-op when the mesh already shows our bust.
+ *
+ * Enforcement: a ring-enabled token ALWAYS becomes a masked bust — with the
+ * authored centre, or a default centre when none is set — so raw rectangular art
+ * can never overflow the ring band. Its size is normalised against the token's
+ * ring subject scale (see {@link resolveBustContent}), so the bust seats inside
+ * the band no matter what scale the token carries. A ringless token with no frame
+ * keeps its raw art.
  */
 export function onRefreshToken(token: MaskableToken): void {
-    const frame = parseTokenFrameFlag(resolveTokenFrameFlag(token));
+    const ringEnabled = token.document.ring.enabled;
+    const frame = parseTokenFrameFlag(resolveTokenFrameFlag(token)) ?? (ringEnabled ? parseTokenFrameFlag(true) : null);
     if (frame === null) return;
     const mesh = token.mesh;
     if (mesh?.texture.valid !== true) return;
     if (ours.has(mesh.texture)) return; // already showing the generated bust
-    const content = frame.content > 0 ? frame.content : token.document.ring.enabled ? RING_CONTENT : 1.0;
+    const subjectScale = token.document.ring.subject?.scale ?? 1;
+    const content = resolveBustContent(frame.content, ringEnabled, subjectScale);
     const key = `${token.document.texture.src ?? ''}|${frame.cx}|${frame.cy}|${content}|${frame.zoom}`;
     // strict tsc types canvas.app as possibly undefined (pre-boot); the hook
     // only fires with a live canvas, but guard rather than assert.
