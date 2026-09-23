@@ -1,3 +1,4 @@
+import { ringModeUpdate } from '../canvas/token-rounded-ring.ts';
 import { hydrateActorInMemory } from '../compendium-hydrate.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { resolveSenses, senseBearersOf, tokenSensesUpdate } from '../rules/token-senses.ts';
@@ -44,6 +45,14 @@ type TokenHUDLike = {
     object?: {
         document?: TokenDocument;
     };
+};
+
+/** The slice of a token update the ring-mode switch reads (and extends). */
+type TokenRingDelta = {
+    width?: number;
+    height?: number;
+    ring?: { enabled?: boolean };
+    flags?: { [SYSTEM_ID]?: { roundedRing?: boolean } };
 };
 
 type TokenWithFlags = TokenDocument & {
@@ -94,7 +103,51 @@ export class TokenDocumentWH40K extends TokenDocument {
         });
         const senses = tokenSensesUpdate(resolveSenses(senseBearersOf(actor.items)));
         this.updateSource({ ...footprint, ...senses });
+
+        // A non-square token runs the rounded-rect ring instead of the core
+        // circle, which would shrink to its short side (#587).
+        this.updateSource(
+            ringModeUpdate({
+                width: this.width,
+                height: this.height,
+                ringEnabled: this.ring.enabled,
+                rounded: this.#roundedFlag(),
+                creating: true,
+            }),
+        );
         return undefined;
+    }
+
+    /**
+     * Keep the ring mode in step with the footprint: resizing a token to or from
+     * a square swaps between the core circular ring and the rounded-rect ring
+     * (#587), and turning the ring on for a non-square token lands in rounded mode.
+     * @param {never} changed  The candidate update (typed `never` by the framework).
+     * @param {never} options  Update options.
+     * @param {never} user  The requesting user.
+     * @returns {Promise<boolean | undefined>}  `false` aborts the update.
+     */
+    protected override async _preUpdate(changed: never, options: never, user: never): Promise<boolean | undefined> {
+        const allowed = await super._preUpdate(changed, options, user);
+        if (allowed === false) return false;
+
+        const delta: TokenRingDelta = changed;
+        if (delta.width === undefined && delta.height === undefined && delta.ring?.enabled === undefined) return undefined;
+        const update = ringModeUpdate({
+            width: delta.width ?? this.width,
+            height: delta.height ?? this.height,
+            ringEnabled: delta.ring?.enabled ?? this.ring.enabled,
+            rounded: delta.flags?.[SYSTEM_ID]?.roundedRing ?? this.#roundedFlag(),
+            creating: false,
+        });
+        foundry.utils.mergeObject(delta, update);
+        return undefined;
+    }
+
+    /** This token's `roundedRing` flag (true / false / unset). */
+    #roundedFlag(): boolean | undefined {
+        const flag = (this as TokenWithFlags).getFlag(SYSTEM_ID, 'roundedRing');
+        return typeof flag === 'boolean' ? flag : undefined;
     }
 
     /* -------------------------------------------- */
@@ -436,7 +489,7 @@ export class TokenDocumentWH40K extends TokenDocument {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: Record<string,MovementTypeConfig> index may return undefined at runtime
         const label = config !== undefined ? game.i18n.localize(config.label) : type;
         const speed = (token.actor?.system.movement as Record<string, number> | undefined)?.[type];
-        void token.update({ flags: { 'wh40k-rpg': { movementAction: type } } } as TokenDocument.UpdateInput);
+        void token.update({ flags: { 'wh40k-rpg': { movementAction: type } } });
         ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
     }
 }

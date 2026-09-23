@@ -127,6 +127,11 @@ declare module 'fvtt-types/configuration' {
         JournalEntry: {
             'wh40k-rpg': Record<string, unknown>;
         };
+        // Token-scoped state (the rounded-rect ring mode, #587; the bust frame)
+        // written through TokenDocument#updateSource.
+        Token: {
+            'wh40k-rpg': Record<string, unknown>;
+        };
     }
     /* eslint-enable no-restricted-syntax */
 
