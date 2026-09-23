@@ -33,6 +33,12 @@ interface WorldTimeContext {
     dayCounterLabel: string;
     fullDate: string;
     elapsed: string;
+    localBodyName: string;
+    localRotationHours: number;
+    localDay: number;
+    localTimeOfDay: string;
+    /** Localised weather of the viewed scene's body ('' when no body is configured). */
+    localWeather: string;
 }
 
 /** Wrap the widget template in the `.wh40k-rpg` ancestor the live floating panel
@@ -56,6 +62,11 @@ const BASE: WorldTimeContext = {
     dayCounterLabel: 'Day 5',
     fullDate: '0000-01-06 14:05:09',
     elapsed: '5d 14h',
+    localBodyName: 'Solenne Minoris',
+    localRotationHours: 19,
+    localDay: 5,
+    localTimeOfDay: '07:12',
+    localWeather: 'Smog',
 };
 
 export const GmView: Story = {
@@ -73,7 +84,10 @@ export const GmView: Story = {
         void expect(canvasElement.querySelector('[data-action="advanceHour"]')).not.toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceDay"]')).not.toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceCustom"]')).not.toBeNull();
-        void expect(canvasElement.querySelector('[data-action="setInception"]')).not.toBeNull();
+        // The Celestial Bodies & Weather editor opener (#588).
+        void expect(canvasElement.querySelector('[data-action="editBodies"]')).not.toBeNull();
+        // The viewed body's current weather is shown.
+        void expect(canvasElement.querySelector('[data-wh40k-hook="wt-weather"]')?.textContent.trim()).toBe('Smog');
         void expect(canvasElement.querySelector('[data-wh40k-hook="wt-amount"]')).not.toBeNull();
         void expect(canvasElement.querySelector('[data-wh40k-hook="wt-unit"]')).not.toBeNull();
     },
@@ -93,6 +107,16 @@ export const PlayerView: Story = {
         void expect(canvasElement.querySelector('[data-action="advanceHour"]')).toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceDay"]')).toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceCustom"]')).toBeNull();
-        void expect(canvasElement.querySelector('[data-action="setInception"]')).toBeNull();
+        void expect(canvasElement.querySelector('[data-action="editBodies"]')).toBeNull();
+    },
+};
+
+export const NoBodiesConfigured: Story = {
+    name: 'No celestial bodies — Terran day, no weather line',
+    args: { ...BASE, isGM: true, localBodyName: 'Terran Standard', localRotationHours: 24, localWeather: '' },
+    render: (args) => renderWidget(args),
+    play: ({ canvasElement }) => {
+        void expect(canvasElement.querySelector('[data-wh40k-hook="wt-weather"]')).toBeNull();
+        void expect(canvasElement.querySelector('[data-action="editBodies"]')).not.toBeNull();
     },
 };

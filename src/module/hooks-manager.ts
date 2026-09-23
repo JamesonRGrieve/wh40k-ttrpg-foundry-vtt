@@ -141,6 +141,7 @@ import { WH40K } from './rules/config.ts';
 import { convertDeadActorToPile } from './rules/death-loot.ts';
 import { registerGMProxy } from './rules/gm-proxy.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
+import { localHourOfDay } from './rules/planetary-calendar.ts';
 import {
     applyPortraitOnPreCreate,
     applyPortraitOnPreCreateToken,
@@ -148,6 +149,7 @@ import {
     type PortraitActorLike,
     type PortraitTokenLike,
 } from './rules/portrait-spawn.ts';
+import { buildCelestialBodyField, sceneBodyKey, syncSceneLighting } from './rules/scene-lighting.ts';
 import { buildSkillSpecializationIndex } from './rules/skill-specialization-index.ts';
 import { buildSkillVariantIndex } from './rules/skill-variant-index.ts';
 import { SURPRISED_STATUS_ID, surpriseHasExpired } from './rules/surprise.ts';
@@ -253,6 +255,22 @@ export class HooksManager {
             preloadCompendiumTokenActors(game.scenes).catch((err: unknown) => {
                 console.error('compendium-token-actors: preload failed', err);
             });
+        });
+        // Scene lighting from in-universe time + weather (#588): re-sync at load,
+        // when the GM edits the bodies/weather, and when a scene's binding changes.
+        // (The clock advancing re-syncs from onUpdateWorldTime.)
+        const resyncLighting = (): void => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+            HooksManager.syncSceneLighting().catch((err: unknown) => {
+                console.error('scene-lighting: sync failed', err);
+            });
+        };
+        hooksOn('ready', resyncLighting);
+        hooksOn('updateSetting', (setting: { key?: string }) => {
+            if (setting.key === `${SYSTEM_ID}.${WH40KSettings.SETTINGS.celestialBodies}`) resyncLighting();
+        });
+        hooksOn('updateScene', (_scene: object, changed: { flags?: { [SYSTEM_ID]?: object } }) => {
+            if (changed.flags?.[SYSTEM_ID] !== undefined) resyncLighting();
         });
         hooksOn('createToken', (token: Parameters<typeof ensureCompendiumTokenActor>[0]) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
@@ -546,9 +564,27 @@ export class HooksManager {
      * remaining (#456), so advancing the GM clock updates the countdown and drops
      * expired effects immediately. Cheap: only rendered sheets are touched.
      */
+    /**
+     * Drive every body-bound scene's darkness from its body's local time of day
+     * and weather (#588). Only the active GM writes, so clients never race the
+     * same scene update.
+     */
+    static async syncSceneLighting(): Promise<void> {
+        if (game.users.activeGM?.isSelf !== true) return;
+        const bodies = WH40KSettings.getCelestialBodies();
+        if (Object.keys(bodies).length === 0) return;
+        const elapsed = game.time.worldTime - WH40KSettings.getWorldTimeInception();
+        await syncSceneLighting(game.scenes, bodies, (body) => localHourOfDay(elapsed, body), canvas.scene);
+    }
+
     static async onUpdateWorldTime(dt: number): Promise<void> {
         // #487: keep the world-time counter widget live as the clock advances.
         WorldTimeWidget.refresh();
+        // #588: the clock moved, so the sun did too.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+        HooksManager.syncSceneLighting().catch((err: unknown) => {
+            console.error('scene-lighting: sync failed', err);
+        });
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors may be absent pre-ready; the sheet handle is loosely typed by Foundry
         const actors = (globalThis as { game?: { actors?: { contents?: unknown[] } } }).game?.actors?.contents;
         if (!Array.isArray(actors)) return;
@@ -682,13 +718,13 @@ export class HooksManager {
             root = first;
         }
         // Re-renders reuse the same element; a second copy would post a duplicate
-        // checkbox and the last one submitted would win at random.
+        // control and the last one submitted would win at random.
         if (root.querySelector(`input[name="${WARP_WEAKNESS_INPUT_NAME}"]`) !== null) return;
 
         const scene = app.document ?? app.object ?? null;
         if (scene === null) return;
 
-        const field = buildWarpWeaknessField(
+        const warpField = buildWarpWeaknessField(
             document,
             {
                 label: game.i18n.localize('WH40K.Scene.WarpWeakness.Label'),
@@ -696,11 +732,22 @@ export class HooksManager {
             },
             isWarpWeak(scene),
         );
+        // Bind the scene's lighting to a celestial body's local time + weather (#588).
+        const bodyField = buildCelestialBodyField(
+            document,
+            {
+                label: game.i18n.localize('WH40K.Scene.CelestialBody.Label'),
+                hint: game.i18n.localize('WH40K.Scene.CelestialBody.Hint'),
+                none: game.i18n.localize('WH40K.Scene.CelestialBody.None'),
+            },
+            WH40KSettings.getCelestialBodies(),
+            sceneBodyKey(scene),
+        );
 
         // Append to the ambience/environment tab when present, else the form body,
-        // so the control lands somewhere sensible across Foundry's config layouts.
+        // so the controls land somewhere sensible across Foundry's config layouts.
         const host = root.querySelector('.tab[data-tab="ambience"]') ?? root.querySelector('.tab[data-tab="basic"]') ?? root.querySelector('form') ?? root;
-        host.appendChild(field);
+        host.append(warpField, bodyField);
     }
 
     static onLootTokenHUD(app: LootTokenHUDLike, html: HTMLElement | JQuery): void {

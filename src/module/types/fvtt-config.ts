@@ -132,6 +132,10 @@ declare module 'fvtt-types/configuration' {
         Token: {
             'wh40k-rpg': Record<string, unknown>;
         };
+        // Scene-scoped state (Warp weakness, #137; celestial-body binding, #588).
+        Scene: {
+            'wh40k-rpg': Record<string, unknown>;
+        };
     }
     /* eslint-enable no-restricted-syntax */
 

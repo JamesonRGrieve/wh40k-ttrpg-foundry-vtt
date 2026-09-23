@@ -202,6 +202,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/dialogs/batch-create.hbs',
             'systems/wh40k-rpg/templates/dialogs/template-selector.hbs',
             'systems/wh40k-rpg/templates/dialogs/fate-uses.hbs',
+            'systems/wh40k-rpg/templates/dialogs/celestial-bodies.hbs',
             'systems/wh40k-rpg/templates/dialogs/inventory-generator-dialog.hbs',
 
             // NPC applications

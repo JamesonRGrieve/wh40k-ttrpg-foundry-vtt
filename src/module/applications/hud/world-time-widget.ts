@@ -34,9 +34,11 @@
 import { SYSTEM_ID } from '../../constants.ts';
 import { t } from '../../i18n/t.ts';
 import { addSecondsToImperialDate, formatImperialDate } from '../../rules/imperial-date.ts';
-import { type CelestialBody, localDayNumber, localSeason, localTimeOfDay, SOLENNE_SYSTEM } from '../../rules/planetary-calendar.ts';
+import { type CelestialBody, localDayNumber, localSeason, localTimeOfDay, TERRAN_ROTATION_HOURS } from '../../rules/planetary-calendar.ts';
+import { sceneBodyKey, type WeatherKind, weatherLabelKey } from '../../rules/scene-lighting.ts';
 import { advanceSeconds, dayNumberSince, formatClock, formatRemaining, type TimeAdvanceUnit } from '../../rules/world-time.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
+import CelestialBodiesDialog from '../dialogs/celestial-bodies-dialog.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -83,6 +85,20 @@ function currentClockLabel(clock: WorldClock): string {
     return formatClock(c.hour, c.minute);
 }
 
+/**
+ * The celestial body whose local clock the widget shows (#588): the body the
+ * viewed scene is bound to, else the first configured body, else a Terran-
+ * standard day. Bodies are world data (Celestial Bodies menu), never constants.
+ */
+function viewedBody(): CelestialBody & { weather: WeatherKind | null } {
+    const bodies = WH40KSettings.getCelestialBodies();
+    const boundKey = sceneBodyKey(canvas.scene);
+    const bound = boundKey !== null && boundKey in bodies ? bodies[boundKey] : undefined;
+    const body = bound ?? Object.values(bodies).at(0);
+    if (body !== undefined) return body;
+    return { name: t('WH40K.WorldTime.TerranStandard'), rotationHours: TERRAN_ROTATION_HOURS, weather: null };
+}
+
 export default class WorldTimeWidget extends HandlebarsApplicationMixin(ApplicationV2) {
     /* -------------------------------------------- */
     /*  Configuration                               */
@@ -118,6 +134,8 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
             advanceDay: WorldTimeWidget.#advanceDay as ActionHandler,
             // eslint-disable-next-line @typescript-eslint/unbound-method
             advanceCustom: WorldTimeWidget.#advanceCustom as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            editBodies: WorldTimeWidget.#editBodies,
         },
     };
 
@@ -150,10 +168,15 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
     static show(): WorldTimeWidget {
         if (!WorldTimeWidget.#settingHookRegistered) {
             WorldTimeWidget.#settingHookRegistered = true;
-            const inceptionKey = `${SYSTEM_ID}.${WH40KSettings.SETTINGS.worldTimeInception}`;
+            const watchedKeys = new Set([
+                `${SYSTEM_ID}.${WH40KSettings.SETTINGS.worldTimeInception}`,
+                `${SYSTEM_ID}.${WH40KSettings.SETTINGS.celestialBodies}`,
+            ]);
             Hooks.on('updateSetting', (setting: { key?: string }) => {
-                if (setting.key === inceptionKey) WorldTimeWidget.refresh();
+                if (setting.key !== undefined && watchedKeys.has(setting.key)) WorldTimeWidget.refresh();
             });
+            // The local clock follows the viewed scene's body (#588).
+            Hooks.on('canvasReady', () => WorldTimeWidget.refresh());
         }
         let instance = WorldTimeWidget.#instance;
         if (instance === null) {
@@ -201,7 +224,7 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
 
         const elapsed = now - inception;
 
-        const body: CelestialBody = SOLENNE_SYSTEM['solenne-minoris'] ?? { name: 'Terran Standard', rotationHours: 24 };
+        const body = viewedBody();
         const localDay = localDayNumber(elapsed, body);
         const localTime = localTimeOfDay(elapsed, body);
 
@@ -216,15 +239,20 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
         context['localTimeOfDay'] = formatClock(localTime.hour, localTime.minute);
         context['localRotationHours'] = body.rotationHours;
         const season = localSeason(elapsed, body);
-        context['localSeason'] = season?.name ?? '';
+        const seasonName = season === null ? '' : game.i18n.localize(season.labelKey);
+        context['localSeason'] = seasonName;
         context['localSeasonIcon'] = season?.icon ?? '';
+        context['localWeather'] = body.weather === null ? '' : game.i18n.localize(weatherLabelKey(body.weather));
 
-        const ratio = (24 / body.rotationHours).toFixed(2);
-        const orbitalInfo = body.orbitalDays !== undefined ? `\nOrbital period: ${body.orbitalDays} Terran days` : '';
-        const tiltInfo = body.axialTilt !== undefined ? `\nAxial tilt: ${body.axialTilt}°` : '';
-        context['localBodyTooltip'] = `${body.name}\nLocal day: ${
-            body.rotationHours
-        } Terran hours\n1 Terran day = ${ratio} local days${orbitalInfo}${tiltInfo}${season !== null ? `\nCurrent season: ${season.name}` : ''}`;
+        const lines = [
+            body.name,
+            t('WH40K.WorldTime.Tooltip.LocalDay', { hours: body.rotationHours }),
+            t('WH40K.WorldTime.Tooltip.Ratio', { ratio: (TERRAN_ROTATION_HOURS / body.rotationHours).toFixed(2) }),
+        ];
+        if (body.orbitalDays !== undefined) lines.push(t('WH40K.WorldTime.Tooltip.Orbit', { days: body.orbitalDays }));
+        if (body.axialTilt !== undefined) lines.push(t('WH40K.WorldTime.Tooltip.Tilt', { degrees: body.axialTilt }));
+        if (seasonName !== '') lines.push(t('WH40K.WorldTime.Tooltip.Season', { season: seasonName }));
+        context['localBodyTooltip'] = lines.join('\n');
 
         return context;
     }
@@ -255,6 +283,13 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
 
     static async #advanceDay(this: WorldTimeWidget, _event: Event, _target: HTMLElement): Promise<void> {
         await WorldTimeWidget.#advance(advanceSeconds(1, 'day'));
+    }
+
+    /* -------------------------------------------- */
+
+    /** Open the GM's Celestial Bodies editor (bodies + weather, #588). */
+    static #editBodies(this: WorldTimeWidget, _event: Event, _target: HTMLElement): void {
+        CelestialBodiesDialog.open();
     }
 
     /* -------------------------------------------- */
