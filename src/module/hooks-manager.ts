@@ -98,6 +98,7 @@ import { openWithoutHomeworldInfoDialog } from './applications/prompts/without-h
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { registerStackedTokenPicker } from './canvas/stacked-token-picker-hook.ts';
 import { onRefreshToken } from './canvas/token-mask.ts';
+import { onRefreshRoundedToken } from './canvas/token-rounded-ring.ts';
 import { hydrateActorInMemory } from './compendium-hydrate.ts';
 import { buildCareerAdvancementIndex } from './config/advancements/career-advancement-cache.ts';
 import type { WH40KSystemConfig } from './config.ts';
@@ -229,8 +230,12 @@ export class HooksManager {
         hooksOn('renderTokenHUD', (app: LootTokenHUDLike, html: HTMLElement | JQuery) => HooksManager.onLootTokenHUD(app, html));
         // Loot piles are dropped in place — non-GM players can't drag them around.
         hooksOn('preUpdateToken', (doc: LootMoveTokenLike, change: { x?: number; y?: number }) => HooksManager.onPreUpdateToken(doc, change));
-        // Runtime circular busts from plain portraits (flags.wh40k-rpg.tokenFrame)
-        hooksOn('refreshToken', (token: Parameters<typeof onRefreshToken>[0]) => onRefreshToken(token));
+        // Runtime token art: a non-square token in rounded-rect ring mode (#587)
+        // gets its rounded frame; every other token gets the circular bust from
+        // its plain portrait (flags.wh40k-rpg.tokenFrame).
+        hooksOn('refreshToken', (token: Parameters<typeof onRefreshRoundedToken>[0] & Parameters<typeof onRefreshToken>[0]) => {
+            if (!onRefreshRoundedToken(token)) onRefreshToken(token);
+        });
         // Stacked-token bust palette: pick a specific token out of an overlapping
         // stack instead of Foundry's invisible click-to-cycle (#569).
         registerStackedTokenPicker();
