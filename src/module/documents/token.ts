@@ -1,7 +1,9 @@
+import { hydrateActorInMemory } from '../compendium-hydrate.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import { resolveSenses, senseBearersOf, tokenSensesUpdate } from '../rules/token-senses.ts';
 import { disembark, embark, embarkOnDropOnto, slaveOccupantTokens } from '../rules/vehicle-embark.ts';
 import { readAboard } from '../rules/vehicle-occupancy.ts';
-import { tokenPresetFromActor } from '../utils/token-footprint.ts';
+import { type PhysicalDimensions, tokenPresetFromActor } from '../utils/token-footprint.ts';
 import { hasInteriorScene, isVehicleActor, openInteriorScene, type SceneLookup } from '../vehicle/vehicle-interior.ts';
 
 type MovementTypeConfig = {
@@ -60,11 +62,12 @@ export class TokenDocumentWH40K extends TokenDocument {
     /* -------------------------------------------- */
 
     /**
-     * Preset a new token's footprint and vision from its actor's compendium data,
-     * so a dropped vehicle/creature arrives at the right grid size (and a vehicle
-     * can see) without the GM resizing it by hand. Runs at token creation — which
-     * also covers placing an EXISTING actor whose prototype token stayed 1×1
-     * (the actor `_preCreate` footprint stamp only fires on actor creation).
+     * Preset a new token's footprint and senses from its actor's compendium data,
+     * so a dropped vehicle/creature arrives at the right W×H size for this scene's
+     * grid, with sight on and any vision/detection modes its traits declare,
+     * without the GM configuring it by hand. Runs at token creation — which also
+     * covers placing an EXISTING actor, and is the only point the scene grid (and
+     * so an authored `footprint` in metres) is known (#582).
      * @param {never} data  The create payload (typed `never` by the framework).
      * @param {never} options  Create options.
      * @param {never} user  The requesting user.
@@ -76,17 +79,21 @@ export class TokenDocumentWH40K extends TokenDocument {
 
         const actor = this.actor;
         if (actor === null) return undefined;
-        const update = tokenPresetFromActor({
+        // Owned items are stored lean; join their compendium bodies first so the
+        // sense hooks authored there (Dark-sight, Unnatural Senses) are readable.
+        await hydrateActorInMemory(actor);
+
+        const system = actor.system as { size?: number; footprint?: PhysicalDimensions };
+        const grid = this.parent?.grid;
+        const footprint = tokenPresetFromActor({
             currentWidth: this.width,
             currentHeight: this.height,
-            size: (actor.system as { size?: number }).size,
-            actorType: actor.type,
-            sightEnabled: this.sight.enabled,
+            size: system.size,
+            dimensions: system.footprint,
+            grid: grid === undefined ? null : { distance: grid.distance, units: grid.units },
         });
-        if (Object.keys(update).length > 0) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: updateSource takes a dotted-path token delta (width/height/sight.enabled); Record<string, number|boolean> is the payload shape
-            this.updateSource(update);
-        }
+        const senses = tokenSensesUpdate(resolveSenses(senseBearersOf(actor.items)));
+        this.updateSource({ ...footprint, ...senses });
         return undefined;
     }
 

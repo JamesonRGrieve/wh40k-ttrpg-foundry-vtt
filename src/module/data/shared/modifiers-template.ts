@@ -1,4 +1,5 @@
 import { CRAFTSMANSHIP_TIERS, type Craftsmanship } from '../../rules/ow-craftsmanship.ts';
+import { SENSE_KINDS, SENSE_RANGE_SOURCES, type SenseEntry } from '../../rules/token-senses.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
 
 /* -------------------------------------------------------------------------- */
@@ -240,6 +241,20 @@ export interface CraftsmanshipGatedEntry {
     value: number;
     /** The minimum craftsmanship tier that unlocks the bonus. */
     minCraftsmanship: Craftsmanship;
+}
+
+/** The `ArrayField` of {@link SenseEntry} token-sense hooks (#582). */
+function sensesSchema(): foundry.data.fields.DataField.Any {
+    const fields = foundry.data.fields;
+    return new fields.ArrayField(
+        new fields.SchemaField({
+            kind: new fields.StringField({ required: true, initial: 'vision', choices: [...SENSE_KINDS] }),
+            mode: new fields.StringField({ required: true, blank: false }),
+            range: new fields.NumberField({ required: false, nullable: true, min: 0, initial: null }),
+            rangeSource: new fields.StringField({ required: true, blank: true, initial: '', choices: [...SENSE_RANGE_SOURCES] }),
+        }),
+        { required: true, initial: [] },
+    );
 }
 
 /** The `ArrayField` of {@link CraftsmanshipGatedEntry} tier-gated bonuses. */
@@ -526,6 +541,8 @@ export default class ModifiersTemplate extends SystemDataModel {
         grantedEffects: GrantedEffectEntry[];
         /** Data-driven craftsmanship-gated bonuses (Direction #7) — see {@link CraftsmanshipGatedEntry}. */
         craftsmanshipGated: CraftsmanshipGatedEntry[];
+        /** Data-driven token senses (Direction #7, #582) — see {@link SenseEntry}. */
+        senses: SenseEntry[];
     };
 
     /** @inheritdoc */
@@ -581,6 +598,11 @@ export default class ModifiersTemplate extends SystemDataModel {
                 // at Good, +10 Strength at Best). The central collector reads the
                 // item's own `system.craftsmanship` against each `minCraftsmanship`.
                 craftsmanshipGated: craftsmanshipGatedSchema(),
+                // Data-driven token senses (Direction #7, #582). Empty on legacy
+                // items; authored on content that changes what its bearer perceives
+                // (Dark-sight → darkvision, Unnatural Senses (X) → senseAll at X m).
+                // Folded onto the token's sight/detection modes at token creation.
+                senses: sensesSchema(),
             }),
         };
     }
@@ -618,6 +640,7 @@ export default class ModifiersTemplate extends SystemDataModel {
         if (!('situational' in mods) || mods['situational'] === undefined) mods['situational'] = { characteristics: [], skills: [], combat: [] };
         if (!('dynamicModifiers' in mods) || mods['dynamicModifiers'] === undefined) mods['dynamicModifiers'] = [];
         if (!('craftsmanshipGated' in mods) || mods['craftsmanshipGated'] === undefined) mods['craftsmanshipGated'] = [];
+        if (!('senses' in mods) || mods['senses'] === undefined) mods['senses'] = [];
         ModifiersTemplate.#normalizeGrantedEffects(mods);
     }
 

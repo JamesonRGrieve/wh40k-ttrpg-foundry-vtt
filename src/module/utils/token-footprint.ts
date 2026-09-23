@@ -10,7 +10,9 @@
  * Consumers: `documents/npc.ts` and `documents/vehicle.ts` stamp the footprint
  * at `_preCreate` (so a compendium-imported actor arrives at the right size
  * without a sheet ever being opened), and `applications/actor/npc-sheet.ts`
- * re-applies it from the sheet's token-setup action.
+ * re-applies it from the sheet's token-setup action. At token creation
+ * (`documents/token.ts`) the scene grid is known, so an actor with an authored
+ * physical `footprint` (metres) is refined to its W×H cell footprint (#582).
  */
 
 /** Grid squares per size descriptor. Sizes off the scale fall back to 1×1. */
@@ -57,6 +59,62 @@ export function prototypeTokenFootprintUpdate(size: unknown): Record<string, num
     };
 }
 
+/** Metres → one unit of each length unit a scene grid may be measured in. */
+const UNITS_PER_METRE: ReadonlyMap<string, number> = new Map([
+    ['ft', 3.28084],
+    ['feet', 3.28084],
+    ['foot', 3.28084],
+    ['yd', 1.09361],
+    ['yards', 1.09361],
+    ['km', 0.001],
+    ['mi', 0.000621371],
+    ['miles', 0.000621371],
+]);
+
+/**
+ * Convert metres into a scene's grid units. Metres (`m`, `meters`, `metres`),
+ * a blank unit and any unrecognised unit are treated as metric — the d100 lines
+ * measure in metres.
+ * @param metres  A length in metres.
+ * @param units   The scene's `grid.units` label.
+ */
+export function metresToSceneUnits(metres: number, units: string | null | undefined): number {
+    return metres * (UNITS_PER_METRE.get((units ?? '').trim().toLowerCase()) ?? 1);
+}
+
+/** The scene grid a footprint is laid out on. */
+export interface GridScale {
+    /** Scene units per grid cell (`scene.grid.distance`). */
+    distance: number;
+    /** The unit label (`scene.grid.units`). */
+    units: string;
+}
+
+/** An actor's authored physical footprint in metres. */
+export interface PhysicalDimensions {
+    length: number | null;
+    width: number | null;
+}
+
+/**
+ * The W×H grid-cell footprint for an actor with authored dimensions, or `null`
+ * when either dimension or the grid is missing. The token lies lengthwise across
+ * the grid (width ← length, height ← width), matching side-profile vehicle art.
+ * Each side rounds to the nearest whole cell, never below one.
+ * @param dimensions  The actor's `system.footprint` (metres).
+ * @param grid        The scene grid.
+ */
+export function dimensionFootprint(
+    dimensions: PhysicalDimensions | null | undefined,
+    grid: GridScale | null | undefined,
+): { width: number; height: number } | null {
+    if (dimensions == null || grid == null || !(grid.distance > 0)) return null;
+    const { length, width } = dimensions;
+    if (length === null || width === null || !(length > 0) || !(width > 0)) return null;
+    const cells = (metres: number): number => Math.max(1, Math.round(metresToSceneUnits(metres, grid.units) / grid.distance));
+    return { width: cells(length), height: cells(width) };
+}
+
 /** The actor/token facts the token preset reads. */
 export interface TokenPresetInput {
     /** The token's current width/height (inherited from the prototype or authored). */
@@ -64,40 +122,37 @@ export interface TokenPresetInput {
     currentHeight?: number | null | undefined;
     /** The owning actor's 1–10 size descriptor. */
     size?: number | null | undefined;
-    /** The owning actor's type (`dh2-terracraft`, `dh2-npc`, …), gating vehicle vision. */
-    actorType?: string | undefined;
-    /** Whether the token's sight is currently enabled. */
-    sightEnabled?: boolean | null | undefined;
+    /** The owning actor's authored physical footprint (metres). */
+    dimensions?: PhysicalDimensions | null | undefined;
+    /** The scene grid the token is placed on. */
+    grid?: GridScale | null | undefined;
+    /** Overwrite a footprint that looks hand-set (the sheet's explicit setup action). */
+    force?: boolean;
 }
 
 /**
- * Token field updates to preset from the owning actor's compendium data, as a
+ * The footprint update to preset from the owning actor's compendium data, as a
  * dotted-path payload for `TokenDocument#updateSource`. Empty when nothing needs
  * changing.
  *
- * - **Footprint**: a token still at the default 1×1 grows to its size-ladder
- *   footprint (Hulking → 2×2, Massive → 3×3, …). A token that already carries a
- *   custom footprint is left alone, so a hand-resized token is never clobbered.
- * - **Vision**: a vehicle whose sight is off is given vision (crews see out of
- *   their vehicle); other actor types are left as authored.
+ * Authored `dimensions` win (W×H cells for the scene's grid); otherwise the
+ * square size-ladder footprint (Hulking → 2×2, Massive → 3×3, …). The preset only
+ * replaces a DEFAULT footprint — still 1×1, or still the square ladder stamp the
+ * actor's `_preCreate` wrote — so a hand-resized token is never clobbered unless
+ * `force` is set.
  * @param {TokenPresetInput} input  The actor/token facts.
- * @returns {Record<string, number | boolean>}  Dotted-path updates (may be empty).
+ * @returns {Record<string, number>}  `width` / `height` updates (may be empty).
  */
-export function tokenPresetFromActor(input: TokenPresetInput): Record<string, number | boolean> {
-    const update: Record<string, number | boolean> = {};
+export function tokenPresetFromActor(input: TokenPresetInput): Record<string, number> {
+    const ladder = tokenFootprintForSize(input.size);
+    const currentWidth = input.currentWidth ?? 1;
+    const currentHeight = input.currentHeight ?? 1;
+    const isDefault = (currentWidth === 1 && currentHeight === 1) || (currentWidth === ladder && currentHeight === ladder);
+    if (input.force !== true && !isDefault) return {};
 
-    const footprint = tokenFootprintForSize(input.size);
-    if (footprint > 1 && (input.currentWidth ?? 1) === 1 && (input.currentHeight ?? 1) === 1) {
-        update['width'] = footprint;
-        update['height'] = footprint;
-    }
-
-    const isVehicle = /craft|vehicle/.test(input.actorType ?? '');
-    if (isVehicle && input.sightEnabled !== true) {
-        update['sight.enabled'] = true;
-    }
-
-    return update;
+    const target = dimensionFootprint(input.dimensions, input.grid) ?? { width: ladder, height: ladder };
+    if (target.width === currentWidth && target.height === currentHeight) return {};
+    return { width: target.width, height: target.height };
 }
 
 /**
