@@ -2,13 +2,16 @@ import { describe, expect, it } from 'vitest';
 import type { PortraitVariant, TokenFrame } from './portrait-pool.ts';
 import {
     applyPortraitOnPreCreate,
+    applyPortraitOnPreCreateToken,
     applySpawnPortrait,
     collectUsedPortraitImgs,
     currentPortraitIndex,
     decideSpawnPortrait,
     effectivePoolSize,
     type PortraitActorLike,
+    type PortraitTokenLike,
     type PortraitUpdate,
+    type TokenPortraitUpdate,
     rerollSpawnPortrait,
     togglePinnedIndex,
 } from './portrait-spawn.ts';
@@ -111,8 +114,56 @@ describe('applySpawnPortrait', () => {
         expect(actor.updates).toHaveLength(1);
         expect(actor.updates[0]).toEqual({
             img: 'chosen.webp',
-            prototypeToken: { flags: { [SYSTEM_ID]: { tokenFrame: { cx: 0.5, cy: 0.28 } } } },
+            prototypeToken: {
+                flags: { [SYSTEM_ID]: { tokenFrame: { cx: 0.5, cy: 0.28 } } },
+                ring: { subject: { scale: 0.8 } },
+            },
         });
+    });
+});
+
+describe('applyPortraitOnPreCreateToken', () => {
+    interface MockToken extends PortraitTokenLike {
+        updates: TokenPortraitUpdate[];
+    }
+    function mockToken(actorLink = false): MockToken {
+        const updates: TokenPortraitUpdate[] = [];
+        return {
+            actorLink,
+            updates,
+            updateSource(changes: TokenPortraitUpdate) {
+                updates.push(changes);
+            },
+        };
+    }
+
+    it('rolls a per-token portrait (src + frame + 0.8 ring scale) for an unlinked pooled token', () => {
+        const token = mockToken(false);
+        const actor = mockActor({ variants: [{ img: 'b.webp', tokenFrame: { cx: 0.4, cy: 0.25 } }] });
+        applyPortraitOnPreCreateToken(token, actor, rngOf(0.9));
+        expect(token.updates).toHaveLength(1);
+        expect(token.updates[0]?.texture.src).toBe('b.webp');
+        expect(token.updates[0]?.ring.subject.scale).toBe(0.8);
+        expect(token.updates[0]?.flags[SYSTEM_ID]?.tokenFrame).toEqual({ cx: 0.4, cy: 0.25 });
+    });
+
+    it('no-ops for a LINKED token (it mirrors its actor)', () => {
+        const token = mockToken(true);
+        applyPortraitOnPreCreateToken(token, mockActor({ variants: [{ img: 'b.webp', tokenFrame: null }] }), rngOf(0.9));
+        expect(token.updates).toHaveLength(0);
+    });
+
+    it('no-ops when the actor has no pool', () => {
+        const token = mockToken(false);
+        applyPortraitOnPreCreateToken(token, mockActor(), rngOf(0.9));
+        expect(token.updates).toHaveLength(0);
+    });
+
+    it('avoids a portrait already used by a sibling token on the scene', () => {
+        const token = mockToken(false);
+        const actor = mockActor({ img: 'a.webp', variants: [{ img: 'b.webp', tokenFrame: null }] });
+        applyPortraitOnPreCreateToken(token, actor, rngOf(0), new Set(['a.webp']));
+        expect(token.updates[0]?.texture.src).toBe('b.webp');
     });
 });
 
