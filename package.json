@@ -65,6 +65,8 @@
     "packs:validate": "node src/packs/validate-schema.cjs",
     "packs:validate:actors": "node src/packs/validate-actors.cjs",
     "packs:validate:images": "node src/packs/validate-images.cjs",
+    "packs:validate:schema": "node scripts/validate-pack-schema.mjs",
+    "packs:validate:schema:report": "node scripts/validate-pack-schema.mjs --report",
     "actors:ratchet": "node scripts/actors-ratchet.mjs",
     "actors:ratchet:update": "node scripts/actors-ratchet.mjs --update",
     "images:ratchet": "node scripts/images-ratchet.mjs",
