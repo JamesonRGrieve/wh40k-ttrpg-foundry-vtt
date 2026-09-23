@@ -11,7 +11,8 @@ import type { WH40KNPC } from '../../documents/npc.ts';
 import { characteristicFromAbbrev } from '../../helpers/characteristic-labels.ts';
 import { hasDaemonic } from '../../rules/daemonic-immunities.ts';
 import { getInteractionCap } from '../../rules/disposition.ts';
-import { tokenFootprintForSize } from '../../utils/token-footprint.ts';
+import { resolveSenses, senseBearersOf, tokenSensesUpdate } from '../../rules/token-senses.ts';
+import { tokenPresetFromActor } from '../../utils/token-footprint.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import InventoryGeneratorDialog from '../dialogs/inventory-generator-dialog.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
@@ -1289,18 +1290,21 @@ export default class NPCSheet extends CharacterSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document update payload is Record<string,unknown>; token/prototypeToken fields are untyped.
         const updates: Record<string, unknown> = {};
 
-        // Size-based dimensions — the same ladder `_preCreate` stamps, so the
-        // sheet button and a fresh compendium import can never disagree (#501).
-        const tokenSize = tokenFootprintForSize(npc.system.size);
-        updates['width'] = tokenSize;
-        updates['height'] = tokenSize;
-
-        // Type-based vision/detection
-        if (npc.system.type === 'daemon' || npc.system.type === 'xenos') {
-            updates['sight'] = { enabled: true, range: 60, visionMode: 'darkvision' };
-        } else {
-            updates['sight'] = { enabled: true, range: 30 };
-        }
+        // Footprint and senses from the same shared preset token creation uses, so
+        // the sheet button and a fresh drop can never disagree (#501, #582):
+        // authored dimensions on the viewed scene's grid (else the size ladder),
+        // and sight/detection from the NPC's own trait data — never its type.
+        const grid = canvas.scene?.grid;
+        Object.assign(
+            updates,
+            tokenPresetFromActor({
+                size: npc.system.size,
+                dimensions: npc.system.footprint,
+                grid: grid === undefined ? null : { distance: grid.distance, units: grid.units },
+                force: true,
+            }),
+            tokenSensesUpdate(resolveSenses(senseBearersOf(npc.items))),
+        );
 
         // Bars
         updates['bar1'] = { attribute: 'wounds' };

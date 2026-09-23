@@ -83,8 +83,20 @@ export default class ActorDataModel extends SystemDataModel {
                 // null pins nothing, so spawn picks at random.
                 pinned: new fields.NumberField({ required: false, nullable: true, integer: true, min: 0, initial: null }),
             }),
+            // Physical footprint in metres (#582), authored in the compendium _source
+            // for things that aren't a square (vehicles). A token of this actor is
+            // sized W×H grid cells from it and the scene's grid distance; null falls
+            // back to the square size-ladder footprint. Universal, like `portraits`.
+            // (Not `dimensions`: voidcraft already use that name for prose size.)
+            footprint: new fields.SchemaField({
+                length: new fields.NumberField({ required: false, nullable: true, min: 0, initial: null }),
+                width: new fields.NumberField({ required: false, nullable: true, min: 0, initial: null }),
+            }),
         };
     }
+
+    /** Physical footprint in metres; null dimensions fall back to the size ladder. */
+    declare footprint: { length: number | null; width: number | null };
 
     /**
      * The UUID of the class actor this one is a named instance of, or `''`.

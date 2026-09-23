@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_TOKEN_FOOTPRINT, prototypeTokenFootprintUpdate, tokenFootprintForSize, tokenPresetFromActor } from './token-footprint.ts';
+import {
+    DEFAULT_TOKEN_FOOTPRINT,
+    dimensionFootprint,
+    metresToSceneUnits,
+    prototypeTokenFootprintUpdate,
+    tokenFootprintForSize,
+    tokenPresetFromActor,
+} from './token-footprint.ts';
 
 describe('tokenFootprintForSize', () => {
     it('maps the whole 1-10 size scale', () => {
@@ -39,29 +46,78 @@ describe('prototypeTokenFootprintUpdate', () => {
     });
 });
 
+describe('metresToSceneUnits', () => {
+    it('treats metres, a blank unit and unknown units as metric', () => {
+        expect(metresToSceneUnits(7, 'm')).toBe(7);
+        expect(metresToSceneUnits(7, '')).toBe(7);
+        expect(metresToSceneUnits(7, null)).toBe(7);
+        expect(metresToSceneUnits(7, 'parsecs')).toBe(7);
+    });
+
+    it('converts to feet', () => {
+        expect(metresToSceneUnits(1, 'ft')).toBeCloseTo(3.28084, 5);
+        expect(metresToSceneUnits(1, ' Feet ')).toBeCloseTo(3.28084, 5);
+    });
+});
+
+describe('dimensionFootprint', () => {
+    const metreGrid = { distance: 1, units: 'm' };
+
+    it('lays a vehicle lengthwise: 6.9 m x 4.6 m on a 1 m grid → 7 x 5 cells', () => {
+        expect(dimensionFootprint({ length: 6.9, width: 4.6 }, metreGrid)).toEqual({ width: 7, height: 5 });
+    });
+
+    it('scales to the grid distance (2 m per cell → 3 x 2)', () => {
+        expect(dimensionFootprint({ length: 6.9, width: 4.6 }, { distance: 2, units: 'm' })).toEqual({ width: 3, height: 2 });
+    });
+
+    it('honours a feet grid (5 ft per cell)', () => {
+        expect(dimensionFootprint({ length: 6.9, width: 4.6 }, { distance: 5, units: 'ft' })).toEqual({ width: 5, height: 3 });
+    });
+
+    it('never goes below one cell', () => {
+        expect(dimensionFootprint({ length: 0.4, width: 0.3 }, { distance: 2, units: 'm' })).toEqual({ width: 1, height: 1 });
+    });
+
+    it('returns null without both dimensions or a usable grid', () => {
+        expect(dimensionFootprint({ length: 6.9, width: null }, metreGrid)).toBeNull();
+        expect(dimensionFootprint(null, metreGrid)).toBeNull();
+        expect(dimensionFootprint({ length: 6.9, width: 4.6 }, null)).toBeNull();
+        expect(dimensionFootprint({ length: 6.9, width: 4.6 }, { distance: 0, units: 'm' })).toBeNull();
+    });
+});
+
 describe('tokenPresetFromActor', () => {
-    it('grows a default 1x1 token to its size footprint (a Chimera at size 7 → 3x3)', () => {
-        expect(tokenPresetFromActor({ currentWidth: 1, currentHeight: 1, size: 7, actorType: 'dh2-terracraft', sightEnabled: true })).toMatchObject({
-            width: 3,
-            height: 3,
+    const metreGrid = { distance: 1, units: 'm' };
+
+    it('grows a default 1x1 token to its size footprint (size 7 → 3x3)', () => {
+        expect(tokenPresetFromActor({ currentWidth: 1, currentHeight: 1, size: 7 })).toEqual({ width: 3, height: 3 });
+    });
+
+    it('prefers authored dimensions over the size ladder', () => {
+        expect(tokenPresetFromActor({ currentWidth: 1, currentHeight: 1, size: 7, dimensions: { length: 6.9, width: 4.6 }, grid: metreGrid })).toEqual({
+            width: 7,
+            height: 5,
         });
     });
 
-    it('enables vision for a vehicle whose sight is off', () => {
-        const update = tokenPresetFromActor({ currentWidth: 1, currentHeight: 1, size: 6, actorType: 'dh2-terracraft', sightEnabled: false });
-        expect(update['sight.enabled']).toBe(true);
-        expect(update).toMatchObject({ width: 2, height: 2 });
+    it('replaces the square ladder stamp the actor _preCreate wrote with the dimension footprint', () => {
+        expect(tokenPresetFromActor({ currentWidth: 3, currentHeight: 3, size: 7, dimensions: { length: 6.9, width: 4.6 }, grid: metreGrid })).toEqual({
+            width: 7,
+            height: 5,
+        });
     });
 
-    it('leaves a hand-resized token (already non-1x1) alone', () => {
-        expect(tokenPresetFromActor({ currentWidth: 4, currentHeight: 4, size: 7, actorType: 'dh2-terracraft', sightEnabled: true })).toEqual({});
+    it('leaves a hand-resized token alone', () => {
+        expect(tokenPresetFromActor({ currentWidth: 4, currentHeight: 4, size: 7, dimensions: { length: 6.9, width: 4.6 }, grid: metreGrid })).toEqual({});
     });
 
-    it('does not resize a size that maps to 1x1, and does not touch non-vehicle vision', () => {
-        expect(tokenPresetFromActor({ currentWidth: 1, currentHeight: 1, size: 4, actorType: 'dh2-npc', sightEnabled: false })).toEqual({});
+    it('overwrites a hand-resized token when forced', () => {
+        expect(tokenPresetFromActor({ currentWidth: 4, currentHeight: 4, size: 7, force: true })).toEqual({ width: 3, height: 3 });
     });
 
-    it('does not re-enable vision that is already on', () => {
-        expect(tokenPresetFromActor({ currentWidth: 3, currentHeight: 3, size: 7, actorType: 'dh2-terracraft', sightEnabled: true })).toEqual({});
+    it('is empty when the footprint already matches', () => {
+        expect(tokenPresetFromActor({ currentWidth: 1, currentHeight: 1, size: 4 })).toEqual({});
+        expect(tokenPresetFromActor({ currentWidth: 3, currentHeight: 3, size: 7 })).toEqual({});
     });
 });
