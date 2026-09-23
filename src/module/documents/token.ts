@@ -68,14 +68,14 @@ export class TokenDocumentWH40K extends TokenDocument {
      * @param {never} data  The create payload (typed `never` by the framework).
      * @param {never} options  Create options.
      * @param {never} user  The requesting user.
-     * @returns {Promise<boolean | void>}  The base result (false aborts creation).
+     * @returns {Promise<boolean | undefined>}  `false` aborts creation.
      */
-    protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | void> {
+    protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | undefined> {
         const result = await super._preCreate(data, options, user);
         if (result === false) return false;
 
         const actor = this.actor;
-        if (actor === null) return result;
+        if (actor === null) return undefined;
         const update = tokenPresetFromActor({
             currentWidth: this.width,
             currentHeight: this.height,
@@ -87,7 +87,7 @@ export class TokenDocumentWH40K extends TokenDocument {
             // eslint-disable-next-line no-restricted-syntax -- boundary: updateSource takes a dotted-path token delta (width/height/sight.enabled); Record<string, number|boolean> is the payload shape
             this.updateSource(update);
         }
-        return result;
+        return undefined;
     }
 
     /* -------------------------------------------- */
