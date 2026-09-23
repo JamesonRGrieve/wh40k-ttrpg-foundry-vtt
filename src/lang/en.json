@@ -1078,6 +1078,10 @@
                 "Name": "NPCs advance like characters",
                 "Hint": "Treat every NPC as a buildable character rather than a frozen stat block. Its printed characteristics are split into purchasable advances, its aptitudes are derived from the skills, talents and characteristics it actually has, and its experience at spawn is set to the exact XP those advances would cost — so the Advancement Dialog can keep advancing it from there. Off by default; enabling it changes no printed value, only how the stat block is accounted for."
             },
+            "CompendiumDropImportsActor": {
+                "Name": "Compendium drops import a world Actor",
+                "Hint": "When off (the default), dragging an NPC or vehicle from a compendium onto a scene places only a token: it is backed by the compendium entry and keeps its own wounds and changes, and no Actor is added to the sidebar. Turn this on to always import a world Actor first (Foundry's default). Player characters always import. Hold Ctrl while dropping to import one anyway."
+            },
             "HighGroundBand": {
                 "Name": "Higher Ground elevation band",
                 "Hint": "How far above the target the attacker must be, in scene distance units, before the RAW Higher Ground +10 applies. 0 (default) is RAW — strictly above counts. Raise it so a crate or a half-step of rubble does not grant the bonus; on a map using the Levels module, any value below the floor height still lets a genuine storey qualify, since a token’s elevation there is its floor’s base height."
@@ -1112,6 +1116,9 @@
                 "Name": "Image Size",
                 "Hint": "Requested image size, e.g. 1024x1024."
             }
+        },
+        "Token": {
+            "CompendiumDropNoPermission": "You do not have permission to place a token for that compendium actor."
         },
         "TokenImageGen": {
             "Generating": "Generating token image for {name}…",

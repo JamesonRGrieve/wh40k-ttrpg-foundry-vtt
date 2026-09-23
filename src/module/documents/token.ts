@@ -1,6 +1,7 @@
 import { ringModeUpdate } from '../canvas/token-rounded-ring.ts';
 import { hydrateActorInMemory } from '../compendium-hydrate.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import { cachedCompendiumActor, compendiumActorUuidOf } from '../rules/compendium-token-actors.ts';
 import { resolveSenses, senseBearersOf, tokenSensesUpdate } from '../rules/token-senses.ts';
 import { disembark, embark, embarkOnDropOnto, slaveOccupantTokens } from '../rules/vehicle-embark.ts';
 import { readAboard } from '../rules/vehicle-occupancy.ts';
@@ -66,6 +67,19 @@ type TokenWithFlags = TokenDocument & {
  * Foundry V13's CONFIG.Token.movement.actions system.
  */
 export class TokenDocumentWH40K extends TokenDocument {
+    /**
+     * The base actor, falling back to the compendium actor a token-only
+     * compendium drop is backed by (#586): such a token's `actorId` names a
+     * compendium document, not a world actor, so `game.actors` has no entry and
+     * the synthetic actor is built from the cached compendium body instead.
+     */
+    override get baseActor(): Actor.Implementation | null {
+        const world = super.baseActor;
+        if (world !== null) return world;
+        const uuid = compendiumActorUuidOf(this);
+        return uuid === null ? null : cachedCompendiumActor(uuid);
+    }
+
     /* -------------------------------------------- */
     /*  Creation presets                            */
     /* -------------------------------------------- */

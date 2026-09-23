@@ -71,6 +71,7 @@ export class WH40KSettings {
         worldTimeInception: 'world-time-inception',
         campaignInceptionDate: 'campaign-inception-date',
         npcAdvancement: 'npc-advancement',
+        compendiumDropImportsActor: 'compendium-drop-imports-actor',
         allowManualRoll: 'allow-manual-roll',
         tokenImageGenMode: 'token-image-gen-mode',
         tokenImageGenEndpoint: 'token-image-gen-endpoint',
@@ -377,6 +378,18 @@ export class WH40KSettings {
     static isNpcAdvancementEnabled(): boolean {
         try {
             return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.npcAdvancement) === true;
+        } catch {
+            return false;
+        }
+    }
+
+    /** When true, dropping a compendium actor onto a scene imports a world Actor
+     *  first (Foundry's default). Off by default: non-character actors are placed as
+     *  token-only, compendium-backed unlinked tokens (#586). Safe to call before the
+     *  setting is registered (returns false). */
+    static isCompendiumDropImportEnabled(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.compendiumDropImportsActor) === true;
         } catch {
             return false;
         }
@@ -815,6 +828,15 @@ export class WH40KSettings {
                 scope: 'world',
                 config: true,
                 requiresReload: true,
+                default: false,
+                type: Boolean,
+            },
+            {
+                key: S.compendiumDropImportsActor,
+                name: 'WH40K.SETTINGS.CompendiumDropImportsActor.Name',
+                hint: 'WH40K.SETTINGS.CompendiumDropImportsActor.Hint',
+                scope: 'world',
+                config: true,
                 default: false,
                 type: Boolean,
             },

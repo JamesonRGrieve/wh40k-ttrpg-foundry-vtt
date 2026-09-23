@@ -693,6 +693,25 @@ declare global {
     namespace foundry.data {
         const fields: typeof foundry.data.fields;
     }
+
+    // =========================================================================
+    // Token drop position (@internal core static)
+    // =========================================================================
+    //
+    // `Token._getDropActorPosition` is the helper core's own canvas actor drop
+    // (`TokenLayer#_onDropActorData`) uses to centre a new token on the drop
+    // point and snap it. The system's token-only compendium drop (#586) replays
+    // that flow, so it calls the same helper rather than re-deriving the pivot /
+    // snap / level logic. Absent from fvtt-types (it is marked @internal).
+    namespace foundry.canvas.placeables {
+        namespace Token {
+            function _getDropActorPosition(
+                token: TokenDocument,
+                point: { x: number; y: number; elevation?: number | undefined },
+                options?: { snap?: boolean },
+            ): { x: number; y: number; elevation: number; width: number; height: number };
+        }
+    }
 }
 
 // =========================================================================
