@@ -368,6 +368,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
             },
             {
               "choices": undefined,
+              "config": false,
+              "default": ""{}"",
+              "key": "celestial-bodies",
+              "requiresReload": undefined,
+              "scope": "world",
+              "type": "String",
+            },
+            {
+              "choices": undefined,
               "config": true,
               "default": "false",
               "key": "allow-manual-roll",

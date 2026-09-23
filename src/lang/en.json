@@ -1078,6 +1078,10 @@
                 "Name": "NPCs advance like characters",
                 "Hint": "Treat every NPC as a buildable character rather than a frozen stat block. Its printed characteristics are split into purchasable advances, its aptitudes are derived from the skills, talents and characteristics it actually has, and its experience at spawn is set to the exact XP those advances would cost — so the Advancement Dialog can keep advancing it from there. Off by default; enabling it changes no printed value, only how the stat block is accounted for."
             },
+            "CelestialBodies": {
+                "Name": "Celestial Bodies & Weather",
+                "Hint": "Define the campaign's planets and moons (day length, year, tilt) and set each one's current weather. Scenes bound to a body take their lighting from its local time of day and weather."
+            },
             "CompendiumDropImportsActor": {
                 "Name": "Compendium drops import a world Actor",
                 "Hint": "When off (the default), dragging an NPC or vehicle from a compendium onto a scene places only a token: it is backed by the compendium entry and keeps its own wounds and changes, and no Actor is added to the sidebar. Turn this on to always import a world Actor first (Foundry's default). Player characters always import. Hold Ctrl while dropping to import one anyway."
@@ -4835,7 +4839,52 @@
             "UnitLabel": "Time unit",
             "UnitHours": "Hours",
             "UnitDays": "Days",
-            "GmOnly": "Only the GM can advance world time."
+            "GmOnly": "Only the GM can advance world time.",
+            "TerranStandard": "Terran Standard",
+            "BodyCycle": "{body} ({hours}h cycle)",
+            "Tooltip": {
+                "LocalDay": "Local day: {hours} Terran hours",
+                "Ratio": "1 Terran day = {ratio} local days",
+                "Orbit": "Orbital period: {days} Terran days",
+                "Tilt": "Axial tilt: {degrees}°",
+                "Season": "Current season: {season}"
+            }
+        },
+        "CelestialBodies": {
+            "Title": "Celestial Bodies",
+            "Intro": "The planets and moons of this campaign. Each body's rotation sets its local day; a scene bound to a body (Scene Configuration → Celestial Body) takes its lighting from that body's time of day and current weather.",
+            "Name": "Name",
+            "Rotation": "Day (h)",
+            "Orbit": "Year (d)",
+            "Tilt": "Tilt (°)",
+            "Weather": "Weather",
+            "Add": "Add Body",
+            "Remove": "Remove Body",
+            "Save": "Save",
+            "Edit": "Celestial Bodies & Weather",
+            "Empty": "No celestial bodies yet. Add one to drive scene lighting from in-universe time.",
+            "GmOnly": "Only the GM can edit celestial bodies."
+        },
+        "Weather": {
+            "Clear": "Clear",
+            "Haze": "Haze",
+            "Overcast": "Overcast",
+            "Rain": "Rain",
+            "Fog": "Fog",
+            "Dust": "Dust",
+            "Smog": "Smog",
+            "Storm": "Storm",
+            "Ash": "Ashfall"
+        },
+        "Season": {
+            "EarlySpring": "Early Spring",
+            "LateSpring": "Late Spring",
+            "EarlySummer": "Early Summer",
+            "LateSummer": "Late Summer",
+            "EarlyAutumn": "Early Autumn",
+            "LateAutumn": "Late Autumn",
+            "EarlyWinter": "Early Winter",
+            "DeepWinter": "Deep Winter"
         },
         "Status": {
             "Modifier": "Modifier:",
@@ -5684,6 +5733,11 @@
             "WarpWeakness": {
                 "Label": "Warp Weakness",
                 "Hint": "The veil is thin in this scene: +10 to Focus Power tests, Psychic Phenomena are one step more severe, and they also trigger on a 9 or any odd result."
+            },
+            "CelestialBody": {
+                "Label": "Celestial Body",
+                "Hint": "Drive this scene's darkness from the body's local time of day and current weather as the world clock advances. Leave unset for interiors, voidships and hand-lit maps.",
+                "None": "Not driven (manual lighting)"
             }
         }
     }

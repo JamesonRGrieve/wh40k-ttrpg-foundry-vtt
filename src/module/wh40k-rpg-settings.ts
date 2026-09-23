@@ -2,6 +2,7 @@ import { ALL_SYSTEM_IDS, type GameSystemId } from './config/game-systems/types.t
 import { SYSTEM_ID } from './constants.ts';
 import type { FatigueMode } from './rules/fatigue.ts';
 import { type ImperialDate, parseImperialDate } from './rules/imperial-date.ts';
+import { type CelestialBodies, parseCelestialBodies } from './rules/scene-lighting.ts';
 import { coerceTokenImageGenMode, type TokenImageGenConfig, type TokenImageGenMode } from './rules/token-image-gen.ts';
 
 export type DH2Ruleset = 'raw' | 'homebrew';
@@ -72,6 +73,7 @@ export class WH40KSettings {
         campaignInceptionDate: 'campaign-inception-date',
         npcAdvancement: 'npc-advancement',
         compendiumDropImportsActor: 'compendium-drop-imports-actor',
+        celestialBodies: 'celestial-bodies',
         allowManualRoll: 'allow-manual-roll',
         tokenImageGenMode: 'token-image-gen-mode',
         tokenImageGenEndpoint: 'token-image-gen-endpoint',
@@ -393,6 +395,31 @@ export class WH40KSettings {
         } catch {
             return false;
         }
+    }
+
+    /** The campaign's celestial bodies (#588) — name, rotation, orbit, tilt and
+     *  current weather per body — as the GM configured them. World data, stored as
+     *  JSON and validated on read; anything unparseable reads as no bodies, so
+     *  scene lighting simply stays manual. Safe before registration (returns {}). */
+    static getCelestialBodies(): CelestialBodies {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
+        let raw: unknown;
+        try {
+            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.celestialBodies);
+        } catch {
+            return {};
+        }
+        if (typeof raw !== 'string' || raw.trim() === '') return {};
+        try {
+            return parseCelestialBodies(JSON.parse(raw));
+        } catch {
+            return {};
+        }
+    }
+
+    /** Persist the celestial bodies (#588); world-scoped, so every client sees it. */
+    static async setCelestialBodies(bodies: CelestialBodies): Promise<void> {
+        await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.celestialBodies, JSON.stringify(bodies));
     }
 
     /** When true, the manual roll input (physical dice entry) is shown in the
@@ -839,6 +866,15 @@ export class WH40KSettings {
                 config: true,
                 default: false,
                 type: Boolean,
+            },
+            {
+                key: S.celestialBodies,
+                name: 'WH40K.SETTINGS.CelestialBodies.Name',
+                hint: 'WH40K.SETTINGS.CelestialBodies.Hint',
+                scope: 'world',
+                config: false,
+                default: '{}',
+                type: String,
             },
             {
                 key: S.allowManualRoll,

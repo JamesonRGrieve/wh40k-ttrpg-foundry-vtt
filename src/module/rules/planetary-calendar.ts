@@ -3,7 +3,9 @@
  *
  * Converts elapsed Terran-standard seconds into local time for a celestial
  * body with a known rotation period. `game.time.worldTime` stays in Terran
- * seconds — this is a pure display-layer conversion.
+ * seconds — this is a pure display-layer conversion. The bodies themselves are
+ * world data (the `celestial-bodies` setting, see `scene-lighting.ts`), never
+ * campaign constants in `src/`.
  */
 
 import { DAY_SECONDS, HOUR_SECONDS } from './world-time.ts';
@@ -11,25 +13,29 @@ import { DAY_SECONDS, HOUR_SECONDS } from './world-time.ts';
 export interface CelestialBody {
     name: string;
     rotationHours: number;
-    orbitalDays?: number;
-    axialTilt?: number;
+    orbitalDays?: number | undefined;
+    axialTilt?: number | undefined;
 }
 
 export interface SeasonInfo {
-    name: string;
+    /** Langpack key for the season's name. */
+    labelKey: string;
     icon: string;
 }
 
 const SEASONS: SeasonInfo[] = [
-    { name: 'Early Spring', icon: 'seedling' },
-    { name: 'Late Spring', icon: 'leaf' },
-    { name: 'Early Summer', icon: 'sun' },
-    { name: 'Late Summer', icon: 'sun' },
-    { name: 'Early Autumn', icon: 'wind' },
-    { name: 'Late Autumn', icon: 'wind' },
-    { name: 'Early Winter', icon: 'snowflake' },
-    { name: 'Deep Winter', icon: 'snowflake' },
+    { labelKey: 'WH40K.Season.EarlySpring', icon: 'seedling' },
+    { labelKey: 'WH40K.Season.LateSpring', icon: 'leaf' },
+    { labelKey: 'WH40K.Season.EarlySummer', icon: 'sun' },
+    { labelKey: 'WH40K.Season.LateSummer', icon: 'sun' },
+    { labelKey: 'WH40K.Season.EarlyAutumn', icon: 'wind' },
+    { labelKey: 'WH40K.Season.LateAutumn', icon: 'wind' },
+    { labelKey: 'WH40K.Season.EarlyWinter', icon: 'snowflake' },
+    { labelKey: 'WH40K.Season.DeepWinter', icon: 'snowflake' },
 ];
+
+/** Rotation period of the Terran-standard fallback day, in hours. */
+export const TERRAN_ROTATION_HOURS = 24;
 
 export function localDaySeconds(body: CelestialBody): number {
     return body.rotationHours * HOUR_SECONDS;
@@ -64,15 +70,8 @@ export function terranDayNumber(elapsedTerranSeconds: number): number {
     return Math.floor(elapsedTerranSeconds / (24 * HOUR_SECONDS));
 }
 
-export const SOLENNE_SYSTEM: Record<string, CelestialBody> = {
-    'solenne-majoris': { name: 'Solenne Majoris', rotationHours: 26, orbitalDays: 340, axialTilt: 18 },
-    'solenne-minoris': { name: 'Solenne Minoris', rotationHours: 19, orbitalDays: 340, axialTilt: 5 },
-    'terran-standard': { name: 'Terran Standard', rotationHours: 24 },
-};
-
-export const TERRAN_STANDARD: CelestialBody = { name: 'Terran Standard', rotationHours: 24 };
-
-export function resolveBody(locationKey: string | null): CelestialBody {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (ESLint's parser project) has the flag off, tsconfig.json has it on
-    return (locationKey !== null ? SOLENNE_SYSTEM[locationKey] : undefined) ?? TERRAN_STANDARD;
+/** The body's local hour of day as a fractional hour (`13:30` → 13.5). */
+export function localHourOfDay(elapsedTerranSeconds: number, body: CelestialBody): number {
+    const { hour, minute } = localTimeOfDay(elapsedTerranSeconds, body);
+    return hour + minute / 60;
 }
