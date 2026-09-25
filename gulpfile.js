@@ -368,10 +368,24 @@ const FATAL_TS_CODES = new Set([
   'TS2664', // invalid module name in augmentation
 ]);
 
+// The program outgrows node's default heap: tsc then aborts part-way through
+// emitting, leaving dist/module without files it never reached (the system's
+// entry script among them), so it runs with room to finish.
+const TSC_HEAP_MB = 12288;
+// Room for every diagnostic tsc prints; exec kills the process when its output outgrows this.
+const TSC_OUTPUT_LIMIT_BYTES = 64 * 1024 * 1024;
+
 function compileTypeScript(done) {
-  exec('pnpm exec tsc --pretty false', (err, stdout, stderr) => {
+  const env = { ...process.env, NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ''} --max-old-space-size=${TSC_HEAP_MB}`.trim() };
+  exec('pnpm exec tsc --pretty false', { env, maxBuffer: TSC_OUTPUT_LIMIT_BYTES }, (err, stdout, stderr) => {
     const out = (stdout || '') + (stderr || '');
     const diags = out.split('\n').filter((l) => /error TS\d+/.test(l));
+    // tsc exits non-zero on type errors, which are reported (and filtered below). A non-zero exit with none
+    // reported is a crash (out of memory, a signal): what it emitted is partial, and must never ship.
+    if (err && diags.length === 0) {
+      console.error(out.split('\n').slice(0, 20).join('\n'));
+      return done(new Error(`tsc stopped without finishing (${err.signal ?? `exit ${err.code}`}); dist/module is incomplete`));
+    }
     const fatal = diags.filter((l) => {
       const m = l.match(/error (TS\d+)/);
       if (!m) return false;
