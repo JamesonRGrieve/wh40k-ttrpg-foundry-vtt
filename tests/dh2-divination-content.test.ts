@@ -15,6 +15,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
+import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const PACK_DIR = resolve(__dirname, '../src/packs-private/dark-heresy-2/dh2-core-origins-divinations/_source');
 
@@ -40,7 +41,7 @@ function readDivinations(): DivinationDoc[] {
     );
 }
 
-describe('DH2 Divination origin pack content (#316)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('DH2 Divination origin pack content (#316)', () => {
     const docs = readDivinations();
     const byName = new Map(docs.map((d) => [d.name, d]));
 

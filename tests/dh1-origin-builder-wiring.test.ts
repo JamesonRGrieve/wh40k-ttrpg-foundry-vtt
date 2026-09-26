@@ -20,6 +20,7 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { SystemConfigRegistry } from '../src/module/config/game-systems/index.ts';
+import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 import { stepsInPack } from './helpers/origin-pack-content.ts';
 
 interface I18nStub {
@@ -42,7 +43,7 @@ afterAll(() => {
     G.game = ORIGINAL_GAME;
 });
 
-describe('DH1 origin-path builder wiring', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('DH1 origin-path builder wiring', () => {
     const config = SystemConfigRegistry.get('dh1').getOriginStepConfig();
 
     it('declares core steps and packs (not the empty placeholder)', () => {

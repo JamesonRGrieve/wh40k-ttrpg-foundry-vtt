@@ -16,6 +16,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const PACKS_ROOT = resolve(__dirname, '../src/packs-private');
 const SKIPS_FILE = resolve(__dirname, '../.vehicle-art-skips.json');
@@ -91,7 +92,7 @@ actors.push(
 
 const skipList: SkipList = existsSync(SKIPS_FILE) ? (JSON.parse(readFileSync(SKIPS_FILE, 'utf8')) as SkipList) : { description: '', skips: {} };
 
-describe('pack actor placeholder art (#500)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('pack actor placeholder art (#500)', () => {
     it('finds actor documents to check', () => {
         expect(actors.length).toBeGreaterThan(0);
     });

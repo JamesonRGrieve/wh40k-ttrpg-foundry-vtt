@@ -11,6 +11,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import type { WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
+import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
 import { weaponDestroysOnCriticalFail } from './weapon-destroy.ts';
 import {
     applyKeepHighestToDie,
@@ -62,7 +63,7 @@ beforeAll(() => {
     setWeaponQualityPayloadsForTesting(Object.fromEntries(mechanicsById));
 });
 
-describe('weaponQuality pack is populated with mechanics', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('weaponQuality pack is populated with mechanics', () => {
     it('finds the shipped weaponQuality pack', () => {
         // src/packs is a submodule; if unpopulated this guard is meaningless.
         expect(mechanicsById.size).toBeGreaterThan(0);
@@ -84,7 +85,7 @@ describe('weaponQuality pack is populated with mechanics', () => {
     });
 });
 
-describe('Scavenged — destroyOnCriticalFail', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Scavenged — destroyOnCriticalFail', () => {
     it('pins the RAW destroy-on-crit-fail mechanic on the canonical Scavenged doc', () => {
         // The RT-core Scavenged doc is the #303 canonical; the six line stubs mirror it by ref.
         expect(mech('scavenged').destroyOnCriticalFail).toBe(true);
@@ -101,7 +102,7 @@ describe('Scavenged — destroyOnCriticalFail', () => {
     });
 });
 
-describe('Blast (X) — template payload', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Blast (X) — template payload', () => {
     it('exposes a sphere template with variable radius', () => {
         const tpl = mech('blast').template;
         expect(tpl.shape).toBe('sphere');
@@ -115,7 +116,7 @@ describe('Blast (X) — template payload', () => {
     });
 });
 
-describe('Concussive (X) — Toughness test + DoF-scaled stun', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Concussive (X) — Toughness test + DoF-scaled stun', () => {
     it('requires a Toughness save with -10 per X', () => {
         const hit = mech('concussive').hitEffect;
         expect(hit.requiresSave).toBe('toughness');
@@ -138,7 +139,7 @@ describe('Concussive (X) — Toughness test + DoF-scaled stun', () => {
     });
 });
 
-describe('Corrosive — armour-melt save', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Corrosive — armour-melt save', () => {
     it('promotes to hit-effect type with an armour-melt fail effect', () => {
         const entry = mech('corrosive');
         expect(entry.type).toBe('hit-effect');
@@ -147,7 +148,7 @@ describe('Corrosive — armour-melt save', () => {
     });
 });
 
-describe('Crippling (X)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Crippling (X)', () => {
     it('emits X damage per round when the target acts beyond a Half Action', () => {
         expect(resolveCripplingTickDamage(2)).toBe(2);
         expect(resolveCripplingTickDamage(0)).toBe(0);
@@ -159,7 +160,7 @@ describe('Crippling (X)', () => {
     });
 });
 
-describe('Flame — Agility test or burning', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Flame — Agility test or burning', () => {
     it('promotes to a hit-effect that grants Burning on a failed Agility save', () => {
         const hit = mech('flame').hitEffect;
         expect(hit.requiresSave).toBe('agility');
@@ -167,7 +168,7 @@ describe('Flame — Agility test or burning', () => {
     });
 });
 
-describe('Flexible — already parry-typed (regression guard)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Flexible — already parry-typed (regression guard)', () => {
     it('keeps cannotBeParried: true', () => {
         const entry = mech('flexible');
         expect(entry.type).toBe('parry');
@@ -175,7 +176,7 @@ describe('Flexible — already parry-typed (regression guard)', () => {
     });
 });
 
-describe('Graviton — Strength test, bonus armour damage', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Graviton — Strength test, bonus armour damage', () => {
     it('exposes a Strength save with prone fail-effect', () => {
         const hit = mech('graviton').hitEffect;
         expect(hit.requiresSave).toBe('strength');
@@ -189,7 +190,7 @@ describe('Graviton — Strength test, bonus armour damage', () => {
     });
 });
 
-describe('Hallucinogenic (X) — Toughness penalty scales with X', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Hallucinogenic (X) — Toughness penalty scales with X', () => {
     it('penalises Toughness test by X×10', () => {
         expect(resolveHitEffectSaveTarget({ characteristicTotal: 40, key: 'hallucinogenic', level: 2 })).toBe(20);
         expect(resolveHitEffectSaveTarget({ characteristicTotal: 40, key: 'hallucinogenic', level: 0 })).toBe(40);
@@ -230,7 +231,7 @@ describe('Lance — Pen × DoS', () => {
     });
 });
 
-describe('Maximal — recharge / overheat package', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Maximal — recharge / overheat package', () => {
     it('emits +2 penetration, +1d10 damage, and the follow-up tags', () => {
         const result = resolveMaximalEffect();
         expect(result.bonusPenetration).toBe(2);
@@ -240,7 +241,7 @@ describe('Maximal — recharge / overheat package', () => {
     });
 });
 
-describe('Overheats — registry flag (no resolver needed)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Overheats — registry flag (no resolver needed)', () => {
     it('keeps the overheats:true flag for action-data.ts consumers', () => {
         expect(mech('overheats').overheats).toBe(true);
     });
@@ -324,19 +325,19 @@ describe('Proven (X) — damage die floor', () => {
     });
 });
 
-describe('Reliable — registry flag (jam logic lives in rules/weapon-jam.ts)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Reliable — registry flag (jam logic lives in rules/weapon-jam.ts)', () => {
     it('keeps the reliable:true flag', () => {
         expect(mech('reliable').reliable).toBe(true);
     });
 });
 
-describe('Sanctified — registry flag (Daemons cannot ignore damage)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Sanctified — registry flag (Daemons cannot ignore damage)', () => {
     it('keeps the ignoresDaemonResistance flag', () => {
         expect(mech('sanctified').ignoresDaemonResistance).toBe(true);
     });
 });
 
-describe('Scatter — range-banded damage', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Scatter — range-banded damage', () => {
     it('exposes the canonical RAW bands', () => {
         const bands = mech('scatter').rangeBands;
         expect(bands.pointBlank).toBe(3);
@@ -360,7 +361,7 @@ describe('Scatter — range-banded damage', () => {
     });
 });
 
-describe('Shocking — Toughness or 1 round stun, half DoF rule', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Shocking — Toughness or 1 round stun, half DoF rule', () => {
     it('exposes the 1-round Stun and Fatigue rider', () => {
         const entry = mech('shocking');
         expect(entry.hitEffect.requiresSave).toBe('toughness');
@@ -377,7 +378,7 @@ describe('Shocking — Toughness or 1 round stun, half DoF rule', () => {
     });
 });
 
-describe('Smoke (X) — concealment cloud', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Smoke (X) — concealment cloud', () => {
     it('exposes a concealment-cloud template with variable radius', () => {
         const tpl = mech('smoke').template;
         expect(tpl.shape).toBe('concealment-cloud');
@@ -385,7 +386,7 @@ describe('Smoke (X) — concealment cloud', () => {
     });
 });
 
-describe('Snare (X) — Agility penalty', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Snare (X) — Agility penalty', () => {
     it('penalises Agility by X×10', () => {
         const hit = mech('snare').hitEffect;
         expect(hit.requiresSave).toBe('agility');
@@ -394,7 +395,7 @@ describe('Snare (X) — Agility penalty', () => {
     });
 });
 
-describe('Spray — cone template, Agility avoidance', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Spray — cone template, Agility avoidance', () => {
     it('exposes a cone template with non-variable shape', () => {
         const entry = mech('spray');
         expect(entry.template.shape).toBe('cone');
@@ -403,7 +404,7 @@ describe('Spray — cone template, Agility avoidance', () => {
     });
 });
 
-describe('Toxic (X) — Toughness penalty, 1d10 additional damage', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Toxic (X) — Toughness penalty, 1d10 additional damage', () => {
     it('Toughness test is penalised by X×10', () => {
         expect(resolveHitEffectSaveTarget({ characteristicTotal: 40, key: 'toxic', level: 4 })).toBe(0);
         expect(resolveHitEffectSaveTarget({ characteristicTotal: 40, key: 'toxic', level: 1 })).toBe(30);
@@ -431,7 +432,7 @@ describe('weaponQualityIdentifierFromName', () => {
     });
 });
 
-describe('dieOps content is authored on the canonical RT docs (#303)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('dieOps content is authored on the canonical RT docs (#303)', () => {
     it('Tearing declares a pre-evaluation keep-highest with one extra die', () => {
         expect(mech('tearing').dieOps).toEqual([
             { op: 'keepHighest', phase: 'preEvaluate', extraDice: 1, threshold: null, usesLevel: false, modifierKey: 'tearing' },
@@ -466,7 +467,7 @@ describe('dieOps content is authored on the canonical RT docs (#303)', () => {
     });
 });
 
-describe('collectWeaponQualityDieOps', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('collectWeaponQualityDieOps', () => {
     it('resolves Tearing to a pre-evaluation keep-highest op', () => {
         expect(collectWeaponQualityDieOps([{ name: 'Tearing' }])).toEqual([
             { quality: 'Tearing', op: 'keepHighest', phase: 'preEvaluate', extraDice: 1, threshold: 0, modifierKey: 'tearing' },
@@ -562,7 +563,7 @@ describe('applyKeepHighestToDie — Tearing term surgery', () => {
     });
 });
 
-describe('resolveDieOpDamageAdjust — per-die accumulation across a multi-die weapon', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('resolveDieOpDamageAdjust — per-die accumulation across a multi-die weapon', () => {
     /** Sum the adjustments every op resolved for `special` contributes over `rolls` — what the engine's per-die loop does. */
     function totalAdjust(special: { name: string; level?: number }, rolls: number[]): number {
         const ops = collectWeaponQualityDieOps([special]);

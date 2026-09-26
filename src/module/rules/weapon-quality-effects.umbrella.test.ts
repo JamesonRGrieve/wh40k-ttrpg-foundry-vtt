@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
+import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
 import { attackerWeaponPreventsParry, calculateQualityPenetrationModifiers } from './weapon-quality-effects';
 import { weaponQualityMechanicsFromRaw } from './weapon-quality-payloads.ts';
 
@@ -28,7 +29,7 @@ function mech(identifier: string): WeaponQualityMechanics {
     return m;
 }
 
-describe('Weapon-quality registry coverage', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Weapon-quality registry coverage', () => {
     it('carries mechanics for every audit-listed quality', () => {
         for (const key of [
             // mechanical
@@ -144,7 +145,7 @@ describe('Lance — penetration multiplied by DoS', () => {
     });
 });
 
-describe('Phase 5 registry promotions (#57 partial)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Phase 5 registry promotions (#57 partial)', () => {
     const expectedTypes: Record<string, string> = {
         flexible: 'parry',
         lance: 'penetration',

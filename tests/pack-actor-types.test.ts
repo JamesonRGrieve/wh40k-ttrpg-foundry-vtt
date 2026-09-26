@@ -12,11 +12,12 @@
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
+import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 // Public src/system.json packs + the private content's fragment (scripts/lib/pack-manifest.mjs).
 const system = readDeclaredPacks(resolve(__dirname, '..'));
 
-describe('system.json actor-pack types (#296)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('system.json actor-pack types (#296)', () => {
     const actorPacks = system.packs.filter((p) => p.name.includes('-actors-'));
 
     it('declares actor packs (the taxonomy exists)', () => {

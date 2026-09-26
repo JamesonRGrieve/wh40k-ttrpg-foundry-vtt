@@ -24,6 +24,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
 import { SystemConfigRegistry } from '../src/module/config/game-systems/index.ts';
 import { ALL_SYSTEM_IDS, type GameSystemId } from '../src/module/config/game-systems/types.ts';
+import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 import { stepsInPack } from './helpers/origin-pack-content.ts';
 
 interface I18nStub {
@@ -65,7 +66,7 @@ function registeredPackNames(): Set<string> {
 const PACK_NAMES = registeredPackNames();
 const SYSTEM_IDS: readonly GameSystemId[] = ALL_SYSTEM_IDS;
 
-describe('origin-path builder pack references resolve to registered compendiums', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('origin-path builder pack references resolve to registered compendiums', () => {
     it('system.json registers packs (guards against an empty/garbled manifest read)', () => {
         expect(PACK_NAMES.size).toBeGreaterThan(0);
     });
@@ -81,7 +82,7 @@ describe('origin-path builder pack references resolve to registered compendiums'
     }
 });
 
-describe('every registered home-step origin pack is offered by the builder (#222)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('every registered home-step origin pack is offered by the builder (#222)', () => {
     // Reverse of the check above: a supplement's home-step pack (DH2 home worlds,
     // DW chapters) silently missing from the config leaves those origins
     // unselectable — "no selections available". These groups are unambiguous: the
@@ -102,7 +103,7 @@ describe('every registered home-step origin pack is offered by the builder (#222
     }
 });
 
-describe('origin-path builder steps resolve to compendium content', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('origin-path builder steps resolve to compendium content', () => {
     // A configured step renders empty unless some item in the step's packs carries
     // a matching `system.step`. This is the failure mode that hid the DH2 pack-name
     // drift, the DH1 careerPath/career mismatch, and the IM missing-step-metadata —

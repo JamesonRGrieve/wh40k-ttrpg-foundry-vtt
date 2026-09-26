@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
 import { buildWeaponQualityPayloadIndex, getWeaponQualityHasLevel, getWeaponQualityMechanics } from './weapon-quality-payloads.ts';
 
 /**
@@ -62,7 +63,7 @@ afterAll(() => {
     vi.unstubAllGlobals();
 });
 
-describe('per-system weaponQuality index resolution (#303)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('per-system weaponQuality index resolution (#303)', () => {
     for (const { systemId } of PACKS) {
         it(`${systemId}: resolves Accurate aimBonus + Scatter bands through the ref to the RT payload`, () => {
             expect(getWeaponQualityMechanics('accurate', systemId)?.aimBonus).toBe(10);
