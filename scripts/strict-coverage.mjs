@@ -20,7 +20,10 @@
  */
 import { execSync } from 'node:child_process';
 import { existsSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
+
+const { tscEnv } = createRequire(import.meta.url)('./lib/tsc-heap.cjs');
 
 const argv = process.argv.slice(2);
 function arg(name, fallback) {
@@ -45,14 +48,19 @@ if (!existsSync(CONFIG_PATH)) {
 // tsc exits non-zero whenever there are errors. We want the error list, so
 // catch and read stdout.
 let tscOutput = '';
+let tscFailed = false;
+let tscStderr = '';
 try {
     tscOutput = execSync(`./node_modules/.bin/tsc --noEmit -p ${config}`, {
         encoding: 'utf8',
         stdio: ['ignore', 'pipe', 'pipe'],
         maxBuffer: 128 * 1024 * 1024,
+        env: tscEnv(),
     });
 } catch (err) {
     tscOutput = err.stdout?.toString() ?? '';
+    tscStderr = err.stderr?.toString() ?? '';
+    tscFailed = true;
 }
 
 // tsc lines look like: `path/to/file.ts(123,45): error TS4114: <message>`
@@ -71,6 +79,16 @@ for (const line of tscOutput.split('\n')) {
     byFile[file] ??= {};
     byFile[file][code] = (byFile[file][code] ?? 0) + 1;
     totalErrors++;
+}
+
+// tsc fails with diagnostics when there are type errors — that is the normal
+// case here. A failure with NO parseable diagnostic is a crash (out of heap, a
+// signal, a bad config): reading it as "0 errors" would pass the ratchet on a
+// typecheck that never ran, so refuse instead.
+if (tscFailed && totalErrors === 0) {
+    console.error(`[strict-coverage] tsc -p ${config} failed without reporting any diagnostics (a crash, not a type error):`);
+    console.error((tscStderr || tscOutput).split('\n').slice(0, 20).join('\n'));
+    process.exit(2);
 }
 
 const payload = {
