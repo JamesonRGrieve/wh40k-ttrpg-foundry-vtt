@@ -16,8 +16,16 @@ copyrighted content in `src/packs`.
 **Six game lines.** The schema keys off six system ids — `dh1`, `dh2`, `rt`,
 `dw`, `bc`, `ow`. Dark Heresy 2e (`dh2`) is the canonical default line.
 
-**Frontmatter templates** for each item type live in `src/packs/_templates/*.yml`
-— copy the matching template when authoring a new document.
+**Frontmatter templates** for each item type live in the private content repo
+(`src/packs-private/_templates/*.yml`) — copy the matching template when
+authoring a new document. They are worked examples built on real book items, so
+they stay with the copyrighted content rather than in this public repo.
+
+**Pack declarations.** The public `src/system.json` declares only packs built
+from `src/packs`. The copyrighted content's `packs[]` and `packFolders` live in
+`src/packs-private/system.packs.json`; the campaign deploy merges them into the
+built `dist/system.json` (`scripts/merge-private-manifest.mjs`), and
+`pnpm packs:folders` regenerates that fragment's folder tree.
 
 ---
 

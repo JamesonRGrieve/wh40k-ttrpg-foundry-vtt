@@ -85,10 +85,10 @@ build_archive() {
 
 filter_release_manifest() {
     # Declare only the packs actually compiled into dist/packs. src/system.json
-    # hand-declares every CAMPAIGN pack (the src/packs-private content); a public
-    # release compiles only src/packs, so narrow packs[] to what shipped — else
-    # Foundry errors on a declared pack whose dir is absent. Only the manual
-    # `release` mode runs this; the campaign deploy keeps the full packs[].
+    # declares only public packs (the campaign's private declarations are merged
+    # by the deploy, never here), so this is a safety net: a declared public pack
+    # that failed to build is dropped rather than making Foundry error on a
+    # missing pack dir. Only the manual `release` mode runs this.
     echo "=== Declaring only the packs built into dist/packs (public generics) ==="
     node scripts/filter-manifest-packs.mjs dist/system.json
 }
