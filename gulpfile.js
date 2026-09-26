@@ -370,13 +370,13 @@ const FATAL_TS_CODES = new Set([
 
 // The program outgrows node's default heap: tsc then aborts part-way through
 // emitting, leaving dist/module without files it never reached (the system's
-// entry script among them), so it runs with room to finish.
-const TSC_HEAP_MB = 12288;
+// entry script among them), so it runs with the shared heap (scripts/lib/tsc-heap.cjs).
+const { tscEnv } = require('./scripts/lib/tsc-heap.cjs');
 // Room for every diagnostic tsc prints; exec kills the process when its output outgrows this.
 const TSC_OUTPUT_LIMIT_BYTES = 64 * 1024 * 1024;
 
 function compileTypeScript(done) {
-  const env = { ...process.env, NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ''} --max-old-space-size=${TSC_HEAP_MB}`.trim() };
+  const env = tscEnv();
   exec('pnpm exec tsc --pretty false', { env, maxBuffer: TSC_OUTPUT_LIMIT_BYTES }, (err, stdout, stderr) => {
     const out = (stdout || '') + (stderr || '');
     const diags = out.split('\n').filter((l) => /error TS\d+/.test(l));
