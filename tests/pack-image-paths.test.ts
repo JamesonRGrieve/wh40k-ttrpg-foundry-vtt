@@ -12,6 +12,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const PACKS_ROOT = resolve(__dirname, '../src/packs-private');
 
@@ -37,7 +38,7 @@ const documents: Array<{ file: string; text: string }> = (existsSync(PACKS_ROOT)
     text: readFileSync(file, 'utf8'),
 }));
 
-describe('compendium image paths (#239)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('compendium image paths (#239)', () => {
     const files = documents.map((doc) => doc.file);
 
     it('finds the packs submodule (else the guard is vacuous)', () => {

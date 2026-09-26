@@ -14,6 +14,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const SKILLS_DIR = resolve(__dirname, '../src/packs-private/dark-heresy-2/dh2-core-items-skills/_source');
 
@@ -36,7 +37,7 @@ function skillDocs(): Map<string, SkillDoc> {
 /** The DH2 specialist skills, per Chapter III. */
 const SPECIALIST_SKILLS = ['Common Lore', 'Forbidden Lore', 'Linguistics', 'Operate', 'Scholastic Lore', 'Trade'];
 
-describe('DH2 specialist skills carry their canonical specialisations (#498)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('DH2 specialist skills carry their canonical specialisations (#498)', () => {
     const docs = skillDocs();
 
     it.each(SPECIALIST_SKILLS)('%s is marked specialist and lists its specialisations', (name) => {

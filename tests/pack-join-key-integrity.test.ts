@@ -20,6 +20,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const PACKS_ROOT = resolve(__dirname, '../src/packs-private');
 /** `Compendium.<system>.<pack>.<DocType>.<id>` */
@@ -116,7 +117,7 @@ function joinKeys(): Array<{ file: string; actor: string; item: string; uuid: st
     return out;
 }
 
-describe('pack embedded-item join keys resolve (#499)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('pack embedded-item join keys resolve (#499)', () => {
     it('finds pack source documents to check', () => {
         expect(files.length).toBeGreaterThan(0);
         expect(actors.length).toBeGreaterThan(0);

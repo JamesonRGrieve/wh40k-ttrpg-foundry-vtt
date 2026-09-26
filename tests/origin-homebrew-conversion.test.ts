@@ -15,6 +15,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 import { materializeItemVariants } from '../src/module/utils/item-variant-utils.ts';
 
 const CANON = resolve(__dirname, '../src/packs-private/only-war/ow-core-origins-homeworlds/_source/fortress-world_a51ce4de508a699d.json');
@@ -44,7 +45,7 @@ function resolveFor(line: Parameters<typeof materializeItemVariants>[1]): Resolv
     return materializeItemVariants(freshSystem(), line) as unknown as ResolvedFortress;
 }
 
-describe('Fortress World — DH2 homebrew conversion', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Fortress World — DH2 homebrew conversion', () => {
     it('resolves the DH2 homebrew stats for a DH2 actor', () => {
         const sys = resolveFor('dh2');
         expect(sys.grants.aptitudes).toEqual(['Defence']);

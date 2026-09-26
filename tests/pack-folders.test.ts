@@ -11,6 +11,7 @@
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { type PackFolder, readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
+import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const system = readDeclaredPacks(resolve(__dirname, '..'));
 
@@ -22,7 +23,7 @@ function collectFolderedPacks(folders: PackFolder[] | undefined, out: string[] =
     return out;
 }
 
-describe('system.json packFolders ↔ packs sync (#297)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('system.json packFolders ↔ packs sync (#297)', () => {
     const declared = system.packs.map((p) => p.name);
     const declaredSet = new Set(declared);
     const folderedList = collectFolderedPacks(system.packFolders);

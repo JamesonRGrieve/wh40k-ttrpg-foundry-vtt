@@ -12,6 +12,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { HAS_PRIVATE_CONTENT } from '../../testing/private-content.ts';
 import {
     isJsonArray,
     isJsonObject,
@@ -318,7 +319,7 @@ describe('migrateSkills (#256)', () => {
     });
 });
 
-describe('real bestiary pack data migrates to a usable shape', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('real bestiary pack data migrates to a usable shape', () => {
     const PACK_DIR = resolve(__dirname, '../../../packs-private/dark-heresy-2/dh2-core-actors-bestiary/_source');
     const files = existsSync(PACK_DIR) ? readdirSync(PACK_DIR).filter((f) => f.endsWith('.json')) : [];
     // Whole-file reference stubs carry no system; relinked actors are canonically
