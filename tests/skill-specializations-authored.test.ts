@@ -13,7 +13,7 @@
 
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const SKILLS_DIR = resolve(__dirname, '../src/packs-private/dark-heresy-2/dh2-core-items-skills/_source');
@@ -38,7 +38,12 @@ function skillDocs(): Map<string, SkillDoc> {
 const SPECIALIST_SKILLS = ['Common Lore', 'Forbidden Lore', 'Linguistics', 'Operate', 'Scholastic Lore', 'Trade'];
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('DH2 specialist skills carry their canonical specialisations (#498)', () => {
-    const docs = skillDocs();
+    // Read in beforeAll, not the describe body: vitest runs describe bodies while
+    // collecting even a skipped suite, and the pack is absent where it is skipped.
+    let docs = new Map<string, SkillDoc>();
+    beforeAll(() => {
+        docs = skillDocs();
+    });
 
     it.each(SPECIALIST_SKILLS)('%s is marked specialist and lists its specialisations', (name) => {
         const doc = docs.get(name);

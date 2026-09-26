@@ -13,7 +13,7 @@
 
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
@@ -42,8 +42,14 @@ function readDivinations(): DivinationDoc[] {
 }
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('DH2 Divination origin pack content (#316)', () => {
-    const docs = readDivinations();
-    const byName = new Map(docs.map((d) => [d.name, d]));
+    // Read in beforeAll, not the describe body: vitest runs describe bodies while
+    // collecting even a skipped suite, and the pack is absent where it is skipped.
+    let docs: DivinationDoc[] = [];
+    let byName = new Map<string, DivinationDoc>();
+    beforeAll(() => {
+        docs = readDivinations();
+        byName = new Map(docs.map((d) => [d.name, d]));
+    });
 
     it('ships all 25 Table-2-9 divinations as dh2 origin-path docs', () => {
         expect(docs).toHaveLength(25);
