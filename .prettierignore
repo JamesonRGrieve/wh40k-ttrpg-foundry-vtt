@@ -3,3 +3,8 @@ dist
 package-lock.json
 # Handlebars templates use {{#if}} in HTML attributes (valid HBS, unsupported by prettier)
 src/templates/**/*.hbs
+# The private content submodule is its own repo with its own conventions; CI never
+# checks it out, so the public format gate must not scan it locally either.
+src/packs-private
+# Gitignored local artifact of `pnpm packs:audit` (Prettier 2 does not read .gitignore).
+.compendium-uuid-index.json

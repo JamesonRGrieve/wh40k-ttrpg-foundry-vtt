@@ -227,7 +227,18 @@ function ensureDir(filePath) {
     if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
 }
 
-const { registryOut, typesOut } = generate();
+// Emit Prettier-formatted output under the repo's own config. The raw generator
+// strings failed `prettier --check` in `pnpm check`, so CI went red on every push
+// while the pre-commit hook (which regenerates these files) kept writing them back
+// unformatted. Formatting here makes regeneration and the format gate agree.
+const prettier = require('prettier');
+function formatted(source, filepath) {
+    return prettier.format(source, { ...(prettier.resolveConfig.sync(filepath) ?? {}), filepath });
+}
+
+const generated = generate();
+const registryOut = formatted(generated.registryOut, REGISTRY_OUT);
+const typesOut = formatted(generated.typesOut, TYPES_OUT);
 
 if (checkMode) {
     const oldRegistry = existsSync(REGISTRY_OUT) ? readFileSync(REGISTRY_OUT, 'utf8') : '';
