@@ -1,26 +1,18 @@
 /**
- * Regression guard (#297): every compendium pack declared in `system.json` `packs[]`
- * must be foldered exactly once in `packFolders`, and `packFolders` must not
- * reference a pack that no longer exists. `packFolders` is Foundry's declarative
- * compendium-directory folder tree; when it drifts, packs fall to the root
- * unfoldered (the "heap of misorganised packs" symptom). `pnpm packs:folders`
- * regenerates it; this test fails the build if it is ever out of sync.
+ * Regression guard (#297): every declared compendium pack must be foldered exactly
+ * once in `packFolders`, and `packFolders` must not reference a pack that no longer
+ * exists. `packFolders` is Foundry's declarative compendium-directory folder tree;
+ * when it drifts, packs fall to the root unfoldered (the "heap of misorganised
+ * packs" symptom). `pnpm packs:folders` regenerates it; this test fails the build if
+ * it is ever out of sync. The declarations are the public `src/system.json`'s plus
+ * the private content's fragment (scripts/lib/pack-manifest.mjs).
  */
 
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { readRepoFile } from './lib/repo-file.ts';
+import { type PackFolder, readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
 
-interface PackFolder {
-    name: string;
-    packs?: string[];
-    folders?: PackFolder[];
-}
-interface SystemJson {
-    packs: { name: string }[];
-    packFolders?: PackFolder[];
-}
-
-const system = JSON.parse(readRepoFile('src/system.json')) as SystemJson;
+const system = readDeclaredPacks(resolve(__dirname, '..'));
 
 function collectFolderedPacks(folders: PackFolder[] | undefined, out: string[] = []): string[] {
     for (const f of folders ?? []) {
@@ -52,7 +44,7 @@ describe('system.json packFolders ↔ packs sync (#297)', () => {
     });
 
     it('gives every supported game line a top-level folder (incl. IM)', () => {
-        const tops = (system.packFolders ?? []).map((f) => f.name);
+        const tops = system.packFolders.map((f) => f.name);
         expect(tops).toContain('Imperium Maledictum');
         expect(tops).toContain('Dark Heresy 2e');
     });

@@ -14,7 +14,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { readRepoFile } from './lib/repo-file.ts';
+import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
 
 const PACK_DIR = resolve(__dirname, '../src/packs-private/dark-heresy-2/dh2-core-origins-divinations/_source');
 
@@ -69,8 +69,8 @@ describe('DH2 Divination origin pack content (#316)', () => {
         expect(byName.get('Do not ask why you serve. Only ask how.')?.system.grants?.fateThreshold).toBe(1);
     });
 
-    it('is registered in system.json (pack entry + folder grouping)', () => {
-        const manifest = readRepoFile('src/system.json');
+    it('is registered as a pack (pack entry + folder grouping)', () => {
+        const manifest = JSON.stringify(readDeclaredPacks(resolve(__dirname, '..')));
         expect((manifest.match(/dh2-core-origins-divinations/g) ?? []).length).toBeGreaterThanOrEqual(2);
     });
 });

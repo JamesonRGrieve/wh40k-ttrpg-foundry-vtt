@@ -17,9 +17,12 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { PRIVATE_PACK_MANIFEST } from './lib/pack-manifest.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const SYS_PATH = resolve(ROOT, 'src/system.json');
+// The foldered packs are the private content's, declared in its own fragment
+// (scripts/lib/pack-manifest.mjs) — the public src/system.json declares none.
+const SYS_PATH = resolve(ROOT, PRIVATE_PACK_MANIFEST);
 
 const LINE_LABELS = {
     bc: 'Black Crusade',
@@ -216,7 +219,7 @@ function main() {
 
     if (changed) {
         writeFileSync(SYS_PATH, serialized);
-        console.log('[pack-folders] rewrote src/system.json packFolders.');
+        console.log(`[pack-folders] rewrote ${PRIVATE_PACK_MANIFEST} packFolders.`);
     } else {
         console.log('[pack-folders] already in sync; no change.');
     }

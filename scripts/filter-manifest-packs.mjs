@@ -3,18 +3,15 @@
  * Filter a built manifest's `packs[]` down to the packs that actually shipped in
  * this build's `dist/packs`.
  *
- * `src/system.json` hand-declares every pack the CAMPAIGN ships (the copyrighted
- * content in the src/packs-private submodule). A PUBLIC build only compiles the
- * generic packs in src/packs (empty until authored), so those private packs are
- * declared but absent from dist/packs — and Foundry errors on a declared pack
- * whose directory is missing. So the public vectors (the nightly manifest and the
- * manual `build-system.sh release`) rewrite `packs[]` to exactly the pack dirs
- * present on disk: [] while src/packs is empty, and the generic packs once
- * authored. This replaces the old blanket "strip all packs" (which would also
- * drop legitimately-shipped public generics — the footgun this fixes).
+ * `src/system.json` declares only the public generic packs in src/packs; the
+ * copyrighted content's declarations live in the private repo and are merged only
+ * by the campaign deploy (scripts/merge-private-manifest.mjs). The public vectors
+ * (the nightly manifest and the manual `build-system.sh release`) still rewrite
+ * `packs[]` to exactly the pack dirs present on disk, as a safety net: a declared
+ * public pack that failed to build is dropped instead of making Foundry error on
+ * a missing pack directory.
  *
- * The campaign deploy does NOT use this — it ships every declared pack from
- * src/packs-private and keeps the full `packs[]`.
+ * The campaign deploy does NOT use this — it ships every declared pack.
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
