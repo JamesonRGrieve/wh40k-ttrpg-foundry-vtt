@@ -375,6 +375,17 @@ const { tscEnv } = require('./scripts/lib/tsc-heap.cjs');
 // Room for every diagnostic tsc prints; exec kills the process when its output outgrows this.
 const TSC_OUTPUT_LIMIT_BYTES = 64 * 1024 * 1024;
 
+// The browser loads dist/module as unbundled ES modules, so a runtime import of an
+// npm package fails the whole module graph (the system silently never loads).
+// Checked on the compiled output, after tsc has erased type-only imports.
+const { findBareRuntimeImports } = require('./scripts/check-runtime-imports.cjs');
+function checkRuntimeImports(done) {
+  const problems = findBareRuntimeImports(path.join(BUILD_DIR, 'module'));
+  if (problems.length === 0) return done();
+  const list = problems.map(({ file, specifier }) => `  ${file}: '${specifier}'`).join('\n');
+  return done(new Error(`unloadable import(s) in shipped runtime modules — the browser cannot resolve these, so the system would not load:\n${list}`));
+}
+
 function compileTypeScript(done) {
   const env = tscEnv();
   exec('pnpm exec tsc --pretty false', { env, maxBuffer: TSC_OUTPUT_LIMIT_BYTES }, (err, stdout, stderr) => {
@@ -475,7 +486,7 @@ function createArchive() {
 /*  Export Tasks
 /* ----------------------------------------- */
 
-const buildSystem = gulp.series(cleanBuild, generateIcons, compileCss, compileTypeScript, copyFiles);
+const buildSystem = gulp.series(cleanBuild, generateIcons, compileCss, compileTypeScript, checkRuntimeImports, copyFiles);
 const build = gulp.series(buildSystem, compilePacks, createArchive);
 const archive = gulp.series(createArchive);
 const defaultTask = gulp.series(buildSystem, compilePacks, watchUpdates);

@@ -14,7 +14,6 @@
  * flag plumbing.
  */
 
-import { z } from 'zod';
 import { SYSTEM_ID } from '../constants.ts';
 
 /* -------------------------------------------- */
@@ -47,32 +46,106 @@ export function weatherLabelKey(weather: WeatherKind): string {
 /*  Celestial bodies (world data)               */
 /* -------------------------------------------- */
 
-const celestialBodySchema = z.object({
-    name: z.string().trim().min(1),
-    rotationHours: z.number().positive(),
-    orbitalDays: z.number().positive().optional(),
-    axialTilt: z.number().min(0).max(90).optional(),
-    weather: z.enum(WEATHER_KINDS).default('clear'),
-});
-
-/** Body keys are slugs, so they are stable scene-flag values. */
-const celestialBodiesSchema = z.record(z.string().regex(/^[a-z0-9][a-z0-9-]*$/), celestialBodySchema);
-
 /** One celestial body as the GM configured it. */
-export type CelestialBodyRecord = z.infer<typeof celestialBodySchema>;
+export interface CelestialBodyRecord {
+    name: string;
+    /** Local day length in Terran hours (> 0). */
+    rotationHours: number;
+    /** Local year in Terran days (> 0), when known. */
+    orbitalDays?: number | undefined;
+    /** Axial tilt in degrees (0–90), when known. */
+    axialTilt?: number | undefined;
+    weather: WeatherKind;
+}
 
 /** Every configured body, keyed by slug. */
 export type CelestialBodies = Record<string, CelestialBodyRecord>;
+
+/** Body keys are slugs, so they are stable scene-flag values. */
+const BODY_KEY = /^[a-z0-9][a-z0-9-]*$/;
+
+/*
+ * Validation is hand-written, not Zod: this module is runtime code, and the system
+ * ships unbundled tsc output, so a bare `import … from 'zod'` fails to resolve in
+ * the browser and takes the whole system's module graph down with it.
+ */
+
+function isWeatherKind(value: string): value is WeatherKind {
+    return (WEATHER_KINDS as readonly string[]).includes(value);
+}
+
+/** A body entry with its fields' types checked (ranges are checked by {@link toBody}). */
+interface StoredBody {
+    name?: string;
+    rotationHours?: number;
+    orbitalDays?: number;
+    axialTilt?: number;
+    weather?: string;
+}
+
+/** Does this object carry only correctly-typed body fields (each optional)? */
+function isStoredBody(value: object): value is StoredBody {
+    if ('name' in value && typeof value.name !== 'string') return false;
+    if ('rotationHours' in value && typeof value.rotationHours !== 'number') return false;
+    if ('orbitalDays' in value && value.orbitalDays !== undefined && typeof value.orbitalDays !== 'number') return false;
+    if ('axialTilt' in value && value.axialTilt !== undefined && typeof value.axialTilt !== 'number') return false;
+    return !('weather' in value) || typeof value.weather === 'string';
+}
+
+/** A finite number above `min` (or at it, when `inclusiveMin`) and at most `max`, else null. */
+function boundedNumber(
+    value: number | undefined,
+    { min, max = Infinity, inclusiveMin = false }: { min: number; max?: number; inclusiveMin?: boolean },
+): number | null {
+    if (value === undefined || !Number.isFinite(value)) return null;
+    if (inclusiveMin ? value < min : value <= min) return null;
+    return value > max ? null : value;
+}
+
+/**
+ * Validate one body. A missing weather defaults to `clear`; any present but
+ * invalid field rejects the body.
+ */
+function toBody(value: object): CelestialBodyRecord | null {
+    if (!isStoredBody(value)) return null;
+    const name = (value.name ?? '').trim();
+    const rotationHours = boundedNumber(value.rotationHours, { min: 0 });
+    if (name === '' || rotationHours === null) return null;
+    const body: CelestialBodyRecord = { name, rotationHours, weather: 'clear' };
+    if (value.orbitalDays !== undefined) {
+        const orbitalDays = boundedNumber(value.orbitalDays, { min: 0 });
+        if (orbitalDays === null) return null;
+        body.orbitalDays = orbitalDays;
+    }
+    if (value.axialTilt !== undefined) {
+        const axialTilt = boundedNumber(value.axialTilt, { min: 0, max: 90, inclusiveMin: true });
+        if (axialTilt === null) return null;
+        body.axialTilt = axialTilt;
+    }
+    if (value.weather !== undefined) {
+        if (!isWeatherKind(value.weather)) return null;
+        body.weather = value.weather;
+    }
+    return body;
+}
 
 /**
  * Validate the raw `celestial-bodies` world setting. Anything that does not
  * parse reads as no bodies (lighting stays manual) rather than throwing.
  * @param raw  The stored setting value.
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: a world setting value is untyped until the Zod parse on the next line
+// eslint-disable-next-line no-restricted-syntax -- boundary: a world setting value is untyped until the per-entry validation below
 export function parseCelestialBodies(raw: unknown): CelestialBodies {
-    const result = celestialBodiesSchema.safeParse(raw);
-    return result.success ? result.data : {};
+    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return {};
+    const bodies: CelestialBodies = {};
+    // The setting is parsed JSON, so each entry is a JSON value (Object.entries types it `any`).
+    const entries = Object.entries(raw) as Array<[string, string | number | boolean | object | null]>;
+    for (const [key, value] of entries) {
+        const body = BODY_KEY.test(key) && typeof value === 'object' && value !== null ? toBody(value) : null;
+        if (body === null) return {};
+        bodies[key] = body;
+    }
+    return bodies;
 }
 
 /** A stable slug for a body name (`"Solenne Minoris"` → `solenne-minoris`). */
@@ -112,18 +185,18 @@ function optionalNumber(value: string): number | undefined {
 export function bodiesFromRows(rows: readonly CelestialBodyRow[]): CelestialBodies {
     const bodies: CelestialBodies = {};
     for (const row of rows) {
-        const parsed = celestialBodySchema.safeParse({
+        const parsed = toBody({
             name: row.name,
             rotationHours: optionalNumber(row.rotationHours),
             orbitalDays: optionalNumber(row.orbitalDays),
             axialTilt: optionalNumber(row.axialTilt),
-            weather: (WEATHER_KINDS as readonly string[]).includes(row.weather) ? row.weather : 'clear',
+            weather: isWeatherKind(row.weather) ? row.weather : 'clear',
         });
-        if (!parsed.success) continue;
-        const base = row.key !== '' ? row.key : bodyKeyFor(parsed.data.name);
+        if (parsed === null) continue;
+        const base = row.key !== '' ? row.key : bodyKeyFor(parsed.name);
         let key = base;
         for (let n = 2; key in bodies; n++) key = `${base}-${n}`;
-        bodies[key] = parsed.data;
+        bodies[key] = parsed;
     }
     return bodies;
 }
