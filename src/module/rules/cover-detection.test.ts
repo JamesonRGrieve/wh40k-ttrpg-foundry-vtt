@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { coverLevelFromBlockedFraction, coverSituationalKey, hasLineOfSight, resolveTargetVisibility } from './cover-detection.ts';
+import {
+    type CoverEdge,
+    coverLevelFromBlockedFraction,
+    coverSituationalKey,
+    hasLineOfSight,
+    rayPassesCover,
+    resolveTargetVisibility,
+    segmentCrossing,
+} from './cover-detection.ts';
 
 /**
  * Pure LoS + full/half cover detection (#406). The blocked/total ray counts come
@@ -53,5 +61,38 @@ describe('resolveTargetVisibility (#406)', () => {
 
     it('no line of sight (and full cover) when every ray is blocked', () => {
         expect(resolveTargetVisibility(8, 8)).toEqual({ hasLineOfSight: false, cover: 'full', coverKey: 'coverHeavy' });
+    });
+
+    it('counts rays passing low cover toward cover but never against line of sight', () => {
+        // Nothing blocked, but half the rays pass a table before the target: half cover, still in sight.
+        expect(resolveTargetVisibility(0, 8, 4)).toEqual({ hasLineOfSight: true, cover: 'half', coverKey: 'coverMedium' });
+        // Walls and low cover together: full cover, still in sight while one ray is clear.
+        expect(resolveTargetVisibility(3, 8, 4)).toEqual({ hasLineOfSight: true, cover: 'full', coverKey: 'coverHeavy' });
+    });
+});
+
+describe('segmentCrossing (#406)', () => {
+    it('finds where two segments cross, and nothing where they are parallel or apart', () => {
+        expect(segmentCrossing({ x: 0, y: 0 }, { x: 10, y: 0 }, { x: 5, y: -5 }, { x: 5, y: 5 })).toEqual({ x: 5, y: 0 });
+        expect(segmentCrossing({ x: 0, y: 0 }, { x: 10, y: 0 }, { x: 0, y: 1 }, { x: 10, y: 1 })).toBeNull();
+        expect(segmentCrossing({ x: 0, y: 0 }, { x: 4, y: 0 }, { x: 5, y: -5 }, { x: 5, y: 5 })).toBeNull();
+    });
+});
+
+describe('rayPassesCover (#406)', () => {
+    // A table's near edge, across the ray, 10 px before the target at x 100.
+    const table: CoverEdge = { a: { x: 90, y: -20 }, b: { x: 90, y: 20 }, grade: 0.5 };
+    const origin = { x: 0, y: 0 };
+    const target = { x: 100, y: 0 };
+
+    it('passes cover crossed near the target, of at least half cover', () => {
+        expect(rayPassesCover(origin, target, [table], 50)).toBe(true);
+        expect(rayPassesCover(origin, target, [{ ...table, grade: 0.25 }], 50)).toBe(false);
+    });
+
+    it('ignores cover by the attacker’s own feet, far from the target, and cover the ray misses', () => {
+        const attackersOwn: CoverEdge = { a: { x: 10, y: -20 }, b: { x: 10, y: 20 }, grade: 0.5 };
+        expect(rayPassesCover(origin, target, [attackersOwn], 50)).toBe(false);
+        expect(rayPassesCover(origin, { x: 100, y: 60 }, [table], 50)).toBe(false);
     });
 });
