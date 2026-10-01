@@ -11,7 +11,18 @@
  * follow-up — only walls are consulted here.
  */
 
-import { resolveTargetVisibility, type TargetVisibility } from '../rules/cover-detection.ts';
+import { type CoverEdge, rayPassesCover, resolveTargetVisibility, type TargetVisibility } from '../rules/cover-detection.ts';
+
+/**
+ * The flag scope a scene's low-cover walls are graded under: the Zephyr
+ * Cartography module rings a table, a pew or rubble with walls that restrict
+ * nothing and carry `cover` (0–1), so the cover a scene's builder meant is
+ * found without a move-blocking wall. Absent the module, no wall carries it.
+ */
+const COVER_FLAG_SCOPE = 'zephyr-cartography';
+
+/** How far past the target's own edge low cover still shields it, in grid squares: a figure crouched behind it. */
+const COVER_REACH_SQUARES = 1;
 
 interface Point {
     x: number;
@@ -61,9 +72,41 @@ export function detectTargetVisibility(attacker: TokenLike, target: TokenLike): 
     const origin = attacker.center;
     const bounds = target.bounds;
     if (origin == null || bounds == null) return null;
+    const edges = sceneCoverEdges();
+    const reach = Math.max(bounds.width, bounds.height) / 2 + COVER_REACH_SQUARES * gridSize();
     let blocked = 0;
+    let covered = 0;
     for (const [fx, fy] of SAMPLE_OFFSETS) {
-        if (wallBlocks(origin, { x: bounds.x + bounds.width * fx, y: bounds.y + bounds.height * fy })) blocked++;
+        const dest = { x: bounds.x + bounds.width * fx, y: bounds.y + bounds.height * fy };
+        if (wallBlocks(origin, dest)) blocked++;
+        else if (rayPassesCover(origin, dest, edges, reach)) covered++;
     }
-    return resolveTargetVisibility(blocked, SAMPLE_OFFSETS.length);
+    return resolveTargetVisibility(blocked, SAMPLE_OFFSETS.length, covered);
+}
+
+/** A wall as far as cover needs it: its segment and its flags, the grade read as whatever the flag holds. */
+interface CoverWallLike {
+    document?: { c?: readonly number[]; flags?: Record<string, { cover?: number | string | boolean | null } | undefined> } | null;
+}
+
+/** Foundry's default grid square in pixels. */
+const DEFAULT_GRID_PX = 100;
+
+/** The scene's low-cover edges: walls graded with `cover` under the cartography module's flags; none without a canvas. */
+function sceneCoverEdges(): CoverEdge[] {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: canvas.walls is Foundry's untyped runtime placeables layer here.
+    const walls = (globalThis as { canvas?: { walls?: { placeables?: readonly CoverWallLike[] } } }).canvas?.walls?.placeables ?? [];
+    return walls.flatMap((wall) => {
+        const c = wall.document?.c;
+        const grade = wall.document?.flags?.[COVER_FLAG_SCOPE]?.cover;
+        if (c === undefined || c.length < 4 || typeof grade !== 'number') return [];
+        const [ax = 0, ay = 0, bx = 0, by = 0] = c;
+        return [{ a: { x: ax, y: ay }, b: { x: bx, y: by }, grade }];
+    });
+}
+
+/** The scene's grid square in pixels; a hundred without a canvas. */
+function gridSize(): number {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: canvas.grid is Foundry's untyped runtime grid here.
+    return (globalThis as { canvas?: { grid?: { size?: number } } }).canvas?.grid?.size ?? DEFAULT_GRID_PX;
 }

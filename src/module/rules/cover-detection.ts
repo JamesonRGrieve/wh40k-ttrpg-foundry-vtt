@@ -60,13 +60,59 @@ export interface TargetVisibility {
 }
 
 /**
- * Resolve line of sight + cover from the sample-ray counts. When every ray is
- * blocked there is no line of sight and cover reports `full` (the caller decides
- * whether to block the shot or treat it as firing blind). Pure.
+ * Resolve line of sight + cover from the sample-ray counts. `coveredRays` are
+ * rays no wall stops but that pass low cover near the target (a table, a pew,
+ * rubble a scene marks as cover): they count toward cover, never against line
+ * of sight. When every ray is blocked there is no line of sight and cover
+ * reports `full` (the caller decides whether to block the shot or treat it as
+ * firing blind). Pure.
  */
-export function resolveTargetVisibility(blockedRays: number, totalRays: number): TargetVisibility {
+export function resolveTargetVisibility(blockedRays: number, totalRays: number, coveredRays = 0): TargetVisibility {
     const los = hasLineOfSight(blockedRays, totalRays);
-    const fraction = totalRays > 0 ? blockedRays / totalRays : 0;
+    const fraction = totalRays > 0 ? Math.min(totalRays, blockedRays + coveredRays) / totalRays : 0;
     const cover = coverLevelFromBlockedFraction(fraction);
     return { hasLineOfSight: los, cover, coverKey: coverSituationalKey(cover) };
+}
+
+/** A point on the canvas, in scene pixels. */
+export interface CoverPoint {
+    x: number;
+    y: number;
+}
+
+/** An edge of low cover a scene marks, with its grade (0 none to 1 full). */
+export interface CoverEdge {
+    a: CoverPoint;
+    b: CoverPoint;
+    grade: number;
+}
+
+/** The least grade of marked cover that shields a target at all: half cover. */
+export const LEAST_COVER_GRADE = 0.5;
+
+/** Where segment `p→q` crosses segment `a→b`, or null where it does not (parallel, or apart). Pure. */
+export function segmentCrossing(p: CoverPoint, q: CoverPoint, a: CoverPoint, b: CoverPoint): CoverPoint | null {
+    const r = { x: q.x - p.x, y: q.y - p.y };
+    const s = { x: b.x - a.x, y: b.y - a.y };
+    const denominator = r.x * s.y - r.y * s.x;
+    if (denominator === 0) return null;
+    const t = ((a.x - p.x) * s.y - (a.y - p.y) * s.x) / denominator;
+    const u = ((a.x - p.x) * r.y - (a.y - p.y) * r.x) / denominator;
+    if (t < 0 || t > 1 || u < 0 || u > 1) return null;
+    return { x: p.x + t * r.x, y: p.y + t * r.y };
+}
+
+/**
+ * Whether the ray from `origin` to `dest` passes low cover shielding the
+ * target: an edge of at least half cover crossed within `reach` scene pixels
+ * of `dest`. Cover by the attacker's own feet (a table they crouch behind)
+ * shields them, not the target, so a crossing far from the target counts for
+ * nothing. Pure.
+ */
+export function rayPassesCover(origin: CoverPoint, dest: CoverPoint, edges: readonly CoverEdge[], reach: number): boolean {
+    return edges.some((edge) => {
+        if (edge.grade < LEAST_COVER_GRADE) return false;
+        const crossing = segmentCrossing(origin, dest, edge.a, edge.b);
+        return crossing !== null && Math.hypot(crossing.x - dest.x, crossing.y - dest.y) <= reach;
+    });
 }

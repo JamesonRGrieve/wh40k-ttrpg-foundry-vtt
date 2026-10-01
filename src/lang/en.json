@@ -1017,7 +1017,7 @@
             },
             "AutoCoverLos": {
                 "Name": "Auto Line of Sight & Cover",
-                "Hint": "When enabled, the attack dialog ray-casts from the attacker to the target against the scene's walls to auto-detect line of sight and full/half cover, and pre-selects the cover situational. Disabled by default: verify the geometry on your own scenes before relying on it to drive rolls."
+                "Hint": "When enabled, the attack dialog ray-casts from the attacker to the target against the scene's walls to auto-detect line of sight and full/half cover, and pre-selects the cover situational. Low cover marked on a scene (tables, pews, rubble from Zephyr Cartography maps) near the target also counts as cover without blocking sight. Disabled by default: verify the geometry on your own scenes before relying on it to drive rolls."
             },
             "AwarenessSenseSplit": {
                 "Name": "Homebrew: Awareness Sense Channels",
