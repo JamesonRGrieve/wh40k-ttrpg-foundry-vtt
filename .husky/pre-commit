@@ -135,4 +135,20 @@ fi
 wait_all
 [ "$FAILED" = "0" ] || exit 1
 
+# ---------------------------------------------------------------------------
+# Phase 4: Tier B e2e against the real Foundry server — only when the licensed
+# dump is present. Runs alone, after every cheaper gate has passed: it builds
+# dist/ and boots isolated Foundry servers sized to the box's free RAM, so it
+# must not contend with the Phase 3 tsc passes.
+# ---------------------------------------------------------------------------
+FOUNDRY_PROBE="${ROOT}/.foundry-release/main.js"
+if [ -f "${FOUNDRY_PROBE}" ]; then
+    echo "[pre-commit] phase 4: e2e (Foundry dump found)"
+    run_bg "e2e" pnpm -s test:e2e
+    wait_all
+    [ "$FAILED" = "0" ] || exit 1
+else
+    echo "[pre-commit] phase 4: e2e skipped — ${FOUNDRY_PROBE} not found (run ./pull-foundry.sh to enable)"
+fi
+
 echo "[pre-commit] all phases passed"
