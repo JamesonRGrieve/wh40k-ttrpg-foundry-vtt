@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import type { OpenedDialog } from './lib/dialog-opener';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -10,14 +11,10 @@ interface MedicaeDialogProbeResult {
     error: string | null;
 }
 
-interface MedicaeDialogInstance {
-    render: (opts?: { force?: boolean }) => Promise<void>;
-    element: HTMLElement | null;
-    close: () => Promise<void>;
-}
+type MedicaeDialogInstance = OpenedDialog;
 
 interface MedicaeDialogModule {
-    default: new (opts?: object) => MedicaeDialogInstance;
+    openMedicaeMechadendriteDialog: () => void;
 }
 
 /**
@@ -45,24 +42,12 @@ test.describe.serial('MedicaeMechadendriteDialog (Tier B)', () => {
 
             try {
                 const mod = (await import(moduleUrl)) as MedicaeDialogModule;
-                const Cls = mod.default;
-                if (typeof Cls !== 'function') {
-                    return {
-                        rendered,
-                        hasStaunchButton,
-                        hasCancelButton,
-                        error: 'default export not a constructor',
-                    };
-                }
-                const inst = new Cls({});
-                try {
-                    await inst.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 80);
-                    });
-                } catch (err) {
-                    error = err instanceof Error ? err.message : String(err);
-                }
+                const inst = await wh40kOpenDialog('medicae-mechadendrite-dialog', () => {
+                    mod.openMedicaeMechadendriteDialog();
+                });
+                await new Promise<void>((r) => {
+                    setTimeout(r, 80);
+                });
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     const el = inst.element;

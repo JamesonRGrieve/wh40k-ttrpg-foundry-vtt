@@ -33,30 +33,18 @@ test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
             let hasApplyButton = false;
             let hasCancelButton = false;
 
-            interface DialogInstance {
-                render: (force?: boolean) => Promise<void>;
-                element: HTMLElement | null;
-                close: () => Promise<void>;
-            }
             interface DialogModule {
-                default: new () => DialogInstance;
+                openSisterOfBattleDialog: () => void;
             }
 
             try {
                 const mod = (await import(moduleUrl)) as DialogModule;
-                const Cls = mod.default;
-                if (typeof Cls !== 'function') {
-                    return { rendered, talentRowCount, hasApplyButton, hasCancelButton, error: 'default export not a constructor' };
-                }
-                const inst = new Cls();
-                try {
-                    await inst.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 40);
-                    });
-                } catch (err) {
-                    error = err instanceof Error ? err.message : String(err);
-                }
+                const inst = await wh40kOpenDialog('sister-of-battle-dialog', () => {
+                    mod.openSisterOfBattleDialog();
+                });
+                await new Promise<void>((r) => {
+                    setTimeout(r, 40);
+                });
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     talentRowCount = inst.element.querySelectorAll('[data-talent]').length;

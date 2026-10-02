@@ -21,7 +21,7 @@ import { test } from './lib/test';
  *   - `difficulties.ts` — `rollDifficulties` (the localised ladder map).
  *   - `scatter.ts` — `buildScatterVector` (clamp branches),
  *     `scaleScatterForArea` (cap), `labelForDirection`.
- *   - `surprise.ts` — `getSurpriseToHitBonus`, `canActThisRound`,
+ *   - `surprise.ts` — `surpriseHasExpired`, `canActThisRound`,
  *     `canUseReactions` (round-1 vs round-2+ branches).
  *   - `trying-again.ts` — `getTryAgainAdvice` (no-retry +
  *     cumulative-penalty skill sets).
@@ -55,7 +55,7 @@ const RULE_PURE_FLOWS = [
     'scatter-buildVector',
     'scatter-scaleForArea',
     'scatter-labelForDirection',
-    'surprise-toHitBonus',
+    'surprise-hasExpired',
     'surprise-canActThisRound',
     'surprise-canUseReactions',
     'trying-again-advice',
@@ -116,7 +116,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 DIRECTION_LABELS: readonly string[];
             };
             'surprise': {
-                getSurpriseToHitBonus: (input: { targetIsSurprised: boolean; currentRound: number }) => number;
+                surpriseHasExpired: (round: number) => boolean;
                 canActThisRound: (surprised: boolean, round: number) => boolean;
                 canUseReactions: (surprised: boolean, round: number) => boolean;
             };
@@ -252,14 +252,11 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         // ---------- surprise ----------
         const surprise = await loadModule('surprise');
         if (isImportError(surprise)) {
-            for (const k of ['surprise-toHitBonus', 'surprise-canActThisRound', 'surprise-canUseReactions'] as const) record(k, false, surprise.__importError);
+            for (const k of ['surprise-hasExpired', 'surprise-canActThisRound', 'surprise-canUseReactions'] as const) record(k, false, surprise.__importError);
         } else {
-            guarded('surprise-toHitBonus', () => {
-                const yes = surprise.getSurpriseToHitBonus({ targetIsSurprised: true, currentRound: 1 });
-                const no = surprise.getSurpriseToHitBonus({ targetIsSurprised: false, currentRound: 1 });
-                const expired = surprise.getSurpriseToHitBonus({ targetIsSurprised: true, currentRound: 2 });
-                return yes === 30 && no === 0 && expired === 0;
-            });
+            // The +30 against a surprised target is the data-driven `unawareTarget`
+            // circumstance modifier; this module only bounds Surprised to its round.
+            guarded('surprise-hasExpired', () => !surprise.surpriseHasExpired(1) && surprise.surpriseHasExpired(2) && surprise.surpriseHasExpired(5));
             guarded(
                 'surprise-canActThisRound',
                 () => surprise.canActThisRound(false, 1) && !surprise.canActThisRound(true, 1) && surprise.canActThisRound(true, 2),

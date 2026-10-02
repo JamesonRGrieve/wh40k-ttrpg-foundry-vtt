@@ -15,14 +15,12 @@ import { expect, test } from './lib/test';
  * Strategy:
  *   - Each flow dynamic-imports a single dist module and drives one or more
  *     of its exported entry points through realistic inputs.
- *   - For modules that need an actor (`computeArmour`, `evaluateWoundsFormula`),
- *     a throwaway `bc-character` is created with embedded items, fed in, then
- *     torn down at the end of the spec.
+ *   - For modules that need an actor (`computeArmour`), a throwaway
+ *     `bc-character` is created with embedded items, fed in, then torn down
+ *     at the end of the spec.
  *   - For pure utilities (`calculateRangeBracket`, `calculateRangeModifier`,
- *     `isOutOfRange`, `clampSubtletyLoss`, `parseTBMultiplier`,
- *     `parseDiceRoll`, `describeWoundsFormula`, `describeFateFormula`), the
- *     module is imported and called with synthetic inputs — no game state
- *     required.
+ *     `isOutOfRange`, `clampSubtletyLoss`), the module is imported and called
+ *     with synthetic inputs — no game state required.
  *   - All failures collect into a single array and assert at the end so the
  *     report shows every miss in one pass rather than first-fail masking.
  *
@@ -35,14 +33,11 @@ const FLOWS = [
     'armour-calculator-equipped-only',
     'range-calculator-band',
     'range-calculator-extreme',
-    'formula-evaluator-evaluates-string',
-    'formula-evaluator-with-actor-data',
     'subtlety-clamp-edge-cases',
 ] as const;
 
 const ARMOUR_URL = '/systems/wh40k-rpg/module/utils/armour-calculator.js';
 const RANGE_URL = '/systems/wh40k-rpg/module/utils/range-calculator.js';
-const FORMULA_URL = '/systems/wh40k-rpg/module/utils/formula-evaluator.js';
 const SUBTLETY_URL = '/systems/wh40k-rpg/module/rules/subtlety-adjusters.js';
 
 interface FlowResult {
@@ -71,8 +66,7 @@ interface ProbeFoundryGlobal {
 /**
  * Create a throwaway bc-character with a known toughness bonus + equipped
  * armour item layout so `computeArmour` has a deterministic input. Returned
- * id is used by both armour flows (which embed/replace items) and the
- * actor-data formula flow.
+ * id is used by both armour flows (which embed/replace items).
  */
 async function createProbeActor(page: Page): Promise<{ id: string | null; error: string | null }> {
     return page.evaluate(async () => {
@@ -205,14 +199,6 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                 isAtMeltaRange?: (bracket: string) => boolean | undefined;
                 formatRangeDisplay?: (info: RangeInfo) => RangeInfo | undefined;
             }
-            interface FormulaModule {
-                parseTBMultiplier?: (formula: string) => number | undefined;
-                parseDiceRoll?: (formula: string) => string | null | undefined;
-                describeWoundsFormula?: (formula: string) => string | undefined;
-                describeFateFormula?: (formula: string) => string | undefined;
-                evaluateFateFormula?: (formula: string) => number | undefined;
-                evaluateWoundsFormula?: (formula: string, actor: ActorLike | null) => number | undefined;
-            }
             interface SubtletyModule {
                 clampSubtletyLoss?: (delta: number, cap: number) => number;
                 isSubtletyPrimitive?: (value: string) => boolean;
@@ -228,7 +214,6 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
             // ── module loads (each guarded so one bad import doesn't sink the rest) ──
             let armourMod: ArmourModule | null = null;
             let rangeMod: RangeModule | null = null;
-            let formulaMod: FormulaModule | null = null;
             let subtletyMod: SubtletyModule | null = null;
             try {
                 armourMod = (await import(urls.armour)) as ArmourModule;
@@ -241,12 +226,6 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
             } catch (err) {
                 record('range-calculator-band', false, `range import failed: ${err instanceof Error ? err.message : String(err)}`);
                 record('range-calculator-extreme', false, `range import failed: ${err instanceof Error ? err.message : String(err)}`);
-            }
-            try {
-                formulaMod = (await import(urls.formula)) as FormulaModule;
-            } catch (err) {
-                record('formula-evaluator-evaluates-string', false, `formula import failed: ${err instanceof Error ? err.message : String(err)}`);
-                record('formula-evaluator-with-actor-data', false, `formula import failed: ${err instanceof Error ? err.message : String(err)}`);
             }
             try {
                 subtletyMod = (await import(urls.subtlety)) as SubtletyModule;
@@ -403,83 +382,7 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
                 }
             }
 
-            // ── 5. formula-evaluator-evaluates-string ───────────────
-            // Pure helpers don't need an actor.
-            function probeFormulaString(): void {
-                if (formulaMod != null) {
-                    try {
-                        const tbMult = formulaMod.parseTBMultiplier?.('2xTB+1d5+2');
-                        const tbMultPlain = formulaMod.parseTBMultiplier?.('TB');
-                        const tbMultNone = formulaMod.parseTBMultiplier?.('1d10');
-                        const dice = formulaMod.parseDiceRoll?.('2xTB+1d5+2');
-                        const diceNone = formulaMod.parseDiceRoll?.('TB');
-                        const descWounds = formulaMod.describeWoundsFormula?.('2xTB+1d5');
-                        const descFate = formulaMod.describeFateFormula?.('(1-5|=2),(6-10|=3)');
-                        const descFatePlain = formulaMod.describeFateFormula?.('whatever');
-                        const fateVal = formulaMod.evaluateFateFormula?.('(1-5|=2),(6-10|=3)');
-                        const emptyWounds = formulaMod.evaluateWoundsFormula?.('', null);
-                        const emptyFate = formulaMod.evaluateFateFormula?.('');
-                        const invalidFate = formulaMod.evaluateFateFormula?.('not a formula');
-                        // fateVal can legitimately be 0 in headless Foundry when
-                        // Roll.evaluateSync throws and the catch fallback fires;
-                        // 2 / 3 are the rolled-condition values. All three are
-                        // valid signals that the function executed end-to-end.
-                        const ok =
-                            tbMult === 2 &&
-                            tbMultPlain === 1 &&
-                            tbMultNone === 0 &&
-                            dice === '1d5+2' &&
-                            diceNone === null &&
-                            typeof descWounds === 'string' &&
-                            descWounds.includes('×') &&
-                            typeof descFate === 'string' &&
-                            descFate.startsWith('1d10:') &&
-                            descFatePlain === 'whatever' &&
-                            typeof fateVal === 'number' &&
-                            (fateVal === 0 || fateVal === 2 || fateVal === 3) &&
-                            emptyWounds === 0 &&
-                            emptyFate === 0 &&
-                            invalidFate === 0;
-                        record(
-                            'formula-evaluator-evaluates-string',
-                            ok,
-                            ok
-                                ? null
-                                : `tbMult=${tbMult} tbMultPlain=${tbMultPlain} tbMultNone=${tbMultNone} dice=${dice} diceNone=${diceNone} descW=${descWounds} descF=${descFate} descFP=${descFatePlain} fate=${fateVal} ew=${emptyWounds} ef=${emptyFate} invF=${invalidFate}`,
-                        );
-                    } catch (err) {
-                        record('formula-evaluator-evaluates-string', false, `formula pure-helpers threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
-                }
-            }
-
-            // ── 6. formula-evaluator-with-actor-data ────────────────
-            // T40 → TB=4. "2xTB+5" → 8+5 = 13 (no dice term, deterministic).
-            function probeFormulaActorData(): void {
-                if (formulaMod?.evaluateWoundsFormula != null && actor != null) {
-                    try {
-                        const wounds = formulaMod.evaluateWoundsFormula('2xTB+5', actor);
-                        // Source bug: evaluateWoundsFormula's regex loop iterates the
-                        // charMap in insertion order and the `SB` (strength) abbr's
-                        // regex consumes the `SB` suffix of `WSB`/`BSB`/`InfB`-like
-                        // multi-letter abbreviations before the WSB/BSB/InfB regex
-                        // ever runs — `1xWSB` resolves to `1xW<strength-bonus>` and
-                        // the WSB regex never matches. Same flaw applies to BSB
-                        // (consumed by SB) and InfB (consumed by FB). Until the
-                        // regex is anchored / iteration ordered longest-first,
-                        // assert only on the single-letter-abbr path (TB / WB / SB)
-                        // which works correctly.
-                        const ok = wounds === 13;
-                        record('formula-evaluator-with-actor-data', ok, ok ? null : `evaluateWoundsFormula('2xTB+5') = ${wounds} (expected 13)`);
-                    } catch (err) {
-                        record('formula-evaluator-with-actor-data', false, `evaluateWoundsFormula threw: ${err instanceof Error ? err.message : String(err)}`);
-                    }
-                } else if (formulaMod != null) {
-                    record('formula-evaluator-with-actor-data', false, `missing evaluateWoundsFormula or actor (actor=${actor != null})`);
-                }
-            }
-
-            // ── 7. subtlety-clamp-edge-cases ────────────────────────
+            // ── 5. subtlety-clamp-edge-cases ────────────────────────
             // Drive every early-return + the active clamp path of
             // clampSubtletyLoss; assert isSubtletyPrimitive both arms.
             function probeSubtletyClamp(): void {
@@ -526,14 +429,12 @@ async function runFlows(page: Page, actorId: string): Promise<{ results: FlowRes
             probeArmourEquippedOnly();
             probeRangeBand();
             probeRangeExtreme();
-            probeFormulaString();
-            probeFormulaActorData();
             probeSubtletyClamp();
 
             return out;
         },
         {
-            urls: { armour: ARMOUR_URL, range: RANGE_URL, formula: FORMULA_URL, subtlety: SUBTLETY_URL },
+            urls: { armour: ARMOUR_URL, range: RANGE_URL, subtlety: SUBTLETY_URL },
             actorId,
         },
     );

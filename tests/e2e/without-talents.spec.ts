@@ -63,7 +63,7 @@ test.describe.serial('Without talents — Push the Limit chat card (Tier B)', ()
 
                 const html = await renderTemplateFn(template, context);
                 rendered = typeof html === 'string' && html.length > 0;
-                hasCardRoot = html.includes('wh40k-push-the-limit-card');
+                hasCardRoot = html.includes('data-wh40k-hook="push-the-limit-card"');
                 hasSystemAnchor = html.includes('data-wh40k-system="dh2"');
                 hasCriticalBanner = html.includes('WH40K.WithoutTalents.PushTheLimit.CriticalLabel') || html.includes('fa-skull-crossbones');
 

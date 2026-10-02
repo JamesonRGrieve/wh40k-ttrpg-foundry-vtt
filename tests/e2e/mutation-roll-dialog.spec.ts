@@ -1,4 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
+import type { OpenedDialog } from './lib/dialog-opener';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -11,14 +12,10 @@ interface MutationDialogProbeResult {
     error: string | null;
 }
 
-interface MutationDialogInstance {
-    render: (force?: boolean) => Promise<void>;
-    element: HTMLElement | null;
-    close: () => Promise<void>;
-}
+type MutationDialogInstance = OpenedDialog;
 
 interface MutationDialogModule {
-    default: new (opts?: { track?: string }) => MutationDialogInstance;
+    openMutationRollDialog: (opts: { track: string }) => void;
 }
 
 /**
@@ -46,19 +43,12 @@ test.describe.serial('MutationRollDialog (Tier B)', () => {
 
             try {
                 const mod = (await import(moduleUrl)) as MutationDialogModule;
-                const Cls = mod.default;
-                if (typeof Cls !== 'function') {
-                    return { rendered, hasMinorBtn, hasMajorBtn, hasRollBtn, error: 'default export not a constructor' };
-                }
-                const inst = new Cls({ track: 'major' });
-                try {
-                    await inst.render(true);
-                    await new Promise((r) => {
-                        setTimeout(r, 60);
-                    });
-                } catch (err) {
-                    error = err instanceof Error ? err.message : String(err);
-                }
+                const inst = await wh40kOpenDialog('mutation-roll-dialog', () => {
+                    mod.openMutationRollDialog({ track: 'major' });
+                });
+                await new Promise((r) => {
+                    setTimeout(r, 60);
+                });
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     hasMinorBtn = inst.element.querySelector('[data-action="selectTrack"][data-track="minor"]') !== null;

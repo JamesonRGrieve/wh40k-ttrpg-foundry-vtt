@@ -123,17 +123,17 @@ test.describe.serial('Starship Manoeuvre Action bar (Tier B)', () => {
 
                 const html = await renderTemplateFn(template, context);
                 rendered = typeof html === 'string' && html.length > 0;
-                hasBarRoot = html.includes('wh40k-voidcraft-manoeuvre-bar');
+                hasBarRoot = html.includes('data-wh40k-hook="voidcraft-manoeuvre-bar"');
                 hasAdjustBearing = html.includes('data-manoeuvre-id="adjust-bearing"');
                 hasAdjustSpeed = html.includes('data-manoeuvre-id="adjust-speed"');
                 hasAdjustSpeedAndBearing = html.includes('data-manoeuvre-id="adjust-speed-and-bearing"');
                 hasComeToNewHeading = html.includes('data-manoeuvre-id="come-to-new-heading"');
                 hasDisengage = html.includes('data-manoeuvre-id="disengage"');
                 hasEvasive = html.includes('data-manoeuvre-id="evasive-manoeuvres"');
-                hasOpposedBadge = html.includes('wh40k-voidcraft-manoeuvre-tile__opposed');
-                // Match the root tile class followed by a space or quote so
-                // BEM modifiers (…-tile__name/__difficulty) aren't counted.
-                tileCount = (html.match(/wh40k-voidcraft-manoeuvre-tile[ "]/g) ?? []).length;
+                hasOpposedBadge = html.includes('data-wh40k-hook="voidcraft-manoeuvre-tile__opposed"');
+                // The closing quote makes this an exact hook match, so the
+                // tile's `…-tile__opposed` badge hook isn't counted as a tile.
+                tileCount = (html.match(/data-wh40k-hook="voidcraft-manoeuvre-tile"/g) ?? []).length;
 
                 const msg = await g.ChatMessage?.create({ user: g.game?.user?.id, content: html });
                 messageId = msg?.id ?? null;

@@ -30,28 +30,46 @@ function e2ePortForWorker(): number {
 
 /**
  * Join this worker's own isolated test world as its single auto-created
- * `Gamemaster`. Returns true on success, false if the join select isn't
- * populated (test should skip).
+ * `Gamemaster`. Returns true on success, false if the join page never learns
+ * the GM user (test should skip).
  *
  * This is the single canonical entry point for any Tier B spec that needs to
  * be in /game. Adding a new spec? Use this — do not re-implement the flow.
  * Uses an absolute per-worker base URL rather than the config `baseURL`, since
  * each worker targets a different port.
  */
-/**
- * One attempt to reach /join and confirm the world's user list is populated.
- * `backoff` inserts a short wait first (used on retries) to let a slow world boot
- * catch up. Returns true when the Gamemaster <option> is attached.
- */
-/** Per-attempt wait for the user <select> to populate. */
+/** The world's auto-created GM user, joined by name. */
+const GM_USER_NAME = 'Gamemaster';
+
+/** Per-attempt wait for the join page to know the GM user. */
 const JOIN_ATTEMPT_TIMEOUT_MS = 20_000;
 
-async function joinSelectPopulated(page: Page, origin: string, backoff: boolean): Promise<boolean> {
+/**
+ * One attempt to reach /join and confirm the world's user list is loaded.
+ * `backoff` inserts a short wait first (used on retries) to let a slow world boot
+ * catch up. Returns true once the username field is present and the join page's
+ * `game.users` contains the GM.
+ *
+ * V14 (build 368) replaced the user `<select name="userid">` with a typed
+ * `<input name="username">`, resolved client-side via `game.users` by name. The
+ * old wait for a populated `<option>` never matched, so every spec burned its
+ * whole join budget and then skipped.
+ */
+async function joinFormReady(page: Page, origin: string, backoff: boolean): Promise<boolean> {
     if (backoff) await page.waitForTimeout(2_000);
     await page.goto(`${origin}/join`);
     await page.waitForLoadState('networkidle');
     try {
-        await page.locator('select[name="userid"] option', { hasText: /\S/ }).first().waitFor({ state: 'attached', timeout: JOIN_ATTEMPT_TIMEOUT_MS });
+        await page.locator('input[name="username"]').waitFor({ state: 'attached', timeout: JOIN_ATTEMPT_TIMEOUT_MS });
+        await page.waitForFunction(
+            (name) =>
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global `game` is injected by the licensed app; no shipped types
+                (globalThis as unknown as { game?: { users?: { some?: (fn: (u: { name: string }) => boolean) => boolean } } }).game?.users?.some?.(
+                    (u) => u.name === name,
+                ) === true,
+            GM_USER_NAME,
+            { timeout: JOIN_ATTEMPT_TIMEOUT_MS },
+        );
         return true;
     } catch {
         return false;
@@ -61,7 +79,7 @@ async function joinSelectPopulated(page: Page, origin: string, backoff: boolean)
 export async function joinAsGM(page: Page): Promise<boolean> {
     const origin = `http://127.0.0.1:${e2ePortForWorker()}`;
     // The first spec to reach /join can beat the world's boot: the user list
-    // (the Gamemaster <option>) isn't populated until the world finishes loading.
+    // (`game.users` holding the Gamemaster) isn't loaded until the world finishes loading.
     // A single wait then races that startup and fails intermittently — which, for
     // the coverage-tracker spec (_aa_inventory), corrupts the whole run's coverage,
     // and elsewhere skips otherwise-green specs. Retry with reloads so a slow boot
@@ -91,11 +109,11 @@ export async function joinAsGM(page: Page): Promise<boolean> {
     let populated = false;
     for (let attempt = 0; attempt < JOIN_ATTEMPTS; attempt++) {
         // eslint-disable-next-line no-await-in-loop -- sequential retry: each attempt must fully resolve (and fail) before the next reload; parallelizing defeats the world-boot backoff
-        populated = await joinSelectPopulated(page, origin, attempt > 0);
+        populated = await joinFormReady(page, origin, attempt > 0);
         if (populated) break;
     }
     if (!populated) return false;
-    await page.selectOption('select[name="userid"]', { label: 'Gamemaster' });
+    await page.fill('input[name="username"]', GM_USER_NAME);
     await page.click('button[name="join"]');
     await page.waitForURL(/\/game/, { timeout: 30_000 });
     let ready = false;

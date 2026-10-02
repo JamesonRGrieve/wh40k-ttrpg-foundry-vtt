@@ -28,31 +28,17 @@ test.describe.serial('DaemonhostBindingDialog (Tier B)', () => {
             let hasBindButton = false;
 
             try {
-                interface DialogInstance {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
-                    render: (force?: boolean) => Promise<unknown>;
-                    element: HTMLElement | null;
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
-                    close: () => Promise<unknown>;
-                }
                 interface DialogModule {
-                    default: new () => DialogInstance;
+                    openDaemonhostBindingDialog: () => void;
                 }
                 // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
                 const mod = (await import(moduleUrl)) as unknown as DialogModule;
-                const Cls = mod.default;
-                if (typeof Cls !== 'function') {
-                    return { rendered, tierCardCount, hasBindButton, error: 'default export not a constructor' };
-                }
-                const inst = new Cls();
-                try {
-                    await inst.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 40);
-                    });
-                } catch (err) {
-                    error = String((err as Error).message);
-                }
+                const inst = await wh40kOpenDialog('daemonhost-binding-dialog', () => {
+                    mod.openDaemonhostBindingDialog();
+                });
+                await new Promise<void>((r) => {
+                    setTimeout(r, 40);
+                });
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     tierCardCount = inst.element.querySelectorAll('[data-action="selectTier"]').length;

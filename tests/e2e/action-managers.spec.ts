@@ -7,7 +7,7 @@ import { expect, test } from './lib/test';
  * Tier B coverage of the four action managers under `src/module/actions/`:
  *
  *   - basic-action-manager.ts   — renderChatMessageHTML hook + chat-card
- *     `.roll-control__*` click handlers + scene-control assignDamage tool.
+ *     `.roll-control__*` click handlers.
  *   - combat-action-manager.ts  — combatTurn / combatRound hook handlers
  *     (active-effect processing + first-attack-flag reset on round change).
  *   - targeted-action-manager.ts — getSceneControlButtons hook handler
@@ -31,7 +31,6 @@ const ACTION_MANAGER_FLOWS = [
     'combat-action-on-turn',
     'reload-action-dispatch',
     'targeted-action-with-target',
-    'scene-control-buttons-registered',
     'chat-card-button-click',
 ] as const;
 
@@ -543,58 +542,6 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
             }
 
             /* ============================================================
-             * Flow 5: scene-control-buttons-registered
-             * Fire the getSceneControlButtons hook with a synthetic
-             * controls map and assert that the manager handlers
-             * (BasicActionManager + TargetedActionManager) injected
-             * their tools onto the 'tokens' control group.
-             * ============================================================ */
-            async function probeSceneControlButtons(): Promise<void> {
-                // Re-narrow the closed-over Hooks const: the outer guard's
-                // narrowing does not propagate into this nested function.
-                if (HooksObj === undefined) return;
-                try {
-                    // Synthetic controls map shaped like V14's payload.
-                    interface SceneControl {
-                        name: string;
-                        tools: Record<string, object>;
-                    }
-                    const controls: { tokens: SceneControl } = {
-                        tokens: {
-                            name: 'tokens',
-                            tools: {},
-                        },
-                    };
-                    HooksObj.callAll?.('getSceneControlButtons', controls);
-                    // Allow the hook to flush.
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
-                    const toolKeys = Object.keys(controls.tokens.tools);
-                    // BasicActionManager registers 'assignDamage'. TargetedActionManager
-                    // conditionally registers 'Attack' (gated by the simple-attack-rolls
-                    // setting). At least one must appear if the hook handlers ran.
-                    const hasAssignDamage = toolKeys.includes('assignDamage');
-                    const hasAttack = toolKeys.includes('Attack');
-                    if (hasAssignDamage || hasAttack) {
-                        setResult(
-                            'scene-control-buttons-registered',
-                            true,
-                            `tools registered: ${toolKeys.join(', ')} (assignDamage=${String(hasAssignDamage)} Attack=${String(hasAttack)})`,
-                        );
-                    } else {
-                        setResult(
-                            'scene-control-buttons-registered',
-                            false,
-                            `no manager tools registered on 'tokens' control (keys: ${toolKeys.join(', ') || '<empty>'})`,
-                        );
-                    }
-                } catch (err) {
-                    setResult('scene-control-buttons-registered', false, `threw: ${String(err instanceof Error ? err.message : err)}`);
-                }
-            }
-
-            /* ============================================================
              * Flow 6: chat-card-button-click
              * Full E2E: render a chat card containing a
              * `.roll-control__refund` button (or similar data-action),
@@ -672,7 +619,6 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                 await probeCombatActionOnTurn();
                 await probeReloadActionDispatch();
                 await probeTargetedActionWithTarget();
-                await probeSceneControlButtons();
                 await probeChatCardButtonClick();
             } finally {
                 // REVERSE (LIFO): the host actor is registered before the items embedded

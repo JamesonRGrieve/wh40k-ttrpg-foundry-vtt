@@ -16,15 +16,8 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
         await joinOrSkip(page);
 
         const result = await page.evaluate(async () => {
-            interface DialogInstance {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render/close return Promise<this> with no shipped types
-                render: (opts?: object) => Promise<unknown>;
-                element: HTMLElement | null;
-                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
-                close: () => Promise<unknown>;
-            }
             interface DialogModule {
-                default: new (opts?: object) => DialogInstance;
+                openBeyondHomeworldInfoDialog: () => void;
             }
             const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/beyond-homeworld-info-dialog.js';
             let error: string | null = null;
@@ -39,28 +32,12 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
             try {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
                 const mod = (await import(moduleUrl)) as unknown as DialogModule;
-                const Cls = mod.default;
-                if (typeof Cls !== 'function') {
-                    return {
-                        rendered,
-                        cardCount,
-                        hasDaemonWorld,
-                        hasPenalColony,
-                        hasQuarantineWorld,
-                        hasCorruptionRider,
-                        hasSubtletyClampRider,
-                        error: 'default export not a constructor',
-                    };
-                }
-                const inst = new Cls({});
-                try {
-                    await inst.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 80);
-                    });
-                } catch (err) {
-                    error = err instanceof Error ? err.message : String(err);
-                }
+                const inst = await wh40kOpenDialog('beyond-homeworld-info-dialog', () => {
+                    mod.openBeyondHomeworldInfoDialog();
+                });
+                await new Promise<void>((r) => {
+                    setTimeout(r, 80);
+                });
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     const el = inst.element;

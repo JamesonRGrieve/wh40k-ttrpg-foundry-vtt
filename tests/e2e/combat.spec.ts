@@ -10,8 +10,6 @@ import { expect, test } from './lib/test';
  * Source coverage targets:
  *   - src/module/actions/combat-action-manager.ts (combatTurn / combatRound
  *     hook handlers)
- *   - src/module/applications/hud/combat-quick-panel.ts (constructor +
- *     render + combatRound listener registration)
  *   - src/module/applications/npc/encounter-builder.ts (singleton + render +
  *     _prepareContext walking #npcs / party config)
  *   - src/module/applications/npc/combat-preset-dialog.ts (library mode
@@ -49,7 +47,7 @@ const COMBAT_FLOWS = [
     'endCombat',
 ] as const;
 
-const COMBAT_UI_CLASSES = ['CombatQuickPanel', 'EncounterBuilder', 'CombatPresetDialog', 'DifficultyCalculatorDialog', 'NPCThreatScalerDialog'] as const;
+const COMBAT_UI_CLASSES = ['EncounterBuilder', 'CombatPresetDialog', 'DifficultyCalculatorDialog', 'NPCThreatScalerDialog'] as const;
 
 type FlowName = (typeof COMBAT_FLOWS)[number];
 type UIClassName = (typeof COMBAT_UI_CLASSES)[number];
@@ -444,7 +442,6 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult> {
                 settings?: SettingsApi;
             };
             wh40k?: Surface;
-            foundry?: { applications?: { api?: { HandlebarsApplicationMixin?: (cls: AppClass) => AppClass } } };
         }
         // eslint-disable-next-line no-restricted-syntax -- boundary: globalThis is the Foundry V14 runtime global; no schema exists in this repo
         const g = globalThis as unknown as FoundryUiGlobal;
@@ -530,17 +527,6 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult> {
         // records a note) when the class can't be instantiated in this
         // environment; the caller skips render for a null instance.
         const constructInstance = (name: string, Cls: AppClass): AppInstance | null => {
-            if (name === 'CombatQuickPanel') {
-                // CombatQuickPanel extends ApplicationV2 directly without
-                // the HandlebarsApplicationMixin, so its render() throws
-                // "not renderable". Re-wrap with the mixin at runtime so we
-                // can exercise its constructor + _prepareContext under
-                // coverage. Real fix is to apply the mixin in source; this
-                // is a spec-only workaround.
-                const mixin = g.foundry?.applications?.api?.HandlebarsApplicationMixin;
-                const Wrapped = typeof mixin === 'function' ? mixin(Cls) : Cls;
-                return new Wrapped();
-            }
             if (name === 'EncounterBuilder') {
                 // Singleton pattern — prefer .instance/.show, fall through to ctor.
                 return typeof Cls.instance !== 'undefined' ? Cls.instance : new Cls();

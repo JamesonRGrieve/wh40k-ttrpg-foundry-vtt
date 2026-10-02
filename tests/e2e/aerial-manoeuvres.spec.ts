@@ -61,7 +61,7 @@ test.describe.serial('AerialManoeuvre chat card (Tier B)', () => {
 
                 const html = await renderTemplateFn(template, context);
                 rendered = typeof html === 'string' && html.length > 0;
-                hasCardRoot = html.includes('wh40k-aerial-card');
+                hasCardRoot = html.includes('data-wh40k-hook="aerial-card"');
                 hasSystemAnchor = html.includes('data-wh40k-system="dh2"');
                 hasFreeAttackBanner = html.includes('WH40K.AerialManoeuvre.FreeAttack') || html.includes('fa-crosshairs');
 

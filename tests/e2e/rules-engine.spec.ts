@@ -309,7 +309,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                         attackSpecials: [],
                     };
                     ammo.calculateAmmoInformation(usesRollData);
-                    // usesAmmo=false short-circuits before touching ammoText / clip.
+                    // usesAmmo=false still normalises ammoText to '' (no clip readout)
+                    // before short-circuiting the clip arithmetic.
                     const noRollData: FakeAmmoRollData = {
                         weapon: { usesAmmo: false, system: { clip: { value: 0 } } },
                         action: 'Standard Attack',
@@ -320,7 +321,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     ammo.calculateAmmoInformation(noRollData);
                     record(
                         'ammo-ammoText',
-                        typeof usesRollData.ammoText === 'string' && usesRollData.ammoText.length > 0 && noRollData.ammoText === undefined,
+                        typeof usesRollData.ammoText === 'string' && usesRollData.ammoText.length > 0 && noRollData.ammoText === '',
                         `usesAmmo=${String(usesRollData.ammoText)} noAmmo=${String(noRollData.ammoText)}`,
                     );
                 } catch (err) {

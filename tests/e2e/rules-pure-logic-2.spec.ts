@@ -7,7 +7,7 @@ import { test } from './lib/test';
  * Tier B coverage of the *third* batch of pure-logic modules under
  * `src/module/rules/*` — the affliction / social / vehicle resolvers
  * (addiction, assistance, characteristic-damage, combat-circumstance-
- * modifiers, disposition, disease, poison, hatred, phenomena-modifier,
+ * modifiers, disposition, disease, poison, phenomena-modifier,
  * reinforcement, requisition-test, spray-avoidance, vehicle-actions,
  * vehicle-hazards) that neither `rules-engine.spec.ts` nor
  * `rules-pure-logic.spec.ts` touches. Same rationale as those specs:
@@ -39,7 +39,6 @@ const RULE_AFFLICTION_FLOWS = [
     'disease-dailyTick',
     'poison-exposure',
     'poison-failurePayload',
-    'hatred-actorHasHatredFor',
     'phenomena-modifier-compose',
     'reinforcement-callTarget',
     'requisition-test-target',
@@ -111,11 +110,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     ongoingTag: string;
                 };
             };
-            'hatred': {
-                actorHasHatredFor: (actor: HatredActor, target: HatredTarget) => string | null;
-                HATRED_BONUS: number;
-                HATRED_SPECIALIZATIONS: readonly string[];
-            };
             'phenomena-modifier': {
                 composePhenomenaModifier: (input: { warpWeakness: boolean; taintedPsykerPushCP: number }) => {
                     focusModifier: number;
@@ -165,13 +159,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             ongoingDamagePerRound: number;
             ongoingDurationRounds: number;
             ongoingTag: string;
-        }
-        interface HatredActor {
-            items: readonly { type?: string; name?: string; system?: { specialization?: string } }[];
-        }
-        interface HatredTarget {
-            name: string;
-            system: { traits: readonly { name: string }[] };
         }
         type ImportError = { __importError: string };
         type Loaded<T> = T | ImportError;
@@ -346,21 +333,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             guarded('poison-failurePayload', () => {
                 const p = poison.buildPoisonFailurePayload(ulva);
                 return p.immediateDamage === 1 && p.ongoingDamagePerRound === 1 && p.ongoingDurationRounds === 5 && p.ongoingTag === 'crippled';
-            });
-        }
-
-        // ---------- hatred ----------
-        const hatred = await loadModule('hatred');
-        if (isImportError(hatred)) {
-            fail(['hatred-actorHasHatredFor'], hatred.__importError);
-        } else {
-            guarded('hatred-actorHasHatredFor', () => {
-                const hatredDaemons = { type: 'talent', name: 'Hatred', system: { specialization: 'Daemons' } };
-                const target = { name: 'Bloodletter', system: { traits: [{ name: 'Daemonic' }] } };
-                const unrelated = { name: 'Guardsman', system: { traits: [] } };
-                const hit = hatred.actorHasHatredFor({ items: [hatredDaemons] }, target);
-                const miss = hatred.actorHasHatredFor({ items: [hatredDaemons] }, unrelated);
-                return hit === 'Daemons' && miss === null && hatred.HATRED_BONUS === 10 && Array.isArray(hatred.HATRED_SPECIALIZATIONS);
             });
         }
 

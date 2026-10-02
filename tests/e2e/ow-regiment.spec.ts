@@ -65,7 +65,7 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
             try {
                 const actor = await ActorCls.create({
                     name: 'OW Regiment Probe',
-                    type: 'character',
+                    type: 'ow-character',
                     system: { gameSystem: 'ow' },
                 });
                 if (actor == null) {
@@ -113,14 +113,8 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
             g.__owRegimentActor = undefined;
         });
 
-        // The panel only renders once the orchestrator merges the manifest;
-        // until then the assertions below skip rather than fail. The probe
-        // still surfaces page errors and the screenshot.
         if (result.error !== null) {
             test.info().annotations.push({ type: 'note', description: `probe error: ${result.error}` });
-        }
-        if (result.rendered && result.categoryCount === 0) {
-            test.skip(true, 'panel not yet wired into tab-overview — orchestrator merge pending');
         }
         expect(result.rendered, 'sheet failed to render').toBe(true);
         expect(result.hasBudget, '12-point budget readout missing').toBe(true);

@@ -53,7 +53,7 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
             try {
                 const actor = await ActorCls.create({
                     name: 'OW Craftsmanship Probe',
-                    type: 'character',
+                    type: 'ow-character',
                     system: { gameSystem: 'ow' },
                 });
                 if (actor == null) {
@@ -160,11 +160,6 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
 
         if (result.error !== null) {
             test.info().annotations.push({ type: 'note', description: `probe error: ${result.error}` });
-        }
-        // The panel only renders once the orchestrator merges the manifest;
-        // until then the panel-not-present case is a clean skip, not a fail.
-        if (result.rendered && !result.panelPresent) {
-            test.skip(true, 'panel not yet wired into tab-overview — orchestrator merge pending');
         }
         expect(result.rendered, 'sheet failed to render').toBe(true);
         expect(result.panelPresent, 'Craftsmanship panel missing from sheet').toBe(true);

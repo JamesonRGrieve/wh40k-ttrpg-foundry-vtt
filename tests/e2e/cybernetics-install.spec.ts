@@ -28,38 +28,21 @@ test.describe.serial('CyberneticsInstallDialog (Tier B)', () => {
 
             try {
                 interface DialogInstance {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
-                    render: (opts?: object) => Promise<unknown>;
                     element: HTMLElement | null;
                     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
                     close: () => Promise<unknown>;
                 }
                 interface DialogModule {
-                    default: new (opts?: object) => DialogInstance;
+                    openCyberneticsInstallDialog: (opts: { deviceName: string }) => void;
                 }
                 // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
                 const mod = (await import(moduleUrl)) as unknown as DialogModule;
-                const Cls = mod.default;
-                if (typeof Cls !== 'function') {
-                    return {
-                        rendered,
-                        craftButtons,
-                        siteButtons,
-                        hasDifficulty,
-                        hasSkillInput,
-                        hasRollButton,
-                        error: 'default export not a constructor',
-                    };
-                }
-                const inst = new Cls({ deviceName: 'Bionic Arm' });
-                try {
-                    await inst.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 80);
-                    });
-                } catch (err) {
-                    error = err instanceof Error ? err.message : String(err);
-                }
+                const inst = await wh40kOpenDialog('cybernetics-install-dialog', () => {
+                    mod.openCyberneticsInstallDialog({ deviceName: 'Bionic Arm' });
+                });
+                await new Promise<void>((r) => {
+                    setTimeout(r, 80);
+                });
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     const el = inst.element;

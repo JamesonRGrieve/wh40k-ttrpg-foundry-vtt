@@ -55,8 +55,6 @@ import { expect, test } from './lib/test';
  *   - src/module/applications/api/application-v2-mixin.ts
  *     (`_renderContainers` data-container-id placement, `subtitle` i18n
  *     getter, `_disableFields` readonly/disabled flips).
- *   - src/module/applications/api/dialog.ts (DialogWH40K — `wait()` Promise
- *     resolve + `resolve(result)` static flag flip).
  *   - src/module/applications/api/what-if-mixin.ts (WhatIfMixin — exit
  *     resets `_whatIfActive` + clears DOM; `_applyChange` when inactive
  *     forwards straight to document.update).
@@ -101,7 +99,6 @@ const APP_API_DEPTH_FLOWS = [
     'icons-helper-resolution',
     'icons-handlebars-registration',
     'appv2-mixin-subtitle-and-disable',
-    'dialog-wait-and-resolve',
     'whatif-mixin-exit-and-direct-apply',
     'statbreakdown-mixin-variant-rows',
     'collapsible-panel-roundtrip',
@@ -1369,61 +1366,6 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
             }
 
             /* ============================================================
-             * Flow 17: dialog-wait-and-resolve
-             * DialogWH40K.wait() returns a Promise resolved via the
-             * instance's `resolve(value)` helper (backed by the private
-             * #resolution tracker — there is no public `_submitted` flag).
-             * Fire wait + resolve in sequence; assert the Promise settles
-             * with the passed value.
-             * ============================================================ */
-            async function probeDialogWaitResolve(): Promise<void> {
-                try {
-                    interface DialogInst {
-                        wait: () => Promise<string>;
-                        resolve: (value: string) => void;
-                        close?: () => Promise<void>;
-                    }
-                    type DialogCtor = new (config: { window: { title: string }; content: string; buttons: never[] }) => DialogInst;
-                    const mod = await loadModule<{ default?: DialogCtor; DialogWH40K?: DialogCtor }>(`${base}/applications/api/dialog.js`);
-                    const DialogWH40K = mod.default ?? mod.DialogWH40K;
-                    if (typeof DialogWH40K !== 'function') {
-                        notes['dialog-wait-and-resolve'] = 'DialogWH40K export missing';
-                    } else {
-                        const dialog = new DialogWH40K({
-                            window: { title: 'probe-wait-dialog' },
-                            content: '<p>wait-probe</p>',
-                            buttons: [],
-                        });
-                        // wait() awaits a Promise that resolves on close OR
-                        // resolve(). Kick off wait, then immediately call
-                        // resolve('probe-value') to settle the Promise without
-                        // needing the render to materialise.
-                        const waitPromise = dialog.wait();
-                        // Yield a tick so wait() installs its 'close' listener.
-                        await new Promise<void>((resolve) => {
-                            setTimeout(resolve, 30);
-                        });
-                        dialog.resolve('probe-value');
-                        const settled = await withTimeout(waitPromise, 5_000, 'DialogWH40K.wait');
-                        if (settled === 'probe-value') {
-                            fired['dialog-wait-and-resolve'] = true;
-                            notes['dialog-wait-and-resolve'] = 'wait() resolved with the resolve(value) payload';
-                        } else {
-                            notes['dialog-wait-and-resolve'] = `settled=${String(settled)}`;
-                        }
-                        try {
-                            await dialog.close?.();
-                        } catch {
-                            /* ignore */
-                        }
-                        await closeOpenDialogs();
-                    }
-                } catch (err) {
-                    notes['dialog-wait-and-resolve'] = `flow threw: ${String(err instanceof Error ? err.message : String(err))}`;
-                }
-            }
-
-            /* ============================================================
              * Flow 18: whatif-mixin-exit-and-direct-apply
              * Two complementary branches of WhatIfMixin:
              *  1. When `_whatIfActive` is false, `previewChange` forwards
@@ -1787,7 +1729,6 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                 await probeIconsResolution();
                 await probeIconsHandlebars();
                 await probeAppV2SubtitleDisable();
-                await probeDialogWaitResolve();
                 await probeWhatIfExitDirect();
                 await probeStatBreakdownRows();
                 await probeCollapsibleRoundtrip();

@@ -16,9 +16,6 @@ import { test } from './lib/test';
  * Modules exercised (all were at 0% function coverage from Tier B
  * before this spec because the system code reaches them only via
  * Actor / Item roll methods, which take other paths in headless mode):
- *   - `chaos-talents.ts` — Enemies Within talent constant table.
- *   - `elite-advances.ts` — Elite Advance definition registry +
- *     prerequisite shapes.
  *   - `radical-services.ts` — Radical Services requisition table +
  *     availability refs into `requisition-test.ts`.
  *   - `xenos-features.ts` — Enemies Without role / talent / homeworld
@@ -43,9 +40,6 @@ import { test } from './lib/test';
  */
 
 const RULE_PROGRESSION_FLOWS = [
-    'chaos-talents-constants',
-    'elite-advances-registry',
-    'elite-advances-prerequisites',
     'radical-services-registry',
     'radical-services-availability',
     'xenos-features-constants',
@@ -72,24 +66,6 @@ interface FlowResult {
 async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
     const results = await page.evaluate(async (): Promise<FlowResult[]> => {
         type ImportError = { __importError?: string };
-        interface TalentConstant {
-            radiusMetres?: number;
-            wpBonus?: number;
-            testBonusPerCp?: number;
-        }
-        interface ChaosTalentsModule extends ImportError {
-            AEGIS_OF_CONTEMPT?: TalentConstant;
-            FLAGELLANT?: TalentConstant;
-            TAINTED_PSYKER?: TalentConstant;
-        }
-        interface EliteAdvanceEntry {
-            id?: string;
-            xpCost?: number;
-            prerequisites?: Array<{ type?: string; minimum?: number }>;
-        }
-        interface EliteAdvancesModule extends ImportError {
-            ELITE_ADVANCES?: Record<string, EliteAdvanceEntry>;
-        }
         interface RadicalServiceEntry {
             id?: string;
             threatLevel?: number;
@@ -160,50 +136,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             }
         };
 
-        // ---------- content registries (chaos / elite / radical / xenos / profane) ----------
+        // ---------- content registries (radical / xenos / profane) ----------
         async function probeContentRegistries(): Promise<void> {
-            // ---------- chaos-talents ----------
-            const chaosTalents = await loadModule<ChaosTalentsModule>('chaos-talents');
-            if (chaosTalents.__importError !== undefined) {
-                record('chaos-talents-constants', false, String(chaosTalents.__importError));
-            } else {
-                try {
-                    const aegis = chaosTalents.AEGIS_OF_CONTEMPT;
-                    const flagellant = chaosTalents.FLAGELLANT;
-                    const tainted = chaosTalents.TAINTED_PSYKER;
-                    record(
-                        'chaos-talents-constants',
-                        typeof aegis?.radiusMetres === 'number' && typeof flagellant?.wpBonus === 'number' && typeof tainted?.testBonusPerCp === 'number',
-                        null,
-                    );
-                } catch (err) {
-                    record('chaos-talents-constants', false, String((err as Error).message));
-                }
-            }
-
-            // ---------- elite-advances ----------
-            const elite = await loadModule<EliteAdvancesModule>('elite-advances');
-            if (elite.__importError !== undefined) {
-                for (const k of ['elite-advances-registry', 'elite-advances-prerequisites'] as const) record(k, false, String(elite.__importError));
-            } else {
-                try {
-                    const reg = elite.ELITE_ADVANCES ?? {};
-                    const ids = Object.keys(reg);
-                    const allShaped = ids.every((id) => typeof reg[id].id === 'string' && typeof reg[id].xpCost === 'number');
-                    record('elite-advances-registry', ids.length > 0 && allShaped, `ids=${ids.join(',')}`);
-                } catch (err) {
-                    record('elite-advances-registry', false, String((err as Error).message));
-                }
-                try {
-                    const astropath = elite.ELITE_ADVANCES?.astropath;
-                    const prereqs = astropath?.prerequisites ?? [];
-                    const allValid = prereqs.length > 0 && prereqs.every((p) => typeof p.type === 'string' && typeof p.minimum === 'number');
-                    record('elite-advances-prerequisites', allValid, null);
-                } catch (err) {
-                    record('elite-advances-prerequisites', false, String((err as Error).message));
-                }
-            }
-
             // ---------- radical-services ----------
             const radical = await loadModule<RadicalServicesModule>('radical-services');
             if (radical.__importError !== undefined) {

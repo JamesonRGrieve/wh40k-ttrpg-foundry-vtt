@@ -20,14 +20,12 @@ test.describe.serial('WithinHomeworldInfoDialog (#139)', () => {
 
         const result = await page.evaluate(async () => {
             interface DialogInstance {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
-                render: (force?: boolean) => Promise<unknown>;
                 element: HTMLElement | null;
                 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
                 close: () => Promise<unknown>;
             }
             interface DialogModule {
-                default: new () => DialogInstance;
+                openWithinHomeworldInfoDialog: () => void;
             }
             interface DialogHostWindow {
                 __wh40kWithinHomeworldDialog?: DialogInstance | undefined;
@@ -42,19 +40,12 @@ test.describe.serial('WithinHomeworldInfoDialog (#139)', () => {
             try {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
                 const mod = (await import(moduleUrl)) as unknown as DialogModule;
-                const Cls = mod.default;
-                if (typeof Cls !== 'function') {
-                    return { rendered, cardCount, ids, hasCloseButton, error: 'default export not a constructor' };
-                }
-                const inst = new Cls();
-                try {
-                    await inst.render(true);
-                    await new Promise((r) => {
-                        setTimeout(r, 60);
-                    });
-                } catch (err) {
-                    error = err instanceof Error ? err.message : String(err);
-                }
+                const inst: DialogInstance = await wh40kOpenDialog('within-homeworld-info-dialog', () => {
+                    mod.openWithinHomeworldInfoDialog();
+                });
+                await new Promise((r) => {
+                    setTimeout(r, 60);
+                });
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     const cards = inst.element.querySelectorAll('[data-homeworld]');
