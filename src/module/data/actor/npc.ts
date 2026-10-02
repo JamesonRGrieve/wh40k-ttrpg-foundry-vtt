@@ -28,6 +28,7 @@ import { characteristicField, initiativeField, movementField, sizeField, woundsF
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
 import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
+import type { NpcArmour } from './npc-armour-edit.ts';
 import {
     CHARACTERISTIC_SHORT_TO_FULL,
     type Json,
@@ -251,20 +252,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         mode: 'simple' | 'embedded';
         simple: NPCV2SimpleWeapon[];
     };
-    declare armour: {
-        mode: 'simple' | 'locations';
-        total: number;
-        authored: boolean;
-        locations: {
-            head: number;
-            body: number;
-            leftArm: number;
-            rightArm: number;
-            leftLeg: number;
-            rightLeg: number;
-            [key: string]: number;
-        };
-    };
+    declare armour: NpcArmour;
     declare specialAbilities: string;
     declare customStats: {
         enabled: boolean;

@@ -1,7 +1,13 @@
+import { isAuthoredOnCreate, type NpcArmourPatch, resolveArmourEdit } from '../data/actor/npc-armour-edit.ts';
 import type NPCData from '../data/actor/npc.ts';
 import { openRollPrompt } from '../rolls/roll-prompt.ts';
 import { hasAuthoredFootprint, prototypeTokenFootprintUpdate } from '../utils/token-footprint.ts';
 import { WH40KBaseActor } from './base-actor.ts';
+
+/** The armour slice of an NPC create payload or update delta. */
+interface NpcArmourChange {
+    system?: { armour?: NpcArmourPatch };
+}
 
 /**
  * Document class for npcV2 type actors.
@@ -106,7 +112,34 @@ export class WH40KNPC extends WH40KBaseActor {
             initData['prototypeToken.bar1'] = { attribute: 'horde.magnitude' };
         }
 
+        // Explicit non-zero armour at creation is authored: keep it rather than
+        // letting the Toughness + worn-item derivation overwrite it on prepare.
+        const armourCreate: NpcArmourChange = data;
+        if (isAuthoredOnCreate(armourCreate.system?.armour)) initData['system.armour.authored'] = true;
+
         this.updateSource(initData);
+        return undefined;
+    }
+
+    /**
+     * Mark a GM armour edit as authored, and drop a sheet save's echo of the
+     * derived armour it displays, so neither is lost to — nor freezes — the
+     * Toughness + worn-item derivation (see npc-armour-edit.ts).
+     * @param {never} changed  The candidate update (typed `never` by the framework).
+     * @param {never} options  Update options.
+     * @param {never} user  The requesting user.
+     * @returns {Promise<boolean | undefined>}  `false` aborts the update.
+     */
+    protected override async _preUpdate(changed: never, options: never, user: never): Promise<boolean | undefined> {
+        const allowed = await super._preUpdate(changed, options, user);
+        if (allowed === false) return false;
+
+        const delta: NpcArmourChange = changed;
+        const patch = delta.system?.armour;
+        if (patch === undefined || delta.system === undefined) return undefined;
+        const resolved = resolveArmourEdit(patch, this.system.armour);
+        if (resolved === null) delete delta.system.armour;
+        else delta.system.armour = resolved;
         return undefined;
     }
 
