@@ -40,9 +40,14 @@ export FOUNDRY_NODE
 # world.sh only *symlinks* dist/ (and errors if it's missing) — it never builds.
 # Skip with E2E_SKIP_BUILD=1 when iterating on spec files alone against an
 # already-current dist/.
+#
+# The private content packs are merged in exactly as the campaign deploy does,
+# so the e2e world holds the compendium content production ships — without it
+# every lean (compendium-joined) seed actor fails its hydration join.
 if [[ "${E2E_SKIP_BUILD:-}" != "1" ]]; then
     echo "[integration] Building system → dist/ before e2e (set E2E_SKIP_BUILD=1 to skip)…"
     (cd "${SCRIPT_DIR}" && pnpm build)
+    bash "${SCRIPT_DIR}/scripts/build-private-packs.sh"
 fi
 
 CONFIG="${SCRIPT_DIR}/playwright.foundry.config.ts"
@@ -66,28 +71,18 @@ fi
 # e2e:ratchet see every spec). Clear accumulated coverage artifacts so the
 # report reflects only this run (nothing else truncates them).
 #
-# Default auto-scales to the box's CURRENT headroom: each worker needs ~6.3G
-# RAM (chromium under software-WebGL) and is CPU-heavy but await-bound, so we
-# cap by AVAILABLE RAM (avail/7, leaving a worker's slack) and by CPU (cores/3),
-# clamp to [1,8]. Keying off *available* (not total) memory adapts to other
-# workloads sharing the box. Override with E2E_WORKERS (E2E_WORKERS=1 forces the
+# Default auto-scales to the box's CURRENT headroom (scripts/auto-workers.sh):
+# GPU on (default) offloads rendering to the host GPU/VRAM, so each worker is
+# light on both CPU (~3 load) and system RAM (~3-4G) — measured at 4 workers:
+# load ~12, avail steady — hence 4G and 3 threads per worker, which saturates
+# the CPU while staying inside free RAM. Software WebGL is RAM-heavy (~6.3G a
+# worker), hence 7G. Override with E2E_WORKERS (E2E_WORKERS=1 forces the
 # historical serial run).
 if [[ -z "${E2E_WORKERS:-}" ]]; then
-    _cores="$(nproc 2>/dev/null || echo 4)"
-    _avail_gb="$(free -g 2>/dev/null | awk 'NR==2{print $7}' || echo 8)"
-    # GPU on (default) offloads rendering to the host GPU/VRAM, so each worker is
-    # light on both CPU (~3 load) and system RAM (~3-4G) — measured at 4 workers:
-    # load ~12, avail steady. Target ~cores/3 workers to push CPU toward
-    # saturation, bounded by RAM (avail/4). Software mode stays CPU-heavy
-    # (cores/3) and RAM-bound (avail/7).
-    if [[ "${E2E_GPU:-1}" != "0" ]]; then _mem_div=4; _cpu_div=3; else _mem_div=7; _cpu_div=3; fi
-    _by_mem=$(( _avail_gb / _mem_div ))
-    _by_cpu=$(( _cores / _cpu_div ))
-    _w=$(( _by_mem < _by_cpu ? _by_mem : _by_cpu ))
-    (( _w < 1 )) && _w=1
-    (( _w > 8 )) && _w=8
-    export E2E_WORKERS="${_w}"
-    echo "[integration] auto-scaled workers=${_w} (cores=${_cores}, avail=${_avail_gb}G)"
+    if [[ "${E2E_GPU:-1}" != "0" ]]; then _gb_per_worker=4; else _gb_per_worker=7; fi
+    E2E_WORKERS="$(bash "${SCRIPT_DIR}/scripts/auto-workers.sh" "${_gb_per_worker}" 3)"
+    export E2E_WORKERS
+    echo "[integration] auto-scaled workers=${E2E_WORKERS} (threads=$(nproc), avail=$(free -g | awk 'NR==2{print $7}')G)"
 fi
 echo "[integration] Full run (isolated worlds, workers=${E2E_WORKERS})…"
 rm -rf "${SCRIPT_DIR}/.e2e-raw-coverage" "${SCRIPT_DIR}/.e2e-runtime-coverage.jsonl"
