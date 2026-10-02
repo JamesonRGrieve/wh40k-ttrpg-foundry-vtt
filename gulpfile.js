@@ -10,6 +10,7 @@ const clean = require("gulp-clean");
 const postcssNested = require('postcss-nested');
 const postcssImport = require('postcss-import');
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 const zip = require("gulp-zip");
 const { ClassicLevel } = require("classic-level");
@@ -69,6 +70,9 @@ const PACK_SRC = process.env.WH40K_PACKS_SRC || "src/packs";
 const PACK_SRC_ABS = path.resolve(__dirname, PACK_SRC);
 const BUILD_DIR = "dist";
 const PACK_BUILD_DIR = process.env.WH40K_PACKS_BUILD_DIR || path.join(BUILD_DIR, "packs");
+// Packs compiled at once: one per hardware thread. Each pack owns its own
+// LevelDB dir, so concurrent compiles never contend on a lock.
+const PACK_COMPILE_CONCURRENCY = os.availableParallelism();
 
 function readJsonFile(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -215,15 +219,17 @@ async function compilePacks() {
     }
   }
 
-  // Process each pack into a LevelDB compendium
-  for (const { pack: folder, sourceDir, relPath } of packEntries) {
+  // Compile one pack into its own LevelDB compendium. Packs are independent
+  // (each owns its db dir), so they compile concurrently below; each pack's
+  // writes are collected and committed as one batch.
+  async function compilePack({ pack: folder, sourceDir, relPath }) {
     const dbPath = path.join(packsDir, relPath);
 
     try {
       removePackDir(dbPath);
     } catch (err) {
       console.error(`Failed to clean pack dir ${dbPath}: ${err.code || err.message}. Skipping.`);
-      continue;
+      return;
     }
 
     // Create and explicitly open the LevelDB database. Without the explicit
@@ -235,7 +241,7 @@ async function compilePacks() {
       await db.open();
     } catch (openErr) {
       console.error(`Failed to open pack database ${dbPath}: ${openErr.code || openErr.message}. Skipping.`);
-      continue;
+      return;
     }
 
     // Determine the document collection type from the folder name.
@@ -244,6 +250,7 @@ async function compilePacks() {
     const collectionType = detectCollectionType(folder);
 
     try {
+      const ops = [];
       // Special handling for origin-path pack - create folders for each step
       const originPathFolders = {};
       if (folder === 'rt-items-origin-path') {
@@ -267,7 +274,7 @@ async function compilePacks() {
             color: null,
             flags: {}
           };
-          await db.put(`!folders!${step.id}`, folderDoc);
+          ops.push({ type: 'put', key: `!folders!${step.id}`, value: folderDoc });
         }
       }
       
@@ -306,27 +313,48 @@ async function compilePacks() {
               for (const item of embeddedItems) {
                 if (item && item._id) {
                   const itemKey = `!actors.items!${doc._id}.${item._id}`;
-                  await db.put(itemKey, item);
+                  ops.push({ type: 'put', key: itemKey, value: item });
                   itemIds.push(item._id);
                 }
               }
               doc.items = itemIds;
             }
-            await db.put(key, doc);
+            ops.push({ type: 'put', key, value: doc });
           }
         } catch (parseErr) {
           console.error(`Error parsing ${filePath}:`, parseErr);
         }
       }
       
+      await db.batch(ops);
       const folderCount = folder === 'rt-items-origin-path' ? ' + 6 folders' : '';
       console.log(`Compiled pack: ${folder} (${files.length} documents${folderCount})`);
     } finally {
       await db.close();
     }
   }
-  
-  return Promise.resolve();
+
+  await runPool(packEntries, PACK_COMPILE_CONCURRENCY, compilePack);
+}
+
+/**
+ * Run `task` over `items` with at most `limit` in flight at once.
+ * @param {T[]} items
+ * @param {number} limit
+ * @param {(item: T) => Promise<void>} task
+ * @returns {Promise<void>}
+ * @template T
+ */
+async function runPool(items, limit, task) {
+  let next = 0;
+  const lane = async () => {
+    while (next < items.length) {
+      const item = items[next];
+      next += 1;
+      await task(item);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, lane));
 }
 
 /* ----------------------------------------- */
@@ -486,10 +514,16 @@ function createArchive() {
 /*  Export Tasks
 /* ----------------------------------------- */
 
-const buildSystem = gulp.series(cleanBuild, generateIcons, compileCss, compileTypeScript, checkRuntimeImports, copyFiles);
-const build = gulp.series(buildSystem, compilePacks, createArchive);
+// After clean + icon codegen (the icon registry is a TS/CSS input), the
+// remaining steps write disjoint outputs — css/, module/*.js (src/module holds
+// only .ts, allowJs is off, so copyFiles never touches tsc's output), static
+// copies, and per-pack LevelDB dirs — so they run concurrently.
+const compileModule = gulp.series(compileTypeScript, checkRuntimeImports);
+const buildSystem = gulp.series(cleanBuild, generateIcons, gulp.parallel(compileCss, compileModule, copyFiles));
+const buildAll = gulp.series(cleanBuild, generateIcons, gulp.parallel(compileCss, compileModule, copyFiles, compilePacks));
+const build = gulp.series(buildAll, createArchive);
 const archive = gulp.series(createArchive);
-const defaultTask = gulp.series(buildSystem, compilePacks, watchUpdates);
+const defaultTask = gulp.series(buildAll, watchUpdates);
 
 exports.clean = gulp.series(cleanBuild);
 exports.css = gulp.series(compileCss);
