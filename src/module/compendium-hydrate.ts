@@ -44,7 +44,7 @@ type HydratableItem = {
     system: Record<string, unknown>;
     _source?: { system?: Record<string, unknown>; img?: string | null };
     _stats?: { compendiumSource?: string | null };
-    updateSource?: (changes: Record<string, unknown>) => void;
+    updateSource?: (changes: Record<string, unknown>, options?: SourceReplaceOptions) => void;
 };
 
 type HydratableActor = {
@@ -63,10 +63,13 @@ type HydratableActor = {
      */
     system?: Record<string, unknown>;
     _source?: { system?: Record<string, unknown> };
-    updateSource?: (changes: Record<string, unknown>) => void;
+    updateSource?: (changes: Record<string, unknown>, options?: SourceReplaceOptions) => void;
 };
 
 type SourceLike = { img: string | null; system: Record<string, unknown> };
+
+/** The `updateSource` option the join passes: replace root keys wholesale (see {@link REPLACE_SYSTEM}). */
+type SourceReplaceOptions = { recursive: false };
 /* eslint-enable no-restricted-syntax */
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry item system payloads are open-ended Records
@@ -379,6 +382,20 @@ export async function hydrateActorInMemory(actor: HydratableActor): Promise<numb
 }
 
 /**
+ * Commit the joined `system` as a wholesale replacement, not a recursive merge.
+ *
+ * A DataModel's `_source` is `Object.seal`ed, and Foundry builds the system
+ * model with `copy: false`, so `item._source.system` itself is sealed. A schema
+ * field declared `required: false` with no `initial` (origin-path `effectText`,
+ * talent `specialization`) is simply absent from a lean item's source, and a
+ * recursive commit then tries to ADD that key to the sealed object — "Cannot add
+ * property effectText, object is not extensible". `recursive: false` makes
+ * Foundry treat `system` as a ForcedReplacement and swap in the fresh merged
+ * object, which is already the complete join, so nothing is lost.
+ */
+const REPLACE_SYSTEM: SourceReplaceOptions = { recursive: false };
+
+/**
  * As {@link hydrateActorInMemory}, but also reports the join keys that did not
  * resolve so the caller can surface them. A silent drop is what made #499 read
  * as "the hybrid was authored without claws" instead of "the claws didn't load".
@@ -387,7 +404,7 @@ async function hydrateActorReporting(actor: HydratableActor): Promise<{ patched:
     const { patches, unresolved, actorSystem } = await buildHydration(actor);
     for (const patch of patches) {
         const item = actor.items.contents.find((i) => i.id === patch['_id']);
-        item?.updateSource?.({ system: patch['system'], ...(patch['img'] !== undefined ? { img: patch['img'] } : {}) });
+        item?.updateSource?.({ system: patch['system'], ...(patch['img'] !== undefined ? { img: patch['img'] } : {}) }, REPLACE_SYSTEM);
     }
     // The actor's own join, same in-memory contract as its items': `updateSource`
     // touches only `_source`, so a named individual gains its class's stats at
@@ -405,7 +422,7 @@ async function hydrateActorReporting(actor: HydratableActor): Promise<{ patched:
             /* compendium not loaded yet */
         }
     }
-    if (actorSystem !== null) actor.updateSource?.({ system: actorSystem });
+    if (actorSystem !== null) actor.updateSource?.({ system: actorSystem }, REPLACE_SYSTEM);
     if (patches.length > 0 || actorSystem !== null) actor.reset?.();
     // Report from the single join site, so EVERY path (boot, import, sheet
     // render) surfaces a failed join without each caller re-implementing it.

@@ -10,7 +10,7 @@
  * `createActor` hook / a crashed sheet render.
  */
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildActorVariantJoin, buildHydratedSystem, buildHydrationPatches } from './compendium-hydrate.ts';
+import { buildActorVariantJoin, buildHydratedSystem, buildHydrationPatches, hydrateActorInMemory } from './compendium-hydrate.ts';
 
 /** Minimal structural shape matching the slice of an owned item `buildHydrationPatches` reads. */
 interface MockItem {
@@ -215,5 +215,63 @@ describe('buildActorVariantJoin — a named individual inherits its class', () =
     it('returns null when the join would be a no-op, so the actor is not reset needlessly', async () => {
         vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, system: { armour: 20 } }));
         await expect(buildActorVariantJoin(named({ variantOf: 'Compendium.x.Actor.base', armour: 20 }))).resolves.toBeNull();
+    });
+});
+
+/**
+ * Foundry seals every DataModel `_source` and builds the system model with
+ * `copy: false`, so a document's `_source.system` is itself sealed. A schema
+ * field with `required: false` and no `initial` (origin-path `effectText`,
+ * talent `specialization`) is absent from a lean item, and a RECURSIVE
+ * `updateSource` then tries to add it to the sealed object — the live
+ * "Cannot add property effectText, object is not extensible" crash on token
+ * create. The join must commit `system` as a wholesale replacement.
+ */
+describe('hydrateActorInMemory — commits onto a sealed source', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        vi.restoreAllMocks();
+    });
+
+    type SystemPayload = Record<string, string | number>;
+    interface SealedDoc {
+        _source: { system: SystemPayload };
+        readonly system: SystemPayload;
+        updateSource: (changes: { system?: SystemPayload }, options?: { recursive: false }) => void;
+    }
+
+    /** A document whose `updateSource` mirrors Foundry's commit: per-key into the sealed system unless `recursive: false`. */
+    const sealedDoc = (system: SystemPayload): SealedDoc => {
+        const source = { system: Object.seal({ ...system }) };
+        return {
+            _source: source,
+            get system() {
+                return source.system;
+            },
+            updateSource(changes, options) {
+                const next = changes.system;
+                if (next === undefined) return;
+                if (options?.recursive === false) source.system = Object.seal({ ...next });
+                else Object.assign(source.system, next);
+            },
+        };
+    };
+
+    it('adds a canonical field the lean item lacks without throwing', async () => {
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, system: { effectText: '<p>Gain a Fate point.</p>', xpCost: 0 } }));
+        const doc = sealedDoc({ xpCost: 100 });
+        const item = { id: 'o1', name: 'Mind Cleansed', img: null, type: 'originPath', _stats: { compendiumSource: 'Compendium.x.Item.o' }, ...doc };
+        const actor = { items: { contents: [item] }, reset: vi.fn() };
+        await expect(hydrateActorInMemory(actor)).resolves.toBe(1);
+        expect(doc._source.system).toEqual({ effectText: '<p>Gain a Fate point.</p>', xpCost: 100 });
+        expect(actor.reset).toHaveBeenCalledOnce();
+    });
+
+    it('adds a base field to a named individual without throwing', async () => {
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, system: { specialization: 'Las', armour: 20 } }));
+        const doc = sealedDoc({ variantOf: 'Compendium.x.Actor.base', armour: 25 });
+        const actor = { items: { contents: [] }, name: 'Excrucian', reset: vi.fn(), ...doc };
+        await expect(hydrateActorInMemory(actor)).resolves.toBe(0);
+        expect(doc._source.system).toEqual({ variantOf: 'Compendium.x.Actor.base', specialization: 'Las', armour: 25 });
     });
 });
