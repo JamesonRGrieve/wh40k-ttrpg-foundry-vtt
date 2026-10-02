@@ -30,43 +30,24 @@ test.describe.serial('WarpTravelDialog (Tier B)', () => {
 
             try {
                 interface DialogInstance {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
-                    render: (opts?: object) => Promise<unknown>;
                     element: HTMLElement | null;
                     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
                     close: () => Promise<unknown>;
                 }
                 interface DialogModule {
-                    default: new (opts?: object) => DialogInstance;
+                    openWarpTravelDialog: () => void;
                 }
                 interface DialogHostGlobal {
                     __c9dialog?: DialogInstance | undefined;
                 }
                 // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
                 const mod = (await import(moduleUrl)) as unknown as DialogModule;
-                const Cls = mod.default;
-                if (typeof Cls !== 'function') {
-                    return {
-                        rendered,
-                        hasResolve,
-                        hasPostChat,
-                        hasRollPeril,
-                        hasCancel,
-                        inputCount,
-                        hasBaseDays,
-                        hasNavigationWarp,
-                        error: 'default export not a constructor',
-                    };
-                }
-                const inst = new Cls({});
-                try {
-                    await inst.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 80);
-                    });
-                } catch (err) {
-                    error = String(err instanceof Error ? err.message : err);
-                }
+                const inst: DialogInstance = await wh40kOpenDialog('warp-travel-dialog', () => {
+                    mod.openWarpTravelDialog();
+                });
+                await new Promise<void>((r) => {
+                    setTimeout(r, 80);
+                });
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     const el = inst.element;

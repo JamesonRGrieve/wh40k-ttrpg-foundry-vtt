@@ -16,8 +16,6 @@ import { expect, test } from './lib/test';
  *     6-step "Get started" tour; registered as `wh40k-rpg.main-tour`).
  *   - src/module/applications/api/tooltip-mixin.ts (TooltipMixin —
  *     prepare*Tooltip delegating helpers returning JSON payloads).
- *   - src/module/applications/api/dialog.ts (DialogWH40K — static
- *     confirm/prompt helpers + instance _prepareContext / wait / resolve).
  *   - src/module/applications/api/what-if-mixin.ts (WhatIfMixin —
  *     enter/exit, previewChange, _updatePreview, _calculateImpacts,
  *     getWhatIfState / isWhatIfActive).
@@ -64,8 +62,6 @@ const APP_TOURS_EXTRA_FLOWS = [
     'tour-main-steps-shape',
     'tour-registered-in-game',
     'tooltip-mixin-prepare',
-    'dialog-wh40k-static-helpers',
-    'dialog-wh40k-instance-render',
     'whatif-mixin-state',
     'statbreakdown-mixin-action',
     'collapsible-panel-mixin-toggle',
@@ -212,22 +208,6 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
         type ActionMixinFactory = (base: new (...args: never[]) => object) => MixedWithActions;
 
         // DialogWH40K shapes shared by the static-helper + instance-render flows.
-        interface DialogInstance {
-            render: (options: object) => Promise<DialogInstance>;
-            _prepareContext: (options: object) => Promise<{ content?: string; buttons?: Array<{ cssClass?: string }> }>;
-            element?: HTMLElement | null;
-            close?: () => Promise<void>;
-        }
-        interface DialogCtor {
-            new (options: object): DialogInstance;
-            confirm?: (options: object) => Promise<void>;
-            prompt?: (options: object) => Promise<void>;
-        }
-        interface DialogModule {
-            default?: DialogCtor;
-            DialogWH40K?: DialogCtor;
-        }
-
         // mainTour is built by probeMainConstruct() and read by
         // probeMainStepsShape() — shared across the two tour flows.
         interface MainTourInstance {
@@ -456,92 +436,6 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 }
             } catch (err) {
                 notes['tooltip-mixin-prepare'] = `flow threw: ${String((err as Error).message)}`;
-            }
-        }
-
-        /* ============================================================
-         * Flow 6: dialog-wh40k-static-helpers
-         * DialogWH40K.confirm / .prompt delegate to DialogV2. Fire
-         * each fire-and-forget (the promise resolves only on user
-         * action) and assert a DialogV2 popup attached to the DOM —
-         * exercising the static helper source path. Tear the popup
-         * down after observing it.
-         * ============================================================ */
-        async function probeDialogStatic(): Promise<void> {
-            try {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
-                const mod = (await import(`${base}/applications/api/dialog.js`)) as unknown as DialogModule;
-                const DialogWH40K = mod.default ?? mod.DialogWH40K;
-                // DialogWH40K.confirm was removed (#287) in favour of
-                // ConfirmationDialog.confirm; only the static prompt() survives.
-                if (typeof DialogWH40K !== 'function' || typeof DialogWH40K.prompt !== 'function') {
-                    notes['dialog-wh40k-static-helpers'] = 'DialogWH40K.prompt missing';
-                } else {
-                    void DialogWH40K.prompt({ title: 'probe-prompt', content: 'enter', label: 'OK' });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 80);
-                    });
-                    const popup = document.querySelector('dialog.application');
-                    // The helper returned without throwing even when the
-                    // DialogV2 markup is deferred; treat a present popup OR
-                    // a clean dispatch as the source-coverage signal.
-                    fired['dialog-wh40k-static-helpers'] = true;
-                    notes['dialog-wh40k-static-helpers'] = `confirm/prompt dispatched; popup=${popup === null ? 'absent' : 'present'}`;
-                    await closeOpenDialogs();
-                }
-            } catch (err) {
-                notes['dialog-wh40k-static-helpers'] = `flow threw: ${String((err as Error).message)}`;
-            }
-        }
-
-        /* ============================================================
-         * Flow 7: dialog-wh40k-instance-render
-         * Construct DialogWH40K with content + buttons options,
-         * render it, and assert _prepareContext mapped the buttons
-         * (button.class → cssClass) and content onto the context.
-         * Close immediately to keep the stack clean.
-         * ============================================================ */
-        async function probeDialogInstance(): Promise<void> {
-            try {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
-                const mod = (await import(`${base}/applications/api/dialog.js`)) as unknown as DialogModule;
-                const DialogWH40K = mod.default ?? mod.DialogWH40K;
-                if (typeof DialogWH40K !== 'function') {
-                    notes['dialog-wh40k-instance-render'] = 'DialogWH40K export missing';
-                } else {
-                    const dialog = new DialogWH40K({
-                        window: { title: 'probe-dialog' },
-                        content: '<p>probe-content</p>',
-                        buttons: [{ label: 'Yes', class: 'primary', default: true }],
-                    });
-                    let renderThrew: string | null = null;
-                    try {
-                        await withTimeout(dialog.render({ force: true }), 5_000, 'DialogWH40K.render');
-                    } catch (err) {
-                        renderThrew = String((err as Error).message);
-                    }
-                    const ctx = await dialog._prepareContext({});
-                    const contentOk = ctx.content === '<p>probe-content</p>';
-                    const buttonOk = Array.isArray(ctx.buttons) && ctx.buttons[0]?.cssClass === 'primary';
-                    const elementPresent = dialog.element != null;
-                    const tolerable = renderThrew?.includes('must render a single HTML element') === true;
-                    if (contentOk && buttonOk && (elementPresent || tolerable)) {
-                        fired['dialog-wh40k-instance-render'] = true;
-                        notes['dialog-wh40k-instance-render'] = '_prepareContext mapped content + button.cssClass';
-                    } else {
-                        notes['dialog-wh40k-instance-render'] = `contentOk=${String(contentOk)} buttonOk=${String(buttonOk)} elementPresent=${String(
-                            elementPresent,
-                        )} renderThrew=${renderThrew ?? 'no'}`;
-                    }
-                    try {
-                        await dialog.close?.();
-                    } catch {
-                        /* ignore */
-                    }
-                    await closeOpenDialogs();
-                }
-            } catch (err) {
-                notes['dialog-wh40k-instance-render'] = `flow threw: ${String((err as Error).message)}`;
             }
         }
 
@@ -1222,8 +1116,6 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
             probeMainStepsShape();
             probeTourRegistered();
             await probeTooltipMixin();
-            await probeDialogStatic();
-            await probeDialogInstance();
             await probeSharedPc();
             await probeWhatIfState();
             await probeStatBreakdownAction();

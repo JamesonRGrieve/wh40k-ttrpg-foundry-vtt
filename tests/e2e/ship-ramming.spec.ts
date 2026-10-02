@@ -67,7 +67,7 @@ test.describe.serial('Ship Ramming chat card (Tier B)', () => {
 
                 const html = await renderTemplateFn(template, context);
                 rendered = typeof html === 'string' && html.length > 0;
-                hasCardRoot = html.includes('wh40k-ship-ramming-card');
+                hasCardRoot = html.includes('data-wh40k-hook="ship-ramming-card"');
                 hasSystemAnchor = html.includes('data-wh40k-system="rt"');
                 // Resolve the i18n key to the rendered label so the assertion
                 // holds whether or not the key exists in the langpack (a bare

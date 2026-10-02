@@ -6,7 +6,7 @@ import { test } from './lib/test';
 /**
  * Tier B coverage of the *fifth* batch of pure-logic modules under
  * `src/module/rules/*` — the tactical / registry resolvers (aim,
- * altitude, attack-specials, explication, medicae-mechadendrite,
+ * altitude, attack-specials, medicae-mechadendrite,
  * combat-actions, daemon-weapon, daemonhost) that none of the prior
  * rules-*.spec.ts batches touch. Several of these modules ship NO
  * vitest unit test, so they were at 0% coverage on every surface
@@ -27,8 +27,6 @@ const RULE_TACTICAL_FLOWS = [
     'altitude-profiles',
     'attack-specials-list',
     'attack-specials-names',
-    'explication-breakthroughsCrossed',
-    'explication-isComplete',
     'medicae-mechadendrite-data',
     'combat-actions-all',
     'daemon-weapon-profiles',
@@ -95,11 +93,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             attackSpecials: () => Array<{ name?: string; hasLevel?: boolean }>;
             attackSpecialsNames: () => string[];
         }
-        interface ExplicationModule {
-            breakthroughsCrossed: (o: { complexity: string; oldDoS: number; newDoS: number }) => number;
-            isExplicationComplete: (o: { target: string; objective: string; complexity: string; accumulatedDoS: number }) => boolean;
-            EXPLICATION_THRESHOLDS: Record<string, number>;
-        }
         interface MedicaeModule {
             MEDICAE_MECHADENDRITE: object;
         }
@@ -164,23 +157,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             guarded('attack-specials-names', () => {
                 const names = attackSpecials.attackSpecialsNames();
                 return Array.isArray(names) && names.includes('Accurate') && names.includes('Blast');
-            });
-        }
-
-        // ---------- explication ----------
-        const explication = await loadModule<ExplicationModule>('explication');
-        if (hasImportError(explication)) {
-            fail(['explication-breakthroughsCrossed', 'explication-isComplete'], explication.__importError);
-        } else {
-            guarded('explication-breakthroughsCrossed', () => {
-                const none = explication.breakthroughsCrossed({ complexity: 'standard', oldDoS: 0, newDoS: 0 });
-                const some = explication.breakthroughsCrossed({ complexity: 'standard', oldDoS: 0, newDoS: 25 });
-                return none === 0 && some >= 1 && explication.EXPLICATION_THRESHOLDS.standard === 25;
-            });
-            guarded('explication-isComplete', () => {
-                const done = explication.isExplicationComplete({ target: 't', objective: 'eradication', complexity: 'minor', accumulatedDoS: 999 });
-                const notDone = explication.isExplicationComplete({ target: 't', objective: 'eradication', complexity: 'minor', accumulatedDoS: 0 });
-                return done && !notDone;
             });
         }
 

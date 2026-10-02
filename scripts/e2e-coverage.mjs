@@ -261,14 +261,8 @@ const DIALOG_AND_PROMPT_CLASSES = [
     'BaseRollDialog',
     'DamageRollDialog',
     'EffectCreationDialog',
-    'EnhancedSkillDialog',
-    'ForceFieldDialog',
-    'PsychicPowerDialog',
-    'RighteousFuryDialog',
-    'SimpleRollDialog',
     'SpecialistSkillDialog',
     'UnifiedRollDialog',
-    'WeaponAttackDialog',
 ];
 
 // ActiveEffect direct-creation flows exercised by tests/e2e/active-effects.spec.ts.
@@ -318,7 +312,7 @@ const COMBAT_FLOWS = [
 // the application class file (constructor + _prepareContext + _onRender +
 // PARTS registration). Keys MUST match the recordCoverage('combat.ui', ...)
 // calls in the spec.
-const COMBAT_UI_CLASSES = ['CombatQuickPanel', 'EncounterBuilder', 'CombatPresetDialog', 'DifficultyCalculatorDialog', 'NPCThreatScalerDialog'];
+const COMBAT_UI_CLASSES = ['EncounterBuilder', 'CombatPresetDialog', 'DifficultyCalculatorDialog', 'NPCThreatScalerDialog'];
 
 // Token document + scene-embedded token lifecycle flows exercised by
 // tests/e2e/token.spec.ts. Each key is a step in the scene/token lifecycle
@@ -527,8 +521,7 @@ recordDimension('active-effect.flow', covered['active-effect.flow'], ACTIVE_EFFE
 // Combat tracker lifecycle dimensions exercised by tests/e2e/combat.spec.ts.
 // Drives source-code coverage on `src/module/actions/combat-action-manager.ts`
 // (combatTurn / combatRound handler bodies) and the combat-adjacent
-// ApplicationV2 surfaces under `src/module/applications/hud/combat-quick-panel.ts`
-// and `src/module/applications/npc/*` (encounter builder, combat preset
+// ApplicationV2 surfaces under `src/module/applications/npc/*` (encounter builder, combat preset
 // dialog, difficulty calculator dialog, NPC threat scaler dialog).
 recordDimension('combat.flow', covered['combat.flow'], COMBAT_FLOWS);
 recordDimension('combat.ui', covered['combat.ui'], COMBAT_UI_CLASSES);
@@ -807,10 +800,7 @@ recordDimension('helper.flow', covered['helper.flow'], HELPER_FLOWS);
 // (computeArmour location aggregation + equipped-only filter),
 // `src/module/utils/range-calculator.ts` (calculateRangeBracket buckets,
 // applyQualityModifiers, isAtMeltaRange, calculateRangeModifier, isOutOfRange,
-// formatRangeDisplay), `src/module/utils/formula-evaluator.ts`
-// (evaluateWoundsFormula with characteristic refs + dice notation, parseTBMultiplier,
-// parseDiceRoll, describeWoundsFormula, describeFateFormula, evaluateFateFormula
-// early-returns), and `src/module/rules/subtlety-adjusters.ts` (clampSubtletyLoss
+// formatRangeDisplay), and `src/module/rules/subtlety-adjusters.ts` (clampSubtletyLoss
 // passthrough + active-clamp + truncation branches, isSubtletyPrimitive both arms).
 // Keys MUST match the recordCoverage('calculator.flow', ...) calls in the spec.
 const CALCULATOR_FLOWS = [
@@ -818,18 +808,16 @@ const CALCULATOR_FLOWS = [
     'armour-calculator-equipped-only',
     'range-calculator-band',
     'range-calculator-extreme',
-    'formula-evaluator-evaluates-string',
-    'formula-evaluator-with-actor-data',
     'subtlety-clamp-edge-cases',
 ];
 recordDimension('calculator.flow', covered['calculator.flow'], CALCULATOR_FLOWS);
 
 // Action-manager dispatch dimension exercised by tests/e2e/action-managers.spec.ts.
 // Pushes source-code coverage on `src/module/actions/basic-action-manager.ts`
-// (renderChatMessageHTML hook + .roll-control__* click handlers + scene-control
-// assignDamage tool), `src/module/actions/combat-action-manager.ts`
+// (renderChatMessageHTML hook + .roll-control__* click handlers),
+// `src/module/actions/combat-action-manager.ts`
 // (combatTurn / combatRound hook handlers), `src/module/actions/targeted-action-manager.ts`
-// (getSceneControlButtons hook handler + getSourceToken / getTargetToken /
+// (getSourceToken / getTargetToken /
 // createSourceAndTargetData early-return branches), and
 // `src/module/actions/reload-action-manager.ts` (static reloadWeapon entry
 // point + findSpareAmmunition / hasSpareAmmunition / getEffectiveReloadTime
@@ -840,7 +828,6 @@ const ACTION_MANAGER_FLOWS = [
     'combat-action-on-turn',
     'reload-action-dispatch',
     'targeted-action-with-target',
-    'scene-control-buttons-registered',
     'chat-card-button-click',
 ];
 recordDimension('action-manager.flow', covered['action-manager.flow'], ACTION_MANAGER_FLOWS);
@@ -901,12 +888,8 @@ recordDimension('npc-tool.flow', covered['npc-tool.flow'], NPC_TOOL_FLOWS);
 // Pushes source-code coverage on `src/module/data/item/weapon.ts` (defineSchema
 // getters: usesAmmo, isEmpty, isRangedWeapon, isMeleeWeapon; prepareDerivedData
 // / _computeModifiers paths; clip + rateOfFire schema fields round-tripping
-// through update writes), `src/module/applications/prompts/weapon-attack-dialog.ts`,
-// `src/module/applications/prompts/damage-roll-dialog.ts` (prepareDamageRoll +
-// _performRoll → Roll.evaluate + sendActionDataToChat), and
-// `src/module/applications/prompts/righteous-fury-dialog.ts` (constructor +
-// DEFAULT_OPTIONS + PARTS + render). Also covers
-// `src/module/applications/prompts/psychic-power-dialog.ts` and the
+// through update writes), `src/module/applications/prompts/damage-roll-dialog.ts` (prepareDamageRoll +
+// _performRoll → Roll.evaluate + sendActionDataToChat). Also covers the
 // `src/module/documents/acolyte.ts` rollItem weapon / psychicPower branches +
 // `src/module/documents/npc.ts` applyDamage armour-reduction branch. Keys MUST
 // match the recordCoverage('weapon-attack.flow', ...) calls in the spec.
@@ -914,7 +897,6 @@ const WEAPON_ATTACK_FLOWS = [
     'weapon-attack-rolls-to-hit',
     'weapon-attack-consumes-ammo',
     'weapon-attack-out-of-ammo',
-    'damage-roll-with-fury',
     'damage-roll-applies-armour',
     'psychic-power-roll',
     'weapon-modes',
@@ -981,7 +963,7 @@ const RULE_PURE_FLOWS = [
     'scatter-buildVector',
     'scatter-scaleForArea',
     'scatter-labelForDirection',
-    'surprise-toHitBonus',
+    'surprise-hasExpired',
     'surprise-canActThisRound',
     'surprise-canUseReactions',
     'trying-again-advice',
@@ -1036,7 +1018,6 @@ const RULE_AFFLICTION_FLOWS = [
     'disease-dailyTick',
     'poison-exposure',
     'poison-failurePayload',
-    'hatred-actorHasHatredFor',
     'phenomena-modifier-compose',
     'reinforcement-callTarget',
     'requisition-test-target',
@@ -1088,7 +1069,7 @@ recordDimension('rule-occult.flow', covered['rule-occult.flow'], RULE_OCCULT_FLO
 // spec drives directly. Several of these modules ship NO vitest unit
 // test, so they were at 0% on every coverage surface before this spec
 // landed. Pushes source-code coverage on
-// `src/module/rules/{aim,altitude,attack-specials,explication,
+// `src/module/rules/{aim,altitude,attack-specials,
 // medicae-mechadendrite,combat-actions,daemon-weapon,daemonhost}.ts`.
 // Keys MUST match the recordCoverage('rule-tactical.flow', ...) calls
 // in the spec.
@@ -1099,8 +1080,6 @@ const RULE_TACTICAL_FLOWS = [
     'altitude-profiles',
     'attack-specials-list',
     'attack-specials-names',
-    'explication-breakthroughsCrossed',
-    'explication-isComplete',
     'medicae-mechadendrite-data',
     'combat-actions-all',
     'daemon-weapon-profiles',
@@ -1196,12 +1175,9 @@ const UTILS_EXTRA_FLOWS = [
 recordDimension('utils-extra.flow', covered['utils-extra.flow'], UTILS_EXTRA_FLOWS);
 
 // tests/e2e/rules-progression.spec.ts — remaining uncovered src/module/rules/*
-// (chaos-talents, elite-advances, radical-services, xenos-features,
-// profane-objects, weapon-training, weapon-modifiers, range).
+// (radical-services, xenos-features, profane-objects, weapon-training,
+// weapon-modifiers, range).
 const RULE_PROGRESSION_FLOWS = [
-    'chaos-talents-constants',
-    'elite-advances-registry',
-    'elite-advances-prerequisites',
     'radical-services-registry',
     'radical-services-availability',
     'xenos-features-constants',
@@ -1256,8 +1232,6 @@ const HANDLEBARS_EXTRA_FLOWS = [
     'helpers-icon-lookups',
     'helpers-skillkey-rt-family',
     'helpers-skillkey-dh2-family',
-    'helpers-craftsmanship',
-    'helpers-game-icons',
 ];
 recordDimension('handlebars-extra.flow', covered['handlebars-extra.flow'], HANDLEBARS_EXTRA_FLOWS);
 
@@ -1327,8 +1301,6 @@ const APP_TOURS_EXTRA_FLOWS = [
     'tour-main-steps-shape',
     'tour-registered-in-game',
     'tooltip-mixin-prepare',
-    'dialog-wh40k-static-helpers',
-    'dialog-wh40k-instance-render',
     'whatif-mixin-state',
     'statbreakdown-mixin-action',
     'collapsible-panel-mixin-toggle',
@@ -1592,7 +1564,6 @@ const APP_API_DEPTH_FLOWS = [
     'icons-helper-resolution',
     'icons-handlebars-registration',
     'appv2-mixin-subtitle-and-disable',
-    'dialog-wait-and-resolve',
     'whatif-mixin-exit-and-direct-apply',
     'statbreakdown-mixin-variant-rows',
     'collapsible-panel-roundtrip',
@@ -1768,14 +1739,8 @@ const SCREENSHOT_DIALOG_CLASSES = [
     'BaseRollDialog',
     'DamageRollDialog',
     'EffectCreationDialog',
-    'EnhancedSkillDialog',
-    'ForceFieldDialog',
-    'PsychicPowerDialog',
-    'RighteousFuryDialog',
-    'SimpleRollDialog',
     'SpecialistSkillDialog',
     'UnifiedRollDialog',
-    'WeaponAttackDialog',
 ];
 const SCREENSHOT_CHAT_TEMPLATES = [
     'acquisition-test',
@@ -1896,8 +1861,8 @@ const COMPENDIUM_CONTENT_FLOWS = [
     'dw-core-items-talents::validated',
     'dw-core-items-weapons::validated',
     'dw-core-chapters::validated',
-    'hb-items-weapons::validated',
-    'hb-items-actors::validated',
+    'hb-dh2-items-weapons::validated',
+    'hb-dh2-items-actors::validated',
     'ow-core-items-talents::validated',
     'ow-core-items-weapons::validated',
     'ow-core-homeworlds::validated',

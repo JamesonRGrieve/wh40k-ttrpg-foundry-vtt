@@ -30,14 +30,8 @@ const DIALOG_CLASSES = [
     'BaseRollDialog',
     'DamageRollDialog',
     'EffectCreationDialog',
-    'EnhancedSkillDialog',
-    'ForceFieldDialog',
-    'PsychicPowerDialog',
-    'RighteousFuryDialog',
-    'SimpleRollDialog',
     'SpecialistSkillDialog',
     'UnifiedRollDialog',
-    'WeaponAttackDialog',
 ] as const;
 
 // Re-derived from tests/e2e/chat-cards.spec.ts CHAT_TEMPLATES (kept in sync there).
@@ -191,13 +185,7 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
                     // modifier maps + selectWeapon/finalize callbacks produced by the roll
                     // initiation flow, which a standalone probe cannot synthesise. There is
                     // no faithful bare snapshot, so they are skipped from render + assertion.
-                    const requiresLiveRollContext = new Set([
-                        'WeaponAttackDialog',
-                        'PsychicPowerDialog',
-                        'SimpleRollDialog',
-                        'AssignDamageDialog',
-                        'ForceFieldDialog',
-                    ]);
+                    const requiresLiveRollContext = new Set(['AssignDamageDialog']);
                     // ConvertActorSystemDialog.open(actor) reads `actor.type`; pass the dh2 seed.
                     // WH40KCreateActorDialog.open() needs none. open() is async (resolves only
                     // when the dialog closes) so it is not awaited; its rejection is swallowed

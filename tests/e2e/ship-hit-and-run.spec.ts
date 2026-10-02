@@ -71,7 +71,7 @@ test.describe.serial('Ship Hit-and-Run chat card (Tier B)', () => {
 
                 const html = await renderHbsTemplate(template, context);
                 rendered = typeof html === 'string' && html.length > 0;
-                hasCardRoot = html.includes('wh40k-ship-har-card');
+                hasCardRoot = html.includes('data-wh40k-hook="ship-har-card"');
                 hasSystemAnchor = html.includes('data-wh40k-system="rt"');
                 // Resolve i18n keys so checks hold whether or not the keys are
                 // in the langpack (a bare key only shows when unresolved).

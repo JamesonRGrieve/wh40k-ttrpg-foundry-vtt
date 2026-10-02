@@ -125,11 +125,8 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
         // --- flow 1: scene-controls-button-registered ---------------
         // Synthesize the V14 controls payload shape (Record keyed by
         // control name; each control has a `tools` object). Fire the
-        // hook directly and verify that the system added at least one
-        // tool under the `tokens` category — that's where both
-        // BasicActionManager.initializeHooks (assignDamage) and
-        // TargetedActionManager.initializeHooks (Attack) install
-        // their buttons.
+        // hook directly and verify that the system added its top-level
+        // `wh40k` control group (#521) with at least one tool.
         const controls: Record<string, ControlsEntry> = {
             tokens: { tools: {} },
             measure: { tools: {} },
@@ -143,12 +140,11 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
         };
         try {
             hooksApi.callAll('getSceneControlButtons', controls);
-            const tokensTools = controls['tokens'].tools;
-            const toolNames = Object.keys(tokensTools);
+            const toolNames = Object.keys(controls['wh40k'].tools);
             if (toolNames.length > 0) {
                 fired['scene-controls-button-registered'] = true;
             } else {
-                notes['scene-controls-button-registered'] = 'no tools installed under controls.tokens after hook';
+                notes['scene-controls-button-registered'] = 'no tools installed under controls.wh40k after hook';
             }
         } catch (err) {
             notes['scene-controls-button-registered'] = `getSceneControlButtons threw: ${err instanceof Error ? err.message : String(err)}`;
@@ -161,8 +157,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
         // token is selected — that's a successful dispatch through
         // the source-coverage path we care about, not a failure.
         try {
-            const tokensTools = controls['tokens'].tools;
-            const toolEntries = Object.entries(tokensTools);
+            const toolEntries = Object.entries(controls['wh40k'].tools);
             if (toolEntries.length === 0) {
                 notes['scene-controls-button-onclick'] = 'no tools to invoke (flow 1 failed)';
             } else {
@@ -197,8 +192,8 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
 
         // --- flow 6: scene-controls-per-category --------------------
         // Enumerate every category the system contributes to during
-        // a single hook fire. Today the system installs under
-        // `tokens` only; this probe records that fact and would
+        // a single hook fire. Today the system installs under its own
+        // `wh40k` group only; this probe records that fact and would
         // surface a regression if a new category becomes populated
         // (or the existing one stops being populated).
         try {

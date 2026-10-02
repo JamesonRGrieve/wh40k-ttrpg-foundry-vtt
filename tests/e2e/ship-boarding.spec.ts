@@ -57,7 +57,7 @@ test.describe.serial('Ship Boarding chat card (Tier B)', () => {
 
                 const html = await renderTemplateFn(template, context);
                 rendered = typeof html === 'string' && html.length > 0;
-                hasCardRoot = html.includes('wh40k-ship-boarding-card');
+                hasCardRoot = html.includes('data-wh40k-hook="ship-boarding-card"');
                 hasSystemAnchor = html.includes('data-wh40k-system="rt"');
                 // Resolve the i18n key so the check holds whether or not the
                 // key is in the langpack (a bare key only shows when unresolved).

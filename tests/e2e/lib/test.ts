@@ -2,6 +2,7 @@ import { appendFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { test as base } from '@playwright/test';
 import { type CapturedError, formatCapturedError, unexpectedErrors } from './console-guard';
+import { installDialogOpener } from './dialog-opener';
 
 /**
  * Playwright `test` extended with two things every Tier B spec gets for free by
@@ -50,6 +51,7 @@ export const test = base.extend({
         } catch {
             // page.coverage is chromium-only; non-chromium projects skip.
         }
+        await installDialogOpener(page);
 
         await use(page);
 

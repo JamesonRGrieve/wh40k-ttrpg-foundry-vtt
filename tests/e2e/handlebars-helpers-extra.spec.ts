@@ -26,13 +26,6 @@ import { expect, test } from './lib/test';
  *   - `SkillKeyHelper` in `src/module/helpers/skill-key-helper.ts`
  *     (per-system skill set: name↔key, specialist / characteristic /
  *     advanced classification, metadata, char grouping)
- *   - `CraftsmanshipHelper` in
- *     `src/module/helpers/craftsmanship-helper.ts`
- *     (modifier resolution, weapon-quality add/remove, force-field
- *     overload range, effect-summary prose)
- *   - the game-icons CDN URL builders in
- *     `src/module/helpers/game-icons.ts`
- *     (`getIconUrl` / `getColoredIconUrl` / `getDefaultIcon`)
  *
  * Registered Handlebars helpers are exercised by compiling inline
  * templates against the global `Handlebars` (the system registered them
@@ -438,77 +431,6 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                     record('helpers-skillkey-dh2-family', ok, `athl=${athl} ling=${ling} op=${op} parry=${parryChar}`);
                 } catch (err) {
                     record('helpers-skillkey-dh2-family', false, `import/call threw: ${String((err as Error).message)}`);
-                }
-
-                // ---------------------------------------------------------
-                // 15. CraftsmanshipHelper — modifier resolution, weapon
-                //     quality add/remove, force-field overload range,
-                //     effect-summary prose. Reads CONFIG.WH40K
-                //     .craftsmanshipRules; tolerant of the rules being
-                //     absent in the test world (returns {} / empty Set —
-                //     still exercises every branch).
-                // ---------------------------------------------------------
-                try {
-                    const mod = await importByUrl('/systems/wh40k-rpg/module/helpers/craftsmanship-helper.js');
-                    const C = mod.default;
-                    const meleeWeapon = { craftsmanship: 'best', melee: true, parent: { type: 'weapon' } };
-                    const rangedWeapon = { craftsmanship: 'poor', melee: false, parent: { type: 'weapon' } };
-                    const commonGear = { craftsmanship: 'common', parent: { type: 'gear' } };
-                    const mods = C?.getModifiers?.(meleeWeapon);
-                    const addQ = C?.getWeaponQualities?.(rangedWeapon);
-                    const rmQ = C?.getRemoveQualities?.(rangedWeapon);
-                    const meleeNoQ = C?.getWeaponQualities?.(meleeWeapon);
-                    const hasEffects = C?.hasCraftsmanshipEffects?.(rangedWeapon);
-                    const noEffects = C?.hasCraftsmanshipEffects?.(commonGear);
-                    const ffRange = C?.getForceFieldOverloadRange?.({ craftsmanship: 'common', parent: { type: 'forceField' } });
-                    const overloads = C?.isOverloadRoll?.({ craftsmanship: 'common', parent: { type: 'forceField' } }, ffRange?.[0] ?? 1);
-                    const summary = C?.getEffectSummary?.(rangedWeapon);
-                    const ok =
-                        mods !== undefined &&
-                        typeof mods === 'object' &&
-                        addQ instanceof Set &&
-                        rmQ instanceof Set &&
-                        meleeNoQ instanceof Set &&
-                        meleeNoQ.size === 0 &&
-                        hasEffects === true &&
-                        noEffects === false &&
-                        Array.isArray(ffRange) &&
-                        ffRange.length === 2 &&
-                        overloads === true &&
-                        Array.isArray(summary);
-                    record('helpers-craftsmanship', ok, `mods=${JSON.stringify(mods)} ffRange=${JSON.stringify(ffRange)} summary=${JSON.stringify(summary)}`);
-                } catch (err) {
-                    record('helpers-craftsmanship', false, `import/call threw: ${String((err as Error).message)}`);
-                }
-
-                // ---------------------------------------------------------
-                // 16. game-icons.ts CDN URL builders: getIconUrl (short +
-                //     full + http forms) / getColoredIconUrl /
-                //     getDefaultIcon (known + fallback).
-                // ---------------------------------------------------------
-                try {
-                    const mod = await importByUrl('/systems/wh40k-rpg/module/helpers/game-icons.js');
-                    const short = mod.getIconUrl?.('lorc/sword');
-                    const full = mod.getIconUrl?.('svg/lorc/originals/axe.svg');
-                    const http = mod.getIconUrl?.('https://example.com/x.svg');
-                    const coloured = mod.getColoredIconUrl?.('lorc/sword', 'ff0000', '000000');
-                    const knownDefault = mod.getDefaultIcon?.('weapon');
-                    const fallbackDefault = mod.getDefaultIcon?.('totallyUnknownType');
-                    const cdn = mod.GAME_ICONS_CDN;
-                    const ok =
-                        typeof short === 'string' &&
-                        short === `${cdn}/svg/lorc/originals/sword.svg` &&
-                        full === `${cdn}/svg/lorc/originals/axe.svg` &&
-                        http === 'https://example.com/x.svg' &&
-                        typeof coloured === 'string' &&
-                        coloured.includes('game-icons.net/icons/000000/ff0000/lorc/sword.svg') &&
-                        typeof knownDefault === 'string' &&
-                        knownDefault.includes('crossed-swords') &&
-                        typeof fallbackDefault === 'string' &&
-                        fallbackDefault.includes('perspective-dice-six');
-                    record('helpers-game-icons', ok, `short=${short} full=${full} coloured=${coloured} known=${knownDefault} fallback=${fallbackDefault}`);
-                } catch (err) {
-                    record('helpers-game-icons', false, `import/call threw: ${String((err as Error).message)}`);
                 }
             }
 

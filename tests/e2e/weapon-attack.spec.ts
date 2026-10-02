@@ -5,24 +5,17 @@ import { expect, test } from './lib/test';
 
 /**
  * Tier B coverage of the full weapon-attack pipeline: equip → attack roll
- * dispatch → ammo consumption → damage roll → armour application →
- * Righteous Fury confirmation. Also exercises PsychicPowerDialog rendering
- * and weapon fire-mode (single / semi / full-auto) switching.
+ * dispatch → ammo consumption → damage roll → armour application. Also
+ * exercises psychic-power roll dispatch and weapon fire-mode (single / semi /
+ * full-auto) switching.
  *
  * Source coverage targets:
  *   - src/module/data/item/weapon.ts (defineSchema getters: usesAmmo,
  *     isEmpty, isRangedWeapon, isMeleeWeapon, prepareDerivedData /
  *     _computeModifiers paths, craftsmanship modifiers, clip getters)
- *   - src/module/applications/prompts/weapon-attack-dialog.ts
- *     (constructor + render + #onSelectWeapon action + _onRender event
- *     binding + form-render of the weapon-roll-prompt.hbs PART)
  *   - src/module/applications/prompts/damage-roll-dialog.ts
  *     (constructor + render + prepareDamageRoll helper +
  *     _performRoll → Roll evaluate + sendActionDataToChat)
- *   - src/module/applications/prompts/righteous-fury-dialog.ts
- *     (constructor + render + DEFAULT_OPTIONS classes / PARTS resolution)
- *   - src/module/applications/prompts/psychic-power-dialog.ts
- *     (constructor + render via preparePsychicPowerRoll)
  *   - src/module/applications/prompts/unified-roll-dialog.ts
  *     (prepareUnifiedRoll path reached through acolyte.rollWeaponDamage
  *     fallbacks)
@@ -49,7 +42,6 @@ const WEAPON_ATTACK_FLOWS = [
     'weapon-attack-rolls-to-hit',
     'weapon-attack-consumes-ammo',
     'weapon-attack-out-of-ammo',
-    'damage-roll-with-fury',
     'damage-roll-applies-armour',
     'psychic-power-roll',
     'weapon-modes',
@@ -104,12 +96,6 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
             rollPsychicPower?: (power: ItemDoc) => Promise<void> | void;
             applyDamage?: (amount: number, location: string, options: { ignoreToughness?: boolean }) => Promise<void>;
         }
-        interface DialogInstance {
-            render: (options: { force: boolean }) => Promise<void>;
-            close: () => Promise<void>;
-            element?: object | null;
-        }
-        type DialogCtor = new (options: object) => DialogInstance;
         interface FoundryWindow {
             id?: string;
             close?: () => Promise<void>;
@@ -419,63 +405,6 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                 }
             };
 
-            const probeDamageRollWithFury = async (): Promise<void> => {
-                /* ============================================================
-                 * Flow 4: damage-roll-with-fury
-                 * Construct RighteousFuryDialog directly and render it. The
-                 * dialog opens with a confirmation roll; we close it
-                 * immediately after observing the render to keep the spec
-                 * unblocked. Exercises the constructor + DEFAULT_OPTIONS +
-                 * PARTS resolution + _renderHTML path. Success: window
-                 * appears in ui.windows or the dialog instance reports a
-                 * rendered element.
-                 * ============================================================ */
-                try {
-                    // Dynamic import — the dialog class lives at
-                    // /systems/wh40k-rpg/module/applications/prompts/righteous-fury-dialog.js
-                    // at runtime. Built specifier so TS doesn't try to resolve
-                    // the Foundry-served URL at compile time.
-                    const url = '/systems/wh40k-rpg/module/applications/prompts/righteous-fury-dialog.js';
-                    type FuryModule = { default?: DialogCtor; RighteousFuryDialog?: DialogCtor };
-                    const importModule = async (u: string): Promise<FuryModule> => (await import(/* @vite-ignore */ u)) as FuryModule;
-                    const mod = await importModule(url);
-                    const RighteousFuryDialog = mod.default ?? mod.RighteousFuryDialog;
-                    if (typeof RighteousFuryDialog !== 'function') {
-                        notes['damage-roll-with-fury'] = 'RighteousFuryDialog default export missing';
-                    } else {
-                        const live = getPc();
-                        const dialog = new RighteousFuryDialog({
-                            actor: live,
-                            characteristic: 'weaponSkill',
-                            target: 50,
-                            weaponName: 'probe-fury-weapon',
-                            isMelee: true,
-                        });
-                        let renderThrew: string | null = null;
-                        try {
-                            await withTimeout(dialog.render({ force: true }), 5_000, 'RighteousFuryDialog.render');
-                        } catch (err) {
-                            renderThrew = String((err as Error).message);
-                        }
-                        const elementPresent = dialog.element !== null && dialog.element !== undefined;
-                        if (renderThrew === null && elementPresent) {
-                            fired['damage-roll-with-fury'] = true;
-                            notes['damage-roll-with-fury'] = 'RighteousFuryDialog rendered with attached element';
-                        } else {
-                            notes['damage-roll-with-fury'] = `render: threw=${renderThrew ?? 'no'} elementPresent=${String(elementPresent)}`;
-                        }
-                        try {
-                            await dialog.close();
-                        } catch {
-                            /* ignore */
-                        }
-                        await closeOpenDialogs();
-                    }
-                } catch (err) {
-                    notes['damage-roll-with-fury'] = `dynamic import threw: ${String((err as Error).message)}`;
-                }
-            };
-
             const probeAppliesArmour = async (): Promise<void> => {
                 /* ============================================================
                  * Flow 5: damage-roll-applies-armour
@@ -657,7 +586,6 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
             await probeRollsToHit();
             await probeConsumesAmmo();
             await probeOutOfAmmo();
-            await probeDamageRollWithFury();
             await probeAppliesArmour();
             await probePsychicPower();
             await probeWeaponModes();

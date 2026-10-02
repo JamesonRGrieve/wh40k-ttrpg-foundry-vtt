@@ -94,32 +94,12 @@ const DIALOG_PROBES = [
         ctor: 'default',
     },
     {
-        className: 'EnhancedSkillDialog',
-        moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/enhanced-skill-dialog.js',
-        kind: 'enhancedSkill',
-        ctor: 'default',
-    },
-    { className: 'ForceFieldDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/force-field-dialog.js', kind: 'forceField', ctor: 'default' },
-    {
-        className: 'PsychicPowerDialog',
-        moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/psychic-power-dialog.js',
-        kind: 'psychicPower',
-        ctor: 'default',
-    },
-    { className: 'SimpleRollDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/simple-roll-dialog.js', kind: 'simpleRoll', ctor: 'default' },
-    {
         className: 'SpecialistSkillDialog',
         moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/specialist-skill-dialog.js',
         kind: 'actorCtor',
         ctor: 'default',
     },
     { className: 'UnifiedRollDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js', kind: 'simpleRoll', ctor: 'default' },
-    {
-        className: 'WeaponAttackDialog',
-        moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/weapon-attack-dialog.js',
-        kind: 'weaponAttack',
-        ctor: 'default',
-    },
 ] as const;
 
 interface DialogProbeResult {
@@ -297,11 +277,6 @@ async function probeDialogs(page: Page): Promise<{
             const sampleLocations = { head: 'Head', body: 'Body', rightArm: 'Right Arm', leftArm: 'Left Arm', rightLeg: 'Right Leg', leftLeg: 'Left Leg' };
             const sampleDamageType = { e: 'Energy', i: 'Impact', r: 'Rending', x: 'Explosive' };
             const sampleDifficulties = { '-30': 'Hard (-30)', '0': 'Routine (+0)', '30': 'Easy (+30)' };
-            const sampleForceField = {
-                name: 'probe-shield',
-                img: 'icons/svg/aura.svg',
-                system: { protectionRating: 50, activated: true, overloaded: false },
-            };
             const sampleActionData = {
                 name: 'probe',
                 rollData: {
@@ -363,51 +338,6 @@ async function probeDialogs(page: Page): Promise<{
                     ],
                 ],
                 [
-                    'forceField',
-                    () => [
-                        {
-                            actor: actorDoc,
-                            forceField: sampleForceField,
-                            protectionRating: 50,
-                            overloadRating: 1,
-                        },
-                    ],
-                ],
-                // powerSelect=true branch renders the simple list view.
-                [
-                    'psychicPower',
-                    () => [
-                        {
-                            rollData: {
-                                powerSelect: true,
-                                psychicPowers: [],
-                                actor: actorDoc,
-                                sourceActor: actorDoc,
-                            },
-                            performActionAndSendToChat: async (): Promise<void> => {
-                                /* no-op */
-                            },
-                        },
-                    ],
-                ],
-                // weaponSelect=true branch renders the simple list view.
-                [
-                    'weaponAttack',
-                    () => [
-                        {
-                            rollData: {
-                                weaponSelect: true,
-                                weapons: [],
-                                actor: actorDoc,
-                                sourceActor: actorDoc,
-                            },
-                            performActionAndSendToChat: async (): Promise<void> => {
-                                /* no-op */
-                            },
-                        },
-                    ],
-                ],
-                [
                     'ammoPicker',
                     () => [
                         {
@@ -418,19 +348,9 @@ async function probeDialogs(page: Page): Promise<{
                         },
                     ],
                 ],
-                // SimpleRollDialog / UnifiedRollDialog need an ActionData-shaped
-                // first arg with rollData.modifiers.
+                // UnifiedRollDialog needs an ActionData-shaped first arg with
+                // rollData.modifiers.
                 ['simpleRoll', () => [sampleActionData]],
-                [
-                    'enhancedSkill',
-                    () => [
-                        {
-                            name: 'probe',
-                            rollData: sampleActionData.rollData,
-                            actor: actorDoc,
-                        },
-                    ],
-                ],
                 [
                     'effectCreation',
                     () => [
@@ -496,17 +416,6 @@ async function probeDialogs(page: Page): Promise<{
                             return { className: probe.className, rendered: false, error: `unknown probe kind: ${probe.kind}` };
                         }
                         const inst = new Cls(...args);
-                        // BaseRollDialog ships no template of its own; borrow
-                        // simple-roll-prompt.hbs at instance level so we can
-                        // exercise its constructor + _prepareContext path.
-                        if (probe.kind === 'baseRoll') {
-                            inst.constructor.PARTS = {
-                                form: {
-                                    template: 'systems/wh40k-rpg/templates/prompt/simple-roll-prompt.hbs',
-                                    scrollable: [''],
-                                },
-                            };
-                        }
                         let renderErr: string | null = null;
                         try {
                             await inst.render(true);

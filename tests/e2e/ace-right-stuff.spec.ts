@@ -194,7 +194,7 @@ test.describe.serial('Ace · Right Stuff (Tier B)', () => {
 
                     const html = await renderTemplateFn(template, context);
                     rendered = typeof html === 'string' && html.length > 0;
-                    hasCardRoot = html.includes('wh40k-right-stuff-card');
+                    hasCardRoot = html.includes('data-wh40k-hook="right-stuff-card"');
                     hasSystemAnchor = html.includes('data-wh40k-system="dh2"');
                     hasAutoSuccessBanner =
                         html.includes('WH40K.RightStuff.AutoSuccessLabel') || html.includes('WH40K.RightStuff.AutoSuccessWithDoS') || html.includes('fa-star');

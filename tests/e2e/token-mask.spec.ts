@@ -39,13 +39,12 @@ interface ProbeState {
     actorId: string | null;
 }
 
-// A real RECTANGULAR portrait (1458x2087) — must exist and serve: a missing
-// path silently becomes Foundry's 512x512 fallback texture on EVERY token,
-// which once produced a false "bust applied" pass here.
-// Use a permissive, always-present Foundry-core portrait so this test never
-// depends on the private content submodule; the token mask geometry is what it
-// asserts, and any texture exercises it.
-const PORTRAIT = 'icons/svg/mystery-man.svg';
+// A RECTANGULAR raster that ships with Foundry core (950x420), so the test never
+// depends on the private content submodule. It must be non-square: the
+// generated bust is a 512x512 RenderTexture, so a square source (a missing path's
+// 512x512 fallback, or a square SVG such as mystery-man) is indistinguishable
+// from it — which made both the bust check and the control check meaningless.
+const PORTRAIT = 'ui/anvil-bg.png';
 
 interface TokenDocLike {
     id: string;
@@ -119,8 +118,10 @@ async function probeTokenMask(page: Page, portrait: string): Promise<ProbeState>
                 ring: { enabled: true },
                 flags: { 'wh40k-rpg': { tokenFrame: { cx: 0.5, cy: 0.3 } } },
             });
-            // the control token: same portrait, no flag
-            await control.update({ texture: { src }, ring: { enabled: true } });
+            // the control token: same portrait, no flag and NO ring — a ring-enabled
+            // token is always busted (default centre when unflagged), so only a
+            // ringless, unflagged token is guaranteed to keep its raw art.
+            await control.update({ texture: { src }, ring: { enabled: false } });
             await new Promise((resolve) => {
                 setTimeout(resolve, 3000);
             });

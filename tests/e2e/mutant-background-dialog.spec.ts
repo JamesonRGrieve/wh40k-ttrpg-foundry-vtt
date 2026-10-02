@@ -13,14 +13,8 @@ interface MutantDialogProbeResult {
     error: string | null;
 }
 
-interface MutantDialogInstance {
-    render: (force?: boolean) => Promise<void>;
-    element: HTMLElement | null;
-    close: () => Promise<void>;
-}
-
 interface MutantDialogModule {
-    default: new (actor: object | null) => MutantDialogInstance;
+    openMutantBackgroundDialog: (actor: object | null) => void;
 }
 
 interface MutantActorGlobal {
@@ -64,19 +58,6 @@ test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
 
             try {
                 const mod = (await import(moduleUrl)) as MutantDialogModule;
-                const Cls = mod.default;
-                if (typeof Cls !== 'function') {
-                    return {
-                        rendered,
-                        hasCorruptionCallout,
-                        hasTwistedFleshRow,
-                        hasApplyButton,
-                        hasCancelButton,
-                        actorAttached,
-                        error: 'default export not a constructor',
-                    };
-                }
-
                 // Best-effort fresh dh2 actor creation. If `Actor.create` is
                 // unavailable in the test world we fall back to null so the
                 // surface still renders for the structural assertions.
@@ -98,15 +79,12 @@ test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
                     /* fall through with null actor */
                 }
 
-                const inst = new Cls(actor);
-                try {
-                    await inst.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 40);
-                    });
-                } catch (err) {
-                    error = err instanceof Error ? err.message : String(err);
-                }
+                const inst = await wh40kOpenDialog('mutant-background-dialog', () => {
+                    mod.openMutantBackgroundDialog(actor);
+                });
+                await new Promise<void>((r) => {
+                    setTimeout(r, 40);
+                });
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     hasCorruptionCallout = inst.element.textContent.includes('+10');

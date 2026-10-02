@@ -4,7 +4,7 @@ import { expect, test } from './lib/test';
 /**
  * Smoke spec for the Radical Services GM dialog (#89). Boots the licensed
  * Foundry server through the standard GM join harness, creates a fixture
- * DH2 character, instantiates `RadicalServicesDialog` via its deployed
+ * DH2 character, opens `RadicalServicesDialog` via its deployed
  * module URL, and asserts the dialog renders with the 9-row services
  * table plus the Attempt / Cancel action buttons.
  */
@@ -19,16 +19,8 @@ test.describe.serial('Radical Services dialog (#89)', () => {
             interface FoundryGlobal {
                 Actor?: { create?: (data: object) => Promise<ActorInstance | null> };
             }
-            interface DialogInstance {
-                render: (opts: { force: boolean }) => Promise<void>;
-                element: HTMLElement | null;
-                close: () => Promise<void>;
-            }
-            interface DialogCtor {
-                new (actor: ActorInstance): DialogInstance;
-            }
             interface DialogModule {
-                default: DialogCtor;
+                openRadicalServicesDialog: (actor: ActorInstance) => void;
             }
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
             const g = globalThis as unknown as FoundryGlobal;
@@ -55,9 +47,10 @@ test.describe.serial('Radical Services dialog (#89)', () => {
                 const modUrl = '/systems/wh40k-rpg/module/applications/prompts/radical-services-dialog.js';
                 // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of compiled JS module; shape declared via DialogModule
                 const mod = (await import(/* @vite-ignore */ modUrl)) as unknown as DialogModule;
-                const DialogCls = mod.default;
-                const dialog = new DialogCls(actor);
-                await dialog.render({ force: true });
+                const probeActor = actor;
+                const dialog = await wh40kOpenDialog('radical-services-dialog', () => {
+                    mod.openRadicalServicesDialog(probeActor);
+                });
                 const root = dialog.element;
                 if (!(root instanceof HTMLElement)) {
                     return { ok: false, reason: 'dialog.element not an HTMLElement' };
@@ -81,7 +74,7 @@ test.describe.serial('Radical Services dialog (#89)', () => {
             }
         });
 
-        test.skip(!result.ok, `precondition failed: ${result.ok ? '' : result.reason}`);
+        expect(result.ok, `probe failed: ${result.ok ? '' : result.reason}`).toBe(true);
         if (!result.ok || !('snap' in result) || result.snap === undefined) return;
         const snap = result.snap;
         expect(snap.rowCount).toBe(9);

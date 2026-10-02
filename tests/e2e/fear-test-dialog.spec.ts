@@ -127,16 +127,8 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
                 error: string | null;
             }
             const result = await page.evaluate(async (): Promise<DialogProbeResult> => {
-                interface DialogInstance {
-                    render: (force?: boolean) => Promise<void>;
-                    element: HTMLElement | null;
-                    close: () => Promise<void>;
-                }
-                interface DialogCtor {
-                    new (opts?: { fearRating?: number }): DialogInstance;
-                }
                 interface DialogModule {
-                    default: DialogCtor;
+                    openFearTestDialog: (opts: { fearRating: number }) => void;
                 }
                 const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/fear-test-dialog.js';
                 let error: string | null = null;
@@ -148,19 +140,12 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
                 try {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of compiled JS module; shape declared via DialogModule
                     const mod = (await import(moduleUrl)) as unknown as DialogModule;
-                    const Cls = mod.default;
-                    if (typeof Cls !== 'function') {
-                        return { rendered, hasFearInput, fearInputValue, hasRollButton, error: 'default export not a constructor' };
-                    }
-                    const inst = new Cls({ fearRating: 3 });
-                    try {
-                        await inst.render(true);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 60);
-                        });
-                    } catch (err) {
-                        error = String((err as Error).message);
-                    }
+                    const inst = await wh40kOpenDialog('fear-test-dialog', () => {
+                        mod.openFearTestDialog({ fearRating: 3 });
+                    });
+                    await new Promise<void>((r) => {
+                        setTimeout(r, 60);
+                    });
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element !== null) {
                         const fr = inst.element.querySelector<HTMLInputElement>('input[name="fearRating"]');
