@@ -47,7 +47,7 @@ Two extra suites layer on top of the unit + storybook-playwright surfaces. Both 
 - **Tier A — `pnpm test:integration`.** Vitest under jsdom that loads `.foundry-release/public/scripts/foundry.js`, stubs canvas / WebGL / IndexedDB, drives the init pipeline, then asserts against real Documents / DataModels / sheets. Catches V14 `cleanData(_state)` regressions, `registerSheet` anonymous-class collisions, and per-system DataModel registration breaks. Tests live in `tests/integration/*.test.ts`; the boot harness is `tests/integration/lib/boot.ts`. Boot is best-effort — if Foundry refuses to init under jsdom, the harness records the error and individual tests skip rather than fail the suite.
 - **Tier B — `pnpm test:e2e`.** Playwright spawns the real Foundry server (`node .foundry-release/main.js`) against an ephemeral data dir at `.foundry-release/data-test/` with the working tree's `dist/` symlinked in as the system. Tests drive the GM-only seed world, create actors per game system, and assert on chat-card DOM (catching the `.wh40k-rpg` ancestor regression noted under "Adaptation procedure" 3a). Config is `playwright.foundry.config.ts`; provisioning is `scripts/setup-foundry-test-world.sh`.
 
-Neither tier runs pre-commit (Tier A is 30s+ to boot, Tier B is minutes). They run only when invoked explicitly or by the licensed CI lane. The `integration:ratchet` (case count cannot fall) keeps Tier A coverage from being silently deleted; Tier B is intentionally not ratcheted (failures are binary "server didn't boot" signals, not coverage to drive down).
+**Tier B runs pre-commit whenever the dump is present.** The hook's final phase checks for `.foundry-release/main.js`: if it exists, `pnpm test:e2e` runs (alone, after every other gate passes) and a red run blocks the commit; if it doesn't, the phase prints a skip line and the commit proceeds. Tier A does not run pre-commit; it runs only when invoked explicitly or by the licensed CI lane. The `integration:ratchet` (case count cannot fall) keeps Tier A coverage from being silently deleted; Tier B is intentionally not ratcheted (failures are binary "server didn't boot" signals, not coverage to drive down).
 
 ---
 
@@ -418,6 +418,7 @@ Per-file logs land in `.auto-fix/file-logs/<sanitized-path>.attempt<N>.<runner>-
 22. `unconsumed:ratchet` — the count of `src/module/` modules with no production importer cannot rise; auto-flips to strict at 0.
 23. Pack validation if `gulpfile.js` or `src/packs/` changed — schema (`packs`), the actor-completeness ratchet (`actors:ratchet`), and the image-coverage ratchet (`images:ratchet`, real-art count per document class must not fall).
 24. `vitest run` — full Vitest suite must pass.
+25. `test:e2e` (Tier B) — only when `.foundry-release/main.js` exists; runs alone after steps 1–24 pass and must be green. Skipped with a notice when the dump is absent.
 
 The Storybook Playwright visual suite (storybook build + ~700 screenshot tests)
 is **not** in the pre-commit hook — it is the browser-based, multi-minute long
