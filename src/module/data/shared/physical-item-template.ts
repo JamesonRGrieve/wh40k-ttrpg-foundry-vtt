@@ -1,3 +1,5 @@
+import { RENOWN_RANK_ORDER, type RenownRank } from '../../rules/dw-renown.ts';
+import { labelFor } from '../../utils/config-choices.ts';
 import { inferActiveGameLine } from '../../utils/item-variant-utils.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
@@ -11,6 +13,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     declare weight: number;
     declare availability: string;
     declare craftsmanship: string;
+    declare renown: RenownRank | null;
     declare quantity: number;
     declare bound: boolean;
     declare variantOf: string;
@@ -78,6 +81,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
                               'extremely-rare',
                               'near-unique',
                               'unique',
+                              'uncommon',
                           ];
                 },
             }),
@@ -88,6 +92,15 @@ export default class PhysicalItemTemplate extends SystemDataModel {
                     const keys = Object.keys(CONFIG.wh40k.craftsmanships);
                     return keys.length > 0 ? keys : ['poor', 'common', 'good', 'best'];
                 },
+            }),
+            // Deathwatch Renown rank required to requisition the item (printed in the
+            // armoury tables' Renown column, distinct from availability); null elsewhere.
+            renown: new fields.StringField({
+                required: false,
+                nullable: true,
+                blank: false,
+                initial: null,
+                choices: [...RENOWN_RANK_ORDER],
             }),
             quantity: new fields.NumberField({
                 required: true,
@@ -340,7 +353,9 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @type {string}
      */
     get availabilityLabel(): string {
-        return game.i18n.localize(`WH40K.Availability.${this.availability.capitalize()}`);
+        // Read the rating's own label key: capitalising the id broke hyphenated
+        // ratings (`very-rare` → `WH40K.Availability.Very-rare`, an unknown key).
+        return labelFor(CONFIG.wh40k.availabilities, this.availability);
     }
 
     /* -------------------------------------------- */

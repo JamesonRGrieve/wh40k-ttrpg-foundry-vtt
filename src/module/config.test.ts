@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ALL_SYSTEM_IDS } from './config/game-systems/types.ts';
-import { WH40K, buildQualityLabel, parseQualityLevel } from './config.ts';
+import { WH40K } from './config.ts';
+import { buildQualityLabel, parseQualityLevel } from './utils/quality-id.ts';
 
 /**
  * Guard for the #300 quality-level primitives extracted from the three sites
@@ -9,21 +10,28 @@ import { WH40K, buildQualityLabel, parseQualityLevel } from './config.ts';
  */
 describe('parseQualityLevel (#300)', () => {
     it('extracts a numeric level', () => {
-        expect(parseQualityLevel('blast-3')).toEqual({ baseId: 'blast', level: 3 });
+        expect(parseQualityLevel('blast-3')).toEqual({ baseId: 'blast', level: 3, formula: null });
     });
 
     it('treats a -x suffix as a level-less placeholder (case-insensitive)', () => {
-        expect(parseQualityLevel('flamer-x')).toEqual({ baseId: 'flamer', level: null });
-        expect(parseQualityLevel('FLAMER-X')).toEqual({ baseId: 'FLAMER', level: null });
+        expect(parseQualityLevel('flamer-x')).toEqual({ baseId: 'flamer', level: null, formula: null });
+        expect(parseQualityLevel('FLAMER-X')).toEqual({ baseId: 'FLAMER', level: null, formula: null });
     });
 
     it('returns the bare identifier when there is no suffix', () => {
-        expect(parseQualityLevel('tearing')).toEqual({ baseId: 'tearing', level: null });
+        expect(parseQualityLevel('tearing')).toEqual({ baseId: 'tearing', level: null, formula: null });
+        expect(parseQualityLevel('razor-sharp')).toEqual({ baseId: 'razor-sharp', level: null, formula: null });
     });
 
     it('only strips the final -<n> segment, keeping hyphenated base ids', () => {
-        expect(parseQualityLevel('proven-2')).toEqual({ baseId: 'proven', level: 2 });
-        expect(parseQualityLevel('multi-part-5')).toEqual({ baseId: 'multi-part', level: 5 });
+        expect(parseQualityLevel('proven-2')).toEqual({ baseId: 'proven', level: 2, formula: null });
+        expect(parseQualityLevel('multi-part-5')).toEqual({ baseId: 'multi-part', level: 5, formula: null });
+    });
+
+    it('parses a dice-expression rating as a formula, not a level', () => {
+        expect(parseQualityLevel('blast-10+1d10')).toEqual({ baseId: 'blast', level: null, formula: '10+1d10' });
+        expect(parseQualityLevel('blast-1d10+10')).toEqual({ baseId: 'blast', level: null, formula: '1d10+10' });
+        expect(parseQualityLevel('multi-part-2d10')).toEqual({ baseId: 'multi-part', level: null, formula: '2d10' });
     });
 });
 
@@ -39,6 +47,10 @@ describe('buildQualityLabel (#300)', () => {
 
     it('appends (X) when the quality takes a level but none was supplied', () => {
         expect(buildQualityLabel('Blast', true, null)).toBe('Blast (X)');
+    });
+
+    it('appends a dice rating as printed', () => {
+        expect(buildQualityLabel('Blast', true, null, '10+1d10')).toBe('Blast (10+1d10)');
     });
 });
 

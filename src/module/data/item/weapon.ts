@@ -28,6 +28,7 @@ import {
     type SupportedLineKey,
     tryResolveLineVariant,
 } from '../../utils/item-variant-utils.ts';
+import { buildQualityLabel, parseQualityLevel } from '../../utils/quality-id.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import AttackTemplate from '../shared/attack-template.ts';
@@ -39,14 +40,7 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
 import { WEAPON_FACING_CHOICES, WEAPON_MOUNTING_CHOICES, type WeaponFacing, type WeaponMounting } from '../shared/vehicle-mounting.ts';
-
-/**
- * Valid weapon `class` / `type` choices. Shared between `defineSchema()` and the
- * `_migrateData` coercion so a corrupt/legacy value (e.g. an imported `"low-tech"`
- * type) is normalized to a valid choice instead of failing strict validation —
- * which, for an owned item, drops it from the actor and empties the inventory.
- */
-const WEAPON_CLASS_CHOICES = ['melee', 'pistol', 'basic', 'heavy', 'thrown', 'exotic'] as const;
+import { isWeaponClass, WEAPON_CLASS_CHOICES } from '../shared/weapon-class.ts';
 
 /** Weapons already reported this session, so a re-render doesn't re-nag the GM. */
 const reportedUnresolvedVariants = new Set<string>();
@@ -236,6 +230,7 @@ export default class WeaponData extends ItemDataModel.mixin(
     // From SubtletyAdjusterTemplate (mixin static type does not surface it).
     declare subtletyAdjuster?: { kind: SubtletyAdjusterKind; delta: number; minAbsoluteDelta: number; requiresEquipped: boolean };
     declare class: string;
+    declare secondaryClass: string | null;
     declare type: string;
     declare twoHanded: boolean;
     declare melee: boolean;
@@ -340,6 +335,15 @@ export default class WeaponData extends ItemDataModel.mixin(
             class: new fields.StringField({
                 required: true,
                 initial: 'melee',
+                choices: [...WEAPON_CLASS_CHOICES],
+            }),
+
+            // Second printed class for dual-class weapons ("Melee/ Thrown"); null otherwise.
+            secondaryClass: new fields.StringField({
+                required: false,
+                nullable: true,
+                blank: false,
+                initial: null,
                 choices: [...WEAPON_CLASS_CHOICES],
             }),
 
@@ -647,7 +651,7 @@ export default class WeaponData extends ItemDataModel.mixin(
         // anything else non-string is genuinely corrupt and is normalised.
         const rawClass = source['class'];
         if (typeof rawClass === 'string') {
-            if (!(WEAPON_CLASS_CHOICES as readonly string[]).includes(rawClass)) source['class'] = 'exotic';
+            if (!isWeaponClass(rawClass)) source['class'] = 'exotic';
         } else if (rawClass !== undefined && rawClass !== null && !isLineVariantContainer(rawClass)) {
             source['class'] = 'exotic';
         }
@@ -1567,13 +1571,7 @@ export default class WeaponData extends ItemDataModel.mixin(
     get qualitiesArray(): Array<{ id: string; baseId: string; label: string; description: string; level: number | null; hasLevel: boolean }> {
         const qualities: Array<{ id: string; baseId: string; label: string; description: string; level: number | null; hasLevel: boolean }> = [];
         for (const qualityId of this.effectiveSpecial) {
-            // Parse level from quality ID (e.g., "blast-3" -> "blast", 3)
-            const match = qualityId.match(/^(.+?)-(\d+)$/);
-            const [, baseFromMatch, levelStr] = match ?? [];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: baseFromMatch is string|undefined from regex destructure
-            const baseId: string = baseFromMatch ?? qualityId;
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: levelStr is string|undefined from regex destructure
-            const level = levelStr !== undefined ? parseInt(levelStr, 10) : null;
+            const { baseId, level, formula } = parseQualityLevel(qualityId);
 
             // Definition (label/description langpack keys + hasLevel) resolves from the
             // weaponQuality compendium via the boot index (#303); null → humanized fallback.
@@ -1583,7 +1581,8 @@ export default class WeaponData extends ItemDataModel.mixin(
             qualities.push({
                 id: qualityId,
                 baseId: baseId,
-                label: definition !== null ? game.i18n.localize(definition.label) : fallbackLabel,
+                // A dice rating has no numeric `level` slot, so it travels in the label.
+                label: buildQualityLabel(definition !== null ? game.i18n.localize(definition.label) : fallbackLabel, false, null, formula),
                 description: definition !== null ? game.i18n.localize(definition.description) : '',
                 level: level,
                 hasLevel: definition !== null ? definition.hasLevel : false,
@@ -1664,7 +1663,7 @@ export default class WeaponData extends ItemDataModel.mixin(
      */
     get loadedAmmoLabel(): string {
         if (!this.hasLoadedAmmo) return 'Standard';
-        return this.loadedAmmo?.name !== undefined && this.loadedAmmo.name !== '' ? this.loadedAmmo.name : 'Unknown';
+        return this.loadedAmmo?.name !== undefined && this.loadedAmmo.name !== '' ? this.loadedAmmo.name : game.i18n.localize('WH40K.Common.Unknown');
     }
 
     /* -------------------------------------------- */
@@ -1804,7 +1803,9 @@ export default class WeaponData extends ItemDataModel.mixin(
             'system.clip.value': roundsToLoad,
         });
 
-        ui.notifications.info(`${ammoItem.name} loaded into ${this.parent.name} (${roundsToLoad} rounds)`);
+        ui.notifications.info(
+            game.i18n.format('WH40K.Notify.Weapon.AmmoLoaded', { ammo: ammoItem.name, weapon: this.parent.name, rounds: String(roundsToLoad) }),
+        );
         return this.parent;
     }
 
@@ -1829,7 +1830,7 @@ export default class WeaponData extends ItemDataModel.mixin(
             'system.clip.value': 0,
         });
 
-        ui.notifications.info(`Ammunition ejected from ${this.parent.name}`);
+        ui.notifications.info(game.i18n.format('WH40K.Notify.Weapon.AmmoEjected', { weapon: this.parent.name }));
         return this.parent;
     }
 

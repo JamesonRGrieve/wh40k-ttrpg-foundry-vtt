@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { choicesFrom, choicesRecordFrom } from './config-choices.ts';
+import WH40K from '../config.ts';
+import { choicesFrom, choicesRecordFrom, labelFor } from './config-choices.ts';
 
 /**
  * `choicesFrom` / `choicesRecordFrom` derive UI choice lists from a CONFIG map,
@@ -65,5 +66,25 @@ describe('choicesRecordFrom', () => {
         for (const { value, label } of choicesFrom(SAMPLE)) {
             expect(record[value]).toBe(label);
         }
+    });
+});
+
+describe('labelFor', () => {
+    it("localizes the entry's own label key, including hyphenated ids", () => {
+        vi.stubGlobal('game', { i18n: { localize: (key: string): string => `loc:${key}` } });
+        // `very-rare` once resolved to the unknown key WH40K.Availability.Very-rare.
+        expect(labelFor(WH40K.availabilities, 'very-rare')).toBe('loc:WH40K.Availability.VeryRare');
+        expect(labelFor(WH40K.availabilities, 'near-unique')).toBe('loc:WH40K.Availability.NearUnique');
+    });
+
+    it('falls back to the raw id for an unknown key', () => {
+        stubLocalize();
+        expect(labelFor(SAMPLE, 'not-a-key')).toBe('not-a-key');
+    });
+
+    it('labels the unrated "uncommon" availability, which carries no modifier', () => {
+        vi.stubGlobal('game', { i18n: { localize: (key: string): string => `loc:${key}` } });
+        expect(labelFor(WH40K.availabilities, 'uncommon')).toBe('loc:WH40K.Availability.Uncommon');
+        expect(WH40K.availabilities).toHaveProperty('uncommon.modifier', null);
     });
 });

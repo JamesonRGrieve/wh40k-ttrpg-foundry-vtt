@@ -55,7 +55,9 @@ export function variant(inner) {
 // `melee`/`solid_projectile` types + underscore spelling are OW/legacy). The gate's
 // job is to catch a genuinely-NEW deviation, so it accepts the established set and the
 // coherence check below is what flags a ranged weapon mis-typed as melee.
-export const WEAPON_CLASS = ['melee', 'pistol', 'basic', 'heavy', 'thrown', 'exotic', 'ranged', 'vehicle', 'mounted'];
+// Must stay a superset of WEAPON_CLASS_CHOICES (src/module/data/shared/weapon-class.ts);
+// tests/validate-pack-schema.test.ts pins that so a new DataModel class can't be rejected here.
+export const WEAPON_CLASS = ['melee', 'pistol', 'basic', 'heavy', 'thrown', 'exotic', 'placed', 'ranged', 'vehicle', 'mounted'];
 export const WEAPON_TYPE = [
     'primitive', 'las', 'solid-projectile', 'solid_projectile', 'bolt', 'melta', 'plasma', 'flame', 'launcher', 'explosive',
     'power', 'chain', 'shock', 'force', 'exotic', 'xenos', 'energy', 'melee', 'shield', 'low-tech', 'impact', 'grenade', 'rending',

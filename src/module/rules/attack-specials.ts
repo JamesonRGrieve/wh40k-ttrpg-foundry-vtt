@@ -1,5 +1,6 @@
 import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KItemDocument } from '../types/global.d.ts';
+import { parseQualityLevel } from '../utils/quality-id.ts';
 import { calculateWeaponModifiersAttackSpecials } from './weapon-modifiers.ts';
 import { applyQualityModifiersToRollData } from './weapon-quality-effects.ts';
 
@@ -28,10 +29,9 @@ const attackSpecialByKey: Map<string, { name: string; hasLevel: boolean }> = new
  * then skipped. This replaces the name-keyed AMMO_EFFECTS `attackSpecials` table.
  */
 export function attackSpecialForQualityId(qualityId: string): { name: string; level: number | boolean } | null {
-    const levelMatch = /-(\d+)$/.exec(qualityId);
-    const base = levelMatch !== null ? qualityId.slice(0, levelMatch.index) : qualityId;
-    const level = levelMatch !== null ? Number(levelMatch[1]) : null;
-    const found = attackSpecialByKey.get(normalizeQualityKey(base));
+    // A dice-rated quality (`blast-10+1d10`) is present but carries no fixed level here.
+    const { baseId, level } = parseQualityLevel(qualityId);
+    const found = attackSpecialByKey.get(normalizeQualityKey(baseId));
     if (found === undefined) return null;
     return { name: found.name, level: level ?? true };
 }
