@@ -9,6 +9,7 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KArmourLocation } from '../../types/global.d.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
+import { parseQualityLevel } from '../../utils/quality-id.ts';
 
 /** Minimal typed interface for the Foundry tooltip manager. */
 interface TooltipManager {
@@ -402,20 +403,23 @@ export class TooltipsWH40K {
         let html = tipHeader(label ?? name ?? '', total);
         html += tipDivider();
         html += `<div class="wh40k-tooltip__breakdown">`;
-        html += tipLine('Base:', base);
-        html += tipLine('Advances:', `${advance} (×5 = +${advance * 5})`);
+        html += tipLine(localize('WH40K.Tooltip.Base'), base);
+        html += tipLine(
+            localize('WH40K.Tooltip.Advances'),
+            game.i18n.format('WH40K.Tooltip.AdvancesValue', { advance: String(advance), bonus: String(advance * 5) }),
+        );
 
         if (modifier !== 0) {
-            html += tipLine('Modifiers:', formatSigned(modifier), 'wh40k-tooltip__line--modifier');
+            html += tipLine(localize('WH40K.Tooltip.Modifiers'), formatSigned(modifier), 'wh40k-tooltip__line--modifier');
         }
 
         html += `</div>`;
-        html += tipSourceList(sources, 'Modifier Sources:');
+        html += tipSourceList(sources, localize('WH40K.Tooltip.ModifierSources'));
 
         html += `
             <div class="wh40k-tooltip__divider"></div>
             <div class="wh40k-tooltip__bonus">
-                <span class="wh40k-tooltip__label">Bonus:</span>
+                <span class="wh40k-tooltip__label">${localize('WH40K.Tooltip.Bonus')}</span>
                 <span class="wh40k-tooltip__value wh40k-tooltip__value--bonus">${bonus}</span>
                 <span class="wh40k-tooltip__bonus-calc">(${Math.floor(total / 10)}${unnatural > 1 ? ` × ${unnatural}` : ''})</span>
             </div>
@@ -488,14 +492,14 @@ export class TooltipsWH40K {
         // ladder — DH2 is the canonical default of the FFG family — so the
         // degraded path still shows the correct Known/Trained/Experienced/
         // Veteran progression instead of a misleading one.
-        const skillRanks: SkillRank[] = systemConfig?.getSkillRanks() ?? [
+        const skillRanks: SkillRank[] = systemConfig?.getLocalizedSkillRanks() ?? [
             { level: 1, key: 'trained', tooltip: localize('WH40K.Skills.Rank.Known'), bonus: 0 },
             { level: 2, key: 'plus10', tooltip: localize('WH40K.Skills.Rank.Trained'), bonus: 10 },
             { level: 3, key: 'plus20', tooltip: localize('WH40K.Skills.Rank.Experienced'), bonus: 20 },
             { level: 4, key: 'plus30', tooltip: localize('WH40K.Skills.Rank.Veteran'), bonus: 30 },
         ];
         if (plus30 && !skillRanks.some((rank) => rank.level === 4)) {
-            skillRanks.push({ level: 4, key: 'plus30', tooltip: 'Veteran', bonus: 30 });
+            skillRanks.push({ level: 4, key: 'plus30', tooltip: localize('WH40K.Skills.Rank.Veteran'), bonus: 30 });
         }
 
         const level = plus30 ? 4 : plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
@@ -629,12 +633,12 @@ export class TooltipsWH40K {
         const armorValue = data.armorValue ?? 0;
         const equipped = data.equipped ?? [];
 
-        let html = tipHeader(location ?? 'Armour', `AP ${total}`);
+        let html = tipHeader(location ?? localize('WH40K.Tooltip.Armour'), `${localize('WH40K.Armour.AP')} ${total}`);
         html += tipDivider();
         html += `<div class="wh40k-tooltip__breakdown">`;
-        html += tipLine('Toughness Bonus:', toughnessBonus);
-        if (traitBonus > 0) html += tipLine('Trait Bonus:', traitBonus);
-        if (armorValue > 0) html += tipLine('Armour:', armorValue);
+        html += tipLine(localize('WH40K.Tooltip.ToughnessBonus'), toughnessBonus);
+        if (traitBonus > 0) html += tipLine(localize('WH40K.Tooltip.TraitBonus'), traitBonus);
+        if (armorValue > 0) html += tipLine(localize('WH40K.Tooltip.ArmourLabel'), armorValue);
         html += `</div>`;
 
         // The derivation, not just the parts: a hovering player should be able to
@@ -643,17 +647,17 @@ export class TooltipsWH40K {
         //
         // Worn pieces are enumerated individually when known, otherwise the summed
         // `armorValue` stands in for them; using both would double-count.
-        const terms: string[] = [`${toughnessBonus} (TB)`];
-        if (traitBonus > 0) terms.push(`${traitBonus} (Traits)`);
+        const terms: string[] = [`${toughnessBonus} (${localize('WH40K.Status.Fatigue.ToughnessBonusAbbr')})`];
+        if (traitBonus > 0) terms.push(`${traitBonus} (${localize('WH40K.Traits')})`);
         if (equipped.length > 0) {
             for (const item of equipped) terms.push(`${item.ap ?? 0} (${item.name})`);
         } else if (armorValue > 0) {
-            terms.push(`${armorValue} (Armour)`);
+            terms.push(`${armorValue} (${localize('WH40K.Tooltip.Armour')})`);
         }
         html += `
             <div class="wh40k-tooltip__divider"></div>
             <div class="wh40k-tooltip__formula wh40k-tooltip__line">
-                <span class="wh40k-tooltip__label">Formula:</span>
+                <span class="wh40k-tooltip__label">${localize('WH40K.Tooltip.Formula')}</span>
                 <span class="wh40k-tooltip__value">${terms.join(' + ')} = ${total}</span>
             </div>
         `;
@@ -662,7 +666,7 @@ export class TooltipsWH40K {
             html += `
                 <div class="wh40k-tooltip__divider"></div>
                 <div class="wh40k-tooltip__equipped">
-                    <div class="wh40k-tooltip__equipped-title">Equipped:</div>
+                    <div class="wh40k-tooltip__equipped-title">${localize('WH40K.Tooltip.Equipped')}</div>
             `;
             for (const item of equipped) {
                 html += `
@@ -690,17 +694,17 @@ export class TooltipsWH40K {
         let html = tipHeader(name);
         html += tipDivider();
         html += `<div class="wh40k-tooltip__breakdown">`;
-        html += tipLine('Damage:', damage);
-        html += tipLine('Penetration:', penetration);
-        html += tipLine('Range:', range);
-        html += tipLine('Rate of Fire:', rof);
+        html += tipLine(localize('WH40K.Tooltip.Damage'), damage);
+        html += tipLine(localize('WH40K.Tooltip.Penetration'), penetration);
+        html += tipLine(localize('WH40K.Tooltip.Range'), range);
+        html += tipLine(localize('WH40K.Tooltip.RateOfFire'), rof);
         html += `</div>`;
 
         if (qualities.length > 0) {
             html += `
                 <div class="wh40k-tooltip__divider"></div>
                 <div class="wh40k-tooltip__qualities">
-                    <div class="wh40k-tooltip__qualities-title">Qualities:</div>
+                    <div class="wh40k-tooltip__qualities-title">${localize('WH40K.Tooltip.Qualities')}</div>
             `;
             for (const quality of qualities) {
                 html += `<div class="wh40k-tooltip__quality">${quality}</div>`;
@@ -711,7 +715,7 @@ export class TooltipsWH40K {
         html += `
             <div class="wh40k-tooltip__action">
                 <i class="fas fa-crosshairs"></i>
-                Click to attack
+                ${localize('WH40K.Tooltip.ClickToAttack')}
             </div>
         `;
 
@@ -722,7 +726,7 @@ export class TooltipsWH40K {
         const { title } = data;
         const sources = data.sources ?? [];
 
-        let html = tipHeader(title ?? 'Modifiers');
+        let html = tipHeader(title ?? localize('WH40K.Tooltip.ModifiersTitle'));
         html += tipDivider();
         html += `<div class="wh40k-tooltip__sources">${tipSourceRows(sources)}</div>`;
         return html;
@@ -773,7 +777,7 @@ export class TooltipsWH40K {
             <div class="wh40k-tooltip__divider"></div>
             <div class="wh40k-tooltip__info">
                 <i class="fas fa-cog"></i>
-                <span>This quality has automated mechanical effects</span>
+                <span>${localize('WH40K.Tooltip.AutomatedEffects')}</span>
             </div>
             `;
         }
@@ -792,7 +796,7 @@ export class TooltipsWH40K {
 
     _buildGenericTooltip(data: GenericTooltipPayload): string {
         const { title, content } = data;
-        return `${tipHeader(title ?? 'Information')}<div class="wh40k-tooltip__content">${content ?? ''}</div>`;
+        return `${tipHeader(title ?? localize('WH40K.Tooltip.Information'))}<div class="wh40k-tooltip__content">${content ?? ''}</div>`;
     }
 
     _repositionTooltip(): void {
@@ -994,12 +998,7 @@ export function prepareQualityTooltipData(identifier: string, level: number | nu
     if (config === undefined) return '{}';
     const def = config.getQualityDefinition?.(identifier) ?? null;
     if (def === null) return '{}';
-    let resolvedLevel = level;
-    if (resolvedLevel === null) {
-        const match = identifier.match(/-(\d+)$/);
-        const matchGroup = match?.[1];
-        if (matchGroup !== undefined) resolvedLevel = parseInt(matchGroup);
-    }
+    const resolvedLevel = level ?? parseQualityLevel(identifier).level;
     const label = game.i18n.localize(def.label);
     const description = game.i18n.localize(def.description);
     const data = {

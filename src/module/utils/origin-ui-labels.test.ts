@@ -26,15 +26,22 @@ describe('getAllCharacteristicDisplayInfo', () => {
 });
 
 describe('getTrainingLabel (generic fallback)', () => {
-    it('maps generic level keys to labels', () => {
-        expect(getTrainingLabel('trained')).toBe('Trained');
-        expect(getTrainingLabel('plus10')).toBe('+10');
-        expect(getTrainingLabel('known')).toBe('Known');
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('maps generic level keys to localized rank names', () => {
+        vi.stubGlobal('game', { i18n: { localize: (key: string): string => `loc:${key}` } });
+        expect(getTrainingLabel('trained')).toBe('loc:WH40K.Skills.Rank.Trained');
+        expect(getTrainingLabel('plus10')).toBe('loc:WH40K.Skills.Rank.Plus10');
+        expect(getTrainingLabel('plus30')).toBe('loc:WH40K.Skills.Rank.Plus30');
+        expect(getTrainingLabel('known')).toBe('loc:WH40K.Skills.Rank.Known');
     });
 
     it('passes through an unknown level and defaults empty to Trained', () => {
+        vi.stubGlobal('game', { i18n: { localize: (key: string): string => `loc:${key}` } });
         expect(getTrainingLabel('custom')).toBe('custom');
-        expect(getTrainingLabel('')).toBe('Trained');
+        expect(getTrainingLabel('')).toBe('loc:WH40K.Skills.Rank.Trained');
     });
 });
 

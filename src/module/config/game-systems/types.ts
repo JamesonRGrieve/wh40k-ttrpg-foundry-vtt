@@ -20,9 +20,9 @@ export interface SkillRankDef {
     level: number;
     /** Data field key for backward compat: 'trained', 'plus10', 'plus20', 'plus30' */
     key: string;
-    /** Short display label: 'T', '+10', 'Kn', 'Tr', etc. */
+    /** Langpack key for the short display label ('T', '+10', 'Kn', 'Tr', …). Localize via `getLocalizedSkillRanks()`. */
     label: string;
-    /** Full name: 'Trained', 'Known', 'Experienced', etc. */
+    /** Langpack key for the full rank name ('Trained', 'Known', 'Experienced', …). */
     tooltip: string;
     /** Test bonus at this rank: 0, 10, 20, 30 */
     bonus: number;

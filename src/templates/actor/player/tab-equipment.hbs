@@ -8,7 +8,7 @@
         <div class="tw-flex-1 tw-h-2 tw-bg-black/30 tw-rounded-full tw-overflow-hidden">
             <div class="tw-h-full tw-rounded-full tw-transition-all {{#if (gt encumbrancePercent 100)}}tw-bg-[var(--wh40k-accent-combat)]{{else if (gt encumbrancePercent 75)}}tw-bg-[#fbbf24]{{else}}tw-bg-[var(--wh40k-color-success)]{{/if}}" style="width: {{encumbrancePercent}}%"></div>
         </div>
-        <span class="tw-text-[0.65rem] tw-font-semibold tw-tabular-nums tw-text-[color:var(--wh40k-text-secondary)] tw-shrink-0">{{system.encumbrance.value}} / {{system.encumbrance.max}} kg</span>
+        <span class="tw-text-[0.65rem] tw-font-semibold tw-tabular-nums tw-text-[color:var(--wh40k-text-secondary)] tw-shrink-0">{{system.encumbrance.value}} / {{system.encumbrance.max}} {{localize "WH40K.Common.Kilograms"}}</span>
     </div>
     {{/if}}
     {{> systems/wh40k-rpg/templates/actor/panel/loadout-equipment-panel.hbs}}

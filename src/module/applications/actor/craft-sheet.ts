@@ -16,6 +16,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { occupantCandidateActors, type TokenSortDoc } from '../../rules/vehicle-embark.ts';
 import { occupantsOf, unfilledCrew } from '../../rules/vehicle-occupancy.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
+import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
 
 /** A single armour facing on a craft (front / side / rear). */
 interface CraftArmourFacing {
@@ -237,30 +238,11 @@ export default class CraftActorSheet extends BaseActorSheet {
         ...(BaseActorSheet as typeof BaseActorSheet & { PARTS?: Record<string, ApplicationV2Config.PartConfiguration> }).PARTS,
         header: {
             template: 'systems/wh40k-rpg/templates/actor/craft/header.hbs',
-            container: {
-                classes: [
-                    'wh40k-sidebar',
-                    'tw-flex',
-                    'tw-flex-col',
-                    'tw-h-full',
-                    'tw-min-h-0',
-                    'tw-min-w-0',
-                    'tw-overflow-y-auto',
-                    'tw-overflow-x-hidden',
-                    'tw-bg-[var(--color-bg-secondary,#252525)]',
-                    'tw-border-r-2',
-                    'tw-border-solid',
-                    'tw-border-[var(--wh40k-sidebar-accent,var(--wh40k-color-gold,#d4af37))]',
-                ],
-                id: 'sidebar',
-            },
+            container: SIDEBAR_CONTAINER,
         },
         tabs: {
             template: 'systems/wh40k-rpg/templates/actor/craft/tabs.hbs',
-            container: {
-                classes: ['wh40k-sidebar', 'tw-flex', 'tw-flex-col', 'tw-h-full', 'tw-min-h-0'],
-                id: 'sidebar',
-            },
+            container: SIDEBAR_CONTAINER,
         },
         overview: {
             template: 'systems/wh40k-rpg/templates/actor/craft/tab-overview.hbs',

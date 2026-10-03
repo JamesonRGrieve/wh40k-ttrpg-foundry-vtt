@@ -16,11 +16,11 @@
     Rendered only for BC actors; the include in tab-overview.hbs gates on
     `isBC`.
 --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-ritual-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson" icon="fa-hat-wizard" label=(localize "WH40K.BC.Ritual.PanelHeader") rootAttrs=(safeAttrs "data-bc-ritual-mastery" ritualPanel.ritualMastery) hasRightSlot=true}}
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-ritual-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson-l40" icon="fa-hat-wizard" label=(localize "WH40K.BC.Ritual.PanelHeader") rootAttrs=(safeAttrs "data-bc-ritual-mastery" ritualPanel.ritualMastery) hasRightSlot=true}}
     {{!-- Header right slot: perform-ritual button --}}
     {{#*inline "rightSlot"}}
         <button type="button"
-                data-wh40k-hook="bc-ritual-perform-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
+                data-wh40k-hook="bc-ritual-perform-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson-light tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson-l40 hover:tw-bg-crimson hover:tw-text-white"
                 data-action="bcPerformRitual"
                 title="{{localize 'WH40K.BC.Ritual.PerformButton'}}">
             {{localize "WH40K.BC.Ritual.PerformButton"}}

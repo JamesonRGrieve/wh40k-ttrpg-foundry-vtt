@@ -1,7 +1,7 @@
 {{!-- Fate Panel — vital meter with Inquisitorial rosette pips (no bar). --}}
 {{!-- labelAction="viewFateUses" wires the FATE header label as the trigger for the
      Fate-uses reference popout (#35), eliminating the need for a separate icon button. --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="fate" label="Fate" icon="fa-skull" actor=actor
+{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="fate" label=(localize "WH40K.Fate") icon="fa-skull" actor=actor
     rootStateClass=(iff (eq system.fate.value 0) "wh40k-fate-empty-state")
     labelAction="viewFateUses"
     labelActionTitle=(localize "WH40K.FateUses.DialogTitle")}}
@@ -14,8 +14,8 @@
             field="system.fate.value"
             current=system.fate.value
             maxLabel=system.fate.max
-            decTitle="Spend Fate Point"
-            incTitle="Restore Fate Point"
+            decTitle=(localize "WH40K.VitalPanel.SpendFatePoint")
+            incTitle=(localize "WH40K.VitalPanel.RestoreFatePoint")
             maxValue=system.fate.max}}
 
         {{!-- Rosette Pip Display --}}
@@ -29,14 +29,14 @@
                             class="tw-size-[42px] tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-relative tw-flex tw-items-center tw-justify-center {{#if (lte index ../system.fate.value)}}tw-animate-gentle-glow{{else}}tw-opacity-40{{/if}}"
                             data-action="setFateStar"
                             data-fate-index="{{index}}"
-                            title="Fate Point {{index}}{{#if (lte index ../system.fate.value)}} (Available — click to spend){{else}} (Spent — click to restore){{/if}}">
+                            title="{{#if (lte index ../system.fate.value)}}{{localize 'WH40K.VitalPanel.FatePointAvailable' index=index}}{{else}}{{localize 'WH40K.VitalPanel.FatePointSpent' index=index}}{{/if}}">
                         <i class="fas fa-skull {{#if (lte index ../system.fate.value)}}tw-text-[var(--wh40k-accent-gold)] {{themeClassFor 'accent'}}{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
                     </button>
                 {{/each}}
             {{else}}
                 <div class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-gray-500 tw-opacity-60">
                     <i class="{{concat 'far' ' fa-circle'}}"></i>
-                    <span>No Fate Points</span>
+                    <span>{{localize "WH40K.VitalPanel.NoFatePoints"}}</span>
                 </div>
             {{/if}}
         </div>
@@ -83,7 +83,7 @@
                 <li><strong>{{localize "WH40K.VitalInfoCard.FateRighteousFuryTitle"}}</strong> {{localize "WH40K.VitalInfoCard.FateRighteousFuryDesc"}}</li>
             </ul>
 
-            <p class="tw-text-crimson {{themeClassFor 'accent'}} tw-mt-[6px] tw-px-1 tw-py-0.5 tw-bg-[color:var(--wh40k-wounds-bg)] tw-border-l-2 tw-border-l-[color:var(--wh40k-wounds-secondary)] tw-rounded-[3px] tw-text-[0.75rem]"><i class="fas fa-fire"></i> <strong class="tw-text-[color:var(--wh40k-wounds-secondary)]">{{localize "WH40K.VitalInfoCard.FateBurningTitle"}}</strong> {{localize "WH40K.VitalInfoCard.FateBurningDesc"}}</p>
+            <p class="tw-text-crimson-l40{{themeClassFor 'accent'}} tw-mt-[6px] tw-px-1 tw-py-0.5 tw-bg-[color:var(--wh40k-wounds-bg)] tw-border-l-2 tw-border-l-[color:var(--wh40k-wounds-secondary)] tw-rounded-[3px] tw-text-[0.75rem]"><i class="fas fa-fire"></i> <strong class="tw-text-[color:var(--wh40k-wounds-secondary)]">{{localize "WH40K.VitalInfoCard.FateBurningTitle"}}</strong> {{localize "WH40K.VitalInfoCard.FateBurningDesc"}}</p>
         {{/systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs}}
     {{/systems/wh40k-rpg/templates/actor/partial/vital-edit-body.hbs}}
 {{/systems/wh40k-rpg/templates/actor/partial/vital-panel-shell}}

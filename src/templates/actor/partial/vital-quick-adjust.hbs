@@ -18,7 +18,7 @@
             data-field="{{field}}"
             data-delta="-5"
             data-min="{{#if minValue}}{{minValue}}{{else}}0{{/if}}"
-            title="Decrease by 5">
+            title="{{localize 'WH40K.VitalPanel.DecreaseBy' amount=5}}">
         -5
     </button>
     <button type="button"
@@ -27,7 +27,7 @@
             data-field="{{field}}"
             data-delta="-1"
             data-min="{{#if minValue}}{{minValue}}{{else}}0{{/if}}"
-            title="Decrease by 1">
+            title="{{localize 'WH40K.VitalPanel.DecreaseBy' amount=1}}">
         -1
     </button>
     <button type="button"
@@ -36,7 +36,7 @@
             data-field="{{field}}"
             data-delta="1"
             data-max="{{#if maxValue}}{{maxValue}}{{else}}100{{/if}}"
-            title="Increase by 1">
+            title="{{localize 'WH40K.VitalPanel.IncreaseBy' amount=1}}">
         +1
     </button>
     <button type="button"
@@ -45,7 +45,7 @@
             data-field="{{field}}"
             data-delta="5"
             data-max="{{#if maxValue}}{{maxValue}}{{else}}100{{/if}}"
-            title="Increase by 5">
+            title="{{localize 'WH40K.VitalPanel.IncreaseBy' amount=5}}">
         +5
     </button>
 </div>

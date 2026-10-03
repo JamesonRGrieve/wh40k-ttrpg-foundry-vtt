@@ -3,11 +3,11 @@
     <div class="wh40k-panel-header">
         <span class="wh40k-panel-title tw-text-gold {{themeClassFor 'accent'}}">
             <i class="fas fa-fist-raised"></i>
-            Combat Actions
+            {{localize "WH40K.Combat.Actions.Title"}}
         </span>
         <button type="button" class="tw-ml-auto tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-bg-[rgba(0,0,0,0.2)] hover:tw-border-gold bc:hover:tw-border-crimson-light dh1:hover:tw-border-gold-raw-l5 dh2:hover:tw-border-gold-raw dw:hover:tw-border-accent-combat ow:hover:tw-border-brass-l20 rt:hover:tw-border-gold im:hover:tw-border-failure hover:tw-bg-[rgba(212,175,55,0.15)] tw-transition-all"
                 data-action="initiative"
-                title="Roll Initiative (Current: {{system.initiative.total}})">
+                title="{{localize 'WH40K.Combat.RollInitiativeCurrent' value=system.initiative.total}}">
             <i class="fas fa-dice-d20 tw-text-[var(--wh40k-gold)]"></i>
             <span class="tw-text-xs tw-font-semibold">{{system.initiative.total}}</span>
         </button>
@@ -22,7 +22,7 @@
         {{! COMBAT TALENTS — plain click shows description locally; Shift+Click posts to chat (issue #19) }}
         {{#if combatTalents.length}}
             {{> systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs
-                heading="Combat Talents"
+                heading=(localize "WH40K.Combat.Actions.CombatTalents")
                 icon="fa-star"
                 items=combatTalents
                 mode="item"
@@ -42,7 +42,7 @@
 
         {{! REACTION ACTIONS }}
         {{#> systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs
-            heading="Reactions"
+            heading=(localize "WH40K.Combat.Reactions")
             icon="fa-bolt"}}
                 {{! Dodge }}
                 <button
@@ -50,13 +50,13 @@
                     class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-skills)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
                     data-action="dodge"
                     data-tooltip
-                    aria-label="Dodge: Reaction"
-                    title="Dodge"
+                    aria-label="{{localize 'WH40K.Combat.Actions.ReactionLabel' action=(localize 'WH40K.Combat.Dodge')}}"
+                    title="{{localize 'WH40K.Combat.Dodge'}}"
                 >
                     <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                     <i class="fas fa-running tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
-                    <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">Dodge</span>
-                    <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">Reaction</span>
+                    <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize "WH40K.Combat.Dodge"}}</span>
+                    <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{localize "WH40K.ActionType.Reaction"}}</span>
                 </button>
                 {{! Parry }}
                 <button
@@ -64,30 +64,30 @@
                     class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-skills)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
                     data-action="parry"
                     data-tooltip
-                    aria-label="Parry: Reaction"
-                    title="Parry"
+                    aria-label="{{localize 'WH40K.Combat.Actions.ReactionLabel' action=(localize 'WH40K.Combat.Parry')}}"
+                    title="{{localize 'WH40K.Combat.Parry'}}"
                 >
                     <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                     <i class="fas fa-shield-alt tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
-                    <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">Parry</span>
-                    <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">Reaction</span>
+                    <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize "WH40K.Combat.Parry"}}</span>
+                    <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{localize "WH40K.ActionType.Reaction"}}</span>
                 </button>
         {{/systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs}}
 
         {{! UTILITY ACTIONS }}
         {{#> systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs
-            heading="Utility Actions"
+            heading=(localize "WH40K.Combat.Actions.UtilityActions")
             icon="fa-tools"
             items=dh.combatActions.utility
             mode="action"
             dataAction="vocalizeCombatAction"
             actionColor="--wh40k-accent-talents"}}
                 {{! Assign Damage }}
-                <button type="button" class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-talents)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0" data-action="assign-damage" title="Assign Damage">
+                <button type="button" class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-talents)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0" data-action="assign-damage" title="{{localize 'WH40K.Combat.AssignDamage'}}">
                     <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                     <i class="fas fa-heart-broken tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
-                    <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">Assign Damage</span>
-                    <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">Tool</span>
+                    <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize "WH40K.Combat.AssignDamage"}}</span>
+                    <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{localize "WH40K.Combat.Actions.ToolLabel"}}</span>
                 </button>
         {{/systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs}}
 

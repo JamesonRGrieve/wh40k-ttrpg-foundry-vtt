@@ -8,6 +8,18 @@
 // Item sheet window-content: strips Foundry's default chrome so the gothic
 // sheet body fills the window edge-to-edge. The .wh40k-rpg.sheet.item path
 // matches the classes set by every item sheet's DEFAULT_OPTIONS.
+// Every system window (dialogs, prompts, tools) gets an opaque surface. Foundry's
+// window body is translucent, so the canvas art showed through dialog text (e.g.
+// Character Advancement). `.window-content` is emitted by ApplicationV2, not a
+// template, so no `tw-*` utility can sit on it — and the frame root itself IS
+// `.wh40k-rpg`, which the `.wh40k-rpg .tw-x` utility scope cannot match. Sheets
+// paint their own surface with more specific rules (actor grid, item override below).
+const applicationWindow = {
+    '.wh40k-rpg.application > .window-content': {
+        backgroundColor: 'var(--color-bg-primary, #1a1a1a)',
+    },
+};
+
 const itemSheetWindow = {
     '.wh40k-rpg.sheet.item .window-content': {
         background: 'transparent',
@@ -117,12 +129,19 @@ const actorSheetOverrides = {
             overflow: 'hidden',
             gap: '0',
         },
-        // actor/partial/header-base.hbs already spells all three inline —
-        // `tw-flex-none` IS `flex: 0 0 auto`, plus `tw-overflow-visible tw-z-10` —
-        // so the two sides agree; this (0,4,0) rule wins over their (0,2,0) anyway.
+        // The PC/NPC sidebar header: it takes the sidebar's remaining height and
+        // scrolls inside it, so the tab nav below (SIDEBAR_CONTAINER in
+        // applications/actor/sidebar-container.ts) stays pinned in view. This
+        // (0,4,0) rule out-specifies header-base.hbs's inline `tw-flex-none
+        // tw-overflow-visible` (0,2,0) and the container's (0,3,0) child variants,
+        // so it must agree with them: it used to pin the header at full height
+        // (`flex: 0 0 auto; overflow: visible`), which pushed the nav off the
+        // bottom of the window on six of seven lines.
         '& .wh40k-character-header': {
-            flex: '0 0 auto',
-            overflow: 'visible',
+            flex: '1 1 auto',
+            minHeight: '0',
+            overflowX: 'hidden',
+            overflowY: 'auto',
             zIndex: '10',
         },
         // The nav strip rendered by actor/partial/tab-strip.hbs. At (0,4,1) this
@@ -294,6 +313,7 @@ const actorSheetOverrides = {
 };
 
 module.exports = {
+    ...applicationWindow,
     ...itemSheetWindow,
     ...armourChatCard,
     ...actorSheetOverrides,

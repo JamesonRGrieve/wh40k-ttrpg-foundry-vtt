@@ -2,7 +2,7 @@
      matches the other Statistics-tab panels instead of a bare hand-rolled
      header (#238). --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
-    label="Talents"
+    label=(localize "WH40K.Talents")
     icon="fa-star"
     count=talentsCount
     rootClass="wh40k-panel-talents-table tw-mt-0 tw-mb-0 tw-w-full tw-box-border tw-self-stretch tw-flex-1 tw-flex tw-flex-col"
@@ -23,7 +23,7 @@
                 <button type="button" class="tw-flex-1 tw-min-w-0 tw-text-left tw-cursor-pointer tw-truncate tw-font-semibold tw-bg-transparent tw-border-none tw-p-0 tw-m-0 tw-text-[0.78rem]" data-action="itemEdit" data-item-id="{{talent.id}}">
                     {{talent.fullName}}
                     {{#if talent.flags.wh40k-rpg.autoGranted}}
-                    <i class="{{concat 'fas fa-gift'}}" style="margin-left:4px;font-size:0.6rem;color:var(--wh40k-color-gold);cursor:help" title="Granted by {{talent.flags.wh40k-rpg.grantedBy}}"></i>
+                    <i class="{{concat 'fas fa-gift'}}" style="margin-left:4px;font-size:0.6rem;color:var(--wh40k-color-gold);cursor:help" title="{{localize 'WH40K.Talent.GrantedBy' source=talent.flags.wh40k-rpg.grantedBy}}"></i>
                     {{/if}}
                 </button>
 
@@ -39,14 +39,14 @@
                             title="{{#if talent.isFavorite}}{{localize "WH40K.Favourites.Unfavorite"}}{{else}}{{localize "WH40K.Favourites.Favorite"}}{{/if}}">
                         <i class="{{#if talent.isFavorite}}{{concat 'fas fa-star'}}{{else}}{{concat 'far fa-star'}}{{/if}}"></i>
                     </button>
-                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem]" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Chat">
+                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem]" data-action="itemVocalize" data-item-id="{{talent.id}}" title="{{localize 'WH40K.Common.Chat'}}">
                         <i class="{{concat 'fas fa-comment'}}"></i>
                     </button>
                     {{!-- Direct removal is the freeform bypass of the sanctioned path
                          (advancement / compendium import): shown only in edit mode AND
                          when the "Freeform Characters" setting is on (#571). --}}
                     {{#if (and @root.inEditMode (isFreeformCharacters))}}
-                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem]" data-action="itemDelete" data-item-id="{{talent.id}}" title="Delete">
+                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem]" data-action="itemDelete" data-item-id="{{talent.id}}" title="{{localize 'WH40K.Common.Delete'}}">
                         <i class="{{concat 'fas fa-trash'}}"></i>
                     </button>
                     {{/if}}
@@ -61,6 +61,6 @@
              advancement/XP flow; the dropzone invites mis-clicks when it appears
              unconditionally. --}}
         {{#if (isFreeformCreation)}}
-        {{> systems/wh40k-rpg/templates/actor/partial/dropzone.hbs type="talent" iconClass="fa-star" hasItems=talentsCount label="Drop Talent to Add" compactLabel="Drop to add" clickToCreate=false}}
+        {{> systems/wh40k-rpg/templates/actor/partial/dropzone.hbs type="talent" iconClass="fa-star" hasItems=talentsCount labelKey="WH40K.DropZone.DropTalentToAdd" compactLabelKey="WH40K.DropZone.DropToAdd" clickToCreate=false}}
         {{/if}}
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

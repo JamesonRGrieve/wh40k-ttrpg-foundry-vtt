@@ -3,17 +3,26 @@
     "take everything" action plus per-row edit/delete (inherited base actions).
     Pickup target resolution + transfer lives in ItemDropManager.
 --}}
-<div class="tw-flex tw-flex-col tw-h-full tw-gap-3 tw-p-3 tw-text-[color:var(--wh40k-text-primary)]">
+<div class="tw-flex tw-flex-col tw-h-full tw-gap-3 tw-p-3 tw-bg-[var(--color-bg-primary,#1a1a1a)] tw-text-[color:var(--wh40k-text-primary)]">
     <header class="tw-flex tw-items-center tw-gap-3 tw-pb-2 tw-border-b tw-border-[var(--wh40k-border-light)]">
         <img src="{{actor.img}}" alt="{{actor.name}}" class="tw-w-10 tw-h-10 tw-object-cover tw-rounded-sm tw-border tw-border-[var(--wh40k-border-light)]" />
         <div class="tw-flex tw-flex-col tw-min-w-0">
-            <span class="tw-font-semibold tw-text-gold dh2:tw-text-gold-raw rt:tw-text-amber-400 im:tw-text-failure tw-truncate">{{actor.name}}</span>
+            <span class="tw-font-semibold tw-text-gold dh2:tw-text-gold-raw rt:tw-text-amber-400 im:tw-text-failure-l40 tw-truncate">{{actor.name}}</span>
             {{#if lootSource}}
                 <span class="tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)] tw-truncate">{{lootSource}}</span>
             {{/if}}
         </div>
-        <span class="tw-ml-auto tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-secondary)] tw-whitespace-nowrap">{{lootTotalWeight}} kg</span>
+        <span class="tw-ml-auto tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-secondary)] tw-whitespace-nowrap">{{lootTotalWeight}} {{localize "WH40K.Common.Kilograms"}}</span>
     </header>
+
+    {{!-- GM description (system.description): editable in edit mode, shown when set. --}}
+    {{#if inEditMode}}
+    <section class="tw-flex tw-flex-col tw-gap-1" aria-label="{{localize 'WH40K.Tabs.Description'}}">
+        {{editor system.description target="system.description" button=true editable=editable engine="prosemirror"}}
+    </section>
+    {{else if system.description}}
+    <section class="editor-content tw-text-sm tw-text-[color:var(--wh40k-text-secondary)]" aria-label="{{localize 'WH40K.Tabs.Description'}}">{{{system.description}}}</section>
+    {{/if}}
 
     <button
         type="button"
@@ -55,10 +64,10 @@
                                 {{#if item.quantity}}<span>&times;{{item.quantity}}</span>{{/if}}
                             </td>
                             <td class="tw-p-1 tw-align-middle tw-text-right tw-text-[color:var(--wh40k-text-muted)] tw-whitespace-nowrap">
-                                {{#if item.weight}}<span>{{item.weight}} kg</span>{{else}}<span class="tw-italic">&mdash;</span>{{/if}}
+                                {{#if item.weight}}<span>{{item.weight}} {{localize "WH40K.Common.Kilograms"}}</span>{{else}}<span class="tw-italic">&mdash;</span>{{/if}}
                             </td>
                             <td class="tw-p-1 tw-align-middle tw-w-6 tw-text-right">
-                                <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-0.5 tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-accent-combat" data-action="itemDelete" data-item-id="{{item.id}}" title="{{localize 'WH40K.Common.Delete'}}" aria-label="{{localize 'WH40K.Common.Delete'}}">
+                                <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-0.5 tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-accent-combat-l30" data-action="itemDelete" data-item-id="{{item.id}}" title="{{localize 'WH40K.Common.Delete'}}" aria-label="{{localize 'WH40K.Common.Delete'}}">
                                     <i class="fas fa-trash tw-text-[0.72rem]"></i>
                                 </button>
                             </td>

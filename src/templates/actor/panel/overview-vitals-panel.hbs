@@ -34,7 +34,7 @@
                             action="setWoundPip"
                             dataAttr="wound-index"
                             iconClass="fa-heart"
-                            titlePrefix="Wounds"}}
+                            titlePrefix=(localize "WH40K.Wounds")}}
                         <span class="tw-ml-auto tw-text-[0.7rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-secondary)]">{{system.wounds.value}}/{{system.wounds.max}}</span>
                     {{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}
 
@@ -48,7 +48,7 @@
                             action="setCriticalPip"
                             dataAttr="crit-level"
                             pipClass="wh40k-crit-pip-mini"
-                            titlePrefix="Critical Level"}}
+                            titlePrefix=(localize "WH40K.VitalPanel.CriticalLevel")}}
                     {{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}
                     {{/if}}
 
@@ -64,7 +64,7 @@
                             pipClass="wh40k-fatigue-pip"
                             filledClass=" tw-animate-bolt-glow"
                             iconClass="fa-zzz"
-                            titlePrefix="Fatigue Level"}}
+                            titlePrefix=(localize "WH40K.VitalPanel.FatigueLevel")}}
                         {{#if (gt system.fatigue.value 0)}}
                         <span class="tw-text-[0.7rem] tw-font-bold tw-text-[color:var(--wh40k-accent-combat)] tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.1)] tw-px-1 tw-py-[1px] tw-rounded-[3px]">−10</span>
                         {{/if}}
@@ -88,7 +88,7 @@
                             dataAttr="fate-index"
                             pipClass="wh40k-fate-pip"
                             iconClass="fa-star"
-                            titlePrefix="Fate Point"}}
+                            titlePrefix=(localize "WH40K.VitalPanel.FatePoint")}}
                         <button type="button" class="tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-text-medium)]"
                             data-action="viewFateUses"
                             title="{{localize 'WH40K.FateUses.DialogTitle'}}">
@@ -117,7 +117,7 @@
                 <div class="tw-px-2 tw-py-1.5 tw-bg-[rgba(0,0,0,0.05)] tw-mt-auto">
                     {{> systems/wh40k-rpg/templates/actor/partial/vital-inline-row
                         icon="fa-skull"
-                        label="Corruption"
+                        label=(localize "WH40K.Resource.Corruption")
                         field="system.corruption"
                         current=system.corruption
                         maxAttr=100
@@ -130,7 +130,7 @@
                         degreeText=(corruptionDegree system.corruption)}}
                     {{> systems/wh40k-rpg/templates/actor/partial/vital-inline-row
                         icon="fa-brain"
-                        label="Insanity"
+                        label=(localize "WH40K.Resource.Insanity")
                         field="system.insanity"
                         current=system.insanity
                         maxAttr=100

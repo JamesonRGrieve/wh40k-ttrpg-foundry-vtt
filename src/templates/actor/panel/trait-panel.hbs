@@ -1,6 +1,6 @@
 {{!-- Traits Panel - Compact Table View with Grouping --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
-    label="Traits"
+    label=(localize "WH40K.Traits")
     icon="fa-shield-alt"
     rootClass="tw-mt-0 tw-mb-0 tw-w-full tw-box-border tw-self-stretch tw-flex-1 tw-flex tw-flex-col"
     rootAttrs="data-drop-zone=\"general\" data-accepts=\"trait\""
@@ -35,7 +35,7 @@
                               class="tw-text-left tw-cursor-pointer tw-truncate tw-w-full tw-font-semibold tw-bg-transparent tw-border-none tw-p-0"
                               data-action="itemEdit"
                               data-item-id="{{trait.id}}"
-                              title="Click to open item sheet">
+                              title="{{localize 'WH40K.Common.OpenItemSheet'}}">
                             {{trait.name}}
                         </button>
 
@@ -56,7 +56,7 @@
                                 data-action="adjustTraitLevel"
                                 data-item-id="{{trait.id}}"
                                 data-delta="-1"
-                                title="Decrease Level">
+                                title="{{localize 'WH40K.Common.DecreaseLevel'}}">
                             <i class="{{concat 'fas fa-minus'}}"></i>
                         </button>
                         <span class="tw-text-[0.75rem] tw-font-semibold tw-min-w-[20px] tw-text-center">{{trait.system.level}}</span>
@@ -65,7 +65,7 @@
                                 data-action="adjustTraitLevel"
                                 data-item-id="{{trait.id}}"
                                 data-delta="1"
-                                title="Increase Level">
+                                title="{{localize 'WH40K.Common.IncreaseLevel'}}">
                             <i class="{{concat 'fas fa-plus'}}"></i>
                         </button>
                     </div>
@@ -76,14 +76,14 @@
                                 class="tw-bg-none tw-border-none tw-cursor-pointer tw-px-[6px] tw-py-[4px] tw-rounded-[3px] tw-text-[0.85rem] tw-text-[var(--wh40k-text-muted)]"
                                 data-action="itemVocalize"
                                 data-item-id="{{trait.id}}"
-                                title="Send to Chat">
+                                title="{{localize 'WH40K.SpecialUse.SendToChat'}}">
                             <i class="{{concat 'fas fa-comment'}}"></i>
                         </button>
                         <button type="button"
                                 class="tw-bg-none tw-border-none tw-cursor-pointer tw-px-[6px] tw-py-[4px] tw-rounded-[3px] tw-text-[0.85rem] tw-text-[var(--wh40k-text-muted)]"
                                 data-action="itemDelete"
                                 data-item-id="{{trait.id}}"
-                                title="Delete">
+                                title="{{localize 'WH40K.Common.Delete'}}">
                             <i class="{{concat 'fas fa-trash'}}"></i>
                         </button>
                     </div>
@@ -101,7 +101,7 @@
     {{#if (isFreeformCreation)}}
     <div class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-m-2 tw-cursor-pointer tw-transition-all tw-border-2 tw-border-dashed tw-border-[var(--wh40k-border-color-light)] tw-rounded {{#if traits.length}}tw-flex-row tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-min-h-0{{else}}tw-flex-col tw-p-4 tw-min-h-[80px]{{/if}}" data-action="itemCreate" data-type="trait">
         <i class="{{concat 'fas fa-shield-alt'}} tw-text-[var(--wh40k-text-muted)] {{#if traits.length}}tw-text-[0.9rem]{{else}}tw-text-[2rem]{{/if}}"></i>
-        <span data-dropzone-text class="tw-text-[var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.05em] tw-text-center {{#if traits.length}}tw-text-[0.7rem]{{else}}tw-text-[0.75rem]{{/if}}">{{#if traits.length}}Drop to add{{else}}Drop Trait or Click to Create{{/if}}</span>
+        <span data-dropzone-text class="tw-text-[var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.05em] tw-text-center {{#if traits.length}}tw-text-[0.7rem]{{else}}tw-text-[0.75rem]{{/if}}">{{#if traits.length}}{{localize "WH40K.DropZone.DropToAdd"}}{{else}}{{localize "WH40K.DropZone.DropTraitOrCreate"}}{{/if}}</span>
     </div>
     {{/if}}
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

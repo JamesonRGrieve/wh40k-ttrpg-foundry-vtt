@@ -31,7 +31,7 @@
     Rendered only for BC actors; the include in tab-overview.hbs gates on
     `isBC`.
 --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-gifts-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson" icon="fa-gift" label=(localize "WH40K.BC.Gifts.Label") rootAttrs=(safeAttrs "data-bc-current-alignment" giftsPanel.currentAlignment) hasRightSlot=true}}
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-gifts-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson-l40" icon="fa-gift" label=(localize "WH40K.BC.Gifts.Label") rootAttrs=(safeAttrs "data-bc-current-alignment" giftsPanel.currentAlignment) hasRightSlot=true}}
     {{!-- Header right slot: gift count --}}
     {{#*inline "rightSlot"}}
         <span class="tw-text-[0.72rem] tw-tabular-nums tw-text-[color:var(--wh40k-text-muted)]"
@@ -51,7 +51,7 @@
                         <span class="tw-font-semibold tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-bright)]">
                             {{gift.name}}
                         </span>
-                        <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson tw-text-crimson bc:tw-text-crimson-light">
+                        <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson tw-text-crimson-l40bc:tw-text-crimson-light">
                             {{#if (eq gift.appliedAlignment "khorne")}}{{localize "WH40K.BC.Gifts.Rider.Khorne"}}{{/if}}
                             {{#if (eq gift.appliedAlignment "slaanesh")}}{{localize "WH40K.BC.Gifts.Rider.Slaanesh"}}{{/if}}
                             {{#if (eq gift.appliedAlignment "nurgle")}}{{localize "WH40K.BC.Gifts.Rider.Nurgle"}}{{/if}}
@@ -68,7 +68,7 @@
                     {{/if}}
 
                     {{#if gift.riderDescription}}
-                        <div class="tw-text-[0.72rem] tw-text-crimson bc:tw-text-crimson-light"
+                        <div class="tw-text-[0.72rem] tw-text-crimson-l40bc:tw-text-crimson-light"
                              data-rider-alignment="{{gift.appliedAlignment}}">
                             <span class="tw-italic">{{gift.riderDescription}}</span>
                         </div>

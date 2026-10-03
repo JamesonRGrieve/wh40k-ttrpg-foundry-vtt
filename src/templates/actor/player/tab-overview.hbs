@@ -18,27 +18,19 @@
             {{> systems/wh40k-rpg/templates/actor/panel/overview-active-effects-panel.hbs}}
 
             {{#unless isNPC}}
-            {{!-- Resources (Influence / Requisition / Gelt) — PC-only; sits under Active
-                 Effects in col 1 (#15). In DH2 RAW mode Influence is a Statistics
-                 characteristic, not an economy stat, so it (and Throne Gelt) drop out
-                 of this panel and the grid collapses. --}}
-            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Resources" icon="fa-coins" zoneClass="tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]" contentClass="tw-p-2 tw-flex-1 tw-w-full"}}
-                    {{!-- Fixed column count keeps Influence / Requisition / Throne Gelt side by side
-                         (horizontal) rather than wrapping to a vertical stack (#236). The number inputs
-                         carry min-w-0 below so they shrink to share the row with the fixed steppers
-                         instead of clipping. RAW: only Requisition (1 col); hidden Gelt: 2 cols. --}}
+            {{!-- Resources — PC-only; sits under Active Effects in col 1 (#15). Each line
+                 shows its own acquisition currency + the throne-gelt baseline
+                 (`resourceRows`, derived from WH40K.currencies). DH2 keeps its
+                 ruleset-gated trio: in RAW mode Influence is a Statistics
+                 characteristic, so it (and Throne Gelt) drop out and the grid collapses.
+                 Fixed column counts keep the steppers side by side (#236). --}}
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title=(localize "WH40K.Resources.Title") icon="fa-coins" zoneClass="tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]" contentClass="tw-p-2 tw-flex-1 tw-w-full"}}
+                    {{#if isDH2}}
                     <div class="tw-grid {{#if isRaw}}tw-grid-cols-1{{else if hideThroneGelt}}tw-grid-cols-2{{else}}tw-grid-cols-3{{/if}} tw-gap-2 tw-w-full">
                         {{#unless isRaw}}
-                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
-                            <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal" data-tooltip="Social and political pull — calling in favours, securing audiences, persuading officials. Not bought with coin.">Influence</span>
-                            <div class="tw-flex tw-items-center tw-gap-1">
-                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="system.influence" data-min="0" title="-1">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-0 tw-max-w-[150px]" name="system.influence" value="{{system.influence}}" min="0" max="100" />
-                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="system.influence" data-max="100" title="+1">
-                                    <i class="fas fa-plus"></i>
-                                </button>
+                        {{#> systems/wh40k-rpg/templates/actor/partial/resource-stepper.hbs
+                            label=(localize "WH40K.Currency.Influence") tooltip=(localize "WH40K.Resources.InfluenceTooltip")
+                            field="system.influence" value=system.influence max=100}}
                                 {{#if isHomebrew}}
                                 {{!-- Issue #13 follow-up: Influence is not solely an economy stat
                                      (it gates social manipulation, audiences, Requisition tests).
@@ -57,36 +49,24 @@
                                     <i class="fas fa-dice-d10"></i>
                                 </button>
                                 {{/if}}
-                            </div>
-                        </div>
+                        {{/systems/wh40k-rpg/templates/actor/partial/resource-stepper.hbs}}
                         {{/unless}}
-                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
-                            <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal" data-tooltip="Drawing on Inquisitorial resources — weapons from the armoury, specialist equipment, transport, and backup.">Requisition</span>
-                            <div class="tw-flex tw-items-center tw-gap-1">
-                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="system.requisition" data-min="0" title="-1">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-0 tw-max-w-[150px]" name="system.requisition" value="{{system.requisition}}" min="0" />
-                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="system.requisition" title="+1">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/actor/partial/resource-stepper.hbs
+                            label=(localize "WH40K.Currency.Requisition") tooltip=(localize "WH40K.Resources.RequisitionTooltip")
+                            field="system.requisition" value=system.requisition}}
                         {{#unless hideThroneGelt}}
-                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
-                            <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal" data-tooltip="Hard currency for street-level transactions — food, lodging, bribes, and black market purchases.">Throne Gelt</span>
-                            <div class="tw-flex tw-items-center tw-gap-1">
-                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="system.throneGelt" data-min="0" title="-1">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-0 tw-max-w-[150px]" name="system.throneGelt" value="{{system.throneGelt}}" min="0" />
-                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="system.throneGelt" title="+1">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/actor/partial/resource-stepper.hbs
+                            label=(localize "WH40K.Currency.ThroneGelt") tooltip=(localize "WH40K.Resources.ThroneGeltTooltip")
+                            field="system.throneGelt" value=system.throneGelt}}
                         {{/unless}}
                     </div>
+                    {{else}}
+                    <div class="tw-grid {{#if (eq resourceRows.length 1)}}tw-grid-cols-1{{else}}tw-grid-cols-2{{/if}} tw-gap-2 tw-w-full">
+                        {{#each resourceRows}}
+                        {{> systems/wh40k-rpg/templates/actor/partial/resource-stepper.hbs label=(localize labelKey) field=field value=value}}
+                        {{/each}}
+                    </div>
+                    {{/if}}
             {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
             {{/unless}}
 
@@ -107,7 +87,7 @@
         {{!-- COLUMN 2: Favourite Skills → Favourite Talents → Progression --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Favourite Skills --}}
-            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Favourite Skills" icon="fa-star" zoneClass="tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-accent-green-bright)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-green-bright)]"}}
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title=(localize "WH40K.Favourites.Skills") icon="fa-star" zoneClass="tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-accent-green-bright)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-green-bright)]"}}
                     <div class="tw-flex tw-flex-col tw-gap-[3px]" data-favourite-list="skills">
                         {{#if favoriteSkills}}
                             {{#each favoriteSkills as |skill|}}
@@ -117,7 +97,7 @@
                                  aria-label="{{skill.label}}: {{skill.current}}"
                                  data-wh40k-tooltip="skill"
                                  data-wh40k-tooltip-data="{{skill.tooltipData}}">
-                                <i class="fas fa-grip-vertical tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-cursor-grab active:tw-cursor-grabbing" title="Drag to reorder"></i>
+                                <i class="fas fa-grip-vertical tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-cursor-grab active:tw-cursor-grabbing" title="{{localize 'WH40K.Common.DragToReorder'}}"></i>
                                 <span class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-flex-1">{{skill.label}}</span>
                                 <span class="tw-text-[0.85rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-min-w-[28px] tw-text-right">{{skill.current}}</span>
                                 <button type="button"
@@ -125,7 +105,7 @@
                                         data-action="roll"
                                         data-roll-type="skill"
                                         data-roll-target="{{skill.key}}"
-                                        title="Roll {{skill.label}}">
+                                        title="{{localize 'WH40K.Roll.Roll'}} {{skill.label}}">
                                     <i class="fas fa-dice"></i>
                                 </button>
                             </div>
@@ -141,7 +121,7 @@
             {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
 
             {{!-- Favourite Talents --}}
-            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Favourite Talents" icon="fa-star-half-alt" zoneClass="tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-talents)]"}}
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title=(localize "WH40K.Favourites.Talents") icon="fa-star-half-alt" zoneClass="tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-talents)]"}}
                     <div class="tw-flex tw-flex-col tw-gap-[3px]" data-favourite-list="talents">
                         {{#if favoriteTalents}}
                             {{#each favoriteTalents as |talent|}}
@@ -149,7 +129,7 @@
                                  draggable="true"
                                  data-favourite-key="{{talent.id}}"
                                  title="{{talent.name}}{{#if talent.specialization}} ({{talent.specialization}}){{/if}}">
-                                <i class="fas fa-grip-vertical tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-cursor-grab active:tw-cursor-grabbing" title="Drag to reorder"></i>
+                                <i class="fas fa-grip-vertical tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-cursor-grab active:tw-cursor-grabbing" title="{{localize 'WH40K.Common.DragToReorder'}}"></i>
                                 <img class="tw-w-[20px] tw-h-[20px] tw-rounded-[3px] tw-object-cover tw-shrink-0" src="{{talent.img}}" alt="{{talent.name}}" />
                                 <span class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-flex-1 tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)]">
                                     {{talent.fullName}}
@@ -161,7 +141,7 @@
                                         class="tw-w-[20px] tw-h-[20px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)]"
                                         data-action="itemEdit"
                                         data-item-id="{{talent.id}}"
-                                        title="View {{talent.name}}">
+                                        title="{{localize 'WH40K.View'}} {{talent.name}}">
                                     <i class="fas fa-info-circle"></i>
                                 </button>
                             </div>
@@ -180,7 +160,7 @@
             {{!-- Progression (XP) — PC-only — kept inline due to SVG ring + action-button header --}}
             <div class="tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-rounded-[6px] tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]">
                 <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.12)_0%,var(--color-bg-tertiary)_100%)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] [&>i]:tw-text-[color:var(--wh40k-color-gold)]">
-                    <div class="tw-relative tw-w-[20px] tw-h-[20px] tw-shrink-0"data-tooltip="{{#if system.experience.total}}{{floor (multiply (divide system.experience.used system.experience.total) 100)}}{{else}}0{{/if}}% XP spent ({{system.experience.used}}/{{system.experience.total}})">
+                    <div class="tw-relative tw-w-[20px] tw-h-[20px] tw-shrink-0"data-tooltip="{{#if system.experience.total}}{{localize 'WH40K.Experience.PercentSpent' percent=(floor (multiply (divide system.experience.used system.experience.total) 100)) used=system.experience.used total=system.experience.total}}{{else}}{{localize 'WH40K.Experience.PercentSpent' percent=0 used=system.experience.used total=system.experience.total}}{{/if}}">
                         <svg viewBox="0 0 100 100" class="tw-w-full tw-h-full">
                             <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(120, 46, 34, 0.2)" stroke-width="12"/>
                             <circle cx="50" cy="50" r="45" fill="none" stroke="#c08020" stroke-width="12" stroke-linecap="round"
@@ -189,21 +169,21 @@
                                     transform="rotate(-90 50 50)"/>
                         </svg>
                     </div>
-                    <span>Progression — Rank {{system.rank}}</span>
+                    <span>{{localize "WH40K.Experience.ProgressionRank" rank=system.rank}}</span>
                     <div class="tw-flex tw-gap-1 tw-ml-auto">
                         {{#if isGM}}
-                        <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-px-2 tw-py-1 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] tw-font-semibold tw-cursor-pointer tw-text-[color:var(--color-text-secondary)]" data-action="customXP" title="Add XP">
-                            <i class="fas fa-plus"></i> Add XP
+                        <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-px-2 tw-py-1 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] tw-font-semibold tw-cursor-pointer tw-text-[color:var(--color-text-secondary)]" data-action="customXP" title="{{localize 'WH40K.VitalEditBody.AddXP'}}">
+                            <i class="fas fa-plus"></i> {{localize "WH40K.VitalEditBody.AddXP"}}
                         </button>
                         {{/if}}
-                        <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-px-2 tw-py-1 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] tw-font-semibold tw-cursor-pointer tw-text-[color:var(--color-text-secondary)]" data-action="openAdvancement" title="Buy Advancements">
-                            <i class="fa-solid fa-arrow-up-big-small"></i> Advance
+                        <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-px-2 tw-py-1 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] tw-font-semibold tw-cursor-pointer tw-text-[color:var(--color-text-secondary)]" data-action="openAdvancement" title="{{localize 'WH40K.Experience.BuyAdvancements'}}">
+                            <i class="fa-solid fa-arrow-up-big-small"></i> {{localize "WH40K.Experience.Advance"}}
                         </button>
                     </div>
                 </div>
                 <div class="tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     <div class="tw-grid tw-grid-cols-2 tw-gap-2">
-                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[var(--color-text-secondary)]">Experience</span>
+                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[var(--color-text-secondary)]">{{localize "WH40K.Experience.Header"}}</span>
                         <span class="tw-text-[0.85rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)]">{{system.experience.available}}/{{system.experience.total}}</span>
                     </div>
                     {{!-- Itemised XP purchases (#XP-visibility) — every advance that contributes to Spent,
@@ -232,20 +212,20 @@
             <div class="tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-rounded-[6px] tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]">
                 <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.12)_0%,var(--color-bg-tertiary)_100%)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] [&>i]:tw-text-[color:var(--wh40k-color-gold)]">
                     <i class="fa-solid fa-skull"></i>
-                    <span>Threat — {{threatTier.label}}</span>
+                    <span>{{localize "WH40K.NPC.ThreatSummary" tier=threatTier.label}}</span>
                 </div>
                 <div class="tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     <div class="tw-grid tw-grid-cols-2 tw-gap-2">
-                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[var(--color-text-secondary)]">Threat Level</span>
+                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[var(--color-text-secondary)]">{{localize "WH40K.NPC.ThreatLevel"}}</span>
                         <span class="tw-text-[0.85rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)]" style="color: {{threatTier.color}};">{{source.threatLevel}}/30</span>
                     </div>
                     <div class="tw-grid tw-grid-cols-2 tw-gap-2">
-                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[var(--color-text-secondary)]">Type / Role</span>
+                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[var(--color-text-secondary)]">{{localize "WH40K.NPC.TypeAndRole"}}</span>
                         <span class="tw-text-[0.85rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)]">{{source.type}} / {{source.role}}</span>
                     </div>
                     {{#if horde.enabled}}
                     <div class="tw-grid tw-grid-cols-2 tw-gap-2">
-                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[var(--color-text-secondary)]">Magnitude</span>
+                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[var(--color-text-secondary)]">{{localize "WH40K.NPC.Horde.Magnitude"}}</span>
                         <span class="tw-text-[0.85rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)]">{{horde.magnitude}}/{{horde.magnitudeMax}}</span>
                     </div>
                     {{/if}}

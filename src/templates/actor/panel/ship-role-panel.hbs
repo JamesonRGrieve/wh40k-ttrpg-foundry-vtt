@@ -5,7 +5,7 @@
             {{localize "WH40K.ShipRole.Header"}}
         </span>
         <span class="tw-ml-auto tw-px-2 tw-py-0.5 tw-bg-[rgba(74,55,40,0.1)] tw-rounded-full tw-text-[0.85em] tw-font-semibold">{{shipRoles.length}}</span>
-        <button type="button" class="tw-p-1 tw-bg-transparent tw-border-none tw-cursor-pointer tw-transition-all hover:tw-text-gold bc:hover:tw-text-crimson-light dh1:hover:tw-text-gold-raw-l5 dh2:hover:tw-text-gold-raw dw:hover:tw-text-accent-combat ow:hover:tw-text-brass-l20 rt:hover:tw-text-gold im:hover:tw-text-failure hover:tw-scale-110" data-action="itemCreate" data-item-type="shipRole" data-tooltip="Add Ship Role">
+        <button type="button" class="tw-p-1 tw-bg-transparent tw-border-none tw-cursor-pointer tw-transition-all hover:tw-text-gold bc:hover:tw-text-crimson-light dh1:hover:tw-text-gold-raw-l5 dh2:hover:tw-text-gold-raw dw:hover:tw-text-accent-combat-l30ow:hover:tw-text-brass-l20 rt:hover:tw-text-gold im:hover:tw-text-failure hover:tw-scale-110" data-action="itemCreate" data-item-type="shipRole" data-tooltip="{{localize 'WH40K.ShipRole.AddRole'}}">
             <i class="fas fa-plus"></i>
         </button>
         <i class="fas fa-chevron-down collapse-icon"></i>
@@ -21,10 +21,10 @@
                                 <img class="tw-w-7 tw-h-7 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.2)]" src="{{role.img}}" alt="{{role.name}}" />
                                 <span class="tw-text-[1.05em] tw-font-semibold tw-text-[#4a3728]">{{role.name}}</span>
                             </button>
-                            <span class="tw-inline-flex tw-items-center tw-justify-center tw-min-w-[2rem] tw-h-6 tw-px-2 tw-bg-gradient-to-br tw-from-gold tw-to-[#c9a42b] tw-border tw-border-solid tw-border-[#b89420] tw-rounded-full tw-text-[0.8em] tw-font-bold tw-text-[#2a1a0a] tw-shadow-sm" data-tooltip="Rank {{role.system.rank}}">
+                            <span class="tw-inline-flex tw-items-center tw-justify-center tw-min-w-[2rem] tw-h-6 tw-px-2 tw-bg-gradient-to-br tw-from-gold tw-to-[#c9a42b] tw-border tw-border-solid tw-border-[#b89420] tw-rounded-full tw-text-[0.8em] tw-font-bold tw-text-[#2a1a0a] tw-shadow-sm" data-tooltip="{{localize 'WH40K.Dialog.DifficultyCalculator.Rank' rank=role.system.rank}}">
                                 R{{role.system.rank}}
                             </span>
-                            <button class="tw-p-1 tw-bg-transparent tw-border-none tw-cursor-pointer tw-opacity-50 hover:tw-opacity-100 tw-transition-opacity" data-action="itemDelete" data-item-id="{{role._id}}" data-tooltip="Remove Role">
+                            <button class="tw-p-1 tw-bg-transparent tw-border-none tw-cursor-pointer tw-opacity-50 hover:tw-opacity-100 tw-transition-opacity" data-action="itemDelete" data-item-id="{{role._id}}" data-tooltip="{{localize 'WH40K.ShipRole.RemoveRole'}}">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>

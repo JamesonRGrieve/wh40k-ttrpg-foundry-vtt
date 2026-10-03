@@ -21,28 +21,28 @@
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.Half")
                     value=actor.movement.half
-                    unit="m"
+                    unit=(localize "WH40K.Common.Metres")
                     action="setMovementMode"
                     attrs="data-movement-type=\"half\""
                     title=(localize "WH40K.MOVEMENT.Tooltip.Half"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.Full")
                     value=actor.movement.full
-                    unit="m"
+                    unit=(localize "WH40K.Common.Metres")
                     action="setMovementMode"
                     attrs="data-movement-type=\"full\""
                     title=(localize "WH40K.MOVEMENT.Tooltip.Full"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.Charge")
                     value=actor.movement.charge
-                    unit="m"
+                    unit=(localize "WH40K.Common.Metres")
                     action="setMovementMode"
                     attrs="data-movement-type=\"charge\""
                     title=(localize "WH40K.MOVEMENT.Tooltip.Charge"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.Run")
                     value=actor.movement.run
-                    unit="m"
+                    unit=(localize "WH40K.Common.Metres")
                     action="setMovementMode"
                     attrs="data-movement-type=\"run\""
                     title=(localize "WH40K.MOVEMENT.Tooltip.Run")))}}
@@ -55,17 +55,17 @@
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.LeapVertical")
                     value=actor.movement.leapVertical
-                    unit="m"
+                    unit=(localize "WH40K.Common.Metres")
                     title=(localize "WH40K.MOVEMENT.Tooltip.LeapVertical"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.LeapHorizontal")
                     value=actor.movement.leapHorizontal
-                    unit="m"
+                    unit=(localize "WH40K.Common.Metres")
                     title=(localize "WH40K.MOVEMENT.Tooltip.LeapHorizontal"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.Jump")
                     value=actor.movement.jump
-                    unit="cm"
+                    unit=(localize "WH40K.Common.Centimetres")
                     title=(localize "WH40K.MOVEMENT.Tooltip.Jump")))}}
 
         {{!-- Lifting Capacity (SB-based) — leads with current carried inventory weight
@@ -77,22 +77,22 @@
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.Carrying")
                     value=actor.encumbrance.value
-                    unit="kg"
+                    unit=(localize "WH40K.Common.Kilograms")
                     title=(localize "WH40K.MOVEMENT.Tooltip.Carrying"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.Carry")
                     value=actor.lifting.carry
-                    unit="kg"
+                    unit=(localize "WH40K.Common.Kilograms")
                     title=(localize "WH40K.MOVEMENT.Tooltip.Carry"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.Lift")
                     value=actor.lifting.lift
-                    unit="kg"
+                    unit=(localize "WH40K.Common.Kilograms")
                     title=(localize "WH40K.MOVEMENT.Tooltip.Lift"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.Push")
                     value=actor.lifting.push
-                    unit="kg"
+                    unit=(localize "WH40K.Common.Kilograms")
                     title=(localize "WH40K.MOVEMENT.Tooltip.Push")))}}
     </div>
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

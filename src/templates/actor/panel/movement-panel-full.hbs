@@ -9,7 +9,7 @@
             (object
                 label=(localize "WH40K.MOVEMENT.Stat.Half")
                 value=system.movement.half
-                unit="m"
+                unit=(localize "WH40K.Common.Metres")
                 icon="fa-walking"
                 action="setMovementMode"
                 attrs="data-movement-type=\"half\""
@@ -17,7 +17,7 @@
             (object
                 label=(localize "WH40K.MOVEMENT.Stat.Full")
                 value=system.movement.full
-                unit="m"
+                unit=(localize "WH40K.Common.Metres")
                 icon="fa-shoe-prints"
                 action="setMovementMode"
                 attrs="data-movement-type=\"full\""
@@ -25,7 +25,7 @@
             (object
                 label=(localize "WH40K.MOVEMENT.Stat.Charge")
                 value=system.movement.charge
-                unit="m"
+                unit=(localize "WH40K.Common.Metres")
                 icon="fa-running"
                 action="setMovementMode"
                 attrs="data-movement-type=\"charge\""
@@ -33,7 +33,7 @@
             (object
                 label=(localize "WH40K.MOVEMENT.Stat.Run")
                 value=system.movement.run
-                unit="m"
+                unit=(localize "WH40K.Common.Metres")
                 icon="fa-wind"
                 action="setMovementMode"
                 attrs="data-movement-type=\"run\""
@@ -51,17 +51,17 @@
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.LeapVerticalLong")
                     value=system.movement.leapVertical
-                    unit="m"
+                    unit=(localize "WH40K.Common.Metres")
                     title=(localize "WH40K.MOVEMENT.Tooltip.LeapVertical"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.LeapHorizontalLong")
                     value=system.movement.leapHorizontal
-                    unit="m"
+                    unit=(localize "WH40K.Common.Metres")
                     title=(localize "WH40K.MOVEMENT.Tooltip.LeapHorizontal"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.JumpHeight")
                     value=system.movement.jump
-                    unit="cm"
+                    unit=(localize "WH40K.Common.Centimetres")
                     title=(localize "WH40K.MOVEMENT.Tooltip.Jump")))}}
 
         {{!-- Carrying Capacity --}}
@@ -73,19 +73,19 @@
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.Lift")
                     value=system.lifting.lift
-                    unit="kg"
+                    unit=(localize "WH40K.Common.Kilograms")
                     icon="fa-dumbbell"
                     title=(localize "WH40K.MOVEMENT.Tooltip.Lift"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.Carry")
                     value=system.lifting.carry
-                    unit="kg"
+                    unit=(localize "WH40K.Common.Kilograms")
                     icon="fa-hands-holding"
                     title=(localize "WH40K.MOVEMENT.Tooltip.Carry"))
                 (object
                     label=(localize "WH40K.MOVEMENT.Stat.PushDrag")
                     value=system.lifting.push
-                    unit="kg"
+                    unit=(localize "WH40K.Common.Kilograms")
                     icon="fa-cart-flatbed"
                     title=(localize "WH40K.MOVEMENT.Tooltip.Push")))}}
 

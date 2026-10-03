@@ -13,7 +13,7 @@ import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './ty
 
 export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'rt' as const;
-    readonly label = 'WH40K.System.RogueTrader';
+    readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.rt';
     readonly cssClass = 'rogue-trader';
     readonly theme = {
         primary: 'accent-dynasty',

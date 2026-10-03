@@ -21,7 +21,7 @@
 {{!-- Compact variant: single dense line --}}
 <div class="tw-flex tw-items-center tw-gap-[6px] tw-px-[6px] tw-py-1 tw-rounded-sm tw-border-l-2 tw-border-l-[var(--wh40k-accent-gold)] tw-transition-all {{#if effect.disabled}}tw-opacity-50 tw-border-l-[var(--wh40k-text-muted)]{{/if}}"
      data-effect-id="{{effect.id}}"
-     title="{{#if effect.label}}{{effect.label}}{{else}}{{effect.name}}{{/if}}{{#if effect.sourceName}} (from {{effect.sourceName}}){{/if}}">
+     title="{{#if effect.label}}{{effect.label}}{{else}}{{effect.name}}{{/if}}{{#if effect.sourceName}} ({{localize 'WH40K.Effects.FromSource' source=effect.sourceName}}){{/if}}">
     <img src="{{effect.icon}}"
          class="tw-w-[18px] tw-h-[18px] tw-rounded-sm tw-object-cover tw-shrink-0 tw-border tw-border-black/10 {{#if effect.disabled}}tw-grayscale{{/if}}"
          alt="" />
@@ -105,7 +105,7 @@
                 {{#each effect.changes as |change|}}
                     <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-py-0.5 tw-px-2 tw-text-xs">
                         <span class="tw-text-gray-700">{{change.label}}</span>
-                        <span class="tw-font-mono tw-font-semibold dh2:tw-text-bronze rt:tw-text-amber-700 im:tw-text-crimson">{{change.value}}</span>
+                        <span class="tw-font-mono tw-font-semibold dh2:tw-text-bronze rt:tw-text-amber-700 im:tw-text-crimson-l40">{{change.value}}</span>
                     </div>
                 {{/each}}
             </div>

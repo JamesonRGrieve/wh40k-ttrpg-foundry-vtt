@@ -6,8 +6,10 @@
  *    (base-actor-sheet + character-sheet) → one exported ADVANCE_XP_COSTS.
  *  - the NPC Type/Role dropdown maps were inline twice in npc-sheet.ts → the
  *    NPC_TYPE_OPTIONS / NPC_ROLE_OPTIONS module constants.
- *  - the 21-skill list was hard-coded three times in npc-sheet.ts → the
- *    NPC_BASIC_SKILLS canonical list, the other two projections derive from it.
+ *  - the 21-skill list was hard-coded three times in npc-sheet.ts → one
+ *    NPC_BASIC_SKILLS list, later replaced by the per-line skill catalog
+ *    (SKILL_DEFINITIONS via standardSkillsForSystem): that DH2-only list was
+ *    shown on every line's NPC sheet.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -39,25 +41,25 @@ describe('base-actor-sheet XP-cost source (#284)', () => {
 });
 
 describe('npc-sheet constant de-dup (#284, options updated by #257)', () => {
-    it('declares the NPC tier/nature option + skill constants once', () => {
-        // #257 split the overloaded NPC type into tier + nature (role dropped).
-        expect(NPC).toContain('const NPC_TIER_OPTIONS');
-        expect(NPC).toContain('const NPC_NATURE_OPTIONS');
-        expect(NPC).not.toContain('const NPC_ROLE_OPTIONS');
-        expect(NPC).toContain('const NPC_BASIC_SKILLS');
+    it('declares the NPC tier/nature option builders once', () => {
+        // #257 split the overloaded NPC type into tier + nature (role dropped). The
+        // options are builders, not constants: their labels are langpack keys
+        // localized at render time (the langpack is not loaded at module load).
+        expect(countOccurrences(NPC, 'const npcTierOptions = ')).toBe(1);
+        expect(countOccurrences(NPC, 'const npcNatureOptions = ')).toBe(1);
+        expect(NPC).not.toContain('NPC_ROLE_OPTIONS');
     });
 
-    it('references the tier/nature option constants from both the context and the header', () => {
-        expect(NPC).toContain("context['npcTierOptions'] = NPC_TIER_OPTIONS");
-        expect(NPC).toContain("context['npcNatureOptions'] = NPC_NATURE_OPTIONS");
-        expect(NPC).toContain('options: NPC_TIER_OPTIONS');
-        expect(NPC).toContain('options: NPC_NATURE_OPTIONS');
+    it('builds the tier/nature options from the one builder for both the context and the header', () => {
+        expect(NPC).toContain("context['npcTierOptions'] = npcTierOptions()");
+        expect(NPC).toContain("context['npcNatureOptions'] = npcNatureOptions()");
+        expect(NPC).toContain('options: npcTierOptions()');
+        expect(NPC).toContain('options: npcNatureOptions()');
     });
 
-    it('keeps the 21-skill list in exactly one place (the other projections derive)', () => {
-        // The skill key 'sleightOfHand' appears once as data (the canonical list);
-        // the {key,name} / [key,label,charShort] projections derive via .map().
-        expect(countOccurrences(NPC, "sleightOfHand: 'Sleight of Hand'")).toBe(0);
-        expect(NPC).toContain("key: 'sleightOfHand', name: 'Sleight of Hand'");
+    it('holds no skill list of its own; every projection derives from the per-line catalog', () => {
+        expect(NPC).not.toContain('NPC_BASIC_SKILLS');
+        expect(NPC).not.toContain("'Sleight of Hand'");
+        expect(countOccurrences(NPC, 'standardSkillsForSystem(')).toBe(2); // skills tab + add-skill picker
     });
 });

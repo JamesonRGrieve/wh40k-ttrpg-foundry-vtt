@@ -1,13 +1,13 @@
-{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Vehicle.Upgrades.Header") icon="fa-cogs" rootClass="tw-col-span-6 tw-row-span-1" bodyClass="tw-p-0" titleClass=(concat "tw-text-gold " (themeClassFor 'accent'))}}
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Vehicle.UpgradesHeader") icon="fa-cogs" rootClass="tw-col-span-6 tw-row-span-1" bodyClass="tw-p-0" titleClass=(concat "tw-text-gold " (themeClassFor 'accent'))}}
     {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
         addAction="itemCreate"
         addType="vehicleUpgrade"
         addTitleKey="WH40K.Common.AddVehicleUpgrade"
         headers=(array
-            (object cellClass="table-cell--span2" labelKey="WH40K.Vehicle.Upgrades.Name")
+            (object cellClass="table-cell--span2" labelKey="WH40K.Vehicle.UpgradesName")
             (object labelKey="WH40K.VehicleUpgrade.Type")
             (object labelKey="WH40K.VehicleUpgrade.Difficulty")
-            (object cellClass="table-cell--span2" labelKey="WH40K.Vehicle.Upgrades.Modifiers"))}}
+            (object cellClass="table-cell--span2" labelKey="WH40K.Vehicle.UpgradesModifiers"))}}
         {{#each upgrades as |item|}}
             {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
                 item=item

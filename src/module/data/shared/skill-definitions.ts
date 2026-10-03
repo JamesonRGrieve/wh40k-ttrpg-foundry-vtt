@@ -133,6 +133,26 @@ export function skillKeysForSystem(systemId: string): Set<string> {
     return cached;
 }
 
+/** One non-specialist skill a game line uses, for list UIs (NPC skills tab, add-skill picker). */
+export interface StandardSkillEntry {
+    key: string;
+    label: string;
+    /** Governing characteristic, short form. */
+    char: string;
+    advanced: boolean;
+}
+
+/**
+ * The non-specialist skills of `systemId`, in catalog order. Specialist groups
+ * (Common Lore, Trade, …) carry per-specialisation entries and are listed separately.
+ */
+export function standardSkillsForSystem(systemId: string): StandardSkillEntry[] {
+    const keys = skillKeysForSystem(systemId);
+    return Object.entries(SKILL_DEFINITIONS)
+        .filter(([key, d]) => keys.has(key) && !d.hasEntries)
+        .map(([key, d]) => ({ key, label: d.label, char: d.char, advanced: d.advanced }));
+}
+
 /**
  * Derive a `skillKey → full-characteristic-key` map from {@link SKILL_DEFINITIONS}
  * (e.g. `dodge → 'agility'`). Used as the NPC skill-target fallback when an

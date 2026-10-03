@@ -1,10 +1,10 @@
 {{!-- Orders Panel --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs panelId="orders" label="Ship Orders" icon="fa-ship" count=ordersCount rootClass="wh40k-panel-powers wh40k-panel-orders" bodyClass="tw-p-0" titleClass=(concat "tw-text-gold " (themeClassFor 'accent')) accentBg="linear-gradient(135deg,rgb(from #0284c7 r g b / 0.15) 0%,rgb(from #0284c7 r g b / 0.05) 100%)" accentBorder="rgb(from #0284c7 r g b / 0.3)" accentIcon="#0284c7"}}
+{{#> systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs panelId="orders" label=(localize "WH40K.Orders.ShipOrders") icon="fa-ship" count=ordersCount rootClass="wh40k-panel-powers wh40k-panel-orders" bodyClass="tw-p-0" titleClass=(concat "tw-text-gold " (themeClassFor 'accent')) accentBg="linear-gradient(135deg,rgb(from #0284c7 r g b / 0.15) 0%,rgb(from #0284c7 r g b / 0.05) 100%)" accentBorder="rgb(from #0284c7 r g b / 0.3)" accentIcon="#0284c7"}}
     {{!-- Category Filter Tabs --}}
     {{#if orderCategories.length}}
     <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-[var(--wh40k-radius-sm)] tw-mb-[var(--wh40k-space-md)]">
         <button type="button" class="wh40k-filter-btn tw-px-[10px] tw-py-1 tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-[12px] tw-bg-transparent tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.75rem] tw-font-medium tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg)] hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-border-[color:var(--wh40k-border-color)] {{#unless activeOrderCategory}}tw-bg-accent-powers tw-text-white tw-border-accent-powers{{/unless}}" data-action="filterOrders" data-category="">
-            All
+            {{localize "WH40K.All"}}
         </button>
         {{#each orderCategories as |cat|}}
         <button type="button" class="wh40k-filter-btn wh40k-filter-{{cat.id}} tw-px-[10px] tw-py-1 tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-[12px] tw-bg-transparent tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.75rem] tw-font-medium tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg)] hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-border-[color:var(--wh40k-border-color)]" data-action="filterOrders" data-category="{{cat.id}}">
@@ -22,26 +22,26 @@
             accentColor="#0891b2"
             dragType="order"
             extraAttrs=(concat 'data-category="' order.system.category '"')
-            editTitle="Edit Order"
+            editTitleKey="WH40K.Orders.EditOrder"
             pills=(array order.system.pill (hash bgClass="tw-bg-[rgba(0,0,0,0.1)]" textClass="tw-text-[color:var(--wh40k-text-muted)]" label=order.system.actionTypeLabel))
             stats=(array
-                (hash label="Test" value=order.system.testLabel)
-                (hash label="Action" value=order.system.actionTypeLabel))
+                (hash labelKey="WH40K.NavigatorPowers.Test" value=order.system.testLabel)
+                (hash labelKey="WH40K.Orders.Action" value=order.system.actionTypeLabel))
             actions=(array
-                (hash action="rollOrder" icon="fa-dice-d20" title="Execute Order" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
-                (hash action="vocalizeOrder" icon="fa-comment" title="Post to Chat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
-                (hash action="togglePowerDetails" icon="fa-chevron-down" title="Toggle Details" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
+                (hash action="rollOrder" icon="fa-dice-d20" titleKey="WH40K.Orders.ExecuteOrder" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
+                (hash action="vocalizeOrder" icon="fa-comment" titleKey="WH40K.Action.PostToChat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
+                (hash action="togglePowerDetails" icon="fa-chevron-down" titleKey="WH40K.Common.ToggleDetails" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
         }}
-            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Requirements" icon="fa-list-check" content=order.system.requirements}}
-            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Effect" icon="fa-check-circle" labelClass="tw-text-[#22c55e]" content=order.system.effect}}
-            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Failure" icon="fa-exclamation-triangle" labelClass="tw-text-[#ef4444]" content=order.system.failure}}
-            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Description" content=order.system.description}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.Tabs.Requirements") icon="fa-list-check" content=order.system.requirements}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.Tabs.Effect") icon="fa-check-circle" labelClass="tw-text-[#22c55e]" content=order.system.effect}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.Roll.Failure") icon="fa-exclamation-triangle" labelClass="tw-text-[#ef4444]" content=order.system.failure}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.Description") content=order.system.description}}
         {{/systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs}}
         {{else}}
-        {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-ship" text="No ship orders known" padding="md"}}
+        {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-ship" textKey="WH40K.Orders.NoOrders" padding="md"}}
         {{/each}}
     </div>
 
     {{!-- Add Order Dropzone --}}
-    {{> systems/wh40k-rpg/templates/actor/partial/dropzone.hbs type="order" hasItems=ordersCount label="Drop Ship Order or Click to Create" compactLabel="Drop or click to add"}}
+    {{> systems/wh40k-rpg/templates/actor/partial/dropzone.hbs type="order" hasItems=ordersCount labelKey="WH40K.Orders.DropOrCreate" compactLabelKey="WH40K.DropZone.DropOrClickToAdd"}}
 {{/systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs}}

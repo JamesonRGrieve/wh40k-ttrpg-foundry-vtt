@@ -329,6 +329,33 @@ export function aggregateRegimentGrants(selection: RegimentSelection, optionCata
 }
 
 /* -------------------------------------------------------------------- */
+/*  Sheet panel summary                                                 */
+/* -------------------------------------------------------------------- */
+
+/** Regiment + Standard Kit budget readouts for the OW Regiment panel, each with its cap. */
+export interface RegimentPanelSummary {
+    readonly regiment: RegimentBudgetResult & { readonly budget: number };
+    readonly kit: KitBudgetResult & { readonly budget: number };
+}
+
+/**
+ * Evaluate a persisted selection + kit for the sheet's Regiment panel. The kit
+ * cap includes the selection's aggregated `kitModifier` (Mechanised raises it,
+ * Penal lowers it), so the panel and the builder dialog agree.
+ */
+export function buildRegimentPanelSummary(
+    selection: RegimentSelection,
+    kit: ReadonlyArray<{ readonly id: string; readonly cost: number }>,
+    optionCatalog: ReadonlyArray<RegimentOption>,
+): RegimentPanelSummary {
+    const kitModifier = aggregateRegimentGrants(selection, optionCatalog).kitModifier ?? 0;
+    return {
+        regiment: { ...computeRegimentBudget(selection, optionCatalog), budget: REGIMENT_BUDGET },
+        kit: { ...computeKitBudget(kit, kitModifier), budget: STANDARD_KIT_BUDGET + kitModifier },
+    };
+}
+
+/* -------------------------------------------------------------------- */
 /*  Empty-selection helper                                              */
 /* -------------------------------------------------------------------- */
 

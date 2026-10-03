@@ -610,7 +610,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const actorSkills = this.#getActorSystem().skills ?? {};
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- getVisibleSkills is optional in some systemConfig variants; ?. + ?? is the safe call pattern
         const visibleSkills = systemConfig.getVisibleSkills?.() ?? new Set<string>();
-        const ranks = systemConfig.getSkillRanks();
+        const ranks = systemConfig.getLocalizedSkillRanks();
+        const untrainedLabel = game.i18n.localize('WH40K.Skills.Untrained');
 
         const result: PreparedSkillAdvance[] = [];
 
@@ -639,7 +640,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     const entryIsMaxed = entryRank >= ranks.length;
                     const entryCost = entryIsMaxed ? null : systemConfig.getSkillAdvanceCost(this.actor, skillKey, entryRank);
                     const entryCanPurchase = !entryIsMaxed && entryCost !== null && available >= entryCost;
-                    const entryCurrentLabel = entryRank > 0 ? ranks[entryRank - 1]?.tooltip ?? 'Untrained' : 'Untrained';
+                    const entryCurrentLabel = entryRank > 0 ? ranks[entryRank - 1]?.tooltip ?? untrainedLabel : untrainedLabel;
                     const entryNextRank = ranks[entryRank];
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: entryNextRank may be undefined despite indexed access type
                     const entryNextLabel = !entryIsMaxed && entryNextRank !== undefined ? entryNextRank.tooltip : null;
@@ -673,7 +674,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 // per-specialisation rows above are for bumping what is already owned.
                 const addCost = systemConfig.getSkillAdvanceCost(this.actor, skillKey, 0);
                 if (addCost !== null) {
-                    const addNextLabel = ranks[0]?.tooltip ?? 'Known';
+                    const addNextLabel = ranks[0]?.tooltip ?? '';
                     result.push({
                         id: `skill:${skillKey}:__new`,
                         name: label,
@@ -684,7 +685,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         specialization: '__new',
                         cost: addCost,
                         currentRank: 0,
-                        currentLabel: 'Untrained',
+                        currentLabel: untrainedLabel,
                         nextLabel: addNextLabel,
                         owned: false,
                         canPurchase: available >= addCost,
@@ -702,7 +703,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const cost = isMaxed ? null : systemConfig.getSkillAdvanceCost(this.actor, skillKey, effectiveRank);
             const canPurchase = !isMaxed && cost !== null && available >= cost;
 
-            const currentLabel = effectiveRank > 0 ? ranks[effectiveRank - 1]?.tooltip ?? 'Untrained' : 'Untrained';
+            const currentLabel = effectiveRank > 0 ? ranks[effectiveRank - 1]?.tooltip ?? untrainedLabel : untrainedLabel;
             const nextRank = ranks[effectiveRank];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: nextRank may be undefined despite indexed access type
             const nextLabel = !isMaxed && nextRank !== undefined ? nextRank.tooltip : null;
@@ -1117,7 +1118,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const chips: Array<{ key: string; label: string; count: number; accessible: number; active: boolean }> = [
             {
                 key: 'all',
-                label: 'All',
+                label: game.i18n.localize('WH40K.All'),
                 count: powers.length,
                 accessible: powers.filter((p) => !p.blocked).length,
                 active: activeDiscipline === 'all',
@@ -1149,7 +1150,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     .sort(([a], [b]) => a - b)
                     .map(([prCost, tierItems]) => ({
                         prCost,
-                        label: `PR ${prCost}`,
+                        label: game.i18n.format('WH40K.PsychicPower.PrCost', { cost: String(prCost) }),
                         accessible: prCost <= currentRating,
                         items: tierItems,
                     }));
@@ -1188,7 +1189,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         (g) => (g.name ?? '').toLowerCase() === t.name.toLowerCase(),
                     ),
             );
-            const source = origin ? origin.name : 'Innate / Granted';
+            const source = origin ? origin.name : game.i18n.localize('WH40K.Advancement.InnateGranted');
             return {
                 id: t.id ?? '',
                 name: t.name,
@@ -1576,7 +1577,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 (e) => specializationSlug(e.slug ?? '') === newSlug || specializationSlug(e.name ?? '') === newSlug,
             );
             if (existing) {
-                ui.notifications.warn(`${skillLabel} (${specName}) already exists on this character.`);
+                ui.notifications.warn(game.i18n.format('WH40K.Advancement.Specialization.Duplicate', { skill: skillLabel, name: specName }));
                 return;
             }
 
@@ -1770,7 +1771,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // Resolve compendium doc to get full data
         const sourceDoc = await fromUuid(entry.uuid);
         if (!sourceDoc) {
-            ui.notifications.error(`Could not load talent from compendium: ${entry.name}`);
+            ui.notifications.error(game.i18n.format('WH40K.Advancement.TalentLoadFailed', { name: entry.name }));
             return;
         }
 
@@ -1822,21 +1823,23 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     async #promptForTalentSpecialization(talentName: string, ownedSpecs: string[]): Promise<string | null> {
-        const ownedNote = ownedSpecs.length ? `<p class="notes">Already owned: ${ownedSpecs.join(', ')}</p>` : '';
+        const ownedNote = ownedSpecs.length
+            ? `<p class="notes">${game.i18n.format('WH40K.Advancement.TalentSpecialisationOwned', { owned: ownedSpecs.join(', ') })}</p>`
+            : '';
         const content = `<div class="form-group">
-            <label>Specialization</label>
-            <input type="text" name="specialization" placeholder="e.g. Shock, Solid Projectile, Bolt"
+            <label>${game.i18n.localize('WH40K.Advancement.Specialization.Choose')}</label>
+            <input type="text" name="specialization" placeholder="${game.i18n.localize('WH40K.Advancement.TalentSpecialisationPlaceholder')}"
                 autofocus style="width:100%; margin-top:0.25em"/>
             ${ownedNote}
         </div>`;
         return new Promise((resolve) => {
             new foundry.appv1.api.Dialog({
-                title: `${talentName} — Specialization`,
+                title: game.i18n.format('WH40K.Advancement.TalentSpecialisationTitle', { talent: talentName }),
                 content,
                 buttons: {
                     ok: {
                         icon: '<i class="fas fa-check"></i>',
-                        label: 'Purchase',
+                        label: game.i18n.localize('WH40K.Advancement.Specialization.Purchase'),
                         callback: (html: JQuery) => {
                             const value = (html.find('input[name="specialization"]').val() as string | undefined)?.trim() ?? '';
                             if (value.length > 0 && ownedSpecs.some((s) => s.toLowerCase() === value.toLowerCase())) {
@@ -1849,7 +1852,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     },
                     cancel: {
                         icon: '<i class="fas fa-times"></i>',
-                        label: 'Cancel',
+                        label: game.i18n.localize('WH40K.Cancel'),
                         callback: () => resolve(null),
                     },
                 },
@@ -1900,7 +1903,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const sourceDoc = await fromUuid(entry.uuid);
         if (!sourceDoc) {
-            ui.notifications.error(`Could not load power from compendium: ${entry.name}`);
+            ui.notifications.error(game.i18n.format('WH40K.Advancement.PowerLoadFailed', { name: entry.name }));
             return;
         }
 
@@ -1931,7 +1934,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const sourceDoc = await fromUuid(entry.uuid);
         if (!sourceDoc) {
-            ui.notifications.error(`Could not load elite advance: ${entry.name}`);
+            ui.notifications.error(game.i18n.format('WH40K.Advancement.EliteAdvanceLoadFailed', { name: entry.name }));
             return;
         }
 

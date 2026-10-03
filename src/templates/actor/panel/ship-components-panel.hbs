@@ -17,7 +17,7 @@
                     editAction=false
                     cells=(array
                         (object value=item.system.componentTypeLabel cellClass="table-cell" title=item.system.componentTypeLabel)
-                        (object value=item.system.powerDisplay cellClass=(concat "table-cell " (iff (gt item.system.power.generated 0) "tw-text-success tw-font-semibold" (iff (gt item.system.power.used 0) "tw-text-crimson" ""))))
+                        (object value=item.system.powerDisplay cellClass=(concat "table-cell " (iff (gt item.system.power.generated 0) "tw-text-success-l20tw-font-semibold" (iff (gt item.system.power.used 0) "tw-text-crimson-l40" ""))))
                         (object value=item.system.space)
                         (object value=item.system.shipPoints))
                     actions=(array

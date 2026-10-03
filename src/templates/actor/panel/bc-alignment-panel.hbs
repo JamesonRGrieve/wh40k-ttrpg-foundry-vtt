@@ -30,7 +30,7 @@
     Rendered only for BC actors; the include in tab-status.hbs gates on
     `actor._gameSystemId === 'bc'`.
 --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-alignment-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson" icon="fa-skull" label=(localize "WH40K.BC.Advancement.PanelHeader") rootAttrs=(safeAttrs "data-bc-current-alignment" alignmentPanel.current "data-bc-derived-alignment" alignmentPanel.derived) hasRightSlot=true}}
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-alignment-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson-l40" icon="fa-skull" label=(localize "WH40K.BC.Advancement.PanelHeader") rootAttrs=(safeAttrs "data-bc-current-alignment" alignmentPanel.current "data-bc-derived-alignment" alignmentPanel.derived) hasRightSlot=true}}
     {{!-- Header right slot: current alignment readout --}}
     {{#*inline "rightSlot"}}
         <span data-wh40k-hook="bc-current-alignment" class="tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
@@ -41,7 +41,7 @@
     {{/inline}}
 
     {{#if alignmentPanel.pendingFlip}}
-        <div data-wh40k-hook="bc-pending-flip" class="tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-crimson bc:tw-text-crimson-light"
+        <div data-wh40k-hook="bc-pending-flip" class="tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-crimson-l40bc:tw-text-crimson-light"
              data-pending-alignment="{{alignmentPanel.derived}}">
             <i class="fas fa-exclamation-triangle"></i>
             {{localize "WH40K.BC.Advancement.PendingFlip" target=alignmentPanel.derived}}
@@ -49,7 +49,7 @@
     {{/if}}
 
     {{#if alignmentPanel.psykerLocked}}
-        <div data-wh40k-hook="bc-psyker-lock" class="tw-px-2 tw-py-1 tw-text-[0.75rem] tw-text-crimson bc:tw-text-crimson-light tw-border tw-border-solid tw-border-crimson tw-rounded">
+        <div data-wh40k-hook="bc-psyker-lock" class="tw-px-2 tw-py-1 tw-text-[0.75rem] tw-text-crimson-l40bc:tw-text-crimson-light tw-border tw-border-solid tw-border-crimson tw-rounded">
             <i class="fas fa-ban"></i>
             {{localize "WH40K.BC.Advancement.PsykerLocked"}}
         </div>
@@ -82,11 +82,11 @@
     <div class="tw-flex tw-items-center tw-justify-between tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
         {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.72rem]" labelKey="WH40K.BC.Advancement.Checkpoint"}}
         <span class="tw-text-[0.78rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]">
-            {{alignmentPanel.checkpoint}} / {{alignmentPanel.corruption}} CP
+            {{localize "WH40K.BC.Advancement.CheckpointValue" checkpoint=alignmentPanel.checkpoint corruption=alignmentPanel.corruption}}
         </span>
         {{#if alignmentPanel.recheckDue}}
             <button type="button"
-                    class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
+                    class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson-l40hover:tw-bg-crimson hover:tw-text-white"
                     data-action="recheckBcAlignment"
                     title="{{localize 'WH40K.BC.Advancement.RecheckTitle'}}">
                 {{localize "WH40K.BC.Advancement.RecheckButton"}}
@@ -102,12 +102,12 @@
         </span>
         {{#if alignmentPanel.infamyCost}}
             <button type="button"
-                    data-wh40k-hook="bc-infamy-buy-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
+                    data-wh40k-hook="bc-infamy-buy-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson-l40hover:tw-bg-crimson hover:tw-text-white"
                     data-action="buyBcInfamyAdvance"
                     data-xp-cost="{{alignmentPanel.infamyCost}}"
                     data-increment="{{alignmentPanel.infamyIncrement}}"
                     title="{{localize 'WH40K.BC.Advancement.BuyInfamyTitle' xp=alignmentPanel.infamyCost step=alignmentPanel.infamyIncrement}}">
-                +{{alignmentPanel.infamyIncrement}} / {{alignmentPanel.infamyCost}} xp
+                {{localize "WH40K.BC.Advancement.BuyInfamyButton" step=alignmentPanel.infamyIncrement cost=alignmentPanel.infamyCost}}
             </button>
         {{else}}
             <span class="tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">

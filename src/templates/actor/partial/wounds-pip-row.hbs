@@ -11,7 +11,7 @@
                 class="tw-w-7 tw-h-7 tw-p-0 tw-border-2 tw-border-solid tw-rounded-full tw-cursor-pointer tw-flex tw-items-center tw-justify-center tw-relative {{themeClassFor 'border'}} {{#if (lte level ../critical)}}tw-border-crimson tw-bg-[var(--wh40k-wounds-bg)]{{else}}tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-btn-bg)]{{/if}}"
                 data-action="setCriticalPip"
                 data-crit-level="{{level}}"
-                title="{{#if (eq ../mode 'edit')}}Set Critical to {{level}}{{else}}Critical Level {{level}} - Click to toggle{{/if}}">
+                title="{{#if (eq ../mode 'edit')}}{{localize 'WH40K.VitalPanel.SetCriticalTo' level=level}}{{else}}{{localize 'WH40K.VitalPanel.CriticalLevelToggle' level=level}}{{/if}}">
             {{#if (lte level ../critical)}}
                 {{#if (eq ../mode 'edit')}}
                     <span class="tw-text-[0.65rem] tw-font-bold tw-text-white" style="background: radial-gradient(circle, #d85545, var(--wh40k-wounds-secondary)); width: auto; height: auto;">{{level}}</span>

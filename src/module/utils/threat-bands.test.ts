@@ -20,13 +20,15 @@ describe('threat-bands', () => {
         expect(THREAT_BANDS.map((b) => b.color)).toEqual(['#4caf50', '#2196f3', '#ff9800', '#f44336', '#9c27b0']);
     });
 
-    it('carries the Latin badge labels and prose description keys', () => {
+    it('carries line-neutral badge label keys and prose description keys', () => {
         const minor = tierBandFor(3);
         expect(minor.label).toBe('Minor');
-        expect(minor.latinLabel).toBe('Hereticus Minoris');
+        // The badge once showed Inquisition-only Latin ("Hereticus Minoris") on every line.
+        expect(minor.labelKey).toBe('WH40K.Threat.Tier.Minor');
         expect(minor.descriptionKey).toBe('WH40K.Threat.Low');
-        expect(tierBandFor(30).latinLabel).toBe('Hereticus Maximus');
+        expect(tierBandFor(30).labelKey).toBe('WH40K.Threat.Tier.Boss');
         expect(tierBandFor(30).descriptionKey).toBe('WH40K.Threat.Apocalyptic');
+        expect(THREAT_BANDS.map((b) => b.labelKey)).toEqual(THREAT_BANDS.map((b) => `WH40K.Threat.Tier.${b.label}`));
     });
 
     it.each([

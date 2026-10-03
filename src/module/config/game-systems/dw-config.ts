@@ -10,11 +10,12 @@ import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './ty
 
 export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dw' as const;
-    readonly label = 'WH40K.System.Deathwatch';
+    readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dw';
     readonly cssClass = 'deathwatch';
     readonly theme = {
         primary: 'bronze',
-        accent: 'accent-combat',
+        // Accent is text on the dark sheet: accent-combat measured 2.1:1, below WCAG AA.
+        accent: 'accent-combat-l30',
         border: 'accent-combat-d10',
     } as const;
 

@@ -26,7 +26,7 @@ import { owAdjustSituational, owLogisticsTest, owToggleMunitorum } from '../../a
 import { owRequestGear } from '../../actions/ow-mission-gear-actions.ts';
 import { owMountedAction } from '../../actions/ow-mount-actions.ts';
 import { owIssueOrder } from '../../actions/ow-orders-actions.ts';
-import { owRegimentEdit } from '../../actions/ow-regiment-actions.ts';
+import { owRegimentEdit, resolveRegimentCatalog } from '../../actions/ow-regiment-actions.ts';
 import { owVehicleAction } from '../../actions/ow-vehicle-actions.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
@@ -40,6 +40,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
+import { lineResourceRows, type ResourceRow } from '../../rules/acquisition-resources.ts';
 import type { ActionKind } from '../../rules/action-budget.ts';
 import { actionBudgetForActor, resetActionsForActor, spendActionForActor } from '../../rules/action-economy.ts';
 import {
@@ -77,7 +78,7 @@ import {
     type AstartesImplantId,
 } from '../../rules/dw-astartes.ts';
 import { isOathActive } from '../../rules/dw-oath.ts';
-import { getRenownRank, RENOWN_RANK_ORDER, RENOWN_THRESHOLDS, type RenownRank } from '../../rules/dw-renown.ts';
+import { getRenownRank, RENOWN_RANK_ORDER, RENOWN_THRESHOLDS, type RenownRank, renownRankLabelKey } from '../../rules/dw-renown.ts';
 import { DW_SPECIAL_AMMO_EFFECTS, type AmmoEffect } from '../../rules/dw-special-ammo.ts';
 import { getSupportRange } from '../../rules/dw-squad-mode.ts';
 import {
@@ -96,7 +97,7 @@ import { combatMovementView } from '../../rules/movement-budget.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
 import { MOUNTED_ACTIONS } from '../../rules/ow-mount.ts';
 import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
-import { REGIMENT_BUDGET } from '../../rules/ow-regiment-creation.ts';
+import { buildRegimentPanelSummary, REGIMENT_BUDGET, type RegimentPanelSummary } from '../../rules/ow-regiment-creation.ts';
 import { buildDrawbackPanel, type MultiComradeRoster } from '../../rules/ow-regiment-drawback.ts';
 import { buildBattlefieldPanel } from '../../rules/ow-regimental-award.ts';
 import {
@@ -129,6 +130,7 @@ import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import ColonyGrowthDialog from '../prompts/colony-growth-dialog.ts';
 import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
 import BaseActorSheet, { ADVANCE_XP_COSTS, type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
+import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; double-cast is the only way to extract the TextEditor implementation
 const TextEditor = (foundry.applications as unknown as { ux: { TextEditor: { implementation: TextEditorImplementationLike } } }).ux.TextEditor.implementation;
@@ -146,13 +148,16 @@ function titleCase(s: string): string {
     return s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
 }
 
+/** Currency wallets another sheet panel already edits (RT Dynasty tab, OW Logistics panel), so the Resources panel skips them. */
+const RESOURCE_WALLETS_EDITED_ELSEWHERE: ReadonlySet<string> = new Set(['system.rogueTrader.profitFactor.current', 'system.logisticsRating']);
+
 const ARMOUR_DISPLAY_LOCATIONS = [
-    { key: 'head', label: 'Head', shortLabel: 'Head', rollRange: '01-10' },
-    { key: 'rightArm', label: 'Right Arm', shortLabel: 'R.Arm', rollRange: '11-20' },
-    { key: 'leftArm', label: 'Left Arm', shortLabel: 'L.Arm', rollRange: '21-30' },
-    { key: 'body', label: 'Body', shortLabel: 'Body', rollRange: '31-70' },
-    { key: 'rightLeg', label: 'Right Leg', shortLabel: 'R.Leg', rollRange: '71-85' },
-    { key: 'leftLeg', label: 'Left Leg', shortLabel: 'L.Leg', rollRange: '86-00' },
+    { key: 'head', labelKey: 'WH40K.BodyLocation.Head', shortLabelKey: 'WH40K.BodyLocation.Head', rollRange: '01-10' },
+    { key: 'rightArm', labelKey: 'WH40K.BodyLocation.RightArm', shortLabelKey: 'WH40K.ArmourSilhouette.ShortRightArm', rollRange: '11-20' },
+    { key: 'leftArm', labelKey: 'WH40K.BodyLocation.LeftArm', shortLabelKey: 'WH40K.ArmourSilhouette.ShortLeftArm', rollRange: '21-30' },
+    { key: 'body', labelKey: 'WH40K.BodyLocation.Body', shortLabelKey: 'WH40K.BodyLocation.Body', rollRange: '31-70' },
+    { key: 'rightLeg', labelKey: 'WH40K.BodyLocation.RightLeg', shortLabelKey: 'WH40K.ArmourSilhouette.ShortRightLeg', rollRange: '71-85' },
+    { key: 'leftLeg', labelKey: 'WH40K.BodyLocation.LeftLeg', shortLabelKey: 'WH40K.ArmourSilhouette.ShortLeftLeg', rollRange: '86-00' },
 ] as const;
 
 type SheetTabConfig = {
@@ -227,6 +232,7 @@ type CharacterSheetContextDeclaredFields = {
     drawbackPanel?: Record<string, unknown>;
     battlefieldPanel?: Record<string, unknown>;
     hideThroneGelt?: boolean;
+    resourceRows?: Array<ResourceRow & { value: number | undefined }>;
     originPathSteps?: unknown;
     originPathSummary?: unknown;
     originPathComplete?: boolean;
@@ -372,10 +378,7 @@ type DwRequisitionPanelContext = {
 };
 
 /** OW Regiment panel (#151). */
-type OwRegimentPanelContext = {
-    selection: unknown;
-    kit: ReadonlyArray<{ id: string; cost: number }>;
-};
+type OwRegimentPanelContext = RegimentPanelSummary;
 
 /** OW Comrade panel (#152). */
 type OwComradePanelContext = {
@@ -1042,43 +1045,11 @@ export default class CharacterSheet extends BaseActorSheet {
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         header: {
             template: 'systems/wh40k-rpg/templates/actor/player/header-dh.hbs',
-            container: {
-                classes: [
-                    'wh40k-sidebar',
-                    'tw-flex',
-                    'tw-flex-col',
-                    'tw-h-full',
-                    'tw-min-h-0',
-                    'tw-min-w-0',
-                    'tw-overflow-y-auto',
-                    'tw-overflow-x-hidden',
-                    'tw-bg-[var(--color-bg-secondary,#252525)]',
-                    'tw-border-r-2',
-                    'tw-border-solid',
-                    'tw-border-[var(--wh40k-sidebar-accent,var(--wh40k-color-gold,#d4af37))]',
-                ],
-                id: 'sidebar',
-            },
+            container: SIDEBAR_CONTAINER,
         },
         tabs: {
             template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
-            container: {
-                classes: [
-                    'wh40k-sidebar',
-                    'tw-flex',
-                    'tw-flex-col',
-                    'tw-h-full',
-                    'tw-min-h-0',
-                    'tw-min-w-0',
-                    'tw-overflow-y-auto',
-                    'tw-overflow-x-hidden',
-                    'tw-bg-[var(--color-bg-secondary,#252525)]',
-                    'tw-border-r-2',
-                    'tw-border-solid',
-                    'tw-border-[var(--wh40k-sidebar-accent,var(--wh40k-color-gold,#d4af37))]',
-                ],
-                id: 'sidebar',
-            },
+            container: SIDEBAR_CONTAINER,
         },
         overview: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-overview.hbs',
@@ -1131,13 +1102,6 @@ export default class CharacterSheet extends BaseActorSheet {
     ];
 
     /* -------------------------------------------- */
-
-    /** @override */
-    override get title(): string {
-        const actorType = String(this.document.type);
-        const base = `${actorType.includes('character') ? 'Player Character' : actorType}: ${this.document.name}`;
-        return `${base} — Drag and Drop from Compendium to Add`;
-    }
 
     /** @override */
     override tabGroups = {
@@ -1232,9 +1196,8 @@ export default class CharacterSheet extends BaseActorSheet {
         // next `_prepareCombatData` recomputes from current actor state.
         this.#combatDataCache = null;
 
-        // isGM / dh come from BaseActorSheet._prepareCommonContext (called by super).
-        // Edit mode + ruleset state are character-specific.
-        context.inEditMode = this.inEditMode;
+        // isGM / dh / inEditMode come from BaseActorSheet._prepareCommonContext (called by super).
+        // Ruleset state is character-specific.
 
         // Ruleset state (DH2e only) — controls Throne Gelt visibility
         const activeGameSystem = this._resolveGameSystemId();
@@ -1274,6 +1237,15 @@ export default class CharacterSheet extends BaseActorSheet {
         const isRaw = isDH2 && ruleset === 'raw';
         context.isRaw = isRaw;
         context.hideThroneGelt = isRaw;
+        // Non-DH2 lines show their own acquisition currency + the gelt baseline
+        // (DH2 keeps its ruleset-gated Influence/Requisition/Gelt trio in the template).
+        if (!isDH2 && activeGameSystem !== null) {
+            context.resourceRows = lineResourceRows(activeGameSystem, CONFIG.wh40k.currencies, RESOURCE_WALLETS_EDITED_ELSEWHERE).map((row) => ({
+                ...row,
+                // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty returns unknown for a dynamic wallet path
+                value: foundry.utils.getProperty(this.actor, row.field) as number | undefined,
+            }));
+        }
 
         // In DH2 RAW mode Influence is a percentile characteristic (testable for Requisition,
         // social, and Investigation rolls). Surface it on the characteristics map so the
@@ -1664,8 +1636,8 @@ export default class CharacterSheet extends BaseActorSheet {
         if (!actor) return;
         const value = Number(this.actor.system.influence);
         const entry = {
-            label: 'Influence',
-            short: 'Inf',
+            label: game.i18n.localize('WH40K.Characteristic.Influence'),
+            short: game.i18n.localize('WH40K.Characteristic.Abbr.Influence'),
             base: value,
             advance: 0,
             modifier: 0,
@@ -1839,9 +1811,9 @@ export default class CharacterSheet extends BaseActorSheet {
         const nextRank: RenownRank | null = RENOWN_RANK_ORDER[rankIdx + 1] ?? null;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser narrows nextRank to RenownRank by missing the union; strict tsconfig retains the | null branch
         const nextRankMin = nextRank != null ? RENOWN_THRESHOLDS[nextRank].min : null;
-        const rankLabel = game.i18n.localize(`WH40K.DW.Renown.Rank.${capitalize(rank)}`);
+        const rankLabel = game.i18n.localize(renownRankLabelKey(rank));
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser narrows nextRank to RenownRank by missing the union; strict tsconfig retains the | null branch
-        const nextRankLabel = nextRank != null ? game.i18n.localize(`WH40K.DW.Renown.Rank.${capitalize(nextRank)}`) : null;
+        const nextRankLabel = nextRank != null ? game.i18n.localize(renownRankLabelKey(nextRank)) : null;
         const progressPercent =
             nextRankMin === null ? 100 : Math.max(0, Math.min(100, Math.round(((value - rankRange.min) / (nextRankMin - rankRange.min)) * 100)));
         return {
@@ -1880,10 +1852,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareOwRegimentPanel(): OwRegimentPanelContext {
         const sys = this.actor.system;
-        return {
-            selection: sys.regimentSelection,
-            kit: sys.regimentKit,
-        };
+        return buildRegimentPanelSummary(sys.regimentSelection, sys.regimentKit, resolveRegimentCatalog(this.actor));
     }
 
     /* -------------------------------------------- */
@@ -3013,6 +2982,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const equippedArmour = armourItems.filter((item) => (item.system as { state?: { equipped?: boolean } }).state?.equipped === true);
 
         return ARMOUR_DISPLAY_LOCATIONS.map((locationConfig) => {
+            const locationLabel = game.i18n.localize(locationConfig.labelKey);
             // eslint-disable-next-line no-restricted-syntax -- boundary: system.armour is typed loosely on WH40KActorSystemData; narrow per location key
             const rawArmour = system.armour?.[locationConfig.key];
             const armourData: WH40KArmourLocation = {
@@ -3042,10 +3012,15 @@ export default class CharacterSheet extends BaseActorSheet {
                             title: item.name,
                             content: `
                                 <div class="tw-flex tw-items-center tw-gap-2">
-                                    <img src="${item.img}" alt="${item.name}" class="tw-h-8 tw-w-8 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-object-cover" />
+                                    <img src="${item.img}" alt="${
+                                item.name
+                            }" class="tw-h-8 tw-w-8 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-object-cover" />
                                     <div class="tw-flex tw-flex-col">
                                         <span class="tw-font-semibold">${item.name}</span>
-                                        <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">${locationConfig.label}: +${ap} AP</span>
+                                        <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">${game.i18n.format('WH40K.ArmourSilhouette.LocationAp', {
+                                            location: locationLabel,
+                                            ap: String(ap),
+                                        })}</span>
                                     </div>
                                 </div>
                             `,
@@ -3056,6 +3031,8 @@ export default class CharacterSheet extends BaseActorSheet {
 
             return {
                 ...locationConfig,
+                label: locationLabel,
+                shortLabel: game.i18n.localize(locationConfig.shortLabelKey),
                 total: armourData.total,
                 tooltipData: this.prepareArmorTooltip(locationConfig.key, armourData, coveringItems),
                 items: coveringItems,
@@ -3146,15 +3123,15 @@ export default class CharacterSheet extends BaseActorSheet {
         // Determine wealth tier (WH40K RPG wealth categories)
         let wealthTier: { key: string; label: string; min: number };
         if (effectivePF >= 100) {
-            wealthTier = { key: 'legendary', label: 'Legendary Wealth', min: 100 };
+            wealthTier = { key: 'legendary', label: game.i18n.localize('WH40K.Dynasty.WealthTier.Legendary'), min: 100 };
         } else if (effectivePF >= 75) {
-            wealthTier = { key: 'mighty', label: 'Mighty Empire', min: 75 };
+            wealthTier = { key: 'mighty', label: game.i18n.localize('WH40K.Dynasty.WealthTier.Mighty'), min: 75 };
         } else if (effectivePF >= 50) {
-            wealthTier = { key: 'notable', label: 'Notable Dynasty', min: 50 };
+            wealthTier = { key: 'notable', label: game.i18n.localize('WH40K.Dynasty.WealthTier.Notable'), min: 50 };
         } else if (effectivePF >= 25) {
-            wealthTier = { key: 'modest', label: 'Modest Wealth', min: 25 };
+            wealthTier = { key: 'modest', label: game.i18n.localize('WH40K.Dynasty.WealthTier.Modest'), min: 25 };
         } else {
-            wealthTier = { key: 'poor', label: 'Poor Resources', min: 0 };
+            wealthTier = { key: 'poor', label: game.i18n.localize('WH40K.Dynasty.WealthTier.Poor'), min: 0 };
         }
 
         // Calculate percentage for gauge (cap at 100 for display, but allow >100 PF)
@@ -3382,6 +3359,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 const skill = skills[key];
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (skill === undefined) return null;
+                if (!this._isFavouriteEligible(skill as SkillLike)) return null;
                 const charShort = skill.characteristic !== '' ? skill.characteristic : 'S';
                 const charKey = this._charShortToKey(charShort);
                 const char = characteristics[charKey];
@@ -3476,22 +3454,22 @@ export default class CharacterSheet extends BaseActorSheet {
         const bonus = Number(skill.bonus ?? 0);
 
         // Base characteristic
-        parts.push(`${char?.label !== undefined && char.label !== '' ? char.label : 'Characteristic'} ${charValue}`);
+        parts.push(`${char?.label !== undefined && char.label !== '' ? char.label : game.i18n.localize('WH40K.Characteristic.SelectLabel')} ${charValue}`);
 
         // Training modifier
         if (!trained) {
-            parts.push('Untrained (÷2)');
+            parts.push(game.i18n.localize('WH40K.Tooltip.Skill.UntrainedHalfBase'));
         } else if (plus20) {
-            parts.push('Training +20');
+            parts.push(game.i18n.localize('WH40K.Tooltip.Skill.TrainingPlus20'));
         } else if (plus10) {
-            parts.push('Training +10');
+            parts.push(game.i18n.localize('WH40K.Tooltip.Skill.TrainingPlus10'));
         } else {
-            parts.push('Trained');
+            parts.push(game.i18n.localize('WH40K.Skills.Trained'));
         }
 
         // Bonus from items/effects
         if (bonus !== 0) {
-            parts.push(`Bonus ${bonus > 0 ? '+' : ''}${bonus}`);
+            parts.push(game.i18n.format('WH40K.Tooltip.Skill.BonusValue', { bonus: `${bonus > 0 ? '+' : ''}${bonus}` }));
         }
 
         return parts.join(' | ');
@@ -3709,7 +3687,7 @@ export default class CharacterSheet extends BaseActorSheet {
             DHTargetedActionManager.performWeaponAttack(this.actor);
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error);
-            this._notify('error', `Attack failed: ${message}`, {
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.AttackFailed', { error: message }), {
                 duration: 5000,
             });
             console.error('Attack error:', error);
@@ -3727,7 +3705,7 @@ export default class CharacterSheet extends BaseActorSheet {
             await this.actor.rollSkill('dodge');
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error);
-            this._notify('error', `Dodge roll failed: ${message}`, {
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.DodgeFailed', { error: message }), {
                 duration: 5000,
             });
             console.error('Dodge error:', error);
@@ -3745,7 +3723,7 @@ export default class CharacterSheet extends BaseActorSheet {
             await this.actor.rollSkill('parry');
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error);
-            this._notify('error', `Parry roll failed: ${message}`, {
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.ParryFailed', { error: message }), {
                 duration: 5000,
             });
             console.error('Parry error:', error);
@@ -3767,7 +3745,7 @@ export default class CharacterSheet extends BaseActorSheet {
             prepareAssignDamageRoll(assignData as unknown as Record<string, unknown>);
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error);
-            this._notify('error', `Assign damage failed: ${message}`, {
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.AssignDamageFailed', { error: message }), {
                 duration: 5000,
             });
             console.error('Assign damage error:', error);
@@ -3860,7 +3838,7 @@ export default class CharacterSheet extends BaseActorSheet {
             });
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error);
-            this._notify('error', `Initiative roll failed: ${message}`, {
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.InitiativeFailed', { error: message }), {
                 duration: 5000,
             });
             console.error('Initiative roll error:', error);
@@ -3912,7 +3890,7 @@ export default class CharacterSheet extends BaseActorSheet {
             await CharacterSheet.#rollInitiative.call(this, event, target);
             return;
         }
-        this._notify('warning', `Unknown combat action: ${actionKey}`, {
+        this._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.UnknownCombatAction', { action: actionKey }), {
             duration: 3000,
         });
     }
@@ -3949,7 +3927,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const actionConfig = allActions.find((a) => a.key === actionKey);
         if (actionConfig === undefined) {
-            this._notify('warning', `Unknown combat action: ${actionKey}`, { duration: 3000 });
+            this._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.UnknownCombatAction', { action: actionKey }), { duration: 3000 });
             return;
         }
 
@@ -4077,10 +4055,22 @@ export default class CharacterSheet extends BaseActorSheet {
         if (movementType === undefined) return;
 
         const movementData = {
-            half: { label: 'Half Move', icon: 'fa-walking', description: 'Move and take other actions' },
-            full: { label: 'Full Move', icon: 'fa-shoe-prints', description: 'Move with no other actions' },
-            charge: { label: 'Charge', icon: 'fa-running', description: 'Move and attack with +20 bonus' },
-            run: { label: 'Run', icon: 'fa-wind', description: 'Run at full speed (Agility test may be required)' },
+            half: {
+                label: game.i18n.localize('WH40K.MOVEMENT.Type.Half'),
+                icon: 'fa-walking',
+                description: game.i18n.localize('WH40K.MOVEMENT.Vocalize.Half'),
+            },
+            full: {
+                label: game.i18n.localize('WH40K.MOVEMENT.Type.Full'),
+                icon: 'fa-shoe-prints',
+                description: game.i18n.localize('WH40K.MOVEMENT.Vocalize.Full'),
+            },
+            charge: {
+                label: game.i18n.localize('WH40K.MOVEMENT.Type.Charge'),
+                icon: 'fa-running',
+                description: game.i18n.localize('WH40K.MOVEMENT.Vocalize.Charge'),
+            },
+            run: { label: game.i18n.localize('WH40K.MOVEMENT.Type.Run'), icon: 'fa-wind', description: game.i18n.localize('WH40K.MOVEMENT.Vocalize.Run') },
         };
 
         const movement = movementData[movementType];
@@ -4121,7 +4111,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const token = this.actor.getActiveTokens()[0]?.document;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (token === null || token === undefined) {
-            ui.notifications.info(`${game.i18n.localize('WH40K.MOVEMENT.Label')}: No active token on canvas.`);
+            ui.notifications.info(game.i18n.format('WH40K.Notify.Token.NoActiveToken', { label: game.i18n.localize('WH40K.MOVEMENT.Label') }));
             return;
         }
 
@@ -4138,7 +4128,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // Disengage is a Half Action, not a move mode (#416); only real movement
         // speeds are selectable here.
         const speed = this.actor.system.movement[movementType as keyof typeof this.actor.system.movement];
-        ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
+        ui.notifications.info(game.i18n.format('WH40K.Notify.Token.MovementModeSet', { label, speed: String(speed) }));
     }
 
     /* -------------------------------------------- */
@@ -4341,8 +4331,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const shipChecks = panel.querySelectorAll('.wh40k-ship-storage .wh40k-transfer-check:checked');
 
         if (!backpackChecks.length && !shipChecks.length) {
-            // eslint-disable-next-line no-restricted-syntax -- player-facing notification; TODO: migrate to i18n key when langpack stabilises
-            ui.notifications.warn('No items selected to transfer.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Transfer.NoneSelected'));
             return;
         }
 
@@ -4417,8 +4406,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const allChecks = panel.querySelectorAll('.wh40k-transfer-check:checked');
         if (!allChecks.length) {
-            // eslint-disable-next-line no-restricted-syntax -- player-facing notification; TODO: migrate to i18n key when langpack stabilises
-            ui.notifications.warn('No items selected to give.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Transfer.NoneSelectedToGive'));
             return;
         }
 
@@ -4433,19 +4421,20 @@ export default class CharacterSheet extends BaseActorSheet {
         const targets = game.actors.filter((a) => a.id !== sourceActor.id && a.isOwner);
 
         if (!targets.length) {
-            // eslint-disable-next-line no-restricted-syntax -- player-facing notification; TODO: migrate to i18n key when langpack stabilises
-            ui.notifications.warn('No other actors available to give items to.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Transfer.NoRecipients'));
             return;
         }
 
         const options = targets.map((a) => `<option value="${a.id}">${a.name}</option>`).join('');
-        const content = `<form><div class="form-group"><label>Give ${itemIds.length} item(s) to:</label><select name="targetActorId">${options}</select></div></form>`;
+        const content = `<form><div class="form-group"><label>${game.i18n.format('WH40K.Notify.Transfer.GiveTo', {
+            count: String(itemIds.length),
+        })}</label><select name="targetActorId">${options}</select></div></form>`;
 
         const targetId = await dialogV2.prompt({
-            window: { title: 'Give Items' },
+            window: { title: game.i18n.localize('WH40K.Notify.Transfer.GiveTitle') },
             content,
             ok: {
-                label: 'Give',
+                label: game.i18n.localize('WH40K.Notify.Transfer.GiveButton'),
                 icon: 'fas fa-hand-holding',
                 callback: (_event: Event, button: HTMLElement) => {
                     return ((button as HTMLElement & { form: HTMLFormElement }).form.elements.namedItem('targetActorId') as HTMLInputElement | null)?.value;
@@ -4479,7 +4468,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments data param type doesn't accept our Record shape; double-cast to satisfy the overload
         await targetActor.createEmbeddedDocuments('Item', itemsData as unknown as Parameters<typeof targetActor.createEmbeddedDocuments<'Item'>>[1]);
         await sourceActor.deleteEmbeddedDocuments('Item', itemIds);
-        ui.notifications.info(`Gave ${itemsData.length} item(s) to ${targetActor.name}.`);
+        ui.notifications.info(game.i18n.format('WH40K.Notify.Transfer.Gave', { count: String(itemsData.length), target: targetActor.name }));
     }
 
     /* -------------------------------------------- */
@@ -4518,16 +4507,28 @@ export default class CharacterSheet extends BaseActorSheet {
                 const toEquip = armourItems.filter((item) => item.system.state.equipped !== true);
                 await Promise.all(toEquip.map(async (item) => item.update({ 'system.state.equipped': true })));
                 count = toEquip.length;
-                this._notify('info', `Equipped ${count} armour piece${count !== 1 ? 's' : ''}`, {
-                    duration: 3000,
-                });
+                this._notify(
+                    'info',
+                    game.i18n.format(count !== 1 ? 'WH40K.Notify.CharacterSheet.EquippedArmourMany' : 'WH40K.Notify.CharacterSheet.EquippedArmourOne', {
+                        count: String(count),
+                    }),
+                    {
+                        duration: 3000,
+                    },
+                );
             } else if (action === 'unequip-all') {
                 const equippedItems = items.filter((i: WH40KItem) => (i.system as { state?: { equipped?: boolean } }).state?.equipped === true);
                 await Promise.all(equippedItems.map(async (item) => item.update({ 'system.state.equipped': false })));
                 count = equippedItems.length;
-                this._notify('info', `Unequipped ${count} item${count !== 1 ? 's' : ''}`, {
-                    duration: 3000,
-                });
+                this._notify(
+                    'info',
+                    game.i18n.format(count !== 1 ? 'WH40K.Notify.CharacterSheet.UnequippedMany' : 'WH40K.Notify.CharacterSheet.UnequippedOne', {
+                        count: String(count),
+                    }),
+                    {
+                        duration: 3000,
+                    },
+                );
             } else if (action === 'stow-gear') {
                 const gearItems = items.filter(
                     (i: WH40KItem & { isGear?: boolean; system: WH40KItem['system'] & { state?: { inBackpack?: boolean } } }) =>
@@ -4542,16 +4543,22 @@ export default class CharacterSheet extends BaseActorSheet {
                     ),
                 );
                 count = gearItems.length;
-                this._notify('info', `Stowed ${count} gear item${count !== 1 ? 's' : ''} in backpack`, {
-                    duration: 3000,
-                });
+                this._notify(
+                    'info',
+                    game.i18n.format(count !== 1 ? 'WH40K.Notify.CharacterSheet.StowedGearMany' : 'WH40K.Notify.CharacterSheet.StowedGearOne', {
+                        count: String(count),
+                    }),
+                    {
+                        duration: 3000,
+                    },
+                );
             } else {
-                this._notify('warning', `Unknown bulk action: ${action}`, {
+                this._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.UnknownBulkAction', { action }), {
                     duration: 3000,
                 });
             }
         } catch (error) {
-            this._notify('error', `Bulk operation failed: ${errorMessage(error)}`, {
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.BulkFailed', { error: errorMessage(error) }), {
                 duration: 5000,
             });
             console.error('Bulk equipment error:', error);
@@ -4878,12 +4885,12 @@ export default class CharacterSheet extends BaseActorSheet {
                     _gameSystemId: firstSystemId(this.actor),
                 });
             } else {
-                this._notify('warning', `Bonus "${bonusName}" not found`, {
+                this._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.BonusNotFound', { name: bonusName ?? '' }), {
                     duration: 3000,
                 });
             }
         } catch (error) {
-            this._notify('error', `Failed to vocalize bonus: ${errorMessage(error)}`, {
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.BonusVocalizeFailed', { error: errorMessage(error) }), {
                 duration: 5000,
             });
             console.error('Bonus vocalize error:', error);
@@ -4929,7 +4936,7 @@ export default class CharacterSheet extends BaseActorSheet {
             await this._updateSystemField('system.possession.unleashUsed', next.unleashUsed);
             this._notify('info', game.i18n.localize('WH40K.Possession.UnleashSpent'), { duration: 2500 });
         } catch (error) {
-            this._notify('error', `Failed to unleash daemon: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.UnleashDaemonFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Unleash daemon error:', error);
         }
     }
@@ -4953,7 +4960,7 @@ export default class CharacterSheet extends BaseActorSheet {
             await this._updateSystemField('system.possession.unleashUsed', next.unleashUsed);
             this._notify('info', game.i18n.localize('WH40K.Possession.ResetDone'), { duration: 2500 });
         } catch (error) {
-            this._notify('error', `Failed to reset possession session: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.PossessionResetFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Reset possession session error:', error);
         }
     }
@@ -5005,7 +5012,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 { duration: 3000 },
             );
         } catch (error) {
-            this._notify('error', `Frenzy test failed: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.FrenzyFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Possession frenzy test error:', error);
         }
     }
@@ -5051,7 +5058,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 { duration: 3500 },
             );
         } catch (error) {
-            this._notify('error', `Mismanifest contest failed: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.MismanifestFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Possession mismanifest error:', error);
         }
     }
@@ -5103,7 +5110,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 content,
             });
         } catch (error) {
-            this._notify('error', `Failed to apply Mortification of the Flesh: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.MortificationFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Mortification of the Flesh error:', error);
         }
     }
@@ -5177,7 +5184,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 content,
             });
         } catch (error) {
-            this._notify('error', `Failed to apply Death to All Who Oppose Me: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.DeathToAllFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Death to All Who Oppose Me error:', error);
         }
     }
@@ -5209,7 +5216,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 content,
             });
         } catch (error) {
-            this._notify('error', `Smite the Unholy failed: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.SmiteFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Smite the Unholy error:', error);
         }
     }
@@ -5220,7 +5227,7 @@ export default class CharacterSheet extends BaseActorSheet {
             await applyManaclesCondition(this.actor);
             this._notify('info', game.i18n.localize('WH40K.Condition.Manacles.AppliedNotification'), { duration: 2500 });
         } catch (error) {
-            this._notify('error', `Failed to apply Manacled: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.ManacledApplyFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('applyManacles error:', error);
         }
     }
@@ -5233,7 +5240,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 this._notify('info', game.i18n.localize('WH40K.Condition.Manacles.LiftedNotification'), { duration: 2500 });
             }
         } catch (error) {
-            this._notify('error', `Failed to lift Manacled: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.ManacledLiftFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('liftManacles error:', error);
         }
     }
@@ -5243,7 +5250,7 @@ export default class CharacterSheet extends BaseActorSheet {
         try {
             openRightStuffDialog({ actor: this.actor });
         } catch (error) {
-            this._notify('error', `Right Stuff dialog failed: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.RightStuffFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('openRightStuff error:', error);
         }
     }
@@ -5277,7 +5284,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 opponentStrength: strengthTotal,
             });
         } catch (error) {
-            this._notify('error', `Grapple action failed: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.GrappleFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Grapple action error:', error);
             return null;
         }
@@ -5365,7 +5372,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 content,
             });
         } catch (error) {
-            this._notify('error', `Failed to snap out of shock: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.SnapOutOfShockFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Snap Out of It error:', error);
         }
     }
@@ -5486,13 +5493,13 @@ export default class CharacterSheet extends BaseActorSheet {
                 const gameSystem = this._resolveGameSystemId();
                 await game.wh40k.openOriginPathBuilder(this.actor, gameSystem ? { gameSystem } : {});
             } else {
-                this._notify('warning', 'Origin Path Builder not available', {
+                this._notify('warning', game.i18n.localize('WH40K.Utility.OriginPathNotAvailable'), {
                     duration: 3000,
                 });
                 console.warn('game.wh40k.openOriginPathBuilder not found');
             }
         } catch (error) {
-            this._notify('error', `Failed to open Origin Path Builder: ${errorMessage(error)}`, {
+            this._notify('error', `${game.i18n.localize('WH40K.Utility.OriginPathError')}: ${errorMessage(error)}`, {
                 duration: 5000,
             });
             console.error('Origin Path Builder error:', error);
@@ -5697,7 +5704,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 content: `<p><strong>${game.i18n.localize('WH40K.BC.Advancement.RecheckChatTitle')}</strong></p><p>${formatted}</p>`,
             });
         } catch (error) {
-            this._notify('error', `Failed to re-check BC alignment: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.AlignmentRecheckFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('BC alignment recheck error:', error);
         }
     }
@@ -5766,7 +5773,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 ],
             });
         } catch (error) {
-            this._notify('error', `Failed to purchase Infamy advance: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.InfamyPurchaseFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('BC infamy advance purchase error:', error);
         }
     }
@@ -5974,8 +5981,9 @@ export default class CharacterSheet extends BaseActorSheet {
                 textAlign: 'center',
                 pointerEvents: 'none',
             });
-            noResults.innerHTML =
-                '<i class="fas fa-search" style="font-size:2rem;opacity:0.5"></i><span style="font-size:var(--wh40k-font-size-base,0.9rem)">No items match your filters</span>';
+            noResults.innerHTML = `<i class="fas fa-search" style="font-size:2rem;opacity:0.5"></i><span style="font-size:var(--wh40k-font-size-base,0.9rem)">${game.i18n.localize(
+                'WH40K.CompendiumBrowser.NoResults',
+            )}</span>`;
             equipmentPanel.appendChild(noResults);
         }
     }
@@ -6159,7 +6167,9 @@ export default class CharacterSheet extends BaseActorSheet {
         await item.update({ 'system.level': newLevel });
 
         // Provide visual feedback
-        ui.notifications.info(`${item.name} level ${delta > 0 ? 'increased' : 'decreased'} to ${newLevel}`);
+        ui.notifications.info(
+            game.i18n.format(delta > 0 ? 'WH40K.Notify.Item.LevelIncreased' : 'WH40K.Notify.Item.LevelDecreased', { item: item.name, level: String(newLevel) }),
+        );
     }
 
     /* -------------------------------------------- */
@@ -6176,11 +6186,11 @@ export default class CharacterSheet extends BaseActorSheet {
         try {
             await EffectActions.createEffect(this.effectsOwner, { disabled: false, duration: {}, changes: [] });
 
-            this._notify('info', 'New effect created', {
+            this._notify('info', game.i18n.localize('WH40K.Notify.CharacterSheet.EffectCreated'), {
                 duration: 2000,
             });
         } catch (error) {
-            this._notify('error', `Failed to create effect: ${errorMessage(error)}`, {
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.EffectCreateFailed', { error: errorMessage(error) }), {
                 duration: 5000,
             });
             console.error('Create effect error:', error);
@@ -6200,7 +6210,7 @@ export default class CharacterSheet extends BaseActorSheet {
             const effect = EffectActions.resolveEffect(this.effectsOwner, target);
 
             if (effect === undefined) {
-                this._notify('warning', 'Effect not found', {
+                this._notify('warning', game.i18n.localize('WH40K.Notify.CharacterSheet.EffectNotFound'), {
                     duration: 3000,
                 });
                 return;
@@ -6208,11 +6218,15 @@ export default class CharacterSheet extends BaseActorSheet {
 
             await effect.update({ disabled: !effect.disabled });
 
-            this._notify('info', `Effect ${effect.disabled ? 'disabled' : 'enabled'}`, {
-                duration: 2000,
-            });
+            this._notify(
+                'info',
+                game.i18n.localize(effect.disabled ? 'WH40K.Notify.CharacterSheet.EffectDisabled' : 'WH40K.Notify.CharacterSheet.EffectEnabled'),
+                {
+                    duration: 2000,
+                },
+            );
         } catch (error) {
-            this._notify('error', `Failed to toggle effect: ${errorMessage(error)}`, {
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.EffectToggleFailed', { error: errorMessage(error) }), {
                 duration: 5000,
             });
             console.error('Toggle effect error:', error);
@@ -6232,27 +6246,27 @@ export default class CharacterSheet extends BaseActorSheet {
             const effect = EffectActions.resolveEffect(this.effectsOwner, target);
 
             if (effect === undefined) {
-                this._notify('warning', 'Effect not found', {
+                this._notify('warning', game.i18n.localize('WH40K.Notify.CharacterSheet.EffectNotFound'), {
                     duration: 3000,
                 });
                 return;
             }
 
             const confirmed = await ConfirmationDialog.confirm({
-                title: 'Delete Active Effect',
-                content: `Are you sure you want to delete <strong>${effect.name}</strong>?`,
-                confirmLabel: 'Delete',
-                cancelLabel: 'Cancel',
+                title: game.i18n.localize('WH40K.Notify.CharacterSheet.DeleteEffectTitle'),
+                content: game.i18n.format('WH40K.Notify.CharacterSheet.DeleteEffectContent', { name: effect.name ?? '' }),
+                confirmLabel: game.i18n.localize('WH40K.Common.Delete'),
+                cancelLabel: game.i18n.localize('WH40K.Cancel'),
             });
 
             if (confirmed) {
                 await effect.delete();
-                this._notify('info', 'Effect deleted', {
+                this._notify('info', game.i18n.localize('WH40K.Notify.CharacterSheet.EffectDeleted'), {
                     duration: 2000,
                 });
             }
         } catch (error) {
-            this._notify('error', `Failed to delete effect: ${errorMessage(error)}`, {
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.EffectDeleteFailed', { error: errorMessage(error) }), {
                 duration: 5000,
             });
             console.error('Delete effect error:', error);
@@ -6274,12 +6288,12 @@ export default class CharacterSheet extends BaseActorSheet {
             if (itemId === undefined || itemId === '') return;
             const item = sheet.actor.items.get(itemId);
             if (item === undefined) {
-                sheet._notify('warning', `${label} not found`, { duration: 3000 });
+                sheet._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.ItemNotFound', { label }), { duration: 3000 });
                 return;
             }
             await sheet.actor.rollItem(itemId);
         } catch (error) {
-            sheet._notify('error', `${label} roll failed: ${errorMessage(error)}`, { duration: 5000 });
+            sheet._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.ItemRollFailed', { label, error: errorMessage(error) }), { duration: 5000 });
             console.error(`${label} roll error:`, error);
         }
     }
@@ -6294,7 +6308,7 @@ export default class CharacterSheet extends BaseActorSheet {
             if (itemId === undefined || itemId === '') return;
             const item = sheet.actor.items.get(itemId);
             if (item === undefined) {
-                sheet._notify('warning', `${label} not found`, { duration: 3000 });
+                sheet._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.ItemNotFound', { label }), { duration: 3000 });
                 return;
             }
 
@@ -6307,7 +6321,9 @@ export default class CharacterSheet extends BaseActorSheet {
                 });
             }
         } catch (error) {
-            sheet._notify('error', `Failed to post ${label.toLowerCase()}: ${errorMessage(error)}`, { duration: 5000 });
+            sheet._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.ItemPostFailed', { label: label.toLowerCase(), error: errorMessage(error) }), {
+                duration: 5000,
+            });
             console.error(`Vocalize ${label.toLowerCase()} error:`, error);
         }
     }
@@ -6321,7 +6337,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #rollPower(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await CharacterSheet.#rollItemAction(this, target, 'Power');
+        await CharacterSheet.#rollItemAction(this, target, game.i18n.localize('WH40K.NavigatorPowers.Name'));
     }
 
     /* -------------------------------------------- */
@@ -6338,14 +6354,18 @@ export default class CharacterSheet extends BaseActorSheet {
             if (itemId === undefined || itemId === '') return;
             const item = this.actor.items.get(itemId);
             if (item === undefined) {
-                this._notify('warning', 'Power not found', { duration: 3000 });
+                this._notify(
+                    'warning',
+                    game.i18n.format('WH40K.Notify.CharacterSheet.ItemNotFound', { label: game.i18n.localize('WH40K.NavigatorPowers.Name') }),
+                    { duration: 3000 },
+                );
                 return;
             }
 
             // Use the actor's damageItem method
             await this.actor.damageItem(itemId);
         } catch (error) {
-            this._notify('error', `Damage roll failed: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.DamageRollFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Power damage error:', error);
         }
     }
@@ -6359,7 +6379,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #vocalizePower(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await CharacterSheet.#vocalizeItemAction(this, target, 'Power', 'wh40k-power-chat');
+        await CharacterSheet.#vocalizeItemAction(this, target, game.i18n.localize('WH40K.NavigatorPowers.Name'), 'wh40k-power-chat');
     }
 
     /* -------------------------------------------- */
@@ -6395,7 +6415,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #rollRitual(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await CharacterSheet.#rollItemAction(this, target, 'Ritual');
+        await CharacterSheet.#rollItemAction(this, target, game.i18n.localize('WH40K.Rituals.Name'));
     }
 
     /* -------------------------------------------- */
@@ -6407,7 +6427,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #vocalizeRitual(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await CharacterSheet.#vocalizeItemAction(this, target, 'Ritual', 'wh40k-ritual-chat');
+        await CharacterSheet.#vocalizeItemAction(this, target, game.i18n.localize('WH40K.Rituals.Name'), 'wh40k-ritual-chat');
     }
 
     /* -------------------------------------------- */
@@ -6419,7 +6439,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #rollOrder(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await CharacterSheet.#rollItemAction(this, target, 'Order');
+        await CharacterSheet.#rollItemAction(this, target, game.i18n.localize('WH40K.Orders.Name'));
     }
 
     /* -------------------------------------------- */
@@ -6431,7 +6451,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #vocalizeOrder(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await CharacterSheet.#vocalizeItemAction(this, target, 'Order', 'wh40k-order-chat');
+        await CharacterSheet.#vocalizeItemAction(this, target, game.i18n.localize('WH40K.Orders.Name'), 'wh40k-order-chat');
     }
 
     /* -------------------------------------------- */
@@ -6466,13 +6486,16 @@ export default class CharacterSheet extends BaseActorSheet {
                     const roll = await new Roll('1d100').evaluate();
                     await ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                        content: `<div class="wh40k-phenomena-roll"><h3>Psychic Phenomena</h3><p>Roll: ${roll.total}</p></div>`,
+                        content: `<div class="wh40k-phenomena-roll"><h3>${game.i18n.localize('WH40K.QuickActions.PsychicPhenomena')}</h3><p>${game.i18n.format(
+                            'WH40K.Roll.RollResult',
+                            { total: String(roll.total) },
+                        )}</p></div>`,
                         rolls: [roll],
                     });
                 }
             }
         } catch (error) {
-            this._notify('error', `Phenomena roll failed: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.PhenomenaFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Phenomena roll error:', error);
         }
     }
@@ -6509,13 +6532,16 @@ export default class CharacterSheet extends BaseActorSheet {
                     const roll = await new Roll('1d100').evaluate();
                     await ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                        content: `<div class="wh40k-perils-roll"><h3>Perils of the Warp</h3><p>Roll: ${roll.total}</p></div>`,
+                        content: `<div class="wh40k-perils-roll"><h3>${game.i18n.localize('WH40K.QuickActions.PerilsOfTheWarp')}</h3><p>${game.i18n.format(
+                            'WH40K.Roll.RollResult',
+                            { total: String(roll.total) },
+                        )}</p></div>`,
                         rolls: [roll],
                     });
                 }
             }
         } catch (error) {
-            this._notify('error', `Perils roll failed: ${errorMessage(error)}`, { duration: 5000 });
+            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.PerilsFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Perils roll error:', error);
         }
     }

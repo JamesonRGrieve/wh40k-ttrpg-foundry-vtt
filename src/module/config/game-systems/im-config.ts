@@ -10,11 +10,12 @@ import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './ty
 
 export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'im' as const;
-    readonly label = 'WH40K.System.ImperiumMaledictum';
+    readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.im';
     readonly cssClass = 'imperium-maledictum';
     readonly theme = {
         primary: 'crimson-light',
-        accent: 'failure',
+        // Accent is text on the dark sheet: failure measured 1.3:1 (near-invisible).
+        accent: 'failure-l40',
         border: 'failure-l10',
     } as const;
 

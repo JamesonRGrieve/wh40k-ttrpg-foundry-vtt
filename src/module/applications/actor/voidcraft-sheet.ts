@@ -19,6 +19,7 @@ import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { capitalize } from '../../utils/format.ts';
 import { RollTableUtils } from '../../utils/roll-table-utils.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
+import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
 
 /** One ship-action row surfaced in the Extended / Manoeuvre Actions tabs. */
 interface ShipActionRow {
@@ -109,10 +110,12 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             rollShipCriticalHit: VoidcraftActorSheet.#rollShipCriticalHit,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
-        classes: ['wh40k-rpg', 'sheet', 'actor', 'voidcraft'],
+        // `player` opts into the shared sidebar + body grid (dark window body) the
+        // character and craft sheets use; without it the canvas showed through.
+        classes: ['wh40k-rpg', 'sheet', 'actor', 'player', 'voidcraft'],
         position: {
-            width: 900,
-            height: 700,
+            width: 1000,
+            height: 800,
         },
         tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'stats', group: 'primary' }],
     };
@@ -124,9 +127,11 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         ...((BaseActorSheet as typeof BaseActorSheet & { PARTS?: Record<string, ApplicationV2Config.PartConfiguration> }).PARTS ?? {}),
         header: {
             template: 'systems/wh40k-rpg/templates/actor/voidcraft/header.hbs',
+            container: SIDEBAR_CONTAINER,
         },
         tabs: {
-            template: 'systems/wh40k-rpg/templates/actor/voidcraft/tabs.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
+            container: SIDEBAR_CONTAINER,
         },
         stats: {
             template: 'systems/wh40k-rpg/templates/actor/voidcraft/tab-stats.hbs',

@@ -31,7 +31,7 @@
     Rendered only for BC actors; the include in tab-overview.hbs gates on
     `isBC`.
 --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-supplements-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson" icon="fa-skull-crossbones" label=(localize "WH40K.BC.Supplements.PanelHeader") rootAttrs=(safeAttrs "data-bc-daemon-engine-rating" supplementsPanel.daemonEngineRating "data-bc-quick-and-the-dead-active" supplementsPanel.quickAndTheDeadActive)}}
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-supplements-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson-l40" icon="fa-skull-crossbones" label=(localize "WH40K.BC.Supplements.PanelHeader") rootAttrs=(safeAttrs "data-bc-daemon-engine-rating" supplementsPanel.daemonEngineRating "data-bc-quick-and-the-dead-active" supplementsPanel.quickAndTheDeadActive)}}
 
     {{!-- Daemon Engine(X) rating --}}
     <div class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
@@ -70,7 +70,7 @@
             </label>
             <button type="button"
                     id="bc-quick-and-the-dead"
-                    data-wh40k-hook="bc-quick-and-the-dead-toggle" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] {{#if supplementsPanel.quickAndTheDeadActive}}tw-border-crimson tw-text-crimson{{else}}tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+                    data-wh40k-hook="bc-quick-and-the-dead-toggle" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] {{#if supplementsPanel.quickAndTheDeadActive}}tw-border-crimson tw-text-crimson-l40{{else}}tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
                     data-action="bcToggleQuickAndTheDead"
                     aria-pressed="{{supplementsPanel.quickAndTheDeadActive}}"
                     title="{{localize 'WH40K.BC.Supplements.QuickAndTheDead.ToggleTitle'}}">

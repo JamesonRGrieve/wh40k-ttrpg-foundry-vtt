@@ -25,9 +25,9 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
 
     getSkillRanks(): SkillRankDef[] {
         return [
-            { level: 1, key: 'trained', label: 'T', tooltip: 'Trained', bonus: 0 },
-            { level: 2, key: 'plus10', label: '+10', tooltip: '+10', bonus: 10 },
-            { level: 3, key: 'plus20', label: '+20', tooltip: '+20', bonus: 20 },
+            { level: 1, key: 'trained', label: 'WH40K.Skills.RankShort.T', tooltip: 'WH40K.Skills.Rank.Trained', bonus: 0 },
+            { level: 2, key: 'plus10', label: 'WH40K.Skills.RankShort.Plus10', tooltip: 'WH40K.Skills.Rank.Plus10', bonus: 10 },
+            { level: 3, key: 'plus20', label: 'WH40K.Skills.RankShort.Plus20', tooltip: 'WH40K.Skills.Rank.Plus20', bonus: 20 },
         ];
     }
 

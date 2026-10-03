@@ -59,11 +59,12 @@ function readBcSystem(actor: WH40KBaseActor): BcCharacterSystem {
 
 export class BCSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'bc' as const;
-    readonly label = 'WH40K.System.BlackCrusade';
+    readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.bc';
     readonly cssClass = 'black-crusade';
     readonly theme = {
         primary: 'crimson',
-        accent: 'crimson-light',
+        // Accent is text on the dark sheet: crimson-light measured 2.3:1, below WCAG AA.
+        accent: 'crimson-l40',
         border: 'crimson-dark',
     } as const;
 

@@ -32,10 +32,10 @@
     Rendered only for BC actors; the include in tab-overview.hbs gates on
     `isBC`.
 --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-daemon-prince-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson" icon="fa-crown" label=(localize "WH40K.BC.DaemonPrince.PanelHeader") rootAttrs=(safeAttrs "data-bc-ascended" daemonPrincePanel.ascended "data-bc-alignment" daemonPrincePanel.alignmentAtAscension) hasRightSlot=true}}
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-daemon-prince-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson-l40" icon="fa-crown" label=(localize "WH40K.BC.DaemonPrince.PanelHeader") rootAttrs=(safeAttrs "data-bc-ascended" daemonPrincePanel.ascended "data-bc-alignment" daemonPrincePanel.alignmentAtAscension) hasRightSlot=true}}
     {{!-- Header right slot: ascension status --}}
     {{#*inline "rightSlot"}}
-        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] {{#if daemonPrincePanel.ascended}}bc:tw-text-crimson tw-font-bold{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}">
+        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] {{#if daemonPrincePanel.ascended}}bc:tw-text-crimson-l40tw-font-bold{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}">
             {{#if daemonPrincePanel.ascended}}
                 {{localize "WH40K.BC.DaemonPrince.Status.Ascended"}}
             {{else}}
@@ -90,17 +90,17 @@
                 {{localize "WH40K.BC.DaemonPrince.Status.Thresholds" infamy=daemonPrincePanel.infamyThreshold corruption=daemonPrincePanel.corruptionThreshold}}
             </span>
             <div class="tw-flex tw-justify-between tw-gap-2">
-                <span class="tw-text-[color:var(--wh40k-text-muted)]">Infamy</span>
+                <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Advancement.Infamy"}}</span>
                 <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">{{daemonPrincePanel.infamy}} / {{daemonPrincePanel.infamyThreshold}}</span>
             </div>
             <div class="tw-flex tw-justify-between tw-gap-2">
-                <span class="tw-text-[color:var(--wh40k-text-muted)]">Corruption</span>
+                <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Resource.Corruption"}}</span>
                 <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">{{daemonPrincePanel.corruption}} / {{daemonPrincePanel.corruptionThreshold}}</span>
             </div>
         </div>
 
         <button type="button"
-                data-wh40k-hook="bc-dp-ascend-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1.5 tw-bg-transparent tw-border tw-border-solid tw-rounded tw-px-2 tw-py-1 tw-text-[0.78rem] tw-uppercase tw-tracking-[0.05em] {{#if daemonPrincePanel.canAscend}}tw-cursor-pointer tw-border-crimson tw-text-crimson hover:tw-bg-crimson hover:tw-text-white{{else}}tw-cursor-not-allowed tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+                data-wh40k-hook="bc-dp-ascend-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1.5 tw-bg-transparent tw-border tw-border-solid tw-rounded tw-px-2 tw-py-1 tw-text-[0.78rem] tw-uppercase tw-tracking-[0.05em] {{#if daemonPrincePanel.canAscend}}tw-cursor-pointer tw-border-crimson tw-text-crimson-l40hover:tw-bg-crimson hover:tw-text-white{{else}}tw-cursor-not-allowed tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
                 data-action="bcAscend"
                 {{#unless daemonPrincePanel.canAscend}}disabled{{/unless}}
                 title="{{#if daemonPrincePanel.canAscend}}{{localize 'WH40K.BC.DaemonPrince.AscendButton.Label'}}{{else}}{{localize 'WH40K.BC.DaemonPrince.AscendButton.Disabled'}}{{/if}}">

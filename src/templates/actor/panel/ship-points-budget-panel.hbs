@@ -25,7 +25,7 @@
         <div class="tw-flex tw-flex-row tw-items-center tw-justify-between tw-gap-3">
             <div class="tw-flex tw-flex-col">
                 <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Voidcraft.Build.SpentLabel"}}</span>
-                <span class="tw-text-2xl tw-font-semibold {{#if buildValidation.isOverBudget}}tw-text-crimson{{else}}tw-text-success{{/if}}"
+                <span class="tw-text-2xl tw-font-semibold {{#if buildValidation.isOverBudget}}tw-text-crimson-l40{{else}}tw-text-success-l20{{/if}}"
                       data-field="spent">{{buildValidation.spent}}</span>
             </div>
             <div class="tw-text-3xl tw-opacity-40">/</div>
@@ -36,7 +36,7 @@
         </div>
 
         {{#if buildValidation.isOverBudget}}
-            <div class="tw-rounded tw-border tw-border-crimson tw-bg-crimson/10 tw-p-2 tw-text-sm tw-text-crimson"
+            <div class="tw-rounded tw-border tw-border-crimson tw-bg-crimson/10 tw-p-2 tw-text-sm tw-text-crimson-l40"
                  data-state="over-budget" role="alert">
                 {{localize "WH40K.Voidcraft.Build.OverBudget"}}
             </div>
@@ -52,9 +52,9 @@
                         data-slot="{{slot.id}}" data-filled="{{slot.filled}}">
                         <span>{{localize slot.labelKey}}</span>
                         {{#if slot.filled}}
-                            <span class="tw-text-success">{{localize "WH40K.Voidcraft.Build.SlotFilled"}}</span>
+                            <span class="tw-text-success-l20">{{localize "WH40K.Voidcraft.Build.SlotFilled"}}</span>
                         {{else}}
-                            <span class="tw-text-crimson tw-font-semibold">{{localize "WH40K.Voidcraft.Build.SlotMissing"}}</span>
+                            <span class="tw-text-crimson-l40tw-font-semibold">{{localize "WH40K.Voidcraft.Build.SlotMissing"}}</span>
                         {{/if}}
                     </li>
                 {{/each}}
@@ -62,7 +62,7 @@
         </div>
 
         <div class="tw-flex tw-flex-row tw-items-center tw-justify-end tw-gap-2">
-            <span class="tw-text-sm {{#if buildValidation.isValid}}tw-text-success{{else}}tw-text-crimson{{/if}}"
+            <span class="tw-text-sm {{#if buildValidation.isValid}}tw-text-success-l20{{else}}tw-text-crimson-l40{{/if}}"
                   data-state="{{#if buildValidation.isValid}}valid{{else}}invalid{{/if}}">
                 {{#if buildValidation.isValid}}
                     {{localize "WH40K.Voidcraft.Build.Valid"}}
