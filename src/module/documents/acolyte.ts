@@ -390,14 +390,14 @@ export class WH40KAcolyte extends WH40KBaseActor {
 
         const char = this.system.characteristics[charKey] as (typeof this.system.characteristics)[string] | undefined;
         if (char === undefined) {
-            ui.notifications.warn(`Characteristic "${charKey}" not found`);
+            ui.notifications.warn(game.i18n.format('WH40K.Notify.Acolyte.CharacteristicNotFound', { characteristic: charKey }));
             return;
         }
 
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: charKey,
             type: 'characteristic',
-            label: `${char.label} Test`,
+            label: game.i18n.format('WH40K.Roll.TestLabel', { name: char.label }),
             target: char.total,
             situationalKey: charKey,
             nameOverride: flavorOverride !== undefined && flavorOverride !== '' ? flavorOverride : undefined,
@@ -417,7 +417,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const resolvedSkillName = this._resolveSkillName(skillName);
         const skill = this.skills[resolvedSkillName] as WH40KSkill | undefined;
         if (skill === undefined) {
-            ui.notifications.warn(`Unable to find skill ${skillName}`);
+            ui.notifications.warn(game.i18n.format('WH40K.Notify.Acolyte.SkillNotFound', { skill: skillName }));
             return;
         }
         let label = skill.label;
@@ -454,7 +454,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: resolvedSkillName,
             type: 'skill',
-            label: `${label} Test`,
+            label: game.i18n.format('WH40K.Roll.TestLabel', { name: label ?? resolvedSkillName }),
             target: targetValue,
             situationalKey: resolvedSkillName,
             ...(readoutFamily !== null ? { instance: new DosReadoutActionData(readoutFamily) } : {}),
@@ -484,7 +484,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         this._buildSimpleSkillRoll({
             key: skillKey,
             type: 'skill',
-            label: `${skillLabel} Test`,
+            label: game.i18n.format('WH40K.Roll.TestLabel', { name: skillLabel }),
             target: targetValue,
             situationalKey: skillKey,
             instance: action,
@@ -748,8 +748,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     // eslint-disable-next-line @typescript-eslint/require-await -- signature returns Promise for caller compat
     async rollWeaponDamage(weapon: WH40KItem): Promise<void> {
         if (weapon.system.state.equipped !== true) {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.WeaponNotEquipped localization key not yet in en.json
-            ui.notifications.warn('Actor must have weapon equipped!');
+            ui.notifications.warn(game.i18n.localize('WH40K.Warning.WeaponNotEquipped'));
             return;
         }
 
@@ -817,8 +816,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // PC-only branch: force fields must be equipped AND activated.
         if (item.type === 'forceField') {
             if (item.system.state.equipped !== true || item.system.state.activated !== true) {
-                // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.ForceFieldNotReady localization key not yet in en.json
-                ui.notifications.warn('Actor must have force field equipped and activated!');
+                ui.notifications.warn(game.i18n.localize('WH40K.Notify.Acolyte.ForceFieldNotReady'));
                 return;
             }
             // eslint-disable-next-line no-restricted-syntax -- boundary: ForceFieldData ctor accepts the item document via per-system-typed slot
@@ -850,7 +848,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             await this.rollPsychicPowerDamage(item);
             return;
         }
-        ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
+        ui.notifications.warn(game.i18n.format('WH40K.Vehicle.Errors.NoActionForItemType', { type: item.type }));
     }
 
     /* -------------------------------------------- */

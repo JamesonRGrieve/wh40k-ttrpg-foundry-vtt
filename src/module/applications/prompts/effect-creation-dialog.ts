@@ -101,14 +101,14 @@ export default class EffectCreationDialog extends DialogV2 {
             buttons: [
                 {
                     action: 'create',
-                    label: 'Create Effect',
+                    label: 'WH40K.Effects.Create',
                     icon: 'fas fa-check',
                     default: true,
                     type: 'submit',
                 },
                 {
                     action: 'cancel',
-                    label: 'Cancel',
+                    label: 'WH40K.Cancel',
                     icon: 'fas fa-times',
                     type: 'button',
                 },
@@ -166,34 +166,34 @@ export default class EffectCreationDialog extends DialogV2 {
 
         // Characteristics
         context['characteristics'] = [
-            { id: 'weaponSkill', label: 'Weapon Skill' },
-            { id: 'ballisticSkill', label: 'Ballistic Skill' },
-            { id: 'strength', label: 'Strength' },
-            { id: 'toughness', label: 'Toughness' },
-            { id: 'agility', label: 'Agility' },
-            { id: 'intelligence', label: 'Intelligence' },
-            { id: 'perception', label: 'Perception' },
-            { id: 'willpower', label: 'Willpower' },
-            { id: 'fellowship', label: 'Fellowship' },
+            { id: 'weaponSkill', label: game.i18n.localize('WH40K.Characteristic.WeaponSkill') },
+            { id: 'ballisticSkill', label: game.i18n.localize('WH40K.Characteristic.BallisticSkill') },
+            { id: 'strength', label: game.i18n.localize('WH40K.Characteristic.Strength') },
+            { id: 'toughness', label: game.i18n.localize('WH40K.Characteristic.Toughness') },
+            { id: 'agility', label: game.i18n.localize('WH40K.Characteristic.Agility') },
+            { id: 'intelligence', label: game.i18n.localize('WH40K.Characteristic.Intelligence') },
+            { id: 'perception', label: game.i18n.localize('WH40K.Characteristic.Perception') },
+            { id: 'willpower', label: game.i18n.localize('WH40K.Characteristic.Willpower') },
+            { id: 'fellowship', label: game.i18n.localize('WH40K.Characteristic.Fellowship') },
         ];
 
         // Common skills
         context['skills'] = [
-            { id: 'dodge', label: 'Dodge' },
-            { id: 'parry', label: 'Parry' },
-            { id: 'awareness', label: 'Awareness' },
-            { id: 'stealth', label: 'Stealth' },
-            { id: 'charm', label: 'Charm' },
-            { id: 'deceive', label: 'Deceive' },
-            { id: 'intimidate', label: 'Intimidate' },
+            { id: 'dodge', label: game.i18n.localize('WH40K.Combat.Dodge') },
+            { id: 'parry', label: game.i18n.localize('WH40K.Combat.Parry') },
+            { id: 'awareness', label: game.i18n.localize('WH40K.Dialog.EffectCreation.Awareness') },
+            { id: 'stealth', label: game.i18n.localize('WH40K.Dialog.EffectCreation.Stealth') },
+            { id: 'charm', label: game.i18n.localize('WH40K.SkillUse.Social.Charm') },
+            { id: 'deceive', label: game.i18n.localize('WH40K.SkillUse.Social.Deceive') },
+            { id: 'intimidate', label: game.i18n.localize('WH40K.SkillUse.Social.Intimidate') },
         ];
 
         // Combat modifiers
         context['combatTypes'] = [
-            { id: 'attack', label: 'Attack Rolls' },
-            { id: 'damage', label: 'Damage' },
-            { id: 'defense', label: 'Defense' },
-            { id: 'initiative', label: 'Initiative' },
+            { id: 'attack', label: game.i18n.localize('WH40K.Dialog.EffectCreation.AttackRolls') },
+            { id: 'damage', label: game.i18n.localize('WH40K.Weapon.Damage') },
+            { id: 'defense', label: game.i18n.localize('WH40K.Dialog.EffectCreation.Defense') },
+            { id: 'initiative', label: game.i18n.localize('WH40K.Combat.Initiative') },
         ];
 
         return context;
@@ -253,8 +253,7 @@ export default class EffectCreationDialog extends DialogV2 {
         }
 
         if (effectData === null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40K.ActiveEffect.InvalidData is a localization key, not a hardcoded string; lint rule cannot distinguish
-            ui.notifications.warn('WH40K.ActiveEffect.InvalidData');
+            ui.notifications.warn(game.i18n.localize('WH40K.ActiveEffect.InvalidData'));
             this.#resolution.resolve(null);
             return;
         }

@@ -2,8 +2,8 @@
     <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0 tw-overflow-hidden">
         {{!-- Item Header (canonical partial) --}}
         {{> systems/wh40k-rpg/templates/item/panel/item-header.hbs
-            namePlaceholder="Upgrade Name"
-            typeLabelKey="WH40K.ShipUpgrade"
+            namePlaceholderKey="WH40K.ItemSheet.NamePlaceholder.ShipUpgrade"
+            typeLabelKey="TYPES.Item.shipUpgrade"
             typeIcon="fa-level-up-alt"}}
 
         {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
@@ -17,11 +17,11 @@
                 <!-- Basic Properties -->
                 <div class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-[var(--wh40k-radius-lg)] tw-mb-[var(--wh40k-space-md)] tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-justify-between tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-border-b tw-border-[var(--wh40k-border-color-light)]" style="background: linear-gradient(90deg, rgba(212,175,55,0.15) 0%, transparent 100%)">
-                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-gold {{themeClassFor 'accent'}} tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-level-up-alt tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> Upgrade Properties</h3>
+                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-gold {{themeClassFor 'accent'}} tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-level-up-alt tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> {{localize "WH40K.ItemSheet.Ship.UpgradeProperties"}}</h3>
                     </div>
                     <div class="tw-p-[var(--wh40k-space-md)]">
                         <div class="form-group">
-                            <label>{{localize "WH40K.Availability"}}</label>
+                            <label>{{localize "WH40K.Availability.Label"}}</label>
                             <select name="system.availability">
                                 {{selectOptions availabilities selected=source.availability}}
                             </select>
@@ -32,21 +32,21 @@
                 <!-- Resource Requirements -->
                 <div class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-[var(--wh40k-radius-lg)] tw-mb-[var(--wh40k-space-md)] tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-justify-between tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-border-b tw-border-[var(--wh40k-border-color-light)]" style="background: linear-gradient(90deg, rgba(212,175,55,0.15) 0%, transparent 100%)">
-                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-[color:var(--wh40k-gold)] tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-battery-half tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> Resource Requirements</h3>
+                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-[color:var(--wh40k-gold)] tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-battery-half tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> {{localize "WH40K.ItemSheet.Ship.ResourceRequirements"}}</h3>
                     </div>
                     <div class="tw-p-[var(--wh40k-space-md)]">
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Power</label>
+                                <label>{{localize "WH40K.ShipComponent.Power"}}</label>
                                 <input type="number" name="system.power" value="{{source.power}}" />
-                                <p class="hint">Negative values = generates power</p>
+                                <p class="hint">{{localize "WH40K.ItemSheet.Ship.NegativePower"}}</p>
                             </div>
                             <div class="form-group">
-                                <label>Space</label>
+                                <label>{{localize "WH40K.ShipComponent.Space"}}</label>
                                 <input type="number" name="system.space" value="{{source.space}}" />
                             </div>
                             <div class="form-group">
-                                <label>Ship Points</label>
+                                <label>{{localize "WH40K.ItemSheet.Ship.ShipPoints"}}</label>
                                 <input type="number" name="system.shipPoints" value="{{source.shipPoints}}" />
                             </div>
                         </div>
@@ -56,50 +56,50 @@
                 <!-- Stat Modifiers -->
                 <div class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-[var(--wh40k-radius-lg)] tw-mb-[var(--wh40k-space-md)] tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-justify-between tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-border-b tw-border-[var(--wh40k-border-color-light)]" style="background: linear-gradient(90deg, rgba(212,175,55,0.15) 0%, transparent 100%)">
-                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-[color:var(--wh40k-gold)] tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-chart-line tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> Stat Modifiers</h3>
+                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-[color:var(--wh40k-gold)] tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-chart-line tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> {{localize "WH40K.ItemSheet.Ship.StatModifiers"}}</h3>
                     </div>
                     <div class="tw-p-[var(--wh40k-space-md)]">
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Speed</label>
+                                <label>{{localize "WH40K.Voidcraft.Build.Stat.Speed"}}</label>
                                 <input type="number" name="system.modifiers.speed" value="{{source.modifiers.speed}}" />
                             </div>
                             <div class="form-group">
-                                <label>Manoeuvrability</label>
+                                <label>{{localize "WH40K.Voidcraft.Build.Stat.Manoeuvrability"}}</label>
                                 <input type="number" name="system.modifiers.manoeuvrability" value="{{source.modifiers.manoeuvrability}}" />
                             </div>
                             <div class="form-group">
-                                <label>Detection</label>
+                                <label>{{localize "WH40K.Voidcraft.Build.Stat.Detection"}}</label>
                                 <input type="number" name="system.modifiers.detection" value="{{source.modifiers.detection}}" />
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Armour</label>
+                                <label>{{localize "WH40K.Voidcraft.Build.Stat.Armour"}}</label>
                                 <input type="number" name="system.modifiers.armour" value="{{source.modifiers.armour}}" />
                             </div>
                             <div class="form-group">
-                                <label>Hull Integrity</label>
+                                <label>{{localize "WH40K.Voidcraft.Build.Stat.HullIntegrity"}}</label>
                                 <input type="number" name="system.modifiers.hullIntegrity" value="{{source.modifiers.hullIntegrity}}" />
                             </div>
                             <div class="form-group">
-                                <label>Turret Rating</label>
+                                <label>{{localize "WH40K.Voidcraft.Build.Stat.TurretRating"}}</label>
                                 <input type="number" name="system.modifiers.turretRating" value="{{source.modifiers.turretRating}}" />
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Void Shields</label>
+                                <label>{{localize "WH40K.Voidcraft.Build.Stat.VoidShields"}}</label>
                                 <input type="number" name="system.modifiers.voidShields" value="{{source.modifiers.voidShields}}" />
                             </div>
                             <div class="form-group">
-                                <label>Morale</label>
+                                <label>{{localize "WH40K.Voidcraft.Build.Stat.Morale"}}</label>
                                 <input type="number" name="system.modifiers.morale" value="{{source.modifiers.morale}}" />
                             </div>
                             <div class="form-group">
-                                <label>Crew Rating</label>
+                                <label>{{localize "WH40K.Voidcraft.Build.Stat.CrewRating"}}</label>
                                 <input type="number" name="system.modifiers.crewRating" value="{{source.modifiers.crewRating}}" />
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                 <!-- Effect -->
                 <div class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-[var(--wh40k-radius-lg)] tw-mb-[var(--wh40k-space-md)] tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-justify-between tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-border-b tw-border-[var(--wh40k-border-color-light)]" style="background: linear-gradient(90deg, rgba(212,175,55,0.15) 0%, transparent 100%)">
-                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-[color:var(--wh40k-gold)] tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-magic tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> Effect</h3>
+                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-[color:var(--wh40k-gold)] tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-magic tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> {{localize "WH40K.Tabs.Effect"}}</h3>
                     </div>
                     <div class="tw-p-[var(--wh40k-space-md)]">
                         {{#if inEditMode}}
@@ -123,7 +123,7 @@
                 <!-- Notes -->
                 <div class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-[var(--wh40k-radius-lg)] tw-mb-[var(--wh40k-space-md)] tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-justify-between tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-border-b tw-border-[var(--wh40k-border-color-light)]" style="background: linear-gradient(90deg, rgba(212,175,55,0.15) 0%, transparent 100%)">
-                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-[color:var(--wh40k-gold)] tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-sticky-note tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> Notes</h3>
+                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-[color:var(--wh40k-gold)] tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-sticky-note tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> {{localize "WH40K.Tabs.Notes"}}</h3>
                     </div>
                     <div class="tw-p-[var(--wh40k-space-md)]">
                         <textarea name="system.notes" rows="3">{{system.notes}}</textarea>
@@ -133,7 +133,7 @@
                 <!-- Description -->
                 <div class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-[var(--wh40k-radius-lg)] tw-mb-[var(--wh40k-space-md)] tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-justify-between tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-border-b tw-border-[var(--wh40k-border-color-light)]" style="background: linear-gradient(90deg, rgba(212,175,55,0.15) 0%, transparent 100%)">
-                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-[color:var(--wh40k-gold)] tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-scroll tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> Description</h3>
+                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-[color:var(--wh40k-gold)] tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-scroll tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> {{localize "WH40K.Tabs.Description"}}</h3>
                     </div>
                     <div class="tw-p-[var(--wh40k-space-md)]">
                         {{#if inEditMode}}

@@ -16,10 +16,10 @@
     <div class="tw-mt-3 tw-px-3 tw-py-2 tw-rounded-md tw-text-center tw-font-semibold tw-uppercase tw-tracking-[0.08em] {{#if requisition.success}}tw-bg-emerald-900/40 tw-text-emerald-300 tw-border tw-border-emerald-500/40{{else}}tw-bg-rose-900/40 tw-text-rose-300 tw-border tw-border-rose-500/40{{/if}}">
         {{#if requisition.success}}
             {{localize "WH40K.RadicalServices.Success"}}
-            <span class="tw-ml-2 tw-tabular-nums">(+{{requisition.dos}} DoS)</span>
+            <span class="tw-ml-2 tw-tabular-nums">(+{{requisition.dos}} {{localize "WH40K.Chat.Roll.DoS"}})</span>
         {{else}}
             {{localize "WH40K.RadicalServices.Failure"}}
-            <span class="tw-ml-2 tw-tabular-nums">(-{{requisition.dof}} DoF)</span>
+            <span class="tw-ml-2 tw-tabular-nums">(-{{requisition.dof}} {{localize "WH40K.Chat.Roll.DoF"}})</span>
         {{/if}}
     </div>
 

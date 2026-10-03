@@ -224,8 +224,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
 
         const skillKey = form.querySelector<HTMLSelectElement>('#skill-select')?.value;
         if (skillKey === undefined || skillKey.length === 0) {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Skills.SelectSkillTypeRequired localization key pending
-            ui.notifications.warn('Please select a skill type.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Skills.SelectSkillTypeRequired'));
             return;
         }
 
@@ -234,8 +233,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         const speciality = customValue.length > 0 ? customValue : specValue;
 
         if (speciality.length === 0) {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Skills.SelectSpecializationRequired localization key pending
-            ui.notifications.warn('Please enter or select a specialization name.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Skills.SelectSpecializationRequired'));
             return;
         }
 

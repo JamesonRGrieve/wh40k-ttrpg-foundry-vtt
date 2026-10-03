@@ -40,7 +40,7 @@
                 {{talent.specialization}}
                 {{#if talent.stackable}}
                     {{#if talent.rank}}
-                        <span class="tw-text-[var(--color-text-secondary)] tw-italic">(Rank {{talent.rank}})</span>
+                        <span class="tw-text-[var(--color-text-secondary)] tw-italic">{{localize "WH40K.Chat.Talent.Rank" rank=talent.rank}}</span>
                     {{/if}}
                 {{/if}}
             </div>
@@ -51,7 +51,7 @@
     <div class="tw-flex tw-flex-wrap tw-gap-3 tw-pt-2 tw-border-t {{themeClassFor 'border'}}">
         {{#if talent.aptitudes.length}}
             <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-sm">
-                <strong>Aptitudes:</strong>
+                <strong>{{localize "WH40K.Chat.Label.Aptitudes"}}</strong>
                 <div class="tw-flex tw-flex-wrap tw-gap-1.5">
                     {{#each talent.aptitudes as |apt|}}
                         <span class="tw-inline-block tw-px-1.5 tw-py-0.5 tw-bg-gradient-to-br tw-from-accent-talents/15 tw-to-accent-talents/10 tw-border tw-border-accent-talents/30 tw-rounded tw-text-[0.7rem] tw-font-semibold tw-text-[var(--wh40k-text-dark)] tw-uppercase tw-tracking-wide">{{apt}}</span>
@@ -61,7 +61,7 @@
         {{/if}}
 
         <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-sm">
-            <strong>Cost:</strong>
+            <strong>{{localize "WH40K.Chat.Label.Cost"}}</strong>
             {{talent.costLabel}}
         </div>
     </div>

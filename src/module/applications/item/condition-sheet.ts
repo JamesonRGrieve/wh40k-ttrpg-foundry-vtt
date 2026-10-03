@@ -15,9 +15,9 @@ const ConditionSheet = defineSimpleItemSheet({
     width: 560,
     height: 640,
     tabs: [
-        { tab: 'details', group: 'primary', label: 'Details' },
-        { tab: 'description', group: 'primary', label: 'Description' },
-        { tab: 'effects', group: 'primary', label: 'Effects' },
+        { tab: 'details', group: 'primary', label: 'WH40K.Tabs.Details' },
+        { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Description' },
+        { tab: 'effects', group: 'primary', label: 'WH40K.Tabs.Effects' },
     ],
     defaultTab: 'details',
     extraContext: {

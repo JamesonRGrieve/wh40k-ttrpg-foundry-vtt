@@ -12,16 +12,16 @@
     <div class="tw-p-7 tw-bg-[linear-gradient(135deg,var(--wh40k-panel-bg-solid)_0%,var(--wh40k-input-bg)_100%)] tw-border-[3px] tw-border-solid {{themeClassFor 'border'}} tw-rounded-md tw-text-center tw-animate-slideDown tw-shadow-[0_0_20px_rgba(201,162,39,0.3)]">
         <div class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-2xl tw-font-bold">
             <span>{{roll.total}}</span>
-            <span class="tw-text-sm tw-uppercase tw-opacity-70">vs</span>
+            <span class="tw-text-sm tw-uppercase tw-opacity-70">{{localize "WH40K.Common.Versus"}}</span>
             <span>{{targetValue}}</span>
         </div>
         <div class="tw-mt-2">
             {{#if success}}
-            <span class="tw-text-success-l20 tw-font-bold"><i class="fas fa-pray"></i> Ritual Complete!</span>
+            <span class="tw-text-success-l20 tw-font-bold"><i class="fas fa-pray"></i> {{localize "WH40K.Chat.Ritual.Complete"}}</span>
             {{else}}
-            <span class="tw-text-failure-l10 tw-font-bold"><i class="fas fa-skull"></i> Ritual Failed!</span>
+            <span class="tw-text-failure-l10 tw-font-bold"><i class="fas fa-skull"></i> {{localize "WH40K.Chat.Ritual.Failed"}}</span>
             {{/if}}
-            <span class="tw-text-sm tw-opacity-80">({{degrees}} Degrees)</span>
+            <span class="tw-text-sm tw-opacity-80">({{degrees}} {{localize "WH40K.Chat.Roll.Degrees"}})</span>
         </div>
     </div>
 
@@ -33,13 +33,13 @@
 
     {{#if item.system.effect}}
     <div class="tw-mt-2 tw-text-sm">
-        <strong>Effect:</strong> {{{item.system.effect}}}
+        <strong>{{localize "WH40K.Chat.Label.Effect"}}</strong> {{{item.system.effect}}}
     </div>
     {{/if}}
 
     {{#if item.system.duration}}
     <div class="tw-mt-1 tw-text-sm">
-        <strong>Duration:</strong> {{item.system.duration}}
+        <strong>{{localize "WH40K.Chat.Label.Duration"}}</strong> {{item.system.duration}}
     </div>
     {{/if}}
 {{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}

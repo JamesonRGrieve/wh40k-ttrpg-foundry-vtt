@@ -283,7 +283,7 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
         };
 
         await npc.update(updates);
-        ui.notifications.info(`Applied preset "${preset.name}" to ${npc.name}`);
+        ui.notifications.info(game.i18n.format('WH40K.NPC.PresetApplied', { preset: preset.name, npc: npc.name }));
     }
 
     /* -------------------------------------------- */
@@ -338,21 +338,19 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
         const description = form?.querySelector<HTMLTextAreaElement>('[name="presetDescription"]')?.value.trim();
 
         if (name === undefined || name === '') {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetNameRequired localization key
-            ui.notifications.warn('Please enter a preset name.');
+            ui.notifications.warn(game.i18n.localize('WH40K.NPC.PresetNameRequired'));
             return;
         }
 
         if (this.#state.npc === null) {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.NoNPCSelected localization key
-            ui.notifications.error('No NPC selected.');
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.NoNPCSelected'));
             return;
         }
 
         const preset = CombatPresetDialog.createPresetFromNPC(this.#state.npc, name, description);
         await CombatPresetDialog.addPreset(preset);
 
-        ui.notifications.info(`Saved preset "${name}"`);
+        ui.notifications.info(game.i18n.format('WH40K.NPC.PresetSaved', { name }));
         void this.close();
     }
 
@@ -365,21 +363,18 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
         event.preventDefault();
 
         if (this.#state.selectedPreset === null) {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.SelectPresetToLoad localization key
-            ui.notifications.warn('Please select a preset to load.');
+            ui.notifications.warn(game.i18n.localize('WH40K.NPC.SelectPresetToLoad'));
             return;
         }
 
         if (this.#state.npc === null) {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.NoNPCSelected localization key
-            ui.notifications.error('No NPC selected.');
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.NoNPCSelected'));
             return;
         }
 
         const preset = CombatPresetDialog.getPreset(this.#state.selectedPreset);
         if (preset === null) {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetNotFound localization key
-            ui.notifications.error('Preset not found.');
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.PresetNotFound'));
             return;
         }
 
@@ -402,13 +397,13 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
         if (preset === null) return;
 
         const confirmed = await ConfirmationDialog.confirm({
-            title: 'Delete Preset',
-            content: `<p>Delete preset <strong>${preset.name}</strong>?</p>`,
+            title: game.i18n.localize('WH40K.NPC.PresetDeleteTitle'),
+            content: game.i18n.format('WH40K.NPC.PresetDeleteContent', { name: preset.name }),
         });
 
         if (confirmed) {
             await CombatPresetDialog.deletePresetById(presetId);
-            ui.notifications.info(`Deleted preset "${preset.name}"`);
+            ui.notifications.info(game.i18n.format('WH40K.NPC.PresetDeleted', { name: preset.name }));
             void this.render();
         }
     }
@@ -459,11 +454,11 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
                     }
 
                     await CombatPresetDialog.addPreset(preset);
-                    ui.notifications.info(`Imported preset "${preset.name}"`);
+                    ui.notifications.info(game.i18n.format('WH40K.NPC.PresetImported', { name: preset.name }));
                     void this.render();
                 } catch (error) {
                     const msg = error instanceof Error ? error.message : String(error);
-                    ui.notifications.error(`Failed to import preset: ${msg}`);
+                    ui.notifications.error(game.i18n.format('WH40K.NPC.PresetImportFailed', { error: msg }));
                 }
             })();
         });

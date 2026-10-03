@@ -12,25 +12,25 @@
       {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-16 tw-h-16" frameClass="" overlayIcon=item.system.damageTypeIcon overlayBgClass="tw-bg-black/60" overlayTextClass="" overlayIconClass="" extraClass="tw-shrink-0"}}
 
       <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
-        {{> systems/wh40k-rpg/templates/item/partial/item-name-input.hbs placeholder="Critical Injury Name"}}
+        {{> systems/wh40k-rpg/templates/item/partial/item-name-input.hbs placeholderKey="WH40K.ItemSheet.CriticalInjury.NamePlaceholder"}}
 
         <div class="tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Damage Type">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.CriticalInjury.DamageType'}}">
             <i class="fas {{item.system.damageTypeIcon}}"></i>
             {{item.system.damageTypeLabel}}
           </span>
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Body Location">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.CriticalInjury.BodyPart'}}">
             <i class="fas {{item.system.bodyPartIcon}}"></i>
             {{item.system.bodyPartLabel}}
           </span>
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Severity Level">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.ItemSheet.CriticalInjury.SeverityLevel'}}">
             <i class="fas fa-chart-line"></i>
-            Severity {{item.system.severity}}
+            {{localize "WH40K.CriticalInjury.Severity"}} {{item.system.severity}}
           </span>
           {{#if item.system.isPermanent}}
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Permanent Injury">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.ItemSheet.CriticalInjury.PermanentTooltip'}}">
             <i class="fas fa-infinity"></i>
-            Permanent
+            {{localize "WH40K.CriticalInjury.Permanent"}}
           </span>
           {{/if}}
         </div>
@@ -44,7 +44,7 @@
     <div class="tw-p-3 tw-shrink-0">
       <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2 tw-text-sm">
         <i class="fas fa-chart-line tw-text-gold {{themeClassFor 'accent'}}"></i>
-        <span>Severity Level</span>
+        <span>{{localize "WH40K.ItemSheet.CriticalInjury.SeverityLevel"}}</span>
       </div>
       <div class="tw-flex tw-flex-col tw-gap-1">
         <input type="range"
@@ -56,17 +56,17 @@
                data-action="changeSeverity"
                class="tw-w-full" />
         <div class="tw-flex tw-justify-between tw-text-xs">
-          <span class="tw-opacity-70">Minor (1)</span>
+          <span class="tw-opacity-70">{{localize "WH40K.ItemSheet.CriticalInjury.MinorValue"}}</span>
           <span class="tw-font-semibold tw-text-gold {{themeClassFor 'accent'}}">
             <strong>{{item.system.severity}}</strong>
           </span>
-          <span class="tw-opacity-70">Fatal (10)</span>
+          <span class="tw-opacity-70">{{localize "WH40K.ItemSheet.CriticalInjury.FatalValue"}}</span>
         </div>
         <div class="tw-flex tw-gap-px tw-h-1.5 tw-rounded-full tw-overflow-hidden">
-          <span class="tw-flex-1 tw-bg-success/50" title="Minor (1-3)"></span>
-          <span class="tw-flex-1 tw-bg-warning/50" title="Moderate (4-6)"></span>
-          <span class="tw-flex-1 tw-bg-crimson/50" title="Severe (7-9)"></span>
-          <span class="tw-flex-[0.33] tw-bg-crimson" title="Fatal (10)"></span>
+          <span class="tw-flex-1 tw-bg-success/50" title="{{localize 'WH40K.CriticalInjury.SeverityLevels.Minor'}}"></span>
+          <span class="tw-flex-1 tw-bg-warning/50" title="{{localize 'WH40K.CriticalInjury.SeverityLevels.Moderate'}}"></span>
+          <span class="tw-flex-1 tw-bg-crimson/50" title="{{localize 'WH40K.CriticalInjury.SeverityLevels.Severe'}}"></span>
+          <span class="tw-flex-[0.33] tw-bg-crimson" title="{{localize 'WH40K.CriticalInjury.SeverityLevels.Fatal'}}"></span>
         </div>
       </div>
     </div>
@@ -75,8 +75,8 @@
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
     {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
-        (object tab="details"     label="Details"     icon="fa-info-circle" active=true)
-        (object tab="description" label="Description" icon="fa-book"))}}
+        (object tab="details"     label=(localize "WH40K.Tabs.Details")     icon="fa-info-circle" active=true)
+        (object tab="description" label=(localize "WH40K.Tabs.Description") icon="fa-book"))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
@@ -90,37 +90,37 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-cog tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Injury Properties</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.CriticalInjury.InjuryProperties"}}</h3>
           </div>
           <div class="tw-p-3">
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Damage Type</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.CriticalInjury.DamageType"}}</label>
                 <select name="system.damageType" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-                  <option value="impact" {{#if (eq item.system.damageType "impact")}}selected{{/if}}>Impact</option>
-                  <option value="rending" {{#if (eq item.system.damageType "rending")}}selected{{/if}}>Rending</option>
-                  <option value="explosive" {{#if (eq item.system.damageType "explosive")}}selected{{/if}}>Explosive</option>
-                  <option value="energy" {{#if (eq item.system.damageType "energy")}}selected{{/if}}>Energy</option>
+                  <option value="impact" {{#if (eq item.system.damageType "impact")}}selected{{/if}}>{{localize "WH40K.DamageType.Impact"}}</option>
+                  <option value="rending" {{#if (eq item.system.damageType "rending")}}selected{{/if}}>{{localize "WH40K.DamageType.Rending"}}</option>
+                  <option value="explosive" {{#if (eq item.system.damageType "explosive")}}selected{{/if}}>{{localize "WH40K.DamageType.Explosive"}}</option>
+                  <option value="energy" {{#if (eq item.system.damageType "energy")}}selected{{/if}}>{{localize "WH40K.DamageType.Energy"}}</option>
                 </select>
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Body Location</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.CriticalInjury.BodyPart"}}</label>
                 <select name="system.bodyPart" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-                  <option value="head" {{#if (eq item.system.bodyPart "head")}}selected{{/if}}>Head</option>
-                  <option value="arm" {{#if (eq item.system.bodyPart "arm")}}selected{{/if}}>Arm</option>
-                  <option value="body" {{#if (eq item.system.bodyPart "body")}}selected{{/if}}>Body</option>
-                  <option value="leg" {{#if (eq item.system.bodyPart "leg")}}selected{{/if}}>Leg</option>
+                  <option value="head" {{#if (eq item.system.bodyPart "head")}}selected{{/if}}>{{localize "WH40K.BodyPart.Head"}}</option>
+                  <option value="arm" {{#if (eq item.system.bodyPart "arm")}}selected{{/if}}>{{localize "WH40K.BodyPart.Arm"}}</option>
+                  <option value="body" {{#if (eq item.system.bodyPart "body")}}selected{{/if}}>{{localize "WH40K.BodyPart.Body"}}</option>
+                  <option value="leg" {{#if (eq item.system.bodyPart "leg")}}selected{{/if}}>{{localize "WH40K.BodyPart.Leg"}}</option>
                 </select>
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Severity (1-10)</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.CriticalInjury.SeverityRange"}}</label>
                 <input type="number" name="system.severity" value="{{item.system.severity}}"
                        data-dtype="Number" min="1" max="10" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
                 <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm">
                   <input type="checkbox" name="system.permanent" {{checked item.system.permanent}} />
-                  <span>Permanent Injury</span>
+                  <span>{{localize "WH40K.ItemSheet.CriticalInjury.PermanentTooltip"}}</span>
                 </label>
               </div>
             </div>
@@ -131,18 +131,18 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-file-medical tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Injury Effect (Severity {{item.system.severity}})</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.CriticalInjury.InjuryEffect" severity=item.system.severity}}</h3>
           </div>
           <div class="tw-p-2">
             {{#if inEditMode}}
               {{#each item.system.availableSeverities as |sev|}}
                 {{#with (lookup ../item.system.effects sev) as |effect|}}
                   <div class="tw-mb-3">
-                    <label class="tw-text-sm tw-font-medium tw-block tw-mb-1"><strong>Severity {{sev}}:</strong></label>
+                    <label class="tw-text-sm tw-font-medium tw-block tw-mb-1"><strong>{{localize "WH40K.CriticalInjury.Severity"}} {{sev}}:</strong></label>
                     {{editor effect.text target=(concat "system.effects." sev ".text") button=true editable=../editable engine="prosemirror"}}
                     <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm tw-mt-1">
                       <input type="checkbox" name="system.effects.{{sev}}.permanent" {{checked effect.permanent}} />
-                      <span>Permanent</span>
+                      <span>{{localize "WH40K.CriticalInjury.Permanent"}}</span>
                     </label>
                   </div>
                 {{/with}}
@@ -150,7 +150,7 @@
             {{else}}
               <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{item.system.currentEffect}}}</div>
               <div class="tw-mt-2">
-                <p class="tw-text-xs tw-italic tw-opacity-70"><em>This injury has effects for all severity levels 1-10. Change the severity slider to preview different effects.</em></p>
+                <p class="tw-text-xs tw-italic tw-opacity-70"><em>{{localize "WH40K.ItemSheet.CriticalInjury.AllSeveritiesHint"}}</em></p>
               </div>
             {{/if}}
           </div>
@@ -160,10 +160,10 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-sticky-note tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">GM Notes</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Common.GmNotes"}}</h3>
           </div>
           <div class="tw-p-3">
-            <textarea name="system.notes" rows="3" placeholder="Treatment details, duration, special circumstances..." class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
+            <textarea name="system.notes" rows="3" placeholder="{{localize 'WH40K.ItemSheet.CriticalInjury.NotesPlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
           </div>
         </div>
 
@@ -176,7 +176,7 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-book tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Description</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Tabs.Description"}}</h3>
           </div>
           <div class="tw-p-2">
             {{#if inEditMode}}
@@ -191,24 +191,24 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-book-open tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Source</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Common.Source"}}</h3>
           </div>
           <div class="tw-p-3">
             <div class="tw-grid tw-grid-cols-3 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Source Book</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.NPC.SourceBook"}}</label>
                 <input type="text" name="system.source.book" value="{{source.source.book}}"
-                       placeholder="Rogue Trader Core" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                       placeholder="{{localize 'WH40K.ItemSheet.Common.SourceBookPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Page</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Source.Page"}}</label>
                 <input type="text" name="system.source.page" value="{{source.source.page}}"
                        placeholder="254" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Custom Reference</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.Common.CustomReference"}}</label>
                 <input type="text" name="system.source.url" value="{{source.source.url}}"
-                       placeholder="Homebrew" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                       placeholder="{{localize 'WH40K.ItemSheet.Common.CustomReferencePlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
             </div>
           </div>

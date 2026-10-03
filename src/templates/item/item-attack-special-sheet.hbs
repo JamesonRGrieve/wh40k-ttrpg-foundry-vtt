@@ -8,17 +8,17 @@
         <div class="tw-flex tw-gap-4 tw-mb-3">
             <div class="tw-flex tw-items-center tw-gap-2">
                 <input name="system.hasLevel" type="checkbox" data-dtype="Boolean" {{checked item.system.hasLevel}} />
-                <label>Has Level</label>
+                <label>{{localize "WH40K.ItemSheet.AttackSpecial.HasLevel"}}</label>
             </div>
             <div class="tw-flex tw-items-center tw-gap-2">
                 <input name="system.enabled" type="checkbox" data-dtype="Boolean" {{checked item.system.enabled}} />
-                <label>Enabled</label>
+                <label>{{localize "WH40K.ItemSheet.AttackSpecial.Enabled"}}</label>
             </div>
         </div>
 
         <div class="tw-flex tw-gap-4">
             <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[rgba(202,210,222,0.7)]">Level</label>
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[rgba(202,210,222,0.7)]">{{localize "WH40K.Common.Level"}}</label>
                 {{#if item.system.hasLevel}}
                     <input name="system.level" type="number" data-dtype="Number" value="{{item.system.level}}" />
                 {{else}}
@@ -26,7 +26,7 @@
                 {{/if}}
             </div>
             <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[rgba(202,210,222,0.7)]">Source</label>
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[rgba(202,210,222,0.7)]">{{localize "WH40K.Common.Source"}}</label>
                 <input name="system.source" type="text" value="{{item.system.source}}" />
             </div>
         </div>
@@ -35,7 +35,7 @@
     {{! Description }}
     <div class="tw-p-4 tw-border-t {{themeClassFor 'border'}}">
         <div class="tw-flex tw-flex-col tw-gap-1">
-            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[rgba(202,210,222,0.7)]">Description</label>
+            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[rgba(202,210,222,0.7)]">{{localize "WH40K.Tabs.Description"}}</label>
             <textarea class="tw-w-full tw-p-2 tw-rounded tw-border tw-border-[rgba(255,255,255,0.1)] tw-bg-[rgba(0,0,0,0.2)] tw-text-[var(--color-text-primary)]" name="system.description.value">{{item.system.description.value}}</textarea>
         </div>
     </div>

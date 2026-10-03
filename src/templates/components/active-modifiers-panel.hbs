@@ -7,7 +7,7 @@
         </button>
         <span class="wh40k-panel-title">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
-            Active Modifiers
+            {{localize "WH40K.ActiveModifiersPanel.Title"}}
         </span>
         <span class="wh40k-modifier-count tw-inline-flex tw-items-center tw-justify-center tw-min-w-[24px] tw-h-6 tw-px-2 tw-bg-[rgba(168,85,247,0.2)] tw-rounded-full tw-text-[0.85em] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1:tw-text-gold-raw-l5 dh2:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
             {{add (add (add (add (add modifiers.conditions.length modifiers.talents.length) modifiers.traits.length) modifiers.equipment.length) modifiers.origins.length) modifiers.effects.length}}
@@ -23,7 +23,7 @@
                 <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                     <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                         <i class="fa-solid fa-exclamation-triangle tw-opacity-80"></i>
-                        Conditions
+                        {{localize "WH40K.ActiveModifiersPanel.Conditions"}}
                     </div>
                     {{#each modifiers.conditions as |mod|}}
                     <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] hover:tw-bg-[rgba(0,0,0,0.3)] tw-border-l-[3px] tw-border-l-[rgba(245,158,11,0.6)] tw-rounded-[var(--wh40k-radius-md)] tw-transition-all hover:tw-translate-x-0.5">
@@ -50,7 +50,7 @@
                 <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                     <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                         <i class="fa-solid fa-graduation-cap tw-opacity-80"></i>
-                        Talents
+                        {{localize "WH40K.Tabs.Talents"}}
                     </div>
                     {{#each modifiers.talents as |mod|}}
                     <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] hover:tw-bg-[rgba(0,0,0,0.3)] tw-border-l-[3px] tw-border-l-[rgba(168,85,247,0.6)] tw-rounded-[var(--wh40k-radius-md)] tw-transition-all hover:tw-translate-x-0.5 {{#unless mod.active}}tw-opacity-50{{/unless}}">
@@ -65,7 +65,7 @@
                             <div class="tw-text-[0.85em] tw-text-[color:var(--wh40k-text-disabled,rgba(255,255,255,0.5))] tw-italic">{{mod.duration}}</div>
                         </div>
                         {{#if mod.canToggle}}
-                        <button type="button" class="tw-shrink-0 tw-w-9 tw-h-9 tw-flex tw-items-center tw-justify-center tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-cursor-pointer" data-action="toggleModifier" data-item-id="{{mod.id}}" title="{{#if mod.active}}Deactivate{{else}}Activate{{/if}}">
+                        <button type="button" class="tw-shrink-0 tw-w-9 tw-h-9 tw-flex tw-items-center tw-justify-center tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-cursor-pointer" data-action="toggleModifier" data-item-id="{{mod.id}}" title="{{#if mod.active}}{{localize 'WH40K.ActiveModifiersPanel.Deactivate'}}{{else}}{{localize 'WH40K.ActiveModifiersPanel.Activate'}}{{/if}}">
                             <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}} tw-text-[1.2em]"></i>
                         </button>
                         {{/if}}
@@ -79,7 +79,7 @@
                 <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                     <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                         <i class="fa-solid fa-dna tw-opacity-80"></i>
-                        Traits
+                        {{localize "WH40K.Traits"}}
                     </div>
                     {{#each modifiers.traits as |mod|}}
                     <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] hover:tw-bg-[rgba(0,0,0,0.3)] tw-border-l-[3px] tw-border-l-[rgba(59,130,246,0.6)] tw-rounded-[var(--wh40k-radius-md)] tw-transition-all hover:tw-translate-x-0.5">
@@ -103,7 +103,7 @@
                 <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                     <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                         <i class="fa-solid fa-shield tw-opacity-80"></i>
-                        Equipment
+                        {{localize "WH40K.ActiveModifiersPanel.Equipment"}}
                     </div>
                     {{#each modifiers.equipment as |mod|}}
                     <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] hover:tw-bg-[rgba(0,0,0,0.3)] tw-border-l-[3px] tw-border-l-[rgba(100,116,139,0.6)] tw-rounded-[var(--wh40k-radius-md)] tw-transition-all hover:tw-translate-x-0.5">
@@ -127,7 +127,7 @@
                 <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                     <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                         <i class="fa-solid fa-globe tw-opacity-80"></i>
-                        Origins
+                        {{localize "WH40K.ActiveModifiersPanel.Origins"}}
                     </div>
                     {{#each modifiers.origins as |mod|}}
                     <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] hover:tw-bg-[rgba(0,0,0,0.3)] tw-border-l-[3px] tw-border-l-[rgba(99,102,241,0.6)] tw-rounded-[var(--wh40k-radius-md)] tw-transition-all hover:tw-translate-x-0.5">
@@ -151,7 +151,7 @@
                 <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                     <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                         <i class="fa-solid fa-sparkles tw-opacity-80"></i>
-                        Effects
+                        {{localize "WH40K.Tabs.Effects"}}
                     </div>
                     {{#each modifiers.effects as |mod|}}
                     <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] hover:tw-bg-[rgba(0,0,0,0.3)] tw-border-l-[3px] tw-border-l-[rgba(236,72,153,0.6)] tw-rounded-[var(--wh40k-radius-md)] tw-transition-all hover:tw-translate-x-0.5 {{#unless mod.active}}tw-opacity-50{{/unless}}">
@@ -164,7 +164,7 @@
                             <div class="tw-text-[0.85em] tw-text-[color:var(--wh40k-text-disabled,rgba(255,255,255,0.5))] tw-italic">{{mod.duration}}</div>
                         </div>
                         {{#if mod.canToggle}}
-                        <button type="button" class="tw-shrink-0 tw-w-9 tw-h-9 tw-flex tw-items-center tw-justify-center tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-cursor-pointer" data-action="toggleModifier" data-item-id="{{mod.id}}" title="{{#if mod.active}}Deactivate{{else}}Activate{{/if}}">
+                        <button type="button" class="tw-shrink-0 tw-w-9 tw-h-9 tw-flex tw-items-center tw-justify-center tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-cursor-pointer" data-action="toggleModifier" data-item-id="{{mod.id}}" title="{{#if mod.active}}{{localize 'WH40K.ActiveModifiersPanel.Deactivate'}}{{else}}{{localize 'WH40K.ActiveModifiersPanel.Activate'}}{{/if}}">
                             <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}} tw-text-[1.2em]"></i>
                         </button>
                         {{/if}}
@@ -176,7 +176,7 @@
         {{else}}
             <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-md)] tw-py-8 tw-px-4 tw-text-[color:var(--wh40k-text-disabled,rgba(255,255,255,0.4))] tw-text-center">
                 <i class="fa-solid fa-circle-info tw-text-[2em] tw-opacity-50"></i>
-                <p class="tw-m-0 tw-text-[0.95em] tw-italic">No active modifiers</p>
+                <p class="tw-m-0 tw-text-[0.95em] tw-italic">{{localize "WH40K.ActiveModifiersPanel.None"}}</p>
             </div>
         {{/if}}
     </div>

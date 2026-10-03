@@ -13,13 +13,13 @@
         {{!-- Name Input --}}
         <div class="tw-flex tw-flex-col tw-gap-1">
             <label for="name" class="tw-font-medium tw-text-[0.85rem] tw-text-[var(--color-text-light-heading,#eee)]">{{localize "WH40K.Name"}}</label>
-            <input type="text" name="name" value="{{state.name}}" placeholder="Enter NPC name..." class="tw-w-full tw-p-2 tw-border tw-border-solid tw-border-[var(--color-border-light,#555)] tw-rounded-md tw-bg-[var(--color-bg-input,#222)] tw-text-[var(--color-text-light,#fff)] tw-text-base focus:tw-border-[var(--wh40k-color-accent,var(--wh40k-color-gold))] focus:tw-outline-none" />
+            <input type="text" name="name" value="{{state.name}}" placeholder="{{localize 'WH40K.Dialog.NpcQuickCreate.NamePlaceholder'}}" class="tw-w-full tw-p-2 tw-border tw-border-solid tw-border-[var(--color-border-light,#555)] tw-rounded-md tw-bg-[var(--color-bg-input,#222)] tw-text-[var(--color-text-light,#fff)] tw-text-base focus:tw-border-[var(--wh40k-color-accent,var(--wh40k-color-gold))] focus:tw-outline-none" />
         </div>
 
         {{!-- Faction Input --}}
         <div class="tw-flex tw-flex-col tw-gap-1">
             <label for="faction" class="tw-font-medium tw-text-[0.85rem] tw-text-[var(--color-text-light-heading,#eee)]">{{localize "WH40K.NPC.Faction"}}</label>
-            <input type="text" name="faction" value="{{state.faction}}" placeholder="e.g., Ork, Imperial Guard, Chaos..." class="tw-w-full tw-p-2 tw-border tw-border-solid tw-border-[var(--color-border-light,#555)] tw-rounded-md tw-bg-[var(--color-bg-input,#222)] tw-text-[var(--color-text-light,#fff)] tw-text-base focus:tw-border-[var(--wh40k-color-accent,var(--wh40k-color-gold))] focus:tw-outline-none" />
+            <input type="text" name="faction" value="{{state.faction}}" placeholder="{{localize 'WH40K.Dialog.NpcQuickCreate.FactionPlaceholder'}}" class="tw-w-full tw-p-2 tw-border tw-border-solid tw-border-[var(--color-border-light,#555)] tw-rounded-md tw-bg-[var(--color-bg-input,#222)] tw-text-[var(--color-text-light,#fff)] tw-text-base focus:tw-border-[var(--wh40k-color-accent,var(--wh40k-color-gold))] focus:tw-outline-none" />
         </div>
 
         {{!-- Threat Level Slider --}}
@@ -134,7 +134,7 @@
                 {{#each preview.weapons}}
                 <div class="tw-flex tw-justify-between tw-px-2 tw-py-1 tw-bg-[var(--color-bg-hover,#252525)] tw-rounded-sm tw-text-base">
                     <span class="tw-font-medium tw-text-[var(--color-text-light,#fff)]">{{name}}</span>
-                    <span class="tw-text-[var(--color-text-light-secondary,#aaa)]">{{damage}}, Pen {{pen}}</span>
+                    <span class="tw-text-[var(--color-text-light-secondary,#aaa)]">{{localize "WH40K.Dialog.NpcQuickCreate.PenValue" damage=damage pen=pen}}</span>
                 </div>
                 {{/each}}
             </div>

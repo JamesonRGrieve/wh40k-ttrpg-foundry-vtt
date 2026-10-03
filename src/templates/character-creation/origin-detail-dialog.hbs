@@ -21,7 +21,7 @@
                 {{#if xpCost}}
                     <span class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.8rem] tw-font-semibold tw-bg-[rgba(33,150,243,0.2)] tw-border tw-border-[#64b5f6] tw-text-[#64b5f6]">
                         <i class="fa-solid fa-gem"></i>
-                        {{xpCost}} XP
+                        {{xpCost}} {{localize "WH40K.Common.XP"}}
                     </span>
                 {{/if}}
             </div>
@@ -90,14 +90,14 @@
                             </h3>
                             <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xs)]">
                                 {{#if woundsFormula}}
-                                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-w-full" data-tooltip="Roll this formula to determine starting Wounds">
+                                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-w-full" data-tooltip="{{localize 'WH40K.OriginDetailDialog.RollWoundsTooltip'}}">
                                         <i class="fa-solid fa-heart tw-text-base tw-w-6 tw-text-center tw-text-[color:var(--wh40k-accent-red)]"></i>
                                         <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">{{localize "WH40K.Wounds"}}:</span>
                                         <code class="tw-font-mono tw-bg-[rgba(0,0,0,0.3)] tw-py-[2px] tw-px-2 tw-rounded tw-text-[color:var(--wh40k-gold)]">{{woundsFormula}}</code>
                                     </div>
                                 {{/if}}
                                 {{#if fateFormula}}
-                                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-w-full" data-tooltip="Roll this formula to determine starting Fate Points">
+                                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-w-full" data-tooltip="{{localize 'WH40K.OriginDetailDialog.RollFateTooltip'}}">
                                         <i class="fa-solid fa-star tw-text-base tw-w-6 tw-text-center tw-text-[color:var(--wh40k-gold)]"></i>
                                         <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">{{localize "WH40K.Fate"}}:</span>
                                         <code class="tw-font-mono tw-bg-[rgba(0,0,0,0.3)] tw-py-[2px] tw-px-2 tw-rounded tw-text-[color:var(--wh40k-gold)]">{{fateFormula}}</code>
@@ -218,7 +218,7 @@
                     </div>
                 </section>
             {{else}}
-                <p class="tw-text-center tw-text-[color:var(--wh40k-text-muted)] tw-italic tw-py-[var(--wh40k-space-xl)]">No description available.</p>
+                <p class="tw-text-center tw-text-[color:var(--wh40k-text-muted)] tw-italic tw-py-[var(--wh40k-space-xl)]">{{localize "WH40K.OriginDetailDialog.NoDescription"}}</p>
             {{/if}}
         </div>
 
@@ -249,7 +249,7 @@
                     </div>
                 </section>
             {{else}}
-                <p class="tw-text-center tw-text-[color:var(--wh40k-text-muted)] tw-italic tw-py-[var(--wh40k-space-xl)]">No choices required for this origin.</p>
+                <p class="tw-text-center tw-text-[color:var(--wh40k-text-muted)] tw-italic tw-py-[var(--wh40k-space-xl)]">{{localize "WH40K.OriginDetailDialog.NoChoices"}}</p>
             {{/if}}
         </div>
 
@@ -280,7 +280,7 @@
                     </div>
                 </section>
             {{else}}
-                <p class="tw-text-center tw-text-[color:var(--wh40k-text-muted)] tw-italic tw-py-[var(--wh40k-space-xl)]">No special requirements.</p>
+                <p class="tw-text-center tw-text-[color:var(--wh40k-text-muted)] tw-italic tw-py-[var(--wh40k-space-xl)]">{{localize "WH40K.OriginDetailDialog.NoRequirements"}}</p>
             {{/if}}
         </div>
 

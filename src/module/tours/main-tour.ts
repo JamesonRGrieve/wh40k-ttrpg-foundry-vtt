@@ -3,48 +3,47 @@ import { WH40KTour } from './wh40k-rpg-tour.ts';
 export class DHTourMain extends WH40KTour {
     constructor() {
         super({
-            title: 'Get started with WH40K RPG',
-            description: 'Learn the basic features of the WH40K RPG system',
+            title: 'WH40K.Tour.Main.Title',
+            description: 'WH40K.Tour.Main.Description',
             canBeResumed: false,
             display: true,
             steps: [
                 {
                     id: 'goto-compendium',
                     selector: '[data-tab="compendium"]',
-                    title: 'Compendium tab',
-                    content: 'Go to your compendium tab',
+                    title: 'WH40K.Tour.Main.CompendiumTab.Title',
+                    content: 'WH40K.Tour.Main.CompendiumTab.Content',
                     action: 'click',
                 },
                 {
                     id: 'import-compendium',
                     selector: '[data-pack="wh40k-rpg.ammo"]',
-                    title: 'Import Compendiums',
-                    content: 'Import the wh40k-rpg compendiums for the item and data lists.',
+                    title: 'WH40K.Tour.Main.ImportCompendiums.Title',
+                    content: 'WH40K.Tour.Main.ImportCompendiums.Content',
                 },
                 {
                     id: 'goto-actors',
                     selector: '[data-tab="actors"]',
-                    title: 'Actors',
-                    content:
-                        'Items can be drag-and-dropped onto actors. Some items like weapons can contain other items such as specials, ammo, and modifications.',
+                    title: 'WH40K.Tour.Main.Actors.Title',
+                    content: 'WH40K.Tour.Main.Actors.Content',
                 },
                 {
                     id: 'goto-action-bar',
                     selector: '#action-bar',
-                    title: 'Macros',
-                    content: 'Characteristics, Skills and Items from the Actor sheet can be dragged onto the action bar for easy access.',
+                    title: 'WH40K.Tour.Main.Macros.Title',
+                    content: 'WH40K.Tour.Main.Macros.Content',
                 },
                 {
                     id: 'goto-attack',
                     selector: '[data-tool="Attack"]',
-                    title: 'Attack',
-                    content: 'Select a token and optionally target a token then click here to perform an attack with equipped weapons.',
+                    title: 'WH40K.Tour.Main.Attack.Title',
+                    content: 'WH40K.Tour.Main.Attack.Content',
                 },
                 {
                     id: 'goto-damage',
                     selector: '[data-tool="Assign Damage"]',
-                    title: 'Assign Damage',
-                    content: 'Select a token click here to assign damage and fatigue.',
+                    title: 'WH40K.Tour.Main.AssignDamage.Title',
+                    content: 'WH40K.Tour.Main.AssignDamage.Content',
                 },
             ] as foundry.nue.Tour.Step[],
         } as foundry.nue.Tour.Config);

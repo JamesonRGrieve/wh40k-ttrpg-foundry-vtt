@@ -662,8 +662,7 @@ export class WeaponRollData extends RollData {
                 const size = Number.parseInt(targetActorSystem.size.toString(), 10);
                 this.modifiers['target-size'] = targetSizeModifier(size);
             } catch {
-                // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.RollData.TargetSizeNotANumber localization key not yet in en.json
-                ui.notifications.warn('Target size is not a number. Unexpected error.');
+                ui.notifications.warn(game.i18n.localize('WH40K.Warning.TargetSizeNotANumber'));
             }
         }
 

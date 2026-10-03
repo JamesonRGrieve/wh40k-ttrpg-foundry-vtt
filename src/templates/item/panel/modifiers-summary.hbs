@@ -5,7 +5,7 @@
 <div class="tw-flex tw-flex-col tw-gap-1.5">
   <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gold {{themeClassFor 'accent'}}">
     <i class="fas fa-sliders-h"></i>
-    <span>Active Modifiers</span>
+    <span>{{localize "WH40K.ActiveModifiersPanel.Title"}}</span>
   </div>
 
   <div class="tw-flex tw-flex-wrap tw-gap-1">
@@ -20,16 +20,16 @@
     {{!-- Show situational indicator if present --}}
     {{#if system.hasSituationalModifiers}}
     <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-rounded-md tw-text-xs tw-font-semibold tw-bg-warning/20 tw-text-warning"
-          title="Has situational modifiers">
+          title="{{localize 'WH40K.ItemSheet.Modifiers.HasSituational'}}">
       <i class="fas fa-exclamation-triangle"></i>
-      <span>Situational</span>
+      <span>{{localize "WH40K.Roll.ModifierSource.Situational"}}</span>
     </span>
     {{/if}}
 
     {{#unless system.modifiersList.length}}
     <span class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-italic tw-text-gray-400">
       <i class="fas fa-info-circle"></i>
-      No active modifiers
+      {{localize "WH40K.ActiveModifiersPanel.None"}}
     </span>
     {{/unless}}
   </div>

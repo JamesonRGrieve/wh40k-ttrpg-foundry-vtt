@@ -25,7 +25,7 @@
                                 data-action="removeProperty"
                                 data-property="{{key}}"
                                 data-list="added"
-                                data-tooltip="Remove property"
+                                data-tooltip="{{localize 'WH40K.Modification.RemoveProperty'}}"
                                 {{disabled (not ../isEditable)}}>
                             <i class="fas fa-times"></i>
                         </button>
@@ -33,16 +33,16 @@
                 {{else}}
                     <p class="tw-text-center tw-p-4 tw-italic" style="color: rgba(255,255,255,0.4)">
                         <i class="fas fa-info-circle tw-mr-2"></i>
-                        No properties added
+                        {{localize "WH40K.ItemSheet.ArmourMod.NoPropertiesAdded"}}
                     </p>
                 {{/each}}
             </div>
 
             {{#if isEditable}}
                 <div class="tw-flex tw-flex-col tw-gap-2 tw-p-4 tw-border-t tw-border-[rgba(212,197,166,0.15)]" style="background: rgba(0,0,0,0.15)">
-                    <label class="tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Add Property</label>
+                    <label class="tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Modification.AddProperty"}}</label>
                     <select class="tw-w-full tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)]" data-add-list="added">
-                        <option value="">-- Select Property --</option>
+                        <option value="">{{localize "WH40K.ItemSheet.ArmourMod.SelectProperty"}}</option>
                         {{#each availablePropertiesArray}}
                             <option value="{{key}}">{{label}}</option>
                         {{/each}}
@@ -54,7 +54,7 @@
                             data-property=""
                             data-list="added">
                         <i class="fas fa-plus"></i>
-                        Add
+                        {{localize "WH40K.Common.Add"}}
                     </button>
                 </div>
             {{/if}}
@@ -84,7 +84,7 @@
                                 data-action="removeProperty"
                                 data-property="{{key}}"
                                 data-list="removed"
-                                data-tooltip="Remove property"
+                                data-tooltip="{{localize 'WH40K.Modification.RemoveProperty'}}"
                                 {{disabled (not ../isEditable)}}>
                             <i class="fas fa-times"></i>
                         </button>
@@ -92,16 +92,16 @@
                 {{else}}
                     <p class="tw-text-center tw-p-4 tw-italic" style="color: rgba(255,255,255,0.4)">
                         <i class="fas fa-info-circle tw-mr-2"></i>
-                        No properties removed
+                        {{localize "WH40K.ItemSheet.ArmourMod.NoPropertiesRemoved"}}
                     </p>
                 {{/each}}
             </div>
 
             {{#if isEditable}}
                 <div class="tw-flex tw-flex-col tw-gap-2 tw-p-4 tw-border-t tw-border-[rgba(212,197,166,0.15)]" style="background: rgba(0,0,0,0.15)">
-                    <label class="tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Remove Property</label>
+                    <label class="tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Modification.RemoveProperty"}}</label>
                     <select class="tw-w-full tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)]" data-add-list="removed">
-                        <option value="">-- Select Property --</option>
+                        <option value="">{{localize "WH40K.ItemSheet.ArmourMod.SelectProperty"}}</option>
                         {{#each availablePropertiesArray}}
                             <option value="{{key}}">{{label}}</option>
                         {{/each}}
@@ -113,7 +113,7 @@
                             data-property=""
                             data-list="removed">
                         <i class="fas fa-minus"></i>
-                        Remove
+                        {{localize "WH40K.Common.Remove"}}
                     </button>
                 </div>
             {{/if}}

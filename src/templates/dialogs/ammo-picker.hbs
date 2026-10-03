@@ -2,7 +2,7 @@
 {{! Allows selecting ammunition type for weapon reload }}
 
 <div class="tw-p-2 tw-flex tw-flex-col tw-gap-3">
-    <p class="tw-m-0 tw-text-base {{themeClassFor 'accent'}}">Select ammunition to load into <strong>{{weaponName}}</strong> (Clip: {{clipMax}})</p>
+    <p class="tw-m-0 tw-text-base {{themeClassFor 'accent'}}">{{localize "WH40K.Dialog.AmmoPicker.Prompt"}} <strong>{{weaponName}}</strong> {{localize "WH40K.Dialog.AmmoPicker.ClipValue" max=clipMax}}</p>
 
     <div class="tw-flex tw-flex-col tw-gap-2 tw-max-h-[400px] tw-overflow-y-auto">
         {{#each ammoItems as |ammo|}}
@@ -12,10 +12,10 @@
             <div class="tw-flex tw-flex-col tw-flex-1 tw-min-w-0 tw-gap-0.5">
                 <span class="tw-flex tw-items-center tw-gap-2 tw-font-semibold tw-text-base {{#if ammo.isCurrentlyLoaded}}tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))]{{/if}}">
                     {{ammo.name}}
-                    {{#if ammo.isCurrentlyLoaded}}<span class="tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-bg-[var(--wh40k-color-accent,var(--wh40k-color-gold))] tw-text-[#0a0a0f] tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]">loaded</span>{{/if}}
+                    {{#if ammo.isCurrentlyLoaded}}<span class="tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-bg-[var(--wh40k-color-accent,var(--wh40k-color-gold))] tw-text-[#0a0a0f] tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Dialog.AmmoPicker.Loaded"}}</span>{{/if}}
                 </span>
                 <span class="tw-flex tw-items-center tw-gap-2 tw-text-xs tw-text-[var(--color-text-light-6,#aaa)] {{#if ammo.isCurrentlyLoaded}}tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))]{{/if}}">
-                    <span>{{ammo.quantity}} rounds</span>
+                    <span>{{localize "WH40K.Dialog.AmmoPicker.Rounds" count=ammo.quantity}}</span>
                     {{#if ammo.modifierSummary}}<span class="tw-italic">{{ammo.modifierSummary}}</span>{{/if}}
                 </span>
             </div>

@@ -107,15 +107,21 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
                 <div class="what-if-toolbar-content">
                     <div class="what-if-status">
                         <i class="fas fa-flask tw-animate-flask-bubble"></i>
-                        <span class="what-if-label">Preview Mode</span>
-                        <span class="what-if-count">${changeCount} change${changeCount !== 1 ? 's' : ''}</span>
+                        <span class="what-if-label">${game.i18n.localize('WH40K.WhatIf.PreviewMode')}</span>
+                        <span class="what-if-count">${game.i18n.format(changeCount !== 1 ? 'WH40K.WhatIf.ChangeCountMany' : 'WH40K.WhatIf.ChangeCountOne', {
+                            count: String(changeCount),
+                        })}</span>
                     </div>
                     <div class="what-if-actions">
-                        <button type="button" class="what-if-btn commit-btn" data-action="commitWhatIf" title="Save Changes">
-                            <i class="fas fa-check"></i> Commit
+                        <button type="button" class="what-if-btn commit-btn" data-action="commitWhatIf" title="${game.i18n.localize(
+                            'WH40K.WhatIf.SaveChanges',
+                        )}">
+                            <i class="fas fa-check"></i> ${game.i18n.localize('WH40K.WhatIf.Commit')}
                         </button>
-                        <button type="button" class="what-if-btn cancel-btn" data-action="cancelWhatIf" title="Discard Changes">
-                            <i class="fas fa-times"></i> Cancel
+                        <button type="button" class="what-if-btn cancel-btn" data-action="cancelWhatIf" title="${game.i18n.localize(
+                            'WH40K.WhatIf.DiscardChanges',
+                        )}">
+                            <i class="fas fa-times"></i> ${game.i18n.localize('WH40K.Cancel')}
                         </button>
                     </div>
                 </div>
@@ -279,8 +285,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
 
         async enterWhatIfMode(): Promise<void> {
             if (this._whatIfActive) {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key for What-If mode notifications to be added in a follow-up i18n pass
-                ui.notifications.warn('Already in What-If mode');
+                ui.notifications.warn(game.i18n.localize('WH40K.Notify.WhatIf.AlreadyActive'));
                 return;
             }
 
@@ -291,8 +296,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
             // eslint-disable-next-line @typescript-eslint/no-deprecated -- ApplicationV2.render(force) is V1 signature; used until sheet migrated to V2 render pattern
             await this.render(false);
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key for What-If mode notifications to be added in a follow-up i18n pass
-            ui.notifications.info('What-If mode activated - changes will be previewed');
+            ui.notifications.info(game.i18n.localize('WH40K.Notify.WhatIf.Activated'));
         }
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: value is arbitrary actor update data; unknown is the correct type at this API seam
@@ -351,7 +355,11 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
                 if (currentChar.bonus !== previewChar.bonus) {
                     impacts.push({
                         type: 'characteristic',
-                        message: `${previewChar.label} Bonus: ${currentChar.bonus} → ${previewChar.bonus}`,
+                        message: game.i18n.format('WH40K.WhatIf.CharacteristicBonusImpact', {
+                            characteristic: previewChar.label,
+                            from: String(currentChar.bonus),
+                            to: String(previewChar.bonus),
+                        }),
                     });
                 }
             }
@@ -365,21 +373,21 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
             if (sys.initiative.bonus !== preSys.initiative.bonus) {
                 impacts.push({
                     type: 'combat',
-                    message: `Initiative: ${sys.initiative.bonus} → ${preSys.initiative.bonus}`,
+                    message: game.i18n.format('WH40K.WhatIf.InitiativeImpact', { from: String(sys.initiative.bonus), to: String(preSys.initiative.bonus) }),
                 });
             }
 
             if (sys.wounds.max !== preSys.wounds.max) {
                 impacts.push({
                     type: 'survival',
-                    message: `Max Wounds: ${sys.wounds.max} → ${preSys.wounds.max}`,
+                    message: game.i18n.format('WH40K.WhatIf.MaxWoundsImpact', { from: String(sys.wounds.max), to: String(preSys.wounds.max) }),
                 });
             }
 
             if (sys.movement.half !== preSys.movement.half) {
                 impacts.push({
                     type: 'movement',
-                    message: `Half Move: ${sys.movement.half}m → ${preSys.movement.half}m`,
+                    message: game.i18n.format('WH40K.WhatIf.HalfMoveImpact', { from: String(sys.movement.half), to: String(preSys.movement.half) }),
                 });
             }
 
@@ -392,18 +400,17 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
             const count = Object.keys(this._whatIfChanges).length;
             if (count > 0) {
                 const confirm = await dialogV2.confirm({
-                    window: { title: 'Cancel What-If Mode' },
-                    content: `Discard ${count} pending change${count !== 1 ? 's' : ''}?`,
-                    yes: { label: 'Discard', default: true },
-                    no: { label: 'Keep Editing', default: false },
+                    window: { title: game.i18n.localize('WH40K.WhatIf.CancelTitle') },
+                    content: game.i18n.format(count !== 1 ? 'WH40K.WhatIf.DiscardMany' : 'WH40K.WhatIf.DiscardOne', { count: String(count) }),
+                    yes: { label: game.i18n.localize('WH40K.WhatIf.Discard'), default: true },
+                    no: { label: game.i18n.localize('WH40K.WhatIf.KeepEditing'), default: false },
                 });
 
                 if (!confirm) return;
             }
 
             await this.exitWhatIfMode();
-            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key for What-If mode notifications to be added in a follow-up i18n pass
-            ui.notifications.info('What-If mode cancelled - changes discarded');
+            ui.notifications.info(game.i18n.localize('WH40K.Notify.WhatIf.Cancelled'));
         }
 
         async exitWhatIfMode(): Promise<void> {

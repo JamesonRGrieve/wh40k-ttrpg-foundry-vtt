@@ -4,7 +4,7 @@
     {{!-- Current XP Display --}}
     <div class="tw-mb-5">
         <div class="tw-flex tw-items-center tw-justify-center tw-gap-3 tw-p-4 tw-bg-gradient-to-br tw-from-[rgba(0,0,0,0.3)] tw-to-[rgba(0,0,0,0.2)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-[6px]">
-            <span class="tw-text-[0.9rem] tw-font-medium tw-text-[#9a9a8a]">Current Total XP:</span>
+            <span class="tw-text-[0.9rem] tw-font-medium tw-text-[#9a9a8a]">{{localize "WH40K.Prompt.AddXp.CurrentTotal"}}</span>
             <span class="tw-text-[1.5rem] tw-font-bold {{themeClassFor 'accent'}} tw-shadow-[0_0_12px_rgba(201,162,39,0.3)] tw-tabular-nums">{{currentTotal}}</span>
         </div>
     </div>
@@ -12,7 +12,7 @@
     {{!-- XP Input --}}
     <div class="tw-mb-5">
         <label class="tw-flex tw-flex-col tw-gap-2">
-            <span class="tw-text-[0.85rem] tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.05em]">XP to Add/Subtract:</span>
+            <span class="tw-text-[0.85rem] tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Prompt.AddXp.Amount"}}</span>
             <input type="number"
                    name="xpAmount"
                    value="{{xpAmount}}"
@@ -23,7 +23,7 @@
         </label>
         <p class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-bg-[rgba(42,90,139,0.1)] tw-border tw-border-[rgba(42,90,139,0.2)] tw-rounded-md tw-text-[0.8rem] tw-text-[#9a9a8a] tw-leading-[1.4] tw-m-0">
             <i class="fas fa-info-circle tw-text-[#5dade2] tw-shrink-0"></i>
-            Enter a positive number to add XP, or negative to subtract.
+            {{localize "WH40K.Prompt.AddXp.Hint"}}
         </p>
     </div>
 
@@ -33,10 +33,10 @@
         <div class="tw-flex tw-flex-col tw-items-center tw-gap-3 tw-p-4 tw-rounded-[6px] tw-border {{#if isAddition}}tw-bg-gradient-to-br tw-from-[rgba(42,139,74,0.15)] tw-to-[rgba(42,139,74,0.05)] tw-border-[rgba(74,222,128,0.4)]{{else}}tw-bg-gradient-to-br tw-from-[rgba(139,42,42,0.15)] tw-to-[rgba(139,42,42,0.05)] tw-border-[rgba(248,113,113,0.4)]{{/if}}">
             <div class="tw-flex tw-items-center tw-gap-2 tw-text-[1.1rem] tw-font-semibold {{#if isAddition}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
                 <i class="fas {{#if isAddition}}fa-arrow-up{{else}}fa-arrow-down{{/if}}"></i>
-                {{#if isAddition}}+{{else}}-{{/if}}{{absAmount}} XP
+                {{#if isAddition}}+{{else}}-{{/if}}{{absAmount}} {{localize "WH40K.Common.XP"}}
             </div>
             <div class="tw-flex tw-items-center tw-gap-2.5 tw-px-4 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-rounded-md">
-                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em]">New Total:</span>
+                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Prompt.AddXp.NewTotal"}}</span>
                 <span class="tw-text-[1.3rem] tw-font-bold {{themeClassFor 'accent'}} tw-shadow-[0_0_12px_rgba(201,162,39,0.3)] tw-tabular-nums">{{newTotal}}</span>
             </div>
         </div>

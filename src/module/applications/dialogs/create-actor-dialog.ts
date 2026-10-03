@@ -40,6 +40,9 @@ export const ACTOR_KIND_LABELS: Record<string, string> = {
     voidcraft: 'Voidcraft',
 };
 
+const localizedSystemLabel = (systemId: string): string => game.i18n.localize(`WH40K.SETTINGS.PrimaryGameSystem.Choices.${systemId}`);
+const localizedKindLabel = (kindId: string): string => game.i18n.localize(`WH40K.CreateActor.Kinds.${kindId}`);
+
 export interface CreateActorOptions {
     folder?: string;
     initialSystem?: string;
@@ -57,40 +60,40 @@ export class WH40KCreateActorDialog {
         const initialKind = ACTOR_SYSTEM_AVAILABILITY[initialSystem]?.[0] ?? 'character';
 
         const systemSelect = Object.keys(ACTOR_SYSTEM_LABELS)
-            .map((k) => `<option value="${k}" ${k === initialSystem ? 'selected' : ''}>${ACTOR_SYSTEM_LABELS[k]}</option>`)
+            .map((k) => `<option value="${k}" ${k === initialSystem ? 'selected' : ''}>${localizedSystemLabel(k)}</option>`)
             .join('');
 
         const kindSelect = Object.keys(ACTOR_KIND_LABELS)
             .filter((k) => (ACTOR_SYSTEM_AVAILABILITY[initialSystem] ?? []).includes(k))
-            .map((k) => `<option value="${k}" ${k === initialKind ? 'selected' : ''}>${ACTOR_KIND_LABELS[k]}</option>`)
+            .map((k) => `<option value="${k}" ${k === initialKind ? 'selected' : ''}>${localizedKindLabel(k)}</option>`)
             .join('');
 
         const content = `
             <form class="wh40k-create-actor-form" style="display:flex;flex-direction:column;gap:8px;">
                 <div class="form-group">
-                    <label>Game System</label>
+                    <label>${game.i18n.localize('WH40K.CreateActor.SystemLabel')}</label>
                     <select name="system" style="width:100%;">${systemSelect}</select>
                 </div>
                 <div class="form-group">
-                    <label>Kind</label>
+                    <label>${game.i18n.localize('WH40K.CreateActor.KindLabel')}</label>
                     <select name="kind" style="width:100%;">${kindSelect}</select>
                 </div>
                 <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" name="name" placeholder="Unnamed Actor" style="width:100%;" />
+                    <label>${game.i18n.localize('WH40K.CreateActor.NameLabel')}</label>
+                    <input type="text" name="name" placeholder="${game.i18n.localize('WH40K.CreateActor.NamePlaceholder')}" style="width:100%;" />
                 </div>
             </form>
         `;
 
         return new Promise((resolve) => {
             const dialog = new foundry.applications.api.DialogV2({
-                window: { title: 'Create Actor', icon: 'fa-solid fa-user-plus' },
+                window: { title: game.i18n.localize('WH40K.CreateActor.Title'), icon: 'fa-solid fa-user-plus' },
                 position: { width: 400 },
                 content,
                 buttons: [
                     {
                         action: 'create',
-                        label: 'Create',
+                        label: game.i18n.localize('WH40K.CreateActor.CreateButton'),
                         icon: 'fa-solid fa-plus',
                         default: true,
                         callback: async (_event: Event, button: HTMLElement) => {
@@ -99,9 +102,13 @@ export class WH40KCreateActorDialog {
                             const kind = (form.querySelector('[name="kind"]') as HTMLSelectElement).value;
                             const nameInput = (form.querySelector('[name="name"]') as HTMLInputElement).value.trim();
                             const type = `${selectedSystem}-${kind}`;
-                            const systemLabel = ACTOR_SYSTEM_LABELS[selectedSystem] ?? selectedSystem;
-                            const kindLabel = ACTOR_KIND_LABELS[kind] ?? kind;
-                            const name = nameInput !== '' ? nameInput : `New ${systemLabel} ${kindLabel}`;
+                            const name =
+                                nameInput !== ''
+                                    ? nameInput
+                                    : game.i18n.format('WH40K.CreateActor.DefaultName', {
+                                          system: localizedSystemLabel(selectedSystem),
+                                          kind: localizedKindLabel(kind),
+                                      });
                             // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create expects document creation data; no typed overload matches plain object
                             const data: Record<string, unknown> = { name, type };
                             if (opts.folder !== undefined) data['folder'] = opts.folder;
@@ -113,7 +120,7 @@ export class WH40KCreateActorDialog {
                     },
                     {
                         action: 'cancel',
-                        label: 'Cancel',
+                        label: game.i18n.localize('WH40K.CreateActor.CancelButton'),
                         icon: 'fa-solid fa-xmark',
                         callback: () => resolve(null),
                     },
@@ -133,7 +140,7 @@ export class WH40KCreateActorDialog {
                     const current = kindSel.value;
                     kindSel.innerHTML = Object.keys(ACTOR_KIND_LABELS)
                         .filter((k) => allowed.includes(k))
-                        .map((k) => `<option value="${k}" ${k === current ? 'selected' : ''}>${ACTOR_KIND_LABELS[k]}</option>`)
+                        .map((k) => `<option value="${k}" ${k === current ? 'selected' : ''}>${localizedKindLabel(k)}</option>`)
                         .join('');
                     if (!allowed.includes(current)) {
                         kindSel.value = allowed[0] ?? '';

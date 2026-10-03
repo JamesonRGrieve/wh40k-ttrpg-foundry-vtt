@@ -69,7 +69,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
             availability: new fields.StringField({
                 required: true,
                 initial: 'common',
-                label: 'WH40K.Availability',
+                label: 'WH40K.Availability.Label',
             }),
 
             // Source book reference

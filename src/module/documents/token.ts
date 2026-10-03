@@ -429,7 +429,7 @@ export class TokenDocumentWH40K extends TokenDocument {
             btn.classList.add('wh40k-token-movement__btn');
             if (type === activeType) btn.classList.add('active');
             btn.dataset['movementType'] = type;
-            btn.title = `${game.i18n.localize(config.label)}: ${speed}m`;
+            btn.title = game.i18n.format('WH40K.Notify.Token.MovementSpeedTitle', { label: game.i18n.localize(config.label), speed: String(speed) });
             btn.innerHTML = `<i class="${config.icon}"></i><span class="wh40k-token-movement__value" style="font-weight:700;font-family:var(--wh40k-font-alt,serif)">${speed}m</span>`;
             Object.assign(btn.style, {
                 display: 'flex',
@@ -504,6 +504,6 @@ export class TokenDocumentWH40K extends TokenDocument {
         const label = config !== undefined ? game.i18n.localize(config.label) : type;
         const speed = (token.actor?.system.movement as Record<string, number> | undefined)?.[type];
         void token.update({ flags: { 'wh40k-rpg': { movementAction: type } } });
-        ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
+        ui.notifications.info(game.i18n.format('WH40K.Notify.Token.MovementModeSet', { label, speed: String(speed) }));
     }
 }

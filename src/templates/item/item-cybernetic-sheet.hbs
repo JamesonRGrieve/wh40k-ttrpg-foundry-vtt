@@ -7,41 +7,41 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact cybernetic identity with inline badges
     ═══════════════════════════════════════════════════════════════════ --}}
-    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholder="Cybernetic Name" hideTypeBadge=true }}
+    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholderKey="WH40K.ItemSheet.NamePlaceholder.Cybernetic" hideTypeBadge=true }}
       <div class="tw-flex tw-flex-col tw-gap-2">
         <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
           <div class="tw-flex tw-flex-wrap tw-gap-1 tw-flex-1">
-            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Cybernetic Type">
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="{{localize 'WH40K.ItemSheet.Cybernetic.TypeTooltip'}}">
               <i class="fas fa-microchip"></i>
               {{system.typeLabel}}
             </span>
             {{#if system.locations.size}}
-            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Body Locations">
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="{{localize 'WH40K.CriticalInjury.BodyPart'}}">
               <i class="fas fa-location-dot"></i>
               {{system.locationsLabel}}
             </span>
             {{/if}}
             {{#if (ne system.craftsmanship "common")}}
-            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Craftsmanship">
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="{{localize 'WH40K.Craftsmanship.Label'}}">
               <i class="fas fa-hammer"></i>
               {{system.craftsmanshipLabel}}
             </span>
             {{/if}}
             {{#if system.hasArmourPoints}}
-            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Provides Armour">
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="{{localize 'WH40K.ItemSheet.Cybernetic.ProvidesArmourTooltip'}}">
               <i class="fas fa-shield-halved"></i>
-              Armoured
+              {{localize "WH40K.ItemSheet.Cybernetic.Armoured"}}
             </span>
             {{/if}}
           </div>
 
           <div class="tw-flex tw-items-center tw-justify-end tw-shrink-0">
-            <label class="tw-flex tw-items-center tw-cursor-pointer tw-gap-1" title="Toggle Equipped">
+            <label class="tw-flex tw-items-center tw-cursor-pointer tw-gap-1" title="{{localize 'WH40K.Weapon.ToggleEquipped'}}">
               <input type="checkbox" name="system.state.equipped" {{checked system.state.equipped}} class="tw-sr-only" />
               <span class="tw-text-xl tw-transition-colors {{#if system.state.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-white/50{{/if}}">
                 <i class="fas {{#if system.state.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
               </span>
-              <span class="tw-text-xs {{#if system.state.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:rgba(214,221,235,0.7)]{{/if}}">{{#if system.state.equipped}}Installed{{else}}Uninstalled{{/if}}</span>
+              <span class="tw-text-xs {{#if system.state.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:rgba(214,221,235,0.7)]{{/if}}">{{#if system.state.equipped}}{{localize "WH40K.ItemSheet.Cybernetic.Installed"}}{{else}}{{localize "WH40K.ItemSheet.Cybernetic.Uninstalled"}}{{/if}}</span>
             </label>
           </div>
         </div>
@@ -54,7 +54,7 @@
               <i class="fas fa-microchip"></i>
             </div>
             <div>
-              <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Type</span>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">{{localize "WH40K.Common.Type"}}</span>
               <span class="tw-font-medium">{{system.typeLabel}}</span>
             </div>
           </div>
@@ -65,8 +65,8 @@
               <i class="fas fa-weight-hanging"></i>
             </div>
             <div>
-              <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Weight</span>
-              <span class="tw-font-medium">{{system.weight}}kg</span>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">{{localize "WH40K.Weight"}}</span>
+              <span class="tw-font-medium">{{system.weight}}{{localize "WH40K.Common.Kilograms"}}</span>
             </div>
           </div>
 
@@ -76,7 +76,7 @@
               <i class="fas fa-store"></i>
             </div>
             <div>
-              <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Availability</span>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">{{localize "WH40K.Availability.Label"}}</span>
               <span class="tw-font-medium">{{system.availabilityLabel}}</span>
             </div>
           </div>
@@ -88,11 +88,11 @@
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
     {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
-        (object tab="properties"   label="Properties"   icon="fa-cog"          active=true)
-        (object tab="effects"      label="Effects"      icon="fa-bolt")
-        (object tab="armour"       label="Armour"       icon="fa-shield-halved")
-        (object tab="installation" label="Installation" icon="fa-syringe")
-        (object tab="description"  label="Description"  icon="fa-book"))}}
+        (object tab="properties"   label=(localize "WH40K.Tabs.Properties")   icon="fa-cog"          active=true)
+        (object tab="effects"      label=(localize "WH40K.Tabs.Effects")      icon="fa-bolt")
+        (object tab="armour"       label=(localize "WH40K.Items.Armour")       icon="fa-shield-halved")
+        (object tab="installation" label=(localize "WH40K.Tabs.Installation") icon="fa-syringe")
+        (object tab="description"  label=(localize "WH40K.Tabs.Description")  icon="fa-book"))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
@@ -106,7 +106,7 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-microchip"></i>
-            <h3>Cybernetic Configuration</h3>
+            <h3>{{localize "WH40K.ItemSheet.Cybernetic.Configuration"}}</h3>
           </div>
           <div class="tw-mb-3">
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
@@ -114,16 +114,16 @@
               {{!-- Type --}}
               <div class="tw-flex tw-flex-col tw-gap-1.5">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
-                  <i class="fas fa-tag"></i> Type
+                  <i class="fas fa-tag"></i> {{localize "WH40K.Common.Type"}}
                 </label>
                 <select name="system.type" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
                   {{#select system.type}}
-                  <option value="replacement">Replacement</option>
-                  <option value="implant">Implant</option>
-                  <option value="augmetic">Augmetic</option>
-                  <option value="bionic">Bionic</option>
-                  <option value="mechadendrite">Mechadendrite</option>
-                  <option value="integrated-weapon">Integrated Weapon</option>
+                  <option value="replacement">{{localize "WH40K.ItemSheet.Cybernetic.TypeReplacement"}}</option>
+                  <option value="implant">{{localize "WH40K.ItemSheet.Cybernetic.TypeImplant"}}</option>
+                  <option value="augmetic">{{localize "WH40K.ItemSheet.Cybernetic.TypeAugmetic"}}</option>
+                  <option value="bionic">{{localize "WH40K.ItemSheet.Cybernetic.TypeBionic"}}</option>
+                  <option value="mechadendrite">{{localize "WH40K.ItemSheet.Cybernetic.TypeMechadendrite"}}</option>
+                  <option value="integrated-weapon">{{localize "WH40K.ItemSheet.Cybernetic.TypeIntegratedWeapon"}}</option>
                   {{/select}}
                 </select>
               </div>
@@ -131,98 +131,98 @@
               {{!-- Slot/Location Toggles --}}
               <div class="tw-flex tw-flex-col tw-gap-1.5 tw-col-span-2">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
-                  <i class="fas fa-location-dot"></i> Body Locations
+                  <i class="fas fa-location-dot"></i> {{localize "WH40K.CriticalInjury.BodyPart"}}
                 </label>
                 <div class="tw-flex tw-flex-wrap tw-gap-2">
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="head" 
                            {{#if (includes system.locations "head")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-head-side-brain"></i> Head
+                      <i class="fas fa-head-side-brain"></i> {{localize "WH40K.BodyLocation.Head"}}
                     </span>
                   </label>
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="eyes" 
                            {{#if (includes system.locations "eyes")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-eye"></i> Eyes
+                      <i class="fas fa-eye"></i> {{localize "WH40K.ItemSheet.Cybernetic.LocationEyes"}}
                     </span>
                   </label>
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="ears" 
                            {{#if (includes system.locations "ears")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-ear-listen"></i> Ears
+                      <i class="fas fa-ear-listen"></i> {{localize "WH40K.ItemSheet.Cybernetic.LocationEars"}}
                     </span>
                   </label>
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="mouth" 
                            {{#if (includes system.locations "mouth")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-face-grin-tongue"></i> Mouth
+                      <i class="fas fa-face-grin-tongue"></i> {{localize "WH40K.ItemSheet.Cybernetic.LocationMouth"}}
                     </span>
                   </label>
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="brain" 
                            {{#if (includes system.locations "brain")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-brain"></i> Brain
+                      <i class="fas fa-brain"></i> {{localize "WH40K.ItemSheet.Cybernetic.LocationBrain"}}
                     </span>
                   </label>
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="leftArm" 
                            {{#if (includes system.locations "leftArm")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-hand-fist"></i> Left Arm
+                      <i class="fas fa-hand-fist"></i> {{localize "WH40K.BodyLocation.LeftArm"}}
                     </span>
                   </label>
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="rightArm" 
                            {{#if (includes system.locations "rightArm")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-hand-fist"></i> Right Arm
+                      <i class="fas fa-hand-fist"></i> {{localize "WH40K.BodyLocation.RightArm"}}
                     </span>
                   </label>
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="body" 
                            {{#if (includes system.locations "body")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-shield"></i> Body
+                      <i class="fas fa-shield"></i> {{localize "WH40K.BodyLocation.Body"}}
                     </span>
                   </label>
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="organs" 
                            {{#if (includes system.locations "organs")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-heart-pulse"></i> Organs
+                      <i class="fas fa-heart-pulse"></i> {{localize "WH40K.ItemSheet.Cybernetic.LocationOrgans"}}
                     </span>
                   </label>
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="leftLeg" 
                            {{#if (includes system.locations "leftLeg")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-boot"></i> Left Leg
+                      <i class="fas fa-boot"></i> {{localize "WH40K.BodyLocation.LeftLeg"}}
                     </span>
                   </label>
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="rightLeg" 
                            {{#if (includes system.locations "rightLeg")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-boot"></i> Right Leg
+                      <i class="fas fa-boot"></i> {{localize "WH40K.BodyLocation.RightLeg"}}
                     </span>
                   </label>
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="spine" 
                            {{#if (includes system.locations "spine")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-spine"></i> Spine
+                      <i class="fas fa-spine"></i> {{localize "WH40K.ItemSheet.Cybernetic.LocationSpine"}}
                     </span>
                   </label>
                   <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="internal" 
                            {{#if (includes system.locations "internal")}}checked{{/if}} />
                     <span class="tw-text-sm">
-                      <i class="fas fa-gears"></i> Internal
+                      <i class="fas fa-gears"></i> {{localize "WH40K.ItemSheet.Cybernetic.LocationInternal"}}
                     </span>
                   </label>
                 </div>
@@ -235,7 +235,7 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-box"></i>
-            <h3>Physical Properties</h3>
+            <h3>{{localize "WH40K.Ammunition.PhysicalProperties"}}</h3>
           </div>
           <div class="tw-mb-3">
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
@@ -243,7 +243,7 @@
               {{!-- Weight --}}
               <div class="tw-flex tw-flex-col tw-gap-1.5">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
-                  <i class="fas fa-weight-hanging"></i> Weight (kg)
+                  <i class="fas fa-weight-hanging"></i> {{localize "WH40K.Ammunition.WeightKg"}}
                 </label>
                 <input type="number" name="system.weight" value="{{source.weight}}" 
                        step="0.1" min="0" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
@@ -252,14 +252,14 @@
               {{!-- Craftsmanship --}}
               <div class="tw-flex tw-flex-col tw-gap-1.5">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
-                  <i class="fas fa-hammer"></i> Craftsmanship
+                  <i class="fas fa-hammer"></i> {{localize "WH40K.Craftsmanship.Label"}}
                 </label>
                 <select name="system.craftsmanship" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
                   {{#select system.craftsmanship}}
-                  <option value="poor">Poor</option>
-                  <option value="common">Common</option>
-                  <option value="good">Good</option>
-                  <option value="best">Best</option>
+                  <option value="poor">{{localize "WH40K.Craftsmanship.Poor"}}</option>
+                  <option value="common">{{localize "WH40K.Craftsmanship.Common"}}</option>
+                  <option value="good">{{localize "WH40K.Craftsmanship.Good"}}</option>
+                  <option value="best">{{localize "WH40K.Craftsmanship.Best"}}</option>
                   {{/select}}
                 </select>
               </div>
@@ -267,21 +267,21 @@
               {{!-- Availability --}}
               <div class="tw-flex tw-flex-col tw-gap-1.5">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
-                  <i class="fas fa-store"></i> Availability
+                  <i class="fas fa-store"></i> {{localize "WH40K.Availability.Label"}}
                 </label>
                 <select name="system.availability" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
                   {{#select system.availability}}
-                  <option value="ubiquitous">Ubiquitous</option>
-                  <option value="abundant">Abundant</option>
-                  <option value="plentiful">Plentiful</option>
-                  <option value="common">Common</option>
-                  <option value="average">Average</option>
-                  <option value="scarce">Scarce</option>
-                  <option value="rare">Rare</option>
-                  <option value="veryRare">Very Rare</option>
-                  <option value="extremelyRare">Extremely Rare</option>
-                  <option value="nearUnique">Near Unique</option>
-                  <option value="unique">Unique</option>
+                  <option value="ubiquitous">{{localize "WH40K.Availability.Ubiquitous"}}</option>
+                  <option value="abundant">{{localize "WH40K.Availability.Abundant"}}</option>
+                  <option value="plentiful">{{localize "WH40K.Availability.Plentiful"}}</option>
+                  <option value="common">{{localize "WH40K.Availability.Common"}}</option>
+                  <option value="average">{{localize "WH40K.Availability.Average"}}</option>
+                  <option value="scarce">{{localize "WH40K.Availability.Scarce"}}</option>
+                  <option value="rare">{{localize "WH40K.Availability.Rare"}}</option>
+                  <option value="veryRare">{{localize "WH40K.Availability.VeryRare"}}</option>
+                  <option value="extremelyRare">{{localize "WH40K.Availability.ExtremelyRare"}}</option>
+                  <option value="nearUnique">{{localize "WH40K.Availability.NearUnique"}}</option>
+                  <option value="unique">{{localize "WH40K.Availability.Unique"}}</option>
                   {{/select}}
                 </select>
               </div>
@@ -308,11 +308,11 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-bolt"></i>
-            <h3>Effect</h3>
+            <h3>{{localize "WH40K.Tabs.Effect"}}</h3>
           </div>
           <div class="tw-mb-3">
             <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
-              <i class="fas fa-info-circle"></i> Describe the mechanical benefits or abilities granted by this cybernetic.
+              <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.Cybernetic.EffectHint"}}
             </p>
             <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{#if inEditMode}}
@@ -328,11 +328,11 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-exclamation-triangle"></i>
-            <h3>Drawbacks</h3>
+            <h3>{{localize "WH40K.ItemSheet.Cybernetic.Drawbacks"}}</h3>
           </div>
           <div class="tw-mb-3">
             <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
-              <i class="fas fa-info-circle"></i> Any negative effects, limitations, or complications from this cybernetic.
+              <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.Cybernetic.DrawbacksHint"}}
             </p>
             <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{#if inEditMode}}
@@ -349,14 +349,14 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-chart-line"></i>
-            <h3>Stat Modifiers</h3>
+            <h3>{{localize "WH40K.ItemSheet.Ship.StatModifiers"}}</h3>
           </div>
           <div class="tw-mb-3">
             <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md">
               
               {{#if system.modifiers.characteristics}}
               <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Characteristics</h4>
+                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">{{localize "WH40K.Characteristics"}}</h4>
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each system.modifiers.characteristics}}
                   <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
@@ -372,7 +372,7 @@
 
               {{#if system.modifiers.skills}}
               <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Skills</h4>
+                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">{{localize "WH40K.Tabs.Skills"}}</h4>
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each system.modifiers.skills}}
                   <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
@@ -388,7 +388,7 @@
 
               {{#if system.modifiers.combat}}
               <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Combat</h4>
+                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">{{localize "WH40K.Tabs.Combat"}}</h4>
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each system.modifiers.combat}}
                   <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
@@ -404,10 +404,10 @@
 
               {{#if system.modifiers.wounds}}
               <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Other</h4>
+                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">{{localize "WH40K.ItemSheet.Modifiers.Other"}}</h4>
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
-                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">Wounds</span>
+                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{localize "WH40K.Wounds"}}</span>
                     <span class="tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt system.modifiers.wounds 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{signedNumber system.modifiers.wounds}}
                     </span>
@@ -418,10 +418,10 @@
 
               {{#if system.modifiers.movement}}
               <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Movement</h4>
+                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">{{localize "WH40K.ItemSheet.Trait.Movement"}}</h4>
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
-                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">Movement Bonus</span>
+                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{localize "WH40K.ItemSheet.Trait.MovementBonus"}}</span>
                     <span class="tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt system.modifiers.movement 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{signedNumber system.modifiers.movement}}
                     </span>
@@ -432,7 +432,7 @@
             </div>
             
             <p class="tw-mt-4 tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic">
-              <i class="fas fa-info-circle"></i> Modifiers are configured via Active Effects. This panel is read-only.
+              <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.Trait.ModifiersReadOnly"}}
             </p>
           </div>
         </div>
@@ -440,8 +440,8 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
             <i class="fas fa-chart-line"></i>
-            <p>No stat modifiers defined</p>
-            <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">Use Active Effects tab to add bonuses</p>
+            <p>{{localize "WH40K.ItemSheet.Cybernetic.NoStatModifiers"}}</p>
+            <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">{{localize "WH40K.ItemSheet.Cybernetic.UseActiveEffects"}}</p>
           </div>
         </div>
         {{/if}}
@@ -455,13 +455,13 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-shield-halved"></i>
-            <h3>Armour Protection</h3>
+            <h3>{{localize "WH40K.ItemSheet.Cybernetic.ArmourProtection"}}</h3>
           </div>
           <div class="tw-mb-3">
             <div class="tw-flex tw-flex-col tw-gap-1.5 tw-justify-center">
               <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--color-text-primary)]">
                 <input type="checkbox" name="system.hasArmourPoints" {{checked system.hasArmourPoints}} />
-                <span>This cybernetic provides armour protection</span>
+                <span>{{localize "WH40K.ItemSheet.Cybernetic.ProvidesArmour"}}</span>
               </label>
             </div>
           </div>
@@ -472,43 +472,43 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-shield-halved"></i>
-            <h3>Armour Points by Location</h3>
+            <h3>{{localize "WH40K.ItemSheet.Armour.ByLocation"}}</h3>
           </div>
           <div class="tw-mb-3">
             <div class="tw-grid tw-grid-cols-3 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label><i class="fas fa-head-side-brain"></i> Head</label>
+                <label><i class="fas fa-head-side-brain"></i> {{localize "WH40K.BodyLocation.Head"}}</label>
                 <input type="number" name="system.armourPoints.head" value="{{source.armourPoints.head}}" 
                        data-dtype="Number" min="0" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label><i class="fas fa-hand-fist"></i> Left Arm</label>
+                <label><i class="fas fa-hand-fist"></i> {{localize "WH40K.BodyLocation.LeftArm"}}</label>
                 <input type="number" name="system.armourPoints.leftArm" value="{{source.armourPoints.leftArm}}" 
                        data-dtype="Number" min="0" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label><i class="fas fa-hand-fist"></i> Right Arm</label>
+                <label><i class="fas fa-hand-fist"></i> {{localize "WH40K.BodyLocation.RightArm"}}</label>
                 <input type="number" name="system.armourPoints.rightArm" value="{{source.armourPoints.rightArm}}" 
                        data-dtype="Number" min="0" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label><i class="fas fa-shield"></i> Body</label>
+                <label><i class="fas fa-shield"></i> {{localize "WH40K.BodyLocation.Body"}}</label>
                 <input type="number" name="system.armourPoints.body" value="{{source.armourPoints.body}}" 
                        data-dtype="Number" min="0" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label><i class="fas fa-boot"></i> Left Leg</label>
+                <label><i class="fas fa-boot"></i> {{localize "WH40K.BodyLocation.LeftLeg"}}</label>
                 <input type="number" name="system.armourPoints.leftLeg" value="{{source.armourPoints.leftLeg}}" 
                        data-dtype="Number" min="0" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label><i class="fas fa-boot"></i> Right Leg</label>
+                <label><i class="fas fa-boot"></i> {{localize "WH40K.BodyLocation.RightLeg"}}</label>
                 <input type="number" name="system.armourPoints.rightLeg" value="{{source.armourPoints.rightLeg}}" 
                        data-dtype="Number" min="0" />
               </div>
             </div>
             <p class="tw-mt-4 tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic">
-              <i class="fas fa-info-circle"></i> Cybernetic armour stacks with worn armour at the affected locations.
+              <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.Cybernetic.ArmourStacks"}}
             </p>
           </div>
         </div>
@@ -516,8 +516,8 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
             <i class="fas fa-shield-halved"></i>
-            <p>This cybernetic does not provide armour</p>
-            <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">Enable armour protection above to configure AP values</p>
+            <p>{{localize "WH40K.ItemSheet.Cybernetic.NoArmour"}}</p>
+            <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">{{localize "WH40K.ItemSheet.Cybernetic.EnableArmourHint"}}</p>
           </div>
         </div>
         {{/if}}
@@ -531,7 +531,7 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-syringe"></i>
-            <h3>Installation Requirements</h3>
+            <h3>{{localize "WH40K.ItemSheet.Cybernetic.InstallationRequirements"}}</h3>
           </div>
           <div class="tw-mb-3">
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
@@ -539,33 +539,33 @@
               {{!-- Surgery Required --}}
               <div class="tw-flex tw-flex-col tw-gap-1.5">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
-                  <i class="fas fa-user-doctor"></i> Surgery Type
+                  <i class="fas fa-user-doctor"></i> {{localize "WH40K.ItemSheet.Cybernetic.SurgeryType"}}
                 </label>
                 <input type="text" name="system.installation.surgery" value="{{source.installation.surgery}}" 
-                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., Major, Simple, Complex" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="{{localize 'WH40K.ItemSheet.Cybernetic.SurgeryPlaceholder'}}" />
               </div>
               
               {{!-- Difficulty --}}
               <div class="tw-flex tw-flex-col tw-gap-1.5">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
-                  <i class="fas fa-gauge-high"></i> Difficulty
+                  <i class="fas fa-gauge-high"></i> {{localize "WH40K.SpecialUse.Difficulty"}}
                 </label>
                 <input type="text" name="system.installation.difficulty" value="{{source.installation.difficulty}}" 
-                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., Challenging (-10), Difficult (-20)" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="{{localize 'WH40K.ItemSheet.Cybernetic.DifficultyPlaceholder'}}" />
               </div>
               
               {{!-- Recovery Time --}}
               <div class="tw-flex tw-flex-col tw-gap-1.5">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
-                  <i class="fas fa-clock"></i> Recovery Time
+                  <i class="fas fa-clock"></i> {{localize "WH40K.ItemSheet.Cybernetic.RecoveryTime"}}
                 </label>
                 <input type="text" name="system.installation.recoveryTime" value="{{source.installation.recoveryTime}}" 
-                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., 1d5 days, 2 weeks" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="{{localize 'WH40K.ItemSheet.Cybernetic.RecoveryPlaceholder'}}" />
               </div>
             </div>
             
             <p class="tw-mt-4 tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic">
-              <i class="fas fa-info-circle"></i> Installation typically requires a successful Medicae test. Failed installations may cause complications or injury.
+              <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.Cybernetic.InstallationNote"}}
             </p>
           </div>
         </div>
@@ -579,11 +579,11 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-book"></i>
-            <h3>Description</h3>
+            <h3>{{localize "WH40K.Tabs.Description"}}</h3>
           </div>
           <div class="tw-mb-3">
             <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
-              <i class="fas fa-info-circle"></i> Flavor text, appearance, and background information.
+              <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.Cybernetic.DescriptionHint"}}
             </p>
             <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{#if inEditMode}}
@@ -599,12 +599,12 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-sticky-note"></i>
-            <h3>Notes</h3>
+            <h3>{{localize "WH40K.Tabs.Notes"}}</h3>
           </div>
           <div class="tw-mb-3">
             <div class="tw-flex tw-flex-col tw-gap-1.5">
               <textarea name="system.notes" rows="4" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm tw-min-h-[80px] tw-resize-y focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]"
-                        placeholder="GM notes, house rules, special considerations...">{{system.notes}}</textarea>
+                        placeholder="{{localize 'WH40K.ItemSheet.Cybernetic.NotesPlaceholder'}}">{{system.notes}}</textarea>
             </div>
           </div>
         </div>
@@ -613,24 +613,24 @@
         <div class="tw-mb-4">
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-book-bookmark"></i>
-            <h3>Source</h3>
+            <h3>{{localize "WH40K.Common.Source"}}</h3>
           </div>
           <div class="tw-mb-3">
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1.5">
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Book</label>
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.Source.Book"}}</label>
                 <input type="text" name="system.source.book" value="{{source.source.book}}" 
-                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="RT: Core Rulebook" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="{{localize 'WH40K.ItemSheet.Cybernetic.BookPlaceholder'}}" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1.5">
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Page</label>
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.Source.Page"}}</label>
                 <input type="text" name="system.source.page" value="{{source.source.page}}" 
                        class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="142" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1.5 tw-col-span-2">
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Custom Reference</label>
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.ItemSheet.Common.CustomReference"}}</label>
                 <input type="text" name="system.source.url" value="{{source.source.url}}"
-                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="Optional: Custom source text overrides book/page" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="{{localize 'WH40K.ItemSheet.Cybernetic.CustomReferencePlaceholder'}}" />
               </div>
             </div>
           </div>

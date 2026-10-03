@@ -201,12 +201,16 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
             return `
                 <div class="wh40k-item-preview-header tw-flex tw-justify-between tw-items-center tw-gap-[var(--wh40k-space-md)] tw-mb-3 tw-pb-2 tw-border-b tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))]">
                     <div class="wh40k-item-preview-title tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-flex-1 tw-text-[1.1em] tw-font-semibold tw-text-[color:var(--wh40k-text-primary,#fff)]">
-                        <img src="${item.img}" alt="${item.name}" class="wh40k-item-preview-icon tw-w-8 tw-h-8 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))]" />
+                        <img src="${item.img}" alt="${
+                item.name
+            }" class="wh40k-item-preview-icon tw-w-8 tw-h-8 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))]" />
                         <span>${item.name}</span>
                     </div>
                     <div class="wh40k-item-preview-actions tw-flex tw-gap-[var(--wh40k-space-xs)] tw-flex-wrap tw-justify-end">
                         ${actionsHTML}
-                        <button type="button" class="wh40k-quick-action wh40k-quick-action--secondary" data-action="closeItemPreview" title="Collapse">
+                        <button type="button" class="wh40k-quick-action wh40k-quick-action--secondary" data-action="closeItemPreview" title="${game.i18n.localize(
+                            'WH40K.ItemPreview.Collapse',
+                        )}">
                             <i class="fa-solid fa-chevron-up"></i>
                         </button>
                     </div>
@@ -224,37 +228,48 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
             const sys = item.system as unknown as WeaponDataModel;
             const sysRec = sys as unknown as Record<string, unknown>;
             const damage = sys.damage;
+            const notAvailable = game.i18n.localize('WH40K.ItemPreview.NotAvailable');
             const stats = {
                 penetration: sys.damage?.penetration ?? 0,
-                range: sys.rangeLabel ?? 'N/A',
-                rof: sys.rateOfFireLabel ?? 'N/A',
+                range: sys.rangeLabel ?? notAvailable,
+                rof: sys.rateOfFireLabel ?? notAvailable,
             };
 
             return `
                 <div class="wh40k-weapon-preview-stats tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-sm)] tw-mb-2">
                     <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
                         <i class="fa-solid fa-burst tw-text-[var(--wh40k-stat-neutral)]"></i>
-                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Damage</span>
-                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${damage.formula || 'N/A'}</span>
+                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">${game.i18n.localize(
+                            'WH40K.Weapon.Damage',
+                        )}</span>
+                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${damage.formula || notAvailable}</span>
                     </div>
                     <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
                         <i class="fa-solid fa-shield tw-text-[var(--wh40k-stat-neutral)]"></i>
-                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Pen</span>
+                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">${game.i18n.localize(
+                            'WH40K.Weapon.Pen',
+                        )}</span>
                         <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${stats.penetration || 0}</span>
                     </div>
                     <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
                         <i class="fa-solid fa-bullseye tw-text-[var(--wh40k-stat-neutral)]"></i>
-                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Range</span>
-                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${stats.range || 'N/A'}</span>
+                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">${game.i18n.localize(
+                            'WH40K.Weapon.Range',
+                        )}</span>
+                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${stats.range || notAvailable}</span>
                     </div>
                     <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
                         <i class="fa-solid fa-gauge-high tw-text-[var(--wh40k-stat-neutral)]"></i>
-                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">RoF</span>
-                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${stats.rof || 'N/A'}</span>
+                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">${game.i18n.localize(
+                            'WH40K.ItemPreview.RateOfFire',
+                        )}</span>
+                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${stats.rof || notAvailable}</span>
                     </div>
                     <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
                         <i class="fa-solid fa-box tw-text-[var(--wh40k-stat-neutral)]"></i>
-                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Clip</span>
+                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">${game.i18n.localize(
+                            'WH40K.Weapon.Clip',
+                        )}</span>
                         <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${
                             (sysRec['clip'] as Record<string, unknown> | undefined)?.['current'] || 0
                         }/${(sysRec['clip'] as Record<string, unknown> | undefined)?.['max'] || 0}</span>
@@ -283,32 +298,44 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
                 <div class="wh40k-armour-preview-locations tw-grid tw-grid-cols-[repeat(auto-fit,minmax(120px,1fr))] tw-gap-[6px] tw-mb-2">
                     ${
                         locations['head']
-                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">Head:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['head']}</strong></div>`
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">${game.i18n.localize(
+                                  'WH40K.ItemPreview.LocationHead',
+                              )}</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['head']}</strong></div>`
                             : ''
                     }
                     ${
                         locations['leftArm']
-                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">L Arm:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['leftArm']}</strong></div>`
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">${game.i18n.localize(
+                                  'WH40K.ItemPreview.LocationLeftArm',
+                              )}</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['leftArm']}</strong></div>`
                             : ''
                     }
                     ${
                         locations['rightArm']
-                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">R Arm:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['rightArm']}</strong></div>`
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">${game.i18n.localize(
+                                  'WH40K.ItemPreview.LocationRightArm',
+                              )}</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['rightArm']}</strong></div>`
                             : ''
                     }
                     ${
                         locations['body']
-                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">Body:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['body']}</strong></div>`
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">${game.i18n.localize(
+                                  'WH40K.ItemPreview.LocationBody',
+                              )}</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['body']}</strong></div>`
                             : ''
                     }
                     ${
                         locations['leftLeg']
-                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">L Leg:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['leftLeg']}</strong></div>`
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">${game.i18n.localize(
+                                  'WH40K.ItemPreview.LocationLeftLeg',
+                              )}</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['leftLeg']}</strong></div>`
                             : ''
                     }
                     ${
                         locations['rightLeg']
-                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">R Leg:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['rightLeg']}</strong></div>`
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">${game.i18n.localize(
+                                  'WH40K.ItemPreview.LocationRightLeg',
+                              )}</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['rightLeg']}</strong></div>`
                             : ''
                     }
                 </div>
@@ -340,7 +367,7 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
             if (sys.prerequisites?.text) {
                 content += `
                     <div class="wh40k-item-preview-prereqs tw-mb-2 tw-p-[6px_8px] tw-bg-[rgba(168,85,247,0.1)] tw-border-l-[3px] tw-border-l-[rgba(168,85,247,0.5)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]">
-                        <strong>Prerequisites:</strong> ${sys.prerequisites.text}
+                        <strong>${game.i18n.localize('WH40K.ItemPreview.Prerequisites')}</strong> ${sys.prerequisites.text}
                     </div>
                 `;
             }
@@ -371,7 +398,9 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
             let content = '';
 
             if (sys.level) {
-                content += `<div class="wh40k-trait-level tw-mb-2 tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.95em]"><strong class="tw-text-[color:var(--wh40k-text-primary,#fff)] tw-mr-1">Level:</strong> ${sys.level}</div>`;
+                content += `<div class="wh40k-trait-level tw-mb-2 tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.95em]"><strong class="tw-text-[color:var(--wh40k-text-primary,#fff)] tw-mr-1">${game.i18n.localize(
+                    'WH40K.ItemPreview.Level',
+                )}</strong> ${sys.level}</div>`;
             }
 
             if (sys.description) {
@@ -396,7 +425,11 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
             let content = `
                 <div class="wh40k-condition-preview-meta tw-flex tw-flex-wrap tw-gap-[6px] tw-mb-2">
                     ${sys.nature ? `<span class="wh40k-badge wh40k-badge--${sys.nature}">${sys.nature}</span>` : ''}
-                    ${sys.duration ? `<span class="wh40k-badge">Duration: ${sys.duration}</span>` : ''}
+                    ${
+                        sys.duration
+                            ? `<span class="wh40k-badge">${game.i18n.format('WH40K.ItemPreview.DurationBadge', { duration: String(sys.duration) })}</span>`
+                            : ''
+                    }
                     ${(sys.stacks ?? 0) > 1 ? `<span class="wh40k-badge">×${sys.stacks}</span>` : ''}
                 </div>
             `;
@@ -422,11 +455,13 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
             let content = '';
 
             if (sys.quantity) {
-                content += `<div class="wh40k-gear-quantity"><strong>Quantity:</strong> ${sys.quantity}</div>`;
+                content += `<div class="wh40k-gear-quantity"><strong>${game.i18n.localize('WH40K.ItemPreview.Quantity')}</strong> ${sys.quantity}</div>`;
             }
 
             if (sys.uses) {
-                content += `<div class="wh40k-gear-uses"><strong>Uses:</strong> ${sys.uses.current}/${sys.uses.max}</div>`;
+                content += `<div class="wh40k-gear-uses"><strong>${game.i18n.localize('WH40K.ItemPreview.Uses')}</strong> ${sys.uses.current}/${
+                    sys.uses.max
+                }</div>`;
             }
 
             if (sys.description) {
@@ -451,15 +486,17 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
             let content = '';
 
             if (sys.cost) {
-                content += `<div class="wh40k-power-cost"><strong>Cost:</strong> ${sys.cost}</div>`;
+                content += `<div class="wh40k-power-cost"><strong>${game.i18n.localize('WH40K.ItemPreview.Cost')}</strong> ${sys.cost}</div>`;
             }
 
             if (sys.range) {
-                content += `<div class="wh40k-power-range"><strong>Range:</strong> ${sys.range}</div>`;
+                content += `<div class="wh40k-power-range"><strong>${game.i18n.localize('WH40K.ItemPreview.RangeLabel')}</strong> ${sys.range}</div>`;
             }
 
             if (sys.sustained !== undefined) {
-                content += `<div class="wh40k-power-sustained"><strong>Sustained:</strong> ${sys.sustained ? 'Yes' : 'No'}</div>`;
+                content += `<div class="wh40k-power-sustained"><strong>${game.i18n.localize('WH40K.ItemPreview.Sustained')}</strong> ${game.i18n.localize(
+                    sys.sustained ? 'WH40K.Yes' : 'WH40K.No',
+                )}</div>`;
             }
 
             if (sys.description) {
@@ -479,7 +516,7 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
                 return `<div class="wh40k-item-preview-description">${String(sys['description'])}</div>`;
             }
 
-            return '<div class="wh40k-item-preview-empty">No additional details available.</div>';
+            return `<div class="wh40k-item-preview-empty">${game.i18n.localize('WH40K.ItemPreview.NoDetails')}</div>`;
         }
 
         /**
@@ -519,7 +556,7 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
         #generateModifiersHTML(modifiers: WH40KItemModifiers): string {
             if (!modifiers) return '';
 
-            let content = '<div class="wh40k-item-preview-modifiers"><strong>Modifiers:</strong><ul>';
+            let content = `<div class="wh40k-item-preview-modifiers"><strong>${game.i18n.localize('WH40K.ItemPreview.Modifiers')}</strong><ul>`;
 
             if (modifiers.characteristics) {
                 for (const [char, value] of Object.entries(modifiers.characteristics)) {

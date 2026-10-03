@@ -126,6 +126,8 @@ function installGlobals(opts: { settings?: Record<string, boolean>; targets?: To
         },
         wh40k: { log: (): void => undefined, error: (): void => undefined },
         canvas: { tokens: { controlled: [] as TokenLike[] } },
+        // Player-facing warnings are langpack keys; echo them so warnings are recorded.
+        i18n: { localize: (key: string): string => key, format: (key: string): string => key },
     };
     vi.stubGlobal('game', gameStub);
     vi.stubGlobal('ui', {

@@ -59,12 +59,48 @@ export class ReloadActionManager {
      * Reload action time costs mapped to action economy.
      */
     static RELOAD_ACTION_COSTS: Record<string, ReloadActionCost> = {
-        '-': { half: 0, full: 0, label: 'No Reload' },
-        'free': { half: 0, full: 0, label: 'Free Action' },
-        'half': { half: 1, full: 0, label: 'Half Action' },
-        'full': { half: 0, full: 1, label: 'Full Action' },
-        '2-full': { half: 0, full: 2, label: '2 Full Actions' },
-        '3-full': { half: 0, full: 3, label: '3 Full Actions' },
+        '-': {
+            half: 0,
+            full: 0,
+            get label() {
+                return game.i18n.localize('WH40K.Reload.NoReload');
+            },
+        },
+        'free': {
+            half: 0,
+            full: 0,
+            get label() {
+                return game.i18n.localize('WH40K.Reload.Free');
+            },
+        },
+        'half': {
+            half: 1,
+            full: 0,
+            get label() {
+                return game.i18n.localize('WH40K.Reload.Half');
+            },
+        },
+        'full': {
+            half: 0,
+            full: 1,
+            get label() {
+                return game.i18n.localize('WH40K.Reload.Full');
+            },
+        },
+        '2-full': {
+            half: 0,
+            full: 2,
+            get label() {
+                return game.i18n.localize('WH40K.Reload.2Full');
+            },
+        },
+        '3-full': {
+            half: 0,
+            full: 3,
+            get label() {
+                return game.i18n.localize('WH40K.Reload.3Full');
+            },
+        },
     };
 
     /**
@@ -79,7 +115,7 @@ export class ReloadActionManager {
         if (weapon.type !== 'weapon') {
             return {
                 success: false,
-                message: 'Invalid weapon',
+                message: game.i18n.localize('WH40K.Reload.InvalidWeapon'),
                 actionsSpent: { half: 0, full: 0, label: '' },
             };
         }
@@ -91,7 +127,7 @@ export class ReloadActionManager {
         if (!system.usesAmmo) {
             return {
                 success: false,
-                message: `${weapon.name} does not use ammunition`,
+                message: game.i18n.format('WH40K.Reload.NamedNotUsesAmmo', { name: weapon.name }),
                 actionsSpent: { half: 0, full: 0, label: '' },
             };
         }
@@ -101,7 +137,7 @@ export class ReloadActionManager {
         if (!force && system.clip.value >= effectiveMax) {
             return {
                 success: false,
-                message: `${weapon.name} is already fully loaded (${effectiveMax}/${effectiveMax})`,
+                message: game.i18n.format('WH40K.Reload.NamedAlreadyFull', { name: weapon.name, current: String(effectiveMax), max: String(effectiveMax) }),
                 actionsSpent: { half: 0, full: 0, label: '' },
             };
         }
@@ -111,7 +147,7 @@ export class ReloadActionManager {
             if (!this.hasSpareAmmunition(actor, weapon)) {
                 return {
                     success: false,
-                    message: `No compatible ammunition available for ${weapon.name}`,
+                    message: game.i18n.format('WH40K.Reload.NoCompatibleAmmo', { name: weapon.name }),
                     actionsSpent: { half: 0, full: 0, label: '' },
                 };
             }
@@ -125,7 +161,7 @@ export class ReloadActionManager {
         if (reloadCost === undefined) {
             return {
                 success: false,
-                message: `Invalid reload time: ${effectiveReloadTime}`,
+                message: game.i18n.format('WH40K.Reload.InvalidReloadTime', { time: effectiveReloadTime }),
                 actionsSpent: { half: 0, full: 0, label: '' },
             };
         }
@@ -134,7 +170,7 @@ export class ReloadActionManager {
         if (effectiveReloadTime === '-') {
             return {
                 success: false,
-                message: `${weapon.name} cannot be reloaded`,
+                message: game.i18n.format('WH40K.Reload.CannotReload', { name: weapon.name }),
                 actionsSpent: { half: 0, full: 0, label: '' },
             };
         }
@@ -167,7 +203,7 @@ export class ReloadActionManager {
                 // Edge case: ammo was returned but nothing available (shouldn't happen, but guard)
                 return {
                     success: false,
-                    message: `No compatible ammunition available for ${weapon.name}`,
+                    message: game.i18n.format('WH40K.Reload.NoCompatibleAmmo', { name: weapon.name }),
                     actionsSpent: { half: 0, full: 0, label: '' },
                 };
             }
@@ -193,7 +229,7 @@ export class ReloadActionManager {
                 }
                 return {
                     success: false,
-                    message: 'Reload cancelled',
+                    message: game.i18n.localize('WH40K.Reload.Cancelled'),
                     actionsSpent: { half: 0, full: 0, label: '' },
                 };
             }
@@ -222,14 +258,19 @@ export class ReloadActionManager {
             await weapon.update({ 'system.clip.value': roundsToLoad, 'system.clip.magazine': [segment], 'system.secondaryUsed': false });
 
             // Build success message
-            let message = `${weapon.name} reloaded with ${selectedAmmo.name} (${previousValue} → ${roundsToLoad})`;
+            let message = game.i18n.format('WH40K.Reload.ReloadedWith', {
+                weapon: weapon.name,
+                ammo: selectedAmmo.name,
+                from: String(previousValue),
+                to: String(roundsToLoad),
+            });
             if (roundsToLoad < newEffectiveMax) {
-                message += ` [partial — only ${roundsToLoad} rounds available]`;
+                message += ` ${game.i18n.format('WH40K.Reload.PartialSuffix', { count: String(roundsToLoad) })}`;
             }
             message += ` — ${reloadCost.label}`;
 
             if (this.hasCustomisedQuality(weapon) && effectiveReloadTime !== system.reload) {
-                message += ` (Customised: ${system.reload} → ${effectiveReloadTime})`;
+                message += ` ${game.i18n.format('WH40K.Reload.CustomisedSuffix', { from: system.reload, to: effectiveReloadTime })}`;
             }
 
             return {
@@ -245,7 +286,9 @@ export class ReloadActionManager {
 
         return {
             success: true,
-            message: `${weapon.name} reloaded (${previousValue} → ${effectiveMax}) — ${reloadCost.label}`,
+            message: `${game.i18n.format('WH40K.Reload.Reloaded', { weapon: weapon.name, from: String(previousValue), to: String(effectiveMax) })} — ${
+                reloadCost.label
+            }`,
             actionsSpent: reloadCost,
         };
     }
@@ -297,7 +340,7 @@ export class ReloadActionManager {
     static async validateActionEconomy(actor: WH40KBaseActor, actionCost: ReloadActionCost): Promise<{ success: boolean; message: string }> {
         // If no actions required, always succeed (free action)
         if (actionCost.half === 0 && actionCost.full === 0) {
-            return { success: true, message: 'Free action' };
+            return { success: true, message: game.i18n.localize('WH40K.Reload.Free') };
         }
 
         // Check if in combat (shared with the attack gate, #251).
@@ -308,7 +351,7 @@ export class ReloadActionManager {
             // Out of combat - allow reload with notification. (combat == null is
             // implied by !isInCombat at runtime, but narrows combat for the turn
             // check below.)
-            return { success: true, message: 'Out of combat - no action cost' };
+            return { success: true, message: game.i18n.localize('WH40K.Reload.OutOfCombat') };
         }
 
         // Check if it's the actor's turn
@@ -318,23 +361,23 @@ export class ReloadActionManager {
         if (!isActorsTurn) {
             // Not actor's turn - ask for confirmation
             const confirmed = await ConfirmationDialog.confirm({
-                title: 'Reload Out of Turn',
-                content: `<p>It is not ${actor.name}'s turn.</p><p>Reload anyway? This will not track action economy.</p>`,
-                confirmLabel: 'Reload',
-                cancelLabel: 'Cancel',
+                title: game.i18n.localize('WH40K.Reload.OutOfTurn'),
+                content: game.i18n.format('WH40K.Reload.OutOfTurnContent', { actor: actor.name }),
+                confirmLabel: game.i18n.localize('WH40K.Weapon.Reload'),
+                cancelLabel: game.i18n.localize('WH40K.Cancel'),
             });
 
             if (!confirmed) {
-                return { success: false, message: 'Reload cancelled' };
+                return { success: false, message: game.i18n.localize('WH40K.Reload.Cancelled') };
             }
 
-            return { success: true, message: 'Reload performed out of turn (no action tracking)' };
+            return { success: true, message: game.i18n.localize('WH40K.Reload.OutOfTurnPerformed') };
         }
 
         const actionDescription = this._getActionCostDescription(actionCost);
         return {
             success: true,
-            message: `Reload requires: ${actionDescription}`,
+            message: game.i18n.format('WH40K.Reload.RequiresAction', { cost: actionDescription }),
         };
     }
 
@@ -347,13 +390,17 @@ export class ReloadActionManager {
     private static _getActionCostDescription(actionCost: ReloadActionCost): string {
         const parts: string[] = [];
         if (actionCost.full > 0) {
-            parts.push(`${actionCost.full} Full Action${actionCost.full > 1 ? 's' : ''}`);
+            parts.push(
+                game.i18n.format(actionCost.full > 1 ? 'WH40K.Reload.FullActionsMany' : 'WH40K.Reload.FullActionsOne', { count: String(actionCost.full) }),
+            );
         }
         if (actionCost.half > 0) {
-            parts.push(`${actionCost.half} Half Action${actionCost.half > 1 ? 's' : ''}`);
+            parts.push(
+                game.i18n.format(actionCost.half > 1 ? 'WH40K.Reload.HalfActionsMany' : 'WH40K.Reload.HalfActionsOne', { count: String(actionCost.half) }),
+            );
         }
         const joined = parts.join(' + ');
-        return joined === '' ? 'Free Action' : joined;
+        return joined === '' ? game.i18n.localize('WH40K.Reload.Free') : joined;
     }
 
     /**
@@ -382,7 +429,7 @@ export class ReloadActionManager {
         await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/reload-action-chat.hbs', templateData, {
             speaker: ChatMessage.getSpeaker({ actor }),
             type: messageType,
-            flavor: `${weapon.name} - Reload`,
+            flavor: game.i18n.format('WH40K.Reload.ChatFlavor', { weapon: weapon.name }),
             applyWhispers: true,
         });
     }

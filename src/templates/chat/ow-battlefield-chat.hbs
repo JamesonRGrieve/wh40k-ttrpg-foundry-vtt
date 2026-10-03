@@ -64,10 +64,10 @@
                 </div>
                 <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums">
                     <span data-field="effective-target">
-                        Target: <strong class="tw-text-[color:var(--wh40k-text-bright)]">{{event.effectiveTarget}}</strong>
+                        {{localize "WH40K.Chat.Label.Target"}} <strong class="tw-text-[color:var(--wh40k-text-bright)]">{{event.effectiveTarget}}</strong>
                     </span>
                     <span data-field="roll">
-                        Roll: <strong class="tw-text-[color:var(--wh40k-text-bright)]">{{event.roll}}</strong>
+                        {{localize "WH40K.Chat.Label.Roll"}} <strong class="tw-text-[color:var(--wh40k-text-bright)]">{{event.roll}}</strong>
                     </span>
                 </div>
                 {{#if event.successful}}

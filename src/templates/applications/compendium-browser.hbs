@@ -1,23 +1,23 @@
 <form class="tw-flex tw-flex-col tw-h-full">
     <header class="tw-p-4 tw-bg-[rgba(0,0,0,0.3)] tw-border-b-2 tw-border-[var(--color-border-dark)]">
-        <h1 class="tw-m-0 tw-mb-2 tw-text-2xl {{themeClassFor 'accent'}}"><i class="fas fa-search tw-mr-2 tw-text-[color:var(--color-warm-2)]"></i> Rogue Trader Compendium Browser</h1>
-        <p class="tw-m-0 tw-text-[color:var(--color-text-dark)] tw-text-[0.9rem]">Browse, filter, and search through all Rogue Trader compendia</p>
+        <h1 class="tw-m-0 tw-mb-2 tw-text-2xl {{themeClassFor 'accent'}}"><i class="fas fa-search tw-mr-2 tw-text-[color:var(--color-warm-2)]"></i> {{localize "WH40K.CompendiumBrowser.Title"}}</h1>
+        <p class="tw-m-0 tw-text-[color:var(--color-text-dark)] tw-text-[0.9rem]">{{localize "WH40K.CompendiumBrowser.Subtitle"}}</p>
     </header>
 
     <div class="tw-flex tw-flex-1 tw-overflow-hidden">
         <aside class="tw-w-[250px] tw-p-4 tw-bg-[rgba(0,0,0,0.2)] tw-border-r tw-border-[var(--color-border-dark)] tw-overflow-y-auto">
             <div>
-                <h3 class="tw-m-0 tw-mb-4 tw-text-[1.1rem] tw-text-[color:var(--color-text-light)] tw-border-b tw-border-[var(--color-border-dark)] tw-pb-2"><i class="fas fa-filter tw-mr-2"></i> Filters</h3>
+                <h3 class="tw-m-0 tw-mb-4 tw-text-[1.1rem] tw-text-[color:var(--color-text-light)] tw-border-b tw-border-[var(--color-border-dark)] tw-pb-2"><i class="fas fa-filter tw-mr-2"></i> {{localize "WH40K.Common.Filters"}}</h3>
 
                 <div class="tw-mb-4">
-                    <label for="search-input" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Search</label>
-                    <input type="text" class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded" placeholder="Search by name..." value="{{filters.search}}">
+                    <label for="search-input" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.Common.Search"}}</label>
+                    <input type="text" class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded" placeholder="{{localize 'WH40K.CompendiumBrowser.SearchPlaceholder'}}" value="{{filters.search}}">
                 </div>
 
                 <div class="tw-mb-4">
-                    <label for="filter-source" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Source</label>
+                    <label for="filter-source" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.Common.Source"}}</label>
                     <select class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
-                        <option value="all">All Sources</option>
+                        <option value="all">{{localize "WH40K.CompendiumBrowser.AllSources"}}</option>
                         {{#each sources}}
                         <option value="{{this}}" {{#if (eq ../filters.source this)}}selected{{/if}}>{{this}}</option>
                         {{/each}}
@@ -25,9 +25,9 @@
                 </div>
 
                 <div class="tw-mb-4">
-                    <label for="filter-category" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Category</label>
+                    <label for="filter-category" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.Gear.Category"}}</label>
                     <select class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
-                        <option value="all">All Categories</option>
+                        <option value="all">{{localize "WH40K.CompendiumBrowser.AllCategories"}}</option>
                         {{#each categories}}
                         <option value="{{this}}" {{#if (eq ../filters.category this)}}selected{{/if}}>{{this}}</option>
                         {{/each}}
@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="tw-mb-4">
-                    <label for="filter-group-by" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Group By</label>
+                    <label for="filter-group-by" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.CompendiumBrowser.GroupBy"}}</label>
                     <select class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         {{#each groupByOptions}}
                         <option value="{{value}}" {{#if (eq ../filters.groupBy value)}}selected{{/if}}>{{label}}</option>
@@ -45,12 +45,12 @@
 
                 {{#if hasArmourFilters}}
                 <div class="tw-h-px tw-bg-[var(--color-border-dark)] tw-my-6"></div>
-                <h4 class="tw-m-0 tw-mb-4 tw-text-[0.95rem] tw-text-[color:var(--wh40k-color-gold)] tw-font-semibold"><i class="fas fa-shield tw-mr-2"></i> Armour Filters</h4>
+                <h4 class="tw-m-0 tw-mb-4 tw-text-[0.95rem] tw-text-[color:var(--wh40k-color-gold)] tw-font-semibold"><i class="fas fa-shield tw-mr-2"></i> {{localize "WH40K.CompendiumBrowser.ArmourFilters"}}</h4>
 
                 <div class="tw-mb-4">
-                    <label for="filter-armour-type" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Armour Type</label>
+                    <label for="filter-armour-type" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.CompendiumBrowser.ArmourType"}}</label>
                     <select class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
-                        <option value="all">All Types</option>
+                        <option value="all">{{localize "WH40K.CompendiumBrowser.AllTypes"}}</option>
                         {{#each armourTypes as |type key|}}
                         <option value="{{key}}" {{#if (eq ../filters.armourType key)}}selected{{/if}}>
                             {{localize type.label}}
@@ -60,28 +60,28 @@
                 </div>
 
                 <div class="tw-mb-4">
-                    <label for="filter-min-ap" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Minimum AP</label>
-                    <input type="number" class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded" min="0" max="20" value="{{filters.minAP}}" placeholder="Any">
+                    <label for="filter-min-ap" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.CompendiumBrowser.MinimumAP"}}</label>
+                    <input type="number" class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded" min="0" max="20" value="{{filters.minAP}}" placeholder="{{localize 'WH40K.Common.Any'}}">
                 </div>
 
                 <div class="tw-mb-4">
-                    <label for="filter-coverage" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Coverage</label>
+                    <label for="filter-coverage" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.Armour.Coverage"}}</label>
                     <select class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
-                        <option value="all" {{#if (eq filters.coverage "all")}}selected{{/if}}>All Coverage</option>
-                        <option value="full" {{#if (eq filters.coverage "full")}}selected{{/if}}>Full Body</option>
-                        <option value="partial" {{#if (eq filters.coverage "partial")}}selected{{/if}}>Partial</option>
+                        <option value="all" {{#if (eq filters.coverage "all")}}selected{{/if}}>{{localize "WH40K.CompendiumBrowser.AllCoverage"}}</option>
+                        <option value="full" {{#if (eq filters.coverage "full")}}selected{{/if}}>{{localize "WH40K.CompendiumBrowser.FullBody"}}</option>
+                        <option value="partial" {{#if (eq filters.coverage "partial")}}selected{{/if}}>{{localize "WH40K.CompendiumBrowser.Partial"}}</option>
                     </select>
                 </div>
                 {{/if}}
 
                 {{#if hasArmourModFilters}}
                 <div class="tw-h-px tw-bg-[var(--color-border-dark)] tw-my-6"></div>
-                <h4 class="tw-m-0 tw-mb-4 tw-text-[0.95rem] tw-text-[color:var(--wh40k-color-gold)] tw-font-semibold"><i class="fas fa-wrench tw-mr-2"></i> Armour Modification Filters</h4>
+                <h4 class="tw-m-0 tw-mb-4 tw-text-[0.95rem] tw-text-[color:var(--wh40k-color-gold)] tw-font-semibold"><i class="fas fa-wrench tw-mr-2"></i> {{localize "WH40K.CompendiumBrowser.ModificationFilters"}}</h4>
 
                 <div class="tw-mb-4">
-                    <label for="filter-mod-type" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Applies To</label>
+                    <label for="filter-mod-type" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.CompendiumBrowser.AppliesTo"}}</label>
                     <select class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
-                        <option value="all">All Armour Types</option>
+                        <option value="all">{{localize "WH40K.CompendiumBrowser.AllArmourTypes"}}</option>
                         {{#each armourTypesForMods as |type key|}}
                         <option value="{{key}}" {{#if (eq ../filters.modType key)}}selected{{/if}}>
                             {{localize type.label}}
@@ -93,27 +93,27 @@
                 <div class="tw-mb-4">
                     <label class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">
                         <input type="checkbox" class="tw-cursor-pointer" {{#if filters.hasModifiers}}checked{{/if}}>
-                        Has Stat Modifiers
+                        {{localize "WH40K.CompendiumBrowser.HasStatModifiers"}}
                     </label>
                 </div>
 
                 <div class="tw-mb-4">
                     <label class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">
                         <input type="checkbox" class="tw-cursor-pointer" {{#if filters.hasProperties}}checked{{/if}}>
-                        Adds/Removes Properties
+                        {{localize "WH40K.CompendiumBrowser.ChangesProperties"}}
                     </label>
                 </div>
                 {{/if}}
 
                 <button type="button" class="tw-w-full tw-p-2 tw-bg-[var(--color-cool-2)] tw-border-0 tw-text-white tw-rounded tw-cursor-pointer hover:tw-bg-[var(--color-cool-3)]" data-action="clearFilters">
-                    <i class="fas fa-times tw-mr-2"></i> Clear Filters
+                    <i class="fas fa-times tw-mr-2"></i> {{localize "WH40K.CompendiumBrowser.ClearFilters"}}
                 </button>
             </div>
         </aside>
 
         <main class="tw-flex-1 tw-flex tw-flex-col tw-overflow-hidden">
             <div class="tw-p-4 tw-bg-[rgba(0,0,0,0.1)] tw-border-b tw-border-[var(--color-border-dark)]">
-                <h3 class="tw-m-0 tw-text-[1.1rem] tw-text-[color:var(--color-text-light)]">Results ({{results.length}} items)</h3>
+                <h3 class="tw-m-0 tw-text-[1.1rem] tw-text-[color:var(--color-text-light)]">{{localize "WH40K.CompendiumBrowser.Results" count=results.length}}</h3>
             </div>
 
             <div class="tw-flex-1 tw-overflow-y-auto tw-p-4">
@@ -139,12 +139,12 @@
                                     <span class="tw-inline-flex tw-items-center tw-gap-[0.375rem] tw-py-1 tw-px-[0.625rem] tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.2)_0%,rgba(212,175,55,0.1)_100%)] tw-border tw-border-[rgba(212,175,55,0.4)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.75rem] tw-font-bold tw-text-white tw-font-mono">
                                         <i class="fas fa-shield-halved tw-text-[0.85rem] tw-opacity-90"></i> {{armourData.apSummary}}
                                     </span>
-                                    <span class="tw-inline-flex tw-items-center tw-gap-[0.375rem] tw-py-1 tw-px-[0.625rem] tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.2)_0%,rgba(212,175,55,0.1)_100%)] tw-border tw-border-[rgba(212,175,55,0.4)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] tw-font-semibold tw-text-white tw-font-mono tw-tracking-[1px]" title="Coverage: {{armourData.coverageIcons}}">
+                                    <span class="tw-inline-flex tw-items-center tw-gap-[0.375rem] tw-py-1 tw-px-[0.625rem] tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.2)_0%,rgba(212,175,55,0.1)_100%)] tw-border tw-border-[rgba(212,175,55,0.4)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] tw-font-semibold tw-text-white tw-font-mono tw-tracking-[1px]" title="{{localize 'WH40K.CompendiumBrowser.CoverageTitle' coverage=armourData.coverageIcons}}">
                                         <i class="fas fa-person tw-text-[0.85rem] tw-opacity-90"></i> {{armourData.coverageIcons}}
                                     </span>
                                     {{#if armourData.maxAgility}}
                                     <span class="tw-inline-flex tw-items-center tw-gap-[0.375rem] tw-py-1 tw-px-[0.625rem] tw-bg-[linear-gradient(135deg,rgba(52,152,219,0.2)_0%,rgba(52,152,219,0.1)_100%)] tw-border tw-border-[rgba(52,152,219,0.4)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.75rem] tw-font-semibold tw-text-white">
-                                        <i class="fas fa-person-running tw-text-[0.85rem] tw-opacity-90"></i> Max {{armourData.maxAgility}}
+                                        <i class="fas fa-person-running tw-text-[0.85rem] tw-opacity-90"></i> {{localize "WH40K.CompendiumBrowser.MaxAgility" value=armourData.maxAgility}}
                                     </span>
                                     {{/if}}
                                 </div>
@@ -177,7 +177,7 @@
                                 <div class="tw-flex tw-flex-col tw-gap-[6px] tw-mt-[6px]">
                                     {{#if qualityData.hasLevel}}
                                     <span class="tw-bg-[rgba(75,192,115,0.15)] tw-border tw-border-[rgba(75,192,115,0.3)] tw-text-[#4bc073] tw-py-[3px] tw-px-2 tw-rounded tw-text-[11px] tw-font-semibold tw-self-start">
-                                        <i class="fas fa-layer-group tw-text-[10px] tw-mr-1"></i> Has Level{{#if qualityData.level}} ({{qualityData.level}}){{/if}}
+                                        <i class="fas fa-layer-group tw-text-[10px] tw-mr-1"></i> {{#if qualityData.level}}{{localize "WH40K.CompendiumBrowser.HasLevelValue" level=qualityData.level}}{{else}}{{localize "WH40K.CompendiumBrowser.HasLevel"}}{{/if}}
                                     </span>
                                     {{/if}}
                                     <p class="tw-m-0 tw-text-[11px] tw-leading-[1.4] tw-text-[color:var(--wh40k-text-muted)] tw-italic tw-overflow-hidden tw-[-webkit-line-clamp:3] tw-[-webkit-box-orient:vertical] tw-[display:-webkit-box]">{{qualityData.description}}</p>
@@ -199,7 +199,7 @@
                 {{else}}
                     <div class="tw-text-center tw-p-12 tw-text-[color:var(--color-text-dark)]">
                         <i class="fas fa-search tw-text-[3rem] tw-mb-4 tw-opacity-50 tw-block"></i>
-                        <p class="tw-text-[1.1rem]">No items match your filters</p>
+                        <p class="tw-text-[1.1rem]">{{localize "WH40K.CompendiumBrowser.NoResults"}}</p>
                     </div>
                 {{/if}}
             </div>

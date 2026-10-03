@@ -12,9 +12,9 @@ const ForceFieldSheet = defineSimpleItemSheet({
     width: 540,
     height: 620,
     tabs: [
-        { tab: 'stats', group: 'primary', label: 'Stats' },
-        { tab: 'description', group: 'primary', label: 'Info' },
-        { tab: 'effects', group: 'primary', label: 'Effects' },
+        { tab: 'stats', group: 'primary', label: 'WH40K.Tabs.Stats' },
+        { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Info' },
+        { tab: 'effects', group: 'primary', label: 'WH40K.Tabs.Effects' },
     ],
     defaultTab: 'stats',
 });

@@ -8,15 +8,15 @@
   <nav class="tw-flex tw-gap-1 tw-border-b tw-border-solid tw-border-black/10 tw-mb-2" data-group="modifiers">
     <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent active" data-tab="basic" data-group="modifiers">
       <i class="fas fa-plus-circle"></i>
-      <span>Basic</span>
+      <span>{{localize "WH40K.ItemSheet.ModifiersEditor.Basic"}}</span>
     </button>
     <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent" data-tab="situational" data-group="modifiers">
       <i class="fas fa-exclamation-triangle"></i>
-      <span>Situational</span>
+      <span>{{localize "WH40K.Roll.ModifierSource.Situational"}}</span>
     </button>
     <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent" data-tab="advanced" data-group="modifiers">
       <i class="fas fa-cog"></i>
-      <span>Advanced</span>
+      <span>{{localize "WH40K.ItemSheet.ModifiersEditor.Advanced"}}</span>
     </button>
   </nav>
 
@@ -27,7 +27,7 @@
     <div class="tw-flex tw-flex-col tw-gap-1.5">
       <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
         <i class="fas fa-user-circle"></i>
-        Characteristics
+        {{localize "WH40K.Characteristics"}}
       </h4>
       <div class="tw-grid tw-grid-cols-3 tw-gap-2">
         {{#each config.characteristics}}
@@ -49,7 +49,7 @@
     <div class="tw-flex tw-flex-col tw-gap-1.5">
       <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
         <i class="fas fa-book"></i>
-        Skills
+        {{localize "WH40K.Tabs.Skills"}}
       </h4>
       <div class="tw-flex tw-flex-col tw-gap-1">
         {{#each system.modifiers.skills}}
@@ -64,7 +64,7 @@
                   class="tw-inline-flex tw-h-7 tw-w-7 tw-items-center tw-justify-center tw-rounded-md tw-border tw-border-[var(--color-border-secondary)] tw-bg-[var(--wh40k-btn-bg)] tw-text-crimson tw-font-bold tw-cursor-pointer hover:tw-scale-[1.08] hover:tw-shadow-[0_2px_6px_var(--wh40k-shadow-soft)]"
                   data-action="removeSkillModifier"
                   data-skill="{{@key}}"
-                  title="Remove">
+                  title="{{localize 'WH40K.Common.Remove'}}">
             <i class="fas fa-times"></i>
           </button>
         </div>
@@ -78,11 +78,11 @@
     <div class="tw-flex tw-flex-col tw-gap-1.5">
       <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
         <i class="fas fa-sword"></i>
-        Combat
+        {{localize "WH40K.Tabs.Combat"}}
       </h4>
       <div class="tw-grid tw-grid-cols-3 tw-gap-2">
         <div class="tw-flex tw-flex-col tw-gap-0.5">
-          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Attack</label>
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">{{localize "WH40K.Combat.Attack"}}</label>
           <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
                  name="system.modifiers.combat.attack"
                  type="number"
@@ -90,7 +90,7 @@
                  placeholder="0" />
         </div>
         <div class="tw-flex tw-flex-col tw-gap-0.5">
-          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Damage</label>
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">{{localize "WH40K.Weapon.Damage"}}</label>
           <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
                  name="system.modifiers.combat.damage"
                  type="number"
@@ -98,7 +98,7 @@
                  placeholder="0" />
         </div>
         <div class="tw-flex tw-flex-col tw-gap-0.5">
-          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Penetration</label>
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">{{localize "WH40K.Combat.Penetration"}}</label>
           <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
                  name="system.modifiers.combat.penetration"
                  type="number"
@@ -106,7 +106,7 @@
                  placeholder="0" />
         </div>
         <div class="tw-flex tw-flex-col tw-gap-0.5">
-          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Defense</label>
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">{{localize "WH40K.ItemSheet.ModifiersEditor.Defence"}}</label>
           <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
                  name="system.modifiers.combat.defense"
                  type="number"
@@ -114,7 +114,7 @@
                  placeholder="0" />
         </div>
         <div class="tw-flex tw-flex-col tw-gap-0.5">
-          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Initiative</label>
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">{{localize "WH40K.Combat.Initiative"}}</label>
           <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
                  name="system.modifiers.combat.initiative"
                  type="number"
@@ -122,7 +122,7 @@
                  placeholder="0" />
         </div>
         <div class="tw-flex tw-flex-col tw-gap-0.5">
-          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Speed</label>
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">{{localize "WH40K.VehicleStat.Speed"}}</label>
           <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
                  name="system.modifiers.combat.speed"
                  type="number"
@@ -136,11 +136,11 @@
     <div class="tw-flex tw-flex-col tw-gap-1.5">
       <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
         <i class="fas fa-heart"></i>
-        Resources
+        {{localize "WH40K.ItemSheet.Modifiers.Resources"}}
       </h4>
       <div class="tw-grid tw-grid-cols-3 tw-gap-2">
         <div class="tw-flex tw-flex-col tw-gap-0.5">
-          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Wounds</label>
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">{{localize "WH40K.Wounds"}}</label>
           <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
                  name="system.modifiers.resources.wounds"
                  type="number"
@@ -148,7 +148,7 @@
                  placeholder="0" />
         </div>
         <div class="tw-flex tw-flex-col tw-gap-0.5">
-          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Fate</label>
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">{{localize "WH40K.Fate"}}</label>
           <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
                  name="system.modifiers.resources.fate"
                  type="number"
@@ -156,7 +156,7 @@
                  placeholder="0" />
         </div>
         <div class="tw-flex tw-flex-col tw-gap-0.5">
-          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Insanity</label>
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">{{localize "WH40K.Status.Insanity.Label"}}</label>
           <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
                  name="system.modifiers.resources.insanity"
                  type="number"
@@ -164,7 +164,7 @@
                  placeholder="0" />
         </div>
         <div class="tw-flex tw-flex-col tw-gap-0.5">
-          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Corruption</label>
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">{{localize "WH40K.Status.Corruption.Label"}}</label>
           <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
                  name="system.modifiers.resources.corruption"
                  type="number"
@@ -180,14 +180,14 @@
   <div class="tw-flex tw-flex-col tw-gap-3" data-tab="situational" data-group="modifiers">
     <div class="tw-flex tw-items-start tw-gap-2 tw-p-2 tw-bg-blue-900/15 tw-border tw-border-solid tw-border-blue-800/30 tw-rounded-md">
       <i class="fas fa-info-circle tw-text-blue-400 tw-flex-shrink-0 tw-mt-0.5"></i>
-      <p class="tw-m-0 tw-text-sm">Situational modifiers apply only when specific conditions are met. Use the condition field to describe when each modifier applies.</p>
+      <p class="tw-m-0 tw-text-sm">{{localize "WH40K.ItemSheet.ModifiersEditor.SituationalHint"}}</p>
     </div>
 
     {{!-- Situational Characteristics --}}
     <div class="tw-flex tw-flex-col tw-gap-1.5">
       <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
         <i class="fas fa-user-circle"></i>
-        Conditional Characteristic Bonuses
+        {{localize "WH40K.ItemSheet.ModifiersEditor.ConditionalCharacteristicBonuses"}}
       </h4>
       <div class="tw-flex tw-flex-col tw-gap-1.5">
         {{#each system.modifiers.situational.characteristics}}
@@ -196,10 +196,10 @@
                  name="system.modifiers.situational.characteristics.{{@index}}.condition"
                  type="text"
                  value="{{condition}}"
-                 placeholder="When... (e.g., 'in melee combat')" />
+                 placeholder="{{localize 'WH40K.ItemSheet.ModifiersEditor.ConditionPlaceholder'}}" />
           <select class="tw-w-36 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm"
                   name="system.modifiers.situational.characteristics.{{@index}}.key">
-            <option value="">Select Characteristic</option>
+            <option value="">{{localize "WH40K.Dialog.EffectCreation.SelectCharacteristic"}}</option>
             {{#each ../../config.characteristics}}
             <option value="{{@key}}" {{selected (eq @key ../key)}}>{{label}}</option>
             {{/each}}
@@ -214,7 +214,7 @@
                   data-action="removeSituationalModifier"
                   data-type="characteristics"
                   data-index="{{@index}}"
-                  title="Remove">
+                  title="{{localize 'WH40K.Common.Remove'}}">
             <i class="fas fa-times"></i>
           </button>
         </div>
@@ -232,13 +232,13 @@
   <div class="tw-flex tw-flex-col tw-gap-3" data-tab="advanced" data-group="modifiers">
     <div class="tw-flex tw-items-start tw-gap-2 tw-p-2 tw-bg-blue-900/15 tw-border tw-border-solid tw-border-blue-800/30 tw-rounded-md">
       <i class="fas fa-info-circle tw-text-blue-400 tw-flex-shrink-0 tw-mt-0.5"></i>
-      <p class="tw-m-0 tw-text-sm">Advanced modifiers for custom effects not covered by standard categories.</p>
+      <p class="tw-m-0 tw-text-sm">{{localize "WH40K.ItemSheet.ModifiersEditor.AdvancedHint"}}</p>
     </div>
 
     <div class="tw-flex tw-flex-col tw-gap-1.5">
       <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
         <i class="fas fa-plus-square"></i>
-        Custom Modifiers
+        {{localize "WH40K.ItemSheet.ModifiersEditor.CustomModifiers"}}
       </h4>
       <div class="tw-flex tw-flex-col tw-gap-1.5">
         {{#each system.modifiers.other}}
@@ -247,12 +247,12 @@
                  name="system.modifiers.other.{{@index}}.key"
                  type="text"
                  value="{{key}}"
-                 placeholder="Modifier Key" />
+                 placeholder="{{localize 'WH40K.ItemSheet.ModifiersEditor.KeyPlaceholder'}}" />
           <input class="tw-flex-1 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm"
                  name="system.modifiers.other.{{@index}}.label"
                  type="text"
                  value="{{label}}"
-                 placeholder="Display Label" />
+                 placeholder="{{localize 'WH40K.ItemSheet.ModifiersEditor.LabelPlaceholder'}}" />
           <input class="tw-w-16 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm tw-text-center"
                  name="system.modifiers.other.{{@index}}.value"
                  type="number"
@@ -260,17 +260,17 @@
                  placeholder="0" />
           <select class="tw-w-24 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm"
                   name="system.modifiers.other.{{@index}}.mode">
-            <option value="add" {{selected (eq mode "add")}}>Add</option>
-            <option value="multiply" {{selected (eq mode "multiply")}}>Multiply</option>
-            <option value="override" {{selected (eq mode "override")}}>Override</option>
-            <option value="upgrade" {{selected (eq mode "upgrade")}}>Upgrade</option>
-            <option value="downgrade" {{selected (eq mode "downgrade")}}>Downgrade</option>
+            <option value="add" {{selected (eq mode "add")}}>{{localize "WH40K.Dialog.TalentEditor.ModeAdd"}}</option>
+            <option value="multiply" {{selected (eq mode "multiply")}}>{{localize "WH40K.Dialog.TalentEditor.ModeMultiply"}}</option>
+            <option value="override" {{selected (eq mode "override")}}>{{localize "WH40K.Dialog.TalentEditor.ModeOverride"}}</option>
+            <option value="upgrade" {{selected (eq mode "upgrade")}}>{{localize "WH40K.ItemSheet.ModifiersEditor.ModeUpgrade"}}</option>
+            <option value="downgrade" {{selected (eq mode "downgrade")}}>{{localize "WH40K.ItemSheet.ModifiersEditor.ModeDowngrade"}}</option>
           </select>
           <button type="button"
                   class="tw-inline-flex tw-h-7 tw-w-7 tw-items-center tw-justify-center tw-rounded-md tw-border tw-border-[var(--color-border-secondary)] tw-bg-[var(--wh40k-btn-bg)] tw-text-crimson tw-font-bold tw-cursor-pointer hover:tw-scale-[1.08] hover:tw-shadow-[0_2px_6px_var(--wh40k-shadow-soft)]"
                   data-action="removeOtherModifier"
                   data-index="{{@index}}"
-                  title="Remove">
+                  title="{{localize 'WH40K.Common.Remove'}}">
             <i class="fas fa-times"></i>
           </button>
         </div>

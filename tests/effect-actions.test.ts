@@ -78,13 +78,19 @@ describe('resolveEffect', () => {
 
 describe('createEffect', () => {
     it('merges caller overrides over the defaults and forwards the operation', async () => {
-        const owner = makeOwner();
-        await EffectActions.createEffect(owner, { origin: owner.uuid, disabled: true }, { renderSheet: true });
-        expect(owner.createEmbeddedDocuments).toHaveBeenCalledWith(
-            'ActiveEffect',
-            [{ name: 'New Effect', img: 'icons/svg/aura.svg', origin: 'Item.abc', disabled: true }],
-            { renderSheet: true },
-        );
+        // The default name is a langpack key; echo keys so the assertion names it.
+        vi.stubGlobal('game', { i18n: { localize: (key: string): string => key } });
+        try {
+            const owner = makeOwner();
+            await EffectActions.createEffect(owner, { origin: owner.uuid, disabled: true }, { renderSheet: true });
+            expect(owner.createEmbeddedDocuments).toHaveBeenCalledWith(
+                'ActiveEffect',
+                [{ name: 'WH40K.ActiveEffect.NewEffect', img: 'icons/svg/aura.svg', origin: 'Item.abc', disabled: true }],
+                { renderSheet: true },
+            );
+        } finally {
+            vi.unstubAllGlobals();
+        }
     });
 });
 

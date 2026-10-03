@@ -6,7 +6,7 @@
     <section class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden tw-mb-4 tw-shadow-md tw-relative">
       <header class="tw-flex tw-flex-row tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-gradient-to-b tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.05)] tw-border-b tw-border-solid {{themeClassFor 'border'}} tw-w-full tw-box-border [&>h3]:tw-m-0 [&>h3]:tw-text-lg [&>h3]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
         <i class="fa-solid fa-save"></i>
-        <h3>Save Combat Preset</h3>
+        <h3>{{localize "WH40K.Dialog.CombatPreset.SaveTitle"}}</h3>
       </header>
       <div class="tw-p-4">
         {{#if npc}}
@@ -15,7 +15,7 @@
             <div class="tw-flex-1 [&>h4]:tw-m-0 [&>h4]:tw-mb-2 [&>h4]:tw-text-lg [&>h4]:tw-text-[var(--color-text-light-primary)]">
               <h4>{{npc.name}}</h4>
               <div class="tw-flex tw-gap-2">
-                <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">Threat {{npc.threatLevel}}</span>
+                <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">{{localize "WH40K.Dialog.CombatPreset.Threat" level=npc.threatLevel}}</span>
                 <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">{{npc.type}}</span>
                 <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">{{npc.role}}</span>
               </div>
@@ -23,21 +23,21 @@
           </div>
 
           <div class="tw-mb-4 [&>label]:tw-block [&>label]:tw-font-semibold [&>label]:tw-text-base [&>label]:tw-text-[var(--color-text-light-secondary)] [&>label]:tw-mb-2 [&>label]:tw-uppercase [&>label]:tw-tracking-[0.5px] [&>input]:tw-w-full [&>input]:tw-px-3 [&>input]:tw-py-2 [&>input]:tw-bg-[var(--color-bg-secondary)] [&>input]:tw-border-2 [&>input]:tw-border-solid [&>input]:tw-border-[var(--color-border-secondary)] [&>input]:tw-rounded-md [&>input]:tw-text-[var(--color-text-light-primary)] [&>input]:tw-transition-all [&>input:focus]:tw-border-[var(--wh40k-accent-gold)] [&>input:focus]:tw-outline-none">
-            <label>Preset Name *</label>
+            <label>{{localize "WH40K.Dialog.CombatPreset.PresetName"}}</label>
             <input
               type="text"
               name="presetName"
-              placeholder="e.g., Elite Guard, Chaos Cultist, Xenos Warrior"
+              placeholder="{{localize 'WH40K.Dialog.CombatPreset.PresetNamePlaceholder'}}"
               required
             />
           </div>
 
           <div class="tw-mb-4 [&>label]:tw-block [&>label]:tw-font-semibold [&>label]:tw-text-base [&>label]:tw-text-[var(--color-text-light-secondary)] [&>label]:tw-mb-2 [&>label]:tw-uppercase [&>label]:tw-tracking-[0.5px] [&>textarea]:tw-w-full [&>textarea]:tw-px-3 [&>textarea]:tw-py-2 [&>textarea]:tw-bg-[var(--color-bg-secondary)] [&>textarea]:tw-border-2 [&>textarea]:tw-border-solid [&>textarea]:tw-border-[var(--color-border-secondary)] [&>textarea]:tw-rounded-md [&>textarea]:tw-text-[var(--color-text-light-primary)] [&>textarea]:tw-resize-y [&>textarea]:tw-transition-all [&>textarea:focus]:tw-border-[var(--wh40k-accent-gold)] [&>textarea:focus]:tw-outline-none">
-            <label>Description</label>
+            <label>{{localize "WH40K.Tabs.Description"}}</label>
             <textarea
               name="presetDescription"
               rows="3"
-              placeholder="Optional description of this preset..."
+              placeholder="{{localize 'WH40K.Dialog.CombatPreset.DescriptionPlaceholder'}}"
             ></textarea>
           </div>
 
@@ -47,7 +47,7 @@
               class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-3 tw-py-1.5 tw-text-sm tw-font-medium tw-rounded-sm tw-border tw-border-solid tw-border-[rgba(59,130,246,0.5)] tw-bg-[var(--color-accent,#3b82f6)] tw-text-[var(--color-text-primary)] tw-cursor-pointer tw-transition-all hover:tw-bg-blue-600 hover:tw-shadow-[0_2px_8px_rgba(59,130,246,0.3)] disabled:tw-opacity-50 disabled:tw-cursor-not-allowed"
               data-action="saveNew"
             >
-              <i class="fa-solid fa-save"></i> Save Preset
+              <i class="fa-solid fa-save"></i> {{localize "WH40K.Dialog.CombatPreset.SavePreset"}}
             </button>
           </div>
         {{/if}}
@@ -60,7 +60,7 @@
     <section class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden tw-mb-4 tw-shadow-md tw-relative">
       <header class="tw-flex tw-flex-row tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-gradient-to-b tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.05)] tw-border-b tw-border-solid {{themeClassFor 'border'}} tw-w-full tw-box-border [&>h3]:tw-m-0 [&>h3]:tw-text-lg [&>h3]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
         <i class="fa-solid fa-download"></i>
-        <h3>Load Combat Preset</h3>
+        <h3>{{localize "WH40K.Dialog.CombatPreset.LoadTitle"}}</h3>
       </header>
       <div class="tw-p-4">
         {{#if npc}}
@@ -68,7 +68,7 @@
             <img src="{{npc.img}}" alt="{{npc.name}}" class="tw-w-[60px] tw-h-[60px] tw-rounded-lg tw-border-2 tw-border-solid tw-border-[var(--color-border-secondary)] tw-object-cover" />
             <div class="tw-flex-1 [&>h4]:tw-m-0 [&>h4]:tw-mb-2 [&>h4]:tw-text-lg [&>h4]:tw-text-[var(--color-text-light-primary)]">
               <h4>{{npc.name}}</h4>
-              <p class="tw-text-base tw-text-orange-500 tw-font-semibold tw-mt-1 tw-mb-0">Loading a preset will overwrite this NPC's stats.</p>
+              <p class="tw-text-base tw-text-orange-500 tw-font-semibold tw-mt-1 tw-mb-0">{{localize "WH40K.Dialog.CombatPreset.LoadWarning"}}</p>
             </div>
           </div>
         {{/if}}
@@ -89,7 +89,7 @@
                   <p class="tw-mb-2 tw-text-base tw-text-[var(--color-text-light-secondary)] tw-italic">{{this.description}}</p>
                 {{/if}}
                 <div class="tw-flex tw-gap-2 tw-flex-wrap">
-                  <span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">Threat {{this.threatLevel}}</span>
+                  <span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">{{localize "WH40K.Dialog.CombatPreset.Threat" level=this.threatLevel}}</span>
                   <span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">{{this.type}}</span>
                   {{#if this.faction}}<span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">{{this.faction}}</span>{{/if}}
                 </div>
@@ -104,13 +104,13 @@
               data-action="loadSelected"
               {{#unless selectedPreset}}disabled{{/unless}}
             >
-              <i class="fa-solid fa-download"></i> Load Selected
+              <i class="fa-solid fa-download"></i> {{localize "WH40K.Dialog.CombatPreset.LoadSelected"}}
             </button>
           </div>
         {{else}}
           <p class="tw-text-center tw-p-10 tw-text-[var(--color-text-light-secondary)] tw-italic [&>i]:tw-block [&>i]:tw-text-3xl [&>i]:tw-mb-3 [&>i]:tw-text-[var(--color-border-secondary)]">
             <i class="fa-solid fa-info-circle"></i>
-            No presets saved yet. Create one from an NPC sheet.
+            {{localize "WH40K.Dialog.CombatPreset.NoPresets"}}
           </p>
         {{/if}}
       </div>
@@ -121,13 +121,13 @@
   {{#if (eq mode "library")}}
     <section class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden tw-mb-4 tw-shadow-md tw-relative">
       <header class="tw-flex tw-flex-row tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-gradient-to-b tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.05)] tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-w-full tw-box-border [&>h3]:tw-m-0 [&>h3]:tw-flex-1 [&>h3]:tw-text-lg [&>h3]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
-        <h3>Preset Library</h3>
+        <h3>{{localize "WH40K.Dialog.CombatPreset.LibraryTitle"}}</h3>
         <i class="fa-solid fa-bookmark"></i>
         <button
           type="button"
           class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-medium tw-rounded-sm tw-border tw-border-solid tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-text-[var(--color-text-primary)] tw-cursor-pointer tw-transition-all tw-min-w-[32px] hover:tw-bg-[rgba(100,100,120,0.5)] hover:tw--translate-y-px disabled:tw-opacity-50 disabled:tw-cursor-not-allowed"
           data-action="importPreset"
-          data-tooltip="Import Preset from JSON"
+          data-tooltip="{{localize 'WH40K.Dialog.CombatPreset.ImportTooltip'}}"
         >
           <i class="fa-solid fa-file-import"></i>
         </button>
@@ -146,7 +146,7 @@
                     <p class="tw-mb-2 tw-text-base tw-text-[var(--color-text-light-secondary)] tw-italic">{{this.description}}</p>
                   {{/if}}
                   <div class="tw-flex tw-gap-2 tw-flex-wrap">
-                    <span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">Threat {{this.threatLevel}}</span>
+                    <span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">{{localize "WH40K.Dialog.CombatPreset.Threat" level=this.threatLevel}}</span>
                     <span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">{{this.type}}</span>
                     {{#if this.role}}<span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">{{this.role}}</span>{{/if}}
                     {{#if this.faction}}<span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">{{this.faction}}</span>{{/if}}
@@ -158,7 +158,7 @@
                     class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-medium tw-rounded-sm tw-border tw-border-solid tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-text-[var(--color-text-primary)] tw-cursor-pointer tw-transition-all tw-min-w-[32px] hover:tw-bg-[rgba(100,100,120,0.5)] hover:tw--translate-y-px disabled:tw-opacity-50 disabled:tw-cursor-not-allowed"
                     data-action="exportPreset"
                     data-preset-id="{{this.id}}"
-                    data-tooltip="Export as JSON"
+                    data-tooltip="{{localize 'WH40K.Dialog.CombatPreset.ExportTooltip'}}"
                   >
                     <i class="fa-solid fa-file-export"></i>
                   </button>
@@ -167,7 +167,7 @@
                     class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-medium tw-rounded-sm tw-border tw-border-solid tw-border-[rgba(239,68,68,0.3)] tw-bg-[rgba(239,68,68,0.2)] tw-text-[#fca5a5] tw-cursor-pointer tw-transition-all tw-min-w-[32px] hover:tw-bg-[rgba(239,68,68,0.3)] hover:tw-border-[rgba(239,68,68,0.5)] disabled:tw-opacity-50 disabled:tw-cursor-not-allowed"
                     data-action="deletePreset"
                     data-preset-id="{{this.id}}"
-                    data-tooltip="Delete Preset"
+                    data-tooltip="{{localize 'WH40K.Dialog.CombatPreset.DeleteTooltip'}}"
                   >
                     <i class="fa-solid fa-trash"></i>
                   </button>
@@ -178,7 +178,7 @@
         {{else}}
           <p class="tw-text-center tw-p-10 tw-text-[var(--color-text-light-secondary)] tw-italic [&>i]:tw-block [&>i]:tw-text-3xl [&>i]:tw-mb-3 [&>i]:tw-text-[var(--color-border-secondary)]">
             <i class="fa-solid fa-info-circle"></i>
-            No presets saved yet. Create one from an NPC sheet.
+            {{localize "WH40K.Dialog.CombatPreset.NoPresets"}}
           </p>
         {{/if}}
       </div>

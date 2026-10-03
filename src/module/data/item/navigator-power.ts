@@ -110,15 +110,37 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
      * (novice/adept/master) have content.
      */
     get pills(): Array<{ bgClass: string; textClass: string; icon: string; label: string }> {
-        const pills = [{ bgClass: 'tw-bg-[rgba(8,145,178,0.2)]', textClass: 'tw-text-[#0891b2]', icon: 'fa-eye', label: 'Navigator' }];
+        const pills = [
+            {
+                bgClass: 'tw-bg-[rgba(8,145,178,0.2)]',
+                textClass: 'tw-text-[#0891b2]',
+                icon: 'fa-eye',
+                label: game.i18n.localize('WH40K.TalentCategory.Navigator'),
+            },
+        ];
         if (this.levels.novice.effect) {
-            pills.push({ bgClass: 'tw-bg-[rgba(34,197,94,0.15)]', textClass: 'tw-text-[#22c55e]', icon: 'fa-seedling', label: 'Novice' });
+            pills.push({
+                bgClass: 'tw-bg-[rgba(34,197,94,0.15)]',
+                textClass: 'tw-text-[#22c55e]',
+                icon: 'fa-seedling',
+                label: game.i18n.localize('WH40K.Chat.Item.Novice'),
+            });
         }
         if (this.levels.adept.effect) {
-            pills.push({ bgClass: 'tw-bg-[rgba(59,130,246,0.15)]', textClass: 'tw-text-[#3b82f6]', icon: 'fa-star-half-alt', label: 'Adept' });
+            pills.push({
+                bgClass: 'tw-bg-[rgba(59,130,246,0.15)]',
+                textClass: 'tw-text-[#3b82f6]',
+                icon: 'fa-star-half-alt',
+                label: game.i18n.localize('WH40K.Chat.Item.Adept'),
+            });
         }
         if (this.levels.master.effect) {
-            pills.push({ bgClass: 'tw-bg-[rgba(245,158,11,0.15)]', textClass: 'tw-text-[#f59e0b]', icon: 'fa-crown', label: 'Master' });
+            pills.push({
+                bgClass: 'tw-bg-[rgba(245,158,11,0.15)]',
+                textClass: 'tw-text-[#f59e0b]',
+                icon: 'fa-crown',
+                label: game.i18n.localize('WH40K.Chat.Item.Master'),
+            });
         }
         return pills;
     }

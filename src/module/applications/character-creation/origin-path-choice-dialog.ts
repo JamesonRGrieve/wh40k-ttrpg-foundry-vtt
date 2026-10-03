@@ -549,7 +549,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                 }
                 selections.add(compositeValue);
             } else {
-                ui.notifications.warn(`You can only select ${choice.count} option(s).`);
+                ui.notifications.warn(game.i18n.format('WH40K.Notify.OriginPath.SelectionLimit', { count: String(choice.count) }));
                 return;
             }
         }
@@ -619,8 +619,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         });
 
         if (incomplete.length > 0) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
-            ui.notifications.warn('Please complete all required choices.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.OriginPath.CompleteChoices'));
             return;
         }
 
@@ -667,8 +666,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             }
         } catch (error) {
             console.warn('Could not load item:', uuid, error);
-            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
-            ui.notifications.warn('Could not find that item.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.OriginPath.ItemNotFound'));
         }
     }
 

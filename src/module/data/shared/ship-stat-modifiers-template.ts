@@ -33,7 +33,7 @@ export type ShipStatModifiers = Record<(typeof SHIP_STAT_KEYS)[number], number>;
 /** One rendered, non-zero ship-stat modifier for display. */
 export type ShipModifierEntry = StatModifierEntry;
 
-const helpers = makeStatModifiers(SHIP_STAT_KEYS, 'WH40K.ShipStat');
+const helpers = makeStatModifiers(SHIP_STAT_KEYS, 'WH40K.Voidcraft.Build.Stat');
 
 /**
  * Build the shared nine-field ship-stat `modifiers` SchemaField.

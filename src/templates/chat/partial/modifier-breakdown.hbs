@@ -20,7 +20,7 @@
         targetLabel       — optional, default "Target"
 --}}
 <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
-    <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{#if baseLabel}}{{baseLabel}}{{else}}Base{{/if}}</span>
+    <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{#if baseLabel}}{{baseLabel}}{{else}}{{localize "WH40K.CharacteristicSetup.Base"}}{{/if}}</span>
     <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{baseTarget}}</span>
 </div>
 
@@ -52,6 +52,6 @@
 {{/if}}
 
 <div class="tw-flex tw-justify-between tw-items-center tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-accent-overlay)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md">
-    <span class="tw-text-[var(--wh40k-card-muted)] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">{{#if targetLabel}}{{targetLabel}}{{else}}Target{{/if}}</span>
+    <span class="tw-text-[var(--wh40k-card-muted)] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">{{#if targetLabel}}{{targetLabel}}{{else}}{{localize "WH40K.Roll.TargetLabel"}}{{/if}}</span>
     <span class="tw-text-[1.2rem] tw-font-bold {{themeClassFor 'accent'}}">{{modifiedTarget}}</span>
 </div>

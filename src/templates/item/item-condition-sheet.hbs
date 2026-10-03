@@ -12,25 +12,25 @@
       {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-16 tw-h-16" frameClass="" overlayIcon=item.system.natureIcon overlayBgClass="tw-bg-black/60" overlayTextClass="" overlayIconClass="" extraClass="tw-shrink-0"}}
 
       <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
-        {{> systems/wh40k-rpg/templates/item/partial/item-name-input.hbs placeholder="Condition Name"}}
+        {{> systems/wh40k-rpg/templates/item/partial/item-name-input.hbs placeholderKey="WH40K.ItemSheet.Condition.NamePlaceholder"}}
 
         <div class="tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Condition Nature">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.ItemSheet.Condition.NatureTooltip'}}">
             <i class="fas {{item.system.natureIcon}}"></i>
             {{item.system.natureLabel}}
           </span>
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Applies To">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.ItemSheet.Condition.AppliesToTooltip'}}">
             <i class="fas {{item.system.appliesToIcon}}"></i>
             {{item.system.appliesToLabel}}
           </span>
           {{#if item.system.stackable}}
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Stackable Condition">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.ItemSheet.Condition.StackableTooltip'}}">
             <i class="fas fa-layer-group"></i>
             ×{{item.system.stacks}}
           </span>
           {{/if}}
           {{#if item.system.isTemporary}}
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Duration">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.Gear.Duration'}}">
             <i class="fas fa-clock"></i>
             {{item.system.durationDisplay}}
           </span>
@@ -44,9 +44,9 @@
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
     {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
-        (object tab="details"     label="Details"     icon="fa-info-circle" active=true)
-        (object tab="description" label="Description" icon="fa-book")
-        (object tab="effects"     label="Effects"     icon="fa-magic"))}}
+        (object tab="details"     label=(localize "WH40K.Tabs.Details")     icon="fa-info-circle" active=true)
+        (object tab="description" label=(localize "WH40K.Tabs.Description") icon="fa-book")
+        (object tab="effects"     label=(localize "WH40K.Tabs.Effects")     icon="fa-magic"))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
@@ -60,25 +60,25 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-cog tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Condition Properties</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Condition.Properties"}}</h3>
           </div>
           <div class="tw-p-3">
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Nature</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.Condition.Nature"}}</label>
                 <select name="system.nature" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-                  <option value="beneficial" {{#if (eq item.system.nature "beneficial")}}selected{{/if}}>Beneficial</option>
-                  <option value="harmful" {{#if (eq item.system.nature "harmful")}}selected{{/if}}>Harmful</option>
-                  <option value="neutral" {{#if (eq item.system.nature "neutral")}}selected{{/if}}>Neutral</option>
+                  <option value="beneficial" {{#if (eq item.system.nature "beneficial")}}selected{{/if}}>{{localize "WH40K.ItemSheet.Condition.Beneficial"}}</option>
+                  <option value="harmful" {{#if (eq item.system.nature "harmful")}}selected{{/if}}>{{localize "WH40K.ItemSheet.Condition.Harmful"}}</option>
+                  <option value="neutral" {{#if (eq item.system.nature "neutral")}}selected{{/if}}>{{localize "WH40K.ItemSheet.Condition.Neutral"}}</option>
                 </select>
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Applies To</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.Condition.AppliesTo"}}</label>
                 <select name="system.appliesTo" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-                  <option value="self" {{#if (eq item.system.appliesTo "self")}}selected{{/if}}>Self</option>
-                  <option value="target" {{#if (eq item.system.appliesTo "target")}}selected{{/if}}>Target</option>
-                  <option value="both" {{#if (eq item.system.appliesTo "both")}}selected{{/if}}>Both</option>
-                  <option value="area" {{#if (eq item.system.appliesTo "area")}}selected{{/if}}>Area</option>
+                  <option value="self" {{#if (eq item.system.appliesTo "self")}}selected{{/if}}>{{localize "WH40K.ItemSheet.Condition.Self"}}</option>
+                  <option value="target" {{#if (eq item.system.appliesTo "target")}}selected{{/if}}>{{localize "WH40K.ItemSheet.Condition.Target"}}</option>
+                  <option value="both" {{#if (eq item.system.appliesTo "both")}}selected{{/if}}>{{localize "WH40K.ItemSheet.Condition.Both"}}</option>
+                  <option value="area" {{#if (eq item.system.appliesTo "area")}}selected{{/if}}>{{localize "WH40K.ItemSheet.Condition.Area"}}</option>
                 </select>
               </div>
             </div>
@@ -89,18 +89,18 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-layer-group tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Stacking</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Condition.Stacking"}}</h3>
           </div>
           <div class="tw-p-3">
             <div class="tw-flex tw-flex-col tw-gap-1">
               <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm">
                 <input type="checkbox" name="system.stackable" {{checked item.system.stackable}} />
-                <span>Condition is Stackable</span>
+                <span>{{localize "WH40K.ItemSheet.Condition.IsStackable"}}</span>
               </label>
             </div>
             {{#if item.system.stackable}}
             <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-2">
-              <label class="tw-text-sm tw-font-medium">Current Stacks</label>
+              <label class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.Condition.CurrentStacks"}}</label>
               <input type="number" name="system.stacks" value="{{item.system.stacks}}"
                      data-dtype="Number" min="1" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
             </div>
@@ -112,23 +112,23 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-clock tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Duration</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Gear.Duration"}}</h3>
           </div>
           <div class="tw-p-3">
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Duration Value</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.Condition.DurationValue"}}</label>
                 <input type="number" name="system.duration.value" value="{{item.system.duration.value}}"
                        data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Duration Units</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.Condition.DurationUnits"}}</label>
                 <select name="system.duration.units" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-                  <option value="permanent" {{#if (eq item.system.duration.units "permanent")}}selected{{/if}}>Permanent</option>
-                  <option value="rounds" {{#if (eq item.system.duration.units "rounds")}}selected{{/if}}>Rounds</option>
-                  <option value="minutes" {{#if (eq item.system.duration.units "minutes")}}selected{{/if}}>Minutes</option>
-                  <option value="hours" {{#if (eq item.system.duration.units "hours")}}selected{{/if}}>Hours</option>
-                  <option value="days" {{#if (eq item.system.duration.units "days")}}selected{{/if}}>Days</option>
+                  <option value="permanent" {{#if (eq item.system.duration.units "permanent")}}selected{{/if}}>{{localize "WH40K.CriticalInjury.Permanent"}}</option>
+                  <option value="rounds" {{#if (eq item.system.duration.units "rounds")}}selected{{/if}}>{{localize "WH40K.ItemSheet.Condition.Rounds"}}</option>
+                  <option value="minutes" {{#if (eq item.system.duration.units "minutes")}}selected{{/if}}>{{localize "WH40K.ItemSheet.Condition.Minutes"}}</option>
+                  <option value="hours" {{#if (eq item.system.duration.units "hours")}}selected{{/if}}>{{localize "WH40K.ItemSheet.Condition.Hours"}}</option>
+                  <option value="days" {{#if (eq item.system.duration.units "days")}}selected{{/if}}>{{localize "WH40K.ItemSheet.Condition.Days"}}</option>
                 </select>
               </div>
             </div>
@@ -139,7 +139,7 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-bolt tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Condition Effect</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Condition.Effect"}}</h3>
           </div>
           <div class="tw-p-2">
             {{#if inEditMode}}
@@ -154,7 +154,7 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-eraser tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Removal Conditions</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Condition.RemovalConditions"}}</h3>
           </div>
           <div class="tw-p-2">
             {{#if inEditMode}}
@@ -169,10 +169,10 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-sticky-note tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">GM Notes</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Common.GmNotes"}}</h3>
           </div>
           <div class="tw-p-3">
-            <textarea name="system.notes" rows="3" placeholder="Additional notes, special circumstances..." class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
+            <textarea name="system.notes" rows="3" placeholder="{{localize 'WH40K.ItemSheet.Condition.NotesPlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
           </div>
         </div>
 
@@ -185,7 +185,7 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-book tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Description</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Tabs.Description"}}</h3>
           </div>
           <div class="tw-p-2">
             {{#if inEditMode}}
@@ -200,24 +200,24 @@
         <div class="tw-mb-3">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
             <i class="fas fa-book-open tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Source</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Common.Source"}}</h3>
           </div>
           <div class="tw-p-3">
             <div class="tw-grid tw-grid-cols-3 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Source Book</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.NPC.SourceBook"}}</label>
                 <input type="text" name="system.source.book" value="{{source.source.book}}"
-                       placeholder="Rogue Trader Core" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                       placeholder="{{localize 'WH40K.ItemSheet.Common.SourceBookPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Page</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Source.Page"}}</label>
                 <input type="text" name="system.source.page" value="{{source.source.page}}"
                        placeholder="249" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Custom Reference</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.Common.CustomReference"}}</label>
                 <input type="text" name="system.source.url" value="{{source.source.url}}"
-                       placeholder="Homebrew" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                       placeholder="{{localize 'WH40K.ItemSheet.Common.CustomReferencePlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
             </div>
           </div>

@@ -18,8 +18,8 @@
                 {{!-- Opposed Roll --}}
                 {{#if isOpposed}}
                     <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
-                        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Opposed {{opposedChar}}</span>
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{opposedRoll.total}} vs {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}} DoS){{/if}}</span>
+                        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{localize "WH40K.Chat.Roll.Opposed"}} {{opposedChar}}</span>
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{opposedRoll.total}} {{localize "WH40K.Common.Versus"}} {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}} {{localize "WH40K.Chat.Roll.DoS"}}){{/if}}</span>
                     </div>
                 {{/if}}
 
@@ -27,7 +27,7 @@
                 {{#if success}}
                     <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
                         <span class="tw-text-[1.5rem] tw-font-bold tw-text-[var(--wh40k-success-secondary)]">{{dos}}</span>
-                        <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">Degrees of Success</span>
+                        <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">{{localize "WH40K.Roll.DegreesOfSuccess"}}</span>
                     </div>
                     {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
                         variant="success"
@@ -36,7 +36,7 @@
                 {{else}}
                     <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
                         <span class="tw-text-[1.5rem] tw-font-bold tw-text-[var(--wh40k-danger-secondary)]">{{dof}}</span>
-                        <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">Degrees of Failure</span>
+                        <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">{{localize "WH40K.Roll.DegreesOfFailure"}}</span>
                     </div>
                     {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
                         variant="danger"
@@ -49,12 +49,12 @@
                     {{#if success}}
                         <button class="roll-control__hide-control tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-toggle="{{@root.id}}">
                             <span class="material-icons tw-text-[16px]">bolt</span>
-                            <span>Effect</span>
+                            <span>{{localize "WH40K.Tabs.Effect"}}</span>
                         </button>
                     {{else}}
                         <button class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-not-allowed tw-whitespace-nowrap tw-opacity-40">
                             <span class="material-icons tw-text-[16px]">bolt</span>
-                            <span>Effect</span>
+                            <span>{{localize "WH40K.Tabs.Effect"}}</span>
                         </button>
                     {{/if}}
                     {{#if success}}

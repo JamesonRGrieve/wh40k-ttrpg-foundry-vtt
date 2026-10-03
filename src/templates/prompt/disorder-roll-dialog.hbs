@@ -19,7 +19,7 @@
                         data-disorder-severity="{{this.id}}"
                         class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1 tw-px-3 tw-py-3 tw-rounded-md tw-border tw-cursor-pointer tw-transition-colors {{#if (eq this.id ../severity)}}tw-border-indigo-400 tw-bg-[rgba(99,102,241,0.18)] tw-text-indigo-200 tw-shadow-[0_0_0_1px_rgba(129,140,248,0.45)]{{else}}tw-border-[rgba(129,140,248,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-[#cbd5ff] hover:tw-border-indigo-300 hover:tw-bg-[rgba(99,102,241,0.12)]{{/if}}">
                     <span class="tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em]">{{localize this.labelKey}}</span>
-                    <span class="tw-text-xs tw-tabular-nums tw-text-indigo-300">{{this.threshold}} IP</span>
+                    <span class="tw-text-xs tw-tabular-nums tw-text-indigo-300">{{this.threshold}} {{localize "WH40K.Prompt.DisorderRoll.InsanityPoints"}}</span>
                 </button>
             {{/each}}
         </div>

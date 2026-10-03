@@ -222,7 +222,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
         const props = [`${this.characteristicLabel} (${this.characteristicAbbr})`, this.skillTypeLabel];
 
         if (this.isBasic) {
-            props.push(game.i18n.localize('WH40K.Skill.Basic'));
+            props.push(game.i18n.localize('WH40K.Skills.Basic'));
         }
 
         if (this.aptitudes.length) {

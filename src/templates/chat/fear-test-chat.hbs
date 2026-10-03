@@ -13,13 +13,13 @@
         {{#if isNoOp}}
             — {{localize "WH40K.Fear.RatingLabel"}} 0
         {{else}}
-            — Fear ({{fearRating}})
+            — {{localize "WH40K.Fear.Rating"}} ({{fearRating}})
         {{/if}}
     </div>
 
     <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
         <li class="tw-flex tw-justify-between tw-gap-3">
-            <span class="tw-text-[#9a9a8a]">WP</span>
+            <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Characteristic.Abbr.Willpower"}}</span>
             <span class="tw-font-bold tw-tabular-nums">{{willpower}}</span>
         </li>
         <li class="tw-flex tw-justify-between tw-gap-3">
@@ -39,7 +39,7 @@
     {{else}}
         {{#unless isNoOp}}
         <div class="tw-p-2 tw-rounded-sm tw-border tw-border-red-700 tw-bg-[rgba(139,0,0,0.18)] tw-text-red-600 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-center tw-mb-2">
-            {{localize "WH40K.Fear.FailureText"}} ({{degreesOfFailure}} DoF)
+            {{localize "WH40K.Fear.FailureText"}} ({{degreesOfFailure}} {{localize "WH40K.Chat.Roll.DoF"}})
         </div>
         <div class="tw-flex tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-px-1">
             <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Fear.ShockModifier"}}</span>

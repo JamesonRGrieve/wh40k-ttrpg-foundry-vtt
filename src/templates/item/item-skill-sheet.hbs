@@ -2,27 +2,27 @@
 <div class="tw-flex tw-flex-col tw-h-full">
     <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
         {{!-- Header --}}
-        {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholder="Skill Name" hideTypeBadge=true }}
+        {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholderKey="WH40K.ItemSheet.NamePlaceholder.Skill" hideTypeBadge=true }}
             <div class="tw-flex tw-flex-col tw-gap-1">
                 <div class="tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
                     <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-bg-[linear-gradient(135deg,rgba(41,128,185,0.15),rgba(41,128,185,0.12))] tw-border tw-border-[rgba(41,128,185,0.4)] tw-text-[var(--wh40k-accent-info)]">
-                        <i class="fas fa-graduation-cap"></i> Skill
+                        <i class="fas fa-graduation-cap"></i> {{localize "WH40K.Skills.Skill"}}
                     </span>
                     <select name="system.skillType" class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
-                        <option value="basic" {{#if (eq item.system.skillType "basic")}}selected{{/if}}>Basic</option>
-                        <option value="advanced" {{#if (eq item.system.skillType "advanced")}}selected{{/if}}>Advanced</option>
-                        <option value="specialist" {{#if (eq item.system.skillType "specialist")}}selected{{/if}}>Specialist</option>
+                        <option value="basic" {{#if (eq item.system.skillType "basic")}}selected{{/if}}>{{localize "WH40K.Skills.Basic"}}</option>
+                        <option value="advanced" {{#if (eq item.system.skillType "advanced")}}selected{{/if}}>{{localize "WH40K.OriginPath.Advanced"}}</option>
+                        <option value="specialist" {{#if (eq item.system.skillType "specialist")}}selected{{/if}}>{{localize "WH40K.ItemSheet.Skill.Specialist"}}</option>
                     </select>
                     <select name="system.characteristic" class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
-                        <option value="agility" {{#if (eq item.system.characteristic "agility")}}selected{{/if}}>Agility</option>
-                        <option value="ballisticSkill" {{#if (eq item.system.characteristic "ballisticSkill")}}selected{{/if}}>Ballistic Skill</option>
-                        <option value="fellowship" {{#if (eq item.system.characteristic "fellowship")}}selected{{/if}}>Fellowship</option>
-                        <option value="intelligence" {{#if (eq item.system.characteristic "intelligence")}}selected{{/if}}>Intelligence</option>
-                        <option value="perception" {{#if (eq item.system.characteristic "perception")}}selected{{/if}}>Perception</option>
-                        <option value="strength" {{#if (eq item.system.characteristic "strength")}}selected{{/if}}>Strength</option>
-                        <option value="toughness" {{#if (eq item.system.characteristic "toughness")}}selected{{/if}}>Toughness</option>
-                        <option value="weaponSkill" {{#if (eq item.system.characteristic "weaponSkill")}}selected{{/if}}>Weapon Skill</option>
-                        <option value="willpower" {{#if (eq item.system.characteristic "willpower")}}selected{{/if}}>Willpower</option>
+                        <option value="agility" {{#if (eq item.system.characteristic "agility")}}selected{{/if}}>{{localize "WH40K.Characteristic.Agility"}}</option>
+                        <option value="ballisticSkill" {{#if (eq item.system.characteristic "ballisticSkill")}}selected{{/if}}>{{localize "WH40K.Characteristic.BallisticSkill"}}</option>
+                        <option value="fellowship" {{#if (eq item.system.characteristic "fellowship")}}selected{{/if}}>{{localize "WH40K.Characteristic.Fellowship"}}</option>
+                        <option value="intelligence" {{#if (eq item.system.characteristic "intelligence")}}selected{{/if}}>{{localize "WH40K.Characteristic.Intelligence"}}</option>
+                        <option value="perception" {{#if (eq item.system.characteristic "perception")}}selected{{/if}}>{{localize "WH40K.Characteristic.Perception"}}</option>
+                        <option value="strength" {{#if (eq item.system.characteristic "strength")}}selected{{/if}}>{{localize "WH40K.Characteristic.Strength"}}</option>
+                        <option value="toughness" {{#if (eq item.system.characteristic "toughness")}}selected{{/if}}>{{localize "WH40K.Characteristic.Toughness"}}</option>
+                        <option value="weaponSkill" {{#if (eq item.system.characteristic "weaponSkill")}}selected{{/if}}>{{localize "WH40K.Characteristic.WeaponSkill"}}</option>
+                        <option value="willpower" {{#if (eq item.system.characteristic "willpower")}}selected{{/if}}>{{localize "WH40K.Characteristic.Willpower"}}</option>
                     </select>
                 </div>
 
@@ -31,15 +31,15 @@
                     {{!-- Skill Type Badge --}}
                     {{#if (eq item.system.skillType "basic")}}
                     <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold tw-uppercase tw-tracking-tight tw-bg-[linear-gradient(135deg,rgba(39,174,96,0.15),rgba(39,174,96,0.08))] tw-border tw-border-[rgba(39,174,96,0.4)] tw-text-[var(--wh40k-accent-green)]">
-                        <i class="fas fa-circle-check"></i> Basic
+                        <i class="fas fa-circle-check"></i> {{localize "WH40K.Skills.Basic"}}
                     </span>
                     {{else if (eq item.system.skillType "advanced")}}
                     <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold tw-uppercase tw-tracking-tight tw-bg-[linear-gradient(135deg,rgba(230,126,34,0.15),rgba(230,126,34,0.08))] tw-border tw-border-[rgba(230,126,34,0.4)] tw-text-[#e67e22]">
-                        <i class="fas fa-star"></i> Advanced
+                        <i class="fas fa-star"></i> {{localize "WH40K.OriginPath.Advanced"}}
                     </span>
                     {{else if (eq item.system.skillType "specialist")}}
                     <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold tw-uppercase tw-tracking-tight tw-bg-[linear-gradient(135deg,rgba(122,60,180,0.15),rgba(122,60,180,0.08))] tw-border tw-border-[rgba(122,60,180,0.4)] tw-text-purple-400">
-                        <i class="fas fa-flask"></i> Specialist
+                        <i class="fas fa-flask"></i> {{localize "WH40K.ItemSheet.Skill.Specialist"}}
                     </span>
                     {{/if}}
 
@@ -64,32 +64,32 @@
             {{!-- Properties Panel --}}
             <section class="tw-bg-black/20 tw-border tw-border-white/[0.08] tw-rounded-md tw-p-3">
                 <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-pb-2 tw-mb-3 tw-border-b tw-border-white/10">
-                    <i class="fas fa-info-circle tw-text-[var(--wh40k-accent-info)]"></i> Properties
+                    <i class="fas fa-info-circle tw-text-[var(--wh40k-accent-info)]"></i> {{localize "WH40K.Tabs.Properties"}}
                 </h3>
 
                 <div class="tw-grid tw-grid-cols-2 tw-gap-3">
                     <div class="tw-flex tw-flex-col tw-gap-1">
-                        <label class="tw-text-xs tw-opacity-70">Characteristic</label>
+                        <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Characteristic.SelectLabel"}}</label>
                         <div class="tw-text-sm tw-bg-black/30 tw-border tw-border-white/[0.05] tw-rounded-sm tw-px-2.5 tw-py-1.5">{{item.system.characteristicLabel}}</div>
                     </div>
 
                     <div class="tw-flex tw-flex-col tw-gap-1">
-                        <label class="tw-text-xs tw-opacity-70">Skill Type</label>
+                        <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.Skill.SkillType"}}</label>
                         <div class="tw-text-sm tw-bg-black/30 tw-border tw-border-white/[0.05] tw-rounded-sm tw-px-2.5 tw-py-1.5">{{capitalize item.system.skillType}}</div>
                     </div>
 
                     <div class="tw-flex tw-flex-col tw-gap-1">
-                        <label class="tw-text-xs tw-opacity-70">Use Time</label>
-                        <input type="text" name="system.useTime" value="{{item.system.useTime}}" placeholder="Half Action" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                        <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.Skill.UseTime"}}</label>
+                        <input type="text" name="system.useTime" value="{{item.system.useTime}}" placeholder="{{localize 'WH40K.ItemSheet.Skill.UseTimePlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
                     </div>
 
                     <div class="tw-flex tw-flex-col tw-gap-1">
-                        <label class="tw-text-xs tw-opacity-70">Untrained Use</label>
+                        <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.Skill.UntrainedUse"}}</label>
                         <div class="tw-text-sm tw-bg-black/30 tw-border tw-border-white/[0.05] tw-rounded-sm tw-px-2.5 tw-py-1.5">
                             {{#if item.system.isBasic}}
-                                <i class="fas fa-check tw-text-success"></i> Can use untrained
+                                <i class="fas fa-check tw-text-success"></i> {{localize "WH40K.ItemSheet.Skill.CanUseUntrained"}}
                             {{else}}
-                                <i class="fas fa-times tw-text-crimson"></i> Cannot use untrained
+                                <i class="fas fa-times tw-text-crimson"></i> {{localize "WH40K.ItemSheet.Skill.CannotUseUntrained"}}
                             {{/if}}
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                 {{!-- Aptitudes --}}
                 {{#if item.system.aptitudes.length}}
                 <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-4">
-                    <label class="tw-text-xs tw-opacity-70">Aptitudes</label>
+                    <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Aptitudes"}}</label>
                     <div class="tw-flex tw-flex-wrap tw-gap-1">
                         {{#each item.system.aptitudes}}
                         <span class="tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-bg-black/20 tw-border tw-border-white/10">{{this}}</span>
@@ -107,8 +107,8 @@
                 </div>
                 {{else}}
                 <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-4">
-                    <label class="tw-text-xs tw-opacity-70">Aptitudes</label>
-                    <input type="text" name="system.aptitudes" value="" placeholder="Agility, General (comma-separated)" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                    <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Aptitudes"}}</label>
+                    <input type="text" name="system.aptitudes" value="" placeholder="{{localize 'WH40K.ItemSheet.Skill.AptitudesPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
                 </div>
                 {{/if}}
             </section>
@@ -117,7 +117,7 @@
             {{#if item.system.descriptor}}
             <section class="tw-bg-[linear-gradient(135deg,rgba(41,128,185,0.08),rgba(41,128,185,0.05))] tw-border tw-border-[rgba(41,128,185,0.2)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-info)] tw-rounded-r-md tw-p-3">
                 <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-[var(--wh40k-accent-info)]">
-                    <i class="fas fa-align-left"></i> Description
+                    <i class="fas fa-align-left"></i> {{localize "WH40K.Tabs.Description"}}
                 </h3>
                 <div class="tw-text-sm tw-italic tw-leading-relaxed tw-p-2">
                     {{item.system.descriptor}}
@@ -129,7 +129,7 @@
             {{#if (eq item.system.skillType "specialist")}}
             <section class="tw-bg-black/20 tw-border tw-border-white/[0.08] tw-rounded-md tw-p-3">
                 <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-pb-2 tw-mb-3 tw-border-b tw-border-white/10">
-                    <i class="fas fa-list-ul tw-text-purple-400"></i> Specializations
+                    <i class="fas fa-list-ul tw-text-purple-400"></i> {{localize "WH40K.ItemSheet.Skill.Specialisations"}}
                 </h3>
 
                 {{#if item.system.specializations.length}}
@@ -146,14 +146,14 @@
                        class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
                        name="system.specializations"
                        value="{{join item.system.specializations ", "}}"
-                       placeholder="Imperium, Koronus Expanse, War (comma-separated)" />
+                       placeholder="{{localize 'WH40K.ItemSheet.Skill.SpecialisationsPlaceholder'}}" />
             </section>
             {{/if}}
 
             {{!-- Uses & Rules Panel --}}
             <section class="tw-bg-black/20 tw-border tw-border-white/[0.08] tw-rounded-md tw-p-3">
                 <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-pb-2 tw-mb-3 tw-border-b tw-border-white/10">
-                    <i class="fas fa-book-open tw-text-[var(--wh40k-accent-green)]"></i> Uses &amp; Rules
+                    <i class="fas fa-book-open tw-text-[var(--wh40k-accent-green)]"></i> {{localize "WH40K.ItemSheet.Skill.UsesAndRules"}}
                 </h3>
                 <div class="editor tw-text-sm" data-edit="system.uses">
                     {{{item.system.uses}}}
@@ -303,7 +303,7 @@
             {{#if item.system.specialRules}}
             <section class="tw-bg-[linear-gradient(135deg,rgba(122,60,180,0.08)_0%,rgba(142,68,173,0.05)_100%)] tw-border tw-border-[rgba(122,60,180,0.2)] tw-border-l-[3px] tw-border-l-purple-500 tw-rounded-r-md tw-p-3">
                 <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-purple-400">
-                    <i class="fas fa-exclamation-triangle"></i> Special Rules
+                    <i class="fas fa-exclamation-triangle"></i> {{localize "WH40K.ItemSheet.Skill.SpecialRules"}}
                 </h3>
                 <div class="editor tw-text-sm" data-edit="system.specialRules">
                     {{{item.system.specialRules}}}
@@ -314,24 +314,24 @@
             {{!-- Roll Config (advanced settings) --}}
             <section class="tw-bg-black/[0.15] tw-border tw-border-white/[0.05] tw-rounded-md tw-p-3">
                 <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-pb-2 tw-mb-3 tw-border-b tw-border-white/[0.08] tw-opacity-70">
-                    <i class="fas fa-cog"></i> Roll Configuration
+                    <i class="fas fa-cog"></i> {{localize "WH40K.ItemSheet.Skill.RollConfiguration"}}
                 </h3>
 
                 <div class="tw-grid tw-grid-cols-3 tw-gap-3">
                     <div class="tw-flex tw-flex-col tw-gap-1">
-                        <label class="tw-text-xs tw-opacity-70">Default Modifier</label>
+                        <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.Skill.DefaultModifier"}}</label>
                         <input type="number" name="system.rollConfig.defaultModifier" value="{{item.system.rollConfig.defaultModifier}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
                     </div>
 
                     <div class="tw-flex tw-flex-col tw-gap-1">
-                        <label class="tw-text-xs tw-opacity-70">Untrained Penalty</label>
+                        <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.Skill.UntrainedPenalty"}}</label>
                         <input type="number" name="system.rollConfig.untrainedPenalty" value="{{item.system.rollConfig.untrainedPenalty}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
                     </div>
 
                     <div class="tw-flex tw-flex-col tw-gap-1 tw-justify-end">
                         <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm">
                             <input type="checkbox" name="system.rollConfig.canBeUsedUntrained" {{checked item.system.rollConfig.canBeUsedUntrained}} />
-                            Can Use Untrained
+                            {{localize "WH40K.ItemSheet.Skill.CanUseUntrainedLabel"}}
                         </label>
                     </div>
                 </div>
@@ -339,12 +339,12 @@
 
             {{!-- Footer: Source --}}
             <div class="tw-pt-4 tw-border-t tw-border-white/10">
-                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70 tw-mb-1 tw-block">Source</label>
+                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70 tw-mb-1 tw-block">{{localize "WH40K.Common.Source"}}</label>
                 <input type="text"
                        class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
                        name="system.source"
                        value="{{#if item.system.source}}{{item.system.source}}{{else}}Core Rulebook{{/if}}"
-                       placeholder="Core Rulebook" />
+                       placeholder="{{localize 'WH40K.ItemSheet.Skill.SourcePlaceholder'}}" />
             </div>
         </div>
     </form>

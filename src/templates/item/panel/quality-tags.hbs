@@ -29,7 +29,7 @@
             class="tw--mr-1 tw-ml-0.5 tw-inline-flex tw-h-4 tw-w-4 tw-items-center tw-justify-center tw-border-0 tw-bg-transparent tw-p-0 tw-text-inherit tw-opacity-60 tw-transition-all hover:tw-scale-110 hover:tw-text-[var(--wh40k-stat-negative)] hover:tw-opacity-100"
             data-action="removeQuality"
             data-quality-name="{{this.name}}"
-            title="Remove {{this.name}}">
+            title="{{localize 'WH40K.ItemSheet.QualityTags.Remove' name=this.name}}">
       <i class="fa-solid fa-xmark"></i>
     </button>
     {{/if}}
@@ -40,9 +40,9 @@
   <button type="button"
           class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-border tw-border-[rgba(59,130,246,0.3)] tw-bg-[rgba(59,130,246,0.15)] tw-px-2.5 tw-py-1 tw-text-sm tw-text-[#93c5fd] tw-transition-all hover:tw-border-[rgba(59,130,246,0.5)] hover:tw-bg-[rgba(59,130,246,0.25)]"
           data-action="addQuality"
-          title="Add Quality">
+          title="{{localize 'WH40K.ItemSheet.QualityTags.Add'}}">
     <i class="fa-solid fa-plus"></i>
-    <span>Add</span>
+    <span>{{localize "WH40K.Common.Add"}}</span>
   </button>
   {{/if}}
 </div>

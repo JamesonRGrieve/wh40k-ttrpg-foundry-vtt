@@ -12,11 +12,11 @@ const CyberneticSheet = defineSimpleItemSheet({
     width: 600,
     height: 700,
     tabs: [
-        { tab: 'properties', group: 'primary', label: 'Properties' },
-        { tab: 'installation', group: 'primary', label: 'Installation' },
-        { tab: 'modifiers', group: 'primary', label: 'Modifiers' },
-        { tab: 'description', group: 'primary', label: 'Info' },
-        { tab: 'effects', group: 'primary', label: 'Effects' },
+        { tab: 'properties', group: 'primary', label: 'WH40K.Tabs.Properties' },
+        { tab: 'installation', group: 'primary', label: 'WH40K.Tabs.Installation' },
+        { tab: 'modifiers', group: 'primary', label: 'WH40K.Tabs.Modifiers' },
+        { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Info' },
+        { tab: 'effects', group: 'primary', label: 'WH40K.Tabs.Effects' },
     ],
     defaultTab: 'properties',
 });

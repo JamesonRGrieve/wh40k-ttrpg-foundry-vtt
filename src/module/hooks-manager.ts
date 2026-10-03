@@ -1235,8 +1235,8 @@ export class HooksManager {
             { sheet: EndeavourSheet, types: ['endeavour'], label: 'WH40K.Sheet.Endeavour' },
             { sheet: LeadSheet, types: ['lead'], label: 'WH40K.Sheet.Lead' },
             { sheet: OriginPathSheet, types: ['originPath'], label: 'WH40K.Sheet.OriginPath' },
-            { sheet: WeaponModSheet, types: ['weaponModification'], label: 'WH40K.Sheet.WeaponMod' },
-            { sheet: ArmourModSheet, types: ['armourModification'], label: 'WH40K.Sheet.ArmourMod' },
+            { sheet: WeaponModSheet, types: ['weaponModification'], label: 'WH40K.Sheet.WeaponModification' },
+            { sheet: ArmourModSheet, types: ['armourModification'], label: 'WH40K.Sheet.ArmourModification' },
             { sheet: AttackSpecialSheet, types: ['attackSpecial'], label: 'WH40K.Sheet.AttackSpecial' },
             { sheet: WeaponQualitySheet, types: ['weaponQuality'], label: 'WH40K.Sheet.WeaponQuality' },
             { sheet: ShipComponentSheet, types: ['shipComponent'], label: 'WH40K.Sheet.ShipComponent' },
@@ -1359,8 +1359,8 @@ export class HooksManager {
         browserBtn.type = 'button';
         browserBtn.className =
             'wh40k-compendium-browser-btn tw-bg-gradient-to-br tw-from-[var(--wh40k-gold-dark)] tw-to-[var(--wh40k-gold)] tw-border tw-border-solid tw-border-[var(--wh40k-gold)] tw-rounded tw-text-[var(--wh40k-sheet-bg)] tw-text-xs tw-font-semibold tw-px-2 tw-py-1 tw-cursor-pointer tw-mr-1';
-        browserBtn.title = 'Open Compendium Browser';
-        browserBtn.innerHTML = '<i class="fas fa-search tw-mr-1"></i> Compendium Browser';
+        browserBtn.title = game.i18n.localize('WH40K.CompendiumBrowser.OpenTooltip');
+        browserBtn.innerHTML = `<i class="fas fa-search tw-mr-1"></i> ${game.i18n.localize('WH40K.CompendiumBrowser.Button')}`;
 
         browserBtn.addEventListener('click', (event) => {
             event.preventDefault();

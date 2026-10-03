@@ -518,17 +518,17 @@ export default class TalentSheet extends BaseItemSheet<TalentItem> {
      */
     _getCategoryOptions(currentCategory: string | undefined): SelectOption[] {
         const categories = [
-            { value: '', label: 'General' },
-            { value: 'general', label: 'General' },
-            { value: 'combat', label: 'Combat' },
-            { value: 'social', label: 'Social' },
-            { value: 'investigation', label: 'Investigation' },
-            { value: 'psychic', label: 'Psychic' },
-            { value: 'navigator', label: 'Navigator' },
-            { value: 'tech', label: 'Tech' },
-            { value: 'leadership', label: 'Leadership' },
-            { value: 'career', label: 'Career' },
-            { value: 'unique', label: 'Unique' },
+            { value: '', label: game.i18n.localize('WH40K.TalentCategory.General') },
+            { value: 'general', label: game.i18n.localize('WH40K.TalentCategory.General') },
+            { value: 'combat', label: game.i18n.localize('WH40K.TalentCategory.Combat') },
+            { value: 'social', label: game.i18n.localize('WH40K.TalentCategory.Social') },
+            { value: 'investigation', label: game.i18n.localize('WH40K.TalentCategory.Investigation') },
+            { value: 'psychic', label: game.i18n.localize('WH40K.TalentCategory.Psychic') },
+            { value: 'navigator', label: game.i18n.localize('WH40K.TalentCategory.Navigator') },
+            { value: 'tech', label: game.i18n.localize('WH40K.TalentCategory.Tech') },
+            { value: 'leadership', label: game.i18n.localize('WH40K.TalentCategory.Leadership') },
+            { value: 'career', label: game.i18n.localize('WH40K.TalentCategory.Career') },
+            { value: 'unique', label: game.i18n.localize('WH40K.TalentCategory.Unique') },
         ];
 
         return categories.map((cat) => ({
@@ -548,9 +548,9 @@ export default class TalentSheet extends BaseItemSheet<TalentItem> {
     _getTierOptions(currentTier: number | undefined): SelectOption[] {
         return [
             { value: 0, label: '—', selected: currentTier === 0 },
-            { value: 1, label: 'Tier 1', selected: currentTier === 1 },
-            { value: 2, label: 'Tier 2', selected: currentTier === 2 },
-            { value: 3, label: 'Tier 3', selected: currentTier === 3 },
+            { value: 1, label: game.i18n.localize('WH40K.Talent.Tier1'), selected: currentTier === 1 },
+            { value: 2, label: game.i18n.localize('WH40K.Talent.Tier2'), selected: currentTier === 2 },
+            { value: 3, label: game.i18n.localize('WH40K.Talent.Tier3'), selected: currentTier === 3 },
         ];
     }
 
@@ -882,9 +882,17 @@ export default class TalentSheet extends BaseItemSheet<TalentItem> {
         const content = `
             <div class="talent-chat-card">
                 <h3>${this.item.name}</h3>
-                <p><strong>Type:</strong> ${this.item.system.isPassive ? 'Passive' : 'Active'}</p>
-                ${this.item.system.tier ? `<p><strong>Tier:</strong> ${this.item.system.tier}</p>` : ''}
-                ${this.item.system.cost ? `<p><strong>Cost:</strong> ${this.item.system.cost} XP</p>` : ''}
+                <p><strong>${game.i18n.localize('WH40K.Common.TypeLabel')}</strong> ${game.i18n.localize(
+            this.item.system.isPassive ? 'WH40K.ItemSheet.Talent.Passive' : 'WH40K.ItemSheet.Talent.Active',
+        )}</p>
+                ${this.item.system.tier ? `<p><strong>${game.i18n.localize('WH40K.Common.TierLabel')}</strong> ${this.item.system.tier}</p>` : ''}
+                ${
+                    this.item.system.cost
+                        ? `<p><strong>${game.i18n.localize('WH40K.ItemPreview.Cost')}</strong> ${game.i18n.format('WH40K.Common.XpAmount', {
+                              amount: String(this.item.system.cost),
+                          })}</p>`
+                        : ''
+                }
                 <hr>
                 <div>${this.item.system.benefit !== '' ? this.item.system.benefit : this.item.system.description.value}</div>
             </div>

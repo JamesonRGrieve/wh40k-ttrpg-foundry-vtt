@@ -181,7 +181,7 @@ export default class NPCQuickCreateDialog extends makeNpcFormDialog({
             // Buttons
             buttons: [
                 { type: 'submit', icon: 'fa-solid fa-plus', label: 'WH40K.NPC.Create', cssClass: 'primary' },
-                { type: 'button', action: 'cancel', icon: 'fa-solid fa-times', label: 'Cancel' },
+                { type: 'button', action: 'cancel', icon: 'fa-solid fa-times', label: 'WH40K.Cancel' },
             ],
         };
     }
@@ -324,7 +324,7 @@ export default class NPCQuickCreateDialog extends makeNpcFormDialog({
             const actor = (await Actor.create(actorData as unknown as Parameters<typeof Actor.create>[0])) as WH40KNPC | undefined;
 
             if (actor) {
-                ui.notifications.info(`Created NPC: ${String(actor.name)}`);
+                ui.notifications.info(game.i18n.format('WH40K.NPC.Created', { name: String(actor.name) }));
 
                 // Open the sheet
                 // eslint-disable-next-line @typescript-eslint/no-deprecated -- actor.sheet.render(true) is the V14 pattern for reopening actor sheets; render({ force: true }) breaks actor sheets
@@ -447,7 +447,7 @@ export default class NPCQuickCreateDialog extends makeNpcFormDialog({
             if (result !== undefined) actors.push(result as WH40KNPC);
         }
 
-        ui.notifications.info(`Created ${actors.length} NPCs`);
+        ui.notifications.info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: String(actors.length) }));
         return actors;
     }
 }

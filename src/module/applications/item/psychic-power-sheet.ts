@@ -12,9 +12,9 @@ const PsychicPowerSheet = defineSimpleItemSheet({
     width: 550,
     height: 500,
     tabs: [
-        { tab: 'details', group: 'primary', label: 'Details' },
-        { tab: 'description', group: 'primary', label: 'Description' },
-        { tab: 'effects', group: 'primary', label: 'Effects' },
+        { tab: 'details', group: 'primary', label: 'WH40K.Tabs.Details' },
+        { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Description' },
+        { tab: 'effects', group: 'primary', label: 'WH40K.Tabs.Effects' },
     ],
     defaultTab: 'details',
 });

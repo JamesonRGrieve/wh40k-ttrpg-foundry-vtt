@@ -27,8 +27,8 @@ const CriticalInjurySheet = defineSimpleItemSheet({
     width: 560,
     height: 620,
     tabs: [
-        { tab: 'details', group: 'primary', label: 'Details' },
-        { tab: 'description', group: 'primary', label: 'Description' },
+        { tab: 'details', group: 'primary', label: 'WH40K.Tabs.Details' },
+        { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Description' },
     ],
     defaultTab: 'details',
     actions: {

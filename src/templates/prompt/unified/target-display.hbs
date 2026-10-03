@@ -8,7 +8,7 @@
 
         {{!-- Difficulty picker beside the target --}}
         {{#if isForceField}}
-            <div class="tw-font-display tw-text-sm tw-font-semibold tw-text-[rgba(232,228,217,0.7)] tw-uppercase tw-tracking-[0.15em]">Protection Rating</div>
+            <div class="tw-font-display tw-text-sm tw-font-semibold tw-text-[rgba(232,228,217,0.7)] tw-uppercase tw-tracking-[0.15em]">{{localize "WH40K.Chat.ForceField.ProtectionRating"}}</div>
         {{else}}
             <div class="urd-difficulty-picker tw-relative tw-mt-2">
                 <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-py-1 tw-px-[14px] tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-[20px] tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(201,162,39,0.1)] hover:tw-border-[rgba(201,162,39,0.5)]" data-action="toggleDifficultyPicker">
@@ -36,7 +36,7 @@
     {{!-- Breakdown line --}}
     {{#unless isForceField}}
     <div class="tw-flex tw-items-center tw-gap-1.5 tw-mt-2.5 tw-text-xs tw-text-[#6a6a6a]">
-        <span>Base {{baseTarget}}</span>
+        <span>{{localize "WH40K.CharacteristicSetup.Base"}} {{baseTarget}}</span>
         {{#if (ne difficultyMod 0)}}
             <span class="tw-text-[rgba(201,162,39,0.3)]">|</span>
             <span class="{{#if (gt difficultyMod 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
@@ -46,13 +46,13 @@
         {{#if (ne situationalMod 0)}}
             <span class="tw-text-[rgba(201,162,39,0.3)]">|</span>
             <span class="{{#if (gt situationalMod 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
-                Mods {{#if (gt situationalMod 0)}}+{{/if}}{{situationalMod}}
+                {{localize "WH40K.Prompt.Unified.Mods"}} {{#if (gt situationalMod 0)}}+{{/if}}{{situationalMod}}
             </span>
         {{/if}}
         {{#if (ne customMod 0)}}
             <span class="tw-text-[rgba(201,162,39,0.3)]">|</span>
             <span class="{{#if (gt customMod 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
-                Custom {{#if (gt customMod 0)}}+{{/if}}{{customMod}}
+                {{localize "WH40K.Prompt.Unified.Custom"}} {{#if (gt customMod 0)}}+{{/if}}{{customMod}}
             </span>
         {{/if}}
     </div>

@@ -135,12 +135,10 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      * PrimarySheetMixin expects TABS as a flat array of descriptors
      * (V14), not the V13 nested `{ primary: { tabs: {...} } }` shape.
      */
-    /* eslint-disable no-restricted-syntax -- i18n: TABS static initializer runs before game.i18n; labels are resolved at render time by Handlebars {{localize}} */
     static TABS = [
-        { tab: 'items', group: 'primary', label: 'Items' },
-        { tab: 'actors', group: 'primary', label: 'Actors' },
+        { tab: 'items', group: 'primary', label: 'WH40K.Tabs.Items' },
+        { tab: 'actors', group: 'primary', label: 'WH40K.Tabs.Actors' },
     ];
-    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
@@ -160,12 +158,12 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
         context['tabs'] = {
             items: {
-                label: 'Items',
+                label: game.i18n.localize('WH40K.Tabs.Items'),
                 packs: packs.filter((p) => p.documentName === 'Item'),
                 icon: 'fa-suitcase',
             },
             actors: {
-                label: 'Actors',
+                label: game.i18n.localize('WH40K.Tabs.Actors'),
                 packs: packs.filter((p) => p.documentName === 'Actor'),
                 icon: 'fa-users',
             },
@@ -424,21 +422,21 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         if (modifiers.armourPoints !== undefined && modifiers.armourPoints !== 0) {
             modifierBadges.push({
                 type: 'ap',
-                label: `AP ${formatSigned(modifiers.armourPoints)}`,
+                label: `${game.i18n.localize('WH40K.Armour.AP')} ${formatSigned(modifiers.armourPoints)}`,
                 positive: modifiers.armourPoints > 0,
             });
         }
         if (modifiers.maxAgility !== undefined && modifiers.maxAgility !== 0) {
             modifierBadges.push({
                 type: 'agility',
-                label: `Ag ${formatSigned(modifiers.maxAgility)}`,
+                label: `${game.i18n.localize('WH40K.Characteristic.Abbr.Agility')} ${formatSigned(modifiers.maxAgility)}`,
                 positive: modifiers.maxAgility > 0,
             });
         }
         if (modifiers.weight !== undefined && modifiers.weight !== 0) {
             modifierBadges.push({
                 type: 'weight',
-                label: `${formatSigned(modifiers.weight)}kg`,
+                label: `${formatSigned(modifiers.weight)}${game.i18n.localize('WH40K.Common.Kilograms')}`,
                 positive: modifiers.weight <= 0, // Lighter is better
             });
         }
@@ -515,10 +513,10 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             if (!effectStr.match(/^\d+$/)) {
                 description = effectStr.replace(/<[^>]*>/g, ''); // Strip HTML
             } else {
-                description = `See rulebook page ${effectStr}`;
+                description = game.i18n.format('WH40K.CompendiumBrowser.SeeRulebookPage', { page: effectStr });
             }
         } else {
-            description = 'No description available';
+            description = game.i18n.localize('WH40K.CompendiumBrowser.NoDescription');
         }
 
         // Truncate description for list view
@@ -545,10 +543,10 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     // eslint-disable-next-line no-restricted-syntax -- boundary: groupBy options are plain UI data; Record<string,unknown> is the shape consumed by the template
     _getGroupByOptions(): Record<string, unknown>[] {
         return [
-            { value: 'source', label: 'Source' },
-            { value: 'category', label: 'Category' },
-            { value: 'type', label: 'Type' },
-            { value: 'pack', label: 'Pack' },
+            { value: 'source', label: game.i18n.localize('WH40K.Common.Source') },
+            { value: 'category', label: game.i18n.localize('WH40K.CompendiumBrowser.Category') },
+            { value: 'type', label: game.i18n.localize('WH40K.Common.Type') },
+            { value: 'pack', label: game.i18n.localize('WH40K.CompendiumBrowser.Pack') },
         ];
     }
 

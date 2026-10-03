@@ -64,8 +64,9 @@ describe('ship-stat modifier helpers', () => {
     it('shipModifiersList includes only non-zero stats with localized labels', () => {
         const list = shipModifiersList({ speed: 1, armour: 0, morale: -3 } as ShipStatModifiers);
         expect(list).toEqual([
-            { key: 'speed', label: 'WH40K.ShipStat.Speed', value: 1 },
-            { key: 'morale', label: 'WH40K.ShipStat.Morale', value: -3 },
+            // Repointed from the never-defined WH40K.ShipStat.* to the existing stat labels.
+            { key: 'speed', label: 'WH40K.Voidcraft.Build.Stat.Speed', value: 1 },
+            { key: 'morale', label: 'WH40K.Voidcraft.Build.Stat.Morale', value: -3 },
         ]);
     });
 });

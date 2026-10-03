@@ -1400,8 +1400,7 @@ export class WH40KBaseActor extends Actor {
         const specialityKey = toCamelCase(speciality);
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skills[key] may be undefined; null check is for runtime safety
         if (parent === undefined || parent === null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn(`Skill not specified -- unexpected error.`);
+            ui.notifications.warn(t('WH40K.Warning.SkillNotSpecified'));
             return;
         }
 
@@ -1411,8 +1410,7 @@ export class WH40KBaseActor extends Actor {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- entry.name may be undefined per noUncheckedIndexedAccess; check is intentional
             entries.some((entry) => (entry.name !== undefined ? entry.name.toLowerCase() === speciality.toLowerCase() : false) || entry.slug === specialityKey)
         ) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn(`Speciality already exists. Unable to create.`);
+            ui.notifications.warn(t('WH40K.Notify.Actor.SpecialityExists'));
             return;
         }
 
@@ -1600,7 +1598,7 @@ export class WH40KBaseActor extends Actor {
         const willpower = sysChars !== undefined ? sysChars['willpower'] : undefined;
 
         const breakdown: WH40KStatBreakdown = {
-            label: 'Wounds',
+            label: game.i18n.localize('WH40K.Resource.Wounds'),
             base: 0,
             modifiers: [],
             total: wounds.max,
@@ -1649,7 +1647,7 @@ export class WH40KBaseActor extends Actor {
         const agility = sysCharsI !== undefined ? sysCharsI['agility'] : undefined;
 
         const breakdown: WH40KStatBreakdown = {
-            label: 'Initiative',
+            label: game.i18n.localize('WH40K.Combat.Initiative'),
             base: agility !== undefined ? agility.bonus : 0,
             modifiers: [],
             total: initiative.bonus,
@@ -1671,13 +1669,13 @@ export class WH40KBaseActor extends Actor {
         const fate = (this.system as Record<string, unknown>)['fate'] as { rolled?: boolean; max?: number } | undefined | null;
 
         if (fate === undefined || fate === null) {
-            return { label: 'Fate Points', base: 0, modifiers: [], total: 0 };
+            return { label: game.i18n.localize('WH40K.Resource.FatePoints'), base: 0, modifiers: [], total: 0 };
         }
 
         const totalFateMod = (this.system as Record<string, unknown>)['totalFateModifier'] as number | undefined;
         /* eslint-enable no-restricted-syntax */
         const breakdown: WH40KStatBreakdown = {
-            label: 'Fate Points',
+            label: game.i18n.localize('WH40K.Resource.FatePoints'),
             base: fate.rolled === true ? (fate.max ?? 0) - (totalFateMod ?? 0) : 0,
             modifiers: [],
             total: fate.max ?? 0,
@@ -1713,7 +1711,7 @@ export class WH40KBaseActor extends Actor {
         if (armour === undefined || armour === null) return null;
 
         const breakdown: WH40KStatBreakdown = {
-            label: `Armour (${location})`,
+            label: game.i18n.format('WH40K.Tooltip.ArmourLocation', { location }),
             base: 0,
             modifiers: [],
             total: armour.value ?? 0,

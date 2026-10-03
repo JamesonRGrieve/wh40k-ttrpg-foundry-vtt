@@ -348,7 +348,7 @@
  <span class="tw-py-[2px] tw-px-[5px] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-bg-[rgba(156,39,176,0.2)] tw-text-[#ce93d8] tw-border tw-border-[rgba(156,39,176,0.4)]">{{localize "WH40K.OriginPath.Advanced"}}</span>
  {{/if}}
  {{#if origin.xpCost}}
- <span class="tw-py-[2px] tw-px-[5px] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-bg-[rgba(33,150,243,0.2)] tw-text-[#64b5f6] tw-border tw-border-[rgba(33,150,243,0.4)]">{{origin.xpCost}} XP</span>
+ <span class="tw-py-[2px] tw-px-[5px] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-bg-[rgba(33,150,243,0.2)] tw-text-[#64b5f6] tw-border tw-border-[rgba(33,150,243,0.4)]">{{origin.xpCost}} {{localize "WH40K.Common.XP"}}</span>
  {{/if}}
  </div>
  {{/if}}
@@ -584,7 +584,7 @@
  <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-mb-[var(--wh40k-space-xs)] {{#if selectedOrigin.rolls.thrones.hasValue}}tw-border tw-border-[rgba(76,175,80,0.3)] tw-bg-[rgba(76,175,80,0.05)]{{else}}tw-border tw-border-transparent{{/if}}">
  <div class="tw-flex-1">
  <div class="tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">
- <i class="fa-solid fa-coins tw-mr-[var(--wh40k-space-xs)]"></i> Throne Gelt
+ <i class="fa-solid fa-coins tw-mr-[var(--wh40k-space-xs)]"></i> {{localize "WH40K.Currency.ThroneGelt"}}
  </div>
  {{#if selectedOrigin.rolls.thrones.hasValue}}
  <div class="tw-text-[0.9rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)]">{{selectedOrigin.rolls.thrones.value}} <span class="tw-text-[0.75rem] tw-font-normal tw-text-[color:var(--wh40k-text-muted)]">({{selectedOrigin.rolls.thrones.breakdown}})</span></div>
@@ -610,23 +610,23 @@
  <div class="tw-border-t tw-border-t-[var(--wh40k-bronze)] tw-pt-[var(--wh40k-space-md)]">
  <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[0.5px]">
  <i class="fa-solid fa-user-tie tw-text-[0.9rem]"></i>
- Starting Resources
+ {{localize "WH40K.OriginPathBuilder.StartingResources"}}
  </h4>
  <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-mb-[var(--wh40k-space-xs)] {{#if selectedOrigin.resources.influenceRolled}}tw-border tw-border-[rgba(76,175,80,0.3)] tw-bg-[rgba(76,175,80,0.05)]{{else}}tw-border tw-border-transparent{{/if}}">
  <div class="tw-flex-1">
  <div class="tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">
- <i class="fa-solid fa-user-tie tw-mr-[var(--wh40k-space-xs)]"></i> Influence
+ <i class="fa-solid fa-user-tie tw-mr-[var(--wh40k-space-xs)]"></i> {{localize "WH40K.Currency.Influence"}}
  </div>
  {{#if selectedOrigin.resources.influenceRolled}}
  <div class="tw-text-[0.9rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)]">{{selectedOrigin.resources.influenceRolled}}</div>
  {{else}}
- <div class="tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-mono">1d5 + Fel Bonus + {{selectedOrigin.resources.influenceMod}}</div>
+ <div class="tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-mono">{{localize "WH40K.OriginPathBuilder.InfluenceFormula" modifier=selectedOrigin.resources.influenceMod}}</div>
  {{/if}}
  </div>
  <div class="tw-flex tw-gap-[var(--wh40k-space-xs)]">
  <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105" data-action="rollInfluence">
  <i class="fa-solid fa-dice"></i>
- {{#if selectedOrigin.resources.influenceRolled}}Reroll{{else}}Roll{{/if}}
+ {{#if selectedOrigin.resources.influenceRolled}}{{localize "WH40K.Reroll.Button"}}{{else}}{{localize "WH40K.Common.Roll"}}{{/if}}
  </button>
  <button type="button" class="tw-flex tw-items-center tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105" data-action="manualInfluence">
  <i class="fa-solid fa-keyboard"></i>
@@ -755,7 +755,7 @@
  {{/if}}
  {{#if preview.aptitudes.length}}
  <div >
- <div class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">Aptitudes</div>
+ <div class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.Aptitudes"}}</div>
  <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[120px] tw-overflow-y-auto tw-overflow-x-hidden">
  {{#each preview.aptitudes as |apt|}}
  <span class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3]">

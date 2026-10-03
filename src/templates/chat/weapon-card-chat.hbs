@@ -17,32 +17,32 @@
     {{!-- Stats Grid --}}
     <div class="tw-grid tw-grid-cols-2 tw-gap-px tw-p-px tw-bg-[var(--wh40k-border-color-light)] tw-mb-2">
       <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
-        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Damage</span>
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Weapon.Damage"}}</span>
         <span class="tw-font-display tw-text-[0.95rem] tw-font-bold tw-text-[#dc143c]">{{item.system.damageLabel}}</span>
       </div>
       <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
-        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Pen</span>
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Weapon.Pen"}}</span>
         <span class="tw-font-display tw-text-[0.95rem] tw-font-bold {{themeClassFor 'accent'}}">{{item.system.damage.penetration}}</span>
       </div>
 
       {{#if item.system.isRangedWeapon}}
       <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
-        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Range</span>
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Weapon.Range"}}</span>
         <span class="tw-font-display tw-text-[0.95rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{item.system.rangeLabel}}</span>
       </div>
       <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
-        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">RoF</span>
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Chat.Weapon.RoF"}}</span>
         <span class="tw-font-display tw-text-[0.95rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{item.system.rateOfFireLabel}}</span>
       </div>
       {{/if}}
 
       {{#if item.system.usesAmmo}}
       <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
-        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Clip</span>
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Weapon.Clip"}}</span>
         <span class="tw-font-display tw-text-[0.95rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{item.system.clip.value}}/{{item.system.effectiveClipMax}}</span>
       </div>
       <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
-        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Reload</span>
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Weapon.Reload"}}</span>
         <span class="tw-font-display tw-text-[0.95rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{item.system.reloadLabel}}</span>
       </div>
       {{/if}}
@@ -54,14 +54,14 @@
       <i class="fas fa-hammer tw-text-gold"></i>
       {{#if item.system.craftsmanshipModifiers.toHit}}
       {{#if (gt item.system.craftsmanshipModifiers.toHit 0)}}
-      <span class="tw-font-semibold tw-text-[#4ade80]">+{{item.system.craftsmanshipModifiers.toHit}} to Hit</span>
+      <span class="tw-font-semibold tw-text-[#4ade80]">+{{localize "WH40K.Chat.Weapon.ToHit" value=item.system.craftsmanshipModifiers.toHit}}</span>
       {{else}}
-      <span class="tw-font-semibold tw-text-[#dc143c]">{{item.system.craftsmanshipModifiers.toHit}} to Hit</span>
+      <span class="tw-font-semibold tw-text-[#dc143c]">{{localize "WH40K.Chat.Weapon.ToHit" value=item.system.craftsmanshipModifiers.toHit}}</span>
       {{/if}}
       {{/if}}
       {{#if item.system.craftsmanshipModifiers.damage}}
       <span class="tw-font-semibold tw-text-[#4ade80]">
-        +{{item.system.craftsmanshipModifiers.damage}} Damage
+        {{localize "WH40K.Chat.Weapon.DamageBonus" value=item.system.craftsmanshipModifiers.damage}}
       </span>
       {{/if}}
     </div>
@@ -91,18 +91,18 @@
     <div class="tw-flex tw-gap-1.5 tw-justify-center tw-items-stretch">
       <button type="button" class="tw-flex tw-flex-1 tw-items-center tw-justify-center tw-gap-1.5 tw-px-5 tw-py-2 tw-border tw-rounded-md tw-text-[0.9rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[linear-gradient(135deg,var(--wh40k-red)_0%,var(--wh40k-red-dark)_100%)] tw-border-[var(--wh40k-red-dark)] tw-text-white tw-shadow-[0_2px_6px_rgba(139,0,0,0.3)] hover:tw-bg-[linear-gradient(135deg,var(--wh40k-red-bright)_0%,var(--wh40k-red)_100%)] hover:-tw-translate-y-px hover:tw-shadow-[0_3px_8px_rgba(139,0,0,0.4)]" data-action="attack" data-item-uuid="{{item.uuid}}">
         <i class="fas fa-crosshairs"></i>
-        Attack
+        {{localize "WH40K.Combat.Attack"}}
       </button>
       {{#unless autoApplyDamage}}
       <button type="button" class="tw-flex tw-flex-none tw-items-center tw-gap-1 tw-px-3 tw-py-1.5 tw-border tw-rounded-md tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[linear-gradient(135deg,var(--wh40k-gold)_0%,var(--wh40k-gold-dark)_100%)] tw-border-[var(--wh40k-gold-dark)] tw-text-white hover:tw-bg-[linear-gradient(135deg,var(--wh40k-gold-bright)_0%,var(--wh40k-gold)_100%)] hover:-tw-translate-y-px hover:tw-shadow-[0_3px_8px_rgba(212,175,55,0.4)]" data-action="rollDamage" data-item-uuid="{{item.uuid}}">
         <i class="fas fa-burst"></i>
-        Damage
+        {{localize "WH40K.Weapon.Damage"}}
       </button>
       {{/unless}}
       {{#if item.system.usesAmmo}}
       <button type="button" class="tw-flex tw-flex-none tw-items-center tw-gap-1 tw-px-3 tw-py-1.5 tw-border tw-rounded-md tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[var(--wh40k-btn-bg)] tw-border-[var(--wh40k-border-color)] tw-text-[var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:-tw-translate-y-px" data-action="reload" data-item-uuid="{{item.uuid}}">
         <i class="fas fa-rotate-right"></i>
-        Reload
+        {{localize "WH40K.Weapon.Reload"}}
       </button>
       {{/if}}
     </div>

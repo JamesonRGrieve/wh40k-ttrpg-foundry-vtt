@@ -167,8 +167,7 @@ export default class ContainerItemSheet<TItem extends WH40KItemDocument = WH40KI
 
         // Prevent dropping item onto itself or ancestors
         if (!this._validateDropTarget(droppedItem)) {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Item.Container.DropSelfRejected localization key
-            ui.notifications.info('Cannot drop item into itself');
+            ui.notifications.info(game.i18n.localize('WH40K.Item.Container.DropSelfRejected'));
             return false;
         }
 
@@ -283,10 +282,10 @@ export default class ContainerItemSheet<TItem extends WH40KItemDocument = WH40KI
         if (itemId === undefined || itemId === '') return;
 
         const confirmed = await ConfirmationDialog.confirm({
-            title: 'Confirm Delete',
-            content: 'Are you sure you would like to delete this?',
-            confirmLabel: 'Delete',
-            cancelLabel: 'Cancel',
+            title: game.i18n.localize('WH40K.Item.Container.ConfirmDeleteTitle'),
+            content: game.i18n.localize('WH40K.Item.Container.ConfirmDeleteContent'),
+            confirmLabel: game.i18n.localize('WH40K.Common.Delete'),
+            cancelLabel: game.i18n.localize('WH40K.Cancel'),
         });
 
         if (confirmed) {

@@ -8,28 +8,28 @@
                 <img class="tw-w-12 tw-h-12 tw-border-2 tw-border-solid {{themeClassFor 'border'}} tw-rounded-md tw-object-cover tw-flex-shrink-0" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
                 <div class="tw-flex-1 tw-min-w-0">
                     <h2 class="tw-m-0 tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-truncate">{{this.actor.name}}</h2>
-                    <div class="tw-text-sm tw-text-gray-400 tw-mt-1">Assign Damage</div>
+                    <div class="tw-text-sm tw-text-gray-400 tw-mt-1">{{localize "WH40K.Combat.AssignDamage"}}</div>
                 </div>
             </div>
 
             <div class="tw-grid tw-grid-cols-3 tw-gap-2">
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
                     <span class="tw-font-display tw-font-bold tw-text-lg {{themeClassFor 'accent'}}">{{this.actor.system.wounds.value}}/{{this.actor.system.wounds.max}}</span>
-                    <span class="tw-text-xs tw-text-gray-400 tw-uppercase tw-tracking-wide">Wounds</span>
+                    <span class="tw-text-xs tw-text-gray-400 tw-uppercase tw-tracking-wide">{{localize "WH40K.Wounds"}}</span>
                 </div>
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
                     <span class="tw-font-display tw-font-bold tw-text-lg {{themeClassFor 'accent'}}">{{this.actor.system.wounds.critical}}</span>
-                    <span class="tw-text-xs tw-text-gray-400 tw-uppercase tw-tracking-wide">Critical</span>
+                    <span class="tw-text-xs tw-text-gray-400 tw-uppercase tw-tracking-wide">{{localize "WH40K.Prompt.AssignDamage.Critical"}}</span>
                 </div>
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
                     <span class="tw-font-display tw-font-bold tw-text-lg {{themeClassFor 'accent'}}">{{this.actor.system.fatigue.value}}/{{this.actor.system.fatigue.max}}</span>
-                    <span class="tw-text-xs tw-text-gray-400 tw-uppercase tw-tracking-wide">Fatigue</span>
+                    <span class="tw-text-xs tw-text-gray-400 tw-uppercase tw-tracking-wide">{{localize "WH40K.Combat.Fatigue"}}</span>
                 </div>
             </div>
         </div>
 
         {{! Damage Details }}
-        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title="Incoming Damage" marginClass=""}}
+        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs titleKey="WH40K.Prompt.AssignDamage.IncomingDamage" marginClass=""}}
             {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Hit Location"}}
                 <select class="tw-min-w-[140px] tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm" name="hit.location" id="location">
                     {{selectOptions locations selected=this.hit.location}}
@@ -69,11 +69,11 @@
 <div class="dialog-buttons">
     <button class="dialog-button roll default" data-button="roll" id="assign-damage">
         <span class="material-icons">api</span>
-        Apply
+        {{localize "WH40K.Common.Apply"}}
     </button>
     <button class="dialog-button cancel" data-button="cancel" id="cancel-prompt">
         <span class="material-icons">close</span>
-        Cancel
+        {{localize "WH40K.Cancel"}}
     </button>
 </div>
 </form>

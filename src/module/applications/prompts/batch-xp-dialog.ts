@@ -126,8 +126,12 @@ export default class BatchXPDialog extends ApplicationV2Mixin(ApplicationV2 as u
             count++;
         }
 
-        const verb = this.xpAmount > 0 ? 'added to' : 'removed from';
-        ui.notifications.info(`${Math.abs(this.xpAmount)} XP ${verb} ${count} character(s).`);
+        ui.notifications.info(
+            game.i18n.format(this.xpAmount > 0 ? 'WH40K.Notify.Xp.BatchAdded' : 'WH40K.Notify.Xp.BatchRemoved', {
+                amount: String(Math.abs(this.xpAmount)),
+                count: String(count),
+            }),
+        );
         await this.close();
     }
 

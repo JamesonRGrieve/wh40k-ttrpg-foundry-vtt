@@ -301,7 +301,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         if (this.item) {
             const itemSys = this.item.system as AcquireableItemSystem;
             context.item = {
-                name: this.item.name !== '' ? this.item.name : 'Unknown',
+                name: this.item.name !== '' ? this.item.name : game.i18n.localize('WH40K.Common.Unknown'),
                 img: this.item.img ?? null,
                 type: this.item.type,
                 availability: itemSys.availability !== undefined && itemSys.availability !== '' ? itemSys.availability : 'Common',

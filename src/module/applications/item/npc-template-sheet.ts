@@ -179,46 +179,46 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
 
         // Prepare categories
         const categories = [
-            { key: 'humanoid', label: 'Humanoid' },
-            { key: 'xenos', label: 'Xenos' },
-            { key: 'daemon', label: 'Daemon' },
-            { key: 'creature', label: 'Creature' },
-            { key: 'vehicle', label: 'Vehicle' },
-            { key: 'custom', label: 'Custom' },
+            { key: 'humanoid', label: game.i18n.localize('WH40K.NPCCategory.Humanoid') },
+            { key: 'xenos', label: game.i18n.localize('WH40K.NPCCategory.Xenos') },
+            { key: 'daemon', label: game.i18n.localize('WH40K.NPCCategory.Daemon') },
+            { key: 'creature', label: game.i18n.localize('WH40K.NPCCategory.Creature') },
+            { key: 'vehicle', label: game.i18n.localize('WH40K.WeaponClass.Vehicle') },
+            { key: 'custom', label: game.i18n.localize('WH40K.Source.Custom') },
         ].map((c) => ({ ...c, selected: c.key === sys.category }));
 
         // Prepare roles
         const roles = [
-            { key: 'bruiser', name: 'Bruiser' },
-            { key: 'sniper', name: 'Sniper' },
-            { key: 'caster', name: 'Caster' },
-            { key: 'support', name: 'Support' },
-            { key: 'commander', name: 'Commander' },
-            { key: 'specialist', name: 'Specialist' },
+            { key: 'bruiser', name: game.i18n.localize('WH40K.NPCRole.Bruiser') },
+            { key: 'sniper', name: game.i18n.localize('WH40K.NPCRole.Sniper') },
+            { key: 'caster', name: game.i18n.localize('WH40K.NPCRole.Caster') },
+            { key: 'support', name: game.i18n.localize('WH40K.NPCRole.Support') },
+            { key: 'commander', name: game.i18n.localize('WH40K.NPCRole.Commander') },
+            { key: 'specialist', name: game.i18n.localize('WH40K.NPCRole.Specialist') },
         ].map((r) => ({ ...r, selected: r.key === sys.role }));
 
         // Prepare types
         const types = [
-            { key: 'troop', name: 'Troop' },
-            { key: 'elite', name: 'Elite' },
-            { key: 'master', name: 'Master' },
-            { key: 'horde', name: 'Horde' },
-            { key: 'swarm', name: 'Swarm' },
-            { key: 'creature', name: 'Creature' },
-            { key: 'daemon', name: 'Daemon' },
-            { key: 'xenos', name: 'Xenos' },
+            { key: 'troop', name: game.i18n.localize('WH40K.NPCType.Troop') },
+            { key: 'elite', name: game.i18n.localize('WH40K.NPCType.Elite') },
+            { key: 'master', name: game.i18n.localize('WH40K.NPCType.Master') },
+            { key: 'horde', name: game.i18n.localize('WH40K.NPCType.Horde') },
+            { key: 'swarm', name: game.i18n.localize('WH40K.NPCType.Swarm') },
+            { key: 'creature', name: game.i18n.localize('WH40K.NPCType.Creature') },
+            { key: 'daemon', name: game.i18n.localize('WH40K.NPCType.Daemon') },
+            { key: 'xenos', name: game.i18n.localize('WH40K.NPCType.Xenos') },
         ].map((t) => ({ ...t, selected: t.key === sys.type }));
 
         // Prepare equipment presets
         const presets = [
-            { key: 'melee', name: 'Melee' },
-            { key: 'ranged', name: 'Ranged' },
-            { key: 'mixed', name: 'Mixed' },
-            { key: 'caster', name: 'Caster' },
-            { key: 'support', name: 'Support' },
-            { key: 'heavy', name: 'Heavy' },
-            { key: 'unarmed', name: 'Unarmed' },
-            { key: 'custom', name: 'Custom' },
+            { key: 'melee', name: game.i18n.localize('WH40K.WeaponClass.Melee') },
+            { key: 'ranged', name: game.i18n.localize('WH40K.NPC.Template.PresetRanged') },
+            { key: 'mixed', name: game.i18n.localize('WH40K.ClipBuilder.Mixed') },
+            { key: 'caster', name: game.i18n.localize('WH40K.NPCRole.Caster') },
+            { key: 'support', name: game.i18n.localize('WH40K.NPCRole.Support') },
+            { key: 'heavy', name: game.i18n.localize('WH40K.WeaponClass.Heavy') },
+            { key: 'unarmed', name: game.i18n.localize('WH40K.NPC.Template.PresetUnarmed') },
+            { key: 'custom', name: game.i18n.localize('WH40K.Source.Custom') },
         ].map((p) => ({ ...p, selected: p.key === sys.equipmentPreset }));
 
         // Prepare characteristics for display — list + labels/abbreviations come
@@ -344,7 +344,7 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
 
         const weapons = foundry.utils.deepClone(this.item.system.customWeapons);
         weapons.push({
-            name: 'New Weapon',
+            name: game.i18n.localize('WH40K.NPC.Template.NewWeapon'),
             damage: '1d10',
             pen: 0,
             range: 'Melee',
@@ -381,7 +381,7 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
         const traits = foundry.utils.deepClone(this.item.system.traits);
         traits.push({
             uuid: '',
-            name: 'New Trait',
+            name: game.i18n.localize('WH40K.NPC.Template.NewTrait'),
             description: '',
         });
 
@@ -411,7 +411,7 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
         const talents = foundry.utils.deepClone(this.item.system.talents);
         talents.push({
             uuid: '',
-            name: 'New Talent',
+            name: game.i18n.localize('WH40K.NPC.Template.NewTalent'),
             description: '',
         });
 
@@ -440,7 +440,7 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
 
         const variants = foundry.utils.deepClone(this.item.system.variants);
         variants.push({
-            name: 'New Variant',
+            name: game.i18n.localize('WH40K.NPC.Template.NewVariant'),
             description: '',
             threatModifier: 0,
             characteristicModifiers: {},
@@ -513,7 +513,7 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
                     await actor.createEmbeddedDocuments('Item', itemsToCreate);
                 }
 
-                ui.notifications.info(`Created NPC: ${actor.name ?? 'Unknown'}`);
+                ui.notifications.info(game.i18n.format('WH40K.NPC.Created', { name: actor.name ?? game.i18n.localize('WH40K.Common.Unknown') }));
                 actor.sheet?.render(true);
             }
         } catch (err) {

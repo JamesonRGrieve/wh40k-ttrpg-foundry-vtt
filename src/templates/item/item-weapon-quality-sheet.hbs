@@ -13,17 +13,17 @@
 
             <div class="tw-flex-1 tw-min-w-0">
                 <input type="text" class="tw-w-full tw-px-2 tw-py-1 tw-bg-transparent tw-border-0 tw-border-b tw-border-solid tw-border-transparent tw-font-display tw-text-xl tw-font-semibold hover:tw-border-orange-500/60 focus:tw-border-orange-500/60 focus:tw-outline-none tw-transition-colors"
-                       name="name" value="{{item.name}}" placeholder="Quality Name" />
+                       name="name" value="{{item.name}}" placeholder="{{localize 'WH40K.ItemSheet.WeaponQuality.NamePlaceholder'}}" />
 
                 <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-mt-1.5 tw-pl-2">
-                    <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-md tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-orange-500/15 tw-border tw-border-solid tw-border-orange-500/40 tw-text-orange-500" title="Item Type">
+                    <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-md tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-orange-500/15 tw-border tw-border-solid tw-border-orange-500/40 tw-text-orange-500" title="{{localize 'WH40K.ItemSheet.WeaponQuality.ItemTypeTooltip'}}">
                         <i class="fas fa-star"></i>
-                        Weapon Quality
+                        {{localize "WH40K.ItemSheet.WeaponQuality.ItemType"}}
                     </span>
                     {{#if system.hasLevel}}
-                        <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-md tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-blue-500/15 tw-border tw-border-solid tw-border-blue-500/40 tw-text-blue-500" title="Has Level">
+                        <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-md tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-blue-500/15 tw-border tw-border-solid tw-border-blue-500/40 tw-text-blue-500" title="{{localize 'WH40K.ItemSheet.WeaponQuality.HasLevel'}}">
                             <i class="fas fa-sort-numeric-up"></i>
-                            Level
+                            {{localize "WH40K.Common.Level"}}
                             {{system.level}}
                         </span>
                     {{/if}}
@@ -40,7 +40,7 @@
                     <i class="fas fa-fingerprint"></i>
                 </div>
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-                    <span class="tw-text-2xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">Identifier</span>
+                    <span class="tw-text-2xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.ItemSheet.WeaponQuality.Identifier"}}</span>
                     <span class="tw-font-display tw-text-sm tw-font-semibold">{{system.identifier}}</span>
                 </div>
             </div>
@@ -50,8 +50,8 @@
                     <i class="fas fa-sort-numeric-up"></i>
                 </div>
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-                    <span class="tw-text-2xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">Has Level</span>
-                    <span class="tw-font-display tw-text-sm tw-font-semibold">{{#if system.hasLevel}}Yes{{else}}No{{/if}}</span>
+                    <span class="tw-text-2xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.ItemSheet.WeaponQuality.HasLevel"}}</span>
+                    <span class="tw-font-display tw-text-sm tw-font-semibold">{{#if system.hasLevel}}{{localize "WH40K.Yes"}}{{else}}{{localize "WH40K.No"}}{{/if}}</span>
                 </div>
             </div>
 
@@ -61,7 +61,7 @@
                         <i class="fas fa-hashtag"></i>
                     </div>
                     <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-                        <span class="tw-text-2xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">Level</span>
+                        <span class="tw-text-2xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.Common.Level"}}</span>
                         <span class="tw-font-display tw-text-sm tw-font-semibold">{{system.level}}</span>
                     </div>
                 </div>
@@ -74,15 +74,15 @@
         <nav class="tabs wh40k-tabs tw-flex tw-gap-0.5 tw-px-3 tw-bg-black/5 tw-border-b tw-border-solid tw-border-black/10" data-group="primary">
             <button type="button" class="wh40k-tab active tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-solid tw-border-transparent tw-text-sm tw-font-medium tw-text-gray-500 tw-cursor-pointer tw-transition-all [&.active]:tw-text-orange-500 [&.active]:tw-border-orange-500 [&.active]:tw-bg-orange-500/8" data-tab="effect" data-group="primary">
                 <i class="fas fa-bolt"></i>
-                <span>Effect</span>
+                <span>{{localize "WH40K.Tabs.Effect"}}</span>
             </button>
             <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-solid tw-border-transparent tw-text-sm tw-font-medium tw-text-gray-500 tw-cursor-pointer tw-transition-all [&.active]:tw-text-orange-500 [&.active]:tw-border-orange-500 [&.active]:tw-bg-orange-500/8" data-tab="details" data-group="primary">
                 <i class="fas fa-cog"></i>
-                <span>Details</span>
+                <span>{{localize "WH40K.Tabs.Details"}}</span>
             </button>
             <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-solid tw-border-transparent tw-text-sm tw-font-medium tw-text-gray-500 tw-cursor-pointer tw-transition-all [&.active]:tw-text-orange-500 [&.active]:tw-border-orange-500 [&.active]:tw-bg-orange-500/8" data-tab="description" data-group="primary">
                 <i class="fas fa-book"></i>
-                <span>Description</span>
+                <span>{{localize "WH40K.Tabs.Description"}}</span>
             </button>
         </nav>
 
@@ -97,7 +97,7 @@
                 <div class="tw-bg-white/5 tw-border tw-border-solid tw-border-orange-500/30 tw-rounded-md tw-mb-3 tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-bg-gradient-to-r tw-from-orange-500/12 tw-to-transparent tw-border-b tw-border-solid tw-border-orange-500/20">
                         <i class="fas fa-bolt tw-text-orange-500 tw-text-sm"></i>
-                        <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">Mechanical Effect</h3>
+                        <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.ItemSheet.WeaponQuality.MechanicalEffect"}}</h3>
                     </div>
                     <div class="tw-p-0">
                         {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
@@ -108,13 +108,13 @@
                     <div class="tw-bg-white/5 tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
                         <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-b tw-border-solid tw-border-black/10">
                             <i class="fas fa-info-circle tw-text-bronze tw-text-sm"></i>
-                            <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">Level Explanation</h3>
+                            <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.ItemSheet.WeaponQuality.LevelExplanation"}}</h3>
                         </div>
                         <div class="tw-p-3">
                             <p class="tw-m-0 tw-p-2.5 tw-bg-blue-500/8 tw-border-l-4 tw-border-solid tw-border-blue-500/50 tw-rounded-md tw-text-sm tw-leading-relaxed">
-                                This quality has a numeric level (X). The level is displayed as
+                                {{localize "WH40K.ItemSheet.WeaponQuality.LevelExplanationBefore"}}
                                 <strong class="tw-font-semibold">{{item.name}} ({{system.level}})</strong>
-                                when applied to a weapon. The effect above should reference the level value where applicable.
+                                {{localize "WH40K.ItemSheet.WeaponQuality.LevelExplanationAfter"}}
                             </p>
                         </div>
                     </div>
@@ -128,29 +128,29 @@
                 <div class="tw-bg-white/5 tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-b tw-border-solid tw-border-black/10">
                         <i class="fas fa-cog tw-text-bronze tw-text-sm"></i>
-                        <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">Quality Properties</h3>
+                        <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.ItemSheet.WeaponQuality.QualityProperties"}}</h3>
                     </div>
                     <div class="tw-p-3">
 
                         <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mb-3">
-                            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">Identifier</label>
-                            <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm tw-font-body" name="system.identifier" value="{{source.identifier}}" placeholder="e.g., tearing, blast, unwieldy" />
-                            <p class="tw-m-0 tw-mt-0.5 tw-text-xs tw-italic tw-text-gray-500">Unique identifier (lowercase, hyphenated)</p>
+                            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.ItemSheet.WeaponQuality.Identifier"}}</label>
+                            <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm tw-font-body" name="system.identifier" value="{{source.identifier}}" placeholder="{{localize 'WH40K.ItemSheet.WeaponQuality.IdentifierPlaceholder'}}" />
+                            <p class="tw-m-0 tw-mt-0.5 tw-text-xs tw-italic tw-text-gray-500">{{localize "WH40K.ItemSheet.WeaponQuality.IdentifierHint"}}</p>
                         </div>
 
                         <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mb-3">
                             <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-rounded-md tw-p-1.5 hover:tw-bg-white/5 tw-transition-colors">
                                 <input type="checkbox" class="tw-w-4 tw-h-4 tw-cursor-pointer" name="system.hasLevel" {{checked system.hasLevel}} />
-                                <span class="tw-text-sm tw-font-medium">Quality Has Numeric Level</span>
+                                <span class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.WeaponQuality.HasNumericLevel"}}</span>
                             </label>
-                            <p class="tw-m-0 tw-ml-7 tw-text-xs tw-italic tw-text-gray-500">Check if this quality takes a level parameter (e.g., Blast (X), Tearing (X))</p>
+                            <p class="tw-m-0 tw-ml-7 tw-text-xs tw-italic tw-text-gray-500">{{localize "WH40K.ItemSheet.WeaponQuality.NumericLevelHint"}}</p>
                         </div>
 
                         {{#if system.hasLevel}}
                             <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mb-3">
-                                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">Default Level</label>
+                                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.ItemSheet.WeaponQuality.DefaultLevel"}}</label>
                                 <input type="number" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.level" value="{{source.level}}" data-dtype="Number" min="0" />
-                                <p class="tw-m-0 tw-mt-0.5 tw-text-xs tw-italic tw-text-gray-500">Default level value for this quality</p>
+                                <p class="tw-m-0 tw-mt-0.5 tw-text-xs tw-italic tw-text-gray-500">{{localize "WH40K.ItemSheet.WeaponQuality.DefaultLevelHint"}}</p>
                             </div>
                         {{/if}}
 
@@ -160,10 +160,10 @@
                 <div class="tw-bg-white/5 tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-b tw-border-solid tw-border-black/10">
                         <i class="fas fa-sticky-note tw-text-bronze tw-text-sm"></i>
-                        <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">Notes</h3>
+                        <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.Tabs.Notes"}}</h3>
                     </div>
                     <div class="tw-p-3">
-                        <textarea class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm tw-font-body tw-resize-y" name="system.notes" rows="4" placeholder="Additional notes, legacy data, GM notes...">{{system.notes}}</textarea>
+                        <textarea class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm tw-font-body tw-resize-y" name="system.notes" rows="4" placeholder="{{localize 'WH40K.ItemSheet.WeaponQuality.NotesPlaceholder'}}">{{system.notes}}</textarea>
                     </div>
                 </div>
 
@@ -175,7 +175,7 @@
                 <div class="tw-bg-white/5 tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-b tw-border-solid tw-border-black/10">
                         <i class="fas fa-book tw-text-bronze tw-text-sm"></i>
-                        <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">Full Description</h3>
+                        <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.ItemSheet.WeaponQuality.FullDescription"}}</h3>
                     </div>
                     <div class="tw-p-0">
                         {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
@@ -185,22 +185,22 @@
                 <div class="tw-bg-white/5 tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-b tw-border-solid tw-border-black/10">
                         <i class="fas fa-book-open tw-text-bronze tw-text-sm"></i>
-                        <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">Source</h3>
+                        <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.Common.Source"}}</h3>
                     </div>
                     <div class="tw-p-3">
                         <div class="tw-grid tw-grid-cols-[2fr_1fr] tw-gap-2 tw-mb-3">
                             <div class="tw-flex tw-flex-col tw-gap-0.5">
-                                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">Source Book</label>
-                                <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.book" value="{{source.source.book}}" placeholder="Rogue Trader Core" />
+                                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.NPC.SourceBook"}}</label>
+                                <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.book" value="{{source.source.book}}" placeholder="{{localize 'WH40K.ItemSheet.Common.SourceBookPlaceholder'}}" />
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-0.5">
-                                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">Page</label>
+                                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.Source.Page"}}</label>
                                 <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.page" value="{{source.source.page}}" placeholder="127" />
                             </div>
                         </div>
                         <div class="tw-flex tw-flex-col tw-gap-0.5">
-                            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">Custom Reference</label>
-                            <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.url" value="{{source.source.url}}" placeholder="https://… (homebrew/errata source)" />
+                            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.ItemSheet.Common.CustomReference"}}</label>
+                            <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.url" value="{{source.source.url}}" placeholder="{{localize 'WH40K.ItemSheet.WeaponQuality.UrlPlaceholder'}}" />
                         </div>
                     </div>
                 </div>

@@ -1,9 +1,9 @@
 <form class="wh40k-item-sheet tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)]" autocomplete="off">
     {{! Header }}
-    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholder="Modification Name" hideTypeBadge=true }}
+    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholderKey="WH40K.ItemSheet.NamePlaceholder.WeaponMod" hideTypeBadge=true }}
         <div class="tw-flex tw-items-center tw-gap-1 tw-text-sm tw-text-gold {{themeClassFor 'accent'}}">
             <span class="material-icons tw-text-lg">build</span>
-            <span>Weapon Modification</span>
+            <span>{{localize "WH40K.ItemSheet.WeaponMod.Title"}}</span>
         </div>
     {{/systems/wh40k-rpg/templates/item/panel/item-header.hbs}}
 
@@ -11,21 +11,21 @@
     <section class="tw-p-2 tw-border-b tw-border-solid tw-border-black/10">
         <h2 class="tw-flex tw-items-center tw-gap-1.5 tw-font-display tw-text-md tw-text-gold {{themeClassFor 'accent'}} tw-mb-2 tw-pb-1.5 tw-border-b tw-border-solid tw-border-black/10">
             <span class="material-icons tw-text-lg">tune</span>
-            Properties
+            {{localize "WH40K.Tabs.Properties"}}
         </h2>
         <div class="tw-grid tw-grid-cols-3 tw-gap-2 tw-mb-2">
             <div class="tw-flex tw-flex-col tw-gap-0.5">
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">Weight</label>
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.Weight"}}</label>
                 <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.weight" type="number" data-dtype="Number" value="{{item.system.weight}}" />
             </div>
             <div class="tw-flex tw-flex-col tw-gap-0.5">
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">Availability</label>
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.Availability.Label"}}</label>
                 <select class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.availability">
                     {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
                 </select>
             </div>
             <div class="tw-flex tw-flex-col tw-gap-0.5">
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">Craftsmanship</label>
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.Craftsmanship.Label"}}</label>
                 <select class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.craftsmanship">
                     {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
                 </select>
@@ -34,16 +34,16 @@
         <div class="tw-grid tw-grid-cols-2 tw-gap-2 tw-mb-2">
             <div class="tw-flex tw-items-center tw-gap-2">
                 <input type="checkbox" name="system.state.equipped" data-dtype="Boolean" {{checked item.system.state.equipped}} />
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer">Installed</label>
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer">{{localize "WH40K.ItemSheet.WeaponMod.Installed"}}</label>
             </div>
             <div class="tw-flex tw-items-center tw-gap-2">
                 <input type="checkbox" name="system.backpack.inBackpack" data-dtype="Boolean" {{checked item.system.backpack.inBackpack}} />
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer">In Backpack</label>
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer">{{localize "WH40K.ItemSheet.WeaponMod.InBackpack"}}</label>
             </div>
         </div>
         <div class="tw-flex tw-flex-col tw-gap-0.5">
-            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">Source</label>
-            <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.source" type="text" value="{{item.system.source}}" placeholder="Rulebook reference" />
+            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.Common.Source"}}</label>
+            <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.source" type="text" value="{{item.system.source}}" placeholder="{{localize 'WH40K.ItemSheet.WeaponMod.SourcePlaceholder'}}" />
         </div>
     </section>
 
@@ -51,13 +51,13 @@
     <section class="tw-p-2">
         <h2 class="tw-flex tw-items-center tw-gap-1.5 tw-font-display tw-text-md tw-text-gold {{themeClassFor 'accent'}} tw-mb-2 tw-pb-1.5 tw-border-b tw-border-solid tw-border-black/10">
             <span class="material-icons tw-text-lg">description</span>
-            Description
+            {{localize "WH40K.Tabs.Description"}}
         </h2>
         <div class="tw-flex tw-flex-col tw-gap-0.5 tw-w-full">
             <textarea
                 class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-p-2 tw-text-sm tw-font-body tw-resize-y tw-min-h-[80px]"
                 name="system.description.value"
-                placeholder="Describe the modification's effects..."
+                placeholder="{{localize 'WH40K.ItemSheet.WeaponMod.DescriptionPlaceholder'}}"
             >{{item.system.description.value}}</textarea>
         </div>
     </section>

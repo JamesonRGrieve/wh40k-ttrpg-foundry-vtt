@@ -24,14 +24,14 @@
 
             {{#if item.system.effect}}
                 <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                    <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">Effect</h3>
+                    <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">{{localize "WH40K.Tabs.Effect"}}</h3>
                     <div class="tw-text-base tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{{item.system.effect}}}</div>
                 </div>
             {{/if}}
 
             {{#if item.system.benefit}}
                 <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                    <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">Benefit</h3>
+                    <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">{{localize "WH40K.SpecialAbility.Benefit"}}</h3>
                     <div class="tw-text-base tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{{item.system.benefit}}}</div>
                 </div>
             {{/if}}
@@ -42,11 +42,11 @@
                     {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Class" value=item.system.class compact=true}}
                     {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Type" value=item.system.type compact=true}}
                     <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Damage</span>
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">{{localize "WH40K.Weapon.Damage"}}</span>
                         <span class="tw-text-[var(--wh40k-text-dark)]">{{#if item.system.damageLabel}}{{item.system.damageLabel}}{{else}}{{item.system.damage.formula}}{{#if item.system.damage.bonus}}+{{item.system.damage.bonus}}{{/if}} {{item.system.damage.type}}{{/if}}</span>
                     </div>
                     <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Pen</span>
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">{{localize "WH40K.Weapon.Pen"}}</span>
                         <span class="tw-text-[var(--wh40k-text-dark)]">{{#if item.system.damage.penetration}}{{item.system.damage.penetration}}{{else}}{{item.system.penetration}}{{/if}}</span>
                     </div>
                     {{#if item.system.range}}
@@ -71,19 +71,19 @@
                 </div>
                 {{#if item.system.novice}}
                     <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                        <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">Novice</h3>
+                        <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">{{localize "WH40K.Chat.Item.Novice"}}</h3>
                         <div class="tw-text-base tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{item.system.novice}}</div>
                     </div>
                 {{/if}}
                 {{#if item.system.adept}}
                     <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                        <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">Adept</h3>
+                        <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">{{localize "WH40K.Chat.Item.Adept"}}</h3>
                         <div class="tw-text-base tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{item.system.adept}}</div>
                     </div>
                 {{/if}}
                 {{#if item.system.master}}
                     <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                        <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">Master</h3>
+                        <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">{{localize "WH40K.Chat.Item.Master"}}</h3>
                         <div class="tw-text-base tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{item.system.master}}</div>
                     </div>
                 {{/if}}
@@ -130,23 +130,23 @@
                 {{#if isRollable}}
                     <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-skills-primary)_0%,var(--wh40k-skills-secondary)_100%)] tw-border tw-border-[var(--wh40k-skills-primary)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="roll">
                         <i class="fas fa-dice-d20 tw-text-[12px]"></i>
-                        Roll
+                        {{localize "WH40K.Common.Roll"}}
                     </button>
                 {{/if}}
                 {{#if isWeapon}}
                     <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-red)_0%,var(--wh40k-red-dark)_100%)] tw-border tw-border-[var(--wh40k-red-dark)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="attack">
                         <i class="fas fa-crosshairs tw-text-[12px]"></i>
-                        Attack
+                        {{localize "WH40K.Combat.Attack"}}
                     </button>
                     <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-gold)_0%,var(--wh40k-gold-dark)_100%)] tw-border tw-border-[var(--wh40k-gold-dark)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="rollDamage">
                         <i class="fas fa-burst tw-text-[12px]"></i>
-                        Damage
+                        {{localize "WH40K.Weapon.Damage"}}
                     </button>
                 {{/if}}
                 {{#if isUsable}}
                     <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-powers-primary)_0%,var(--wh40k-powers-secondary)_100%)] tw-border tw-border-[var(--wh40k-powers-primary)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="useItem">
                         <i class="fas fa-hand-sparkles tw-text-[12px]"></i>
-                        Use
+                        {{localize "WH40K.Chat.Item.Use"}}
                     </button>
                 {{/if}}
             </div>

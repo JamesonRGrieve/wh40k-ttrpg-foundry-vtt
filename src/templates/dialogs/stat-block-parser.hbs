@@ -6,7 +6,7 @@
       <label class="tw-font-bold {{themeClassFor 'accent'}}">{{localize "WH40K.NPC.Import.PasteStatBlock"}}</label>
       <button type="button" data-action="clearInput"
               class="tw-p-1 tw-cursor-pointer tw-bg-transparent tw-border-0 tw-opacity-70 hover:tw-opacity-100"
-              title="Clear">
+              title="{{localize 'WH40K.Dialog.StatBlockParser.Clear'}}">
         <i class="fa-solid fa-eraser"></i>
       </button>
     </div>
@@ -78,7 +78,7 @@
 
       {{!-- Characteristics --}}
       <div class="tw-p-4 tw-bg-[var(--wh40k-bg-paper-light)] tw-rounded-lg tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-shadow-sm">
-        <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-1 tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))] tw-uppercase tw-tracking-[0.05em] [&>i]:tw-text-[0.7rem]">{{localize "WH40K.Characteristics.Label"}}</h4>
+        <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-1 tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))] tw-uppercase tw-tracking-[0.05em] [&>i]:tw-text-[0.7rem]">{{localize "WH40K.Characteristics"}}</h4>
         <div class="tw-grid tw-grid-cols-5 tw-gap-2">
           {{#each parsedData.system.characteristics as |char key|}}
           <div class="tw-text-center tw-p-1 tw-rounded-sm tw-bg-[var(--wh40k-bg-subtle)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)]">
@@ -93,7 +93,7 @@
       <div class="tw-p-4 tw-bg-[var(--wh40k-bg-paper-light)] tw-rounded-lg tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-shadow-sm" style="--wh40k-color-accent: var(--wh40k-accent-skills);">
         <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-1 tw-text-[var(--wh40k-color-accent)] tw-uppercase tw-tracking-[0.05em] [&>i]:tw-text-[0.7rem]">{{localize "WH40K.Vitals.Label"}}</h4>
         <dl class="tw-m-0 tw-text-[0.85rem] [&_dt]:tw-font-bold [&_dt]:tw-text-[var(--color-text-light-6)]">
-          <dt>{{localize "WH40K.Wounds.Label"}}</dt>
+          <dt>{{localize "WH40K.Wounds"}}</dt>
           <dd class="tw-m-0 tw-mb-2">{{parsedData.system.wounds.max}}</dd>
           {{#if parsedData.system.armour}}
           <dt>{{localize "WH40K.Armour.Label"}}</dt>
@@ -112,7 +112,7 @@
             <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-rounded-sm tw-text-sm tw-bg-[var(--wh40k-bg-overlay-medium)] tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-text-[var(--color-text-secondary)] [&>i]:tw-text-[var(--wh40k-color-accent)] [&>i]:tw-text-[0.65rem]"><i class="fa-solid fa-check"></i>{{skill.name}}</li>
             {{/each}}
           {{else}}
-            <li class="tw-flex tw-justify-center tw-p-2 tw-rounded-sm tw-text-sm tw-italic tw-text-[var(--color-text-tertiary)] tw-bg-[var(--wh40k-bg-overlay-light)]">None</li>
+            <li class="tw-flex tw-justify-center tw-p-2 tw-rounded-sm tw-text-sm tw-italic tw-text-[var(--color-text-tertiary)] tw-bg-[var(--wh40k-bg-overlay-light)]">{{localize "WH40K.Common.None"}}</li>
           {{/if}}
         </ul>
       </div>
@@ -128,7 +128,7 @@
             <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-rounded-sm tw-text-sm tw-bg-[var(--wh40k-bg-overlay-medium)] tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-text-[var(--color-text-secondary)] [&>i]:tw-text-[var(--wh40k-color-accent)] [&>i]:tw-text-[0.65rem]"><i class="fa-solid fa-bolt"></i>{{item.name}}</li>
             {{/each}}
           {{else}}
-            <li class="tw-flex tw-justify-center tw-p-2 tw-rounded-sm tw-text-sm tw-italic tw-text-[var(--color-text-tertiary)] tw-bg-[var(--wh40k-bg-overlay-light)]">None</li>
+            <li class="tw-flex tw-justify-center tw-p-2 tw-rounded-sm tw-text-sm tw-italic tw-text-[var(--color-text-tertiary)] tw-bg-[var(--wh40k-bg-overlay-light)]">{{localize "WH40K.Common.None"}}</li>
           {{/if}}
         </ul>
       </div>
@@ -144,7 +144,7 @@
             <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-rounded-sm tw-text-sm tw-bg-[var(--wh40k-bg-overlay-medium)] tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-text-[var(--color-text-secondary)] [&>i]:tw-text-[var(--wh40k-color-accent)] [&>i]:tw-text-[0.65rem]"><i class="fa-solid fa-shield"></i>{{item.name}}</li>
             {{/each}}
           {{else}}
-            <li class="tw-flex tw-justify-center tw-p-2 tw-rounded-sm tw-text-sm tw-italic tw-text-[var(--color-text-tertiary)] tw-bg-[var(--wh40k-bg-overlay-light)]">None</li>
+            <li class="tw-flex tw-justify-center tw-p-2 tw-rounded-sm tw-text-sm tw-italic tw-text-[var(--color-text-tertiary)] tw-bg-[var(--wh40k-bg-overlay-light)]">{{localize "WH40K.Common.None"}}</li>
           {{/if}}
         </ul>
       </div>
@@ -157,10 +157,10 @@
         <ul class="tw-list-none tw-p-0 tw-m-0 tw-grid tw-gap-1">
           {{#if hasPreviewWeapons}}
             {{#each previewWeapons as |weapon|}}
-            <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-rounded-sm tw-text-sm tw-bg-[var(--wh40k-bg-overlay-medium)] tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-text-[var(--color-text-secondary)] [&>i]:tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))] [&>i]:tw-text-[0.65rem]"><i class="fa-solid fa-bullseye"></i>{{weapon.name}} ({{weapon.damage}}, Pen {{weapon.pen}})</li>
+            <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-rounded-sm tw-text-sm tw-bg-[var(--wh40k-bg-overlay-medium)] tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-text-[var(--color-text-secondary)] [&>i]:tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))] [&>i]:tw-text-[0.65rem]"><i class="fa-solid fa-bullseye"></i>{{weapon.name}} {{localize "WH40K.Dialog.StatBlockParser.WeaponSummary" damage=weapon.damage pen=weapon.pen}}</li>
             {{/each}}
           {{else}}
-            <li class="tw-flex tw-justify-center tw-p-2 tw-rounded-sm tw-text-sm tw-italic tw-text-[var(--color-text-tertiary)] tw-bg-[var(--wh40k-bg-overlay-light)]">None</li>
+            <li class="tw-flex tw-justify-center tw-p-2 tw-rounded-sm tw-text-sm tw-italic tw-text-[var(--color-text-tertiary)] tw-bg-[var(--wh40k-bg-overlay-light)]">{{localize "WH40K.Common.None"}}</li>
           {{/if}}
         </ul>
       </div>

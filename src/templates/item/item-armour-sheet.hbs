@@ -7,27 +7,27 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact armour identity with inline stats
     ═══════════════════════════════════════════════════════════════════ --}}
-    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholder="Armour Name" hideTypeBadge=true }}
+    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholderKey="WH40K.ItemSheet.NamePlaceholder.Armour" hideTypeBadge=true }}
       <div class="tw-flex tw-flex-col tw-gap-2">
         <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
           <div class="tw-flex tw-flex-wrap tw-gap-1 tw-items-center tw-flex-1">
-            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-[rgba(201,162,39,0.2)] tw-border tw-border-[rgba(201,162,39,0.4)] tw-text-gold {{themeClassFor 'accent'}}" title="Armour Type">
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-[rgba(201,162,39,0.2)] tw-border tw-border-[rgba(201,162,39,0.4)] tw-text-gold {{themeClassFor 'accent'}}" title="{{localize 'WH40K.ItemSheet.Armour.TypeLabel'}}">
               <i class="fas {{item.system.typeIcon}}"></i>
               {{item.system.typeLabel}}
             </span>
-            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-[rgba(46,204,113,0.2)] tw-border tw-border-[rgba(46,204,113,0.4)] tw-text-[var(--wh40k-accent-green-bright)] tw-font-mono" title="Maximum Armour Points">
-              AP {{item.system.maxAP}}
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-[rgba(46,204,113,0.2)] tw-border tw-border-[rgba(46,204,113,0.4)] tw-text-[var(--wh40k-accent-green-bright)] tw-font-mono" title="{{localize 'WH40K.ItemSheet.Armour.MaxArmourPointsTooltip'}}">
+              {{localize "WH40K.Armour.AP"}} {{item.system.maxAP}}
             </span>
             {{#if (ne item.system.craftsmanship "common")}}
-            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-[rgba(139,105,20,0.2)] tw-border tw-border-[rgba(139,105,20,0.4)] tw-text-[rgba(255,255,255,0.8)]" title="Craftsmanship">
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-[rgba(139,105,20,0.2)] tw-border tw-border-[rgba(139,105,20,0.4)] tw-text-[rgba(255,255,255,0.8)]" title="{{localize 'WH40K.Craftsmanship.Label'}}">
               <i class="fas fa-hammer"></i>
               {{item.system.craftsmanshipLabel}}
             </span>
             {{/if}}
             {{#if item.system.maxAgility}}
-            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-[rgba(52,152,219,0.2)] tw-border tw-border-[rgba(52,152,219,0.4)] tw-text-[var(--wh40k-accent-info)]" title="Maximum Agility Bonus">
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-[rgba(52,152,219,0.2)] tw-border tw-border-[rgba(52,152,219,0.4)] tw-text-[var(--wh40k-accent-info)]" title="{{localize 'WH40K.ItemSheet.Armour.MaxAgilityTooltip'}}">
               <i class="fas fa-person-running"></i>
-              Max Ag {{item.system.maxAgility}}
+              {{localize "WH40K.Chat.Armour.MaxAg"}} {{item.system.maxAgility}}
             </span>
             {{/if}}
           </div>
@@ -37,19 +37,19 @@
             {{#if isOwnedByActor}}
             {{#if canEdit}}
             <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-md tw-cursor-pointer tw-border tw-border-solid tw-border-[rgba(255,255,255,0.2)] tw-bg-[rgba(255,255,255,0.1)] tw-text-[rgba(255,255,255,0.7)] tw-transition-all hover:tw-bg-[rgba(201,162,39,0.2)] hover:tw-border-[rgba(201,162,39,0.4)] hover:tw-text-gold {{#if inEditMode}}tw-bg-[rgba(46,204,113,0.2)] tw-border-[rgba(46,204,113,0.4)] tw-text-[var(--wh40k-accent-green-bright)]{{/if}}"
-                    data-action="toggleEditMode" title="{{#if inEditMode}}Exit Edit Mode{{else}}Enter Edit Mode{{/if}}">
+                    data-action="toggleEditMode" title="{{#if inEditMode}}{{localize 'WH40K.Common.ExitEditMode'}}{{else}}{{localize 'WH40K.Common.EnterEditMode'}}{{/if}}">
               <i class="fas {{#if inEditMode}}fa-lock-open{{else}}fa-pen-to-square{{/if}}"></i>
             </button>
             {{/if}}
             {{/if}}
 
             {{!-- Equipped Toggle --}}
-            <label class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" title="Toggle Equipped">
+            <label class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" title="{{localize 'WH40K.Weapon.ToggleEquipped'}}">
               <input type="checkbox" name="system.state.equipped" {{checked item.system.state.equipped}} class="tw-sr-only" />
               <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 {{#if item.system.state.equipped}}tw-text-[var(--wh40k-accent-green-bright)]{{else}}tw-text-[rgba(255,255,255,0.3)]{{/if}}">
                 <i class="fas {{#if item.system.state.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
               </span>
-              <span class="tw-text-xs tw-font-semibold tw-uppercase {{#if item.system.state.equipped}}tw-text-[var(--wh40k-accent-green-bright)]{{else}}tw-text-[rgba(255,255,255,0.5)]{{/if}}">{{#if item.system.state.equipped}}Worn{{else}}Stowed{{/if}}</span>
+              <span class="tw-text-xs tw-font-semibold tw-uppercase {{#if item.system.state.equipped}}tw-text-[var(--wh40k-accent-green-bright)]{{else}}tw-text-[rgba(255,255,255,0.5)]{{/if}}">{{#if item.system.state.equipped}}{{localize "WH40K.Armour.Worn"}}{{else}}{{localize "WH40K.Armour.Stowed"}}{{/if}}</span>
             </label>
           </div>
         </div>
@@ -62,8 +62,8 @@
               <i class="fas fa-weight-hanging"></i>
             </div>
             <div class="tw-flex tw-flex-col">
-              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Weight</span>
-              <span class="tw-font-semibold">{{system.weight}}kg</span>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Weight"}}</span>
+              <span class="tw-font-semibold">{{system.weight}}{{localize "WH40K.Common.Kilograms"}}</span>
             </div>
           </div>
 
@@ -74,7 +74,7 @@
               <i class="fas fa-person-running"></i>
             </div>
             <div class="tw-flex tw-flex-col">
-              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Max Ag</span>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Chat.Armour.MaxAg"}}</span>
               <span class="tw-font-semibold">{{system.maxAgility}}</span>
             </div>
           </div>
@@ -86,7 +86,7 @@
               <i class="fas fa-head-side-brain"></i>
             </div>
             <div class="tw-flex tw-flex-col">
-              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Head</span>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Coverage.Head"}}</span>
               <span class="tw-font-semibold">{{system.armourPoints.head}}</span>
             </div>
           </div>
@@ -97,7 +97,7 @@
               <i class="fas fa-shield"></i>
             </div>
             <div class="tw-flex tw-flex-col">
-              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Body</span>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Coverage.Body"}}</span>
               <span class="tw-font-semibold">{{system.armourPoints.body}}</span>
             </div>
           </div>
@@ -108,7 +108,7 @@
               <i class="fas fa-hand-fist"></i>
             </div>
             <div class="tw-flex tw-flex-col">
-              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Arms</span>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Coverage.Arms"}}</span>
               <span class="tw-font-semibold">{{system.armourPoints.leftArm}}/{{system.armourPoints.rightArm}}</span>
             </div>
           </div>
@@ -119,7 +119,7 @@
               <i class="fas fa-boot"></i>
             </div>
             <div class="tw-flex tw-flex-col">
-              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Legs</span>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Coverage.Legs"}}</span>
               <span class="tw-font-semibold">{{system.armourPoints.leftLeg}}/{{system.armourPoints.rightLeg}}</span>
             </div>
           </div>
@@ -133,19 +133,19 @@
     <nav class="tabs wh40k-tabs tw-flex tw-shrink-0 tw-bg-black/40 tw-border-b tw-border-[rgba(201,162,39,0.3)]" data-group="primary">
       <button type="button" class="wh40k-tab active tw-flex tw-items-center tw-text-gold {{themeClassFor 'accent'}} tw-border-b-[3px] tw-border-b-gold bc:tw-border-b-crimson-light dh1:tw-border-b-gold-raw-l5 dh2:tw-border-b-gold-raw dw:tw-border-b-accent-combat ow:tw-border-b-brass-l20 rt:tw-border-b-gold im:tw-border-b-failure tw-bg-[rgba(201,162,39,0.1)] tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="protection" data-group="primary">
         <i class="fas fa-shield-halved"></i>
-        <span>Protection</span>
+        <span>{{localize "WH40K.Tabs.Protection"}}</span>
       </button>
       <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent tw-text-[rgba(255,255,255,0.6)] tw-border-b-[3px] tw-border-b-transparent hover:tw-text-[rgba(255,255,255,0.9)] hover:tw-bg-[rgba(201,162,39,0.1)]" data-tab="mods" data-group="primary">
         <i class="fas fa-wrench"></i>
-        <span>Mods</span>
+        <span>{{localize "WH40K.ItemSheet.Armour.ModsTab"}}</span>
       </button>
       <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent tw-text-[rgba(255,255,255,0.6)] tw-border-b-[3px] tw-border-b-transparent hover:tw-text-[rgba(255,255,255,0.9)] hover:tw-bg-[rgba(201,162,39,0.1)]" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
-        <span>Description</span>
+        <span>{{localize "WH40K.Tabs.Description"}}</span>
       </button>
       <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent tw-text-[rgba(255,255,255,0.6)] tw-border-b-[3px] tw-border-b-transparent hover:tw-text-[rgba(255,255,255,0.9)] hover:tw-bg-[rgba(201,162,39,0.1)]" data-tab="effects" data-group="primary">
         <i class="fas fa-magic"></i>
-        <span>Effects</span>
+        <span>{{localize "WH40K.Tabs.Effects"}}</span>
       </button>
     </nav>
 
@@ -162,37 +162,37 @@
         <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
             <i class="fas fa-shield-halved tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Armour Points by Location</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Armour.ByLocation"}}</h3>
           </div>
           <div class="tw-p-3">
             <div class="tw-grid tw-grid-cols-3 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium"><i class="fas fa-head-side-brain"></i> Head</label>
+                <label class="tw-text-sm tw-font-medium"><i class="fas fa-head-side-brain"></i> {{localize "WH40K.Coverage.Head"}}</label>
                 <input type="number" name="system.armourPoints.head" value="{{item.system.armourPoints.head}}"
                        data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium"><i class="fas fa-shield"></i> Body</label>
+                <label class="tw-text-sm tw-font-medium"><i class="fas fa-shield"></i> {{localize "WH40K.Coverage.Body"}}</label>
                 <input type="number" name="system.armourPoints.body" value="{{item.system.armourPoints.body}}"
                        data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium"><i class="fas fa-hand-fist"></i> L. Arm</label>
+                <label class="tw-text-sm tw-font-medium"><i class="fas fa-hand-fist"></i> {{localize "WH40K.ItemSheet.Armour.LeftArm"}}</label>
                 <input type="number" name="system.armourPoints.leftArm" value="{{item.system.armourPoints.leftArm}}"
                        data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium"><i class="fas fa-hand-fist"></i> R. Arm</label>
+                <label class="tw-text-sm tw-font-medium"><i class="fas fa-hand-fist"></i> {{localize "WH40K.ItemSheet.Armour.RightArm"}}</label>
                 <input type="number" name="system.armourPoints.rightArm" value="{{item.system.armourPoints.rightArm}}"
                        data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium"><i class="fas fa-boot"></i> L. Leg</label>
+                <label class="tw-text-sm tw-font-medium"><i class="fas fa-boot"></i> {{localize "WH40K.ItemSheet.Armour.LeftLeg"}}</label>
                 <input type="number" name="system.armourPoints.leftLeg" value="{{item.system.armourPoints.leftLeg}}"
                        data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium"><i class="fas fa-boot"></i> R. Leg</label>
+                <label class="tw-text-sm tw-font-medium"><i class="fas fa-boot"></i> {{localize "WH40K.ItemSheet.Armour.RightLeg"}}</label>
                 <input type="number" name="system.armourPoints.rightLeg" value="{{item.system.armourPoints.rightLeg}}"
                        data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
@@ -205,61 +205,61 @@
         <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
             <i class="fas fa-cog tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Base Properties</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Armour.BaseProperties"}}</h3>
           </div>
           <div class="tw-p-3">
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Armour Type</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.Armour.TypeLabel"}}</label>
                 <select name="system.type" class="{{#unless inEditMode}}tw-bg-black/15 tw-border-white/5 tw-text-[color:var(--wh40k-text-medium)] tw-cursor-default tw-pointer-events-none{{/unless}} tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" {{#unless inEditMode}}disabled{{/unless}}>
-                  <option value="flak" {{#if (eq item.system.type "flak")}}selected{{/if}}>Flak</option>
-                  <option value="mesh" {{#if (eq item.system.type "mesh")}}selected{{/if}}>Mesh</option>
-                  <option value="carapace" {{#if (eq item.system.type "carapace")}}selected{{/if}}>Carapace</option>
-                  <option value="power" {{#if (eq item.system.type "power")}}selected{{/if}}>Power Armour</option>
-                  <option value="light-power" {{#if (eq item.system.type "light-power")}}selected{{/if}}>Light Power</option>
-                  <option value="storm-trooper" {{#if (eq item.system.type "storm-trooper")}}selected{{/if}}>Storm Trooper</option>
-                  <option value="feudal-world" {{#if (eq item.system.type "feudal-world")}}selected{{/if}}>Feudal World</option>
-                  <option value="primitive" {{#if (eq item.system.type "primitive")}}selected{{/if}}>Primitive</option>
-                  <option value="xenos" {{#if (eq item.system.type "xenos")}}selected{{/if}}>Xenos</option>
-                  <option value="void" {{#if (eq item.system.type "void")}}selected{{/if}}>Void Suit</option>
-                  <option value="enforcer" {{#if (eq item.system.type "enforcer")}}selected{{/if}}>Enforcer</option>
-                  <option value="hostile-environment" {{#if (eq item.system.type "hostile-environment")}}selected{{/if}}>Hostile Environment</option>
+                  <option value="flak" {{#if (eq item.system.type "flak")}}selected{{/if}}>{{localize "WH40K.ArmourType.Flak"}}</option>
+                  <option value="mesh" {{#if (eq item.system.type "mesh")}}selected{{/if}}>{{localize "WH40K.ArmourType.Mesh"}}</option>
+                  <option value="carapace" {{#if (eq item.system.type "carapace")}}selected{{/if}}>{{localize "WH40K.ArmourType.Carapace"}}</option>
+                  <option value="power" {{#if (eq item.system.type "power")}}selected{{/if}}>{{localize "WH40K.ArmourType.Power"}}</option>
+                  <option value="light-power" {{#if (eq item.system.type "light-power")}}selected{{/if}}>{{localize "WH40K.ArmourType.LightPower"}}</option>
+                  <option value="storm-trooper" {{#if (eq item.system.type "storm-trooper")}}selected{{/if}}>{{localize "WH40K.ArmourType.StormTrooper"}}</option>
+                  <option value="feudal-world" {{#if (eq item.system.type "feudal-world")}}selected{{/if}}>{{localize "WH40K.ArmourType.FeudalWorld"}}</option>
+                  <option value="primitive" {{#if (eq item.system.type "primitive")}}selected{{/if}}>{{localize "WH40K.ArmourType.Primitive"}}</option>
+                  <option value="xenos" {{#if (eq item.system.type "xenos")}}selected{{/if}}>{{localize "WH40K.ArmourType.Xenos"}}</option>
+                  <option value="void" {{#if (eq item.system.type "void")}}selected{{/if}}>{{localize "WH40K.ArmourType.Void"}}</option>
+                  <option value="enforcer" {{#if (eq item.system.type "enforcer")}}selected{{/if}}>{{localize "WH40K.ArmourType.Enforcer"}}</option>
+                  <option value="hostile-environment" {{#if (eq item.system.type "hostile-environment")}}selected{{/if}}>{{localize "WH40K.ArmourType.HostileEnvironment"}}</option>
                 </select>
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Max Agility Bonus</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.Armour.MaxAgilityTooltip"}}</label>
                 <input type="number" name="system.maxAgility" value="{{item.system.maxAgility}}"
-                       data-dtype="Number" min="0" placeholder="No limit"
+                       data-dtype="Number" min="0" placeholder="{{localize 'WH40K.ItemSheet.Armour.NoLimit'}}"
                        class="{{#unless inEditMode}}tw-bg-black/15 tw-border-white/5 tw-text-[color:var(--wh40k-text-medium)] tw-cursor-default tw-pointer-events-none{{/unless}} tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
                        {{#unless inEditMode}}readonly{{/unless}} />
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Availability</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Availability.Label"}}</label>
                 <select name="system.availability" class="{{#unless inEditMode}}tw-bg-black/15 tw-border-white/5 tw-text-[color:var(--wh40k-text-medium)] tw-cursor-default tw-pointer-events-none{{/unless}} tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" {{#unless inEditMode}}disabled{{/unless}}>
-                  <option value="ubiquitous" {{#if (eq item.system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
-                  <option value="abundant" {{#if (eq item.system.availability "abundant")}}selected{{/if}}>Abundant</option>
-                  <option value="plentiful" {{#if (eq item.system.availability "plentiful")}}selected{{/if}}>Plentiful</option>
-                  <option value="common" {{#if (eq item.system.availability "common")}}selected{{/if}}>Common</option>
-                  <option value="average" {{#if (eq item.system.availability "average")}}selected{{/if}}>Average</option>
-                  <option value="scarce" {{#if (eq item.system.availability "scarce")}}selected{{/if}}>Scarce</option>
-                  <option value="rare" {{#if (eq item.system.availability "rare")}}selected{{/if}}>Rare</option>
-                  <option value="very-rare" {{#if (eq item.system.availability "very-rare")}}selected{{/if}}>Very Rare</option>
-                  <option value="extremely-rare" {{#if (eq item.system.availability "extremely-rare")}}selected{{/if}}>Extremely Rare</option>
-                  <option value="near-unique" {{#if (eq item.system.availability "near-unique")}}selected{{/if}}>Near Unique</option>
-                  <option value="unique" {{#if (eq item.system.availability "unique")}}selected{{/if}}>Unique</option>
+                  <option value="ubiquitous" {{#if (eq item.system.availability "ubiquitous")}}selected{{/if}}>{{localize "WH40K.Availability.Ubiquitous"}}</option>
+                  <option value="abundant" {{#if (eq item.system.availability "abundant")}}selected{{/if}}>{{localize "WH40K.Availability.Abundant"}}</option>
+                  <option value="plentiful" {{#if (eq item.system.availability "plentiful")}}selected{{/if}}>{{localize "WH40K.Availability.Plentiful"}}</option>
+                  <option value="common" {{#if (eq item.system.availability "common")}}selected{{/if}}>{{localize "WH40K.Availability.Common"}}</option>
+                  <option value="average" {{#if (eq item.system.availability "average")}}selected{{/if}}>{{localize "WH40K.Availability.Average"}}</option>
+                  <option value="scarce" {{#if (eq item.system.availability "scarce")}}selected{{/if}}>{{localize "WH40K.Availability.Scarce"}}</option>
+                  <option value="rare" {{#if (eq item.system.availability "rare")}}selected{{/if}}>{{localize "WH40K.Availability.Rare"}}</option>
+                  <option value="very-rare" {{#if (eq item.system.availability "very-rare")}}selected{{/if}}>{{localize "WH40K.Availability.VeryRare"}}</option>
+                  <option value="extremely-rare" {{#if (eq item.system.availability "extremely-rare")}}selected{{/if}}>{{localize "WH40K.Availability.ExtremelyRare"}}</option>
+                  <option value="near-unique" {{#if (eq item.system.availability "near-unique")}}selected{{/if}}>{{localize "WH40K.Availability.NearUnique"}}</option>
+                  <option value="unique" {{#if (eq item.system.availability "unique")}}selected{{/if}}>{{localize "WH40K.Availability.Unique"}}</option>
                 </select>
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Craftsmanship</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Craftsmanship.Label"}}</label>
                 <select name="system.craftsmanship" class="{{#unless inEditMode}}tw-bg-black/15 tw-border-white/5 tw-text-[color:var(--wh40k-text-medium)] tw-cursor-default tw-pointer-events-none{{/unless}} tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" {{#unless inEditMode}}disabled{{/unless}}>
-                  <option value="poor" {{#if (eq item.system.craftsmanship "poor")}}selected{{/if}}>Poor</option>
-                  <option value="common" {{#if (eq item.system.craftsmanship "common")}}selected{{/if}}>Common</option>
-                  <option value="good" {{#if (eq item.system.craftsmanship "good")}}selected{{/if}}>Good</option>
-                  <option value="best" {{#if (eq item.system.craftsmanship "best")}}selected{{/if}}>Best</option>
+                  <option value="poor" {{#if (eq item.system.craftsmanship "poor")}}selected{{/if}}>{{localize "WH40K.Craftsmanship.Poor"}}</option>
+                  <option value="common" {{#if (eq item.system.craftsmanship "common")}}selected{{/if}}>{{localize "WH40K.Craftsmanship.Common"}}</option>
+                  <option value="good" {{#if (eq item.system.craftsmanship "good")}}selected{{/if}}>{{localize "WH40K.Craftsmanship.Good"}}</option>
+                  <option value="best" {{#if (eq item.system.craftsmanship "best")}}selected{{/if}}>{{localize "WH40K.Craftsmanship.Best"}}</option>
                 </select>
               </div>
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Weight (kg)</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Ammunition.WeightKg"}}</label>
                 <input type="number" name="system.weight" value="{{item.system.weight}}"
                        data-dtype="Number" min="0" step="0.1"
                        class="{{#unless inEditMode}}tw-bg-black/15 tw-border-white/5 tw-text-[color:var(--wh40k-text-medium)] tw-cursor-default tw-pointer-events-none{{/unless}} tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
@@ -267,7 +267,7 @@
               </div>
               {{#unless hideThroneGelt}}
               <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">Cost (Thrones)</label>
+                <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Ammunition.CostThrones"}}</label>
                 <input type="number" name="system.cost.dh2.homebrew.throneGelt" value="{{item.system.cost.dh2.homebrew.throneGelt}}"
                        data-dtype="Number" min="0"
                        class="{{#unless inEditMode}}tw-bg-black/15 tw-border-white/5 tw-text-[color:var(--wh40k-text-medium)] tw-cursor-default tw-pointer-events-none{{/unless}} tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
@@ -292,7 +292,7 @@
         <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
             <i class="fas fa-star tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Special Properties</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Armour.SpecialProperties"}}</h3>
             {{#if propertiesArray.length}}
             <span class="tw-ml-auto tw-inline-flex tw-items-center tw-justify-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-semibold">{{propertiesArray.length}}</span>
             {{/if}}
@@ -306,7 +306,7 @@
                 {{#if ../inEditMode}}
                 <button type="button" class="tw-cursor-pointer tw-border-none tw-bg-transparent tw-p-0 tw-leading-none tw-text-[rgba(255,255,255,0.5)] hover:tw-text-[var(--wh40k-accent-red)]"
                         data-action="removeProperty" data-property="{{prop.id}}"
-                        title="Remove property">
+                        title="{{localize 'WH40K.Modification.RemoveProperty'}}">
                   <i class="fas fa-times"></i>
                 </button>
                 {{/if}}
@@ -325,7 +325,7 @@
               {{/each}}
             </div>
             {{else}}
-            <p class="tw-italic tw-opacity-70 tw-text-sm tw-m-0 tw-py-2">No special properties</p>
+            <p class="tw-italic tw-opacity-70 tw-text-sm tw-m-0 tw-py-2">{{localize "WH40K.ItemSheet.Armour.NoSpecialProperties"}}</p>
             {{/if}}
 
             {{!-- Add property control (only in edit mode) --}}
@@ -333,14 +333,14 @@
             {{#if availableProperties}}
             <div class="tw-flex tw-gap-2 tw-mt-2">
               <select class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.15)] tw-text-white focus:tw-outline-none focus:tw-border-gold" name="new-property">
-                <option value="">-- Add Property --</option>
+                <option value="">{{localize "WH40K.ItemSheet.Armour.AddPropertyOption"}}</option>
                 {{#each availableProperties as |prop key|}}
                 <option value="{{key}}">{{prop.label}}</option>
                 {{/each}}
               </select>
               <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-1 tw-rounded-md tw-cursor-pointer tw-text-sm" data-action="addProperty">
                 <i class="fas fa-plus"></i>
-                Add
+                {{localize "WH40K.Common.Add"}}
               </button>
             </div>
             {{/if}}
@@ -356,18 +356,18 @@
         <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
             <i class="fas fa-wrench tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Modification Slots</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Armour.ModificationSlots"}}</h3>
             <span class="tw-ml-auto tw-inline-flex tw-items-center tw-justify-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-semibold">
               {{modificationsArray.length}} / {{system.modificationSlots}}
             </span>
           </div>
           <div class="tw-p-3">
             <div class="tw-flex tw-items-center tw-gap-2 tw-mb-3 tw-pb-3 tw-border-b tw-border-[rgba(255,255,255,0.1)]">
-              <label class="tw-text-sm">Total Slots:</label>
+              <label class="tw-text-sm">{{localize "WH40K.ItemSheet.Armour.TotalSlots"}}</label>
               <input type="number" name="system.modificationSlots" value="{{source.modificationSlots}}"
                      data-dtype="Number" min="0" max="10" class="tw-w-16 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               <span class="tw-text-xs tw-opacity-70 tw-ml-auto">
-                {{system.availableModSlots}} available
+                {{localize "WH40K.ItemSheet.Armour.SlotsAvailable" count=system.availableModSlots}}
               </span>
             </div>
 
@@ -382,12 +382,12 @@
                 <div class="tw-flex tw-gap-1">
                   <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-rounded-md tw-cursor-pointer"
                           data-action="editMod" data-mod-index="{{idx}}"
-                          title="Edit Modification">
+                          title="{{localize 'WH40K.ItemSheet.Armour.EditModification'}}">
                     <i class="fas fa-edit"></i>
                   </button>
                   <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-rounded-md tw-cursor-pointer"
                           data-action="removeMod" data-mod-index="{{idx}}"
-                          title="Remove Modification">
+                          title="{{localize 'WH40K.ItemSheet.Armour.RemoveModification'}}">
                     <i class="fas fa-trash"></i>
                   </button>
                 </div>
@@ -397,14 +397,14 @@
             {{else}}
             <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-italic tw-rounded-md tw-border-2 tw-border-dashed tw-border-[rgba(255,255,255,0.1)] tw-text-[rgba(255,255,255,0.4)] tw-mb-3">
               <i class="fas fa-wrench tw-opacity-40 tw-text-3xl tw-mb-2"></i>
-              <span class="tw-text-sm">No Modifications Installed</span>
-              <p class="tw-m-0 tw-text-xs tw-opacity-70">Drag armour modification items here to install them.</p>
+              <span class="tw-text-sm">{{localize "WH40K.ItemSheet.Armour.NoModifications"}}</span>
+              <p class="tw-m-0 tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.Armour.DragModifications"}}</p>
             </div>
             {{/if}}
 
             <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-w-full tw-px-3 tw-py-2 tw-rounded-md tw-cursor-pointer tw-text-sm tw-mt-2" data-action="addModification">
               <i class="fas fa-plus"></i>
-              Add Modification
+              {{localize "WH40K.ItemSheet.Armour.AddModification"}}
             </button>
           </div>
         </div>
@@ -418,7 +418,7 @@
         <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
             <i class="fas fa-bolt tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Effect</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Tabs.Effect"}}</h3>
           </div>
           <div class="tw-p-2">
             {{#if inEditMode}}
@@ -433,7 +433,7 @@
         <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
             <i class="fas fa-book tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Description</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Tabs.Description"}}</h3>
           </div>
           <div class="tw-p-2">
             {{#if inEditMode}}
@@ -448,10 +448,10 @@
         <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
             <i class="fas fa-sticky-note tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Notes</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Tabs.Notes"}}</h3>
           </div>
           <div class="tw-p-3">
-            <textarea name="system.notes" rows="4" placeholder="GM notes, acquisition details, etc." class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
+            <textarea name="system.notes" rows="4" placeholder="{{localize 'WH40K.ItemSheet.Armour.NotesPlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
           </div>
         </div>
 
@@ -459,11 +459,11 @@
         <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
           <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
             <i class="fas fa-book-open tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Source</h3>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Common.Source"}}</h3>
           </div>
           <div class="tw-p-3">
             <input type="text" name="system.source" value="{{item.system.source}}"
-                   placeholder="Rogue Trader Core Rulebook, pg. 123" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                   placeholder="{{localize 'WH40K.Ammunition.SourcePlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
           </div>
         </div>
 

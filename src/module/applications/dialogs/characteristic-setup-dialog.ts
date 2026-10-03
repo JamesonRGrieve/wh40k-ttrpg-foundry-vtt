@@ -510,8 +510,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     static async open(actor: WH40KBaseActor): Promise<boolean> {
         const t = actor.type as string;
         if (t !== 'acolyte' && t !== 'character') {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.CharacteristicSetup.OnlyForCharacters localization key
-            ui.notifications.error('Characteristic setup is only available for characters.');
+            ui.notifications.error(game.i18n.localize('WH40K.CharacteristicSetup.OnlyForCharacters'));
             return false;
         }
         const dialog = new this(actor);

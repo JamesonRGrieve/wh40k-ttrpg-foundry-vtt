@@ -267,7 +267,7 @@ export class GrantsManager {
 
         // Show notification summary
         if (options.dryRun !== true && result.notifications.length > 0 && options.showNotification !== false) {
-            ui.notifications.info(`Applied grants from ${item.name}`);
+            ui.notifications.info(game.i18n.format('WH40K.Notify.Grants.AppliedFromItem', { item: item.name }));
         }
 
         return result;
@@ -414,7 +414,7 @@ export class GrantsManager {
 
         // Show combined notification
         if (options.dryRun !== true && result.notifications.length > 0 && options.showNotification !== false) {
-            ui.notifications.info(`Applied grants from ${items.length} items`);
+            ui.notifications.info(game.i18n.format('WH40K.Notify.Grants.AppliedFromItems', { count: String(items.length) }));
         }
 
         return result;

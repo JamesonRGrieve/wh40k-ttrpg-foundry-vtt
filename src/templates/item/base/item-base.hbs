@@ -11,10 +11,10 @@
 
     {{!-- TAB NAVIGATION --}}
     {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
-        (object tab="stats" label="Stats" icon="fa-chart-bar" active=true)
-        (object tab="properties" label="Properties" icon="fa-cogs")
-        (object tab="description" label="Info" icon="fa-scroll")
-        (object tab="effects" label="Effects" icon="fa-magic"))}}
+        (object tab="stats" label=(localize "WH40K.Tabs.Stats") icon="fa-chart-bar" active=true)
+        (object tab="properties" label=(localize "WH40K.Tabs.Properties") icon="fa-cogs")
+        (object tab="description" label=(localize "WH40K.Tabs.Info") icon="fa-scroll")
+        (object tab="effects" label=(localize "WH40K.Tabs.Effects") icon="fa-magic"))}}
 
     {{!-- TAB CONTENT --}}
     <section class="tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-[var(--wh40k-space-md)] tw-border-t {{themeClassFor 'border'}}">

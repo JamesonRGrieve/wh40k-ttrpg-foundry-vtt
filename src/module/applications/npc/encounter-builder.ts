@@ -279,15 +279,13 @@ export default class EncounterBuilder extends makeNpcFormDialog({
         }
 
         if (actor === null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
-            ui.notifications.warn('Could not find the dropped actor.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Encounter.DroppedActorNotFound'));
             return;
         }
 
         // Only allow NPC types
         if (actor.type !== 'npc' && actor.type !== 'npcV2') {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
-            ui.notifications.warn('Only NPC actors can be added to encounters.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Encounter.OnlyNpcs'));
             return;
         }
 
@@ -355,8 +353,7 @@ export default class EncounterBuilder extends makeNpcFormDialog({
         const actors = game.actors.filter((a) => (a as { type: string }).type === 'npc' || (a as { type: string }).type === 'npcV2');
 
         if (actors.length === 0) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
-            ui.notifications.warn('No NPC actors found in the world.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Encounter.NoWorldNpcs'));
             return;
         }
 
@@ -370,11 +367,11 @@ export default class EncounterBuilder extends makeNpcFormDialog({
         const content = `
       <form>
         <div class="form-group">
-          <label>Select NPC</label>
+          <label>${game.i18n.localize('WH40K.Notify.Encounter.SelectNpc')}</label>
           <select name="uuid">${options}</select>
         </div>
         <div class="form-group">
-          <label>Count</label>
+          <label>${game.i18n.localize('WH40K.Notify.Encounter.Count')}</label>
           <input type="number" name="count" value="1" min="1" max="20"/>
         </div>
       </form>
@@ -386,9 +383,9 @@ export default class EncounterBuilder extends makeNpcFormDialog({
         }
         // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- Dialog is V1 API pending migration to DialogV2; cast required to reach .prompt()
         const result = await (Dialog as unknown as { prompt: (opts: Record<string, unknown>) => Promise<PromptResult | null> }).prompt({
-            title: 'Add NPC',
+            title: game.i18n.localize('WH40K.NPC.Encounter.AddNPC'),
             content,
-            label: 'Add',
+            label: game.i18n.localize('WH40K.Common.Add'),
             callback: (html: HTMLElement[]) => {
                 const form = (html[0] ?? document).querySelector('form') as HTMLFormElement;
                 return {
@@ -476,16 +473,17 @@ export default class EncounterBuilder extends makeNpcFormDialog({
      */
     static async #saveTemplate(this: EncounterBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
-            ui.notifications.warn('No NPCs to save.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Encounter.NothingToSave'));
             return;
         }
 
         // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- Dialog is V1 API pending migration to DialogV2; cast required to reach .prompt()
         const name = await (Dialog as unknown as { prompt: (opts: Record<string, unknown>) => Promise<string | null> }).prompt({
-            title: 'Save Encounter Template',
-            content: '<form><div class="form-group"><label>Template Name</label><input type="text" name="name" placeholder="My Encounter"/></div></form>',
-            label: 'Save',
+            title: game.i18n.localize('WH40K.Notify.Encounter.SaveTemplateTitle'),
+            content: `<form><div class="form-group"><label>${game.i18n.localize(
+                'WH40K.NPC.Template.Name',
+            )}</label><input type="text" name="name" placeholder="${game.i18n.localize('WH40K.Notify.Encounter.TemplatePlaceholder')}"/></div></form>`,
+            label: game.i18n.localize('WH40K.CharEdit.Save'),
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: html[0] is the V1 Dialog callback array element; optional chains guard V1 API runtime behaviour
             callback: (html: HTMLElement[]) => html[0]?.querySelector<HTMLInputElement>('[name="name"]')?.value ?? '',
             rejectClose: false,
@@ -500,7 +498,7 @@ export default class EncounterBuilder extends makeNpcFormDialog({
             savedAt: Date.now(),
         });
 
-        ui.notifications.info(`Saved encounter template: ${name}`);
+        ui.notifications.info(game.i18n.format('WH40K.Notify.Encounter.TemplateSaved', { name }));
         void this.render({ parts: ['content'] });
     }
 
@@ -519,7 +517,7 @@ export default class EncounterBuilder extends makeNpcFormDialog({
         this.#npcs = foundry.utils.deepClone(template.npcs);
         this.#party = foundry.utils.deepClone(template.party);
 
-        ui.notifications.info(`Loaded encounter: ${template.name}`);
+        ui.notifications.info(game.i18n.format('WH40K.Notify.Encounter.Loaded', { name: template.name }));
         void this.render({ parts: ['content'] });
     }
 
@@ -530,8 +528,7 @@ export default class EncounterBuilder extends makeNpcFormDialog({
      */
     static async #deployToCombat(this: EncounterBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
-            ui.notifications.warn('No NPCs to deploy.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Encounter.NothingToDeploy'));
             return;
         }
 

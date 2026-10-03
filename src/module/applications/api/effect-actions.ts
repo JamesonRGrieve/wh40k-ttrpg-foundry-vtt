@@ -73,7 +73,7 @@ export async function createEffect(
     operation?: Record<string, unknown>,
     // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments resolves to an opaque Foundry document result
 ): Promise<unknown> {
-    const data = { name: 'New Effect', img: 'icons/svg/aura.svg', ...overrides };
+    const data = { name: game.i18n.localize('WH40K.ActiveEffect.NewEffect'), img: 'icons/svg/aura.svg', ...overrides };
     return owner.createEmbeddedDocuments('ActiveEffect', [data], operation);
 }
 

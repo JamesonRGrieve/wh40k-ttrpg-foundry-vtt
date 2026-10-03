@@ -332,7 +332,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
                 },
                 { action: 'exportText', icon: 'fa-solid fa-file-lines', label: 'WH40K.NPC.Export.DownloadText' },
                 { action: 'exportJson', icon: 'fa-solid fa-file-code', label: 'WH40K.NPC.Export.DownloadJSON' },
-                { action: 'close', icon: 'fa-solid fa-times', label: 'Close' },
+                { action: 'close', icon: 'fa-solid fa-times', label: 'WH40K.Close' },
             ],
         };
     }

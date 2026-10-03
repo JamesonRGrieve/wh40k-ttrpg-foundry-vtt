@@ -21,13 +21,13 @@
 
     {{!-- Roll Title --}}
     <div class="tw-flex tw-items-center tw-justify-between tw-p-3" style="background: rgba(0, 0, 0, 0.2);">
-        <h4 class="tw-m-0 tw-text-md" style="color: #e0e0e0;">Rolling for {{rollTypeLabel}}</h4>
+        <h4 class="tw-m-0 tw-text-md" style="color: #e0e0e0;">{{localize "WH40K.Chat.OriginRoll.RollingFor" type=rollTypeLabel}}</h4>
         <span class="tw-text-sm" style="color: #888;">{{timestamp}}</span>
     </div>
 
     {{!-- Formula --}}
     <div class="tw-p-3" style="background: rgba(0, 0, 0, 0.3); border-top: 1px solid rgba(201, 160, 99, 0.3); border-bottom: 1px solid rgba(201, 160, 99, 0.3);">
-        <label class="tw-inline-block tw-mr-2 tw-font-bold tw-text-gold-raw">Formula:</label>
+        <label class="tw-inline-block tw-mr-2 tw-font-bold tw-text-gold-raw">{{localize "WH40K.Chat.Label.Formula"}}</label>
         <code class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-md" style="font-family: 'Courier New', monospace; color: #ffd700; background: rgba(0, 0, 0, 0.4);">{{formula}}</code>
     </div>
 
@@ -49,10 +49,10 @@
         <p class="tw-m-0 tw-italic tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-gold-raw">
             {{#if (eq rollType 'wounds')}}
                 <i class="fa-solid fa-shield-heart" style="color: #ffd700;"></i>
-                Added to character's starting Wounds
+                {{localize "WH40K.Chat.OriginRoll.AddedToWounds"}}
             {{else}}
                 <i class="fa-solid fa-hand-sparkles" style="color: #ffd700;"></i>
-                Fate guides your path through the void
+                {{localize "WH40K.Chat.OriginRoll.FateGuides"}}
             {{/if}}
         </p>
     </div>

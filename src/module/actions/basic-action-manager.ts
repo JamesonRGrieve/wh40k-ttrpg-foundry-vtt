@@ -127,8 +127,7 @@ export class BasicActionManager {
     async _rollDamage(event: Event): Promise<void> {
         event.preventDefault();
         const btn = event.currentTarget as HTMLButtonElement;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-        const actionData = this.#resolveStoredAction(btn, 'Roll data no longer available. Cannot roll damage.');
+        const actionData = this.#resolveStoredAction(btn, game.i18n.localize('WH40K.Notify.Action.RollDataUnavailable'));
         if (actionData == null) return;
 
         // Disable button to prevent double-rolling
@@ -266,8 +265,7 @@ export class BasicActionManager {
         const before = hit.totalDamage;
         const replaced = hit.replaceDamageDieWithDoS(dos);
         if (!replaced) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: dev-only fallback; replacement only fails when the Roll has no dice terms
-            ui.notifications.warn('No damage die available to replace.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Action.NoDamageDie'));
             return;
         }
 
@@ -310,8 +308,7 @@ export class BasicActionManager {
 
         const sourceActor: WithRollSkill | null = actionData.rollData.sourceActor;
         if (sourceActor == null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn("No source actor found for Assassin's Strike dispatch.");
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Action.NoSourceActor'));
             return;
         }
 
@@ -329,8 +326,7 @@ export class BasicActionManager {
                 flavor: game.i18n.localize('WH40K.AssassinsStrike.TestTitle'),
             });
         } catch {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: dev-only fallback when the actor's rollSkill API throws (e.g., missing skill on legacy data)
-            ui.notifications.warn("Unable to dispatch Acrobatics test for Assassin's Strike.");
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Action.AcrobaticsDispatchFailed'));
             btn.disabled = false;
             return;
         }
@@ -415,8 +411,7 @@ export class BasicActionManager {
         try {
             await (defender as { rollSkill?: (skill: string) => Promise<void> }).rollSkill?.(skill);
         } catch {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: dev-only fallback when the defender's rollSkill API throws (e.g., missing skill on legacy data)
-            ui.notifications.warn('Unable to roll the defender reaction test.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Action.DefenderReactionFailed'));
             btn.disabled = false;
             return;
         }
@@ -428,21 +423,19 @@ export class BasicActionManager {
     async _refundResources(event: Event): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget as HTMLElement;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-        const actionData = this.#resolveStoredAction(div, `Action data expired. Unable to perform action.`);
+        const actionData = this.#resolveStoredAction(div, game.i18n.localize('WH40K.Notify.Action.ActionDataExpired'));
         if (actionData == null) return;
 
         const confirmed = await ConfirmationDialog.confirm({
-            title: 'Confirm Refund',
-            content: 'Are you sure you would like to refund ammo, fate, etc for this action?',
-            confirmLabel: 'Refund',
-            cancelLabel: 'Cancel',
+            title: game.i18n.localize('WH40K.Dialog.Refund.Title'),
+            content: game.i18n.localize('WH40K.Dialog.Refund.Content'),
+            confirmLabel: game.i18n.localize('WH40K.Dialog.Refund.Confirm'),
+            cancelLabel: game.i18n.localize('WH40K.Cancel'),
         });
 
         if (confirmed) {
             await actionData.refundResources();
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.info(`Resources refunded`);
+            ui.notifications.info(game.i18n.localize('WH40K.Notify.Action.ResourcesRefunded'));
         }
     }
 
@@ -646,8 +639,7 @@ export class BasicActionManager {
             }
         }
         if (targetActor == null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn(`Cannot determine target actor to assign hit.`);
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Action.NoTargetActor'));
             return;
         }
 
@@ -669,8 +661,7 @@ export class BasicActionManager {
         const fatigue = div.dataset['fatigue'];
 
         if (targetUuid == null || targetUuid === '') {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn(`Cannot determine target UUID to assign hit.`);
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Action.NoTargetUuid'));
             return;
         }
 
@@ -683,14 +674,12 @@ export class BasicActionManager {
         /* eslint-enable no-restricted-syntax */
 
         if (targetActor == null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn(`Cannot determine actor to assign hit.`);
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Action.NoActor'));
             return;
         }
         for (const field of [damage, penetration, fatigue]) {
             if (field != null && field !== '' && Number.isNaN(parseInt(field, 10))) {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-                ui.notifications.warn(`Unable to determine damage/penetration/fatigue to assign.`);
+                ui.notifications.warn(game.i18n.localize('WH40K.Notify.Action.NoDamageToAssign'));
                 return;
             }
         }

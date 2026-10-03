@@ -16,7 +16,7 @@
                 class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold">
             <option value="">— {{localize "WH40K.Fear.ObserverLabel"}} —</option>
             {{#each observers}}
-                <option value="{{this.id}}" {{#if (eq this.id ../selectedObserverId)}}selected{{/if}}>{{this.name}} (WP {{this.willpower}})</option>
+                <option value="{{this.id}}" {{#if (eq this.id ../selectedObserverId)}}selected{{/if}}>{{localize "WH40K.Prompt.FearTest.Observer" name=this.name willpower=this.willpower}}</option>
             {{/each}}
         </select>
     </div>
@@ -25,7 +25,7 @@
     <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-mb-4">
         <div class="tw-flex tw-flex-col tw-gap-1.5">
             <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
-                WP
+                {{localize "WH40K.Characteristic.Abbr.Willpower"}}
             </label>
             <input type="number"
                    name="willpower"
@@ -52,7 +52,7 @@
     {{!-- Pip indicator --}}
     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-4">
         <span class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Fear.RatingLabel"}}</span>
-        <span class="tw-inline-flex tw-items-center tw-gap-1" aria-label="Fear {{fearRating}}">
+        <span class="tw-inline-flex tw-items-center tw-gap-1" aria-label="{{localize 'WH40K.Fear.Rating'}} {{fearRating}}">
             {{#each pips}}
                 {{#if this.on}}
                     <span class="tw-inline-block tw-w-2.5 tw-h-2.5 tw-rounded-full tw-border {{#if ../fearRatingHigh}}tw-border-red-600 tw-bg-red-600{{else}}tw-border-gold tw-bg-gold{{/if}}"></span>
