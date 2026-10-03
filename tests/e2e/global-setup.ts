@@ -1,6 +1,8 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { hasFoundry, requireOrSkip, skipBanner } from './has-foundry';
+import { foundryTestDataDir } from './lib/data-dir';
+import { scaledMs } from './lib/timing';
 
 // Base port for the per-worker isolated worlds — kept in sync with join.ts's
 // E2E_PORT_BASE (worker N → port base+N). Computed locally so this string-loaded
@@ -11,6 +13,9 @@ const E2E_PORT_BASE = Number(process.env.FOUNDRY_TEST_PORT ?? 30001);
  *  concurrent workers never share a world (no websocket cross-broadcast races).
  *  Keep in sync with playwright.foundry.config.ts. */
 const E2E_WORKERS = Math.max(1, Number(process.env.E2E_WORKERS ?? 1));
+
+/** How long each world may take to finish booting — matches the webServer timeout. */
+const WORLD_READY_TIMEOUT_MS = scaledMs(180_000);
 
 export default async function globalSetup(): Promise<void> {
     requireOrSkip('B');
@@ -39,9 +44,9 @@ export default async function globalSetup(): Promise<void> {
  * a Gamemaster option to the client. One data dir per port: `.foundry-test-data-<port>`.
  */
 async function waitForWorldReady(port: number): Promise<void> {
-    const deadline = Date.now() + 180_000;
+    const deadline = Date.now() + WORLD_READY_TIMEOUT_MS;
     const url = `http://127.0.0.1:${port}/systems/wh40k-rpg/system.json`;
-    const usersDbDir = resolve(__dirname, '..', '..', `.foundry-test-data-${port}`, 'Data', 'worlds', 'wh40k-e2e', 'data', 'users');
+    const usersDbDir = resolve(foundryTestDataDir(port), 'Data', 'worlds', 'wh40k-e2e', 'data', 'users');
     while (Date.now() < deadline) {
         let httpOk = false;
         try {
@@ -59,5 +64,5 @@ async function waitForWorldReady(port: number): Promise<void> {
             setTimeout(r, 1_000);
         });
     }
-    throw new Error(`Foundry world on :${port} did not become ready within 180s`);
+    throw new Error(`Foundry world on :${port} did not become ready within ${WORLD_READY_TIMEOUT_MS}ms`);
 }

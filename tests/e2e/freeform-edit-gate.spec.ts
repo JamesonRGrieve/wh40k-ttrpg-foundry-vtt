@@ -45,9 +45,8 @@ test('freeform-off keeps the characteristic direct-edit input hidden in edit mod
             if (sheet === undefined) return { rendered: false, hudPresent: false, inputInEditMode: null, error: 'sheet unavailable' };
 
             await sheet.render({ force: true });
-            await new Promise<void>((r) => {
-                setTimeout(r, 250);
-            });
+            // Wait for the characteristic HUD to render (the checks below report a miss).
+            await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('[data-characteristic]') != null);
             const rendered = sheet.element instanceof HTMLElement;
             // The characteristic HUD renders (the panel my edit lives in) without throwing.
             const hudPresent = sheet.element?.querySelector('[data-characteristic]') != null;
@@ -55,9 +54,8 @@ test('freeform-off keeps the characteristic direct-edit input hidden in edit mod
             // Enter edit mode. freeform-characters defaults OFF, so the gate stays closed.
             sheet.element?.querySelector<HTMLElement>('[data-action="toggleEditMode"]')?.click();
             await sheet.render({ force: true });
-            await new Promise<void>((r) => {
-                setTimeout(r, 250);
-            });
+            // The gate is asserted CLOSED (an absence): let the edit-mode render fully settle first.
+            await globalThis.wh40kE2E.settle(250);
             const inputInEditMode = sheet.element?.querySelector('.wh40k-char-direct-input') != null;
 
             return { rendered, hudPresent, inputInEditMode, error: null };

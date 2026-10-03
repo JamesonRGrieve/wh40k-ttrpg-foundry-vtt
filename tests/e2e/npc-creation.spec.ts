@@ -82,9 +82,8 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[] }> {
                 const dlg = new NPCQuickCreateDialog({}, {});
                 opened.push(dlg);
                 await dlg.render({ force: true });
-                await new Promise<void>((r) => {
-                    setTimeout(r, 50);
-                });
+                // Wait for the dialog element (the record below reports a miss).
+                await globalThis.wh40kE2E.pollUntil(() => dlg.element instanceof HTMLElement);
                 record('quick-create-dialog-renders', dlg.element instanceof HTMLElement, null);
             }
         } catch (err) {
@@ -102,9 +101,8 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[] }> {
                 const dlg = new BatchCreateDialog({}, {});
                 opened.push(dlg);
                 await dlg.render({ force: true });
-                await new Promise<void>((r) => {
-                    setTimeout(r, 50);
-                });
+                // Wait for the dialog element (the record below reports a miss).
+                await globalThis.wh40kE2E.pollUntil(() => dlg.element instanceof HTMLElement);
                 record('batch-create-dialog-renders', dlg.element instanceof HTMLElement, null);
             }
         } catch (err) {
@@ -122,9 +120,8 @@ async function probeNPCCreate(page: Page): Promise<{ results: FlowResult[] }> {
                 const dlg = new TemplateSelector({});
                 opened.push(dlg);
                 await dlg.render({ force: true });
-                await new Promise<void>((r) => {
-                    setTimeout(r, 50);
-                });
+                // Wait for the dialog element (the record below reports a miss).
+                await globalThis.wh40kE2E.pollUntil(() => dlg.element instanceof HTMLElement);
                 record('template-selector-renders', dlg.element instanceof HTMLElement, null);
             }
         } catch (err) {

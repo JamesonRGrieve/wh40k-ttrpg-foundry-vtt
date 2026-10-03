@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the WH40KVehicle document class
@@ -125,19 +126,9 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
             return out;
         }
 
-        const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-            // TypeScript's control flow doesn't track Promise-executor assignments,
-            // so use an object wrapper that the analyzer sees as always-initialized.
-            const timerRef = { id: null as ReturnType<typeof setTimeout> | null };
-            const timeout = new Promise<T>((_, reject) => {
-                timerRef.id = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                if (timerRef.id !== null) clearTimeout(timerRef.id);
-            }
-        };
+        const { withTimeout } = globalThis.wh40kE2E;
+        // Vehicle creation and the weapon roll get a longer budget.
+        const SLOW_OP_TIMEOUT_MS = globalThis.wh40kE2E.scaledMs(8_000);
 
         // ---- create a bc-vehicle with rich system data so every getter has a meaningful read ----
         let vehicleActor: ProbeActor | null = null;
@@ -169,8 +160,8 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
                         speed: { cruising: 60, tactical: 18, notes: '' },
                     },
                 }),
-                8_000,
                 'vehicle Actor.create',
+                SLOW_OP_TIMEOUT_MS,
             );
         } catch (err) {
             for (const f of flows) record(f, false, `vehicle create threw: ${err instanceof Error ? err.message : String(err)}`);
@@ -307,7 +298,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
         try {
             const v = live();
             if (v == null) throw new Error('vehicle not live');
-            await withTimeout(v.rollItem('this-item-does-not-exist'), 5_000, 'rollItem missing');
+            await withTimeout(v.rollItem('this-item-does-not-exist'), 'rollItem missing');
             record('rollItem-missing-item', true, null);
         } catch (err) {
             // V8 still attributes the line hits even if a UI helper threw.
@@ -321,7 +312,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
         try {
             const user = gme?.user;
             if (user != null && typeof user.update === 'function' && user.character != null) {
-                await withTimeout(user.update({ character: null }), 5_000, 'clear user.character');
+                await withTimeout(user.update({ character: null }), 'clear user.character');
             }
         } catch {
             /* best effort — proceed regardless */
@@ -339,7 +330,6 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
                         system: {},
                     },
                 ]),
-                5_000,
                 'embed armour item',
             );
             const arr = Array.isArray(created) ? created : [];
@@ -353,7 +343,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
             if (itemId == null || v == null) {
                 record('rollItem-no-character', false, 'no item available to roll');
             } else {
-                await withTimeout(v.rollItem(itemId), 5_000, 'rollItem no-character');
+                await withTimeout(v.rollItem(itemId), 'rollItem no-character');
                 record('rollItem-no-character', true, null);
             }
         } catch (err) {
@@ -379,7 +369,6 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
                         },
                     },
                 }),
-                5_000,
                 'pc create',
             );
         } catch {
@@ -399,7 +388,6 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
                             },
                         },
                     }),
-                    5_000,
                     'pc dh2 fallback',
                 );
             } catch {
@@ -409,7 +397,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
         try {
             const user = gme?.user;
             if (user != null && typeof user.update === 'function' && characterActor?.id != null) {
-                await withTimeout(user.update({ character: characterActor.id }), 5_000, 'set user.character');
+                await withTimeout(user.update({ character: characterActor.id }), 'set user.character');
             }
         } catch {
             /* best effort */
@@ -422,7 +410,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
             if (itemId == null || v == null) {
                 record('rollItem-non-weapon', false, 'no non-weapon item available');
             } else {
-                await withTimeout(v.rollItem(itemId), 5_000, 'rollItem non-weapon');
+                await withTimeout(v.rollItem(itemId), 'rollItem non-weapon');
                 record('rollItem-non-weapon', true, null);
             }
         } catch (err) {
@@ -449,7 +437,6 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
                         },
                     },
                 ]),
-                5_000,
                 'embed weapon item',
             );
             const arr = Array.isArray(created) ? created : [];
@@ -462,7 +449,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
             if (weaponItemId === null || v == null) {
                 record('rollItem-weapon-delegation', false, 'no weapon item created');
             } else {
-                await withTimeout(v.rollItem(weaponItemId), 8_000, 'rollItem weapon');
+                await withTimeout(v.rollItem(weaponItemId), 'rollItem weapon', SLOW_OP_TIMEOUT_MS);
                 record('rollItem-weapon-delegation', true, null);
             }
         } catch (err) {
@@ -497,7 +484,7 @@ async function probeVehicleMethods(page: Page): Promise<{ results: FlowResult[] 
 }
 
 test.describe.serial('documents/vehicle (Tier B)', () => {
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('every WH40KVehicle getter + rollItem branch is exercised', async ({ page }) => {
         await joinOrSkip(page);
 

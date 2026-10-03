@@ -151,12 +151,13 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
         }
         const actorId = actor.id;
 
-        const sleep = async (ms: number): Promise<void> =>
-            new Promise<void>((r) => {
-                setTimeout(r, ms);
-            });
+        const { pollUntil } = globalThis.wh40kE2E;
         const liveActor = (): ProbeActor | undefined => fg.game?.actors?.get?.(actorId);
         const effectCountBefore = (): number => liveActor()?.effects?.size ?? 0;
+        /** Wait for the effect count to reach `expected` (each record below reports a miss). */
+        const awaitEffectCount = async (expected: number): Promise<void> => {
+            await pollUntil(() => effectCountBefore() === expected);
+        };
 
         const aeModule = ae;
         const seededActor = actor;
@@ -170,7 +171,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
                     name: 'probe-raw-effect',
                     changes: [{ key: 'system.combat.attack', mode: 2, value: 5 }],
                 });
-                await sleep(20);
+                await awaitEffectCount(before + 1);
                 record('createEffect', effectCountBefore() === before + 1, null);
             } catch (err) {
                 record('createEffect', false, err instanceof Error ? err.message : String(err));
@@ -180,7 +181,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             try {
                 const before = effectCountBefore();
                 await aeModule.createCharacteristicEffect?.(liveActor(), 'strength', 10);
-                await sleep(20);
+                await awaitEffectCount(before + 1);
                 record('createCharacteristicEffect', effectCountBefore() === before + 1, null);
             } catch (err) {
                 record('createCharacteristicEffect', false, err instanceof Error ? err.message : String(err));
@@ -190,7 +191,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             try {
                 const before = effectCountBefore();
                 await aeModule.createSkillEffect?.(liveActor(), 'dodge', 10);
-                await sleep(20);
+                await awaitEffectCount(before + 1);
                 record('createSkillEffect', effectCountBefore() === before + 1, null);
             } catch (err) {
                 record('createSkillEffect', false, err instanceof Error ? err.message : String(err));
@@ -200,7 +201,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             try {
                 const before = effectCountBefore();
                 await aeModule.createCombatEffect?.(liveActor(), 'attack', 10);
-                await sleep(20);
+                await awaitEffectCount(before + 1);
                 record('createCombatEffect', effectCountBefore() === before + 1, null);
             } catch (err) {
                 record('createCombatEffect', false, err instanceof Error ? err.message : String(err));
@@ -210,7 +211,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             try {
                 const before = effectCountBefore();
                 await aeModule.createConditionEffect?.(liveActor(), 'stunned');
-                await sleep(20);
+                await awaitEffectCount(before + 1);
                 record('createConditionEffect', effectCountBefore() === before + 1, null);
             } catch (err) {
                 record('createConditionEffect', false, err instanceof Error ? err.message : String(err));
@@ -220,7 +221,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             try {
                 const before = effectCountBefore();
                 await aeModule.createTemporaryEffect?.(liveActor(), 'probe-temp-effect', [{ key: 'system.combat.defense', mode: 2, value: 5 }], 3);
-                await sleep(20);
+                await awaitEffectCount(before + 1);
                 record('createTemporaryEffect', effectCountBefore() === before + 1, null);
             } catch (err) {
                 record('createTemporaryEffect', false, err instanceof Error ? err.message : String(err));
@@ -233,7 +234,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             try {
                 const before = effectCountBefore();
                 await aeModule.removeEffectByName?.(liveActor(), 'probe-raw-effect');
-                await sleep(20);
+                await awaitEffectCount(before - 1);
                 record('removeEffectByName', effectCountBefore() === before - 1, null);
             } catch (err) {
                 record('removeEffectByName', false, err instanceof Error ? err.message : String(err));
@@ -250,8 +251,10 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
                 } else {
                     const wasDisabled = target.disabled === true;
                     await aeModule.toggleEffect?.(liveActor(), target.id);
-                    await sleep(20);
-                    const after = liveActor()?.effects?.get?.(target.id) ?? target;
+                    const targetId = target.id;
+                    const readToggled = (): ActiveEffectDoc => liveActor()?.effects?.get?.(targetId) ?? target;
+                    await pollUntil(() => readToggled().disabled !== wasDisabled);
+                    const after = readToggled();
                     record('toggleEffect', after.disabled !== wasDisabled, `before=${String(wasDisabled)} after=${String(after.disabled)}`);
                 }
             } catch (err) {
@@ -262,7 +265,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             try {
                 const before = effectCountBefore();
                 await aeModule.removeEffects?.(liveActor(), () => true);
-                await sleep(40);
+                await pollUntil(() => effectCountBefore() < before);
                 record('removeEffects', effectCountBefore() < before, `before=${before} after=${effectCountBefore()}`);
             } catch (err) {
                 record('removeEffects', false, err instanceof Error ? err.message : String(err));

@@ -413,9 +413,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
             let context: Awaited<ReturnType<DialogInstance['_prepareContext']>> | null = null;
             try {
                 await dialog.render(true);
-                await new Promise((r) => {
-                    setTimeout(r, 30);
-                });
+                await globalThis.wh40kE2E.settle(30);
                 context = await dialog._prepareContext({ force: true });
             } catch (err) {
                 try {

@@ -103,9 +103,8 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
                     };
                 }
                 await sheet.render(true);
-                await new Promise((r) => {
-                    setTimeout(r, 200);
-                });
+                // Wait for the craftsmanship panel to render (the checks below report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('.wh40k-ow-craftsmanship-panel') != null);
                 const el = sheet.element;
                 rendered = el instanceof HTMLElement;
                 if (rendered && el) {

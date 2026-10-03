@@ -59,9 +59,8 @@ test('Superior Chirurgeon renders as a read-only passive row in the Medicae roll
             // Open the real Medicae roll dialog (routes through the skill-use flow,
             // which opens the unified Roll Test dialog — nothing is skipped).
             await actor.rollSkill('medicae');
-            await new Promise<void>((r) => {
-                setTimeout(r, 700);
-            });
+            // Wait for the dialog to render its passive-modifier row (the assertions report a miss).
+            await globalThis.wh40kE2E.pollUntil(() => document.querySelector('.unified-roll-dialog')?.textContent.includes('Superior Chirurgeon') === true);
 
             const dialog = document.querySelector('.unified-roll-dialog');
             if (dialog === null) return fail('unified-roll-dialog did not render');

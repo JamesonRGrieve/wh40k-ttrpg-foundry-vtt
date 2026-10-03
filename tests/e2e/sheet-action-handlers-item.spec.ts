@@ -4,6 +4,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of per-sheet `static DEFAULT_OPTIONS.actions` handlers
@@ -182,17 +183,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
 
         // Wrap any awaitable with a 5s timeout so a blocking dialog or
         // socket-wait can't hang the spec (mirrors weapon-attack.spec.ts).
-        const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-            let timer: ReturnType<typeof setTimeout> | undefined;
-            const timeout = new Promise<T>((_, reject) => {
-                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                clearTimeout(timer);
-            }
-        };
+        const { withTimeout, settle } = globalThis.wh40kE2E;
 
         /** Drain any open dialog / confirmation / sheet popouts spawned by an action. */
         async function closeOpenDialogs(): Promise<void> {
@@ -237,7 +228,6 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                     type: 'dh2-character',
                     system: { gameSystem: 'dh2' },
                 }),
-                5_000,
                 'PC Actor.create',
             );
             const createdId = pc?.id;
@@ -261,9 +251,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
 
         // Let the server flush the parent create before we start
         // pumping embedded creates (mirrors weapon-attack.spec.ts).
-        await new Promise<void>((r) => {
-            setTimeout(r, 250);
-        });
+        await settle(250);
 
         const getPc = (): ActorLike | undefined => gameObj?.actors?.get?.(pcId);
 
@@ -277,7 +265,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
             if (live?.createEmbeddedDocuments == null) return null;
             let created: Array<{ id?: string }> = [];
             try {
-                created = await withTimeout(live.createEmbeddedDocuments('Item', [{ name, type, system: systemData }]), 5_000, `create ${type}`);
+                created = await withTimeout(live.createEmbeddedDocuments('Item', [{ name, type, system: systemData }]), `create ${type}`);
             } catch {
                 return null;
             }
@@ -294,7 +282,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
             const sheet = item.sheet ?? null;
             if (sheet?.render == null) return { item, sheet: null };
             try {
-                await withTimeout(sheet.render({ force: true }), 5_000, `render ${type} sheet`);
+                await withTimeout(sheet.render({ force: true }), `render ${type} sheet`);
             } catch {
                 /* still return — handlers that don't read this.element will work */
             }
@@ -326,7 +314,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                 return { called: false, error: `${actionName} action missing on ${SheetCls.name ?? 'unknown sheet'}` };
             }
             try {
-                await withTimeout(Promise.resolve(handler.call(sheet, evt, target)), 5_000, `${actionName} dispatch`);
+                await withTimeout(Promise.resolve(handler.call(sheet, evt, target)), `${actionName} dispatch`);
                 return { called: true, error: null };
             } catch (err) {
                 return { called: false, error: err instanceof Error ? err.message : String(err) };
@@ -1162,7 +1150,7 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('item-sheet action handlers (Tier B)', () => {
     // Cap at 4 minutes — many independent embedded creates + sheet renders run serially.
-    test.setTimeout(240_000);
+    test.setTimeout(scaledMs(240_000));
     test('per-sheet DEFAULT_OPTIONS.actions handlers across 9 item-sheet files', async ({ page }) => {
         await joinOrSkip(page);
 

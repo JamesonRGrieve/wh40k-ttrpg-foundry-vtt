@@ -30,6 +30,7 @@
 import { mkdirSync } from 'node:fs';
 import { basename, resolve } from 'node:path';
 import type { Locator, Page } from '@playwright/test';
+import { scaledMs } from './timing';
 
 const SCREENSHOT_DIR = resolve(__dirname, '..', '..', '..', '.e2e-screenshots');
 
@@ -116,13 +117,57 @@ async function prepareApplicationForCapture(page: Page): Promise<Locator | null>
                 last.scrollIntoView({ block: 'start', inline: 'start' });
             }, sel);
             // Wait one frame for the position change to settle visually.
-            await page.waitForTimeout(80);
+            await page.waitForTimeout(scaledMs(80));
             return loc;
         } catch {
             /* continue */
         }
     }
     return null;
+}
+
+/**
+ * Make the screen capture-clean: unpause, dismiss every notification (the
+ * headless "no hardware acceleration" warning covered sheet headers in most
+ * actor screenshots), and close every floating application window whose id
+ * does not contain `keepIdFragment` (stray windows such as In-Universe Time
+ * overlapped sheets; a sheet's app id embeds its document id). Best-effort.
+ */
+export async function clearScreenOverlays(page: Page, keepIdFragment?: string): Promise<void> {
+    try {
+        await page.evaluate(async (keep: string | null) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (`game`, `ui`, `foundry.applications.instances`) have no browser-side types
+            const g = globalThis as unknown as {
+                game?: { paused?: boolean; togglePause?: (state: boolean) => void };
+                ui?: { notifications?: { clear?: () => void } };
+                foundry?: { applications?: { instances?: Map<string, { id?: string; close?: (o?: object) => Promise<void> }> } };
+            };
+            if (g.game?.paused === true) g.game.togglePause?.(false);
+            g.ui?.notifications?.clear?.();
+            document.querySelectorAll('#notifications > *').forEach((n) => {
+                n.remove();
+            });
+            const apps = Array.from(g.foundry?.applications?.instances?.values() ?? []);
+            await Promise.all(
+                apps
+                    // Floating windows mount on <body>; core UI (sidebar, hotbar, controls) lives under #interface.
+                    .filter((app) => {
+                        const id = app.id ?? '';
+                        if (keep !== null && id.includes(keep)) return false;
+                        return document.getElementById(id)?.parentElement === document.body;
+                    })
+                    .map(async (app) => {
+                        try {
+                            await app.close?.({ animate: false });
+                        } catch {
+                            /* ignore */
+                        }
+                    }),
+            );
+        }, keepIdFragment ?? null);
+    } catch {
+        /* ignore */
+    }
 }
 
 /**

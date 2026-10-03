@@ -3,9 +3,10 @@ import { resolve } from 'node:path';
 import { test as base } from '@playwright/test';
 import { type CapturedError, formatCapturedError, unexpectedErrors } from './console-guard';
 import { installDialogOpener } from './dialog-opener';
+import { installInPageHelpers } from './in-page-helpers';
 
 /**
- * Playwright `test` extended with two things every Tier B spec gets for free by
+ * Playwright `test` extended with the things every Tier B spec gets for free by
  * importing from here (instead of from '@playwright/test'):
  *
  *  1. Per-page V8 JS coverage capture. Entries are dumped to `.e2e-raw-coverage/`;
@@ -21,6 +22,10 @@ import { installDialogOpener } from './dialog-opener';
  *     without duplicating that boilerplate. Set `E2E_CONSOLE_GUARD=off` to
  *     disable, or `=report` to only append captures to `.e2e-console-report.jsonl`
  *     (for calibrating IGNORED_PATTERNS) without failing.
+ *
+ *  3. In-page helpers on every document the page loads: `globalThis.wh40kE2E`
+ *     (scaled `withTimeout` / `waitFor` / `settle`, see in-page-helpers.ts) and
+ *     `globalThis.wh40kOpenDialog` (see dialog-opener.ts).
  */
 
 const RAW_DIR = resolve(__dirname, '..', '..', '..', '.e2e-raw-coverage');
@@ -51,6 +56,7 @@ export const test = base.extend({
         } catch {
             // page.coverage is chromium-only; non-chromium projects skip.
         }
+        await installInPageHelpers(page);
         await installDialogOpener(page);
 
         await use(page);

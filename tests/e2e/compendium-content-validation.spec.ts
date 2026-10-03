@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Keys MUST match the COMPENDIUM_CONTENT_FLOWS constant in
@@ -32,7 +33,7 @@ import { expect, test } from './lib/test';
  *      content audit is the orchestrator's job, not this spec.
  *
  * Strategy mirrors `weapon-attack.spec.ts`: one page.evaluate per pack
- * wrapped in `withTimeout(p, 30000, label)` so a slow pack can't hang the
+ * wrapped in `withTimeout(p, label, <scaled 30s>)` so a slow pack can't hang the
  * whole spec. Read-only — no documents are created, updated, or deleted.
  * Each pack records a flow under `<packId>::validated` so the orchestrator
  * can sum per-pack coverage.
@@ -156,17 +157,8 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
         // Wrap any awaitable with a 30s timeout so a slow pack can't
         // hang the spec (pack.getDocuments() is genuinely slow on large
         // packs — 30s is the safe-side bound).
-        const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-            let timer: ReturnType<typeof setTimeout> | undefined;
-            const timeout = new Promise<T>((_, reject) => {
-                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                clearTimeout(timer);
-            }
-        };
+        const { withTimeout } = globalThis.wh40kE2E;
+        const PACK_LOAD_TIMEOUT_MS = globalThis.wh40kE2E.scaledMs(30_000);
 
         // Recursively walk a value, yielding every string that matches
         // the Foundry compendium UUID shape. Caps depth at 8 to avoid
@@ -400,7 +392,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
 
             let docs: RawDoc[] = [];
             try {
-                docs = await withTimeout(pack.getDocuments(), 30_000, `${packId}.getDocuments()`);
+                docs = await withTimeout(pack.getDocuments(), `${packId}.getDocuments()`, PACK_LOAD_TIMEOUT_MS);
             } catch (err) {
                 outcome.packError = `getDocuments threw: ${String((err as Error).message)}`;
                 return;
@@ -459,7 +451,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
 test.describe.serial('compendium content validation (Tier B)', () => {
     // Cap at 15 minutes — 26 packs × up-to-30s timeout each = 13min worst
     // case; we add headroom for the inner per-doc work.
-    test.setTimeout(900_000);
+    test.setTimeout(scaledMs(900_000));
     test('every enumerated wh40k-rpg pack: every doc validates against its DataModel and round-trips', async ({ page }) => {
         await joinOrSkip(page);
 

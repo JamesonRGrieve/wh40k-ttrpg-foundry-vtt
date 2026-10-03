@@ -411,9 +411,7 @@ async function probeScaler(page: Page): Promise<FlowResult> {
                 try {
                     dialog = new ScalerDialog(actor);
                     await dialog.render(true).catch(() => undefined);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
+                    await globalThis.wh40kE2E.settle(30);
                 } catch {
                     /* render is best-effort; the static-API drive below is what gates the probe */
                 }
@@ -549,9 +547,7 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
                 // a real party computation.
                 try {
                     await dialog.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
+                    await globalThis.wh40kE2E.settle(30);
                 } catch {
                     /* render is best-effort */
                 }
@@ -630,9 +626,7 @@ async function probeBuilder(page: Page): Promise<FlowResult> {
                 // Ensure a clean slate (singleton may retain state from
                 // earlier specs — combat.spec.ts touches it).
                 builder.clear();
-                await new Promise<void>((r) => {
-                    setTimeout(r, 20);
-                });
+                await globalThis.wh40kE2E.settle(20);
 
                 for (const uuid of npcUuids) {
                     await builder.addNPC(uuid, 1);
@@ -775,9 +769,7 @@ async function probePreset(page: Page): Promise<FlowResult> {
                 let lib: { close: () => Promise<void> } | null = null;
                 try {
                     lib = PresetDialog.showLibrary();
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 40);
-                    });
+                    await globalThis.wh40kE2E.settle(40);
                 } catch {
                     /* render is best-effort */
                 }

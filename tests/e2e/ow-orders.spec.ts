@@ -110,9 +110,8 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
                     const sheet = actor.sheet;
                     if (sheet == null) return { error: 'actor.sheet is null' };
                     await sheet.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 120);
-                    });
+                    // Wait for the orders panel to render (the checks below report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('.wh40k-ow-orders-panel') != null);
                     rendered = sheet.element instanceof HTMLElement;
 
                     if (rendered && sheet.element != null) {
@@ -127,8 +126,10 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
 
                         if (issueBtn && !issueBtn.disabled) {
                             issueBtn.click();
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 200);
+                            // Wait for the issued order to land on the actor (the checks below report a miss).
+                            await globalThis.wh40kE2E.pollUntil(() => {
+                                const orders = actor.system?.activeOrders;
+                                return Array.isArray(orders) && orders.length > ordersBefore;
                             });
                             issueDispatched = true;
                         }

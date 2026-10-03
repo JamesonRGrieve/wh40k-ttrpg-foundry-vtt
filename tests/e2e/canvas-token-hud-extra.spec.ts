@@ -3,6 +3,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the system's TokenRuler subclass + token-HUD button
@@ -177,16 +178,10 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
             PERCEPTION: 2,
         };
 
-        const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-            let timer: ReturnType<typeof setTimeout> | undefined;
-            const timeout = new Promise<T>((_, reject) => {
-                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                clearTimeout(timer);
-            }
+        const { withTimeout, pollUntil, settle } = globalThis.wh40kE2E;
+        /** Wait for `renderTokenHUD` to inject the movement buttons into `root`; the probe's own check reports a miss. */
+        const awaitMovementButtons = async (root: HTMLElement): Promise<void> => {
+            await pollUntil(() => root.querySelectorAll('.wh40k-token-movement__btn').length > 0);
         };
 
         // Cleanup registry — every actor / scene / item / created
@@ -206,7 +201,6 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     type: 'bc-character',
                     system: { gameSystem: 'bc', movement: { half: 3, full: 6, charge: 9, run: 18 } },
                 }),
-                5_000,
                 'ActorCls.create',
             );
             if (actor?.id != null) {
@@ -239,7 +233,6 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     type: 'bc-npc',
                     system: { gameSystem: 'bc' },
                 }),
-                5_000,
                 'ActorCls.create (no movement)',
             );
             if (actorNoMovement?.id != null) {
@@ -567,9 +560,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
                     HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
+                    await awaitMovementButtons(htmlRoot);
                     const activeBtns = htmlRoot.querySelectorAll('.wh40k-token-movement__btn.active');
                     if (activeBtns.length === 1) {
                         const activeBtn = activeBtns[0] as HTMLElement;
@@ -616,9 +607,8 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
                     HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
+                    // Asserting an ABSENCE: give any (wrong) async injection time to land.
+                    await settle(30);
                     const container = htmlRoot.querySelector('.wh40k-token-movement');
                     if (container === null) {
                         fired['token-hud-no-movement-skips-injection'] = true;
@@ -656,9 +646,7 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
                     HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
+                    await awaitMovementButtons(htmlRoot);
                     const halfBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="half"]');
                     if (halfBtn !== null) {
                         const title = halfBtn.title;
@@ -711,15 +699,11 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
                     HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
+                    await awaitMovementButtons(htmlRoot);
                     const chargeBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="charge"]');
                     if (chargeBtn !== null) {
                         chargeBtn.click();
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 50);
-                        });
+                        await pollUntil(() => recordedUpdates.length > 0);
                         const lastUpdate = recordedUpdates[recordedUpdates.length - 1] as { flags?: { 'wh40k-rpg'?: { movementAction?: string } } } | undefined;
                         const flagsPayload = lastUpdate?.flags?.['wh40k-rpg'];
                         if (flagsPayload?.movementAction === 'charge') {
@@ -764,21 +748,15 @@ async function probeCanvasTokenHudExtra(page: Page): Promise<ProbeResult> {
                     };
                     const fakeHud = { object: { document: fakeTokenDoc } };
                     HooksMgr.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
+                    await awaitMovementButtons(htmlRoot);
                     const runBtn = htmlRoot.querySelector<HTMLElement>('.wh40k-token-movement__btn[data-movement-type="run"]');
                     if (runBtn !== null) {
                         const baseBg = runBtn.style.background;
                         runBtn.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 10);
-                        });
+                        await pollUntil(() => runBtn.style.background !== baseBg);
                         const hoverBg = runBtn.style.background;
                         runBtn.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 10);
-                        });
+                        await pollUntil(() => runBtn.style.background === baseBg);
                         const leaveBg = runBtn.style.background;
                         if (hoverBg !== baseBg && leaveBg === baseBg) {
                             fired['token-hud-button-mouseenter-mouseleave-styles'] = true;
@@ -883,7 +861,7 @@ test.describe.serial('canvas ruler + token HUD depth (Tier B)', () => {
     // Cap at 2 minutes — per-call timeouts mean we should never come close,
     // but a hung server would otherwise eat the global 10-minute test
     // timeout and take downstream specs with it.
-    test.setTimeout(120_000);
+    test.setTimeout(scaledMs(120_000));
     test('TokenRulerWH40K style helpers + onTokenHUDRender button branches exercise canvas + HUD source', async ({ page }) => {
         await joinOrSkip(page);
 

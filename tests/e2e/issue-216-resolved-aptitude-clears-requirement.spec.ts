@@ -282,9 +282,8 @@ test.describe.serial('Issue #216 — resolved duplicate aptitude no longer rende
 
                 try {
                     await builder.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 120);
-                    });
+                    // Wait for the resolved-collision banner (the assertions report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => builder.element?.querySelector('[data-testid="aptitude-collision-resolved-banner"]') != null);
                 } catch (err) {
                     error = `render: ${err instanceof Error ? err.message : String(err)}`;
                 }

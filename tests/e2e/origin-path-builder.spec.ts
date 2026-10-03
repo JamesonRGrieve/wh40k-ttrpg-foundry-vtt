@@ -151,10 +151,8 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
             try {
                 builder = new OriginPathBuilder(seededActor, {});
                 await builder.render(true);
-                // _prepareContext → _loadOrigins is async; give it a beat.
-                await new Promise<void>((r) => {
-                    setTimeout(r, 200);
-                });
+                // _prepareContext → _loadOrigins is async; wait for the origins (loaded below if they never arrive).
+                await globalThis.wh40kE2E.pollUntil(() => (builder.allOrigins?.length ?? 0) > 0);
                 // Ensure origins loaded (compendium fetch can be slow on cold cache).
                 if ((builder.allOrigins?.length ?? 0) === 0 && typeof builder._loadOrigins === 'function') {
                     try {
@@ -191,9 +189,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     const rv = handler.call(activeBuilder, event, target);
                     if (rv instanceof Promise) await rv;
                     // Allow the post-action re-render to settle.
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
+                    await globalThis.wh40kE2E.settle(30);
                     return null;
                 } catch (err) {
                     return String(err instanceof Error ? err.message : err);
@@ -378,9 +374,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
                     builder.showLineage = false;
                     builder.showCharacteristics = false;
                     await builder.render();
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
+                    await globalThis.wh40kE2E.settle(30);
                     if (builder.selections.size === 0 && builder.currentStepIndex === 0 && activeBuilder.previewedOrigin === null) {
                         record('builder-cancel-or-reset', true, null);
                     } else {

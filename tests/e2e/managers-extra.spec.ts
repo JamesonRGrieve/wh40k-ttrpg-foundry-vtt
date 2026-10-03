@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B extra coverage of the three `src/module/managers/*` classes that
@@ -32,7 +33,7 @@ import { expect, test } from './lib/test';
  * Strategy mirrors weapon-attack.spec.ts / managers.spec.ts:
  *   - one shared cleanup registry, every actor / scene / item created here
  *     registered for end-of-probe deletion;
- *   - dialog-opening + document writes wrapped in a 5s `withTimeout` so a
+ *   - dialog-opening + document writes wrapped in the shared (scaled 5s) `withTimeout` so a
  *     blocking dialog or socket-wait can't hang the spec;
  *   - collect-failures-then-assert so one broken flow doesn't mask the rest.
  *
@@ -210,18 +211,10 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
 
             // Wrap any awaitable with a timeout so a blocking dialog or
             // socket-wait can't hang the spec (mirrors weapon-attack.spec.ts).
-            const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
-                const timeout = new Promise<T>((_, reject) => {
-                    timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-                });
-                try {
-                    return await Promise.race([p, timeout]);
-                } finally {
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
-                    if (timer !== null) clearTimeout(timer);
-                }
-            };
+            const { withTimeout, pollUntil, settle } = globalThis.wh40kE2E;
+            // Compendium-walking inventory-generator calls get longer budgets.
+            const INVENTORY_APPLY_TIMEOUT_MS = globalThis.wh40kE2E.scaledMs(10_000);
+            const COLLECT_CANDIDATES_TIMEOUT_MS = globalThis.wh40kE2E.scaledMs(15_000);
 
             /** Drain any dialog the previous probe left open. */
             async function closeOpenDialogs(): Promise<void> {
@@ -321,11 +314,11 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['event-tracker-set-and-get-resolved'] = 'setResolved/getResolved unavailable';
                     } else {
                         const eventId = 'probe-event-alpha';
-                        await withTimeout(ET.setResolved(eventId, true), 5_000, 'setResolved(true)');
+                        await withTimeout(ET.setResolved(eventId, true), 'setResolved(true)');
                         const afterSet = ET.getResolved();
                         const present = afterSet != null && eventId in afterSet;
                         const stamped = present && typeof afterSet[eventId].resolvedAt === 'string';
-                        await withTimeout(ET.setResolved(eventId, false), 5_000, 'setResolved(false)');
+                        await withTimeout(ET.setResolved(eventId, false), 'setResolved(false)');
                         const afterClear = ET.getResolved();
                         const removed = afterClear != null && typeof afterClear === 'object' && !(eventId in afterClear);
                         if (present && stamped && removed) {
@@ -370,9 +363,9 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             const unknownEvent = ET.isAvailable('does-not-exist');
                             const rootAvailable = ET.isAvailable('evt-root'); // no prereqs → true
                             const gateBefore = ET.isAvailable('evt-gate'); // prereqs unmet → false
-                            await withTimeout(ET.setResolved('evt-root', true), 5_000, 'resolve evt-root');
+                            await withTimeout(ET.setResolved('evt-root', true), 'resolve evt-root');
                             const gateStillBlocked = ET.isAvailable('evt-gate'); // requires_any still unmet
-                            await withTimeout(ET.setResolved('evt-side-b', true), 5_000, 'resolve evt-side-b');
+                            await withTimeout(ET.setResolved('evt-side-b', true), 'resolve evt-side-b');
                             const gateAfter = ET.isAvailable('evt-gate'); // both met → true
                             if (!unknownEvent && rootAvailable && !gateBefore && !gateStillBlocked && gateAfter) {
                                 fired['event-tracker-is-available'] = true;
@@ -484,8 +477,8 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             },
                         };
                         try {
-                            await withTimeout(ET.setResolved('evt-betrayal', true), 5_000, 'resolve evt-betrayal');
-                            await withTimeout(ET.setResolved('evt-pact', true), 5_000, 'resolve evt-pact');
+                            await withTimeout(ET.setResolved('evt-betrayal', true), 'resolve evt-betrayal');
+                            await withTimeout(ET.setResolved('evt-pact', true), 'resolve evt-pact');
                             const states = ET.computeCharacterStates();
                             const vael = states['Inquisitor Vael'];
                             const dispOk = vael.dispositions['party'].attitude === 'hostile' && vael.dispositions['party'].trigger === 'evt-betrayal';
@@ -607,20 +600,18 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         };
                         try {
                             const before = Object.keys(uiGbl?.windows ?? {}).length;
-                            ET.open();
-                            // open() calls Dialog#render synchronously; let
-                            // the render microtask settle.
-                            await new Promise<void>((r) => {
-                                setTimeout(r, 250);
-                            });
-                            const windowList = Object.values(uiGbl?.windows ?? {});
-                            const opened =
+                            const trackerOpened = (): boolean =>
                                 Object.keys(uiGbl?.windows ?? {}).length > before ||
-                                windowList.some((w) =>
+                                Object.values(uiGbl?.windows ?? {}).some((w) =>
                                     String(w.title ?? '')
                                         .toLowerCase()
                                         .includes('event tracker'),
                                 );
+                            ET.open();
+                            // open() starts Dialog#render; wait for the window
+                            // to register (the check below reports it if it never does).
+                            await pollUntil(trackerOpened);
+                            const opened = trackerOpened();
                             if (opened) {
                                 fired['event-tracker-open-dialog'] = true;
                                 notes['event-tracker-open-dialog'] = 'tracker Dialog rendered into ui.windows';
@@ -647,7 +638,6 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                   type: 'dh2-character',
                                   system: { gameSystem: 'dh2' },
                               }),
-                              5_000,
                               'PC Actor.create',
                           )
                         : null;
@@ -668,9 +658,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                 // Yield a tick so the server-side create flushes before the
                 // first createEmbeddedDocuments fires (V14 race guard,
                 // mirrors weapon-attack.spec.ts).
-                await new Promise<void>((r) => {
-                    setTimeout(r, 250);
-                });
+                await settle(250);
             }
 
             /* ============================================================
@@ -689,7 +677,6 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         const IDM = mod.ItemDropManager ?? mod.default;
                         const created = await withTimeout(
                             live.createEmbeddedDocuments?.('Item', [{ name: 'probe-nondrop-talent', type: 'talent' }]) ?? Promise.resolve(undefined),
-                            5_000,
                             'create talent',
                         );
                         const createdId = created?.at(0)?.id ?? '';
@@ -704,7 +691,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                     /* ignore */
                                 }
                             });
-                            const dropResult1 = await withTimeout(IDM.dropItemFromActor(live, talent), 5_000, 'dropItemFromActor(talent)');
+                            const dropResult1 = await withTimeout(IDM.dropItemFromActor(live, talent), 'dropItemFromActor(talent)');
                             const stillOwned = live.items?.get?.(talent.id ?? '') !== undefined;
                             if (dropResult1 === null && stillOwned) {
                                 fired['item-drop-non-droppable-returns-null'] = true;
@@ -739,7 +726,6 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         const created = await withTimeout(
                             live.createEmbeddedDocuments?.('Item', [{ name: 'probe-notoken-gear', type: 'gear', system: { quantity: 1 } }]) ??
                                 Promise.resolve(undefined),
-                            5_000,
                             'create gear',
                         );
                         const createdId = created?.at(0)?.id ?? '';
@@ -754,7 +740,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                     /* ignore */
                                 }
                             });
-                            const dropResult2 = await withTimeout(IDM.dropItemFromActor(live, gear), 5_000, 'dropItemFromActor(no token)');
+                            const dropResult2 = await withTimeout(IDM.dropItemFromActor(live, gear), 'dropItemFromActor(no token)');
                             const stillOwned = live.items?.get?.(gear.id ?? '') !== undefined;
                             if (dropResult2 === null && stillOwned) {
                                 fired['item-drop-no-token-returns-null'] = true;
@@ -788,7 +774,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         const mod = (await import(itemDropUrl)) as { ItemDropManager?: ItemDropManagerLike; default?: ItemDropManagerLike };
                         const IDM = mod.ItemDropManager ?? mod.default;
-                        dropScene = await withTimeout(SceneGbl.create({ name: 'managers-extra-drop-scene' }), 5_000, 'Scene.create');
+                        dropScene = await withTimeout(SceneGbl.create({ name: 'managers-extra-drop-scene' }), 'Scene.create');
                         const scene = dropScene;
                         if (scene?.id != null && typeof IDM?.dropItemFromActor === 'function') {
                             cleanups.push(async () => {
@@ -800,7 +786,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             });
                             // View the scene so canvas.scene resolves.
                             try {
-                                await withTimeout(Promise.resolve(scene.view?.()), 5_000, 'scene.view');
+                                await withTimeout(Promise.resolve(scene.view?.()), 'scene.view');
                             } catch {
                                 /* best-effort — canvas may be unavailable headlessly */
                             }
@@ -817,15 +803,10 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 effects: priorEffects ?? [],
                                 flags: priorFlags ?? {},
                             };
-                            await withTimeout(
-                                scene.createEmbeddedDocuments?.('Token', [protoData]) ?? Promise.resolve(),
-                                5_000,
-                                'createEmbeddedDocuments(Token)',
-                            );
+                            await withTimeout(scene.createEmbeddedDocuments?.('Token', [protoData]) ?? Promise.resolve(), 'createEmbeddedDocuments(Token)');
                             const created = await withTimeout(
                                 live.createEmbeddedDocuments?.('Item', [{ name: 'probe-drop-gear', type: 'gear', system: { quantity: 2 } }]) ??
                                     Promise.resolve(undefined),
-                                5_000,
                                 'create drop gear',
                             );
                             const createdId = created?.at(0)?.id ?? '';
@@ -833,7 +814,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             if (gear == null) {
                                 notes['item-drop-creates-loot-pile'] = 'drop gear create failed';
                             } else {
-                                const dropResult3 = await withTimeout(IDM.dropItemFromActor(live, gear), 5_000, 'dropItemFromActor(with token)');
+                                const dropResult3 = await withTimeout(IDM.dropItemFromActor(live, gear), 'dropItemFromActor(with token)');
                                 lootActor = dropResult3;
                                 const refreshed = getPc();
                                 const gearGone = refreshed?.items?.get?.(gear.id ?? '') === undefined;
@@ -891,7 +872,6 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                                 ? initialPile
                                 : (await withTimeout(
                                       ActorGbl?.create?.({ name: 'managers-extra-loot-pile', type: 'loot' }) ?? Promise.resolve(null),
-                                      5_000,
                                       'loot Actor.create',
                                   )) ?? null;
                         const pileId = pile?.id;
@@ -906,7 +886,6 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             await withTimeout(
                                 pile.createEmbeddedDocuments?.('Item', [{ name: 'probe-pickup-gear', type: 'gear', system: { quantity: 3 } }]) ??
                                     Promise.resolve([]),
-                                5_000,
                                 'stock loot pile',
                             );
                         }
@@ -914,7 +893,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         if (pile == null || pileId == null || itemCount === 0 || typeof IDM?.pickupLoot !== 'function') {
                             notes['item-drop-pickup-loot'] = `no usable loot pile (id=${String(pileId)} items=${itemCount})`;
                         } else {
-                            const ok = await withTimeout(IDM.pickupLoot(live, pile), 5_000, 'pickupLoot');
+                            const ok = await withTimeout(IDM.pickupLoot(live, pile), 'pickupLoot');
                             const refreshedPc = getPc();
                             const receivedSomething = (refreshedPc?.items?.contents ?? []).some(
                                 (i) => i.name === 'probe-drop-gear' || i.name === 'probe-pickup-gear',
@@ -953,8 +932,8 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     if (typeof IGM?.collectCandidates !== 'function') {
                         notes['inventory-generator-collect-candidates'] = 'collectCandidates unavailable';
                     } else {
-                        const dh2 = await withTimeout(IGM.collectCandidates('dh2'), 15_000, 'collectCandidates(dh2)');
-                        const im = await withTimeout(IGM.collectCandidates('im'), 15_000, 'collectCandidates(im)');
+                        const dh2 = await withTimeout(IGM.collectCandidates('dh2'), 'collectCandidates(dh2)', COLLECT_CANDIDATES_TIMEOUT_MS);
+                        const im = await withTimeout(IGM.collectCandidates('im'), 'collectCandidates(im)', COLLECT_CANDIDATES_TIMEOUT_MS);
                         const shapeOk = dh2.every(
                             (c) =>
                                 typeof c.uuid === 'string' &&
@@ -1009,14 +988,14 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     } else if (typeof IGM?.applyToActor !== 'function' || typeof IGM.collectCandidates !== 'function') {
                         notes['inventory-generator-apply-to-actor'] = 'applyToActor/collectCandidates unavailable';
                     } else {
-                        const candidates = await withTimeout(IGM.collectCandidates('dh2'), 15_000, 'collectCandidates for apply');
+                        const candidates = await withTimeout(IGM.collectCandidates('dh2'), 'collectCandidates for apply', COLLECT_CANDIDATES_TIMEOUT_MS);
                         const candidate = candidates.find((c) => typeof c.uuid === 'string');
                         if (candidate?.uuid == null) {
                             notes['inventory-generator-apply-to-actor'] = 'no compendium candidate available to apply';
                         } else {
                             const candidateUuid = candidate.uuid;
                             const beforeCount = live.items?.contents?.length ?? 0;
-                            const applied = await withTimeout(IGM.applyToActor(live, [candidateUuid]), 10_000, 'applyToActor');
+                            const applied = await withTimeout(IGM.applyToActor(live, [candidateUuid]), 'applyToActor', INVENTORY_APPLY_TIMEOUT_MS);
                             const refreshed = getPc();
                             const afterCount = refreshed?.items?.contents?.length ?? 0;
                             const gained = afterCount > beforeCount;
@@ -1070,7 +1049,6 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                         const notOwned = { isOwner: false, name: 'unowned-stub-actor', items: [] };
                         const permResult = await withTimeout(
                             IGM.applyToActor(notOwned, ['Compendium.wh40k-rpg.dh2-gear.NonExistent']),
-                            5_000,
                             'applyToActor(not owner)',
                         );
                         if (permResult === null) {
@@ -1139,7 +1117,7 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('managers/* extra coverage (Tier B)', () => {
     // Cap at 4 minutes — per-call timeouts mean we should never come close.
-    test.setTimeout(240_000);
+    test.setTimeout(scaledMs(240_000));
     test('event-tracker / item-drop / inventory-generator manager flows', async ({ page }) => {
         await joinOrSkip(page);
 

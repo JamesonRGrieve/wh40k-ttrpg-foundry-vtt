@@ -66,9 +66,7 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
         }
 
         await npc.sheet.render(true);
-        await new Promise<void>((r) => {
-            setTimeout(r, 250);
-        });
+        await globalThis.wh40kE2E.settle(250);
 
         // The panel lives on the dedicated NPC tab.
         try {
@@ -76,9 +74,8 @@ test('npc-interactions-panel renders on the NPC tab (#145)', async ({ page }) =>
         } catch {
             /* tab name may vary in older sheets */
         }
-        await new Promise<void>((r) => {
-            setTimeout(r, 200);
-        });
+        // Wait for the interactions panel to render (the assertions report a miss).
+        await globalThis.wh40kE2E.pollUntil(() => npc.sheet.element?.querySelector('[data-wh40k-hook="npc-interactions-panel"]') != null);
 
         const root = npc.sheet.element;
         const panel = root?.querySelector('[data-wh40k-hook="npc-interactions-panel"]') ?? null;

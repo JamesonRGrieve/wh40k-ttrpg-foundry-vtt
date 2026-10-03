@@ -70,9 +70,8 @@ test.describe.serial('extended test toggle (#59)', () => {
                 return { error: `dialog render threw: ${err instanceof Error ? err.message : String(err)}`, snaps: null };
             }
 
-            await new Promise<void>((r) => {
-                setTimeout(r, 80);
-            });
+            // Wait for the extended-test controls to render (the checks below report a miss).
+            await globalThis.wh40kE2E.pollUntil(() => dialog.element?.querySelector('[data-wh40k-hook="extended-test-controls"]') != null);
             const root = dialog.element;
             if (!(root instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', snaps: null };
@@ -101,10 +100,13 @@ test.describe.serial('extended test toggle (#59)', () => {
 
             async function clickCheckbox(): Promise<void> {
                 const cb = rootEl.querySelector<HTMLInputElement>('[data-wh40k-hook="extended-test-controls__checkbox"]');
+                const expectThreshold = cb?.checked !== true;
                 cb?.click();
-                await new Promise<void>((r) => {
-                    setTimeout(r, 60);
-                });
+                // Wait for the re-render to show (or drop) the threshold input for
+                // the new toggle state; the assertions report a miss.
+                await globalThis.wh40kE2E.pollUntil(
+                    () => (rootEl.querySelector('[data-wh40k-hook="extended-test-controls__threshold-input"]') !== null) === expectThreshold,
+                );
             }
 
             const initial = readState('initial-off');
@@ -141,9 +143,8 @@ test.describe.serial('extended test toggle (#59)', () => {
             const cb = root?.querySelector<HTMLInputElement>('[data-wh40k-hook="extended-test-controls__checkbox"]');
             if (cb !== null && cb !== undefined && !cb.checked) {
                 cb.click();
-                await new Promise<void>((r) => {
-                    setTimeout(r, 60);
-                });
+                // Let the re-render settle before the snap.
+                await globalThis.wh40kE2E.settle(60);
             }
         });
         await snap(page, 'extended-test-toggle-on');

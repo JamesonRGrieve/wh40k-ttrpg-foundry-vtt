@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Keys MUST match the APP_TOURS_EXTRA_FLOWS constant in scripts/e2e-coverage.mjs (registered by the orchestrator).
@@ -147,17 +148,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
 
         // Wrap any awaitable with a timeout so a blocking dialog or
         // socket-wait can't hang the spec (mirrors weapon-attack.spec.ts).
-        const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-            const timerRef = { id: null as ReturnType<typeof setTimeout> | null };
-            const timeout = new Promise<T>((_, reject) => {
-                timerRef.id = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                if (timerRef.id !== null) clearTimeout(timerRef.id);
-            }
-        };
+        const { withTimeout, pollUntil, settle } = globalThis.wh40kE2E;
 
         // Drain any dialog/prompt/tour windows a probe left open so the
         // next probe's window stack starts clean (mirrors dialogs.spec.ts).
@@ -255,7 +246,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     });
                     let waitResolved = false;
                     try {
-                        await withTimeout(tour.waitForElement('body'), 3_000, 'waitForElement(body)');
+                        await withTimeout(tour.waitForElement('body'), 'waitForElement(body)', globalThis.wh40kE2E.scaledMs(3_000));
                         waitResolved = true;
                     } catch (err) {
                         notes['tour-wh40k-base-class'] = `waitForElement threw: ${String((err as Error).message)}`;
@@ -448,11 +439,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
             try {
                 const createPc = ActorCls?.create?.bind(ActorCls);
                 if (createPc != null) {
-                    pc = await withTimeout(
-                        createPc({ name: 'app-tours-extra-pc', type: 'dh2-character', system: { gameSystem: 'dh2' } }),
-                        5_000,
-                        'PC Actor.create',
-                    );
+                    pc = await withTimeout(createPc({ name: 'app-tours-extra-pc', type: 'dh2-character', system: { gameSystem: 'dh2' } }), 'PC Actor.create');
                 }
                 const pcId = pc?.id;
                 if (pcId != null) {
@@ -468,9 +455,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 notes['whatif-mixin-state'] = err instanceof Error ? `PC create threw: ${err.message}` : `PC create threw: ${String(err)}`;
             }
             // Yield a tick so the server create flushes before embeds.
-            await new Promise<void>((r) => {
-                setTimeout(r, 250);
-            });
+            await settle(250);
         }
 
         /* ============================================================
@@ -526,9 +511,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         const inst = new Mixed();
                         const before = inst.getWhatIfState();
                         const inactiveBefore = !inst.isWhatIfActive() && before.changeCount === 0;
-                        await withTimeout(inst.enterWhatIfMode(), 5_000, 'enterWhatIfMode');
+                        await withTimeout(inst.enterWhatIfMode(), 'enterWhatIfMode');
                         const activeAfterEnter = inst.isWhatIfActive();
-                        await withTimeout(inst.previewChange('system.characteristics.weaponSkill.advance', 10), 5_000, 'previewChange');
+                        await withTimeout(inst.previewChange('system.characteristics.weaponSkill.advance', 10), 'previewChange');
                         const after = inst.getWhatIfState();
                         const previewBuilt = inst._whatIfPreview != null;
                         if (inactiveBefore && activeAfterEnter && after.changeCount === 1 && previewBuilt) {
@@ -593,9 +578,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         target.dataset['statKey'] = 'weaponSkill';
                         const evt = new MouseEvent('click', { bubbles: true, cancelable: true });
                         action.call(inst, evt, target);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 30);
-                        });
+                        await pollUntil(() => document.querySelector('.wh40k-stat-breakdown-popover') !== null);
                         const popover = document.querySelector('.wh40k-stat-breakdown-popover');
                         if (popover !== null) {
                             fired['statbreakdown-mixin-action'] = true;
@@ -653,8 +636,8 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     const scopeOk = Mixed.PANEL_FLAG_SCOPE === 'wh40k-rpg.panels';
                     const presetsOk = typeof Mixed.PANEL_PRESETS?.combat === 'object' && Mixed.PANEL_PRESETS.combat.label === 'Combat Mode';
                     const inst = new Mixed();
-                    await withTimeout(inst.togglePanel('weapons', false), 5_000, 'togglePanel(weapons,false)');
-                    await withTimeout(inst.collapseAllPanels(), 5_000, 'collapseAllPanels');
+                    await withTimeout(inst.togglePanel('weapons', false), 'togglePanel(weapons,false)');
+                    await withTimeout(inst.collapseAllPanels(), 'collapseAllPanels');
                     const weaponsCollapsed = inst.expandedSections.get('weapons') === false;
                     const skillsTracked = inst.expandedSections.has('skills');
                     if (scopeOk && presetsOk && weaponsCollapsed && skillsTracked) {
@@ -701,9 +684,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     const el = document.createElement('span');
                     el.textContent = '5';
                     inst.animateCounter(el, 5, 12, { duration: 50 });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 220);
-                    });
+                    await pollUntil(() => el.textContent === '12' && inst._runningAnimations.size === 0);
                     const settled = el.textContent === '12';
                     const cleared = inst._runningAnimations.size === 0;
                     const counterClass = el.classList.contains('value-counter');
@@ -754,9 +735,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     };
                     setupNumberInputAutoSelect(root);
                     input.dispatchEvent(new FocusEvent('focus', { bubbles: false }));
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 10);
-                    });
+                    await pollUntil(() => selectSpy.called);
                     root.remove();
                     if (selectSpy.called) {
                         fired['appv2-mixin-number-autoselect'] = true;
@@ -798,7 +777,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
                     const mod = (await import(`${base}/applications/api/effect-actions.js`)) as unknown as EffectActionsModule;
                     const { effectIdFromTarget, resolveEffect, createEffect, effectToggle, effectDelete } = mod;
-                    const created = await withTimeout(createEffect(live, { name: 'probe-effect' }), 5_000, 'createEffect');
+                    const created = await withTimeout(createEffect(live, { name: 'probe-effect' }), 'createEffect');
                     const effect: ProbeEffect | null = created != null ? created.at(0) ?? null : null;
                     if (effect?.id == null) {
                         notes['effect-actions-crud'] = 'createEffect did not return an ActiveEffect';
@@ -810,9 +789,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         const resolvedOk = resolved?.name === 'probe-effect';
                         const effectId = effect.id;
                         const disabledBefore = live.effects?.get?.(effectId)?.disabled === false;
-                        await withTimeout(effectToggle.call({ effectsOwner: live }, new Event('click'), target), 5_000, 'effectToggle');
+                        await withTimeout(effectToggle.call({ effectsOwner: live }, new Event('click'), target), 'effectToggle');
                         const disabledAfter = live.effects?.get?.(effectId)?.disabled === true;
-                        await withTimeout(effectDelete.call({ effectsOwner: live }, new Event('click'), target), 5_000, 'effectDelete');
+                        await withTimeout(effectDelete.call({ effectsOwner: live }, new Event('click'), target), 'effectDelete');
                         const deleted = live.effects?.get?.(effectId) == null;
                         if (idResolved && resolvedOk && disabledBefore && disabledAfter && deleted) {
                             fired['effect-actions-crud'] = true;
@@ -903,7 +882,6 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                                 system: { gameSystem: 'dh2', active: true, isPassive: false, modifiers: { characteristics: { weaponSkill: 5 } } },
                             },
                         ]),
-                        5_000,
                         'embed condition+talent',
                     );
                     for (const e of embeds) {
@@ -969,7 +947,6 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                         live.createEmbeddedDocuments('Item', [
                             { name: 'probe-preview-gear', type: 'gear', system: { gameSystem: 'dh2', quantity: 2, description: 'probe gear' } },
                         ]),
-                        5_000,
                         'embed preview gear',
                     );
                     const firstGear = created.at(0);
@@ -1006,14 +983,10 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             } else {
                                 const inst = new Mixed();
                                 action.call(inst, new Event('click'), target);
-                                await new Promise<void>((r) => {
-                                    setTimeout(r, 60);
-                                });
+                                await pollUntil(() => sheetRoot.querySelector('.wh40k-item-preview') !== null);
                                 const isOpened = sheetRoot.querySelector('.wh40k-item-preview') !== null;
                                 action.call(inst, new Event('click'), target);
-                                await new Promise<void>((r) => {
-                                    setTimeout(r, 260);
-                                });
+                                await pollUntil(() => sheetRoot.querySelector('.wh40k-item-preview') === null);
                                 const isClosed = sheetRoot.querySelector('.wh40k-item-preview') === null;
                                 const toggled = isOpened && isClosed;
                                 fired['item-preview-card-toggle'] = toggled;
@@ -1055,7 +1028,6 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } else {
                     const created = await withTimeout(
                         live.createEmbeddedDocuments('Item', [{ name: 'probe-editor-talent', type: 'talent', system: { gameSystem: 'dh2' } }]),
-                        5_000,
                         'embed talent',
                     );
                     const firstTalent = created.at(0);
@@ -1079,7 +1051,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                             const dialog = new TalentEditorDialog({ item: talent, initialSection: 'modifiers' });
                             let renderThrew: string | null = null;
                             try {
-                                await withTimeout(dialog.render({ force: true }), 5_000, 'TalentEditorDialog.render');
+                                await withTimeout(dialog.render({ force: true }), 'TalentEditorDialog.render');
                             } catch (err) {
                                 renderThrew = err instanceof Error ? err.message : String(err);
                             }
@@ -1157,7 +1129,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('applications + tours extra coverage (Tier B)', () => {
     // Cap at 3 minutes — per-call timeouts mean we should never come close.
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('tours + uncovered API mixins / components / dialog render flows', async ({ page }) => {
         await joinOrSkip(page);
 

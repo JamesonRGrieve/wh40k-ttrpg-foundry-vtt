@@ -35,9 +35,8 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
                 const inst = await wh40kOpenDialog('beyond-homeworld-info-dialog', () => {
                     mod.openBeyondHomeworldInfoDialog();
                 });
-                await new Promise<void>((r) => {
-                    setTimeout(r, 80);
-                });
+                // Wait for the homeworld cards (the checks below report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('[data-homeworld-id]') != null);
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     const el = inst.element;

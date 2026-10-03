@@ -62,9 +62,8 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
                 const sheet = actor.sheet;
                 if (!sheet) return { actorId, error: 'actor.sheet undefined' };
                 await sheet.render(true);
-                await new Promise<void>((r) => {
-                    setTimeout(r, 120);
-                });
+                // Wait for the badge to render (the checks below report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('[data-wh40k-hook="daemonic-immunities-badge"]') != null);
                 sheetRendered = sheet.element instanceof HTMLElement;
                 if (sheetRendered && sheet.element) {
                     const badge = sheet.element.querySelector('[data-wh40k-hook="daemonic-immunities-badge"]');

@@ -293,18 +293,16 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 if (renderResult != null) {
                     await Promise.resolve(renderResult);
                 }
-                // Render is async; allow the hook callback to flush.
-                await new Promise<void>((r) => {
-                    setTimeout(r, 100);
-                });
+                // Render is async; give the hook callback a short window to fire
+                // (the fallback below covers a headless world where it never does).
+                await globalThis.wh40kE2E.pollUntil(() => fired.getSceneControlButtons, globalThis.wh40kE2E.scaledMs(1000));
                 if (!fired.getSceneControlButtons) {
                     // Fallback: call the hook with an empty controls map +
                     // tools array so the system's handler shape (which
                     // typically appends to that array) doesn't throw.
                     HooksGbl.callAll?.('getSceneControlButtons', { controls: {} });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 30);
-                    });
+                    // Wait for the hook tap to record it (the assertion reports a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => fired.getSceneControlButtons);
                 }
             } catch (err) {
                 notes.getSceneControlButtons = `ui.controls.render threw: ${String((err as Error).message)}`;

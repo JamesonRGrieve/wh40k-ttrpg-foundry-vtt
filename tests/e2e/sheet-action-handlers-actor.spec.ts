@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B depth coverage of per-actor-sheet `static DEFAULT_OPTIONS.actions`
@@ -139,24 +140,15 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
             };
         }
 
-        // Wrap a promise with a 5s timeout so a blocking dialog can't hang
-        // the spec (mirrors weapon-attack.spec.ts). The optional-chained
-        // Foundry method calls that feed this may resolve to `undefined`
-        // when a member is absent; `Promise.race` passes that through.
-        const withTimeout = async <T>(p: Promise<T> | undefined | void, ms: number, label: string): Promise<T | undefined> => {
-            let timer: ReturnType<typeof setTimeout> | null = null;
-            const timeout = new Promise<T>((_, reject) => {
-                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            // A `void`/`undefined` input (sync handler or absent member) resolves
-            // immediately; only a real promise can win or lose against the timer.
-            const awaitable: Promise<T | undefined> = p instanceof Promise ? p : Promise.resolve(undefined);
-            try {
-                return await Promise.race([awaitable, timeout]);
-            } finally {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
-                if (timer !== null) clearTimeout(timer);
-            }
+        // Bound a promise with the shared in-page timeout so a blocking dialog
+        // can't hang the spec. The optional-chained Foundry method calls that
+        // feed this may yield `undefined` when a member is absent, and a sync
+        // handler yields `void`; those resolve immediately to `undefined` —
+        // only a real promise can win or lose against the timer.
+        const { settle } = globalThis.wh40kE2E;
+        const withTimeout = async <T>(p: Promise<T> | undefined | void, label: string, ms?: number): Promise<T | undefined> => {
+            if (!(p instanceof Promise)) return undefined;
+            return globalThis.wh40kE2E.withTimeout(p, label, ms);
         };
 
         // Drain stray dialogs so the next probe's window stack stays clean.
@@ -217,7 +209,6 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                         type,
                         system: { gameSystem, ...system },
                     }),
-                    5_000,
                     `Actor.create(${type}/${gameSystem})`,
                 );
                 const actorId = actor?.id;
@@ -249,9 +240,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 return;
             }
             // Yield so the create flush completes before the embedded create.
-            await new Promise<void>((r) => {
-                setTimeout(r, 250);
-            });
+            await settle(250);
             const livePc = (): ProbeActor | undefined => (pc.id != null ? gameCtx?.actors?.get?.(pc.id) : undefined);
             const sheet = livePc()?.sheet;
             if (sheet == null) {
@@ -260,10 +249,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
             }
             // Render once so this.element exists for filter/dom flows.
             try {
-                await withTimeout(sheet.render?.(true), 5_000, 'PC sheet.render');
-                await new Promise<void>((r) => {
-                    setTimeout(r, 50);
-                });
+                await withTimeout(sheet.render?.(true), 'PC sheet.render');
+                await settle(50);
             } catch {
                 /* render best-effort; some flows do not require DOM */
             }
@@ -287,7 +274,6 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             system: { state: { equipped: false, inBackpack: false, inShipStorage: false } },
                         },
                     ]),
-                    5_000,
                     'create gear',
                 );
                 const first = created?.at(0);
@@ -305,7 +291,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     notes['character-sheet::toggleEquip'] = 'gear missing';
                 } else {
                     const before = gear.system?.state?.equipped === true;
-                    await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'toggleEquip');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 'toggleEquip');
                     const fresh = livePc()?.items?.get?.(gear.id ?? '');
                     const after = fresh?.system?.state?.equipped === true;
                     if (after !== before) {
@@ -327,7 +313,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 } else if (gear == null) {
                     notes['character-sheet::stowItem'] = 'gear missing';
                 } else {
-                    await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'stowItem');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 'stowItem');
                     const fresh = livePc()?.items?.get?.(gear.id ?? '');
                     const inBackpack = fresh?.system?.state?.inBackpack === true;
                     const equipped = fresh?.system?.state?.equipped === true;
@@ -350,7 +336,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 } else if (gear == null) {
                     notes['character-sheet::unstowItem'] = 'gear missing';
                 } else {
-                    await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 5_000, 'unstowItem');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(gear.id ?? '')), 'unstowItem');
                     const fresh = livePc()?.items?.get?.(gear.id ?? '');
                     const inBackpack = fresh?.system?.state?.inBackpack === true;
                     if (!inBackpack) {
@@ -389,7 +375,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     const favBefore = livePc()?.getFlag?.('wh40k-rpg', 'favoriteSkills');
                     const flagBefore = Array.isArray(favBefore) ? favBefore : [];
                     const includesBefore = flagBefore.includes('athletics');
-                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ skill: 'athletics' })), 5_000, 'toggleFavoriteSkill');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ skill: 'athletics' })), 'toggleFavoriteSkill');
                     const favAfter = livePc()?.getFlag?.('wh40k-rpg', 'favoriteSkills');
                     const flagAfter = Array.isArray(favAfter) ? favAfter : [];
                     const includesAfter = flagAfter.includes('athletics');
@@ -416,7 +402,6 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 } else {
                     const talentCreated = await withTimeout(
                         livePc()?.createEmbeddedDocuments?.('Item', [{ name: 'probe-talent', type: 'talent', system: {} }]),
-                        5_000,
                         'create talent',
                     );
                     const firstTalent = talentCreated?.at(0);
@@ -432,7 +417,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                             }
                         });
                         const talentId = talent.id ?? '';
-                        await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(talentId)), 5_000, 'toggleFavoriteTalent');
+                        await withTimeout(handler.call(sheet, synthEvent(), synthRowTarget(talentId)), 'toggleFavoriteTalent');
                         const favTalentsFlag = livePc()?.getFlag?.('wh40k-rpg', 'favoriteTalents');
                         const flagAfter = Array.isArray(favTalentsFlag) ? favTalentsFlag : [];
                         if (flagAfter.includes(talentId)) {
@@ -460,7 +445,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 } else {
                     let threw: string | null = null;
                     try {
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-2' })), 5_000, 'adjustSubtletyManually');
+                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-2' })), 'adjustSubtletyManually');
                     } catch (err) {
                         threw = err instanceof Error ? err.message : String(err);
                     }
@@ -489,9 +474,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 notes['npc-sheet::toggleHordeMode'] = 'NPC create returned null';
                 return;
             }
-            await new Promise<void>((r) => {
-                setTimeout(r, 250);
-            });
+            await settle(250);
             const liveNpc = (): ProbeActor | undefined => (npc.id != null ? gameCtx?.actors?.get?.(npc.id) : undefined);
             const sheet = liveNpc()?.sheet;
             if (sheet == null) {
@@ -499,10 +482,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 return;
             }
             try {
-                await withTimeout(sheet.render?.(true), 5_000, 'NPC sheet.render');
-                await new Promise<void>((r) => {
-                    setTimeout(r, 50);
-                });
+                await withTimeout(sheet.render?.(true), 'NPC sheet.render');
+                await settle(50);
             } catch {
                 /* best-effort */
             }
@@ -522,7 +503,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     notes['npc-sheet::toggleHordeMode'] = 'handler missing';
                 } else {
                     const before = liveNpc()?.system?.horde?.active === true;
-                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'toggleHordeMode');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 'toggleHordeMode');
                     const after = liveNpc()?.system?.horde?.active === true;
                     if (after !== before) {
                         fired['npc-sheet::toggleHordeMode'] = true;
@@ -546,7 +527,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 } else {
                     let threw: string | null = null;
                     try {
-                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '1' })), 5_000, 'applyMagnitudeDamage');
+                        await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '1' })), 'applyMagnitudeDamage');
                     } catch (err) {
                         threw = err instanceof Error ? err.message : String(err);
                     }
@@ -568,7 +549,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 if (typeof handler !== 'function') {
                     notes['npc-sheet::setSkillLevel'] = 'handler missing';
                 } else {
-                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ skill: 'awareness', level: 'trained' })), 5_000, 'setSkillLevel');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ skill: 'awareness', level: 'trained' })), 'setSkillLevel');
                     const fresh = liveNpc()?.system?.trainedSkills?.awareness;
                     if (fresh?.trained === true) {
                         fired['npc-sheet::setSkillLevel'] = true;
@@ -616,8 +597,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 if (typeof handler !== 'function') {
                     notes['npc-sheet::removeTag'] = 'handler missing';
                 } else {
-                    await withTimeout(liveNpc()?.update?.({ 'system.tags': ['boss'] }), 5_000, 'seed npc tag');
-                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ tag: 'boss' })), 5_000, 'removeTag');
+                    await withTimeout(liveNpc()?.update?.({ 'system.tags': ['boss'] }), 'seed npc tag');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ tag: 'boss' })), 'removeTag');
                     const tags = liveNpc()?.system?.tags ?? [];
                     if (!tags.includes('boss')) {
                         fired['npc-sheet::removeTag'] = true;
@@ -637,7 +618,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 if (typeof handler !== 'function') {
                     notes['npc-sheet::adjustInteractionCount'] = 'handler missing';
                 } else {
-                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ pcId: 'probe-pc', delta: '1' })), 5_000, 'adjustInteractionCount');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ pcId: 'probe-pc', delta: '1' })), 'adjustInteractionCount');
                     const interactionsFlag = liveNpc()?.getFlag?.('wh40k-rpg', 'interactions');
                     const interactions: Record<string, number> = Array.isArray(interactionsFlag) || interactionsFlag == null ? {} : interactionsFlag;
                     if (interactions['probe-pc'] === 1) {
@@ -663,9 +644,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 notes['npc-sheet::scaleToThreat-im'] = 'IM NPC create returned null';
                 return;
             }
-            await new Promise<void>((r) => {
-                setTimeout(r, 250);
-            });
+            await settle(250);
             const liveIm = (): ProbeActor | undefined => (imNpc.id != null ? gameCtx?.actors?.get?.(imNpc.id) : undefined);
             const sheet = liveIm()?.sheet;
             if (sheet == null) {
@@ -673,10 +652,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 return;
             }
             try {
-                await withTimeout(sheet.render?.(true), 5_000, 'IM NPC sheet.render');
-                await new Promise<void>((r) => {
-                    setTimeout(r, 50);
-                });
+                await withTimeout(sheet.render?.(true), 'IM NPC sheet.render');
+                await settle(50);
             } catch {
                 /* best-effort */
             }
@@ -696,7 +673,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     // scaleToThreat awaits a dialog; race with a timeout so the spec
                     // never blocks on user input. A timeout still counts as "dispatch
                     // reached the dialog".
-                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 2_000, 'scaleToThreat');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 'scaleToThreat', globalThis.wh40kE2E.scaledMs(2_000));
                 } catch (err) {
                     threw = err instanceof Error ? err.message : String(err);
                 }
@@ -720,9 +697,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 notes['vehicle-sheet::adjustIntegrity'] = 'Vehicle create returned null';
                 return;
             }
-            await new Promise<void>((r) => {
-                setTimeout(r, 250);
-            });
+            await settle(250);
             const liveV = (): ProbeActor | undefined => (vehicle.id != null ? gameCtx?.actors?.get?.(vehicle.id) : undefined);
             const sheet = liveV()?.sheet;
             if (sheet == null) {
@@ -730,10 +705,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 return;
             }
             try {
-                await withTimeout(sheet.render?.(true), 5_000, 'Vehicle sheet.render');
-                await new Promise<void>((r) => {
-                    setTimeout(r, 50);
-                });
+                await withTimeout(sheet.render?.(true), 'Vehicle sheet.render');
+                await settle(50);
             } catch {
                 /* best-effort */
             }
@@ -755,7 +728,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                     notes['vehicle-sheet::adjustIntegrity'] = 'handler missing';
                 } else {
                     const before = liveV()?.system?.integrity?.value ?? -1;
-                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-3' })), 5_000, 'adjustIntegrity');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ delta: '-3' })), 'adjustIntegrity');
                     const after = liveV()?.system?.integrity?.value ?? -1;
                     if (after === Math.max(0, before - 3)) {
                         fired['vehicle-sheet::adjustIntegrity'] = true;
@@ -776,7 +749,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 } else {
                     const before = liveV()?.system?.integrity?.value ?? -1;
                     const max = liveV()?.system?.integrity?.max ?? before;
-                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '2' })), 5_000, 'repairDamage');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({ amount: '2' })), 'repairDamage');
                     const after = liveV()?.system?.integrity?.value ?? -1;
                     if (after === Math.min(max, before + 2)) {
                         fired['vehicle-sheet::repairDamage'] = true;
@@ -807,9 +780,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 notes['starship-sheet::raiseVoidShield'] = 'Starship create returned null';
                 return;
             }
-            await new Promise<void>((r) => {
-                setTimeout(r, 250);
-            });
+            await settle(250);
             const liveS = (): ProbeActor | undefined => (starship.id != null ? gameCtx?.actors?.get?.(starship.id) : undefined);
             const sheet = liveS()?.sheet;
             if (sheet == null) {
@@ -817,10 +788,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 return;
             }
             try {
-                await withTimeout(sheet.render?.(true), 5_000, 'Starship sheet.render');
-                await new Promise<void>((r) => {
-                    setTimeout(r, 50);
-                });
+                await withTimeout(sheet.render?.(true), 'Starship sheet.render');
+                await settle(50);
             } catch {
                 /* best-effort */
             }
@@ -840,7 +809,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 if (typeof handler !== 'function') {
                     notes['starship-sheet::raiseVoidShield'] = 'handler missing';
                 } else {
-                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'raiseVoidShield');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 'raiseVoidShield');
                     const active = liveS()?.system?.voidShieldsStatus?.active ?? -1;
                     const exhausted = liveS()?.system?.voidShieldsStatus?.exhausted ?? -1;
                     if (active === 2 && exhausted === 0) {
@@ -861,7 +830,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 if (typeof handler !== 'function') {
                     notes['starship-sheet::lowerVoidShield'] = 'handler missing';
                 } else {
-                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'lowerVoidShield');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 'lowerVoidShield');
                     const active = liveS()?.system?.voidShieldsStatus?.active ?? -1;
                     const exhausted = liveS()?.system?.voidShieldsStatus?.exhausted ?? -1;
                     if (active === 1 && exhausted === 1) {
@@ -882,7 +851,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 if (typeof handler !== 'function') {
                     notes['starship-sheet::restoreVoidShields'] = 'handler missing';
                 } else {
-                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'restoreVoidShields');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 'restoreVoidShields');
                     const active = liveS()?.system?.voidShieldsStatus?.active ?? -1;
                     const exhausted = liveS()?.system?.voidShieldsStatus?.exhausted ?? -1;
                     const max = liveS()?.system?.voidShields ?? -1;
@@ -933,9 +902,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 notes['loot-sheet::pickupAll'] = 'Loot create returned null';
                 return;
             }
-            await new Promise<void>((r) => {
-                setTimeout(r, 250);
-            });
+            await settle(250);
             const liveL = (): ProbeActor | undefined => (loot.id != null ? gameCtx?.actors?.get?.(loot.id) : undefined);
             const sheet = liveL()?.sheet;
             if (sheet == null) {
@@ -943,10 +910,8 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 return;
             }
             try {
-                await withTimeout(sheet.render?.(true), 5_000, 'Loot sheet.render');
-                await new Promise<void>((r) => {
-                    setTimeout(r, 50);
-                });
+                await withTimeout(sheet.render?.(true), 'Loot sheet.render');
+                await settle(50);
             } catch {
                 /* best-effort */
             }
@@ -966,7 +931,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
                 // exercises the receiver-resolution branch without throwing.
                 let threw: string | null = null;
                 try {
-                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 5_000, 'pickupAll');
+                    await withTimeout(handler.call(sheet, synthEvent(), synthTarget({})), 'pickupAll');
                 } catch (err) {
                     threw = err instanceof Error ? err.message : String(err);
                 }
@@ -1022,7 +987,7 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('per-sheet actor action handlers (Tier B)', () => {
     // Per-call timeouts keep individual probes bounded; cap the full sweep at 4 minutes.
-    test.setTimeout(240_000);
+    test.setTimeout(scaledMs(240_000));
     test('character / npc / vehicle / starship / loot per-sheet actions dispatch and mutate documents', async ({ page }) => {
         await joinOrSkip(page);
 

@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the `src/module/documents/` files that are NOT deeply
@@ -36,7 +37,7 @@ import { expect, test } from './lib/test';
  * are in scope.
  *
  * Strategy mirrors weapon-attack.spec.ts: each flow probe runs in a
- * single `page.evaluate` round-trip with a 5s `withTimeout` wrapper
+ * single `page.evaluate` round-trip with the shared (scaled 5s) `withTimeout` wrapper
  * around every blocking await; created actors / items / chat messages
  * are registered to a `cleanups` list and drained in a `finally` block.
  * Failures are collected and asserted with `recordCoverage` keying off
@@ -174,17 +175,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
 
         // Wrap any awaitable with a 5s timeout so a hung op can't stall
         // the spec (mirrors weapon-attack.spec.ts / combat.spec.ts).
-        const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-            let timer: ReturnType<typeof setTimeout> | undefined;
-            const timeout = new Promise<T>((_, reject) => {
-                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                clearTimeout(timer);
-            }
-        };
+        const { withTimeout, settle } = globalThis.wh40kE2E;
 
         // Shared cleanup registry — every actor / item / message we
         // create here gets registered for end-of-probe deletion.
@@ -216,7 +207,6 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             type: 'dh2-character',
                             system: { gameSystem: 'dh2' },
                         }),
-                        5_000,
                         'proxy dh2-character Actor.create',
                     );
                     const actorId = actor.id;
@@ -337,7 +327,6 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             type: 'dh2-character',
                             system: { gameSystem: 'dh2' },
                         }),
-                        5_000,
                         'container-host Actor.create',
                     );
                     const hostId = host.id;
@@ -368,9 +357,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                 // before embedded item creates fire — mirrors the comment
                 // in weapon-attack.spec.ts about V14 race conditions.
                 if (host?.id != null) {
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 250);
-                    });
+                    await settle(250);
                 }
             };
 
@@ -393,7 +380,6 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                                     system: {},
                                 },
                             ]),
-                            5_000,
                             'create backpack item',
                         );
                         const createdId = created[0]?.id;
@@ -438,7 +424,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                 try {
                     if (backpackItem != null) {
                         const sample = [{ _id: 'aaaaaaaaaaaaaaaa', name: 'nested-a' }];
-                        await withTimeout(backpackItem.setNested?.(sample) ?? Promise.resolve(), 5_000, 'setNested');
+                        await withTimeout(backpackItem.setNested?.(sample) ?? Promise.resolve(), 'setNested');
                         const round1 = backpackItem.getNested?.();
                         const has1 = backpackItem.hasNested?.();
 
@@ -485,13 +471,12 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                 try {
                     if (backpackItem != null) {
                         // Reset to empty so the append count is deterministic.
-                        await withTimeout(backpackItem.setNested?.([]) ?? Promise.resolve(), 5_000, 'reset nested array');
+                        await withTimeout(backpackItem.setNested?.([]) ?? Promise.resolve(), 'reset nested array');
                         await withTimeout(
                             backpackItem.createNestedDocuments?.([
                                 { name: 'created-a', type: 'gear', system: {} },
                                 { name: 'created-b', type: 'gear', system: {} },
                             ]) ?? Promise.resolve(),
-                            5_000,
                             'createNestedDocuments',
                         );
                         const after = backpackItem.getNested?.() ?? [];
@@ -530,7 +515,6 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             // would be stripped on clean — `name` survives + proves merge.
                             await withTimeout(
                                 backpackItem.updateNestedDocuments?.([{ _id: firstId, name: 'merged-name' }]) ?? Promise.resolve(),
-                                5_000,
                                 'updateNestedDocuments',
                             );
                             const after = backpackItem.getNested?.() ?? [];
@@ -563,7 +547,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         const before = backpackItem.getNested?.() ?? [];
                         const firstId = before[0]?._id;
                         if (typeof firstId === 'string' && firstId.length > 0) {
-                            await withTimeout(backpackItem.deleteNestedDocuments?.([firstId]) ?? Promise.resolve(), 5_000, 'deleteNestedDocuments');
+                            await withTimeout(backpackItem.deleteNestedDocuments?.([firstId]) ?? Promise.resolve(), 'deleteNestedDocuments');
                             const after = backpackItem.getNested?.() ?? [];
                             const stillThere = after.find((e) => e._id === firstId);
                             if (after.length === before.length - 1 && stillThere === undefined) {
@@ -600,7 +584,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                             { _id: 'cccccccccccccccc', name: 'conv-a', type: 'gear', system: {} },
                             { _id: 'dddddddddddddddd', name: 'conv-b', type: 'gear', system: {} },
                         ];
-                        await withTimeout(backpackItem.setNested?.(seed) ?? Promise.resolve(), 5_000, 'seed nested for convert');
+                        await withTimeout(backpackItem.setNested?.(seed) ?? Promise.resolve(), 'seed nested for convert');
                         let threw: string | null = null;
                         try {
                             backpackItem.convertNestedToItems?.();
@@ -638,7 +622,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                 try {
                     if (backpackItem != null) {
                         const newName = 'documents-extra-backpack-renamed';
-                        await withTimeout(backpackItem.update?.({ name: newName }) ?? Promise.resolve(), 5_000, 'backpack.update');
+                        await withTimeout(backpackItem.update?.({ name: newName }) ?? Promise.resolve(), 'backpack.update');
                         const live = getHost();
                         const backpackId = backpackItem.id;
                         const fresh = backpackId != null ? live?.items.get(backpackId) : undefined;
@@ -703,7 +687,6 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                                     },
                                 },
                             }),
-                            5_000,
                             'ChatMessage.create (flags)',
                         );
                         const withFlagsId = withFlags.id;
@@ -716,7 +699,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                                 }
                             });
                         }
-                        const plain = await withTimeout(ChatMessageCls.create({ content: 'documents-extra-plain' }), 5_000, 'ChatMessage.create (plain)');
+                        const plain = await withTimeout(ChatMessageCls.create({ content: 'documents-extra-plain' }), 'ChatMessage.create (plain)');
                         const plainId = plain.id;
                         if (plainId != null) {
                             cleanups.push(async () => {
@@ -769,14 +752,13 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         // Construct a Roll for a deterministic constant 35;
                         // evaluating yields total=35 reliably without RNG.
                         const roll = new RollCls('35');
-                        await withTimeout(roll.evaluate?.() ?? Promise.resolve(), 5_000, 'roll.evaluate');
+                        await withTimeout(roll.evaluate?.() ?? Promise.resolve(), 'roll.evaluate');
                         const msg = await withTimeout(
                             ChatMessageCls.create({
                                 content: 'documents-extra-degrees',
                                 rolls: [roll],
                                 flags: { 'wh40k-rpg': { target: 50 } },
                             }),
-                            5_000,
                             'ChatMessage.create (degrees)',
                         );
                         const msgId = msg.id;
@@ -824,7 +806,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
                         notes['chat-message-onChatCardAction-routes'] = 'onChatCardAction static is not a function';
                     } else {
                         const onChatCardAction = cls.onChatCardAction;
-                        const routerMsg = await withTimeout(createMsg({ content: 'documents-extra-router' }), 5_000, 'ChatMessage.create (router)');
+                        const routerMsg = await withTimeout(createMsg({ content: 'documents-extra-router' }), 'ChatMessage.create (router)');
                         const routerMsgId = routerMsg.id;
                         if (routerMsgId != null) {
                             cleanups.push(async () => {
@@ -863,8 +845,8 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
 
                         let routerThrew: string | null = null;
                         try {
-                            await withTimeout(onChatCardAction(makeEvent('__unknown__'), document.body), 5_000, 'onChatCardAction (unknown)');
-                            await withTimeout(onChatCardAction(makeEvent(null), document.body), 5_000, 'onChatCardAction (undefined)');
+                            await withTimeout(onChatCardAction(makeEvent('__unknown__'), document.body), 'onChatCardAction (unknown)');
+                            await withTimeout(onChatCardAction(makeEvent(null), document.body), 'onChatCardAction (undefined)');
                         } catch (err) {
                             routerThrew = err instanceof Error ? err.message : String(err);
                         }
@@ -1030,7 +1012,7 @@ async function probeDocumentsExtraFlows(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('documents/* extra depth (Tier B)', () => {
     // Cap at 3 minutes — per-call timeouts mean we should never come close.
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('actor-proxy / item-container / chat-message / _module flows', async ({ page }) => {
         await joinOrSkip(page);
 

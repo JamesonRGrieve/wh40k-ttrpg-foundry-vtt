@@ -42,9 +42,8 @@ test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
                 const inst = await wh40kOpenDialog('sister-of-battle-dialog', () => {
                     mod.openSisterOfBattleDialog();
                 });
-                await new Promise<void>((r) => {
-                    setTimeout(r, 40);
-                });
+                // Wait for the dialog content (the checks below report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('[data-action="apply"]') != null);
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     talentRowCount = inst.element.querySelectorAll('[data-talent]').length;

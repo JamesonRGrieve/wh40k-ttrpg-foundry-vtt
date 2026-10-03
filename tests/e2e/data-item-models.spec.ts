@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the item DataModels under src/module/data/item/ that the
@@ -191,18 +192,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
 
         // Wrap any awaitable with a 5s timeout so a blocking operation or
         // socket-wait can't hang the spec (mirrors weapon-attack.spec.ts).
-        const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-            let timer: ReturnType<typeof setTimeout> | null = null;
-            const timeout = new Promise<T>((_, reject) => {
-                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
-                if (timer !== null) clearTimeout(timer);
-            }
-        };
+        const { withTimeout, settle } = globalThis.wh40kE2E;
 
         // Shared cleanup registry — every actor / item we create here gets
         // registered for end-of-probe deletion (mirrors weapon-attack.spec.ts).
@@ -225,7 +215,6 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         },
                     },
                 }),
-                5_000,
                 'PC Actor.create',
             );
             const pcId = pc?.id;
@@ -250,9 +239,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
         // Yield a tick so the server-side create flushes its database write
         // before the first createEmbeddedDocuments fires (V14 race noted in
         // weapon-attack.spec.ts).
-        await new Promise((r) => {
-            setTimeout(r, 250);
-        });
+        await settle(250);
 
         const getPc = (): ActorDoc | null | undefined => gameG?.actors?.get?.(livePcId);
 
@@ -263,7 +250,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
         const embed = async (flow: string, data: SchemaMap): Promise<ItemDoc | null> => {
             const live = getPc();
             if (live == null) return null;
-            const created = await withTimeout(live.createEmbeddedDocuments('Item', [data]), 5_000, `create ${String(data['type'])} for ${flow}`);
+            const created = await withTimeout(live.createEmbeddedDocuments('Item', [data]), `create ${String(data['type'])} for ${flow}`);
             const itemId = created[0]?.id;
             if (itemId === undefined) return null;
             const item = live.items.get(itemId);
@@ -1222,7 +1209,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('item DataModel derived-data (Tier B)', () => {
     // Cap at 3 minutes — per-call timeouts mean we should never come close.
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('item DataModels round-trip schema fields and compute derived getters', async ({ page }) => {
         await joinOrSkip(page);
 

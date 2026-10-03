@@ -25,7 +25,10 @@ FOUNDRY_TEST_PORT="${1:-${FOUNDRY_TEST_PORT:-30001}}"
 # Must live OUTSIDE .foundry-release/ — Foundry refuses dataPath located
 # inside the application root. One data dir per port so each worker gets a
 # fully isolated world (no shared websocket broadcasts between workers).
-DATA_DIR="${SCRIPT_DIR}/.foundry-test-data-${FOUNDRY_TEST_PORT}"
+# E2E_DATA_ROOT relocates the worlds (default: the repo root) — e.g. onto local
+# disk when the repo is NFS-mounted, where LevelDB pack migration on boot is too
+# slow for the web-server timeout.
+DATA_DIR="${E2E_DATA_ROOT:-${SCRIPT_DIR}}/.foundry-test-data-${FOUNDRY_TEST_PORT}"
 DATA_DATA="${DATA_DIR}/Data"
 CONFIG_DIR="${DATA_DIR}/Config"
 SYSTEMS_DIR="${DATA_DATA}/systems"

@@ -125,17 +125,8 @@ async function resetSubtlety(page: Page, actorId: string, value: number): Promis
             // then measure its delta against the settled one — the value would be
             // "wrong" by exactly the amount still in flight (60 vs 56 → the
             // -7 adjustment looked like -3).
-            await new Promise<void>((resolve) => {
-                let waited = 0;
-                const read = (): number | null => gameGlobal?.actors?.get?.(id)?.system?.subtlety?.value ?? null;
-                const tick = setInterval(() => {
-                    waited += 50;
-                    if (read() === v || waited >= 2000) {
-                        clearInterval(tick);
-                        resolve();
-                    }
-                }, 50);
-            });
+            const read = (): number | null => gameGlobal?.actors?.get?.(id)?.system?.subtlety?.value ?? null;
+            await globalThis.wh40kE2E.pollUntil(() => read() === v, globalThis.wh40kE2E.scaledMs(2000));
         },
         { id: actorId, v: value },
     );

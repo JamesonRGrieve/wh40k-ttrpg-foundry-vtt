@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the full weapon-attack pipeline: equip → attack roll
@@ -131,17 +132,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
 
         // Wrap any awaitable with a 5s timeout so a blocking dialog or
         // socket-wait can't hang the spec (mirrors combat.spec.ts).
-        const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-            let timer: ReturnType<typeof setTimeout> | undefined;
-            const timeout = new Promise<T>((_, reject) => {
-                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                clearTimeout(timer);
-            }
-        };
+        const { withTimeout, settle } = globalThis.wh40kE2E;
 
         /**
          * Drain any roll-flow dialogs the previous probe left open so the
@@ -183,7 +174,6 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                     type: 'dh2-character',
                     system: { gameSystem: 'dh2' },
                 }),
-                5_000,
                 'PC Actor.create',
             );
             if (pc?.id != null) {
@@ -210,9 +200,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
         // array silently when the child create races with the parent's
         // initial commit (the server log shows "Actor [X] does not exist"
         // during the embedded create).
-        await new Promise<void>((r) => {
-            setTimeout(r, 250);
-        });
+        await settle(250);
 
         const getPc = (): ActorDoc => {
             const live = browserGame?.actors?.get?.(pc.id);
@@ -247,7 +235,6 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                                 },
                             },
                         ]),
-                        5_000,
                         'create melee weapon',
                     );
                     const meleeArr = meleeCreated as Array<{ id: string }> | undefined | null;
@@ -265,7 +252,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         const windowsBefore = Object.keys(browserUi?.windows ?? {}).length;
                         let threw: string | null = null;
                         try {
-                            await withTimeout(Promise.resolve(live.rollWeaponAction?.(weapon)), 5_000, 'rollWeaponAction');
+                            await withTimeout(Promise.resolve(live.rollWeaponAction?.(weapon)), 'rollWeaponAction');
                         } catch (err) {
                             threw = String((err as Error).message);
                         }
@@ -313,7 +300,6 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                                 },
                             },
                         ]),
-                        5_000,
                         'create ranged weapon (ammo)',
                     );
                     const rangedArr = rangedCreated as Array<{ id: string }> | undefined | null;
@@ -330,7 +316,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         });
                         const before = weapon.system?.clip?.value ?? -1;
                         const usesAmmoBefore = weapon.system?.usesAmmo ?? false;
-                        await withTimeout(weapon.update({ 'system.clip.value': before - 1 }), 5_000, 'decrement clip');
+                        await withTimeout(weapon.update({ 'system.clip.value': before - 1 }), 'decrement clip');
                         const freshWeapon = live.items.get(weapon.id);
                         const after = freshWeapon?.system?.clip?.value ?? -1;
                         const usesAmmoAfter = freshWeapon?.system?.usesAmmo ?? false;
@@ -373,7 +359,6 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                                 },
                             },
                         ]),
-                        5_000,
                         'create empty-clip weapon',
                     );
                     const emptyArr = emptyCreated as Array<{ id: string }> | undefined | null;
@@ -424,7 +409,6 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                                 armour: { mode: 'simple', total: 4, locations: {} },
                             },
                         }),
-                        5_000,
                         'NPC Actor.create',
                     );
                     if (npc?.id == null) {
@@ -442,7 +426,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                             notes['damage-roll-applies-armour'] = 'npc.applyDamage missing';
                         } else {
                             const before = live.system?.wounds?.value ?? -1;
-                            await withTimeout(live.applyDamage(6, 'body', { ignoreToughness: true }), 5_000, 'npc.applyDamage (armour)');
+                            await withTimeout(live.applyDamage(6, 'body', { ignoreToughness: true }), 'npc.applyDamage (armour)');
                             const fresh = browserGame?.actors?.get?.(npc.id);
                             const after = fresh?.system?.wounds?.value ?? -1;
                             // Expected net damage = max(0, 6 - 4) = 2.
@@ -483,7 +467,6 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                                 },
                             },
                         ]),
-                        5_000,
                         'create psychic power',
                     );
                     const powerArr = powerCreated as Array<{ id: string }> | undefined | null;
@@ -500,7 +483,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         });
                         let threw: string | null = null;
                         try {
-                            await withTimeout(Promise.resolve(live.rollPsychicPower?.(power)), 5_000, 'rollPsychicPower');
+                            await withTimeout(Promise.resolve(live.rollPsychicPower?.(power)), 'rollPsychicPower');
                         } catch (err) {
                             threw = String((err as Error).message);
                         }
@@ -548,7 +531,6 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                                 },
                             },
                         ]),
-                        5_000,
                         'create fire-mode weapon',
                     );
                     const weapon = modeCreated?.[0] != null ? live.items.get(modeCreated[0].id) : null;
@@ -568,7 +550,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
                         // schema field (semi 3 → 4). The write proves the
                         // attack.rateOfFire path round-trips through
                         // prepareDerivedData.
-                        await withTimeout(weapon.update({ 'system.attack.rateOfFire.semi': 4 }), 5_000, 'update fire-mode semi');
+                        await withTimeout(weapon.update({ 'system.attack.rateOfFire.semi': 4 }), 'update fire-mode semi');
                         const fresh = live.items.get(weapon.id);
                         const semiAfter = fresh?.system?.attack?.rateOfFire?.semi ?? -1;
                         if (rof.single === true && rof.semi === 3 && rof.full === 10 && isRanged && semiAfter === 4) {
@@ -621,7 +603,7 @@ async function probeWeaponAttackFlows(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('weapon-attack pipeline (Tier B)', () => {
     // Cap at 3 minutes — per-call timeouts mean we should never come close.
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('weapon equip / attack / ammo / damage / armour / fury / psychic / fire-modes flows', async ({ page }) => {
         await joinOrSkip(page);
 

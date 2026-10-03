@@ -48,18 +48,16 @@ async function setupStack(page: Page): Promise<SetupProbe> {
             // Two tokens at the SAME position → a fully overlapping stack.
             await scene.createEmbeddedDocuments('Token', [td.toObject(), td.toObject()]);
             await scene.view();
-            await new Promise<void>((r) => {
-                setTimeout(r, 4000);
-            });
+            // Wait for the canvas to draw both stacked tokens (the check below reports a miss).
+            await globalThis.wh40kE2E.pollUntil(() => (g.canvas.tokens?.placeables.length ?? 0) >= 2, globalThis.wh40kE2E.scaledMs(20_000));
             if (g.game.paused) g.game.togglePause(false);
 
             const placeables = g.canvas.tokens?.placeables ?? [];
             if (placeables.length < 2) return fail(`expected 2 placed tokens, got ${placeables.length}`);
             // Fire the hover hook the picker listens on, as Foundry does on real hover.
             g.Hooks.callAll('hoverToken', placeables[0], true);
-            await new Promise<void>((r) => {
-                setTimeout(r, 300);
-            });
+            // Wait for the picker palette to open (the assertions report a miss).
+            await globalThis.wh40kE2E.pollUntil(() => document.getElementById('wh40k-stacked-token-picker') !== null);
 
             const palette = document.getElementById('wh40k-stacked-token-picker');
             const busts = palette?.querySelectorAll('button[data-token-id]') ?? [];

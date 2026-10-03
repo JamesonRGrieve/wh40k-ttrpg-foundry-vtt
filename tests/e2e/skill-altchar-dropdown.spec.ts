@@ -113,9 +113,8 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
                 return { error: `dialog render threw: ${err instanceof Error ? err.message : String(err)}`, snaps: null };
             }
 
-            await new Promise<void>((resolve) => {
-                setTimeout(resolve, 100);
-            });
+            // Wait for the characteristic dropdown to render (the assertions report a miss).
+            await globalThis.wh40kE2E.pollUntil(() => dialog.element?.querySelector('[data-wh40k-hook="skill-char-override__select"]') != null);
             const rawRoot = dialog.element;
             if (!(rawRoot instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', snaps: null };
@@ -146,9 +145,8 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
                 select.value = 'toughness';
                 select.dispatchEvent(new Event('change', { bubbles: true }));
             }
-            await new Promise<void>((resolve) => {
-                setTimeout(resolve, 80);
-            });
+            // Let the change-driven re-render settle before reading back.
+            await globalThis.wh40kE2E.settle(80);
             const afterSwap = readState('after-toughness');
 
             return { error: null, snaps: { initial, afterSwap } };

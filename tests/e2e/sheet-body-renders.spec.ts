@@ -1,6 +1,7 @@
 import type { ConsoleMessage } from '@playwright/test';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Regression guard: an actor sheet must render its BODY, not just its header.
@@ -36,8 +37,11 @@ interface ProbeGlobal {
     Actor: { create: (data: object) => Promise<ProbeActor | null> };
 }
 
-/** How long a rendered sheet is given to settle before it is measured. */
+/** How long (base, scaled) a rendered sheet is given to settle into a visible body before it is measured. */
 const SETTLE_MS = 1500;
+
+/** Characters of text the active tab must exceed to count as rendered content. */
+const MIN_ACTIVE_TAB_TEXT = 20;
 
 const TYPES = ['dh2-npc', 'dh2-character', 'dh2-terracraft'] as const;
 
@@ -58,7 +62,7 @@ for (const type of TYPES) {
         }
 
         const probe = await page.evaluate(
-            async ({ actorType, settleMs }): Promise<SheetProbe> => {
+            async ({ actorType, settleMs, minText }): Promise<SheetProbe> => {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's browser-side Actor global is runtime-only, with no shipped types
                 const g = globalThis as unknown as ProbeGlobal;
                 let actor: ProbeActor | null;
@@ -70,20 +74,27 @@ for (const type of TYPES) {
                 if (actor === null) return { activeTabVisible: false, activeTabText: 0, error: 'Actor.create returned null' };
                 try {
                     await actor.sheet.render(true);
-                    await new Promise<void>((resolve) => {
-                        setTimeout(resolve, settleMs);
-                    });
-                    const content = actor.sheet.element.querySelector('.window-content') ?? actor.sheet.element;
-                    const active = content.querySelector('.tab.active');
-                    const box = active?.getBoundingClientRect();
-                    const visible = active !== null && box !== undefined && box.width > 0 && box.height > 0 && getComputedStyle(active).visibility !== 'hidden';
-                    return { activeTabVisible: visible, activeTabText: (active?.textContent ?? '').trim().length, error: null };
+                    const sheetEl = actor.sheet.element;
+                    const measure = (): { activeTabVisible: boolean; activeTabText: number } => {
+                        const content = sheetEl.querySelector('.window-content') ?? sheetEl;
+                        const active = content.querySelector('.tab.active');
+                        const box = active?.getBoundingClientRect();
+                        const visible =
+                            active !== null && box !== undefined && box.width > 0 && box.height > 0 && getComputedStyle(active).visibility !== 'hidden';
+                        return { activeTabVisible: visible, activeTabText: (active?.textContent ?? '').trim().length };
+                    };
+                    // Wait (up to the settle budget) for a visible, non-empty active tab; the assertions report a miss.
+                    await globalThis.wh40kE2E.pollUntil(() => {
+                        const m = measure();
+                        return m.activeTabVisible && m.activeTabText > minText;
+                    }, settleMs);
+                    return { ...measure(), error: null };
                 } finally {
                     await actor.sheet.close();
                     await actor.delete();
                 }
             },
-            { actorType: type, settleMs: SETTLE_MS },
+            { actorType: type, settleMs: scaledMs(SETTLE_MS), minText: MIN_ACTIVE_TAB_TEXT },
         );
 
         await testInfo.attach('console-render', { body: messages.join('\n') || '(no console output)', contentType: 'text/plain' });
@@ -91,6 +102,6 @@ for (const type of TYPES) {
 
         expect(probe.error).toBeNull();
         expect(probe.activeTabVisible, 'the active tab must be visible').toBe(true);
-        expect(probe.activeTabText, 'the active tab must have content').toBeGreaterThan(20);
+        expect(probe.activeTabText, 'the active tab must have content').toBeGreaterThan(MIN_ACTIVE_TAB_TEXT);
     });
 }

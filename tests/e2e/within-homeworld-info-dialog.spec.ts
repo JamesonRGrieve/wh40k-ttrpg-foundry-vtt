@@ -43,9 +43,8 @@ test.describe.serial('WithinHomeworldInfoDialog (#139)', () => {
                 const inst: DialogInstance = await wh40kOpenDialog('within-homeworld-info-dialog', () => {
                     mod.openWithinHomeworldInfoDialog();
                 });
-                await new Promise((r) => {
-                    setTimeout(r, 60);
-                });
+                // Wait for the homeworld cards (the checks below report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('[data-homeworld]') != null);
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     const cards = inst.element.querySelectorAll('[data-homeworld]');

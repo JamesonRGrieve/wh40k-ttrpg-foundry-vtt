@@ -107,9 +107,8 @@ test.describe.serial('trying again warning (#62)', () => {
                 return { error: `dialog render threw: ${err instanceof Error ? err.message : String(err)}`, rendered: false };
             }
 
-            await new Promise<void>((r) => {
-                setTimeout(r, 100);
-            });
+            // Wait for the warning banner to render (the assertions report a miss).
+            await globalThis.wh40kE2E.pollUntil(() => dialog.element?.querySelector('[data-wh40k-hook="try-again-warning"]') != null);
             const root = dialog.element;
             if (!(root instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', rendered: false };

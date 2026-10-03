@@ -59,7 +59,7 @@ async function itemPilesFullyActive(page: Page): Promise<boolean> {
     return page.evaluate(async () => {
         // eslint-disable-next-line no-restricted-syntax -- boundary: third-party `game.itempiles` + Foundry `game.settings` are outside our type surface
         const g = globalThis as unknown as { game?: { itempiles?: { API?: unknown }; settings?: { get?: (s: string, k: string) => unknown } } };
-        for (let i = 0; i < 60; i++) {
+        const fullyActive = (): boolean => {
             const apiUp = g.game?.itempiles?.API != null;
             const seeded = g.game?.settings?.get?.('item-piles', 'actorClassType') === 'loot';
             // Our addSystemIntegration must have populated Item Piles' active
@@ -69,13 +69,10 @@ async function itemPilesFullyActive(page: Page): Promise<boolean> {
             // contains "tg" once registration lands.
             const currencies = g.game?.settings?.get?.('item-piles', 'currencies');
             const currenciesLive = currencies != null && JSON.stringify(currencies).includes('tg');
-            if (apiUp && seeded && currenciesLive) return true;
-            // eslint-disable-next-line no-await-in-loop -- polling for module ready-init after activation; bounded, sequential by design
-            await new Promise((r) => {
-                setTimeout(r, 250);
-            });
-        }
-        return false;
+            return apiUp && seeded && currenciesLive;
+        };
+        // Poll for the module's ready-init after activation (scaled 15s budget).
+        return globalThis.wh40kE2E.pollUntil(fullyActive, globalThis.wh40kE2E.scaledMs(15_000), 250);
     });
 }
 
@@ -146,17 +143,9 @@ async function probeRealModule(page: Page): Promise<{ results: FlowResult[] }> {
         // await hung the whole page.evaluate and burned the 600s test timeout
         // (8.2s → 20m) rather than failing the one flow that stalled. Same 5s
         // bound managers-extra / weapon-attack already use, for the same reason.
-        const withTimeout = async <T>(promise: Promise<T>, label: string, ms = 5_000): Promise<T> => {
-            const timer = { id: null as ReturnType<typeof setTimeout> | null };
-            const timeout = new Promise<T>((_, reject) => {
-                timer.id = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([promise, timeout]);
-            } finally {
-                if (timer.id !== null) clearTimeout(timer.id);
-            }
-        };
+        const { withTimeout } = globalThis.wh40kE2E;
+        // Each whole flow group gets a longer budget than one API call.
+        const FLOW_GROUP_TIMEOUT_MS = globalThis.wh40kE2E.scaledMs(30_000);
         const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
             out.push({ name, ok, detail });
         };
@@ -274,9 +263,9 @@ async function probeRealModule(page: Page): Promise<{ results: FlowResult[] }> {
             // Each flow gets its own outer bound too, so a stall inside one is
             // reported as that flow failing rather than taking the whole probe —
             // and the run — down with it.
-            await withTimeout(runCurrencyFlows(), 'runCurrencyFlows', 30_000);
-            await withTimeout(runItemFlows(), 'runItemFlows', 30_000);
-            await withTimeout(runPileFlagFlow(), 'runPileFlagFlow', 30_000);
+            await withTimeout(runCurrencyFlows(), 'runCurrencyFlows', FLOW_GROUP_TIMEOUT_MS);
+            await withTimeout(runItemFlows(), 'runItemFlows', FLOW_GROUP_TIMEOUT_MS);
+            await withTimeout(runPileFlagFlow(), 'runPileFlagFlow', FLOW_GROUP_TIMEOUT_MS);
         } finally {
             for (const doc of trash) {
                 try {

@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B "full gameplay" scenarios — each test drives a complete narrative
@@ -111,17 +112,11 @@ async function probeMultiPartyCombat(page: Page): Promise<StepResult[]> {
                 out.push({ step: name, success: false, note: err instanceof Error ? err.message : String(err) });
             }
         };
-        const withTimeout = async <T>(p: Promise<T> | undefined, ms: number, label: string): Promise<T> => {
+        // A missing method (optional-chained call → undefined) fails the step;
+        // anything else is bounded by the shared in-page timeout.
+        const withTimeout = async <T>(p: Promise<T> | undefined, label: string, ms?: number): Promise<T> => {
             if (p === undefined) throw new Error(`${label} unavailable`);
-            let timer: ReturnType<typeof setTimeout> | undefined;
-            const timeout = new Promise<T>((_, reject) => {
-                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                clearTimeout(timer);
-            }
+            return globalThis.wh40kE2E.withTimeout(p, label, ms);
         };
         const base = '/systems/wh40k-rpg/module';
         // eslint-disable-next-line no-restricted-syntax -- boundary: runtime ESM import of a Foundry-served module has no static type
@@ -147,7 +142,7 @@ async function probeMultiPartyCombat(page: Page): Promise<StepResult[]> {
         try {
             await step('assemble-party', async () => {
                 const mk = async (name: string, type: string, system: ActorSeed): Promise<ActorDoc> => {
-                    const a = await withTimeout(g.Actor.create({ name, type, system }), 5_000, `create ${name}`);
+                    const a = await withTimeout(g.Actor.create({ name, type, system }), `create ${name}`);
                     if (a?.id == null) throw new Error(`create ${name} returned null`);
                     return a;
                 };
@@ -178,22 +173,21 @@ async function probeMultiPartyCombat(page: Page): Promise<StepResult[]> {
             });
 
             await step('start-encounter', async () => {
-                const c = await withTimeout(g.Combat.create({}), 5_000, 'Combat.create');
+                const c = await withTimeout(g.Combat.create({}), 'Combat.create');
                 if (c?.id == null) throw new Error('Combat.create returned null');
                 combat = c;
                 const created = await withTimeout(
                     c.createEmbeddedDocuments?.('Combatant', [{ actorId: ids.pc1 }, { actorId: ids.pc2 }, { actorId: ids.npc1 }, { actorId: ids.npc2 }]),
-                    5_000,
                     'add combatants',
                 );
                 const cids = created.map((d) => d.id).filter((id): id is string => typeof id === 'string');
                 if (cids.length < 4) throw new Error(`expected 4 combatants, got ${cids.length}`);
                 [cmb.pc1, cmb.pc2, cmb.npc1, cmb.npc2] = cids;
-                await withTimeout(c.setInitiative?.(cmb.pc1, 40), 5_000, 'init pc1');
-                await withTimeout(c.setInitiative?.(cmb.pc2, 30), 5_000, 'init pc2');
-                await withTimeout(c.setInitiative?.(cmb.npc1, 20), 5_000, 'init npc1');
-                await withTimeout(c.setInitiative?.(cmb.npc2, 10), 5_000, 'init npc2');
-                await withTimeout(c.startCombat?.(), 5_000, 'startCombat');
+                await withTimeout(c.setInitiative?.(cmb.pc1, 40), 'init pc1');
+                await withTimeout(c.setInitiative?.(cmb.pc2, 30), 'init pc2');
+                await withTimeout(c.setInitiative?.(cmb.npc1, 20), 'init npc1');
+                await withTimeout(c.setInitiative?.(cmb.npc2, 10), 'init npc2');
+                await withTimeout(c.startCombat?.(), 'startCombat');
                 if ((c.round ?? 0) < 1) throw new Error(`expected round >= 1, got ${c.round ?? 0}`);
                 if (c.combatant?.id !== cmb.pc1) throw new Error(`expected PC1 (init 40) first, got ${c.combatant?.id ?? 'undefined'}`);
                 return `4-combatant encounter live; PC1 acts first at round ${c.round ?? 0}`;
@@ -201,7 +195,7 @@ async function probeMultiPartyCombat(page: Page): Promise<StepResult[]> {
 
             await step('pc1-strikes-cultist-a', async () => {
                 const npc1 = live(ids.npc1);
-                await withTimeout(npc1?.applyDamage?.(DMG, 'body', { ignoreArmour: true, ignoreToughness: true }), 5_000, 'PC1 strike');
+                await withTimeout(npc1?.applyDamage?.(DMG, 'body', { ignoreArmour: true, ignoreToughness: true }), 'PC1 strike');
                 const w = live(ids.npc1)?.system?.wounds?.value ?? -1;
                 if (w !== WOUNDS - DMG) throw new Error(`expected ${WOUNDS - DMG} wounds, got ${w}`);
                 return `PC1's chainsword bites: Cultist A ${WOUNDS} → ${w}`;
@@ -213,12 +207,12 @@ async function probeMultiPartyCombat(page: Page): Promise<StepResult[]> {
                 // Fresh read each time — a plain `c.combatant?.id` would be CFA-narrowed
                 // to the previous turn's value even though nextTurn() changed it.
                 const curId = (): string | undefined => c.combatant?.id;
-                await withTimeout(c.nextTurn?.(), 5_000, 'to pc2');
+                await withTimeout(c.nextTurn?.(), 'to pc2');
                 if (curId() !== cmb.pc2) throw new Error(`expected PC2 turn, got ${curId() ?? 'undefined'}`);
-                await withTimeout(c.nextTurn?.(), 5_000, 'to npc1');
+                await withTimeout(c.nextTurn?.(), 'to npc1');
                 if (curId() !== cmb.npc1) throw new Error(`expected Cultist A turn, got ${curId() ?? 'undefined'}`);
-                await withTimeout(c.nextTurn?.(), 5_000, 'to npc2');
-                await withTimeout(c.nextTurn?.(), 5_000, 'wrap to round 2');
+                await withTimeout(c.nextTurn?.(), 'to npc2');
+                await withTimeout(c.nextTurn?.(), 'wrap to round 2');
                 if ((c.round ?? 0) < 2) throw new Error(`expected round >= 2 after a full go-around, got ${c.round ?? 0}`);
                 return `turn order held across all 4 combatants; now round ${c.round ?? 0}`;
             });
@@ -226,8 +220,8 @@ async function probeMultiPartyCombat(page: Page): Promise<StepResult[]> {
             await step('cultist-a-dropped-and-critically-hit', async () => {
                 // Two more strikes drop Cultist A to 0 and accrue critical wounds.
                 const npc1 = live(ids.npc1);
-                await withTimeout(npc1?.applyDamage?.(DMG, 'body', { ignoreArmour: true, ignoreToughness: true }), 5_000, 'strike 2');
-                await withTimeout(live(ids.npc1)?.applyDamage?.(DMG, 'body', { ignoreArmour: true, ignoreToughness: true }), 5_000, 'killing blow');
+                await withTimeout(npc1?.applyDamage?.(DMG, 'body', { ignoreArmour: true, ignoreToughness: true }), 'strike 2');
+                await withTimeout(live(ids.npc1)?.applyDamage?.(DMG, 'body', { ignoreArmour: true, ignoreToughness: true }), 'killing blow');
                 const dead = live(ids.npc1);
                 if ((dead?.system?.wounds?.value ?? -1) !== 0) throw new Error(`expected 0 wounds, got ${dead?.system?.wounds?.value ?? -1}`);
                 // The killing blow is a head-splitting critical: run the real crit pipeline.
@@ -239,7 +233,7 @@ async function probeMultiPartyCombat(page: Page): Promise<StepResult[]> {
                     effect,
                     riders: critMod.classifyCriticalEffect(effect),
                 };
-                const report = await withTimeout(aeMod.applyCriticalDamageConditions(dead as ActorDoc, rec), 5_000, 'applyCriticalDamageConditions');
+                const report = await withTimeout(aeMod.applyCriticalDamageConditions(dead as ActorDoc, rec), 'applyCriticalDamageConditions');
                 const coif = Array.from(live(ids.npc1)?.items ?? []).find((i) => i.name === 'Scenario Coif');
                 if (report.helmetTornOff !== 'Scenario Coif') throw new Error(`expected helmet 'Scenario Coif' torn off, got ${String(report.helmetTornOff)}`);
                 if (coif?.system?.state?.equipped !== false) throw new Error('expected the coif to be unequipped after the crit');
@@ -251,7 +245,7 @@ async function probeMultiPartyCombat(page: Page): Promise<StepResult[]> {
             await step('pc2-finishes-cultist-b', async () => {
                 for (let i = 0; i < 3; i++) {
                     // eslint-disable-next-line no-await-in-loop -- sequential strikes deplete the same live actor; each must resolve before the next reads wounds
-                    await withTimeout(live(ids.npc2)?.applyDamage?.(DMG, 'body', { ignoreArmour: true, ignoreToughness: true }), 5_000, `pc2 strike ${i + 1}`);
+                    await withTimeout(live(ids.npc2)?.applyDamage?.(DMG, 'body', { ignoreArmour: true, ignoreToughness: true }), `pc2 strike ${i + 1}`);
                 }
                 const dead = live(ids.npc2);
                 if ((dead?.system?.wounds?.value ?? -1) !== 0) throw new Error(`expected Cultist B at 0 wounds, got ${dead?.system?.wounds?.value ?? -1}`);
@@ -261,7 +255,7 @@ async function probeMultiPartyCombat(page: Page): Promise<StepResult[]> {
 
             await step('encounter-ends', async () => {
                 // endCombat opens a confirm dialog that hangs headless; delete directly (as combat-full-encounter does).
-                await withTimeout(currentCombat()?.delete?.(), 5_000, 'end encounter');
+                await withTimeout(currentCombat()?.delete?.(), 'end encounter');
                 return 'both cultists down; the encounter ends';
             });
         } finally {
@@ -477,7 +471,7 @@ async function probeTrading(page: Page): Promise<StepResult[]> {
 /* ================================ tests ==================================== */
 
 test.describe.serial('gameplay scenarios (Tier B)', () => {
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
 
     test('multi-party combat: initiative → item-use strike → critical side-effects → deaths', async ({ page }) => {
         await joinOrSkip(page);

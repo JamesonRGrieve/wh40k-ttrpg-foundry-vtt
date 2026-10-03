@@ -45,9 +45,8 @@ test.describe.serial('MedicaeMechadendriteDialog (Tier B)', () => {
                 const inst = await wh40kOpenDialog('medicae-mechadendrite-dialog', () => {
                     mod.openMedicaeMechadendriteDialog();
                 });
-                await new Promise<void>((r) => {
-                    setTimeout(r, 80);
-                });
+                // Wait for the dialog content (the checks below report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('button[data-action="staunchBloodLoss"]') != null);
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     const el = inst.element;

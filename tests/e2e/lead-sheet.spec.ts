@@ -68,9 +68,8 @@ async function probeLeadSheet(page: Page): Promise<LeadProbeResult> {
         try {
             if (item.sheet?.render != null) {
                 await item.sheet.render(true);
-                await new Promise<void>((r) => {
-                    setTimeout(r, 100);
-                });
+                // Let the sheet settle before the snap.
+                await globalThis.wh40kE2E.settle(100);
                 rendered = true;
             }
         } catch (renderErr) {

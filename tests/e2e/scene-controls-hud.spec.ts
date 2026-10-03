@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the scene-controls toolbar (left rail) and the Token
@@ -225,17 +226,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
         // pair whose `system.movement` map is populated; verify the
         // hook handler injects the `.wh40k-token-movement` container
         // into the supplied HTML root.
-        const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-            let timer: ReturnType<typeof setTimeout> | undefined;
-            const timeout = new Promise<T>((_, reject) => {
-                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                if (timer !== undefined) clearTimeout(timer);
-            }
-        };
+        const { withTimeout, pollUntil } = globalThis.wh40kE2E;
 
         // Create a transient actor whose system.movement has entries
         // so the onTokenHUDRender loop has something to iterate.
@@ -247,7 +238,6 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                     type: 'bc-character',
                     system: { gameSystem: 'bc', movement: { half: 3, full: 6, charge: 9, run: 18 } },
                 }),
-                5_000,
                 'Actor.create',
             );
         } catch (err) {
@@ -292,10 +282,11 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                 const fakeHud = { object: { document: fakeToken } };
 
                 hooksApi.callAll('renderTokenHUD', fakeHud, htmlRoot);
-                // Allow microtasks (any async listeners) to flush.
-                await new Promise((r) => {
-                    setTimeout(r, 30);
-                });
+                // Wait for any async listener to inject the movement buttons
+                // (the check below reports it if they never arrive).
+                await pollUntil(
+                    () => htmlRoot.querySelector('.wh40k-token-movement') !== null && htmlRoot.querySelectorAll('.wh40k-token-movement__btn').length > 0,
+                );
 
                 const container = htmlRoot.querySelector('.wh40k-token-movement');
                 const movementBtns = htmlRoot.querySelectorAll('.wh40k-token-movement__btn');
@@ -310,9 +301,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                     try {
                         const firstBtn = movementBtns[0] as HTMLElement;
                         firstBtn.click();
-                        await new Promise((r) => {
-                            setTimeout(r, 30);
-                        });
+                        await pollUntil(() => firstBtn.classList.contains('active'));
                         // Active class should now be on the clicked btn.
                         if (firstBtn.classList.contains('active')) {
                             fired['token-effects-via-hud'] = true;
@@ -351,7 +340,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
         if (canvasReady && actor?.id != null) {
             let scene: SceneRef | null = null;
             try {
-                scene = await withTimeout(SceneCls.create({ name: 'scene-hud-spec' }), 5_000, 'Scene.create');
+                scene = await withTimeout(SceneCls.create({ name: 'scene-hud-spec' }), 'Scene.create');
             } catch (err) {
                 notes['token-hud-renders'] = `Scene.create threw: ${err instanceof Error ? err.message : String(err)}`;
             }
@@ -367,14 +356,14 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                 try {
                     // Activate the scene so canvas.tokens populates.
                     try {
-                        await withTimeout(scene.activate?.() ?? Promise.resolve(), 5_000, 'scene.activate');
+                        await withTimeout(scene.activate?.() ?? Promise.resolve(), 'scene.activate');
                     } catch {
                         /* best-effort */
                     }
                     const protoData: { name?: string; actorId?: string } =
                         typeof actor.prototypeToken?.toObject === 'function' ? actor.prototypeToken.toObject() : { name: actor.name, actorId: actor.id };
                     protoData.actorId = actor.id;
-                    const created = await withTimeout(scene.createEmbeddedDocuments('Token', [protoData]), 5_000, 'createEmbeddedDocuments(Token)');
+                    const created = await withTimeout(scene.createEmbeddedDocuments('Token', [protoData]), 'createEmbeddedDocuments(Token)');
                     const tokenDoc = Array.isArray(created) ? created[0] : null;
                     const canvasTokens = cvs.tokens;
                     const placedToken = tokenDoc?.object ?? (tokenDoc?.id != null ? canvasTokens?.get?.(tokenDoc.id) : undefined);
@@ -433,7 +422,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
 }
 
 test.describe.serial('scene controls + Token HUD (Tier B)', () => {
-    test.setTimeout(120_000);
+    test.setTimeout(scaledMs(120_000));
     test('system-registered scene controls + Token HUD overlay exercise hook handlers', async ({ page }) => {
         await joinOrSkip(page);
 

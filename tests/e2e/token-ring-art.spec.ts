@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B verification that the DH2 art pipeline's tokens work with the core
@@ -191,14 +192,16 @@ async function probeCanvasRender(page: Page, sceneId: string): Promise<FlowResul
             const scene = g.game.scenes.get(id);
             if (scene === undefined) return { ok: false, detail: `scene ${id} not found` };
             await scene.view();
-            await new Promise((resolve) => {
-                setTimeout(resolve, 5000);
-            });
+            // Wait for the canvas to draw the placed token with its ring (the
+            // checks below report whichever never arrives).
+            await globalThis.wh40kE2E.pollUntil(() => {
+                const placedTok = g.canvas.tokens?.placeables[0];
+                return g.canvas.ready && placedTok?.ring != null;
+            }, globalThis.wh40kE2E.scaledMs(20_000));
             if (g.game.paused) g.game.togglePause(false);
             await g.canvas.animatePan({ x: 350, y: 350, scale: 3, duration: 0 });
-            await new Promise((resolve) => {
-                setTimeout(resolve, 2000);
-            });
+            // Let the panned frame render before the screenshot.
+            await globalThis.wh40kE2E.settle(2000);
             const tok = g.canvas.tokens?.placeables[0];
             if (!g.canvas.ready) return { ok: false, detail: 'canvas.ready is false after scene.view()' };
             if (tok?.ring == null) return { ok: false, detail: 'placed token has no TokenRing instance' };
@@ -240,7 +243,7 @@ async function cleanup(page: Page, sceneId: string | null, actorId: string | nul
 }
 
 test.describe.serial('token ring art (Tier B)', () => {
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('DH2 token busts ring-enable, serve, and render in a live Foundry world', async ({ page }) => {
         await joinOrSkip(page);
 

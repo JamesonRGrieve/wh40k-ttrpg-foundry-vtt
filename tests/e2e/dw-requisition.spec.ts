@@ -105,9 +105,8 @@ test.describe.serial('DW Requisition (Tier B)', () => {
                 const sheet = actor.sheet;
                 if (typeof sheet?.render === 'function') {
                     await sheet.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 120);
-                    });
+                    // Wait for the requisition panel to render (the checks below report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('.wh40k-dw-requisition-panel') != null);
                     rendered = sheet.element instanceof HTMLElement;
                     const el = sheet.element;
                     if (rendered && el != null) {

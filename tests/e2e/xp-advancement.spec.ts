@@ -226,9 +226,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 if (typeof Cls !== 'function') return { rendered: false, error: 'AddXPDialog default export not a constructor' };
                 inst = new Cls(actor as never);
                 await inst.render(true);
-                await new Promise<void>((r) => {
-                    setTimeout(r, 30);
-                });
+                await globalThis.wh40kE2E.settle(30);
                 const rendered = inst.element instanceof HTMLElement;
                 try {
                     await inst.close?.();
@@ -289,9 +287,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 if (typeof Cls !== 'function') return { rendered: false, error: 'AdvancementDialog default export not a constructor' };
                 inst = new Cls(actor as never);
                 await inst.render(true);
-                await new Promise<void>((r) => {
-                    setTimeout(r, 30);
-                });
+                await globalThis.wh40kE2E.settle(30);
                 const rendered = inst.element instanceof HTMLElement;
                 try {
                     await inst.close?.();

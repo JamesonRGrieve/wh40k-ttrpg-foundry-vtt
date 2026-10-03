@@ -86,19 +86,16 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
 
         const createdActor = actor;
         await createdActor.sheet.render(true);
-        await new Promise<void>((r) => {
-            setTimeout(r, 250);
-        });
+        await globalThis.wh40kE2E.settle(250);
 
         // Navigate to the Overview tab (Status was consolidated into Overview, #263).
         try {
             createdActor.sheet.changeTab?.('overview', 'primary');
-            await new Promise<void>((r) => {
-                setTimeout(r, 150);
-            });
         } catch {
             /* sheets without changeTab fall back to whatever tab is open */
         }
+        // Wait for the pact rows to render (the assertion below reports a miss).
+        await globalThis.wh40kE2E.pollUntil(() => (createdActor.sheet.element?.querySelectorAll?.('[data-wh40k-hook="dark-pact-row"]')?.length ?? 0) >= 2);
 
         const rows = createdActor.sheet.element?.querySelectorAll?.('[data-wh40k-hook="dark-pact-row"]');
         const rowCount = rows?.length ?? 0;

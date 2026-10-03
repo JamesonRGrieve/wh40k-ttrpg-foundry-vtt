@@ -136,9 +136,7 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
             builder = new OriginPathBuilder(actor, {});
             await builder.render(true);
             // Allow _loadOrigins() and the first render() to settle.
-            await new Promise<void>((r) => {
-                setTimeout(r, 300);
-            });
+            await globalThis.wh40kE2E.settle(300);
         } catch (err) {
             try {
                 await actor.delete?.();
@@ -182,9 +180,8 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
                 builder.currentStepIndex = charStepIdx;
                 builder.showCharacteristics = true;
                 await builder.render();
-                await new Promise<void>((r) => {
-                    setTimeout(r, 120);
-                });
+                // Wait for the characteristics workspace to render (the assertions report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => root?.querySelector('[data-wh40k-hook="csd-workspace"]') != null);
                 const workspace = root?.querySelector('[data-wh40k-hook="csd-workspace"]') ?? null;
                 if (workspace) {
                     const cls = workspace.getAttribute('class') ?? '';

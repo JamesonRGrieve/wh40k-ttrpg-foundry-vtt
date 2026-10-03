@@ -1,7 +1,8 @@
 import type { Page } from '@playwright/test';
+import { E2E_OP_TIMEOUT_MS } from './timing';
 
-/** How long the opener may take to put its application on screen. */
-const OPEN_TIMEOUT_MS = 5_000;
+/** How long the opener may take to put its application on screen (scaled 5000 ms). */
+const OPEN_TIMEOUT_MS = E2E_OP_TIMEOUT_MS;
 /** Poll interval while waiting for the opened application to render. */
 const OPEN_POLL_MS = 20;
 

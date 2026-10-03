@@ -52,9 +52,8 @@ test.describe.serial('GrenadeThrowDialog (Tier B)', () => {
                 const inst = new Cls({ grenadeId: 'psychotroke' });
                 try {
                     await inst.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 60);
-                    });
+                    // Wait for the dialog content (the checks below report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('[data-action="throw"]') != null);
                 } catch (err) {
                     error = err instanceof Error ? err.stack ?? err.message : String(err);
                 }
