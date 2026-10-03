@@ -6,6 +6,7 @@
 import { getDegreeForMode, isD100Success, resolveDegreesMethod } from './rolls/roll-helpers.ts';
 import { getWeaponQualityHasLevel, getWeaponQualityMechanics, weaponQualityDescKey, weaponQualityLabelKey } from './rules/weapon-quality-payloads.ts';
 import { capitalize } from './utils/format.ts';
+import { buildQualityLabel, parseQualityLevel } from './utils/quality-id.ts';
 
 /* -------------------------------------------- */
 /*  Config Type Definitions                     */
@@ -21,6 +22,15 @@ export interface LabelAbbreviationConfig {
 export interface LabelModifierConfig {
     label: string;
     modifier: number;
+}
+/**
+ * An availability rating. `modifier` is null for a rating the books print only
+ * as an item's availability cell, never in a modifier table (DH1/BC "Uncommon"):
+ * it is stored RAW and unrated rather than given an invented scale position.
+ */
+export interface AvailabilityConfig {
+    label: string;
+    modifier: number | null;
 }
 interface LabelDescriptionConfig {
     label: string;
@@ -146,7 +156,7 @@ export interface WH40KSystemConfig {
     combatBonuses: Record<string, LabelConfig>;
     /** Derived resource pools a talent/effect can modify (wounds/fate/insanity/corruption). */
     resources: Record<string, LabelConfig>;
-    availabilities: Record<string, LabelModifierConfig>;
+    availabilities: Record<string, AvailabilityConfig>;
     currencies: Record<string, CurrencyConfig>;
     movementTypes: Record<string, MovementTypeConfig>;
     tokenRulerColors: Record<string, number>;
@@ -242,8 +252,9 @@ WH40K.resources = {
 /* -------------------------------------------- */
 
 /**
- * Item availability ratings.
- * @type {Object<string, {label: string, modifier: number}>}
+ * Item availability ratings. `uncommon` is printed by DH1 supplements and BC as
+ * an availability cell only — no book gives it a modifier — so it is unrated
+ * (null) and sits outside the ordered scale.
  */
 WH40K.availabilities = {
     'ubiquitous': { label: 'WH40K.Availability.Ubiquitous', modifier: 70 },
@@ -257,6 +268,7 @@ WH40K.availabilities = {
     'extremely-rare': { label: 'WH40K.Availability.ExtremelyRare', modifier: -30 },
     'near-unique': { label: 'WH40K.Availability.NearUnique', modifier: -50 },
     'unique': { label: 'WH40K.Availability.Unique', modifier: -70 },
+    'uncommon': { label: 'WH40K.Availability.Uncommon', modifier: null },
 };
 
 /* -------------------------------------------- */
@@ -472,6 +484,8 @@ WH40K.weaponClasses = {
     heavy: { label: 'WH40K.WeaponClass.Heavy' },
     thrown: { label: 'WH40K.WeaponClass.Thrown' },
     exotic: { label: 'WH40K.WeaponClass.Exotic' },
+    vehicle: { label: 'WH40K.WeaponClass.Vehicle' },
+    placed: { label: 'WH40K.WeaponClass.Placed' },
 };
 
 /**
@@ -645,20 +659,20 @@ WH40K.hullTypes = {
  */
 WH40K.shipComponentTypes = {
     essential: { label: 'WH40K.ShipComponent.Essential' },
-    supplemental: { label: 'WH40K.ShipComponent.Supplemental' },
-    weapons: { label: 'WH40K.ShipComponent.Weapons' },
-    auger: { label: 'WH40K.ShipComponent.Auger' },
-    gellarField: { label: 'WH40K.ShipComponent.GellarField' },
-    voidShields: { label: 'WH40K.ShipComponent.VoidShields' },
-    warpDrive: { label: 'WH40K.ShipComponent.WarpDrive' },
-    plasmaDrive: { label: 'WH40K.ShipComponent.PlasmaDrive' },
-    lifeSupport: { label: 'WH40K.ShipComponent.LifeSupport' },
-    quarters: { label: 'WH40K.ShipComponent.Quarters' },
-    bridge: { label: 'WH40K.ShipComponent.Bridge' },
-    generatorum: { label: 'WH40K.ShipComponent.Generatorum' },
-    augment: { label: 'WH40K.ShipComponent.Augment' },
-    archeotech: { label: 'WH40K.ShipComponent.Archeotech' },
-    xenotech: { label: 'WH40K.ShipComponent.Xenotech' },
+    supplemental: { label: 'WH40K.ShipComponent.Type.Supplemental' },
+    weapons: { label: 'WH40K.ShipComponent.Type.Weapons' },
+    auger: { label: 'WH40K.ShipComponent.Type.Auger' },
+    gellarField: { label: 'WH40K.ShipComponent.Type.GellarField' },
+    voidShields: { label: 'WH40K.ShipComponent.Type.VoidShields' },
+    warpDrive: { label: 'WH40K.ShipComponent.Type.WarpDrive' },
+    plasmaDrive: { label: 'WH40K.ShipComponent.Type.PlasmaDrive' },
+    lifeSupport: { label: 'WH40K.ShipComponent.Type.LifeSupport' },
+    quarters: { label: 'WH40K.ShipComponent.Type.Quarters' },
+    bridge: { label: 'WH40K.ShipComponent.Type.Bridge' },
+    generatorum: { label: 'WH40K.ShipComponent.Type.Generatorum' },
+    augment: { label: 'WH40K.ShipComponent.Type.Augment' },
+    archeotech: { label: 'WH40K.ShipComponent.Type.Archeotech' },
+    xenotech: { label: 'WH40K.ShipComponent.Type.Xenotech' },
 };
 
 /* -------------------------------------------- */
@@ -1019,38 +1033,13 @@ WH40K.getDefaultIcon = function (type) {
 };
 
 /**
- * Parse a quality identifier into its base id and level. `blast-3` →
- * `{ baseId: 'blast', level: 3 }`; `flamer-x` → `{ baseId: 'flamer', level: null }`
- * (the `(X)` placeholder); a bare `tearing` → `{ baseId: 'tearing', level: null }`.
- * Content-agnostic — pure suffix parsing, no quality table is consulted.
- */
-export function parseQualityLevel(identifier: string): { baseId: string; level: number | null } {
-    const levelMatch = identifier.match(/^(.+?)-(\d+|x)$/i);
-    const base = levelMatch?.[1];
-    const lvl = levelMatch?.[2];
-    const baseId = base ?? identifier;
-    const level: number | null = lvl !== undefined ? (lvl.toLowerCase() === 'x' ? null : parseInt(lvl, 10)) : null;
-    return { baseId, level };
-}
-
-/**
- * Append the level suffix to a localized quality label: ` (N)` for a known
- * level, ` (X)` when the quality takes a level but none was supplied, nothing
- * otherwise.
- */
-export function buildQualityLabel(localizedBase: string, hasLevel: boolean, level: number | null): string {
-    if (!hasLevel) return localizedBase;
-    return level !== null ? `${localizedBase} (${level})` : `${localizedBase} (X)`;
-}
-
-/**
  * Get quality definition from identifier.
  * @param {string} identifier    Quality identifier (e.g., "tearing", "blast-3")
  * @returns {object|null}        Quality definition or null
  */
 WH40K.getQualityDefinition = (identifier) => {
-    // Strip level suffix (blast-3 → blast, flamer-x → flamer).
-    const baseId = identifier.replace(/-\d+$/, '').replace(/-x$/i, '');
+    // Strip the rating suffix (blast-3, flamer-x, blast-10+1d10 → blast / flamer).
+    const { baseId } = parseQualityLevel(identifier);
     const labelKey = weaponQualityLabelKey(baseId);
     // "Known" iff the langpack carries the label; unlabelled qualities return null so
     // callers fall back to a humanized identifier (matching the old registry-miss path).
@@ -1075,7 +1064,7 @@ WH40K.getQualityDefinition = (identifier) => {
 WH40K.getQualityLabel = function (identifier, level = null) {
     const def = this.getQualityDefinition(identifier);
     if (!def) return identifier;
-    return buildQualityLabel(game.i18n.localize(def.label), def.hasLevel, level);
+    return buildQualityLabel(game.i18n.localize(def.label), def.hasLevel, level, parseQualityLevel(identifier).formula);
 };
 
 /**
@@ -1422,7 +1411,7 @@ WH40K.combatActions = {
  * @type {Object<string, {label: string, description: string}>}
  */
 WH40K.careers = {
-    rogueTrader: { label: 'WH40K.Career.WH40K', description: 'WH40K.Career.WH40KDesc' },
+    rogueTrader: { label: 'WH40K.Career.RogueTrader', description: 'WH40K.Career.RogueTraderDesc' },
     archMilitant: { label: 'WH40K.Career.ArchMilitant', description: 'WH40K.Career.ArchMilitantDesc' },
     astropath: { label: 'WH40K.Career.Astropath', description: 'WH40K.Career.AstropathDesc' },
     explorator: { label: 'WH40K.Career.Explorator', description: 'WH40K.Career.ExploratorDesc' },

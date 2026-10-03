@@ -12,7 +12,7 @@
 import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { GameSystemId, OriginStepConfig, OriginStepDef } from '../../config/game-systems/types.ts';
-import WH40K from '../../config.ts';
+import WH40K, { type AvailabilityConfig } from '../../config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
@@ -1519,7 +1519,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             )
             .join('')}</div>`;
         return JSON.stringify({
-            title: 'Origin Bonus',
+            title: game.i18n.localize('WH40K.OriginPath.OriginBonus'),
             content,
         });
     }
@@ -2108,7 +2108,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const configWh40k = (CONFIG as { wh40k?: { availabilities?: Record<string, { label: string; modifier: number }> } }).wh40k;
+        const configWh40k = (CONFIG as { wh40k?: { availabilities?: Record<string, AvailabilityConfig> } }).wh40k;
         const availabilityConfig = configWh40k?.availabilities ?? WH40K.availabilities;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: availabilityConfig['scarce'] may be absent; modifier may be absent
         const scarceModifier = availabilityConfig['scarce']?.modifier ?? 0;
@@ -2136,10 +2136,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     const entrySys = entry.system;
                     const availability = entrySys?.availability;
                     if (availability === undefined || availability === '') continue;
-                    const availabilityEntry = availabilityConfig[availability] as { label: string; modifier: number } | undefined;
+                    const availabilityEntry = availabilityConfig[availability] as AvailabilityConfig | undefined;
                     if (availabilityEntry === undefined) continue;
+                    // Unrated availabilities (no printed modifier) cannot be shown to meet the Scarce floor.
                     const modifier = availabilityEntry.modifier;
-                    if (modifier < scarceModifier) continue;
+                    if (modifier === null || modifier < scarceModifier) continue;
                     if (entry.name?.startsWith('! Default') === true) continue;
                     const homebrewCost = entrySys?.cost?.dh2?.homebrew;
                     const equipEntry: EquipmentEntry = {
@@ -4460,7 +4461,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Manually enter a divination.
      */
     static async #manualDivination(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
-        const text = await this._promptForValue({ title: 'Enter Divination', label: 'Divination:', name: 'divination', type: 'text' });
+        const text = await this._promptForValue({
+            title: game.i18n.localize('WH40K.CharGen.DivinationPlaceholder'),
+            label: game.i18n.localize('WH40K.OriginPath.ManualDivinationLabel'),
+            name: 'divination',
+            type: 'text',
+        });
         if (text !== null && text !== '') {
             this._divination = text;
             this._saveScrollPosition();
@@ -4474,8 +4480,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static async #rollThrones(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const formula = this._getContextualThronesFormula();
         if (formula === '') {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: thrones formula warning; key not yet in langpack
-            ui.notifications.warn('No thrones formula available yet — select an origin with a throne gelt formula.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.OriginPath.NoThronesFormula'));
             return;
         }
         const roll = new Roll(formula);
@@ -4486,7 +4491,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     static async #manualThrones(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
-        const raw = await this._promptForValue({ title: 'Enter Starting Throne Gelt', label: 'Thrones:', name: 'value', type: 'number', min: '0' });
+        const raw = await this._promptForValue({
+            title: game.i18n.localize('WH40K.OriginPath.ManualThronesPromptTitle'),
+            label: game.i18n.localize('WH40K.OriginPath.ManualThronesLabel'),
+            name: 'value',
+            type: 'number',
+            min: '0',
+        });
         const val = raw === null ? NaN : parseInt(raw, 10);
         if (!Number.isNaN(val)) {
             this._thronesRolled = val;
@@ -4516,7 +4527,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     static async #manualInfluence(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
-        const raw = await this._promptForValue({ title: 'Enter Starting Influence', label: 'Influence:', name: 'value', type: 'number', min: '0' });
+        const raw = await this._promptForValue({
+            title: game.i18n.localize('WH40K.OriginPath.ManualInfluencePromptTitle'),
+            label: game.i18n.localize('WH40K.OriginPath.ManualInfluenceLabel'),
+            name: 'value',
+            type: 'number',
+            min: '0',
+        });
         const val = raw === null ? NaN : parseInt(raw, 10);
         if (!Number.isNaN(val)) {
             this._influenceRolled = val;

@@ -3,12 +3,14 @@ import {
     awardRenown,
     canRequisition,
     getRenownRank,
+    isRenownRank,
     loseRenown,
     RENOWN_MAX,
     RENOWN_MIN,
     RENOWN_RANK_ORDER,
     RENOWN_THRESHOLDS,
     renownRankIndex,
+    renownRankLabelKey,
 } from './dw-renown';
 
 /**
@@ -189,5 +191,25 @@ describe('loseRenown — §"LOSING RENOWN"', () => {
     });
     it('non-finite current Renown resets to floor', () => {
         expect(loseRenown(Number.NaN, 5)).toBe(RENOWN_MIN);
+    });
+});
+
+describe('renown rank ids and labels', () => {
+    it('maps each rank to its langpack label key', () => {
+        expect(RENOWN_RANK_ORDER.map(renownRankLabelKey)).toEqual([
+            'WH40K.DW.Renown.Rank.Initiated',
+            'WH40K.DW.Renown.Rank.Respected',
+            'WH40K.DW.Renown.Rank.Distinguished',
+            'WH40K.DW.Renown.Rank.Famed',
+            'WH40K.DW.Renown.Rank.Hero',
+        ]);
+    });
+
+    it('recognises exactly the five rank ids (the item renown field and requisition prompt share this list)', () => {
+        for (const rank of RENOWN_RANK_ORDER) expect(isRenownRank(rank)).toBe(true);
+        expect(isRenownRank('initiate')).toBe(false);
+        expect(isRenownRank('Famed')).toBe(false);
+        expect(isRenownRank(null)).toBe(false);
+        expect(isRenownRank(undefined)).toBe(false);
     });
 });

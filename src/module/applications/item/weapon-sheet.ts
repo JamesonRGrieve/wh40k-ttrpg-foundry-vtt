@@ -3,7 +3,7 @@
  */
 
 import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
-import type { LabelConfig, LabelAbbreviationConfig, LabelModifierConfig } from '../../config.ts';
+import type { AvailabilityConfig, LabelConfig, LabelAbbreviationConfig, LabelModifierConfig } from '../../config.ts';
 import type { default as WeaponData } from '../../data/item/weapon.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
@@ -11,6 +11,7 @@ import { consumeRounds } from '../../rules/magazine.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
+import { parseQualityLevel } from '../../utils/quality-id.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
 import ClipBuilderDialog from '../dialogs/clip-builder-dialog.ts';
@@ -60,7 +61,7 @@ interface WeaponSheetContext extends Record<string, unknown> {
     weaponClasses: Record<string, LabelConfig>;
     weaponTypes: Record<string, LabelConfig>;
     damageTypes: Record<string, LabelAbbreviationConfig>;
-    availabilities: Record<string, LabelModifierConfig>;
+    availabilities: Record<string, AvailabilityConfig>;
     craftsmanships: Record<string, LabelModifierConfig>;
     reloadTimes: Record<string, { label: string }>;
     bodyCollapsed: boolean;
@@ -196,11 +197,11 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         context.craftsmanships = CONFIG.wh40k.craftsmanships;
         context.reloadTimes = {
             '-': { label: '—' },
-            'free': { label: 'Free Action' },
-            'half': { label: 'Half Action' },
-            'full': { label: 'Full Action' },
-            '2-full': { label: '2 Full Actions' },
-            '3-full': { label: '3 Full Actions' },
+            'free': { label: game.i18n.localize('WH40K.Reload.Free') },
+            'half': { label: game.i18n.localize('WH40K.Reload.Half') },
+            'full': { label: game.i18n.localize('WH40K.Reload.Full') },
+            '2-full': { label: game.i18n.localize('WH40K.Reload.2Full') },
+            '3-full': { label: game.i18n.localize('WH40K.Reload.3Full') },
         };
 
         // Body collapse state - start collapsed by default
@@ -209,9 +210,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
 
         // Prepare qualities array for clickable tags
         context.qualitiesArray = Array.from(system.effectiveSpecial).map((q: string) => {
-            // Parse level from quality identifier if present
-            const match = /-(\d+)$/.exec(q);
-            const level = match?.[1] !== undefined ? parseInt(match[1], 10) : null;
+            const { level } = parseQualityLevel(q);
 
             // Get localized label using CONFIG helper (CONFIG.wh40k not CONFIG.wh40k)
             const label = CONFIG.wh40k.getQualityLabel(q, level);
@@ -403,7 +402,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
 
         // Each modification can only be added once
         if (this.item.items.some((i) => i.name === item.name)) {
-            ui.notifications.info(`Weapon can only hold one ${item.name}`);
+            ui.notifications.info(game.i18n.format('WH40K.WeaponSheet.OnlyOneOfItem', { name: item.name }));
             return false;
         }
 
@@ -428,11 +427,12 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         const effects: string[] = [];
         const m = mod.cachedModifiers;
 
-        if (m.damage !== 0) effects.push(`Damage ${m.damage > 0 ? '+' : ''}${m.damage}`);
-        if (m.penetration !== 0) effects.push(`Pen ${m.penetration > 0 ? '+' : ''}${m.penetration}`);
-        if (m.toHit !== 0) effects.push(`To Hit ${m.toHit > 0 ? '+' : ''}${m.toHit}`);
-        if (m.range !== 0) effects.push(`Range ${m.range > 0 ? '+' : ''}${m.range}m`);
-        if (m.weight !== 0) effects.push(`Weight ${m.weight > 0 ? '+' : ''}${m.weight}kg`);
+        const signed = (value: number): string => `${value > 0 ? '+' : ''}${value}`;
+        if (m.damage !== 0) effects.push(game.i18n.format('WH40K.WeaponSheet.EffectDamage', { value: signed(m.damage) }));
+        if (m.penetration !== 0) effects.push(game.i18n.format('WH40K.WeaponSheet.EffectPenetration', { value: signed(m.penetration) }));
+        if (m.toHit !== 0) effects.push(game.i18n.format('WH40K.WeaponSheet.EffectToHit', { value: signed(m.toHit) }));
+        if (m.range !== 0) effects.push(game.i18n.format('WH40K.WeaponSheet.EffectRange', { value: signed(m.range) }));
+        if (m.weight !== 0) effects.push(game.i18n.format('WH40K.WeaponSheet.EffectWeight', { value: signed(m.weight) }));
 
         return effects;
     }
@@ -560,7 +560,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
 
         // Check if there's ammo to spend
         if (system.clip.value <= 0) {
-            ui.notifications.warn(`${this.item.name} is out of ammunition!`);
+            ui.notifications.warn(game.i18n.format('WH40K.WeaponSheet.OutOfAmmo', { name: this.item.name }));
             return;
         }
 
@@ -573,7 +573,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
 
         // Show feedback
         if (newValue === 0) {
-            ui.notifications.warn(`${this.item.name} is now empty!`);
+            ui.notifications.warn(game.i18n.format('WH40K.WeaponSheet.NowEmpty', { name: this.item.name }));
         }
     }
 
@@ -619,9 +619,9 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
             if (def !== null) {
                 const label = game.i18n.localize(def.label);
                 const description = game.i18n.localize(def.description);
-                ui.notifications.info(`${label}: ${description}`);
+                ui.notifications.info(game.i18n.format('WH40K.WeaponSheet.QualityInfo', { label, description }));
             } else {
-                ui.notifications.warn(`Quality "${identifier}" not found.`);
+                ui.notifications.warn(game.i18n.format('WH40K.WeaponSheet.QualityNotFound', { identifier }));
             }
         }
     }
@@ -761,7 +761,9 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
 
         await this.item.update({ 'system.modifications': mods });
 
-        ui.notifications.info(`${mod.name} ${mod.active ? 'activated' : 'deactivated'}.`);
+        ui.notifications.info(
+            game.i18n.format(mod.active ? 'WH40K.WeaponSheet.ModificationActivated' : 'WH40K.WeaponSheet.ModificationDeactivated', { name: mod.name }),
+        );
     }
 
     /* -------------------------------------------- */
@@ -801,7 +803,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         if (mod === undefined) return;
 
         // Shared fromUuid → sheet.render idiom (#290).
-        await this.viewItemByUuid(mod.uuid, `Modification "${mod.name}" not found. It may have been deleted.`);
+        await this.viewItemByUuid(mod.uuid, game.i18n.format('WH40K.WeaponSheet.ModificationNotFound', { name: mod.name }));
     }
 
     /* -------------------------------------------- */
@@ -830,7 +832,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         const mods = this.item.system.modifications.filter((_, i) => i !== index);
         await this.item.update({ 'system.modifications': mods });
 
-        ui.notifications.info(`${mod.name} removed.`);
+        ui.notifications.info(game.i18n.format('WH40K.WeaponSheet.ModificationRemoved', { name: mod.name }));
     }
 
     /* -------------------------------------------- */
@@ -867,7 +869,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         const updated = [...this.item.system.modifications, modEntry];
         await this.item.update({ 'system.modifications': updated });
 
-        ui.notifications.info(`${modItem.name} installed.`);
+        ui.notifications.info(game.i18n.format('WH40K.WeaponSheet.ModificationInstalled', { name: modItem.name }));
         return true;
     }
 
@@ -886,20 +888,20 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         // Check weapon class restriction
         const classRestrictions = restrictions?.weaponClasses;
         if (classRestrictions !== undefined && classRestrictions.size > 0 && !classRestrictions.has(weapon.class)) {
-            ui.notifications.warn(`${modItem.name} cannot be installed on ${weapon.classLabel} weapons.`);
+            ui.notifications.warn(game.i18n.format('WH40K.WeaponSheet.ModificationClassIncompatible', { name: modItem.name, classLabel: weapon.classLabel }));
             return false;
         }
 
         // Check weapon type restriction
         const typeRestrictions = restrictions?.weaponTypes;
         if (typeRestrictions !== undefined && typeRestrictions.size > 0 && !typeRestrictions.has(weapon.type)) {
-            ui.notifications.warn(`${modItem.name} is not compatible with ${weapon.typeLabel} weapons.`);
+            ui.notifications.warn(game.i18n.format('WH40K.WeaponSheet.ModificationTypeIncompatible', { name: modItem.name, typeLabel: weapon.typeLabel }));
             return false;
         }
 
         // Check for duplicates
         if (weapon.modifications.some((m) => m.uuid === modItem.uuid)) {
-            ui.notifications.info(`${modItem.name} is already installed.`);
+            ui.notifications.info(game.i18n.format('WH40K.WeaponSheet.ModificationAlreadyInstalled', { name: modItem.name }));
             return false;
         }
 
@@ -1094,7 +1096,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         // Check weapon type compatibility
         const ammoTypes = ammoItem.system.weaponTypes;
         if (ammoTypes !== undefined && ammoTypes.size > 0 && !ammoTypes.has(weapon.type)) {
-            ui.notifications.warn(`${ammoItem.name} is not compatible with ${weapon.typeLabel} weapons`);
+            ui.notifications.warn(game.i18n.format('WH40K.WeaponSheet.AmmoIncompatible', { name: ammoItem.name, typeLabel: weapon.typeLabel }));
             return false;
         }
 

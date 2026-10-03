@@ -58,6 +58,16 @@ export const RENOWN_THRESHOLDS: Record<RenownRank, RenownRankRange> = {
  */
 export const RENOWN_RANK_ORDER: readonly RenownRank[] = ['initiated', 'respected', 'distinguished', 'famed', 'hero'];
 
+/** Langpack key for a rank's display label (`famed` → `WH40K.DW.Renown.Rank.Famed`). */
+export function renownRankLabelKey(rank: RenownRank): string {
+    return `WH40K.DW.Renown.Rank.${rank.charAt(0).toUpperCase()}${rank.slice(1)}`;
+}
+
+/** Whether `value` is a Renown rank id. */
+export function isRenownRank(value: string | null | undefined): value is RenownRank {
+    return value != null && (RENOWN_RANK_ORDER as readonly string[]).includes(value);
+}
+
 /** Floor on Renown — RAW does not document a negative-Renown state. */
 export const RENOWN_MIN = 0;
 

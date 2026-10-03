@@ -24,7 +24,7 @@
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
-import { canRequisition, type RenownRank } from '../rules/dw-renown.ts';
+import { canRequisition, isRenownRank, RENOWN_RANK_ORDER, type RenownRank, renownRankLabelKey } from '../rules/dw-renown.ts';
 import { type Craftsmanship, type PooledContribution, canActorRequisition, canPoolRequisition, computeItemCost } from '../rules/dw-requisition.ts';
 
 /** Minimal action-handler `this` binding. The character sheet supplies a richer shape; only `actor` is consumed. */
@@ -41,14 +41,15 @@ interface DwActorSystemSlice {
 }
 
 const CRAFTSMANSHIP_KEYS: readonly Craftsmanship[] = ['poor', 'common', 'good', 'best'];
-const RENOWN_RANKS: readonly RenownRank[] = ['initiated', 'respected', 'distinguished', 'famed', 'hero'];
+/** `<option>`s for the required-rank select, in canonical rank order, Initiated preselected. */
+function renownRankOptions(): string {
+    return RENOWN_RANK_ORDER.map(
+        (rank, i) => `<option value="${rank}"${i === 0 ? ' selected' : ''}>${game.i18n.localize(renownRankLabelKey(rank))}</option>`,
+    ).join('');
+}
 
 function isCraftsmanship(value: string | undefined): value is Craftsmanship {
     return value !== undefined && (CRAFTSMANSHIP_KEYS as readonly string[]).includes(value);
-}
-
-function isRenownRank(value: string | undefined): value is RenownRank {
-    return value !== undefined && (RENOWN_RANKS as readonly string[]).includes(value);
 }
 
 /** Read the typed slice off a DW actor. */
@@ -108,13 +109,7 @@ async function promptItemDetails(): Promise<RequisitionItemPromptResult | null> 
             </div>
             <div class="form-group">
                 <label>${game.i18n.localize('WH40K.DW.Requisition.Form.RequiredRank')}</label>
-                <select name="requiredRank">
-                    <option value="initiated" selected>Initiated</option>
-                    <option value="respected">Respected</option>
-                    <option value="distinguished">Distinguished</option>
-                    <option value="famed">Famed</option>
-                    <option value="hero">Hero</option>
-                </select>
+                <select name="requiredRank">${renownRankOptions()}</select>
             </div>
         `,
         ok: {
@@ -169,13 +164,7 @@ async function promptPoolDetails(): Promise<PoolPromptResult | null> {
             </div>
             <div class="form-group">
                 <label>${game.i18n.localize('WH40K.DW.Requisition.Form.RequiredRank')}</label>
-                <select name="requiredRank">
-                    <option value="initiated" selected>Initiated</option>
-                    <option value="respected">Respected</option>
-                    <option value="distinguished">Distinguished</option>
-                    <option value="famed">Famed</option>
-                    <option value="hero">Hero</option>
-                </select>
+                <select name="requiredRank">${renownRankOptions()}</select>
             </div>
             <div class="form-group">
                 <label>${game.i18n.localize('WH40K.DW.Requisition.Form.HolderRp')}</label>

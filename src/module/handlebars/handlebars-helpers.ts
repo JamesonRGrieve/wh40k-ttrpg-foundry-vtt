@@ -1,7 +1,8 @@
 import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
-import WH40K, { buildQualityLabel, parseQualityLevel } from '../config.ts';
+import WH40K from '../config.ts';
 import { combatActionIcon, combatTimingKey } from '../rules/combat-action-display.ts';
 import { capitalize, formatSigned } from '../utils/format.ts';
+import { buildQualityLabel, parseQualityLevel } from '../utils/quality-id.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass, thresholdLadder } from './degree-ladders.ts';
@@ -903,7 +904,7 @@ export function registerHandlebarsHelpers(): void {
 
         for (const identifier of qualityIds) {
             // Parse identifier (e.g., "blast-3" → base="blast", level=3)
-            const { baseId, level } = parseQualityLevel(identifier);
+            const { baseId, level, formula } = parseQualityLevel(identifier);
 
             // Resolve the definition from the weaponQuality compendium via the boot index (#303).
             const def = getDef(baseId);
@@ -921,7 +922,7 @@ export function registerHandlebarsHelpers(): void {
             }
 
             // Build rich quality object
-            const label = buildQualityLabel(game.i18n.localize(def.label), def.hasLevel === true, level);
+            const label = buildQualityLabel(game.i18n.localize(def.label), def.hasLevel === true, level, formula);
 
             qualities.push({
                 identifier,
@@ -1026,7 +1027,7 @@ export function registerHandlebarsHelpers(): void {
      */
     Handlebars.registerHelper('qualityLookup', (identifier: string): WeaponQuality => {
         const rtConfig = getRtConfig();
-        const { baseId, level } = parseQualityLevel(identifier);
+        const { baseId, level, formula } = parseQualityLevel(identifier);
         const def = rtConfig?.getQualityDefinition?.(baseId) ?? null;
         if (def === null) {
             return {
@@ -1037,7 +1038,7 @@ export function registerHandlebarsHelpers(): void {
             };
         }
 
-        const label = buildQualityLabel(game.i18n.localize(def.label), def.hasLevel === true, level);
+        const label = buildQualityLabel(game.i18n.localize(def.label), def.hasLevel === true, level, formula);
 
         return {
             identifier,

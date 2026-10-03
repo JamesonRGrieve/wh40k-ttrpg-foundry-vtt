@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
-import { validateDoc, variant } from '../scripts/validate-pack-schema.mjs';
+import { validateDoc, variant, WEAPON_CLASS } from '../scripts/validate-pack-schema.mjs';
+import { WEAPON_CLASS_CHOICES } from '../src/module/data/shared/weapon-class.ts';
 
 /**
  * Unit coverage for the Zod v4 compendium content-schema gate
@@ -56,5 +57,13 @@ describe('variant', () => {
         expect(schema.safeParse('a').success).toBe(true);
         expect(schema.safeParse({ dh2: 'a', dw: 'b' }).success).toBe(true); // subset of lines is fine
         expect(schema.safeParse({ notALine: 'a' }).success).toBe(false);
+    });
+});
+
+describe('weapon class list', () => {
+    // The gate once kept its own list and rejected `placed` (DW Melta Bomb) after the
+    // DataModel accepted it. Every DataModel class must pass the gate.
+    it('accepts every class the weapon DataModel accepts', () => {
+        for (const cls of WEAPON_CLASS_CHOICES) expect(WEAPON_CLASS).toContain(cls);
     });
 });

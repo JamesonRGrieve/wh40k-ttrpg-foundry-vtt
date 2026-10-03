@@ -35,3 +35,14 @@ export function choicesFrom(map: Record<string, LabelledConfigEntry>): ConfigCho
 export function choicesRecordFrom(map: Record<string, LabelledConfigEntry>): Record<string, string> {
     return Object.fromEntries(choicesFrom(map).map(({ value, label }) => [value, label]));
 }
+
+/**
+ * Localized label for one key of a CONFIG map, read from the entry's own label
+ * key (never derived from the id — hyphenated ids like `very-rare` have no
+ * capitalised twin in the langpack). Unknown keys fall back to the raw id.
+ */
+export function labelFor(map: Record<string, LabelledConfigEntry>, key: string): string {
+    const entry = map[key];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) sees `LabelledConfigEntry`, tsconfig.json (flag on) sees `| undefined` and requires this guard.
+    return entry === undefined ? key : game.i18n.localize(entry.label);
+}
