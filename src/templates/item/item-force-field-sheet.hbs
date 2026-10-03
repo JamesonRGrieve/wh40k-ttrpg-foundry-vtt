@@ -8,21 +8,21 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact force field identity with status
     ═══════════════════════════════════════════════════════════════════ --}}
-    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholder="Force Field Name" hideTypeBadge=true }}
+    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholderKey="WH40K.ItemSheet.NamePlaceholder.ForceField" hideTypeBadge=true }}
       <div class="tw-flex tw-flex-col tw-gap-2">
         <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
           <div class="tw-flex tw-flex-wrap tw-gap-1 tw-items-center tw-flex-1">
             <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs"
-                  title="Status">
+                  title="{{localize 'WH40K.ItemSheet.ForceField.StatusTooltip'}}">
               <i class="fas {{#if system.state.overloaded}}fa-exclamation-triangle{{else if system.state.activated}}fa-shield{{else}}fa-shield-slash{{/if}}"></i>
               {{system.statusLabel}}
             </span>
-            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Protection Rating">
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.Chat.ForceField.ProtectionRating'}}">
               <i class="fas fa-percent"></i>
               {{system.protectionRating}}%
             </span>
             {{#if (ne system.craftsmanship "common")}}
-            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Craftsmanship">
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.Craftsmanship.Label'}}">
               <i class="fas fa-hammer"></i>
               {{system.craftsmanshipLabel}}
             </span>
@@ -30,12 +30,12 @@
           </div>
 
           <div class="tw-shrink-0">
-            <label class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" title="Toggle Equipped">
+            <label class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" title="{{localize 'WH40K.Weapon.ToggleEquipped'}}">
               <input type="checkbox" name="system.state.equipped" {{checked system.state.equipped}} class="tw-sr-only" />
               <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 tw-text-xl tw-transition-colors {{#if system.state.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-white/50{{/if}}">
                 <i class="fas {{#if system.state.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
               </span>
-              <span class="tw-text-xs {{#if system.state.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:rgba(214,221,235,0.7)]{{/if}}">{{#if system.state.equipped}}Equipped{{else}}Stowed{{/if}}</span>
+              <span class="tw-text-xs {{#if system.state.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:rgba(214,221,235,0.7)]{{/if}}">{{#if system.state.equipped}}{{localize "WH40K.Weapon.Equipped"}}{{else}}{{localize "WH40K.Weapon.Stowed"}}{{/if}}</span>
             </label>
           </div>
         </div>
@@ -47,7 +47,7 @@
               <i class="fas fa-shield-alt"></i>
             </div>
             <div class="tw-flex tw-flex-col">
-              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Rating</span>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.ItemSheet.ForceField.Rating"}}</span>
               <span class="tw-font-semibold">{{system.protectionRating}}</span>
             </div>
           </div>
@@ -57,7 +57,7 @@
               <i class="fas fa-bolt"></i>
             </div>
             <div class="tw-flex tw-flex-col">
-              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Overload</span>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.ItemSheet.ForceField.Overload"}}</span>
               <span class="tw-font-semibold">{{system.overloadThreshold}}+</span>
             </div>
           </div>
@@ -67,8 +67,8 @@
               <i class="fas fa-weight-hanging"></i>
             </div>
             <div class="tw-flex tw-flex-col">
-              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Weight</span>
-              <span class="tw-font-semibold">{{system.weight}}kg</span>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Weight"}}</span>
+              <span class="tw-font-semibold">{{system.weight}}{{localize "WH40K.Common.Kilograms"}}</span>
             </div>
           </div>
         </div>
@@ -79,9 +79,9 @@
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
     {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
-        (object tab="stats"       label="Stats"   icon="fa-chart-bar" active=true)
-        (object tab="description" label="Info"    icon="fa-scroll")
-        (object tab="effects"     label="Effects" icon="fa-magic"))}}
+        (object tab="stats"       label=(localize "WH40K.Tabs.Stats")   icon="fa-chart-bar" active=true)
+        (object tab="description" label=(localize "WH40K.Tabs.Info")    icon="fa-scroll")
+        (object tab="effects"     label=(localize "WH40K.Tabs.Effects") icon="fa-magic"))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
@@ -95,7 +95,7 @@
       <div class="tw-mb-3">
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
           <i class="fas fa-toggle-on tw-opacity-70"></i>
-          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Status Controls</h3>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.ForceField.StatusControls"}}</h3>
         </div>
         <div class="tw-p-3">
           <div class="tw-flex tw-flex-col tw-gap-2">
@@ -105,8 +105,8 @@
                 <i class="fas fa-shield"></i>
               </span>
               <span class="tw-flex tw-flex-col">
-                <strong class="tw-text-sm">Activated</strong>
-                <small class="tw-text-xs tw-opacity-70">Force field is currently active and providing protection</small>
+                <strong class="tw-text-sm">{{localize "WH40K.Prompt.Unified.ForceFieldActivated"}}</strong>
+                <small class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.ForceField.ActivatedHint"}}</small>
               </span>
             </label>
 
@@ -116,8 +116,8 @@
                 <i class="fas fa-exclamation-triangle"></i>
               </span>
               <span class="tw-flex tw-flex-col">
-                <strong class="tw-text-sm">Overloaded</strong>
-                <small class="tw-text-xs tw-opacity-70">Force field has overloaded and is temporarily disabled</small>
+                <strong class="tw-text-sm">{{localize "WH40K.Prompt.Unified.ForceFieldOverloaded"}}</strong>
+                <small class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.ForceField.OverloadedHint"}}</small>
               </span>
             </label>
           </div>
@@ -128,14 +128,14 @@
       <div class="tw-mb-3">
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
           <i class="fas fa-shield-halved tw-opacity-70"></i>
-          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Protection Settings</h3>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.ForceField.ProtectionSettings"}}</h3>
         </div>
         <div class="tw-p-3">
           <div class="tw-flex tw-gap-3 tw-mb-3">
             <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
               <label class="tw-text-sm tw-font-medium">
-                Protection Rating
-                <small class="tw-font-normal tw-opacity-70 tw-block">Roll equal to or under this to be protected</small>
+                {{localize "WH40K.Chat.ForceField.ProtectionRating"}}
+                <small class="tw-font-normal tw-opacity-70 tw-block">{{localize "WH40K.ItemSheet.ForceField.ProtectionRatingHint"}}</small>
               </label>
               <div class="tw-flex tw-items-center tw-gap-1">
                 <input type="number" name="system.protectionRating" value="{{source.protectionRating}}"
@@ -145,8 +145,8 @@
             </div>
             <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
               <label class="tw-text-sm tw-font-medium">
-                Overload Threshold
-                <small class="tw-font-normal tw-opacity-70 tw-block">Roll this or higher on hit to overload</small>
+                {{localize "WH40K.ItemSheet.ForceField.OverloadThreshold"}}
+                <small class="tw-font-normal tw-opacity-70 tw-block">{{localize "WH40K.ItemSheet.ForceField.OverloadThresholdHint"}}</small>
               </label>
               <div class="tw-flex tw-items-center tw-gap-1">
                 <input type="number" name="system.overloadThreshold" value="{{source.overloadThreshold}}"
@@ -157,11 +157,11 @@
           </div>
           <div class="tw-flex tw-flex-col tw-gap-1">
             <label class="tw-text-sm tw-font-medium">
-              Overload Duration
-              <small class="tw-font-normal tw-opacity-70"> — How long does the field stay disabled?</small>
+              {{localize "WH40K.ItemSheet.ForceField.OverloadDuration"}}
+              <small class="tw-font-normal tw-opacity-70"> {{localize "WH40K.ItemSheet.ForceField.OverloadDurationHint"}}</small>
             </label>
             <input type="text" name="system.overloadDuration" value="{{source.overloadDuration}}"
-                   placeholder="1d5 rounds" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                   placeholder="{{localize 'WH40K.ItemSheet.ForceField.OverloadDurationPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
           </div>
         </div>
       </div>
@@ -170,18 +170,18 @@
       <div class="tw-mb-3">
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
           <i class="fas fa-cog tw-opacity-70"></i>
-          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Physical Properties</h3>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Ammunition.PhysicalProperties"}}</h3>
         </div>
         <div class="tw-p-3">
           <div class="tw-flex tw-gap-3 tw-mb-3">
             <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
-              <label class="tw-text-sm tw-font-medium">Weight (kg)</label>
+              <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Ammunition.WeightKg"}}</label>
               <input type="number" name="system.weight" value="{{source.weight}}"
                      data-dtype="Number" min="0" step="0.1" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
             </div>
             {{#unless hideThroneGelt}}
             <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
-              <label class="tw-text-sm tw-font-medium">Cost (Thrones)</label>
+              <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Ammunition.CostThrones"}}</label>
               <input type="number" name="system.cost.dh2.homebrew.throneGelt" value="{{source.cost.dh2.homebrew.throneGelt}}"
                      data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
             </div>
@@ -189,28 +189,28 @@
           </div>
           <div class="tw-flex tw-gap-3">
             <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
-              <label class="tw-text-sm tw-font-medium">Availability</label>
+              <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Availability.Label"}}</label>
               <select name="system.availability" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-                <option value="ubiquitous" {{#if (eq system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
-                <option value="abundant" {{#if (eq system.availability "abundant")}}selected{{/if}}>Abundant</option>
-                <option value="plentiful" {{#if (eq system.availability "plentiful")}}selected{{/if}}>Plentiful</option>
-                <option value="common" {{#if (eq system.availability "common")}}selected{{/if}}>Common</option>
-                <option value="average" {{#if (eq system.availability "average")}}selected{{/if}}>Average</option>
-                <option value="scarce" {{#if (eq system.availability "scarce")}}selected{{/if}}>Scarce</option>
-                <option value="rare" {{#if (eq system.availability "rare")}}selected{{/if}}>Rare</option>
-                <option value="very-rare" {{#if (eq system.availability "very-rare")}}selected{{/if}}>Very Rare</option>
-                <option value="extremely-rare" {{#if (eq system.availability "extremely-rare")}}selected{{/if}}>Extremely Rare</option>
-                <option value="near-unique" {{#if (eq system.availability "near-unique")}}selected{{/if}}>Near Unique</option>
-                <option value="unique" {{#if (eq system.availability "unique")}}selected{{/if}}>Unique</option>
+                <option value="ubiquitous" {{#if (eq system.availability "ubiquitous")}}selected{{/if}}>{{localize "WH40K.Availability.Ubiquitous"}}</option>
+                <option value="abundant" {{#if (eq system.availability "abundant")}}selected{{/if}}>{{localize "WH40K.Availability.Abundant"}}</option>
+                <option value="plentiful" {{#if (eq system.availability "plentiful")}}selected{{/if}}>{{localize "WH40K.Availability.Plentiful"}}</option>
+                <option value="common" {{#if (eq system.availability "common")}}selected{{/if}}>{{localize "WH40K.Availability.Common"}}</option>
+                <option value="average" {{#if (eq system.availability "average")}}selected{{/if}}>{{localize "WH40K.Availability.Average"}}</option>
+                <option value="scarce" {{#if (eq system.availability "scarce")}}selected{{/if}}>{{localize "WH40K.Availability.Scarce"}}</option>
+                <option value="rare" {{#if (eq system.availability "rare")}}selected{{/if}}>{{localize "WH40K.Availability.Rare"}}</option>
+                <option value="very-rare" {{#if (eq system.availability "very-rare")}}selected{{/if}}>{{localize "WH40K.Availability.VeryRare"}}</option>
+                <option value="extremely-rare" {{#if (eq system.availability "extremely-rare")}}selected{{/if}}>{{localize "WH40K.Availability.ExtremelyRare"}}</option>
+                <option value="near-unique" {{#if (eq system.availability "near-unique")}}selected{{/if}}>{{localize "WH40K.Availability.NearUnique"}}</option>
+                <option value="unique" {{#if (eq system.availability "unique")}}selected{{/if}}>{{localize "WH40K.Availability.Unique"}}</option>
               </select>
             </div>
             <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
-              <label class="tw-text-sm tw-font-medium">Craftsmanship</label>
+              <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Craftsmanship.Label"}}</label>
               <select name="system.craftsmanship" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-                <option value="poor" {{#if (eq system.craftsmanship "poor")}}selected{{/if}}>Poor</option>
-                <option value="common" {{#if (eq system.craftsmanship "common")}}selected{{/if}}>Common</option>
-                <option value="good" {{#if (eq system.craftsmanship "good")}}selected{{/if}}>Good</option>
-                <option value="best" {{#if (eq system.craftsmanship "best")}}selected{{/if}}>Best</option>
+                <option value="poor" {{#if (eq system.craftsmanship "poor")}}selected{{/if}}>{{localize "WH40K.Craftsmanship.Poor"}}</option>
+                <option value="common" {{#if (eq system.craftsmanship "common")}}selected{{/if}}>{{localize "WH40K.Craftsmanship.Common"}}</option>
+                <option value="good" {{#if (eq system.craftsmanship "good")}}selected{{/if}}>{{localize "WH40K.Craftsmanship.Good"}}</option>
+                <option value="best" {{#if (eq system.craftsmanship "best")}}selected{{/if}}>{{localize "WH40K.Craftsmanship.Best"}}</option>
               </select>
             </div>
           </div>
@@ -236,7 +236,7 @@
       <div class="tw-mb-3">
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
           <i class="fas fa-bolt tw-opacity-70"></i>
-          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Effect</h3>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Tabs.Effect"}}</h3>
         </div>
         <div class="tw-p-2">
           {{#if inEditMode}}
@@ -251,7 +251,7 @@
       <div class="tw-mb-3">
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
           <i class="fas fa-book tw-opacity-70"></i>
-          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Description</h3>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Tabs.Description"}}</h3>
         </div>
         <div class="tw-p-2">
           {{#if inEditMode}}
@@ -266,10 +266,10 @@
       <div class="tw-mb-3">
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
           <i class="fas fa-sticky-note tw-opacity-70"></i>
-          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Notes</h3>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Tabs.Notes"}}</h3>
         </div>
         <div class="tw-p-3">
-          <textarea name="system.notes" rows="4" placeholder="GM notes, special rules, etc." class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{system.notes}}</textarea>
+          <textarea name="system.notes" rows="4" placeholder="{{localize 'WH40K.ItemSheet.ForceField.NotesPlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{system.notes}}</textarea>
         </div>
       </div>
 
@@ -277,11 +277,11 @@
       <div class="tw-mb-3">
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
           <i class="fas fa-book-open tw-opacity-70"></i>
-          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Source</h3>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Common.Source"}}</h3>
         </div>
         <div class="tw-p-3">
           <input type="text" name="system.source" value="{{source.source}}"
-                 placeholder="Rogue Trader Core Rulebook, pg. 123" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                 placeholder="{{localize 'WH40K.Ammunition.SourcePlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
         </div>
       </div>
 

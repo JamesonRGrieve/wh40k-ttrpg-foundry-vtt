@@ -27,22 +27,22 @@
     {{!-- Stats --}}
     <div class="tw-grid tw-grid-cols-2 tw-gap-1">
       <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
-        <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">Coverage</span>
+        <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">{{localize "WH40K.Armour.Coverage"}}</span>
         <span class="tw-font-semibold tw-text-[var(--wh40k-text-dark)]">{{item.system.coverageLabel}}</span>
       </div>
       <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
-        <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">Max AP</span>
+        <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">{{localize "WH40K.Chat.Armour.MaxAP"}}</span>
         <span class="tw-font-semibold tw-text-[var(--wh40k-text-dark)]">{{item.system.maxAP}}</span>
       </div>
       {{#if item.system.maxAgility}}
       <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
-        <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">Max Ag</span>
+        <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">{{localize "WH40K.Chat.Armour.MaxAg"}}</span>
         <span class="tw-font-semibold tw-text-[var(--wh40k-text-dark)]">{{item.system.maxAgility}}</span>
       </div>
       {{/if}}
       {{#if item.system.weight}}
       <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
-        <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">Weight</span>
+        <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">{{localize "WH40K.Weight"}}</span>
         <span class="tw-font-semibold tw-text-[var(--wh40k-text-dark)]">{{item.system.weightLabel}}</span>
       </div>
       {{/if}}

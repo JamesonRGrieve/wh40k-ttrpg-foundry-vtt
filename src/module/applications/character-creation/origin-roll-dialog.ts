@@ -396,20 +396,18 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const is1d5 = formula.includes('1d5');
         const is1d10 = formula.includes('1d10');
 
-        const instructionText = is1d5
-            ? 'Roll 1d10 and enter the result (it will be divided by 2, rounded up for 1d5):'
-            : is1d10
-            ? 'Roll 1d10 and enter the result:'
-            : 'Enter the dice result:';
+        const instructionText = game.i18n.localize(
+            is1d5 ? 'WH40K.OriginPath.ManualInstructionD5' : is1d10 ? 'WH40K.OriginPath.ManualInstructionD10' : 'WH40K.OriginPath.ManualInstructionDefault',
+        );
 
         // Show expanded formula with TB value
         const expandedFormula = formula.replace(/(\d+)xTB/gi, (_match: string, multiplier: string) => {
             return `${multiplier}×${tb}`;
         });
 
-        let hintText = `<strong>Formula:</strong> <code>${formula}</code> = <code>${expandedFormula}</code>`;
+        let hintText = game.i18n.format('WH40K.OriginPath.ManualFormulaHint', { formula, expanded: expandedFormula });
         if (is1d5) {
-            hintText += `<br><strong>Note:</strong> For 1d5, roll a d10 and divide by 2, rounded up.`;
+            hintText += game.i18n.localize('WH40K.OriginPath.ManualD5Note');
         }
 
         // Prompt for dice roll only
@@ -526,7 +524,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const optionsText = conditions
             .map((match) => {
                 const [, min, max, outcome] = match;
-                return `${min}-${max} → ${outcome} Fate Points`;
+                return game.i18n.format('WH40K.OriginPath.ManualFateOutcome', { min: String(min), max: String(max), outcome: String(outcome) });
             })
             .join('<br>');
 
@@ -536,9 +534,9 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             content: `
                 <form>
                     <div class="form-group">
-                        <label>Roll 1d10 and enter the result:</label>
+                        <label>${game.i18n.localize('WH40K.OriginPath.ManualInstructionD10')}</label>
                         <input type="number" name="value" min="1" max="10" value="" autofocus />
-                        <p class="hint"><strong>Results:</strong><br>${optionsText}</p>
+                        <p class="hint">${game.i18n.format('WH40K.OriginPath.ManualFateResults', { options: optionsText })}</p>
                     </div>
                 </form>
             `,
@@ -804,9 +802,9 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             content: `
                 <form>
                     <div class="form-group">
-                        <label>Roll <code>${formula}</code> and enter the dice total:</label>
+                        <label>${game.i18n.format('WH40K.OriginPath.ManualThronesInstruction', { formula })}</label>
                         <input type="number" name="value" min="0" value="" autofocus />
-                        <p class="hint">Enter the sum of your dice rolls only — static bonuses in the formula will be added automatically.</p>
+                        <p class="hint">${game.i18n.localize('WH40K.OriginPath.ManualThronesHint')}</p>
                     </div>
                 </form>
             `,

@@ -14,8 +14,8 @@ const StorageLocationSheet = defineSimpleItemSheet({
     width: 550,
     height: 500,
     tabs: [
-        { tab: 'contents', group: 'primary', label: 'Contents' },
-        { tab: 'description', group: 'primary', label: 'Description' },
+        { tab: 'contents', group: 'primary', label: 'WH40K.Tabs.Contents' },
+        { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Description' },
     ],
     defaultTab: 'contents',
 });

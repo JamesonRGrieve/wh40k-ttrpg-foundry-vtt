@@ -13,13 +13,13 @@
     <div class="tw-flex tw-gap-3 tw-flex-wrap tw-mb-2">
         {{#if attackModifier}}
         <div class="tw-flex tw-flex-col tw-gap-0.5 tw-px-2.5 tw-py-1.5 tw-bg-[var(--wh40k-accent-overlay)] tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color-light)] {{#if (gt attackModifier 0)}}tw-border-[var(--wh40k-success-primary)]{{else}}tw-border-[var(--wh40k-danger-primary)]{{/if}}">
-            <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-text-muted)]">Attack</span>
+            <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Combat.Attack"}}</span>
             <span class="tw-text-sm tw-font-bold tw-text-[var(--wh40k-bronze)] tw-font-alt">{{attackModifier}}</span>
         </div>
         {{/if}}
         {{#if subtypes}}
         <div class="tw-flex tw-flex-col tw-gap-0.5 tw-px-2.5 tw-py-1.5 tw-bg-[var(--wh40k-accent-overlay)] tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color-light)]">
-            <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-text-muted)]">Type</span>
+            <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Common.Type"}}</span>
             <span class="tw-text-sm tw-font-bold tw-text-[var(--wh40k-bronze)] tw-font-alt">{{subtypes}}</span>
         </div>
         {{/if}}
@@ -43,7 +43,7 @@
     <div class="tw-flex tw-gap-1 tw-p-2.5 tw-mt-2 -tw-mx-4 -tw-mb-3 tw-justify-center tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color-light)]">
         <button type="button" class="tw-flex tw-flex-1 tw-items-center tw-justify-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-bronze)] tw-to-[var(--wh40k-bronze-dark)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-md tw-text-white tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer tw-transition-all hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.3)]" data-uuid="{{itemUuid}}" data-action="openItemSheet">
             <i class="fas fa-scroll-old tw-text-[12px]"></i>
-            View Details
+            {{localize "WH40K.Common.ViewDetails"}}
         </button>
     </div>
     {{/if}}

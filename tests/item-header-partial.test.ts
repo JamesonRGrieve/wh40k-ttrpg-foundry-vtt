@@ -81,12 +81,12 @@ describe('item-header partial — name input', () => {
     });
 
     it('falls back to the default i18n key when no overrides are set', () => {
-        // The story-mode localize helper returns the key unchanged when no
-        // translation table is registered, which is the contract we want to
-        // assert: the default key is `WH40K.Item.NamePlaceholder`.
+        // The story-mode localize helper resolves against the real langpack, where
+        // the default key `WH40K.Item.NamePlaceholder` is now defined (it used to be
+        // missing, so the raw key leaked into the placeholder).
         const html = directTemplate(baseContext());
         const input = dom(html).querySelector('input[name="name"]');
-        expect(input?.getAttribute('placeholder')).toBe('WH40K.Item.NamePlaceholder');
+        expect(input?.getAttribute('placeholder')).toBe('Item Name');
     });
 
     it('uses namePlaceholderKey when no raw namePlaceholder is given', () => {

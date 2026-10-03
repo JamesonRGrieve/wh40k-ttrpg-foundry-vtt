@@ -1132,14 +1132,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- currentRangeBracket may be undefined due to noUncheckedIndexedAccess
         const selectedRangeSummary = currentRangeBracket
             ? { label: currentRangeBracket.label, modifier: currentRangeBracket.modifier, modifierLabel: currentRangeBracket.modifierLabel }
-            : { label: 'Standard', modifier: 0, modifierLabel: '+0' };
+            : { label: game.i18n.localize('WH40K.Prompt.Unified.StandardRange'), modifier: 0, modifierLabel: '+0' };
 
         // Selected situational summary for collapsed header
         const activeSituationals = combatSituationals.filter((s) => s.isActive);
         const sitTotal = activeSituationals.reduce((sum, s) => sum + s.modifier, 0);
         const selectedSituationalSummary = {
             hasActive: activeSituationals.length > 0,
-            label: activeSituationals.length > 0 ? activeSituationals.map((s) => s.label).join(', ') : 'None',
+            label: activeSituationals.length > 0 ? activeSituationals.map((s) => s.label).join(', ') : game.i18n.localize('WH40K.Common.None'),
             total: sitTotal,
             totalLabel: sitTotal >= 0 ? `+${sitTotal}` : `${sitTotal}`,
         };
@@ -1148,7 +1148,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const currentSizeOption = sizeOptions.find((s) => s.isSelected) ?? sizeOptions.find((s) => s.key === '4');
         const selectedSizeSummary = currentSizeOption
             ? { label: currentSizeOption.label, modifier: currentSizeOption.modifier, modifierLabel: currentSizeOption.modifierLabel }
-            : { label: 'Average (4)', modifier: 0, modifierLabel: '+0' };
+            : { label: game.i18n.localize('WH40K.Prompt.Unified.SizeAverage'), modifier: 0, modifierLabel: '+0' };
 
         return {
             weapons: Array.isArray(rd['weapons']) ? rd['weapons'] : [],

@@ -1,14 +1,14 @@
 {{!-- Rogue Trader Bleeding Card --}}
 {{#> systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs actorName=actor.name title="Bleeding!" subtitle="Critical Condition" gameSystem=gameSystem}}
     <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
-        <span class="tw-text-[color:var(--wh40k-text-muted)] tw-font-medium">Fatigue</span>
+        <span class="tw-text-[color:var(--wh40k-text-muted)] tw-font-medium">{{localize "WH40K.Combat.Fatigue"}}</span>
         <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-dark)]">{{system.fatigue.value}} / {{system.fatigue.max}}</span>
     </div>
 
     <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-gold tw-rounded-r-[4px] tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto">
-        <p class="tw-m-0 tw-mb-2 last:tw-mb-0">Once per round as a Free Action, the character (or another who can reach them) can attempt a
-            <strong>Difficult (–10) Medicae</strong>
-            test to remove this condition.</p>
+        <p class="tw-m-0 tw-mb-2 last:tw-mb-0">{{localize "WH40K.Chat.Bleeding.Instruction"}}
+            <strong>{{localize "WH40K.Chat.Bleeding.Test"}}</strong>
+            {{localize "WH40K.Chat.Bleeding.Removal"}}</p>
     </div>
 
     {{> systems/wh40k-rpg/templates/chat/partial/wounds-callout.hbs

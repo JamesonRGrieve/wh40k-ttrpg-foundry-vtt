@@ -83,10 +83,10 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
         // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 super() constructor accepts options as Record<string,unknown>; typed DefaultOptions requires cast
         super(options as Record<string, unknown>);
         this.#config = {
-            title: config.title !== undefined && config.title !== '' ? config.title : 'Confirm',
-            content: config.content !== undefined && config.content !== '' ? config.content : 'Are you sure?',
-            confirmLabel: config.confirmLabel !== undefined && config.confirmLabel !== '' ? config.confirmLabel : 'Confirm',
-            cancelLabel: config.cancelLabel !== undefined && config.cancelLabel !== '' ? config.cancelLabel : 'Cancel',
+            title: config.title !== undefined && config.title !== '' ? config.title : game.i18n.localize('WH40K.Confirm'),
+            content: config.content !== undefined && config.content !== '' ? config.content : game.i18n.localize('WH40K.Dialog.ConfirmDefaultContent'),
+            confirmLabel: config.confirmLabel !== undefined && config.confirmLabel !== '' ? config.confirmLabel : game.i18n.localize('WH40K.Confirm'),
+            cancelLabel: config.cancelLabel !== undefined && config.cancelLabel !== '' ? config.cancelLabel : game.i18n.localize('WH40K.Cancel'),
             rejectOnClose: config.rejectOnClose ?? false,
         };
     }

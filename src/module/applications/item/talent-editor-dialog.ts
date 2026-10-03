@@ -474,12 +474,12 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _getCombatModifierOptions(): { value: string; label: string }[] {
         return [
-            { value: 'attack', label: 'Attack Bonus' },
-            { value: 'damage', label: 'Damage Bonus' },
-            { value: 'penetration', label: 'Penetration' },
-            { value: 'defense', label: 'Defense Bonus' },
-            { value: 'initiative', label: 'Initiative' },
-            { value: 'speed', label: 'Movement Speed' },
+            { value: 'attack', label: game.i18n.localize('WH40K.Combat.AttackBonus') },
+            { value: 'damage', label: game.i18n.localize('WH40K.Combat.DamageBonus') },
+            { value: 'penetration', label: game.i18n.localize('WH40K.Combat.Penetration') },
+            { value: 'defense', label: game.i18n.localize('WH40K.Dialog.TalentEditor.DefenseBonus') },
+            { value: 'initiative', label: game.i18n.localize('WH40K.Combat.Initiative') },
+            { value: 'speed', label: game.i18n.localize('WH40K.Combat.MovementSpeed') },
         ];
     }
 
@@ -490,10 +490,10 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _getResourceOptions(): { value: string; label: string }[] {
         return [
-            { value: 'wounds', label: 'Wounds' },
-            { value: 'fate', label: 'Fate Points' },
-            { value: 'insanity', label: 'Insanity Threshold' },
-            { value: 'corruption', label: 'Corruption Threshold' },
+            { value: 'wounds', label: game.i18n.localize('WH40K.Resource.Wounds') },
+            { value: 'fate', label: game.i18n.localize('WH40K.Resource.FatePoints') },
+            { value: 'insanity', label: game.i18n.localize('WH40K.Resource.InsanityThreshold') },
+            { value: 'corruption', label: game.i18n.localize('WH40K.Resource.CorruptionThreshold') },
         ];
     }
 
@@ -504,9 +504,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _getTrainingLevelOptions(): { value: string; label: string }[] {
         return [
-            { value: 'trained', label: 'Trained' },
-            { value: 'plus10', label: '+10' },
-            { value: 'plus20', label: '+20' },
+            { value: 'trained', label: game.i18n.localize('WH40K.Skills.Trained') },
+            { value: 'plus10', label: game.i18n.localize('WH40K.Skills.Plus10') },
+            { value: 'plus20', label: game.i18n.localize('WH40K.Skills.Plus20') },
         ];
     }
 
@@ -778,7 +778,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
         // Update the item
         await this.item.update(updateData);
-        ui.notifications.info(`Updated ${this.item.name}`);
+        ui.notifications.info(game.i18n.format('WH40K.Notify.Item.Updated', { item: this.item.name }));
     }
 
     /**
@@ -830,35 +830,42 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
         const trainingOptions = this._getTrainingLevelOptions()
             .map((o) => `<option value="${o.value}">${o.label}</option>`)
             .join('');
+        const label = (key: string): string => game.i18n.localize(key);
 
         // Build row based on category and type
         const rowBuilders: Record<string, string> = {
             'prerequisites.characteristics': `
                     <div class="ted-list-row">
                         <select name="prerequisites.characteristics.${index}.key">
-                            <option value="">-- Select --</option>
+                            <option value="">${label('WH40K.Common.Select')}</option>
                             ${characteristicOptions}
                         </select>
-                        <input type="number" name="prerequisites.characteristics.${index}.value" value="0" min="0" placeholder="Min value" />
+                        <input type="number" name="prerequisites.characteristics.${index}.value" value="0" min="0" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.MinValuePlaceholder',
+            )}" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`,
 
             'prerequisites.skills': `
                     <div class="ted-list-row">
-                        <input type="text" name="prerequisites.skills.${index}.name" value="" placeholder="Skill name (e.g., Dodge, Parry)" />
+                        <input type="text" name="prerequisites.skills.${index}.name" value="" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.SkillNamePlaceholder',
+            )}" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`,
 
             'prerequisites.talents': `
                     <div class="ted-list-row">
-                        <input type="text" name="prerequisites.talents.${index}.name" value="" placeholder="Talent name" />
+                        <input type="text" name="prerequisites.talents.${index}.name" value="" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.TalentNamePlaceholder',
+            )}" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`,
 
             'modifiers.characteristics': `
                     <div class="ted-list-row">
                         <select name="modifiers.characteristics.${index}.key">
-                            <option value="">-- Select --</option>
+                            <option value="">${label('WH40K.Common.Select')}</option>
                             ${characteristicOptions}
                         </select>
                         <input type="number" name="modifiers.characteristics.${index}.value" value="0" placeholder="+/-" />
@@ -868,7 +875,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             'modifiers.skills': `
                     <div class="ted-list-row">
                         <select name="modifiers.skills.${index}.key">
-                            <option value="">-- Select --</option>
+                            <option value="">${label('WH40K.Common.Select')}</option>
                             ${skillOptions}
                         </select>
                         <input type="number" name="modifiers.skills.${index}.value" value="0" placeholder="+/-" />
@@ -878,7 +885,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             'modifiers.combat': `
                     <div class="ted-list-row">
                         <select name="modifiers.combat.${index}.key">
-                            <option value="">-- Select --</option>
+                            <option value="">${label('WH40K.Common.Select')}</option>
                             ${combatOptions}
                         </select>
                         <input type="number" name="modifiers.combat.${index}.value" value="0" placeholder="+/-" />
@@ -888,7 +895,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             'modifiers.resources': `
                     <div class="ted-list-row">
                         <select name="modifiers.resources.${index}.key">
-                            <option value="">-- Select --</option>
+                            <option value="">${label('WH40K.Common.Select')}</option>
                             ${resourceOptions}
                         </select>
                         <input type="number" name="modifiers.resources.${index}.value" value="0" placeholder="+/-" />
@@ -897,13 +904,15 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
             'modifiers.other': `
                     <div class="ted-list-row ted-list-row--wide">
-                        <input type="text" name="modifiers.other.${index}.key" value="" placeholder="Key (e.g., movement)" />
-                        <input type="text" name="modifiers.other.${index}.label" value="" placeholder="Label" />
+                        <input type="text" name="modifiers.other.${index}.key" value="" placeholder="${label('WH40K.Dialog.TalentEditor.KeyPlaceholder')}" />
+                        <input type="text" name="modifiers.other.${index}.label" value="" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.LabelPlaceholder',
+            )}" />
                         <input type="number" name="modifiers.other.${index}.value" value="0" placeholder="+/-" />
                         <select name="modifiers.other.${index}.mode">
-                            <option value="add">Add</option>
-                            <option value="multiply">Multiply</option>
-                            <option value="override">Override</option>
+                            <option value="add">${label('WH40K.Dialog.TalentEditor.ModeAdd')}</option>
+                            <option value="multiply">${label('WH40K.Dialog.TalentEditor.ModeMultiply')}</option>
+                            <option value="override">${label('WH40K.Dialog.TalentEditor.ModeOverride')}</option>
                         </select>
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`,
@@ -912,45 +921,55 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                     <div class="ted-list-row ted-list-row--stacked">
                         <div class="ted-row-inline">
                             <select name="situational.characteristics.${index}.key">
-                                <option value="">-- Select --</option>
+                                <option value="">${label('WH40K.Common.Select')}</option>
                                 ${characteristicOptions}
                             </select>
                             <input type="number" name="situational.characteristics.${index}.value" value="0" placeholder="+/-" />
                             <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                         </div>
-                        <textarea name="situational.characteristics.${index}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When fighting in melee combat')"></textarea>
+                        <textarea name="situational.characteristics.${index}.condition" rows="2" class="ted-textarea-condition" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.CharacteristicConditionPlaceholder',
+            )}"></textarea>
                     </div>`,
 
             'situational.skills': `
                     <div class="ted-list-row ted-list-row--stacked">
                         <div class="ted-row-inline">
                             <select name="situational.skills.${index}.key">
-                                <option value="">-- Select --</option>
+                                <option value="">${label('WH40K.Common.Select')}</option>
                                 ${skillOptions}
                             </select>
                             <input type="number" name="situational.skills.${index}.value" value="0" placeholder="+/-" />
                             <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                         </div>
-                        <textarea name="situational.skills.${index}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When performing acrobatic maneuvers')"></textarea>
+                        <textarea name="situational.skills.${index}.condition" rows="2" class="ted-textarea-condition" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.SkillConditionPlaceholder',
+            )}"></textarea>
                     </div>`,
 
             'situational.combat': `
                     <div class="ted-list-row ted-list-row--stacked">
                         <div class="ted-row-inline">
                             <select name="situational.combat.${index}.key">
-                                <option value="">-- Select --</option>
+                                <option value="">${label('WH40K.Common.Select')}</option>
                                 ${combatOptions}
                             </select>
                             <input type="number" name="situational.combat.${index}.value" value="0" placeholder="+/-" />
                             <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                         </div>
-                        <textarea name="situational.combat.${index}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When attacking from surprise')"></textarea>
+                        <textarea name="situational.combat.${index}.condition" rows="2" class="ted-textarea-condition" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.CombatConditionPlaceholder',
+            )}"></textarea>
                     </div>`,
 
             'grants.skills': `
                     <div class="ted-list-row ted-list-row--wide">
-                        <input type="text" name="grants.skills.${index}.name" value="" placeholder="Skill name" />
-                        <input type="text" name="grants.skills.${index}.specialization" value="" placeholder="Specialization (optional)" />
+                        <input type="text" name="grants.skills.${index}.name" value="" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.GrantedSkillNamePlaceholder',
+            )}" />
+                        <input type="text" name="grants.skills.${index}.specialization" value="" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.SpecialisationPlaceholder',
+            )}" />
                         <select name="grants.skills.${index}.level">
                             ${trainingOptions}
                         </select>
@@ -959,24 +978,34 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
             'grants.talents': `
                     <div class="ted-list-row ted-list-row--wide">
-                        <input type="text" name="grants.talents.${index}.name" value="" placeholder="Talent name" />
-                        <input type="text" name="grants.talents.${index}.specialization" value="" placeholder="Specialization (optional)" />
-                        <input type="text" name="grants.talents.${index}.uuid" value="" placeholder="UUID (optional)" />
+                        <input type="text" name="grants.talents.${index}.name" value="" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.TalentNamePlaceholder',
+            )}" />
+                        <input type="text" name="grants.talents.${index}.specialization" value="" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.SpecialisationPlaceholder',
+            )}" />
+                        <input type="text" name="grants.talents.${index}.uuid" value="" placeholder="${label('WH40K.Dialog.TalentEditor.UuidPlaceholder')}" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`,
 
             'grants.traits': `
                     <div class="ted-list-row ted-list-row--wide">
-                        <input type="text" name="grants.traits.${index}.name" value="" placeholder="Trait name" />
-                        <input type="number" name="grants.traits.${index}.level" value="" placeholder="Level (optional)" />
-                        <input type="text" name="grants.traits.${index}.uuid" value="" placeholder="UUID (optional)" />
+                        <input type="text" name="grants.traits.${index}.name" value="" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.TraitNamePlaceholder',
+            )}" />
+                        <input type="number" name="grants.traits.${index}.level" value="" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.LevelPlaceholder',
+            )}" />
+                        <input type="text" name="grants.traits.${index}.uuid" value="" placeholder="${label('WH40K.Dialog.TalentEditor.UuidPlaceholder')}" />
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`,
 
             'grants.specialAbilities': `
                     <div class="ted-list-row ted-list-row--column">
-                        <input type="text" name="grants.specialAbilities.${index}.name" value="" placeholder="Ability name" />
-                        <textarea name="grants.specialAbilities.${index}.description" rows="2" placeholder="Description"></textarea>
+                        <input type="text" name="grants.specialAbilities.${index}.name" value="" placeholder="${label(
+                'WH40K.Dialog.TalentEditor.AbilityNamePlaceholder',
+            )}" />
+                        <textarea name="grants.specialAbilities.${index}.description" rows="2" placeholder="${label('WH40K.Description')}"></textarea>
                         <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
                     </div>`,
         };

@@ -343,7 +343,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                         'tw-bg-[var(--wh40k-color-accent,var(--wh40k-color-gold))] tw-text-white hover:tw-bg-[#9e801f] disabled:tw-opacity-50 disabled:tw-cursor-not-allowed',
                     disabled: !this.#parsedData,
                 },
-                { type: 'button', action: 'cancel', icon: 'fa-solid fa-times', label: 'Cancel' },
+                { type: 'button', action: 'cancel', icon: 'fa-solid fa-times', label: 'WH40K.Cancel' },
             ],
         };
     }
@@ -1218,8 +1218,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      */
     static async _onSubmit(this: StatBlockParser, _event: Event | SubmitEvent, _form: HTMLFormElement, _formData: FormDataExtended): Promise<void> {
         if (!this.#parsedData) {
-            // eslint-disable-next-line no-restricted-syntax -- legacy notification string, pending langpack migration
-            ui.notifications.error('No valid data to import. Parse input first.');
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.Import.NoValidData'));
             return;
         }
 

@@ -295,7 +295,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
         // Show roll to chat
         await roll.toMessage({
             flavor: game.i18n.format('WH40K.ForceField.ProtectionRoll', {
-                name: (this.parent as { name?: string } | undefined)?.name ?? 'Force Field',
+                name: (this.parent as { name?: string } | undefined)?.name ?? game.i18n.localize('WH40K.Roll.ForceFieldTitle'),
                 isProtected: isProtected ? game.i18n.localize('WH40K.ForceField.Protected') : game.i18n.localize('WH40K.ForceField.NotProtected'),
                 overloaded: overloaded ? ` (${game.i18n.localize('WH40K.ForceField.Overloaded')}!)` : '',
             }),

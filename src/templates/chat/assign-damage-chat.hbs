@@ -4,22 +4,22 @@
         {{! Header }}
         <div class="tw-relative tw-px-4 tw-py-3 tw-bg-gradient-to-r tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color)]">
             <div class="tw-text-xs tw-text-[var(--wh40k-card-muted)] tw-uppercase tw-tracking-widest tw-mb-1">{{this.actor.name}}</div>
-            {{#if hasDamage}}<h2 class="tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{this.hit.location}} Hit</h2>{{else}}<h2 class="tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">Damage Applied</h2>{{/if}}
+            {{#if hasDamage}}<h2 class="tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{localize "WH40K.Chat.AssignDamage.Hit" location=this.hit.location}}</h2>{{else}}<h2 class="tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{localize "WH40K.Chat.AssignDamage.Applied"}}</h2>{{/if}}
         </div>
 
         {{! Body }}
         <div class="tw-px-4 tw-py-3">
             {{! Current Status }}
             <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
-                <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Wounds</span>
+                <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{localize "WH40K.Wounds"}}</span>
                 <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{this.actor.system.wounds.value}} / {{this.actor.system.wounds.max}}</span>
             </div>
             <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
-                <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Fatigue</span>
+                <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{localize "WH40K.Combat.Fatigue"}}</span>
                 <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{this.actor.system.fatigue.value}} / {{this.actor.system.fatigue.max}}</span>
             </div>
             <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
-                <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Critical Wounds</span>
+                <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{localize "WH40K.Chat.AssignDamage.CriticalWounds"}}</span>
                 <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{this.actor.system.wounds.critical}}</span>
             </div>
 
@@ -66,14 +66,14 @@
 
             {{#if this.hasFatigueDamage}}
                 <div class="tw-flex tw-justify-between tw-items-center tw-px-3.5 tw-py-2.5 tw-my-2 tw-bg-[var(--wh40k-warning-bg)] tw-border-l-[3px] tw-border-l-[var(--wh40k-warning-primary)] tw-rounded-r">
-                    <span class="tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-warning-secondary)]">Fatigue</span>
+                    <span class="tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-warning-secondary)]">{{localize "WH40K.Combat.Fatigue"}}</span>
                     <span class="tw-text-lg tw-font-bold tw-text-[var(--wh40k-card-text)]">+{{this.fatigueTaken}}</span>
                 </div>
             {{/if}}
 
             {{#if this.hasCriticalDamage}}
                 <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-fate-bg)] tw-border-2 tw-border-[var(--wh40k-gold-bright)] tw-rounded-md tw-text-center">
-                    <div class="tw-font-display tw-text-base tw-font-bold tw-text-[var(--wh40k-gold-bright)] tw-uppercase tw-tracking-widest tw-shadow-[0_0_10px_rgba(255,215,0,0.5)]">⚠ Critical Damage: {{this.criticalDamageTaken}} ⚠</div>
+                    <div class="tw-font-display tw-text-base tw-font-bold tw-text-[var(--wh40k-gold-bright)] tw-uppercase tw-tracking-widest tw-shadow-[0_0_10px_rgba(255,215,0,0.5)]">⚠ {{localize "WH40K.Chat.AssignDamage.CriticalDamage" value=this.criticalDamageTaken}} ⚠</div>
                     <div class="tw-text-sm tw-text-[var(--wh40k-card-text)] tw-mt-2 tw-leading-snug">{{this.criticalEffect}}</div>
                 </div>
             {{/if}}

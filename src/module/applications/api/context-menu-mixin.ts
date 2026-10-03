@@ -164,33 +164,33 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
 
             return [
                 {
-                    name: `Roll ${char.label !== '' ? char.label : charKey} Test`,
+                    name: game.i18n.format('WH40K.ContextMenu.RollTest', { name: char.label !== '' ? char.label : charKey }),
                     icon: '<i class="fas fa-dice-d20"></i>',
                     callback: async () => this._onCharacteristicRoll(charKey),
                 },
                 {
-                    name: 'Roll with Modifier...',
+                    name: game.i18n.localize('WH40K.ContextMenu.RollWithModifier'),
                     icon: '<i class="fas fa-dice-d20"></i>',
                     callback: async () => this._onCharacteristicRollWithModifier(charKey),
                 },
                 {
-                    name: 'View Modifier Sources',
+                    name: game.i18n.localize('WH40K.ContextMenu.ViewModifierSources'),
                     icon: '<i class="fas fa-info-circle"></i>',
                     callback: async () => this._showModifierSources(charKey),
                 },
                 {
-                    name: 'Edit Characteristic',
+                    name: game.i18n.localize('WH40K.ContextMenu.EditCharacteristic'),
                     icon: '<i class="fas fa-edit"></i>',
                     callback: async () => this._onEditCharacteristic(charKey),
                 },
                 {
-                    name: 'Spend XP to Advance',
+                    name: game.i18n.localize('WH40K.ContextMenu.SpendXpToAdvance'),
                     icon: '<i class="fas fa-star"></i>',
                     callback: async () => this._onAdvanceCharacteristic(charKey),
                     condition: () => char.advance < 5,
                 },
                 {
-                    name: 'Post to Chat',
+                    name: game.i18n.localize('WH40K.Action.PostToChat'),
                     icon: '<i class="fas fa-comment"></i>',
                     callback: async () => this._postCharacteristicToChat(charKey, char),
                 },
@@ -214,34 +214,34 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
 
             const options: ContextMenuEntryLike[] = [
                 {
-                    name: `Roll ${skill.label !== '' ? skill.label : skillKey} Test`,
+                    name: game.i18n.format('WH40K.ContextMenu.RollTest', { name: skill.label !== undefined && skill.label !== '' ? skill.label : skillKey }),
                     icon: '<i class="fas fa-dice-d20"></i>',
                     callback: async () => this._onSkillRoll(skillKey),
                 },
                 {
-                    name: 'Roll with Modifier...',
+                    name: game.i18n.localize('WH40K.ContextMenu.RollWithModifier'),
                     icon: '<i class="fas fa-dice-d20"></i>',
                     callback: async () => this._onSkillRollWithModifier(skillKey),
                 },
                 {
-                    name: skill.trained ? 'Untrain' : 'Train',
+                    name: game.i18n.localize(skill.trained ? 'WH40K.ContextMenu.Untrain' : 'WH40K.ContextMenu.Train'),
                     icon: '<i class="fas fa-graduation-cap"></i>',
                     callback: async () => this._toggleSkillTraining(skillKey, 'trained'),
                 },
                 {
-                    name: skill.plus10 ? 'Remove +10' : 'Add +10',
+                    name: game.i18n.localize(skill.plus10 ? 'WH40K.ContextMenu.RemovePlus10' : 'WH40K.ContextMenu.AddPlus10'),
                     icon: '<i class="fas fa-plus-circle"></i>',
                     callback: async () => this._toggleSkillTraining(skillKey, 'plus10'),
                     condition: () => skill.trained,
                 },
                 {
-                    name: skill.plus20 ? 'Remove +20' : 'Add +20',
+                    name: game.i18n.localize(skill.plus20 ? 'WH40K.ContextMenu.RemovePlus20' : 'WH40K.ContextMenu.AddPlus20'),
                     icon: '<i class="fas fa-plus-circle"></i>',
                     callback: async () => this._toggleSkillTraining(skillKey, 'plus20'),
                     condition: () => skill.plus10,
                 },
                 {
-                    name: 'View Governing Characteristic',
+                    name: game.i18n.localize('WH40K.ContextMenu.ViewGoverningCharacteristic'),
                     icon: '<i class="fas fa-eye"></i>',
                     callback: () => this._showGoverningCharacteristic(skillKey, skill),
                 },
@@ -250,7 +250,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
             // Add specialization option for specialist skills
             if (Array.isArray(skill.entries)) {
                 options.push({
-                    name: 'Add Specialization',
+                    name: game.i18n.localize('WH40K.ContextMenu.AddSpecialisation'),
                     icon: '<i class="fas fa-plus"></i>',
                     callback: async () => this._addSkillSpecialization(skillKey),
                 });
@@ -281,12 +281,12 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
                 const rateOfFire = system.rateOfFire;
                 options.push(
                     {
-                        name: 'Standard Attack',
+                        name: game.i18n.localize('WH40K.ContextMenu.StandardAttack'),
                         icon: '<i class="fas fa-crosshairs"></i>',
                         callback: async () => this._weaponAttack(item, 'standard'),
                     },
                     {
-                        name: 'Aimed Attack',
+                        name: game.i18n.localize('WH40K.ContextMenu.AimedAttack'),
                         icon: '<i class="fas fa-bullseye"></i>',
                         callback: async () => this._weaponAttack(item, 'aimed'),
                     },
@@ -294,7 +294,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
 
                 if (rateOfFire?.includes('S') === true) {
                     options.push({
-                        name: 'Semi-Auto Burst',
+                        name: game.i18n.localize('WH40K.ContextMenu.SemiAutoBurst'),
                         icon: '<i class="fas fa-redo"></i>',
                         callback: async () => this._weaponAttack(item, 'semi'),
                     });
@@ -302,7 +302,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
 
                 if (rateOfFire?.includes('–') === true || rateOfFire?.includes('/-') === true) {
                     options.push({
-                        name: 'Full-Auto Burst',
+                        name: game.i18n.localize('WH40K.ContextMenu.FullAutoBurst'),
                         icon: '<i class="fas fa-fire"></i>',
                         callback: async () => this._weaponAttack(item, 'full'),
                     });
@@ -334,7 +334,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
             // Standard item actions
             options.push(
                 {
-                    name: 'Edit Item',
+                    name: game.i18n.localize('WH40K.ContextMenu.EditItem'),
                     icon: '<i class="fas fa-edit"></i>',
                     callback: () => {
                         // eslint-disable-next-line @typescript-eslint/no-deprecated -- render(true) is the V14-compatible force-open idiom
@@ -342,12 +342,12 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
                     },
                 },
                 {
-                    name: 'Duplicate',
+                    name: game.i18n.localize('WH40K.ContextMenu.Duplicate'),
                     icon: '<i class="fas fa-copy"></i>',
                     callback: async () => this._duplicateItem(item),
                 },
                 {
-                    name: 'Delete',
+                    name: game.i18n.localize('WH40K.Common.Delete'),
                     icon: '<i class="fas fa-trash"></i>',
                     callback: async () => this._deleteItem(item),
                 },
@@ -366,27 +366,27 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
         _getFatePointContextOptions(): ContextMenuEntryLike[] {
             return [
                 {
-                    name: 'Spend for Re-roll',
+                    name: game.i18n.localize('WH40K.ContextMenu.SpendReroll'),
                     icon: '<i class="fas fa-redo"></i>',
                     callback: async () => this._spendFate('reroll'),
                 },
                 {
-                    name: 'Spend for +10 Bonus',
+                    name: game.i18n.localize('WH40K.ContextMenu.SpendBonus'),
                     icon: '<i class="fas fa-plus-circle"></i>',
                     callback: async () => this._spendFate('bonus'),
                 },
                 {
-                    name: 'Spend for +1 DoS',
+                    name: game.i18n.localize('WH40K.ContextMenu.SpendDos'),
                     icon: '<i class="fas fa-arrow-up"></i>',
                     callback: async () => this._spendFate('dos'),
                 },
                 {
-                    name: 'Spend for Healing (1d5)',
+                    name: game.i18n.localize('WH40K.ContextMenu.SpendHealing'),
                     icon: '<i class="fas fa-heartbeat"></i>',
                     callback: async () => this._spendFate('healing'),
                 },
                 {
-                    name: 'Burn Fate Point (Permanent)',
+                    name: game.i18n.localize('WH40K.ContextMenu.BurnFatePoint'),
                     icon: '<i class="fas fa-fire"></i>',
                     callback: async () => this._burnFatePoint(),
                     group: 'danger',
@@ -447,28 +447,28 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
         async _toggleSkillTraining(_skillKey: string, _level: string): Promise<void> {}
 
         _showGoverningCharacteristic(skillKey: string, skill: WH40KSkill): void {
-            const label = skill.label !== '' ? skill.label : skillKey;
-            ui.notifications.info(`${label} is governed by ${skill.characteristic}`);
+            const label = skill.label !== undefined && skill.label !== '' ? skill.label : skillKey;
+            ui.notifications.info(game.i18n.format('WH40K.Notify.Item.GovernedBy', { label, characteristic: skill.characteristic }));
         }
 
         async _addSkillSpecialization(_skillKey: string): Promise<void> {}
 
         async _duplicateItem(item: WH40KItem): Promise<void> {
-            await item.clone({ name: `${item.name} (Copy)` }, { save: true });
-            ui.notifications.info(`Duplicated ${item.name}`);
+            await item.clone({ name: game.i18n.format('WH40K.Notify.Item.CopyName', { name: item.name }) }, { save: true });
+            ui.notifications.info(game.i18n.format('WH40K.Notify.Item.Duplicated', { item: item.name }));
         }
 
         async _deleteItem(item: WH40KItem): Promise<void> {
             const confirmed = await dialogV2.confirm({
-                window: { title: `Delete ${item.name}?` },
-                content: `<p>Are you sure you want to delete <strong>${item.name}</strong>?</p>`,
+                window: { title: game.i18n.format('WH40K.WeaponSheet.ConfirmDeleteTitle', { name: item.name }) },
+                content: game.i18n.format('WH40K.Notify.Item.ConfirmDeleteContent', { item: item.name }),
                 yes: { default: false },
                 no: { default: true },
             });
 
             if (confirmed) {
                 await item.delete();
-                ui.notifications.info(`Deleted ${item.name}`);
+                ui.notifications.info(game.i18n.format('WH40K.Notify.Item.Deleted', { item: item.name }));
             }
         }
 
@@ -488,8 +488,8 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
 
         async _burnFatePoint(): Promise<void> {
             const confirmed = await dialogV2.confirm({
-                window: { title: 'Burn Fate Point?' },
-                content: `<p><strong>Warning:</strong> This will permanently reduce your maximum Fate Points!</p><p>Are you sure?</p>`,
+                window: { title: game.i18n.localize('WH40K.Notify.Stat.BurnFateTitle') },
+                content: game.i18n.localize('WH40K.Notify.Stat.BurnFateWarning'),
                 yes: { default: false },
                 no: { default: true },
             });
@@ -499,8 +499,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
                 const currentTotal = fate?.total ?? 0;
                 if (currentTotal > 0) {
                     await this.actor.update({ 'system.fate.total': currentTotal - 1 });
-                    // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Fate.Burned localization key
-                    ui.notifications.warn('Fate Point burned! Maximum reduced permanently.');
+                    ui.notifications.warn(game.i18n.localize('WH40K.Notify.Fate.Burned'));
                 }
             }
         }

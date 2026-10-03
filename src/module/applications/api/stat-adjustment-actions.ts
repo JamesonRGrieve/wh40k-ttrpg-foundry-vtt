@@ -203,7 +203,7 @@ export const setShockPip = throttledAction('setShockPip', 200, setShockPipImpl);
 async function setCorruptionImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
     const targetValue = parseInt(target.dataset['value'] ?? '0', 10);
     if (Number.isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
-        this._notify('error', 'Invalid corruption value', { duration: 3000 });
+        this._notify('error', game.i18n.localize('WH40K.Notify.Stat.InvalidCorruption'), { duration: 3000 });
         return;
     }
     await this._updateSystemField('system.corruption', targetValue);
@@ -214,7 +214,7 @@ export const setCorruption = throttledAction('setCorruption', 200, setCorruption
 async function setInsanityImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
     const targetValue = parseInt(target.dataset['value'] ?? '0', 10);
     if (Number.isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
-        this._notify('error', 'Invalid insanity value', { duration: 3000 });
+        this._notify('error', game.i18n.localize('WH40K.Notify.Stat.InvalidInsanity'), { duration: 3000 });
         return;
     }
     await this._updateSystemField('system.insanity', targetValue);
@@ -229,7 +229,7 @@ export const setInsanity = throttledAction('setInsanity', 200, setInsanityImpl);
 async function restoreFateImpl(this: Host, _event: Event, _target: HTMLElement): Promise<void> {
     const maxFate = this.actor.system.fate?.max ?? 0;
     await this._updateSystemField('system.fate.value', maxFate);
-    this._notify('info', `Restored all fate points to ${maxFate}`, { duration: 3000 });
+    this._notify('info', game.i18n.format('WH40K.Notify.Stat.FateRestored', { max: String(maxFate) }), { duration: 3000 });
 }
 
 export const restoreFate = throttledAction('restoreFate', 500, restoreFateImpl);
@@ -239,28 +239,28 @@ async function spendFateImpl(this: Host, _event: Event, target: HTMLElement): Pr
     const currentFate = this.actor.system.fate?.value ?? 0;
 
     if (currentFate <= 0) {
-        this._notify('warning', 'No fate points available to spend!', { duration: 3000 });
+        this._notify('warning', game.i18n.localize('WH40K.Notify.Stat.NoFateAvailable'), { duration: 3000 });
         return;
     }
 
     const messages: Record<string, string> = {
-        reroll: `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>re-roll</strong> a test!`,
-        bonus: `<strong>${this.actor.name}</strong> spends a Fate Point to gain <strong>+10 bonus</strong> to a test!`,
-        dos: `<strong>${this.actor.name}</strong> spends a Fate Point to add <strong>+1 Degree of Success</strong>!`,
-        heal: `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>heal damage</strong>!`,
-        avoid: `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>avoid death</strong>!`,
+        reroll: game.i18n.format('WH40K.Notify.Stat.FateSpentReroll', { actor: this.actor.name }),
+        bonus: game.i18n.format('WH40K.Notify.Stat.FateSpentBonus', { actor: this.actor.name }),
+        dos: game.i18n.format('WH40K.Notify.Stat.FateSpentDos', { actor: this.actor.name }),
+        heal: game.i18n.format('WH40K.Notify.Stat.FateSpentHeal', { actor: this.actor.name }),
+        avoid: game.i18n.format('WH40K.Notify.Stat.FateSpentAvoid', { actor: this.actor.name }),
     };
 
     let message: string;
     if (action === 'burn') {
         const confirmBurn = await ConfirmationDialog.confirm({
-            title: 'Burn Fate Point?',
-            content: 'Are you sure you want to <strong>permanently burn</strong> a Fate Point?',
-            confirmLabel: 'Burn',
-            cancelLabel: 'Cancel',
+            title: game.i18n.localize('WH40K.Notify.Stat.BurnFateTitle'),
+            content: game.i18n.localize('WH40K.Notify.Stat.BurnFateContent'),
+            confirmLabel: game.i18n.localize('WH40K.Notify.Stat.BurnFateConfirm'),
+            cancelLabel: game.i18n.localize('WH40K.Cancel'),
         });
         if (!confirmBurn) return;
-        message = `<strong>${this.actor.name}</strong> <strong style="color: #b63a2b;">BURNS</strong> a Fate Point!`;
+        message = game.i18n.format('WH40K.Notify.Stat.FateBurnedMessage', { actor: this.actor.name });
         await this.actor.update({
             'system.fate.max': Math.max(0, (this.actor.system.fate?.max ?? 0) - 1),
         });

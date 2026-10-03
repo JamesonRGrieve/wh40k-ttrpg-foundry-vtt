@@ -39,9 +39,9 @@
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
     {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
-        (object tab="details"     label="Details"     icon="fa-info-circle" active=true)
-        (object tab="description" label="Description" icon="fa-book")
-        (object tab="effects"     label="Effects"     icon="fa-magic"))}}
+        (object tab="details"     label=(localize "WH40K.Tabs.Details")     icon="fa-info-circle" active=true)
+        (object tab="description" label=(localize "WH40K.Tabs.Description") icon="fa-book")
+        (object tab="effects"     label=(localize "WH40K.Tabs.Effects")     icon="fa-magic"))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT

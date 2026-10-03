@@ -16,22 +16,22 @@
     <div class="tw-p-7 tw-border-[3px] tw-border-solid {{themeClassFor 'border'}} tw-rounded-md tw-text-center tw-animate-slideDown tw-shadow-[0_0_20px_rgba(201,162,39,0.3)]" style="background: linear-gradient(135deg, var(--wh40k-panel-bg-solid) 0%, var(--wh40k-input-bg) 100%)">
         <div class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-2xl tw-font-bold">
             <span>{{roll.total}}</span>
-            <span class="tw-text-sm tw-uppercase tw-opacity-70">vs</span>
+            <span class="tw-text-sm tw-uppercase tw-opacity-70">{{localize "WH40K.Common.Versus"}}</span>
             <span>{{targetValue}}</span>
         </div>
         <div class="tw-mt-2">
             {{#if success}}
-            <span class="tw-text-success-l20 tw-font-bold"><i class="fas fa-check-circle"></i> Success!</span>
+            <span class="tw-text-success-l20 tw-font-bold"><i class="fas fa-check-circle"></i> {{localize "WH40K.Chat.Roll.Success"}}</span>
             {{else}}
-            <span class="tw-text-failure-l10 tw-font-bold"><i class="fas fa-times-circle"></i> Failure!</span>
+            <span class="tw-text-failure-l10 tw-font-bold"><i class="fas fa-times-circle"></i> {{localize "WH40K.Chat.Roll.Failure"}}</span>
             {{/if}}
-            <span class="tw-text-sm tw-opacity-80">({{degrees}} Degrees)</span>
+            <span class="tw-text-sm tw-opacity-80">({{degrees}} {{localize "WH40K.Chat.Roll.Degrees"}})</span>
         </div>
     </div>
 
     {{#if item.system.effect}}
     <div class="tw-mt-2 tw-text-sm">
-        <strong>Effect:</strong> {{{item.system.effect}}}
+        <strong>{{localize "WH40K.Chat.Label.Effect"}}</strong> {{{item.system.effect}}}
     </div>
     {{/if}}
 {{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}

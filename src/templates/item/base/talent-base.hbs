@@ -13,9 +13,9 @@
 
     {{!-- TAB NAVIGATION --}}
     {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
-        (object tab="details" label="Details" icon="fa-info-circle" active=true)
-        (object tab="modifiers" label="Modifiers" icon="fa-sliders-h")
-        (object tab="effects" label="Effects" icon="fa-magic"))}}
+        (object tab="details" label=(localize "WH40K.Tabs.Details") icon="fa-info-circle" active=true)
+        (object tab="modifiers" label=(localize "WH40K.Tabs.Modifiers") icon="fa-sliders-h")
+        (object tab="effects" label=(localize "WH40K.Tabs.Effects") icon="fa-magic"))}}
 
     {{!-- TAB CONTENT --}}
     <section class="tw-flex-1 tw-min-h-0 tw-overflow-y-auto tw-overflow-x-hidden tw-p-[var(--wh40k-space-md)] tw-flex tw-flex-col tw-gap-[var(--wh40k-space-md)] tw-border-t {{themeClassFor 'border'}}">

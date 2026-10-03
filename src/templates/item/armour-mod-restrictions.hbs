@@ -30,7 +30,7 @@
             {{#if (eq armourTypesArray.length 0)}}
                 <p class="tw-text-center tw-p-4 tw-italic" style="color: rgba(255,255,255,0.5)">
                     <i class="fas fa-exclamation-triangle tw-mr-2"></i>
-                    No armour types configured
+                    {{localize "WH40K.ItemSheet.ArmourMod.NoArmourTypes"}}
                 </p>
             {{/if}}
         </div>
@@ -59,7 +59,7 @@
                            name="system.source"
                            value="{{source.source}}"
                            class="tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)] tw-w-full"
-                           placeholder="Core Rulebook, p. 123">
+                           placeholder="{{localize 'WH40K.ItemSheet.ArmourMod.SourcePlaceholder'}}">
                 </div>
             </div>
         </div>

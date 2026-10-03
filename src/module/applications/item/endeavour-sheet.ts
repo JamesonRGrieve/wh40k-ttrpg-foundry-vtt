@@ -65,7 +65,7 @@ const EndeavourSheet = defineSimpleItemSheet({
     tabs: [
         { tab: 'details', group: 'primary', label: 'WH40K.Endeavours.Header' },
         { tab: 'objectives', group: 'primary', label: 'WH40K.Endeavours.Objectives' },
-        { tab: 'description', group: 'primary', label: 'WH40K.Description.Label' },
+        { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Description' },
     ],
     defaultTab: 'details',
     actions: {

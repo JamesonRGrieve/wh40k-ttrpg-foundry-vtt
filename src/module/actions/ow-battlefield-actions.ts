@@ -105,7 +105,7 @@ async function promptSupportRequest(): Promise<RequestSupportPromptResult | null
                 <select name="kind" id="ow-support-kind">${labels.kind}</select>
             </div>
             <div class="form-group">
-                <label for="ow-support-modifier">${labels.modifier} (Logistics Modifier)</label>
+                <label for="ow-support-modifier">${labels.modifier} (${game.i18n.localize('WH40K.OW.Battlefield.Support.LogisticsModifier')})</label>
                 <input type="number" name="logisticsModifier" id="ow-support-modifier" value="0" step="1" />
             </div>
             <div class="form-group">
@@ -113,11 +113,11 @@ async function promptSupportRequest(): Promise<RequestSupportPromptResult | null
                 <input type="number" name="cooldownTurns" id="ow-support-cooldown" value="2" min="0" step="1" />
             </div>
             <div class="form-group">
-                <label for="ow-support-target">Current Logistics Target</label>
+                <label for="ow-support-target">${game.i18n.localize('WH40K.OW.Battlefield.Support.CurrentLogisticsTarget')}</label>
                 <input type="number" name="currentLogisticsTarget" id="ow-support-target" value="40" min="0" step="1" />
             </div>
             <div class="form-group">
-                <label for="ow-support-roll">d100 Roll</label>
+                <label for="ow-support-roll">${game.i18n.localize('WH40K.BC.Ritual.ChatRoll')}</label>
                 <input type="number" name="roll" id="ow-support-roll" value="50" min="1" max="100" step="1" />
             </div>
         </fieldset>

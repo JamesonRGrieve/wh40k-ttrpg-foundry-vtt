@@ -215,7 +215,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             // Form buttons
             buttons: [
                 { type: 'submit', icon: 'fa-solid fa-dice-d20', label: 'WH40K.Roll.Roll', cssClass: 'primary' },
-                { type: 'button', action: 'cancel', icon: 'fa-solid fa-times', label: 'Cancel' },
+                { type: 'button', action: 'cancel', icon: 'fa-solid fa-times', label: 'WH40K.Cancel' },
             ],
         };
     }

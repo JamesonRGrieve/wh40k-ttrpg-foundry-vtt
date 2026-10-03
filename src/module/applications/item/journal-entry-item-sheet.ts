@@ -11,7 +11,7 @@ const JournalEntryItemSheet = defineSimpleItemSheet({
     template: 'systems/wh40k-rpg/templates/item/item-journal-entry-sheet.hbs',
     width: 550,
     height: 500,
-    tabs: [{ tab: 'content', group: 'primary', label: 'Content' }],
+    tabs: [{ tab: 'content', group: 'primary', label: 'WH40K.Tabs.Content' }],
     defaultTab: 'content',
 });
 

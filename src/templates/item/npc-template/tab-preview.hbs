@@ -81,7 +81,7 @@
                         {{#each previewData.weapons as |weapon|}}
                             <div class="tw-flex tw-gap-4 tw-py-2 tw-border-b tw-border-dashed tw-border-[var(--wh40k-border-color)]">
                                 <span class="tw-font-medium">{{weapon.name}}</span>
-                                <span class="tw-text-[var(--wh40k-text-muted)]">{{weapon.damage}} Pen {{weapon.pen}}</span>
+                                <span class="tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.ItemSheet.NpcTemplate.DamagePen" damage=weapon.damage pen=weapon.pen}}</span>
                                 {{#if weapon.special}}
                                     <span class="tw-text-sm tw-italic">{{weapon.special}}</span>
                                 {{/if}}

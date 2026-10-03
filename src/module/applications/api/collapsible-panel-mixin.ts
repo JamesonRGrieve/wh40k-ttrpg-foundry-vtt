@@ -55,7 +55,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
          */
         static PANEL_PRESETS: Record<string, CollapsiblePanelConfig> = {
             combat: {
-                label: 'Combat Mode',
+                label: 'WH40K.Notify.Panel.CombatMode',
                 icon: 'fa-sword',
                 panels: {
                     'characteristics': true,
@@ -69,7 +69,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
                 },
             },
             social: {
-                label: 'Social Mode',
+                label: 'WH40K.Notify.Panel.SocialMode',
                 icon: 'fa-users',
                 panels: {
                     'characteristics': true,
@@ -83,7 +83,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
                 },
             },
             exploration: {
-                label: 'Exploration Mode',
+                label: 'WH40K.Notify.Panel.ExplorationMode',
                 icon: 'fa-map',
                 panels: {
                     'characteristics': true,
@@ -97,12 +97,12 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
                 },
             },
             all: {
-                label: 'Expand All',
+                label: 'WH40K.Notify.Panel.ExpandAll',
                 icon: 'fa-expand',
                 panels: {}, // Will expand all panels
             },
             none: {
-                label: 'Collapse All',
+                label: 'WH40K.Notify.Panel.CollapseAll',
                 icon: 'fa-compress',
                 panels: {}, // Will collapse all panels
             },
@@ -340,7 +340,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
             }
 
             // Show notification
-            ui.notifications.info(`Applied ${preset.label} panel layout`);
+            ui.notifications.info(game.i18n.format('WH40K.Notify.Panel.LayoutApplied', { layout: game.i18n.localize(preset.label) }));
         }
 
         /* -------------------------------------------- */

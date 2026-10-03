@@ -7,7 +7,7 @@
   <div class="tw-flex tw-flex-col tw-p-2 tw-border-b">
     <div class="tw-flex tw-items-center tw-gap-1.5 tw-font-bold tw-text-base {{themeClassFor 'accent'}}">
       <i class="fa-solid fa-rotate-right"></i>
-      <span>Reload</span>
+      <span>{{localize "WH40K.Weapon.Reload"}}</span>
     </div>
     <div class="tw-text-sm tw-opacity-80">
       {{weapon.name}}
@@ -20,7 +20,7 @@
     <div class="tw-flex tw-flex-col tw-gap-1">
       <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-sm tw-font-bold">
         <i class="fa-solid fa-database"></i>
-        <span>Ammunition</span>
+        <span>{{localize "WH40K.Ammunition.TypeLabel"}}</span>
       </div>
       <div class="tw-flex tw-items-center tw-gap-2">
         <span class="tw-font-mono">{{clipCurrent}}/{{clipMax}}</span>
@@ -35,7 +35,7 @@
     <div class="tw-flex tw-flex-col tw-gap-1">
       <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-sm tw-font-bold">
         <i class="fa-solid fa-hourglass-half"></i>
-        <span>Action Cost</span>
+        <span>{{localize "WH40K.Reload.ActionCost"}}</span>
       </div>
       <div class="tw-flex tw-items-center tw-gap-2 tw-flex-wrap">
         {{#if hasCustomised}}
@@ -48,9 +48,9 @@
           {{effectiveReloadTime}}
         </span>
         {{#if hasCustomised}}
-        <span class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-flex tw-items-center tw-gap-1 tw-bg-gold-raw/20 tw-text-gold-raw" title="Customised quality halves reload time">
+        <span class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-flex tw-items-center tw-gap-1 tw-bg-gold-raw/20 tw-text-gold-raw" title="{{localize 'WH40K.Reload.CustomisedBonus'}}">
           <i class="fa-solid fa-wrench"></i>
-          Customised
+          {{localize "WH40K.Common.Customised"}}
         </span>
         {{/if}}
       </div>
@@ -61,23 +61,23 @@
     <div class="tw-flex tw-flex-col tw-gap-1">
       <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-sm tw-font-bold">
         <i class="fa-solid fa-bolt"></i>
-        <span>Actions Spent</span>
+        <span>{{localize "WH40K.Reload.ActionsSpent"}}</span>
       </div>
       <div class="tw-flex tw-items-center tw-gap-1 tw-flex-wrap">
         {{#if (gt result.actionsSpent.full 0)}}
         <span class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-bg-crimson/20 tw-text-crimson-light">
-          {{result.actionsSpent.full}} Full Action{{#if (gt result.actionsSpent.full 1)}}s{{/if}}
+          {{result.actionsSpent.full}} {{#if (gt result.actionsSpent.full 1)}}{{localize "WH40K.Chat.Reload.FullActions"}}{{else}}{{localize "WH40K.Reload.Full"}}{{/if}}
         </span>
         {{/if}}
         {{#if (gt result.actionsSpent.half 0)}}
         <span class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-bg-warning/20 tw-text-warning">
-          {{result.actionsSpent.half}} Half Action{{#if (gt result.actionsSpent.half 1)}}s{{/if}}
+          {{result.actionsSpent.half}} {{#if (gt result.actionsSpent.half 1)}}{{localize "WH40K.Chat.Reload.HalfActions"}}{{else}}{{localize "WH40K.Reload.Half"}}{{/if}}
         </span>
         {{/if}}
         {{#unless (or (gt result.actionsSpent.full 0) (gt result.actionsSpent.half 0))}}
         <span class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-bg-success/20 tw-text-success-l20 tw-flex tw-items-center tw-gap-1">
           <i class="fa-solid fa-gift"></i>
-          Free Action
+          {{localize "WH40K.Reload.Free"}}
         </span>
         {{/unless}}
       </div>

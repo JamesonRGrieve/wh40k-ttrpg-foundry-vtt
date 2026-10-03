@@ -32,7 +32,7 @@
 
     {{#if skill.system.uses}}
     <div class="tw-mb-2">
-        <h4 class="tw-m-0 tw-mb-1 tw-text-sm tw-font-bold"><i class="fas fa-list-check"></i> Uses</h4>
+        <h4 class="tw-m-0 tw-mb-1 tw-text-sm tw-font-bold"><i class="fas fa-list-check"></i> {{localize "WH40K.Chat.Skill.Uses"}}</h4>
         <div class="tw-text-sm">{{{skill.system.uses}}}</div>
     </div>
     {{/if}}
@@ -40,21 +40,21 @@
 
     {{#if skill.system.specialRules}}
     <div class="tw-mb-2">
-        <h4 class="tw-m-0 tw-mb-1 tw-text-sm tw-font-bold"><i class="fas fa-book-open"></i> Special Rules</h4>
+        <h4 class="tw-m-0 tw-mb-1 tw-text-sm tw-font-bold"><i class="fas fa-book-open"></i> {{localize "WH40K.Chat.Skill.SpecialRules"}}</h4>
         <div class="tw-text-sm">{{{skill.system.specialRules}}}</div>
     </div>
     {{/if}}
 
     <div class="tw-text-xs tw-flex tw-flex-wrap tw-gap-2 tw-opacity-80">
         {{#if skill.system.useTime}}
-        <span><strong>Time:</strong> {{skill.system.useTime}}</span>
+        <span><strong>{{localize "WH40K.Chat.Label.Time"}}</strong> {{skill.system.useTime}}</span>
         {{/if}}
         {{#if skill.system.aptitudes.length}}
-        <span><strong>Aptitudes:</strong> {{join skill.system.aptitudes ", "}}</span>
+        <span><strong>{{localize "WH40K.Chat.Label.Aptitudes"}}</strong> {{join skill.system.aptitudes ", "}}</span>
         {{/if}}
         {{#if skill.system.hasSpecializations}}
         <div class="tw-w-full">
-            <strong>Available Specializations:</strong>
+            <strong>{{localize "WH40K.Chat.Label.AvailableSpecialisations"}}</strong>
             <span>{{join skill.system.specializations ", "}}</span>
         </div>
         {{/if}}

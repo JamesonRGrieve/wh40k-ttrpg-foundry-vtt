@@ -12,8 +12,8 @@ const AttackSpecialSheet = defineSimpleItemSheet({
     width: 500,
     height: 400,
     tabs: [
-        { tab: 'details', group: 'primary', label: 'Details' },
-        { tab: 'description', group: 'primary', label: 'Description' },
+        { tab: 'details', group: 'primary', label: 'WH40K.Tabs.Details' },
+        { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Description' },
     ],
     defaultTab: 'details',
 });

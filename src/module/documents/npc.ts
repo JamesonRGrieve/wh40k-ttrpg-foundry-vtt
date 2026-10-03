@@ -179,14 +179,14 @@ export class WH40KNPC extends WH40KBaseActor {
         const char = this.system.characteristics[characteristicKey];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- guard for noUncheckedIndexedAccess; char may be undefined at runtime
         if (char === undefined) {
-            ui.notifications.warn(`Unknown characteristic: ${characteristicKey}`);
+            ui.notifications.warn(game.i18n.format('WH40K.Notify.Npc.UnknownCharacteristic', { characteristic: characteristicKey }));
             return;
         }
 
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: characteristicKey,
             type: 'characteristic',
-            label: `${char.label} Test`,
+            label: game.i18n.format('WH40K.Roll.TestLabel', { name: char.label }),
             target: char.total,
             nameOverride: flavor !== undefined && flavor !== '' ? flavor : undefined,
         });
@@ -204,7 +204,7 @@ export class WH40KNPC extends WH40KBaseActor {
         const weapon = weapons[weaponIndex];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- guard for noUncheckedIndexedAccess; weapon may be undefined at runtime
         if (weapon === undefined) {
-            ui.notifications.warn(`No weapon at index ${weaponIndex}`);
+            ui.notifications.warn(game.i18n.format('WH40K.Notify.Npc.NoWeaponAtIndex', { index: String(weaponIndex) }));
             return;
         }
 
@@ -217,7 +217,7 @@ export class WH40KNPC extends WH40KBaseActor {
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: attackCharKey,
             type: 'simpleWeapon',
-            label: `${weapon.name} Attack`,
+            label: game.i18n.format('WH40K.Roll.AttackLabel', { name: weapon.name }),
             target: char.total,
         });
         openRollPrompt(simpleSkillData);
@@ -251,7 +251,7 @@ export class WH40KNPC extends WH40KBaseActor {
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: skillName,
             type: 'skill',
-            label: `${skillLabel} Test`,
+            label: game.i18n.format('WH40K.Roll.TestLabel', { name: skillLabel }),
             target,
             nameOverride: flavor !== undefined && flavor !== '' ? flavor : undefined,
         });

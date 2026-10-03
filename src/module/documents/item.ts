@@ -852,8 +852,7 @@ export class WH40KItem extends WH40KItemContainer {
      */
     async applyOriginToActor(actor: OriginActorLike, options: { silent?: boolean } = {}): Promise<void> {
         if (!this.isOriginPath) {
-            // eslint-disable-next-line no-restricted-syntax -- legacy notification string, pending langpack migration
-            ui.notifications.warn('This item is not an origin path and cannot be auto-applied.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Item.NotOriginPath'));
             return;
         }
 
@@ -958,7 +957,7 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         if (options.silent !== true) {
-            ui.notifications.info(`Applied ${this.name} to ${actor.name}`);
+            ui.notifications.info(game.i18n.format('WH40K.Notify.Item.Applied', { item: this.name, actor: actor.name }));
         }
     }
 

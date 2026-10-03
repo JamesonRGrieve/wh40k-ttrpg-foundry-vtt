@@ -10,7 +10,7 @@
 
         <div class="wh40k-panel-body">
             <p class="tw-px-4 tw-py-3 tw-mb-4 tw-text-sm tw-rounded-md tw-border-l-[3px] tw-border-[var(--wh40k-accent-info)]" style="background: rgba(52,152,219,0.1); color: rgba(255,255,255,0.7)">
-                Describe the special effects of this modification. Use rich text for formatting.
+                {{localize "WH40K.ItemSheet.ArmourMod.EffectHelp"}}
             </p>
 
             <div class="tw-flex tw-flex-col [&_.editor]:tw-min-h-[250px] [&_.editor]:tw-bg-[rgba(0,0,0,0.3)] [&_.editor]:tw-border [&_.editor]:tw-border-[rgba(212,197,166,0.3)] [&_.editor]:tw-rounded-[6px] [&_.editor:focus-within]:tw-border-[var(--wh40k-color-gold)] [&_.editor:focus-within]:tw-shadow-[0_0_0_2px_rgba(212,175,55,0.2)]">
@@ -33,7 +33,7 @@
                     name="system.notes"
                     class="tw-w-full tw-p-[0.875rem] tw-rounded-[6px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(212,197,166,0.3)] tw-text-white tw-font-[inherit] tw-text-[0.9rem] tw-leading-[1.5] tw-resize-y focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)] focus:tw-shadow-[0_0_0_2px_rgba(212,175,55,0.2)] placeholder:tw-text-[rgba(255,255,255,0.3)]"
                     rows="4"
-                    placeholder="Additional notes or clarifications..."
+                    placeholder="{{localize 'WH40K.ItemSheet.ArmourMod.NotesPlaceholder'}}"
                     {{disabled (not isEditable)}}
                 >{{notes}}</textarea>
             </div>

@@ -55,7 +55,7 @@ export class RollTableUtils {
         table ??= await this.findTableInCompendiums(tableName, pack);
 
         if (table === null) {
-            ui.notifications.warn(`Roll table "${tableName}" not found.`);
+            ui.notifications.warn(game.i18n.format('WH40K.Notify.RollTable.NotFound', { name: tableName }));
             return null;
         }
 
@@ -278,24 +278,24 @@ export class RollTableUtils {
         const content = `
             <form>
                 <div class="form-group">
-                    <label>Select Roll Table:</label>
+                    <label>${game.i18n.localize('WH40K.Notify.RollTable.Select')}</label>
                     <select name="tableName">
                         ${tables.map((t) => `<option value="${t.name}">${t.name} (${t.category})</option>`).join('')}
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Modifier:</label>
+                    <label>${game.i18n.localize('WH40K.Status.Modifier')}</label>
                     <input type="number" name="modifier" value="0" />
                 </div>
             </form>
         `;
 
         void foundry.applications.api.DialogV2.prompt({
-            window: { title: 'Roll Table' },
+            window: { title: game.i18n.localize('WH40K.Notify.RollTable.Title') },
             content,
             ok: {
                 icon: 'fas fa-dice',
-                label: 'Roll',
+                label: game.i18n.localize('WH40K.Common.Roll'),
                 callback: async (_event: Event, _button: HTMLButtonElement, dialog: Element) => {
                     const dialogElement = dialog as RollTableDialog;
                     const tableField = dialogElement.querySelector<HTMLSelectElement>('[name="tableName"]');

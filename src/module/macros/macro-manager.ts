@@ -13,8 +13,7 @@ function getTokenActor(actorId: string | undefined): Actor | undefined {
     }
     if ((actor === null || actor === undefined) && typeof speaker.actor === 'string') actor = game.actors.get(speaker.actor);
     if (actor === null || actor === undefined) {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n keys not established at macro invocation
-        ui.notifications.warn(`Cannot find controlled Actor. Is an Actor selector and do you have permissions?`);
+        ui.notifications.warn(game.i18n.localize('WH40K.Notify.Macro.NoControlledActor'));
         return undefined;
     }
     return actor;
@@ -24,12 +23,10 @@ function getTokenActor(actorId: string | undefined): Actor | undefined {
 function checkCanRollMacro(data: unknown): boolean {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- game.actors may be undefined at macro invocation time
     if (game.actors === undefined) {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n keys not established at macro invocation
-        ui.notifications.warn(`Game or Actors not found. Unable to perform roll`);
+        ui.notifications.warn(game.i18n.localize('WH40K.Notify.Macro.NoActors'));
         return false;
     } else if (data === undefined || data === null || data === '') {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n keys not established at macro invocation
-        ui.notifications.warn(`Must provide data to perform roll`);
+        ui.notifications.warn(game.i18n.localize('WH40K.Notify.Macro.NoRollData'));
         return false;
     }
     return true;
@@ -38,8 +35,7 @@ function checkCanRollMacro(data: unknown): boolean {
 function checkMacroCanCreate(): boolean {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- game.macros/game.user may be undefined at macro invocation time
     if (game.macros === undefined || game.user === undefined) {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n keys not established at macro invocation
-        ui.notifications.warn(`Game or User not found. Unable to create macro`);
+        ui.notifications.warn(game.i18n.localize('WH40K.Notify.Macro.NoUser'));
         return false;
     }
     return true;
@@ -48,8 +44,7 @@ function checkMacroCanCreate(): boolean {
 function checkExistingMacro(name: string, command: string): boolean {
     const existingMacro = game.macros.find((m) => m.name === name && m.command === command);
     if (existingMacro !== undefined) {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n keys not established at macro invocation
-        ui.notifications.warn(`Macro already exists`);
+        ui.notifications.warn(game.i18n.localize('WH40K.Notify.Macro.AlreadyExists'));
         return true;
     }
     return false;
@@ -98,7 +93,7 @@ export function rollItemMacro(actorId: string, itemId: string): unknown {
 
     const item = actor.items.find((i) => i._id === itemId);
     if (item === undefined) {
-        ui.notifications.warn(`Actor does not have an item id: ${itemId}`);
+        ui.notifications.warn(game.i18n.format('WH40K.Notify.Macro.NoItemId', { id: itemId }));
         return undefined;
     }
     // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: rollItem is system extension; item._id may be undefined per noUncheckedIndexedAccess
@@ -138,7 +133,7 @@ export async function rollSkillMacro(actorId: string, skillName: string, special
     /* eslint-enable no-restricted-syntax */
     const skill = actorExt.getSkillFuzzy !== undefined ? actorExt.getSkillFuzzy(skillName) : actorExt.skills?.[skillName];
     if (skill === undefined || skill === null) {
-        ui.notifications.warn(`Your controlled Actor does not have a skill named ${skillName}`);
+        ui.notifications.warn(game.i18n.format('WH40K.Notify.Macro.NoSkill', { skill: skillName }));
         return;
     }
     await actorExt.rollSkill(skillName, speciality);
@@ -167,7 +162,7 @@ export async function rollCharacteristicMacro(actorId: string, characteristic: s
     const actorExt = actor as unknown as { characteristics: Record<string, unknown>; rollCharacteristic: (c: string) => Promise<void> };
     const charCheck = actorExt.characteristics[characteristic];
     if (charCheck === undefined || charCheck === null) {
-        ui.notifications.warn(`Your controlled Actor does not have a characteristic named ${characteristic}`);
+        ui.notifications.warn(game.i18n.format('WH40K.Notify.Macro.NoCharacteristic', { characteristic }));
         return;
     }
     await actorExt.rollCharacteristic(characteristic);

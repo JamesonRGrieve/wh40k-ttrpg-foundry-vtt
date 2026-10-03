@@ -635,8 +635,7 @@ export class Hit {
                 await penRoll.evaluate();
                 this.penetration = penRoll.total ?? 0;
             } catch {
-                // eslint-disable-next-line no-restricted-syntax -- i18n: penetration formula failure is a dev/GM-facing diagnostic; localization deferred
-                ui.notifications.warn('Penetration formula failed - setting to 0');
+                ui.notifications.warn(game.i18n.localize('WH40K.Warning.PenetrationFormulaFailed'));
                 this.penetration = 0;
             }
         }

@@ -368,8 +368,7 @@ export default class NPCThreatScalerDialog extends makeNpcFormDialog({
 
         // Check for no change
         if (currentThreat === newThreat) {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.NoThreatChange localization key
-            ui.notifications.info('No threat level change specified');
+            ui.notifications.info(game.i18n.localize('WH40K.NPC.NoThreatChange'));
             this.#resolution.resolve(false);
             return;
         }
@@ -405,8 +404,7 @@ export default class NPCThreatScalerDialog extends makeNpcFormDialog({
             this.#resolution.resolve(true);
         } catch (error) {
             console.error('Failed to scale NPC:', error);
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.ScaleFailed localization key
-            ui.notifications.error('Failed to scale NPC');
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.ScaleFailed'));
             this.#resolution.resolve(false);
         }
     }
@@ -463,8 +461,7 @@ export default class NPCThreatScalerDialog extends makeNpcFormDialog({
      */
     static async scale(actor: WH40KBaseActor): Promise<boolean> {
         if ((actor.type as string) !== 'npcV2') {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.ScaleOnlyV2 localization key
-            ui.notifications.warn('Can only scale npcV2 type actors');
+            ui.notifications.warn(game.i18n.localize('WH40K.NPC.ScaleOnlyV2'));
             return false;
         }
 

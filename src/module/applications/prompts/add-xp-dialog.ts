@@ -143,8 +143,12 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unk
 
         await this.actor.update({ 'system.experience.total': newTotal });
 
-        const verb = this.xpAmount > 0 ? 'added' : 'removed';
-        ui.notifications.info(`${Math.abs(this.xpAmount)} XP ${verb}. Total: ${newTotal}`);
+        ui.notifications.info(
+            game.i18n.format(this.xpAmount > 0 ? 'WH40K.VitalEditBody.XPAdjustedAdded' : 'WH40K.VitalEditBody.XPAdjustedRemoved', {
+                amount: String(Math.abs(this.xpAmount)),
+                total: String(newTotal),
+            }),
+        );
 
         await this.close();
     }

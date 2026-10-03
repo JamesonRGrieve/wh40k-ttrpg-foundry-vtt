@@ -189,7 +189,7 @@ export default class TemplateSelector extends makeNpcFormDialog({
                     cssClass: 'primary',
                     disabled: !selectedTemplate,
                 },
-                { action: 'cancel', icon: 'fa-solid fa-times', label: 'Cancel' },
+                { action: 'cancel', icon: 'fa-solid fa-times', label: 'WH40K.Cancel' },
             ],
         };
     }
@@ -366,8 +366,7 @@ export default class TemplateSelector extends makeNpcFormDialog({
      */
     static async #onCreate(this: TemplateSelector, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         if (this.#selectedUuid === null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
-            ui.notifications.warn('Select a template first.');
+            ui.notifications.warn(game.i18n.localize('WH40K.NPC.Template.SelectFirst'));
             return;
         }
 
@@ -424,7 +423,7 @@ export default class TemplateSelector extends makeNpcFormDialog({
                     await actor.createEmbeddedDocuments('Item', itemsToCreate as unknown as Parameters<typeof actor.createEmbeddedDocuments<'Item'>>[1]);
                 }
 
-                ui.notifications.info(`Created NPC: ${actor.name}`);
+                ui.notifications.info(game.i18n.format('WH40K.NPC.Created', { name: actor.name }));
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 marks Document.sheet.render legacy in typedefs; minimal local interface mirrors the V2 runtime contract
                 const actorSheet = (actor as unknown as { sheet?: { render: (force: boolean) => void } }).sheet;
                 actorSheet?.render(true);
@@ -434,8 +433,7 @@ export default class TemplateSelector extends makeNpcFormDialog({
             }
         } catch (err) {
             console.error('Failed to create NPC from template:', err);
-            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
-            ui.notifications.error('Failed to create NPC from template');
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.Template.CreateError'));
         }
     }
 

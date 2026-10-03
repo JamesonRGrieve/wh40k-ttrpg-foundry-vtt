@@ -13,7 +13,7 @@
             {{!-- Target-only display (no roll entered) --}}
             {{#if isTargetOnly}}
                 <div class="tw-text-center tw-px-3 tw-py-2 tw-my-2 tw-bg-[rgba(201,162,39,0.08)] tw-border tw-border-dashed tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-text-[0.8rem] tw-italic tw-text-[var(--wh40k-text-muted)]">
-                    Target posted - awaiting physical dice roll
+                    {{localize "WH40K.Chat.Roll.AwaitingPhysicalRoll"}}
                 </div>
             {{else}}
             {{!-- Result Display --}}
@@ -25,7 +25,7 @@
                     glowClass="tw-shadow-[0_0_20px_rgba(45,138,78,0.4),inset_0_0_30px_rgba(45,138,78,0.1)]"}}
                 <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
                     <span class="tw-text-[1.5rem] tw-font-bold tw-text-success">{{dos}}</span>
-                    <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">Degrees of Success</span>
+                    <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">{{localize "WH40K.Roll.DegreesOfSuccess"}}</span>
                 </div>
             {{else}}
                 {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
@@ -35,7 +35,7 @@
                     glowClass="tw-shadow-[0_0_20px_rgba(168,50,50,0.4),inset_0_0_30px_rgba(168,50,50,0.1)]"}}
                 <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
                     <span class="tw-text-[1.5rem] tw-font-bold tw-text-failure">{{dof}}</span>
-                    <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">Degrees of Failure</span>
+                    <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">{{localize "WH40K.Roll.DegreesOfFailure"}}</span>
                 </div>
             {{/if}}
 

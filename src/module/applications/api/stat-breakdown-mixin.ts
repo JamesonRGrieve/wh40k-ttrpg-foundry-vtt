@@ -189,7 +189,7 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
                 </div>
                 <div class="wh40k-stat-breakdown-body">
                     <div class="wh40k-stat-breakdown-row wh40k-stat-breakdown-row--base">
-                        <span class="wh40k-stat-breakdown-source">Base</span>
+                        <span class="wh40k-stat-breakdown-source">${game.i18n.localize('WH40K.CharacteristicSetup.Base')}</span>
                         <span class="wh40k-stat-breakdown-value">${base}</span>
                     </div>
             `;
@@ -219,7 +219,7 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
 
             html += `
                     <div class="wh40k-stat-breakdown-row wh40k-stat-breakdown-row--total">
-                        <span class="wh40k-stat-breakdown-source">Total</span>
+                        <span class="wh40k-stat-breakdown-source">${game.i18n.localize('WH40K.Skills.Total')}</span>
                         <span class="wh40k-stat-breakdown-value">${total}</span>
                     </div>
                 </div>

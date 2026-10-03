@@ -52,15 +52,15 @@
         <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
             <i class="fas fa-weight-hanging tw-opacity-60"></i>
             <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">{{localize "WH40K.Ammunition.Weight"}}</span>
-            <span class="tw-font-medium">{{item.system.weight}}kg</span>
+            <span class="tw-font-medium">{{item.system.weight}}{{localize "WH40K.Common.Kilograms"}}</span>
         </div>
     </div>
 
     {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
-        (object tab="modifiers"     label="Modifiers"     icon="fa-sliders-h"   active=true)
-        (object tab="compatibility" label="Compatibility" icon="fa-link")
-        (object tab="qualities"     label="Qualities"     icon="fa-star")
-        (object tab="details"       label="Details"       icon="fa-info-circle"))}}
+        (object tab="modifiers"     label=(localize "WH40K.Tabs.Modifiers")     icon="fa-sliders-h"   active=true)
+        (object tab="compatibility" label=(localize "WH40K.Tabs.Compatibility") icon="fa-link")
+        (object tab="qualities"     label=(localize "WH40K.Tabs.Qualities")     icon="fa-star")
+        (object tab="details"       label=(localize "WH40K.Tabs.Details")       icon="fa-info-circle"))}}
 
     <div class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3" data-group="primary">
 

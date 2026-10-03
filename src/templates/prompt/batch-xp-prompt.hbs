@@ -15,7 +15,7 @@
                 <input type="checkbox" name="selected" value="{{this.id}}" {{#if this.selected}}checked{{/if}} class="tw-w-4 tw-h-4 tw-cursor-pointer tw-accent-[var(--wh40k-color-gold)]" />
                 <img src="{{this.img}}" alt="{{this.name}}" class="tw-w-6 tw-h-6 tw-rounded tw-object-cover tw-border tw-border-[rgba(201,162,39,0.3)]" />
                 <span class="tw-text-[0.85rem] tw-font-medium">{{this.name}}</span>
-                <span class="tw-ml-auto tw-text-[0.7rem] tw-tabular-nums tw-text-[#9a9a8a]">{{this.currentXP}} XP</span>
+                <span class="tw-ml-auto tw-text-[0.7rem] tw-tabular-nums tw-text-[#9a9a8a]">{{this.currentXP}} {{localize "WH40K.Common.XP"}}</span>
             </label>
             {{/each}}
         </div>
@@ -39,7 +39,7 @@
     {{#if (ne xpAmount 0)}}
     <div class="tw-mb-4 tw-p-3 tw-rounded-md tw-border {{#if isAddition}}tw-bg-[rgba(42,139,74,0.1)] tw-border-[rgba(74,222,128,0.3)]{{else}}tw-bg-[rgba(139,42,42,0.1)] tw-border-[rgba(248,113,113,0.3)]{{/if}}">
         <div class="tw-text-center tw-text-[1rem] tw-font-semibold {{#if isAddition}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
-            {{#if isAddition}}+{{else}}-{{/if}}{{absAmount}} XP to {{selectedCount}} character(s)
+            {{#if isAddition}}+{{else}}-{{/if}}{{absAmount}} {{localize "WH40K.Prompt.BatchXp.ToCharacters" count=selectedCount}}
         </div>
     </div>
     {{/if}}

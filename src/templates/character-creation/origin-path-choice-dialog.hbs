@@ -75,7 +75,7 @@
                                                 data-choice="{{../choiceKey}}"
                                                 data-option="{{option.value}}"
                                                 class="tw-flex-1 tw-py-[0.35rem] tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-xs)] tw-text-[color:var(--wh40k-text-light)] tw-text-[0.9rem] tw-cursor-pointer focus:tw-outline-none focus:tw-border-[var(--wh40k-gold)]">
-                                            <option value="">-- Select --</option>
+                                            <option value="">{{localize "WH40K.Common.Select"}}</option>
                                             {{#each option.specializations as |spec|}}
                                                 <option value="{{spec}}" {{#if (eq spec ../chosenSpecialization)}}selected{{/if}}>{{spec}}</option>
                                             {{/each}}

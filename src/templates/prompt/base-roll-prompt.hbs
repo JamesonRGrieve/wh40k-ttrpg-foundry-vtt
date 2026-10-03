@@ -9,12 +9,12 @@
     {{#if rollData}}
         {{#with rollData}}
             <h3 class="divider">{{name}}</h3>
-            <p>Target: <strong>{{baseTarget}}</strong></p>
+            <p>{{localize "WH40K.Prompt.BaseRoll.Target"}} <strong>{{baseTarget}}</strong></p>
         {{/with}}
     {{else}}
-        <p>Configure roll…</p>
+        <p>{{localize "WH40K.Prompt.BaseRoll.Configure"}}</p>
     {{/if}}
     <footer class="form-footer">
-        <button type="submit" class="bright"><i class="fa-solid fa-dice"></i> Roll</button>
+        <button type="submit" class="bright"><i class="fa-solid fa-dice"></i> {{localize "WH40K.Common.Roll"}}</button>
     </footer>
 </form>

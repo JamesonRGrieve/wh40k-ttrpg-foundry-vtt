@@ -50,13 +50,11 @@ export class TargetedActionManager {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- game.canvas?.tokens?.controlled optional chain; undefined is possible at invocation
             const controlled = game.canvas?.tokens?.controlled;
             if (controlled === undefined || controlled.length === 0) {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-                ui.notifications.warn('You need to control a token!');
+                ui.notifications.warn(t('WH40K.Notify.Targeting.NoControlledToken'));
                 return undefined;
             }
             if (controlled.length > 1) {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-                ui.notifications.warn('You need to control a single token! Multi-token support is not yet added.');
+                ui.notifications.warn(t('WH40K.Notify.Targeting.MultipleControlledTokens'));
                 return undefined;
             }
             sourceToken = controlled[0];
@@ -64,8 +62,7 @@ export class TargetedActionManager {
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- sourceToken guard per noUncheckedIndexedAccess; loose null check intentional
         if (sourceToken !== undefined && sourceToken.actor == null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn('Token must be associated with an actor!');
+            ui.notifications.warn(t('WH40K.Notify.Targeting.TokenHasNoActor'));
             return undefined;
         }
 
@@ -86,8 +83,7 @@ export class TargetedActionManager {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- targetedObjects may be null at runtime per Foundry typing gaps
             if (targetedObjects == null || targetedObjects.size === 0) return undefined;
             if (targetedObjects.size > 1) {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-                ui.notifications.warn('You need to target a single token! Multi-token targeting is not yet added.');
+                ui.notifications.warn(t('WH40K.Notify.Targeting.MultipleTargetedTokens'));
                 return undefined;
             }
             targetToken = [...targetedObjects.values()][0];
@@ -95,8 +91,7 @@ export class TargetedActionManager {
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- targetToken guard per noUncheckedIndexedAccess; loose null check intentional
         if (targetToken !== undefined && targetToken.actor == null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn('Target token must be associated with an actor!');
+            ui.notifications.warn(t('WH40K.Notify.Targeting.TargetHasNoActor'));
             return undefined;
         }
 
@@ -158,8 +153,7 @@ export class TargetedActionManager {
                 ? [weapon]
                 : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'weapon' && item.system.state.equipped === true) as WH40KItem[]);
         if (weapons.length === 0) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn('Actor must have an equipped weapon!');
+            ui.notifications.warn(t('WH40K.Warning.WeaponNotEquipped'));
             return;
         }
 
@@ -198,8 +192,7 @@ export class TargetedActionManager {
         // Powers
         const powers = psychicPower != null ? [psychicPower] : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'psychicPower') as WH40KItem[]);
         if (powers.length === 0) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn('Actor must have psychic power!');
+            ui.notifications.warn(t('WH40K.Notify.Targeting.NoPsychicPower'));
             return;
         }
 

@@ -15,20 +15,20 @@
 
         <div class="tw-flex tw-flex-col tw-justify-center tw-gap-1 tw-min-w-0">
           <input type="text" class="tw-font-heading tw-text-[1.1rem] tw-font-semibold tw-text-[rgba(240,232,220,0.95)] wh40k-input--readonly {{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
-                 name="name" value="{{item.name}}" placeholder="Weapon Name"
+                 name="name" value="{{item.name}}" placeholder="{{localize 'WH40K.ItemSheet.NamePlaceholder.Weapon'}}"
                  {{#unless inEditMode}}readonly{{/unless}} />
 
           <div class="tw-flex tw-flex-wrap tw-gap-1 tw-mt-1 tw-items-center">
-            <span class="tw-inline-flex tw-items-center tw-gap-[3px] tw-px-2 tw-py-[2px] tw-bg-[linear-gradient(135deg,rgba(182,62,46,0.25),rgba(182,62,46,0.12))] tw-border tw-border-[rgba(182,62,46,0.5)] tw-rounded-sm tw-text-xs tw-text-[rgba(246,151,139,0.95)]" title="Weapon Class: {{system.classLabel}}">
+            <span class="tw-inline-flex tw-items-center tw-gap-[3px] tw-px-2 tw-py-[2px] tw-bg-[linear-gradient(135deg,rgba(182,62,46,0.25),rgba(182,62,46,0.12))] tw-border tw-border-[rgba(182,62,46,0.5)] tw-rounded-sm tw-text-xs tw-text-[rgba(246,151,139,0.95)]" title="{{localize 'WH40K.ItemSheet.Weapon.ClassTooltip' class=system.classLabel}}">
               {{#if system.isMeleeWeapon}}<i class="fa-solid fa-sword tw-text-[10px] tw-opacity-70"></i>{{else}}<i class="fa-solid fa-gun tw-text-[10px] tw-opacity-70"></i>{{/if}}
               {{system.classLabel}}
             </span>
-            <span class="tw-inline-flex tw-items-center tw-gap-[3px] tw-px-2 tw-py-[2px] tw-bg-[linear-gradient(135deg,rgba(58,93,132,0.35),rgba(58,93,132,0.15))] tw-border tw-border-[rgba(98,142,185,0.45)] tw-rounded-sm tw-text-xs tw-text-[rgba(178,208,234,0.95)]" title="Weapon Type: {{system.typeLabel}}">
+            <span class="tw-inline-flex tw-items-center tw-gap-[3px] tw-px-2 tw-py-[2px] tw-bg-[linear-gradient(135deg,rgba(58,93,132,0.35),rgba(58,93,132,0.15))] tw-border tw-border-[rgba(98,142,185,0.45)] tw-rounded-sm tw-text-xs tw-text-[rgba(178,208,234,0.95)]" title="{{localize 'WH40K.ItemSheet.Weapon.TypeTooltip' type=system.typeLabel}}">
               <i class="fa-solid {{system.typeIcon}} tw-text-[10px] tw-opacity-70"></i>
               {{system.typeLabel}}
             </span>
             {{#if (ne system.craftsmanship "common")}}
-            <span class="tw-inline-flex tw-items-center tw-gap-[3px] tw-px-2 tw-py-[2px] tw-bg-[rgba(181,166,66,0.15)] tw-border tw-border-[rgba(181,166,66,0.4)] tw-rounded-sm tw-text-xs tw-text-[var(--wh40k-color-brass)]" title="Craftsmanship">
+            <span class="tw-inline-flex tw-items-center tw-gap-[3px] tw-px-2 tw-py-[2px] tw-bg-[rgba(181,166,66,0.15)] tw-border tw-border-[rgba(181,166,66,0.4)] tw-rounded-sm tw-text-xs tw-text-[var(--wh40k-color-brass)]" title="{{localize 'WH40K.Craftsmanship.Label'}}">
               {{system.craftsmanshipLabel}}
             </span>
             {{/if}}
@@ -42,7 +42,7 @@
           {{#if canEdit}}
           <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-[6px] tw-bg-[rgba(14,18,26,0.6)] tw-border tw-border-[rgba(212,175,55,0.2)] tw-text-[rgba(214,221,235,0.6)] tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(20,24,34,0.7)] hover:tw-border-[rgba(212,175,55,0.4)] hover:tw-text-[color:var(--wh40k-gold)] {{#if inEditMode}}active tw-animate-glow-pulse tw-bg-[linear-gradient(135deg,rgba(80,46,28,0.6),rgba(28,24,20,0.5))] tw-border-[rgba(212,175,55,0.5)] tw-text-[color:var(--wh40k-gold)]{{/if}}"
                   data-action="toggleEditMode"
-                  data-tooltip="{{#if inEditMode}}Exit Edit Mode{{else}}Edit Mode{{/if}}">
+                  data-tooltip="{{#if inEditMode}}{{localize 'WH40K.Common.ExitEditMode'}}{{else}}{{localize 'WH40K.ItemSheet.Weapon.EditMode'}}{{/if}}">
             <i class="fa-solid {{#if inEditMode}}fa-lock-open{{else}}fa-pen-to-square{{/if}}"></i>
           </button>
           {{/if}}
@@ -73,12 +73,12 @@
         {{#if isOwnedByActor}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-cursor-pointer tw-border-[rgba(115,177,113,0.5)] tw-bg-[linear-gradient(145deg,rgba(74,132,72,0.25),rgba(12,16,24,0.7))]"
              data-action="rollAttack"
-             data-tooltip="Roll Attack">
+             data-tooltip="{{localize 'WH40K.ItemSheet.Weapon.RollAttack'}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
             <i class="fa-solid fa-crosshairs"></i>
           </div>
           <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
-            <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[color:var(--wh40k-green-bright)] tw-leading-[1.1]">Attack</span>
+            <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[color:var(--wh40k-green-bright)] tw-leading-[1.1]">{{localize "WH40K.Combat.Attack"}}</span>
             <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">d100</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
@@ -88,13 +88,13 @@
         {{!-- Damage Card (clickable to roll if owned) --}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[10px_8px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] [grid-column:span_2] [grid-row:span_2] tw-border-[rgba(182,62,46,0.4)] tw-bg-[linear-gradient(145deg,rgba(182,62,46,0.15),rgba(12,16,24,0.7))] {{#if isOwnedByActor}}tw-cursor-pointer{{/if}}"
              {{#if isOwnedByActor}}data-action="rollDamage"{{/if}}
-             data-tooltip="{{#if isOwnedByActor}}Click to Roll Damage{{else}}Damage{{/if}}">
+             data-tooltip="{{#if isOwnedByActor}}{{localize 'WH40K.ItemSheet.Weapon.ClickToRollDamage'}}{{else}}{{localize 'WH40K.Weapon.Damage'}}{{/if}}">
           <div class="tw-relative tw-z-[2] tw-text-[2rem] tw-mb-2 tw-transition-transform">
             <i class="fa-solid fa-skull"></i>
           </div>
           <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
             <span class="tw-font-display tw-text-[1.4rem] tw-font-bold tw-text-[color:var(--wh40k-red-bright)] tw-leading-[1.1]">{{fullDamageFormula}}</span>
-            <span class="tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">Damage</span>
+            <span class="tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">{{localize "WH40K.Weapon.Damage"}}</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
           {{#if hasModificationEffects}}<span class="tw-animate-star-twinkle tw-absolute tw-top-1 tw-right-1.5 tw-text-[0.6rem] tw-text-[var(--wh40k-gold)] tw-z-[3] tw-pointer-events-none" aria-hidden="true">★</span>{{/if}}
@@ -102,13 +102,13 @@
 
         {{!-- Penetration - Arrow (Medium) --}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(212,175,55,0.4)] tw-bg-[linear-gradient(145deg,rgba(212,175,55,0.12),rgba(12,16,24,0.7))]"
-             data-tooltip="Penetration">
+             data-tooltip="{{localize 'WH40K.Combat.Penetration'}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
             <i class="fa-solid fa-location-arrow"></i>
           </div>
           <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
             <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[color:var(--wh40k-gold)] tw-leading-[1.1]">{{effectivePenetration}}</span>
-            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">Penetration</span>
+            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">{{localize "WH40K.Combat.Penetration"}}</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
           {{#if hasModificationEffects}}<span class="tw-animate-star-twinkle tw-absolute tw-top-1 tw-right-1.5 tw-text-[0.6rem] tw-text-[var(--wh40k-gold)] tw-z-[3] tw-pointer-events-none" aria-hidden="true">★</span>{{/if}}
@@ -117,7 +117,7 @@
         {{!-- To Hit - Crosshairs (Medium, conditional) --}}
         {{#if (ne effectiveToHit 0)}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(74,132,72,0.4)] tw-bg-[linear-gradient(145deg,rgba(74,132,72,0.12),rgba(12,16,24,0.7))]"
-             data-tooltip="To Hit Modifier">
+             data-tooltip="{{localize 'WH40K.ItemSheet.Weapon.ToHitModifier'}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
             <i class="fa-solid fa-bullseye"></i>
           </div>
@@ -125,7 +125,7 @@
             <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-leading-[1.1] {{#if (gt effectiveToHit 0)}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:var(--wh40k-red-bright)]{{/if}}">
               {{#if (gt effectiveToHit 0)}}+{{/if}}{{effectiveToHit}}
             </span>
-            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">To Hit</span>
+            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">{{localize "WH40K.ItemSheet.Weapon.ToHit"}}</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
         </div>
@@ -134,26 +134,26 @@
         {{!-- Range - Crosshairs/Target (Medium, ranged only) --}}
         {{#if system.isRangedWeapon}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(58,93,132,0.4)] tw-bg-[linear-gradient(145deg,rgba(58,93,132,0.15),rgba(12,16,24,0.7))]"
-             data-tooltip="Range">
+             data-tooltip="{{localize 'WH40K.Weapon.Range'}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
             <i class="fa-solid fa-ruler"></i>
           </div>
           <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
             <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[rgba(178,208,234,0.95)] tw-leading-[1.1]">{{system.rangeLabel}}</span>
-            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">Range</span>
+            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">{{localize "WH40K.Weapon.Range"}}</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
         </div>
 
         {{!-- Rate of Fire - Burst (Small) --}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(143,76,38,0.4)] tw-bg-[linear-gradient(145deg,rgba(143,76,38,0.15),rgba(12,16,24,0.7))]"
-             data-tooltip="Rate of Fire">
+             data-tooltip="{{localize 'WH40K.ItemSheet.Weapon.RateOfFire'}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
             <i class="fa-solid fa-burst"></i>
           </div>
           <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
             <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[rgba(212,140,80,0.9)] tw-leading-[1.1]">{{system.rateOfFireLabel}}</span>
-            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">RoF</span>
+            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">{{localize "WH40K.Chat.Weapon.RoF"}}</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
         </div>
@@ -163,13 +163,13 @@
         {{#if system.usesAmmo}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(74,132,72,0.4)] tw-bg-[linear-gradient(145deg,rgba(74,132,72,0.1),rgba(12,16,24,0.7))] wh40k-iconic-stat--ammo-{{system.ammoStatus}} {{#if (or (eq system.ammoStatus "critical") (eq system.ammoStatus "empty"))}}tw-animate-clip-pulse{{/if}} {{#if isOwnedByActor}}tw-cursor-pointer{{/if}}"
              {{#if isOwnedByActor}}data-action="expendAmmo"{{/if}}
-             data-tooltip="{{#if isOwnedByActor}}Click to Spend Ammo{{else}}Ammunition{{/if}}">
+             data-tooltip="{{#if isOwnedByActor}}{{localize 'WH40K.ItemSheet.Weapon.ClickToSpendAmmo'}}{{else}}{{localize 'WH40K.Ammunition.TypeLabel'}}{{/if}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
             <i class="fa-solid fa-gun"></i>
           </div>
           <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
             <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[rgba(240,232,220,0.95)] tw-leading-[1.1]">{{system.effectiveClipValue}}/{{system.effectiveClipMax}}</span>
-            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">Clip</span>
+            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">{{localize "WH40K.Weapon.Clip"}}</span>
           </div>
           <div class="tw-absolute tw-bottom-0 tw-left-0 tw-right-0 tw-h-[4px] tw-bg-[rgba(0,0,0,0.3)] tw-overflow-hidden" style="--progress: {{system.ammoPercentage}}%"></div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
@@ -179,12 +179,12 @@
         {{#if isOwnedByActor}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-cursor-pointer tw-border-[rgba(58,93,132,0.4)] tw-bg-[linear-gradient(145deg,rgba(58,93,132,0.2),rgba(12,16,24,0.7))] {{#if (eq system.clip.value system.effectiveClipMax)}}tw-opacity-40 tw-pointer-events-none{{/if}}"
              data-action="reload"
-             data-tooltip="Reload ({{system.reloadLabel}})">
+             data-tooltip="{{localize 'WH40K.ItemSheet.Weapon.ReloadTooltip' label=system.reloadLabel}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
             <i class="fa-solid fa-rotate-right"></i>
           </div>
           <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
-            <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[rgba(178,208,234,0.95)] tw-leading-[1.1]">Reload</span>
+            <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[rgba(178,208,234,0.95)] tw-leading-[1.1]">{{localize "WH40K.Weapon.Reload"}}</span>
             <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">{{system.reloadLabel}}</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
@@ -226,13 +226,13 @@
 
         {{!-- Weight - Scale (Small) --}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(148,160,178,0.3)] tw-bg-[linear-gradient(145deg,rgba(148,160,178,0.08),rgba(12,16,24,0.7))]"
-             data-tooltip="Weight">
+             data-tooltip="{{localize 'WH40K.Weight'}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
             <i class="fa-solid fa-scale-balanced"></i>
           </div>
           <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
-            <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[rgba(240,232,220,0.95)] tw-leading-[1.1]">{{effectiveWeight}}<small>kg</small></span>
-            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">Weight</span>
+            <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[rgba(240,232,220,0.95)] tw-leading-[1.1]">{{effectiveWeight}}<small>{{localize "WH40K.Common.Kilograms"}}</small></span>
+            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">{{localize "WH40K.Weight"}}</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
         </div>
@@ -287,7 +287,7 @@
           <i class="fa-solid fa-circle-dot"></i>
           <span class="tw-flex-1 tw-font-semibold tw-text-[0.85rem] tw-text-[rgba(178,234,176,0.95)]">{{loadedAmmoLabel}}</span>
           {{#if isOwnedByActor}}
-          <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-px-1 tw-py-1 tw-bg-transparent tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-sm tw-cursor-pointer hover:tw-border-[var(--wh40k-gold)] hover:tw-text-gold" data-action="ejectAmmo" title="Eject">
+          <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-px-1 tw-py-1 tw-bg-transparent tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-sm tw-cursor-pointer hover:tw-border-[var(--wh40k-gold)] hover:tw-text-gold" data-action="ejectAmmo" title="{{localize 'WH40K.ItemSheet.Weapon.Eject'}}">
             <i class="fa-solid fa-eject"></i>
           </button>
           {{/if}}
@@ -296,12 +296,12 @@
         <div class="tw-flex tw-flex-wrap tw-gap-[6px] tw-mt-[6px]">
           {{#if (ne loadedAmmoData.modifiers.damage 0)}}
           <span class="tw-inline-flex tw-py-[2px] tw-px-2 tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] tw-font-semibold {{#if (gt loadedAmmoData.modifiers.damage 0)}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:var(--wh40k-red-bright)]{{/if}}">
-            Dmg {{#if (gt loadedAmmoData.modifiers.damage 0)}}+{{/if}}{{loadedAmmoData.modifiers.damage}}
+            {{localize "WH40K.ItemSheet.Weapon.DamageShort"}} {{#if (gt loadedAmmoData.modifiers.damage 0)}}+{{/if}}{{loadedAmmoData.modifiers.damage}}
           </span>
           {{/if}}
           {{#if (ne loadedAmmoData.modifiers.penetration 0)}}
           <span class="tw-inline-flex tw-py-[2px] tw-px-2 tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] tw-font-semibold {{#if (gt loadedAmmoData.modifiers.penetration 0)}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:var(--wh40k-red-bright)]{{/if}}">
-            Pen {{#if (gt loadedAmmoData.modifiers.penetration 0)}}+{{/if}}{{loadedAmmoData.modifiers.penetration}}
+            {{localize "WH40K.Weapon.Pen"}} {{#if (gt loadedAmmoData.modifiers.penetration 0)}}+{{/if}}{{loadedAmmoData.modifiers.penetration}}
           </span>
           {{/if}}
           {{#if (gt loadedAmmoData.addedQualities.length 0)}}
@@ -322,7 +322,7 @@
           <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-5 tw-h-5 tw-bg-transparent tw-border-none tw-text-[color:var(--wh40k-green)] tw-cursor-pointer tw-p-0"
                   data-action="toggleModificationActive"
                   data-mod-index="{{mod.index}}"
-                  title="{{#if mod.active}}Deactivate{{else}}Activate{{/if}}">
+                  title="{{#if mod.active}}{{localize 'WH40K.ActiveModifiersPanel.Deactivate'}}{{else}}{{localize 'WH40K.ActiveModifiersPanel.Activate'}}{{/if}}">
             <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
           </button>
         </div>
@@ -338,7 +338,7 @@
       <section class="tw-mb-2 tw-bg-[rgba(12,16,24,0.5)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-[var(--wh40k-radius-lg)] tw-overflow-hidden">
         <header class="tw-group tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-2 tw-px-3 tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.35),rgba(16,20,28,0.15))] tw-border-b tw-border-[rgba(255,255,255,0.05)] tw-cursor-pointer tw-transition-[background] tw-select-none hover:tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.45),rgba(16,20,28,0.2))]" data-action="toggleSection" data-section="combat">
           <i class="fa-solid fa-swords"></i>
-          <span>Combat Statistics</span>
+          <span>{{localize "WH40K.ItemSheet.Weapon.CombatStatistics"}}</span>
           <i class="fa-solid fa-chevron-down wh40k-section__toggle tw-text-[0.7rem] tw-text-[rgba(214,221,235,0.5)] tw-transition-transform group-hover:tw-text-[color:var(--wh40k-gold)]"></i>
         </header>
         <div class="wh40k-section__body tw-animate-slide-in-up tw-p-[10px_12px] tw-transition-all" data-section-content="combat">
@@ -349,7 +349,7 @@
                      placeholder=" " id="damage-formula"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
-              <label for="damage-formula">Damage Dice</label>
+              <label for="damage-formula">{{localize "WH40K.ItemSheet.Weapon.DamageDice"}}</label>
               <span class="wh40k-float-field__bar"></span>
             </div>
 
@@ -359,7 +359,7 @@
                      placeholder=" " id="damage-bonus"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
-              <label for="damage-bonus">Bonus</label>
+              <label for="damage-bonus">{{localize "WH40K.ItemSheet.Weapon.Bonus"}}</label>
               <span class="wh40k-float-field__bar"></span>
             </div>
 
@@ -369,7 +369,7 @@
                      placeholder=" " id="penetration"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
-              <label for="penetration">Penetration</label>
+              <label for="penetration">{{localize "WH40K.Combat.Penetration"}}</label>
               <span class="wh40k-float-field__bar"></span>
             </div>
 
@@ -380,7 +380,7 @@
                       {{#unless inEditMode}}disabled{{/unless}}>
                 {{selectOptions damageTypes selected=source.damage.type labelAttr="label"}}
               </select>
-              <label for="damage-type">Damage Type</label>
+              <label for="damage-type">{{localize "WH40K.DamageType.Label"}}</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
             </div>
 
@@ -391,7 +391,7 @@
                       {{#unless inEditMode}}disabled{{/unless}}>
                 {{selectOptions weaponClasses selected=source.class labelAttr="label"}}
               </select>
-              <label for="weapon-class">Weapon Class</label>
+              <label for="weapon-class">{{localize "WH40K.ItemSheet.Weapon.WeaponClass"}}</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
             </div>
 
@@ -402,7 +402,7 @@
                       {{#unless inEditMode}}disabled{{/unless}}>
                 {{selectOptions weaponTypes selected=source.type labelAttr="label"}}
               </select>
-              <label for="weapon-type">Weapon Type</label>
+              <label for="weapon-type">{{localize "WH40K.ItemSheet.Weapon.WeaponType"}}</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
             </div>
           </div>
@@ -413,7 +413,7 @@
               <input type="checkbox" name="system.twoHanded" {{checked system.twoHanded}}
                      {{#unless inEditMode}}disabled{{/unless}} />
               <span class="wh40k-toggle-switch__slider"></span>
-              <span class="wh40k-toggle-switch__label"><i class="fa-solid fa-hands"></i> Two-Handed</span>
+              <span class="wh40k-toggle-switch__label"><i class="fa-solid fa-hands"></i> {{localize "WH40K.Weapon.TwoHanded"}}</span>
             </label>
             <label class="wh40k-toggle-switch {{#unless inEditMode}}wh40k-toggle-switch--readonly{{/unless}}">
               <input type="checkbox" name="system.melee" {{checked system.melee}}
@@ -444,7 +444,7 @@
       <section class="tw-mb-2 tw-bg-[rgba(12,16,24,0.5)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-[var(--wh40k-radius-lg)] tw-overflow-hidden">
         <header class="tw-group tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-2 tw-px-3 tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.35),rgba(16,20,28,0.15))] tw-border-b tw-border-[rgba(255,255,255,0.05)] tw-cursor-pointer tw-transition-[background] tw-select-none hover:tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.45),rgba(16,20,28,0.2))]" data-action="toggleSection" data-section="ranged">
           <i class="fa-solid fa-crosshairs"></i>
-          <span>Ranged Attack</span>
+          <span>{{localize "WH40K.ItemSheet.Weapon.RangedAttack"}}</span>
           <i class="fa-solid fa-chevron-down wh40k-section__toggle tw-text-[0.7rem] tw-text-[rgba(214,221,235,0.5)] tw-transition-transform group-hover:tw-text-[color:var(--wh40k-gold)]"></i>
         </header>
         <div class="wh40k-section__body tw-animate-slide-in-up tw-p-[10px_12px] tw-transition-all" data-section-content="ranged">
@@ -455,7 +455,7 @@
                      placeholder=" " id="range-value"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
-              <label for="range-value">Range (m)</label>
+              <label for="range-value">{{localize "WH40K.ItemSheet.Weapon.RangeMetres"}}</label>
               <span class="wh40k-float-field__bar"></span>
             </div>
 
@@ -465,7 +465,7 @@
                      placeholder=" " id="range-special"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
-              <label for="range-special">Special</label>
+              <label for="range-special">{{localize "WH40K.Weapon.Special"}}</label>
               <span class="wh40k-float-field__bar"></span>
             </div>
           </div>
@@ -475,14 +475,14 @@
             <label class="tw-flex tw-items-center tw-gap-[6px] tw-cursor-pointer {{#unless inEditMode}}tw-opacity-70 tw-pointer-events-none tw-cursor-default{{/unless}}">
               <input type="checkbox" name="system.attack.rateOfFire.single" {{checked system.attack.rateOfFire.single}}
                      {{#unless inEditMode}}disabled{{/unless}} />
-              <span>Single (S)</span>
+              <span>{{localize "WH40K.ItemSheet.Weapon.SingleShot"}}</span>
             </label>
             <div class="wh40k-float-field wh40k-float-field--narrow">
               <input type="number" name="system.attack.rateOfFire.semi" value="{{source.attack.rateOfFire.semi}}"
                      min="0" placeholder=" " id="rof-semi"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
-              <label for="rof-semi">Semi</label>
+              <label for="rof-semi">{{localize "WH40K.ItemSheet.Weapon.Semi"}}</label>
               <span class="wh40k-float-field__bar"></span>
             </div>
             <div class="wh40k-float-field wh40k-float-field--narrow">
@@ -490,7 +490,7 @@
                      min="0" placeholder=" " id="rof-full"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
-              <label for="rof-full">Full</label>
+              <label for="rof-full">{{localize "WH40K.ItemSheet.Weapon.Full"}}</label>
               <span class="wh40k-float-field__bar"></span>
             </div>
           </div>
@@ -503,7 +503,7 @@
       <section class="tw-mb-2 tw-bg-[rgba(12,16,24,0.5)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-[var(--wh40k-radius-lg)] tw-overflow-hidden">
         <header class="tw-group tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-2 tw-px-3 tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.35),rgba(16,20,28,0.15))] tw-border-b tw-border-[rgba(255,255,255,0.05)] tw-cursor-pointer tw-transition-[background] tw-select-none hover:tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.45),rgba(16,20,28,0.2))]" data-action="toggleSection" data-section="ammunition">
           <i class="fa-solid fa-box-archive"></i>
-          <span>Ammunition</span>
+          <span>{{localize "WH40K.Ammunition.TypeLabel"}}</span>
           <i class="fa-solid fa-chevron-down wh40k-section__toggle tw-text-[0.7rem] tw-text-[rgba(214,221,235,0.5)] tw-transition-transform group-hover:tw-text-[color:var(--wh40k-gold)]"></i>
         </header>
         <div class="wh40k-section__body tw-animate-slide-in-up tw-p-[10px_12px] tw-transition-all" data-section-content="ammunition">
@@ -514,7 +514,7 @@
                      min="0" placeholder=" " id="clip-current"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
-              <label for="clip-current">Current</label>
+              <label for="clip-current">{{localize "WH40K.ItemSheet.Weapon.Current"}}</label>
               <span class="wh40k-float-field__bar"></span>
             </div>
 
@@ -524,7 +524,7 @@
                      min="0" placeholder=" " id="clip-max"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
-              <label for="clip-max">Max</label>
+              <label for="clip-max">{{localize "WH40K.Common.Max"}}</label>
               <span class="wh40k-float-field__bar"></span>
             </div>
 
@@ -535,7 +535,7 @@
                       {{#unless inEditMode}}disabled{{/unless}}>
                 {{selectOptions reloadTimes selected=source.reload labelAttr="label"}}
               </select>
-              <label for="reload-time">Reload</label>
+              <label for="reload-time">{{localize "WH40K.Weapon.Reload"}}</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
             </div>
           </div>
@@ -544,8 +544,8 @@
           {{#unless hasLoadedAmmo}}
           <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-4 tw-mt-2 tw-bg-[rgba(0,0,0,0.15)] tw-border-2 tw-border-dashed tw-border-[rgba(255,255,255,0.1)] tw-rounded-[6px] tw-text-center tw-transition-all">
             <i class="fa-solid fa-bullseye"></i>
-            <p>Standard Ammunition</p>
-            <p class="tw-text-[0.7rem] tw-italic tw-mt-1 tw-text-[color:var(--wh40k-text-muted)]">Drag special ammo here to load</p>
+            <p>{{localize "WH40K.ItemSheet.Weapon.StandardAmmunition"}}</p>
+            <p class="tw-text-[0.7rem] tw-italic tw-mt-1 tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.ItemSheet.Weapon.DragSpecialAmmo"}}</p>
           </div>
           {{/unless}}
         </div>
@@ -556,7 +556,7 @@
       <section class="tw-mb-2 tw-bg-[rgba(12,16,24,0.5)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-[var(--wh40k-radius-lg)] tw-overflow-hidden">
         <header class="tw-group tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-2 tw-px-3 tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.35),rgba(16,20,28,0.15))] tw-border-b tw-border-[rgba(255,255,255,0.05)] tw-cursor-pointer tw-transition-[background] tw-select-none hover:tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.45),rgba(16,20,28,0.2))]" data-action="toggleSection" data-section="acquisition">
           <i class="fa-solid fa-coins"></i>
-          <span>Acquisition</span>
+          <span>{{localize "WH40K.ItemSheet.Weapon.Acquisition"}}</span>
           <i class="fa-solid fa-chevron-down wh40k-section__toggle tw-text-[0.7rem] tw-text-[rgba(214,221,235,0.5)] tw-transition-transform group-hover:tw-text-[color:var(--wh40k-gold)]"></i>
         </header>
         <div class="wh40k-section__body tw-animate-slide-in-up tw-p-[10px_12px] tw-transition-all" data-section-content="acquisition">
@@ -568,7 +568,7 @@
                       {{#unless inEditMode}}disabled{{/unless}}>
                 {{selectOptions availabilities selected=source.availability labelAttr="label"}}
               </select>
-              <label for="availability">Availability</label>
+              <label for="availability">{{localize "WH40K.Availability.Label"}}</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
             </div>
 
@@ -579,7 +579,7 @@
                       {{#unless inEditMode}}disabled{{/unless}}>
                 {{selectOptions craftsmanships selected=source.craftsmanship labelAttr="label"}}
               </select>
-              <label for="craftsmanship">Craftsmanship</label>
+              <label for="craftsmanship">{{localize "WH40K.Craftsmanship.Label"}}</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
             </div>
 
@@ -589,7 +589,7 @@
                      step="0.1" min="0" placeholder=" " id="weight"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
-              <label for="weight">Weight (kg)</label>
+              <label for="weight">{{localize "WH40K.Ammunition.WeightKg"}}</label>
               <span class="wh40k-float-field__bar"></span>
             </div>
 
@@ -599,7 +599,7 @@
                      placeholder=" " id="source"
                      class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                      {{#unless inEditMode}}readonly{{/unless}} />
-              <label for="source">Source</label>
+              <label for="source">{{localize "WH40K.Common.Source"}}</label>
               <span class="wh40k-float-field__bar"></span>
             </div>
           </div>
@@ -610,7 +610,7 @@
       <section class="tw-mb-2 tw-bg-[rgba(12,16,24,0.5)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-[var(--wh40k-radius-lg)] tw-overflow-hidden">
         <header class="tw-group tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-2 tw-px-3 tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.35),rgba(16,20,28,0.15))] tw-border-b tw-border-[rgba(255,255,255,0.05)] tw-cursor-pointer tw-transition-[background] tw-select-none hover:tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.45),rgba(16,20,28,0.2))]" data-action="toggleSection" data-section="description">
           <i class="fa-solid fa-scroll"></i>
-          <span>Description</span>
+          <span>{{localize "WH40K.Tabs.Description"}}</span>
           <i class="fa-solid fa-chevron-down wh40k-section__toggle tw-text-[0.7rem] tw-text-[rgba(214,221,235,0.5)] tw-transition-transform group-hover:tw-text-[color:var(--wh40k-gold)]"></i>
         </header>
         <div class="wh40k-section__body tw-animate-slide-in-up tw-p-0 tw-transition-all" data-section-content="description">
@@ -620,19 +620,19 @@
           </div>
           {{else}}
           <div class="tw-p-[10px_12px] tw-text-[0.85rem] tw-leading-[1.5] tw-text-[color:var(--wh40k-text-medium)] tw-min-h-[60px] tw-transition-all {{#if canEdit}}tw-cursor-pointer tw-border tw-border-transparent tw-rounded-[var(--wh40k-radius-md)] tw-m-2 tw-p-[8px_10px] hover:tw-bg-[rgba(212,175,55,0.08)] hover:tw-border-[rgba(212,175,55,0.25)]{{/if}}"
-               {{#if canEdit}}data-action="toggleEditMode" title="Click to edit"{{/if}}>
+               {{#if canEdit}}data-action="toggleEditMode" title="{{localize 'WH40K.ItemSheet.Weapon.ClickToEdit'}}"{{/if}}>
             {{#if system.description.value}}
             {{{system.description.value}}}
             {{else}}
-            <p class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-text-[rgba(214,221,235,0.4)] tw-italic tw-m-0"><i class="fa-solid fa-pen"></i> Click to add description...</p>
+            <p class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-text-[rgba(214,221,235,0.4)] tw-italic tw-m-0"><i class="fa-solid fa-pen"></i> {{localize "WH40K.ItemSheet.Weapon.ClickToAddDescription"}}</p>
             {{/if}}
           </div>
           {{/if}}
 
           {{!-- Notes --}}
           <div class="tw-flex tw-flex-col tw-gap-1 tw-px-3 tw-py-2.5 tw-w-full">
-            <label class="tw-text-sm tw-font-medium">Notes</label>
-            <textarea name="system.notes" rows="2" placeholder="Personal notes..."
+            <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Tabs.Notes"}}</label>
+            <textarea name="system.notes" rows="2" placeholder="{{localize 'WH40K.ItemSheet.Weapon.PersonalNotes'}}"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}} tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-p-1.5 tw-text-sm tw-font-body tw-resize-y"
                       {{#unless inEditMode}}readonly{{/unless}}>{{system.notes}}</textarea>
           </div>
@@ -644,7 +644,7 @@
       <section class="tw-mb-2 tw-bg-[rgba(12,16,24,0.5)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-[var(--wh40k-radius-lg)] tw-overflow-hidden">
         <header class="tw-group tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-2 tw-px-3 tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.35),rgba(16,20,28,0.15))] tw-border-b tw-border-[rgba(255,255,255,0.05)] tw-cursor-pointer tw-transition-[background] tw-select-none hover:tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.45),rgba(16,20,28,0.2))]" data-action="toggleSection" data-section="modifications">
           <i class="fa-solid fa-wrench"></i>
-          <span>Modifications</span>
+          <span>{{localize "WH40K.Tabs.Modifications"}}</span>
           {{#if modificationsData.length}}
           <span class="tw-inline-flex tw-items-center tw-justify-center tw-min-w-[22px] tw-h-[22px] tw-px-1.5 tw-ml-1.5 {{themeClassFor 'primary'}} tw-rounded-full tw-font-ui tw-text-xs tw-font-bold tw-text-[#1a1a1a]">{{modificationsData.length}}</span>
           {{/if}}
@@ -668,11 +668,11 @@
               {{/if}}
               <div class="tw-flex tw-gap-[2px]">
                 <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-px-1 tw-py-1 tw-bg-transparent tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-sm tw-cursor-pointer hover:tw-border-[var(--wh40k-gold)] hover:tw-text-gold"
-                        data-action="viewModification" data-mod-index="{{mod.index}}" title="View">
+                        data-action="viewModification" data-mod-index="{{mod.index}}" title="{{localize 'WH40K.ItemSheet.Weapon.View'}}">
                   <i class="fa-solid fa-eye"></i>
                 </button>
                 <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-px-1 tw-py-1 tw-bg-transparent tw-border tw-border-[var(--wh40k-red-dark)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-sm tw-cursor-pointer hover:tw-bg-[var(--wh40k-red-dark)] hover:tw-border-[var(--wh40k-red)] hover:tw-text-white"
-                        data-action="removeModification" data-mod-index="{{mod.index}}" title="Remove">
+                        data-action="removeModification" data-mod-index="{{mod.index}}" title="{{localize 'WH40K.Common.Remove'}}">
                   <i class="fa-solid fa-trash"></i>
                 </button>
               </div>
@@ -682,8 +682,8 @@
           {{else}}
           <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70" data-drop-zone="modifications">
             <i class="fa-solid fa-wrench"></i>
-            <p>No modifications</p>
-            <p class="tw-text-[0.7rem] tw-italic tw-mt-1 tw-text-[color:var(--wh40k-text-muted)]">Drag modifications from compendium</p>
+            <p>{{localize "WH40K.ItemSheet.Weapon.NoModifications"}}</p>
+            <p class="tw-text-[0.7rem] tw-italic tw-mt-1 tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.ItemSheet.Weapon.DragModifications"}}</p>
           </div>
           {{/if}}
         </div>
@@ -695,7 +695,7 @@
       <section class="tw-mb-2 tw-bg-[rgba(12,16,24,0.5)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-[var(--wh40k-radius-lg)] tw-overflow-hidden">
         <header class="tw-group tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-2 tw-px-3 tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.35),rgba(16,20,28,0.15))] tw-border-b tw-border-[rgba(255,255,255,0.05)] tw-cursor-pointer tw-transition-[background] tw-select-none hover:tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.45),rgba(16,20,28,0.2))]" data-action="toggleSection" data-section="effects">
           <i class="fa-solid fa-wand-magic-sparkles"></i>
-          <span>Active Effects</span>
+          <span>{{localize "WH40K.Effects.ActiveLabel"}}</span>
           <span class="tw-inline-flex tw-items-center tw-justify-center tw-min-w-[22px] tw-h-[22px] tw-px-1.5 tw-ml-1.5 {{themeClassFor 'primary'}} tw-rounded-full tw-font-ui tw-text-xs tw-font-bold tw-text-[#1a1a1a]">{{effects.length}}</span>
           <i class="fa-solid fa-chevron-down wh40k-section__toggle tw-text-[0.7rem] tw-text-[rgba(214,221,235,0.5)] tw-transition-transform group-hover:tw-text-[color:var(--wh40k-gold)]"></i>
         </header>

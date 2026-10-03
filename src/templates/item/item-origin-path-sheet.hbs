@@ -8,7 +8,7 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact identity with step badge
     ═══════════════════════════════════════════════════════════════════ --}}
-    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholder="Origin Path Name" hideTypeBadge=true }}
+    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholderKey="WH40K.ItemSheet.NamePlaceholder.OriginPath" hideTypeBadge=true }}
       <div class="tw-flex tw-flex-col tw-gap-1">
         <div class="tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
           {{!-- Step Badge --}}
@@ -18,30 +18,30 @@
           </span>
 
           {{!-- Step Index Badge --}}
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Order in path">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.ItemSheet.OriginPath.OrderTooltip'}}">
             <i class="fas fa-sort-numeric-up"></i>
-            Step {{add item.system.stepIndex 1}}
+            {{localize "WH40K.ItemSheet.OriginPath.StepNumber" number=(add item.system.stepIndex 1)}}
           </span>
         </div>
 
         {{!-- Step Configuration --}}
         <div class="tw-flex tw-gap-2 tw-mt-1">
           <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
-            <label class="tw-text-xs tw-opacity-70">Step Type</label>
+            <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.OriginPath.StepType"}}</label>
             <select name="system.step" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-              <option value="homeWorld" {{#if (eq item.system.step "homeWorld")}}selected{{/if}}>Home World</option>
-              <option value="birthright" {{#if (eq item.system.step "birthright")}}selected{{/if}}>Birthright</option>
-              <option value="lureOfTheVoid" {{#if (eq item.system.step "lureOfTheVoid")}}selected{{/if}}>Lure of the Void</option>
-              <option value="trialsAndTravails" {{#if (eq item.system.step "trialsAndTravails")}}selected{{/if}}>Trials &amp; Travails</option>
-              <option value="motivation" {{#if (eq item.system.step "motivation")}}selected{{/if}}>Motivation</option>
-              <option value="career" {{#if (eq item.system.step "career")}}selected{{/if}}>Career</option>
-              <option value="lineage" {{#if (eq item.system.step "lineage")}}selected{{/if}}>Lineage</option>
-              <option value="eliteAdvance" {{#if (eq item.system.step "eliteAdvance")}}selected{{/if}}>Elite Advance</option>
+              <option value="homeWorld" {{#if (eq item.system.step "homeWorld")}}selected{{/if}}>{{localize "WH40K.OriginPath.StepHomeWorld"}}</option>
+              <option value="birthright" {{#if (eq item.system.step "birthright")}}selected{{/if}}>{{localize "WH40K.OriginPath.StepBirthright"}}</option>
+              <option value="lureOfTheVoid" {{#if (eq item.system.step "lureOfTheVoid")}}selected{{/if}}>{{localize "WH40K.OriginPath.StepLureOfTheVoid"}}</option>
+              <option value="trialsAndTravails" {{#if (eq item.system.step "trialsAndTravails")}}selected{{/if}}>{{localize "WH40K.OriginPath.StepTrialsAndTravails"}}</option>
+              <option value="motivation" {{#if (eq item.system.step "motivation")}}selected{{/if}}>{{localize "WH40K.OriginPath.StepMotivation"}}</option>
+              <option value="career" {{#if (eq item.system.step "career")}}selected{{/if}}>{{localize "WH40K.OriginPath.StepCareer"}}</option>
+              <option value="lineage" {{#if (eq item.system.step "lineage")}}selected{{/if}}>{{localize "WH40K.OriginPath.Lineage"}}</option>
+              <option value="eliteAdvance" {{#if (eq item.system.step "eliteAdvance")}}selected{{/if}}>{{localize "WH40K.OriginPath.Elite"}}</option>
             </select>
           </div>
 
           <div class="tw-flex tw-flex-col tw-gap-1 tw-w-20">
-            <label class="tw-text-xs tw-opacity-70">Step Index</label>
+            <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.OriginPath.StepIndex"}}</label>
             <input type="number" name="system.stepIndex" value="{{item.system.stepIndex}}" min="0" max="8" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
           </div>
         </div>
@@ -64,10 +64,10 @@
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
     {{> systems/wh40k-rpg/templates/item/partial/item-accent-tab-strip.hbs category="dynasty" tabs=(array
-        (object tab="grants"       label="Grants"       icon="fa-gift"            active=true)
-        (object tab="requirements" label="Requirements" icon="fa-lock"            active=false)
-        (object tab="choices"      label="Choices"      icon="fa-question-circle" active=false)
-        (object tab="description"  label="Description"  icon="fa-book"            active=false))}}
+        (object tab="grants"       label=(localize "WH40K.Talent.Grants")       icon="fa-gift"            active=true)
+        (object tab="requirements" label=(localize "WH40K.Tabs.Requirements") icon="fa-lock"            active=false)
+        (object tab="choices"      label=(localize "WH40K.ItemSheet.OriginPath.Choices")      icon="fa-question-circle" active=false)
+        (object tab="description"  label=(localize "WH40K.Tabs.Description")  icon="fa-book"            active=false))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
@@ -85,39 +85,39 @@
 
           <div class="tw-grid tw-grid-cols-[repeat(9,1fr)] tw-gap-1">
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="tw-text-xs tw-opacity-70">WS</label>
+              <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Characteristic.Abbr.WeaponSkill"}}</label>
               <input type="number" name="system.modifiers.characteristics.weaponSkill" value="{{item.system.modifiers.characteristics.weaponSkill}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="tw-text-xs tw-opacity-70">BS</label>
+              <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Characteristic.Abbr.BallisticSkill"}}</label>
               <input type="number" name="system.modifiers.characteristics.ballisticSkill" value="{{item.system.modifiers.characteristics.ballisticSkill}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="tw-text-xs tw-opacity-70">S</label>
+              <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Characteristic.Abbr.Strength"}}</label>
               <input type="number" name="system.modifiers.characteristics.strength" value="{{item.system.modifiers.characteristics.strength}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="tw-text-xs tw-opacity-70">T</label>
+              <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Characteristic.Abbr.Toughness"}}</label>
               <input type="number" name="system.modifiers.characteristics.toughness" value="{{item.system.modifiers.characteristics.toughness}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="tw-text-xs tw-opacity-70">Ag</label>
+              <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Characteristic.Abbr.Agility"}}</label>
               <input type="number" name="system.modifiers.characteristics.agility" value="{{item.system.modifiers.characteristics.agility}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="tw-text-xs tw-opacity-70">Int</label>
+              <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Characteristic.Abbr.Intelligence"}}</label>
               <input type="number" name="system.modifiers.characteristics.intelligence" value="{{item.system.modifiers.characteristics.intelligence}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="tw-text-xs tw-opacity-70">Per</label>
+              <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Characteristic.Abbr.Perception"}}</label>
               <input type="number" name="system.modifiers.characteristics.perception" value="{{item.system.modifiers.characteristics.perception}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="tw-text-xs tw-opacity-70">WP</label>
+              <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Characteristic.Abbr.Willpower"}}</label>
               <input type="number" name="system.modifiers.characteristics.willpower" value="{{item.system.modifiers.characteristics.willpower}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="tw-text-xs tw-opacity-70">Fel</label>
+              <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Characteristic.Abbr.Fellowship"}}</label>
               <input type="number" name="system.modifiers.characteristics.fellowship" value="{{item.system.modifiers.characteristics.fellowship}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
           </div>
@@ -131,19 +131,19 @@
 
           <div class="tw-flex tw-flex-wrap tw-gap-3">
             <div class="tw-flex tw-flex-col tw-gap-1">
-              <label class="tw-text-xs tw-opacity-70">Wounds</label>
+              <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Wounds"}}</label>
               <input type="number" name="system.grants.wounds" value="{{item.system.grants.wounds}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-w-20" placeholder="0" />
             </div>
 
             <div class="tw-flex tw-flex-col tw-gap-1">
-              <label class="tw-text-xs tw-opacity-70">Fate Threshold</label>
+              <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.OriginPath.FateThreshold"}}</label>
               <input type="number" name="system.grants.fateThreshold" value="{{item.system.grants.fateThreshold}}" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-w-20" placeholder="0" />
             </div>
 
             <div class="tw-flex tw-flex-col tw-justify-end">
               <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm">
                 <input type="checkbox" name="system.grants.blessedByEmperor" {{checked item.system.grants.blessedByEmperor}} />
-                <span>Blessed by Emperor</span>
+                <span>{{localize "WH40K.ItemSheet.OriginPath.BlessedByEmperor"}}</span>
               </label>
             </div>
           </div>
@@ -196,7 +196,7 @@
           {{else}}
           <div class="tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
             <i class="fas fa-graduation-cap tw-opacity-40"></i>
-            <p class="tw-m-0">No skills granted</p>
+            <p class="tw-m-0">{{localize "WH40K.ItemSheet.OriginPath.NoSkills"}}</p>
           </div>
           {{/if}}
         </div>
@@ -235,7 +235,7 @@
           {{else}}
           <div class="tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
             <i class="fas fa-star tw-opacity-40"></i>
-            <p class="tw-m-0">No talents granted</p>
+            <p class="tw-m-0">{{localize "WH40K.ItemSheet.OriginPath.NoTalents"}}</p>
           </div>
           {{/if}}
         </div>
@@ -274,7 +274,7 @@
           {{else}}
           <div class="tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
             <i class="fas fa-shield-alt tw-opacity-40"></i>
-            <p class="tw-m-0">No traits granted</p>
+            <p class="tw-m-0">{{localize "WH40K.ItemSheet.OriginPath.NoTraits"}}</p>
           </div>
           {{/if}}
         </div>
@@ -294,7 +294,7 @@
           {{else}}
           <div class="tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
             <i class="fas fa-brain tw-opacity-40"></i>
-            <p class="tw-m-0">No aptitudes granted</p>
+            <p class="tw-m-0">{{localize "WH40K.ItemSheet.OriginPath.NoAptitudes"}}</p>
           </div>
           {{/if}}
         </div>
@@ -361,12 +361,12 @@
           {{#if item.system.requirements.text}}
           <div class="tw-mb-3">
             <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-              <i class="fas fa-file-alt tw-text-gold {{themeClassFor 'accent'}}"></i> Text Description
+              <i class="fas fa-file-alt tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.ItemSheet.OriginPath.TextDescription"}}
             </h3>
 
             <div class="tw-flex tw-flex-col tw-gap-1">
-              <label class="tw-text-xs tw-opacity-70">Requirements</label>
-              <textarea name="system.requirements.text" rows="3" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y" placeholder="e.g., Must have Void Born homeworld">{{item.system.requirements.text}}</textarea>
+              <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Tabs.Requirements"}}</label>
+              <textarea name="system.requirements.text" rows="3" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y" placeholder="{{localize 'WH40K.ItemSheet.OriginPath.RequirementsPlaceholder'}}">{{item.system.requirements.text}}</textarea>
             </div>
 
             <div class="tw-mt-2 tw-text-sm tw-p-2 tw-rounded-sm">
@@ -379,11 +379,11 @@
           {{#if item.system.requirements.previousSteps.length}}
           <div class="tw-mb-3">
             <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-              <i class="fas fa-check-circle tw-text-gold {{themeClassFor 'accent'}}"></i> Required Previous Steps
+              <i class="fas fa-check-circle tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.ItemSheet.OriginPath.RequiredPreviousSteps"}}
             </h3>
 
             <div class="tw-flex tw-flex-col tw-gap-1">
-              <p class="tw-m-0 tw-mb-1 tw-text-xs tw-italic tw-opacity-70">Character must have ONE of these:</p>
+              <p class="tw-m-0 tw-mb-1 tw-text-xs tw-italic tw-opacity-70">{{localize "WH40K.ItemSheet.OriginPath.MustHaveOne"}}</p>
               {{#each item.system.requirements.previousSteps as |step|}}
               <div class="tw-inline-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-text-success">
                 <i class="fas fa-check"></i>
@@ -398,11 +398,11 @@
           {{#if item.system.requirements.excludedSteps.length}}
           <div class="tw-mb-3">
             <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-              <i class="fas fa-ban tw-text-gold {{themeClassFor 'accent'}}"></i> Excluded Steps
+              <i class="fas fa-ban tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.ItemSheet.OriginPath.ExcludedSteps"}}
             </h3>
 
             <div class="tw-flex tw-flex-col tw-gap-1">
-              <p class="tw-m-0 tw-mb-1 tw-text-xs tw-italic tw-opacity-70">Character cannot have ANY of these:</p>
+              <p class="tw-m-0 tw-mb-1 tw-text-xs tw-italic tw-opacity-70">{{localize "WH40K.ItemSheet.OriginPath.CannotHaveAny"}}</p>
               {{#each item.system.requirements.excludedSteps as |step|}}
               <div class="tw-inline-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-text-crimson">
                 <i class="fas fa-times"></i>
@@ -415,8 +415,8 @@
         {{else}}
         <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-italic tw-rounded-md">
           <i class="fas fa-unlock tw-opacity-40 tw-text-3xl tw-mb-2"></i>
-          <p class="tw-m-0 tw-text-sm">No requirements defined</p>
-          <p class="tw-m-0 tw-text-xs tw-opacity-70 tw-mt-1">This origin path is available to all characters</p>
+          <p class="tw-m-0 tw-text-sm">{{localize "WH40K.ItemSheet.OriginPath.NoRequirements"}}</p>
+          <p class="tw-m-0 tw-text-xs tw-opacity-70 tw-mt-1">{{localize "WH40K.ItemSheet.OriginPath.AvailableToAll"}}</p>
         </div>
         {{/if}}
       </div>
@@ -435,7 +435,7 @@
                 <i class="fas {{#if (eq choice.type "skill")}}fa-graduation-cap{{else if (eq choice.type "talent")}}fa-star{{else if (eq choice.type "characteristic")}}fa-dumbbell{{else}}fa-toolbox{{/if}}"></i>
                 {{capitalize choice.type}}
               </span>
-              <span class="tw-text-xs tw-opacity-70">Choose {{choice.count}}</span>
+              <span class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.OriginPath.ChooseCount" count=choice.count}}</span>
             </div>
 
             <div class="tw-flex tw-flex-col tw-gap-1">
@@ -451,8 +451,8 @@
         {{else}}
         <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-italic tw-rounded-md">
           <i class="fas fa-question-circle tw-opacity-40 tw-text-3xl tw-mb-2"></i>
-          <p class="tw-m-0 tw-text-sm">No player choices required</p>
-          <p class="tw-m-0 tw-text-xs tw-opacity-70 tw-mt-1">All grants are automatic</p>
+          <p class="tw-m-0 tw-text-sm">{{localize "WH40K.ItemSheet.OriginPath.NoChoices"}}</p>
+          <p class="tw-m-0 tw-text-xs tw-opacity-70 tw-mt-1">{{localize "WH40K.ItemSheet.OriginPath.AutomaticGrants"}}</p>
         </div>
         {{/if}}
       </div>
@@ -462,11 +462,11 @@
         {{!-- Effect Text --}}
         <div class="tw-mb-3">
           <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-            <i class="fas fa-magic tw-text-gold {{themeClassFor 'accent'}}"></i> Effect Text
+            <i class="fas fa-magic tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.ItemSheet.OriginPath.EffectText"}}
           </h3>
 
           <p class="tw-m-0 tw-mb-3 tw-text-xs tw-italic tw-opacity-70">
-            <i class="fas fa-info-circle"></i> Brief mechanical summary or flavor text
+            <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.OriginPath.EffectTextHint"}}
           </p>
 
           <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
@@ -481,11 +481,11 @@
         {{!-- Description --}}
         <div class="tw-mb-3">
           <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-            <i class="fas fa-book tw-text-gold {{themeClassFor 'accent'}}"></i> Description
+            <i class="fas fa-book tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.Tabs.Description"}}
           </h3>
 
           <p class="tw-m-0 tw-mb-3 tw-text-xs tw-italic tw-opacity-70">
-            <i class="fas fa-info-circle"></i> Full lore and background information
+            <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.OriginPath.DescriptionHint"}}
           </p>
 
           <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
@@ -500,22 +500,22 @@
         {{!-- Notes --}}
         <div class="tw-mb-3">
           <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-            <i class="fas fa-sticky-note tw-text-gold {{themeClassFor 'accent'}}"></i> Notes
+            <i class="fas fa-sticky-note tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.Tabs.Notes"}}
           </h3>
 
           <div class="tw-flex tw-flex-col tw-gap-1.5">
-            <textarea name="system.notes" rows="4" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y" placeholder="GM notes, balance considerations, etc.">{{item.system.notes}}</textarea>
+            <textarea name="system.notes" rows="4" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y" placeholder="{{localize 'WH40K.ItemSheet.OriginPath.NotesPlaceholder'}}">{{item.system.notes}}</textarea>
           </div>
         </div>
 
         {{!-- Source --}}
         <div class="tw-mb-3">
           <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-            <i class="fas fa-book-bookmark tw-text-gold {{themeClassFor 'accent'}}"></i> Source
+            <i class="fas fa-book-bookmark tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.Common.Source"}}
           </h3>
 
           <div class="tw-flex tw-flex-col tw-gap-1.5">
-            <input type="text" name="system.source" value="{{item.system.source}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" placeholder="Core Rulebook, pg. XX" />
+            <input type="text" name="system.source" value="{{item.system.source}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" placeholder="{{localize 'WH40K.ItemSheet.OriginPath.SourcePlaceholder'}}" />
           </div>
         </div>
       </div>

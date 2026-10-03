@@ -12,9 +12,9 @@ const WeaponQualitySheet = defineSimpleItemSheet({
     width: 550,
     height: 500,
     tabs: [
-        { tab: 'effect', group: 'primary', label: 'Effect' },
-        { tab: 'details', group: 'primary', label: 'Details' },
-        { tab: 'description', group: 'primary', label: 'Description' },
+        { tab: 'effect', group: 'primary', label: 'WH40K.Tabs.Effect' },
+        { tab: 'details', group: 'primary', label: 'WH40K.Tabs.Details' },
+        { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Description' },
     ],
     defaultTab: 'effect',
 });

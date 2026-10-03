@@ -107,8 +107,8 @@ export class EventTracker {
      */
     static registerSettings(): void {
         game.settings.register(SYSTEM_ID, SETTING_KEY, {
-            name: 'Event Tracker State',
-            hint: 'Stores which campaign events have been resolved.',
+            name: 'WH40K.Notify.EventTracker.SettingName',
+            hint: 'WH40K.Notify.EventTracker.SettingHint',
             scope: 'world',
             config: false,
             type: Object,
@@ -230,7 +230,7 @@ export class EventTracker {
                 const dep = EventTracker._graph?.[id];
                 const depName = dep?.name ?? id;
                 const depLoc = dep?.location !== undefined && dep.location !== '' ? ` (${dep.location})` : '';
-                reasons.push(`Requires: ${depName}${depLoc}`);
+                reasons.push(game.i18n.format('WH40K.Notify.EventTracker.Requires', { event: `${depName}${depLoc}` }));
             }
         }
 
@@ -243,7 +243,11 @@ export class EventTracker {
                     const depLoc = dep?.location !== undefined && dep.location !== '' ? ` (${dep.location})` : '';
                     return `${depName}${depLoc}`;
                 });
-                reasons.push(`Requires one of: ${options.join(' OR ')}`);
+                reasons.push(
+                    game.i18n.format('WH40K.Notify.EventTracker.RequiresOneOf', {
+                        events: options.join(game.i18n.localize('WH40K.Notify.EventTracker.OrSeparator')),
+                    }),
+                );
             }
         }
 
@@ -354,7 +358,7 @@ export class EventTracker {
     /** Build the events pane HTML (the original, unchanged content). */
     static _buildEventsPane(): string {
         const graph = EventTracker._graph;
-        if (!graph) return '<p>Event graph not loaded. Check console.</p>';
+        if (!graph) return `<p>${game.i18n.localize('WH40K.Notify.EventTracker.PaneNotLoaded')}</p>`;
 
         const resolved = EventTracker.getResolved();
 
@@ -397,7 +401,11 @@ export class EventTracker {
             .evt-day-end { font-size: 10px; color: #68c; margin-left: 4px; }
         </style><div class="evt-tracker">`;
 
-        html += `<div class="evt-stats">${resolvedCount}/${total} resolved &bull; ${availableCount} available now</div>`;
+        html += `<div class="evt-stats">${game.i18n.format('WH40K.Notify.EventTracker.Summary', {
+            resolved: String(resolvedCount),
+            total: String(total),
+            available: String(availableCount),
+        })}</div>`;
 
         for (const [groupName, events] of groups.entries()) {
             html += `<div class="evt-group"><h3>${groupName}</h3>`;
@@ -412,7 +420,7 @@ export class EventTracker {
                 html += `<input type="checkbox" data-event-id="${evt.id}" ${checked} ${disabled}>`;
                 html += `<span class="evt-name">${evt.name}</span>`;
                 if (evt.location !== undefined && evt.location !== '') html += `<span class="evt-loc">${evt.location}</span>`;
-                if (evt.is_day_end === true) html += `<span class="evt-day-end">[DAY END]</span>`;
+                if (evt.is_day_end === true) html += `<span class="evt-day-end">${game.i18n.localize('WH40K.Notify.EventTracker.DayEnd')}</span>`;
                 html += `</div>`;
 
                 // Show blocking reasons for locked events
@@ -422,7 +430,7 @@ export class EventTracker {
                         html += `<div class="evt-block">${reason}</div>`;
                     }
                     if (evt.excuse !== undefined && evt.excuse !== '') {
-                        html += `<div class="evt-excuse">Excuse: ${evt.excuse}</div>`;
+                        html += `<div class="evt-excuse">${game.i18n.format('WH40K.Notify.EventTracker.Excuse', { excuse: evt.excuse })}</div>`;
                     }
                 }
             }
@@ -437,11 +445,11 @@ export class EventTracker {
         const states = EventTracker.computeCharacterStates();
         const names = Object.keys(states).sort((a, b) => a.localeCompare(b));
         if (!names.length) {
-            return `<div class="evt-tracker"><p style="color:#888;">No character dispositions or relationships loaded. Backfill <code>dispositions</code> / <code>relationships</code> frontmatter on character files and re-run <code>export_events.py</code>.</p></div>`;
+            return `<div class="evt-tracker"><p style="color:#888;">${game.i18n.localize('WH40K.Notify.EventTracker.NoCharacterData')}</p></div>`;
         }
 
         let html = `<div class="evt-tracker evt-npc-state">`;
-        html += `<div class="evt-stats">${names.length} NPC(s) with disposition/relationship data &bull; state recomputed from resolved events</div>`;
+        html += `<div class="evt-stats">${game.i18n.format('WH40K.Notify.EventTracker.NpcSummary', { count: String(names.length) })}</div>`;
 
         for (const name of names) {
             const s = states[name] as (typeof states)[string] | undefined;
@@ -457,11 +465,15 @@ export class EventTracker {
                     const d = s.dispositions[target] as DispositionEntry | undefined;
                     if (d === undefined) continue;
                     const color = EventTracker._stateColor(d.attitude);
-                    const badge = `<span class="evt-badge" style="background:${color};">${d.attitude !== '' ? d.attitude : 'unknown'}</span>`;
-                    const targetLabel = target === 'party' ? '<strong>Party</strong>' : target;
+                    const badge = `<span class="evt-badge" style="background:${color};">${
+                        d.attitude !== '' ? d.attitude : game.i18n.localize('WH40K.Notify.EventTracker.Unknown')
+                    }</span>`;
+                    const targetLabel = target === 'party' ? `<strong>${game.i18n.localize('WH40K.Notify.EventTracker.Party')}</strong>` : target;
                     const triggered =
                         d.trigger !== undefined && d.trigger !== ''
-                            ? ` <span class="evt-trigger">(via ${EventTracker._graph?.[d.trigger]?.name ?? d.trigger})</span>`
+                            ? ` <span class="evt-trigger">${game.i18n.format('WH40K.Notify.EventTracker.Via', {
+                                  event: EventTracker._graph?.[d.trigger]?.name ?? d.trigger,
+                              })}</span>`
                             : '';
                     html += `<div class="evt-row"><span class="evt-npc-target">${targetLabel}</span> ${badge}${triggered}`;
                     if (d.note !== undefined && d.note !== '') html += `<div class="evt-npc-note">${d.note}</div>`;
@@ -478,7 +490,9 @@ export class EventTracker {
                     const badge = `<span class="evt-badge" style="background:${color};">${r.currentState}</span>`;
                     const triggered =
                         r.trigger !== undefined && r.trigger !== ''
-                            ? ` <span class="evt-trigger">(via ${EventTracker._graph?.[r.trigger]?.name ?? r.trigger})</span>`
+                            ? ` <span class="evt-trigger">${game.i18n.format('WH40K.Notify.EventTracker.Via', {
+                                  event: EventTracker._graph?.[r.trigger]?.name ?? r.trigger,
+                              })}</span>`
                             : '';
                     html += `<div class="evt-row"><span class="evt-npc-target">${r.target}</span> <span class="evt-npc-type">${r.type}</span> ${badge}${triggered}`;
                     if (r.summary !== undefined && r.summary !== '') html += `<div class="evt-npc-note">${r.summary}</div>`;
@@ -531,9 +545,13 @@ export class EventTracker {
             .evt-npc-note { font-size: 11px; color: #bbb; margin-left: 20px; font-style: italic; flex-basis: 100%; }
         </style>`;
         html += `<div class="evt-tabs">`;
-        html += `<button type="button" class="evt-tab-btn ${eventsClass}" data-tab="events">Events</button>`;
+        html += `<button type="button" class="evt-tab-btn ${eventsClass}" data-tab="events">${game.i18n.localize(
+            'WH40K.Notify.EventTracker.TabEvents',
+        )}</button>`;
         if (hasCharacters) {
-            html += `<button type="button" class="evt-tab-btn ${npcsClass}" data-tab="npcs">NPC State</button>`;
+            html += `<button type="button" class="evt-tab-btn ${npcsClass}" data-tab="npcs">${game.i18n.localize(
+                'WH40K.Notify.EventTracker.TabNpcState',
+            )}</button>`;
         }
         html += `</div>`;
         html += `<div class="evt-tab-pane ${eventsClass}" data-pane="events">${EventTracker._buildEventsPane()}</div>`;
@@ -546,14 +564,12 @@ export class EventTracker {
     /** Open the tracker dialog. GM only. */
     static open(): void {
         if (!game.user.isGM) {
-            // eslint-disable-next-line no-restricted-syntax -- GM-only dev tool; i18n migration tracked separately
-            ui.notifications.warn('Event Tracker is GM-only.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.EventTracker.GmOnly'));
             return;
         }
 
         if (!EventTracker._graph) {
-            // eslint-disable-next-line no-restricted-syntax -- GM-only dev tool; i18n migration tracked separately
-            ui.notifications.warn('Event graph not loaded. Run deploy.sh --restart to write the GM-only event-graph document into the world.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.EventTracker.GraphNotLoaded'));
             return;
         }
 
@@ -563,10 +579,10 @@ export class EventTracker {
 
         // eslint-disable-next-line @typescript-eslint/no-deprecated -- Dialog V1 used intentionally; DialogV2 migration tracked separately
         const d = new Dialog({
-            title: 'Solenne Campaign — Event Tracker',
+            title: game.i18n.localize('WH40K.Notify.EventTracker.DialogTitle'),
             content: EventTracker._buildContent(activeTab),
             buttons: {
-                close: { label: 'Close' },
+                close: { label: game.i18n.localize('WH40K.Close') },
             },
             render: (html: JQuery) => {
                 const $html = html instanceof HTMLElement ? $(html) : html;

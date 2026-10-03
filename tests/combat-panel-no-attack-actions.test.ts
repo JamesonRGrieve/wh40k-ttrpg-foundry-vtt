@@ -23,9 +23,9 @@ describe('combat panel no longer lists per-weapon attack actions (#227)', () => 
     });
 
     it('keeps the non-per-weapon action groups', () => {
-        expect(panel).toContain('heading="Reactions"');
-        expect(panel).toContain('heading="Combat Talents"');
-        expect(panel).toContain('heading="Utility Actions"');
+        expect(panel).toContain('heading=(localize "WH40K.Combat.Reactions")');
+        expect(panel).toContain('heading=(localize "WH40K.Combat.Actions.CombatTalents")');
+        expect(panel).toContain('heading=(localize "WH40K.Combat.Actions.UtilityActions")');
     });
 
     it('drops the Movement Actions group — movement is the dedicated move-mode cluster (#235)', () => {

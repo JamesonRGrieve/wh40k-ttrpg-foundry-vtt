@@ -77,13 +77,13 @@ export default class SkillGrantData extends BaseGrantData {
      * @type {object}
      */
     static TRAINING_LEVELS: Record<string, { order: number; label: string; bonus: number } | undefined> = {
-        known: { order: BaseSystemConfig.skillLevelToRank('known'), label: 'WH40K.Skill.Level.Known', bonus: 0 },
-        trained: { order: BaseSystemConfig.skillLevelToRank('trained'), label: 'WH40K.Skill.Level.Trained', bonus: 0 }, // RT/DH1e/DW rank 1 alias
-        plus10: { order: BaseSystemConfig.skillLevelToRank('plus10'), label: 'WH40K.Skill.Level.Plus10', bonus: 10 }, // RT/DH1e/DW rank 2 alias
-        experienced: { order: BaseSystemConfig.skillLevelToRank('experienced'), label: 'WH40K.Skill.Level.Experienced', bonus: 20 },
-        plus20: { order: BaseSystemConfig.skillLevelToRank('plus20'), label: 'WH40K.Skill.Level.Plus20', bonus: 20 }, // RT/DH1e/DW rank 3 alias
-        veteran: { order: BaseSystemConfig.skillLevelToRank('veteran'), label: 'WH40K.Skill.Level.Veteran', bonus: 30 },
-        plus30: { order: BaseSystemConfig.skillLevelToRank('plus30'), label: 'WH40K.Skill.Level.Plus30', bonus: 30 }, // DH2e/BC/OW rank 4 alias
+        known: { order: BaseSystemConfig.skillLevelToRank('known'), label: 'WH40K.Skills.Rank.Known', bonus: 0 },
+        trained: { order: BaseSystemConfig.skillLevelToRank('trained'), label: 'WH40K.Skills.Rank.Trained', bonus: 0 }, // RT/DH1e/DW rank 1 alias
+        plus10: { order: BaseSystemConfig.skillLevelToRank('plus10'), label: 'WH40K.Skills.Rank.Plus10', bonus: 10 }, // RT/DH1e/DW rank 2 alias
+        experienced: { order: BaseSystemConfig.skillLevelToRank('experienced'), label: 'WH40K.Skills.Rank.Experienced', bonus: 20 },
+        plus20: { order: BaseSystemConfig.skillLevelToRank('plus20'), label: 'WH40K.Skills.Rank.Plus20', bonus: 20 }, // RT/DH1e/DW rank 3 alias
+        veteran: { order: BaseSystemConfig.skillLevelToRank('veteran'), label: 'WH40K.Skills.Rank.Veteran', bonus: 30 },
+        plus30: { order: BaseSystemConfig.skillLevelToRank('plus30'), label: 'WH40K.Skills.Rank.Plus30', bonus: 30 }, // DH2e/BC/OW rank 4 alias
     };
 
     /** Property declarations */

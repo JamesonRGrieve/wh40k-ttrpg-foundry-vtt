@@ -6,7 +6,7 @@
         caption="Energy (ignores Armour)"}}
 
     <div class="tw-flex tw-justify-between tw-items-center tw-px-[14px] tw-py-[10px] tw-my-2 tw-bg-[var(--wh40k-warning-bg)] tw-border-l-[3px] tw-border-l-[var(--wh40k-warning-primary)] tw-rounded-r-[4px]">
-        <span class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-warning-secondary)]">Fatigue</span>
+        <span class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-warning-secondary)]">{{localize "WH40K.Combat.Fatigue"}}</span>
         <span class="tw-text-[1.1rem] tw-font-bold tw-text-[color:var(--wh40k-text-dark)]">+1</span>
     </div>
 
@@ -17,7 +17,7 @@
             value=roll.total
             valueShadowClass="tw-[text-shadow:0_2px_8px_var(--wh40k-shadow-medium)]"}}
         <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-gold tw-rounded-r-[4px] tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto">
-            <p class="tw-m-0 tw-mb-2 last:tw-mb-0">You may take actions as normal despite the flames.</p>
+            <p class="tw-m-0 tw-mb-2 last:tw-mb-0">{{localize "WH40K.Chat.Burning.ActNormally"}}</p>
         </div>
     {{else}}
         {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
@@ -26,7 +26,7 @@
             value=roll.total
             valueShadowClass="tw-[text-shadow:0_2px_8px_var(--wh40k-shadow-medium)]"}}
         <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-gold tw-rounded-r-[4px] tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto">
-            <p class="tw-m-0 tw-mb-2 last:tw-mb-0">You can only flail in agony and scream!</p>
+            <p class="tw-m-0 tw-mb-2 last:tw-mb-0">{{localize "WH40K.Chat.Burning.Flail"}}</p>
         </div>
     {{/if}}
 

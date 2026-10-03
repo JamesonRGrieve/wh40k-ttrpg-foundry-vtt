@@ -3,7 +3,7 @@
 {{!-- Power Selection (if multiple) --}}
 {{#if powerSelect}}
     <div class="tw-mb-3">
-        <h4 class="tw-font-display tw-text-xs tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">Select Power</h4>
+        <h4 class="tw-font-display tw-text-xs tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">{{localize "WH40K.Prompt.Unified.SelectPower"}}</h4>
         <div class="tw-flex tw-flex-col tw-gap-2 tw-my-2">
             {{#each psychicPowers as |power|}}
                 <label class="tw-flex tw-items-center tw-gap-[14px] tw-py-3 tw-px-[14px] tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(0,0,0,0.35)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-translate-x-1 {{#if power.isSelected}}tw-bg-[rgba(201,162,39,0.08)] tw-border-gold-raw tw-shadow-[0_0_20px_rgba(201,162,39,0.2),inset_0_0_20px_rgba(201,162,39,0.05)]{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}}"
@@ -63,9 +63,9 @@
         {{/if}}
         {{#if psyModeBreakdown}}
             <div class="tw-mt-2 tw-px-2 tw-py-1.5 tw-text-[0.7rem] tw-text-[#a8a890] tw-bg-[rgba(0,0,0,0.2)] tw-rounded tw-flex tw-justify-between tw-gap-2" data-testid="psy-mode-breakdown">
-                <span>Effective PR: <strong class="tw-text-[#e8e4d9]" data-testid="psy-effective-pr">{{psyModeBreakdown.effectivePR}}</strong></span>
-                <span>Focus: <strong class="tw-text-[#e8e4d9]" data-testid="psy-focus-mod">{{#if (gte psyModeBreakdown.focusModifier 0)}}+{{/if}}{{psyModeBreakdown.focusModifier}}</strong></span>
-                {{#if psyModeBreakdown.forcePhenomena}}<span class="tw-text-red-300" data-testid="psy-force-phenomena">Phenomena</span>{{/if}}
+                <span>{{localize "WH40K.Prompt.Unified.EffectivePR"}} <strong class="tw-text-[#e8e4d9]" data-testid="psy-effective-pr">{{psyModeBreakdown.effectivePR}}</strong></span>
+                <span>{{localize "WH40K.Prompt.Unified.Focus"}} <strong class="tw-text-[#e8e4d9]" data-testid="psy-focus-mod">{{#if (gte psyModeBreakdown.focusModifier 0)}}+{{/if}}{{psyModeBreakdown.focusModifier}}</strong></span>
+                {{#if psyModeBreakdown.forcePhenomena}}<span class="tw-text-red-300" data-testid="psy-force-phenomena">{{localize "WH40K.Prompt.Unified.Phenomena"}}</span>{{/if}}
             </div>
         {{/if}}
     </div>
@@ -74,27 +74,27 @@
 {{!-- Power Config --}}
 {{#if power}}
     <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
-        <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Psychic Rating</span>
+        <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">{{localize "WH40K.Prompt.Unified.PsychicRating"}}</span>
         <input class="tw-py-2.5 tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-text-[#e8e4d9] tw-text-base tw-font-medium tw-min-w-20 tw-w-20 tw-text-center tw-[appearance:textfield] [&::-webkit-outer-spin-button]:tw-[appearance:none] [&::-webkit-inner-spin-button]:tw-[appearance:none] tw-transition-all hover:tw-border-[rgba(255,255,255,0.15)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)]" type="number" data-dtype="Number" name="pr" value="{{pr}}" />
     </div>
     {{#if rollData.modifiers.bonus}}
         <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
-            <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Rating Bonus</span>
+            <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">{{localize "WH40K.Prompt.Unified.RatingBonus"}}</span>
             <span class="tw-text-base tw-font-semibold {{themeClassFor 'accent'}}">+{{rollData.modifiers.bonus}}</span>
         </div>
     {{/if}}
     <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5">
-        <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Has Psy Focus</span>
+        <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">{{localize "WH40K.Prompt.Unified.HasPsyFocus"}}</span>
         <input class="tw-w-5 tw-h-5 tw-cursor-pointer tw-m-0 tw-[accent-color:#c9a227]" type="checkbox" data-dtype="Boolean" {{checked hasFocus}} name="hasFocus" />
     </div>
 
     <div class="tw-h-px tw-bg-[linear-gradient(90deg,transparent_0%,rgba(201,162,39,0.2)_50%,transparent_100%)] tw-my-2.5"></div>
     <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
-        <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Distance (m)</span>
+        <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">{{localize "WH40K.Prompt.Unified.DistanceMetres"}}</span>
         <input class="tw-py-2.5 tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-text-[#e8e4d9] tw-text-base tw-font-medium tw-min-w-20 tw-w-20 tw-text-center tw-[appearance:textfield] [&::-webkit-outer-spin-button]:tw-[appearance:none] [&::-webkit-inner-spin-button]:tw-[appearance:none] tw-transition-all hover:tw-border-[rgba(255,255,255,0.15)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)]" type="number" data-dtype="Number" name="distance" value="{{distance}}" />
     </div>
     <div class="tw-flex tw-items-center tw-justify-between tw-py-2.5 tw-px-[14px] tw-my-2 tw-bg-[linear-gradient(90deg,rgba(0,0,0,0.3)_0%,rgba(0,0,0,0.15)_100%)] tw-rounded-md tw-border-l-[3px] tw-border-l-gold-raw bc:tw-border-l-crimson-light dh1:tw-border-l-gold-raw-l5 dh2:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure">
         <span class="tw-font-semibold tw-text-base tw-text-[#e8e4d9]">{{rangeName}}</span>
-        <span class="tw-font-bold tw-text-[0.95rem] tw-[font-variant-numeric:tabular-nums] tw-text-[#b8b8a8]">Max: {{maxRange}}m</span>
+        <span class="tw-font-bold tw-text-[0.95rem] tw-[font-variant-numeric:tabular-nums] tw-text-[#b8b8a8]">{{localize "WH40K.Prompt.Unified.MaxRange" range=maxRange}}</span>
     </div>
 {{/if}}

@@ -3,7 +3,7 @@
   {{!-- Name Pattern --}}
   <div class="tw-form-group">
     <label>{{localize "WH40K.NPC.BatchCreate.NamePattern"}}</label>
-    <input type="text" name="namePattern" value="{{state.namePattern}}" placeholder="NPC {n}"/>
+    <input type="text" name="namePattern" value="{{state.namePattern}}" placeholder="{{localize 'WH40K.Dialog.BatchCreate.NamePatternPlaceholder'}}"/>
     <p class="tw-hint">{{localize "WH40K.NPC.BatchCreate.NamePatternHint"}}</p>
   </div>
 
@@ -57,7 +57,7 @@
   {{!-- Faction --}}
   <div class="tw-form-group">
     <label>{{localize "WH40K.NPC.Faction"}}</label>
-    <input type="text" name="faction" value="{{state.faction}}" placeholder="Optional"/>
+    <input type="text" name="faction" value="{{state.faction}}" placeholder="{{localize 'WH40K.Dialog.BatchCreate.OptionalPlaceholder'}}"/>
   </div>
 
   {{!-- Folder --}}

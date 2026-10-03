@@ -3,7 +3,7 @@
 {{!-- Weapon Selection (if multiple) --}}
 {{#if weaponSelect}}
     <div class="tw-mb-3">
-        <h4 class="tw-font-display tw-text-xs tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">Select Weapon</h4>
+        <h4 class="tw-font-display tw-text-xs tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">{{localize "WH40K.Prompt.Unified.SelectWeapon"}}</h4>
         <div class="tw-flex tw-flex-col tw-gap-2 tw-my-2">
             {{#each weapons as |weapon|}}
                 <label class="tw-flex tw-items-center tw-gap-[14px] tw-py-3 tw-px-[14px] tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(0,0,0,0.35)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-translate-x-1 {{#if weapon.isSelected}}tw-bg-[rgba(201,162,39,0.08)] tw-border-gold-raw tw-shadow-[0_0_20px_rgba(201,162,39,0.2),inset_0_0_20px_rgba(201,162,39,0.05)] [&_.urd-weapon-name]:tw-text-gold-raw{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}}"
@@ -32,7 +32,7 @@
     {{!-- Ammo Info --}}
     {{#if usesAmmo}}
         <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
-            <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Ammunition</span>
+            <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">{{localize "WH40K.Ammunition.TypeLabel"}}</span>
             <span class="tw-text-base tw-font-semibold {{themeClassFor 'accent'}}">{{ammoText}}</span>
         </div>
     {{/if}}
@@ -40,7 +40,7 @@
     {{!-- ═══════ ATTACK MODE ═══════ --}}
     <div class="tw-flex tw-flex-col tw-gap-1 tw-py-2">
         <div class="tw-flex tw-items-center tw-gap-2 tw-font-ui tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#9a9a8a] tw-p-0 tw-m-0 [&_i:first-child]:tw-text-gold-raw [&_i:first-child]:tw-text-xs">
-            <i class="fas fa-crosshairs"></i> Attack Mode
+            <i class="fas fa-crosshairs"></i> {{localize "WH40K.Prompt.Unified.AttackMode"}}
         </div>
         <div class="tw-grid tw-grid-cols-3 tw-gap-1">
             {{#each attackModes}}
@@ -61,7 +61,7 @@
         {{#if isMelee}}
             <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-py-0.5 tw-px-2 tw-text-2xs tw-font-ui tw-text-[#7a7a6a] tw-bg-transparent tw-border-0 tw-cursor-pointer tw-transition-colors hover:tw-text-[#9a9a8a] [&>i]:tw-text-[0.55rem]" data-action="toggleSpecialOptions">
                 <i class="fas {{#if specialOptionsExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}}"></i>
-                Special Options
+                {{localize "WH40K.Prompt.Unified.SpecialOptions"}}
             </button>
             {{#if specialOptionsExpanded}}
                 <div class="tw-grid tw-grid-cols-3 tw-gap-1 tw-pl-2">
@@ -84,7 +84,7 @@
     {{!-- Called Shot Location (conditional) --}}
     {{#if isCalledShot}}
         <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
-            <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Called Shot Location</span>
+            <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">{{localize "WH40K.Prompt.Unified.CalledShotLocation"}}</span>
             <select class="tw-min-h-10 tw-py-[10px] tw-px-[14px] tw-pr-8 tw-bg-[rgba(0,0,0,0.3)] tw-bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Cpath%20fill%3D%27%23c9a227%27%20d%3D%27M6%208L1%203h10z%27/%3E%3C/svg%3E')] tw-bg-no-repeat tw-bg-[right_12px_center] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px] tw-leading-[1.2] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)]" name="calledShotLocation">
                 {{selectOptions locations selected=calledShotLocation}}
             </select>
@@ -95,7 +95,7 @@
     {{#if isRanged}}
         <div class="tw-flex tw-flex-col tw-gap-1 tw-py-2 tw-border-t tw-border-[rgba(255,255,255,0.06)]">
             <div class="tw-flex tw-items-center tw-gap-2 tw-font-ui tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#9a9a8a] tw-p-0 tw-m-0 [&_i:first-child]:tw-text-gold-raw [&_i:first-child]:tw-text-xs">
-                <i class="fas fa-eye"></i> Aim
+                <i class="fas fa-eye"></i> {{localize "WH40K.Prompt.Unified.Aim"}}
             </div>
             <div class="tw-grid tw-grid-cols-3 tw-gap-1">
                 {{#each aimOptions}}
@@ -148,13 +148,13 @@
                 {{#if rangeModifiedBy}}
                     <div class="tw-flex tw-items-center tw-gap-1 tw-py-0.5 tw-px-2 tw-text-2xs tw-text-[#7a7a6a] tw-italic [&>i]:tw-text-gold-raw">
                         <i class="fas fa-info-circle"></i>
-                        Range modifier affected by {{rangeModifiedBy}}
+                        {{localize "WH40K.Prompt.Unified.RangeModifiedBy"}} {{rangeModifiedBy}}
                     </div>
                 {{/if}}
                 {{#if isMeltaRange}}
                     <div class="tw-flex tw-items-center tw-gap-1 tw-py-0.5 tw-px-2 tw-text-2xs tw-italic tw-text-[#e67e22] [&>i]:tw-text-[#e67e22]">
                         <i class="fas fa-fire"></i>
-                        Melta: Double penetration at this range
+                        {{localize "WH40K.Prompt.Unified.MeltaRange"}}
                     </div>
                 {{/if}}
             {{/if}}
@@ -165,14 +165,14 @@
     {{#if hasCombatSituationals}}
         <div class="tw-flex tw-flex-col tw-gap-1 tw-py-2 tw-pb-1 tw-border-t tw-border-[rgba(255,255,255,0.06)]">
             <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-font-ui tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#9a9a8a] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-cursor-pointer tw-w-full tw-justify-start hover:tw-text-[#e8e4d9] [&_i:first-child]:tw-text-gold-raw [&_i:first-child]:tw-text-xs" data-action="toggleSituationalSection">
-                <i class="fas fa-sliders-h"></i> Situational
+                <i class="fas fa-sliders-h"></i> {{localize "WH40K.Roll.ModifierSource.Situational"}}
                 {{#unless situationalExpanded}}
                     <span class="tw-ml-auto tw-flex tw-items-center tw-gap-1 tw-text-2xs tw-font-normal tw-normal-case tw-tracking-normal">
                         {{#if selectedSituationalSummary.hasActive}}
                             <span class="tw-text-[#e8e4d9]">{{selectedSituationalSummary.label}}</span>
                             <span class="tw-font-semibold {{#if (gt selectedSituationalSummary.total 0)}}tw-text-[#4ade80]{{else if (lt selectedSituationalSummary.total 0)}}tw-text-[#f87171]{{else}}tw-text-[#7a7a6a]{{/if}}">{{selectedSituationalSummary.totalLabel}}</span>
                         {{else}}
-                            <span class="tw-text-[#e8e4d9]">None</span>
+                            <span class="tw-text-[#e8e4d9]">{{localize "WH40K.Common.None"}}</span>
                         {{/if}}
                     </span>
                 {{/unless}}
@@ -219,7 +219,7 @@
                         <button type="button"
                                 class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-0.5 tw-py-1 tw-px-1 tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all tw-font-ui tw-text-2xs tw-text-[#9a9a8a] tw-relative tw-min-h-14 tw-text-center {{#if isSelected}}tw-border-gold-raw tw-bg-[rgba(201,162,39,0.1)] tw-text-[#e8e4d9] tw-shadow-[0_0_6px_rgba(201,162,39,0.15)]{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}} enabled:hover:tw-border-[rgba(255,255,255,0.15)] enabled:hover:tw-bg-[rgba(0,0,0,0.4)] enabled:hover:tw--translate-y-px enabled:hover:tw-shadow-sm enabled:hover:tw-text-[#e8e4d9]"
                                 data-action="selectSizeModifier" data-size-key="{{key}}"
-                                data-tooltip="{{label}} target size modifier">
+                                data-tooltip="{{localize 'WH40K.Prompt.Unified.SizeModifierTooltip' label=label}}">
                             <span class="tw-font-medium tw-text-2xs tw-leading-[1.1]">{{label}}</span>
                             <span class="tw-font-semibold tw-text-2xs {{#if (gt modifier 0)}}tw-text-[#4ade80]{{else if (lt modifier 0)}}tw-text-[#f87171]{{else}}tw-text-[#7a7a6a]{{/if}}">{{modifierLabel}}</span>
                         </button>

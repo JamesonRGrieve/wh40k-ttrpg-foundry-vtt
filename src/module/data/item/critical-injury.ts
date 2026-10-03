@@ -161,7 +161,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
     get fullDescription(): string {
         let desc = this.currentEffect;
         if (this.notes !== '') {
-            desc += desc !== '' ? `\n\n<strong>Notes:</strong> ${this.notes}` : this.notes;
+            desc += desc !== '' ? `\n\n<strong>${game.i18n.localize('WH40K.Chat.Label.Notes')}</strong> ${this.notes}` : this.notes;
         }
         return desc;
     }

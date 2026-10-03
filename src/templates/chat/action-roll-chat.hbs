@@ -12,7 +12,7 @@
                         <div class="tw-mb-4 tw-p-3 tw-bg-[linear-gradient(135deg,rgba(75,192,115,0.08)_0%,rgba(75,192,115,0.03)_100%)] tw-border-l-[3px] tw-border-l-[rgba(75,192,115,0.5)] tw-rounded-md">
                             <div class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2">
                                 <i class="fas fa-star" style="color: #4bc073; font-size: 0.85rem;"></i>
-                                <span class="tw-font-semibold tw-text-[0.85rem] tw-text-[var(--wh40k-card-text)] tw-uppercase tw-tracking-[0.5px]">Active Qualities</span>
+                                <span class="tw-font-semibold tw-text-[0.85rem] tw-text-[var(--wh40k-card-text)] tw-uppercase tw-tracking-[0.5px]">{{localize "WH40K.Chat.Roll.ActiveQualities"}}</span>
                             </div>
                             <div class="tw-flex tw-flex-wrap tw-gap-1.5">
                                 {{#each (specialQualities weapon.system.effectiveSpecial) as |quality|}}
@@ -43,7 +43,7 @@
 
                 {{#if usesAmmo}}
                     <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
-                        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Ammo Used</span>
+                        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{localize "WH40K.Chat.Roll.AmmoUsed"}}</span>
                         <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{ammoUsed}}</span>
                     </div>
                 {{/if}}
@@ -59,8 +59,8 @@
                 {{!-- Opposed Roll --}}
                 {{#if isOpposed}}
                     <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
-                        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Opposed {{opposedChar}}</span>
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{opposedRoll.total}} vs {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}} DoS){{/if}}</span>
+                        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{localize "WH40K.Chat.Roll.Opposed"}} {{opposedChar}}</span>
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{opposedRoll.total}} {{localize "WH40K.Common.Versus"}} {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}} {{localize "WH40K.Chat.Roll.DoS"}}){{/if}}</span>
                     </div>
                 {{/if}}
 
@@ -70,12 +70,12 @@
                     {{#if success}}
                         <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
                             <span class="tw-text-[1.5rem] tw-font-bold tw-text-[var(--wh40k-success-secondary)]">{{dos}}</span>
-                            <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">Degrees of Success</span>
+                            <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">{{localize "WH40K.Roll.DegreesOfSuccess"}}</span>
                         </div>
                     {{else}}
                         <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
                             <span class="tw-text-[1.5rem] tw-font-bold tw-text-[var(--wh40k-danger-secondary)]">{{dof}}</span>
-                            <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">Degrees of Failure</span>
+                            <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">{{localize "WH40K.Roll.DegreesOfFailure"}}</span>
                         </div>
                     {{/if}}
                     {{#if resultFormula}}
@@ -87,7 +87,7 @@
                 {{!-- Target-only display (no roll entered) --}}
                 {{#if isTargetOnly}}
                     <div class="tw-text-center tw-px-3 tw-py-2 tw-my-2 tw-bg-[rgba(201,162,39,0.08)] tw-border tw-border-dashed tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-text-[0.8rem] tw-italic tw-text-[var(--wh40k-card-muted)]">
-                        Target posted - awaiting physical dice roll
+                        {{localize "WH40K.Chat.Roll.AwaitingPhysicalRoll"}}
                     </div>
                 {{/if}}
 
@@ -120,12 +120,12 @@
                         {{#if showDamage}}
                             <button class="roll-control__roll-damage tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
                                 <span class="material-icons tw-text-[16px]">bolt</span>
-                                <span>Roll Damage</span>
+                                <span>{{localize "WH40K.Weapon.RollDamage"}}</span>
                             </button>
                         {{else}}
                             <button class="tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-not-allowed tw-whitespace-nowrap tw-opacity-40">
                                 <span class="material-icons tw-text-[16px]">bolt</span>
-                                <span>Damage</span>
+                                <span>{{localize "WH40K.Weapon.Damage"}}</span>
                             </button>
                         {{/if}}
                         <div class="tw-flex tw-gap-1.5">
