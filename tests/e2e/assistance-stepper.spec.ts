@@ -83,9 +83,8 @@ test.describe.serial('assistance chips (#60)', () => {
                 return { error: `dialog render threw: ${(err as Error).message}`, state: null };
             }
 
-            await new Promise<void>((r) => {
-                setTimeout(r, 80);
-            });
+            // The probe asserts ABSENCES: let the render fully settle first.
+            await globalThis.wh40kE2E.settle(80);
             const root = dialog.element;
             if (!(root instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', state: null };

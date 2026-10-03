@@ -64,18 +64,15 @@ test('shock-panel renders value/Snap-Out for dh2 actors (#66)', async ({ page })
         if (actor == null) return { setupOk: false, valueText: '', hasButton: false, error: 'Actor.create returned null' };
 
         await actor.sheet.render(true);
-        await new Promise<void>((r) => {
-            setTimeout(r, 250);
-        });
+        await globalThis.wh40kE2E.settle(250);
 
         try {
             actor.sheet.changeTab?.('overview', 'primary');
-            await new Promise<void>((r) => {
-                setTimeout(r, 150);
-            });
         } catch {
             /* sheets without changeTab fall back to whatever tab is open */
         }
+        // Wait for the panel to render (the assertions below report a miss).
+        await globalThis.wh40kE2E.pollUntil(() => actor.sheet.element?.querySelector?.('[data-wh40k-hook="shock-value"]') != null);
 
         const valueEl = actor.sheet.element?.querySelector?.('[data-wh40k-hook="shock-value"]');
         const valueText = valueEl?.textContent.trim() ?? '';

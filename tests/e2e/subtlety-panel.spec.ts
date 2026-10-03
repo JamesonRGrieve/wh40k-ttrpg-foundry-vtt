@@ -104,18 +104,15 @@ test.describe.serial('SubtletyPanel (Tier B)', () => {
 
                 try {
                     await actor.sheet?.render?.(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 250);
-                    });
+                    await globalThis.wh40kE2E.settle(250);
                     // Navigate to the Overview tab where the panel now lives (#263).
                     try {
                         actor.sheet?.changeTab?.('overview', 'primary');
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 150);
-                        });
                     } catch {
                         /* sheets without changeTab fall back to the open tab */
                     }
+                    // Wait for the panel to render (the checks below report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => actor.sheet?.element?.querySelector('[data-wh40k-hook="subtlety-panel"]') != null);
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }

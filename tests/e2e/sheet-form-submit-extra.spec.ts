@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of sheet form-submit round-trips across the actor and
@@ -399,17 +400,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
 
             // Bounded await with timeout so a single hung render/submit
             // doesn't tar-pit the whole spec.
-            const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                const timerRef = { id: null as ReturnType<typeof setTimeout> | null };
-                const timeout = new Promise<T>((_, reject) => {
-                    timerRef.id = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-                });
-                try {
-                    return await Promise.race([p, timeout]);
-                } finally {
-                    if (timerRef.id !== null) clearTimeout(timerRef.id);
-                }
-            };
+            const { withTimeout, pollUntil, settle } = globalThis.wh40kE2E;
 
             // A traversable document field: an indexable object node or a
             // scalar leaf. Models the live document tree the probe walks
@@ -572,7 +563,6 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                         type: spec.type,
                         system: spec.initialSystem,
                     }),
-                    5_000,
                     `${slug} Actor.create`,
                 );
                 if (actor?.id == null) {
@@ -611,7 +601,6 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                         type: 'dh2-character',
                         system: { gameSystem: spec.embedHostGameSystem },
                     }),
-                    5_000,
                     `${slug} host Actor.create`,
                 );
                 if (actor?.id == null) {
@@ -629,9 +618,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                 // Yield a tick so V14's backend has committed the parent
                 // create before the embedded child write (the same race
                 // weapon-attack.spec.ts works around).
-                await new Promise<void>((r) => {
-                    setTimeout(r, 250);
-                });
+                await settle(250);
 
                 const live = gameRef.actors.get(hostId) ?? actor;
                 const created = await withTimeout(
@@ -642,7 +629,6 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                             system: spec.initialSystem,
                         },
                     ]),
-                    5_000,
                     `${slug} createEmbeddedDocuments`,
                 );
                 const createdId = created[0]?.id;
@@ -688,40 +674,40 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
                             continue;
                         }
                         try {
-                            await withTimeout(liveSheet.submit({ updateData, preventClose: true }), 5_000, `${slug} sheet.submit ${path}`);
+                            await withTimeout(liveSheet.submit({ updateData, preventClose: true }), `${slug} sheet.submit ${path}`);
                         } catch (submitErr) {
                             notes[key] = `submit threw: ${describeSubmitError(submitErr)}${offendingFormFields(liveSheet, doc)}`;
                             continue;
                         }
-                        // Foundry's submit chain resolves before the document
-                        // update commit lands; give it a small settle window
-                        // per weapon-attack.spec.ts.
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 150);
-                        });
 
                         // `actor` is guaranteed non-null here (the create
                         // blocks return early otherwise).
-                        let refreshed: FoundryDoc | FoundryItem | null = doc;
-                        const liveActor = gameRef.actors.get(actor.id);
-                        if (spec.kind === 'actor') {
-                            refreshed = liveActor ?? doc;
-                        } else if (item !== null) {
-                            refreshed = liveActor?.items.get(item.id) ?? doc;
-                        }
-                        const after = getPath(refreshed, path);
+                        const readAfter = (): FieldValue => {
+                            let refreshed: FoundryDoc | FoundryItem | null = doc;
+                            const liveActor = gameRef.actors.get(actor.id);
+                            if (spec.kind === 'actor') {
+                                refreshed = liveActor ?? doc;
+                            } else if (item !== null) {
+                                refreshed = liveActor?.items.get(item.id) ?? doc;
+                            }
+                            return getPath(refreshed, path);
+                        };
 
                         // Boolean: equality. Number: equality after Number() coerce
                         // (so '10' submitted into a number field still passes).
                         // String: equality.
-                        let matched = false;
-                        if (typeof next === 'boolean') {
-                            matched = after === next;
-                        } else if (typeof next === 'number') {
-                            matched = Number(after) === next;
-                        } else if (typeof next === 'string') {
-                            matched = fmt(after) === next;
-                        }
+                        const roundTripped = (value: FieldValue): boolean => {
+                            if (typeof next === 'boolean') return value === next;
+                            if (typeof next === 'number') return Number(value) === next;
+                            return fmt(value) === next;
+                        };
+
+                        // Foundry's submit chain resolves before the document
+                        // update commit lands; wait for the committed value
+                        // (the check below reports it if it never arrives).
+                        await pollUntil(() => roundTripped(readAfter()));
+                        const after = readAfter();
+                        const matched = roundTripped(after);
 
                         if (matched) {
                             fired[key] = true;
@@ -748,16 +734,14 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
 
                     const liveSheet = built.sheet;
                     try {
-                        await withTimeout(liveSheet.render(true), 5_000, `${slug} sheet.render`);
+                        await withTimeout(liveSheet.render(true), `${slug} sheet.render`);
                     } catch (renderErr) {
                         const renderMsg = renderErr instanceof Error ? renderErr.message : String(renderErr);
                         for (const p of paths) notes[`${slug}::${p}`] = `sheet.render threw: ${renderMsg}`;
                         return;
                     }
                     // Let PARTS settle into the DOM before we probe.
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 100);
-                    });
+                    await settle(100);
 
                     await runFieldProbes(slug, spec, built, paths);
 
@@ -814,7 +798,7 @@ async function probeFormSubmitFlows(page: Page): Promise<ProbeResult> {
 test.describe.serial('sheet form-submit round-trip depth (Tier B)', () => {
     // Each sheet × field probe is bounded; cap the whole spec at 5 minutes
     // so a stuck render can't hold a CI runner indefinitely.
-    test.setTimeout(300_000);
+    test.setTimeout(scaledMs(300_000));
     test('form-submit round-trips across actor + item sheets and schema fields', async ({ page }) => {
         await joinOrSkip(page);
 

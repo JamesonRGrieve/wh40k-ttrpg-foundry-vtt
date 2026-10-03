@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the Token document + scene-embedded token document
@@ -168,19 +169,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
         // wait for socket events that never arrive. Wrap every async
         // call with a 5s timeout so a hanging operation can't take the
         // Foundry server down and damage downstream specs.
-        const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-            // TypeScript's control flow doesn't track Promise-executor assignments,
-            // so use an object wrapper that ESLint can see as always-initialized.
-            const timerRef = { id: null as ReturnType<typeof setTimeout> | null };
-            const timeout = new Promise<T>((_, reject) => {
-                timerRef.id = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                if (timerRef.id !== null) clearTimeout(timerRef.id);
-            }
-        };
+        const { withTimeout } = globalThis.wh40kE2E;
 
         // ---- create a transient actor (bc-character — the most stable
         //      headless actor type currently). Its prototypeToken object
@@ -194,7 +183,6 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
                     system: { gameSystem: 'bc' },
                     img: 'icons/svg/mystery-man.svg',
                 }),
-                5_000,
                 'Actor.create',
             );
         } catch (err) {
@@ -218,7 +206,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
         // ---- create a transient scene ----
         let scene: ProbeScene | null = null;
         try {
-            scene = await withTimeout(SceneCls.create({ name: 'token-spec' }), 5_000, 'Scene.create');
+            scene = await withTimeout(SceneCls.create({ name: 'token-spec' }), 'Scene.create');
         } catch (err) {
             notes['scene-create-and-token-place'] = `Scene.create threw: ${err instanceof Error ? err.message : String(err)}`;
         }
@@ -288,7 +276,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
                 effects: deltaEffects ?? [],
                 flags: deltaFlags ?? {},
             };
-            const created = await withTimeout(liveScene.createEmbeddedDocuments('Token', [protoData]), 5_000, 'createEmbeddedDocuments(Token)');
+            const created = await withTimeout(liveScene.createEmbeddedDocuments('Token', [protoData]), 'createEmbeddedDocuments(Token)');
             if (Array.isArray(created) && created.length > 0) {
                 token = created[0];
                 if (token.id != null) {
@@ -361,7 +349,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
         try {
             let updateErr: string | null = null;
             try {
-                await withTimeout(liveToken0.setFlag('wh40k-rpg', 'probe', 'spec'), 5_000, 'token.setFlag(probe)');
+                await withTimeout(liveToken0.setFlag('wh40k-rpg', 'probe', 'spec'), 'token.setFlag(probe)');
             } catch (err) {
                 updateErr = err instanceof Error ? err.message : String(err);
             }
@@ -422,8 +410,8 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
         try {
             let updateErr: string | null = null;
             try {
-                await withTimeout(liveToken0.update({ actorLink: false }), 5_000, 'token.update(actorLink:false initial)');
-                await withTimeout(liveToken0.update({ actorLink: true }), 5_000, 'token.update(actorLink:true)');
+                await withTimeout(liveToken0.update({ actorLink: false }), 'token.update(actorLink:false initial)');
+                await withTimeout(liveToken0.update({ actorLink: true }), 'token.update(actorLink:true)');
             } catch (err) {
                 const msg = err instanceof Error ? err.message : String(err);
                 if (msg.includes('OBJECTS') || msg.includes('validation errors')) {
@@ -466,7 +454,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
         //      `name`/system override observable on `token.delta`.
         try {
             try {
-                await withTimeout(liveToken0.update({ actorLink: false }), 5_000, 'token.update(actorLink:false for delta)');
+                await withTimeout(liveToken0.update({ actorLink: false }), 'token.update(actorLink:false for delta)');
             } catch {
                 /* best-effort */
             }
@@ -483,7 +471,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
                 // schema with "system / items / effects / flags: may not be
                 // undefined". The dot path patches the single field and leaves the
                 // rest of the delta intact — which is what real code does.
-                await withTimeout(liveToken0.update({ 'delta.name': 'override-name' }), 5_000, 'token.update(delta.name)');
+                await withTimeout(liveToken0.update({ 'delta.name': 'override-name' }), 'token.update(delta.name)');
             } catch (err) {
                 updateOutcome = `update threw: ${err instanceof Error ? err.message : String(err)}`;
             }
@@ -545,7 +533,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
         try {
             let deleted = false;
             try {
-                const removed = await withTimeout(liveScene.deleteEmbeddedDocuments('Token', [tokenId]), 5_000, 'deleteEmbeddedDocuments(Token)');
+                const removed = await withTimeout(liveScene.deleteEmbeddedDocuments('Token', [tokenId]), 'deleteEmbeddedDocuments(Token)');
                 deleted = Array.isArray(removed) && removed.length > 0;
             } catch (err) {
                 const msg = err instanceof Error ? err.message : String(err);
@@ -557,7 +545,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult> {
                         deleted = true;
                     } else {
                         try {
-                            await withTimeout(liveToken0.delete?.() ?? Promise.resolve(), 5_000, 'token.delete fallback');
+                            await withTimeout(liveToken0.delete?.() ?? Promise.resolve(), 'token.delete fallback');
                             deleted = true;
                         } catch (innerErr) {
                             const innerMsg = innerErr instanceof Error ? innerErr.message : String(innerErr);
@@ -604,7 +592,7 @@ test.describe.serial('token document + scene embedding (Tier B)', () => {
     // Cap at 2 minutes total — internal per-call timeouts mean we should
     // never come close, but a hung server would otherwise eat the global
     // 10-minute test timeout and take downstream specs with it.
-    test.setTimeout(120_000);
+    test.setTimeout(scaledMs(120_000));
     test('scene token lifecycle exercises TokenDocumentWH40K overrides', async ({ page }) => {
         await joinOrSkip(page);
 

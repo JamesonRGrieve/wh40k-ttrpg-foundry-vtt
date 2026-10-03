@@ -76,9 +76,8 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
                     return { error: 'actor.sheet.render missing', rendered, hasBudget, hasKit, hasEditBtn, categoryCount };
                 }
                 await sheet.render(true);
-                await new Promise<void>((r) => {
-                    setTimeout(r, 150);
-                });
+                // Wait for the regiment panel to render (the checks below report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('.wh40k-ow-regiment-panel') != null);
                 const el = sheet.element;
                 rendered = el instanceof HTMLElement;
                 if (rendered && el) {

@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Keys MUST match the DATA_ACTOR_MODEL_FLOWS constant in
@@ -154,20 +155,9 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                 };
             }
 
-            // 5s per-call timeout so a blocking server write can't hang the
-            // spec (mirrors weapon-attack.spec.ts).
-            const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                let timer: ReturnType<typeof setTimeout> | null = null;
-                const timeout = new Promise<T>((_, reject) => {
-                    timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-                });
-                try {
-                    return await Promise.race([p, timeout]);
-                } finally {
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
-                    if (timer !== null) clearTimeout(timer);
-                }
-            };
+            // Shared (scaled 5s) per-call timeout so a blocking server write
+            // can't hang the spec (mirrors weapon-attack.spec.ts).
+            const { withTimeout, settle } = globalThis.wh40kE2E;
 
             const cleanups: Array<() => Promise<void>> = [];
 
@@ -184,7 +174,6 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                 if (create == null) return null;
                 const created = await withTimeout(
                     create({ name: `data-actor-model-${gameSystem}`, type, system: { gameSystem, ...system } }),
-                    5_000,
                     `${type} Actor.create`,
                 );
                 if (created?.id != null) {
@@ -198,9 +187,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     });
                     // Yield a tick so the create write flushes before we read
                     // derived data (mirrors weapon-attack.spec.ts comment).
-                    await new Promise((r) => {
-                        setTimeout(r, 100);
-                    });
+                    await settle(100);
                     return gameGlobal?.actors?.get?.(createdId) ?? created;
                 }
                 return null;
@@ -727,7 +714,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
                     } else {
                         // Call on the actor (NOT a detached reference) — getRollData
                         // reads `this.system`, so a bare `getRollData()` loses `this`.
-                        const data = await withTimeout(Promise.resolve(pc.getRollData()), 5_000, 'getRollData');
+                        const data = await withTimeout(Promise.resolve(pc.getRollData()), 'getRollData');
                         const ws = data['WS'];
                         const wsb = data['WSB'];
                         const full = data['weaponSkill'];
@@ -792,7 +779,7 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('actor DataModel derived-data pipeline (Tier B)', () => {
     // Cap at 3 minutes — per-call timeouts mean we should never come close.
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('creature/character schema round-trips and derived data computes across game systems', async ({ page }) => {
         await joinOrSkip(page);
 

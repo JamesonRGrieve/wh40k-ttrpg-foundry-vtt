@@ -82,9 +82,8 @@ test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
                 const inst = await wh40kOpenDialog('mutant-background-dialog', () => {
                     mod.openMutantBackgroundDialog(actor);
                 });
-                await new Promise<void>((r) => {
-                    setTimeout(r, 40);
-                });
+                // Wait for the dialog content (the checks below report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('[data-action="apply"]') != null);
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     hasCorruptionCallout = inst.element.textContent.includes('+10');

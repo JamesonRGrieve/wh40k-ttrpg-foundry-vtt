@@ -130,8 +130,11 @@ test('Adeptus Astartes Dreadnought loads with hardpoints, pilot/N-A profile, and
             let domHasCombatWalker = false;
             if (sheet !== undefined) {
                 await sheet.render(true);
-                await new Promise<void>((r) => {
-                    setTimeout(r, 400);
+                // Wait for the combat-tab content the assertions look for (they report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => {
+                    const liveEl = sheet.element;
+                    const liveHtml = liveEl instanceof HTMLElement ? liveEl.outerHTML : '';
+                    return ['Left Arm', 'Reinforced Hull', 'Combat Walker'].every((text) => liveHtml.includes(text));
                 });
                 const el = sheet.element;
                 const html = el instanceof HTMLElement ? el.outerHTML : '';

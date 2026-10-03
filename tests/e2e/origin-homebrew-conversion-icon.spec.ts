@@ -98,20 +98,17 @@ async function probeConversionIcon(page: Page): Promise<IconProbeResult> {
             let builder: BuilderShape;
             try {
                 builder = new OriginPathBuilder(seededActor, {});
+                // Pin the homeWorld step (the default) before rendering; the re-render
+                // below populates its card grid once origins have loaded.
+                builder.currentStepIndex = 0;
                 await builder.render(true);
-                await new Promise<void>((r) => {
-                    setTimeout(r, 200);
-                });
+                // _prepareContext → _loadOrigins is async; wait for the origins (loaded below if they never arrive).
+                await globalThis.wh40kE2E.pollUntil(() => (builder.allOrigins?.length ?? 0) > 0);
                 if ((builder.allOrigins?.length ?? 0) === 0 && typeof builder._loadOrigins === 'function') {
                     await builder._loadOrigins().catch(() => undefined);
                 }
-                // Ensure we are on the homeWorld step (default) and re-render so
-                // the loaded origins populate the card grid with their badges.
-                builder.currentStepIndex = 0;
                 await builder.render();
-                await new Promise<void>((r) => {
-                    setTimeout(r, 150);
-                });
+                await globalThis.wh40kE2E.settle(150);
             } catch (err) {
                 await seededActor.delete?.().catch(() => undefined);
                 return fail(`builder.render: ${String(err instanceof Error ? err.message : err)}`);

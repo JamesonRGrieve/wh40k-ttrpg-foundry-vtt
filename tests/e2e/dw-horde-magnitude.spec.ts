@@ -132,9 +132,8 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
 
                 if (typeof actor.sheet?.render === 'function') {
                     await actor.sheet.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 120);
-                    });
+                    // Let the sheet settle before the snap.
+                    await globalThis.wh40kE2E.settle(120);
                     rendered = actor.sheet.element instanceof HTMLElement;
                 }
 

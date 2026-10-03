@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the damage / health / fatigue / fate pipeline on PC and
@@ -97,18 +98,11 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult> {
 
         // Wrap any awaitable with a 5s timeout so a hung update can't
         // take downstream specs with it (matches combat.spec.ts pattern).
-        const withTimeout = async <T>(p: Promise<T> | undefined, ms: number, label: string): Promise<T> => {
+        // An optional-chained call on a missing method yields undefined, which is
+        // a failure here; anything else is bounded by the shared in-page timeout.
+        const withTimeout = async <T>(p: Promise<T> | undefined, label: string, ms?: number): Promise<T> => {
             if (p === undefined) throw new Error(`${label} unavailable (method missing on actor)`);
-            let timer: ReturnType<typeof setTimeout> | null = null;
-            const timeout = new Promise<T>((_, reject) => {
-                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- timer is set synchronously in the Promise executor; TS control-flow cannot track closure assignments
-                if (timer !== null) clearTimeout(timer);
-            }
+            return globalThis.wh40kE2E.withTimeout(p, label, ms);
         };
 
         // ---- create PC (bc-character → acolyte document) ----
@@ -125,7 +119,6 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult> {
                         fate: { max: 3, value: 3, threshold: 0 },
                     },
                 }),
-                5_000,
                 'PC Actor.create',
             );
         } catch (err) {
@@ -144,7 +137,6 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult> {
                         wounds: { max: 10, value: 10, critical: 0 },
                     },
                 }),
-                5_000,
                 'NPC Actor.create',
             );
         } catch (err) {
@@ -179,7 +171,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult> {
                     const before = npc.system?.wounds?.value ?? 0;
                     // ignoreArmour + ignoreToughness keep the math
                     // deterministic regardless of NPC stat defaults.
-                    await withTimeout(npc.applyDamage(3, 'body', { ignoreArmour: true, ignoreToughness: true }), 5_000, 'npc.applyDamage');
+                    await withTimeout(npc.applyDamage(3, 'body', { ignoreArmour: true, ignoreToughness: true }), 'npc.applyDamage');
                     const after = getNpc()?.system?.wounds?.value ?? before;
                     if (after === before - 3) {
                         fired['deal-damage-reduces-wounds'] = true;
@@ -202,9 +194,9 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult> {
                     notes['wounds-zero-marks-critical'] = 'npc.applyDamage missing';
                 } else {
                     // First reduce wounds to 0 (we're already at 7).
-                    await withTimeout(npc.update?.({ 'system.wounds.value': 0, 'system.wounds.critical': 0 }), 5_000, 'npc.update wounds=0');
+                    await withTimeout(npc.update?.({ 'system.wounds.value': 0, 'system.wounds.critical': 0 }), 'npc.update wounds=0');
                     // Now hit for 5 more; critical should rise.
-                    await withTimeout(npc.applyDamage(5, 'body', { ignoreArmour: true, ignoreToughness: true }), 5_000, 'npc.applyDamage critical');
+                    await withTimeout(npc.applyDamage(5, 'body', { ignoreArmour: true, ignoreToughness: true }), 'npc.applyDamage critical');
                     const post = getNpc();
                     const critical = post?.system?.wounds?.critical ?? -1;
                     // npc.ts adds (oldValue - newValue) to critical when newValue===0;
@@ -232,11 +224,11 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult> {
                     notes['fatigue-accumulation'] = 'pc.applyFatigue missing';
                 } else {
                     const start = pc.system?.fatigue?.value ?? 0;
-                    await withTimeout(pc.applyFatigue(1), 5_000, 'applyFatigue 1');
+                    await withTimeout(pc.applyFatigue(1), 'applyFatigue 1');
                     const after1 = getPc()?.system?.fatigue?.value ?? -1;
-                    await withTimeout(getPc()?.applyFatigue?.(2), 5_000, 'applyFatigue 2');
+                    await withTimeout(getPc()?.applyFatigue?.(2), 'applyFatigue 2');
                     const after2 = getPc()?.system?.fatigue?.value ?? -1;
-                    await withTimeout(getPc()?.applyFatigue?.(3), 5_000, 'applyFatigue 3');
+                    await withTimeout(getPc()?.applyFatigue?.(3), 'applyFatigue 3');
                     const after3 = getPc()?.system?.fatigue?.value ?? -1;
                     if (after1 === start + 1 && after2 === start + 3 && after3 === start + 6) {
                         fired['fatigue-accumulation'] = true;
@@ -259,7 +251,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult> {
                     notes['fate-spend-decrements-value'] = 'pc.spendFate missing';
                 } else {
                     const before = pc.system?.fate?.value ?? 0;
-                    await withTimeout(pc.spendFate(), 5_000, 'spendFate');
+                    await withTimeout(pc.spendFate(), 'spendFate');
                     const after = getPc()?.system?.fate?.value ?? before;
                     if (after === before - 1) {
                         fired['fate-spend-decrements-value'] = true;
@@ -285,7 +277,6 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult> {
                             'system.fate.max': beforeMax - 1,
                             'system.fate.value': Math.max(0, (pc.system?.fate?.value ?? 0) - 1),
                         }),
-                        5_000,
                         'burnFate update',
                     );
                     const afterMax = getPc()?.system?.fate?.max ?? beforeMax;
@@ -310,7 +301,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult> {
                     notes['wound-recovery'] = 'npc.healWounds missing';
                 } else {
                     const before = npc.system?.wounds?.value ?? 0;
-                    await withTimeout(npc.healWounds(4), 5_000, 'healWounds');
+                    await withTimeout(npc.healWounds(4), 'healWounds');
                     const after = getNpc()?.system?.wounds?.value ?? before;
                     if (after === Math.min(npc.system?.wounds?.max ?? 10, before + 4)) {
                         fired['wound-recovery'] = true;
@@ -334,13 +325,13 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult> {
                     // Reset NPC to full wounds, then apply 3 sequential strikes
                     // while the PC accumulates 2 fatigue ticks. End-state asserts
                     // both tracks moved as expected.
-                    await withTimeout(npc.update?.({ 'system.wounds.value': 10, 'system.wounds.critical': 0 }), 5_000, 'reset npc wounds');
+                    await withTimeout(npc.update?.({ 'system.wounds.value': 10, 'system.wounds.critical': 0 }), 'reset npc wounds');
                     const pcFatigueStart = getPc()?.system?.fatigue?.value ?? 0;
                     for (let i = 0; i < 3; i++) {
-                        await withTimeout(getNpc()?.applyDamage?.(2, 'body', { ignoreArmour: true, ignoreToughness: true }), 5_000, `seq applyDamage ${i}`);
+                        await withTimeout(getNpc()?.applyDamage?.(2, 'body', { ignoreArmour: true, ignoreToughness: true }), `seq applyDamage ${i}`);
                     }
-                    await withTimeout(getPc()?.applyFatigue?.(1), 5_000, 'seq applyFatigue 1');
-                    await withTimeout(getPc()?.applyFatigue?.(1), 5_000, 'seq applyFatigue 2');
+                    await withTimeout(getPc()?.applyFatigue?.(1), 'seq applyFatigue 1');
+                    await withTimeout(getPc()?.applyFatigue?.(1), 'seq applyFatigue 2');
                     const npcAfter = getNpc()?.system?.wounds?.value ?? -1;
                     const pcAfter = getPc()?.system?.fatigue?.value ?? -1;
                     if (npcAfter === 4 && pcAfter === pcFatigueStart + 2) {
@@ -394,7 +385,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('damage / health / fatigue / fate pipeline (Tier B)', () => {
     // Cap at 3 minutes — per-call timeouts mean we should never come close.
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('actor damage pipeline updates wounds, fatigue, and fate as expected', async ({ page }) => {
         await joinOrSkip(page);
 

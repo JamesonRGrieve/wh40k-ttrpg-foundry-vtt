@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the vehicle + starship gameplay paths. The
@@ -128,17 +129,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
             };
         }
 
-        const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-            const timers: ReturnType<typeof setTimeout>[] = [];
-            const timeout = new Promise<T>((_, reject) => {
-                timers.push(setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms));
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                for (const timer of timers) clearTimeout(timer);
-            }
-        };
+        const { withTimeout } = globalThis.wh40kE2E;
 
         // ---- create dh2-aircraft ----
         // Aircraft (extends ConventionalCraft) carries integrity/crew/
@@ -167,7 +158,6 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
                         speed: { cruising: 200, tactical: 30, notes: '' },
                     },
                 }),
-                5_000,
                 'vehicle Actor.create',
             );
         } catch (err) {
@@ -200,7 +190,6 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
                         power: { total: 50, used: 0 },
                     },
                 }),
-                5_000,
                 'starship Actor.create',
             );
         } catch (err) {
@@ -227,7 +216,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
                 notes['vehicle-hull-damage'] = 'no vehicle available';
             } else {
                 const before = v.system?.integrity?.value ?? -1;
-                await withTimeout(v.update({ 'system.integrity.value': Math.max(0, before - 4) }), 5_000, 'vehicle integrity update');
+                await withTimeout(v.update({ 'system.integrity.value': Math.max(0, before - 4) }), 'vehicle integrity update');
                 const after = getVehicle()?.system?.integrity?.value ?? -1;
                 const isDamaged = getVehicle()?.system?.isDamaged ?? false;
                 if (after === before - 4 && isDamaged) {
@@ -256,7 +245,6 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
                         'system.crew.required': beforeReq + 1,
                         'system.passengers': beforePax + 2,
                     }),
-                    5_000,
                     'vehicle crew update',
                 );
                 const afterReq = getVehicle()?.system?.crew?.required ?? -1;
@@ -277,13 +265,13 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
             if (v == null) {
                 notes['vehicle-altitude-profile'] = 'no vehicle available';
             } else {
-                await withTimeout(v.update({ 'system.altitude': 'low' }), 5_000, 'altitude low');
+                await withTimeout(v.update({ 'system.altitude': 'low' }), 'altitude low');
                 const atLow = getVehicle()?.system?.altitude;
                 const vHigh = getVehicle();
-                if (vHigh != null) await withTimeout(vHigh.update({ 'system.altitude': 'high' }), 5_000, 'altitude high');
+                if (vHigh != null) await withTimeout(vHigh.update({ 'system.altitude': 'high' }), 'altitude high');
                 const atHigh = getVehicle()?.system?.altitude;
                 const vOrbital = getVehicle();
-                if (vOrbital != null) await withTimeout(vOrbital.update({ 'system.altitude': 'orbital' }), 5_000, 'altitude orbital');
+                if (vOrbital != null) await withTimeout(vOrbital.update({ 'system.altitude': 'orbital' }), 'altitude orbital');
                 const atOrbital = getVehicle()?.system?.altitude;
                 if (atLow === 'low' && atHigh === 'high' && atOrbital === 'orbital') {
                     fired['vehicle-altitude-profile'] = true;
@@ -317,7 +305,6 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
                             },
                         },
                     ]),
-                    5_000,
                     'starship component embed',
                 );
                 const after = getStarship()?.items?.size ?? 0;
@@ -342,7 +329,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
                 notes['starship-crew-morale'] = 'no starship available';
             } else {
                 const beforeMax = s.system?.crew?.morale?.max ?? 0;
-                await withTimeout(s.update({ 'system.crew.morale.value': Math.floor(beforeMax / 2) }), 5_000, 'starship morale update');
+                await withTimeout(s.update({ 'system.crew.morale.value': Math.floor(beforeMax / 2) }), 'starship morale update');
                 const afterVal = getStarship()?.system?.crew?.morale?.value ?? -1;
                 const moralePct = getStarship()?.system?.moralePercentage ?? -1;
                 if (afterVal === Math.floor(beforeMax / 2) && moralePct === 50) {
@@ -369,7 +356,6 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
                         'system.hullIntegrity.value': damaged,
                         'system.voidShields': 0,
                     }),
-                    5_000,
                     'starship hull + shields update',
                 );
                 const post = getStarship();
@@ -410,7 +396,6 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
                             system: {},
                         },
                     ]),
-                    5_000,
                     'vehicle weapon embed',
                 );
                 const afterSize = getVehicle()?.items?.size ?? 0;
@@ -421,7 +406,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
                     // switch executes against the new weapon.
                     try {
                         const renderPromise = getVehicle()?.sheet?.render?.(true);
-                        if (renderPromise != null) await withTimeout(renderPromise, 5_000, 'vehicle sheet render');
+                        if (renderPromise != null) await withTimeout(renderPromise, 'vehicle sheet render');
                         await getVehicle()?.sheet?.close?.();
                     } catch {
                         /* sheet render is best-effort here — the embed itself is the metric */
@@ -468,7 +453,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
 }
 
 test.describe.serial('vehicle + starship gameplay pipeline (Tier B)', () => {
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('vehicle and starship update flows drive integrity, crew, altitude, components, morale, and shields', async ({ page }) => {
         await joinOrSkip(page);
 

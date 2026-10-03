@@ -133,9 +133,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                 record('edit-mode-toggle-actor', false, 'actor.sheet undefined');
             } else {
                 await sheet.render(true);
-                await new Promise<void>((r) => {
-                    setTimeout(r, 80);
-                });
+                await globalThis.wh40kE2E.settle(80);
                 const before = sheet.inEditMode;
                 // Character/NPC sheets register `toggleEditMode` as an action.
                 const handler = sheet.options?.actions?.toggleEditMode;
@@ -146,16 +144,13 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     const target = document.createElement('div');
                     const rv = handler.call(sheet, event, target);
                     if (rv instanceof Promise) await rv;
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 60);
-                    });
+                    // Wait for each toggle to flip the mode (the record below reports a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => sheet.inEditMode !== before);
                     const afterFirst = sheet.inEditMode;
                     // Toggle back so we exercise both edges.
                     const rv2 = handler.call(sheet, event, target);
                     if (rv2 instanceof Promise) await rv2;
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 60);
-                    });
+                    await globalThis.wh40kE2E.pollUntil(() => sheet.inEditMode !== afterFirst);
                     const afterSecond = sheet.inEditMode;
                     if (!before && afterFirst && !afterSecond) {
                         record('edit-mode-toggle-actor', true, null);
@@ -180,18 +175,15 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                 record('tab-switch-routes-via-mixin', false, 'actor.sheet undefined');
             } else {
                 await sheet.render(true);
-                await new Promise<void>((r) => {
-                    setTimeout(r, 80);
-                });
+                await globalThis.wh40kE2E.settle(80);
                 const initial = sheet.tabGroups?.primary;
                 const targetTab = initial === 'skills' ? 'combat' : 'skills';
                 if (typeof sheet.changeTab !== 'function') {
                     record('tab-switch-routes-via-mixin', false, 'sheet.changeTab not a function');
                 } else {
                     sheet.changeTab(targetTab, 'primary');
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 60);
-                    });
+                    // Wait for the tab group to switch (the record below reports a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => sheet.tabGroups?.primary === targetTab);
                     const after = sheet.tabGroups?.primary;
                     if (after === targetTab) {
                         record('tab-switch-routes-via-mixin', true, null);
@@ -240,9 +232,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     record('owned-item-sheet-canEdit', false, 'item.sheet undefined');
                 } else {
                     await sheet.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 80);
-                    });
+                    await globalThis.wh40kE2E.settle(80);
                     const ownedFlag = sheet.isOwnedByActor;
                     const compendiumFlag = !sheet.isCompendiumItem;
                     const canEdit = sheet.canEdit; // owner GM on a world actor
@@ -278,9 +268,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                     record('edit-mode-toggle-item', false, 'item.sheet undefined');
                 } else {
                     await sheet.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 80);
-                    });
+                    await globalThis.wh40kE2E.settle(80);
                     // Actor-owned items use the toggle to switch view ↔ edit
                     const before = sheet.inEditMode;
                     const handler = sheet.options?.actions?.toggleEditMode;
@@ -291,15 +279,12 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                         const target = document.createElement('div');
                         const rv = handler.call(sheet, event, target);
                         if (rv instanceof Promise) await rv;
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 80);
-                        });
+                        // Wait for each toggle to flip the mode (the record below reports a miss).
+                        await globalThis.wh40kE2E.pollUntil(() => sheet.inEditMode !== before);
                         const afterFirst = sheet.inEditMode;
                         const rv2 = handler.call(sheet, event, target);
                         if (rv2 instanceof Promise) await rv2;
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 80);
-                        });
+                        await globalThis.wh40kE2E.pollUntil(() => sheet.inEditMode !== afterFirst);
                         const afterSecond = sheet.inEditMode;
                         if (!before && afterFirst && !afterSecond) {
                             record('edit-mode-toggle-item', true, null);
@@ -327,9 +312,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                 record('drop-event-on-sheet', false, 'actor.sheet undefined');
             } else {
                 await sheet.render(true);
-                await new Promise<void>((r) => {
-                    setTimeout(r, 80);
-                });
+                await globalThis.wh40kE2E.settle(80);
                 // Build a transient world-level item, then invoke the sheet's
                 // _onDropItem handler with a synthesized DragEvent. This is
                 // the entrypoint base-actor-sheet.ts:2351 overrides; the
@@ -409,9 +392,7 @@ async function probeSheetMixins(page: Page): Promise<ProbeResult> {
                         record('prosemirror-gated-in-readonly', false, 'compendium item sheet undefined');
                     } else {
                         await compendiumSheet.render(true);
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 100);
-                        });
+                        await globalThis.wh40kE2E.settle(100);
 
                         // flow 4: assert read-only flags
                         const isCompendium = compendiumSheet.isCompendiumItem;

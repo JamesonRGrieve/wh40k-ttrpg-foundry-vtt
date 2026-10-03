@@ -45,9 +45,8 @@ test.describe.serial('WarpTravelDialog (Tier B)', () => {
                 const inst: DialogInstance = await wh40kOpenDialog('warp-travel-dialog', () => {
                     mod.openWarpTravelDialog();
                 });
-                await new Promise<void>((r) => {
-                    setTimeout(r, 80);
-                });
+                // Wait for the dialog content (the checks below report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('button[data-action="resolveJourney"]') != null);
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     const el = inst.element;

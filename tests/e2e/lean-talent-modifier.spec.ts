@@ -54,9 +54,8 @@ test('a LEAN Superior Chirurgeon (compendiumSource only) applies +20 to Medicae 
             ]);
             // Render the sheet: `_prepareContext` runs the in-memory hydration join.
             await actor.sheet?.render(true);
-            await new Promise<void>((r) => {
-                setTimeout(r, 700);
-            });
+            // Wait for the hydrated modifier to fold onto the skill (the assertion checks its size).
+            await globalThis.wh40kE2E.pollUntil(() => readMedicae() !== baseline);
             return { baseline, withTalent: readMedicae(), error: null };
         } catch (err) {
             return fail(err instanceof Error ? err.message : String(err));

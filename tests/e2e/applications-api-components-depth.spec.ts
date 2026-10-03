@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Keys MUST match the APP_API_DEPTH_FLOWS constant in scripts/e2e-coverage.mjs (registered by the orchestrator).
@@ -190,17 +191,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
 
             // Wrap any awaitable with a timeout so a blocking dialog or
             // socket-wait can't hang the spec (mirrors weapon-attack.spec.ts).
-            const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-                const timerHandle = { id: 0 };
-                const timeout = new Promise<T>((_, reject) => {
-                    timerHandle.id = window.setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-                });
-                try {
-                    return await Promise.race([p, timeout]);
-                } finally {
-                    clearTimeout(timerHandle.id);
-                }
-            };
+            const { withTimeout, pollUntil, settle } = globalThis.wh40kE2E;
+            // Panel-preset application re-renders the sheet; it gets a longer budget.
+            const PANEL_PRESET_TIMEOUT_MS = globalThis.wh40kE2E.scaledMs(10_000);
 
             // Drain any dialog / prompt / tour windows a probe left open so
             // the next probe's window stack starts clean (mirrors
@@ -383,7 +376,6 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                 try {
                     pc = await withTimeout(
                         ActorCls.create({ name: 'app-api-depth-pc', type: 'dh2-character', system: { gameSystem: 'dh2' } }),
-                        5_000,
                         'PC Actor.create',
                     );
                     const pcId = pc?.id;
@@ -399,9 +391,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                 } catch (err) {
                     notes['drag-drop-visual-ghost-and-split'] = `PC create threw: ${String(err instanceof Error ? err.message : String(err))}`;
                 }
-                await new Promise<void>((resolve) => {
-                    setTimeout(resolve, 250);
-                });
+                await settle(250);
             }
 
             /* ============================================================
@@ -423,7 +413,6 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                 { name: 'probe-single', type: 'gear', system: { gameSystem: 'dh2', quantity: 1 } },
                                 { name: 'probe-notsplittable', type: 'talent', system: { gameSystem: 'dh2' } },
                             ]),
-                            5_000,
                             'embed gear stack',
                         );
                         // Look the three up by NAME, not by position:
@@ -564,7 +553,6 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                 { name: 'probe-fav-1', type: 'gear', system: { gameSystem: 'dh2' } },
                                 { name: 'probe-fav-2', type: 'gear', system: { gameSystem: 'dh2' } },
                             ]),
-                            5_000,
                             'embed favorite gear',
                         );
                         const fav1 = live.items.get(createdItems[0].id);
@@ -603,7 +591,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                 const inst = new Mixed();
                                 // Seed the flag with both favorite ids — the
                                 // public API roundtrips with the actor flag scope.
-                                await withTimeout(live.setFlag('wh40k-rpg', 'favorites', [fav1.id, fav2.id]), 5_000, 'setFlag favorites seed');
+                                await withTimeout(live.setFlag('wh40k-rpg', 'favorites', [fav1.id, fav2.id]), 'setFlag favorites seed');
                                 cleanups.push(async () => {
                                     try {
                                         await live.unsetFlag?.('wh40k-rpg', 'favorites');
@@ -613,10 +601,10 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                 });
                                 const initial = inst.getFavoriteItems();
                                 const initialOk = initial.length === 2;
-                                await withTimeout(inst.removeFromFavorites(fav1.id), 5_000, 'removeFromFavorites');
+                                await withTimeout(inst.removeFromFavorites(fav1.id), 'removeFromFavorites');
                                 const afterRemove = inst.getFavoriteItems();
                                 const removeOk = afterRemove.length === 1;
-                                await withTimeout(inst.clearFavorites(), 5_000, 'clearFavorites');
+                                await withTimeout(inst.clearFavorites(), 'clearFavorites');
                                 const afterClear = inst.getFavoriteItems();
                                 const clearOk = afterClear.length === 0;
                                 if (initialOk && removeOk && clearOk) {
@@ -861,9 +849,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         const counterEl = document.createElement('span');
                         counterEl.textContent = '0';
                         inst._animateCounter(counterEl, 0, 7, 50);
-                        await new Promise<void>((resolve) => {
-                            setTimeout(resolve, 200);
-                        });
+                        await pollUntil(() => counterEl.textContent === '7');
                         const counterSettled = counterEl.textContent === '7';
                         const anchor = document.createElement('div');
                         document.body.appendChild(anchor);
@@ -1414,7 +1400,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             // Branch 1: direct apply when inactive — write a
                             // tracker flag that we can read back.
                             const beforeFlag = live.getFlag?.('wh40k-rpg', 'probe-whatif-direct');
-                            await withTimeout(inst.previewChange('flags.wh40k-rpg.probe-whatif-direct', 'applied'), 5_000, 'previewChange(inactive)');
+                            await withTimeout(inst.previewChange('flags.wh40k-rpg.probe-whatif-direct', 'applied'), 'previewChange(inactive)');
                             const afterFlag = live.getFlag?.('wh40k-rpg', 'probe-whatif-direct') === 'applied';
                             cleanups.push(async () => {
                                 try {
@@ -1424,9 +1410,9 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                                 }
                             });
                             // Branch 2: enter what-if, then exit — assert state cleared.
-                            await withTimeout(inst.enterWhatIfMode(), 5_000, 'enterWhatIfMode');
-                            await withTimeout(inst.previewChange('system.characteristics.weaponSkill.advance', 7), 5_000, 'previewChange(active)');
-                            await withTimeout(inst.exitWhatIfMode(), 5_000, 'exitWhatIfMode');
+                            await withTimeout(inst.enterWhatIfMode(), 'enterWhatIfMode');
+                            await withTimeout(inst.previewChange('system.characteristics.weaponSkill.advance', 7), 'previewChange(active)');
+                            await withTimeout(inst.exitWhatIfMode(), 'exitWhatIfMode');
                             const inactive = !inst._whatIfActive;
                             const changesCleared = Object.keys(inst._whatIfChanges).length === 0;
                             const previewCleared = inst._whatIfPreview === null;
@@ -1493,9 +1479,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             const target = document.createElement('div');
                             target.dataset['statKey'] = 'weaponSkill';
                             action.call(inst, new MouseEvent('click', { bubbles: true, cancelable: true }), target);
-                            await new Promise<void>((resolve) => {
-                                setTimeout(resolve, 30);
-                            });
+                            await pollUntil(() => document.querySelector('.wh40k-stat-breakdown-popover') !== null);
                             const popover = document.querySelector('.wh40k-stat-breakdown-popover');
                             const html = popover?.innerHTML ?? '';
                             const hasTotal = html.includes('Weapon Skill: 32');
@@ -1507,9 +1491,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                             // Close via the registered button.
                             const closeBtn = popover?.querySelector<HTMLButtonElement>('[data-action="closeBreakdown"]');
                             closeBtn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-                            await new Promise<void>((resolve) => {
-                                setTimeout(resolve, 30);
-                            });
+                            await pollUntil(() => document.querySelector('.wh40k-stat-breakdown-popover') === null);
                             const popoverAfterClose = document.querySelector('.wh40k-stat-breakdown-popover');
                             const closedOk = popoverAfterClose === null;
                             if (hasTotal && hasBase && hasPositive && hasNegative && hasClickable && hasIcon && closedOk) {
@@ -1564,10 +1546,10 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         const inst = new Mixed();
                         const panel = root.querySelector('[data-panel-id="roundtrip"]') as HTMLElement;
                         const beforeCollapsed = panel.classList.contains('collapsed');
-                        await withTimeout(inst.togglePanel('roundtrip', true), 5_000, 'expand');
+                        await withTimeout(inst.togglePanel('roundtrip', true), 'expand');
                         const afterExpandClasses = !panel.classList.contains('collapsed');
                         const expandedSet = inst.expandedSections.get('roundtrip') === true;
-                        await withTimeout(inst.togglePanel('roundtrip', false), 5_000, 'collapse');
+                        await withTimeout(inst.togglePanel('roundtrip', false), 'collapse');
                         const afterCollapseClasses = panel.classList.contains('collapsed');
                         const collapsedSet = inst.expandedSections.get('roundtrip') === false;
                         if (beforeCollapsed && afterExpandClasses && expandedSet && afterCollapseClasses && collapsedSet) {
@@ -1618,19 +1600,19 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         }
                         const Mixed = CollapsiblePanelMixin(StubBase);
                         const inst = new Mixed();
-                        await withTimeout(inst.applyPanelPreset('combat'), 10_000, 'applyPreset(combat)');
+                        await withTimeout(inst.applyPanelPreset('combat'), 'applyPreset(combat)', PANEL_PRESET_TIMEOUT_MS);
                         // combat preset: weapons=true, skills=false, biography=false
                         const weaponsExpanded = inst.expandedSections.get('weapons') === true;
                         const skillsCollapsed = inst.expandedSections.get('skills') === false;
                         const bioCollapsed = inst.expandedSections.get('biography') === false;
                         // applyPanelPreset('none') → collapseAllPanels.
-                        await withTimeout(inst.applyPanelPreset('none'), 10_000, 'applyPreset(none)');
+                        await withTimeout(inst.applyPanelPreset('none'), 'applyPreset(none)', PANEL_PRESET_TIMEOUT_MS);
                         const allCollapsed =
                             inst.expandedSections.get('weapons') === false &&
                             inst.expandedSections.get('skills') === false &&
                             inst.expandedSections.get('biography') === false;
                         // applyPanelPreset('all') → expandAllPanels.
-                        await withTimeout(inst.applyPanelPreset('all'), 10_000, 'applyPreset(all)');
+                        await withTimeout(inst.applyPanelPreset('all'), 'applyPreset(all)', PANEL_PRESET_TIMEOUT_MS);
                         const allExpanded =
                             inst.expandedSections.get('weapons') === true &&
                             inst.expandedSections.get('skills') === true &&
@@ -1681,9 +1663,8 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         // Branch 1: identical from/to → no class swap.
                         const el = document.createElement('span');
                         inst.animateCounter(el, 7, 7, { duration: 30 });
-                        await new Promise<void>((resolve) => {
-                            setTimeout(resolve, 50);
-                        });
+                        // Asserting an ABSENCE: give any (wrong) class swap time to land.
+                        await settle(50);
                         const noClass = !el.classList.contains('value-counter');
                         // Branch 2: _shouldSkipAnimation is callable and returns boolean.
                         const shouldSkip = inst._shouldSkipAnimation();
@@ -1692,9 +1673,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
                         const flashEl = document.createElement('div');
                         inst._flashElement(flashEl, 'tw-animate-stat-heal', 30);
                         const flashAppliedNow = flashEl.classList.contains('tw-animate-stat-heal');
-                        await new Promise<void>((resolve) => {
-                            setTimeout(resolve, 80);
-                        });
+                        await pollUntil(() => !flashEl.classList.contains('tw-animate-stat-heal'));
                         const flashRemoved = !flashEl.classList.contains('tw-animate-stat-heal');
                         if (noClass && skipBoolean && flashAppliedNow && flashRemoved) {
                             fired['enhanced-animations-skip-and-flash'] = true;
@@ -1767,7 +1746,7 @@ async function probeAppApiDepthFlows(page: Page): Promise<ProbeResult> {
 
 test.describe.serial('applications/api + components depth coverage (Tier B)', () => {
     // Cap at 3 minutes — per-call timeouts mean we should never come close.
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('uncovered api/components modules + deeper branches into entry-level surfaces', async ({ page }) => {
         await joinOrSkip(page);
 

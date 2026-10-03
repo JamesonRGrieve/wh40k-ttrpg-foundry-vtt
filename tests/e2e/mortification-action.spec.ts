@@ -58,35 +58,34 @@ test('mortification-action applies fatigue + active effect and posts chat (#94)'
         if (actor == null) return { setupOk: false, error: 'Actor.create returned null' };
 
         const fatigueBefore = actor.system?.fatigue?.value ?? 0;
+        const liveActor = actor;
+        const { pollUntil, settle } = globalThis.wh40kE2E;
 
-        await actor.sheet.render(true);
-        await new Promise<void>((r) => {
-            setTimeout(r, 250);
-        });
+        await liveActor.sheet.render(true);
+        await settle(250);
 
         // Navigate to the Overview tab (Status was consolidated into Overview, #263).
+        const findButton = (): HTMLElement | null => liveActor.sheet.element?.querySelector?.('[data-action="applyMortification"]') ?? null;
         try {
-            actor.sheet.changeTab?.('overview', 'primary');
-            await new Promise<void>((r) => {
-                setTimeout(r, 150);
-            });
+            liveActor.sheet.changeTab?.('overview', 'primary');
         } catch {
             /* sheets without changeTab fall back to whatever tab is open */
         }
+        await pollUntil(() => findButton() !== null);
 
-        const btn = actor.sheet.element?.querySelector?.('[data-action="applyMortification"]') ?? null;
+        const btn = findButton();
         const buttonFound = btn !== null;
+        const findMortificationEffect = (): { flags?: { wh40k?: { source?: string } } } | undefined =>
+            Array.from(liveActor.effects ?? []).find((e) => e.flags?.wh40k?.source === 'mortification');
         if (btn) {
             btn.click();
-            // Allow the async action handler to resolve fatigue.update + ActiveEffect create.
-            await new Promise<void>((r) => {
-                setTimeout(r, 400);
-            });
+            // Wait for the async action handler to resolve fatigue.update + ActiveEffect create
+            // (the assertions below report whichever never lands).
+            await pollUntil(() => (liveActor.system?.fatigue?.value ?? 0) > fatigueBefore && findMortificationEffect() !== undefined);
         }
 
-        const fatigueAfter = actor.system?.fatigue?.value ?? 0;
-        const effects: Array<{ flags?: { wh40k?: { source?: string } } }> = Array.from(actor.effects ?? []);
-        const mortificationEffect = effects.find((e) => e.flags?.wh40k?.source === 'mortification');
+        const fatigueAfter = liveActor.system?.fatigue?.value ?? 0;
+        const mortificationEffect = findMortificationEffect();
 
         return {
             setupOk: true,

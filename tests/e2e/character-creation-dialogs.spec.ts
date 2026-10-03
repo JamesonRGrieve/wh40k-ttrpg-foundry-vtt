@@ -148,9 +148,8 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[] 
                 }
                 opened.push(dlg);
                 await dlg.render({ force: true });
-                await new Promise<void>((r) => {
-                    setTimeout(r, 50);
-                });
+                // Wait for the dialog element (the record below reports a miss).
+                await globalThis.wh40kE2E.pollUntil(() => dlg.element instanceof HTMLElement);
                 record(flow, dlg.element instanceof HTMLElement, null);
             } catch (err) {
                 record(flow, false, String(err instanceof Error ? err.message : err));

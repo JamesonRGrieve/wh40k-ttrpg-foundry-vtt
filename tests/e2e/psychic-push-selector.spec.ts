@@ -76,9 +76,7 @@ test.describe.serial('psychic push selector', () => {
             }
 
             // Allow ApplicationV2 to flush its render frame.
-            await new Promise((r) => {
-                setTimeout(r, 50);
-            });
+            await globalThis.wh40kE2E.settle(50);
 
             const root = dialog.element;
             if (!(root instanceof HTMLElement)) {
@@ -120,18 +118,14 @@ test.describe.serial('psychic push selector', () => {
                 };
             }
 
-            async function clickAction(el: HTMLElement, action: string): Promise<void> {
-                const btn = el.querySelector<HTMLElement>(`[data-action="${action}"]`);
-                btn?.click();
-                await new Promise((r) => {
-                    setTimeout(r, 50);
-                });
-            }
+            const { pollUntil, settle } = globalThis.wh40kE2E;
 
             // Open the context panel (it starts expanded but render order may
             // collapse it; toggle as a no-op if already open).
             if (!root.querySelector('[data-testid="psy-mode-selector"]')) {
-                await clickAction(root, 'toggleContextSection');
+                root.querySelector<HTMLElement>('[data-action="toggleContextSection"]')?.click();
+                // Wait for the mode selector to render (the assertions report a miss).
+                await pollUntil(() => root.querySelector('[data-testid="psy-mode-selector"]') !== null);
             }
 
             const initial = snap(root, 'initial-unfettered');
@@ -139,17 +133,15 @@ test.describe.serial('psychic push selector', () => {
             // Switch to Fettered.
             const fetteredBtn = root.querySelector<HTMLElement>('[data-testid="psy-mode-fettered"]');
             fetteredBtn?.click();
-            await new Promise((r) => {
-                setTimeout(r, 50);
-            });
+            // Wait for Fettered to become the active mode (the assertions report a miss).
+            await pollUntil(() => root.querySelector('[data-testid="psy-mode-fettered"]')?.className.includes('tw-bg-blue-900/40') === true);
             const fettered = snap(root, 'fettered');
 
             // Switch to Push, then increment twice (1 -> 2 -> 3), then try to overshoot.
             const pushBtn = root.querySelector<HTMLElement>('[data-testid="psy-mode-push"]');
             pushBtn?.click();
-            await new Promise((r) => {
-                setTimeout(r, 50);
-            });
+            // Wait for Push to become the active mode (the assertions report a miss).
+            await pollUntil(() => root.querySelector('[data-testid="psy-mode-push"]')?.className.includes('tw-bg-red-900/40') === true);
             const push1 = snap(root, 'push-1');
 
             // The context panel re-renders (ApplicationV2 partial render) on every
@@ -159,12 +151,14 @@ test.describe.serial('psychic push selector', () => {
             // level value to settle rather than racing a fixed delay.
             const clickStep = async (testid: string, expectLevel: string): Promise<void> => {
                 root.querySelector<HTMLElement>(`[data-testid="${testid}"]`)?.click();
-                for (let i = 0; i < 20; i++) {
-                    await new Promise((r) => {
-                        setTimeout(r, 25);
-                    });
-                    if (root.querySelector('[data-testid="psy-push-level-value"]')?.textContent.trim() === expectLevel) break;
-                }
+                // One poll tick first so a clamped (unchanged) level still gets a
+                // chance to (wrongly) re-render before it is read.
+                await settle(25);
+                await pollUntil(
+                    () => root.querySelector('[data-testid="psy-push-level-value"]')?.textContent.trim() === expectLevel,
+                    globalThis.wh40kE2E.scaledMs(500),
+                    25,
+                );
             };
             await clickStep('psy-push-increment', '2');
             const push2 = snap(root, 'push-2');

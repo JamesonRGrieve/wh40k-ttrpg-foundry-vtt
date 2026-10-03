@@ -4,6 +4,7 @@ import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
 import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the dice engine itself — `src/module/dice/_module.ts`,
@@ -405,7 +406,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[] }> {
 }
 
 test.describe.serial('dice engine (Tier B)', () => {
-    test.setTimeout(120_000);
+    test.setTimeout(scaledMs(120_000));
     test('BasicRollWH40K + D100Roll construction / evaluation / target / DoS / DoF / crit / doubles / serialization', async ({ page }) => {
         await joinOrSkip(page);
 

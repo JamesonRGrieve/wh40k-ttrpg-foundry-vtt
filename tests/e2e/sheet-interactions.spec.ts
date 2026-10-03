@@ -138,9 +138,7 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
 
             await sheet.render?.(true);
             // Allow the initial render to settle so PARTS are in the DOM.
-            await new Promise<void>((r) => {
-                setTimeout(r, 100);
-            });
+            await globalThis.wh40kE2E.settle(100);
 
             /* -------- tab switching -------- */
             const probeTab = async (tabId: string): Promise<{ tabId: string; switched: boolean; error: string | null }> => {
@@ -149,12 +147,12 @@ async function probeCharacterSheet(page: Page): Promise<SheetProbeResult> {
                 try {
                     if (typeof sheet.changeTab === 'function') {
                         sheet.changeTab(tabId, 'primary');
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 30);
-                        });
-                        const groupActive = sheet.tabGroups?.primary === tabId;
-                        const navActive = sheet.element?.querySelector(`[data-tab="${tabId}"].active, [data-group="primary"][data-tab="${tabId}"]`);
-                        switched = groupActive || navActive !== null;
+                        const tabSwitched = (): boolean =>
+                            sheet.tabGroups?.primary === tabId ||
+                            sheet.element?.querySelector(`[data-tab="${tabId}"].active, [data-group="primary"][data-tab="${tabId}"]`) !== null;
+                        // Wait for the switch to land (the result below reports a miss).
+                        await globalThis.wh40kE2E.pollUntil(tabSwitched);
+                        switched = tabSwitched();
                     } else {
                         error = 'sheet.changeTab not a function';
                     }

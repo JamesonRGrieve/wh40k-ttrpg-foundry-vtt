@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of `src/module/documents/starship.ts` (was 8.3% fn /
@@ -151,18 +152,15 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             return out;
         }
 
-        const withTimeout = async <T>(p: Promise<T> | undefined, ms: number, label: string): Promise<T | undefined> => {
+        // A method absent on the live actor (optional-chained call → undefined)
+        // resolves to undefined without a call; anything else is bounded by the
+        // shared in-page timeout.
+        const withTimeout = async <T>(p: Promise<T> | undefined, label: string, ms?: number): Promise<T | undefined> => {
             if (p === undefined) return undefined;
-            let timer: ReturnType<typeof setTimeout> | undefined;
-            const timeout = new Promise<T>((_, reject) => {
-                timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                if (timer !== undefined) clearTimeout(timer);
-            }
+            return globalThis.wh40kE2E.withTimeout(p, label, ms);
         };
+        // Ship creation, weapon embeds and the roll-bearing methods get a longer budget.
+        const SLOW_OP_TIMEOUT_MS = globalThis.wh40kE2E.scaledMs(8_000);
 
         let actor: StarshipRef | null | undefined = null;
         try {
@@ -192,8 +190,8 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                         weaponCapacity: { prow: 1, dorsal: 2, port: 1, starboard: 1, keel: 0 },
                     },
                 }),
-                8_000,
                 'starship Actor.create',
+                SLOW_OP_TIMEOUT_MS,
             );
         } catch (err) {
             for (const f of flows) record(f, false, `actor create threw: ${err instanceof Error ? err.message : String(err)}`);
@@ -345,8 +343,8 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
                         system: {},
                     },
                 ]),
-                8_000,
                 'starship weapon embed',
+                SLOW_OP_TIMEOUT_MS,
             );
             const createdArr: ShipWeaponDoc[] = Array.isArray(created) ? created : [];
             createdWeaponId = createdArr[0]?.id ?? null;
@@ -376,7 +374,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             // Force a re-prepare by writing to a derived-affecting field. The
             // override calls `system.prepareEmbeddedData()` so any successful
             // round-trip counts as having executed the override.
-            await withTimeout(live()?.update?.({ 'system.armour': 19 }), 5_000, 'update for prepareData');
+            await withTimeout(live()?.update?.({ 'system.armour': 19 }), 'update for prepareData');
             record('method-prepareData', live()?.armour === 19, String(live()?.armour));
         } catch (err) {
             record('method-prepareData', false, err instanceof Error ? err.message : String(err));
@@ -387,7 +385,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             if (createdWeaponId === null) {
                 record('method-fireWeapon-valid', false, 'no weapon id available');
             } else {
-                await withTimeout(live()?.fireWeapon?.(createdWeaponId), 8_000, 'fireWeapon valid');
+                await withTimeout(live()?.fireWeapon?.(createdWeaponId), 'fireWeapon valid', SLOW_OP_TIMEOUT_MS);
                 record('method-fireWeapon-valid', true, null);
             }
         } catch (err) {
@@ -396,7 +394,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
 
         // -------- method: fireWeapon (invalid id → warns + returns; no-throw) --------
         try {
-            await withTimeout(live()?.fireWeapon?.('not-a-real-weapon-id'), 5_000, 'fireWeapon invalid');
+            await withTimeout(live()?.fireWeapon?.('not-a-real-weapon-id'), 'fireWeapon invalid');
             record('method-fireWeapon-invalid', true, null);
         } catch (err) {
             record('method-fireWeapon-invalid', false, err instanceof Error ? err.message : String(err));
@@ -404,7 +402,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
 
         // -------- method: rollInitiative --------
         try {
-            const result = await withTimeout(live()?.rollInitiative?.(), 8_000, 'rollInitiative');
+            const result = await withTimeout(live()?.rollInitiative?.(), 'rollInitiative', SLOW_OP_TIMEOUT_MS);
             // The override returns null by contract; either way no-throw is the coverage signal.
             record(
                 'method-rollInitiative',
@@ -417,14 +415,14 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
 
         // -------- isCrippled-true / isDestroyed-true: damage the hull --------
         try {
-            await withTimeout(live()?.update?.({ 'system.hullIntegrity.value': 10 }), 5_000, 'hull damage for crippled');
+            await withTimeout(live()?.update?.({ 'system.hullIntegrity.value': 10 }), 'hull damage for crippled');
             // 10 <= floor(40/2)=20 → crippled
             record('get-isCrippled-true', live()?.isCrippled === true, `value=${live()?.hullIntegrity?.value}`);
         } catch (err) {
             record('get-isCrippled-true', false, err instanceof Error ? err.message : String(err));
         }
         try {
-            await withTimeout(live()?.update?.({ 'system.hullIntegrity.value': 0 }), 5_000, 'hull zero for destroyed');
+            await withTimeout(live()?.update?.({ 'system.hullIntegrity.value': 0 }), 'hull zero for destroyed');
             record('get-isDestroyed-true', live()?.isDestroyed === true, `value=${live()?.hullIntegrity?.value}`);
         } catch (err) {
             record('get-isDestroyed-true', false, err instanceof Error ? err.message : String(err));
@@ -443,7 +441,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
 }
 
 test.describe.serial('documents/starship method coverage (Tier B)', () => {
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('every WH40KStarship getter and method executes against an rt-starship', async ({ page }) => {
         await joinOrSkip(page);
 

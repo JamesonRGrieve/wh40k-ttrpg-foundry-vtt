@@ -141,18 +141,15 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
         }
 
         await actor.sheet?.render?.(true);
-        await new Promise<void>((r) => {
-            setTimeout(r, 400);
-        });
+        await globalThis.wh40kE2E.settle(400);
 
         try {
             actor.sheet?.changeTab?.('components', 'primary');
-            await new Promise<void>((r) => {
-                setTimeout(r, 250);
-            });
         } catch {
             /* fall back to whatever tab is open */
         }
+        // Wait for the build-summary panel to render (the assertions report a miss).
+        await globalThis.wh40kE2E.pollUntil(() => actor.sheet?.element?.querySelector('.wh40k-ship-build-summary-panel') != null);
 
         const root = actor.sheet?.element;
         const panel = root?.querySelector('.wh40k-ship-build-summary-panel') ?? null;

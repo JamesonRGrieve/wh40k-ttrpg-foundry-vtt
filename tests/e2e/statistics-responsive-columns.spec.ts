@@ -79,25 +79,17 @@ test('statistics skills grid reflows 3 → 2 → 1 columns by panel width (#267)
             }
             if (actor == null) return { setupOk: false, gridFound: false, probes: [], error: 'Actor.create returned null' };
 
+            const { pollUntil, settle } = globalThis.wh40kE2E;
             await actor.sheet.render(true);
-            await new Promise<void>((r) => {
-                setTimeout(r, 300);
-            });
+            await settle(300);
             actor.sheet.changeTab?.('skills', 'primary');
-            await new Promise<void>((r) => {
-                setTimeout(r, 250);
-            });
+            // Wait for the skills grid to render (the gridFound check below reports a miss).
+            await pollUntil(() => actor.sheet.element?.querySelector?.('[data-testid="skills-responsive-grid"]') != null);
 
             const rootEl = actor.sheet.element as HTMLElement | undefined;
             if (rootEl?.querySelector('[data-testid="skills-responsive-grid"]') == null) {
                 return { setupOk: true, gridFound: false, probes: [], error: 'skills-responsive-grid not found' };
             }
-
-            // eslint-disable-next-line @typescript-eslint/promise-function-async -- canonical promisified setTimeout; there is nothing to await
-            const sleep = (ms: number): Promise<void> =>
-                new Promise<void>((r) => {
-                    setTimeout(r, ms);
-                });
 
             // `setPosition` re-renders the sheet, which DETACHES the old grid node —
             // holding a reference across resizes measures a stale element (width 0
@@ -111,7 +103,7 @@ test('statistics skills grid reflows 3 → 2 → 1 columns by panel width (#267)
                     const tabControl = rootEl.querySelector('[data-tab="skills"][data-group="primary"], nav [data-tab="skills"]') ?? null;
                     if (tabControl instanceof HTMLElement) tabControl.click();
                     // eslint-disable-next-line no-await-in-loop -- poll loop: settle then re-check the LIVE node
-                    await sleep(150);
+                    await settle(150);
                     const g2 = liveGrid();
                     if (g2 !== null && g2.getBoundingClientRect().width > 1 && g2.offsetParent !== null) return g2;
                 }
@@ -125,7 +117,7 @@ test('statistics skills grid reflows 3 → 2 → 1 columns by panel width (#267)
                 // container shrinks unpredictably.
                 actor.sheet.setPosition?.({ left: 20, top: 20, width, height: 820 });
                 // eslint-disable-next-line no-await-in-loop -- sequential resize→settle→re-activate→measure per width
-                await sleep(200);
+                await settle(200);
                 // eslint-disable-next-line no-await-in-loop -- sequential per width (see above)
                 const grid = await waitForLaidOutGrid();
                 const tracks = grid !== null ? getComputedStyle(grid).gridTemplateColumns : 'none';

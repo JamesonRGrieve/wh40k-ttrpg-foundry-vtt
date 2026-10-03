@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the runtime circular token mask
@@ -72,8 +73,13 @@ interface ProbeGlobals {
     canvas: {
         ready: boolean;
         animatePan: (o: { x: number; y: number; scale: number; duration: number }) => Promise<void>;
-        tokens?: { placeables: Array<{ id: string; mesh: { texture: { width: number; height: number } } | null }> };
+        tokens?: { placeables: TokenPlaceableLike[] };
     };
+}
+
+interface TokenPlaceableLike {
+    id: string;
+    mesh: { texture: { width: number; height: number } } | null;
 }
 
 async function probeTokenMask(page: Page, portrait: string): Promise<ProbeState> {
@@ -106,10 +112,13 @@ async function probeTokenMask(page: Page, portrait: string): Promise<ProbeState>
                 record('flag-generates-bust', false, 'token placement failed');
                 return { results: out, sceneId, actorId };
             }
+            const { pollUntil, settle } = globalThis.wh40kE2E;
+            // A freshly viewed scene's canvas gets a longer budget to draw its tokens.
+            const canvasDrawTimeoutMs = globalThis.wh40kE2E.scaledMs(20_000);
+            const findPlaceable = (id: string): TokenPlaceableLike | undefined => g.canvas.tokens?.placeables.find((t) => t.id === id);
             await scene.view();
-            await new Promise((resolve) => {
-                setTimeout(resolve, 4000);
-            });
+            // Wait for the scene's canvas to draw both placed tokens (the checks below report a miss).
+            await pollUntil(() => g.canvas.ready && findPlaceable(masked.id) !== undefined && findPlaceable(control.id) !== undefined, canvasDrawTimeoutMs);
             if (g.game.paused) g.game.togglePause(false);
 
             // the flagged token: rectangular portrait + ring + tokenFrame flag
@@ -122,13 +131,17 @@ async function probeTokenMask(page: Page, portrait: string): Promise<ProbeState>
             // token is always busted (default centre when unflagged), so only a
             // ringless, unflagged token is guaranteed to keep its raw art.
             await control.update({ texture: { src }, ring: { enabled: false } });
-            await new Promise((resolve) => {
-                setTimeout(resolve, 3000);
-            });
+            // Wait for both meshes to settle: the masked token on its 512x512 bust,
+            // the control on the raw (non-square) portrait. The checks below report
+            // whichever state never arrives.
+            const isSquareBust = (tex: { width: number; height: number } | undefined): boolean => tex?.width === 512 && tex.height === 512;
+            await pollUntil(() => {
+                const controlTexNow = findPlaceable(control.id)?.mesh?.texture;
+                return isSquareBust(findPlaceable(masked.id)?.mesh?.texture) && controlTexNow !== undefined && controlTexNow.width !== controlTexNow.height;
+            }, canvasDrawTimeoutMs);
 
-            const placeables = g.canvas.tokens?.placeables ?? [];
-            const maskedTok = placeables.find((t) => t.id === masked.id);
-            const controlTok = placeables.find((t) => t.id === control.id);
+            const maskedTok = findPlaceable(masked.id);
+            const controlTok = findPlaceable(control.id);
             const maskedTex = maskedTok?.mesh?.texture;
             const controlTex = controlTok?.mesh?.texture;
             // the generated bust is a 512x512 RenderTexture; the raw portrait is not square
@@ -153,9 +166,8 @@ async function probeTokenMask(page: Page, portrait: string): Promise<ProbeState>
             );
 
             await g.canvas.animatePan({ x: 350, y: 350, scale: 3, duration: 0 });
-            await new Promise((resolve) => {
-                setTimeout(resolve, 1000);
-            });
+            // Let the panned frame render before the screenshot.
+            await settle(1000);
             record('renders-circular-with-band', g.canvas.ready, g.canvas.ready ? null : 'canvas.ready is false');
         } catch (err) {
             record('flag-generates-bust', false, err instanceof Error ? err.message : String(err));
@@ -192,7 +204,7 @@ async function cleanupProbe(page: Page, sceneId: string | null, actorId: string 
 }
 
 test.describe.serial('runtime token mask (Tier B)', () => {
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('tokenFrame flag renders a circular bust from a rectangular portrait', async ({ page }) => {
         await joinOrSkip(page);
 

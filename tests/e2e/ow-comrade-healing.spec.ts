@@ -137,9 +137,8 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
                     // always close it even if a probe below throws mid-flight.
                     g.__c157sheet = sheet;
                     await sheet.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 120);
-                    });
+                    // Wait for the healing panel to render (the checks below report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('.wh40k-ow-healing-panel') != null);
                     rendered = sheet.element instanceof HTMLElement;
 
                     if (rendered && sheet.element != null) {
@@ -156,17 +155,9 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
                         // — a full socket round-trip that a fixed 150 ms sleep raced
                         // under parallel load. Settle on the observed change, capped.
                         const recoveryDays = (): number | null => g.game?.actors?.get?.(id)?.system?.comradeRecoveryDays ?? null;
-                        const settle = async (from: number | null): Promise<void> =>
-                            new Promise<void>((resolve) => {
-                                let waited = 0;
-                                const tick = setInterval(() => {
-                                    waited += 100;
-                                    if (recoveryDays() !== from || waited >= 2000) {
-                                        clearInterval(tick);
-                                        resolve();
-                                    }
-                                }, 100);
-                            });
+                        const settle = async (from: number | null): Promise<void> => {
+                            await globalThis.wh40kE2E.pollUntil(() => recoveryDays() !== from, globalThis.wh40kE2E.scaledMs(2000), 100);
+                        };
 
                         const tickBtn = el.querySelector<HTMLButtonElement>('button[data-action="owComradeTickDay"]');
                         if (tickBtn !== null && !tickBtn.disabled) {

@@ -96,9 +96,8 @@ async function probeProfaneObjectSheet(page: Page): Promise<ProfaneProbeResult> 
         try {
             if (item.sheet?.render != null) {
                 await item.sheet.render(true);
-                await new Promise((r) => {
-                    setTimeout(r, 200);
-                });
+                // Wait for the profane-object panel to render (the assertions report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => item.sheet?.element?.querySelector?.('[data-wh40k-hook="gear-profane-aura"]') != null);
                 rendered = true;
             }
         } catch (err) {

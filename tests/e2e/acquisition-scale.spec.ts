@@ -102,9 +102,8 @@ test.describe.serial('AcquisitionDialog Scale upgrade (Tier B)', () => {
 
                     try {
                         await inst.render({ force: true });
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 80);
-                        });
+                        // Wait for the dialog content (the checks below report a miss).
+                        await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('button[data-action="selectScale"]') != null);
                     } catch (err) {
                         error = err instanceof Error ? err.message : String(err);
                     }

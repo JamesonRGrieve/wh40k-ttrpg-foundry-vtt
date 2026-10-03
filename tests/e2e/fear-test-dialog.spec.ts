@@ -143,9 +143,8 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
                     const inst = await wh40kOpenDialog('fear-test-dialog', () => {
                         mod.openFearTestDialog({ fearRating: 3 });
                     });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 60);
-                    });
+                    // Wait for the dialog content (the checks below report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('[data-action="rollTest"]') != null);
                     rendered = inst.element instanceof HTMLElement;
                     if (rendered && inst.element !== null) {
                         const fr = inst.element.querySelector<HTMLInputElement>('input[name="fearRating"]');

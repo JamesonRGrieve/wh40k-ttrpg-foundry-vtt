@@ -392,9 +392,7 @@ async function probeDialogs(page: Page): Promise<{
                         // ConvertActorSystemDialog.open(actor) — fire-and-forget;
                         // the promise resolves only when the user clicks a button.
                         Cls.open?.(actorDoc);
-                        await new Promise<void>((resolve) => {
-                            setTimeout(resolve, 60);
-                        });
+                        await globalThis.wh40kE2E.settle(60);
                         rendered = document.querySelector('dialog.application') !== null;
                         if (!rendered) {
                             // Some static dialogs warn-and-return when the
@@ -405,9 +403,7 @@ async function probeDialogs(page: Page): Promise<{
                         }
                     } else if (probe.kind === 'staticOpenNone') {
                         Cls.open?.();
-                        await new Promise<void>((resolve) => {
-                            setTimeout(resolve, 60);
-                        });
+                        await globalThis.wh40kE2E.settle(60);
                         rendered = document.querySelector('dialog.application') !== null;
                         if (!rendered) rendered = true;
                     } else {
@@ -419,9 +415,7 @@ async function probeDialogs(page: Page): Promise<{
                         let renderErr: string | null = null;
                         try {
                             await inst.render(true);
-                            await new Promise<void>((resolve) => {
-                                setTimeout(resolve, 30);
-                            });
+                            await globalThis.wh40kE2E.settle(30);
                         } catch (err) {
                             renderErr = String(err instanceof Error ? err.message : String(err));
                         }

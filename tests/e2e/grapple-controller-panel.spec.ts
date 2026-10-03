@@ -54,18 +54,15 @@ test('grapple-controller-panel renders five actions when state=grappling (#120)'
         if (actor == null) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create returned null' };
 
         await actor.sheet.render(true);
-        await new Promise<void>((r) => {
-            setTimeout(r, 250);
-        });
+        await globalThis.wh40kE2E.settle(250);
 
         try {
             actor.sheet.changeTab?.('overview', 'primary');
-            await new Promise<void>((r) => {
-                setTimeout(r, 150);
-            });
         } catch {
             /* fall back to whatever tab is open */
         }
+        // Wait for the grapple panel to render (the assertions below report a miss).
+        await globalThis.wh40kE2E.pollUntil(() => actor.sheet.element?.querySelector('[data-wh40k-hook="grapple-panel"]') != null);
 
         const root = actor.sheet.element;
         const panel = root?.querySelector('[data-wh40k-hook="grapple-panel"]') ?? null;

@@ -1,5 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
+import { foundryTestDataDir } from './tests/e2e/lib/data-dir';
+import { scaledMs } from './tests/e2e/lib/timing';
 import { hasFoundryTierB, skipBanner } from './tests/integration/lib/has-foundry';
 
 const PORT = Number(process.env.FOUNDRY_TEST_PORT ?? 30001);
@@ -23,10 +25,12 @@ const webServers = FOUNDRY_PRESENT
     ? Array.from({ length: WORKERS }, (_, i) => {
           const port = PORT + i;
           return {
-              command: `bash scripts/setup-foundry-test-world.sh ${port} && ${FOUNDRY_NODE} --require ./scripts/foundry-hostname-shim.cjs .foundry-release/main.js --dataPath=./.foundry-test-data-${port} --port=${port} --noupnp --headless`,
+              command: `bash scripts/setup-foundry-test-world.sh ${port} && ${FOUNDRY_NODE} --require ./scripts/foundry-hostname-shim.cjs .foundry-release/main.js --dataPath=${foundryTestDataDir(
+                  port,
+              )} --port=${port} --noupnp --headless`,
               url: `http://127.0.0.1:${port}`,
               reuseExistingServer: !process.env.CI,
-              timeout: 180_000,
+              timeout: scaledMs(180_000),
               stdout: 'pipe' as const,
               stderr: 'pipe' as const,
           };
@@ -50,7 +54,9 @@ export default defineConfig({
     forbidOnly: !!process.env.CI,
     retries: 0,
     reporter: [['list'], ['json', { outputFile: '.e2e-results.json' }]],
-    timeout: 600_000,
+    // Every budget scales with E2E_TIMEOUT_SCALE (tests/e2e/lib/timing.ts) so a
+    // loaded shared runner can be given proportional headroom.
+    timeout: scaledMs(600_000),
     use: {
         baseURL: `http://127.0.0.1:${PORT}`,
         trace: 'on-first-retry',

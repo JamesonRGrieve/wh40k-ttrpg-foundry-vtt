@@ -67,9 +67,8 @@ test.describe.serial('ColonyGrowthDialog (Tier B)', () => {
                 const inst = new Cls({});
                 try {
                     await inst.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 80);
-                    });
+                    // Wait for the dialog content (the checks below report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('[data-stat-value]') != null);
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }

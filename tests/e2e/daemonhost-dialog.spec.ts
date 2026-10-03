@@ -36,9 +36,8 @@ test.describe.serial('DaemonhostBindingDialog (Tier B)', () => {
                 const inst = await wh40kOpenDialog('daemonhost-binding-dialog', () => {
                     mod.openDaemonhostBindingDialog();
                 });
-                await new Promise<void>((r) => {
-                    setTimeout(r, 40);
-                });
+                // Wait for the dialog content (the checks below report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('[data-action="bind"]') != null);
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     tierCardCount = inst.element.querySelectorAll('[data-action="selectTier"]').length;

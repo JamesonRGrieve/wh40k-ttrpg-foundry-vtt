@@ -175,9 +175,8 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                 }
                 const before = target.style.display;
                 btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-                await new Promise<void>((r) => {
-                    setTimeout(r, 30);
-                });
+                // Wait for the toggle side effect (the check below reports a miss).
+                await globalThis.wh40kE2E.pollUntil(() => target.style.display !== before);
                 const after = target.style.display;
                 if (before !== after) {
                     setResult('basic-action-dispatch', true, `toggle side-effect observed (display ${before}→${after})`);
@@ -210,10 +209,12 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             /* ignore */
                         }
                     });
-                    // Give the chat log a tick to render the message DOM.
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 100);
-                    });
+                    // Give the chat log time to render the message DOM. The sidebar
+                    // may not be mounted headless (handled below), so the wait is short.
+                    await globalThis.wh40kE2E.pollUntil(
+                        () => document.querySelector(`[data-message-id="${msgId}"]`) !== null,
+                        globalThis.wh40kE2E.scaledMs(1000),
+                    );
                     const el = document.querySelector(`[data-message-id="${msgId}"]`);
                     if (el === null) {
                         // Foundry chat sidebar may not be mounted in the
@@ -317,10 +318,8 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         } catch {
                             /* best-effort */
                         }
-                        // Wait for hook callbacks to flush.
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 80);
-                        });
+                        // Wait for the hook callbacks to fire (the check below reports a miss).
+                        await globalThis.wh40kE2E.pollUntil(() => turnFired || roundFired);
                         try {
                             HooksObj.off?.('combatTurn', turnTap);
                             HooksObj.off?.('combatRound', roundTap);
@@ -438,7 +437,7 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                             new Promise<ReloadResult>((resolve) => {
                                 setTimeout(() => {
                                     resolve({ success: false, message: 'timeout' });
-                                }, 800);
+                                }, globalThis.wh40kE2E.scaledMs(800));
                             }),
                         ]);
                     } catch (err) {
@@ -585,10 +584,8 @@ async function probeActionManagers(page: Page): Promise<ProbeResult> {
                         setResult('chat-card-button-click', false, 'refund button missing from detached element');
                     } else {
                         btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-                        // The handler is async; wait for the notification.
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 120);
-                        });
+                        // The handler is async; wait for the notification (the check below reports a miss).
+                        await globalThis.wh40kE2E.pollUntil(() => capture.warnedMessage !== null);
                         if (capture.warnedMessage !== null) {
                             setResult('chat-card-button-click', true, `handler ran end-to-end and surfaced notification: "${String(capture.warnedMessage)}"`);
                         } else {

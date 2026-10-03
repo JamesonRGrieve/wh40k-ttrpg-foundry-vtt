@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { test } from './test';
+import { scaledMs } from './timing';
 
 /**
  * Base TCP port for the e2e Foundry servers. Worker N talks to its own
@@ -42,7 +43,10 @@ function e2ePortForWorker(): number {
 const GM_USER_NAME = 'Gamemaster';
 
 /** Per-attempt wait for the join page to know the GM user. */
-const JOIN_ATTEMPT_TIMEOUT_MS = 20_000;
+const JOIN_ATTEMPT_TIMEOUT_MS = scaledMs(20_000);
+
+/** Wait for the post-join navigation into /game. */
+const GAME_NAVIGATION_TIMEOUT_MS = scaledMs(30_000);
 
 /**
  * One attempt to reach /join and confirm the world's user list is loaded.
@@ -105,7 +109,7 @@ export async function joinAsGM(page: Page): Promise<boolean> {
     // an unrelated refactor innocent, because the failure MOVES when you change
     // which specs you run.
     const READY_ATTEMPTS = 3;
-    const READY_TIMEOUT_MS = 60_000;
+    const READY_TIMEOUT_MS = scaledMs(60_000);
     let populated = false;
     for (let attempt = 0; attempt < JOIN_ATTEMPTS; attempt++) {
         // eslint-disable-next-line no-await-in-loop -- sequential retry: each attempt must fully resolve (and fail) before the next reload; parallelizing defeats the world-boot backoff
@@ -115,7 +119,7 @@ export async function joinAsGM(page: Page): Promise<boolean> {
     if (!populated) return false;
     await page.fill('input[name="username"]', GM_USER_NAME);
     await page.click('button[name="join"]');
-    await page.waitForURL(/\/game/, { timeout: 30_000 });
+    await page.waitForURL(/\/game/, { timeout: GAME_NAVIGATION_TIMEOUT_MS });
     let ready = false;
     for (let attempt = 0; attempt < READY_ATTEMPTS; attempt++) {
         try {

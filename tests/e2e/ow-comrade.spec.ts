@@ -134,9 +134,8 @@ test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
                     const sheet = actor.sheet;
                     if (sheet == null) return { ...base, error: 'actor.sheet is null' };
                     await sheet.render({ force: true });
-                    await new Promise((r) => {
-                        setTimeout(r, 120);
-                    });
+                    // Wait for the comrade panel to render (the checks below report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('[data-wh40k-hook="ow-comrade-panel"]') != null);
                     rendered = sheet.element instanceof HTMLElement;
 
                     if (rendered && sheet.element != null) {
@@ -151,9 +150,9 @@ test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
                         const woundBtn = el.querySelector<HTMLButtonElement>('button[data-action="owComradeWound"]');
                         if (woundBtn && !woundBtn.disabled) {
                             woundBtn.click();
-                            await new Promise((r) => {
-                                setTimeout(r, 150);
-                            });
+                            // Wait for the state change to land on the actor (the assertion reports a miss).
+                            const stateAtClick = stateBefore;
+                            await globalThis.wh40kE2E.pollUntil(() => (actor.system?.comrade?.state ?? null) !== stateAtClick);
                             woundDispatched = true;
                         }
                         stateAfter = actor.system?.comrade?.state ?? null;

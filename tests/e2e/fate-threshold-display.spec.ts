@@ -66,17 +66,15 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
         }
 
         await withThreshold.sheet.render(true);
-        await new Promise<void>((r) => {
-            setTimeout(r, 200);
-        });
+        // Wait for the threshold readout to render (the check below reports a miss).
+        await globalThis.wh40kE2E.pollUntil(() => withThreshold.sheet.element?.querySelector('[data-wh40k-hook="fate-threshold"]') != null);
         const visibleEl = withThreshold.sheet.element?.querySelector('[data-wh40k-hook="fate-threshold"]') ?? null;
         const visibleText = visibleEl?.textContent.trim() ?? '';
         const withThresholdOk = visibleEl !== null && visibleText.includes('2');
 
         await withoutThreshold.sheet.render(true);
-        await new Promise<void>((r) => {
-            setTimeout(r, 200);
-        });
+        // Asserting an ABSENCE: let the render fully settle first.
+        await globalThis.wh40kE2E.settle(200);
         const hiddenEl = withoutThreshold.sheet.element?.querySelector('[data-wh40k-hook="fate-threshold"]') ?? null;
         const withoutThresholdOk = hiddenEl === null;
 
@@ -98,9 +96,8 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
         const actor = g.game?.actors?.getName?.('fate-threshold-visible-probe');
         if (actor?.sheet != null) {
             await actor.sheet.render(true);
-            await new Promise<void>((r) => {
-                setTimeout(r, 200);
-            });
+            // Let the re-render settle before the snap.
+            await globalThis.wh40kE2E.settle(200);
         }
     });
     await snap(page, 'fate-panel-with-threshold');
@@ -117,9 +114,8 @@ test('fate.threshold displays in fate-panel header when > 0 (#63)', async ({ pag
         const actor = g.game?.actors?.getName?.('fate-threshold-hidden-probe');
         if (actor?.sheet != null) {
             await actor.sheet.render(true);
-            await new Promise<void>((r) => {
-                setTimeout(r, 200);
-            });
+            // Let the re-render settle before the snap.
+            await globalThis.wh40kE2E.settle(200);
         }
     });
     await snap(page, 'fate-panel-without-threshold');

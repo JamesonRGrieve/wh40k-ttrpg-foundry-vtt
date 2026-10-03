@@ -238,9 +238,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                 if (actor?.sheet?.render !== undefined) {
                     await actor.sheet.render({ force: true });
                     // Activate the Crew tab so the screenshot captures it.
-                    await new Promise<void>((resolve) => {
-                        setTimeout(resolve, 120);
-                    });
+                    await globalThis.wh40kE2E.settle(120);
                     const sheetEl = actor.sheet.element;
                     if (sheetEl != null) {
                         const crewTab = sheetEl.querySelector?.('[data-tab="crew"]') ?? null;

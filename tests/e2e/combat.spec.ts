@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the full Combat tracker lifecycle and the system's
@@ -157,22 +158,16 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult> {
         // never arrive. Wrap each call with a 5s timeout so one hanging
         // operation can't kill the Foundry server and take downstream
         // specs (dialogs, settings, sheet-interactions) with it.
-        const withTimeout = async <T>(p: Promise<T> | undefined, ms: number, label: string): Promise<T> => {
+        // An optional-chained call on a missing method yields undefined, which is
+        // a failure here; anything else is bounded by the shared in-page timeout.
+        const withTimeout = async <T>(p: Promise<T> | undefined, label: string, ms?: number): Promise<T> => {
             if (p === undefined) throw new Error(`${label} is not available`);
-            const handle = { timer: undefined as ReturnType<typeof setTimeout> | undefined };
-            const timeout = new Promise<T>((_, reject) => {
-                handle.timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                clearTimeout(handle.timer);
-            }
+            return globalThis.wh40kE2E.withTimeout(p, label, ms);
         };
 
         let combat: CombatInstance | null = null;
         try {
-            combat = await withTimeout(CombatGbl.create({}), 5_000, 'Combat.create');
+            combat = await withTimeout(CombatGbl.create({}), 'Combat.create');
             if (combat?.id != null) {
                 fired['create'] = true;
             } else {
@@ -208,7 +203,6 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult> {
                     'Combatant',
                     npcIds.map((id) => ({ actorId: id })),
                 ),
-                5_000,
                 'createEmbeddedDocuments',
             );
             if (created.length > 0) {
@@ -232,7 +226,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult> {
         const probeRollAll = async (): Promise<void> => {
             try {
                 if (typeof liveCombat.rollAll === 'function') {
-                    await withTimeout(liveCombat.rollAll(), 5_000, 'combat.rollAll');
+                    await withTimeout(liveCombat.rollAll(), 'combat.rollAll');
                     fired['rollAll'] = true;
                 } else {
                     notes['rollAll'] = 'combat.rollAll is not a function';
@@ -246,7 +240,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult> {
         const probeActivate = async (): Promise<void> => {
             try {
                 if (typeof liveCombat.activate === 'function') {
-                    await withTimeout(liveCombat.activate(), 5_000, 'combat.activate');
+                    await withTimeout(liveCombat.activate(), 'combat.activate');
                     fired['activate'] = true;
                 } else {
                     notes['activate'] = 'combat.activate is not a function';
@@ -260,7 +254,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult> {
         const probeStartCombat = async (): Promise<void> => {
             try {
                 if (typeof liveCombat.startCombat === 'function') {
-                    await withTimeout(liveCombat.startCombat(), 5_000, 'combat.startCombat');
+                    await withTimeout(liveCombat.startCombat(), 'combat.startCombat');
                     fired['startCombat'] = true;
                 } else {
                     notes['startCombat'] = 'combat.startCombat is not a function';
@@ -276,7 +270,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult> {
                 let turnOk = true;
                 for (let i = 0; i < 3; i++) {
                     if (typeof liveCombat.nextTurn === 'function') {
-                        await withTimeout(liveCombat.nextTurn(), 5_000, 'combat.nextTurn');
+                        await withTimeout(liveCombat.nextTurn(), 'combat.nextTurn');
                     } else {
                         turnOk = false;
                         notes['nextTurn'] = 'combat.nextTurn is not a function';
@@ -295,7 +289,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult> {
                 let roundOk = true;
                 for (let i = 0; i < 2; i++) {
                     if (typeof liveCombat.nextRound === 'function') {
-                        await withTimeout(liveCombat.nextRound(), 5_000, 'combat.nextRound');
+                        await withTimeout(liveCombat.nextRound(), 'combat.nextRound');
                     } else {
                         roundOk = false;
                         notes['nextRound'] = 'combat.nextRound is not a function';
@@ -312,7 +306,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult> {
         const probeSetInitiative = async (): Promise<void> => {
             try {
                 if (combatantIds.length > 0 && typeof liveCombat.setInitiative === 'function') {
-                    await withTimeout(liveCombat.setInitiative(combatantIds[0], 99), 5_000, 'combat.setInitiative');
+                    await withTimeout(liveCombat.setInitiative(combatantIds[0], 99), 'combat.setInitiative');
                     fired['setInitiative'] = true;
                 } else {
                     notes['setInitiative'] = combatantIds.length === 0 ? 'no combatants available' : 'combat.setInitiative is not a function';
@@ -326,7 +320,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult> {
         const probeDeleteCombatant = async (): Promise<void> => {
             try {
                 if (combatantIds.length > 1) {
-                    const removed = await withTimeout(liveCombat.deleteEmbeddedDocuments?.('Combatant', [combatantIds[1]]), 5_000, 'deleteEmbeddedDocuments');
+                    const removed = await withTimeout(liveCombat.deleteEmbeddedDocuments?.('Combatant', [combatantIds[1]]), 'deleteEmbeddedDocuments');
                     if (removed.length > 0) {
                         fired['deleteCombatant'] = true;
                     } else {
@@ -344,10 +338,10 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult> {
         const probeEndCombat = async (): Promise<void> => {
             try {
                 if (typeof liveCombat.endCombat === 'function') {
-                    await withTimeout(liveCombat.endCombat(), 5_000, 'combat.endCombat');
+                    await withTimeout(liveCombat.endCombat(), 'combat.endCombat');
                     fired['endCombat'] = true;
                 } else if (typeof liveCombat.delete === 'function') {
-                    await withTimeout(liveCombat.delete(), 5_000, 'combat.delete');
+                    await withTimeout(liveCombat.delete(), 'combat.delete');
                     fired['endCombat'] = true;
                 } else {
                     notes['endCombat'] = 'neither endCombat nor delete available';
@@ -355,7 +349,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult> {
             } catch {
                 // endCombat may prompt; fall back to delete.
                 try {
-                    await withTimeout(liveCombat.delete?.(), 5_000, 'combat.delete fallback');
+                    await withTimeout(liveCombat.delete?.(), 'combat.delete fallback');
                     fired['endCombat'] = true;
                 } catch (err2) {
                     notes['endCombat'] = `endCombat/delete threw: ${String(err2 instanceof Error ? err2.message : err2)}`;
@@ -555,9 +549,7 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult> {
             }
             await instance.render(true);
             // Allow render microtasks to flush.
-            await new Promise<void>((r) => {
-                setTimeout(r, 50);
-            });
+            await globalThis.wh40kE2E.settle(50);
             rendered[name] = true;
             try {
                 await instance.close?.();
@@ -607,7 +599,7 @@ test.describe.serial('combat lifecycle (Tier B)', () => {
     // Cap at 3 minutes total — internal per-call timeouts mean we should
     // never come close, but a hung server would otherwise eat the global
     // 10-minute test timeout and take downstream specs with it.
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('combat tracker drives full encounter lifecycle and renders combat UIs', async ({ page }) => {
         await joinOrSkip(page);
 

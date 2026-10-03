@@ -176,12 +176,12 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[] }> {
             let inst: BrowserInstance | null = null;
             if (typeof RTCompendiumBrowser === 'function') {
                 try {
-                    inst = new RTCompendiumBrowser({});
-                    await inst.render({ force: true });
-                    await new Promise((r) => {
-                        setTimeout(r, 80);
-                    });
-                    const ok = inst.element instanceof HTMLElement;
+                    const browser = new RTCompendiumBrowser({});
+                    inst = browser;
+                    await browser.render({ force: true });
+                    // Wait for the browser element (the record below reports a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => browser.element instanceof HTMLElement);
+                    const ok = browser.element instanceof HTMLElement;
                     record('browser-renders', ok, ok ? null : 'element is not an HTMLElement after render');
                 } catch (err) {
                     record('browser-renders', false, `render threw: ${errMsg(err)}`);
@@ -267,15 +267,13 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[] }> {
                         // eslint-disable-next-line no-restricted-syntax -- boundary: synthetic InputEvent stub for a Foundry handler; only the read `target.value` member is present
                         const evt = { target: { value: term } } as unknown as InputEvent;
                         liveInst._onSearch(evt);
-                        // wait for the re-render the handler schedules
-                        await new Promise((r) => {
-                            setTimeout(r, 60);
-                        });
+                        // Wait for the handler to apply the search filter (the record below reports a miss).
+                        await globalThis.wh40kE2E.pollUntil(() => liveInst._filters.search === term);
                         const searchResults = await liveInst._getFilteredResults();
                         const ok = searchResults.length > 0 && searchResults.every((r) => r.name.toLowerCase().includes(term));
                         record('browser-search-by-name', ok, ok ? null : `search '${term}' matched ${searchResults.length} (mismatch in name filter)`);
-                        // reset for downstream flows
-                        liveInst._filters.search = '';
+                        // reset for downstream flows (no other writer exists in this single-threaded probe)
+                        Object.assign(liveInst._filters, { search: '' });
                     } catch (err) {
                         record('browser-search-by-name', false, `search threw: ${errMsg(err)}`);
                     }
@@ -302,9 +300,8 @@ async function runFlows(page: Page): Promise<{ results: FlowResult[] }> {
                             // eslint-disable-next-line no-restricted-syntax -- boundary: synthetic PointerEvent stub passed to a Foundry handler; only the two used members are present
                         } as unknown as PointerEvent;
                         await inst._onItemClick(fakeEvent);
-                        await new Promise((r) => {
-                            setTimeout(r, 60);
-                        });
+                        // Let any sheet the click opened render before the cleanup below.
+                        await globalThis.wh40kE2E.settle(60);
                         // Either the sheet rendered (best case) or fromUuid
                         // returned without throwing — both indicate the
                         // _onItemClick path executed end-to-end.

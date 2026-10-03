@@ -66,9 +66,8 @@ test.describe.serial('LogisticsTestDialog (Tier B)', () => {
                 const inst = new Cls({});
                 try {
                     await inst.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 80);
-                    });
+                    // Wait for the dialog's axes to render (the checks below report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('[data-axis="troopCount"]') != null);
                 } catch (err) {
                     error = err instanceof Error ? err.message : String(err);
                 }

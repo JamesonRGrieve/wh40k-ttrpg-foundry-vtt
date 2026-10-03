@@ -159,9 +159,7 @@ async function probeLoot(page: Page): Promise<{ results: FlowResult[] }> {
             try {
                 if (loot?.sheet?.render != null) {
                     await loot.sheet.render(true);
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 250);
-                    });
+                    await globalThis.wh40kE2E.settle(250);
                     const el = loot.sheet.element;
                     const ok = Boolean(el) && (el instanceof HTMLElement || Boolean((el as { 0?: HTMLElement } | null)?.[0]));
                     record('loot-sheet-renders', ok, ok ? null : 'sheet element absent after render');

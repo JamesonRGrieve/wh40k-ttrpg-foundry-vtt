@@ -53,9 +53,8 @@ test.describe.serial('DisorderRollDialog (Tier B)', () => {
                 const inst = new Cls({});
                 try {
                     await inst.render({ force: true });
-                    await new Promise<void>((r) => {
-                        setTimeout(r, 80);
-                    });
+                    // Wait for the dialog content (the checks below report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('button[data-action="rollDisorder"]') != null);
                 } catch (err) {
                     error = String((err as Error).message);
                 }

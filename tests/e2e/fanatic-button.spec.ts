@@ -68,35 +68,34 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
         if (actor == null) return { setupOk: false, error: 'Actor.create returned null' };
 
         const fateBefore = actor.system?.fate?.value ?? 0;
+        const liveActor = actor;
+        const { pollUntil, settle } = globalThis.wh40kE2E;
 
-        await actor.sheet.render(true);
-        await new Promise<void>((r) => {
-            setTimeout(r, 250);
-        });
+        await liveActor.sheet.render(true);
+        await settle(250);
 
         // Navigate to the Overview tab (Status was consolidated into Overview, #263).
+        const findButton = (): HTMLElement | null => liveActor.sheet.element?.querySelector<HTMLElement>('[data-action="deathToAllWhoOpposeMe"]') ?? null;
         try {
-            actor.sheet.changeTab?.('overview', 'primary');
-            await new Promise<void>((r) => {
-                setTimeout(r, 150);
-            });
+            liveActor.sheet.changeTab?.('overview', 'primary');
         } catch {
             /* sheets without changeTab fall back to whatever tab is open */
         }
+        await pollUntil(() => findButton() !== null);
 
-        const btn = actor.sheet.element?.querySelector<HTMLElement>('[data-action="deathToAllWhoOpposeMe"]') ?? null;
+        const btn = findButton();
         const buttonFound = btn !== null;
+        const findFanaticEffect = (): ActorEffect | undefined =>
+            (liveActor.effects !== undefined ? Array.from(liveActor.effects) : []).find((e) => e.flags?.wh40k?.source === 'fanatic-death-to-oppose');
         if (btn !== null) {
             btn.click();
-            // Allow the async action handler to resolve fate.update + ActiveEffect create.
-            await new Promise<void>((r) => {
-                setTimeout(r, 400);
-            });
+            // Wait for the async action handler to resolve fate.update + ActiveEffect create
+            // (the assertions below report whichever never lands).
+            await pollUntil(() => (liveActor.system?.fate?.value ?? 0) < fateBefore && findFanaticEffect() !== undefined);
         }
 
-        const fateAfter = actor.system?.fate?.value ?? 0;
-        const effects: ActorEffect[] = actor.effects !== undefined ? Array.from(actor.effects) : [];
-        const fanaticEffect = effects.find((e) => e.flags?.wh40k?.source === 'fanatic-death-to-oppose');
+        const fateAfter = liveActor.system?.fate?.value ?? 0;
+        const fanaticEffect = findFanaticEffect();
 
         return {
             setupOk: true,

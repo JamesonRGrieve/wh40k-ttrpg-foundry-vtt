@@ -118,12 +118,14 @@ async function probe(page: Page): Promise<ProbeResult> {
         const sheet = actor.sheet;
         if (sheet?.render) {
             await sheet.render(true);
-            await new Promise<void>((r) => {
-                setTimeout(r, 500);
-            });
-            const root = sheet.element ?? null;
-            const equip = root?.querySelector('section[data-tab="equipment"]') ?? root?.querySelector('.tab[data-tab="equipment"]');
-            backpackRows = equip?.querySelectorAll('tbody tr').length ?? 0;
+            const countBackpackRows = (): number => {
+                const root = sheet.element ?? null;
+                const equip = root?.querySelector('section[data-tab="equipment"]') ?? root?.querySelector('.tab[data-tab="equipment"]');
+                return equip?.querySelectorAll('tbody tr').length ?? 0;
+            };
+            // Wait for the inventory rows to render (the assertion reports a miss).
+            await globalThis.wh40kE2E.pollUntil(() => countBackpackRows() >= 5);
+            backpackRows = countBackpackRows();
             await sheet.close?.();
         }
 

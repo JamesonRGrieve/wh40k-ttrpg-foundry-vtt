@@ -46,9 +46,8 @@ test.describe.serial('MutationRollDialog (Tier B)', () => {
                 const inst = await wh40kOpenDialog('mutation-roll-dialog', () => {
                     mod.openMutationRollDialog({ track: 'major' });
                 });
-                await new Promise((r) => {
-                    setTimeout(r, 60);
-                });
+                // Wait for the dialog content (the checks below report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('[data-action="rollMutation"]') != null);
                 rendered = inst.element instanceof HTMLElement;
                 if (rendered && inst.element) {
                     hasMinorBtn = inst.element.querySelector('[data-action="selectTrack"][data-track="minor"]') !== null;

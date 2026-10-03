@@ -136,9 +136,8 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
                         const sheet = actor.sheet;
                         if (sheet == null) return { error: 'actor.sheet is null' };
                         await sheet.render({ force: true });
-                        await new Promise<void>((r) => {
-                            setTimeout(r, 120);
-                        });
+                        // Wait for the vehicle-movement panel to render (the checks below report a miss).
+                        await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('.wh40k-ow-vehicle-movement-panel') != null);
                         rendered = sheet.element instanceof HTMLElement;
 
                         if (rendered && sheet.element != null) {
@@ -156,9 +155,8 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
 
                             if (issueBtn !== null && !issueBtn.disabled) {
                                 issueBtn.click();
-                                await new Promise<void>((r) => {
-                                    setTimeout(r, 200);
-                                });
+                                // Let the dispatched action render before the snap.
+                                await globalThis.wh40kE2E.settle(200);
                                 issueDispatched = true;
                             }
                         }

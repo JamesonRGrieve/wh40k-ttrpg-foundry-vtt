@@ -105,9 +105,8 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
                     const sheet = actor.sheet;
                     if (sheet == null) return { error: 'actor.sheet is null' };
                     await sheet.render({ force: true });
-                    await new Promise((r) => {
-                        setTimeout(r, 120);
-                    });
+                    // Wait for the battlefield panel to render (the checks below report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('.wh40k-ow-battlefield-panel') != null);
                     rendered = sheet.element instanceof HTMLElement;
 
                     if (rendered && sheet.element != null) {
@@ -213,9 +212,8 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
                     const sheet = actor.sheet;
                     if (sheet == null) return { error: 'actor.sheet is null', disabled: null, badge: null };
                     await sheet.render({ force: true });
-                    await new Promise((r) => {
-                        setTimeout(r, 120);
-                    });
+                    // Wait for the cleared cooldown to reach the rendered badge (the assertions report a miss).
+                    await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('[data-cooldown-status="ready"]') != null);
                     g.__c161ready = sheet;
                     const el = sheet.element;
                     if (!(el instanceof HTMLElement)) return { error: 'sheet element missing', disabled: null, badge: null };

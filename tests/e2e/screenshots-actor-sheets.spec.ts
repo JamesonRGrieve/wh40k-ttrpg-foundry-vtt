@@ -1,7 +1,10 @@
 import type { Page } from '@playwright/test';
+import { type ContrastViolation, scanContrast, writeContrastReport } from './lib/contrast';
 import { recordCoverage } from './lib/coverage-tracker';
 import { GAME_SYSTEM_IDS, joinOrSkip, type GameSystemId } from './lib/join';
+import { clearScreenOverlays } from './lib/screenshot';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of the full actor-sheet render surface — every applicable
@@ -180,6 +183,7 @@ async function probeActorSheetScreenshot(
     actorType: string,
     systemId: GameSystemId,
 ): Promise<{
+    actorId: string | null;
     boundingBox: { x: number; y: number; width: number; height: number } | null;
     viewRendered: boolean;
     editToggled: boolean;
@@ -338,10 +342,8 @@ async function probeActorSheetScreenshot(
                 }
 
                 // Let ApplicationV2 PARTS settle (CSS transitions, async tab
-                // content). 500ms matches the spec brief.
-                await new Promise<void>((r) => {
-                    setTimeout(r, 500);
-                });
+                // content). 500ms (scaled) matches the spec brief.
+                await globalThis.wh40kE2E.settle(500);
 
                 // Find the sheet root element in the live DOM. ApplicationV2
                 // tags its outer element with data-appid matching sheet.id.
@@ -374,6 +376,7 @@ async function probeActorSheetScreenshot(
             { actorType, systemId },
         )
         .then((result) => ({
+            actorId: result.actorId,
             boundingBox: result.boundingBox,
             viewRendered: result.viewRendered,
             editToggled: result.editToggled,
@@ -437,10 +440,15 @@ async function toggleEditModeAndMeasure(
                 error = `toggleEditMode threw: ${String(err instanceof Error ? err.message : String(err))}`;
             }
         }
-        // Allow the re-render triggered by the mode flip to settle.
-        await new Promise<void>((r) => {
-            setTimeout(r, 500);
-        });
+        // The mode flip schedules a re-render it does not await; render again and
+        // await it so the capture deterministically shows edit mode (a fixed 500ms
+        // sleep raced the re-render, leaving view and edit shots identical).
+        let rerenderError: string | null = null;
+        try {
+            await sheet.render({ force: true });
+        } catch (err) {
+            rerenderError = `edit-mode re-render threw: ${String(err instanceof Error ? err.message : String(err))}`;
+        }
 
         const appId = String(sheet.id ?? '');
         const directEl = sheet.element instanceof HTMLElement ? sheet.element : null;
@@ -457,7 +465,7 @@ async function toggleEditModeAndMeasure(
                 };
             }
         }
-        return { boundingBox, editToggled, error };
+        return { boundingBox, editToggled, error: error ?? rerenderError };
     }, actorId);
 }
 
@@ -465,6 +473,9 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
     const keysFired: Record<string, boolean> = {};
     const keyNotes: Partial<Record<string, string>> = {};
     const boundingBoxes: Partial<Record<string, { x: number; y: number; width: number; height: number } | null>> = {};
+    const contrast: Record<string, ContrastViolation[]> = {};
+    /** The live sheet window for an actor (its app id embeds the actor id). */
+    const sheetSelector = (actorId: string): string => `.application[id*="${actorId}"]`;
 
     for (const key of SCREENSHOT_ACTOR_FLOWS) keysFired[key] = false;
 
@@ -494,6 +505,7 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
         }
 
         try {
+            await clearScreenOverlays(page, probe.actorId ?? undefined);
             const clip = probe.boundingBox ?? undefined;
             const screenshotPath = `${SCREENSHOT_DIR}/${actorType}__${systemId}__view.png`;
             if (clip) {
@@ -502,6 +514,7 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
                 await page.screenshot({ path: screenshotPath, fullPage: true });
             }
             boundingBoxes[viewKey] = probe.boundingBox;
+            if (probe.actorId !== null) contrast[viewKey] = await scanContrast(page, sheetSelector(probe.actorId));
             keysFired[viewKey] = true;
             keyNotes[viewKey] = clip
                 ? `view captured at clip ${clip.width}x${clip.height} @ (${clip.x},${clip.y})`
@@ -519,6 +532,7 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
             keyNotes[editKey] = toggled.error ?? 'toggleEditMode did not fire';
             return;
         }
+        await clearScreenOverlays(page, recentActorId);
         const clip = toggled.boundingBox ?? undefined;
         const editScreenshotPath = `${SCREENSHOT_DIR}/${actorType}__${systemId}__edit.png`;
         if (clip) {
@@ -527,6 +541,7 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
             await page.screenshot({ path: editScreenshotPath, fullPage: true });
         }
         boundingBoxes[editKey] = toggled.boundingBox;
+        contrast[editKey] = await scanContrast(page, sheetSelector(recentActorId));
         keysFired[editKey] = true;
         keyNotes[editKey] = clip
             ? `edit captured at clip ${clip.width}x${clip.height} @ (${clip.x},${clip.y})`
@@ -572,6 +587,7 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
             await capturePair(actorType, systemId);
         }
     }
+    writeContrastReport(`${SCREENSHOT_DIR}/contrast-report.json`, contrast);
 
     return {
         keysFired: keysFired,
@@ -584,7 +600,7 @@ test.describe.serial('actor-sheet screenshots (Tier B)', () => {
     // 58 keys × ~2s per pair (render + 500ms settle + screenshot + edit
     // + 500ms + screenshot + cleanup) ~= 2 minutes worst case. Allow 5 to
     // tolerate slow renders on per-system first-touch initialisation.
-    test.setTimeout(300_000);
+    test.setTimeout(scaledMs(300_000));
 
     test('every (actorType × gameSystem × {view,edit}) renders and screenshots', async ({ page }) => {
         await joinOrSkip(page);

@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of a COMPLETE combat encounter as one continuous flow.
@@ -116,17 +117,11 @@ async function probeFullEncounter(page: Page): Promise<EncounterProbe> {
         // Several combat methods can hang in headless mode waiting for socket
         // events that never arrive; wrap each in a timeout so one stuck call
         // can't take the Foundry server (and downstream specs) down with it.
-        const withTimeout = async <T>(p: Promise<T> | undefined, ms: number, label: string): Promise<T> => {
+        // A missing method (optional-chained call → undefined) is a failure here;
+        // anything else is bounded by the shared in-page timeout.
+        const withTimeout = async <T>(p: Promise<T> | undefined, label: string, ms?: number): Promise<T> => {
             if (p === undefined) throw new Error(`${label} is not available`);
-            const handle = { timer: undefined as ReturnType<typeof setTimeout> | undefined };
-            const timeout = new Promise<T>((_, reject) => {
-                handle.timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-            });
-            try {
-                return await Promise.race([p, timeout]);
-            } finally {
-                clearTimeout(handle.timer);
-            }
+            return globalThis.wh40kE2E.withTimeout(p, label, ms);
         };
 
         // Encounter state, populated as the steps run; downstream steps guard
@@ -143,7 +138,7 @@ async function probeFullEncounter(page: Page): Promise<EncounterProbe> {
         const strike = async (label: string): Promise<number> => {
             const liveDef = gameGbl?.actors?.get?.(defenderId);
             if (liveDef?.applyDamage == null) throw new Error('defender.applyDamage unavailable');
-            await withTimeout(liveDef.applyDamage(DAMAGE_PER_HIT, 'body', { ignoreArmour: true, ignoreToughness: true }), 5_000, `applyDamage (${label})`);
+            await withTimeout(liveDef.applyDamage(DAMAGE_PER_HIT, 'body', { ignoreArmour: true, ignoreToughness: true }), `applyDamage (${label})`);
             const fresh = gameGbl?.actors?.get?.(defenderId);
             return fresh?.system?.wounds?.value ?? -1;
         };
@@ -153,8 +148,8 @@ async function probeFullEncounter(page: Page): Promise<EncounterProbe> {
         const advanceFullRound = async (): Promise<void> => {
             const c = combat;
             if (c?.nextTurn == null) throw new Error('combat.nextTurn unavailable');
-            await withTimeout(c.nextTurn(), 5_000, 'nextTurn (to defender)');
-            await withTimeout(c.nextTurn(), 5_000, 'nextTurn (to next round)');
+            await withTimeout(c.nextTurn(), 'nextTurn (to defender)');
+            await withTimeout(c.nextTurn(), 'nextTurn (to next round)');
         };
 
         // Read the closure-assigned combat without CFA narrowing it to null in
@@ -167,7 +162,6 @@ async function probeFullEncounter(page: Page): Promise<EncounterProbe> {
                 const create = ActorGbl.create.bind(ActorGbl);
                 const atk = await withTimeout(
                     create({ name: 'full-encounter-attacker', type: 'dh2-character', system: { gameSystem: 'dh2' } }),
-                    5_000,
                     'create attacker',
                 );
                 const def = await withTimeout(
@@ -176,7 +170,6 @@ async function probeFullEncounter(page: Page): Promise<EncounterProbe> {
                         type: 'dh2-npc',
                         system: { gameSystem: 'dh2', wounds: { max: WOUNDS_MAX, value: WOUNDS_MAX, critical: 0 } },
                     }),
-                    5_000,
                     'create defender',
                 );
                 if (atk?.id == null || def?.id == null) throw new Error('actor create returned null');
@@ -193,7 +186,7 @@ async function probeFullEncounter(page: Page): Promise<EncounterProbe> {
 
             await step('create-combat', async () => {
                 if (CombatGbl?.create == null) throw new Error('Combat.create unavailable');
-                const c = await withTimeout(CombatGbl.create({}), 5_000, 'Combat.create');
+                const c = await withTimeout(CombatGbl.create({}), 'Combat.create');
                 if (c?.id == null) throw new Error('Combat.create returned null');
                 combat = c;
                 return `scene-less combat ${c.id} created`;
@@ -204,7 +197,6 @@ async function probeFullEncounter(page: Page): Promise<EncounterProbe> {
                 if (c?.createEmbeddedDocuments == null || attackerId === '' || defenderId === '') throw new Error('combat or actor ids missing');
                 const created = await withTimeout(
                     c.createEmbeddedDocuments('Combatant', [{ actorId: attackerId }, { actorId: defenderId }]),
-                    5_000,
                     'createEmbeddedDocuments',
                 );
                 const ids = created.map((d) => d.id).filter((id): id is string => typeof id === 'string');
@@ -223,22 +215,22 @@ async function probeFullEncounter(page: Page): Promise<EncounterProbe> {
                 let rollAllNote = 'rollAll not a function';
                 try {
                     if (typeof c.rollAll === 'function') {
-                        await withTimeout(c.rollAll(), 5_000, 'rollAll');
+                        await withTimeout(c.rollAll(), 'rollAll');
                         rollAllNote = 'rollAll ok';
                     }
                 } catch (err) {
                     rollAllNote = `rollAll non-fatal: ${err instanceof Error ? err.message : String(err)}`;
                 }
                 if (typeof c.setInitiative !== 'function') throw new Error('combat.setInitiative is not a function');
-                await withTimeout(c.setInitiative(attackerCombatantId, 20), 5_000, 'setInitiative (attacker)');
-                await withTimeout(c.setInitiative(defenderCombatantId, 10), 5_000, 'setInitiative (defender)');
+                await withTimeout(c.setInitiative(attackerCombatantId, 20), 'setInitiative (attacker)');
+                await withTimeout(c.setInitiative(defenderCombatantId, 10), 'setInitiative (defender)');
                 return `${rollAllNote}; initiative set attacker=20 defender=10`;
             });
 
             await step('start-combat', async () => {
                 const c = combat;
                 if (c?.startCombat == null) throw new Error('combat.startCombat unavailable');
-                await withTimeout(c.startCombat(), 5_000, 'startCombat');
+                await withTimeout(c.startCombat(), 'startCombat');
                 const round = c.round ?? 0;
                 if (round < 1) throw new Error(`expected round >= 1 after startCombat, got ${round}`);
                 return `encounter started at round ${round}`;
@@ -303,7 +295,7 @@ async function probeFullEncounter(page: Page): Promise<EncounterProbe> {
                 // so it hangs (5s timeout). Drive the real end-of-encounter state
                 // change — deleting the combat — directly.
                 if (c?.delete == null) throw new Error('combat.delete unavailable');
-                await withTimeout(c.delete(), 5_000, 'end-combat');
+                await withTimeout(c.delete(), 'end-combat');
                 return 'encounter ended';
             });
         } finally {
@@ -333,7 +325,7 @@ async function probeFullEncounter(page: Page): Promise<EncounterProbe> {
 test.describe.serial('combat full encounter (Tier B)', () => {
     // Cap total runtime — internal per-call timeouts mean we should never come
     // close, but a hung server would otherwise eat the global test timeout.
-    test.setTimeout(180_000);
+    test.setTimeout(scaledMs(180_000));
     test('plays an encounter end-to-end: tracker → initiative → strikes → wound depletion → death', async ({ page }) => {
         await joinOrSkip(page);
 

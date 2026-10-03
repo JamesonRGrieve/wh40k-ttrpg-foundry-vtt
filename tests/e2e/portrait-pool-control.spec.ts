@@ -51,9 +51,8 @@ test('portrait-pool re-roll / pin control renders on a pooled actor sheet (#567)
             const sheet = actor.sheet;
             if (sheet === undefined) return fail('actor has no sheet');
             await sheet.render(true);
-            await new Promise<void>((r) => {
-                setTimeout(r, 600);
-            });
+            // Wait for the portrait-pool controls to render (the assertions report a miss).
+            await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('[data-action="rerollPortrait"]') != null);
             const el = sheet.element;
             if (!(el instanceof HTMLElement)) return fail('sheet did not render');
             const variants = actor.system.portraits?.variants;

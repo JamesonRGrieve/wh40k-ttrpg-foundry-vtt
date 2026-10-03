@@ -109,9 +109,8 @@ test.describe.serial('weapon target combatant dropdown (#250)', () => {
             try {
                 const dialog = new Cls(actionData);
                 await dialog.render(true);
-                await new Promise<void>((resolve) => {
-                    setTimeout(resolve, 120);
-                });
+                // Wait for the target dropdown to render (the assertions report a miss).
+                await globalThis.wh40kE2E.pollUntil(() => dialog.element?.querySelector('select[name="targetCombatantId"]') != null);
                 const root = dialog.element;
                 if (!(root instanceof HTMLElement)) {
                     error = 'dialog.element is not an HTMLElement';

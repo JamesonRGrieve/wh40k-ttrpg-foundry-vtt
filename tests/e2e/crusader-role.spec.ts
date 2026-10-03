@@ -77,33 +77,32 @@ test('crusader-role smite-the-unholy decrements Fate and renders chat (#141)', a
         if (actor == null) return { setupOk: false, buttonFound: false, fateBefore: 0, fateAfter: 0, error: 'Actor.create returned null' };
 
         const fateBefore = actor.system?.fate?.value ?? 0;
+        const liveActor = actor;
+        const { pollUntil, settle } = globalThis.wh40kE2E;
 
-        await actor.sheet.render(true);
-        await new Promise<void>((r) => {
-            setTimeout(r, 250);
-        });
+        await liveActor.sheet.render(true);
+        await settle(250);
 
         // Navigate to the Overview tab (Status was consolidated into Overview, #263).
+        const findButton = (): HTMLElement | null => liveActor.sheet.element?.querySelector?.('[data-action="smiteTheUnholy"]') ?? null;
         try {
-            actor.sheet.changeTab?.('overview', 'primary');
-            await new Promise<void>((r) => {
-                setTimeout(r, 150);
-            });
+            liveActor.sheet.changeTab?.('overview', 'primary');
         } catch {
             /* sheets without changeTab fall back to whatever tab is open */
         }
+        await pollUntil(() => findButton() !== null);
 
-        const btn = actor.sheet.element?.querySelector?.('[data-action="smiteTheUnholy"]') ?? null;
+        const btn = findButton();
         const buttonFound = btn !== null;
         if (btn) {
             btn.click();
-            // Allow the async handler to settle (fate decrement + chat-card render).
-            await new Promise<void>((r) => {
-                setTimeout(r, 400);
-            });
+            // Wait for the async handler's fate decrement (the assertion below
+            // reports it if it never lands), then let the chat card render for the snap.
+            await pollUntil(() => (liveActor.system?.fate?.value ?? 0) < fateBefore);
+            await settle(400);
         }
 
-        const fateAfter = actor.system?.fate?.value ?? 0;
+        const fateAfter = liveActor.system?.fate?.value ?? 0;
         // Park the sheet on globalThis so the spec-level snap() captures the
         // live DOM. The fanatic-button + mortification-action specs follow
         // the same pattern; the dialog/panel stays OPEN through snap().
