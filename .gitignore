@@ -71,6 +71,7 @@ playwright-report/
 .e2e-results.json
 .e2e-inventory.json
 .e2e-runtime-coverage.jsonl
+.e2e-console-report.jsonl
 .e2e-raw-coverage/
 .e2e-source-coverage/
 .e2e-screenshots/

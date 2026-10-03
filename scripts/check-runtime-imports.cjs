@@ -10,8 +10,9 @@
  * imports, so only what the browser will actually request is checked — and fails
  * the build on any import whose specifier is not a relative/absolute path.
  *
- * Test code (`*.test.js`, `*.stories.js`, `testing/`) is compiled into dist but
- * never loaded by Foundry, so it is exempt.
+ * Test code (`*.test.js`, `*.stories.js`, `testing/`) is never loaded by Foundry,
+ * so it is exempt. The build (tsconfig.build.json) no longer emits it, but a dist
+ * left over from an older build may still hold it.
  *
  * Usage: node scripts/check-runtime-imports.cjs [dist/module]
  */

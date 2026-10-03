@@ -16,7 +16,7 @@ Fork lineage: [AndruQuiroga/RogueTraderVTT](https://github.com/AndruQuiroga/Rogu
 ## Current Repo State
 
 - Active runtime target: Foundry VTT 14.
-- Manifest compatibility: minimum 13, maximum 14, verified `14.349`.
+- Manifest compatibility: minimum 14, maximum 14, verified `14.368`.
 - Main source tree: `src/`
 - Automated tests: `tests/`
 - Storybook stories: `stories/`
@@ -76,7 +76,7 @@ pnpm packs
 pnpm css
 ```
 
-`./build-system.sh` is the canonical shell entrypoint. It builds the system, then calls `./src/packs/build-compendium.sh`; when the `src/packs` submodule is absent or uninitialized, the compendium step is skipped and the system build still succeeds.
+`./build-system.sh` is the canonical shell entrypoint. It builds the system, then calls `./src/packs/build-compendium.sh`, which compiles the public generic packs in `src/packs` (none yet, so the step is a no-op).
 
 `pnpm build` uses the Gulp pipeline and writes the compiled system plus packs to `dist/`.
 
@@ -138,7 +138,8 @@ src/
   icons/         Icon attribution only (game-icons.net, CC BY 3.0) — no icons bundled
   lang/          Localization files
   module/        TypeScript application, document, data model, rules, and hook code
-  packs/         Local compendium source
+  packs/         Public generic compendium source + pack tooling
+  packs-private/ Copyrighted book content (private submodule; never shipped publicly)
   scripts/       Runtime scripts shipped with the system
   templates/     Handlebars templates and partials
 stories/         Storybook stories, mocks, and rendering helpers
@@ -148,14 +149,14 @@ tailwind/        Legacy Tailwind plugin/component bridge during migration
 .foundry-release/ Mirrored Foundry runtime assets for local compatibility work (gitignored)
 ```
 
-## Release Notes
+## Releases
 
-`./build-system.sh release` stages a release bundle under `archive/release/`:
+Releases are built and published by `.github/workflows/release.yml`:
 
-- `system.json`
-- `wh40k-rpg.zip`
+- **Official release** — bump `version` in `src/system.json`, commit, then push a matching `v<version>` tag (e.g. `v1.0.0`). The workflow runs `pnpm check`, builds, and publishes a GitHub release whose manifest URL is `https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/latest/download/system.json` and whose download URL is pinned to the tag. A tag with a prerelease label (`v1.1.0-rc.1`) publishes as a prerelease.
+- **Nightly** — every push to `main` republishes the rolling `nightly` prerelease (`…/releases/download/nightly/system.json`).
 
-As part of that flow, the script removes `packs/` from the release archive before publication. That is intentional and should not be bypassed.
+Both channels ship system code, `LICENSE`, and the public generic packs only; the release manifest declares exactly the packs present in the zip. `./build-system.sh release` stages the same bundle locally under `archive/release/`.
 
 ## Foundry Runtime Mirror
 
@@ -187,7 +188,7 @@ This is an unofficial, fan-made game system for Foundry VTT. It is not affiliate
 ### What this repository does NOT contain
 
 - **No copyrighted game text.** No rules text, item descriptions, talent descriptions, or stat blocks are included in the public repository. Combat-action labels and modifier values in `src/module/rules/` are original functional paraphrases, not quotations.
-- **No compendium content.** `src/packs/` is a private submodule and is not included in public clones or releases. Users must supply their own content packs or use the system as a bare framework.
+- **No copyrighted compendium content.** Book content lives in the private `src/packs-private` submodule and is not included in public clones or releases. Users must supply their own content packs or use the system as a bare framework.
 - **No copyrighted artwork.** The system does not bundle artwork from any Games Workshop, FFG, or Cubicle 7 publication.
 
 ### License
