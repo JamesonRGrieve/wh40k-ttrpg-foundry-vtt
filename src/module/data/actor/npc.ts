@@ -659,7 +659,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     get threatTier(): { key: string; label: string; color: string } {
         const band = tierBandFor(this.threatLevel);
-        return { key: band.key, label: band.latinLabel, color: band.color };
+        return { key: band.key, label: game.i18n.localize(band.labelKey), color: band.color };
     }
 
     /**
@@ -918,8 +918,10 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             name: name,
             characteristic: charKey,
             trained: true,
-            plus10: level === 'plus10' || level === 'plus20',
-            plus20: level === 'plus20',
+            // `level` is a rank key from the line's ladder (trained / plus10 / plus20 / plus30).
+            plus10: level === 'plus10' || level === 'plus20' || level === 'plus30',
+            plus20: level === 'plus20' || level === 'plus30',
+            plus30: level === 'plus30',
             bonus: bonus,
         };
 

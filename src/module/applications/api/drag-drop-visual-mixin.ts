@@ -21,23 +21,20 @@ import type { EnhancedDragDropMixinAPI } from './sheet-mixin-types.js';
 
 type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
 
-/** Human-readable labels for item types shown in the header drop zone. */
-const DROP_ZONE_LABELS: Record<string, string> = {
-    weapon: 'Add Weapon',
-    armour: 'Add Armour',
-    gear: 'Add Item',
-    ammunition: 'Add Ammunition',
-    cybernetic: 'Add Cybernetic',
-    talent: 'Add Talent',
-    trait: 'Add Trait',
-    psychicPower: 'Add Psychic Power',
-    forceField: 'Add Force Field',
-    criticalInjury: 'Add Critical Injury',
-    condition: 'Add Condition',
-    skill: 'Add Skill',
-    specialAbility: 'Add Special Ability',
-};
-const DROP_ZONE_DEFAULT_LABEL = 'Drag and Drop from Compendium to Add';
+/** Each drop-zone label's own template text, captured on first drag-over so drag-leave can restore it. */
+const DROP_ZONE_IDLE_TEXT = new WeakMap<HTMLElement, string>();
+
+/**
+ * Drop-zone hint while an item of `type` hovers it: "Add <localized item type>".
+ * Unknown/absent types keep the zone's own template-authored text.
+ */
+function dropZoneHoverLabel(type: string | null): string | null {
+    if (type === null) return null;
+    const typeKey = `TYPES.Item.${type}`;
+    const typeLabel = game.i18n.localize(typeKey);
+    if (typeLabel === typeKey) return null;
+    return game.i18n.format('WH40K.DropZone.AddType', { type: typeLabel });
+}
 
 /** Subset of WH40K item.system fields touched by the drag-drop mixin. */
 interface DragDropItemSystem {
@@ -311,27 +308,26 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                 prompt: (opts: unknown) => Promise<{ quantity: number } | null>;
             };
             return dialog.prompt({
-                window: { title: `Split ${item.name}` },
+                window: { title: game.i18n.format('WH40K.DragDrop.SplitTitle', { item: item.name }) },
                 content: `
                     <form class="wh40k-split-dialog">
                         <div class="form-group">
-                            <label>Quantity to move (max ${quantity})</label>
+                            <label>${game.i18n.format('WH40K.DragDrop.SplitQuantityLabel', { max: String(quantity) })}</label>
                             <input type="number" name="quantity" min="1" max="${quantity}" value="1" autofocus />
                         </div>
-                        <p class="hint">The remaining ${quantity - 1} will stay in the original stack.</p>
+                        <p class="hint">${game.i18n.format('WH40K.DragDrop.SplitRemainingHint', { remaining: String(quantity - 1) })}</p>
                     </form>
                 `,
                 ok: {
                     icon: 'fas fa-split',
-                    label: 'Split',
+                    label: game.i18n.localize('WH40K.DragDrop.SplitButton'),
                     callback: (_event: SubmitEvent, _button: HTMLButtonElement, dialogEl: HTMLElement) => {
                         const input = dialogEl.querySelector<HTMLInputElement>('[name="quantity"]');
                         const qty = input ? parseInt(input.value, 10) : 0;
                         if (qty > 0 && qty <= quantity) {
                             return { quantity: qty };
                         }
-                        // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.InvalidQuantity localization key
-                        ui.notifications.warn('Invalid quantity');
+                        ui.notifications.warn(game.i18n.localize('WH40K.DragDrop.InvalidQuantity'));
                         return null;
                     },
                 },
@@ -391,11 +387,12 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             zone.classList.add('wh40k-drag-over');
             if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
 
-            const textEl = zone.querySelector('[data-dropzone-text]');
+            const textEl = zone.querySelector<HTMLElement>('[data-dropzone-text]');
             if (textEl) {
-                const type = _activeDragType ?? this._draggedItem?.item.type ?? null;
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: type may be null at runtime even if narrowed by optional chains
-                textEl.textContent = type !== null && DROP_ZONE_LABELS[type] !== undefined ? DROP_ZONE_LABELS[type] : DROP_ZONE_DEFAULT_LABEL;
+                // Remember the template's own text once so drag-leave can restore it.
+                if (!DROP_ZONE_IDLE_TEXT.has(textEl)) DROP_ZONE_IDLE_TEXT.set(textEl, textEl.textContent);
+                const hoverLabel = dropZoneHoverLabel(_activeDragType ?? this._draggedItem?.item.type ?? null);
+                if (hoverLabel !== null) textEl.textContent = hoverLabel;
             }
         }
 
@@ -411,8 +408,9 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             zone.classList.remove('drop-hover');
             zone.classList.remove('wh40k-drag-over');
 
-            const textEl = zone.querySelector('[data-dropzone-text]');
-            if (textEl) textEl.textContent = 'Drag and Drop from Compendium to Add';
+            const textEl = zone.querySelector<HTMLElement>('[data-dropzone-text]');
+            const idleText = textEl === null ? undefined : DROP_ZONE_IDLE_TEXT.get(textEl);
+            if (textEl !== null && idleText !== undefined) textEl.textContent = idleText;
         }
 
         /* -------------------------------------------- */
@@ -536,19 +534,18 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          */
         async _handleEquipmentDrop(item: WH40KItem, slot: string): Promise<void> {
             if (item.actor?.id !== this.document.id) {
-                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.CannotEquipFromOtherActor localization key
-                ui.notifications.warn('Cannot equip items from other actors');
+                ui.notifications.warn(game.i18n.localize('WH40K.DragDrop.CannotEquipFromOtherActor'));
                 return;
             }
 
             const validSlot = this._validateEquipmentSlot(item, slot);
             if (!validSlot) {
-                ui.notifications.warn(`${item.name} cannot be equipped in ${slot} slot`);
+                ui.notifications.warn(game.i18n.format('WH40K.DragDrop.InvalidSlot', { item: item.name, slot }));
                 return;
             }
 
             await item.update({ 'system.state.equipped': true });
-            ui.notifications.info(`Equipped ${item.name}`);
+            ui.notifications.info(game.i18n.format('WH40K.DragDrop.Equipped', { item: item.name }));
             this._animateSnapToSlot(item);
         }
 
@@ -594,9 +591,9 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             if (behavior === 'copy') {
                 const itemData = item.toObject();
                 await this.#actorDocument().createEmbeddedDocuments('Item', [itemData]);
-                ui.notifications.info(`Added ${item.name} to inventory`);
+                ui.notifications.info(game.i18n.format('WH40K.DragDrop.AddedToInventory', { item: item.name }));
             } else if (behavior === 'move') {
-                ui.notifications.info(`Moved ${item.name}`);
+                ui.notifications.info(game.i18n.format('WH40K.DragDrop.Moved', { item: item.name }));
             }
         }
 
@@ -614,8 +611,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const remaining = currentQty - quantity;
 
             if (remaining <= 0) {
-                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.CannotSplitFullStack localization key
-                ui.notifications.error('Cannot split entire stack');
+                ui.notifications.error(game.i18n.localize('WH40K.DragDrop.CannotSplitFullStack'));
                 return;
             }
 
@@ -627,7 +623,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             await this.#actorDocument().createEmbeddedDocuments('Item', [newItemData]);
             await item.update({ 'system.quantity': remaining });
 
-            ui.notifications.info(`Split ${item.name}: ${quantity} moved, ${remaining} remaining`);
+            ui.notifications.info(game.i18n.format('WH40K.DragDrop.Split', { item: item.name, quantity: String(quantity), remaining: String(remaining) }));
         }
 
         /* -------------------------------------------- */
@@ -686,8 +682,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             }));
 
             await this.#actorDocument().updateEmbeddedDocuments('Item', updates);
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.ItemsReordered localization key
-            ui.notifications.info('Items reordered');
+            ui.notifications.info(game.i18n.localize('WH40K.DragDrop.ItemsReordered'));
         }
 
         /* -------------------------------------------- */
@@ -728,19 +723,18 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             if (item.id === null || item.id === '') return;
             if (favorites.includes(item.id)) {
-                ui.notifications.warn(`${item.name} is already in favorites`);
+                ui.notifications.warn(game.i18n.format('WH40K.DragDrop.AlreadyFavorite', { item: item.name }));
                 return;
             }
 
             if (favorites.length >= 8) {
-                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.FavoritesFull localization key
-                ui.notifications.warn('Favorites bar is full (max 8 items)');
+                ui.notifications.warn(game.i18n.localize('WH40K.DragDrop.FavoritesFull'));
                 return;
             }
 
             favorites.push(item.id);
             await this.#actorDocument().setFlag('wh40k-rpg', 'favorites', favorites);
-            ui.notifications.info(`Added ${item.name} to favorites`);
+            ui.notifications.info(game.i18n.format('WH40K.DragDrop.AddedToFavorites', { item: item.name }));
         }
 
         /* -------------------------------------------- */

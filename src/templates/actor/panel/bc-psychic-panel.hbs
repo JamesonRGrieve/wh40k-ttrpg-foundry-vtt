@@ -24,11 +24,11 @@
     Rendered only for BC actors; the include in tab-overview.hbs gates on
     `isBC`.
 --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-psychic-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson" icon="fa-brain" label=(localize "WH40K.BC.Psychic.PanelHeader") rootAttrs=(safeAttrs "data-bc-psyker-class" psychicPanel.psykerClass "data-bc-psy-mode" psychicPanel.mode) hasRightSlot=true}}
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-psychic-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson-l40" icon="fa-brain" label=(localize "WH40K.BC.Psychic.PanelHeader") rootAttrs=(safeAttrs "data-bc-psyker-class" psychicPanel.psykerClass "data-bc-psy-mode" psychicPanel.mode) hasRightSlot=true}}
     {{!-- Header right slot: psychic test button --}}
     {{#*inline "rightSlot"}}
         <button type="button"
-                data-wh40k-hook="bc-psychic-test-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson hover:tw-bg-crimson hover:tw-text-white"
+                data-wh40k-hook="bc-psychic-test-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-crimson-light tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-crimson-l40 hover:tw-bg-crimson hover:tw-text-white"
                 data-action="bcPsychicTest"
                 title="{{localize 'WH40K.BC.Psychic.TestButton'}}">
             {{localize "WH40K.BC.Psychic.TestButton"}}

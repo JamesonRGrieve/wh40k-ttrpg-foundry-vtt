@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CHARACTERISTIC_SHORT_TO_FULL } from './characteristics.ts';
-import { SKILL_DEFINITIONS, skillCharacteristicMap } from './skill-definitions.ts';
+import { SKILL_DEFINITIONS, skillCharacteristicMap, standardSkillsForSystem } from './skill-definitions.ts';
 
 /**
  * The skill keys + their order are schema-significant: CreatureTemplate builds its
@@ -115,5 +115,34 @@ describe('skillCharacteristicMap', () => {
         for (const [key, d] of Object.entries(SKILL_DEFINITIONS)) {
             expect(map[key]).toBe(CHARACTERISTIC_SHORT_TO_FULL[d.char]);
         }
+    });
+});
+
+describe('standardSkillsForSystem', () => {
+    // NPC sheets once listed DH2's skills on every line; the list is now per line.
+    const keys = (systemId: string): string[] => standardSkillsForSystem(systemId).map((s) => s.key);
+
+    it("lists each line's own skills (DH1/RT Concealment; DH2-family Parry)", () => {
+        expect(keys('dh1')).toContain('concealment');
+        expect(keys('dh1')).not.toContain('parry');
+        expect(keys('dh2')).toContain('parry');
+        expect(keys('dh2')).not.toContain('concealment');
+    });
+
+    it('excludes specialist groups, which carry per-specialisation entries', () => {
+        const specialist = new Set(
+            Object.entries(SKILL_DEFINITIONS)
+                .filter(([, d]) => d.hasEntries)
+                .map(([key]) => key),
+        );
+        for (const systemId of ['dh1', 'dh2', 'rt', 'bc', 'ow', 'dw']) {
+            expect(standardSkillsForSystem(systemId).some((s) => specialist.has(s.key))).toBe(false);
+        }
+        expect(keys('dh2')).not.toContain('commonLore');
+    });
+
+    it('carries the catalog label, characteristic and advanced flag', () => {
+        const acrobatics = standardSkillsForSystem('dh2').find((s) => s.key === 'acrobatics');
+        expect(acrobatics).toEqual({ key: 'acrobatics', label: 'Acrobatics', char: 'Ag', advanced: true });
     });
 });

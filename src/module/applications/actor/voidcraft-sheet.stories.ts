@@ -14,11 +14,11 @@ import { seedRandom, randomId, withSystem, type SystemId } from '../../../../sto
 import { mockStarshipSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, assertField, renderSheetParts } from '../../../../stories/test-helpers';
+import tabsSrc from '../../../templates/actor/player/tabs.hbs?raw';
 import headerSrc from '../../../templates/actor/voidcraft/header.hbs?raw';
 import crewTabSrc from '../../../templates/actor/voidcraft/tab-crew.hbs?raw';
 import extendedActionsTabSrc from '../../../templates/actor/voidcraft/tab-extended-actions.hbs?raw';
 import statsTabSrc from '../../../templates/actor/voidcraft/tab-stats.hbs?raw';
-import tabsSrc from '../../../templates/actor/voidcraft/tabs.hbs?raw';
 import shipWeaponChatSrc from '../../../templates/chat/ship-weapon-chat.hbs?raw';
 
 initializeStoryHandlebars();

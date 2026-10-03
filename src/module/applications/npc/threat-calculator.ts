@@ -393,7 +393,7 @@ export default class ThreatCalculator {
     static getTierInfo(threatLevel: number): Record<string, unknown> {
         const band = tierBandFor(threatLevel);
         return {
-            label: band.label,
+            label: game.i18n.localize(band.labelKey),
             color: band.color,
         };
     }

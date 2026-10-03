@@ -33,10 +33,10 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
 
     getSkillRanks(): SkillRankDef[] {
         return [
-            { level: 1, key: 'trained', label: 'Kn', tooltip: 'Known', bonus: 0 },
-            { level: 2, key: 'plus10', label: 'Tr', tooltip: 'Trained', bonus: 10 },
-            { level: 3, key: 'plus20', label: 'Ex', tooltip: 'Experienced', bonus: 20 },
-            { level: 4, key: 'plus30', label: 'Ve', tooltip: 'Veteran', bonus: 30 },
+            { level: 1, key: 'trained', label: 'WH40K.Skills.RankShort.Known', tooltip: 'WH40K.Skills.Rank.Known', bonus: 0 },
+            { level: 2, key: 'plus10', label: 'WH40K.Skills.RankShort.Trained', tooltip: 'WH40K.Skills.Rank.Trained', bonus: 10 },
+            { level: 3, key: 'plus20', label: 'WH40K.Skills.RankShort.Experienced', tooltip: 'WH40K.Skills.Rank.Experienced', bonus: 20 },
+            { level: 4, key: 'plus30', label: 'WH40K.Skills.RankShort.Veteran', tooltip: 'WH40K.Skills.Rank.Veteran', bonus: 30 },
         ];
     }
 

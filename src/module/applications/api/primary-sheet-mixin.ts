@@ -242,6 +242,8 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                     if (!condition || condition(this.document))
                         tabs[tab] = {
                             ...config,
+                            // TABS declare langpack keys; the shared tab-strip partial prints label verbatim.
+                            label: game.i18n.localize(config.label),
                             id: tab,
                             group: 'primary',
                             active: this.tabGroups['primary'] === tab,

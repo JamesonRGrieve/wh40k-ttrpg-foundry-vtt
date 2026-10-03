@@ -54,9 +54,9 @@ module.exports = {
     // declared in `<id>-config.ts`. Update when a new theme token is added.
     'tw-bg-bronze', 'tw-text-gold-raw', 'tw-border-gold-raw-d10',
     'tw-bg-gold-raw', 'tw-text-gold-raw-l5', 'tw-border-gold-raw-d15',
-    'tw-bg-crimson', 'tw-text-crimson-light', 'tw-border-crimson-dark',
-    'tw-text-accent-combat', 'tw-border-accent-combat-d10',
-    'tw-bg-crimson-light', 'tw-text-failure', 'tw-border-failure-l10',
+    'tw-bg-crimson', 'tw-text-crimson-l40', 'tw-border-crimson-dark',
+    'tw-text-accent-combat-l30', 'tw-border-accent-combat-d10',
+    'tw-bg-crimson-light', 'tw-text-failure-l40', 'tw-border-failure-l10',
     'tw-bg-brass', 'tw-text-brass-l20', 'tw-border-brass-d15',
     'tw-bg-accent-dynasty', 'tw-text-gold', 'tw-border-gold-dark',
     // Pill-style classes emitted by `get pill()` getters on item DataModels
@@ -174,6 +174,8 @@ module.exports = {
           'l20': '#f10000',
           'l25': '#ff0b0b',
           'l30': '#ff2525',
+          // BC accent text: ≥4.5:1 on the dark sheet backgrounds (#1a1a1a / #252525).
+          'l40': '#ff5a5a',
         },
         // Status colors
         success: {
@@ -185,6 +187,8 @@ module.exports = {
         failure: {
           DEFAULT: '#6b1010',
           'l10': '#971717',
+          // IM accent text: ≥4.5:1 on the dark sheet backgrounds (#1a1a1a / #252525).
+          'l40': '#d97b7b',
         },
         warning: '#8b6914',
         // Panel accent palettes (pre-computed darken/lighten variants)
@@ -202,6 +206,8 @@ module.exports = {
           'l10': '#d32828',
           'l15': '#da3b3b',
           'l20': '#de5050',
+          // DW accent text: ≥4.5:1 on the dark sheet backgrounds (#1a1a1a / #252525).
+          'l30': '#e66b6b',
         },
         'accent-skills': {
           DEFAULT: '#2a7a9a',

@@ -33,7 +33,7 @@
                 class="tw-inline-flex tw-items-center tw-justify-center tw-w-5 tw-h-5 tw-p-0 tw-bg-transparent tw-border tw-border-solid tw-rounded-[3px] tw-cursor-pointer tw-text-[0.7rem] {{#if ../pipClass}}{{../pipClass}}{{/if}} {{#if (lte index ../current)}} {{#if ../filledClass}}{{../filledClass}}{{else}} tw-text-gold {{themeClassFor 'accent'}}{{/if}}{{else}} tw-text-[color:var(--wh40k-text-muted)] tw-opacity-50{{/if}} {{themeClassFor 'border'}}"
                 data-action="{{../action}}"
                 data-{{../dataAttr}}="{{index}}"
-                title="{{#if ../titlePrefix}}{{../titlePrefix}}{{else}}Level{{/if}} {{index}}">
+                title="{{#if ../titlePrefix}}{{../titlePrefix}}{{else}}{{localize 'WH40K.Common.Level'}}{{/if}} {{index}}">
             {{#if ../iconClass}}<i class="fas {{../iconClass}}"></i>{{/if}}
         </button>
     {{/each}}

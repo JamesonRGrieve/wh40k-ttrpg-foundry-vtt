@@ -30,7 +30,7 @@
             data-action="decrement"
             data-field="{{field}}"
             data-min="{{#if minValue}}{{minValue}}{{else}}0{{/if}}"
-            title="{{#if decTitle}}{{decTitle}}{{else}}Reduce{{/if}}">
+            title="{{#if decTitle}}{{decTitle}}{{else}}{{localize "WH40K.Action.Reduce"}}{{/if}}">
         <i class="fas fa-minus"></i>
     </button>
 
@@ -52,7 +52,7 @@
             data-action="increment"
             data-field="{{field}}"
             {{#if maxValue}}data-max="{{maxValue}}"{{/if}}
-            title="{{#if incTitle}}{{incTitle}}{{else}}Increase{{/if}}">
+            title="{{#if incTitle}}{{incTitle}}{{else}}{{localize "WH40K.Action.Increase"}}{{/if}}">
         <i class="fas fa-plus"></i>
     </button>
 </div>

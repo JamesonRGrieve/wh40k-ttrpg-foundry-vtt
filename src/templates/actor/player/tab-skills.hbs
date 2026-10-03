@@ -14,7 +14,7 @@
          `flex-1` (main axis = height here) or it keeps its natural height and the
          pair renders ragged (#482). `mb-0` drops the partial's default bottom
          margin so both columns end flush. --}}
-    {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label="Characteristics" icon="fa-chart-bar" rootClass="tw-flex-1 tw-flex tw-flex-col tw-mb-0" bodyClass="tw-flex-1"}}
+    {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Characteristics") icon="fa-chart-bar" rootClass="tw-flex-1 tw-flex tw-flex-col tw-mb-0" bodyClass="tw-flex-1"}}
             <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-2">
                 {{#each actor.characteristics as |characteristic name|}}
                     {{#unless (eq name "influence")}}
@@ -35,7 +35,7 @@
                         >{{this.short}}</button>
                         <div class="wh40k-char-hud-circle tw-relative tw-w-[48px] tw-h-[48px] tw-rounded-full tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[1px] tw-bg-[var(--wh40k-circle-bg,linear-gradient(180deg,#f4d03f_0%,var(--wh40k-color-gold)_70%,#b8860b_100%))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,#8b6914)] tw-shadow-[inset_0_1px_2px_var(--wh40k-text-shadow,rgba(0,0,0,0.1)),0_3px_8px_var(--wh40k-shadow-soft,rgba(0,0,0,0.15))] tw-overflow-hidden tw-group/characteristic-roll" title="{{this.label}}">
                             <span class="tw-text-[1.2em] tw-font-bold tw-text-[color:var(--wh40k-text-dark,#1a1510)] tw-transition-opacity tw-duration-150 group-hover/characteristic-roll:tw-opacity-15">{{this.bonus}}</span>
-                            <span class="tw-text-[0.55em] tw-uppercase tw-tracking-[0.12em] tw-text-[color:var(--wh40k-text-muted,rgba(60,50,40,0.75))] tw-transition-opacity tw-duration-150 group-hover/characteristic-roll:tw-opacity-15">MOD</span>
+                            <span class="tw-text-[0.55em] tw-uppercase tw-tracking-[0.12em] tw-text-[color:var(--wh40k-text-muted,rgba(60,50,40,0.75))] tw-transition-opacity tw-duration-150 group-hover/characteristic-roll:tw-opacity-15">{{localize "WH40K.Characteristic.BonusShort"}}</span>
                             <button
                                 class="tw-absolute tw-inset-0 tw-z-[1] tw-grid tw-place-items-center tw-rounded-full tw-border-0 tw-bg-[rgba(15,23,42,0.08)] tw-text-[rgba(255,255,255,0.78)] tw-opacity-0 tw-transition-all tw-duration-150 hover:tw-bg-[rgba(15,23,42,0.16)] hover:tw-text-white group-hover/characteristic-roll:tw-opacity-100"
                                 type="button"
@@ -57,10 +57,10 @@
                              otherwise the characteristic shows its read-only total. --}}
                         {{#if (and ../inEditMode (isFreeformCharacters))}}
                         <div class="tw-text-[0.65em] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted,rgba(60,50,40,0.75))] tw-text-center">
-                            <input type="number" class="wh40k-char-direct-input" data-characteristic="{{name}}" data-field="base" data-dtype="Number" value="{{this.base}}" title="Base {{this.label}}" />
+                            <input type="number" class="wh40k-char-direct-input" data-characteristic="{{name}}" data-field="base" data-dtype="Number" value="{{this.base}}" title="{{localize 'WH40K.CharacteristicSetup.Base'}} {{this.label}}" />
                         </div>
                         {{else}}
-                        <div class="tw-text-[0.65em] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted,rgba(60,50,40,0.75))] tw-text-center">Total {{this.total}}</div>
+                        <div class="tw-text-[0.65em] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted,rgba(60,50,40,0.75))] tw-text-center">{{localize "WH40K.Characteristic.TotalValue" total=this.total}}</div>
                         {{/if}}
                     </div>
                     {{/unless}}
@@ -87,7 +87,7 @@
     {{/if}}
     </div>
 
-    {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label="Skills" icon="fa-book"}}
+    {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Skills.Header") icon="fa-book"}}
         {{> systems/wh40k-rpg/templates/actor/panel/skills-panel.hbs}}
     {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 

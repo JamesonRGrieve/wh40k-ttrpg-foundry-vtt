@@ -108,6 +108,10 @@ describe('prepareQualityTooltipData quality lookup (#403)', () => {
 });
 
 describe('armour tooltip shows the derivation, not just the parts', () => {
+    /** Langpack keys of the generic formula terms (the mock echoes keys). */
+    const TB = 'WH40K.Status.Fatigue.ToughnessBonusAbbr';
+    const TRAITS = 'WH40K.Traits';
+
     const build = (payload: Parameters<typeof TooltipsWH40K.prototype._buildArmorTooltip>[0]): string =>
         TooltipsWH40K.prototype._buildArmorTooltip.call({} as InstanceType<typeof TooltipsWH40K>, payload);
 
@@ -120,7 +124,8 @@ describe('armour tooltip shows the derivation, not just the parts', () => {
             armorValue: 4,
             equipped: [{ img: '', name: 'Flak Armour', ap: 4 }],
         });
-        expect(html).toContain('3 (TB) + 4 (Traits) + 4 (Flak Armour) = 11');
+        // The i18n mock echoes keys: each generic term is localized, item names pass through.
+        expect(html).toContain(`3 (${TB}) + 4 (${TRAITS}) + 4 (Flak Armour) = 11`);
     });
 
     it('enumerates each worn piece separately rather than a lumped subtotal', () => {
@@ -135,18 +140,18 @@ describe('armour tooltip shows the derivation, not just the parts', () => {
                 { img: '', name: 'Carapace Plate', ap: 2 },
             ],
         });
-        expect(html).toContain('3 (TB) + 4 (Flak Vest) + 2 (Carapace Plate) = 9');
+        expect(html).toContain(`3 (${TB}) + 4 (Flak Vest) + 2 (Carapace Plate) = 9`);
     });
 
     it('falls back to the summed armour value when the worn pieces are unknown', () => {
         const html = build({ location: 'Head', total: 7, toughnessBonus: 3, traitBonus: 0, armorValue: 4, equipped: [] });
         // Never both the per-item terms AND the subtotal — that would double-count.
-        expect(html).toContain('3 (TB) + 4 (Armour) = 7');
+        expect(html).toContain(`3 (${TB}) + 4 (WH40K.Tooltip.Armour) = 7`);
     });
 
     it('omits a zero trait bonus from the formula', () => {
         const html = build({ location: 'Head', total: 3, toughnessBonus: 3, traitBonus: 0, armorValue: 0, equipped: [] });
-        expect(html).toContain('3 (TB) = 3');
-        expect(html).not.toContain('Traits');
+        expect(html).toContain(`3 (${TB}) = 3`);
+        expect(html).not.toContain(TRAITS);
     });
 });

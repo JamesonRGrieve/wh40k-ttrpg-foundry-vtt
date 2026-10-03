@@ -74,7 +74,7 @@
                                 {{#if (eq objective.status "complete")}}
                                     <i class="fas fa-check-square dw:tw-text-bronze"></i>
                                 {{else if (eq objective.status "failed")}}
-                                    <i class="fas fa-times-square tw-text-crimson"></i>
+                                    <i class="fas fa-times-square tw-text-crimson-l40"></i>
                                 {{else}}
                                     <i class="far fa-square"></i>
                                 {{/if}}
@@ -118,7 +118,7 @@
                                     data-complication-id="{{complication.id}}"
                                     title="{{localize 'WH40K.DW.Mission.Complication.Toggle'}}">
                                 {{#if complication.triggered}}
-                                    <i class="fas fa-exclamation-triangle tw-text-crimson"></i>
+                                    <i class="fas fa-exclamation-triangle tw-text-crimson-l40"></i>
                                 {{else}}
                                     <i class="far fa-circle"></i>
                                 {{/if}}
@@ -126,7 +126,7 @@
                             </button>
                             <span class="tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums"
                                   title="{{localize 'WH40K.DW.Mission.Complication.Penalty'}}">
-                                <i class="fas fa-medal tw-text-crimson"></i> -{{complication.renownPenalty}}
+                                <i class="fas fa-medal tw-text-crimson-l40"></i> -{{complication.renownPenalty}}
                             </span>
                         </li>
                     {{/each}}

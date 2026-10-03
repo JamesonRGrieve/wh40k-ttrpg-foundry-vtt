@@ -1,5 +1,5 @@
 {{!-- Simplified Experience Panel --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="experience" label="Experience" icon="fa-graduation-cap" actor=actor}}
+{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="experience" label=(localize "WH40K.Experience.Header") icon="fa-graduation-cap" actor=actor}}
 
         {{!-- Compact XP Display - Single horizontal line --}}
         <div class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-light)] tw-rounded-[6px] tw-mb-[var(--wh40k-space-md)]">
@@ -37,7 +37,7 @@
             {{!-- Available XP Box --}}
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-[2px] tw-px-3 tw-py-[6px] tw-bg-[rgba(192,128,32,0.1)] bc:tw-bg-crimson/10 dh1:tw-bg-gold-raw/10 dh2:tw-bg-gold-raw/10 dw:tw-bg-accent-combat/10 ow:tw-bg-brass-l20/10 rt:tw-bg-gold/10 im:tw-bg-failure/10 tw-border-2 tw-border-[rgba(192,128,32,0.3)] bc:tw-border-crimson/30 dh1:tw-border-gold-raw/30 dh2:tw-border-gold-raw/30 dw:tw-border-accent-combat/30 ow:tw-border-brass-l20/30 rt:tw-border-gold/30 im:tw-border-failure/30 tw-rounded-[6px] tw-shrink-0">
                 <span class="tw-text-[1.4rem] tw-font-bold tw-font-alt tw-leading-none {{themeClassFor 'accent'}}">{{system.experience.available}}</span>
-                <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--color-text-dark-secondary)]">Available</span>
+                <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--color-text-dark-secondary)]">{{localize "WH40K.Experience.Available"}}</span>
             </div>
 
             {{!-- Visual Buffer --}}
@@ -46,7 +46,7 @@
             {{!-- Spent XP --}}
             <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-shrink-0">
                 <span class="tw-text-[1.1rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[var(--color-text-dark-primary)]">{{system.experience.used}}</span>
-                <span class="tw-text-[0.7rem] tw-font-semibold tw-text-[var(--color-text-dark-secondary)]">Spent</span>
+                <span class="tw-text-[0.7rem] tw-font-semibold tw-text-[var(--color-text-dark-secondary)]">{{localize "WH40K.Experience.Spent"}}</span>
             </div>
 
             {{!-- Visual Buffer --}}
@@ -55,7 +55,7 @@
             {{!-- Total XP --}}
             <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-shrink-0">
                 <span class="tw-text-[1.1rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[var(--color-text-dark-primary)]">{{system.experience.total}}</span>
-                <span class="tw-text-[0.7rem] tw-font-semibold tw-text-[var(--color-text-dark-secondary)]">Total</span>
+                <span class="tw-text-[0.7rem] tw-font-semibold tw-text-[var(--color-text-dark-secondary)]">{{localize "WH40K.Experience.Total"}}</span>
             </div>
 
             {{!-- Visual Buffer --}}

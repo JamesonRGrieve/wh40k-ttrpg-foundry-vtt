@@ -50,8 +50,17 @@ export abstract class BaseSystemConfig {
 
     // ── Skill Ranks ──────────────────────────────────────────────
 
-    /** Ordered skill rank definitions for this system */
+    /** Ordered skill rank definitions for this system; `label`/`tooltip` are langpack keys. */
     abstract getSkillRanks(): SkillRankDef[];
+
+    /**
+     * {@link getSkillRanks} with `label`/`tooltip` localized — the form every UI
+     * consumer reads. Call at render time (the langpack is not loaded when sheet
+     * classes are defined).
+     */
+    getLocalizedSkillRanks(): SkillRankDef[] {
+        return this.getSkillRanks().map((rank) => ({ ...rank, label: game.i18n.localize(rank.label), tooltip: game.i18n.localize(rank.tooltip) }));
+    }
 
     /** Maximum skill rank (3 for RT/DH1e/DW, 4 for DH2e/BC/OW) */
     get skillRankCount(): number {

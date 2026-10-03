@@ -1,10 +1,10 @@
 {{!-- Psychic Powers Panel --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs panelId="psychic-powers" label="Psychic Powers" icon="fa-hat-wizard" count=psychicPowersCount rootClass="wh40k-panel-powers wh40k-panel-psychic-powers" bodyClass="tw-p-0" titleClass=(concat "tw-text-gold " (themeClassFor 'accent')) accentBg="linear-gradient(135deg,rgb(from #8b5cf6 r g b / 0.15) 0%,rgb(from #8b5cf6 r g b / 0.05) 100%)" accentBorder="rgb(from #8b5cf6 r g b / 0.3)" accentIcon="#8b5cf6"}}
+{{#> systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs panelId="psychic-powers" label=(localize "WH40K.Combat.PsychicPowers") icon="fa-hat-wizard" count=psychicPowersCount rootClass="wh40k-panel-powers wh40k-panel-psychic-powers" bodyClass="tw-p-0" titleClass=(concat "tw-text-gold " (themeClassFor 'accent')) accentBg="linear-gradient(135deg,rgb(from #8b5cf6 r g b / 0.15) 0%,rgb(from #8b5cf6 r g b / 0.05) 100%)" accentBorder="rgb(from #8b5cf6 r g b / 0.3)" accentIcon="#8b5cf6"}}
     {{!-- Discipline Filter Tabs --}}
     {{#if psychicDisciplines.length}}
     <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-[var(--wh40k-radius-sm)] tw-mb-[var(--wh40k-space-md)]">
         <button type="button" class="wh40k-filter-btn tw-px-[10px] tw-py-1 tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-[12px] tw-bg-transparent tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.75rem] tw-font-medium tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg)] hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-border-[color:var(--wh40k-border-color)] {{#unless activeDiscipline}}tw-bg-accent-powers tw-text-white tw-border-accent-powers{{/unless}}" data-action="filterPowers" data-discipline="">
-            All
+            {{localize "WH40K.All"}}
         </button>
         {{#each psychicDisciplines as |disc|}}
         <button type="button" class="wh40k-filter-btn wh40k-filter-{{disc.id}} tw-px-[10px] tw-py-1 tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-[12px] tw-bg-transparent tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.75rem] tw-font-medium tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg)] hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-border-[color:var(--wh40k-border-color)]" data-action="filterPowers" data-discipline="{{disc.id}}">
@@ -22,39 +22,39 @@
             accentColor="#0891b2"
             dragType="psychicPower"
             extraAttrs=(concat 'data-discipline="' power.system.discipline '"')
-            editTitle="Edit Power"
+            editTitleKey="WH40K.NavigatorPowers.EditPower"
             pills=(iff power.system.sustained
-                (array power.system.pill (hash bgClass="tw-bg-[rgba(8,145,178,0.2)]" textClass="tw-text-[#0891b2]" icon="fa-sync-alt" label="Sustained") (hash bgClass="tw-bg-[rgba(0,0,0,0.1)]" textClass="tw-text-[color:var(--wh40k-text-muted)]" label=(concat 'PR ' power.system.prCost)))
-                (array power.system.pill (hash bgClass="tw-bg-[rgba(0,0,0,0.1)]" textClass="tw-text-[color:var(--wh40k-text-muted)]" label=(concat 'PR ' power.system.prCost))))
+                (array power.system.pill (hash bgClass="tw-bg-[rgba(8,145,178,0.2)]" textClass="tw-text-[#0891b2]" icon="fa-sync-alt" label=(localize "WH40K.Duration.Sustained")) (hash bgClass="tw-bg-[rgba(0,0,0,0.1)]" textClass="tw-text-[color:var(--wh40k-text-muted)]" label=(localize "WH40K.PsychicPower.PrCost" cost=power.system.prCost)))
+                (array power.system.pill (hash bgClass="tw-bg-[rgba(0,0,0,0.1)]" textClass="tw-text-[color:var(--wh40k-text-muted)]" label=(localize "WH40K.PsychicPower.PrCost" cost=power.system.prCost))))
             stats=(iff power.system.isAttack
                 (array
-                    (hash label="Focus" value=power.system.focusTestLabel)
-                    (hash label="Action" value=power.system.activationLabel)
-                    (hash label="Damage" value=power.system.damageLabel)
-                    (hash label="Range" value=power.system.targetLabel))
+                    (hash labelKey="WH40K.Combat.FocusTest" value=power.system.focusTestLabel)
+                    (hash labelKey="WH40K.Orders.Action" value=power.system.activationLabel)
+                    (hash labelKey="WH40K.Weapon.Damage" value=power.system.damageLabel)
+                    (hash labelKey="WH40K.NavigatorPowers.Range" value=power.system.targetLabel))
                 (array
-                    (hash label="Focus" value=power.system.focusTestLabel)
-                    (hash label="Action" value=power.system.activationLabel)
-                    (hash label="Range" value=power.system.targetLabel)))
+                    (hash labelKey="WH40K.Combat.FocusTest" value=power.system.focusTestLabel)
+                    (hash labelKey="WH40K.Orders.Action" value=power.system.activationLabel)
+                    (hash labelKey="WH40K.NavigatorPowers.Range" value=power.system.targetLabel)))
             actions=(iff power.system.isAttack
                 (array
-                    (hash action="rollPower" icon="fa-dice-d20" title="Focus Power" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
-                    (hash action="rollPowerDamage" icon="fa-bolt" title="Roll Damage" hoverClass="hover:tw-bg-[rgba(239,68,68,0.15)] hover:tw-border-[rgba(239,68,68,0.3)] hover:tw-text-[#ef4444]")
-                    (hash action="togglePowerDetails" icon="fa-chevron-down" title="Toggle Details" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
+                    (hash action="rollPower" icon="fa-dice-d20" titleKey="WH40K.Combat.Action.FocusPower" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
+                    (hash action="rollPowerDamage" icon="fa-bolt" titleKey="WH40K.Weapon.RollDamage" hoverClass="hover:tw-bg-[rgba(239,68,68,0.15)] hover:tw-border-[rgba(239,68,68,0.3)] hover:tw-text-[#ef4444]")
+                    (hash action="togglePowerDetails" icon="fa-chevron-down" titleKey="WH40K.Common.ToggleDetails" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
                 (array
-                    (hash action="rollPower" icon="fa-dice-d20" title="Focus Power" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
-                    (hash action="vocalizePower" icon="fa-comment" title="Post to Chat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
-                    (hash action="togglePowerDetails" icon="fa-chevron-down" title="Toggle Details" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]")))
+                    (hash action="rollPower" icon="fa-dice-d20" titleKey="WH40K.Combat.Action.FocusPower" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
+                    (hash action="vocalizePower" icon="fa-comment" titleKey="WH40K.Action.PostToChat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
+                    (hash action="togglePowerDetails" icon="fa-chevron-down" titleKey="WH40K.Common.ToggleDetails" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]")))
         }}
-            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Effect" content=power.system.effect}}
-            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Overbleed" icon="fa-fire" labelClass="tw-text-[#f97316]" content=power.system.overbleed}}
-            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Description" content=power.system.description}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.Tabs.Effect") content=power.system.effect}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.PsychicPower.Overbleed") icon="fa-fire" labelClass="tw-text-[#f97316]" content=power.system.overbleed}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.Description") content=power.system.description}}
         {{/systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs}}
         {{else}}
-        {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-hat-wizard" text="No psychic powers" padding="md"}}
+        {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-hat-wizard" textKey="WH40K.NPC.Template.NoPowers" padding="md"}}
         {{/each}}
     </div>
 
     {{!-- Add Power Dropzone --}}
-    {{> systems/wh40k-rpg/templates/actor/partial/dropzone.hbs type="psychicPower" hasItems=psychicPowersCount label="Drop Psychic Power or Click to Create" compactLabel="Drop or click to add"}}
+    {{> systems/wh40k-rpg/templates/actor/partial/dropzone.hbs type="psychicPower" hasItems=psychicPowersCount labelKey="WH40K.PsychicPower.DropOrCreate" compactLabelKey="WH40K.DropZone.DropOrClickToAdd"}}
 {{/systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs}}

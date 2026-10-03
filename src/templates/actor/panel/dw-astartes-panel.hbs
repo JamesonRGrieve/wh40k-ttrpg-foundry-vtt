@@ -26,19 +26,19 @@
     Rendered only for DW actors; the include in tab-overview.hbs gates
     on `isDW`.
 --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-astartes-panel" accentBorderClass="dw:tw-border-accent-combat" accentIconClass="dw:tw-text-accent-combat" icon="fa-shield-alt" label=(localize "WH40K.DW.Astartes.Label") rootAttrs=(safeAttrs "data-dw-has-black-carapace" astartesPanel.hasBlackCarapace) hasRightSlot=true}}
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-astartes-panel" accentBorderClass="dw:tw-border-accent-combat" accentIconClass="dw:tw-text-accent-combat-l30" icon="fa-shield-alt" label=(localize "WH40K.DW.Astartes.Label") rootAttrs=(safeAttrs "data-dw-has-black-carapace" astartesPanel.hasBlackCarapace) hasRightSlot=true}}
     {{!-- Header right slot: Unnatural Str/Tgh readouts --}}
     {{#*inline "rightSlot"}}
         <div class="tw-flex tw-items-center tw-gap-2">
             <span data-wh40k-hook="dw-astartes-sb" class="tw-text-[0.72rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
                   data-strength-bonus="{{astartesPanel.strengthBonus}}"
                   title="{{localize 'WH40K.DW.Astartes.Unnatural.Strength'}}">
-                SB ×2 = {{astartesPanel.strengthBonus}}
+                {{localize "WH40K.DW.Astartes.StrengthBonusDoubled" value=astartesPanel.strengthBonus}}
             </span>
             <span data-wh40k-hook="dw-astartes-tb" class="tw-text-[0.72rem] tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]"
                   data-toughness-bonus="{{astartesPanel.toughnessBonus}}"
                   title="{{localize 'WH40K.DW.Astartes.Unnatural.Toughness'}}">
-                TB ×2 = {{astartesPanel.toughnessBonus}}
+                {{localize "WH40K.DW.Astartes.ToughnessBonusDoubled" value=astartesPanel.toughnessBonus}}
             </span>
         </div>
     {{/inline}}
@@ -46,24 +46,25 @@
     {{!-- Black Carapace power-armour interface banner (only when active) --}}
     {{#if astartesPanel.hasBlackCarapace}}
         <div data-wh40k-hook="dw-astartes-bc-banner" class="tw-px-2 tw-py-1 tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-bright)] tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded dw:tw-border-accent-combat">
-            <i class="fas fa-link dw:tw-text-accent-combat"></i>
+            <i class="fas fa-link dw:tw-text-accent-combat-l30"></i>
             {{localize "WH40K.DW.Astartes.BlackCarapace.PowerArmorInterface"}}
         </div>
     {{/if}}
 
-    {{!-- Implant grid: 19 toggleable badges --}}
-    <div class="tw-grid tw-grid-cols-2 tw-gap-1.5 tw-mt-1
-                md:tw-grid-cols-3 lg:tw-grid-cols-4">
+    {{!-- Implant grid: 19 toggleable badges. Fixed two columns: the panel sits in a
+         half-width sheet column, so viewport breakpoints overpacked it. h-auto
+         overrides Foundry's fixed core button height, which clipped the cards. --}}
+    <div class="tw-grid tw-grid-cols-2 tw-gap-1.5 tw-mt-1">
         {{#each astartesPanel.implants}}
             <button type="button"
-                    data-wh40k-hook="dw-astartes-implant" class="tw-flex tw-flex-col tw-items-start tw-gap-0.5 tw-px-2 tw-py-1.5 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-text-left tw-transition-colors {{#if this.has}}tw-bg-[color:var(--wh40k-accent-combat,rgba(120,40,40,0.25))] tw-border-[color:var(--wh40k-accent-combat)] tw-text-[color:var(--wh40k-text-bright)] dw:tw-border-accent-combat{{else}}tw-bg-[rgba(0,0,0,0.18)] tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+                    data-wh40k-hook="dw-astartes-implant" class="tw-flex tw-flex-col tw-items-start tw-justify-start tw-gap-0.5 tw-h-auto tw-min-h-0 tw-min-w-0 tw-px-2 tw-py-1.5 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-text-left tw-transition-colors {{#if this.has}}tw-bg-[color:var(--wh40k-accent-combat,rgba(120,40,40,0.25))] tw-border-[color:var(--wh40k-accent-combat)] tw-text-[color:var(--wh40k-text-bright)] dw:tw-border-accent-combat{{else}}tw-bg-[rgba(0,0,0,0.18)] tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
                     data-action="dwAstartesToggleImplant"
                     data-implant-id="{{this.id}}"
                     data-implanted="{{#if this.has}}true{{else}}false{{/if}}"
                     aria-pressed="{{#if this.has}}true{{else}}false{{/if}}"
                     title="{{localize this.nameKey}}">
-                <span class="tw-text-[0.78rem] tw-font-semibold">
-                    <i class="fas {{#if this.has}}fa-check-circle{{else}}fa-circle{{/if}} tw-mr-1"></i>
+                <span class="tw-flex tw-items-start tw-gap-1 tw-w-full tw-text-[0.78rem] tw-font-semibold tw-leading-tight tw-break-words">
+                    <i class="fas {{#if this.has}}fa-check-circle{{else}}fa-circle{{/if}} tw-static tw-m-0 tw-mt-[0.15em] tw-text-[0.7rem] tw-shrink-0"></i>
                     {{localize this.nameKey}}
                 </span>
                 {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" rootClass="wh40k-dw-astartes-implant-category" labelKey=this.categoryKey}}

@@ -32,7 +32,7 @@ export interface OwRegimentActionHost {
  */
 export function owRegimentEdit(this: OwRegimentActionHost, event: Event, _target: HTMLElement): void {
     event.preventDefault();
-    const catalog = resolveCatalog(this.actor);
+    const catalog = resolveRegimentCatalog(this.actor);
     RegimentBuilderDialog.show(this.actor, catalog);
 }
 
@@ -42,7 +42,7 @@ export function owRegimentEdit(this: OwRegimentActionHost, event: Event, _target
  * dialog has compendium content to render. When absent the dialog
  * opens empty and the panel still shows the persisted selection.
  */
-function resolveCatalog(actor: WH40KBaseActor): ReadonlyArray<RegimentOption> {
+export function resolveRegimentCatalog(actor: WH40KBaseActor): ReadonlyArray<RegimentOption> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: regimentCatalog is an optional staging slot exposed by the OW system config; not part of the abstract WH40KBaseActor system surface
     const sys = actor.system as { regimentCatalog?: ReadonlyArray<RegimentOption> };
     return sys.regimentCatalog ?? [];

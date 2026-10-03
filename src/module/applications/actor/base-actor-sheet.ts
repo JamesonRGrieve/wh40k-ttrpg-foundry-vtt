@@ -4,6 +4,7 @@
  */
 
 import { hydrateActorInMemory } from '../../compendium-hydrate.ts';
+import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import WH40K from '../../config.ts';
 import { skillKeysForSystem } from '../../data/shared/skill-definitions.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
@@ -21,7 +22,8 @@ import type {
     WH40KInitiative,
     WH40KMovement,
 } from '../../types/global.d.ts';
-import { capitalize, formatSigned } from '../../utils/format.ts';
+import { firstSystemId } from '../../utils/chat-system-id.ts';
+import { formatSigned } from '../../utils/format.ts';
 import { sortByDisplayName } from '../../utils/talent-trait-sort.ts';
 import { openInteriorScene, vehicleInteriorHeaderControls, type SceneLookup } from '../../vehicle/vehicle-interior.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
@@ -487,6 +489,11 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     // eslint-disable-next-line no-restricted-syntax -- boundary: context is the mixin-erased sheet→template payload Record<string,unknown>.
     protected _prepareCommonContext(context: Record<string, unknown>): void {
         context['isGM'] = game.user.isGM;
+        // Edit mode is shared by every actor sheet (#toggleEditMode). Only the
+        // character sheet used to expose it, so craft/loot `{{#if inEditMode}}`
+        // blocks (Description editors) could never render.
+        context['inEditMode'] = this.inEditMode;
+        context['editable'] = this.isEditable;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- CONFIG.wh40k may be unset in test/Storybook environments before system init
         context['dh'] = CONFIG.wh40k ?? WH40K;
         // Portrait pool (#567): the re-roll / pin control on the portrait renders
@@ -985,17 +992,11 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Tooltip data (JSON string)
         data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
 
-        // Check if skill is favorite (auto-remove if untrained advanced)
+        // Favourite marker. An untrained advanced skill is hidden from favourites
+        // for display only — preparing render context must never write to the
+        // actor (a setFlag here re-rendered the sheet and silently pruned the list).
         const favorites = getFlag<string[]>(this.actor, 'favoriteSkills') ?? [];
-        const isUntrainedAdvanced = data.advanced === true && (data.trainingLevel ?? 0) === 0;
-        if (isUntrainedAdvanced && favorites.includes(key)) {
-            // Auto-unfavourite untrained advanced skills
-            const updated = favorites.filter((f: string) => f !== key);
-            void this.actor.setFlag('wh40k-rpg', 'favoriteSkills', updated);
-            data.isFavorite = false;
-        } else {
-            data.isFavorite = favorites.includes(key);
-        }
+        data.isFavorite = favorites.includes(key) && this._isFavouriteEligible(data);
 
         // Check if advanced skill is granted (for locking)
         data.isGranted = this._isSkillGranted(key, data);
@@ -1009,12 +1010,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @protected
      */
     _getSkillTrainingConfig(): Array<{ level: number; key: string; label: string; tooltip: string; bonus: number }> {
-        // Default: Rogue Trader style (T / +10 / +20)
-        return [
-            { level: 1, key: 'trained', label: 'T', tooltip: 'Trained', bonus: 0 },
-            { level: 2, key: 'plus10', label: '+10', tooltip: '+10', bonus: 10 },
-            { level: 3, key: 'plus20', label: '+20', tooltip: '+20', bonus: 20 },
-        ];
+        // The actor's own line's ladder; per-system sheet classes install the same
+        // lookup directly (game-system-sheets.ts). RT's career ladder when unresolved.
+        const systemId = firstSystemId(this.actor) ?? 'rt';
+        return (SystemConfigRegistry.getOrNull(systemId) ?? SystemConfigRegistry.get('rt')).getLocalizedSkillRanks();
     }
 
     /**
@@ -1029,6 +1028,11 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (skill.plus10 === true) return 2;
         if (skill.trained === true) return 1;
         return 0;
+    }
+
+    /** Whether a skill may show as a favourite: untrained advanced skills cannot be used, so they never do. */
+    _isFavouriteEligible(skill: SkillLike): boolean {
+        return !(skill.advanced === true && this._getTrainingLevel(skill) === 0);
     }
 
     /**
@@ -2131,10 +2135,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         }
 
         const confirmed = await ConfirmationDialog.confirm({
-            title: 'Confirm Delete',
-            content: `Are you sure you want to delete ${item.name}?`,
-            confirmLabel: 'Delete',
-            cancelLabel: 'Cancel',
+            title: game.i18n.localize('WH40K.Item.Container.ConfirmDeleteTitle'),
+            content: game.i18n.format('WH40K.Notify.Item.ConfirmDeleteText', { item: item.name }),
+            confirmLabel: game.i18n.localize('WH40K.Common.Delete'),
+            cancelLabel: game.i18n.localize('WH40K.Cancel'),
         });
 
         if (confirmed) {
@@ -2142,7 +2146,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 await this.actor.deleteEmbeddedDocuments('Item', [itemId]);
             } catch (err) {
                 console.error('WH40K | itemDelete: Error deleting item', err);
-                ui.notifications.error(`Failed to delete ${item.name}`);
+                ui.notifications.error(game.i18n.format('WH40K.Notify.Item.DeleteFailed', { item: item.name }));
             }
         }
     }
@@ -2210,7 +2214,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             await item.sendToChat();
         } catch (err) {
             console.error('WH40K | itemVocalize: Error sending item to chat', err);
-            ui.notifications.error(`Failed to send ${item.name} to chat`);
+            ui.notifications.error(game.i18n.format('WH40K.Notify.Item.ChatFailed', { item: item.name }));
         }
     }
 
@@ -2226,7 +2230,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const itemType = target.dataset['type'] ?? 'gear';
         // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments expects opaque Record shape; typed via Parameters cast below.
         const data: Record<string, unknown> = {
-            name: `New ${capitalize(itemType)}`,
+            name: game.i18n.format('WH40K.Item.NewItemName', { type: game.i18n.localize(`TYPES.Item.${itemType}`) }),
             type: itemType,
         };
 
@@ -2364,7 +2368,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Check if skill is specialist type
         if (!Array.isArray(skill.entries)) {
-            ui.notifications.error(`${skill.label} is not a specialist skill.`);
+            ui.notifications.error(game.i18n.format('WH40K.Notify.Skill.NotSpecialist', { skill: skill.label ?? skillKey }));
             return;
         }
 
@@ -2389,7 +2393,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Check if specialization already exists
         const existing = skill.entries.find((e: { name?: string }) => e.name?.toLowerCase() === name.toLowerCase());
         if (existing) {
-            ui.notifications.warn(`${skill.label} (${name}) already exists.`);
+            ui.notifications.warn(game.i18n.format('WH40K.Notify.Skill.SpecialisationExists', { skill: skill.label ?? skillKey, name }));
             return;
         }
 
@@ -2414,7 +2418,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             [`system.skills.${skillKey}.entries`]: entries,
         });
 
-        ui.notifications.info(`Added ${skill.label} (${name}) specialization.`);
+        ui.notifications.info(game.i18n.format('WH40K.Notify.Skill.SpecialisationAdded', { skill: skill.label ?? skillKey, name }));
     }
 
     /* -------------------------------------------- */
@@ -2437,13 +2441,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const entries = [...skill.entries];
         const entryName = entries[index]?.name;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: entries array index and optional name field may be undefined at runtime
-        const deletedName = entryName !== undefined && entryName !== '' ? entryName : 'this specialization';
+        const deletedName = entryName !== undefined && entryName !== '' ? entryName : game.i18n.localize('WH40K.Notify.Skill.ThisSpecialisation');
 
         const confirmed = await ConfirmationDialog.confirm({
-            title: 'Delete Specialization',
-            content: `Delete "${deletedName}"?`,
-            confirmLabel: 'Delete',
-            cancelLabel: 'Cancel',
+            title: game.i18n.localize('WH40K.Notify.Skill.DeleteSpecialisationTitle'),
+            content: game.i18n.format('WH40K.Notify.Skill.DeleteSpecialisationContent', { name: deletedName }),
+            confirmLabel: game.i18n.localize('WH40K.Common.Delete'),
+            cancelLabel: game.i18n.localize('WH40K.Cancel'),
         });
 
         if (confirmed) {
@@ -2495,7 +2499,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         });
 
         if (entry === undefined) {
-            ui.notifications.info(`No compendium entry found for ${skill.label ?? skillKey}.`);
+            ui.notifications.info(game.i18n.format('WH40K.Notify.Skill.NoCompendiumEntry', { skill: skill.label ?? skillKey }));
             return;
         }
 
@@ -2654,23 +2658,28 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Check if enough XP
         if (available < cost) {
-            ui.notifications.warn(`Not enough XP! Need ${cost}, have ${available}.`);
+            ui.notifications.warn(game.i18n.format('WH40K.Advancement.Error.InsufficientXP', { cost: String(cost), available: String(available) }));
             return;
         }
 
         // Check if already maxed
         if (char.advance >= 5) {
-            ui.notifications.warn(`${char.label} is already at maximum advancement!`);
+            ui.notifications.warn(game.i18n.format('WH40K.Advancement.CharacteristicMaxed', { characteristic: char.label }));
             return;
         }
 
         // Confirm spending
         const confirmed = await ConfirmationDialog.confirm({
-            title: `Advance ${char.label}?`,
-            content: `<p>Spend <strong>${cost} XP</strong> to advance ${char.label} from ${char.total} to ${char.total + 5}?</p>
-                     <p><em>Available XP: ${available}</em></p>`,
-            confirmLabel: 'Advance',
-            cancelLabel: 'Cancel',
+            title: game.i18n.format('WH40K.Advancement.CharacteristicConfirmTitle', { characteristic: char.label }),
+            content: `<p>${game.i18n.format('WH40K.Advancement.CharacteristicConfirmContent', {
+                cost: String(cost),
+                characteristic: char.label,
+                from: String(char.total),
+                to: String(char.total + 5),
+            })}</p>
+                     <p><em>${game.i18n.format('WH40K.Advancement.CharacteristicConfirmAvailable', { available: String(available) })}</em></p>`,
+            confirmLabel: game.i18n.localize('WH40K.Experience.Advance'),
+            cancelLabel: game.i18n.localize('WH40K.Cancel'),
         });
 
         if (!confirmed) return;
@@ -2694,7 +2703,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const newBonus = Math.floor(newTotal / 10) * (char.unnatural || 1);
 
         // Success notification
-        ui.notifications.info(`${char.label} advanced to ${newTotal}! (−${cost} XP)`);
+        ui.notifications.info(
+            game.i18n.format('WH40K.Advancement.CharacteristicAdvanced', { characteristic: char.label, total: String(newTotal), cost: String(cost) }),
+        );
 
         // Trigger characteristic change animation
         this.animateCharacteristicChange(charKey, oldTotal, newTotal);
@@ -2753,38 +2764,38 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Create edit dialog using DialogV2
         const result = (await dialogV2.wait({
             window: {
-                title: `Edit ${char.label}`,
+                title: game.i18n.format('WH40K.CharEdit.Title', { name: char.label }),
                 icon: 'fas fa-edit',
             },
             content: `
                 <div class="wh40k-char-edit-dialog">
                     <div class="form-group">
-                        <label>Base Value</label>
+                        <label>${game.i18n.localize('WH40K.CharEdit.BaseValue')}</label>
                         <input type="number" name="base" value="${currentBase}" min="0" max="100" />
                     </div>
                     <div class="form-group">
-                        <label>Advances (0-5)</label>
+                        <label>${game.i18n.localize('WH40K.CharEdit.Advances')}</label>
                         <input type="number" name="advance" value="${currentAdvance}" min="0" max="5" />
                     </div>
                     <div class="form-group">
-                        <label>Modifier</label>
+                        <label>${game.i18n.localize('WH40K.Roll.Modifier')}</label>
                         <input type="number" name="modifier" value="${currentModifier}" min="-100" max="100" />
                     </div>
                     <div class="form-group">
-                        <label>Unnatural Multiplier</label>
+                        <label>${game.i18n.localize('WH40K.CharEdit.UnnaturalMultiplier')}</label>
                         <input type="number" name="unnatural" value="${currentUnnatural}" min="1" max="10" />
                     </div>
                     <hr/>
                     <div class="wh40k-char-preview">
-                        <p><strong>Total:</strong> <span class="preview-total">${char.total}</span></p>
-                        <p><strong>Bonus:</strong> <span class="preview-bonus">${char.bonus}</span></p>
+                        <p><strong>${game.i18n.localize('WH40K.CharEdit.Total')}</strong> <span class="preview-total">${char.total}</span></p>
+                        <p><strong>${game.i18n.localize('WH40K.CharEdit.Bonus')}</strong> <span class="preview-bonus">${char.bonus}</span></p>
                     </div>
                 </div>
             `,
             buttons: [
                 {
                     action: 'save',
-                    label: 'Save',
+                    label: game.i18n.localize('WH40K.CharEdit.Save'),
                     icon: 'fas fa-save',
                     default: true,
                     // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 callback parameters include opaque _dialog unknown per Foundry API; return value is FormDataExtended.object which is Record<string,unknown>.
@@ -2794,7 +2805,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 },
                 {
                     action: 'cancel',
-                    label: 'Cancel',
+                    label: game.i18n.localize('WH40K.Cancel'),
                     icon: 'fas fa-times',
                 },
             ],
@@ -2810,7 +2821,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 [`system.characteristics.${charKey}.unnatural`]: parseInt(result.unnatural) || 1,
             });
 
-            ui.notifications.info(`${char.label} updated successfully!`);
+            ui.notifications.info(game.i18n.format('WH40K.Notify.Characteristic.Updated', { characteristic: char.label }));
         }
     }
 }

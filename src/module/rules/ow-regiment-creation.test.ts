@@ -4,6 +4,7 @@ import {
     REGIMENT_CATEGORIES,
     STANDARD_KIT_BUDGET,
     aggregateRegimentGrants,
+    buildRegimentPanelSummary,
     computeKitBudget,
     computeRegimentBudget,
     emptyRegimentSelection,
@@ -346,5 +347,29 @@ describe('aggregateRegimentGrants', () => {
         };
         const g = aggregateRegimentGrants(selection, catalog);
         expect(g.characteristics?.['toughness']).toBe(5);
+    });
+});
+
+describe('buildRegimentPanelSummary', () => {
+    it('reports zero spend against both caps for a fresh actor (never blank, as the panel once rendered " / ")', () => {
+        const summary = buildRegimentPanelSummary(BLANK, [], CATALOG);
+        expect(summary.regiment).toMatchObject({ spent: 0, remaining: REGIMENT_BUDGET, valid: false, budget: REGIMENT_BUDGET });
+        expect(summary.kit).toMatchObject({ spent: 0, remaining: STANDARD_KIT_BUDGET, valid: true, budget: STANDARD_KIT_BUDGET });
+        expect(summary.regiment.perCategory.homeWorld).toBe(0);
+    });
+
+    it('raises the kit cap by the selection kitModifier so panel and builder agree', () => {
+        const selection: RegimentSelection = { ...BLANK, regimentType: 'rt-b', specialEquipmentDoctrines: ['sed-a'] };
+        const summary = buildRegimentPanelSummary(selection, [{ id: 'kit-1', cost: 40 }], CATALOG);
+        expect(summary.regiment.spent).toBe(6);
+        expect(summary.kit.budget).toBe(STANDARD_KIT_BUDGET + 15);
+        expect(summary.kit).toMatchObject({ spent: 40, remaining: STANDARD_KIT_BUDGET + 15 - 40, valid: true });
+    });
+
+    it('works with an empty catalog (no compendium content staged)', () => {
+        const selection: RegimentSelection = { ...BLANK, homeWorld: 'hw-a' };
+        const summary = buildRegimentPanelSummary(selection, [], []);
+        expect(summary.regiment).toMatchObject({ spent: 0, budget: REGIMENT_BUDGET });
+        expect(summary.kit.budget).toBe(STANDARD_KIT_BUDGET);
     });
 });

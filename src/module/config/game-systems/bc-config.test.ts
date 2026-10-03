@@ -9,7 +9,7 @@
  * No Foundry runtime — uses a minimal stub for the bits of `actor` the
  * config touches.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { ChaosAdvanceEntry } from '../../rules/bc-alignment-derivation.ts';
 import { asBaseActor } from '../../testing/actor-stub.ts';
@@ -214,6 +214,23 @@ describe('BCSystemConfig: tier and rank definitions (core.md :2581, :2677)', () 
         expect(ranks).toHaveLength(4);
         expect(ranks.map((r) => r.key)).toEqual(['trained', 'plus10', 'plus20', 'plus30']);
         expect(ranks.map((r) => r.bonus)).toEqual([0, 10, 20, 30]);
-        expect(ranks.map((r) => r.tooltip)).toEqual(['Known', 'Trained', 'Experienced', 'Veteran']);
+        // Langpack keys (localized by getLocalizedSkillRanks at render time).
+        expect(ranks.map((r) => r.tooltip)).toEqual([
+            'WH40K.Skills.Rank.Known',
+            'WH40K.Skills.Rank.Trained',
+            'WH40K.Skills.Rank.Experienced',
+            'WH40K.Skills.Rank.Veteran',
+        ]);
+    });
+
+    it('localizes rank labels and names through the langpack', () => {
+        vi.stubGlobal('game', { i18n: { localize: (key: string): string => `loc:${key.split('.').pop() ?? key}` } });
+        try {
+            const ranks = cfg.getLocalizedSkillRanks();
+            expect(ranks.map((r) => r.tooltip)).toEqual(['loc:Known', 'loc:Trained', 'loc:Experienced', 'loc:Veteran']);
+            expect(ranks.map((r) => r.bonus)).toEqual([0, 10, 20, 30]);
+        } finally {
+            vi.unstubAllGlobals();
+        }
     });
 });

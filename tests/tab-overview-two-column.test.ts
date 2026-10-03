@@ -39,7 +39,7 @@ describe('overview two-column layout (#15)', () => {
         // (#494). The ordering contract is unchanged — only the marker is now the
         // include rather than the inline `title="Active Effects"` literal.
         const activeEffects = src.indexOf('overview-active-effects-panel.hbs');
-        const resources = src.indexOf('Resources (Influence');
+        const resources = src.indexOf('{{!-- Resources —');
         expect(col1, 'column 1 marker present').toBeGreaterThan(-1);
         expect(activeEffects, 'active effects panel present').toBeGreaterThan(col1);
         // Resources sits after Active Effects but still within column 1 (before column 2).

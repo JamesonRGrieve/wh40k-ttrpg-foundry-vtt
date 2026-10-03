@@ -12,29 +12,29 @@
             <input type="text" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.sizeDescriptor" value="{{source.sizeDescriptor}}" placeholder="e.g., 20m" />
         </div>
         <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
-            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Speed.Cruising"}}</span>
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.SpeedCruising"}}</span>
             <div class="tw-flex tw-items-center tw-gap-1">
                 <input type="number" data-dtype="Number" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.speed.cruising" value="{{source.speed.cruising}}" />
-                <span class="tw-text-xs tw-opacity-70 tw-shrink-0">kph</span>
+                <span class="tw-text-xs tw-opacity-70 tw-shrink-0">{{localize "WH40K.Common.Kph"}}</span>
             </div>
         </div>
         <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
-            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Speed.Tactical"}}</span>
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.SpeedTactical"}}</span>
             <div class="tw-flex tw-items-center tw-gap-1">
                 <input type="number" data-dtype="Number" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.speed.tactical" value="{{source.speed.tactical}}" />
-                <span class="tw-text-xs tw-opacity-70 tw-shrink-0">m</span>
+                <span class="tw-text-xs tw-opacity-70 tw-shrink-0">{{localize "WH40K.Common.Metres"}}</span>
             </div>
         </div>
         <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
-            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Manoeuverability"}}</span>
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Manoeuvrability"}}</span>
             <input type="number" data-dtype="Number" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.manoeuverability" value="{{source.manoeuverability}}" />
         </div>
         <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)] tw-col-span-full">
-            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Speed.Notes"}}</span>
-            <input type="text" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.speed.notes" value="{{source.speed.notes}}" placeholder="Speed modifiers, special rules..." />
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.SpeedNotes"}}</span>
+            <input type="text" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.speed.notes" value="{{source.speed.notes}}" placeholder="{{localize 'WH40K.Vehicle.SpeedNotesPlaceholder'}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-xs tw-flex-wrap">
-            <strong>{{localize "WH40K.Vehicle.Speed.Summary"}}:</strong>
+            <strong>{{localize "WH40K.Vehicle.SpeedSummary"}}:</strong>
             {{system.speedSummary}}
         </div>
     </div>

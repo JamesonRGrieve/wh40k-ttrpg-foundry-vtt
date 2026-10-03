@@ -19,11 +19,13 @@ import { describe, expect, it } from 'vitest';
 
 const TEMPLATE = resolve(__dirname, '../src/templates/actor/player/tab-overview.hbs');
 const src = readFileSync(TEMPLATE, 'utf8');
+// Every resource row renders through this shared stepper partial.
+const stepper = readFileSync(resolve(__dirname, '../src/templates/actor/partial/resource-stepper.hbs'), 'utf8');
 
-/** The opening tag of the resources grid `<div>` (the element wrapping the three resource cells). */
+/** The opening tag of the DH2 resources grid `<div>` (the element wrapping the three resource cells). */
 function resourcesGridTag(): string {
-    // The grid sits right after the "Resources (Influence / Requisition / Gelt)" comment.
-    const anchor = src.indexOf('Resources (Influence');
+    // The grid sits right after the "Resources —" panel comment.
+    const anchor = src.indexOf('{{!-- Resources —');
     expect(anchor, 'resources panel comment present').toBeGreaterThan(-1);
     const divStart = src.indexOf('<div class="tw-grid', anchor);
     expect(divStart, 'resources grid div present').toBeGreaterThan(-1);
@@ -42,10 +44,16 @@ describe('overview Resources panel layout (#236)', () => {
     });
 
     it('keeps the resource number inputs shrinkable (min-w-0) so they do not clip the steppers', () => {
+        const input = /<input[^>]*name="\{\{field\}\}"[^>]*>/.exec(stepper)?.[0] ?? '';
+        expect(input, 'stepper input').toContain('tw-min-w-0');
+        // Every DH2 resource still binds through the stepper.
         for (const name of ['system.influence', 'system.requisition', 'system.throneGelt']) {
-            const re = new RegExp(`<input[^>]*name="${name.replace('.', '\\.')}"[^>]*>`);
-            const input = re.exec(src)?.[0] ?? '';
-            expect(input, `input for ${name}`).toContain('tw-min-w-0');
+            expect(src, `stepper for ${name}`).toContain(`field="${name}"`);
         }
+    });
+
+    it('renders every non-DH2 line from resourceRows through the same stepper', () => {
+        expect(src).toContain('{{#each resourceRows}}');
+        expect(src).toContain('resource-stepper.hbs label=(localize labelKey) field=field value=value');
     });
 });

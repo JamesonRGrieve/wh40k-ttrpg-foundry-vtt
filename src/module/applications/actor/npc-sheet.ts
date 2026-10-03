@@ -7,6 +7,7 @@
  */
 
 import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
+import { SKILL_DEFINITIONS, standardSkillsForSystem } from '../../data/shared/skill-definitions.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
 import { characteristicFromAbbrev } from '../../helpers/characteristic-labels.ts';
 import { hasDaemonic } from '../../rules/daemonic-immunities.ts';
@@ -37,80 +38,38 @@ interface NPCV2TrainedSkillData {
 
 /** Mapping from WH40K skill key to its governing characteristic key. */
 /** NPC RAW tier dropdown options — single source for the context key + sidebar field (#257). */
-const NPC_TIER_OPTIONS: Record<string, string> = {
-    troop: 'Troop',
-    elite: 'Elite',
-    master: 'Master',
-    horde: 'Horde',
-};
+const npcTierOptions = (): Record<string, string> => ({
+    troop: game.i18n.localize('WH40K.NPCType.Troop'),
+    elite: game.i18n.localize('WH40K.NPCType.Elite'),
+    master: game.i18n.localize('WH40K.NPCType.Master'),
+    horde: game.i18n.localize('WH40K.NPCType.Horde'),
+});
 
 /** NPC creature-nature dropdown options — single source for the context key + sidebar field (#257). */
-const NPC_NATURE_OPTIONS: Record<string, string> = {
-    none: 'None',
-    swarm: 'Swarm',
-    creature: 'Creature',
-    daemon: 'Daemon',
-    xenos: 'Xenos',
-};
-
-/**
- * Canonical 21 basic DH2 skills with governing characteristic (short form) and
- * grouping category. Single source for the three projections this sheet used to
- * hard-code inline — the skills tab ({key,name,char,category}), the add-skill
- * dialog ({key,name}), and `_prepareSkills` ([key,label,charShort]) (#284).
- */
-const NPC_BASIC_SKILLS: ReadonlyArray<{ key: string; name: string; char: string; category: string }> = [
-    { key: 'acrobatics', name: 'Acrobatics', char: 'Ag', category: 'stealth' },
-    { key: 'athletics', name: 'Athletics', char: 'S', category: 'combat' },
-    { key: 'awareness', name: 'Awareness', char: 'Per', category: 'stealth' },
-    { key: 'charm', name: 'Charm', char: 'Fel', category: 'social' },
-    { key: 'command', name: 'Command', char: 'Fel', category: 'social' },
-    { key: 'commerce', name: 'Commerce', char: 'Fel', category: 'social' },
-    { key: 'deceive', name: 'Deceive', char: 'Fel', category: 'social' },
-    { key: 'dodge', name: 'Dodge', char: 'Ag', category: 'combat' },
-    { key: 'inquiry', name: 'Inquiry', char: 'Fel', category: 'social' },
-    { key: 'interrogation', name: 'Interrogation', char: 'WP', category: 'social' },
-    { key: 'intimidate', name: 'Intimidate', char: 'S', category: 'social' },
-    { key: 'logic', name: 'Logic', char: 'Int', category: 'technical' },
-    { key: 'medicae', name: 'Medicae', char: 'Int', category: 'technical' },
-    { key: 'parry', name: 'Parry', char: 'WS', category: 'combat' },
-    { key: 'psyniscience', name: 'Psyniscience', char: 'Per', category: 'technical' },
-    { key: 'scrutiny', name: 'Scrutiny', char: 'Per', category: 'social' },
-    { key: 'security', name: 'Security', char: 'Int', category: 'technical' },
-    { key: 'sleightOfHand', name: 'Sleight of Hand', char: 'Ag', category: 'stealth' },
-    { key: 'stealth', name: 'Stealth', char: 'Ag', category: 'stealth' },
-    { key: 'survival', name: 'Survival', char: 'Per', category: 'stealth' },
-    { key: 'techUse', name: 'Tech-Use', char: 'Int', category: 'technical' },
-];
+const npcNatureOptions = (): Record<string, string> => ({
+    none: game.i18n.localize('WH40K.Common.None'),
+    swarm: game.i18n.localize('WH40K.NPCType.Swarm'),
+    creature: game.i18n.localize('WH40K.NPCType.Creature'),
+    daemon: game.i18n.localize('WH40K.NPCType.Daemon'),
+    xenos: game.i18n.localize('WH40K.NPCType.Xenos'),
+});
 
 /**
  * Pick characteristic from existing state, else derive the full characteristic key
- * from the single-source NPC_BASIC_SKILLS table (#310) — its short `char` is mapped
- * back to the full key via the system-aware characteristicFromAbbrev helper. Falls
- * back to `perception` for keys outside the basic set (unchanged behaviour).
+ * from the skill catalog (SKILL_DEFINITIONS) — its short `char` is mapped back to
+ * the full key via the system-aware characteristicFromAbbrev helper. Falls back to
+ * `perception` for keys outside the catalog (unchanged behaviour).
  */
 function resolveSkillChar(existing: NPCV2TrainedSkillData | undefined, skillKey: string): string {
     const fromState = existing?.characteristic;
     if (fromState !== undefined && fromState !== '') return fromState;
-    const basic = NPC_BASIC_SKILLS.find((s) => s.key === skillKey);
-    return (basic ? characteristicFromAbbrev(basic.char) : null) ?? 'perception';
+    const definition = SKILL_DEFINITIONS[skillKey];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) sees `SkillDefinition`, tsconfig.json (flag on) sees `| undefined` and requires this guard.
+    return (definition !== undefined ? characteristicFromAbbrev(definition.char) : null) ?? 'perception';
 }
 
 /** Ranks in the DH2 ladder above untrained: Known, +10, +20, +30 (#503). */
 const MAX_SKILL_RANK = 4;
-
-/**
- * Per-rank CSS class and tooltip key for the basic-skill proficiency cycle,
- * indexed by effective rank 0–4. Literal keys (not interpolated) so the typed
- * langpack check can verify them.
- */
-const SKILL_LEVEL_DISPLAY = [
-    { cssClass: 'untrained', tooltip: 'WH40K.NPC.SkillLevel.Untrained' },
-    { cssClass: 'trained', tooltip: 'WH40K.NPC.SkillLevel.Trained' },
-    { cssClass: 'plus10', tooltip: 'WH40K.NPC.SkillLevel.Plus10' },
-    { cssClass: 'plus20', tooltip: 'WH40K.NPC.SkillLevel.Plus20' },
-    { cssClass: 'plus30', tooltip: 'WH40K.NPC.SkillLevel.Plus30' },
-] as const;
 
 /**
  * Build a trained-skill entry at the requested rank, preserving characteristic and
@@ -415,8 +374,8 @@ export default class NPCSheet extends CharacterSheet {
 
         // Header + NPC-tab additions
         context['threatTier'] = this.npcActor.system.threatTier;
-        context['npcTierOptions'] = NPC_TIER_OPTIONS;
-        context['npcNatureOptions'] = NPC_NATURE_OPTIONS;
+        context['npcTierOptions'] = npcTierOptions();
+        context['npcNatureOptions'] = npcNatureOptions();
         context['weaponClassOptions'] = {
             melee: 'Melee',
             pistol: 'Pistol',
@@ -490,7 +449,7 @@ export default class NPCSheet extends CharacterSheet {
         const threatLabel = threatTier.label;
         return [
             {
-                label: 'Threat',
+                label: game.i18n.localize('WH40K.Dialog.DifficultyCalculator.Threat'),
                 name: 'system.threatLevel',
                 type: 'number' as const,
                 value: npcActor.system.threatLevel,
@@ -504,25 +463,25 @@ export default class NPCSheet extends CharacterSheet {
                 valueClass: 'wh40k-threat-tier',
             },
             {
-                label: 'Tier',
+                label: game.i18n.localize('WH40K.ItemSheet.Talent.TierLabel'),
                 name: 'system.tier',
                 type: 'select' as const,
                 value: npcActor.system.tier,
-                options: NPC_TIER_OPTIONS,
+                options: npcTierOptions(),
             },
             {
-                label: 'Nature',
+                label: game.i18n.localize('WH40K.ItemSheet.Condition.Nature'),
                 name: 'system.nature',
                 type: 'select' as const,
                 value: npcActor.system.nature,
-                options: NPC_NATURE_OPTIONS,
+                options: npcNatureOptions(),
             },
             {
-                label: 'Faction',
+                label: game.i18n.localize('WH40K.NPC.Faction'),
                 name: 'system.faction',
                 type: 'text' as const,
                 value: npcActor.system.faction,
-                placeholder: 'Faction',
+                placeholder: game.i18n.localize('WH40K.NPC.Faction'),
             },
             // Source / book-reference lives on the NPC tab's Faction & Allegiance
             // panel (rendered through the `sourceLabel` helper), not the header (#252).
@@ -651,9 +610,6 @@ export default class NPCSheet extends CharacterSheet {
                 this._prepareOverviewContext(partContext);
                 this._prepareAbilitiesContext(partContext);
             },
-            skills: () => {
-                this._prepareSkillsContext(partContext);
-            },
             combat: () => {
                 this._prepareCombatContext(partContext);
             },
@@ -758,12 +714,12 @@ export default class NPCSheet extends CharacterSheet {
 
         // Hit locations for location-based armour
         context['hitLocations'] = [
-            { key: 'head', label: 'Head', value: sys.armour.locations?.head ?? 0 },
-            { key: 'body', label: 'Body', value: sys.armour.locations?.body ?? 0 },
-            { key: 'leftArm', label: 'Left Arm', value: sys.armour.locations?.leftArm ?? 0 },
-            { key: 'rightArm', label: 'Right Arm', value: sys.armour.locations?.rightArm ?? 0 },
-            { key: 'leftLeg', label: 'Left Leg', value: sys.armour.locations?.leftLeg ?? 0 },
-            { key: 'rightLeg', label: 'Right Leg', value: sys.armour.locations?.rightLeg ?? 0 },
+            { key: 'head', label: game.i18n.localize('WH40K.BodyLocation.Head'), value: sys.armour.locations?.head ?? 0 },
+            { key: 'body', label: game.i18n.localize('WH40K.BodyLocation.Body'), value: sys.armour.locations?.body ?? 0 },
+            { key: 'leftArm', label: game.i18n.localize('WH40K.BodyLocation.LeftArm'), value: sys.armour.locations?.leftArm ?? 0 },
+            { key: 'rightArm', label: game.i18n.localize('WH40K.BodyLocation.RightArm'), value: sys.armour.locations?.rightArm ?? 0 },
+            { key: 'leftLeg', label: game.i18n.localize('WH40K.BodyLocation.LeftLeg'), value: sys.armour.locations?.leftLeg ?? 0 },
+            { key: 'rightLeg', label: game.i18n.localize('WH40K.BodyLocation.RightLeg'), value: sys.armour.locations?.rightLeg ?? 0 },
         ];
 
         // Combat summary
@@ -813,12 +769,54 @@ export default class NPCSheet extends CharacterSheet {
         // Hit locations with roll ranges (always show, use total AP for simple mode)
         const getAP = (key: string): number => (armourMode === 'simple' ? armourTotal : locs[key] ?? 0);
         const hitLocations: NPCHitLocation[] = [
-            { key: 'head', label: 'Head', short: 'Head', range: '01–10', value: getAP('head'), dr: getAP('head') + tb },
-            { key: 'body', label: 'Body', short: 'Body', range: '31–70', value: getAP('body'), dr: getAP('body') + tb },
-            { key: 'leftArm', label: 'Left Arm', short: 'L.Arm', range: '21–30', value: getAP('leftArm'), dr: getAP('leftArm') + tb },
-            { key: 'rightArm', label: 'Right Arm', short: 'R.Arm', range: '11–20', value: getAP('rightArm'), dr: getAP('rightArm') + tb },
-            { key: 'leftLeg', label: 'Left Leg', short: 'L.Leg', range: '86–00', value: getAP('leftLeg'), dr: getAP('leftLeg') + tb },
-            { key: 'rightLeg', label: 'Right Leg', short: 'R.Leg', range: '71–85', value: getAP('rightLeg'), dr: getAP('rightLeg') + tb },
+            {
+                key: 'head',
+                label: game.i18n.localize('WH40K.BodyLocation.Head'),
+                short: game.i18n.localize('WH40K.BodyLocation.Head'),
+                range: '01–10',
+                value: getAP('head'),
+                dr: getAP('head') + tb,
+            },
+            {
+                key: 'body',
+                label: game.i18n.localize('WH40K.BodyLocation.Body'),
+                short: game.i18n.localize('WH40K.BodyLocation.Body'),
+                range: '31–70',
+                value: getAP('body'),
+                dr: getAP('body') + tb,
+            },
+            {
+                key: 'leftArm',
+                label: game.i18n.localize('WH40K.BodyLocation.LeftArm'),
+                short: game.i18n.localize('WH40K.ArmourSilhouette.ShortLeftArm'),
+                range: '21–30',
+                value: getAP('leftArm'),
+                dr: getAP('leftArm') + tb,
+            },
+            {
+                key: 'rightArm',
+                label: game.i18n.localize('WH40K.BodyLocation.RightArm'),
+                short: game.i18n.localize('WH40K.ArmourSilhouette.ShortRightArm'),
+                range: '11–20',
+                value: getAP('rightArm'),
+                dr: getAP('rightArm') + tb,
+            },
+            {
+                key: 'leftLeg',
+                label: game.i18n.localize('WH40K.BodyLocation.LeftLeg'),
+                short: game.i18n.localize('WH40K.ArmourSilhouette.ShortLeftLeg'),
+                range: '86–00',
+                value: getAP('leftLeg'),
+                dr: getAP('leftLeg') + tb,
+            },
+            {
+                key: 'rightLeg',
+                label: game.i18n.localize('WH40K.BodyLocation.RightLeg'),
+                short: game.i18n.localize('WH40K.ArmourSilhouette.ShortRightLeg'),
+                range: '71–85',
+                value: getAP('rightLeg'),
+                dr: getAP('rightLeg') + tb,
+            },
         ];
         context['hitLocations'] = hitLocations;
 
@@ -853,72 +851,6 @@ export default class NPCSheet extends CharacterSheet {
         // Flag for weapon rows in actions grid (used for empty state)
         const embeddedWeapons = context['embeddedWeapons'] as NPCItemContext[] | undefined;
         context['combatWeaponRows'] = (embeddedWeapons?.length ?? 0) > 0;
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Prepare skills tab context.
-     * @param {object} context - The render context.
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: context is the mixin-erased sheet→template payload Record<string,unknown>.
-    _prepareSkillsContext(context: Record<string, unknown>): void {
-        const sys = context['system'] as NPCSystemContext;
-        // Get trained skills list from data model
-        context['trainedSkillsList'] = sys.trainedSkillsList ?? [];
-
-        // Get favorite skills
-        const favoriteSkillKeys = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
-
-        // All basic skills with their characteristics (canonical source, #284).
-        const allBasicSkills = NPC_BASIC_SKILLS;
-
-        // Build basic skills list with training states. Rank, flags and target all
-        // come from the DataModel (#503) — the sheet no longer re-implements the
-        // ladder or the untrained rule, which is how Veteran (+30) came to be
-        // silently capped at +20 here while getSkillTarget paid it correctly.
-        context['basicSkillsList'] = allBasicSkills.map((skill) => {
-            const display = this.npcActor.system.skillDisplay(skill.key);
-            const level = SKILL_LEVEL_DISPLAY[display.rank] ?? SKILL_LEVEL_DISPLAY[0];
-
-            return {
-                ...skill,
-                isTrained: display.trained,
-                trained: display.trained,
-                plus10: display.plus10,
-                plus20: display.plus20,
-                plus30: display.plus30,
-                rank: display.rank,
-                target: display.target,
-                levelClass: level.cssClass,
-                levelTooltip: game.i18n.localize(level.tooltip),
-                isFavorite: favoriteSkillKeys.includes(skill.key),
-            };
-        });
-
-        // Trained skill count for display
-        const basicSkillsList = context['basicSkillsList'] as Array<{ isTrained: boolean; key: string }>;
-        context['trainedSkillCount'] = basicSkillsList.filter((s) => s.isTrained).length;
-
-        // Mark favorite status on trained skills list
-        // eslint-disable-next-line no-restricted-syntax -- boundary: trainedSkillsList has untyped extra fields used by the Handlebars template.
-        const trainedSkillsList = context['trainedSkillsList'] as Array<{ key: string } & Record<string, unknown>>;
-        context['trainedSkillsList'] = trainedSkillsList.map((skill) => ({
-            ...skill,
-            isFavorite: favoriteSkillKeys.includes(skill.key),
-        }));
-
-        // Skills by category for quick-add
-        const trainedKeys = Object.keys(sys.trainedSkills);
-
-        context['combatSkills'] = allBasicSkills.filter((s) => s.category === 'combat').map((s) => ({ ...s, added: trainedKeys.includes(s.key) }));
-
-        context['socialSkills'] = allBasicSkills.filter((s) => s.category === 'social').map((s) => ({ ...s, added: trainedKeys.includes(s.key) }));
-
-        context['stealthSkills'] = allBasicSkills.filter((s) => s.category === 'stealth').map((s) => ({ ...s, added: trainedKeys.includes(s.key) }));
-
-        context['technicalSkills'] = allBasicSkills.filter((s) => s.category === 'technical').map((s) => ({ ...s, added: trainedKeys.includes(s.key) }));
     }
 
     /* -------------------------------------------- */
@@ -1072,7 +1004,7 @@ export default class NPCSheet extends CharacterSheet {
 
         await roll.toMessage({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: 'Initiative Roll',
+            flavor: game.i18n.localize('WH40K.Combat.RollInitiative'),
         });
     }
 
@@ -1102,38 +1034,38 @@ export default class NPCSheet extends CharacterSheet {
         const skillKey = target.dataset['skill'];
         if (skillKey === undefined || skillKey === '') {
             // Show skill selection dialog
-            const skills = NPC_BASIC_SKILLS.map((s) => ({ key: s.key, name: s.name }))
+            // The active line's skills and its own rank ladder (Known → Veteran on the
+            // DH2 family, Trained → +20 on RT/DH1), all labels from the langpack.
+            const skills = standardSkillsForSystem(this._resolveGameSystemId() ?? 'dh2')
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- trainedSkills is a sparse Record; indexer is genuinely optional at runtime
                 .filter((s) => this.npcActor.system.trainedSkills[s.key] === undefined);
-
-            const options = skills.map((s) => `<option value="${s.key}">${s.name}</option>`).join('');
+            const skillOptions = skills.map((s) => `<option value="${s.key}">${s.label}</option>`).join('');
+            const rankOptions = this._getSkillTrainingConfig()
+                .map((rank) => `<option value="${rank.key}">${rank.tooltip}</option>`)
+                .join('');
 
             const content = `
         <form class="wh40k-skill-add-dialog">
           <div class="wh40k-form-group">
-            <label class="wh40k-form-label">Skill</label>
-            <select name="skill" class="wh40k-form-select">${options}</select>
+            <label class="wh40k-form-label">${game.i18n.localize('WH40K.Skills.Skill')}</label>
+            <select name="skill" class="wh40k-form-select">${skillOptions}</select>
           </div>
           <div class="wh40k-form-group">
-            <label class="wh40k-form-label">Training Level</label>
-            <select name="level" class="wh40k-form-select">
-              <option value="trained">Trained</option>
-              <option value="plus10">+10 (Experienced)</option>
-              <option value="plus20">+20 (Expert)</option>
-            </select>
+            <label class="wh40k-form-label">${game.i18n.localize('WH40K.NPC.TrainingLevel')}</label>
+            <select name="level" class="wh40k-form-select">${rankOptions}</select>
           </div>
         </form>
       `;
 
             const dialog = new foundry.applications.api.DialogV2({
-                window: { title: 'Add Trained Skill', icon: 'fa-solid fa-book-open' },
+                window: { title: 'WH40K.NPC.AddTrainedSkillTitle', icon: 'fa-solid fa-book-open' },
                 content,
                 classes: ['wh40k-rpg', 'wh40k-dialog-skill'],
                 position: { width: 320 },
                 buttons: [
                     {
                         action: 'add',
-                        label: 'Add Skill',
+                        label: 'WH40K.NPC.AddSkill',
                         icon: 'fa-solid fa-plus',
                         default: true,
                         callback: async (_event: Event, button: HTMLButtonElement, _dialog: foundry.applications.api.DialogV2) => {
@@ -1145,6 +1077,7 @@ export default class NPCSheet extends CharacterSheet {
                     },
                     {
                         action: 'cancel',
+                        // Foundry core langpack key; DialogV2 localizes button labels.
                         label: 'Cancel',
                         icon: 'fa-solid fa-xmark',
                     },
@@ -1319,7 +1252,7 @@ export default class NPCSheet extends CharacterSheet {
         updates['displayName'] = 20; // OWNER_HOVER
 
         await npc.update({ prototypeToken: updates });
-        ui.notifications.info(`Token configured for ${npc.name}`);
+        ui.notifications.info(game.i18n.format('WH40K.Notify.Npc.TokenConfigured', { name: npc.name }));
     }
 
     /* -------------------------------------------- */
@@ -1332,7 +1265,7 @@ export default class NPCSheet extends CharacterSheet {
     static async #duplicateNPC(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         await this.npcActor.duplicate();
-        ui.notifications.info(`Created copy of ${this.actor.name}`);
+        ui.notifications.info(game.i18n.format('WH40K.Notify.Npc.CopyCreated', { name: this.actor.name }));
     }
 
     /* -------------------------------------------- */
@@ -1396,13 +1329,13 @@ export default class NPCSheet extends CharacterSheet {
     static async #deleteNPC(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const confirmed = await ConfirmationDialog.confirm({
-            title: 'Delete NPC',
-            content: `<p>Are you sure you want to delete <strong>${this.actor.name}</strong>?</p>`,
+            title: game.i18n.localize('WH40K.NPC.Tools.DeleteNpc'),
+            content: game.i18n.format('WH40K.Notify.Item.ConfirmDeleteContent', { item: this.actor.name }),
         });
 
         if (confirmed) {
             await this.actor.delete();
-            ui.notifications.info(`Deleted ${this.actor.name}`);
+            ui.notifications.info(game.i18n.format('WH40K.Notify.Item.Deleted', { item: this.actor.name }));
         }
     }
 
@@ -1472,19 +1405,19 @@ export default class NPCSheet extends CharacterSheet {
         const content = `
       <form>
         <div class="form-group">
-          <label>Tag Name</label>
-          <input type="text" name="tag" placeholder="e.g., Boss, Minion, Ranged" />
+          <label>${game.i18n.localize('WH40K.NPC.TagName')}</label>
+          <input type="text" name="tag" placeholder="${game.i18n.localize('WH40K.NPC.TagPlaceholder')}" />
         </div>
       </form>
     `;
 
         const dialog = new foundry.applications.api.DialogV2({
-            window: { title: 'Add Tag' },
+            window: { title: game.i18n.localize('WH40K.NPC.AddTag') },
             content,
             buttons: [
                 {
                     action: 'add',
-                    label: 'Add',
+                    label: game.i18n.localize('WH40K.Common.Add'),
                     default: true,
                     callback: async (_event: Event, button: HTMLButtonElement, _dialog: foundry.applications.api.DialogV2) => {
                         const { form } = button;
@@ -1734,41 +1667,28 @@ export default class NPCSheet extends CharacterSheet {
         const characteristics = actor.system.characteristics;
         const trainedSkills = actor.system.trainedSkills;
 
-        // 21 basic WH40K skills with their governing characteristic short names (canonical source, #284).
-        const BASIC_SKILLS: Array<[string, string, string]> = NPC_BASIC_SKILLS.map((s) => [s.key, s.name, s.char] as [string, string, string]);
-
-        const standard: Array<[string, SkillLike]> = BASIC_SKILLS.map((tuple) => {
-            const key = tuple[0];
-            const label = tuple[1];
-            const charShort = tuple[2];
-            const t = trainedSkills[key];
-            /* eslint-disable @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guards: trainedSkills is Record-indexed so t may be absent at runtime */
+        // The active line's own non-specialist skills (DH1/RT list Concealment and
+        // Silent Move, DH2-family lines Parry and Stealth, …). Rank flags and the
+        // target number come from the DataModel's skillDisplay — the single source
+        // that also pays Veteran (+30) and each line's untrained rule.
+        const standard: Array<[string, SkillLike]> = standardSkillsForSystem(this._resolveGameSystemId() ?? 'dh2').map((entry) => {
+            const display = actor.system.skillDisplay(entry.key);
             const skill: SkillLike = {
-                label,
-                characteristic: charShort,
-                trained: !!t?.trained,
-                plus10: !!t?.plus10,
-                plus20: !!t?.plus20,
-                bonus: t?.bonus ?? 0,
-                advanced: false,
+                label: entry.label,
+                characteristic: entry.char,
+                trained: display.trained,
+                plus10: display.plus10,
+                plus20: display.plus20,
+                plus30: display.plus30,
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: trainedSkills is Record-indexed
+                bonus: trainedSkills[entry.key]?.bonus ?? 0,
+                advanced: entry.advanced,
                 hidden: false,
+                current: display.target,
             };
-            /* eslint-enable @typescript-eslint/no-unnecessary-condition */
-            // Compute current target (½ char when untrained, full char + training bonus otherwise).
-            const charKey = this._charShortToKey(charShort);
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics is Record-indexed
-            const charTotal = characteristics[charKey]?.total ?? 0;
-            const level = skill.plus20 === true ? 3 : skill.plus10 === true ? 2 : skill.trained === true ? 1 : 0;
-            const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
-            // Aptitude/career family (DH2 + DH1e/BC/DW/OW/IM) → flat -20.
-            const systemId = this._resolveGameSystemId();
-            const isAptitudeSystem =
-                systemId === 'dh2' || systemId === 'dh1' || systemId === 'bc' || systemId === 'dw' || systemId === 'ow' || systemId === 'im';
-            const untrainedAdjust = isAptitudeSystem ? charTotal - 20 : Math.floor(charTotal / 2);
-            skill.current = level > 0 ? charTotal + trainingBonus + (skill.bonus ?? 0) : untrainedAdjust + (skill.bonus ?? 0);
             // Defer to the parent helper for trainingIndicators, breakdown, tooltipData, isGranted, etc.
-            this._augmentSkillData(key, skill, characteristics);
-            return [key, skill];
+            this._augmentSkillData(entry.key, skill, characteristics);
+            return [entry.key, skill];
         });
 
         // Sort alphabetically by label — matches PC behavior.

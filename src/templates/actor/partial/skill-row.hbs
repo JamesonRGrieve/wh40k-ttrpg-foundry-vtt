@@ -13,8 +13,9 @@
                     data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
                     data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
                     data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
-                    title="Click to view {{entry.[1].label}} skill details">
-                <span class="tw-inline-flex tw-items-baseline tw-gap-[var(--wh40k-space-xs)] tw-leading-none tw-font-[var(--wh40k-font-body)] tw-min-w-0 tw-truncate">{{entry.[1].label}} <span class="tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-[var(--wh40k-font-ui)]">({{entry.[1].charShort}})</span></span>
+                    title="{{localize 'WH40K.Skills.ViewDetails' skill=entry.[1].label}}">
+                {{!-- Only the name truncates; the characteristic suffix stays whole. --}}
+                <span class="tw-inline-flex tw-items-baseline tw-gap-[var(--wh40k-space-xs)] tw-leading-none tw-font-[var(--wh40k-font-body)] tw-min-w-0"><span class="tw-min-w-0 tw-truncate">{{entry.[1].label}}</span> <span class="tw-shrink-0 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-[var(--wh40k-font-ui)]">({{entry.[1].charShort}})</span></span>
             </button>
             {{!-- tw-shrink-0 (#267): this and the favourite star below are flex children
                  of a `tw-flex-1 tw-min-w-0` box, so without it THEY absorb the squeeze
@@ -22,19 +23,19 @@
                  (tw-truncate, line above) is the element that should yield instead. --}}
             <button type="button" class="tw-shrink-0 tw-bg-transparent tw-border-none tw-p-1 tw-text-[color:var(--color-text-secondary)] tw-text-[0.85rem] tw-cursor-pointer tw-flex tw-items-center tw-justify-center tw-rounded-[3px] hover:tw-text-accent-skills hover:tw-bg-[rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.1)] hover:tw-scale-110 active:tw-scale-95"
                     data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
-                    title="Roll {{entry.[1].label}} Test">
+                    title="{{localize 'WH40K.Skills.RollTest' skill=entry.[1].label}}">
                 <i class="fas fa-dice-d20"></i>
             </button>
             <button type="button" class="tw-shrink-0 tw-bg-transparent tw-border-none tw-px-1 tw-py-0.5 tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-text-[0.85rem] hover:tw-text-[color:var(--wh40k-color-gold)] hover:tw-scale-110 {{#if entry.[1].isFavorite}}active tw-text-[color:var(--wh40k-color-gold)]{{/if}}"
                     data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
-                    title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
+                    title="{{#if entry.[1].isFavorite}}{{localize 'WH40K.Skills.RemoveFromFavorites'}}{{else}}{{localize 'WH40K.Skills.AddToFavorites'}}{{/if}}">
                 <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
             </button>
         </div>
     </div>
     <div class="tw-flex tw-gap-0.5 tw-p-0.5 tw-bg-[var(--color-bg-secondary)] tw-rounded-md tw-border tw-border-solid tw-border-[var(--color-border-tertiary)] tw-shrink-0">
         {{#each entry.[1].trainingIndicators as |ind|}}
-        <span class="tw-shrink-0 tw-border tw-border-solid tw-rounded-[3px] tw-text-[0.65rem] tw-font-semibold tw-px-1 tw-py-0.5 tw-min-w-[24px] tw-text-center {{#if ind.active}}active tw-bg-[rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.25)] tw-border-accent-skills tw-text-[color:var(--color-text-primary)] tw-opacity-100 tw-font-bold{{else}}tw-bg-[rgba(255,255,255,0.35)] tw-border-[rgba(120,46,34,0.35)] tw-text-[#3a2820] tw-opacity-50{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
+        <span class="tw-shrink-0 tw-border tw-border-solid tw-rounded-[3px] tw-text-[0.65rem] tw-font-semibold tw-px-1 tw-py-0.5 tw-min-w-[24px] tw-text-center {{#if ind.active}}active tw-bg-[rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.25)] tw-border-accent-skills tw-text-[color:var(--color-text-primary)] tw-opacity-100 tw-font-bold{{else}}tw-bg-transparent tw-border-[var(--color-border-secondary)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
         {{/each}}
     </div>
     <div class="tw-shrink-0 tw-min-w-8.5 tw-h-6.5 tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center tw-border {{themeClassFor 'border'}} tw-rounded-md tw-bg-[var(--color-bg-option)] tw-shadow-[inset_0_1px_2px_rgba(255,255,255,0.1),0_2px_6px_rgba(0,0,0,0.15)]" title="{{entry.[1].breakdown}}">

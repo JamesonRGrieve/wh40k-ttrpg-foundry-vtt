@@ -58,6 +58,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/section-card.hbs',
             'systems/wh40k-rpg/templates/actor/partial/tab-strip.hbs',
             'systems/wh40k-rpg/templates/actor/partial/stat-box.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/resource-stepper.hbs',
             'systems/wh40k-rpg/templates/actor/partial/stat-grid-section.hbs',
             'systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs',
             'systems/wh40k-rpg/templates/actor/partial/effect-row.hbs',
@@ -175,7 +176,6 @@ export class HandlebarManager {
 
             // Voidcraft sheet templates
             'systems/wh40k-rpg/templates/actor/voidcraft/header.hbs',
-            'systems/wh40k-rpg/templates/actor/voidcraft/tabs.hbs',
             'systems/wh40k-rpg/templates/actor/voidcraft/tab-stats.hbs',
             'systems/wh40k-rpg/templates/actor/voidcraft/tab-components.hbs',
             'systems/wh40k-rpg/templates/actor/voidcraft/tab-weapons.hbs',

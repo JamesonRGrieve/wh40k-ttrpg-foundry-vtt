@@ -55,24 +55,23 @@ export function getAllCharacteristicDisplayInfo(): Record<string, { label: strin
  */
 export function getTrainingLabel(level: string, systemConfig?: BaseSystemConfig): string {
     if (systemConfig) {
-        const ranks = systemConfig.getSkillRanks();
-        const rank = ranks.find((r) => r.key === level);
+        const rank = systemConfig.getLocalizedSkillRanks().find((r) => r.key === level);
         if (rank) return rank.tooltip;
     }
 
-    // Generic fallback covering both RT and DH2e terminology
-    const GENERIC_LABELS: Record<string, string> = {
-        trained: 'Trained',
-        plus10: '+10',
-        plus20: '+20',
-        plus30: '+30',
-        known: 'Known',
-        experienced: 'Experienced',
-        veteran: 'Veteran',
+    // Generic fallback covering both RT and DH2e terminology (langpack keys).
+    const GENERIC_LABEL_KEYS: Record<string, string> = {
+        trained: 'WH40K.Skills.Rank.Trained',
+        plus10: 'WH40K.Skills.Rank.Plus10',
+        plus20: 'WH40K.Skills.Rank.Plus20',
+        plus30: 'WH40K.Skills.Rank.Plus30',
+        known: 'WH40K.Skills.Rank.Known',
+        experienced: 'WH40K.Skills.Rank.Experienced',
+        veteran: 'WH40K.Skills.Rank.Veteran',
     };
-    // level in GENERIC_LABELS guarantees the value is present at runtime; ?? handles strict tsconfig
-    if (level in GENERIC_LABELS) return GENERIC_LABELS[level] ?? level;
-    return level !== '' ? level : 'Trained';
+    const key = GENERIC_LABEL_KEYS[level === '' ? 'trained' : level];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) sees `string`, tsconfig.json (flag on) sees `string | undefined` and requires this guard.
+    return key !== undefined ? game.i18n.localize(key) : level;
 }
 
 /* -------------------------------------------- */

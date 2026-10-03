@@ -40,7 +40,7 @@
     {{!-- Header right slot: cooldown badge --}}
     {{#*inline "rightSlot"}}
         <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-px-2 tw-py-0.5 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]
-                     {{#if battlefieldPanel.cooldownActive}}tw-border-crimson tw-text-crimson tw-bg-crimson/10{{else}}tw-border-success tw-text-success tw-bg-success/10{{/if}}"
+                     {{#if battlefieldPanel.cooldownActive}}tw-border-crimson tw-text-crimson-l40tw-bg-crimson/10{{else}}tw-border-success tw-text-success-l20tw-bg-success/10{{/if}}"
               data-cooldown-status="{{#if battlefieldPanel.cooldownActive}}active{{else}}ready{{/if}}">
             <i class="fas {{#if battlefieldPanel.cooldownActive}}fa-hourglass-half{{else}}fa-check{{/if}}"></i>
             {{#if battlefieldPanel.cooldownActive}}

@@ -101,7 +101,7 @@
             {{#if drawbackPanel.penalty.characteristics.length}}
                 <ul class="tw-flex tw-flex-wrap tw-gap-1 tw-list-none tw-m-0 tw-p-0">
                     {{#each drawbackPanel.penalty.characteristics as |char|}}
-                        <li class="tw-inline-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson/50 tw-text-crimson tw-tabular-nums tw-text-[0.72rem]"
+                        <li class="tw-inline-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson/50 tw-text-crimson-l40tw-tabular-nums tw-text-[0.72rem]"
                             data-char-key="{{char.key}}"
                             data-char-value="{{char.value}}">
                             <span>{{char.key}}</span>
@@ -111,28 +111,28 @@
                 </ul>
             {{/if}}
             {{#if drawbackPanel.penalty.skills.length}}
-                <span class="tw-text-crimson tw-text-[0.72rem]">
+                <span class="tw-text-crimson-l40tw-text-[0.72rem]">
                     {{#each drawbackPanel.penalty.skills as |skill|}}{{skill}}{{#unless @last}}, {{/unless}}{{/each}}
                 </span>
             {{/if}}
             {{#if drawbackPanel.penalty.talents.length}}
-                <span class="tw-text-crimson tw-text-[0.72rem]">
+                <span class="tw-text-crimson-l40tw-text-[0.72rem]">
                     {{#each drawbackPanel.penalty.talents as |talent|}}{{talent}}{{#unless @last}}, {{/unless}}{{/each}}
                 </span>
             {{/if}}
             {{#if drawbackPanel.penalty.wounds}}
-                <span class="tw-text-crimson tw-tabular-nums tw-text-[0.72rem]" data-field="wounds">
-                    wounds: {{drawbackPanel.penalty.wounds}}
+                <span class="tw-text-crimson-l40tw-tabular-nums tw-text-[0.72rem]" data-field="wounds">
+                    {{localize "WH40K.OW.RegimentDrawback.PenaltyWounds" value=drawbackPanel.penalty.wounds}}
                 </span>
             {{/if}}
             {{#if drawbackPanel.penalty.logistics}}
-                <span class="tw-text-crimson tw-tabular-nums tw-text-[0.72rem]" data-field="logistics">
-                    logistics: {{drawbackPanel.penalty.logistics}}
+                <span class="tw-text-crimson-l40tw-tabular-nums tw-text-[0.72rem]" data-field="logistics">
+                    {{localize "WH40K.OW.RegimentDrawback.PenaltyLogistics" value=drawbackPanel.penalty.logistics}}
                 </span>
             {{/if}}
             {{#if drawbackPanel.penalty.kitModifier}}
-                <span class="tw-text-crimson tw-tabular-nums tw-text-[0.72rem]" data-field="kit">
-                    kit: {{drawbackPanel.penalty.kitModifier}}
+                <span class="tw-text-crimson-l40tw-tabular-nums tw-text-[0.72rem]" data-field="kit">
+                    {{localize "WH40K.OW.RegimentDrawback.PenaltyKit" value=drawbackPanel.penalty.kitModifier}}
                 </span>
             {{/if}}
         </div>

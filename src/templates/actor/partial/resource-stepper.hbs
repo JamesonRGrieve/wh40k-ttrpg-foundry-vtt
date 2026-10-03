@@ -1,0 +1,24 @@
+{{!-- Labelled −/value/+ stepper for one numeric actor resource (Resources panel).
+
+     Hash params:
+       label    localized label text
+       tooltip  optional localized tooltip on the label
+       field    actor field path the input binds and the steppers adjust (e.g. "system.infamy")
+       value    current value
+       max      optional upper bound (input + increment)
+
+     An optional partial-block renders after the + button (DH2 homebrew Influence
+     puts its roll button there). --}}
+<div class="tw-flex tw-flex-col tw-items-center tw-gap-1" data-resource-field="{{field}}">
+    <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal"{{#if tooltip}} data-tooltip="{{tooltip}}"{{/if}}>{{label}}</span>
+    <div class="tw-flex tw-items-center tw-gap-1">
+        <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="{{field}}" data-min="0" title="-1" aria-label="{{localize 'WH40K.Resources.Decrease' resource=label}}">
+            <i class="fas fa-minus"></i>
+        </button>
+        <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-0 tw-max-w-[150px]" name="{{field}}" value="{{value}}" min="0"{{#if max}} max="{{max}}"{{/if}} aria-label="{{label}}" />
+        <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="{{field}}"{{#if max}} data-max="{{max}}"{{/if}} title="+1" aria-label="{{localize 'WH40K.Resources.Increase' resource=label}}">
+            <i class="fas fa-plus"></i>
+        </button>
+        {{#if @partial-block}}{{> @partial-block}}{{/if}}
+    </div>
+</div>
