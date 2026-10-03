@@ -48,6 +48,7 @@ const STATIC_FILES = [
   "src/module/**/*",
   "!src/module/**/*.ts",
   "!src/module/foundry-core/**",
+  "!src/module/testing{,/**}",
   "src/templates/**/*",
   // Public pack art lives in src/packs/images beside the generic pack sources,
   // and pack documents reference it as `systems/wh40k-rpg/packs/images/...`.
@@ -61,6 +62,9 @@ const STATIC_FILES = [
   "src/lang/**/*",
   "src/*.json"
 ];
+// Repo-root documents that ship at the package root: system.json's `license`
+// field names LICENSE, and the AGPL requires the licence travel with the code.
+const ROOT_DOC_FILES = ["LICENSE", "LICENSE_NOTICE.md", "README.md"];
 // Pack source root. Defaults to the public generic packs in `src/packs`; a build
 // overrides it (e.g. `WH40K_PACKS_SRC=src/packs-private`) to compile the private
 // copyrighted content instead. Accepts a repo-relative or absolute path.
@@ -416,7 +420,9 @@ function checkRuntimeImports(done) {
 
 function compileTypeScript(done) {
   const env = tscEnv();
-  exec('pnpm exec tsc --pretty false', { env, maxBuffer: TSC_OUTPUT_LIMIT_BYTES }, (err, stdout, stderr) => {
+  // tsconfig.build.json drops co-located *.test.ts and src/module/testing/ —
+  // Foundry never loads them, so they have no place in the shipped system.
+  exec('pnpm exec tsc --pretty false -p tsconfig.build.json', { env, maxBuffer: TSC_OUTPUT_LIMIT_BYTES }, (err, stdout, stderr) => {
     const out = (stdout || '') + (stderr || '');
     const diags = out.split('\n').filter((l) => /error TS\d+/.test(l));
     // tsc exits non-zero on type errors, which are reported (and filtered below). A non-zero exit with none
@@ -486,6 +492,10 @@ function copyFiles() {
   return gulp.src(STATIC_FILES, {base: "src",}).pipe(gulp.dest(BUILD_DIR));
 }
 
+function copyRootDocs() {
+  return gulp.src(ROOT_DOC_FILES).pipe(gulp.dest(BUILD_DIR));
+}
+
 /* ----------------------------------------- */
 /*  Other
 /* ----------------------------------------- */
@@ -519,8 +529,8 @@ function createArchive() {
 // only .ts, allowJs is off, so copyFiles never touches tsc's output), static
 // copies, and per-pack LevelDB dirs — so they run concurrently.
 const compileModule = gulp.series(compileTypeScript, checkRuntimeImports);
-const buildSystem = gulp.series(cleanBuild, generateIcons, gulp.parallel(compileCss, compileModule, copyFiles));
-const buildAll = gulp.series(cleanBuild, generateIcons, gulp.parallel(compileCss, compileModule, copyFiles, compilePacks));
+const buildSystem = gulp.series(cleanBuild, generateIcons, gulp.parallel(compileCss, compileModule, copyFiles, copyRootDocs));
+const buildAll = gulp.series(cleanBuild, generateIcons, gulp.parallel(compileCss, compileModule, copyFiles, copyRootDocs, compilePacks));
 const build = gulp.series(buildAll, createArchive);
 const archive = gulp.series(createArchive);
 const defaultTask = gulp.series(buildAll, watchUpdates);

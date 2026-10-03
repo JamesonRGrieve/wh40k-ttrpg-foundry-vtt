@@ -1,46 +1,53 @@
-name: Nightly prerelease
+name: Release
 
-# Publishes a rolling, ephemeral PRE-RELEASE build of `main` to the `nightly`
-# release tag, so testers can install the system from a stable, anonymous
-# manifest URL without us cutting versioned releases. This is NOT an official
-# release channel.
+# Builds the distributable system and publishes it as a GitHub release, on one of
+# two channels (scripts/prepare-release-manifest.mjs stamps the manifest for each):
 #
-# What testers get / DON'T get:
-#   * System code only — sheets, rules engine, settings, lang, templates.
-#   * The PUBLIC generic packs (src/packs), compiled here — empty until authored,
-#     so early nightlies carry no compendium content. The copyrighted book content
-#     is the `src/packs-private` submodule, never checked out here. The published
-#     system.json declares exactly the packs built into dist/packs (see
-#     .github/scripts/prepare-nightly-manifest.mjs), so Foundry never hunts for a
-#     declared pack dir that isn't in the zip.
+#   * nightly — every push to `main` (or a manual dispatch) republishes the
+#     rolling, ephemeral PRE-RELEASE under the fixed `nightly` tag, so testers can
+#     install from a stable manifest URL. Version = src/system.json's prerelease
+#     base + this workflow's run_number (0.0.1-alpha.N). Not an official release.
+#   * release — pushing a `v<semver>` tag cuts an OFFICIAL versioned release. The
+#     tag must equal src/system.json's committed version (bump it, commit, tag).
+#     It runs the full `pnpm check` gate first. The published manifest URL is the
+#     /releases/latest/ alias (installs follow future releases); the download URL
+#     is pinned to the tag, so each version's manifest fetches its own zip — the
+#     form the Foundry package listing expects. A tag with a prerelease label
+#     (v1.1.0-rc.1) publishes as a prerelease and never becomes "latest".
 #
-# Versioning: this workflow's run_number IS the alpha counter. A fresh workflow
-# file starts at run 1, so the first push to main publishes 0.0.1-alpha.1 and
-# each subsequent push (or manual dispatch) increments the last segment. The
-# base prefix comes from src/system.json's version (bump it to 0.0.2-alpha etc.
-# when you want a new base; the counter keeps appending).
+# What ships: system code (sheets, rules engine, settings, lang, templates), the
+# LICENSE/notice/README, and the PUBLIC generic packs in src/packs (empty until
+# authored). The copyrighted book content is the `src/packs-private` submodule —
+# never checked out here, never built, never shipped. The published system.json
+# declares exactly the packs built into dist/packs, so Foundry never hunts for a
+# declared pack dir that isn't in the zip.
 #
-# This intentionally does NOT gate on the CI workflow (ci.yml) — keeping it a
-# separate file is what gives the run_number counter a clean start at 1. If the
-# build itself fails to compile, nothing is published. ci.yml remains the
-# quality gate on the same push.
+# The nightly channel intentionally does NOT gate on ci.yml (ci.yml is the
+# quality gate on the same push); a build that fails to compile publishes nothing.
 
 on:
   push:
     branches: [main]
+    tags: ['v*']
   workflow_dispatch:
 
 permissions:
-  contents: write # required to create/update the `nightly` release
+  contents: write # required to create/update releases
 
 concurrency:
-  group: nightly-release
-  cancel-in-progress: true
+  group: release-${{ github.ref }}
+  # A newer main push supersedes an in-flight nightly; a tagged release is never cancelled.
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
 jobs:
   publish:
-    name: Build + publish nightly prerelease
+    name: Build + publish (${{ startsWith(github.ref, 'refs/tags/v') && 'release' || 'nightly' }})
     runs-on: ubuntu-latest
+    env:
+      CHANNEL: ${{ startsWith(github.ref, 'refs/tags/v') && 'release' || 'nightly' }}
+      TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'nightly' }}
+      RUN: ${{ github.run_number }}
+      REPO_URL: https://github.com/${{ github.repository }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -54,39 +61,56 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # System code + the public generic packs in src/packs (empty until
-      # authored). build:compendium compiles src/packs into dist/packs; the
-      # copyrighted content in the src/packs-private submodule is not checked out
-      # here, so it is never built or shipped.
+      # An official release must pass the same gate ci.yml enforces on main.
+      - if: env.CHANNEL == 'release'
+        run: pnpm check
+
       - run: pnpm build:system
       - run: pnpm build:compendium
 
       - name: Stamp version + manifest URLs; declare only the built packs
-        env:
-          RUN: ${{ github.run_number }}
-          REPO_URL: https://github.com/${{ github.repository }}
-          TAG: nightly
-        run: node .github/scripts/prepare-nightly-manifest.mjs
+        run: node scripts/prepare-release-manifest.mjs
 
       - name: Package system zip (system.json at zip root)
         run: |
           test -f dist/system.json
+          test -f dist/LICENSE
           cd dist
           zip -r -9 ../wh40k-rpg.zip .
 
       - name: Publish rolling `nightly` prerelease
+        if: env.CHANNEL == 'nightly'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: nightly
           name: Nightly build (pre-release)
           prerelease: true
+          make_latest: false
           target_commitish: ${{ github.sha }} # re-point the nightly tag at this build
           body: |
             Automated rolling build of `main`. Ephemeral, pre-release. Ships the public generic packs only (no copyrighted content).
             Commit: ${{ github.sha }}
 
             Install in Foundry → Game Systems → Install System → paste Manifest URL:
-            `https://github.com/${{ github.repository }}/releases/download/nightly/system.json`
+            `${{ env.REPO_URL }}/releases/download/nightly/system.json`
+          files: |
+            dist/system.json
+            wh40k-rpg.zip
+
+      - name: Publish versioned release
+        if: env.CHANNEL == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          make_latest: ${{ !contains(github.ref_name, '-') }}
+          generate_release_notes: true
+          body: |
+            Ships system code and the public generic packs only (no copyrighted content).
+
+            Install in Foundry → Game Systems → Install System → paste Manifest URL:
+            `${{ env.REPO_URL }}/releases/latest/download/system.json`
           files: |
             dist/system.json
             wh40k-rpg.zip
