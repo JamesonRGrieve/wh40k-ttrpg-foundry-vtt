@@ -120,26 +120,13 @@ export function calculateAttackSpecialAttackBonuses(rollData: RollData): void {
             rd.specialModifiers['Indirect'] = 10;
             return;
         }
-        if (name === 'Twin-Linked') {
-            rd.specialModifiers['Twin-Linked'] = 20;
-            return;
-        }
         if (name === 'Defensive') {
             rd.specialModifiers['Defensive'] = -10;
-            return;
         }
-        if (name === 'Accurate') {
-            if ((rd.modifiers['aim'] ?? 0) > 0) {
-                rd.specialModifiers['Accurate'] = 10;
-            }
-            return;
-        }
-        if (name === 'Inaccurate') {
-            const aim = rd.modifiers['aim'] ?? 0;
-            if (aim > 0) {
-                rd.specialModifiers['Inaccurate'] = -aim;
-            }
-        }
+        // Accurate / Inaccurate / Twin-Linked are resolved once, data-driven, by
+        // `applyQualityModifiersToRollData` below (which also sees embedded attack-
+        // special items). A second hardcoded copy here drifted from it: Twin-Linked
+        // applied in every mode here but only on single shots there.
     };
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: actionItem.items is untyped in WH40KItemDocument; cast to structural type for attack-special access

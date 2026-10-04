@@ -85,7 +85,7 @@
                                 <i class="fas fa-shield"></i> {{localize "WH40K.SubtletyPanel.Clamped" value=adj.minAbsoluteDelta}}
                             </span>
                         {{else}}
-                            <span data-wh40k-hook="subtlety-adjuster-delta" class="tw-text-[0.85rem] tw-font-bold {{#if (gt adj.delta 0)}}tw-text-success-l20{{else}}tw-text-crimson-l40dh2:tw-text-crimson-light{{/if}}">
+                            <span data-wh40k-hook="subtlety-adjuster-delta" class="tw-text-[0.85rem] tw-font-bold {{#if (gt adj.delta 0)}}tw-text-success-l20{{else}}tw-text-crimson-l40 dh2:tw-text-crimson-light{{/if}}">
                                 {{#if (gt adj.delta 0)}}+{{/if}}{{adj.delta}}
                             </span>
                         {{/if}}

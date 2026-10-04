@@ -435,6 +435,7 @@ export type I18nKey =
     | 'WH40K.Assistance.PlusButton'
     | 'WH40K.Assistance.Tooltip'
     | 'WH40K.Availability.Abundant'
+    | 'WH40K.Availability.AtPlace'
     | 'WH40K.Availability.Average'
     | 'WH40K.Availability.Common'
     | 'WH40K.Availability.ExtRareShort'

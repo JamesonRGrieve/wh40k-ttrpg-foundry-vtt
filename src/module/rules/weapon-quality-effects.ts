@@ -24,6 +24,7 @@
 import type { WeaponQualityDieOpKind, WeaponQualityDieOpPhase } from '../data/item/weapon-quality-mechanics.ts';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KBaseActorDocument, WH40KItemDocument, WH40KItemSystemData } from '../types/global.d.ts';
+import { parseQualityLevel } from '../utils/quality-id.ts';
 import { nonNegInt } from './_num.ts';
 import { getWeaponQualityMechanics } from './weapon-quality-payloads.ts';
 
@@ -41,6 +42,12 @@ type QualityItem = {
         effectiveSpecial?: Set<string>;
     };
 };
+
+/** Righteous Fury triggers on a natural 10 unless a quality widens it. */
+const STANDARD_RF_THRESHOLD = 10;
+
+/** Qualities whose payload (or rating) lowers the Righteous Fury threshold. */
+const RF_THRESHOLD_QUALITIES = ['gauss', 'vengeful'] as const;
 
 type QualityActor = WH40KBaseActorDocument & {
     system: WH40KBaseActorDocument['system'] & {
@@ -102,16 +109,7 @@ export function weaponHasQuality(weapon: QualityItem | null | undefined, quality
     if (!weapon) return false;
 
     const normalizedName = qualityName.toLowerCase();
-
-    // Check effectiveSpecial set (includes craftsmanship-derived qualities)
-    if (weapon.system?.effectiveSpecial?.has(normalizedName) === true) {
-        return true;
-    }
-
-    // Check special set (base qualities)
-    if (weapon.system?.special?.has(normalizedName) === true) {
-        return true;
-    }
+    if (findWeaponQualityId(weapon, normalizedName) !== null) return true;
 
     // Check embedded attackSpecial items
     if (weapon.items !== undefined) {
@@ -123,6 +121,30 @@ export function weaponHasQuality(weapon: QualityItem | null | undefined, quality
     }
 
     return false;
+}
+
+/**
+ * The quality id a weapon carries for `qualityName` — the bare id (`tearing`) or a
+ * rated one (`vengeful-9`, `blast-10+1d10`) whose base id matches — or null.
+ * Checks `effectiveSpecial` (includes craftsmanship-derived qualities) before the
+ * base `special` set. Pack weapons store rated qualities only as rated ids, so an
+ * exact-id lookup alone never matched them.
+ */
+function findWeaponQualityId(weapon: QualityItem, qualityName: string): string | null {
+    for (const ids of [weapon.system?.effectiveSpecial, weapon.system?.special]) {
+        if (ids === undefined) continue;
+        if (ids.has(qualityName)) return qualityName;
+        for (const id of ids) {
+            if (parseQualityLevel(id).baseId === qualityName) return id;
+        }
+    }
+    return null;
+}
+
+/** The fixed rating of a weapon's rated quality (`vengeful-9` → 9), or null when unrated or absent. */
+function weaponQualityLevel(weapon: QualityItem, qualityName: string): number | null {
+    const id = findWeaponQualityId(weapon, qualityName);
+    return id === null ? null : parseQualityLevel(id).level;
 }
 
 /**
@@ -170,19 +192,13 @@ export function calculateQualityAttackModifiers(rollData: WeaponRollData): Quali
         }
     }
 
-    // Twin-linked: +20 BS on single shots (Standard Attack / Called Shot).
-    // The "additional hit on 2+ DoS" half lives in `action-data.ts` since
-    // it manipulates `damageData.additionalHits` rather than the to-hit roll.
+    // Twin-linked: "+20 to hit when fired" (DH2 / RT Armoury) — every firing
+    // mode, not only single shots. The bonus is the quality doc's `attackBonus`.
+    // The "additional hit on 2+ DoS" half lives in `action-data.ts` since it
+    // manipulates `damageData.additionalHits` rather than the to-hit roll.
     if (weaponHasQuality(weapon, 'twin-linked')) {
-        const action = rollData.action;
-        if (action === 'Standard Attack' || action === 'Called Shot') {
-            modifiers['Twin-Linked'] = 20;
-        }
+        modifiers['Twin-Linked'] = getWeaponQualityMechanics('twin-linked')?.attackBonus ?? 0;
     }
-
-    // Defensive: -10 to attack (for attacker using defensive weapon)
-    // Note: This is already handled in attack-specials.mjs line 73-75
-    // Left here for completeness documentation
 
     return modifiers;
 }
@@ -399,21 +415,18 @@ export function weaponIgnoresArmor(weapon: QualityItem | null | undefined, armor
  * @returns {number} RF threshold (standard is 10)
  */
 export function getRighteousFuryThreshold(weapon: QualityItem | null | undefined): number {
-    if (!weapon) return 10; // Standard RF threshold
+    if (!weapon) return STANDARD_RF_THRESHOLD;
 
-    // Gauss: RF on 9-10
-    if (weaponHasQuality(weapon, 'gauss')) {
-        const threshold = getWeaponQualityMechanics('gauss')?.rfThreshold;
-        if (threshold != null) return threshold;
+    // Each RF-widening quality the weapon carries offers a threshold; the most
+    // permissive (lowest) wins. A rated quality's own rating (Vengeful (9)) is its
+    // threshold; an unrated one falls back to the compendium payload's default.
+    let threshold = STANDARD_RF_THRESHOLD;
+    for (const quality of RF_THRESHOLD_QUALITIES) {
+        if (!weaponHasQuality(weapon, quality)) continue;
+        const offered = weaponQualityLevel(weapon, quality) ?? getWeaponQualityMechanics(quality)?.rfThreshold;
+        if (offered != null && offered < threshold) threshold = offered;
     }
-
-    // Vengeful: RF on 8-10 (most permissive, check last)
-    if (weaponHasQuality(weapon, 'vengeful')) {
-        const threshold = getWeaponQualityMechanics('vengeful')?.rfThreshold;
-        if (threshold != null) return threshold;
-    }
-
-    return 10; // Standard RF threshold
+    return threshold;
 }
 
 /**
@@ -613,6 +626,36 @@ export function collectWeaponQualityDieOps(specials: ReadonlyArray<AttackSpecial
         }
     }
     return resolved;
+}
+
+/**
+ * Resolve every die operation for one attack: the roll's attack specials PLUS the
+ * weapon's own quality set (`effectiveSpecial` identifiers such as `tearing`,
+ * `proven-3`, `primitive-7`).
+ *
+ * Compendium weapons carry their qualities ONLY in that identifier set — the
+ * legacy embedded attack-special items that `rollData.attackSpecials` is built
+ * from are absent on them — so collecting from the attack specials alone meant
+ * Tearing, Proven and Primitive never touched a pack weapon's damage. A quality
+ * present on both sides is collected once (the roll's entry wins). Content-
+ * agnostic: which identifiers declare die operations is read from the quality
+ * docs by {@link collectWeaponQualityDieOps}. `weaponQualityIds` is `undefined` for
+ * an action item with no quality set (a psychic power).
+ */
+export function collectAttackDieOps(
+    attackSpecials: ReadonlyArray<AttackSpecialWithLevel>,
+    weaponQualityIds: Iterable<string> | undefined,
+    systemId?: string,
+): ResolvedDieOp[] {
+    const merged: AttackSpecialWithLevel[] = [...attackSpecials];
+    const seen = new Set(attackSpecials.map((special) => weaponQualityIdentifierFromName(special.name)));
+    for (const qualityId of weaponQualityIds ?? []) {
+        const { baseId, level } = parseQualityLevel(qualityId);
+        if (seen.has(baseId)) continue;
+        seen.add(baseId);
+        merged.push(level === null ? { name: baseId } : { name: baseId, level });
+    }
+    return collectWeaponQualityDieOps(merged, systemId);
 }
 
 /**

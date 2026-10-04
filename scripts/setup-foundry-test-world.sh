@@ -99,13 +99,17 @@ if [[ -d "${MODULE_CACHE}" ]]; then
     done
 fi
 
-# Copy seed world (idempotent rsync).
+# Reset the world to the seed on every run. Specs create actors without
+# deleting them, so a world kept across runs accumulates documents from earlier
+# runs — and from earlier builds whose compendium UUIDs this build may not ship
+# (their hydration errors then fail the console guard in unrelated specs).
 SEED_SRC="${SCRIPT_DIR}/tests/e2e/fixtures/seed-world"
 SEED_DST="${WORLDS_DIR}/${SEED_WORLD_NAME}"
 if [[ ! -d "${SEED_SRC}" ]]; then
     echo "[setup-foundry-test-world] seed world ${SEED_SRC} missing" >&2
     exit 4
 fi
+rm -rf "${SEED_DST}"
 mkdir -p "${SEED_DST}"
 cp -r "${SEED_SRC}/." "${SEED_DST}/"
 

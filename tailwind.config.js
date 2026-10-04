@@ -183,6 +183,8 @@ module.exports = {
           'd10': '#17280b',
           'l10': '#447821',
           'l20': '#5aa02c',
+          // Status text on dark panels: ≥4.5:1 on the darkest sheet surfaces (l20 measures 4.4:1 there).
+          'l30': '#64b032',
         },
         failure: {
           DEFAULT: '#6b1010',

@@ -12,6 +12,7 @@ import { coerceInt } from '../../fields/coerce.ts';
 import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../../shared/characteristic-math.ts';
 import { buildCharacteristicFields, CHARACTERISTIC_SHORT_TO_FULL } from '../../shared/characteristics.ts';
 import { clampSize, coerceIntFields, sizeNameToInt } from '../../shared/field-coercion.ts';
+import { COMBAT_MODIFIER_KEYS, type CombatModifierKey } from '../../shared/modifiers-template.ts';
 import { computeMovement, sumMovementModifiers } from '../../shared/movement-math.ts';
 import { asRawSource, type RawSource } from '../../shared/raw-source.ts';
 import { SKILL_DEFINITIONS } from '../../shared/skill-definitions.ts';
@@ -120,6 +121,28 @@ interface ModifierSource {
     value: number;
     label?: string | undefined;
     specialization?: string | undefined;
+}
+
+/**
+ * `ModifierSource.type` of an origin-path entry. Origin-path characteristic bonuses
+ * are baked into `characteristics.*.base` by the Origin Path Builder on commit, so
+ * their entries in `modifierSources.characteristics` are provenance for the
+ * tooltip / roll-dialog breakdown only and must never be summed into the total.
+ */
+const ORIGIN_PATH_SOURCE_TYPE = 'originPath';
+
+/**
+ * One empty provenance bucket per authored `modifiers.combat` key. Spelled out
+ * rather than mapped so the return type checks it exhaustively against
+ * {@link CombatModifierKey}: a key added to the schema fails to compile here.
+ */
+function emptyCombatModifierSources(): Record<CombatModifierKey, ModifierSource[]> {
+    return { attack: [], damage: [], penetration: [], defense: [], initiative: [], speed: [] };
+}
+
+/** Sum the `value` of every source in a provenance bucket. */
+function sumModifierSources(sources: readonly ModifierSource[]): number {
+    return sources.reduce((total, src) => total + (src.value || 0), 0);
 }
 
 /** Extract the compendium-source UUID from a Foundry document, or null. */
@@ -406,13 +429,8 @@ export default class CreatureTemplate extends CommonTemplate {
         /** Bonus-only characteristic modifiers ("+X Bonus" effects, #415). */
         characteristicBonuses: Partial<Record<string, ModifierSource[]>>;
         skills: Partial<Record<string, ModifierSource[]>>;
-        combat: {
-            toHit: ModifierSource[];
-            damage: ModifierSource[];
-            initiative: ModifierSource[];
-            defence: ModifierSource[];
-            [key: string]: ModifierSource[];
-        };
+        /** Keyed exactly as `ModifiersTemplate`'s `modifiers.combat` schema ({@link COMBAT_MODIFIER_KEYS}). */
+        combat: Record<CombatModifierKey, ModifierSource[]> & Partial<Record<string, ModifierSource[]>>;
         wounds: ModifierSource[];
         fate: ModifierSource[];
         movement: ModifierSource[];
@@ -585,12 +603,9 @@ export default class CreatureTemplate extends CommonTemplate {
                 characteristics: new ObjectField({ required: true, initial: {} }),
                 characteristicBonuses: new ObjectField({ required: true, initial: {} }),
                 skills: new ObjectField({ required: true, initial: {} }),
-                combat: new SchemaField({
-                    toHit: new ArrayField(new ObjectField(), { required: true, initial: [] }),
-                    damage: new ArrayField(new ObjectField(), { required: true, initial: [] }),
-                    initiative: new ArrayField(new ObjectField(), { required: true, initial: [] }),
-                    defence: new ArrayField(new ObjectField(), { required: true, initial: [] }),
-                }),
+                combat: new SchemaField(
+                    Object.fromEntries(COMBAT_MODIFIER_KEYS.map((key) => [key, new ArrayField(new ObjectField(), { required: true, initial: [] })])),
+                ),
                 wounds: new ArrayField(new ObjectField(), { required: true, initial: [] }),
                 fate: new ArrayField(new ObjectField(), { required: true, initial: [] }),
                 movement: new ArrayField(new ObjectField(), { required: true, initial: [] }),
@@ -871,14 +886,11 @@ export default class CreatureTemplate extends CommonTemplate {
             characteristics: {},
             characteristicBonuses: {},
             skills: {},
-            combat: {
-                toHit: [], // Matches schema: modifiers.combat.attack / toHit
-                damage: [], // Matches schema: modifiers.combat.damage
-                penetration: [], // Matches schema: modifiers.combat.penetration
-                defence: [], // Matches schema: modifiers.combat.defense / defence
-                initiative: [], // Matches schema: modifiers.combat.initiative
-                speed: [], // Matches schema: modifiers.combat.speed
-            },
+            // One bucket per authored `modifiers.combat` key. `_applyItemModifiers`
+            // drops an unseeded key, so these MUST be the schema's own key names: a
+            // `toHit` / `defence` seed once silently discarded every authored
+            // `attack` / `defense` modifier.
+            combat: emptyCombatModifierSources(),
             wounds: [],
             fate: [],
             movement: [],
@@ -1186,7 +1198,6 @@ export default class CreatureTemplate extends CommonTemplate {
             for (const [combatKey, value] of Object.entries(mods.combat)) {
                 if (typeof value !== 'number') continue;
                 const list = combatSources[combatKey];
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: index signature access on combatSources may return undefined at runtime
                 if (list === undefined) continue;
                 list.push({ ...source, value });
             }
@@ -1347,8 +1358,10 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number}
      */
     _getTotalCharacteristicModifier(charKey: string): number {
+        // Origin-path entries are display-only provenance (already baked into the
+        // base); summing them here applied every origin bonus a second time.
         const sources = this.modifierSources.characteristics[charKey] ?? [];
-        return sources.reduce((total, src) => total + (src.value || 0), 0);
+        return sumModifierSources(sources.filter((src) => src.type !== ORIGIN_PATH_SOURCE_TYPE));
     }
 
     /**
@@ -1359,8 +1372,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number}
      */
     _getTotalCharacteristicBonusModifier(charKey: string): number {
-        const sources = this.modifierSources.characteristicBonuses[charKey] ?? [];
-        return sources.reduce((total, src) => total + (src.value || 0), 0);
+        return sumModifierSources(this.modifierSources.characteristicBonuses[charKey] ?? []);
     }
 
     /**
@@ -1369,8 +1381,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number}
      */
     _getTotalSkillModifier(skillKey: string): number {
-        const sources = this.modifierSources.skills[skillKey] ?? [];
-        return sources.reduce((total, src) => total + (src.value || 0), 0);
+        return sumModifierSources(this.modifierSources.skills[skillKey] ?? []);
     }
 
     /**
@@ -1379,8 +1390,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number}
      */
     _getTotalCombatModifier(combatKey: string): number {
-        const sources = this.modifierSources.combat[combatKey] ?? [];
-        return sources.reduce((total, src) => total + (src.value || 0), 0);
+        return sumModifierSources(this.modifierSources.combat[combatKey] ?? []);
     }
 
     /**
@@ -1446,7 +1456,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
         const originItems = this._originPathItems();
         for (const item of originItems) {
-            const source = { name: item.name, type: 'originPath', id: item.id, uuid: item.uuid, sourceUuid: compendiumSourceUuidOf(item) };
+            const source = { name: item.name, type: ORIGIN_PATH_SOURCE_TYPE, id: item.id, uuid: item.uuid, sourceUuid: compendiumSourceUuidOf(item) };
 
             // Base modifiers from ModifiersTemplate
             const modBlock = item.system.modifiers as ItemModifiersBlock | null | undefined;
@@ -1470,7 +1480,7 @@ export default class CreatureTemplate extends CommonTemplate {
                         this.modifierSources.characteristics[mod.key] = list;
                         list.push({
                             name: `${item.name} (${mod.source ?? ''})`,
-                            type: 'originPath',
+                            type: ORIGIN_PATH_SOURCE_TYPE,
                             id: item.id,
                             value: mod.value,
                         });

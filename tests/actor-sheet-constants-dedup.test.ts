@@ -9,7 +9,8 @@
  *  - the 21-skill list was hard-coded three times in npc-sheet.ts → one
  *    NPC_BASIC_SKILLS list, later replaced by the per-line skill catalog
  *    (SKILL_DEFINITIONS via standardSkillsForSystem): that DH2-only list was
- *    shown on every line's NPC sheet.
+ *    shown on every line's NPC sheet. The sheet reads it as
+ *    `system.standardSkills` from the NPC DataModel.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -60,6 +61,9 @@ describe('npc-sheet constant de-dup (#284, options updated by #257)', () => {
     it('holds no skill list of its own; every projection derives from the per-line catalog', () => {
         expect(NPC).not.toContain('NPC_BASIC_SKILLS');
         expect(NPC).not.toContain("'Sleight of Hand'");
-        expect(countOccurrences(NPC, 'standardSkillsForSystem(')).toBe(2); // skills tab + add-skill picker
+        // The catalog is read through the DataModel (sheets must not import data/):
+        // skills tab + add-skill picker.
+        expect(NPC).not.toContain('skill-definitions');
+        expect(countOccurrences(NPC, 'system.standardSkills')).toBe(2);
     });
 });

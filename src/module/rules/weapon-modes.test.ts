@@ -12,6 +12,7 @@ import {
     modePenetration,
     modeRange,
     modeRateOfFire,
+    modeReload,
     modeWeaponClass,
     type WeaponFiringMode,
 } from './weapon-modes';
@@ -32,6 +33,7 @@ function mode(over: Partial<WeaponFiringMode> = {}): WeaponFiringMode {
         rateOfFire: null,
         singleUse: false,
         clipMax: 0,
+        reload: '',
         ...over,
     };
 }
@@ -102,6 +104,22 @@ describe('weapon firing modes (#430)', () => {
             expect(modeRange(mode({ range: null }), 10)).toBe(10);
             expect(modeRange(mode({ range: 5 }), 10)).toBe(5);
         });
+        it('reload', () => {
+            expect(modeReload(null, 'full')).toBe('full');
+            expect(modeReload(mode({ reload: '' }), 'full')).toBe('full');
+            expect(modeReload(mode({ reload: '2-full' }), 'full')).toBe('2-full');
+        });
+    });
+
+    // DH2 Enemies Without prints the Kroot Rifle with a "Pulse Round" sub-row carrying
+    // its own Dam/Pen/Clip/Rld; it is authored as one mode on the base weapon.
+    it('models a sub-profile row with its own damage, pen, clip and reload', () => {
+        const pulseRound = mode({ label: 'Pulse Round', damage: '1d10+5', damageType: 'energy', penetration: 1, clipMax: 6, reload: '2-full' });
+        const pulse = activeFiringMode([pulseRound], 0);
+        expect(modeDamageFormula(pulse, '1d10+4')).toBe('1d10+5');
+        expect(modeDamageType(pulse, 'impact')).toBe('energy');
+        expect(modePenetration(pulse, 0)).toBe(1);
+        expect(modeReload(pulse, 'full')).toBe('2-full');
     });
 
     it('models the mining melta Focused (5m, overheats) vs Broad (10m, scatter) split', () => {

@@ -273,15 +273,16 @@ async function showChatLog(page: Page): Promise<void> {
     });
 }
 
-test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
-    test('snapshot every dialog class and every chat-card template', async ({ page }, testInfo) => {
-        // ~45 element captures run serially against a live Foundry world.
-        testInfo.setTimeout(scaledMs(420_000));
+// Dialogs and chat cards are separate tests so each has its own budget and
+// fullyParallel can run them on different workers. As one test over ~45
+// captures it ran ~35 min under load and blew its timeout.
+test.describe('screenshot corpus: dialogs + chat cards (Tier B)', () => {
+    test('snapshot every dialog class', async ({ page }, testInfo) => {
+        // ~15 dialog captures against a live Foundry world.
+        testInfo.setTimeout(scaledMs(300_000));
         await joinOrSkip(page);
 
         const failures: string[] = [];
-
-        // ─── DIALOGS ────────────────────────────────────────────────
         const seeds = await createSeeds(page);
         const contrast: Record<string, ContrastViolation[]> = {};
         for (const name of DIALOG_CLASSES) {
@@ -306,8 +307,17 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
         writeContrastReport('tests/e2e/screenshots/dialog/contrast-report.json', contrast);
         await closeAllWindows(page);
         await deleteSeeds(page, seeds);
+        // Collect-then-assert: surface every failure at once for diagnosis.
+        expect(failures, `${failures.length} dialog screenshot probe(s) failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
+    });
 
-        // ─── CHAT TEMPLATES ─────────────────────────────────────────
+    test('snapshot every chat-card template', async ({ page }, testInfo) => {
+        // ~27 chat-card captures against a live Foundry world.
+        testInfo.setTimeout(scaledMs(300_000));
+        await joinOrSkip(page);
+
+        const failures: string[] = [];
+        await clearScreenOverlays(page);
         await showChatLog(page);
         for (const tpl of CHAT_TEMPLATES) {
             recordCoverage('screenshot.dialog-chat.flow', `chat::${tpl}`);
@@ -356,6 +366,6 @@ test.describe.serial('screenshot corpus: dialogs + chat cards (Tier B)', () => {
             }, createdId);
         }
         // Collect-then-assert: surface every failure at once for diagnosis.
-        expect(failures, `${failures.length} screenshot probe(s) failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
+        expect(failures, `${failures.length} chat-card screenshot probe(s) failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 });

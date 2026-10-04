@@ -2,6 +2,16 @@ import { CRAFTSMANSHIP_TIERS, type Craftsmanship } from '../../rules/ow-craftsma
 import { SENSE_KINDS, SENSE_RANGE_SOURCES, type SenseEntry } from '../../rules/token-senses.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
 
+/**
+ * The static `modifiers.combat` keys an item can author. The single source for the
+ * schema below and for the actor-side provenance buckets
+ * (`CreatureTemplate.modifierSources.combat`), which drop any key they were not
+ * seeded with — so the two can never disagree on a spelling again.
+ */
+export const COMBAT_MODIFIER_KEYS = ['attack', 'damage', 'penetration', 'defense', 'initiative', 'speed'] as const;
+/** {@link COMBAT_MODIFIER_KEYS} as a union. */
+export type CombatModifierKey = (typeof COMBAT_MODIFIER_KEYS)[number];
+
 /* -------------------------------------------------------------------------- */
 /*  Dynamic modifier hooks (data-driven, Direction #7)                        */
 /* -------------------------------------------------------------------------- */
@@ -527,7 +537,7 @@ export default class ModifiersTemplate extends SystemDataModel {
     declare modifiers: {
         characteristics: Record<string, number>;
         skills: Record<string, number>;
-        combat: { attack: number; damage: number; penetration: number; defense: number; initiative: number; speed: number };
+        combat: Record<CombatModifierKey, number>;
         resources: { wounds: number; fate: number; insanity: number; corruption: number };
         other: Array<{ key: string; label: string; value: number; mode: string }>;
         situational: {
@@ -552,14 +562,9 @@ export default class ModifiersTemplate extends SystemDataModel {
             modifiers: new fields.SchemaField({
                 characteristics: new fields.ObjectField({ required: true, initial: {} }),
                 skills: new fields.ObjectField({ required: true, initial: {} }),
-                combat: new fields.SchemaField({
-                    attack: new fields.NumberField({ required: false, initial: 0 }),
-                    damage: new fields.NumberField({ required: false, initial: 0 }),
-                    penetration: new fields.NumberField({ required: false, initial: 0 }),
-                    defense: new fields.NumberField({ required: false, initial: 0 }),
-                    initiative: new fields.NumberField({ required: false, initial: 0 }),
-                    speed: new fields.NumberField({ required: false, initial: 0 }),
-                }),
+                combat: new fields.SchemaField(
+                    Object.fromEntries(COMBAT_MODIFIER_KEYS.map((key) => [key, new fields.NumberField({ required: false, initial: 0 })])),
+                ),
                 resources: new fields.SchemaField({
                     wounds: new fields.NumberField({ required: false, initial: 0 }),
                     fate: new fields.NumberField({ required: false, initial: 0 }),

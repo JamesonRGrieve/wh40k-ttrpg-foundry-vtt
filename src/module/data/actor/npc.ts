@@ -22,7 +22,7 @@ import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, comput
 import { buildCharacteristicFields } from '../shared/characteristics.ts';
 import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
 import { computeMovement } from '../shared/movement-math.ts';
-import { skillCharacteristicMap } from '../shared/skill-definitions.ts';
+import { skillCharacteristicMap, standardSkillsForSystem, type StandardSkillEntry } from '../shared/skill-definitions.ts';
 import { computeSkillTarget, untrainedSkillBase } from '../shared/skill-math.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
@@ -44,6 +44,9 @@ import {
 import { mapOriginStepNames, type OriginItemLike } from './origin-step-names.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
+
+/** Skill catalog for a model class registered without a line (DH2 is the canonical default). */
+const DEFAULT_SKILL_CATALOG_SYSTEM = 'dh2';
 
 /**
  * Data model for NPC V2 actors.
@@ -793,6 +796,25 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     }
 
     /**
+     * This line's non-specialist skill catalog (DH1/RT list Concealment and Silent
+     * Move, DH2-family lines Parry and Stealth, …) — what the sheet's basic-skill
+     * grid and its add-skill picker offer.
+     */
+    get standardSkills(): StandardSkillEntry[] {
+        return NPCData.standardSkillsFor((this.constructor as { gameSystem?: string }).gameSystem);
+    }
+
+    /** The non-specialist skill catalog of a model class's line, DH2 for a class registered without one. */
+    static standardSkillsFor(gameSystem: string | undefined): StandardSkillEntry[] {
+        return standardSkillsForSystem(gameSystem ?? DEFAULT_SKILL_CATALOG_SYSTEM);
+    }
+
+    /** The full characteristic key a catalog skill rolls against (`dodge` → `agility`), or null outside the catalog. */
+    skillCharacteristic(skillKey: string): string | null {
+        return NPCData.SKILL_CHARACTERISTIC_MAP[skillKey] ?? null;
+    }
+
+    /**
      * Target number for one specialization row. Mirrors {@link getSkillTarget} but
      * reads the entry's own rank / characteristic / bonus, falling back to the base
      * skill's characteristic when the row does not override it.
@@ -844,7 +866,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * individual skill carries no `characteristic` of its own.
      * @type {Object<string, string>}
      */
-    static SKILL_CHARACTERISTIC_MAP: Record<string, string> = skillCharacteristicMap();
+    static SKILL_CHARACTERISTIC_MAP: Partial<Record<string, string>> = skillCharacteristicMap();
 
     /**
      * Effective rank of a trained-skill entry (#503).

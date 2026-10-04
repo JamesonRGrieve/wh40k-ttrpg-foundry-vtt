@@ -21,12 +21,12 @@
             </div>
             {{/each}}
         </div>
-        <p class="tw-text-center tw-text-[0.75rem] tw-text-[color:rgba(232,220,196,0.5)] tw-mt-2 tw-m-0 tw-italic">{{localize "WH40K.CharacteristicSetup.ClickToEdit"}}</p>
+        <p class="tw-text-center tw-text-[0.75rem] tw-text-[color:rgba(232,220,196,0.7)] tw-mt-2 tw-m-0 tw-italic">{{localize "WH40K.CharacteristicSetup.ClickToEdit"}}</p>
     </section>
 
     {{!-- Characteristics Grid --}}
     <section class="tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)] tw-text-[color:rgba(36,107,131,1)] tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">
+        <h3 class="tw-flex tw-items-center tw-gap-2 tw-m-0 tw-mb-3 tw-pb-2 tw-border-b {{themeClassFor 'border'}} {{themeClassFor 'accent'}} tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">
             <i class="fa-solid fa-user-gear"></i>
             {{localize "WH40K.CharacteristicSetup.Characteristics"}}
         </h3>
@@ -37,7 +37,7 @@
                 <div class="tw-flex-1 tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.15)] tw-to-[rgba(36,107,131,0.05)] tw-border-2 tw-border-[rgba(36,107,131,0.35)] tw-rounded-[var(--wh40k-radius-lg)] tw-p-3 {{#if hasRoll}}tw-border-[rgba(76,175,80,0.5)]{{/if}}"
                      data-characteristic="{{key}}">
                     <div class="tw-flex tw-items-baseline tw-gap-2 tw-mb-2 tw-pb-[0.35rem] tw-border-b tw-border-[rgba(36,107,131,0.2)]">
-                        <span class="tw-text-[1.1rem] tw-font-bold tw-text-[color:rgba(36,107,131,1)]">{{short}}</span>
+                        <span class="tw-text-[1.1rem] tw-font-bold {{themeClassFor 'accent'}}">{{short}}</span>
                         <span class="tw-text-[0.7rem] tw-text-[color:rgba(232,220,196,0.7)] tw-uppercase tw-tracking-[0.03em]">{{label}}</span>
                     </div>
                     <div class="tw-flex tw-items-center tw-justify-center tw-gap-[0.4rem] tw-flex-wrap">
@@ -50,7 +50,7 @@
                             {{else}}
                             <span class="tw-text-[1.1rem] tw-font-semibold tw-text-[color:var(--csd-bone,#e8dcc4)]">{{base}}</span>
                             {{/if}}
-                            <span class="tw-text-[0.55rem] tw-text-[color:rgba(232,220,196,0.5)] tw-uppercase">{{localize "WH40K.CharacteristicSetup.Base"}}</span>
+                            <span class="tw-text-[0.55rem] tw-text-[color:rgba(232,220,196,0.7)] tw-uppercase">{{localize "WH40K.CharacteristicSetup.Base"}}</span>
                         </div>
                         <span class="tw-text-[1rem] tw-font-bold tw-text-[color:rgba(232,220,196,0.6)]">+</span>
                         <div class="tw-w-[45px] tw-h-[40px] tw-flex tw-items-center tw-justify-center">
@@ -89,12 +89,12 @@
             {{localize "WH40K.CharacteristicSetup.AdvancedModeOff"}}
             {{/if}}
         </button>
-        <span class="tw-text-[0.75rem] tw-text-[color:rgba(232,220,196,0.5)] tw-italic">{{localize "WH40K.CharacteristicSetup.AdvancedHint"}}</span>
+        <span class="tw-text-[0.75rem] tw-text-[color:rgba(232,220,196,0.7)] tw-italic">{{localize "WH40K.CharacteristicSetup.AdvancedHint"}}</span>
     </div>
 
     {{!-- Preview Summary --}}
     <section class="tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)] tw-text-[color:rgba(36,107,131,1)] tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">
+        <h3 class="tw-flex tw-items-center tw-gap-2 tw-m-0 tw-mb-3 tw-pb-2 tw-border-b {{themeClassFor 'border'}} {{themeClassFor 'accent'}} tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">
             <i class="fa-solid fa-chart-bar"></i>
             {{localize "WH40K.CharacteristicSetup.Preview"}}
         </h3>

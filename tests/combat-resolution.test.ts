@@ -70,10 +70,9 @@ interface TargetsStub {
 }
 
 /**
- * Minimal deterministic `Roll` stub. `RollData.calculateTotalModifiers` builds
- * a formula like `0 + @difficulty - @modifier` with a params bag; this stub
- * substitutes the params and evaluates the resulting signed integer arithmetic
- * (no dice in the modifier formula).
+ * Minimal deterministic `Roll` stub for the action / damage paths: substitutes
+ * `@key` params and evaluates the resulting signed integer arithmetic (dice-free
+ * formulas only).
  */
 class StubRoll {
     formula: string;
@@ -179,16 +178,25 @@ describe('RollData modifier/formula breakdown (audit)', () => {
         expect(rd.modifiedTarget).toBe(20);
     });
 
-    it('modifiersToRollData builds an auditable signed formula with per-term params', async () => {
+    // Regression: the total used to be summed by a `0 + @key …` Roll formula, which
+    // Foundry cannot resolve for a key outside `[-.\w]`. A talent-named modifier
+    // (`Battle Drill`, `Hatred (Daemons)`) threw inside the Roll and the swallowed
+    // error zeroed the entire total. The sum is now plain arithmetic.
+    it('sums modifiers keyed by multi-word / bracketed source labels, never zeroing the total', async () => {
         const { RollData } = await loadModules();
         const rd = new RollData();
         rd.modifiers['difficulty'] = 10;
-        rd.modifiers['modifier'] = -20;
-        const { formula, params } = rd.modifiersToRollData();
-        expect(formula).toContain('+ @difficulty');
-        expect(formula).toContain('- @modifier');
-        expect(params['difficulty']).toBe(10);
-        expect(params['modifier']).toBe(20);
+        rd.modifiers['Battle Drill'] = 10;
+        rd.modifiers['Hatred (Daemons)'] = 10;
+        rd.modifiers['modifier'] = -5;
+        await rd.calculateTotalModifiers();
+        expect(rd.modifierTotal).toBe(25);
+        expect(rd.modifierSources.map((c) => [c.key, c.value])).toEqual([
+            ['difficulty', 10],
+            ['modifier', -5],
+            ['Battle Drill', 10],
+            ['Hatred (Daemons)', 10],
+        ]);
     });
 });
 
