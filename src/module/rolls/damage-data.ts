@@ -20,11 +20,12 @@ import {
     applyKeepHighestToDie,
     calculateExoticQualityDamageModifiers,
     calculateQualityPenetrationModifiers,
-    collectWeaponQualityDieOps,
+    collectAttackDieOps,
     type DieTermLike,
     getRighteousFuryThreshold,
     resolveDieOpDamageAdjust,
 } from '../rules/weapon-quality-effects.ts';
+import { type ModifierSourcesShape, passiveCombatModifiers } from './passive-modifiers.ts';
 
 /**
  * Minimal interface for the attackData parameter passed to Hit calculation methods.
@@ -40,6 +41,8 @@ interface ActionItemSystem {
     damageType?: string;
     // eslint-disable-next-line no-restricted-syntax -- boundary: penetration field accepts numeric or formula strings from legacy data
     penetration?: unknown;
+    /** The weapon's quality identifiers (`tearing`, `proven-3`, …) — base + craftsmanship + ammo + mode. Absent on powers. */
+    effectiveSpecial?: Iterable<string>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: catch-all for other system fields accessed via string keys at framework boundaries
     [key: string]: unknown;
 }
@@ -64,8 +67,12 @@ export interface AttackDataLike {
             hasTalentFuzzyWords: (words: string | string[], extra?: string) => boolean;
             /** Owned items, walked for data-driven dynamic modifier hooks (Direction #7). */
             items?: Iterable<DynamicModifierItemLike>;
-            /** Active game line, used to resolve the line's critical-injury pack (#439). */
-            system?: { gameSystem?: string };
+            /**
+             * Active game line, used to resolve the line's critical-injury pack (#439);
+             * and the passive-modifier provenance whose `combat.damage` / `.penetration`
+             * entries (Path A) every hit adds.
+             */
+            system?: { gameSystem?: string; modifierSources?: ModifierSourcesShape | undefined };
         };
         /**
          * The declared target. Typed as the tag-derivation surface only (#518) —
@@ -95,6 +102,16 @@ export interface AttackDataLike {
     };
     // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor; kept unknown to avoid circular imports
     damageData?: { targetActor?: unknown };
+}
+
+/**
+ * Add a sourced contribution to a hit's damage / penetration map under its
+ * lower-cased label, summing with any entry already there so two sources sharing a
+ * label never overwrite each other.
+ */
+function addLabelledModifier(map: Partial<Record<string, number>>, label: string, value: number): void {
+    const key = label.toLowerCase();
+    map[key] = (map[key] ?? 0) + value;
 }
 
 /** The acting actor's states for `condition: whileState` — its conditions plus a declared Aim. */
@@ -321,9 +338,14 @@ export class Hit {
     static async createHit(attackData: AttackDataLike, hitNumber: number): Promise<Hit> {
         const hit = new Hit();
         await hit._calculateDamage(attackData);
-        await hit.applyDynamicModifiers(attackData);
-        hit._totalDamage();
+        // Penetration is resolved BEFORE the modifier passes: a penetration hook
+        // that scales off the weapon's penetration (scale source `penetration`) or
+        // multiplies it (`mode: multiply`) reads `this.penetration`, which was
+        // still 0 when the dynamic pass ran ahead of `_calculatePenetration`.
         await hit._calculatePenetration(attackData);
+        await hit.applyDynamicModifiers(attackData);
+        hit.applyPassiveCombatModifiers(attackData);
+        hit._totalDamage();
         hit._totalPenetration();
         hit._calculateSpecials(attackData);
 
@@ -399,10 +421,24 @@ export class Hit {
             // (this.damage / this.penetration); min/max are stat clamps and don't map here.
             const delta = modeDelta(component.mode, isPen ? this.penetration : this.damage, value);
             if (delta === null) continue;
-            const map = isPen ? this.penetrationModifiers : this.modifiers;
-            const key = component.label.toLowerCase();
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: map[key] may be undefined despite Record<string, number> type
-            map[key] = (map[key] ?? 0) + delta;
+            addLabelledModifier(isPen ? this.penetrationModifiers : this.modifiers, component.label, delta);
+        }
+    }
+
+    /**
+     * Add the attacker's always-on `modifiers.combat.damage` / `.penetration`
+     * (Path A — talents, traits, conditions and equipped gear) to this hit, one
+     * sourced entry per item so the damage card names where each point came from.
+     * Recorded by `creature.ts` in `modifierSources.combat`; until this read, no
+     * roll consumed them.
+     */
+    applyPassiveCombatModifiers(attackData: AttackDataLike): void {
+        const sources = attackData.rollData.sourceActor.system?.modifierSources;
+        for (const [label, value] of Object.entries(passiveCombatModifiers(sources, 'damage'))) {
+            addLabelledModifier(this.modifiers, label, value);
+        }
+        for (const [label, value] of Object.entries(passiveCombatModifiers(sources, 'penetration'))) {
+            addLabelledModifier(this.penetrationModifiers, label, value);
         }
     }
 
@@ -466,7 +502,7 @@ export class Hit {
         // Descriptor-driven weapon-quality die operations (#303). Each quality declares
         // its own `dieOps` on its compendium doc (Direction #7) — the engine no longer
         // name-matches Tearing / Proven / Primitive here.
-        const dieOps = collectWeaponQualityDieOps(attackData.rollData.attackSpecials, sourceActor.system?.gameSystem);
+        const dieOps = collectAttackDieOps(attackData.rollData.attackSpecials, actionItem.system.effectiveSpecial, sourceActor.system?.gameSystem);
 
         // Pre-evaluation pass: the dice pool can only be changed while the Roll is
         // still unevaluated, so `keepHighest` (Tearing) is term surgery, not a modifier.
@@ -640,19 +676,17 @@ export class Hit {
             }
         }
 
-        if (actionItem.isMelee) {
-            if (this.penetration && attackData.rollData.hasAttackSpecial('Lance')) {
-                this.penetrationModifiers['lance'] = this.penetration * attackData.rollData.dos;
-            }
-
-            // Razor Sharp Penetration is applied by calculateQualityPenetrationModifiers
-            // below. The old inline branch matched a mis-spelled 'Razer Sharp' quality
-            // that never fired (canonical is 'Razor Sharp') — removed (#303).
-
-            // Hammer Blow Penetration → data-driven via the talent's dynamicModifiers
-            // hook (applied by applyDynamicModifiers). See Direction #7. The separate
-            // Concussive-quality grant it also confers is handled below.
-        } else if (actionItem.isRanged) {
+        // Melee: Lance (Pen × DoS) is applied by calculateQualityPenetrationModifiers
+        // below as the additive delta basePen × (DoS − 1). The old inline branch
+        // added basePen × DoS under 'lance', which then suppressed the collector's
+        // entry — so a Lance hit totalled Pen × (DoS + 1).
+        // Razor Sharp Penetration is likewise applied by that collector. The old
+        // inline branch matched a mis-spelled 'Razer Sharp' quality that never fired
+        // (canonical is 'Razor Sharp') — removed (#303).
+        // Hammer Blow Penetration → data-driven via the talent's dynamicModifiers
+        // hook (applied by applyDynamicModifiers). See Direction #7. The separate
+        // Concussive-quality grant it also confers is handled below.
+        if (actionItem.isRanged && !actionItem.isMelee) {
             if (attackData.rollData.hasAttackSpecial('Maximal')) {
                 this.penetrationModifiers['maximal'] = 2;
             }

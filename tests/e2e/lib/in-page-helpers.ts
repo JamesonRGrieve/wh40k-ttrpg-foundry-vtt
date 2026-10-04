@@ -9,7 +9,7 @@ const WAIT_FOR_POLL_MS = 50;
  * Node-side modules. Installed once per page by {@link installInPageHelpers}; every
  * budget is derived from the Node-side `E2E_TIMEOUT_SCALE` (see timing.ts).
  */
-export interface E2EPageHelpers {
+interface E2EPageHelpers {
     /** Default budget for one in-page operation (scaled 5000 ms). */
     readonly opTimeoutMs: number;
     /** Scale a base budget (ms) by `E2E_TIMEOUT_SCALE`. */

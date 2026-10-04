@@ -14,8 +14,10 @@
                     data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
                     data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
                     title="{{localize 'WH40K.Skills.ViewDetails' skill=entry.[1].label}}">
-                {{!-- Only the name truncates; the characteristic suffix stays whole. --}}
-                <span class="tw-inline-flex tw-items-baseline tw-gap-[var(--wh40k-space-xs)] tw-leading-none tw-font-[var(--wh40k-font-body)] tw-min-w-0"><span class="tw-min-w-0 tw-truncate">{{entry.[1].label}}</span> <span class="tw-shrink-0 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-[var(--wh40k-font-ui)]">({{entry.[1].charShort}})</span></span>
+                {{!-- Only the name yields: a long name ("Sleight of Hand", "Interrogation")
+                     wraps to a second line rather than clipping — at a word or a hyphenated
+                     syllable, never mid-syllable; the characteristic suffix stays whole. --}}
+                <span class="tw-inline-flex tw-items-baseline tw-gap-[var(--wh40k-space-xs)] tw-leading-none tw-font-[var(--wh40k-font-body)] tw-min-w-0"><span class="tw-min-w-0 tw-line-clamp-2 tw-leading-tight tw-hyphens-auto tw-break-words" data-testid="skill-name">{{entry.[1].label}}</span> <span class="tw-shrink-0 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-[var(--wh40k-font-ui)]">({{entry.[1].charShort}})</span></span>
             </button>
             {{!-- tw-shrink-0 (#267): this and the favourite star below are flex children
                  of a `tw-flex-1 tw-min-w-0` box, so without it THEY absorb the squeeze

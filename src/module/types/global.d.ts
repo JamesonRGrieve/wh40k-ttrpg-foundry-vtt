@@ -20,6 +20,7 @@ import type * as dice from '../dice/_module.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import type { EventTracker } from '../managers/event-tracker.ts';
+import type { ModifierSourcesShape } from '../rolls/passive-modifiers.ts';
 import type { RollTableUtils } from '../utils/roll-table-utils.ts';
 
 // =========================================================================
@@ -264,8 +265,8 @@ export type WH40KActorSystemData = ActorDataModel & {
     originPath?: Record<string, unknown>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.rogueTrader` open sub-object (RT-only)
     rogueTrader?: Record<string, unknown>;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.modifierSources` open map (modifier-tracking projection)
-    modifierSources?: Record<string, unknown>;
+    /** Per-bucket passive-modifier provenance written by `CreatureTemplate._applyItemModifiers`. */
+    modifierSources?: ModifierSourcesShape;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.combatActions` (heterogeneous combat-action list)
     combatActions?: unknown[];
     totalFateModifier?: number;

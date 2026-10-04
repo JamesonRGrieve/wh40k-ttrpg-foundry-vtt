@@ -64,12 +64,12 @@ describe('attackSpecials registry', () => {
 });
 
 describe('calculateAttackSpecialAttackBonuses', () => {
-    // Accurate's aim bonus is read through the weaponQuality boot index (#303); the
-    // resolver returns the absent-default (0) until the index is built, so seed the
-    // RAW value (the pack actually carrying aimBonus: 10 is verified in
-    // weapon-quality-effects.test.ts). The other specials here resolve without the index.
+    // Accurate's aim bonus and Twin-Linked's to-hit bonus are read through the
+    // weaponQuality boot index (#303); the resolver returns the absent-default (0)
+    // until the index is built, so seed the RAW values the packs carry (aimBonus 10,
+    // attackBonus 20). The other specials here resolve without the index.
     beforeAll(() => {
-        setWeaponQualityPayloadsForTesting({ accurate: { aimBonus: 10 } });
+        setWeaponQualityPayloadsForTesting({ 'accurate': { aimBonus: 10 }, 'twin-linked': { attackBonus: 20 } });
     });
 
     it('Scatter grants +10 at Point Blank / Short Range only', () => {

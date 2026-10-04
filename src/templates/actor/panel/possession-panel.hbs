@@ -15,7 +15,7 @@
     Rendered only when `system.possession.state !== 'none'`; the call
     site in tab-status.hbs gates the include with `{{#if (neq ...)}}`.
 --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-possession-panel" accentBorderClass="dh2:tw-border-bronze rt:tw-border-amber-700 im:tw-border-failure" accentIconClass="tw-text-crimson-l40dh2:tw-text-crimson-l40rt:tw-text-amber-700 im:tw-text-failure" icon="fa-ghost" label=(localize "WH40K.Possession.Title") rootAttrs=(safeAttrs "data-possession-state" system.possession.state) hasRightSlot=true}}
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-possession-panel" accentBorderClass="dh2:tw-border-bronze rt:tw-border-amber-700 im:tw-border-failure" accentIconClass="tw-text-crimson-l40 dh2:tw-text-crimson-l40 rt:tw-text-amber-700 im:tw-text-failure-l40" icon="fa-ghost" label=(localize "WH40K.Possession.Title") rootAttrs=(safeAttrs "data-possession-state" system.possession.state) hasRightSlot=true}}
     {{!-- Header right slot: state badge --}}
     {{#*inline "rightSlot"}}
         <span class="tw-px-2 tw-py-0.5 tw-rounded tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]

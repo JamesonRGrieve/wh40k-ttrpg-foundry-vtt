@@ -32,33 +32,41 @@ test('a LEAN Superior Chirurgeon (compendiumSource only) applies +20 to Medicae 
         };
         interface ActorProbe {
             createEmbeddedDocuments: (t: string, d: object[]) => Promise<void>;
+            delete: () => Promise<object | undefined>;
             sheet?: { render: (force: boolean) => Promise<void> };
         }
         const fail = (error: string): LeanProbe => ({ baseline: null, withTalent: null, error });
+        // The probe is deleted afterwards: a lean stub left in the worker's world is
+        // re-hydrated by every later spec, and when its compendium source is absent
+        // that join error fails each of them through the console guard.
+        let actor: ActorProbe | null = null;
         try {
-            const actor = await win.Actor.create({
+            const created = await win.Actor.create({
                 name: 'lean-medic probe',
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2', characteristics: { intelligence: { base: 40, advance: 0, modifier: 0 } } },
             });
-            if (actor === null) return fail('Actor.create returned null');
+            if (created === null) return fail('Actor.create returned null');
+            actor = created;
             const readMedicae = (): number => {
-                const v = win.foundry.utils.getProperty(actor, 'system.skills.medicae.current');
+                const v = win.foundry.utils.getProperty(created, 'system.skills.medicae.current');
                 const n = Number(v);
                 return Number.isFinite(n) ? n : Number.NaN;
             };
             const baseline = readMedicae();
             // LEAN stub — compendiumSource + a per-actor cost only, NO system.modifiers.
-            await actor.createEmbeddedDocuments('Item', [
+            await created.createEmbeddedDocuments('Item', [
                 { name: 'Superior Chirurgeon', type: 'talent', _stats: { compendiumSource: uuid }, system: { cost: 200 } },
             ]);
             // Render the sheet: `_prepareContext` runs the in-memory hydration join.
-            await actor.sheet?.render(true);
+            await created.sheet?.render(true);
             // Wait for the hydrated modifier to fold onto the skill (the assertion checks its size).
             await globalThis.wh40kE2E.pollUntil(() => readMedicae() !== baseline);
             return { baseline, withTalent: readMedicae(), error: null };
         } catch (err) {
             return fail(err instanceof Error ? err.message : String(err));
+        } finally {
+            await actor?.delete();
         }
     }, SUPERIOR_CHIRURGEON_UUID);
 

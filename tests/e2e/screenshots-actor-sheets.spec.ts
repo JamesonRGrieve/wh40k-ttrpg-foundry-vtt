@@ -469,7 +469,12 @@ async function toggleEditModeAndMeasure(
     }, actorId);
 }
 
-async function runAllScreenshots(page: Page): Promise<ProbeResult> {
+/** The flow keys of one game system (`<actorType>::<systemId>::<mode>`). */
+function flowsForSystem(systemId: GameSystemId): ScreenshotFlow[] {
+    return SCREENSHOT_ACTOR_FLOWS.filter((key) => key.split('::')[1] === systemId);
+}
+
+async function runSystemScreenshots(page: Page, systemId: GameSystemId): Promise<ProbeResult> {
     const keysFired: Record<string, boolean> = {};
     const keyNotes: Partial<Record<string, string>> = {};
     const boundingBoxes: Partial<Record<string, { x: number; y: number; width: number; height: number } | null>> = {};
@@ -477,14 +482,13 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
     /** The live sheet window for an actor (its app id embeds the actor id). */
     const sheetSelector = (actorId: string): string => `.application[id*="${actorId}"]`;
 
-    for (const key of SCREENSHOT_ACTOR_FLOWS) keysFired[key] = false;
+    for (const key of flowsForSystem(systemId)) keysFired[key] = false;
 
     // Capture the view-mode screenshot for a pair. Returns the probe handle so
     // the caller can chain edit-mode capture, or null when view mode failed
     // (the probe is already cleaned up in that case).
     async function captureViewMode(
         actorType: string,
-        systemId: GameSystemId,
         viewKey: ScreenshotFlow,
         editKey: ScreenshotFlow,
     ): Promise<Awaited<ReturnType<typeof probeActorSheetScreenshot>> | null> {
@@ -526,7 +530,7 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
     }
 
     // Toggle the live sheet into edit mode and capture its screenshot.
-    async function captureEditMode(actorType: string, systemId: GameSystemId, editKey: ScreenshotFlow, recentActorId: string): Promise<void> {
+    async function captureEditMode(actorType: string, editKey: ScreenshotFlow, recentActorId: string): Promise<void> {
         const toggled = await toggleEditModeAndMeasure(page, recentActorId);
         if (toggled.error !== null || !toggled.editToggled) {
             keyNotes[editKey] = toggled.error ?? 'toggleEditMode did not fire';
@@ -549,11 +553,11 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
     }
 
     // Drive ONE (actorType × systemId) pair through view + edit capture.
-    async function capturePair(actorType: string, systemId: GameSystemId): Promise<void> {
+    async function capturePair(actorType: string): Promise<void> {
         const viewKey = `${actorType}::${systemId}::view` as ScreenshotFlow;
         const editKey = `${actorType}::${systemId}::edit` as ScreenshotFlow;
 
-        const probe = await captureViewMode(actorType, systemId, viewKey, editKey);
+        const probe = await captureViewMode(actorType, viewKey, editKey);
         if (probe === null) return;
 
         // Toggle edit mode and re-screenshot. Need the actor id to locate the
@@ -573,7 +577,7 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
         }
 
         try {
-            await captureEditMode(actorType, systemId, editKey, recentActorId);
+            await captureEditMode(actorType, editKey, recentActorId);
         } catch (err) {
             keyNotes[editKey] = `edit screenshot threw: ${String(err instanceof Error ? err.message : String(err))}`;
         } finally {
@@ -581,13 +585,11 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
         }
     }
 
-    for (const systemId of GAME_SYSTEM_IDS) {
-        const types = actorTypesForSystem(systemId);
-        for (const actorType of types) {
-            await capturePair(actorType, systemId);
-        }
+    for (const actorType of actorTypesForSystem(systemId)) {
+        await capturePair(actorType);
     }
-    writeContrastReport(`${SCREENSHOT_DIR}/contrast-report.json`, contrast);
+    // One report per system: the per-system tests run on separate workers.
+    writeContrastReport(`${SCREENSHOT_DIR}/contrast-report.${systemId}.json`, contrast);
 
     return {
         keysFired: keysFired,
@@ -596,29 +598,34 @@ async function runAllScreenshots(page: Page): Promise<ProbeResult> {
     };
 }
 
-test.describe.serial('actor-sheet screenshots (Tier B)', () => {
-    // 58 keys × ~2s per pair (render + 500ms settle + screenshot + edit
-    // + 500ms + screenshot + cleanup) ~= 2 minutes worst case. Allow 5 to
-    // tolerate slow renders on per-system first-touch initialisation.
-    test.setTimeout(scaledMs(300_000));
+// One test per game system, so each gets its own budget and fullyParallel spreads
+// them across workers. As a single test over all 58 keys it ran ~25 min under
+// load and blew its timeout, failing every key at once.
+test.describe('actor-sheet screenshots (Tier B)', () => {
+    // ≤10 keys per system × ~2s per pair (render + settle + screenshot + edit +
+    // screenshot + cleanup); 3 min tolerates slow per-system first-touch init.
+    test.setTimeout(scaledMs(180_000));
 
-    test('every (actorType × gameSystem × {view,edit}) renders and screenshots', async ({ page }) => {
-        await joinOrSkip(page);
+    for (const systemId of GAME_SYSTEM_IDS) {
+        test(`every ${systemId} (actorType × {view,edit}) renders and screenshots`, async ({ page }) => {
+            await joinOrSkip(page);
 
-        const probe = await runAllScreenshots(page);
+            const probe = await runSystemScreenshots(page, systemId);
+            const flows = flowsForSystem(systemId);
 
-        const failures: string[] = [];
-        for (const key of SCREENSHOT_ACTOR_FLOWS) {
-            if (probe.keysFired[key]) {
-                recordCoverage('screenshot.actor.flow', key);
-            } else {
-                const note = probe.keyNotes[key] ?? 'flow did not fire and no diagnostic note recorded';
-                failures.push(`${key}: ${note}`);
+            const failures: string[] = [];
+            for (const key of flows) {
+                if (probe.keysFired[key]) {
+                    recordCoverage('screenshot.actor.flow', key);
+                } else {
+                    const note = probe.keyNotes[key] ?? 'flow did not fire and no diagnostic note recorded';
+                    failures.push(`${key}: ${note}`);
+                }
             }
-        }
 
-        expect(failures, `${failures.length}/${SCREENSHOT_ACTOR_FLOWS.length} actor-sheet screenshot probes failed:\n  - ${failures.join('\n  - ')}`).toEqual(
-            [],
-        );
-    });
+            expect(failures, `${failures.length}/${flows.length} ${systemId} actor-sheet screenshot probes failed:\n  - ${failures.join('\n  - ')}`).toEqual(
+                [],
+            );
+        });
+    }
 });

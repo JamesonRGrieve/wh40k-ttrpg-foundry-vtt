@@ -46,3 +46,14 @@ export function labelFor(map: Record<string, LabelledConfigEntry>, key: string):
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) sees `LabelledConfigEntry`, tsconfig.json (flag on) sees `| undefined` and requires this guard.
     return entry === undefined ? key : game.i18n.localize(entry.label);
 }
+
+/** A rating printed for a named place ("Scarce (Volg)"). */
+export interface PlaceRating {
+    place: string;
+    availability: string;
+}
+
+/** Label each place-qualified rating as "<localized rating> (<place>)", in printed order. */
+export function placeRatingLabels(map: Record<string, LabelledConfigEntry>, entries: readonly PlaceRating[]): string[] {
+    return entries.map(({ place, availability }) => game.i18n.format('WH40K.Availability.AtPlace', { availability: labelFor(map, availability), place }));
+}

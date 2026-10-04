@@ -91,7 +91,7 @@ function makeRoll(items: DynamicModifierItemLike[], targetActor: object | null):
     // eslint-disable-next-line no-restricted-syntax -- test: bypass the config-heavy constructor to exercise one method
     const rd = Object.create(RollData.prototype) as RollData;
     // eslint-disable-next-line no-restricted-syntax -- test: minimal structural stand-in for the acting actor
-    rd.sourceActor = { items, getCharacteristicFuzzy: () => ({ bonus: 4 }) } as unknown as RollData['sourceActor'];
+    rd.sourceActor = { items, system: {}, getCharacteristicFuzzy: () => ({ bonus: 4 }) } as unknown as RollData['sourceActor'];
     // eslint-disable-next-line no-restricted-syntax -- test: minimal structural stand-in for the target actor
     rd.targetActor = targetActor as unknown as RollData['targetActor'];
     rd.modifiers = {};

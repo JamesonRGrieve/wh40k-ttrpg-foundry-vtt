@@ -18,6 +18,7 @@ import {
     modePenetration,
     modeRange,
     modeRateOfFire,
+    modeReload,
     modeWeaponClass,
     type WeaponFiringMode,
 } from '../../rules/weapon-modes.ts';
@@ -97,8 +98,8 @@ const WEAPON_TYPE_CHOICES = [
     'xenos',
 ] as const;
 
-// Valid `reload` choices — keep in sync with the `reload` StringField schema
-// (see defineSchema). Used by #coerceEnums to normalise legacy/typographic values.
+// Valid `reload` choices — the `reload` field's and each firing mode's choices, and
+// what #coerceEnums normalises legacy/typographic values to.
 const WEAPON_RELOAD_CHOICES = ['-', 'free', 'half', 'full', '2-full', '3-full', '4-full', '5-full', '6-full'] as const;
 
 // Loose dictionary used as a structural shape for both pre-migration source data
@@ -407,7 +408,7 @@ export default class WeaponData extends ItemDataModel.mixin(
             reload: new fields.StringField({
                 required: true,
                 initial: '-',
-                choices: ['-', 'free', 'half', 'full', '2-full', '3-full', '4-full', '5-full', '6-full'],
+                choices: [...WEAPON_RELOAD_CHOICES],
             }),
 
             // Jam state (#411). Persisted PER-WEAPON transient runtime state, not
@@ -457,6 +458,8 @@ export default class WeaponData extends ItemDataModel.mixin(
                     // own clip size (0 = share the weapon's clip).
                     singleUse: new fields.BooleanField({ required: false, initial: false }),
                     clipMax: new fields.NumberField({ required: false, initial: 0, min: 0, integer: true }),
+                    // The mode's own reload time ('' inherits the weapon's `reload`).
+                    reload: new fields.StringField({ required: false, blank: true, initial: '', choices: ['', ...WEAPON_RELOAD_CHOICES] }),
                 }),
                 { required: false, initial: [] },
             ),
@@ -1303,8 +1306,18 @@ export default class WeaponData extends ItemDataModel.mixin(
         };
         // Access schema field via the typed helper — at runtime the instance property
         // (schema field) shadows the prototype method, but TS sees the method.
-        const reloadTime = getReloadField(this);
+        const reloadTime = this.activeReload;
         return labels[reloadTime] ?? reloadTime;
+    }
+
+    /**
+     * Reload time of the active firing mode — its own override, else the weapon's
+     * `reload` (a sub-profile such as the Kroot Rifle's Pulse Round prints its own Rld).
+     * @type {string}
+     */
+    get activeReload(): string {
+        // Access schema field via the typed helper — see reloadLabel comment
+        return modeReload(this.activeFiringModeProfile, getReloadField(this));
     }
 
     /**
@@ -1313,8 +1326,7 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @type {string}
      */
     get effectiveReloadTime(): string {
-        // Access schema field via the typed helper — see reloadLabel comment
-        const baseReload = getReloadField(this);
+        const baseReload = this.activeReload;
 
         // Check for Customised quality
         if (!this.effectiveSpecial.has('customised')) {

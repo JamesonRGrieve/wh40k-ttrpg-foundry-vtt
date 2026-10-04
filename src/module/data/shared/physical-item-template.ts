@@ -1,8 +1,16 @@
 import { RENOWN_RANK_ORDER, type RenownRank } from '../../rules/dw-renown.ts';
-import { labelFor } from '../../utils/config-choices.ts';
+import { labelFor, type PlaceRating, placeRatingLabels } from '../../utils/config-choices.ts';
 import { inferActiveGameLine } from '../../utils/item-variant-utils.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
+
+/** Availability rating keys: the configured ratings, or the full RAW list before CONFIG is ready. */
+function availabilityChoices(): string[] {
+    const keys = Object.keys(CONFIG.wh40k.availabilities);
+    return keys.length > 0
+        ? keys
+        : ['ubiquitous', 'abundant', 'plentiful', 'common', 'average', 'scarce', 'rare', 'very-rare', 'extremely-rare', 'near-unique', 'unique', 'uncommon'];
+}
 
 /**
  * Template for physical items with weight and availability.
@@ -12,6 +20,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     // Typed property declarations matching defineSchema()
     declare weight: number;
     declare availability: string;
+    declare availabilityByPlace: PlaceRating[];
     declare craftsmanship: string;
     declare renown: RenownRank | null;
     declare quantity: number;
@@ -62,29 +71,21 @@ export default class PhysicalItemTemplate extends SystemDataModel {
                 initial: 0,
                 min: 0,
             }),
+            // The general rating — for a place-qualified print, the "elsewhere" value.
             availability: new fields.StringField({
                 required: true,
                 initial: 'common',
-                choices: () => {
-                    const keys = Object.keys(CONFIG.wh40k.availabilities);
-                    return keys.length > 0
-                        ? keys
-                        : [
-                              'ubiquitous',
-                              'abundant',
-                              'plentiful',
-                              'common',
-                              'average',
-                              'scarce',
-                              'rare',
-                              'very-rare',
-                              'extremely-rare',
-                              'near-unique',
-                              'unique',
-                              'uncommon',
-                          ];
-                },
+                choices: availabilityChoices,
             }),
+            // Ratings a book prints for named places ("Scarce (Volg) or Very Rare
+            // (elsewhere)"); `availability` above stays the general value.
+            availabilityByPlace: new fields.ArrayField(
+                new fields.SchemaField({
+                    place: new fields.StringField({ required: true, blank: false }),
+                    availability: new fields.StringField({ required: true, initial: 'common', choices: availabilityChoices }),
+                }),
+                { required: false, initial: [] },
+            ),
             craftsmanship: new fields.StringField({
                 required: true,
                 initial: 'common',
@@ -358,6 +359,14 @@ export default class PhysicalItemTemplate extends SystemDataModel {
         return labelFor(CONFIG.wh40k.availabilities, this.availability);
     }
 
+    /**
+     * Localized place-qualified ratings, e.g. "Scarce (Volg)".
+     * @type {string[]}
+     */
+    get availabilityByPlaceLabels(): string[] {
+        return placeRatingLabels(CONFIG.wh40k.availabilities, this.availabilityByPlace);
+    }
+
     /* -------------------------------------------- */
 
     /**
@@ -378,6 +387,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
         const props: string[] = [];
         if (this.weight) props.push(`${this.weight} kg`);
         if (this.availability) props.push(this.availabilityLabel);
+        props.push(...this.availabilityByPlaceLabels);
         if (this.craftsmanship && this.craftsmanship !== 'common') {
             props.push(this.craftsmanshipLabel);
         }

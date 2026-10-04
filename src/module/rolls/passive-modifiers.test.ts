@@ -16,7 +16,8 @@ import { type ModifierSourcesShape, selectPassiveModifierRows } from './passive-
 const superiorChirurgeon: ModifierSourcesShape = {
     skills: { medicae: [{ name: 'Superior Chirurgeon', type: 'talent', value: 20 }] },
     characteristics: { intelligence: [{ name: 'Unnatural Intelligence', type: 'trait', value: 10 }] },
-    combat: { toHit: [{ name: 'Deadeye Shot', type: 'talent', value: 10 }] },
+    // Keyed by the schema's own combat key (`attack`), as creature.ts now seeds it.
+    combat: { attack: [{ name: 'Deadeye Shot', type: 'talent', value: 10 }] },
 };
 
 describe('selectPassiveModifierRows (#484 read-only passive display)', () => {
@@ -31,7 +32,7 @@ describe('selectPassiveModifierRows (#484 read-only passive display)', () => {
     });
 
     it('reads the combat bucket for a non-skill / non-characteristic (attack) roll', () => {
-        const rows = selectPassiveModifierRows('Attack', 'toHit', superiorChirurgeon);
+        const rows = selectPassiveModifierRows('Attack', 'attack', superiorChirurgeon);
         expect(rows).toEqual([{ label: 'Deadeye Shot', value: 10, valueLabel: '–', type: 'talent' }]);
     });
 

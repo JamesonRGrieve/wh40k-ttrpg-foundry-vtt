@@ -38,6 +38,28 @@ export interface PassiveModifierRow {
     type: string;
 }
 
+/**
+ * The always-on `modifiers.combat.<key>` contributions (Path A) as a roll modifier
+ * map, one entry per contributing item keyed by its name, so each lands on the roll
+ * card as its own sourced row rather than an unexplained total. Unlike the
+ * characteristic / skill buckets, combat modifiers (to-hit, damage, penetration) are
+ * NOT baked into any base value the roll starts from, so the roll must add them —
+ * this is the read the roll / damage paths use to do so. Two entries sharing a name
+ * are summed rather than one overwriting the other; zero-valued entries are dropped.
+ *
+ * @param sources  the actor's `system.modifierSources`, or `undefined`.
+ * @param key      the combat key (`'attack'` / `'damage'` / `'penetration'`).
+ */
+export function passiveCombatModifiers(sources: ModifierSourcesShape | undefined, key: string): Record<string, number> {
+    const totals: Record<string, number> = {};
+    for (const entry of sources?.combat?.[key] ?? []) {
+        if (typeof entry.value !== 'number' || entry.value === 0) continue;
+        const label = entry.name ?? key;
+        totals[label] = (totals[label] ?? 0) + entry.value;
+    }
+    return totals;
+}
+
 /** The `modifierSources` bucket a roll of the given `type` reads from. */
 function bucketForType(type: string, sources: ModifierSourcesShape): Record<string, PassiveModifierEntry[] | undefined> | undefined {
     if (type === 'Skill') return sources.skills;

@@ -130,7 +130,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
         type TourBaseCtor = new (...args: never[]) => object;
         interface FoundryGlobal {
             Actor?: { create?: (data: object) => Promise<ProbeActor | null> };
-            game?: { actors?: ActorsCollection; tours?: ToursCollection };
+            game?: { actors?: ActorsCollection; tours?: ToursCollection; i18n?: { localize: (key: string) => string } };
             ui?: ProbeWindowRecord;
             foundry?: { nue?: { Tour?: TourBaseCtor } };
         }
@@ -634,7 +634,9 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                     }
                     const Mixed = CollapsiblePanelMixin(StubBase);
                     const scopeOk = Mixed.PANEL_FLAG_SCOPE === 'wh40k-rpg.panels';
-                    const presetsOk = typeof Mixed.PANEL_PRESETS?.combat === 'object' && Mixed.PANEL_PRESETS.combat.label === 'Combat Mode';
+                    // The preset label is a langpack key (Direction #6) that localizes to the player-facing name.
+                    const combatLabel = Mixed.PANEL_PRESETS?.combat?.label ?? '';
+                    const presetsOk = foundryGame?.i18n?.localize(combatLabel) === 'Combat Mode';
                     const inst = new Mixed();
                     await withTimeout(inst.togglePanel('weapons', false), 'togglePanel(weapons,false)');
                     await withTimeout(inst.collapseAllPanels(), 'collapseAllPanels');

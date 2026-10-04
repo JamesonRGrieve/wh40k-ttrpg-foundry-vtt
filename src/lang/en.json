@@ -2307,10 +2307,10 @@
             },
             "EffectCreation": {
                 "Awareness": "Awareness",
-            "Stealth": "Stealth",
-            "AttackRolls": "Attack Rolls",
-            "Defense": "Defense",
-            "QuickApplyCondition": "Quick Apply Condition",
+                "Stealth": "Stealth",
+                "AttackRolls": "Attack Rolls",
+                "Defense": "Defense",
+                "QuickApplyCondition": "Quick Apply Condition",
                 "DurationRounds": "Duration (Rounds)",
                 "PermanentPlaceholder": "Leave blank for permanent",
                 "PermanentHint": "Leave blank for permanent effect",
@@ -2351,7 +2351,7 @@
                 "KeyPlaceholder": "Key (e.g., movement)",
                 "LabelPlaceholder": "Label",
                 "DefenseBonus": "Defense Bonus",
-            "ModeAdd": "Add",
+                "ModeAdd": "Add",
                 "ModeMultiply": "Multiply",
                 "ModeOverride": "Override",
                 "Situational": "Situational",
@@ -4683,7 +4683,8 @@
             "ExtremelyRare": "Extremely Rare",
             "NearUnique": "Near Unique",
             "Unique": "Unique",
-            "Uncommon": "Uncommon"
+            "Uncommon": "Uncommon",
+            "AtPlace": "{availability} ({place})"
         },
         "Currency": {
             "ThroneGelt": "Throne Gelt",
@@ -7097,9 +7098,9 @@
             },
             "RegimentDrawback": {
                 "PenaltyWounds": "wounds: {value}",
-            "PenaltyLogistics": "logistics: {value}",
-            "PenaltyKit": "kit: {value}",
-            "Label": "Regimental Drawback",
+                "PenaltyLogistics": "logistics: {value}",
+                "PenaltyKit": "kit: {value}",
+                "Label": "Regimental Drawback",
                 "Refund": "Refund",
                 "Penalty": "Penalty",
                 "Mixed": {

@@ -29,6 +29,7 @@
         {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
             label=(localize "WH40K.Voidcraft.Build.Stat.Morale")
             boxClass="wh40k-morale-box"
+            readonly=true
             valueName="system.crew.morale.value"
             value=source.crew.morale.value
             maxName="system.crew.morale.max"
@@ -37,12 +38,14 @@
             label=(localize "WH40K.Voidcraft.Crew.Population")
             boxClass="wh40k-pop-box"
             singleClass="wh40k-stat-single"
+            readonly=true
             valueName="system.crew.population"
             value=source.crew.population}}
         {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
             label=(localize "WH40K.Voidcraft.Build.Stat.CrewRating")
             boxClass="wh40k-crew-box"
             singleClass="wh40k-stat-single"
+            readonly=true
             valueName="system.crew.crewRating"
             value=source.crew.crewRating}}
     </div>

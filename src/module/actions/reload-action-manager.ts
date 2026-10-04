@@ -19,7 +19,7 @@ interface AmmunitionDataWithQuantity extends AmmunitionData {
     quantity?: number;
 }
 
-type ReloadWeaponSystem = WeaponData & { reload: string };
+type ReloadWeaponSystem = WeaponData;
 
 /**
  * Action cost object with half/full counts
@@ -269,8 +269,8 @@ export class ReloadActionManager {
             }
             message += ` — ${reloadCost.label}`;
 
-            if (this.hasCustomisedQuality(weapon) && effectiveReloadTime !== system.reload) {
-                message += ` ${game.i18n.format('WH40K.Reload.CustomisedSuffix', { from: system.reload, to: effectiveReloadTime })}`;
+            if (this.hasCustomisedQuality(weapon) && effectiveReloadTime !== system.activeReload) {
+                message += ` ${game.i18n.format('WH40K.Reload.CustomisedSuffix', { from: system.activeReload, to: effectiveReloadTime })}`;
             }
 
             return {
@@ -299,25 +299,8 @@ export class ReloadActionManager {
      * @returns Effective reload time
      */
     static getEffectiveReloadTime(weapon: WH40KItem): string {
-        const system = this.getWeaponSystem(weapon);
-        const baseReload = system.reload;
-
-        // Check for Customised quality
-        if (!this.hasCustomisedQuality(weapon)) {
-            return baseReload;
-        }
-
-        // Customised halves reload time
-        const reloadMap: Record<string, string> = {
-            '3-full': '2-full',
-            '2-full': 'full',
-            'full': 'half',
-            'half': 'half', // Already minimum (can't halve further)
-            'free': 'free',
-            '-': '-',
-        };
-
-        return reloadMap[baseReload] ?? baseReload;
+        // The weapon model owns the active mode's reload and the Customised halving.
+        return this.getWeaponSystem(weapon).effectiveReloadTime;
     }
 
     /**
@@ -417,7 +400,7 @@ export class ReloadActionManager {
             weapon: weapon,
             result: result,
             effectiveReloadTime: this.getEffectiveReloadTime(weapon),
-            baseReloadTime: system.reload,
+            baseReloadTime: system.activeReload,
             hasCustomised: this.hasCustomisedQuality(weapon),
             clipCurrent: system.clip.value,
             clipMax: system.effectiveClipMax,

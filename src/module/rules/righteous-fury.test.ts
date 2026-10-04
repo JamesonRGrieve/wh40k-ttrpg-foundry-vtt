@@ -41,6 +41,29 @@ describe('Righteous Fury threshold', () => {
         expect(getRighteousFuryThreshold(weapon as Parameters<typeof getRighteousFuryThreshold>[0])).toBe(8);
     });
 
+    // Pack weapons store a rated quality only as its rated id (`vengeful-9`). An
+    // exact-id lookup never matched it, so those weapons kept the standard 10.
+    it("uses a rated Vengeful (X) weapon's own rating as its threshold", () => {
+        const weapon = { system: { special: new Set(['vengeful-9']) } };
+        expect(getRighteousFuryThreshold(weapon as Parameters<typeof getRighteousFuryThreshold>[0])).toBe(9);
+    });
+
+    it('matches a rated quality in effectiveSpecial too', () => {
+        const weapon = { system: { special: new Set<string>(), effectiveSpecial: new Set(['vengeful-7']) } };
+        expect(getRighteousFuryThreshold(weapon as Parameters<typeof getRighteousFuryThreshold>[0])).toBe(7);
+    });
+
+    // Gauss returned before Vengeful was checked, so a weapon with both stopped at 9.
+    it('takes the most permissive threshold when a weapon has several', () => {
+        const weapon = { system: { special: new Set(['gauss', 'vengeful']) } };
+        expect(getRighteousFuryThreshold(weapon as Parameters<typeof getRighteousFuryThreshold>[0])).toBe(8);
+    });
+
+    it('does not match a quality whose id merely starts with the name', () => {
+        const weapon = { system: { special: new Set(['vengefulness']) } };
+        expect(getRighteousFuryThreshold(weapon as Parameters<typeof getRighteousFuryThreshold>[0])).toBe(10);
+    });
+
     it('checkRighteousFury fires on natural 10 for a standard weapon', () => {
         const weapon = { system: { special: new Set<string>() } };
         expect(checkRighteousFury(weapon as Parameters<typeof checkRighteousFury>[0], 10)).toBe(true);

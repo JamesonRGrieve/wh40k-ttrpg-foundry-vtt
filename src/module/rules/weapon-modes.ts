@@ -59,6 +59,11 @@ export interface WeaponFiringMode {
     singleUse: boolean;
     /** This mode's clip size (0 = share the weapon's clip). A single-use secondary is 1. */
     clipMax: number;
+    /**
+     * Reload-time override (a reload choice such as `2-full`), or '' to inherit — a
+     * sub-profile printed with its own Rld (Kroot Rifle "Pulse Round": 2 Full).
+     */
+    reload: string;
 }
 
 /** Whether the given mode is a spent-after-one-shot secondary (combi). */
@@ -93,6 +98,11 @@ export function applyModeQualities(qualities: Set<string>, mode: WeaponFiringMod
 /** The active mode's damage formula, or `fallback` when the mode does not override it. */
 export function modeDamageFormula(mode: WeaponFiringMode | null, fallback: string): string {
     return mode !== null && mode.damage !== '' ? mode.damage : fallback;
+}
+
+/** The active mode's reload time, or `fallback` when the mode does not override it. */
+export function modeReload(mode: WeaponFiringMode | null, fallback: string): string {
+    return mode !== null && mode.reload !== '' ? mode.reload : fallback;
 }
 
 /** The active mode's damage type, or `fallback` when the mode does not override it. */

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import WH40K from '../config.ts';
-import { choicesFrom, choicesRecordFrom, labelFor } from './config-choices.ts';
+import { choicesFrom, choicesRecordFrom, labelFor, placeRatingLabels } from './config-choices.ts';
 
 /**
  * `choicesFrom` / `choicesRecordFrom` derive UI choice lists from a CONFIG map,
@@ -86,5 +86,29 @@ describe('labelFor', () => {
         vi.stubGlobal('game', { i18n: { localize: (key: string): string => `loc:${key}` } });
         expect(labelFor(WH40K.availabilities, 'uncommon')).toBe('loc:WH40K.Availability.Uncommon');
         expect(WH40K.availabilities).toHaveProperty('uncommon.modifier', null);
+    });
+});
+
+describe('placeRatingLabels', () => {
+    // DH1 Inquisitor's Handbook prints Gloom Eyes "Scarce (Volg) or Very Rare
+    // (elsewhere)": `availabilityByPlace` holds the place-qualified ratings while
+    // `availability` stays the general one.
+    it('labels each place with its own localized rating, in printed order', () => {
+        vi.stubGlobal('game', {
+            i18n: {
+                localize: (key: string): string => `loc:${key.split('.').pop() ?? key}`,
+                format: (key: string, data: Record<string, string>): string => `${key}[${data['availability'] ?? ''}|${data['place'] ?? ''}]`,
+            },
+        });
+        expect(
+            placeRatingLabels(WH40K.availabilities, [
+                { place: 'Volg', availability: 'scarce' },
+                { place: 'War Moons of Talax', availability: 'rare' },
+            ]),
+        ).toEqual(['WH40K.Availability.AtPlace[loc:Scarce|Volg]', 'WH40K.Availability.AtPlace[loc:Rare|War Moons of Talax]']);
+    });
+
+    it('labels nothing when no place-qualified rating is printed', () => {
+        expect(placeRatingLabels(WH40K.availabilities, [])).toEqual([]);
     });
 });

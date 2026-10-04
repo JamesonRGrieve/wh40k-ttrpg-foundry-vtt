@@ -27,7 +27,7 @@ import { test } from './lib/test';
  *   - `roll-data.ts` — `clampModifierToCap()` (+ `ROLL_MODIFIER_CAP`),
  *     `RollData` constructor + `modifiedTarget` / `activeModifiers`
  *     getters + `hasAttackSpecial` / `getAttackSpecial` +
- *     `modifiersToRollData` + `calculateTotalModifiers`, and the
+ *     `calculateTotalModifiers` (incl. multi-word modifier keys), and the
  *     `WeaponRollData` / `PsychicRollData` constructors (template wiring).
  *   - `action-data.ts` — `ActionData` constructor + `addEffect` /
  *     `createEffectData` (effect-name switch) + the
@@ -62,7 +62,7 @@ const ROLLS_BUILDER_FLOWS = [
     'roll-data-modified-target-getter',
     'roll-data-active-modifiers-getter',
     'roll-data-attack-special-lookup',
-    'roll-data-modifiers-to-rolldata',
+    'roll-data-multiword-modifier-key',
     'roll-data-calculate-total-modifiers',
     'roll-data-weapon-subclass-template',
     'roll-data-psychic-subclass-template',
@@ -111,7 +111,6 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[] }
             readonly activeModifiers: Record<string, number | undefined>;
             hasAttackSpecial: (name: string) => boolean;
             getAttackSpecial: (name: string) => { name: string } | undefined;
-            modifiersToRollData: () => { formula: string; params: Record<string, number | undefined> };
             calculateTotalModifiers: () => Promise<void>;
         }
         interface WeaponRollDataInstance extends RollDataInstance {
@@ -384,20 +383,16 @@ async function probeRollsBuilders(page: Page): Promise<{ results: FlowResult[] }
                 }
 
                 try {
+                    // Modifier keys are provenance labels and may hold spaces/parentheses.
+                    // The old `@key` Roll-formula sum threw on them and the swallowed
+                    // error zeroed the WHOLE total; the total is now a plain sum.
                     const rd = new RollData();
-                    rd.modifiers = { difficulty: -10, modifier: 20, aim: 0 };
-                    const { formula, params } = rd.modifiersToRollData();
-                    // -10 → "- @difficulty" with param 10; +20 → "+ @modifier" with
-                    // param 20; 0-valued aim is omitted.
-                    const ok =
-                        formula.includes('- @difficulty') &&
-                        formula.includes('+ @modifier') &&
-                        params.difficulty === 10 &&
-                        params.modifier === 20 &&
-                        params.aim === undefined;
-                    record('roll-data-modifiers-to-rolldata', ok, `formula="${formula}" params=${JSON.stringify(params)}`);
+                    rd.modifiers = { 'difficulty': -10, 'modifier': 0, 'aim': 0, 'Battle Drill': 10, 'Hatred (Daemons)': 10 };
+                    await rd.calculateTotalModifiers();
+                    const ok = rd.modifierTotal === 10 && rd.rawModifierTotal === 10;
+                    record('roll-data-multiword-modifier-key', ok, `total=${rd.modifierTotal} raw=${rd.rawModifierTotal}`);
                 } catch (err) {
-                    record('roll-data-modifiers-to-rolldata', false, err instanceof Error ? err.message : String(err));
+                    record('roll-data-multiword-modifier-key', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {

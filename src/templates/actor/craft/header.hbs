@@ -28,26 +28,25 @@
         </select>
     </div>
 
-    {{!-- Quick Stats --}}
+    {{!-- Quick Stats. Integrity is edited here (no tab owns it); front armour and
+         size are read-only summaries — their inputs live on the Combat / Overview
+         tabs, and a second input of the same name makes the form submit an array
+         that fails schema validation on every save. --}}
     <div class="tw-w-full tw-flex tw-flex-col tw-gap-2 tw-mt-1">
-        <div class="tw-flex tw-items-center tw-justify-between tw-px-1">
+        <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-1">
             <span class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.Integrity"}}</span>
-            <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--color-text-primary)]">
+            <span class="tw-shrink-0 tw-whitespace-nowrap tw-font-bold tw-tabular-nums tw-text-[color:var(--color-text-primary)]">
                 <input type="number" name="system.integrity.value" value="{{source.integrity.value}}" min="0" class="tw-w-8 tw-text-center tw-bg-transparent tw-border-0 tw-font-bold tw-text-[color:var(--color-text-primary)] focus:tw-outline-none" />
                 / {{source.integrity.max}}
             </span>
         </div>
         <div class="tw-flex tw-items-center tw-justify-between tw-px-1">
             <span class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.ArmourFront"}}</span>
-            <input type="number" name="system.armour.front.value" value="{{source.armour.front.value}}" min="0" class="tw-w-8 tw-text-center tw-bg-transparent tw-border-0 tw-font-bold tw-text-[color:var(--color-text-primary)] focus:tw-outline-none" />
+            <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--color-text-primary)]">{{source.armour.front.value}}</span>
         </div>
         <div class="tw-flex tw-items-center tw-justify-between tw-px-1">
             <span class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.Size"}}</span>
-            {{#if inEditMode}}
-            <input type="number" name="system.size" value="{{source.size}}" min="1" max="10" class="tw-w-8 tw-text-center tw-bg-transparent tw-border-0 tw-font-bold tw-text-[color:var(--color-text-primary)] focus:tw-outline-none" />
-            {{else}}
             <span class="tw-font-bold tw-text-[color:var(--color-text-primary)]">{{system.sizeLabel}}</span>
-            {{/if}}
         </div>
     </div>
 </div>

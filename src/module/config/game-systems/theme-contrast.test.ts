@@ -54,3 +54,15 @@ describe('per-system accent text contrast', () => {
         }
     });
 });
+
+describe('status text contrast on dark panels', () => {
+    // #262c21 is the measured backdrop of the starship's green-tinted power/space
+    // status boxes, where success-l20 (#5aa02c) read 4.4:1.
+    const STATUS_SURFACES = [...DARK_SURFACES, '#262c21'] as const;
+    it.each(['success-l30', 'crimson-l40'])('%s clears WCAG AA on dark status surfaces', (token) => {
+        const hex = resolveToken(token);
+        for (const surface of STATUS_SURFACES) {
+            expect(contrast(hex, surface), `${token} ${hex} on ${surface}`).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        }
+    });
+});

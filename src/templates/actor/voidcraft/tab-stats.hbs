@@ -2,7 +2,8 @@
      same dark-theme chrome as the craft/vehicle overview). It used to carry its
      own light-parchment rows (`tw-bg-white/60` with dark-gold labels), which
      rendered as grey bars with ~2:1 label contrast on the dark sheet. --}}
-<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+{{!-- Top accent rule in the line's theme colour, as on the character overview. --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-border-0 tw-border-t-2 tw-border-solid {{themeClassFor 'border'}}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-crosshairs" label=(localize "WH40K.Voidcraft.Combat.Header") bodyClass="tw-p-4 tw-flex tw-flex-col tw-gap-3"}}
         <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
             <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1.5 tw-rounded-md tw-border tw-border-solid tw-border-[#2a4a6a] tw-bg-[linear-gradient(180deg,#4a6b8a_0%,#3a5a7a_100%)] tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer" data-action="rollInitiative" title="{{localize 'WH40K.Voidcraft.Combat.RollInitiative'}}">
@@ -30,15 +31,15 @@
         {{!-- Power / Space status: available vs (used / total); red when short. --}}
         <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-2">
             <div class="tw-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-solid {{#if system.hasPowerShortage}}tw-bg-[rgba(180,40,40,0.15)] tw-border-[rgba(220,80,80,0.45)]{{else}}tw-bg-[rgba(60,140,80,0.12)] tw-border-[rgba(90,160,44,0.4)]{{/if}}">
-                <span class="material-icons tw-text-[1.3em] {{#if system.hasPowerShortage}}tw-text-crimson-l40{{else}}tw-text-success-l20{{/if}}">bolt</span>
+                <span class="material-icons tw-text-[1.3em] {{#if system.hasPowerShortage}}tw-text-crimson-l40{{else}}tw-text-success-l30{{/if}}">bolt</span>
                 <span class="tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--color-text-primary)]">{{localize "WH40K.Voidcraft.Resources.Power"}}</span>
-                <span class="tw-ml-auto tw-text-[1.2em] tw-font-bold tw-tabular-nums {{#if system.hasPowerShortage}}tw-text-crimson-l40{{else}}tw-text-success-l20{{/if}}">{{system.power.available}}</span>
+                <span class="tw-ml-auto tw-text-[1.2em] tw-font-bold tw-tabular-nums {{#if system.hasPowerShortage}}tw-text-crimson-l40{{else}}tw-text-success-l30{{/if}}">{{system.power.available}}</span>
                 <span class="tw-text-[0.75rem] tw-tabular-nums tw-text-[color:var(--wh40k-text-muted)]">({{system.power.used}} / {{system.power.total}})</span>
             </div>
             <div class="tw-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-solid {{#if system.hasSpaceShortage}}tw-bg-[rgba(180,40,40,0.15)] tw-border-[rgba(220,80,80,0.45)]{{else}}tw-bg-[rgba(60,140,80,0.12)] tw-border-[rgba(90,160,44,0.4)]{{/if}}">
-                <span class="material-icons tw-text-[1.3em] {{#if system.hasSpaceShortage}}tw-text-crimson-l40{{else}}tw-text-success-l20{{/if}}">warehouse</span>
+                <span class="material-icons tw-text-[1.3em] {{#if system.hasSpaceShortage}}tw-text-crimson-l40{{else}}tw-text-success-l30{{/if}}">warehouse</span>
                 <span class="tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--color-text-primary)]">{{localize "WH40K.Voidcraft.Resources.Space"}}</span>
-                <span class="tw-ml-auto tw-text-[1.2em] tw-font-bold tw-tabular-nums {{#if system.hasSpaceShortage}}tw-text-crimson-l40{{else}}tw-text-success-l20{{/if}}">{{system.space.available}}</span>
+                <span class="tw-ml-auto tw-text-[1.2em] tw-font-bold tw-tabular-nums {{#if system.hasSpaceShortage}}tw-text-crimson-l40{{else}}tw-text-success-l30{{/if}}">{{system.space.available}}</span>
                 <span class="tw-text-[0.75rem] tw-tabular-nums tw-text-[color:var(--wh40k-text-muted)]">({{system.space.used}} / {{system.space.total}})</span>
             </div>
         </div>

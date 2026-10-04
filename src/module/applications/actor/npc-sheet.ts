@@ -7,9 +7,7 @@
  */
 
 import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
-import { SKILL_DEFINITIONS, standardSkillsForSystem } from '../../data/shared/skill-definitions.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
-import { characteristicFromAbbrev } from '../../helpers/characteristic-labels.ts';
 import { hasDaemonic } from '../../rules/daemonic-immunities.ts';
 import { getInteractionCap } from '../../rules/disposition.ts';
 import { resolveSenses, senseBearersOf, tokenSensesUpdate } from '../../rules/token-senses.ts';
@@ -55,17 +53,14 @@ const npcNatureOptions = (): Record<string, string> => ({
 });
 
 /**
- * Pick characteristic from existing state, else derive the full characteristic key
- * from the skill catalog (SKILL_DEFINITIONS) — its short `char` is mapped back to
- * the full key via the system-aware characteristicFromAbbrev helper. Falls back to
+ * Pick characteristic from existing state, else the catalog characteristic the
+ * DataModel resolves for the skill (`NPCData.skillCharacteristic`). Falls back to
  * `perception` for keys outside the catalog (unchanged behaviour).
  */
-function resolveSkillChar(existing: NPCV2TrainedSkillData | undefined, skillKey: string): string {
+function resolveSkillChar(existing: NPCV2TrainedSkillData | undefined, catalogCharacteristic: string | null): string {
     const fromState = existing?.characteristic;
     if (fromState !== undefined && fromState !== '') return fromState;
-    const definition = SKILL_DEFINITIONS[skillKey];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) sees `SkillDefinition`, tsconfig.json (flag on) sees `| undefined` and requires this guard.
-    return (definition !== undefined ? characteristicFromAbbrev(definition.char) : null) ?? 'perception';
+    return catalogCharacteristic ?? 'perception';
 }
 
 /** Ranks in the DH2 ladder above untrained: Known, +10, +20, +30 (#503). */
@@ -79,10 +74,15 @@ const MAX_SKILL_RANK = 4;
  * cumulative flags, so a skill the GM cycles on the sheet lands in exactly the shape
  * the packs author. The flags are cumulative: +20 sets both `plus10` and `plus20`.
  */
-function buildSkillEntry(skillKey: string, rank: number, prior: NPCV2TrainedSkillData | undefined): NPCV2TrainedSkillData {
+function buildSkillEntry(
+    skillKey: string,
+    rank: number,
+    prior: NPCV2TrainedSkillData | undefined,
+    catalogCharacteristic: string | null,
+): NPCV2TrainedSkillData {
     return {
         name: prior?.name !== undefined && prior.name !== '' ? prior.name : skillKey,
-        characteristic: resolveSkillChar(prior, skillKey),
+        characteristic: resolveSkillChar(prior, catalogCharacteristic),
         advance: rank,
         trained: rank >= 1,
         plus10: rank >= 2,
@@ -1036,7 +1036,7 @@ export default class NPCSheet extends CharacterSheet {
             // Show skill selection dialog
             // The active line's skills and its own rank ladder (Known → Veteran on the
             // DH2 family, Trained → +20 on RT/DH1), all labels from the langpack.
-            const skills = standardSkillsForSystem(this._resolveGameSystemId() ?? 'dh2')
+            const skills = this.npcActor.system.standardSkills
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- trainedSkills is a sparse Record; indexer is genuinely optional at runtime
                 .filter((s) => this.npcActor.system.trainedSkills[s.key] === undefined);
             const skillOptions = skills.map((s) => `<option value="${s.key}">${s.label}</option>`).join('');
@@ -1124,7 +1124,7 @@ export default class NPCSheet extends CharacterSheet {
         const currentSkills: Record<string, NPCV2TrainedSkillData> = foundry.utils.deepClone(this.npcActor.system.trainedSkills);
         const prior = currentSkills[skillKey];
 
-        currentSkills[skillKey] = NPCSheet.#resolveSkillLevelToggle(skillKey, level, prior);
+        currentSkills[skillKey] = NPCSheet.#resolveSkillLevelToggle(skillKey, level, prior, this.npcActor.system.skillCharacteristic(skillKey));
         await this.actor.update({ 'system.trainedSkills': currentSkills });
     }
 
@@ -1137,7 +1137,12 @@ export default class NPCSheet extends CharacterSheet {
      * Clicking the level the skill is already at drops it one rank (the toggle-off
      * gesture); clicking any other level sets it there outright.
      */
-    static #resolveSkillLevelToggle(skillKey: string, level: string, prior: NPCV2TrainedSkillData | undefined): NPCV2TrainedSkillData {
+    static #resolveSkillLevelToggle(
+        skillKey: string,
+        level: string,
+        prior: NPCV2TrainedSkillData | undefined,
+        catalogCharacteristic: string | null,
+    ): NPCV2TrainedSkillData {
         const target = NPCSheet.#SKILL_LEVEL_RANKS[level];
         if (target === undefined) return prior ?? { name: skillKey };
 
@@ -1150,7 +1155,7 @@ export default class NPCSheet extends CharacterSheet {
                 ? prior.advance
                 : (prior.trained === true ? 1 : 0) + (prior.plus10 === true ? 1 : 0) + (prior.plus20 === true ? 1 : 0) + (prior.plus30 === true ? 1 : 0);
 
-        return buildSkillEntry(skillKey, priorRank === target ? target - 1 : target, prior);
+        return buildSkillEntry(skillKey, priorRank === target ? target - 1 : target, prior, catalogCharacteristic);
     }
 
     /* -------------------------------------------- */
@@ -1178,7 +1183,7 @@ export default class NPCSheet extends CharacterSheet {
             await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
             return;
         }
-        currentSkills[skillKey] = buildSkillEntry(skillKey, next, currentSkills[skillKey]);
+        currentSkills[skillKey] = buildSkillEntry(skillKey, next, currentSkills[skillKey], this.npcActor.system.skillCharacteristic(skillKey));
         await this.actor.update({ 'system.trainedSkills': currentSkills });
     }
 
@@ -1671,7 +1676,7 @@ export default class NPCSheet extends CharacterSheet {
         // Silent Move, DH2-family lines Parry and Stealth, …). Rank flags and the
         // target number come from the DataModel's skillDisplay — the single source
         // that also pays Veteran (+30) and each line's untrained rule.
-        const standard: Array<[string, SkillLike]> = standardSkillsForSystem(this._resolveGameSystemId() ?? 'dh2').map((entry) => {
+        const standard: Array<[string, SkillLike]> = actor.system.standardSkills.map((entry) => {
             const display = actor.system.skillDisplay(entry.key);
             const skill: SkillLike = {
                 label: entry.label,

@@ -22,8 +22,8 @@ import { targetSizeModifier } from '../rules/target-size.ts';
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
 import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
 import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
-import { aggregateRollTarget, clampModifierToCap } from './aggregate-target.ts';
-import { evaluateFormula } from './evaluate-formula.ts';
+import { aggregateModifierTotal, aggregateRollTarget } from './aggregate-target.ts';
+import { passiveCombatModifiers } from './passive-modifiers.ts';
 
 // Re-exported for existing consumers (chat-card cap surfacing, tests) that
 // import the cap primitives from this module. The canonical definitions now
@@ -300,35 +300,26 @@ export class RollData {
         return this.attackSpecials.find((s) => s.name === special);
     }
 
-    modifiersToRollData(): { formula: string; params: Record<string, number> } {
-        let formula = '0 ';
-        const rollParams: Record<string, number> = {};
-        for (const modifier of Object.keys(this.modifiers)) {
-            const value = this.modifiers[modifier];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: modifiers[modifier] may be undefined despite Record<string, number> type
-            if (value !== undefined && value !== 0) {
-                if (value >= 0) {
-                    formula += ` + @${modifier}`;
-                } else {
-                    formula += ` - @${modifier}`;
-                }
-                rollParams[modifier] = Math.abs(value);
-            }
-        }
-        return {
-            formula: formula,
-            params: rollParams,
-        };
-    }
-
+    /**
+     * Commit the modifier total: the ±60-capped sum of every committed modifier
+     * (`modifierTotal`), the un-capped sum (`rawModifierTotal`), whether the cap
+     * fired, and the per-component provenance list.
+     *
+     * Summed through the SAME pure aggregator as the dialog's live
+     * `displayTarget`, so the shown and committed targets cannot drift. It used to
+     * be summed by building a `0 + @key …` Roll formula, but Foundry resolves
+     * `@` references only for `[-.\w]` keys: a modifier keyed by a multi-word or
+     * bracketed label — a talent / item name such as `Battle Drill` or
+     * `Hatred (Daemons)` — left an unresolvable term, the Roll threw, and the
+     * swallowed error zeroed the WHOLE modifier total.
+     */
     async calculateTotalModifiers(): Promise<void> {
-        const rollDetails = this.modifiersToRollData();
-        const rollTotal = await evaluateFormula(rollDetails.formula, rollDetails.params);
-        const { clamped, raw, capFired } = clampModifierToCap(rollTotal);
-        this.modifierTotal = clamped;
+        const { total, raw, capFired } = aggregateModifierTotal(this.modifiers);
+        this.modifierTotal = total;
         this.rawModifierTotal = raw;
         this.modifierCapFired = capFired;
         this.buildModifierSources();
+        return Promise.resolve();
     }
 
     /**
@@ -405,6 +396,19 @@ export class RollData {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) sees items[0] as defined, tsconfig.json (flag on) types it `WH40KItem | undefined` and requires this guard
         if (first !== undefined) RollData.setSelected(first, true);
         return { hasMultiple: items.length > 1, first };
+    }
+
+    /**
+     * The attacker's always-on to-hit modifiers from owned items' static
+     * `modifiers.combat.attack` (Path A), one entry per item keyed by its name.
+     *
+     * Characteristic and skill modifiers are baked into the base target by
+     * `creature.ts`, but a combat to-hit modifier has no base value to live in, so
+     * every attack must add it explicitly — before this it was recorded in
+     * `modifierSources.combat` and then read by nothing, so it never moved a roll.
+     */
+    passiveAttackModifiers(): Record<string, number> {
+        return passiveCombatModifiers(this.sourceActor?.system.modifierSources, 'attack');
     }
 
     /**
@@ -742,6 +746,7 @@ export class WeaponRollData extends RollData {
             ...this.specialModifiers,
             ...this.weaponModifiers,
             ...this.dynamicAttackModifiers,
+            ...this.passiveAttackModifiers(),
             range: this.rangeBonus,
         };
     }
@@ -899,7 +904,7 @@ export class PsychicRollData extends RollData {
         // working on a bolter and silently doing nothing on a smite — the same
         // shape of invisible gap this channel was fixed for.
         await this.applyDynamicAttackModifiers();
-        this.modifiers = { ...this.modifiers, ...this.specialModifiers, ...this.dynamicAttackModifiers };
+        this.modifiers = { ...this.modifiers, ...this.specialModifiers, ...this.dynamicAttackModifiers, ...this.passiveAttackModifiers() };
         await this.calculateTotalModifiers();
     }
 }

@@ -127,9 +127,9 @@ async function prepareApplicationForCapture(page: Page): Promise<Locator | null>
 }
 
 /**
- * Make the screen capture-clean: unpause, dismiss every notification (the
- * headless "no hardware acceleration" warning covered sheet headers in most
- * actor screenshots), and close every floating application window whose id
+ * Make the screen capture-clean: unpause, end any active tour, dismiss every
+ * notification (the headless "no hardware acceleration" warning covered sheet
+ * headers in most actor screenshots), and close every floating application window whose id
  * does not contain `keepIdFragment` (stray windows such as In-Universe Time
  * overlapped sheets; a sheet's app id embeds its document id). Best-effort.
  */
@@ -140,9 +140,15 @@ export async function clearScreenOverlays(page: Page, keepIdFragment?: string): 
             const g = globalThis as unknown as {
                 game?: { paused?: boolean; togglePause?: (state: boolean) => void };
                 ui?: { notifications?: { clear?: () => void } };
-                foundry?: { applications?: { instances?: Map<string, { id?: string; close?: (o?: object) => Promise<void> }> } };
+                foundry?: {
+                    applications?: { instances?: Map<string, { id?: string; close?: (o?: object) => Promise<void> }> };
+                    nue?: { Tour?: { activeTour?: { exit?: () => void } | null } };
+                };
             };
             if (g.game?.paused === true) g.game.togglePause?.(false);
+            // A fresh world auto-starts core's "Welcome to Foundry" tour, whose
+            // overlay sits over the middle of every capture.
+            g.foundry?.nue?.Tour?.activeTour?.exit?.();
             g.ui?.notifications?.clear?.();
             document.querySelectorAll('#notifications > *').forEach((n) => {
                 n.remove();
