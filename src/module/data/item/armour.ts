@@ -1,11 +1,22 @@
+import { hitLocationAbbreviation, hitLocationLabel } from '../../rules/hit-locations.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
-import { BODY_LOCATIONS, bodyLocationsSchema } from '../shared/body-locations.ts';
+import { BODY_LOCATIONS, type BodyLocationId, bodyLocationsSchema } from '../shared/body-locations.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate, { type EquippableState } from '../shared/equippable-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
+
+/** Armour-silhouette list order and the icon each location shows; labels come from the hit-location registry. */
+const ARMOUR_LOCATION_ICONS: ReadonlyArray<{ location: BodyLocationId; icon: string }> = [
+    { location: 'head', icon: 'fa-head-side' },
+    { location: 'body', icon: 'fa-person' },
+    { location: 'leftArm', icon: 'fa-hand' },
+    { location: 'rightArm', icon: 'fa-hand' },
+    { location: 'leftLeg', icon: 'fa-socks' },
+    { location: 'rightLeg', icon: 'fa-socks' },
+];
 
 /**
  * Valid armour `type` choices. Shared between `defineSchema()` and the
@@ -441,17 +452,16 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get apSummary(): string {
         const locations = BODY_LOCATIONS;
-        const abbrs: Record<string, string> = { head: 'H', body: 'B', leftArm: 'LA', rightArm: 'RA', leftLeg: 'LL', rightLeg: 'RL' };
         const coverage = this._getEffectiveCoverage();
         const coveredLocations = coverage.has('all') || !coverage.size ? locations : locations.filter((loc) => coverage.has(loc));
 
         const values = coveredLocations.map((loc) => this.getEffectiveAPForLocation(loc));
         const same = values.length > 0 && values.every((value) => value === values[0]);
         if (same && coveredLocations.length === locations.length) {
-            return `All: ${values[0]}`;
+            return game.i18n.format('WH40K.ArmourSilhouette.AllLocationsAp', { ap: String(values[0]) });
         }
 
-        return coveredLocations.map((loc) => `${abbrs[loc]}: ${this.getEffectiveAPForLocation(loc)}`).join(', ');
+        return coveredLocations.map((loc) => `${hitLocationAbbreviation(loc)}: ${this.getEffectiveAPForLocation(loc)}`).join(', ');
     }
 
     /**
@@ -507,7 +517,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get averageAP(): number {
         const coverage = this._getEffectiveCoverage();
-        const locations = BODY_LOCATIONS;
+        const locations: readonly string[] = BODY_LOCATIONS;
         const coveredLocs = coverage.has('all') ? locations : locations.filter((loc) => coverage.has(loc));
 
         if (coveredLocs.length === 0) return 0;
@@ -548,14 +558,12 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {Array<{location: string, label: string, abbr: string, ap: number, covered: boolean, icon: string}>}
      */
     get locationArray(): Array<{ location: string; label: string; abbr: string; icon: string; ap: number; covered: boolean }> {
-        const locations = [
-            { location: 'head', label: 'Head', abbr: 'H', icon: 'fa-head-side' },
-            { location: 'body', label: 'Body', abbr: 'B', icon: 'fa-person' },
-            { location: 'leftArm', label: 'Left Arm', abbr: 'LA', icon: 'fa-hand' },
-            { location: 'rightArm', label: 'Right Arm', abbr: 'RA', icon: 'fa-hand' },
-            { location: 'leftLeg', label: 'Left Leg', abbr: 'LL', icon: 'fa-socks' },
-            { location: 'rightLeg', label: 'Right Leg', abbr: 'RL', icon: 'fa-socks' },
-        ];
+        const locations = ARMOUR_LOCATION_ICONS.map(({ location, icon }) => ({
+            location,
+            label: hitLocationLabel(location),
+            abbr: hitLocationAbbreviation(location),
+            icon,
+        }));
 
         const coverage = this._getEffectiveCoverage();
         const coversAll = coverage.has('all');

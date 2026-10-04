@@ -1,7 +1,7 @@
 import type { HordeTrait } from '../data/actor/mixins/horde-template.ts';
 import { applyCriticalDamageConditions, type CriticalSideEffectReport } from '../rules/active-effects.ts';
 import { type CriticalDamageRecord, getCriticalDamageRecord } from '../rules/critical-damage.ts';
-import { damageTypeDropdown } from '../rules/damage-type.ts';
+import { damageTypeDropdown, normalizeBodyPart } from '../rules/damage-type.ts';
 import { type BreakCheck, magnitudeLossForHit, resolveBreakCheck } from '../rules/dw-horde-magnitude.ts';
 import {
     collectDynamicComponents,
@@ -9,7 +9,6 @@ import {
     type DynamicModifierItemLike,
     type DynamicModifierSituation,
 } from '../rules/dynamic-modifiers.ts';
-import { hitDropdown } from '../rules/hit-locations.ts';
 import { type ActorStateSource, collectActorStates } from '../rules/situation-tags.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { postFlattenedInstanceToChat } from './roll-helpers.ts';
@@ -77,7 +76,6 @@ interface HitLike {
 }
 
 export class AssignDamageData {
-    locations = hitDropdown();
     actor: ActorLike;
     hit: HitLike;
     damageType = damageTypeDropdown();
@@ -454,26 +452,26 @@ export class AssignDamageData {
         const severity = this.actor.system.wounds.critical + this.criticalDamageTaken;
         const clampedSeverity = Math.min(severity, 10);
 
-        // Normalize location name
-        let location = this.hit.location || 'body';
-        if (location.toLowerCase().includes('arm')) location = 'Arm';
-        else if (location.toLowerCase().includes('leg')) location = 'Leg';
-        else if (location.toLowerCase().includes('head')) location = 'Head';
-        else location = 'Body';
+        // Collapse the hit location onto its Critical Effects body part
+        const bodyPart = normalizeBodyPart(this.hit.location) ?? 'Body';
 
         // Normalize damage type
         const damageType = (this.hit.damageType || 'impact').toLowerCase();
+        const damageTypeKey = `WH40K.DamageType.${damageType.capitalize()}`;
 
         const itemData = {
-            name: `Critical Injury - ${location} (${damageType.capitalize()})`,
+            name: game.i18n.format('WH40K.CriticalInjury.ItemName', {
+                location: game.i18n.localize(`WH40K.BodyPart.${bodyPart}`),
+                damageType: game.i18n.has(damageTypeKey) ? game.i18n.localize(damageTypeKey) : damageType.capitalize(),
+            }),
             type: 'criticalInjury',
             system: {
                 damageType: damageType,
-                bodyPart: location.toLowerCase(),
+                bodyPart: bodyPart.toLowerCase(),
                 severity: clampedSeverity,
                 effect: this.criticalEffect || '',
                 permanent: clampedSeverity >= 8, // Severity 8+ typically permanent
-                notes: `Taken at ${new Date().toLocaleString()}`,
+                notes: game.i18n.format('WH40K.CriticalInjury.TakenAt', { time: new Date().toLocaleString() }),
             },
         };
 

@@ -9,58 +9,64 @@
  */
 
 import { WH40K } from '../config.ts';
-
-/** Presentation metadata for one difficulty band — icon + tooltip + the
- * display label. The label is kept here (rather than localized from the CONFIG
- * label key) because not every band has a langpack entry yet, and these strings
- * match the historical hardcoded picker labels exactly. */
-interface DifficultyPresentation {
-    label: string;
-    icon: string;
-    description: string;
-}
+import type { I18nKey } from '../types/i18n-keys';
 
 /** A fully-resolved difficulty band as consumed by the picker templates. */
-export interface DifficultyPreset extends DifficultyPresentation {
+export interface DifficultyPreset {
     key: string;
     modifier: number;
+    /** Localized band name (from the CONFIG label key). */
+    label: string;
+    icon: string;
+    /** Localized tooltip prose. */
+    description: string;
     /** True for the baseline (Challenging / +0) band the dialogs select first. */
     default?: boolean;
 }
 
-/** Per-key presentation, keyed by the same keys as `WH40K.difficulties`. */
+/** Per-key picker presentation: icon + tooltip langpack key, keyed by the same keys as `WH40K.difficulties`. */
+interface DifficultyPresentation {
+    icon: string;
+    descriptionKey: I18nKey;
+}
+
 const DIFFICULTY_PRESENTATION: Record<string, DifficultyPresentation> = {
-    trivial: { label: 'Trivial', icon: 'fa-smile', description: 'Automatic success unless complications' },
-    elementary: { label: 'Elementary', icon: 'fa-smile-beam', description: 'Almost trivial with minor effort' },
-    simple: { label: 'Simple', icon: 'fa-grin-beam', description: 'Easy tasks under no pressure' },
-    easy: { label: 'Easy', icon: 'fa-grin', description: 'Simple tasks with no pressure' },
-    routine: { label: 'Routine', icon: 'fa-meh', description: 'Standard tasks with time' },
-    ordinary: { label: 'Ordinary', icon: 'fa-smile-beam', description: 'Typical difficulty' },
-    challenging: { label: 'Challenging', icon: 'fa-grimace', description: 'No modifier (baseline)' },
-    difficult: { label: 'Difficult', icon: 'fa-frown', description: 'Complex or contested tasks' },
-    hard: { label: 'Hard', icon: 'fa-dizzy', description: 'Very challenging circumstances' },
-    veryHard: { label: 'Very Hard', icon: 'fa-tired', description: 'Exceptional difficulty' },
-    arduous: { label: 'Arduous', icon: 'fa-sad-tear', description: 'Punishing odds against success' },
-    punishing: { label: 'Punishing', icon: 'fa-sad-cry', description: 'Verging on impossible' },
-    hellish: { label: 'Hellish', icon: 'fa-skull', description: 'Near-impossible feats' },
+    trivial: { icon: 'fa-smile', descriptionKey: 'WH40K.Difficulty.Description.Trivial' },
+    elementary: { icon: 'fa-smile-beam', descriptionKey: 'WH40K.Difficulty.Description.Elementary' },
+    simple: { icon: 'fa-grin-beam', descriptionKey: 'WH40K.Difficulty.Description.Simple' },
+    easy: { icon: 'fa-grin', descriptionKey: 'WH40K.Difficulty.Description.Easy' },
+    routine: { icon: 'fa-meh', descriptionKey: 'WH40K.Difficulty.Description.Routine' },
+    ordinary: { icon: 'fa-smile-beam', descriptionKey: 'WH40K.Difficulty.Description.Ordinary' },
+    challenging: { icon: 'fa-grimace', descriptionKey: 'WH40K.Difficulty.Description.Challenging' },
+    difficult: { icon: 'fa-frown', descriptionKey: 'WH40K.Difficulty.Description.Difficult' },
+    hard: { icon: 'fa-dizzy', descriptionKey: 'WH40K.Difficulty.Description.Hard' },
+    veryHard: { icon: 'fa-tired', descriptionKey: 'WH40K.Difficulty.Description.VeryHard' },
+    arduous: { icon: 'fa-sad-tear', descriptionKey: 'WH40K.Difficulty.Description.Arduous' },
+    punishing: { icon: 'fa-sad-cry', descriptionKey: 'WH40K.Difficulty.Description.Punishing' },
+    hellish: { icon: 'fa-skull', descriptionKey: 'WH40K.Difficulty.Description.Hellish' },
 };
 
 /** The CONFIG key whose band is the dialogs' first-selected (baseline) preset. */
 const DEFAULT_DIFFICULTY_KEY = 'challenging';
 
-/** Fallback presentation for a CONFIG band with no entry above (keeps a new
- * difficulty band renderable even before its presentation is authored). */
-const FALLBACK_PRESENTATION: DifficultyPresentation = { label: '', icon: 'fa-question', description: '' };
+/** Icon for a CONFIG band with no presentation entry above (keeps a new band renderable before it is authored). */
+const FALLBACK_ICON = 'fa-question';
 
 /**
  * Build the difficulty ladder by joining the canonical `WH40K.difficulties`
- * key → modifier map with the presentation table. CONFIG insertion order
+ * key → label/modifier map with the presentation table. CONFIG insertion order
  * (trivial … hellish) is preserved.
  */
 export function buildDifficultyPresets(): DifficultyPreset[] {
-    return Object.entries(WH40K.difficulties).map(([key, { modifier }]) => {
-        const presentation = DIFFICULTY_PRESENTATION[key] ?? { ...FALLBACK_PRESENTATION, label: key };
-        const preset: DifficultyPreset = { key, modifier, ...presentation };
+    return Object.entries(WH40K.difficulties).map(([key, { label, modifier }]) => {
+        const presentation = Object.entries(DIFFICULTY_PRESENTATION).find(([presentationKey]) => presentationKey === key)?.[1];
+        const preset: DifficultyPreset = {
+            key,
+            modifier,
+            label: game.i18n.localize(label),
+            icon: presentation?.icon ?? FALLBACK_ICON,
+            description: presentation === undefined ? '' : game.i18n.localize(presentation.descriptionKey),
+        };
         if (key === DEFAULT_DIFFICULTY_KEY) preset.default = true;
         return preset;
     });

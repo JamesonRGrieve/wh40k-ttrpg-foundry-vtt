@@ -1,0 +1,68 @@
+{{!--
+    Condition tick card — ONE card for every condition with a `system.tick`
+    (Fire, Blood Loss, Suffocation, …), posted by `processConditionTicks`.
+    Every value here is the condition document's data: its name, the rolled
+    tick damage / damage type / armour bypass, the fatigue gained, the tick
+    test and the condition a failed test applied, and the document's own
+    removal text. Nothing is condition-specific.
+
+    Context: actor, gameSystem, condition (ConditionMechanics), hasDamage,
+    damage, damageFormula, damageCaption, damageType, ignoresArmour, fatigue,
+    canApply, test ({roll, target, success, characteristicLabel} or null),
+    appliedCondition.
+--}}
+{{#> systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs actorName=actor.name title=condition.name subtitle=(localize "WH40K.Condition.Tick.Subtitle") gameSystem=gameSystem}}
+    {{#if hasDamage}}
+        {{> systems/wh40k-rpg/templates/chat/partial/wounds-callout.hbs
+            labelKey="WH40K.Condition.Tick.Damage"
+            badge=damageFormula
+            value=damage
+            caption=damageCaption}}
+    {{/if}}
+
+    {{#if fatigue}}
+        <div class="tw-flex tw-justify-between tw-items-center tw-px-[14px] tw-py-[10px] tw-my-2 tw-bg-[var(--wh40k-warning-bg)] tw-border-l-[3px] tw-border-l-[var(--wh40k-warning-primary)] tw-rounded-r-[4px]">
+            <span class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-warning-secondary)]">{{localize "WH40K.Combat.Fatigue"}}</span>
+            <span class="tw-text-[1.1rem] tw-font-bold tw-text-[color:var(--wh40k-text-dark)]">+{{fatigue}}</span>
+        </div>
+    {{/if}}
+
+    {{#if test}}
+        {{#if test.success}}
+            {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
+                variant="success"
+                label=(localize "WH40K.Condition.Tick.TestPassed" characteristic=test.characteristicLabel target=test.target)
+                value=test.roll
+                valueShadowClass="tw-[text-shadow:0_2px_8px_var(--wh40k-shadow-medium)]"}}
+        {{else}}
+            {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
+                variant="danger"
+                label=(localize "WH40K.Condition.Tick.TestFailed" characteristic=test.characteristicLabel target=test.target)
+                value=test.roll
+                valueShadowClass="tw-[text-shadow:0_2px_8px_var(--wh40k-shadow-medium)]"}}
+        {{/if}}
+    {{/if}}
+
+    {{#if appliedCondition}}
+        <p class="tw-m-0 tw-my-2 tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-danger-secondary)]">{{localize "WH40K.Condition.Tick.ConditionApplied" condition=appliedCondition}}</p>
+    {{/if}}
+
+    {{#if condition.removal}}
+        <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-gold tw-rounded-r-[4px] tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto">
+            {{{condition.removal}}}
+        </div>
+    {{/if}}
+
+    {{#if canApply}}
+        <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 -tw-mx-4 -tw-mb-3 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
+            {{> systems/wh40k-rpg/templates/chat/partial/wounds-action-button.hbs
+                action="roll-control__apply-damage"
+                labelKey="WH40K.Condition.Tick.Apply"
+                dataType=damageType
+                dataIgnoreArmour=ignoresArmour
+                dataUuid=actor.uuid
+                dataDamage=damage
+                dataFatigue=fatigue}}
+        </div>
+    {{/if}}
+{{/systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs}}

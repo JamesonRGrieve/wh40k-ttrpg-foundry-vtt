@@ -4,6 +4,7 @@ import { aimModifiers } from '../rules/aim.ts';
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.ts';
 import { calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../rules/attack-specials.ts';
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.ts';
+import { activeConditionMechanics, type ConditionBearer } from '../rules/condition-registry.ts';
 import { WH40K } from '../rules/config.ts';
 import { rollDifficulties } from '../rules/difficulties.ts';
 import {
@@ -15,13 +16,21 @@ import {
     ownsActivatableHook,
 } from '../rules/dynamic-modifiers.ts';
 import type { AllocationStrategy, AllocationTarget } from '../rules/hit-allocation.ts';
-import { hitDropdown } from '../rules/hit-locations.ts';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.ts';
 import { AIM_STATE, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
+import { shouldSkipSelfTargetDefenderMods } from '../rules/target-situationals.ts';
 import { targetSizeModifier } from '../rules/target-size.ts';
+import {
+    collectTargetedConditionModifiers,
+    sumTargetedComponents,
+    TARGET_CONDITION_BUCKET,
+    type TargetedAttackContext,
+    type TargetedConditionComponent,
+} from '../rules/targeted-conditions.ts';
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
 import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
 import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { aggregateModifierTotal, aggregateRollTarget } from './aggregate-target.ts';
 import { passiveCombatModifiers } from './passive-modifiers.ts';
 
@@ -77,7 +86,40 @@ const MODIFIER_KEY_META: Record<string, string> = {
     'difficulty': 'Difficulty',
     'situational': 'Situational',
     'combat-situational': 'CombatSituational',
+    [TARGET_CONDITION_BUCKET]: 'TargetConditions',
 };
+
+/** The localiser surface the roll data reads; absent under unit tests. */
+type RuntimeI18n = { localize?: (key: string) => string; format?: (key: string, data: Record<string, string>) => string };
+
+/** `game.i18n` when booted. Roll data is also built under unit tests, where `game` is absent. */
+function runtimeI18n(): RuntimeI18n | undefined {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: `game` is the Foundry runtime global; roll data also runs under unit tests where it is absent, so it is read defensively
+    return (globalThis as { game?: { i18n?: RuntimeI18n } }).game?.i18n;
+}
+
+/**
+ * Path B: the modifiers a TARGET's active conditions impose on an attack
+ * (`system.targeted` on each condition document, resolved for the target's
+ * line), filtered to melee / ranged and the range band. Empty with no target, and
+ * for a homebrew self-target (#393), where defender modifiers do not apply to
+ * oneself.
+ * @param {(ConditionBearer & {id?: string | null}) | null} target  The attack's target.
+ * @param {string | null} sourceActorId  The attacker's id.
+ * @param {boolean} homebrewSelfTargeting  Whether the homebrew self-target rule is on.
+ * @param {TargetedAttackContext} attack  The attack.
+ * @returns {TargetedConditionComponent[]}  One sourced component per applicable entry.
+ */
+export function collectTargetConditionRows(
+    target: (ConditionBearer & { id?: string | null }) | null,
+    sourceActorId: string | null,
+    homebrewSelfTargeting: boolean,
+    attack: TargetedAttackContext,
+): TargetedConditionComponent[] {
+    if (target === null) return [];
+    if (shouldSkipSelfTargetDefenderMods(homebrewSelfTargeting, target.id ?? null, sourceActorId)) return [];
+    return collectTargetedConditionModifiers(activeConditionMechanics(target), attack);
+}
 
 /** Title-case a raw modifier key for display (`combat-action` → `Combat Action`). */
 function prettyModifierKey(key: string): string {
@@ -94,7 +136,6 @@ function prettyModifierKey(key: string): string {
 export class RollData {
     difficulties: Record<string, string> = rollDifficulties();
     aims: Record<string, string> = aimModifiers();
-    locations: Record<string, string> = hitDropdown();
     lasModes: string[] = (WH40K['combat'] as { las_fire_modes?: string[] }).las_fire_modes ?? [];
 
     // Chat Controls
@@ -135,6 +176,17 @@ export class RollData {
     // modifier and re-roll-variant collectors to scope options to this test.
     type: string = '';
     rollKey: string = '';
+    /**
+     * The selected test variant (`Visual`, `Auditory`, …; `''` = none), set by the
+     * roll dialog. A condition whose `system.autoFail` names it fails the test.
+     */
+    testVariant: string = '';
+    /**
+     * True when this attack's target bears a `helplessTarget` condition: the hit
+     * was automatic and damage is rolled twice and added. Set at resolution
+     * by `ActionData.applyConditionOutcomeRules`, read by the damage roll.
+     */
+    targetHelpless: boolean = false;
 
     isOpposed: boolean = false;
     opposedTarget: number = 0;
@@ -350,8 +402,7 @@ export class RollData {
                 continue;
             }
             const suffix = MODIFIER_KEY_META[key];
-            // eslint-disable-next-line no-restricted-syntax -- boundary: `game` is the Foundry runtime global; buildModifierSources also runs under unit tests where it is absent, so localise defensively
-            const i18n = (globalThis as { game?: { i18n?: { localize?: (k: string) => string } } }).game?.i18n;
+            const i18n = runtimeI18n();
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: MODIFIER_KEY_META[key] may be undefined despite Record<string, string> type
             const label = suffix !== undefined ? i18n?.localize?.(`WH40K.Roll.ModifierSource.${suffix}`) ?? prettyModifierKey(key) : prettyModifierKey(key);
             sources.push({ key, label, value, source: label });
@@ -659,6 +710,7 @@ export class WeaponRollData extends RollData {
             this.usesAmmo = false;
         }
         calculateWeaponRange(this);
+        this.applyTargetConditionModifiers();
         this.updateBaseTarget();
 
         // Refresh the displayed aggregate target so the top number reflects
@@ -705,6 +757,36 @@ export class WeaponRollData extends RollData {
         this.weaponSelect = hasMultiple;
         if (first === undefined) return;
         this.weapon = first;
+    }
+
+    /**
+     * Path B: collect the TARGET's condition modifiers for this attack and fold
+     * them into the roll (see {@link collectTargetConditionRows} /
+     * {@link foldTargetConditionComponents}).
+     */
+    applyTargetConditionModifiers(): void {
+        const components = collectTargetConditionRows(this.targetActor, this.sourceActor?.id ?? null, WH40KSettings.isHomebrewSelfTargeting(), {
+            isMelee: this.weapon.isMelee,
+            isRanged: this.weapon.isRanged,
+            rangeBand: this.rangeBracket === '' ? undefined : this.rangeBracket,
+        });
+        this.foldTargetConditionComponents(components);
+    }
+
+    /**
+     * Fold target-condition components into the roll as ONE `target-conditions`
+     * bucket whose sourced parts the chat card expands, so the aggregate sums (and
+     * caps) through `aggregate-target.ts` like every other modifier and each
+     * condition is a hoverable, provenance-bearing row.
+     * @param {TargetedConditionComponent[]} components  The collected components.
+     */
+    foldTargetConditionComponents(components: readonly TargetedConditionComponent[]): void {
+        const i18n = runtimeI18n();
+        this.modifiers[TARGET_CONDITION_BUCKET] = sumTargetedComponents(components);
+        this.expandedBuckets[TARGET_CONDITION_BUCKET] = components.map((component) => ({
+            ...component,
+            source: i18n?.format?.('WH40K.Roll.ModifierSource.TargetCondition', { condition: component.source }) ?? component.source,
+        }));
     }
 
     selectWeapon(weaponName: string): void {

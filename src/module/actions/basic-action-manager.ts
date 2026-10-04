@@ -9,6 +9,7 @@ import { Hit } from '../rolls/damage-data.ts';
 import { uuid, postChatCard, emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { actionBudgetForActor, spendActionForActor } from '../rules/action-economy.ts';
 import { ASSASSINS_STRIKE_TEST } from '../rules/assassins-strike.ts';
+import { DEFAULT_HIT_LOCATION, resolveHitLocationId } from '../rules/hit-locations.ts';
 import { weaponHasQuality } from '../rules/weapon-quality-effects.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
@@ -401,7 +402,10 @@ export class BasicActionManager {
         if (defenderId !== null) {
             const budget = actionBudgetForActor(defenderId);
             if (budget !== null && budget.reactionRemaining <= 0) {
-                ui.notifications.warn(game.i18n.localize('WH40K.Combat.ReactionUsed'));
+                // A condition that removes reactions (`actionLimit: noActions`) is a
+                // different refusal from having already spent this round's one.
+                const reason = budget.actionLimit === 'noActions' ? 'WH40K.Combat.ReactionBlockedByCondition' : 'WH40K.Combat.ReactionUsed';
+                ui.notifications.warn(game.i18n.localize(reason));
                 return;
             }
         }
@@ -608,7 +612,7 @@ export class BasicActionManager {
         const isExplosive = div.dataset['isExplosive'];
 
         const hitData = new Hit();
-        hitData.location = location ?? 'Body';
+        hitData.location = resolveHitLocationId(location) ?? DEFAULT_HIT_LOCATION;
         // dataset values are strings; the AssignDamageData consumer parses them.
         /* eslint-disable no-restricted-syntax -- boundary: Hit fields are typed as number but dataset values are strings; cast through unknown is necessary */
         const hitWritable = hitData as unknown as { totalDamage: unknown; totalPenetration: unknown; totalFatigue: unknown };
@@ -685,7 +689,7 @@ export class BasicActionManager {
         }
 
         const hit = new Hit();
-        if (location != null && location !== '') hit.location = location;
+        if (location != null && location !== '') hit.location = resolveHitLocationId(location) ?? location;
         if (damage != null && damage !== '') hit.totalDamage = Number.parseInt(damage, 10);
         if (penetration != null && penetration !== '') hit.totalPenetration = Number.parseInt(penetration, 10);
         if (fatigue != null && fatigue !== '') hit.totalFatigue = Number.parseInt(fatigue, 10);

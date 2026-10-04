@@ -7,6 +7,7 @@ import type { AvailabilityConfig, LabelConfig, LabelAbbreviationConfig, LabelMod
 import type { default as WeaponData } from '../../data/item/weapon.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
+import { DEFAULT_HIT_LOCATION } from '../../rules/hit-locations.ts';
 import { consumeRounds } from '../../rules/magazine.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
@@ -510,7 +511,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         const damageRoll = await new Roll(formula).evaluate();
 
         const hit = {
-            location: 'Body',
+            location: DEFAULT_HIT_LOCATION,
             damageRoll: { formula: damageRoll.formula, result: damageRoll.result },
             totalDamage: damageRoll.total,
             damageType: weaponSystem.damage.type,

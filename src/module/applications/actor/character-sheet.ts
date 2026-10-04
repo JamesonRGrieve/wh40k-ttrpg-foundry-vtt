@@ -92,6 +92,7 @@ import {
     type OpposedStrengthInput,
 } from '../../rules/grapple.ts';
 import { canEquipWeapon, computeHandBudget, handsForWeapon, resolveAvailableHands, type HandBudget } from '../../rules/hand-budget.ts';
+import { HIT_LOCATION_IDS, hitLocationLabel, hitLocationRollRange, hitLocationShortLabel } from '../../rules/hit-locations.ts';
 import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
 import { combatMovementView } from '../../rules/movement-budget.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
@@ -150,15 +151,6 @@ function titleCase(s: string): string {
 
 /** Currency wallets another sheet panel already edits (RT Dynasty tab, OW Logistics panel), so the Resources panel skips them. */
 const RESOURCE_WALLETS_EDITED_ELSEWHERE: ReadonlySet<string> = new Set(['system.rogueTrader.profitFactor.current', 'system.logisticsRating']);
-
-const ARMOUR_DISPLAY_LOCATIONS = [
-    { key: 'head', labelKey: 'WH40K.BodyLocation.Head', shortLabelKey: 'WH40K.BodyLocation.Head', rollRange: '01-10' },
-    { key: 'rightArm', labelKey: 'WH40K.BodyLocation.RightArm', shortLabelKey: 'WH40K.ArmourSilhouette.ShortRightArm', rollRange: '11-20' },
-    { key: 'leftArm', labelKey: 'WH40K.BodyLocation.LeftArm', shortLabelKey: 'WH40K.ArmourSilhouette.ShortLeftArm', rollRange: '21-30' },
-    { key: 'body', labelKey: 'WH40K.BodyLocation.Body', shortLabelKey: 'WH40K.BodyLocation.Body', rollRange: '31-70' },
-    { key: 'rightLeg', labelKey: 'WH40K.BodyLocation.RightLeg', shortLabelKey: 'WH40K.ArmourSilhouette.ShortRightLeg', rollRange: '71-85' },
-    { key: 'leftLeg', labelKey: 'WH40K.BodyLocation.LeftLeg', shortLabelKey: 'WH40K.ArmourSilhouette.ShortLeftLeg', rollRange: '86-00' },
-] as const;
 
 type SheetTabConfig = {
     tab: string;
@@ -2978,10 +2970,10 @@ export default class CharacterSheet extends BaseActorSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is the shared item union; `state` is contributed by EquippableTemplate and is not on that union
         const equippedArmour = armourItems.filter((item) => (item.system as { state?: { equipped?: boolean } }).state?.equipped === true);
 
-        return ARMOUR_DISPLAY_LOCATIONS.map((locationConfig) => {
-            const locationLabel = game.i18n.localize(locationConfig.labelKey);
+        return HIT_LOCATION_IDS.map((locationKey) => {
+            const locationLabel = hitLocationLabel(locationKey);
             // eslint-disable-next-line no-restricted-syntax -- boundary: system.armour is typed loosely on WH40KActorSystemData; narrow per location key
-            const rawArmour = system.armour?.[locationConfig.key];
+            const rawArmour = system.armour?.[locationKey];
             const armourData: WH40KArmourLocation = {
                 value: rawArmour?.value ?? 0,
                 total: rawArmour?.total ?? 0,
@@ -2997,7 +2989,7 @@ export default class CharacterSheet extends BaseActorSheet {
                     // threw inside `armour.ts` getEffectiveAPForLocation and took the whole
                     // sheet render down (#486).
                     // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is the shared item union; the AP helpers are DataModel methods absent from that union
-                    const ap = getArmourAPForLocation(item.system as ArmourSystemLike, locationConfig.key);
+                    const ap = getArmourAPForLocation(item.system as ArmourSystemLike, locationKey);
                     if (ap <= 0) return null;
 
                     return {
@@ -3027,11 +3019,12 @@ export default class CharacterSheet extends BaseActorSheet {
                 .filter((piece): piece is NonNullable<typeof piece> => piece !== null);
 
             return {
-                ...locationConfig,
+                key: locationKey,
+                rollRange: hitLocationRollRange(locationKey),
                 label: locationLabel,
-                shortLabel: game.i18n.localize(locationConfig.shortLabelKey),
+                shortLabel: hitLocationShortLabel(locationKey),
                 total: armourData.total,
-                tooltipData: this.prepareArmorTooltip(locationConfig.key, armourData, coveringItems),
+                tooltipData: this.prepareArmorTooltip(locationKey, armourData, coveringItems),
                 items: coveringItems,
             };
         });

@@ -1,72 +1,132 @@
 import { t } from '../i18n/t.ts';
-import { emitChatFromTemplate, isD100Success, roll1d100 } from '../rolls/roll-helpers.ts';
+import { emitChatFromTemplate, roll1d100 } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
-import { conditionEffectData, type EffectChange, type EffectDataInput, type EffectOptions, MODE_ADD } from './condition-registry.ts';
+import type { ConditionMechanics } from './condition-mechanics.ts';
+import {
+    activeConditionMechanics,
+    bearerLine,
+    characteristicChangeKey,
+    combatChangeKey,
+    conditionEffectData,
+    type EffectChange,
+    type EffectDataInput,
+    type EffectOptions,
+    MODE_ADD,
+    skillChangeKey,
+} from './condition-registry.ts';
+import { resolveTickTest, tickFailureCondition, ticksDueAtTurnStart, type TickTestOutcome } from './condition-tick.ts';
 import { type CriticalDamageRecord, criticalRiderConditionIds } from './critical-damage.ts';
 import type { CanonicalBodyPart } from './damage-type.ts';
 
-type ActiveEffectChatContext = {
-    template: string;
+/* -------------------------------------------- */
+/*  Condition ticks                             */
+/* -------------------------------------------- */
+
+/** The chat card one condition tick posts. */
+const CONDITION_TICK_TEMPLATE = 'systems/wh40k-rpg/templates/chat/condition-tick-chat.hbs';
+
+/** Render context of {@link CONDITION_TICK_TEMPLATE}. */
+type ConditionTickChatContext = {
     actor: WH40KBaseActorDocument;
-    roll?: Roll;
-    target?: number;
-    success?: boolean;
-    damage?: number;
+    gameSystem: string;
+    condition: ConditionMechanics;
+    hasDamage: boolean;
+    /** Rolled tick damage (0 when the tick deals none). */
+    damage: number;
+    damageFormula: string;
+    damageType: string;
+    /** `'true'` when the damage ignores armour (the apply button's data attribute), else `''`. */
+    ignoresArmour: string;
+    damageCaption: string;
+    fatigue: number;
+    /** Whether the card offers the apply-damage / fatigue button. */
+    canApply: boolean;
+    /** The tick test's roll + outcome, or null when it demands none. */
+    test: (TickTestOutcome & { roll: number; characteristicLabel: string }) | null;
+    /** Display name of the condition a failed test applied, or ''. */
+    appliedCondition: string;
 };
 
-/* -------------------------------------------- */
-/*  Combat Effects                              */
-/* -------------------------------------------- */
-
-export async function handleBleeding(actor: WH40KBaseActorDocument): Promise<void> {
-    const context: ActiveEffectChatContext = {
-        template: 'systems/wh40k-rpg/templates/chat/bleeding-chat.hbs',
-        actor: actor,
-    };
-    await sendActiveEffectMessage(context);
+/** Localised label of a full characteristic key (`willpower` → `Willpower`). */
+function characteristicLabel(key: string): string {
+    const i18nKey = `WH40K.Characteristic.${key.capitalize()}`;
+    return game.i18n.has(i18nKey) ? game.i18n.localize(i18nKey) : key;
 }
 
 /**
- * Per-turn Blood Loss tick (core.md §"Blood Loss"). The character takes
- * 1 wound at the start of their turn while Heavily Damaged. The Toughness
- * test that mitigates the +1 fatigue tier is left to the GM; the wound
- * tick is automated here. Reuses the bleeding chat card.
+ * Resolve one condition's tick on its bearer: roll the damage formula, roll the
+ * test against the bearer's characteristic, apply the `onFail` condition when it
+ * fails, and post the card (whose buttons apply the damage / fatigue, as the
+ * previous per-condition cards did). Everything it does is the condition
+ * document's `system.tick`; nothing is name-matched.
  */
-export async function handleBloodLoss(actor: WH40KBaseActorDocument): Promise<void> {
-    const context: ActiveEffectChatContext = {
-        template: 'systems/wh40k-rpg/templates/chat/bleeding-chat.hbs',
-        actor: actor,
+async function resolveConditionTick(actor: WH40KBaseActorDocument, condition: ConditionMechanics, activeIdentifiers: Set<string>): Promise<void> {
+    const tick = condition.tick;
+
+    const hasDamage = tick.damage !== '';
+    let damage = 0;
+    if (hasDamage) {
+        const damageRoll = new Roll(tick.damage, {});
+        await damageRoll.evaluate();
+        damage = damageRoll.total ?? 0;
+    }
+
+    let testResult: ConditionTickChatContext['test'] = null;
+    let appliedCondition = '';
+    if (tick.test !== null) {
+        const roll = (await roll1d100()).total ?? 0;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: an authored characteristic key may name no characteristic on this actor
+        const characteristicTotal = actor.characteristics[tick.test.characteristic]?.total ?? 0;
+        const outcome = resolveTickTest(tick.test, characteristicTotal, roll);
+        testResult = { ...outcome, roll, characteristicLabel: characteristicLabel(tick.test.characteristic) };
+        const onFail = tickFailureCondition(tick, outcome.success, activeIdentifiers);
+        if (onFail !== null) {
+            const created = await createConditionEffect(actor, onFail);
+            if (created !== null) {
+                activeIdentifiers.add(onFail);
+                appliedCondition = conditionEffectData(onFail, bearerLine(actor))?.name ?? onFail;
+            }
+        }
+    }
+
+    const context: ConditionTickChatContext = {
+        actor,
+        gameSystem: bearerLine(actor),
+        condition,
+        hasDamage,
+        damage,
+        damageFormula: tick.damage,
+        damageType: tick.damageType,
+        ignoresArmour: tick.ignoresArmour ? 'true' : '',
+        damageCaption: tick.ignoresArmour
+            ? t('WH40K.Condition.Tick.DamageIgnoresArmour', { type: tick.damageType })
+            : t('WH40K.Condition.Tick.DamageType', { type: tick.damageType }),
+        fatigue: tick.fatigue,
+        canApply: hasDamage || tick.fatigue > 0,
+        test: testResult,
+        appliedCondition,
     };
-    await sendActiveEffectMessage(context);
-}
-
-export async function handleOnFire(actor: WH40KBaseActorDocument): Promise<void> {
-    const willpower = actor.characteristics['willpower'];
-    const context: ActiveEffectChatContext = {
-        template: 'systems/wh40k-rpg/templates/chat/burning-chat.hbs',
-        actor: actor,
-        roll: await roll1d100(),
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
-        target: willpower?.total ?? 0,
-    };
-    const rollTotal = context.roll?.total ?? 0;
-    const target = context.target ?? 0;
-    context.success = isD100Success(rollTotal, target);
-
-    const damageRoll = new Roll('1d10', {});
-    await damageRoll.evaluate();
-    context.damage = damageRoll.total ?? 0;
-    await sendActiveEffectMessage(context);
-}
-
-export async function sendActiveEffectMessage(activeContext: ActiveEffectChatContext): Promise<void> {
     await emitChatFromTemplate(
-        activeContext.template,
-        // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate accepts untyped context; cast to match Handlebars signature
-        activeContext,
+        CONDITION_TICK_TEMPLATE,
+        context,
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get('core', 'rollMode') is typed as the open core-settings value
         { rollMode: game.settings.get('core', 'rollMode'), applyWhispers: true },
     );
+}
+
+/**
+ * THE per-turn condition processor (replaces the name-matched Fire / Bleeding /
+ * Blood Loss handlers): resolve every active condition on the bearer whose
+ * `system.tick` fires at the start of its combat turn.
+ * @param {WH40KBaseActorDocument} actor  The combatant whose turn is starting.
+ */
+export async function processConditionTicks(actor: WH40KBaseActorDocument): Promise<void> {
+    const active = activeConditionMechanics(actor);
+    const identifiers = new Set(active.map((entry) => entry.identifier));
+    for (const condition of ticksDueAtTurnStart(active)) {
+        // eslint-disable-next-line no-await-in-loop -- sequential: each tick may apply a condition the next one's dedupe reads
+        await resolveConditionTick(actor, condition, identifiers);
+    }
 }
 
 /* -------------------------------------------- */
@@ -78,8 +138,9 @@ export async function sendActiveEffectMessage(activeContext: ActiveEffectChatCon
  * @param {Actor} actor                 The target actor
  * @param {object} effectData           Effect creation data
  * @param {string} effectData.name      Effect name
- * @param {string} effectData.icon      Effect icon path
+ * @param {string} effectData.img       Effect image path (V14 has no `icon` field)
  * @param {object[]} effectData.changes Array of change objects
+ * @param {string[]} effectData.statuses Status ids conferred (what makes it a token status)
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}     The created effect
  */
@@ -87,12 +148,15 @@ export async function sendActiveEffectMessage(activeContext: ActiveEffectChatCon
 export async function createEffect(actor: WH40KBaseActorDocument, effectData: EffectDataInput, options: Record<string, unknown> = {}): Promise<unknown> {
     const data = {
         name: effectData.name,
-        icon: effectData.icon ?? 'icons/svg/aura.svg',
+        img: effectData.img ?? 'icons/svg/aura.svg',
         changes: effectData.changes ?? [],
         disabled: effectData.disabled ?? false,
         origin: effectData.origin,
         duration: effectData.duration ?? {},
         flags: effectData.flags ?? {},
+        // Without `statuses` a condition effect is invisible to `actor.statuses`,
+        // the token, and every status-keyed consumer (the tick processor included).
+        statuses: effectData.statuses ?? [],
     };
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: data array must match Foundry's untyped embedded-document creation schema
@@ -119,10 +183,10 @@ export async function createCharacteristicEffect(
 
     return createEffect(actor, {
         name,
-        icon: options.icon ?? 'icons/svg/upgrade.svg',
+        img: options.img ?? 'icons/svg/upgrade.svg',
         changes: [
             {
-                key: `system.characteristics.${characteristic}.modifier`,
+                key: characteristicChangeKey(characteristic),
                 mode: MODE_ADD,
                 value: value,
             },
@@ -148,10 +212,10 @@ export async function createSkillEffect(actor: WH40KBaseActorDocument, skill: st
 
     return createEffect(actor, {
         name,
-        icon: options.icon ?? 'icons/svg/upgrade.svg',
+        img: options.img ?? 'icons/svg/upgrade.svg',
         changes: [
             {
-                key: `system.skills.${skill}.bonus`,
+                key: skillChangeKey(skill),
                 mode: MODE_ADD,
                 value: value,
             },
@@ -177,10 +241,10 @@ export async function createCombatEffect(actor: WH40KBaseActorDocument, type: st
 
     return createEffect(actor, {
         name,
-        icon: options.icon ?? 'icons/svg/combat.svg',
+        img: options.img ?? 'icons/svg/combat.svg',
         changes: [
             {
-                key: `system.combat.${type}`,
+                key: combatChangeKey(type),
                 mode: MODE_ADD,
                 value: value,
             },
@@ -198,13 +262,13 @@ export async function createCombatEffect(actor: WH40KBaseActorDocument, type: st
  * with one id, one artwork and one set of `changes`, visible on both the sheet
  * and the token.
  * @param {WH40KBaseActorDocument} actor  Actor to apply the condition to.
- * @param {string} condition  Registry key / Foundry status id.
+ * @param {string} condition  Condition identifier / Foundry status id.
  * @param {EffectOptions} [options]  Per-application overrides.
  * @returns {Promise<unknown>}  The created effect, or null for an unknown id.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: return propagates Foundry createEmbeddedDocuments which is opaque
 export async function createConditionEffect(actor: WH40KBaseActorDocument, condition: string, options: EffectOptions = {}): Promise<unknown> {
-    const data = conditionEffectData(condition, options);
+    const data = conditionEffectData(condition, bearerLine(actor), options);
     if (data === null) {
         ui.notifications.warn(t('WH40K.Warning.UnknownCondition', { condition }));
         return null;
@@ -248,7 +312,7 @@ export interface CriticalSideEffectReport {
     weaponBroken: string | null;
     /** Carried munitions that cooked off, with rolled secondary damage. */
     munitions: DetonatedMunition[];
-    /** Condition-registry ids applied this call (completeness / tests). */
+    /** Condition identifiers applied this call (completeness / tests). */
     conditionsApplied: string[];
     /** True when the report carries anything worth surfacing on the chat card. */
     hasSideEffects: boolean;
@@ -260,8 +324,8 @@ export interface CriticalSideEffectReport {
  * Prone, Blinded, Deafened, Fatigue, lost limb) and creates the matching
  * condition Active Effect on the target, then resolves the row's armour decision
  * tree and physical side effects (helmet torn off, held weapon dropped or
- * destroyed, carried munitions cooking off). Persistent tick conditions (Burning,
- * Blood Loss) are processed at the turn boundary by the combat turn-hook (#413).
+ * destroyed, carried munitions cooking off). Conditions with a `system.tick`
+ * (Fire, Blood Loss) are processed at the turn boundary by `processConditionTicks`.
  *
  * Armour decision trees (content-agnostic, resolved against the target's armour
  * at the crit body-part — a helmet for Head hits, location armour otherwise):
@@ -493,7 +557,7 @@ export async function createTemporaryEffect(
 
     return createEffect(actor, {
         name,
-        icon: options.icon ?? 'icons/svg/clockwork.svg',
+        img: options.img ?? 'icons/svg/clockwork.svg',
         changes,
         duration: {
             rounds,

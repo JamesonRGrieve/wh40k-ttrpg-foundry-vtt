@@ -2,19 +2,20 @@ import { describe, expect, it } from 'vitest';
 import { canActThisRound, canUseReactions, SURPRISED_EXPIRES_AT_ROUND, SURPRISED_STATUS_ID, surpriseHasExpired } from './surprise';
 
 /**
- * The +30 to-hit bonus is deliberately NOT tested here, because it is no longer
- * implemented here. A `surprised` condition is mapped to `isUnaware` by
- * `target-situationals.ts`, which auto-selects the `unawareTarget` circumstance
- * modifier — the live route. This module's duplicate of that bonus was deleted
- * (#514); it had no caller and was free to drift from the one players actually got.
+ * The +30 to-hit bonus is deliberately NOT tested here, because it is not
+ * implemented here: it is the condition document's `system.targeted`, applied by
+ * the Path B collector (`targeted-conditions.test.ts`).
  */
 
 describe('Surprise constants (#113)', () => {
     it('Surprised condition expires at round 2', () => {
         expect(SURPRISED_EXPIRES_AT_ROUND).toBe(2);
     });
-    it('uses the status id the content packs author', () => {
-        expect(SURPRISED_STATUS_ID).toBe('surprised');
+    it('uses the status id the content packs author (`surprised-unaware`)', () => {
+        // The pack document is "Surprised / Unaware", identifier
+        // `surprised-unaware`; the old `surprised` id matched no document, so the
+        // round-2 expiry never found the condition to remove.
+        expect(SURPRISED_STATUS_ID).toBe('surprised-unaware');
     });
 });
 

@@ -1,4 +1,5 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
+import type { I18nKey } from '../../types/i18n-keys';
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
 import { calculatePartyThreat, difficultyForRatio } from './threat-utils.ts';
 
@@ -15,18 +16,18 @@ interface DifficultyRating {
 }
 
 /**
- * GM-facing prose describing each shared difficulty band, keyed by band id.
- * The band's thresholds / colour / label come from {@link difficultyForRatio}
- * (the single source shared with the encounter builder, #350); these
- * descriptions are calculator-only flavour text.
+ * Langpack keys of the GM-facing prose describing each shared difficulty band,
+ * keyed by band id. The band's thresholds / colour / label come from
+ * {@link difficultyForRatio} (the single source shared with the encounter
+ * builder, #350); these descriptions are calculator-only flavour text.
  */
-const DIFFICULTY_DESCRIPTIONS: Record<string, string> = {
-    trivial: 'This encounter poses no real threat to the party.',
-    easy: 'The party should handle this encounter without significant resource expenditure.',
-    moderate: 'A fair challenge that will require tactical thinking and resource management.',
-    dangerous: 'A difficult encounter. Party members may take significant wounds.',
-    deadly: 'A life-threatening encounter. Party members may die or suffer critical injuries.',
-    apocalyptic: 'Near-certain TPK. Only attempt with significant advantages or preparation.',
+const DIFFICULTY_DESCRIPTION_KEYS: Record<string, I18nKey> = {
+    trivial: 'WH40K.Dialog.DifficultyCalculator.Description.Trivial',
+    easy: 'WH40K.Dialog.DifficultyCalculator.Description.Easy',
+    moderate: 'WH40K.Dialog.DifficultyCalculator.Description.Moderate',
+    dangerous: 'WH40K.Dialog.DifficultyCalculator.Description.Dangerous',
+    deadly: 'WH40K.Dialog.DifficultyCalculator.Description.Deadly',
+    apocalyptic: 'WH40K.Dialog.DifficultyCalculator.Description.Apocalyptic',
 };
 
 /**
@@ -187,11 +188,12 @@ export default class DifficultyCalculatorDialog extends makeNpcFormDialog({
      */
     _getDifficultyRating(ratio: number): DifficultyRating {
         const band = difficultyForRatio(ratio);
+        const descriptionKey = Object.entries(DIFFICULTY_DESCRIPTION_KEYS).find(([bandKey]) => bandKey === band.key)?.[1];
         return {
             key: band.key,
             label: game.i18n.localize(band.label),
             color: band.color,
-            description: DIFFICULTY_DESCRIPTIONS[band.key] ?? '',
+            description: descriptionKey === undefined ? '' : game.i18n.localize(descriptionKey),
         };
     }
 

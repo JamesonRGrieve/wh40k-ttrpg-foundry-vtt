@@ -4,12 +4,10 @@ import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
- * Tier B coverage of `src/module/rules/active-effects.ts` (was 0% fn /
- * 34.7% line). The module exports 14 functions covering effect
- * factories, the combat-status handlers (`handleBleeding` /
- * `handleBloodLoss` / `handleOnFire`), the chat-message emitter
- * (`sendActiveEffectMessage`), and the lifecycle helpers
- * (`removeEffects`, `removeEffectByName`, `toggleEffect`).
+ * Tier B coverage of `src/module/rules/active-effects.ts`. The module
+ * exports the effect factories, the data-driven condition tick processor
+ * (`processConditionTicks`), and the lifecycle helpers (`removeEffects`,
+ * `removeEffectByName`, `toggleEffect`).
  *
  * No other Tier B spec imports this module directly — the
  * active-effects.spec.ts covers Foundry's native ActiveEffect modes
@@ -36,10 +34,7 @@ const ACTIVE_EFFECTS_RULES_FLOWS = [
     'removeEffectByName',
     'removeEffects',
     'toggleEffect',
-    'handleBleeding',
-    'handleBloodLoss',
-    'handleOnFire',
-    'sendActiveEffectMessage',
+    'processConditionTicks',
 ] as const;
 
 type FlowName = (typeof ACTIVE_EFFECTS_RULES_FLOWS)[number];
@@ -79,11 +74,6 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
         interface ActorsCollection {
             get?: (id: string) => ProbeActor | undefined;
         }
-        interface SendActiveEffectMessagePayload {
-            template: string;
-            actor: ProbeActor | undefined;
-            damage: number;
-        }
         interface ActiveEffectsModule {
             createEffect?: (actor: ProbeActor | undefined, effect: { name: string; changes: EffectChange[] }) => Promise<void>;
             createCharacteristicEffect?: (actor: ProbeActor | undefined, key: string, delta: number) => Promise<void>;
@@ -94,10 +84,7 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             removeEffectByName?: (actor: ProbeActor | undefined, name: string) => Promise<void>;
             removeEffects?: (actor: ProbeActor | undefined, filter: (e: ActiveEffectDoc) => boolean) => Promise<void>;
             toggleEffect?: (actor: ProbeActor | undefined, id: string) => Promise<void>;
-            sendActiveEffectMessage?: (payload: SendActiveEffectMessagePayload) => Promise<void>;
-            handleBleeding?: (actor: ProbeActor | undefined) => Promise<void>;
-            handleBloodLoss?: (actor: ProbeActor | undefined) => Promise<void>;
-            handleOnFire?: (actor: ProbeActor | undefined) => Promise<void>;
+            processConditionTicks?: (actor: ProbeActor | undefined) => Promise<void>;
         }
         interface FoundryGlobal {
             Actor?: ActorClass;
@@ -123,8 +110,8 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
         if (ae === null) return out;
 
         // Seed a dh2-character with characteristics + wounds so the
-        // handleBleeding / handleBloodLoss / handleOnFire branches
-        // (which read `actor.system.wounds`) have meaningful state.
+        // condition tick processor (which rolls tests against the bearer's
+        // characteristics) has meaningful state.
         let actor: ProbeActor | null | undefined;
         try {
             actor = await ActorCls?.create?.({
@@ -272,38 +259,22 @@ async function probeActiveEffectsRules(page: Page): Promise<{ results: FlowResul
             }
         }
 
-        // ---- chat-emit + combat-status handler flows ----
-        async function probeMessageAndHandlerFlows(): Promise<void> {
-            // ---- sendActiveEffectMessage ---- (pure chat-card emit; just confirm no throw)
+        // ---- condition tick processor ----
+        // Rolls each ticking condition's damage / test and posts its card; it
+        // tolerates an actor with no ticking condition and just needs to run
+        // without throwing. Runs while the stunned condition is still applied.
+        async function probeTickFlow(): Promise<void> {
             try {
-                await aeModule.sendActiveEffectMessage?.({
-                    template: 'systems/wh40k-rpg/templates/chat/bleeding-chat.hbs',
-                    actor: liveActor(),
-                    damage: 1,
-                });
-                record('sendActiveEffectMessage', true, null);
+                await aeModule.processConditionTicks?.(liveActor());
+                record('processConditionTicks', true, null);
             } catch (err) {
-                record('sendActiveEffectMessage', false, err instanceof Error ? err.message : String(err));
-            }
-
-            // ---- handleBleeding / handleBloodLoss / handleOnFire ----
-            // These dispatch a roll + chat message + wound reduction; they
-            // tolerate missing combat state and just need to run without
-            // throwing. We accept any successful resolution as coverage.
-            for (const fn of ['handleBleeding', 'handleBloodLoss', 'handleOnFire'] as const) {
-                try {
-                    // eslint-disable-next-line no-await-in-loop -- handlers must execute in series to attribute coverage cleanly
-                    await aeModule[fn]?.(liveActor());
-                    record(fn, true, null);
-                } catch (err) {
-                    record(fn, false, err instanceof Error ? err.message : String(err));
-                }
+                record('processConditionTicks', false, err instanceof Error ? err.message : String(err));
             }
         }
 
         await probeCreateFlows();
+        await probeTickFlow();
         await probeLifecycleFlows();
-        await probeMessageAndHandlerFlows();
 
         // Cleanup
         try {

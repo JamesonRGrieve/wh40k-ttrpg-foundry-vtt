@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
-import { buildWoundTransition, type WoundState, woundTransitionRows } from './wound-transition.ts';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { buildLangStub } from '../testing/lang-stub.ts';
+import { buildWoundTransition, prepareWoundTransitionTooltip, type WoundState, woundTransitionRows } from './wound-transition.ts';
 
 const state = (wounds: number, critical = 0, max = 12, fatigue?: number): WoundState => ({
     wounds: { value: wounds, max, critical },
@@ -63,6 +64,19 @@ describe('buildWoundTransition (#504)', () => {
 });
 
 describe('woundTransitionRows', () => {
+    beforeEach(() => {
+        vi.stubGlobal('game', { i18n: buildLangStub() });
+    });
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('localizes the Fatigue row label and the tooltip heading from the langpack', () => {
+        const transition = buildWoundTransition(state(12, 0, 12, 4), { damageTaken: 2, criticalTaken: 0, fatigueTaken: 1 });
+        expect(woundTransitionRows(transition).map((row) => row.name)).toEqual(['Wounds', 'Fatigue']);
+        expect(JSON.parse(prepareWoundTransitionTooltip(transition)) as { title: string }).toMatchObject({ title: 'Damage Applied' });
+    });
+
     it('renders `before → after / max` for the tooltip payload', () => {
         const rows = woundTransitionRows(buildWoundTransition(state(12), { damageTaken: 8, criticalTaken: 0 }));
         expect(rows).toEqual([{ name: 'Wounds', value: '12 → 4 / 12' }]);

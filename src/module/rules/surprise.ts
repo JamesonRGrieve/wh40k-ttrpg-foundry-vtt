@@ -8,22 +8,17 @@
  *
  * The condition expires at the start of round 2.
  *
- * **The +30 is NOT here.** It is already live by a better route: a target
- * carrying the `surprised` condition is mapped to `isUnaware` by
- * `rules/target-situationals.ts`, which auto-selects the `unawareTarget`
- * circumstance modifier (`rules/combat-circumstance-modifiers.ts`, +30). A second
- * implementation of the same bonus previously sat in this module with no caller,
- * free to drift from the live one — it was deleted rather than wired (#514).
- *
- * What remains here is the part that route does NOT cover: the condition's
- * lifetime, and the turn/reaction loss.
+ * **The +30 is NOT here.** It is authored on the condition document's
+ * `system.targeted` and applied to attackers by the Path B collector
+ * `rules/targeted-conditions.ts`; the turn loss is the document's
+ * `system.actionLimit`. What remains here is the condition's lifetime.
  */
 
 /** Round at which the Surprised condition automatically expires. */
 export const SURPRISED_EXPIRES_AT_ROUND = 2;
 
-/** Foundry status id for the Surprised condition, as the content packs author it. */
-export const SURPRISED_STATUS_ID = 'surprised';
+/** Foundry status id for the Surprised condition — its pack `system.identifier`. */
+export const SURPRISED_STATUS_ID = 'surprised-unaware';
 
 /**
  * Whether the actor can take a turn this round. Surprised actors lose

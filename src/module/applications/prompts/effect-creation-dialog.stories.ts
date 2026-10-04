@@ -5,7 +5,8 @@ import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 
 interface Args {
     selectedCategory: 'condition' | 'characteristic' | 'skill' | 'combat' | 'custom';
-    conditions?: { id: string; label: string; icon: string; tier?: number }[];
+    /** Picker rows, shaped like `conditionPickerRows` (the condition documents). */
+    conditions?: { id: string; name: string; img: string; nature: string }[];
     characteristics?: { key: string; label: string; selected?: boolean }[];
     skills?: { key: string; label: string; characteristic: string }[];
     name?: string;
@@ -18,9 +19,9 @@ const meta = {
     args: {
         selectedCategory: 'condition',
         conditions: [
-            { id: 'fatigued', label: 'Fatigued', icon: 'icons/svg/biohazard.svg', tier: 1 },
-            { id: 'pinned', label: 'Pinned', icon: 'icons/svg/sword.svg' },
-            { id: 'stunned', label: 'Stunned', icon: 'icons/svg/lightning.svg', tier: 2 },
+            { id: 'fatigued', name: 'Fatigued', img: 'icons/svg/sleep.svg', nature: 'harmful' },
+            { id: 'pinned', name: 'Pinned', img: 'icons/svg/net.svg', nature: 'harmful' },
+            { id: 'stunned', name: 'Stunned', img: 'icons/svg/daze.svg', nature: 'harmful' },
         ],
         characteristics: [
             { key: 'ws', label: 'Weapon Skill' },
@@ -39,7 +40,21 @@ export default meta;
 
 type Story = StoryObj<Args>;
 
-export const ConditionTab: Story = {};
+/**
+ * The condition picker renders one selectable row per catalog condition, with
+ * the condition document's image (an image path, not an icon-font class).
+ */
+export const ConditionTab: Story = {
+    play: async ({ canvasElement }) => {
+        const rows = Array.from(canvasElement.querySelectorAll('[data-action="selectCondition"]'));
+        await expect(rows.map((row) => row.getAttribute('data-condition-id'))).toEqual(['fatigued', 'pinned', 'stunned']);
+        await expect(rows.map((row) => row.querySelector('img')?.getAttribute('src'))).toEqual([
+            'icons/svg/sleep.svg',
+            'icons/svg/net.svg',
+            'icons/svg/daze.svg',
+        ]);
+    },
+};
 
 export const CharacteristicTab: Story = {
     args: { selectedCategory: 'characteristic' },

@@ -4,8 +4,9 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import { conditionPickerRows, conditionRegistry } from '../../rules/condition-registry.ts';
+import { bearerLine, conditionEffectData, conditionPickerRows, type EffectDataInput, type EffectDuration } from '../../rules/condition-registry.ts';
 import { capitalize } from '../../utils/format.ts';
+import type { SupportedLineKey } from '../../utils/item-variant-utils.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
 
 const { DialogV2 } = foundry.applications.api;
@@ -34,9 +35,8 @@ export interface EffectCreationData extends Record<string, unknown> {
 interface ActiveEffectChange {
     key: string;
     mode: number;
-    /** Foundry stores change values as strings or numbers; the condition
-     *  registry (the sole source of condition changes, #495) types it the same
-     *  way, so narrowing to `number` here would reject a valid registry row. */
+    /** Foundry stores change values as strings or numbers; condition changes
+     *  (derived from the condition documents, #495) are typed the same way. */
     value: number | string;
 }
 
@@ -49,10 +49,8 @@ export interface EffectPayload {
     name: string;
     icon: string;
     changes: ActiveEffectChange[];
-    flags: { 'wh40k-rpg': { nature: string; requiresProcessing?: boolean } };
-    duration?: { rounds: number; startRound: number; startTurn: number } | undefined;
-    /** Foundry status ids conferred — what makes the AE a token status (#495). */
-    statuses?: string[] | undefined;
+    flags: { 'wh40k-rpg': { nature: string } };
+    duration?: EffectDuration | undefined;
 }
 
 /** The minimal custom-effect payload (no changes / nature flag, just a named disabled effect). */
@@ -157,12 +155,10 @@ export default class EffectCreationDialog extends DialogV2 {
         context['actor'] = this.actor;
         context['selectedCategory'] = this.selectedCategory;
 
-        // Conditions come from the ONE registry (#495). This used to be a second
-        // hardcoded list whose ids (`onFire`, `bleeding`) and `fas fa-*` icons
-        // matched neither the registry's ids nor its artwork, so a condition
-        // applied here was a different thing from the same condition applied by a
-        // crit rider or the token HUD.
-        context['conditions'] = conditionPickerRows();
+        // Conditions come from the condition compendium documents (#495), resolved
+        // for this actor's line — the same catalog the token HUD and crit riders
+        // apply from, so a condition picked here is the same document.
+        context['conditions'] = conditionPickerRows(bearerLine(this.actor));
 
         // Characteristics
         context['characteristics'] = [
@@ -235,12 +231,12 @@ export default class EffectCreationDialog extends DialogV2 {
     static async formHandler(this: EffectCreationDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         const data = formData.object as EffectCreationData;
 
-        let effectData: EffectPayload | CustomEffectPayload | null = null;
+        let effectData: EffectPayload | EffectDataInput | CustomEffectPayload | null = null;
 
         const Ctor = this.constructor as typeof EffectCreationDialog;
         // Handle based on effect type
         if (data.effectType === 'condition') {
-            effectData = Ctor._createConditionData(data);
+            effectData = Ctor._createConditionData(data, bearerLine(this.actor));
         } else if (data.effectType === 'characteristic') {
             effectData = Ctor._createCharacteristicData(data);
         } else if (data.effectType === 'skill') {
@@ -283,37 +279,19 @@ export default class EffectCreationDialog extends DialogV2 {
     /* -------------------------------------------- */
 
     /**
-     * Build the effect payload for a picked condition, from the ONE registry.
-     *
-     * This method used to carry a THIRD hand-maintained condition table whose
-     * ids (`bleeding`, `onFire`) and artwork (`sound-off.svg`, `net.svg`,
-     * `angel.svg`) disagreed with both the registry and the dialog's own picker
-     * list — so the same condition meant three different things depending on
-     * which surface applied it (#495). It now reads the registry and stamps
-     * `statuses`, so a condition applied from this dialog is the same document,
-     * with the same token status, as one applied from the token HUD or a crit
-     * rider.
+     * Build the effect payload for a picked condition, from its compendium
+     * document resolved for the actor's line (#495) — the same builder the token
+     * HUD and crit riders use, so a condition applied from this dialog is the
+     * same document, with the same token status and the same `changes`.
      * @param {EffectCreationData} data  The submitted dialog form data.
-     * @returns {EffectPayload | null}  The creation payload, or null for an unknown id.
+     * @param {SupportedLineKey} line  The actor's game line.
+     * @returns {EffectDataInput | null}  The creation payload, or null for an unknown id.
      */
-    static _createConditionData(data: EffectCreationData): EffectPayload | null {
-        const conditionId = data.conditionId;
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- conditionId is string|undefined from EffectCreationData; falsy check covers both undefined and ''
-        if (!conditionId) return null;
-
-        const definition = conditionRegistry()[conditionId];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: index access on Record may return undefined; guard is required at runtime
-        if (!definition) return null;
-
-        const flags = definition.flags as { 'wh40k-rpg'?: { nature?: string; requiresProcessing?: boolean } };
-        const payload: EffectPayload = {
-            name: definition.name,
-            icon: definition.icon,
-            changes: foundry.utils.deepClone(definition.changes),
-            flags: { 'wh40k-rpg': { nature: flags['wh40k-rpg']?.nature ?? 'harmful' } },
-            statuses: [conditionId],
-        };
-        return this._applyDuration(payload, data);
+    static _createConditionData(data: EffectCreationData, line: SupportedLineKey): EffectDataInput | null {
+        const conditionId = data.conditionId ?? '';
+        if (conditionId === '') return null;
+        const payload = conditionEffectData(conditionId, line);
+        return payload === null ? null : this._applyDuration(payload, data);
     }
 
     /* -------------------------------------------- */
@@ -364,7 +342,7 @@ export default class EffectCreationDialog extends DialogV2 {
      * positive round count is supplied. Shared by every effect builder so the
      * duration shape lives in exactly one place.
      */
-    static _applyDuration(effectData: EffectPayload, data: EffectCreationData): EffectPayload {
+    static _applyDuration<T extends { duration?: EffectDuration | undefined }>(effectData: T, data: EffectCreationData): T {
         const rounds = parseInt(data.duration?.rounds ?? '0', 10);
         if (rounds > 0) {
             const combat = game.combat;

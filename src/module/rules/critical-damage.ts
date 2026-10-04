@@ -371,7 +371,7 @@ export async function getCriticalDamage(type: string, location: string, amount: 
     const table = await loadCriticalDamageTable(systemId);
     const damageMap = getFuzzy(table, type);
     if (damageMap === undefined) return null;
-    const locationMap = getFuzzy(damageMap, location);
+    const locationMap = getFuzzy(damageMap, normalizeBodyPart(location) ?? location);
     if (locationMap === undefined) return null;
     const clamped = amount > 10 ? 10 : amount;
     if (!Object.hasOwn(locationMap, clamped)) return null;
@@ -429,29 +429,30 @@ export async function getCriticalDamageRecord(
 }
 
 /**
- * Map the content-agnostic Critical Effects riders to the condition-registry
- * ids applied by `active-effects.ts` `createConditionEffect` (#108). Pure and
- * ordered. The returned ids are keys of the shared condition registry, so any
- * system that shares that registry gets the same effect application.
+ * Map the content-agnostic Critical Effects riders to the condition identifiers
+ * (`system.identifier` of the condition compendium documents) applied by
+ * `active-effects.ts` `createConditionEffect` (#108). Pure and ordered. The
+ * identifiers are the condition vocabulary every line's pack shares, so each
+ * line gets its own document's modifiers for the same rider.
  *
- * `fatal` now maps to the registry's `dead` status (#495). Death used to be the
+ * `fatal` now maps to core's `dead` status (#495). Death used to be the
  * one outcome with no state at all — only chat prose — so nothing downstream
  * (the token defeated overlay, the combat tracker, the #477 pile conversion)
  * could see that the creature had died. The status IS the state; the GM can
  * clear it like any other condition if they overrule the result.
  * @param {CriticalDamageRiders} riders  Riders classified from the crit row.
- * @returns {string[]}  Condition-registry ids to apply.
+ * @returns {string[]}  Condition identifiers to apply.
  */
 export function criticalRiderConditionIds(riders: CriticalDamageRiders): string[] {
     const ids: string[] = [];
     if (riders.fatal) ids.push('dead');
     if (riders.stunned) ids.push('stunned');
-    if (riders.burning) ids.push('burning');
-    if (riders.bloodLoss) ids.push('bloodloss');
+    if (riders.burning) ids.push('on-fire');
+    if (riders.bloodLoss) ids.push('blood-loss');
     if (riders.prone) ids.push('prone');
     if (riders.blinded) ids.push('blinded');
     if (riders.deafened) ids.push('deafened');
     if (riders.fatigue) ids.push('fatigued');
-    if (riders.lostLimb) ids.push('uselessLimb');
+    if (riders.lostLimb) ids.push('useless-limb');
     return ids;
 }

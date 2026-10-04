@@ -1,10 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { asBaseActor } from '../testing/actor-stub.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
-import { createConditionEffect } from './active-effects.ts';
+import { createEffect } from './active-effects.ts';
 import {
     MANACLES_BS_PENALTY,
-    MANACLES_CONDITION_KEY,
     MANACLES_EFFECT_NAME,
     MANACLES_FLAG_KEY,
     MANACLES_FLAG_SCOPE,
@@ -19,20 +18,22 @@ import {
     isManaclesItem,
     isManaclesItemEquipped,
     liftManaclesCondition,
+    manaclesEffectData,
     syncManaclesConditionForActor,
 } from './manacles.ts';
 
-interface MockedConditionEffectOptions {
-    flags?: Record<string, Record<string, boolean>>;
-    origin?: string;
+interface MockedEffectData {
+    name: string;
+    flags?: Record<string, Record<string, boolean | string>> | undefined;
+    origin?: string | undefined;
 }
 
 vi.mock('./active-effects.ts', () => ({
-    createConditionEffect: vi.fn((_actor: object | null, condition: string, options: MockedConditionEffectOptions) => ({
-        id: `ae-${condition}`,
-        name: 'Manacled',
-        flags: options.flags,
-        origin: options.origin,
+    createEffect: vi.fn((_actor: object | null, data: MockedEffectData) => ({
+        id: 'ae-manacled',
+        name: data.name,
+        flags: data.flags,
+        origin: data.origin,
     })),
 }));
 
@@ -46,9 +47,17 @@ describe('Manacles constants (errata p. 176)', () => {
         expect(MANACLES_WS_PENALTY).toBe(-40);
     });
 
-    it('uses the manacled key from the active-effects condition registry', () => {
-        expect(MANACLES_CONDITION_KEY).toBe('manacled');
+    it('builds its own flag-tagged effect: Manacled is not a book condition', () => {
         expect(MANACLES_EFFECT_NAME).toBe('Manacled');
+        const data = manaclesEffectData('Item.abc');
+        expect(data.changes).toEqual([
+            { key: 'system.characteristics.ballisticSkill.modifier', mode: 2, value: -40 },
+            { key: 'system.characteristics.weaponSkill.modifier', mode: 2, value: -40 },
+        ]);
+        expect(data.flags).toEqual({ [MANACLES_FLAG_SCOPE]: { [MANACLES_FLAG_KEY]: true, nature: 'harmful' } });
+        expect(data.origin).toBe('Item.abc');
+        // Not a status: the token HUD's condition list does not carry it.
+        expect(data.statuses).toBeUndefined();
     });
 
     it('identifies the canonical manacles gear by its compendium slug', () => {
@@ -220,14 +229,7 @@ describe('applyManaclesCondition', () => {
     it('creates a Manacled AE flagged with wh40k-rpg.manacles=true', async () => {
         const actor = makeActor([], []);
         const result = await applyManaclesCondition(actor, { origin: 'Item.abc' });
-        expect(createConditionEffect).toHaveBeenCalledWith(
-            actor,
-            MANACLES_CONDITION_KEY,
-            expect.objectContaining({
-                origin: 'Item.abc',
-                flags: { [MANACLES_FLAG_SCOPE]: { [MANACLES_FLAG_KEY]: true } },
-            }),
-        );
+        expect(createEffect).toHaveBeenCalledWith(actor, manaclesEffectData('Item.abc'));
         expect(result).not.toBeNull();
         expect(result?.name).toBe(MANACLES_EFFECT_NAME);
     });
@@ -235,10 +237,10 @@ describe('applyManaclesCondition', () => {
     it('is idempotent: returns the existing AE without re-creating it', async () => {
         const existing: FakeEffect = { id: 'ae-existing', name: MANACLES_EFFECT_NAME };
         const actor = makeActor([], [existing]);
-        vi.mocked(createConditionEffect).mockClear();
+        vi.mocked(createEffect).mockClear();
         const result = await applyManaclesCondition(actor);
         expect(result).toBe(existing);
-        expect(createConditionEffect).not.toHaveBeenCalled();
+        expect(createEffect).not.toHaveBeenCalled();
     });
 });
 
@@ -263,14 +265,14 @@ describe('liftManaclesCondition', () => {
 
 describe('syncManaclesConditionForActor', () => {
     it('applies the AE when manacles are equipped and none is present', async () => {
-        vi.mocked(createConditionEffect).mockClear();
+        vi.mocked(createEffect).mockClear();
         const actor = makeActor([{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', state: { equipped: true } } }], []);
         await syncManaclesConditionForActor(actor, 'Item.uuid');
-        expect(createConditionEffect).toHaveBeenCalledTimes(1);
+        expect(createEffect).toHaveBeenCalledTimes(1);
     });
 
     it('lifts the AE when no manacles are equipped but the AE is present', async () => {
-        vi.mocked(createConditionEffect).mockClear();
+        vi.mocked(createEffect).mockClear();
         const deleted = vi.fn(async (_type: string, _ids: string[]) => Promise.resolve());
         const actor = makeActor(
             [{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', state: { equipped: false } } }],
@@ -279,11 +281,11 @@ describe('syncManaclesConditionForActor', () => {
         );
         await syncManaclesConditionForActor(actor);
         expect(deleted).toHaveBeenCalledWith('ActiveEffect', ['m']);
-        expect(createConditionEffect).not.toHaveBeenCalled();
+        expect(createEffect).not.toHaveBeenCalled();
     });
 
     it('is a no-op when equipped state and AE presence already agree', async () => {
-        vi.mocked(createConditionEffect).mockClear();
+        vi.mocked(createEffect).mockClear();
         const deleted = vi.fn(async (_type: string, _ids: string[]) => Promise.resolve());
         const actor = makeActor(
             [{ type: 'gear', name: 'Manacles', system: { identifier: 'manacles', state: { equipped: true } } }],
@@ -291,7 +293,7 @@ describe('syncManaclesConditionForActor', () => {
             deleted,
         );
         await syncManaclesConditionForActor(actor);
-        expect(createConditionEffect).not.toHaveBeenCalled();
+        expect(createEffect).not.toHaveBeenCalled();
         expect(deleted).not.toHaveBeenCalled();
     });
 });

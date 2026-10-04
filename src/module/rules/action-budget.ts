@@ -10,6 +10,8 @@
  * costs both, a Half costs one.
  */
 
+import type { ActionLimit } from './condition-mechanics.ts';
+
 export type ActionKind = 'full' | 'half' | 'free' | 'reaction';
 
 /** Count of each action kind spent so far this turn. */
@@ -48,17 +50,45 @@ export function usedActionPoints(spent: ActionsSpent): number {
     return spent.full * ACTION_POINTS_PER_TURN + spent.half;
 }
 
-/** Whether the combatant may still spend an action of the given kind. */
-export function canSpendAction(spent: ActionsSpent, kind: ActionKind): boolean {
-    if (kind === 'full') return usedActionPoints(spent) === 0;
-    if (kind === 'half') return usedActionPoints(spent) <= ACTION_POINTS_PER_TURN - 1;
-    if (kind === 'reaction') return spent.reaction < REACTIONS_PER_ROUND;
-    return true; // free — GM-gated; no hard cap
+/**
+ * Full/Half action points a limit leaves the combatant per turn.
+ *  - `noActions` / `loseTurn`: none (the bearer cannot act on its turn);
+ *  - `halfActionOnly`: a single Half action (Pinned);
+ *  - `grappleOnly` / `none`: the normal pool — `grappleOnly` restricts WHICH
+ *    actions may be taken, not how many, and the budget does not model action
+ *    identity, so it is surfaced on the view rather than enforced here.
+ */
+function actionPointsUnder(limit: ActionLimit): number {
+    if (limit === 'noActions' || limit === 'loseTurn') return 0;
+    if (limit === 'halfActionOnly') return 1;
+    return ACTION_POINTS_PER_TURN;
+}
+
+/** Reactions a limit leaves the combatant. Only `noActions` (Stunned) removes them. */
+function reactionsUnder(limit: ActionLimit): number {
+    return limit === 'noActions' ? 0 : REACTIONS_PER_ROUND;
+}
+
+/**
+ * Whether the combatant may still spend an action of the given kind, under the
+ * action limit its active conditions impose (`rules/condition-mechanics.ts`).
+ * @param {ActionsSpent} spent  Actions spent so far this turn.
+ * @param {ActionKind} kind  The action to spend.
+ * @param {ActionLimit} [limit]  The governing condition action limit.
+ * @returns {boolean}  Whether the spend is allowed.
+ */
+export function canSpendAction(spent: ActionsSpent, kind: ActionKind, limit: ActionLimit = 'none'): boolean {
+    const points = actionPointsUnder(limit);
+    if (kind === 'full') return points >= ACTION_POINTS_PER_TURN && usedActionPoints(spent) === 0;
+    if (kind === 'half') return usedActionPoints(spent) <= points - 1;
+    if (kind === 'reaction') return spent.reaction < reactionsUnder(limit);
+    // free — GM-gated, no hard cap; but a bearer who cannot act at all takes none.
+    return points > 0;
 }
 
 /** Spend one action of the given kind (pure; clamps — a disallowed spend is a no-op). */
-export function spendAction(spent: ActionsSpent, kind: ActionKind): ActionsSpent {
-    if (!canSpendAction(spent, kind)) return spent;
+export function spendAction(spent: ActionsSpent, kind: ActionKind, limit: ActionLimit = 'none'): ActionsSpent {
+    if (!canSpendAction(spent, kind, limit)) return spent;
     return { ...spent, [kind]: spent[kind] + 1 };
 }
 
@@ -75,16 +105,19 @@ export interface ActionBudgetView {
     reactionRemaining: number;
     freeSpent: number;
     usedPoints: number;
+    /** The condition action limit the readout was computed under. */
+    actionLimit: ActionLimit;
 }
 
-/** Project the spent state into a display readout. */
-export function actionBudgetView(spent: ActionsSpent): ActionBudgetView {
+/** Project the spent state into a display readout, under the bearer's action limit. */
+export function actionBudgetView(spent: ActionsSpent, limit: ActionLimit = 'none'): ActionBudgetView {
     const usedPoints = usedActionPoints(spent);
     return {
-        fullAvailable: usedPoints === 0,
-        halfRemaining: Math.max(0, ACTION_POINTS_PER_TURN - usedPoints),
-        reactionRemaining: Math.max(0, REACTIONS_PER_ROUND - spent.reaction),
+        fullAvailable: canSpendAction(spent, 'full', limit),
+        halfRemaining: Math.max(0, actionPointsUnder(limit) - usedPoints),
+        reactionRemaining: Math.max(0, reactionsUnder(limit) - spent.reaction),
         freeSpent: spent.free,
         usedPoints,
+        actionLimit: limit,
     };
 }

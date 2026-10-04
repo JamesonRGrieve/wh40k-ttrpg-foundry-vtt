@@ -1,4 +1,6 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import WH40K from '../config.ts';
+import { buildLangStub } from '../testing/lang-stub.ts';
 import { getAllCharacteristicDisplayInfo, getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from './origin-ui-labels.ts';
 
 /**
@@ -7,7 +9,18 @@ import { getAllCharacteristicDisplayInfo, getCharacteristicDisplayInfo, getChoic
  * via the generic fallback here; getChoiceTypeLabel's i18n is stubbed.
  */
 
+/** The runtime reads the characteristics registry via CONFIG.wh40k, not a config.ts import. */
+function stubRuntime(): void {
+    vi.stubGlobal('game', { i18n: buildLangStub() });
+    vi.stubGlobal('CONFIG', { wh40k: WH40K });
+}
+
 describe('getCharacteristicDisplayInfo', () => {
+    beforeEach(stubRuntime);
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
     it('returns label + short for a known characteristic', () => {
         expect(getCharacteristicDisplayInfo('weaponSkill')).toEqual({ label: 'Weapon Skill', short: 'WS' });
     });
@@ -18,10 +31,22 @@ describe('getCharacteristicDisplayInfo', () => {
 });
 
 describe('getAllCharacteristicDisplayInfo', () => {
+    beforeEach(stubRuntime);
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
     it('exposes the full characteristic map', () => {
         const all = getAllCharacteristicDisplayInfo();
         expect(all['fellowship']).toEqual({ label: 'Fellowship', short: 'Fel' });
         expect(Object.keys(all)).toContain('influence');
+    });
+
+    it('resolves every characteristic through the langpack (no raw keys leak)', () => {
+        const leaked = Object.entries(getAllCharacteristicDisplayInfo()).filter(
+            ([, info]) => info.label.startsWith('WH40K.') || info.short.startsWith('WH40K.'),
+        );
+        expect(leaked).toEqual([]);
     });
 });
 
@@ -58,5 +83,10 @@ describe('getChoiceTypeLabel', () => {
     it('falls back to a capitalized type when the key is unlocalized', () => {
         vi.stubGlobal('game', { i18n: { localize: (k: string): string => k } });
         expect(getChoiceTypeLabel('skill')).toBe('Skill');
+    });
+
+    it('localizes the default label when no choice type is given', () => {
+        vi.stubGlobal('game', { i18n: buildLangStub() });
+        expect(getChoiceTypeLabel('')).toBe('Choice');
     });
 });

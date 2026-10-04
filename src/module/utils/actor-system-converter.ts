@@ -1,4 +1,4 @@
-import { ACTOR_SYSTEM_LABELS } from '../applications/dialogs/create-actor-dialog.ts';
+import { ACTOR_SYSTEMS } from '../applications/dialogs/create-actor-dialog.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 
 /**
@@ -59,7 +59,7 @@ type ActorSourceData = {
     [key: string]: JsonValue | ActorSystemSource | ActorFlags | undefined;
 };
 
-export type ConvertibleCharacterSystem = keyof typeof ACTOR_SYSTEM_LABELS;
+export type ConvertibleCharacterSystem = string;
 export type ConvertibleActorKind = 'character' | 'npc' | 'terracraft' | 'aircraft' | 'watercraft';
 export type ConvertibleActorType = `${ConvertibleCharacterSystem}-${ConvertibleActorKind}`;
 
@@ -103,7 +103,7 @@ const ORIGIN_PATH_FIELDS_BY_SYSTEM: Record<ConvertibleCharacterSystem, ReadonlyS
     im: new Set(['homeWorld', 'background', 'role', 'motivation']),
 };
 
-export const CONVERTIBLE_CHARACTER_SYSTEMS = Object.freeze(Object.keys(ACTOR_SYSTEM_LABELS));
+export const CONVERTIBLE_CHARACTER_SYSTEMS = Object.freeze([...ACTOR_SYSTEMS]);
 export const CONVERTIBLE_ACTOR_KINDS = Object.freeze(['character', 'npc', 'terracraft', 'aircraft', 'watercraft'] as const);
 
 export function isConvertibleActorKind(kind: string): kind is ConvertibleActorKind {

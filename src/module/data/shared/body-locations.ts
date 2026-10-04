@@ -3,8 +3,11 @@
  * Produces a SchemaField covering the six hit locations used by armour and cybernetics.
  */
 
-/** The six standard hit locations, in canonical iteration order. */
-export const BODY_LOCATIONS: readonly string[] = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+/** The six standard hit locations, in canonical iteration order — the single source of location ids. */
+export const BODY_LOCATIONS = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'] as const;
+
+/** Stable hit-location identifier: the schema key of an `armour` / `armourPoints` block. */
+export type BodyLocationId = (typeof BODY_LOCATIONS)[number];
 
 /**
  * Build a SchemaField for the six standard body locations.

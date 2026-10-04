@@ -1,48 +1,35 @@
 import { describe, expect, it } from 'vitest';
 
 /**
- * Schema regression: parse the condition registry and confirm it exposes the
- * full DH2 set. The full `createConditionEffect` flow needs `ui.notifications`
- * and a live actor graph that aren't available outside Foundry, so we verify
- * the registry via static module read (the registry is a module-scope literal).
- *
- * The table lives in the LEAF `rules/condition-registry.ts`, not in this hub —
- * see the `no-circular` note in that module's header.
+ * Source-level regressions for the impure writer hub. The full
+ * `createConditionEffect` / tick flow needs `ui.notifications` and a live actor
+ * graph that aren't available outside Foundry; the pure halves are tested in
+ * `condition-registry.test.ts` / `condition-tick.test.ts`.
  */
-describe('active-effects condition registry', () => {
-    it('lists every canonical DH2 condition string in the source', async () => {
+describe('active-effects condition writers', () => {
+    it('holds no condition table: conditions come from the condition documents', async () => {
         const fs = await import('node:fs/promises');
         const path = await import('node:path');
-        const source = await fs.readFile(path.resolve(process.cwd(), 'src/module/rules/condition-registry.ts'), 'utf8');
-        // Each entry below appears as `<key>: {` in the conditions registry.
-        for (const key of [
-            'stunned',
-            'burning',
-            'prone',
-            'blinded',
-            'deafened',
-            'grappled',
-            'pinned',
-            'unconscious',
-            'suffocating',
-            'bloodloss',
-            'uselessLimb',
-            'fatigued',
-            'manacled',
-            'inspired',
-            'blessed',
-        ]) {
-            expect(source).toContain(`${key}: {`);
-        }
+        const registry = await fs.readFile(path.resolve(process.cwd(), 'src/module/rules/condition-registry.ts'), 'utf8');
+        // The old hard-coded registry: a module-scope table keyed by condition name.
+        expect(registry).not.toMatch(/const CONDITION_REGISTRY/);
+        for (const name of ["'Burning'", "'Inspired'", "'Blessed'", "'Manacled'", "'Stunned'", "'Prone'"]) expect(registry).not.toContain(name);
     });
 
-    it('declares handleBloodLoss alongside handleBleeding and handleOnFire', async () => {
+    it('ticks conditions through ONE data-driven processor, not per-condition handlers', async () => {
         const fs = await import('node:fs/promises');
         const path = await import('node:path');
         const source = await fs.readFile(path.resolve(process.cwd(), 'src/module/rules/active-effects.ts'), 'utf8');
-        expect(source).toContain('export async function handleBleeding');
-        expect(source).toContain('export async function handleOnFire');
-        expect(source).toContain('export async function handleBloodLoss');
+        expect(source).toContain('export async function processConditionTicks');
+        for (const handler of ['handleBleeding', 'handleOnFire', 'handleBloodLoss']) expect(source).not.toContain(`function ${handler}`);
+    });
+
+    it('createEffect writes `img` and `statuses` (V14 has no `icon` field; a status needs `statuses`)', async () => {
+        const fs = await import('node:fs/promises');
+        const path = await import('node:path');
+        const source = await fs.readFile(path.resolve(process.cwd(), 'src/module/rules/active-effects.ts'), 'utf8');
+        expect(source).toContain("img: effectData.img ?? 'icons/svg/aura.svg'");
+        expect(source).toContain('statuses: effectData.statuses ?? []');
     });
 
     it('applyCriticalDamageConditions wires the armour decision trees + physical side effects', async () => {

@@ -9,8 +9,9 @@
  * registry never had, so the panel could not be rendered in a story at all —
  * which is why the surface had no visual coverage when #494 reworked it twice.
  *
- * The ladders live here so both registries call the same code. Pure — no
- * Foundry globals — so the Storybook bridge can import it directly.
+ * The ladders live here so both registries call the same code. The tier
+ * names resolve through `game.i18n` (a runtime global the Storybook sheet
+ * mocks provide); the threshold and class ladders are otherwise pure.
  */
 
 /** A first-match threshold ladder: the first tier whose inclusive max is >= points. */
@@ -43,14 +44,15 @@ export function thresholdLadder(points: number, tiers: Ladder, fallback: string)
     return fallback;
 }
 
-/** PURE (0), TAINTED (1–30), SOILED (31–60), DEBASED (61–90), PROFANE (91–99), DAMNED (100). */
+/** Langpack keys of PURE (0), TAINTED (1–30), SOILED (31–60), DEBASED (61–90), PROFANE (91–99); DAMNED (100) is the fallback. */
 const CORRUPTION_DEGREES: Ladder = [
-    [0, 'PURE'],
-    [30, 'TAINTED'],
-    [60, 'SOILED'],
-    [90, 'DEBASED'],
-    [99, 'PROFANE'],
+    [0, 'WH40K.Status.Corruption.Degree.Pure.Label'],
+    [30, 'WH40K.Status.Corruption.Degree.Tainted.Label'],
+    [60, 'WH40K.Status.Corruption.Degree.Soiled.Label'],
+    [90, 'WH40K.Status.Corruption.Degree.Debased.Label'],
+    [99, 'WH40K.Status.Corruption.Degree.Profane.Label'],
 ];
+const CORRUPTION_DAMNED_LABEL_KEY = 'WH40K.Status.Corruption.Degree.Damned.Label';
 
 const CORRUPTION_CLASSES: Ladder = [
     [0, 'wh40k-degree-pure'],
@@ -60,14 +62,15 @@ const CORRUPTION_CLASSES: Ladder = [
     [99, 'wh40k-degree-profane'],
 ];
 
-/** STABLE (0–9), UNSETTLED (10–39), DISTURBED (40–59), UNHINGED (60–79), DERANGED (80–99), TERMINALLY INSANE (100). */
+/** Langpack keys of STABLE (0–9), UNSETTLED (10–39), DISTURBED (40–59), UNHINGED (60–79), DERANGED (80–99); TERMINALLY INSANE (100) is the fallback. */
 const INSANITY_DEGREES: Ladder = [
-    [9, 'STABLE'],
-    [39, 'UNSETTLED'],
-    [59, 'DISTURBED'],
-    [79, 'UNHINGED'],
-    [99, 'DERANGED'],
+    [9, 'WH40K.Status.Insanity.Degree.Stable.Label'],
+    [39, 'WH40K.Status.Insanity.Degree.Unsettled.Label'],
+    [59, 'WH40K.Status.Insanity.Degree.Disturbed.Label'],
+    [79, 'WH40K.Status.Insanity.Degree.Unhinged.Label'],
+    [99, 'WH40K.Status.Insanity.Degree.Deranged.Label'],
 ];
+const INSANITY_TERMINAL_LABEL_KEY = 'WH40K.Status.Insanity.Degree.Terminal.Label';
 
 const INSANITY_CLASSES: Ladder = [
     [9, 'wh40k-degree-stable'],
@@ -77,9 +80,9 @@ const INSANITY_CLASSES: Ladder = [
     [99, 'wh40k-degree-deranged'],
 ];
 
-/** Corruption degree label for a corruption score. */
+/** Localized corruption degree label for a corruption score. */
 export function corruptionDegree(corruption: DegreeScore): string {
-    return thresholdLadder(numberOr0(corruption), CORRUPTION_DEGREES, 'DAMNED');
+    return game.i18n.localize(thresholdLadder(numberOr0(corruption), CORRUPTION_DEGREES, CORRUPTION_DAMNED_LABEL_KEY));
 }
 
 /** CSS class for a corruption score's degree. */
@@ -87,9 +90,9 @@ export function corruptionDegreeClass(corruption: DegreeScore): string {
     return thresholdLadder(numberOr0(corruption), CORRUPTION_CLASSES, 'wh40k-degree-damned');
 }
 
-/** Insanity degree label for an insanity score. */
+/** Localized insanity degree label for an insanity score. */
 export function insanityDegree(insanity: DegreeScore): string {
-    return thresholdLadder(numberOr0(insanity), INSANITY_DEGREES, 'TERMINALLY INSANE');
+    return game.i18n.localize(thresholdLadder(numberOr0(insanity), INSANITY_DEGREES, INSANITY_TERMINAL_LABEL_KEY));
 }
 
 /** CSS class for an insanity score's degree. */

@@ -11,7 +11,8 @@
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { ACTOR_KIND_LABELS, ACTOR_SYSTEM_AVAILABILITY, ACTOR_SYSTEM_LABELS } from './create-actor-dialog.ts';
+import { localizeKey } from '../../../../stories/mocks/lang-localize.ts';
+import { ACTOR_KINDS, ACTOR_SYSTEM_AVAILABILITY, ACTOR_SYSTEMS } from './create-actor-dialog.ts';
 
 interface Args {
     initialSystem: string;
@@ -19,18 +20,17 @@ interface Args {
 
 function buildKindOptions(systemId: string, selectedKind: string): string {
     const allowed = ACTOR_SYSTEM_AVAILABILITY[systemId] ?? [];
-    return Object.keys(ACTOR_KIND_LABELS)
-        .filter((k) => allowed.includes(k))
-        .map((k) => `<option value="${k}" ${k === selectedKind ? 'selected' : ''}>${ACTOR_KIND_LABELS[k]}</option>`)
+    return ACTOR_KINDS.filter((k) => allowed.includes(k))
+        .map((k) => `<option value="${k}" ${k === selectedKind ? 'selected' : ''}>${localizeKey(`WH40K.CreateActor.Kinds.${k}`)}</option>`)
         .join('');
 }
 
 function renderCreateActorForm(initialSystem: string): HTMLElement {
     const allowed = ACTOR_SYSTEM_AVAILABILITY[initialSystem] ?? [];
     const initialKind = allowed[0] ?? 'character';
-    const systemOptions = Object.keys(ACTOR_SYSTEM_LABELS)
-        .map((k) => `<option value="${k}" ${k === initialSystem ? 'selected' : ''}>${ACTOR_SYSTEM_LABELS[k]}</option>`)
-        .join('');
+    const systemOptions = ACTOR_SYSTEMS.map(
+        (k) => `<option value="${k}" ${k === initialSystem ? 'selected' : ''}>${localizeKey(`WH40K.SETTINGS.PrimaryGameSystem.Choices.${k}`)}</option>`,
+    ).join('');
 
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');

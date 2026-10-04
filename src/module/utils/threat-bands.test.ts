@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { buildLangStub } from '../testing/lang-stub.ts';
+import { capitalize } from './format.ts';
 import { THREAT_BANDS, tierBandFor } from './threat-bands.ts';
 
 /**
@@ -22,13 +24,22 @@ describe('threat-bands', () => {
 
     it('carries line-neutral badge label keys and prose description keys', () => {
         const minor = tierBandFor(3);
-        expect(minor.label).toBe('Minor');
         // The badge once showed Inquisition-only Latin ("Hereticus Minoris") on every line.
         expect(minor.labelKey).toBe('WH40K.Threat.Tier.Minor');
         expect(minor.descriptionKey).toBe('WH40K.Threat.Low');
         expect(tierBandFor(30).labelKey).toBe('WH40K.Threat.Tier.Boss');
         expect(tierBandFor(30).descriptionKey).toBe('WH40K.Threat.Apocalyptic');
-        expect(THREAT_BANDS.map((b) => b.labelKey)).toEqual(THREAT_BANDS.map((b) => `WH40K.Threat.Tier.${b.label}`));
+        expect(THREAT_BANDS.map((b) => b.labelKey)).toEqual(THREAT_BANDS.map((b) => `WH40K.Threat.Tier.${capitalize(b.key)}`));
+    });
+
+    it('carries no English display label — only langpack keys', () => {
+        for (const band of THREAT_BANDS) expect(Object.keys(band)).not.toContain('label');
+    });
+
+    it('every band resolves its label, description and generator-tier keys through the langpack', () => {
+        const lang = buildLangStub();
+        const keys = THREAT_BANDS.flatMap((band) => [band.labelKey, band.descriptionKey, `WH40K.NPC.Tier${capitalize(band.key)}`]);
+        expect(keys.filter((key) => !lang.has(key))).toEqual([]);
     });
 
     it.each([

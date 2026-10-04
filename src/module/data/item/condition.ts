@@ -1,3 +1,11 @@
+import {
+    ACTION_LIMITS,
+    type ActionLimit,
+    type ConditionTick,
+    TARGETED_ATTACK_KINDS,
+    type TargetedConditionEntry,
+    TICK_INTERVALS,
+} from '../../rules/condition-mechanics.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -20,6 +28,16 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
     declare appliesTo: string;
     declare duration: { value: number; units: string };
     declare notes: string;
+    /** Modifiers OTHERS get when attacking the bearer (read by `rules/targeted-conditions.ts`). */
+    declare targeted: TargetedConditionEntry[];
+    /** Attacks against the bearer auto-hit and roll damage twice, keeping the better. */
+    declare helplessTarget: boolean;
+    /** What the bearer may do on its turn (read by `rules/action-budget.ts`). */
+    declare actionLimit: ActionLimit;
+    /** Characteristic keys and test-variant names the bearer automatically fails. */
+    declare autoFail: string[];
+    /** Per-interval effect (read by `rules/condition-tick.ts`). */
+    declare tick: ConditionTick;
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -66,6 +84,37 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
+
+            // Structured mechanics (Direction #7) — the vocabulary lives in
+            // `rules/condition-mechanics.ts`; every field may be authored as a
+            // per-line container, collapsed to the bearer's line on read.
+            targeted: new fields.ArrayField(
+                new fields.SchemaField({
+                    attack: new fields.StringField({ required: true, initial: 'any', choices: [...TARGETED_ATTACK_KINDS] }),
+                    value: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                    exceptRange: new fields.StringField({ required: true, blank: true, initial: '' }),
+                    label: new fields.StringField({ required: true, blank: true, initial: '' }),
+                }),
+                { required: true, initial: [] },
+            ),
+            helplessTarget: new fields.BooleanField({ required: true, initial: false }),
+            actionLimit: new fields.StringField({ required: true, initial: 'none', choices: [...ACTION_LIMITS] }),
+            autoFail: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
+            tick: new fields.SchemaField({
+                interval: new fields.StringField({ required: true, blank: true, initial: '', choices: [...TICK_INTERVALS] }),
+                damage: new fields.StringField({ required: true, blank: true, initial: '' }),
+                damageType: new fields.StringField({ required: true, blank: true, initial: '' }),
+                ignoresArmour: new fields.BooleanField({ required: true, initial: false }),
+                fatigue: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                test: new fields.SchemaField(
+                    {
+                        characteristic: new fields.StringField({ required: true, blank: false }),
+                        difficulty: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                    },
+                    { required: false, nullable: true, initial: null },
+                ),
+                onFail: new fields.StringField({ required: true, blank: true, initial: '' }),
+            }),
         };
     }
 

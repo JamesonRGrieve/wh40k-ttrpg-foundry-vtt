@@ -136,7 +136,7 @@ import {
     preloadCompendiumTokenActors,
     shouldPlaceTokenOnly,
 } from './rules/compendium-token-actors.ts';
-import { conditionStatusEffects } from './rules/condition-registry.ts';
+import { captureCoreDeadStatus, loadConditionCatalog, registerConditionStatusEffects } from './rules/condition-registry.ts';
 import { WH40K } from './rules/config.ts';
 import { convertDeadActorToPile } from './rules/death-loot.ts';
 import { registerGMProxy } from './rules/gm-proxy.ts';
@@ -159,6 +159,7 @@ import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.
 import { DHTourMain } from './tours/main-tour.ts';
 import type { WH40KGameSystem } from './types/global.d.ts';
 import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
+import { inferActiveGameLine } from './utils/item-variant-utils.ts';
 import { backfillOriginPathUuids } from './utils/origin-path-uuid-backfill.ts';
 import { RollTableUtils } from './utils/roll-table-utils.ts';
 import { uuidNameCache } from './utils/uuid-name-cache.ts';
@@ -952,12 +953,12 @@ export class HooksManager {
         CONFIG.MeasuredTemplate.defaults.angle = 30.0;
 
         // Replace Foundry's generic default status list with THIS system's
-        // conditions (#495). Previously CONFIG.statusEffects was never registered,
-        // so the token HUD offered defaults with no relationship to the system's
-        // conditions, their artwork, or their mechanical `changes` — and nothing
-        // the system applied ever became a token status at all.
-        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.statusEffects is a loosely-typed core array; the registry projection is asserted at its source
-        CONFIG.statusEffects = conditionStatusEffects();
+        // conditions (#495). Core's `dead` marker is kept (it backs DEFEATED and the
+        // #477 death-loot hook); the condition rows come from the condition packs,
+        // whose index loads at `ready` (`loadConditionCatalog`), so until then the
+        // list holds `dead` only. Mutated in place — see registerConditionStatusEffects.
+        captureCoreDeadStatus(CONFIG.statusEffects);
+        registerConditionStatusEffects(CONFIG.statusEffects, inferActiveGameLine());
         // Bind core's DEFEATED special status to the registry's `dead` id, so the
         // token defeated overlay and the combat tracker's defeated marker follow
         // the same state the rules engine sees in `actor.statuses` (#495).
@@ -1284,6 +1285,17 @@ export class HooksManager {
         );
     }
 
+    /**
+     * Load the condition catalog from the condition packs' index and register the
+     * token-HUD status rows from it (Direction #7). Runs at `ready` because pack
+     * indices load asynchronously; the HUD only renders on user interaction after
+     * the canvas is ready, by which point the rows are in place.
+     */
+    static async loadConditionStatusEffects(): Promise<void> {
+        await loadConditionCatalog(game.packs);
+        registerConditionStatusEffects(CONFIG.statusEffects, inferActiveGameLine());
+    }
+
     static async ready(): Promise<void> {
         // Register the guided tour first — it is synchronous and independent of
         // the world-data steps below, so registering it up front guarantees it
@@ -1294,6 +1306,7 @@ export class HooksManager {
         await checkAndMigrateWorld();
         await HooksManager.hydrateWorldActorsOnReady();
         await uuidNameCache.build();
+        await HooksManager.loadConditionStatusEffects();
         await buildWeaponQualityPayloadIndex();
         await buildSkillVariantIndex();
         await buildSkillSpecializationIndex();

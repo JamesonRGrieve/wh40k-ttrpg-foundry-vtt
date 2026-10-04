@@ -4,14 +4,12 @@
  * "A character bound with manacles suffers a –40 penalty to all
  *  Ballistic and Weapon Skill checks."
  *
- * This is modelled as the tracked `manacled` condition Active Effect
- * (see `src/module/rules/active-effects.ts`). The condition writes
+ * Manacled is NOT a book condition (there is no condition document for
+ * it), so it is modelled as a tracked, flag-tagged Active Effect built
+ * by {@link manaclesEffectData}. It writes
  * `system.characteristics.ballisticSkill.modifier -40` and
  * `system.characteristics.weaponSkill.modifier -40`, which compose
- * naturally with every existing characteristic-modifier accumulator
- * (cover, range, fatigue, etc. in `combat-circumstance-modifiers.ts`
- * and the roll dialog breakdown) — there is no separate registry to
- * touch.
+ * naturally with every existing characteristic-modifier accumulator.
  *
  * This module owns only the pure helpers that the equip/unequip and
  * sheet-action wiring needs:
@@ -36,7 +34,8 @@
  */
 
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.d.ts';
-import { createConditionEffect } from './active-effects.ts';
+import { createEffect } from './active-effects.ts';
+import { characteristicChangeKey, type EffectDataInput, MODE_ADD } from './condition-registry.ts';
 
 /* -------------------------------------------- */
 /*  Constants                                   */
@@ -48,11 +47,11 @@ export const MANACLES_BS_PENALTY = -40;
 /** Errata p. 176 — penalty applied to WS while manacled. */
 export const MANACLES_WS_PENALTY = -40;
 
-/** Registry key in the `active-effects.ts` condition map. */
-export const MANACLES_CONDITION_KEY = 'manacled' as const;
-
-/** Display name the registry assigns to the created AE. */
+/** Display name of the created AE (also the name-fallback detector). */
 export const MANACLES_EFFECT_NAME = 'Manacled' as const;
+
+/** Artwork of the created AE. */
+const MANACLES_EFFECT_IMG = 'icons/svg/chains.svg';
 
 /**
  * Compendium `system.identifier` slug on the canonical manacles gear
@@ -182,27 +181,34 @@ interface ApplyManaclesOptions {
 }
 
 /**
- * Apply the Manacled condition to an actor. Idempotent: if a Manacled
- * AE already exists, returns it without creating a duplicate.
- *
- * The condition writes the −40 BS / −40 WS modifier through the active
- * effect changes registered in `active-effects.ts:conditions.manacled`,
- * so this helper does NOT need to set any modifier values directly.
+ * The Manacled Active Effect payload: −40 BS / −40 WS, tagged with the
+ * `wh40k-rpg.manacles` flag so unequip lifts exactly this effect. Pure.
+ * @param {string} [origin]  Originating item UUID.
+ * @returns {EffectDataInput}  The creation payload.
+ */
+export function manaclesEffectData(origin?: string): EffectDataInput {
+    return {
+        name: MANACLES_EFFECT_NAME,
+        img: MANACLES_EFFECT_IMG,
+        changes: [
+            { key: characteristicChangeKey('ballisticSkill'), mode: MODE_ADD, value: MANACLES_BS_PENALTY },
+            { key: characteristicChangeKey('weaponSkill'), mode: MODE_ADD, value: MANACLES_WS_PENALTY },
+        ],
+        flags: { [MANACLES_FLAG_SCOPE]: { [MANACLES_FLAG_KEY]: true, nature: 'harmful' } },
+        origin,
+    };
+}
+
+/**
+ * Apply the Manacled effect to an actor. Idempotent: if a Manacled AE
+ * already exists, returns it without creating a duplicate.
  */
 export async function applyManaclesCondition(actor: WH40KBaseActorDocument, options: ApplyManaclesOptions = {}): Promise<ManaclesEffectCandidate | null> {
     const existing = findManaclesEffect(actor);
     if (existing !== null) return existing;
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ActiveEffect.flags is an untyped per-scope bag; createConditionEffect's options.flags signature is Record<string, unknown>
-    const flags: Record<string, Record<string, unknown>> = {
-        [MANACLES_FLAG_SCOPE]: { [MANACLES_FLAG_KEY]: true },
-    };
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: createConditionEffect returns Foundry's untyped ActiveEffect handle
-    const created = (await createConditionEffect(actor, MANACLES_CONDITION_KEY, {
-        flags,
-        ...(options.origin !== undefined ? { origin: options.origin } : {}),
-    })) as ManaclesEffectCandidate | Array<ManaclesEffectCandidate> | null;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: createEffect returns Foundry's untyped createEmbeddedDocuments result
+    const created = (await createEffect(actor, manaclesEffectData(options.origin))) as ManaclesEffectCandidate | Array<ManaclesEffectCandidate> | null;
 
     if (Array.isArray(created)) return created[0] ?? null;
     return created;

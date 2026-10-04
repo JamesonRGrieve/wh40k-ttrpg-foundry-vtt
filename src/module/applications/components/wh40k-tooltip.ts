@@ -7,6 +7,7 @@
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { hitLocationLabel } from '../../rules/hit-locations.ts';
 import type { WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KArmourLocation } from '../../types/global.d.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
 import { parseQualityLevel } from '../../utils/quality-id.ts';
@@ -933,16 +934,8 @@ function resolveEquippedArmorAp(piece: ArmorTooltipEquippedPiece, location: stri
 }
 
 export function prepareArmorTooltipData(location: string, armorData: WH40KArmourLocation, equipped: ArmorTooltipEquippedPiece[] = []): string {
-    const locationLabels: Record<string, string> = {
-        head: 'Head',
-        rightArm: 'Right Arm',
-        leftArm: 'Left Arm',
-        body: 'Body',
-        rightLeg: 'Right Leg',
-        leftLeg: 'Left Leg',
-    };
     const data: ArmorTooltipPayload = {
-        location: locationLabels[location] ?? location,
+        location: hitLocationLabel(location),
         total: armorData.total,
         toughnessBonus: armorData.toughnessBonus,
         traitBonus: armorData.traitBonus,

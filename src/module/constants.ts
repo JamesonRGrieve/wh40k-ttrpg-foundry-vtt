@@ -15,3 +15,11 @@ export const SYSTEM_ID = 'wh40k-rpg';
  * Foundry `CONST` global and therefore cannot be loaded outside a booted client.
  */
 export const DEAD_STATUS_ID = 'dead';
+
+/**
+ * The status id (condition `system.identifier`) the fatigue model applies when
+ * fatigue exceeds its threshold. An identifier in the condition vocabulary, not
+ * content: the condition's name, art and modifiers come from its compendium
+ * document.
+ */
+export const UNCONSCIOUS_STATUS_ID = 'unconscious';

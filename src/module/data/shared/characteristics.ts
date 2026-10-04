@@ -57,6 +57,24 @@ export const CHARACTERISTICS: readonly CharacteristicDef[] = [
     { key: 'influence', label: 'Influence', short: 'Inf' },
 ] as const;
 
+/** Case-folded short code / full key → full schema key, over both spellings. */
+const CHARACTERISTIC_KEY_LOOKUP: ReadonlyMap<string, string> = new Map([
+    ...Object.entries(CHARACTERISTIC_SHORT_TO_FULL).map(([short, full]): [string, string] => [short.toLowerCase(), full]),
+    ...CHARACTERISTICS.map((c): [string, string] => [c.key.toLowerCase(), c.key]),
+]);
+
+/**
+ * Resolve an authored characteristic key — a full schema key (`weaponSkill`) or a
+ * short code in any case (`WS`, `ws`, `Ag`) — to the full schema key, or null
+ * when it names no characteristic. Content authors both spellings in
+ * `modifiers.characteristics`; the actor schema is keyed by the full key only.
+ * @param {string} key  The authored key.
+ * @returns {string | null}  The full schema key.
+ */
+export function normalizeCharacteristicKey(key: string): string | null {
+    return CHARACTERISTIC_KEY_LOOKUP.get(key.trim().toLowerCase()) ?? null;
+}
+
 /**
  * Build a `{ key → DataField }` characteristics schema block by mapping the
  * canonical {@link CHARACTERISTICS} table through a per-model field factory

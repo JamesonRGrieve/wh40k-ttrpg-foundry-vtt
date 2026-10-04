@@ -1,7 +1,10 @@
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import { t } from '../i18n/t.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { hitsForDegrees, isBurstAction } from '../rules/auto-fire.ts';
+import { autoFailingConditions, helplessAutoHitConditions, rolledCharacteristic } from '../rules/condition-mechanics.ts';
+import { activeConditionMechanics } from '../rules/condition-registry.ts';
 import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
 import { gmProxyActorUpdate } from '../rules/gm-proxy.ts';
 import { DAMAGE_TIER_LABEL_KEYS, firstAidTierPenalty, getDamageTier } from '../rules/healing.ts';
@@ -27,6 +30,7 @@ import {
     type SkillUseKind,
     useNeedsItemChoice,
 } from '../rules/skill-uses.ts';
+import { shouldSkipSelfTargetDefenderMods } from '../rules/target-situationals.ts';
 import { isWarpWeak, type WarpWeaknessScene } from '../rules/warp-weakness.ts';
 import { shouldDestroyOnCriticalFail, weaponDestroysOnCriticalFail } from '../rules/weapon-destroy.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
@@ -40,6 +44,42 @@ import { type AttackDataLike, Hit, PsychicDamageData, WeaponDamageData } from '.
 import type { ExtendedTestChatContext } from './extended-test-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
+
+/** Langpack keys of the headings the effect rows on an action card are filed under. */
+const EFFECT_TITLE = {
+    psychicPhenomena: 'WH40K.ActionEffect.Title.PsychicPhenomena',
+    psychic: 'WH40K.ActionEffect.Title.Psychic',
+    feint: 'WH40K.ActionEffect.Title.Feint',
+    knockDown: 'WH40K.ActionEffect.Title.KnockDown',
+    manoeuvre: 'WH40K.ActionEffect.Title.Manoeuvre',
+    disarm: 'WH40K.ActionEffect.Title.Disarm',
+    allOutAttack: 'WH40K.ActionEffect.Title.AllOutAttack',
+    stunAttack: 'WH40K.ActionEffect.Title.StunAttack',
+    spray: 'WH40K.ActionEffect.Title.Spray',
+    suppressing: 'WH40K.ActionEffect.Title.Suppressing',
+    nearOverheat: 'WH40K.ActionEffect.Title.NearOverheat',
+    catastrophicJam: 'WH40K.ActionEffect.Title.CatastrophicJam',
+    nearJam: 'WH40K.ActionEffect.Title.NearJam',
+    deviation: 'WH40K.ActionEffect.Title.Deviation',
+    autoFailure: 'WH40K.ActionEffect.Title.AutoFailure',
+    overheats: 'WH40K.ActionEffect.Title.Overheats',
+    jam: 'WH40K.ActionEffect.Title.Jam',
+    medicae: 'WH40K.ActionEffect.Title.Medicae',
+    interrogation: 'WH40K.ActionEffect.Title.Interrogation',
+    readout: 'WH40K.ActionEffect.Title.Readout',
+    detection: 'WH40K.ActionEffect.Title.Detection',
+    social: 'WH40K.ActionEffect.Title.Social',
+    contest: 'WH40K.ActionEffect.Title.Contest',
+    demolition: 'WH40K.ActionEffect.Title.Demolition',
+    object: 'WH40K.ActionEffect.Title.Object',
+    techUse: 'WH40K.ActionEffect.Title.TechUse',
+    athletics: 'WH40K.ActionEffect.Title.Athletics',
+    security: 'WH40K.ActionEffect.Title.Security',
+    sleightOfHand: 'WH40K.ActionEffect.Title.SleightOfHand',
+    chemUse: 'WH40K.ActionEffect.Title.ChemUse',
+    blather: 'WH40K.ActionEffect.Title.Blather',
+    warCry: 'WH40K.ActionEffect.Title.WarCry',
+} as const;
 
 export class ActionData {
     id: string = uuid();
@@ -163,7 +203,7 @@ export class ActionData {
 
         if (!outcome.triggered) return;
 
-        this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
+        this.addEffect(t(EFFECT_TITLE.psychicPhenomena), t('WH40K.ActionEffect.PsychicPhenomena'));
 
         let autoRoll = true;
         try {
@@ -221,14 +261,11 @@ export class ActionData {
         const weaponRollData = this.rollData as WeaponRollData;
         if (weaponRollData.isFeint) {
             if (!this.rollData.success) {
-                this.addEffect('Feint', `The character fails to feint against the target!`);
+                this.addEffect(t(EFFECT_TITLE.feint), t('WH40K.ActionEffect.Feint.Failed'));
             } else if (this.rollData.targetActor !== null) {
-                this.addEffect('Feint', `The next melee Standard Attack action against that same target during this turn cannot be Evaded!`);
+                this.addEffect(t(EFFECT_TITLE.feint), t('WH40K.ActionEffect.Feint.Succeeded'));
             } else {
-                this.addEffect(
-                    'Feint',
-                    `Compare to targets Weapon Skill check. If the character wins, his next melee Standard Attack action against that same target during this turn cannot be Evaded.`,
-                );
+                this.addEffect(t(EFFECT_TITLE.feint), t('WH40K.ActionEffect.Feint.Compare'));
             }
         }
 
@@ -243,44 +280,35 @@ export class ActionData {
                     const sourceCharacteristics =
                         sourceActor !== null ? (sourceActor.system as { characteristics?: { strength?: { bonus: number } } }).characteristics : undefined;
                     const strengthBonus = sourceCharacteristics?.strength?.bonus ?? 0;
-                    this.addEffect(
-                        'Knock Down',
-                        `The target is knocked Prone and must use a Stand action in his turn to regain his feet! The impact deals [[1d5-3+${strengthBonus}]] (min 0) damage and one level of fatigue to the target!`,
-                    );
+                    this.addEffect(t(EFFECT_TITLE.knockDown), t('WH40K.ActionEffect.KnockDown.Impact', { strengthBonus }));
                 } else if (oppDegrees > 0) {
-                    this.addEffect('Knock Down', `The target is knocked Prone and must use a Stand action in his turn to regain his feet!`);
+                    this.addEffect(t(EFFECT_TITLE.knockDown), t('WH40K.ActionEffect.KnockDown.Prone'));
                 } else if (oppDegrees > -2) {
-                    this.addEffect('Knock Down', `The character fails to knock down the target!`);
+                    this.addEffect(t(EFFECT_TITLE.knockDown), t('WH40K.ActionEffect.KnockDown.Failed'));
                 } else {
-                    this.addEffect('Knock Down', `The character fails to knock down the target and in the failure knocks themselves prone instead!`);
+                    this.addEffect(t(EFFECT_TITLE.knockDown), t('WH40K.ActionEffect.KnockDown.Backfired'));
                 }
             } else if (this.rollData.success) {
-                this.addEffect(
-                    'Knock Down',
-                    `Compare to targets Strength check. If the attacker wins, the target is knocked Prone and must use a Stand action in his turn to regain his feet. If the attacker succeeds by two or more degrees of success, he can choose to inflict 1d5–3+SB Impact damage and one level of Fatigue on the target. If the target wins the test, he keeps his footing. If the target wins by two or more degrees of success, the attacker is knocked Prone instead.`,
-                );
+                this.addEffect(t(EFFECT_TITLE.knockDown), t('WH40K.ActionEffect.KnockDown.Compare'));
             } else {
-                this.addEffect('Knock Down', `The character fails to knock down the target!`);
+                this.addEffect(t(EFFECT_TITLE.knockDown), t('WH40K.ActionEffect.KnockDown.Failed'));
             }
         }
 
         // #450: Manoeuvre — opposed WS; a win shoves the target 1 metre.
         if (weaponRollData.isManoeuvre) {
-            this.addEffect(
-                'Manoeuvre',
-                this.rollData.success ? game.i18n.localize('WH40K.Combat.ManoeuvrePush') : game.i18n.localize('WH40K.Combat.ManoeuvreFail'),
-            );
+            this.addEffect(t(EFFECT_TITLE.manoeuvre), this.rollData.success ? t('WH40K.Combat.ManoeuvrePush') : t('WH40K.Combat.ManoeuvreFail'));
         }
 
         // #450: Disarm — opposed WS; a win drops the target's weapon, 3+ degrees of
         // victory lets the attacker take it (uses the #449 margin).
         if (weaponRollData.isDisarm) {
             if (!this.rollData.success) {
-                this.addEffect('Disarm', game.i18n.localize('WH40K.Combat.DisarmFail'));
+                this.addEffect(t(EFFECT_TITLE.disarm), t('WH40K.Combat.DisarmFail'));
             } else if (this.rollData.opposedMargin >= 3) {
-                this.addEffect('Disarm', game.i18n.localize('WH40K.Combat.DisarmTake'));
+                this.addEffect(t(EFFECT_TITLE.disarm), t('WH40K.Combat.DisarmTake'));
             } else {
-                this.addEffect('Disarm', game.i18n.localize('WH40K.Combat.DisarmDrop'));
+                this.addEffect(t(EFFECT_TITLE.disarm), t('WH40K.Combat.DisarmDrop'));
             }
         }
     }
@@ -293,6 +321,52 @@ export class ActionData {
         const rollTotal = this.rollData.roll?.total ?? 0;
         const target = this.rollData.modifiedTarget;
         this.rollData.success = isD100Success(rollTotal, target);
+        this.applyConditionOutcomeRules();
+    }
+
+    /**
+     * Condition-driven outcome overrides, read from the condition documents
+     * (Direction #7), each surfaced as a card note naming the condition:
+     *  - a melee attack against a bearer of a `helplessTarget` condition hits
+     *    automatically and marks the roll so damage is rolled twice and added;
+     *  - a test the roller's `autoFail` conditions name (its characteristic, or the
+     *    selected test variant) fails automatically. Applied last, so it wins over
+     *    an automatic hit.
+     */
+    applyConditionOutcomeRules(): void {
+        const rd = this.rollData;
+        rd.targetHelpless = false;
+
+        // The automatic hit is printed for Weapon Skill tests only — a MELEE attack —
+        // in every line (DH2 p229, RT/DW p248, OW p253, BC p245, DH1 p199).
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.weapon is a WH40KItem; isMelee is a DataModel getter not surfaced on that union at this layer
+        const weapon = rd.weapon as { isMelee?: boolean } | undefined;
+        const isMeleeAttack = weapon?.isMelee === true;
+        const selfTarget = shouldSkipSelfTargetDefenderMods(WH40KSettings.isHomebrewSelfTargeting(), rd.targetActor?.id ?? null, rd.sourceActor?.id ?? null);
+        if (!selfTarget) {
+            const helpless = helplessAutoHitConditions(activeConditionMechanics(rd.targetActor), isMeleeAttack);
+            if (helpless.length > 0) {
+                rd.success = true;
+                rd.targetHelpless = true;
+                this.addEffect(
+                    game.i18n.localize('WH40K.Condition.HelplessTarget.Label'),
+                    game.i18n.format('WH40K.Condition.HelplessTarget.Text', { conditions: helpless.map((c) => c.name).join(', ') }),
+                );
+            }
+        }
+
+        const failing = autoFailingConditions(activeConditionMechanics(rd.sourceActor), {
+            characteristic: rolledCharacteristic(rd),
+            variant: rd.testVariant === '' ? null : rd.testVariant,
+        });
+        if (failing.length > 0) {
+            rd.success = false;
+            rd.targetHelpless = false;
+            this.addEffect(
+                game.i18n.localize('WH40K.Condition.AutoFail.Label'),
+                game.i18n.format('WH40K.Condition.AutoFail.Text', { conditions: failing.map((c) => c.name).join(', ') }),
+            );
+        }
     }
 
     // eslint-disable-next-line complexity -- this method is a deliberate central dispatcher for action resolution branches
@@ -303,7 +377,7 @@ export class ActionData {
 
         if (actionItem !== undefined) {
             if (this.rollData.action === 'All Out Attack') {
-                this.addEffect('All Out Attack', 'The character cannot attempt Evasion reactions until the beginning of his next turn.');
+                this.addEffect(t(EFFECT_TITLE.allOutAttack), t('WH40K.ActionEffect.AllOutAttack'));
             }
 
             if (weaponRollData.isStun) {
@@ -321,19 +395,16 @@ export class ActionData {
                     if (stunTotal >= defense) {
                         this.rollData.success = true;
                         this.addEffect(
-                            'Stun Attack',
-                            `Stun roll of ${stunTotal} vs ${defense}. Target is stunned for ${stunTotal - defense} rounds and gains 1 level of fatigue.`,
+                            t(EFFECT_TITLE.stunAttack),
+                            t('WH40K.ActionEffect.Stun.Stunned', { roll: stunTotal, defense, rounds: stunTotal - defense }),
                         );
                     } else {
                         this.rollData.success = false;
-                        this.addEffect('Stun Attack', `Stun roll of ${stunTotal} vs ${defense}. The attack fails to stun the target!`);
+                        this.addEffect(t(EFFECT_TITLE.stunAttack), t('WH40K.ActionEffect.Stun.Resisted', { roll: stunTotal, defense }));
                     }
                 } else {
                     this.rollData.success = true;
-                    this.addEffect(
-                        'Stun Attack',
-                        `Stun roll of ${stunTotal}. Compare to the target's total of his Toughness bonus +1 per Armour point protecting his head. If the attacker's roll is equal to or higher than this value, the target is Stunned for a number of rounds equal to the difference between the two values and gains one level of Fatigue.`,
-                    );
+                    this.addEffect(t(EFFECT_TITLE.stunAttack), t('WH40K.ActionEffect.Stun.Compare', { roll: stunTotal }));
                 }
                 return;
             }
@@ -342,7 +413,7 @@ export class ActionData {
                 this.rollData.success = true;
                 this.rollData.dos = 1;
                 this.rollData.dof = 0;
-                this.addEffect('Spray', 'Everyone in 30 degree arc must pass an agility test or be hit.');
+                this.addEffect(t(EFFECT_TITLE.spray), t('WH40K.ActionEffect.Spray'));
             }
 
             const itemSystem = actionItem.system as {
@@ -360,9 +431,9 @@ export class ActionData {
             // + RAW: the talent says the character *may* re-roll).
             if (itemSystem.isRanged === true) {
                 if (this.rollData.action === 'Suppressing Fire - Semi') {
-                    this.addEffect('Suppressing', 'All targets within a 30 degree arc must pass a Difficult (-10) Pinning test for become Pinned.');
+                    this.addEffect(t(EFFECT_TITLE.suppressing), t('WH40K.ActionEffect.Suppressing.Semi'));
                 } else if (this.rollData.action === 'Suppressing Fire - Full') {
-                    this.addEffect('Suppressing', 'All targets within a 45 degree arc must pass a Hard (-20) Pinning test for become Pinned.');
+                    this.addEffect(t(EFFECT_TITLE.suppressing), t('WH40K.ActionEffect.Suppressing.Full'));
                 }
 
                 const rollTotal = this.rollData.roll?.total ?? 0;
@@ -376,7 +447,7 @@ export class ActionData {
                 if (rollTotal > 91 && hasOverheats) {
                     if (bestNeverJamsOrOverheats) {
                         this.rollData.success = false;
-                        this.addEffect('Near Overheat', 'The weapon nearly overheats, but its superior craftsmanship prevents it. Attack misses.');
+                        this.addEffect(t(EFFECT_TITLE.nearOverheat), t('WH40K.ActionEffect.NearOverheat'));
                     } else {
                         this.effects.push('overheat');
                     }
@@ -388,10 +459,7 @@ export class ActionData {
                 if (craftsmanship === 'poor' && hasUnreliable && !this.rollData.success) {
                     if (!bestNeverJamsOrOverheats) {
                         this.effects.push('jam');
-                        this.addEffect(
-                            'Catastrophic Jam',
-                            'The weapon is of such poor quality with its unreliable mechanism that it jams on this failed shot!',
-                        );
+                        this.addEffect(t(EFFECT_TITLE.catastrophicJam), t('WH40K.ActionEffect.CatastrophicJam'));
                     }
                 } else if (!bestNeverJamsOrOverheats) {
                     const jams = shouldJamRoll({
@@ -409,7 +477,7 @@ export class ActionData {
                     // "best" craftsmanship still announces a near-jam for cosmetic purposes
                     // but never actually jams.
                     this.rollData.success = false;
-                    this.addEffect('Near Jam', 'The weapon nearly jams, but its superior craftsmanship prevents it. Attack misses.');
+                    this.addEffect(t(EFFECT_TITLE.nearJam), t('WH40K.ActionEffect.NearJam'));
                 }
             }
 
@@ -440,7 +508,9 @@ export class ActionData {
 
         if (this.rollData.success) {
             this.rollData.dof = 0;
-            this.rollData.dos = 1 + getDegreeForMode(degreesMethod, this.rollData.modifiedTarget, this.rollData.roll?.total ?? 0);
+            // Floored at 1: a FORCED success (a helpless target, Spray) can have a
+            // roll above the target, whose negative margin is not a degree count.
+            this.rollData.dos = Math.max(1, 1 + getDegreeForMode(degreesMethod, this.rollData.modifiedTarget, this.rollData.roll?.total ?? 0));
 
             const damageData = this.damageData;
             if (actionItem !== undefined && damageData !== undefined) {
@@ -488,10 +558,12 @@ export class ActionData {
             }
         } else {
             this.rollData.dos = 0;
-            this.rollData.dof = 1 + getDegreeForMode(degreesMethod, this.rollData.roll?.total ?? 0, this.rollData.modifiedTarget);
+            // Floored at 1 for the same reason: a FORCED failure (a condition
+            // auto-fail, a jam) can have a roll at or under the target.
+            this.rollData.dof = Math.max(1, 1 + getDegreeForMode(degreesMethod, this.rollData.roll?.total ?? 0, this.rollData.modifiedTarget));
 
             if (weaponRollData.isThrown) {
-                this.addEffect('Deviation', `The attack deviates [[ 1d5 ]]m off course to the ${scatterDirection()}!`);
+                this.addEffect(t(EFFECT_TITLE.deviation), t('WH40K.ActionEffect.Deviation', { direction: scatterDirection() }));
             }
 
             if (this.rollData.roll?.total === 100) {
@@ -574,13 +646,13 @@ export class ActionData {
     createEffectData(): void {
         for (const effect of this.effects) {
             if (effect === 'auto-failure') {
-                this.addEffect('Auto Failure', `The roll resulted in an automatic failure!`);
+                this.addEffect(t(EFFECT_TITLE.autoFailure), t('WH40K.ActionEffect.AutoFailure'));
             } else if (effect === 'overheat') {
-                this.addEffect('Overheats', `The weapon overheats forcing it to be dropped on the ground!`);
+                this.addEffect(t(EFFECT_TITLE.overheats), t('WH40K.ActionEffect.Overheats'));
             } else if (effect === 'jam') {
-                this.addEffect('Jam', `The weapon jams!`);
+                this.addEffect(t(EFFECT_TITLE.jam), t('WH40K.ActionEffect.Jam'));
             } else if (effect === 'weapon-broken') {
-                this.addEffect(game.i18n.localize('WH40K.Weapon.Destroyed'), game.i18n.localize('WH40K.Weapon.DestroyedOnCritFail'));
+                this.addEffect(t('WH40K.Weapon.Destroyed'), t('WH40K.Weapon.DestroyedOnCritFail'));
             }
         }
     }
@@ -865,7 +937,10 @@ export class PsychicActionData extends ActionData {
         // checkForOpposed, and the margin scales its magnitude where the content reads it.
         if (this.rollData.isOpposed && this.rollData.targetActor !== null) {
             const key = this.rollData.success ? 'WH40K.Psychic.OpposedOvercome' : 'WH40K.Psychic.OpposedResisted';
-            this.addEffect('Psychic', game.i18n.format(key, { target: this.rollData.targetActor.name, margin: String(this.rollData.opposedMargin) }));
+            this.addEffect(
+                t(EFFECT_TITLE.psychic),
+                game.i18n.format(key, { target: this.rollData.targetActor.name, margin: String(this.rollData.opposedMargin) }),
+            );
         }
     }
 }
@@ -1011,7 +1086,7 @@ export class MedicaeActionData extends SimpleSkillData {
         const outcome = resolveFirstAid(this.useKind, { woundsValue, woundsMax, criticalDamage, toughnessBonus, intelligenceBonus }, this.rollData.dos);
 
         if (!outcome.success) {
-            this.addEffect('Medicae', game.i18n.format('WH40K.SkillUse.Failed', { use: useLabel }));
+            this.addEffect(t(EFFECT_TITLE.medicae), game.i18n.format('WH40K.SkillUse.Failed', { use: useLabel }));
             return;
         }
 
@@ -1055,7 +1130,7 @@ export class MedicaeActionData extends SimpleSkillData {
         if (outcome.woundsRestored > 0) parts.push(game.i18n.format('WH40K.SkillUse.HealedWounds', { wounds: String(outcome.woundsRestored) }));
         if (outcome.criticalResolved > 0) parts.push(game.i18n.format('WH40K.SkillUse.ResolvedCritical', { tiers: String(outcome.criticalResolved) }));
         if (outcome.bloodLossStopped) parts.push(game.i18n.localize('WH40K.SkillUse.BloodLossStopped'));
-        this.addEffect('Medicae', parts.join(' '));
+        this.addEffect(t(EFFECT_TITLE.medicae), parts.join(' '));
     }
 }
 
@@ -1088,7 +1163,7 @@ export class InterrogationActionData extends SimpleSkillData {
         }
         if (outcome.success) {
             this.addEffect(
-                'Interrogation',
+                t(EFFECT_TITLE.interrogation),
                 game.i18n.format('WH40K.SkillUse.Interrogation.Extracted', {
                     tier: String(outcome.infoTier),
                     subject: target.name,
@@ -1097,7 +1172,7 @@ export class InterrogationActionData extends SimpleSkillData {
             );
         } else {
             this.addEffect(
-                'Interrogation',
+                t(EFFECT_TITLE.interrogation),
                 game.i18n.format('WH40K.SkillUse.Interrogation.Resisted', { subject: target.name, fatigue: String(outcome.fatigue) }),
             );
             if (this.rollData.dof >= 2 && interrogateTargetId !== null) {
@@ -1108,7 +1183,10 @@ export class InterrogationActionData extends SimpleSkillData {
                 await gmProxyActorUpdate(interrogateTargetId, {
                     'flags.wh40k-rpg.timeGates.interrogate': expiry,
                 });
-                this.addEffect('Interrogation', game.i18n.format('WH40K.SkillUse.Interrogation.Lockout', { subject: target.name, days: String(days) }));
+                this.addEffect(
+                    t(EFFECT_TITLE.interrogation),
+                    game.i18n.format('WH40K.SkillUse.Interrogation.Lockout', { subject: target.name, days: String(days) }),
+                );
             }
         }
     }
@@ -1129,7 +1207,7 @@ export class DosReadoutActionData extends SimpleSkillData {
 
     override async descriptionText(): Promise<void> {
         const readout = resolveDosReadout(this.family, this.rollData.dos, this.rollData.success);
-        this.addEffect('Readout', game.i18n.format(readout.labelKey, { tier: String(readout.tier) }));
+        this.addEffect(t(EFFECT_TITLE.readout), game.i18n.format(readout.labelKey, { tier: String(readout.tier) }));
         return Promise.resolve();
     }
 }
@@ -1146,7 +1224,7 @@ export class DetectionActionData extends SimpleSkillData {
         const margin = this.rollData.opposedMargin;
         // #449: surface the winner's degrees of victory when the contest was decided by a margin.
         const text = margin > 0 ? `${base} ${game.i18n.format('WH40K.Opposed.Margin', { margin: String(margin) })}` : base;
-        this.addEffect('Detection', text);
+        this.addEffect(t(EFFECT_TITLE.detection), text);
         return Promise.resolve();
     }
 }
@@ -1191,14 +1269,14 @@ export class SocialInfluenceActionData extends SimpleSkillData {
         const targetName = target?.name ?? '';
 
         if (!this.rollData.success) {
-            this.addEffect('Social', game.i18n.format('WH40K.SkillUse.Social.Lost', { use: useLabel, target: targetName }));
+            this.addEffect(t(EFFECT_TITLE.social), game.i18n.format('WH40K.SkillUse.Social.Lost', { use: useLabel, target: targetName }));
             return;
         }
 
         const degrees = Math.max(1, this.rollData.dos);
         const outcome = resolveSocialInfluence(this.def, degrees, true);
         if (target === null || outcome.dispositionDelta === 0) {
-            this.addEffect('Social', game.i18n.format('WH40K.SkillUse.Social.Won', { use: useLabel, target: targetName }));
+            this.addEffect(t(EFFECT_TITLE.social), game.i18n.format('WH40K.SkillUse.Social.Won', { use: useLabel, target: targetName }));
             return;
         }
 
@@ -1208,7 +1286,7 @@ export class SocialInfluenceActionData extends SimpleSkillData {
         await target.adjustDisposition(outcome.dispositionDelta);
         const band = game.i18n.localize(`WH40K.Disposition.${labelForDisposition(clampDisposition(before + outcome.dispositionDelta))}`);
         this.addEffect(
-            'Social',
+            t(EFFECT_TITLE.social),
             game.i18n.format('WH40K.SkillUse.Social.Shift', {
                 use: useLabel,
                 target: targetName,
@@ -1247,7 +1325,7 @@ export class ContestActionData extends SimpleSkillData {
         const base = game.i18n.localize(this.rollData.success ? 'WH40K.SkillUse.Contest.Won' : 'WH40K.SkillUse.Contest.Lost');
         const margin = this.rollData.opposedMargin;
         const text = margin > 0 ? `${base} ${game.i18n.format('WH40K.Opposed.Margin', { margin: String(margin) })}` : base;
-        this.addEffect('Contest', text);
+        this.addEffect(t(EFFECT_TITLE.contest), text);
         return Promise.resolve();
     }
 }
@@ -1289,15 +1367,15 @@ export class DemolitionActionData extends SimpleSkillData {
 
         if (this.mode === 'placeCharge') {
             if (!this.rollData.success) {
-                this.addEffect('Demolition', game.i18n.format('WH40K.SkillUse.Demo.PlaceFailed', { item: name }));
+                this.addEffect(t(EFFECT_TITLE.demolition), game.i18n.format('WH40K.SkillUse.Demo.PlaceFailed', { item: name }));
                 return;
             }
             if (this.rollData.dof >= 4) {
-                this.addEffect('Demolition', game.i18n.format('WH40K.SkillUse.Demo.Premature', { item: name }));
+                this.addEffect(t(EFFECT_TITLE.demolition), game.i18n.format('WH40K.SkillUse.Demo.Premature', { item: name }));
                 return;
             }
             await this.explosive.update({ 'system.state.armed': { active: true, trigger: this.trigger, setterDegrees: Math.max(1, this.rollData.dos) } });
-            this.addEffect('Demolition', game.i18n.format('WH40K.SkillUse.Demo.Placed', { item: name, trigger: this.trigger }));
+            this.addEffect(t(EFFECT_TITLE.demolition), game.i18n.format('WH40K.SkillUse.Demo.Placed', { item: name, trigger: this.trigger }));
             return;
         }
 
@@ -1305,15 +1383,15 @@ export class DemolitionActionData extends SimpleSkillData {
         const setterDegrees = this.explosive.system.state.armed.setterDegrees;
         this.applyOpposedResult({ success: true, dos: setterDegrees, dof: 0 });
         if (this.rollData.dof >= 4) {
-            this.addEffect('Demolition', game.i18n.format('WH40K.SkillUse.Demo.DefuseSetOff', { item: name }));
+            this.addEffect(t(EFFECT_TITLE.demolition), game.i18n.format('WH40K.SkillUse.Demo.DefuseSetOff', { item: name }));
             return;
         }
         if (!this.rollData.success) {
-            this.addEffect('Demolition', game.i18n.format('WH40K.SkillUse.Demo.DefuseFailed', { item: name }));
+            this.addEffect(t(EFFECT_TITLE.demolition), game.i18n.format('WH40K.SkillUse.Demo.DefuseFailed', { item: name }));
             return;
         }
         await this.explosive.update({ 'system.state.armed': { active: false, trigger: '', setterDegrees: 0 } });
-        this.addEffect('Demolition', game.i18n.format('WH40K.SkillUse.Demo.Defused', { item: name }));
+        this.addEffect(t(EFFECT_TITLE.demolition), game.i18n.format('WH40K.SkillUse.Demo.Defused', { item: name }));
     }
 }
 
@@ -1343,22 +1421,22 @@ export class ObjectStateActionData extends SimpleSkillData {
                     : this.mode === 'breakObject'
                     ? 'WH40K.SkillUse.Object.BreakFailed'
                     : 'WH40K.SkillUse.Object.BypassFailed';
-            this.addEffect('Object', game.i18n.format(failKey, { item: itemName }));
+            this.addEffect(t(EFFECT_TITLE.object), game.i18n.format(failKey, { item: itemName }));
             return;
         }
 
         if (this.mode === 'repair') {
             await this.item.update({ 'system.state.broken': false, 'system.jammed': false });
-            this.addEffect('Tech-Use', game.i18n.format('WH40K.SkillUse.Object.Repaired', { item: itemName }));
+            this.addEffect(t(EFFECT_TITLE.techUse), game.i18n.format('WH40K.SkillUse.Object.Repaired', { item: itemName }));
             return;
         }
         if (this.mode === 'breakObject') {
             await this.item.update({ 'system.state.broken': true });
-            this.addEffect('Athletics', game.i18n.format('WH40K.SkillUse.Object.Broke', { item: itemName }));
+            this.addEffect(t(EFFECT_TITLE.athletics), game.i18n.format('WH40K.SkillUse.Object.Broke', { item: itemName }));
             return;
         }
         await this.item.update({ 'system.state.locked': false });
-        this.addEffect('Security', game.i18n.format('WH40K.SkillUse.Object.Unlocked', { item: itemName }));
+        this.addEffect(t(EFFECT_TITLE.security), game.i18n.format('WH40K.SkillUse.Object.Unlocked', { item: itemName }));
     }
 }
 
@@ -1384,7 +1462,7 @@ export class PalmActionData extends SimpleSkillData {
         if (actor === null || target === null) return;
 
         if (!this.rollData.success) {
-            this.addEffect('Sleight of Hand', game.i18n.format('WH40K.SkillUse.Palm.Caught', { target: target.name }));
+            this.addEffect(t(EFFECT_TITLE.sleightOfHand), game.i18n.format('WH40K.SkillUse.Palm.Caught', { target: target.name }));
             return;
         }
 
@@ -1392,7 +1470,7 @@ export class PalmActionData extends SimpleSkillData {
         const moved = await from.transferItemTo(this.itemId, to);
         if (moved === null) return;
         const key = this.mode === 'steal' ? 'WH40K.SkillUse.Palm.Stole' : 'WH40K.SkillUse.Palm.Planted';
-        this.addEffect('Sleight of Hand', game.i18n.format(key, { item: moved, target: target.name }));
+        this.addEffect(t(EFFECT_TITLE.sleightOfHand), game.i18n.format(key, { item: moved, target: target.name }));
     }
 }
 
@@ -1426,10 +1504,10 @@ export class ChemUseActionData extends SimpleSkillData {
             const user = this.rollData.sourceActor;
             if (this.mode === 'applyChem' && user !== null) {
                 await applyChemDose(this.chem, user);
-                this.addEffect('Chem-Use', game.i18n.format('WH40K.SkillUse.Chem.Botched', { chem: chemName, actor: user.name }));
+                this.addEffect(t(EFFECT_TITLE.chemUse), game.i18n.format('WH40K.SkillUse.Chem.Botched', { chem: chemName, actor: user.name }));
                 return;
             }
-            this.addEffect('Chem-Use', game.i18n.format('WH40K.SkillUse.Chem.Failed', { chem: chemName }));
+            this.addEffect(t(EFFECT_TITLE.chemUse), game.i18n.format('WH40K.SkillUse.Chem.Failed', { chem: chemName }));
             return;
         }
 
@@ -1438,14 +1516,17 @@ export class ChemUseActionData extends SimpleSkillData {
             if (weapon === null) return;
             const charges = Math.max(1, this.chem.system.uses.max);
             await weapon.update({ 'system.state.coating': { name: chemName, charges } });
-            this.addEffect('Chem-Use', game.i18n.format('WH40K.SkillUse.Chem.Coated', { chem: chemName, weapon: weapon.name, charges: String(charges) }));
+            this.addEffect(
+                t(EFFECT_TITLE.chemUse),
+                game.i18n.format('WH40K.SkillUse.Chem.Coated', { chem: chemName, weapon: weapon.name, charges: String(charges) }),
+            );
             return;
         }
 
         const target = this.rollData.targetActor;
         if (target === null) return;
         await applyChemDose(this.chem, target);
-        this.addEffect('Chem-Use', game.i18n.format('WH40K.SkillUse.Chem.Applied', { chem: chemName, target: target.name }));
+        this.addEffect(t(EFFECT_TITLE.chemUse), game.i18n.format('WH40K.SkillUse.Chem.Applied', { chem: chemName, target: target.name }));
     }
 }
 
@@ -1473,12 +1554,12 @@ export class SocialBuffActionData extends SimpleSkillData {
         if (this.buff === 'blather') {
             const rounds = blatherRounds(this.rollData.success, this.rollData.opposedMargin);
             const key = rounds > 0 ? 'WH40K.SkillUse.Buff.BlatherHeld' : 'WH40K.SkillUse.Buff.BlatherResist';
-            this.addEffect('Blather', game.i18n.format(key, { target: targetName, rounds: String(rounds) }));
+            this.addEffect(t(EFFECT_TITLE.blather), game.i18n.format(key, { target: targetName, rounds: String(rounds) }));
             return;
         }
 
         if (!this.rollData.success) {
-            this.addEffect('Social', game.i18n.format('WH40K.SkillUse.Buff.Failed', { target: targetName }));
+            this.addEffect(t(EFFECT_TITLE.social), game.i18n.format('WH40K.SkillUse.Buff.Failed', { target: targetName }));
             return;
         }
 
@@ -1486,13 +1567,13 @@ export class SocialBuffActionData extends SimpleSkillData {
             // Real debuff: −10 to the target's defence (Dodge/Parry) for one round,
             // applied through the actor's own effect helper (no rules↔rolls import cycle).
             await target.applyCombatModifier('defense', -10, { name: game.i18n.localize('WH40K.SkillUse.Buff.WarCry'), rounds: 1 });
-            this.addEffect('War Cry', game.i18n.format('WH40K.SkillUse.Buff.WarCryApplied', { target: targetName }));
+            this.addEffect(t(EFFECT_TITLE.warCry), game.i18n.format('WH40K.SkillUse.Buff.WarCryApplied', { target: targetName }));
             return;
         }
 
         // Inspire / Terrify — GM/player-tracked (no clean per-next-test / per-encounter effect).
         const applied = this.buff === 'inspire' ? 'WH40K.SkillUse.Buff.InspireApplied' : 'WH40K.SkillUse.Buff.TerrifyApplied';
-        this.addEffect('Social', game.i18n.format(applied, { target: targetName }));
+        this.addEffect(t(EFFECT_TITLE.social), game.i18n.format(applied, { target: targetName }));
     }
 }
 

@@ -12,7 +12,7 @@ import {
     type InertTrigger,
     modeDelta,
 } from '../rules/dynamic-modifiers.ts';
-import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.ts';
+import { additionalHitLocations, DEFAULT_HIT_LOCATION, getHitLocationForRoll, resolveHitLocationId } from '../rules/hit-locations.ts';
 import { scatterDirection } from '../rules/scatter.ts';
 import { AIM_STATE, type ActorStateSource, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
@@ -22,6 +22,8 @@ import {
     calculateQualityPenetrationModifiers,
     collectWeaponQualityDieOps,
     type DieTermLike,
+    EXOTIC_DAMAGE_MODIFIER_IDS,
+    EXOTIC_DAMAGE_MODIFIER_LABEL_KEYS,
     getRighteousFuryThreshold,
     resolveDieOpDamageAdjust,
     resolveMaximalEffect,
@@ -96,6 +98,8 @@ export interface AttackDataLike {
         /** Roll-time modifier map, read for the derived `aiming` state. */
         modifiers?: Readonly<Partial<Record<string, number>>> | undefined;
         attackSpecials: { name: string; level?: number }[];
+        /** The target bears a `helplessTarget` condition: damage is rolled twice and added. */
+        targetHelpless?: boolean | undefined;
         dos: number;
         eyeOfVengeance: boolean;
         hasAttackSpecial: (name: string) => boolean;
@@ -265,7 +269,8 @@ class DamageData {
 }
 
 export class Hit {
-    location = 'Body';
+    /** Stable hit-location id (`body`, `rightArm`, …); legacy messages may carry the English name. */
+    location: string = DEFAULT_HIT_LOCATION;
 
     /**
      * Which target this hit landed on (#513). A burst's extra hits may be spread
@@ -353,17 +358,15 @@ export class Hit {
         hit.coverAP = attackData.rollData.coverAP ?? 0;
 
         if (attackData.rollData.isCalledShot === true) {
-            hit.location = attackData.rollData.calledShotLocation ?? 'Body';
+            hit.location = resolveHitLocationId(attackData.rollData.calledShotLocation) ?? DEFAULT_HIT_LOCATION;
         } else {
             const roll = attackData.rollData.roll;
-            const initialHit = getHitLocationForRoll(roll?.total ?? 0) ?? 'Body';
-            // eslint-disable-next-line no-restricted-syntax -- boundary: additionalHitLocations() returns a plain object from legacy JS with no TypeScript schema
-            const locationTable = additionalHitLocations() as Record<string, Record<number, string>>;
+            const initialHit = getHitLocationForRoll(roll?.total ?? 0) ?? DEFAULT_HIT_LOCATION;
             // `hitNumber` is this hit's index WITHIN ITS OWN TARGET (#513), so a hit
             // spread onto a second enemy starts that enemy's Table 7-2 walk over
             // rather than inheriting the original target's position in it.
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: table lookup may return undefined at runtime despite the cast type
-            hit.location = locationTable[initialHit]?.[hitNumber <= 5 ? hitNumber : 5] ?? 'Body';
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.json (flag on)
+            hit.location = additionalHitLocations()[initialHit][hitNumber <= 5 ? hitNumber : 5] ?? DEFAULT_HIT_LOCATION;
         }
 
         // Determine Righteous Fury Effects
@@ -534,6 +537,19 @@ export class Hit {
 
         this.damage = damageRoll.total ?? 0;
 
+        // A helpless target (a condition with `helplessTarget`) takes damage rolled
+        // twice and ADDED together — every line prints it that way (DH2 p229, RT/DW
+        // p248, OW p253, BC p245, DH1 p199). The second roll re-uses the first's
+        // formula AFTER the dice-pool surgery above, so Tearing etc. apply to both;
+        // it is a named, sourced modifier so the card shows where it came from.
+        if (attackData.rollData.targetHelpless === true) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Roll constructor type differs between Foundry v13/v14 runtime and shipped types
+            const secondRoll = new Roll(damageRoll.formula, attackData.rollData) as unknown as Roll;
+            await secondRoll.evaluate();
+            const secondDamage = Math.max(0, secondRoll.total ?? 0);
+            if (secondDamage > 0) addLabelledModifier(this.modifiers, t('WH40K.Condition.HelplessTarget.DamageLabel'), secondDamage);
+        }
+
         // eslint-disable-next-line no-restricted-syntax -- boundary: Roll.terms is untyped at runtime; iterating as unknown[] to narrow manually
         for (const term of damageRoll.terms as unknown[]) {
             const termAny = term as { results?: { discarded?: boolean; active?: boolean; result?: number }[] };
@@ -641,17 +657,20 @@ export class Hit {
             target: attackData.damageData?.targetActor as Parameters<typeof calculateExoticQualityDamageModifiers>[0]['target'],
         });
 
-        // Handle exotic modifiers - most are numeric, but Daemonbane is a dice formula
-        for (const [key, value] of Object.entries(exoticModifiers)) {
+        // Handle exotic modifiers - most are numeric, but Daemonbane is a dice formula.
+        // Each is filed on the card under its localized label (the id stays internal).
+        for (const id of EXOTIC_DAMAGE_MODIFIER_IDS) {
+            const value = exoticModifiers[id];
+            const label = t(EXOTIC_DAMAGE_MODIFIER_LABEL_KEYS[id]);
             if (typeof value === 'string' && value.includes('d')) {
                 // Daemonbane: "2d10" - roll additional dice
                 const exoticRoll = new Roll(value, {});
                 // eslint-disable-next-line no-await-in-loop -- sequential by design (see above)
                 await exoticRoll.evaluate();
-                this.modifiers[key] = exoticRoll.total ?? 0;
+                this.modifiers[label] = exoticRoll.total ?? 0;
             } else if (typeof value === 'number') {
                 // Force, Witch-Edge: numeric bonuses
-                this.modifiers[key] = value;
+                this.modifiers[label] = value;
             }
         }
     }

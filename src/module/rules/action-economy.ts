@@ -21,6 +21,8 @@ import {
     spendAction,
 } from './action-budget.ts';
 import { onTurnStart, type TurnCombatant } from './combat-turn-hooks.ts';
+import { type ActionLimit, resolveActionLimit } from './condition-mechanics.ts';
+import { activeConditionMechanics, type ConditionBearer } from './condition-registry.ts';
 
 const ACTIONS_SPENT_FLAG = 'actionsSpentThisTurn';
 
@@ -28,7 +30,7 @@ const ACTIONS_SPENT_FLAG = 'actionsSpentThisTurn';
 // Kept minimal (no getFlag/setFlag) so Foundry's Combat/Combatant are structurally
 // assignable to it; the flag accessor is reached via the cast below (its getFlag
 // scope type is too narrow to put on the contravariant hook handler param).
-type LooseCombatant = { id?: string | null; actorId?: string | null };
+type LooseCombatant = { id?: string | null; actorId?: string | null; actor?: ConditionBearer | null | undefined };
 type LooseCombat = {
     started?: boolean;
     combatant?: LooseCombatant | null | undefined;
@@ -63,11 +65,20 @@ function findCombatant(actorId: string): LooseCombatant | null {
     return null;
 }
 
+/**
+ * The action limit the combatant's active conditions impose — the most
+ * restrictive `system.actionLimit` among them (Stunned, Pinned, Grappled, …),
+ * read from the condition documents rather than matched by name.
+ */
+function combatantActionLimit(combatant: LooseCombatant): ActionLimit {
+    return resolveActionLimit(activeConditionMechanics(combatant.actor)).limit;
+}
+
 /** The current action-budget readout for an actor's combatant, or null if not in combat. */
 export function actionBudgetForActor(actorId: string): ActionBudgetView | null {
     try {
         const combatant = findCombatant(actorId);
-        return combatant ? actionBudgetView(readActionsSpent(combatant)) : null;
+        return combatant ? actionBudgetView(readActionsSpent(combatant), combatantActionLimit(combatant)) : null;
     } catch (err) {
         console.error('WH40K | action economy (view) — ignoring', err);
         return null;
@@ -79,9 +90,10 @@ export function spendActionForActor(actorId: string, kind: ActionKind): ActionBu
     try {
         const combatant = findCombatant(actorId);
         if (!combatant) return null;
-        const next = spendAction(readActionsSpent(combatant), kind);
+        const limit = combatantActionLimit(combatant);
+        const next = spendAction(readActionsSpent(combatant), kind, limit);
         writeActionsSpent(combatant, next);
-        return actionBudgetView(next);
+        return actionBudgetView(next, limit);
     } catch (err) {
         console.error('WH40K | action economy (spend) — ignoring', err);
         return null;
