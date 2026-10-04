@@ -244,6 +244,11 @@ export class RollData {
         return '';
     }
 
+    /** The rolling actor's game line (`dh2`, `rt`, …), scoping per-system content lookups; undefined with no actor. */
+    get gameSystemId(): string | undefined {
+        return (this.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem;
+    }
+
     get effectString(): string {
         // eslint-disable-next-line no-restricted-syntax -- power is set on PsychicRollData subclass; nullish coalesce is the read-time default
         const actionItem = this.weapon ?? this.power;
@@ -569,6 +574,18 @@ export class WeaponRollData extends RollData {
     isSpray: boolean = false;
     isLasWeapon: boolean = false;
     lasMode: string = 'Standard';
+    /**
+     * Base ids of the selectable qualities (`mechanics.selectable`, e.g. Maximal)
+     * the attacker opted into for this attack in the roll dialog. A selectable
+     * quality the weapon carries reaches {@link attackSpecials} only when listed here.
+     */
+    selectedQualities: string[] = [];
+    /**
+     * The selectable qualities actually in play on this attack — the opted-in ones
+     * the active weapon carries in its current mode. Recomputed by
+     * `updateAttackSpecials`; rendered on the chat card as the attacker's choices.
+     */
+    chosenQualities: string[] = [];
 
     override template: string;
 

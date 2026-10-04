@@ -22,6 +22,8 @@ interface MockSpecialItem {
 }
 interface MockRollData {
     weapon: { items: MockSpecialItem[] };
+    /** The roll's resolved attack specials, as `updateAttackSpecials` builds them from the attack-special items. */
+    attackSpecials: Array<{ name: string }>;
     specialModifiers: Record<string, number>;
     modifiers: Record<string, number>;
     rangeName?: string;
@@ -34,6 +36,7 @@ function special(name: string): MockSpecialItem {
 function run(opts: { specials: string[]; rangeName?: string; aim?: number }): Record<string, number> {
     const rollData: MockRollData = {
         weapon: { items: opts.specials.map(special) },
+        attackSpecials: opts.specials.map((name) => ({ name })),
         specialModifiers: {},
         modifiers: opts.aim === undefined ? {} : { aim: opts.aim },
         ...(opts.rangeName === undefined ? {} : { rangeName: opts.rangeName }),
@@ -103,6 +106,7 @@ describe('calculateAttackSpecialAttackBonuses', () => {
     it('ignores items that are not attack specials', () => {
         const rollData: MockRollData = {
             weapon: { items: [{ isAttackSpecial: false, name: 'Twin-Linked' }] },
+            attackSpecials: [],
             specialModifiers: {},
             modifiers: {},
         };
@@ -114,6 +118,7 @@ describe('calculateAttackSpecialAttackBonuses', () => {
     it('resets specialModifiers on each call', () => {
         const rollData: MockRollData = {
             weapon: { items: [special('Twin-Linked')] },
+            attackSpecials: [{ name: 'Twin-Linked' }],
             specialModifiers: { Stale: 99 },
             modifiers: {},
         };

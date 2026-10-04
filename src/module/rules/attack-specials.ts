@@ -3,6 +3,7 @@ import type { WH40KItemDocument } from '../types/global.d.ts';
 import { parseQualityLevel } from '../utils/quality-id.ts';
 import { calculateWeaponModifiersAttackSpecials } from './weapon-modifiers.ts';
 import { applyQualityModifiersToRollData } from './weapon-quality-effects.ts';
+import { chosenQualityEffects, getWeaponQualityMechanicsForId } from './weapon-quality-payloads.ts';
 
 type AttackSpecialLike = {
     name: string;
@@ -36,6 +37,78 @@ export function attackSpecialForQualityId(qualityId: string): { name: string; le
     return { name: found.name, level: level ?? true };
 }
 
+/**
+ * The base ids of the selectable qualities (`mechanics.selectable`) in a weapon's
+ * quality set — the per-attack firing options the roll dialog offers (Maximal).
+ * Which qualities are optional is read from the quality docs, never name-matched.
+ */
+export function selectableQualityIds(qualityIds: Iterable<string> | undefined, systemId?: string): string[] {
+    const ids: string[] = [];
+    for (const qualityId of qualityIds ?? []) {
+        const { baseId } = parseQualityLevel(qualityId);
+        if (ids.includes(baseId)) continue;
+        if (getWeaponQualityMechanicsForId(qualityId, systemId)?.selectable === true) ids.push(baseId);
+    }
+    return ids;
+}
+
+/** Flip one selectable quality's opt-in for this attack, returning the new selection. */
+export function toggleQualityChoice(selected: readonly string[], qualityId: string): string[] {
+    return selected.includes(qualityId) ? selected.filter((id) => id !== qualityId) : [...selected, qualityId];
+}
+
+/**
+ * Bridge a weapon's quality set (`effectiveSpecial`: lowercase ids such as
+ * `tearing`, `proven-3`, `vengeful-9`, already reflecting craftsmanship, the
+ * loaded round and the active firing mode) onto the roll's attack specials.
+ *
+ * Compendium weapons carry their qualities ONLY as these ids — the legacy embedded
+ * attack-special items are absent on them — so every `hasAttackSpecial` check
+ * (Twin-Linked, Storm, Spray, Reliable, Scatter, Vengeful, …) missed them until
+ * bridged here. A quality already present (an embedded item of the same name) is
+ * not added twice; an id with no combat attack-special is skipped. A selectable
+ * quality is bridged only when its base id is in `chosen` — it is the attacker's
+ * per-attack option, not an always-on property.
+ *
+ * Mutates `specials` and returns the base ids of the selectable qualities bridged.
+ */
+export function bridgeWeaponQualities(
+    specials: AttackSpecialLike[],
+    qualityIds: Iterable<string> | undefined,
+    chosen: ReadonlySet<string>,
+    systemId?: string,
+): string[] {
+    const bridgedChoices: string[] = [];
+    for (const qualityId of qualityIds ?? []) {
+        const spec = attackSpecialForQualityId(qualityId);
+        if (spec === null) continue;
+        const { baseId } = parseQualityLevel(qualityId);
+        const selectable = getWeaponQualityMechanicsForId(qualityId, systemId)?.selectable === true;
+        if (selectable && !chosen.has(baseId)) continue;
+        if (specials.some((s) => s.name === spec.name)) continue;
+        specials.push(spec);
+        if (selectable) bridgedChoices.push(baseId);
+    }
+    return bridgedChoices;
+}
+
+/**
+ * Apply the qualities a chosen quality brings with it (Deathwatch Maximal adds
+ * Overheats) and raise an existing Blast rating by its `chosenBlastBonus` (Maximal
+ * outside Rogue Trader: +2). Values come from the quality's mechanics per line.
+ */
+export function applyChosenQualityEffects(specials: AttackSpecialLike[], chosenQualityIds: readonly string[], systemId?: string): void {
+    const effects = chosenQualityEffects(chosenQualityIds, systemId);
+    for (const qualityId of effects.addedQualities) {
+        const spec = attackSpecialForQualityId(qualityId);
+        if (spec !== null && !specials.some((s) => s.name === spec.name)) specials.push(spec);
+    }
+    if (effects.blastBonus === 0) return;
+    const blast = attackSpecialForQualityId('blast');
+    const existing = blast === null ? undefined : specials.find((s) => s.name === blast.name);
+    if (existing !== undefined && typeof existing.level === 'number') existing.level += effects.blastBonus;
+}
+
 type AttackSpecialCarrier = WH40KItemDocument & {
     isAttackSpecial: boolean;
     system: WH40KItemDocument['system'] & {
@@ -62,6 +135,21 @@ export function updateAttackSpecials(rollData: AttackSpecialSourceRollData): voi
             if (i.system.level !== undefined) entry.level = i.system.level;
             mutableRollData.attackSpecials.push(entry);
         }
+    }
+
+    // The weapon's own quality set — the only place compendium weapons carry them
+    // (absent on a psychic power).
+    const qualityIds = actionItem.system.effectiveSpecial;
+    if ('selectedQualities' in rollData) {
+        rollData.chosenQualities = bridgeWeaponQualities(
+            mutableRollData.attackSpecials,
+            qualityIds,
+            new Set(rollData.selectedQualities),
+            rollData.gameSystemId,
+        );
+        applyChosenQualityEffects(mutableRollData.attackSpecials, rollData.chosenQualities, rollData.gameSystemId);
+    } else {
+        bridgeWeaponQualities(mutableRollData.attackSpecials, qualityIds, new Set(), rollData.gameSystemId);
     }
 
     // Las Variable Setting
@@ -129,10 +217,10 @@ export function calculateAttackSpecialAttackBonuses(rollData: RollData): void {
         // applied in every mode here but only on single shots there.
     };
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: actionItem.items is untyped in WH40KItemDocument; cast to structural type for attack-special access
-    for (const item of actionItem.items as unknown as AttackSpecialCarrier[]) {
-        if (!item.isAttackSpecial) continue;
-        applySpecial(item.name, rollData);
+    // The roll's resolved attack specials: embedded items AND the weapon's bridged
+    // quality set, after mode / ammo / weapon-mod changes (see updateAttackSpecials).
+    for (const special of rollData.attackSpecials) {
+        applySpecial(special.name, rollData);
     }
 
     // Apply weapon quality effects (Phase 1: Accurate aim bonus)

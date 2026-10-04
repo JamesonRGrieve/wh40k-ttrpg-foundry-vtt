@@ -347,6 +347,8 @@ export type WH40KItemSystemData = ItemDataModel & {
     isMeleeWeapon?: boolean;
     isRangedWeapon?: boolean;
     melee?: boolean;
+    /** A weapon's quality ids after craftsmanship, ammunition and firing mode (`tearing`, `proven-3`, …); absent on non-weapons. */
+    effectiveSpecial?: Set<string>;
     // See WH40KActorSystemData above — same stop-gap, same follow-up.
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry item DataModel `system` index-signature stop-gap (see WH40KActorSystemData)
     [key: string]: unknown;

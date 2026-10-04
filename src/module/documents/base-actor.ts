@@ -29,6 +29,7 @@ import {
 } from '../rules/subtlety-adjuster-effects.ts';
 import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type SubtletySourceRef } from '../rules/subtlety-adjusters.ts';
 import { weaponFireBlockReason } from '../rules/weapon-jam.ts';
+import { isRecharging, type RechargeMark } from '../rules/weapon-recharge.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
@@ -1235,14 +1236,21 @@ export class WH40KBaseActor extends Actor {
             // fire until cleared; a dry weapon can't fire until reloaded. Reasons
             // are resolved from the weapon DataModel getters via the pure,
             // system-agnostic classifier so the gate holds across all 7 lines.
-            const weaponState = item.system as { isMeleeWeapon?: boolean; isJammed?: boolean; isOutOfAmmo?: boolean };
+            const weaponState = item.system as { isMeleeWeapon?: boolean; isJammed?: boolean; isOutOfAmmo?: boolean; rechargeMark?: RechargeMark };
+            const combat = game.combat;
+            const combatRound = combat?.id != null && combat.started ? { id: combat.id, round: combat.round } : null;
             const fireBlock = weaponFireBlockReason({
                 isMelee: weaponState.isMeleeWeapon === true,
                 jammed: weaponState.isJammed === true,
                 outOfAmmo: weaponState.isOutOfAmmo === true,
+                recharging: weaponState.rechargeMark !== undefined && isRecharging(weaponState.rechargeMark, combatRound),
             });
             if (fireBlock === 'jammed') {
                 ui.notifications.warn(game.i18n.localize('WH40K.Warning.WeaponJammed'));
+                return;
+            }
+            if (fireBlock === 'recharging') {
+                ui.notifications.warn(game.i18n.localize('WH40K.Warning.WeaponRecharging'));
                 return;
             }
             if (fireBlock === 'empty') {

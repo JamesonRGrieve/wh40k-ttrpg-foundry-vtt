@@ -110,6 +110,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             };
             action: string;
             hasAttackSpecial: (name: string) => boolean;
+            /** The attacker's chosen firing options (selectable qualities), as on WeaponRollData. */
+            chosenQualities: string[];
             specialModifiers: Record<string, number>;
             attackSpecials: { name: string }[];
             ammoPerShot?: number;
@@ -305,6 +307,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                         },
                         action: 'Standard Attack',
                         hasAttackSpecial: () => false,
+                        chosenQualities: [],
                         specialModifiers: {},
                         attackSpecials: [],
                     };
@@ -315,6 +318,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                         weapon: { usesAmmo: false, system: { clip: { value: 0 } } },
                         action: 'Standard Attack',
                         hasAttackSpecial: () => false,
+                        chosenQualities: [],
                         specialModifiers: {},
                         attackSpecials: [],
                     };

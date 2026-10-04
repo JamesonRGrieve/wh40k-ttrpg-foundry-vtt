@@ -636,6 +636,7 @@
             "WeaponNotEquipped": "This weapon must be equipped before it can be used to attack. Equip it from the Combat tab first.",
             "RangeFormulaFailed": "Range formula failed — setting to 0",
             "WeaponJammed": "This weapon is jammed and cannot fire. Clear the jam (Unjam action) before firing again.",
+            "WeaponRecharging": "This weapon is recharging after its last shot and cannot fire again until next round.",
             "WeaponEmpty": "This weapon is out of ammunition. Reload before firing again.",
             "InvalidAmmunition": "Invalid ammunition item",
             "NoAmmunitionLoaded": "No ammunition loaded",
@@ -779,7 +780,10 @@
                 "Tooltip": "Degrees = 1 + the difference between the roll and the target, by tens under the active degrees mode (DH2 Gen 2 = tens digit; Gen 1 = margin ÷ 10)."
             },
             "SpreadHits": "Spread hits",
-            "SpreadHitsHint": "Allocate extra hits to nearby enemies within 2m that are no harder to hit:"
+            "SpreadHitsHint": "Allocate extra hits to nearby enemies within 2m that are no harder to hit:",
+            "FiringOptions": "Firing options",
+            "FiringOptionHint": "Use this quality for this attack only",
+            "FiringOptionSource": "Attacker's choice"
         },
         "Assistance": {
             "Label": "Assistants",

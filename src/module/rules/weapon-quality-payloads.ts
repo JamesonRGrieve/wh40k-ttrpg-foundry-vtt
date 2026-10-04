@@ -12,6 +12,7 @@
  */
 
 import type { WeaponQualityDieOp, WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
+import { parseQualityLevel } from '../utils/quality-id.ts';
 
 /** Pack-name suffix shared by every system's weapon-qualities pack (`rt-core-items-weapon-qualities`, `dh2-…`, …). */
 const WEAPON_QUALITY_PACK_SUFFIX = '-core-items-weapon-qualities';
@@ -20,6 +21,11 @@ const WEAPON_QUALITY_PACK_SUFFIX = '-core-items-weapon-qualities';
 function defaultWeaponQualityMechanics(): WeaponQualityMechanics {
     return {
         type: '',
+        selectable: false,
+        chosenRangeBonus: null,
+        chosenAmmoMultiplier: null,
+        chosenBlastBonus: null,
+        chosenAddedQualities: [],
         aimBonus: null,
         parryBonus: null,
         enemyParryPenalty: null,
@@ -102,6 +108,7 @@ export function weaponQualityMechanicsFromRaw(raw: unknown): WeaponQualityMechan
         template: { ...base.template, ...r.template },
         rangeBands: { ...base.rangeBands, ...r.rangeBands },
         dieOps: weaponQualityDieOpsFromRaw(r.dieOps),
+        chosenAddedQualities: [...(r.chosenAddedQualities ?? [])],
     };
 }
 
@@ -229,6 +236,46 @@ export function getWeaponQualityMechanics(identifier: string, systemId?: string)
         if (scoped !== undefined) return scoped;
     }
     return payloadFlat?.get(key) ?? null;
+}
+
+/**
+ * Look up the mechanics for a quality as a weapon carries it — a bare id
+ * (`tearing`), a rated one (`proven-3`, `blast-10+1d10`) or a `(X)` id
+ * (`primitive-x`). The rating is stripped, and a levelled quality authored only
+ * as its sibling `<id>-x` doc resolves through that doc.
+ */
+export function getWeaponQualityMechanicsForId(qualityId: string, systemId?: string): WeaponQualityMechanics | null {
+    const { baseId } = parseQualityLevel(qualityId);
+    return getWeaponQualityMechanics(baseId, systemId) ?? getWeaponQualityMechanics(`${baseId}-x`, systemId);
+}
+
+/** The combined while-chosen effects of an attack's chosen (selectable) qualities. */
+export interface ChosenQualityEffects {
+    /** Metres added to the weapon's range. */
+    rangeBonus: number;
+    /** Factor on rounds spent per shot (1 = unchanged). */
+    ammoMultiplier: number;
+    /** Added to the rating of a Blast quality the attack already has. */
+    blastBonus: number;
+    /** Quality ids that join the attack. */
+    addedQualities: string[];
+}
+
+/**
+ * Fold the `chosen*` mechanics of every quality the attacker chose for this
+ * attack (in the actor's line). Nothing chosen → no change.
+ */
+export function chosenQualityEffects(chosenQualityIds: Iterable<string>, systemId?: string): ChosenQualityEffects {
+    const effects: ChosenQualityEffects = { rangeBonus: 0, ammoMultiplier: 1, blastBonus: 0, addedQualities: [] };
+    for (const id of chosenQualityIds) {
+        const mechanics = getWeaponQualityMechanicsForId(id, systemId);
+        if (mechanics === null) continue;
+        effects.rangeBonus += mechanics.chosenRangeBonus ?? 0;
+        effects.ammoMultiplier *= mechanics.chosenAmmoMultiplier ?? 1;
+        effects.blastBonus += mechanics.chosenBlastBonus ?? 0;
+        effects.addedQualities.push(...mechanics.chosenAddedQualities);
+    }
+    return effects;
 }
 
 /**

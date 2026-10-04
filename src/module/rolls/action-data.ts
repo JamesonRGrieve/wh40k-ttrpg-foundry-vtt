@@ -30,6 +30,7 @@ import {
 import { isWarpWeak, type WarpWeaknessScene } from '../rules/warp-weakness.ts';
 import { shouldDestroyOnCriticalFail, weaponDestroysOnCriticalFail } from '../rules/weapon-destroy.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
+import { attackTriggersRecharge } from '../rules/weapon-recharge.ts';
 import { playWeaponAttackSoundsForRoll } from '../rules/weapon-sounds.ts';
 import { DAY_SECONDS } from '../rules/world-time.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
@@ -419,7 +420,7 @@ export class ActionData {
             // qualities (rules/weapon-destroy.ts is the pure roll gate, mirroring
             // rules/weapon-jam.ts). The break is persisted in useResources().
             const destroyRollTotal = this.rollData.roll?.total ?? 0;
-            const destroySystemId = (this.rollData.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem;
+            const destroySystemId = this.rollData.gameSystemId;
             // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.weapon is a typed WH40KItemDocument; weaponDestroysOnCriticalFail accepts a duck-typed QualityItem
             const destroyWeapon = this.rollData.weapon as Parameters<typeof weaponDestroysOnCriticalFail>[0];
             if (
@@ -435,7 +436,7 @@ export class ActionData {
 
         // Degrees method resolves from the `degreesMode` setting + the source
         // actor's game system (Gen 1 margin/10 vs Gen 2 tens-digit).
-        const degreesMethod = resolveDegreesMethod((this.rollData.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
+        const degreesMethod = resolveDegreesMethod(this.rollData.gameSystemId);
 
         if (this.rollData.success) {
             this.rollData.dof = 0;
@@ -599,6 +600,10 @@ export class ActionData {
         // same resolution step and survive across turns.
         await this._persistWeaponBroken();
 
+        // A recharging shot (Recharge quality, or a chosen Maximal) keeps the weapon
+        // from firing next combat round (rules/weapon-recharge.ts).
+        await this._persistWeaponRecharge();
+
         if (this.rollData.eyeOfVengeance) {
             const sourceActor = this.rollData.sourceActor;
             await sourceActor?.spendFate();
@@ -611,6 +616,20 @@ export class ActionData {
      * and lets a Fate re-roll / manual refund undo the jam alongside the ammo.
      * No-op for non-weapon rolls or when the roll did not jam.
      */
+    /**
+     * Mark the weapon as recharging when this attack triggers a recharge and is
+     * made in a running combat (recharge counts combat rounds; outside combat it
+     * has nothing to block). No-op for non-weapon rolls.
+     */
+    private async _persistWeaponRecharge(): Promise<void> {
+        if (!(this.rollData instanceof WeaponRollData)) return;
+        const combat = game.combat;
+        if (combat?.started !== true) return;
+        if (!attackTriggersRecharge(this.rollData.weapon.system.effectiveSpecial, this.rollData.chosenQualities, this.rollData.gameSystemId)) return;
+        const weaponSystem = this.rollData.weapon.system as { markRecharging?: (combatId: string, round: number) => Promise<object | undefined> };
+        await weaponSystem.markRecharging?.(combat.id, combat.round);
+    }
+
     private async _persistWeaponJam(jammed: boolean): Promise<void> {
         if (!this.effects.includes('jam')) return;
         if (!(this.rollData instanceof WeaponRollData)) return;

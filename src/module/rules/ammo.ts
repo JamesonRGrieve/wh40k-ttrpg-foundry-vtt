@@ -7,6 +7,7 @@ import type { WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KItemDocument } from '../types/global.d.ts';
 import { resolveBurst } from './auto-fire.ts';
 import { consumeRounds, type MagazineSegment, refundRounds } from './magazine.ts';
+import { chosenQualityEffects } from './weapon-quality-payloads.ts';
 
 /** The loaded (chambered) round's cached effect fields, read from the weapon's front segment. */
 type LoadedAmmoEffects = {
@@ -170,9 +171,8 @@ export function calculateAmmoInformation(rollData: AmmoRollData): void {
     if (rollData.hasAttackSpecial('Twin-Linked')) {
         ammoPerShot *= 2;
     }
-    if (rollData.hasAttackSpecial('Maximal')) {
-        ammoPerShot *= 3;
-    }
+    // A chosen firing option's rounds-per-shot factor (Maximal: ×3), authored on the quality.
+    ammoPerShot *= chosenQualityEffects(rollData.chosenQualities, rollData.gameSystemId).ammoMultiplier;
 
     // A weapon that consumes no ammunition still has a rate of fire, and RAW caps
     // its burst by it — so the ceiling is resolved for EVERY weapon and only the

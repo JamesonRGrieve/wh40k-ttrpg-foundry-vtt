@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
+import { installFindSplice, uninstallFindSplice } from '../testing/find-splice.ts';
 import { allCombatActions, throwResolutionPath, updateAvailableCombatActions } from './combat-actions.ts';
 
 /**
@@ -12,40 +13,16 @@ import { allCombatActions, throwResolutionPath, updateAvailableCombatActions } f
  * any per-weapon number.
  */
 
-/**
- * Foundry extends `Array.prototype` with `findSplice` (typed globally by
- * fvtt-types). happy-dom/vitest don't ship it at runtime, and
- * `updateAvailableCombatActions` calls it while pruning rate-of-fire
- * actions, so install a faithful polyfill matching Foundry's signature
- * for the duration of these tests.
- */
+// `updateAvailableCombatActions` prunes rate-of-fire actions with Foundry's
+// `Array.prototype.findSplice`, which the test runtime lacks.
 let installedFindSplice = false;
 
-function findSplicePolyfill<T>(this: T[], predicate: (value: T, index: number, obj: T[]) => boolean, replace?: T): T | null {
-    const index = this.findIndex(predicate);
-    if (index === -1) return null;
-    const removed = this[index];
-    if (replace === undefined) this.splice(index, 1);
-    else this.splice(index, 1, replace);
-    return removed ?? null;
-}
-
 beforeAll(() => {
-    if (typeof Array.prototype.findSplice !== 'function') {
-        Object.defineProperty(Array.prototype, 'findSplice', {
-            configurable: true,
-            writable: true,
-            value: findSplicePolyfill,
-        });
-        installedFindSplice = true;
-    }
+    installedFindSplice = installFindSplice();
 });
 
 afterAll(() => {
-    if (installedFindSplice) {
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- test teardown: remove the polyfill installed in beforeAll so it doesn't leak into other suites.
-        delete (Array.prototype as { findSplice?: typeof findSplicePolyfill }).findSplice;
-    }
+    uninstallFindSplice(installedFindSplice);
 });
 
 /** Minimal structural surface of WeaponRollData that the function reads. */

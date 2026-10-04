@@ -88,6 +88,29 @@ const BLOCK_REASON_KEY: Readonly<Record<OrderBlockReason, string>> = Object.free
     'insufficient-cohesion': 'WH40K.OW.Orders.Validation.InsufficientCohesion',
 });
 
+/** The langpack keys an Order is displayed with — one source for the sheet panel and the chat card. */
+export interface OrderLabelKeys {
+    nameKey: string;
+    effectKey: string | null;
+    actionCostKey: string;
+    blockReasonKey: string | null;
+}
+
+/**
+ * Label keys for an Order, and for why it cannot be issued (`blockReason`). The
+ * sheet once rebuilt these from the id (`Generic.Ranged-volley.Name`), so every
+ * generic Order rendered as its raw key.
+ */
+export function orderLabelKeys(order: OrderDef, blockReason?: OrderBlockReason): OrderLabelKeys {
+    const i18nKeys = GENERIC_ORDER_I18N[order.id];
+    return {
+        nameKey: i18nKeys === undefined ? 'WH40K.OW.Orders.Label' : i18nKeys.nameKey,
+        effectKey: i18nKeys === undefined ? null : i18nKeys.effectKey,
+        actionCostKey: ACTION_COST_KEY[order.actionCost],
+        blockReasonKey: blockReason === undefined ? null : BLOCK_REASON_KEY[blockReason],
+    };
+}
+
 /**
  * Look up the generic OrderDef matching a clicked button's
  * `data-order-id`. Returns `undefined` for unknown ids (speciality
@@ -142,9 +165,7 @@ export async function owIssueOrder(this: OwOrdersActionContext, event: Event, ta
     await this.actor.update({ 'system.activeOrders': updated });
 
     // Compose and post the chat card.
-    const i18nKeys = GENERIC_ORDER_I18N[order.id];
-    const orderNameKey = i18nKeys === undefined ? 'WH40K.OW.Orders.Label' : i18nKeys.nameKey;
-    const effectKey = i18nKeys === undefined ? null : i18nKeys.effectKey;
+    const { nameKey: orderNameKey, effectKey, actionCostKey } = orderLabelKeys(order);
 
     const templateData = {
         gameSystem: 'ow' as const,
@@ -153,7 +174,7 @@ export async function owIssueOrder(this: OwOrdersActionContext, event: Event, ta
         _gameSystemId: firstSystemId(this.actor),
         orderId: order.id,
         orderNameKey,
-        actionCostKey: ACTION_COST_KEY[order.actionCost],
+        actionCostKey,
         kindKey: KIND_KEY[order.kind],
         sweeping,
         effectKey,

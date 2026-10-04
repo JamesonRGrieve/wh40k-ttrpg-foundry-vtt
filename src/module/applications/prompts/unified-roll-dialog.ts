@@ -29,6 +29,7 @@ import {
     getSituationalModifiers,
     isMeleeSpecialOption,
 } from '../../rules/attack-options.ts';
+import { selectableQualityIds, toggleQualityChoice } from '../../rules/attack-specials.ts';
 import { isBurstAction } from '../../rules/auto-fire.ts';
 import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
 import { computeGangUpModifier, gangUpConfigFor, type GangUpTokenLike } from '../../rules/gang-up.ts';
@@ -106,6 +107,23 @@ interface SpreadContextSource {
     action?: string | undefined;
     hitAllocation?: string | undefined;
     spreadTargets?: ReadonlyArray<{ id: string; name: string }> | undefined;
+}
+
+/**
+ * The roll-data slots {@link UnifiedRollDialog} reads to offer the weapon's
+ * selectable (per-attack, attacker-chosen) qualities, such as Maximal.
+ */
+interface SelectableQualitySource {
+    weapon?: { system: { effectiveSpecial?: Iterable<string> | undefined } } | undefined;
+    selectedQualities?: readonly string[] | undefined;
+    gameSystemId: string | undefined;
+}
+
+/** One per-attack quality toggle in the weapon panel. */
+interface SelectableQualityOption {
+    id: string;
+    label: string;
+    isSelected: boolean;
 }
 
 interface SituationalModifierEntry {
@@ -274,6 +292,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             selectDifficulty: UnifiedRollDialog.#onSelectDifficulty,
             toggleSituational: UnifiedRollDialog.#onToggleSituational,
             toggleHitSpread: UnifiedRollDialog.#onToggleHitSpread,
+            toggleSelectableQuality: UnifiedRollDialog.#onToggleSelectableQuality,
             customModUp: UnifiedRollDialog.#onCustomModUp,
             customModDown: UnifiedRollDialog.#onCustomModDown,
             toggleCustomModifier: UnifiedRollDialog.#onToggleCustomModifier,
@@ -1190,6 +1209,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // to hit. Showing the control otherwise would imply a choice that
             // allocation cannot act on.
             ...UnifiedRollDialog.#spreadContext(rd),
+            // Per-attack firing options (Maximal, …): the weapon's qualities whose
+            // compendium mechanics mark them `selectable`, each an opt-in toggle.
+            selectableQualities: UnifiedRollDialog.#selectableQualityOptions(rd),
             // Existing data we still need
             fireRate: rd['fireRate'],
             usesAmmo: rd['usesAmmo'],
@@ -1643,6 +1665,40 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const rd = this.rollData;
         rd['hitAllocation'] = rd['hitAllocation'] === 'spread' ? 'original' : 'spread';
         await this.render(false, { parts: ['weaponPanel'] });
+    }
+
+    /**
+     * Weapon-panel toggles for the weapon's selectable qualities — firing options
+     * such as Maximal that RAW leaves to the attacker shot by shot. Which qualities
+     * are selectable is read from their compendium mechanics; each label is the
+     * quality's own localized name.
+     * @param {SelectableQualitySource} rd  The dialog's roll-data view, narrowed to the slots this reads.
+     * @returns {SelectableQualityOption[]}  One toggle per selectable quality the weapon carries.
+     */
+    static #selectableQualityOptions(rd: SelectableQualitySource): SelectableQualityOption[] {
+        const selected = rd.selectedQualities ?? [];
+        return selectableQualityIds(rd.weapon?.system.effectiveSpecial, rd.gameSystemId).map((id) => ({
+            id,
+            label: CONFIG.wh40k.getQualityLabel(id),
+            isSelected: selected.includes(id),
+        }));
+    }
+
+    /**
+     * Opt into (or out of) one selectable quality for this attack only. The roll is
+     * re-prepared so the choice reaches the attack specials and everything derived
+     * from them — range, ammunition per shot, the displayed target.
+     */
+    static async #onToggleSelectableQuality(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const qualityId = target.dataset['qualityId'];
+        if (qualityId === undefined || qualityId === '') return;
+        const rd = this.rollData;
+        const current = Array.isArray(rd['selectedQualities']) ? rd['selectedQualities'].filter((id): id is string => typeof id === 'string') : [];
+        rd['selectedQualities'] = toggleQualityChoice(current, qualityId);
+        if (typeof rd['update'] === 'function') {
+            await (rd['update'] as () => Promise<void>)();
+        }
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
     }
 
     static async #onCustomModUp(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {

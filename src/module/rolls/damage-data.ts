@@ -20,10 +20,11 @@ import {
     applyKeepHighestToDie,
     calculateExoticQualityDamageModifiers,
     calculateQualityPenetrationModifiers,
-    collectAttackDieOps,
+    collectWeaponQualityDieOps,
     type DieTermLike,
     getRighteousFuryThreshold,
     resolveDieOpDamageAdjust,
+    resolveMaximalEffect,
 } from '../rules/weapon-quality-effects.ts';
 import { type ModifierSourcesShape, passiveCombatModifiers } from './passive-modifiers.ts';
 
@@ -501,8 +502,10 @@ export class Hit {
 
         // Descriptor-driven weapon-quality die operations (#303). Each quality declares
         // its own `dieOps` on its compendium doc (Direction #7) — the engine no longer
-        // name-matches Tearing / Proven / Primitive here.
-        const dieOps = collectAttackDieOps(attackData.rollData.attackSpecials, actionItem.system.effectiveSpecial, sourceActor.system?.gameSystem);
+        // name-matches Tearing / Proven / Primitive here. The attack specials already
+        // carry the weapon's own quality set (bridged by `updateAttackSpecials`), so a
+        // quality a weapon mod, las mode or un-chosen firing option removed stays removed.
+        const dieOps = collectWeaponQualityDieOps(attackData.rollData.attackSpecials, sourceActor.system?.gameSystem);
 
         // Pre-evaluation pass: the dice pool can only be changed while the Roll is
         // still unevaluated, so `keepHighest` (Tearing) is term surgery, not a modifier.
@@ -606,9 +609,11 @@ export class Hit {
                 this.modifiers['overload'] = 2;
             }
 
-            // Maximal
-            if (attackData.rollData.hasAttackSpecial('Maximal')) {
-                const maximalRoll = new Roll('1d10', {});
+            // Maximal: its bonus damage dice are the quality's authored mechanics
+            // (`maximalDamageDice`), not a literal here (Direction #7).
+            const maximalDice = resolveMaximalEffect(attackData.rollData.sourceActor.system?.gameSystem).bonusDamageDice;
+            if (attackData.rollData.hasAttackSpecial('Maximal') && maximalDice !== '') {
+                const maximalRoll = new Roll(maximalDice, {});
                 await maximalRoll.evaluate();
                 this.modifiers['maximal'] = maximalRoll.total ?? 0;
             }
@@ -688,7 +693,7 @@ export class Hit {
         // Concussive-quality grant it also confers is handled below.
         if (actionItem.isRanged && !actionItem.isMelee) {
             if (attackData.rollData.hasAttackSpecial('Maximal')) {
-                this.penetrationModifiers['maximal'] = 2;
+                this.penetrationModifiers['maximal'] = resolveMaximalEffect(attackData.rollData.sourceActor.system?.gameSystem).bonusPenetration;
             }
 
             // Las Modes
