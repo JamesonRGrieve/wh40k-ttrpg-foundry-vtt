@@ -69,20 +69,25 @@ describe('shouldJamRoll', () => {
 });
 
 describe('weaponFireBlockReason (#410/#411 firing gate)', () => {
-    it('a melee weapon never blocks, whatever its jam/ammo state', () => {
-        expect(weaponFireBlockReason({ isMelee: true, jammed: true, outOfAmmo: true })).toBeNull();
-        expect(weaponFireBlockReason({ isMelee: true, jammed: false, outOfAmmo: false })).toBeNull();
+    const ready = { isMelee: false, jammed: false, outOfAmmo: false, recharging: false };
+    it('a melee weapon never blocks, whatever its jam/ammo/recharge state', () => {
+        expect(weaponFireBlockReason({ isMelee: true, jammed: true, outOfAmmo: true, recharging: true })).toBeNull();
+        expect(weaponFireBlockReason({ ...ready, isMelee: true })).toBeNull();
     });
     it('a ready ranged weapon does not block', () => {
-        expect(weaponFireBlockReason({ isMelee: false, jammed: false, outOfAmmo: false })).toBeNull();
+        expect(weaponFireBlockReason(ready)).toBeNull();
     });
     it('a jammed ranged weapon blocks with "jammed"', () => {
-        expect(weaponFireBlockReason({ isMelee: false, jammed: true, outOfAmmo: false })).toBe('jammed');
+        expect(weaponFireBlockReason({ ...ready, jammed: true })).toBe('jammed');
     });
     it('a dry ranged weapon blocks with "empty"', () => {
-        expect(weaponFireBlockReason({ isMelee: false, jammed: false, outOfAmmo: true })).toBe('empty');
+        expect(weaponFireBlockReason({ ...ready, outOfAmmo: true })).toBe('empty');
     });
-    it('jam takes precedence over empty when both are true', () => {
-        expect(weaponFireBlockReason({ isMelee: false, jammed: true, outOfAmmo: true })).toBe('jammed');
+    it('a recharging ranged weapon blocks with "recharging"', () => {
+        expect(weaponFireBlockReason({ ...ready, recharging: true })).toBe('recharging');
+    });
+    it('jam takes precedence over recharge, and recharge over empty', () => {
+        expect(weaponFireBlockReason({ isMelee: false, jammed: true, outOfAmmo: true, recharging: true })).toBe('jammed');
+        expect(weaponFireBlockReason({ ...ready, outOfAmmo: true, recharging: true })).toBe('recharging');
     });
 });

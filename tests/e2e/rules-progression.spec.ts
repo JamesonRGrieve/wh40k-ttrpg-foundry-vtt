@@ -115,6 +115,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             modifiers: Record<string, number>;
             hasWeaponModification: () => boolean;
             hasAttackSpecial: () => boolean;
+            /** The attacker's chosen firing options (selectable qualities), as on WeaponRollData. */
+            chosenQualities: string[];
             rangeName?: string;
             maxRange?: number;
         }
@@ -323,6 +325,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                         modifiers: { aim: 0 },
                         hasWeaponModification: () => false,
                         hasAttackSpecial: () => false,
+                        chosenQualities: [],
                     };
                     calculateWeaponRange?.(rollData);
                     record('range-calculateWeaponRange-melee', rollData.rangeName === 'Melee' && rollData.maxRange === 1, null);
@@ -339,6 +342,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                         modifiers: { aim: 0 },
                         hasWeaponModification: () => false,
                         hasAttackSpecial: () => false,
+                        chosenQualities: [],
                     };
                     calculateWeaponRange?.(rollData);
                     record('range-calculateWeaponRange-noWeapon', rollData.maxRange === 0 && typeof rollData.rangeName === 'string', null);

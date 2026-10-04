@@ -3,12 +3,12 @@
  * three. The old three-column grid stretched Favourites/Progression with an
  * empty centre while cramming the Resources panel into the wide third column.
  *
- * The current fix uses two `minmax(0,1fr)` tracks so BOTH columns grow equally
- * to fill the available sheet width (no fixed cap leaving a dead gutter, and no
- * stretching third column), and relocates the Resources panel into COLUMN 1
- * directly under Active Effects. Column 1 stack: Vitals → Active Effects →
- * Resources; column 2: Favourite Skills → Favourite Talents → Progression.
- * Subtlety lives in its own full-width Party Overview section below the grid (#317).
+ * The columns now pack like masonry (a CSS multi-column flow) instead of grid
+ * rows: a row grid left a hole under the shorter column whenever a line added
+ * its own panels below (OW Regiment / Craftsmanship sat a full row down). The
+ * reading order is unchanged: Vitals → Active Effects → Resources, then
+ * Favourite Skills → Favourite Talents → Progression, then the line's panels.
+ * Subtlety lives in its own full-width Party Overview section below (#317).
  *
  * Source-scan rather than runtime: rendering the tab requires Foundry's sheet
  * context, and the contract here is a literal one on the grid track + panel order.
@@ -22,13 +22,21 @@ const TEMPLATE = resolve(__dirname, '../src/templates/actor/player/tab-overview.
 const src = readFileSync(TEMPLATE, 'utf8');
 
 describe('overview two-column layout (#15)', () => {
-    it('uses two grow-to-fill columns (minmax(0,1fr) tracks), not capped columns or a stretching third', () => {
-        expect(src).toContain('tw-grid-cols-[minmax(0,1fr)_minmax(0,1fr)] tw-grid-rows-[auto_auto]');
-        // No fixed 280-360px caps (would leave a dead gutter at wide widths).
-        expect(src).not.toContain('minmax(280px,360px)');
-        // No stretching third column / column-3 block.
-        expect(src).not.toContain('_1fr]');
+    it('packs panels as a two-column masonry flow, not row-aligned grid tracks', () => {
+        // At most two columns of ≥22rem; each panel is its own unbreakable item.
+        // Tailwind's `columns` utility (`columns: 22rem 2`); the arbitrary-property
+        // spelling `tw-[columns:…]` is not emitted under the `tw-` prefix.
+        expect(src).toContain('tw-columns-[22rem_2]');
+        expect(src).toContain('[&>[data-overview-column]>*]:tw-break-inside-avoid');
+        // A row grid left a hole under the shorter column whenever a line added
+        // panels below it (the OW Regiment panel sat a full row down).
+        expect(src).not.toContain('tw-grid-rows-[auto_auto]');
         expect(src).not.toContain('COLUMN 3');
+    });
+
+    it('lets every column panel join the flow individually (display: contents wrappers)', () => {
+        const wrappers = src.match(/<div class="tw-contents" data-overview-column>/g) ?? [];
+        expect(wrappers).toHaveLength(2);
     });
 
     it('places the Resources panel in column 1, under Active Effects', () => {

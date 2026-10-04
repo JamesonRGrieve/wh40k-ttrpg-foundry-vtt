@@ -25,7 +25,7 @@ import { owAddComrade, owRemoveComrade, owToggleDrawback } from '../../actions/o
 import { owAdjustSituational, owLogisticsTest, owToggleMunitorum } from '../../actions/ow-logistics-actions.ts';
 import { owRequestGear } from '../../actions/ow-mission-gear-actions.ts';
 import { owMountedAction } from '../../actions/ow-mount-actions.ts';
-import { owIssueOrder } from '../../actions/ow-orders-actions.ts';
+import { orderLabelKeys, owIssueOrder } from '../../actions/ow-orders-actions.ts';
 import { owRegimentEdit, resolveRegimentCatalog } from '../../actions/ow-regiment-actions.ts';
 import { owVehicleAction } from '../../actions/ow-vehicle-actions.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
@@ -397,7 +397,7 @@ type OwOrdersPanelContext = {
     available: Array<{
         orderId: string;
         nameKey: string;
-        effectKey: string;
+        effectKey: string | null;
         actionCostKey: string;
         actionCost: string;
         canIssue: boolean;
@@ -1885,12 +1885,9 @@ export default class CharacterSheet extends BaseActorSheet {
             const check = canIssueOrder({ order, hasFullAction: true, hasHalfAction: true, cohesionAvailable });
             return {
                 orderId: order.id,
-                nameKey: `WH40K.OW.Orders.Generic.${titleCase(order.id)}.Name`,
-                effectKey: `WH40K.OW.Orders.Generic.${titleCase(order.id)}.Effect`,
-                actionCostKey: `WH40K.OW.Orders.ActionCost.${titleCase(order.actionCost)}`,
+                ...orderLabelKeys(order, check.reason),
                 actionCost: order.actionCost,
                 canIssue: check.allowed,
-                blockReasonKey: check.reason === undefined ? null : `WH40K.OW.Orders.BlockReason.${titleCase(check.reason)}`,
             };
         });
         const sweepingActive = sys.activeOrders

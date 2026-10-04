@@ -245,4 +245,28 @@
             </button>
         </div>
     {{/if}}
+
+    {{!-- Per-attack firing options: the weapon's qualities whose compendium
+          mechanics mark them selectable (e.g. a plasma weapon's Maximal). Each
+          applies to this attack only when toggled on. --}}
+    {{#if selectableQualities.length}}
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-2 tw-pt-2 tw-border-t tw-border-[rgba(255,255,255,0.06)]">
+            <span class="tw-font-ui tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#9a9a8a]">
+                <i class="fas fa-sliders-h tw-text-gold-raw tw-text-xs"></i> {{localize "WH40K.Roll.FiringOptions"}}
+            </span>
+            <div class="tw-flex tw-flex-wrap tw-gap-1">
+                {{#each selectableQualities as |quality|}}
+                    <button type="button"
+                            class="tw-inline-flex tw-items-center tw-gap-[5px] tw-py-1 tw-px-2.5 tw-border tw-rounded-2xl tw-cursor-pointer tw-text-[0.78rem] tw-transition-all {{#if quality.isSelected}}tw-bg-[rgba(201,162,39,0.15)] tw-border-[rgba(201,162,39,0.5)] tw-text-[#e8e4d9] tw-shadow-[0_0_8px_rgba(201,162,39,0.15)]{{else}}tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a] hover:tw-bg-[rgba(201,162,39,0.08)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-text-[#b8b8a8]{{/if}}"
+                            data-action="toggleSelectableQuality"
+                            data-quality-id="{{quality.id}}"
+                            aria-pressed="{{#if quality.isSelected}}true{{else}}false{{/if}}"
+                            data-tooltip="{{localize 'WH40K.Roll.FiringOptionHint'}}">
+                        <i class="fas {{#if quality.isSelected}}fa-check-square{{else}}fa-square{{/if}} tw-text-[0.7rem] tw-opacity-70"></i>
+                        <span class="tw-font-medium">{{quality.label}}</span>
+                    </button>
+                {{/each}}
+            </div>
+        </div>
+    {{/if}}
 {{/if}}

@@ -14,10 +14,12 @@
                     data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
                     data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
                     title="{{localize 'WH40K.Skills.ViewDetails' skill=entry.[1].label}}">
-                {{!-- Only the name yields: a long name ("Sleight of Hand", "Interrogation")
-                     wraps to a second line rather than clipping — at a word or a hyphenated
-                     syllable, never mid-syllable; the characteristic suffix stays whole. --}}
-                <span class="tw-inline-flex tw-items-baseline tw-gap-[var(--wh40k-space-xs)] tw-leading-none tw-font-[var(--wh40k-font-body)] tw-min-w-0"><span class="tw-min-w-0 tw-line-clamp-2 tw-leading-tight tw-hyphens-auto tw-break-words" data-testid="skill-name">{{entry.[1].label}}</span> <span class="tw-shrink-0 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-[var(--wh40k-font-ui)]">({{entry.[1].charShort}})</span></span>
+                {{!-- A long name ("Interrogation", "Sleight of Hand") keeps its words whole:
+                     the characteristic suffix wraps under the name first, multi-word names
+                     wrap at spaces, and only a single word wider than the whole cell is clipped.
+                     Never break inside a word — browser hyphenation is unavailable in
+                     Foundry's Electron on Windows/Linux, so `break-words` split "Interrogati|on". --}}
+                <span class="tw-inline-flex tw-flex-wrap tw-items-baseline tw-gap-x-[var(--wh40k-space-xs)] tw-gap-y-0.5 tw-leading-tight tw-font-[var(--wh40k-font-body)] tw-min-w-0"><span class="tw-min-w-0 tw-max-w-full tw-overflow-hidden" data-testid="skill-name">{{entry.[1].label}}</span> <span class="tw-shrink-0 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-[var(--wh40k-font-ui)]">({{entry.[1].charShort}})</span></span>
             </button>
             {{!-- tw-shrink-0 (#267): this and the favourite star below are flex children
                  of a `tw-flex-1 tw-min-w-0` box, so without it THEY absorb the squeeze

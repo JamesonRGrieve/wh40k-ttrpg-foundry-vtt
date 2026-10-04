@@ -26,6 +26,8 @@ interface RollDataStub {
     action: string;
     weapon: WeaponStub;
     hasAttackSpecial: (name: string) => boolean;
+    /** The attacker's chosen firing options (selectable qualities); none by default. */
+    chosenQualities: string[];
     ammoPerShot: number;
     fireRate: number;
     shotsFired: number;
@@ -45,6 +47,7 @@ function rollData(action: string, weapon: Partial<WeaponStub> = {}, specials: re
             },
         },
         hasAttackSpecial: (name: string) => specials.includes(name),
+        chosenQualities: [],
         ammoPerShot: 1,
         fireRate: 1,
         shotsFired: 1,

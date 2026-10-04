@@ -89,6 +89,27 @@ interface WeaponQualityRangeBands {
  */
 export interface WeaponQualityMechanics {
     type: string;
+    /**
+     * The attacker opts into this quality per attack rather than it being always
+     * on (Maximal: a firing option chosen shot by shot). A weapon carrying a
+     * selectable quality offers it as a toggle in the roll dialog, and the quality
+     * reaches the roll's attack specials only when the attacker chose it for that
+     * roll. Content-declared, so the engine never name-matches which qualities
+     * are optional (Direction #7).
+     */
+    selectable: boolean;
+    /**
+     * Effects a {@link selectable} quality applies while the attacker has chosen it
+     * for the attack — Maximal: +10 m range, 3 rounds per shot, +2 to Blast, and in
+     * Deathwatch the Overheats quality. Per line, since the books differ.
+     * `chosenRangeBonus` adds metres, `chosenAmmoMultiplier` multiplies rounds per
+     * shot, `chosenBlastBonus` raises an existing Blast rating, and
+     * `chosenAddedQualities` lists quality ids that join the attack.
+     */
+    chosenRangeBonus: number | null;
+    chosenAmmoMultiplier: number | null;
+    chosenBlastBonus: number | null;
+    chosenAddedQualities: string[];
     aimBonus: number | null;
     parryBonus: number | null;
     enemyParryPenalty: number | null;

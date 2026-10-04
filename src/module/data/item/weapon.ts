@@ -22,6 +22,7 @@ import {
     modeWeaponClass,
     type WeaponFiringMode,
 } from '../../rules/weapon-modes.ts';
+import type { RechargeMark } from '../../rules/weapon-recharge.ts';
 import {
     inferActiveGameLine,
     isLineVariantContainer,
@@ -268,6 +269,8 @@ export default class WeaponData extends ItemDataModel.mixin(
     // Per-weapon jam state (#411). May be undefined at runtime when the schema
     // fails to initialise (mirrors loadedAmmo), so consumers guard via isJammed.
     declare jammed: boolean | undefined;
+    // Recharge state (rules/weapon-recharge.ts): where it last fired a recharging shot.
+    declare rechargeMark: RechargeMark;
     // Combi-weapon single-use secondary spent state (#ammo-system): true once the
     // active single-use mode has fired, until the weapon reloads. May be undefined
     // if the schema failed to initialise, so consumers guard.
@@ -419,6 +422,13 @@ export default class WeaponData extends ItemDataModel.mixin(
             // written to the owned item's per-actor overlay so it survives across
             // turns and the compendium→world resync.
             jammed: new fields.BooleanField({ required: false, initial: false }),
+            // Recharge state (rules/weapon-recharge.ts): the combat and round in which
+            // the weapon fired a recharging shot (Recharge quality, or a chosen Maximal).
+            // Per-weapon transient runtime state, like `jammed`; an empty combatId = ready.
+            rechargeMark: new fields.SchemaField({
+                combatId: new fields.StringField({ required: true, blank: true, initial: '' }),
+                round: new fields.NumberField({ required: true, nullable: true, initial: null, integer: true }),
+            }),
             // Combi-weapon single-use secondary spent state (#ammo-system).
             secondaryUsed: new fields.BooleanField({ required: false, initial: false }),
 
@@ -1704,6 +1714,15 @@ export default class WeaponData extends ItemDataModel.mixin(
      */
     async jam(): Promise<WH40KItem | undefined> {
         return this.parent.update({ 'system.jammed': true });
+    }
+
+    /**
+     * Record that this weapon fired a recharging shot in the given combat round,
+     * so it cannot fire again next round (rules/weapon-recharge.ts).
+     * @returns {Promise<Item>}
+     */
+    async markRecharging(combatId: string, round: number): Promise<WH40KItem | undefined> {
+        return this.parent.update({ 'system.rechargeMark': { combatId, round } });
     }
 
     /**

@@ -1,8 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { applyChosenQualityEffects, bridgeWeaponQualities, selectableQualityIds, toggleQualityChoice, updateAttackSpecials } from '../rules/attack-specials.ts';
 import type { DynamicModifierItemLike } from '../rules/dynamic-modifiers.ts';
-import { collectAttackDieOps } from '../rules/weapon-quality-effects.ts';
-import { setWeaponQualityPayloadsForTesting } from '../rules/weapon-quality-payloads.ts';
+import { applyModeQualities, type WeaponFiringMode } from '../rules/weapon-modes.ts';
+import { collectWeaponQualityDieOps } from '../rules/weapon-quality-effects.ts';
+import { chosenQualityEffects, setWeaponQualityPayloadsForTesting } from '../rules/weapon-quality-payloads.ts';
 import { hookScale, makeDynamicHook } from '../testing/dynamic-modifier-hook.ts';
+import { installFindSplice, uninstallFindSplice } from '../testing/find-splice.ts';
 import { type AttackDataLike, Hit } from './damage-data.ts';
 import type { ModifierSourcesShape } from './passive-modifiers.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
@@ -141,6 +144,8 @@ function weaponRoll(sourceActor: HitActor, weaponItem: HitWeapon, action = 'Stan
         expandedBuckets: {},
         modifierSources: [],
         attackSpecials: [],
+        selectedQualities: [],
+        chosenQualities: [],
         rangeBracket: '',
         rangeBonus: 0,
         rangeName: '',
@@ -156,6 +161,8 @@ function seedQualityMechanics(): void {
         'tearing': { type: 'damage', dieOps: [{ op: 'keepHighest', phase: 'preEvaluate', extraDice: 1, modifierKey: 'tearing' }] },
         'proven-x': { type: 'damage', dieOps: [{ op: 'floor', phase: 'postEvaluate', usesLevel: true, modifierKey: 'proven' }] },
         'primitive-x': { type: 'damage', dieOps: [{ op: 'cap', phase: 'postEvaluate', usesLevel: true, modifierKey: 'primitive' }] },
+        // The per-attack firing option: content marks it selectable, nothing in src/ names it.
+        'maximal': { type: 'damage', selectable: true, maximalDamageDice: '1d10', maximalPenetrationBonus: 2, triggersRecharge: true },
     });
 }
 
@@ -208,6 +215,7 @@ describe.each(SYSTEMS)('to-hit propagation onto the committed roll (%s)', (gameS
             dynamicAttackModifiers: {},
             expandedBuckets: {},
             modifierSources: [],
+            attackSpecials: [],
             rangeBracket: '',
         });
         await rd.finalize();
@@ -281,9 +289,24 @@ describe.each(SYSTEMS)('to-hit propagation onto the committed roll (%s)', (gameS
 /*  Damage / penetration                                                       */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * The roll's attack specials as `updateAttackSpecials` leaves them: any legacy
+ * embedded specials first, then the weapon's own quality set bridged in (a
+ * selectable quality only when `chosen`). Levels are numeric on the hit's surface.
+ */
+function rollSpecials(weaponItem: HitWeapon, embedded: readonly string[] = [], chosen: readonly string[] = []): { name: string; level?: number }[] {
+    const specials: Parameters<typeof bridgeWeaponQualities>[0] = embedded.map((name) => ({ name }));
+    bridgeWeaponQualities(specials, weaponItem.system.effectiveSpecial, new Set(chosen));
+    return specials.map((s) => (typeof s.level === 'number' ? { name: s.name, level: s.level } : { name: s.name }));
+}
+
 /** An attack against a hit, with only what `Hit.createHit` reads. */
-function attack(sourceActor: HitActor, weaponItem: HitWeapon, opts: { dos?: number; specials?: string[]; action?: string } = {}): AttackDataLike {
-    const specials = (opts.specials ?? []).map((name) => ({ name }));
+function attack(
+    sourceActor: HitActor,
+    weaponItem: HitWeapon,
+    opts: { dos?: number; specials?: string[]; chosen?: string[]; action?: string } = {},
+): AttackDataLike {
+    const specials = rollSpecials(weaponItem, opts.specials, opts.chosen);
     return {
         rollData: {
             weapon: weaponItem,
@@ -300,14 +323,14 @@ function attack(sourceActor: HitActor, weaponItem: HitWeapon, opts: { dos?: numb
             dos: opts.dos ?? 1,
             eyeOfVengeance: false,
             hasAttackSpecial: (name: string) => specials.some((s) => s.name === name),
-            getAttackSpecial: () => ({ level: 0 }),
+            getAttackSpecial: (name: string) => ({ level: specials.find((s) => s.name === name)?.level ?? 0 }),
         },
     };
 }
 
-describe('collectAttackDieOps — the weapon’s own quality set feeds the die operations', () => {
-    it('resolves Tearing / Proven (X) / Primitive (X) from quality identifiers, with the (X) level', () => {
-        const ops = collectAttackDieOps([], ['tearing', 'proven-3', 'primitive-7', 'reliable']);
+describe('collectWeaponQualityDieOps — die operations come from the bridged attack specials', () => {
+    it('resolves Tearing / Proven (X) / Primitive (X) from a pack weapon’s quality ids, with the (X) level', () => {
+        const ops = collectWeaponQualityDieOps(rollSpecials(weapon({ qualities: ['tearing', 'proven-3', 'primitive-7', 'reliable'] })));
         expect(ops.map((op) => [op.op, op.extraDice, op.threshold, op.modifierKey])).toEqual([
             ['keepHighest', 1, 0, 'tearing'],
             ['floor', 0, 3, 'proven'],
@@ -315,15 +338,15 @@ describe('collectAttackDieOps — the weapon’s own quality set feeds the die o
         ]);
     });
 
-    it('collects a quality present both as a roll attack special and in the set only once', () => {
-        expect(collectAttackDieOps([{ name: 'Tearing' }], ['tearing'])).toHaveLength(1);
+    it('collects a quality present both as an embedded attack special and in the set only once', () => {
+        expect(collectWeaponQualityDieOps(rollSpecials(weapon({ qualities: ['tearing'] }), ['Tearing']))).toHaveLength(1);
     });
 });
 
 describe.each(SYSTEMS)('damage / penetration propagation onto a hit (%s)', (gameSystem) => {
-    // Regression: die operations were collected from `rollData.attackSpecials` only,
-    // which compendium weapons never populate (their qualities live in
-    // `effectiveSpecial`), so Tearing / Proven / Primitive never touched their damage.
+    // Regression: die operations are collected from `rollData.attackSpecials`, which
+    // compendium weapons never populated until their `effectiveSpecial` ids were
+    // bridged in, so Tearing / Proven / Primitive never touched their damage.
     it('Tearing rolls an extra die and keeps the highest', async () => {
         dieQueue.push(2, 7);
         const hit = await Hit.createHit(attack(actor(gameSystem), weapon({ ranged: false, qualities: ['tearing'] })), 1);
@@ -413,11 +436,207 @@ describe.each(SYSTEMS)('damage / penetration propagation onto a hit (%s)', (game
     });
 });
 
+/* -------------------------------------------------------------------------- */
+/*  The weapon's quality set → the roll's attack specials                      */
+/* -------------------------------------------------------------------------- */
+
+/** A firing-mode profile with only the quality changes set. */
+function firingMode(addedQualities: string[], removedQualities: string[]): WeaponFiringMode {
+    return {
+        label: 'Mode',
+        damage: '',
+        damageType: '',
+        damageBonus: null,
+        penetration: null,
+        range: null,
+        addedQualities,
+        removedQualities,
+        weaponClass: '',
+        attackType: '',
+        characteristic: '',
+        rateOfFire: null,
+        singleUse: false,
+        clipMax: 0,
+        reload: '',
+    };
+}
+
+describe.each(SYSTEMS)('a pack weapon’s quality ids reach the roll’s attack specials (%s)', (gameSystem) => {
+    // The las-mode and weapon-mod passes prune with Foundry's `Array#findSplice`.
+    let installedFindSplice = false;
+    beforeAll(() => {
+        installedFindSplice = installFindSplice();
+    });
+    afterAll(() => {
+        uninstallFindSplice(installedFindSplice);
+    });
+
+    /** A weapon roll whose attack specials are prepared exactly as `WeaponRollData.update()` prepares them. */
+    function prepared(weaponItem: HitWeapon, opts: { selected?: string[]; lasMode?: string; rangeName?: string } = {}): WeaponRollData {
+        const rd = weaponRoll(actor(gameSystem), weaponItem);
+        rd.selectedQualities = opts.selected ?? [];
+        if (opts.lasMode !== undefined) rd.lasMode = opts.lasMode;
+        if (opts.rangeName !== undefined) rd.rangeName = opts.rangeName;
+        updateAttackSpecials(rd);
+        return rd;
+    }
+
+    it('Twin-Linked, Storm, Reliable, Accurate and Vengeful (9) are on the roll from their ids alone', () => {
+        const rd = prepared(weapon({ qualities: ['twin-linked', 'storm', 'reliable', 'accurate', 'vengeful-9'] }));
+        for (const name of ['Twin-Linked', 'Storm', 'Reliable', 'Accurate', 'Vengeful']) {
+            expect(rd.hasAttackSpecial(name)).toBe(true);
+        }
+        expect(rd.getAttackSpecial('Vengeful')).toEqual({ name: 'Vengeful', level: 9 });
+    });
+
+    it('a bridged Scatter earns its to-hit bonus at point blank through the central assembler', () => {
+        const rd = prepared(weapon({ qualities: ['scatter'] }), { rangeName: 'Point Blank' });
+        expect(rd.assembleFinalModifiers()['Scatter']).toBe(10);
+    });
+
+    it('the Overload las setting strips a bridged Reliable and makes the shot Unreliable', () => {
+        const rd = prepared(weapon({ qualities: ['reliable'] }), { lasMode: 'Overload' });
+        expect(rd.hasAttackSpecial('Reliable')).toBe(false);
+        expect(rd.hasAttackSpecial('Unreliable')).toBe(true);
+    });
+
+    it('Accurate adds its extra damage die on 3+ DoS for a pack weapon', async () => {
+        dieQueue.push(5, 4);
+        const hit = await Hit.createHit(attack(actor(gameSystem), weapon({ qualities: ['accurate'] }), { dos: 3 }), 1);
+        expect(hit.modifiers['accurate']).toBe(4);
+    });
+
+    it('Vengeful (9) turns a damage 9 into Righteous Fury; without it a 9 does not', async () => {
+        // A Righteous Fury looks up the critical-damage table pack; none is loaded here.
+        vi.stubGlobal('game', { i18n: { localize: (key: string) => key }, wh40k: { log: () => undefined }, packs: { get: () => undefined } });
+        dieQueue.push(9, 3);
+        expect((await Hit.createHit(attack(actor(gameSystem), weapon({ qualities: ['vengeful-9'] })), 1)).righteousFury).toHaveLength(1);
+        dieQueue.push(9);
+        expect((await Hit.createHit(attack(actor(gameSystem), weapon()), 1)).righteousFury).toHaveLength(0);
+    });
+
+    it('a selectable quality (Maximal) stays off the roll unless the attacker opts in', async () => {
+        const plasma = weapon({ qualities: ['maximal', 'overheats'], penetration: 6 });
+        expect(selectableQualityIds(plasma.system.effectiveSpecial, gameSystem)).toEqual(['maximal']);
+
+        const standard = prepared(plasma);
+        expect(standard.hasAttackSpecial('Maximal')).toBe(false);
+        expect(standard.hasAttackSpecial('Overheats')).toBe(true);
+        expect(standard.chosenQualities).toEqual([]);
+
+        dieQueue.push(5);
+        const standardHit = await Hit.createHit(attack(actor(gameSystem), plasma), 1);
+        expect(standardHit.modifiers).not.toHaveProperty('maximal');
+        expect(standardHit.totalPenetration).toBe(6);
+    });
+
+    it('an opted-in selectable quality is on the roll and recorded as the attacker’s choice', async () => {
+        const plasma = weapon({ qualities: ['maximal', 'overheats'], penetration: 6 });
+        const maximal = prepared(plasma, { selected: toggleQualityChoice([], 'maximal') });
+        expect(maximal.hasAttackSpecial('Maximal')).toBe(true);
+        expect(maximal.chosenQualities).toEqual(['maximal']);
+
+        dieQueue.push(5, 7);
+        const maximalHit = await Hit.createHit(attack(actor(gameSystem), plasma, { chosen: ['maximal'] }), 1);
+        expect(maximalHit.modifiers['maximal']).toBe(7);
+        expect(maximalHit.penetrationModifiers['maximal']).toBe(2);
+        expect(maximalHit.totalPenetration).toBe(8);
+    });
+
+    // Maximal's bonus once lived in damage-data.ts as a literal 1d10 / +2; the
+    // quality's authored mechanics are now the only source of those numbers.
+    it('reads the chosen quality’s damage dice and penetration from its mechanics, not literals', async () => {
+        setWeaponQualityPayloadsForTesting({
+            maximal: { type: 'damage', selectable: true, maximalDamageDice: '2d10', maximalPenetrationBonus: 4, triggersRecharge: true },
+        });
+        const plasma = weapon({ qualities: ['maximal'], penetration: 6 });
+        dieQueue.push(5, 3, 4);
+        const hit = await Hit.createHit(attack(actor(gameSystem), plasma, { chosen: ['maximal'] }), 1);
+        expect(hit.modifiers['maximal']).toBe(7);
+        expect(hit.penetrationModifiers['maximal']).toBe(4);
+        expect(hit.totalPenetration).toBe(10);
+    });
+
+    it('opting into a quality the weapon does not carry changes nothing', () => {
+        const rd = prepared(weapon({ qualities: ['overheats'] }), { selected: ['maximal'] });
+        expect(rd.hasAttackSpecial('Maximal')).toBe(false);
+        expect(rd.chosenQualities).toEqual([]);
+    });
+
+    it('toggling an opt-in twice clears it', () => {
+        expect(toggleQualityChoice(toggleQualityChoice([], 'maximal'), 'maximal')).toEqual([]);
+    });
+
+    it('a quality both embedded and in the id set is one attack special, counted once', () => {
+        const embedded = { name: 'Twin-Linked', isAttackSpecial: true, system: { state: { equipped: true } } };
+        const rd = prepared(weapon({ qualities: ['twin-linked'], items: [embedded] }));
+        expect(rd.attackSpecials.filter((s) => s.name === 'Twin-Linked')).toHaveLength(1);
+        expect(rd.assembleFinalModifiers()['Twin-Linked']).toBe(20);
+    });
+
+    it('the active firing mode’s added and removed qualities are respected', () => {
+        const qualities = applyModeQualities(new Set(['overheats', 'reliable']), firingMode(['scatter'], ['overheats']));
+        const rd = prepared(weapon({ qualities: [...qualities] }));
+        expect(rd.hasAttackSpecial('Scatter')).toBe(true);
+        expect(rd.hasAttackSpecial('Reliable')).toBe(true);
+        expect(rd.hasAttackSpecial('Overheats')).toBe(false);
+    });
+
+    // Regression: the die-op merge re-read `effectiveSpecial`, resurrecting a quality a
+    // weapon modification had removed from the roll (Mono strips Primitive).
+    it('a quality a weapon mod removed contributes no die operation', () => {
+        const mono = { name: 'Mono', isWeaponModification: true, system: { state: { equipped: true } } };
+        const rd = prepared(weapon({ ranged: false, qualities: ['primitive-7'], items: [mono] }));
+        expect(rd.hasAttackSpecial('Primitive')).toBe(false);
+        expect(collectWeaponQualityDieOps(rd.attackSpecials)).toEqual([]);
+    });
+});
+
 describe('RollData.passiveAttackModifiers', () => {
     it('sums two sources sharing a name and drops zero-valued entries', () => {
         // eslint-disable-next-line no-restricted-syntax -- test: bypass the WH40K-config constructor to exercise one method
         const rd = Object.create(RollData.prototype) as RollData;
         Object.assign(rd, { sourceActor: actor('dh2', { combat: { attack: [passive('Drill', 5), passive('Drill', 5), passive('Inert', 0)] } }) });
         expect(rd.passiveAttackModifiers()).toEqual({ Drill: 10 });
+    });
+});
+
+// Maximal's range (+10 m), ammo (×3), Blast (+2) and Deathwatch's added Overheats
+// were literals or missing; each line now authors them on the quality.
+describe('while-chosen effects of a selectable quality (authored per line)', () => {
+    beforeEach(() => {
+        setWeaponQualityPayloadsForTesting({
+            maximal: {
+                type: 'damage',
+                selectable: true,
+                chosenRangeBonus: 10,
+                chosenAmmoMultiplier: 3,
+                chosenBlastBonus: 2,
+                chosenAddedQualities: ['overheats'],
+            },
+        });
+    });
+
+    it('folds range, ammo, Blast and added qualities from the chosen quality’s mechanics', () => {
+        expect(chosenQualityEffects(['maximal'])).toEqual({ rangeBonus: 10, ammoMultiplier: 3, blastBonus: 2, addedQualities: ['overheats'] });
+    });
+
+    it('changes nothing when no quality is chosen', () => {
+        expect(chosenQualityEffects([])).toEqual({ rangeBonus: 0, ammoMultiplier: 1, blastBonus: 0, addedQualities: [] });
+    });
+
+    it('raises an existing Blast rating and adds the qualities the choice brings', () => {
+        const specials = [{ name: 'Blast', level: 3 }];
+        applyChosenQualityEffects(specials, ['maximal']);
+        expect(specials).toEqual([
+            { name: 'Blast', level: 5 },
+            { name: 'Overheats', level: true },
+        ]);
+    });
+
+    it('adds no Blast to a weapon that has none', () => {
+        const specials: Array<{ name: string; level?: number | boolean }> = [];
+        applyChosenQualityEffects(specials, ['maximal']);
+        expect(specials.map((s) => s.name)).toEqual(['Overheats']);
     });
 });

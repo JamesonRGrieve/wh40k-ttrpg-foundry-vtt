@@ -2,17 +2,20 @@
 {{!-- At-a-glance view of all critical information --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
-    {{!-- Column sizing rationale (#15): the Overview is a TWO-column layout.
-         Col 1 (Vitals/Mental → Active Effects → Resources) and col 2 (Favourites
-         → Progression) each grow to fill the available width via minmax(0,1fr)
-         tracks — the old fixed 360px cap left a dead gutter at wider sheet widths.
-         Resources sits under Active Effects in col 1 (#15). Column 3 was emptied
-         by #318 (Equipped Weapons & Armour) and #317 (Subtlety → its own
-         full-width Party Overview section below the grid). --}}
-    <div class="tw-grid tw-grid-cols-[minmax(0,1fr)_minmax(0,1fr)] tw-grid-rows-[auto_auto] tw-items-start tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1:tw-border-t-gold-raw-l5 dh2:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure">
+    {{!-- Layout (#15): a TWO-column dashboard that packs like masonry. Every panel
+         is its own item in a CSS multi-column flow (`columns: 22rem 2` — two
+         columns, one on a narrow sheet), so panels stack under each other with no
+         gaps. A row grid left a hole under the shorter column whenever a line
+         added panels below it (OW Regiment / Craftsmanship sat a full row down).
+         Reading order: Vitals → Active Effects → Resources → Favourites →
+         Progression → the line's own panels, filling column 1 then column 2.
+         The COLUMN wrappers are `display: contents` so their panels join the flow
+         individually. Subtlety lives in its own full-width section (#317). --}}
+    <div class="tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1:tw-border-t-gold-raw-l5 dh2:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure">
+    <div class="tw-columns-[22rem_2] tw-gap-2 [&>*]:tw-mb-2 [&>*]:tw-break-inside-avoid [&>[data-overview-column]>*]:tw-mb-2 [&>[data-overview-column]>*]:tw-break-inside-avoid" data-overview-masonry>
 
-        {{!-- COLUMN 1: Vitals → Active Effects --}}
-        <div class="tw-flex tw-flex-col tw-gap-2">
+        {{!-- COLUMN 1: Vitals → Active Effects → Resources --}}
+        <div class="tw-contents" data-overview-column>
             {{> systems/wh40k-rpg/templates/actor/panel/overview-vitals-panel.hbs}}
 
             {{> systems/wh40k-rpg/templates/actor/panel/overview-active-effects-panel.hbs}}
@@ -85,7 +88,7 @@
         </div>
 
         {{!-- COLUMN 2: Favourite Skills → Favourite Talents → Progression --}}
-        <div class="tw-flex tw-flex-col tw-gap-2">
+        <div class="tw-contents" data-overview-column>
             {{!-- Favourite Skills --}}
             {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title=(localize "WH40K.Favourites.Skills") icon="fa-star" zoneClass="tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-accent-green-bright)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-green-bright)]"}}
                     <div class="tw-flex tw-flex-col tw-gap-[3px]" data-favourite-list="skills">
@@ -301,6 +304,7 @@
             {{> systems/wh40k-rpg/templates/actor/panel/ow-battlefield-panel.hbs battlefieldPanel=battlefieldPanel}}
         {{/if}}
 
+    </div>
     </div>
 
     {{!-- Status-tab action panels relocated full-width (#263). --}}

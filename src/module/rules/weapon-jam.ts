@@ -49,17 +49,19 @@ export function shouldJamRoll(opts: { action: string; rollTotal: number; success
 
 /**
  * Why a weapon may not be fired right now, or `null` when it can fire.
- *   - `'jammed'` — the weapon is jammed and must be cleared first (#411).
- *   - `'empty'`  — the weapon uses ammunition and its clip is dry (#410).
- * Melee weapons never gate on either (they don't jam or run dry), so a melee
- * weapon always returns `null`. Pure and system-agnostic: the caller supplies
- * the already-resolved weapon state, so the same gate holds across all 7 lines.
+ *   - `'jammed'`     — the weapon is jammed and must be cleared first (#411).
+ *   - `'empty'`      — the weapon uses ammunition and its clip is dry (#410).
+ *   - `'recharging'` — it fired a recharging shot last round (rules/weapon-recharge.ts).
+ * Melee weapons never gate on any of them, so a melee weapon always returns
+ * `null`. Pure and system-agnostic: the caller supplies the already-resolved
+ * weapon state, so the same gate holds across all 7 lines.
  */
-export type WeaponFireBlockReason = 'jammed' | 'empty' | null;
+export type WeaponFireBlockReason = 'jammed' | 'empty' | 'recharging' | null;
 
-export function weaponFireBlockReason(opts: { isMelee: boolean; jammed: boolean; outOfAmmo: boolean }): WeaponFireBlockReason {
+export function weaponFireBlockReason(opts: { isMelee: boolean; jammed: boolean; outOfAmmo: boolean; recharging: boolean }): WeaponFireBlockReason {
     if (opts.isMelee) return null;
     if (opts.jammed) return 'jammed';
+    if (opts.recharging) return 'recharging';
     if (opts.outOfAmmo) return 'empty';
     return null;
 }

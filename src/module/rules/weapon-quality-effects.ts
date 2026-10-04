@@ -26,7 +26,7 @@ import type { WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KBaseActorDocument, WH40KItemDocument, WH40KItemSystemData } from '../types/global.d.ts';
 import { parseQualityLevel } from '../utils/quality-id.ts';
 import { nonNegInt } from './_num.ts';
-import { getWeaponQualityMechanics } from './weapon-quality-payloads.ts';
+import { getWeaponQualityMechanics, getWeaponQualityMechanicsForId } from './weapon-quality-payloads.ts';
 
 type AttackSpecialLike = {
     name?: string;
@@ -610,7 +610,7 @@ export function collectWeaponQualityDieOps(specials: ReadonlyArray<AttackSpecial
         const identifier = weaponQualityIdentifierFromName(special.name);
         // A levelled quality is authored as a sibling `<id>-x` doc; a weapon carrying
         // the bare name resolves to whichever of the two the pack defines.
-        const mechanics = getWeaponQualityMechanics(identifier, systemId) ?? getWeaponQualityMechanics(`${identifier}-x`, systemId);
+        const mechanics = getWeaponQualityMechanicsForId(identifier, systemId);
         if (mechanics === null) continue;
         for (const dieOp of mechanics.dieOps) {
             const modifierKey = dieOp.modifierKey === '' ? identifier : dieOp.modifierKey;
@@ -626,36 +626,6 @@ export function collectWeaponQualityDieOps(specials: ReadonlyArray<AttackSpecial
         }
     }
     return resolved;
-}
-
-/**
- * Resolve every die operation for one attack: the roll's attack specials PLUS the
- * weapon's own quality set (`effectiveSpecial` identifiers such as `tearing`,
- * `proven-3`, `primitive-7`).
- *
- * Compendium weapons carry their qualities ONLY in that identifier set — the
- * legacy embedded attack-special items that `rollData.attackSpecials` is built
- * from are absent on them — so collecting from the attack specials alone meant
- * Tearing, Proven and Primitive never touched a pack weapon's damage. A quality
- * present on both sides is collected once (the roll's entry wins). Content-
- * agnostic: which identifiers declare die operations is read from the quality
- * docs by {@link collectWeaponQualityDieOps}. `weaponQualityIds` is `undefined` for
- * an action item with no quality set (a psychic power).
- */
-export function collectAttackDieOps(
-    attackSpecials: ReadonlyArray<AttackSpecialWithLevel>,
-    weaponQualityIds: Iterable<string> | undefined,
-    systemId?: string,
-): ResolvedDieOp[] {
-    const merged: AttackSpecialWithLevel[] = [...attackSpecials];
-    const seen = new Set(attackSpecials.map((special) => weaponQualityIdentifierFromName(special.name)));
-    for (const qualityId of weaponQualityIds ?? []) {
-        const { baseId, level } = parseQualityLevel(qualityId);
-        if (seen.has(baseId)) continue;
-        seen.add(baseId);
-        merged.push(level === null ? { name: baseId } : { name: baseId, level });
-    }
-    return collectWeaponQualityDieOps(merged, systemId);
 }
 
 /**
@@ -721,13 +691,14 @@ export function resolveTemplateRadius(level: number): number {
  * the caller's to roll; this helper returns the configured deltas and the
  * follow-up tags the engine consumer should apply.
  */
-export function resolveMaximalEffect(): {
+export function resolveMaximalEffect(systemId?: string): {
     bonusPenetration: number;
     bonusDamageDice: string;
     appliesOverheats: boolean;
     triggersRecharge: boolean;
 } {
-    const maximal = getWeaponQualityMechanics('maximal');
+    // Scoped to the actor's line: the lines' Maximal rules differ (DW adds Overheats).
+    const maximal = getWeaponQualityMechanics('maximal', systemId);
     return {
         bonusPenetration: maximal?.maximalPenetrationBonus ?? 0,
         bonusDamageDice: maximal?.maximalDamageDice ?? '',

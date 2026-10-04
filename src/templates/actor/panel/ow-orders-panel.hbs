@@ -14,7 +14,7 @@
         available: Array<{                          // 3 generic Orders
           orderId:          'ranged-volley' | 'close-quarters' | 'take-cover'
           nameKey:          string                  // 'WH40K.OW.Orders.Generic.RangedVolley' …
-          effectKey:        string                  // 'WH40K.OW.Orders.Effect.RangedVolley' …
+          effectKey:        string | null           // 'WH40K.OW.Orders.Effect.RangedVolley' …
           actionCostKey:    string                  // 'WH40K.OW.Orders.ActionCost.Half' …
           actionCost:       'free' | 'half' | 'full'
           canIssue:         boolean                 // canIssueOrder result
@@ -44,9 +44,11 @@
                         <span class="tw-text-[0.85rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">
                             {{localize this.nameKey}}
                         </span>
+                        {{#if this.effectKey}}
                         <span class="tw-text-[0.72rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
                             {{localize this.effectKey}}
                         </span>
+                        {{/if}}
                         {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" rootClass="wh40k-ow-orders-cost ow:tw-text-brass" labelKey=this.actionCostKey}}
                     </div>
                     {{#if this.canIssue}}

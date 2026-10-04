@@ -3,6 +3,7 @@ import { t } from '../i18n/t.ts';
 import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
 import { calculateRangeModifier } from '../utils/range-calculator.ts';
 import { parsePsychicRange } from './psychic-range.ts';
+import { chosenQualityEffects } from './weapon-quality-payloads.ts';
 
 type RangeAnnotatedRollData = RollData & {
     rangeBracket?: string;
@@ -61,10 +62,8 @@ function calculateWeaponMaxRange(rollData: WeaponRollData): void {
         }
     }
 
-    // Check Maximal
-    if (rollData.hasAttackSpecial('Maximal')) {
-        range += 10;
-    }
+    // A chosen firing option's range bonus (Maximal: +10 m), authored on the quality.
+    range += chosenQualityEffects(rollData.chosenQualities, rollData.gameSystemId).rangeBonus;
 
     //Check Forearm Mounting
     if (rollData.hasWeaponModification('Forearm Weapon Mounting')) {

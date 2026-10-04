@@ -48,6 +48,13 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
             // quality only populates the keys its rule consumes.
             mechanics: new fields.SchemaField({
                 type: new fields.StringField({ required: false, blank: true, initial: '' }),
+                // Attacker opts into this quality per attack (see WeaponQualityMechanics.selectable).
+                selectable: new fields.BooleanField({ required: false, initial: false }),
+                // Effects while a selectable quality is chosen (see WeaponQualityMechanics.chosen*).
+                chosenRangeBonus: new fields.NumberField({ required: false, nullable: true, initial: null }),
+                chosenAmmoMultiplier: new fields.NumberField({ required: false, nullable: true, initial: null, min: 1 }),
+                chosenBlastBonus: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
+                chosenAddedQualities: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: false, initial: [] }),
                 aimBonus: new fields.NumberField({ required: false, nullable: true, initial: null }),
                 parryBonus: new fields.NumberField({ required: false, nullable: true, initial: null }),
                 enemyParryPenalty: new fields.NumberField({ required: false, nullable: true, initial: null }),

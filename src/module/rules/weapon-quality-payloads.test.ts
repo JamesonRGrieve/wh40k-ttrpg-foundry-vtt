@@ -116,15 +116,23 @@ describe('stub pack content integrity (#303)', () => {
     }
     const rtIdentifiers = new Set(rtUuidsByIdentifier.keys());
 
+    // A line's doc is EITHER a stub onto the matching RT doc (mechanicsRef, no own
+    // mechanics) OR a line-specific override carrying its own mechanics and no ref —
+    // used where the line's book prints the quality differently (Maximal: Blast +2
+    // outside RT, Overheats in DW). Never both, never neither.
     for (const p of NON_RT) {
-        it(`${p.systemId}: every stub references a matching RT doc and carries no own mechanics`, () => {
+        it(`${p.systemId}: every doc is a stub onto a matching RT doc or a self-contained override`, () => {
             const docs = loadDocs(p.dir, p.pack);
             expect(docs).toHaveLength(rtIdentifiers.size);
             for (const doc of docs) {
                 const id = doc.system?.identifier;
                 expect(id !== undefined && rtIdentifiers.has(id)).toBe(true);
-                expect(rtUuidsByIdentifier.get(id ?? '')?.has(doc.system?.mechanicsRef ?? '')).toBe(true);
-                expect(doc.system?.mechanics).toBeUndefined();
+                const ref = doc.system?.mechanicsRef ?? '';
+                const isStub = ref !== '' && doc.system?.mechanics === undefined;
+                const isOverride = ref === '' && doc.system?.mechanics !== undefined;
+                expect(isStub || isOverride, `${id ?? '?'} is a stub or an override`).toBe(true);
+                const stubResolves = !isStub || rtUuidsByIdentifier.get(id ?? '')?.has(ref) === true;
+                expect(stubResolves, `${id ?? '?'} stub points at the matching RT doc`).toBe(true);
             }
         });
     }
