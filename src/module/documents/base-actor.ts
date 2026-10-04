@@ -1,5 +1,5 @@
 import type { FatigueModelDef } from '../config/game-systems/types.ts';
-import { DEAD_STATUS_ID, SYSTEM_ID } from '../constants.ts';
+import { DEAD_STATUS_ID, SYSTEM_ID, UNCONSCIOUS_STATUS_ID } from '../constants.ts';
 import { applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../data/shared/characteristic-math.ts';
 import { isEffectSuppressedByEquipState, isWeaponAttackBlockedByEquip } from '../data/shared/equip-state.ts';
 import { computeMovement } from '../data/shared/movement-math.ts';
@@ -10,7 +10,7 @@ import { SimpleSkillData } from '../rolls/action-data.ts';
 import type { ExtendedTestState } from '../rolls/extended-test-data.ts';
 import { openRollPrompt } from '../rolls/roll-prompt.ts';
 import { type AddictionTier, resolveAddictionCheck } from '../rules/addiction.ts';
-import { conditionEffectData } from '../rules/condition-registry.ts';
+import { bearerLine, conditionEffectData } from '../rules/condition-registry.ts';
 import { clampDisposition } from '../rules/disposition.ts';
 import { getFatigueAfterRest, isFatigueDeath, isFatigueUnconscious } from '../rules/fatigue.ts';
 import { clampFearRating, getFearTestPenalty } from '../rules/fear.ts';
@@ -216,17 +216,15 @@ export class WH40KBaseActor extends Actor {
         });
 
         if (unconscious && existing === undefined) {
-            // Build the Unconscious condition from the ONE registry (#495). This
-            // used to hand-build an effect that "mirrors the `unconscious` def" —
-            // a second writer whose copy could (and did) drift, and which set no
-            // `statuses`, so fatigue-unconsciousness was invisible to the token
-            // and to `targetCombatStateFromConditions`.
+            // Build the Unconscious condition from its compendium document (#495),
+            // resolved for this actor's line — never a hand-built copy, which drifts
+            // and sets no `statuses` (invisible to the token and the rules engine).
             //
             // Imported from `rules/condition-registry.ts` — the LEAF that owns the
-            // table and its pure builders. Reaching for it through
+            // catalog and its pure builders. Reaching for it through
             // `rules/active-effects.ts` (the impure writer hub) closed a depcruise
-            // `no-circular` cycle, which is why the registry lives on its own.
-            const data = conditionEffectData('unconscious', {
+            // `no-circular` cycle, which is why the catalog lives on its own.
+            const data = conditionEffectData(UNCONSCIOUS_STATUS_ID, bearerLine(this), {
                 name: game.i18n.localize('WH40K.Fatigue.UnconsciousLabel'),
                 flags: { 'wh40k-rpg': { fatigueUnconscious: true } },
             });
@@ -245,7 +243,7 @@ export class WH40KBaseActor extends Actor {
             // conversion see it — previously this route only emitted a chat
             // notice and left the actor mechanically alive.
             if (!this.statuses.has(DEAD_STATUS_ID)) {
-                const dead = conditionEffectData(DEAD_STATUS_ID);
+                const dead = conditionEffectData(DEAD_STATUS_ID, bearerLine(this));
                 if (dead !== null) {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts Foundry's untyped embedded-document create schema
                     await this.createEmbeddedDocuments('ActiveEffect', [dead] as unknown as Parameters<typeof this.createEmbeddedDocuments<'ActiveEffect'>>[1]);

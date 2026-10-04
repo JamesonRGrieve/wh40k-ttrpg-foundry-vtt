@@ -5,6 +5,7 @@ import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegr
 import { formatSourceLabel, type SourceInput } from '../src/module/handlebars/source-label.ts';
 import { ICON_REGISTRY } from '../src/module/icons/registry.generated.ts';
 import { combatActionIcon, combatTimingKey } from '../src/module/rules/combat-action-display.ts';
+import { hitLocationLabelKey } from '../src/module/rules/hit-locations.ts';
 
 const TEMPLATE_PREFIX = 'systems/wh40k-rpg/templates/';
 const SOURCE_ROOT = '../src/templates/';
@@ -340,6 +341,11 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         const locations = ['body', 'head', 'rightArm', 'leftArm', 'rightLeg', 'leftLeg'] as const;
         const same = locations.every((loc) => num(a[loc]) === body);
         return same ? String(body) : locations.map((loc) => num(a[loc])).join('/');
+    });
+    HandlebarsLib.registerHelper('hitLocationLabel', (location: HbsValue): string => {
+        const value = typeof location === 'string' ? location : '';
+        const key = hitLocationLabelKey(value);
+        return key === undefined ? value : lookupLocalization(key, enLang) ?? value;
     });
     HandlebarsLib.registerHelper('armourLocation', (armour: HbsValue, location: HbsValue): number => {
         if (typeof location !== 'string') return 0;

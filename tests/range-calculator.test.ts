@@ -1,4 +1,6 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import WH40K from '../src/module/config.ts';
+import { buildLangStub } from '../src/module/testing/lang-stub.ts';
 import {
     applyQualityModifiers,
     calculateRangeBracket,
@@ -8,6 +10,17 @@ import {
     isAtMeltaRange,
     isOutOfRange,
 } from '../src/module/utils/range-calculator';
+
+beforeEach(() => {
+    vi.stubGlobal('game', { i18n: buildLangStub() });
+    // The runtime reads the registry via CONFIG.wh40k (importing config.ts from
+    // utils/ closed a runtime import cycle through the roll stack).
+    vi.stubGlobal('CONFIG', { wh40k: WH40K });
+});
+
+afterEach(() => {
+    vi.unstubAllGlobals();
+});
 
 /** Minimal Token-placeable projection the distance helper reads. */
 type TokenArg = Parameters<typeof calculateTokenDistance>[0];
@@ -143,7 +156,19 @@ describe('formatRangeDisplay', () => {
             isMeltaRange: true,
             description: 'Half range',
         });
-        expect(result.tooltip).toContain('Melta');
+        expect(result.tooltip).toContain('Melta: Double Penetration');
+    });
+
+    it('names the modifying quality through the langpack-backed quality label', () => {
+        const result = formatRangeDisplay({
+            bracket: 'extreme',
+            label: 'Extreme',
+            modifier: -10,
+            modifiedBy: 'gyro-stabilised',
+            isMeltaRange: false,
+            description: 'Beyond triple weapon range',
+        });
+        expect(result.tooltip).toBe('Beyond triple weapon range (Modified by Gyro-Stabilised)');
     });
 });
 
@@ -162,10 +187,6 @@ describe('isOutOfRange', () => {
 });
 
 describe('calculateTokenDistance (#233)', () => {
-    afterEach(() => {
-        vi.unstubAllGlobals();
-    });
-
     function stubGrid(measured: number): void {
         vi.stubGlobal('canvas', { grid: { measurePath: () => measured } });
     }

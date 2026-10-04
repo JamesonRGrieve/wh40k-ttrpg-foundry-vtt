@@ -57,20 +57,21 @@ function localize(key: string): string {
     return g.game?.i18n?.localize?.(key) ?? key;
 }
 
-const CHARACTERISTIC_LABEL: Record<GrenadeSaveCharacteristic, string> = {
-    toughness: 'Toughness',
-    agility: 'Agility',
-    willpower: 'Willpower',
+/** Langpack key of each characteristic a grenade save can test. */
+const SAVE_CHARACTERISTIC_LABEL_KEY: Record<GrenadeSaveCharacteristic, string> = {
+    toughness: 'WH40K.Characteristic.Toughness',
+    agility: 'WH40K.Characteristic.Agility',
+    willpower: 'WH40K.Characteristic.Willpower',
 };
 
 function formatDifficulty(mod: number): string {
-    if (mod === 0) return 'Ordinary (+0)';
+    if (mod === 0) return `${localize('WH40K.Difficulty.Ordinary')} (+0)`;
     if (mod > 0) return `+${mod}`;
     return String(mod);
 }
 
 function saveLabelFor(def: GrenadeDefinition): string {
-    return `${CHARACTERISTIC_LABEL[def.save.characteristic]} ${formatDifficulty(def.save.difficulty)}`;
+    return `${localize(SAVE_CHARACTERISTIC_LABEL_KEY[def.save.characteristic])} ${formatDifficulty(def.save.difficulty)}`;
 }
 
 function toChoice(def: GrenadeDefinition, selectedId: string): GrenadeChoice {

@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { WH40K } from '../config.ts';
+import { buildLangStub } from '../testing/lang-stub.ts';
 import { buildDifficultyPresets } from './difficulty-presets.ts';
 
 /**
@@ -8,6 +9,19 @@ import { buildDifficultyPresets } from './difficulty-presets.ts';
  * join stays faithful to CONFIG so a rebalance flows through instead of drifting.
  */
 describe('buildDifficultyPresets', () => {
+    beforeEach(() => {
+        vi.stubGlobal('game', { i18n: buildLangStub() });
+    });
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('localizes each band label from the CONFIG label key and its tooltip from the langpack', () => {
+        const byKey = new Map(buildDifficultyPresets().map((p) => [p.key, p]));
+        expect(byKey.get('veryHard')).toMatchObject({ label: 'Very Hard', description: 'Exceptional difficulty' });
+        expect(byKey.get('challenging')).toMatchObject({ label: 'Challenging', description: 'No modifier (baseline)' });
+    });
+
     it('derives one preset per CONFIG difficulty band, in CONFIG order', () => {
         const presets = buildDifficultyPresets();
         expect(presets.map((p) => p.key)).toEqual(Object.keys(WH40K.difficulties));

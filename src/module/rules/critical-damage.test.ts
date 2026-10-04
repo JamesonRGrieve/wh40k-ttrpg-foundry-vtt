@@ -428,15 +428,18 @@ describe('criticalRiderConditionIds (#108 — riders → condition registry ids)
         expect(criticalRiderConditionIds(noRiders)).toEqual([]);
     });
 
-    it('maps each rider to its condition-registry id', () => {
+    it('maps each rider to the condition pack identifier', () => {
+        // The ids are the `system.identifier` the condition compendium documents
+        // author (`on-fire`, `blood-loss`, `useless-limb`), so the applied effect
+        // resolves to a real document instead of an unknown id.
         expect(criticalRiderConditionIds({ ...noRiders, stunned: true })).toEqual(['stunned']);
-        expect(criticalRiderConditionIds({ ...noRiders, burning: true })).toEqual(['burning']);
-        expect(criticalRiderConditionIds({ ...noRiders, bloodLoss: true })).toEqual(['bloodloss']);
+        expect(criticalRiderConditionIds({ ...noRiders, burning: true })).toEqual(['on-fire']);
+        expect(criticalRiderConditionIds({ ...noRiders, bloodLoss: true })).toEqual(['blood-loss']);
         expect(criticalRiderConditionIds({ ...noRiders, prone: true })).toEqual(['prone']);
         expect(criticalRiderConditionIds({ ...noRiders, blinded: true })).toEqual(['blinded']);
         expect(criticalRiderConditionIds({ ...noRiders, deafened: true })).toEqual(['deafened']);
         expect(criticalRiderConditionIds({ ...noRiders, fatigue: true })).toEqual(['fatigued']);
-        expect(criticalRiderConditionIds({ ...noRiders, lostLimb: true })).toEqual(['uselessLimb']);
+        expect(criticalRiderConditionIds({ ...noRiders, lostLimb: true })).toEqual(['useless-limb']);
     });
 
     it('maps the fatal rider to the `dead` status (#495)', () => {
@@ -451,12 +454,12 @@ describe('criticalRiderConditionIds (#108 — riders → condition registry ids)
 
     it('orders `dead` first when a fatal result also carries other riders', () => {
         const ids = criticalRiderConditionIds({ ...noRiders, fatal: true, stunned: true, bloodLoss: true });
-        expect(ids).toEqual(['dead', 'stunned', 'bloodloss']);
+        expect(ids).toEqual(['dead', 'stunned', 'blood-loss']);
     });
 
-    it('combines multiple riders in registry order', () => {
+    it('combines multiple riders in a stable order', () => {
         const ids = criticalRiderConditionIds({ ...noRiders, stunned: true, burning: true, bloodLoss: true, lostLimb: true });
-        expect(ids).toEqual(['stunned', 'burning', 'bloodloss', 'uselessLimb']);
+        expect(ids).toEqual(['stunned', 'on-fire', 'blood-loss', 'useless-limb']);
     });
 });
 

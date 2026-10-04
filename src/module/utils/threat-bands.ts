@@ -16,10 +16,8 @@ type ThreatBandKey = 'minor' | 'standard' | 'tough' | 'elite' | 'boss';
 
 /** A single threat band. `maxThreat` is the inclusive upper bound (∞ for the top band). */
 interface ThreatBand {
-    /** Stable tier key (minor/standard/tough/elite/boss). */
+    /** Stable tier key (minor/standard/tough/elite/boss); capitalised, it composes the generator's `WH40K.NPC.Tier<Key>` keys. */
     readonly key: ThreatBandKey;
-    /** Tier-name fragment ("Minor") — composes the generator's `WH40K.NPC.Tier<label>` keys. */
-    readonly label: string;
     /** Langpack key for the tier name shown on the NPC threat badge — line-neutral on every system. */
     readonly labelKey: string;
     /** Localization key for the prose threat description. */
@@ -35,7 +33,6 @@ interface ThreatBand {
 /** The open-ended top band; also the {@link tierBandFor} fallback. */
 const BOSS_BAND: ThreatBand = {
     key: 'boss',
-    label: 'Boss',
     labelKey: 'WH40K.Threat.Tier.Boss',
     descriptionKey: 'WH40K.Threat.Apocalyptic',
     color: '#9c27b0',
@@ -49,10 +46,9 @@ const BOSS_BAND: ThreatBand = {
  * (5/10/15/20) land in the same band the four old sites produced.
  */
 export const THREAT_BANDS: readonly ThreatBand[] = [
-    { key: 'minor', label: 'Minor', labelKey: 'WH40K.Threat.Tier.Minor', descriptionKey: 'WH40K.Threat.Low', color: '#4caf50', minThreat: 1, maxThreat: 5 },
+    { key: 'minor', labelKey: 'WH40K.Threat.Tier.Minor', descriptionKey: 'WH40K.Threat.Low', color: '#4caf50', minThreat: 1, maxThreat: 5 },
     {
         key: 'standard',
-        label: 'Standard',
         labelKey: 'WH40K.Threat.Tier.Standard',
         descriptionKey: 'WH40K.Threat.Moderate',
         color: '#2196f3',
@@ -61,7 +57,6 @@ export const THREAT_BANDS: readonly ThreatBand[] = [
     },
     {
         key: 'tough',
-        label: 'Tough',
         labelKey: 'WH40K.Threat.Tier.Tough',
         descriptionKey: 'WH40K.Threat.Dangerous',
         color: '#ff9800',
@@ -70,7 +65,6 @@ export const THREAT_BANDS: readonly ThreatBand[] = [
     },
     {
         key: 'elite',
-        label: 'Elite',
         labelKey: 'WH40K.Threat.Tier.Elite',
         descriptionKey: 'WH40K.Threat.Deadly',
         color: '#f44336',

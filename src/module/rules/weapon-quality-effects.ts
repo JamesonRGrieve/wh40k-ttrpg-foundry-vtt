@@ -24,6 +24,7 @@
 import type { WeaponQualityDieOpKind, WeaponQualityDieOpPhase } from '../data/item/weapon-quality-mechanics.ts';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KBaseActorDocument, WH40KItemDocument, WH40KItemSystemData } from '../types/global.d.ts';
+import type { I18nKey } from '../types/i18n-keys';
 import { parseQualityLevel } from '../utils/quality-id.ts';
 import { nonNegInt } from './_num.ts';
 import { getWeaponQualityMechanics, getWeaponQualityMechanicsForId } from './weapon-quality-payloads.ts';
@@ -79,7 +80,21 @@ type ExoticDamageContext = {
 };
 
 type QualityModifierMap = Record<string, number>;
-type QualityDamageModifierMap = Record<string, number | string>;
+
+/** Stable ids of the exotic quality damage contributions. */
+export const EXOTIC_DAMAGE_MODIFIER_IDS = ['force', 'witchEdge', 'daemonbane'] as const;
+
+type ExoticDamageModifierId = (typeof EXOTIC_DAMAGE_MODIFIER_IDS)[number];
+
+/** Exotic quality damage contributions by stable id (a number, or a dice formula). */
+type QualityDamageModifierMap = Partial<Record<ExoticDamageModifierId, number | string>>;
+
+/** Langpack key of the label each exotic quality damage contribution shows under on the damage card. */
+export const EXOTIC_DAMAGE_MODIFIER_LABEL_KEYS: Readonly<Record<ExoticDamageModifierId, I18nKey>> = {
+    force: 'WH40K.Weapon.QualityModifier.Force',
+    witchEdge: 'WH40K.Weapon.QualityModifier.WitchEdge',
+    daemonbane: 'WH40K.Weapon.QualityModifier.Daemonbane',
+};
 
 /* -------------------------------------------- */
 /*  Quality mechanics source (#303)             */
@@ -355,7 +370,7 @@ export function calculateExoticQualityDamageModifiers(damageContext: ExoticDamag
     if (weaponHasQuality(weapon, 'force')) {
         const psyRating = actor.system.psyker?.psyRating ?? 0;
         if (psyRating > 0) {
-            modifiers['Force (Psy Rating)'] = psyRating;
+            modifiers.force = psyRating;
         }
     }
 
@@ -367,7 +382,7 @@ export function calculateExoticQualityDamageModifiers(damageContext: ExoticDamag
             actor.system.traits?.some((t: { name?: string }) => t.name?.toLowerCase().includes('eldar') === true) === true;
         if (isEldar && weapon.system?.isMeleeWeapon === true) {
             const strengthBonus = actor.system.characteristics.strength?.bonus ?? 0;
-            modifiers['Witch-Edge (Extra SB)'] = strengthBonus;
+            modifiers.witchEdge = strengthBonus;
         }
     }
 
@@ -379,7 +394,7 @@ export function calculateExoticQualityDamageModifiers(damageContext: ExoticDamag
             ) === true || target.system.species?.toLowerCase().includes('daemon') === true;
 
         if (isDaemon) {
-            modifiers['Daemonbane (vs Daemon)'] = '2d10';
+            modifiers.daemonbane = '2d10';
         }
     }
 

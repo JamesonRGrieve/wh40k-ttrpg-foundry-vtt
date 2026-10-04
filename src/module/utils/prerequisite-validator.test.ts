@@ -1,4 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import WH40K from '../config.ts';
+import { buildLangStub } from '../testing/lang-stub.ts';
 import type { WH40KSkill } from '../types/global.d.ts';
 import { checkPrerequisites, parsePrerequisiteString, type PrereqActorView } from './prerequisite-validator.ts';
 
@@ -45,8 +47,9 @@ describe('checkPrerequisites', () => {
     }
 
     beforeEach(() => {
-        vi.stubGlobal('CONFIG', { wh40k: { characteristics: { weaponSkill: { abbreviation: 'WS' } } } });
-        vi.stubGlobal('game', { i18n: { format: (key: string): string => key } });
+        vi.stubGlobal('game', { i18n: buildLangStub() });
+        // Characteristic labels resolve through the runtime CONFIG.wh40k registry.
+        vi.stubGlobal('CONFIG', { wh40k: WH40K });
     });
 
     afterEach(() => {
@@ -65,13 +68,21 @@ describe('checkPrerequisites', () => {
     it('fails an unmet characteristic prerequisite', () => {
         const result = checkPrerequisites(actorView({ characteristics: { weaponSkill: { total: 20 } } }), [{ type: 'characteristic', key: 'ws', value: 30 }]);
         expect(result.valid).toBe(false);
-        expect(result.unmet).toHaveLength(1);
+        expect(result.unmet).toEqual(['Requires WS 30+ (current: 20)']);
+    });
+
+    it('resolves every short code and full key through the shared characteristic normaliser', () => {
+        const characteristics = { fellowship: { total: 50 }, toughness: { total: 50 } };
+        const unresolved = ['Fel', 'fel', 'fellowship', 'T', 'Tgh', 'toughness'].filter(
+            (key) => !checkPrerequisites(actorView({ characteristics }), [{ type: 'characteristic', key, value: 40 }]).valid,
+        );
+        expect(unresolved).toEqual([]);
     });
 
     it('reports an unknown characteristic', () => {
         const result = checkPrerequisites(actorView(), [{ type: 'characteristic', key: 'zzz', value: 30 }]);
         expect(result.valid).toBe(false);
-        expect(result.unmet[0]).toContain('Unknown characteristic');
+        expect(result.unmet).toEqual(['Unknown characteristic: zzz']);
     });
 
     it('passes a present talent and fails a missing one', () => {

@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import WH40K from '../config.ts';
+import { buildLangStub } from '../testing/lang-stub.ts';
 import {
     applyQualityModifiers,
     calculateRangeBracket,
@@ -13,7 +15,33 @@ import {
 /**
  * Coverage for the pure weapon-range bracket/modifier math (previously
  * untested). `calculateTokenDistance` is Foundry-canvas-coupled and excluded.
+ * Bracket labels and tooltips resolve through the real English langpack.
  */
+
+beforeEach(() => {
+    vi.stubGlobal('game', { i18n: buildLangStub() });
+    // Quality labels resolve through the runtime CONFIG.wh40k registry.
+    vi.stubGlobal('CONFIG', { wh40k: WH40K });
+});
+
+afterEach(() => {
+    vi.unstubAllGlobals();
+});
+
+describe('bracket display strings', () => {
+    it('resolves every ranged bracket label and tooltip from the langpack', () => {
+        expect(calculateRangeBracket(2, 30)).toMatchObject({ label: 'Point Blank', description: '2 meters or less' });
+        expect(calculateRangeBracket(15, 30)).toMatchObject({ label: 'Short Range', description: 'Half weapon range or less' });
+        expect(calculateRangeBracket(45, 30)).toMatchObject({ label: 'Standard Range', description: 'Up to double weapon range' });
+        expect(calculateRangeBracket(75, 30)).toMatchObject({ label: 'Long Range', description: 'Up to triple weapon range' });
+        expect(calculateRangeBracket(150, 30)).toMatchObject({ label: 'Extreme Range', description: 'Beyond triple weapon range' });
+    });
+
+    it('resolves the melee label and tooltip', () => {
+        expect(calculateRangeBracket(5, 1)).toMatchObject({ bracket: 'melee', label: 'Melee', description: 'Melee range' });
+        expect(calculateRangeModifier({ isRangedWeapon: false })).toMatchObject({ label: 'Melee', description: 'Melee range' });
+    });
+});
 
 describe('calculateRangeBracket', () => {
     const RANGE = 30;

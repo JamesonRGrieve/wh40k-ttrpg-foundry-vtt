@@ -13,33 +13,24 @@ import { capitalize } from './format.ts';
 /*  Characteristic Display                      */
 /* -------------------------------------------- */
 
-const CHARACTERISTIC_INFO: Record<string, { label: string; short: string }> = {
-    weaponSkill: { label: 'Weapon Skill', short: 'WS' },
-    ballisticSkill: { label: 'Ballistic Skill', short: 'BS' },
-    strength: { label: 'Strength', short: 'S' },
-    toughness: { label: 'Toughness', short: 'T' },
-    agility: { label: 'Agility', short: 'Ag' },
-    intelligence: { label: 'Intelligence', short: 'Int' },
-    perception: { label: 'Perception', short: 'Per' },
-    willpower: { label: 'Willpower', short: 'WP' },
-    fellowship: { label: 'Fellowship', short: 'Fel' },
-    influence: { label: 'Influence', short: 'Inf' },
-};
-
 /**
- * Get display info for a characteristic key.
+ * Get display info for a characteristic key, localized from the canonical
+ * `WH40K.characteristics` registry (label) and its `WH40K.Characteristic.Abbr.*`
+ * langpack entries (short code).
  * @param key - Characteristic key (e.g. 'weaponSkill')
  * @returns Label and short abbreviation
  */
 export function getCharacteristicDisplayInfo(key: string): { label: string; short: string } {
-    return CHARACTERISTIC_INFO[key] ?? { label: key, short: key.substring(0, 3).toUpperCase() };
+    const config = Object.entries(CONFIG.wh40k.characteristics).find(([characteristicKey]) => characteristicKey === key)?.[1];
+    if (config === undefined) return { label: key, short: key.substring(0, 3).toUpperCase() };
+    return { label: game.i18n.localize(config.label), short: game.i18n.localize(`WH40K.Characteristic.Abbr.${capitalize(key)}`) };
 }
 
 /**
  * Get all characteristic display info.
  */
 export function getAllCharacteristicDisplayInfo(): Record<string, { label: string; short: string }> {
-    return CHARACTERISTIC_INFO;
+    return Object.fromEntries(Object.keys(CONFIG.wh40k.characteristics).map((key) => [key, getCharacteristicDisplayInfo(key)]));
 }
 
 /* -------------------------------------------- */
@@ -89,7 +80,7 @@ export function getChoiceTypeLabel(type: string): string {
     const localized = game.i18n.localize(key);
     // If localization returned the key itself, fall back to capitalized type
     if (localized === key) {
-        return type ? capitalize(type) : 'Choice';
+        return type ? capitalize(type) : game.i18n.localize('WH40K.ChoiceType.default');
     }
     return localized;
 }

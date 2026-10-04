@@ -11,8 +11,11 @@
  * would let a second hit silently rewrite the first card's numbers, which is the
  * acceptance's load-bearing requirement.
  *
- * Pure — no Foundry access — so the arithmetic is unit-testable without a world.
+ * The arithmetic is pure, so it is unit-testable without a world; only the
+ * tooltip row labels resolve through the langpack.
  */
+
+import { t } from '../i18n/t.ts';
 
 /** One tracked value's before/after, as stored on the card. */
 interface ValueTransition {
@@ -102,12 +105,12 @@ export interface TransitionTooltipRow {
  * @returns {TransitionTooltipRow[]}  Rows for the tooltip payload.
  */
 export function woundTransitionRows(transition: WoundTransition): TransitionTooltipRow[] {
-    const rows: TransitionTooltipRow[] = [{ name: 'Wounds', value: formatTransition(transition.wounds) }];
+    const rows: TransitionTooltipRow[] = [{ name: t('WH40K.Chat.AssignDamage.Transition.Wounds'), value: formatTransition(transition.wounds) }];
     if (transition.critical !== undefined) {
-        rows.push({ name: 'Critical', value: `${formatTransition(transition.critical)} (+${transition.criticalTaken})` });
+        rows.push({ name: t('WH40K.Chat.AssignDamage.Transition.Critical'), value: `${formatTransition(transition.critical)} (+${transition.criticalTaken})` });
     }
     if (transition.fatigue !== undefined) {
-        rows.push({ name: 'Fatigue', value: formatTransition(transition.fatigue) });
+        rows.push({ name: t('WH40K.Chat.AssignDamage.Transition.Fatigue'), value: formatTransition(transition.fatigue) });
     }
     return rows;
 }
@@ -127,10 +130,10 @@ function formatTransition(value: ValueTransition): string {
  * `value` to a number (`s.value ?? s.modifier ?? 0`) — that would turn every
  * `12 → 4 / 12` into `0`.
  * @param {WoundTransition | null} transition  The stored record, or null.
- * @param {string} [title]  Tooltip heading.
+ * @param {string} [title]  Tooltip heading; defaults to the localized "Damage Applied".
  * @returns {string}  JSON payload, or '' when there is nothing to show.
  */
-export function prepareWoundTransitionTooltip(transition: WoundTransition | null, title = 'Damage Applied'): string {
+export function prepareWoundTransitionTooltip(transition: WoundTransition | null, title: string = t('WH40K.Chat.AssignDamage.Applied')): string {
     if (transition === null) return '';
     const sources = woundTransitionRows(transition);
     if (sources.length === 0) return '';

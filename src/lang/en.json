@@ -246,6 +246,8 @@
         "ArmourSilhouette": {
             "LocationRoll": "{location} - Roll: {range}",
             "LocationAp": "{location}: +{ap} AP",
+            "AllLocationsAp": "All: {ap}",
+            "ApRange": "{min}-{max} AP",
             "ShortRightArm": "R.Arm",
             "ShortLeftArm": "L.Arm",
             "ShortRightLeg": "R.Leg",
@@ -767,7 +769,9 @@
                 "PsyMode": "Psychic Focus",
                 "Difficulty": "Difficulty",
                 "Situational": "Situational",
-                "CombatSituational": "Combat Situational"
+                "CombatSituational": "Combat Situational",
+                "TargetConditions": "Target Conditions",
+                "TargetCondition": "{condition} (target)"
             },
             "ModifierCap": {
                 "Label": "Modifier cap (±60)",
@@ -1946,6 +1950,7 @@
             "AttemptParryTooltip": "Attempt a Parry — roll the target's Parry and spend their Reaction for the round.",
             "NoDefender": "This attack has no target to react.",
             "ReactionUsed": "The defender has already used their Reaction this round.",
+            "ReactionBlockedByCondition": "The defender cannot take Reactions while under its current condition.",
             "CoverAPTooltip": "Cover doesn't penalise the attack roll — it adds this Armour at the hit location, absorbing part of the damage.",
             "NoActiveCombatAttack": "Attacks can only be made during an active combat encounter. Start an encounter and add this token to the tracker first.",
             "NotYourTurnMove": "It is not this combatant's turn — only the active combatant may move.",
@@ -2039,6 +2044,8 @@
         },
         "CriticalInjury": {
             "Label": "Critical Injury",
+            "ItemName": "Critical Injury - {location} ({damageType})",
+            "TakenAt": "Taken at {time}",
             "Severity": "Severity",
             "Permanent": "Permanent",
             "Effect": "Effect",
@@ -2058,6 +2065,25 @@
             }
         },
         "Condition": {
+            "AutoFail": {
+                "Label": "Automatic Failure",
+                "Text": "{conditions}: this test fails automatically."
+            },
+            "HelplessTarget": {
+                "Label": "Helpless Target",
+                "Text": "{conditions}: the melee attack hits automatically; damage is rolled twice and added together.",
+                "DamageLabel": "Helpless target (second damage roll)"
+            },
+            "Tick": {
+                "Subtitle": "Condition",
+                "Damage": "Damage",
+                "DamageType": "{type}",
+                "DamageIgnoresArmour": "{type} (ignores Armour)",
+                "TestPassed": "{characteristic} Test Passed (target {target})",
+                "TestFailed": "{characteristic} Test Failed (target {target})",
+                "ConditionApplied": "{condition} applied.",
+                "Apply": "Apply"
+            },
             "Duration": {
                 "Label": "Duration",
                 "Permanent": "Permanent",
@@ -2296,7 +2322,15 @@
                 "ThreatAnalysis": "Threat Analysis",
                 "NpcThreat": "NPC Threat",
                 "DifficultyScale": "Difficulty Scale",
-                "Easy": "Easy"
+                "Easy": "Easy",
+                "Description": {
+                    "Trivial": "This encounter poses no real threat to the party.",
+                    "Easy": "The party should handle this encounter without significant resource expenditure.",
+                    "Moderate": "A fair challenge that will require tactical thinking and resource management.",
+                    "Dangerous": "A difficult encounter. Party members may take significant wounds.",
+                    "Deadly": "A life-threatening encounter. Party members may die or suffer critical injuries.",
+                    "Apocalyptic": "Near-certain TPK. Only attempt with significant advantages or preparation."
+                }
             },
             "ThreatScaler": {
                 "TierMinor": "Minor",
@@ -3664,6 +3698,7 @@
             "Background": "Background",
             "Role": "Role",
             "Elite": "Elite Advance",
+            "EliteAdvance": "Elite Advance",
             "Divination": "Divination",
             "Race": "Race",
             "Archetype": "Archetype",
@@ -3905,7 +3940,8 @@
             "specialAbility": "Special Ability",
             "malignancy": "Malignancy",
             "mutation": "Mutation",
-            "mentalDisorder": "Mental Disorder"
+            "mentalDisorder": "Mental Disorder",
+            "default": "Choice"
         },
         "Biography": {
             "Identity": "Identity",
@@ -5280,17 +5316,13 @@
             "AssignDamage": {
                 "Hit": "{location} Hit",
                 "Applied": "Damage Applied",
+                "Transition": {
+                    "Wounds": "Wounds",
+                    "Critical": "Critical",
+                    "Fatigue": "Fatigue"
+                },
                 "CriticalWounds": "Critical Wounds",
                 "CriticalDamage": "Critical Damage: {value}"
-            },
-            "Bleeding": {
-                "Instruction": "Once per round as a Free Action, the character (or another who can reach them) can attempt a",
-                "Test": "Difficult (–10) Medicae",
-                "Removal": "test to remove this condition."
-            },
-            "Burning": {
-                "ActNormally": "You may take actions as normal despite the flames.",
-                "Flail": "You can only flail in agony and scream!"
             },
             "Condition": {
                 "Removal": "Removal"
@@ -5972,7 +6004,105 @@
             "Arduous": "Arduous",
             "Punishing": "Punishing",
             "Hellish": "Hellish",
-            "Infernal": "Infernal"
+            "Infernal": "Infernal",
+            "Description": {
+                "Trivial": "Automatic success unless complications",
+                "Elementary": "Almost trivial with minor effort",
+                "Simple": "Easy tasks under no pressure",
+                "Easy": "Simple tasks with no pressure",
+                "Routine": "Standard tasks with time",
+                "Ordinary": "Typical difficulty",
+                "Challenging": "No modifier (baseline)",
+                "Difficult": "Complex or contested tasks",
+                "Hard": "Very challenging circumstances",
+                "VeryHard": "Exceptional difficulty",
+                "Arduous": "Punishing odds against success",
+                "Punishing": "Verging on impossible",
+                "Hellish": "Near-impossible feats"
+            }
+        },
+        "RangeBracket": {
+            "PointBlank": "Point Blank",
+            "PointBlankDescription": "2 meters or less",
+            "Short": "Short Range",
+            "ShortDescription": "Half weapon range or less",
+            "Standard": "Standard Range",
+            "StandardDescription": "Up to double weapon range",
+            "Long": "Long Range",
+            "LongDescription": "Up to triple weapon range",
+            "Extreme": "Extreme Range",
+            "ExtremeDescription": "Beyond triple weapon range",
+            "Melee": "Melee",
+            "MeleeDescription": "Melee range",
+            "ModifiedBy": "Modified by {quality}",
+            "MeltaNote": "Melta: Double Penetration"
+        },
+        "ActionEffect": {
+            "Title": {
+                "PsychicPhenomena": "Psychic Phenomena",
+                "Psychic": "Psychic",
+                "Feint": "Feint",
+                "KnockDown": "Knock Down",
+                "Manoeuvre": "Manoeuvre",
+                "Disarm": "Disarm",
+                "AllOutAttack": "All Out Attack",
+                "StunAttack": "Stun Attack",
+                "Spray": "Spray",
+                "Suppressing": "Suppressing",
+                "NearOverheat": "Near Overheat",
+                "CatastrophicJam": "Catastrophic Jam",
+                "NearJam": "Near Jam",
+                "Deviation": "Deviation",
+                "AutoFailure": "Auto Failure",
+                "Overheats": "Overheats",
+                "Jam": "Jam",
+                "Medicae": "Medicae",
+                "Interrogation": "Interrogation",
+                "Readout": "Readout",
+                "Detection": "Detection",
+                "Social": "Social",
+                "Contest": "Contest",
+                "Demolition": "Demolition",
+                "Object": "Object",
+                "TechUse": "Tech-Use",
+                "Athletics": "Athletics",
+                "Security": "Security",
+                "SleightOfHand": "Sleight of Hand",
+                "ChemUse": "Chem-Use",
+                "Blather": "Blather",
+                "WarCry": "War Cry"
+            },
+            "PsychicPhenomena": "The warp convulses with energy!",
+            "Feint": {
+                "Failed": "The character fails to feint against the target!",
+                "Succeeded": "The next melee Standard Attack action against that same target during this turn cannot be Evaded!",
+                "Compare": "Compare to targets Weapon Skill check. If the character wins, his next melee Standard Attack action against that same target during this turn cannot be Evaded."
+            },
+            "KnockDown": {
+                "Impact": "The target is knocked Prone and must use a Stand action in his turn to regain his feet! The impact deals [[1d5-3+{strengthBonus}]] (min 0) damage and one level of fatigue to the target!",
+                "Prone": "The target is knocked Prone and must use a Stand action in his turn to regain his feet!",
+                "Failed": "The character fails to knock down the target!",
+                "Backfired": "The character fails to knock down the target and in the failure knocks themselves prone instead!",
+                "Compare": "Compare to targets Strength check. If the attacker wins, the target is knocked Prone and must use a Stand action in his turn to regain his feet. If the attacker succeeds by two or more degrees of success, he can choose to inflict 1d5–3+SB Impact damage and one level of Fatigue on the target. If the target wins the test, he keeps his footing. If the target wins by two or more degrees of success, the attacker is knocked Prone instead."
+            },
+            "AllOutAttack": "The character cannot attempt Evasion reactions until the beginning of his next turn.",
+            "Stun": {
+                "Stunned": "Stun roll of {roll} vs {defense}. Target is stunned for {rounds} rounds and gains 1 level of fatigue.",
+                "Resisted": "Stun roll of {roll} vs {defense}. The attack fails to stun the target!",
+                "Compare": "Stun roll of {roll}. Compare to the target's total of his Toughness bonus +1 per Armour point protecting his head. If the attacker's roll is equal to or higher than this value, the target is Stunned for a number of rounds equal to the difference between the two values and gains one level of Fatigue."
+            },
+            "Spray": "Everyone in 30 degree arc must pass an agility test or be hit.",
+            "Suppressing": {
+                "Semi": "All targets within a 30 degree arc must pass a Difficult (-10) Pinning test for become Pinned.",
+                "Full": "All targets within a 45 degree arc must pass a Hard (-20) Pinning test for become Pinned."
+            },
+            "NearOverheat": "The weapon nearly overheats, but its superior craftsmanship prevents it. Attack misses.",
+            "CatastrophicJam": "The weapon is of such poor quality with its unreliable mechanism that it jams on this failed shot!",
+            "NearJam": "The weapon nearly jams, but its superior craftsmanship prevents it. Attack misses.",
+            "Deviation": "The attack deviates [[ 1d5 ]]m off course to the {direction}!",
+            "AutoFailure": "The roll resulted in an automatic failure!",
+            "Overheats": "The weapon overheats forcing it to be dropped on the ground!",
+            "Jam": "The weapon jams!"
         },
         "ArmourType": {
             "Flak": "Flak Armour",
@@ -6022,7 +6152,15 @@
             "LeftArm": "Left Arm",
             "Body": "Body",
             "RightLeg": "Right Leg",
-            "LeftLeg": "Left Leg"
+            "LeftLeg": "Left Leg",
+            "Abbr": {
+                "Head": "H",
+                "RightArm": "RA",
+                "LeftArm": "LA",
+                "Body": "B",
+                "RightLeg": "RL",
+                "LeftLeg": "LL"
+            }
         },
         "Modification": {
             "NamePlaceholder": "Modification Name",
@@ -6290,6 +6428,19 @@
             "CleansingFireDesc": "Purifying flames that deal additional damage to unholy targets."
         },
         "Weapon": {
+            "QualityModifier": {
+                "Force": "Force (Psy Rating)",
+                "WitchEdge": "Witch-Edge (Extra SB)",
+                "Daemonbane": "Daemonbane (vs Daemon)"
+            },
+            "FireMode": {
+                "Single": "Single Shot",
+                "SingleDescription": "Fire a single shot",
+                "Semi": "Semi-Auto ({rof})",
+                "SemiDescription": "Additional hit per 2 DoS",
+                "Full": "Full-Auto ({rof})",
+                "FullDescription": "Additional hit per DoS"
+            },
             "SpecialPlaceholder": "Special qualities",
             "TwoHanded": "Two-Handed",
             "OneHanded": "One-Handed",

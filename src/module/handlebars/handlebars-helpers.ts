@@ -1,6 +1,7 @@
 import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
 import WH40K from '../config.ts';
 import { combatActionIcon, combatTimingKey } from '../rules/combat-action-display.ts';
+import { HIT_LOCATION_IDS, hitLocationAbbreviation, hitLocationLabel } from '../rules/hit-locations.ts';
 import { capitalize, formatSigned } from '../utils/format.ts';
 import { buildQualityLabel, parseQualityLevel } from '../utils/quality-id.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
@@ -82,8 +83,6 @@ export function toCamelCase(str: string): string {
             return $1.toLowerCase();
         });
 }
-
-const ARMOUR_LOCATIONS = ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg'];
 
 function getArmourPointsObject(armour: TplValue): TplRecord | null {
     if (!isTplObject(armour)) return null;
@@ -654,39 +653,17 @@ export function registerHandlebarsHelpers(): void {
     Handlebars.registerHelper('armourDisplay', (armour: TplValue): string => {
         const getValue = (location: string): number => getArmourAPForLocation(armour, location);
         const first = getValue('body');
-        const same = ARMOUR_LOCATIONS.every((location) => getValue(location) === first);
+        const same = HIT_LOCATION_IDS.every((location) => getValue(location) === first);
         if (same) {
             return `${first} ALL`;
         }
 
-        const locationsArray: string[] = [];
-        ARMOUR_LOCATIONS.forEach((part) => {
-            if (getValue(part) > 0) {
-                locationsArray.push(part);
-            }
-        });
-
-        return locationsArray
-            .map((item) => {
-                return `${getValue(item)} ${
-                    item.toLowerCase() === 'head'
-                        ? 'H'
-                        : item.toLowerCase() === 'leftarm'
-                        ? 'LA'
-                        : item.toLowerCase() === 'rightarm'
-                        ? 'RA'
-                        : item.toLowerCase() === 'body'
-                        ? 'B'
-                        : item.toLowerCase() === 'leftleg'
-                        ? 'LL'
-                        : item.toLowerCase() === 'rightleg'
-                        ? 'RL'
-                        : ''
-                }`;
-            })
-            .filter((item) => item !== '')
+        return HIT_LOCATION_IDS.filter((location) => getValue(location) > 0)
+            .map((location) => `${getValue(location)} ${hitLocationAbbreviation(location)}`)
             .join(', ');
     });
+
+    Handlebars.registerHelper('hitLocationLabel', (location: TplValue): string => hitLocationLabel(typeof location === 'string' ? location : ''));
 
     Handlebars.registerHelper('armourLocation', (armour: TplValue, location: string): number => {
         return getArmourAPForLocation(armour, location);

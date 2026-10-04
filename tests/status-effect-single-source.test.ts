@@ -32,37 +32,37 @@ function codeLines(text: string): string[] {
 }
 
 describe('one status-effect system (#495)', () => {
-    it('the registry is the only place condition definitions live', () => {
+    it('no source file defines a condition: they are the condition compendium documents', () => {
         // A condition definition is recognisable by pairing a condition name with
-        // its icon in an object literal. Only the registry may contain them.
-        const dialog = read('applications/prompts/effect-creation-dialog.ts');
-        expect(dialog).not.toMatch(/name:\s*'Stunned'/);
-        expect(dialog).not.toMatch(/name:\s*'Blinded'/);
-        expect(dialog).not.toMatch(/icons\/svg\/daze\.svg/);
+        // its icon in an object literal. None may exist in `src/` (Direction #7).
+        for (const file of ['applications/prompts/effect-creation-dialog.ts', 'rules/condition-registry.ts', 'documents/base-actor.ts']) {
+            const source = read(file);
+            expect(source).not.toMatch(/name:\s*'(Stunned|Blinded|Prone|Unconscious|Fatigued)'/);
+            expect(source).not.toMatch(/icons\/svg\/(daze|blind|unconscious)\.svg/);
+        }
+        expect(read('rules/condition-registry.ts')).not.toMatch(/const CONDITION_REGISTRY/);
     });
 
-    it('base-actor no longer hand-builds the Unconscious effect', () => {
-        const baseActor = read('documents/base-actor.ts');
-        // The inline copy's tell: the -60 change block written out in place.
-        expect(baseActor).not.toMatch(/name:\s*'Unconscious'/);
-        expect(baseActor).not.toMatch(/icons\/svg\/unconscious\.svg/);
-    });
-
-    it('no condition ActiveEffect is created outside the registry', () => {
-        // Both former offenders now build their payload with `conditionEffectData`.
-        expect(read('applications/prompts/effect-creation-dialog.ts')).toContain('conditionRegistry()');
+    it('every condition ActiveEffect is built by the one catalog builder', () => {
+        expect(read('applications/prompts/effect-creation-dialog.ts')).toContain('conditionEffectData(');
         expect(read('documents/base-actor.ts')).toContain('conditionEffectData(');
+        expect(read('rules/active-effects.ts')).toContain('conditionEffectData(');
+        // The token-HUD toggle resolves the document too, not just the status row.
+        expect(read('documents/active-effect.ts')).toContain('conditionEffectData(');
     });
 
-    it('the per-turn condition automation matches by status id, never by effect name', () => {
-        // CODE lines only — the doc comment quotes the old `effect.name === …`
-        // pattern to explain why it was wrong, and a naive scan reads its own
-        // explanation as a violation (the same trap the #498 guard hit).
-        const offenders = codeLines(read('actions/combat-action-manager.ts')).filter((line) => /effect\.name\s*===/.test(line));
-        expect(offenders).toEqual([]);
-        const combat = read('actions/combat-action-manager.ts');
-        expect(combat).toContain("statuses.has('burning')");
-        expect(combat).toContain("statuses.has('bloodloss')");
+    it('the per-turn condition automation is data-driven: no status id or effect name is matched', () => {
+        // CODE lines only — doc comments may quote the old pattern to explain it.
+        const combat = codeLines(read('actions/combat-action-manager.ts'));
+        expect(combat.filter((line) => /effect\.name\s*===/.test(line))).toEqual([]);
+        expect(combat.filter((line) => line.includes('statuses.has('))).toEqual([]);
+        expect(read('actions/combat-action-manager.ts')).toContain('processConditionTicks(');
+    });
+
+    it('CONFIG.statusEffects is mutated in place, never reassigned (V14 keeps an id lookup on it)', () => {
+        const hooks = codeLines(read('hooks-manager.ts'));
+        expect(hooks.filter((line) => /CONFIG\.statusEffects\s*=[^=]/.test(line))).toEqual([]);
+        expect(read('hooks-manager.ts')).toContain('registerConditionStatusEffects(CONFIG.statusEffects');
     });
 
     it('death is a status: the fatal crit rider maps to the `dead` id', () => {
@@ -79,20 +79,20 @@ describe('one status-effect system (#495)', () => {
         expect(hooks).toContain("from './constants.ts'");
     });
 
-    it('the registry lives in a leaf module, not the writer hub', () => {
+    it('the catalog lives in a leaf module, not the writer hub', () => {
         // `rules/active-effects.ts` imports the chat/roll helpers and the actor
         // document type, so it sits inside a large import cycle. `base-actor`
         // needs only the pure payload builder; reaching for it through the hub
-        // closed a depcruise `no-circular` loop. The table therefore lives in
-        // `rules/condition-registry.ts`, which imports nothing.
-        expect(read('rules/condition-registry.ts')).toMatch(/const CONDITION_REGISTRY/);
-        expect(read('rules/active-effects.ts')).not.toMatch(/const CONDITION_REGISTRY/);
+        // closed a depcruise `no-circular` loop.
+        expect(read('rules/condition-registry.ts')).not.toContain("from './active-effects.ts'");
         expect(read('documents/base-actor.ts')).toContain("from '../rules/condition-registry.ts'");
     });
 
     it('every condition effect carries `statuses`, so it is visible on the token', () => {
         const registry = read('rules/condition-registry.ts');
-        // conditionEffectData — the single payload builder — always stamps it.
-        expect(registry).toMatch(/statuses:\s*\[id\]/);
+        // conditionEffectData — the single payload builder — always stamps it,
+        // and createEffect passes it through to the document.
+        expect(registry).toMatch(/statuses:\s*\[condition\]/);
+        expect(read('rules/active-effects.ts')).toContain('statuses: effectData.statuses ?? []');
     });
 });

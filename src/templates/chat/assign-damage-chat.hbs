@@ -4,7 +4,7 @@
         {{! Header }}
         <div class="tw-relative tw-px-4 tw-py-3 tw-bg-gradient-to-r tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color)]">
             <div class="tw-text-xs tw-text-[var(--wh40k-card-muted)] tw-uppercase tw-tracking-widest tw-mb-1">{{this.actor.name}}</div>
-            {{#if hasDamage}}<h2 class="tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{localize "WH40K.Chat.AssignDamage.Hit" location=this.hit.location}}</h2>{{else}}<h2 class="tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{localize "WH40K.Chat.AssignDamage.Applied"}}</h2>{{/if}}
+            {{#if hasDamage}}<h2 class="tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{localize "WH40K.Chat.AssignDamage.Hit" location=(hitLocationLabel this.hit.location)}}</h2>{{else}}<h2 class="tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{localize "WH40K.Chat.AssignDamage.Applied"}}</h2>{{/if}}
         </div>
 
         {{! Body }}
@@ -55,7 +55,7 @@
             {{#if this.hasDamage}}
                 {{> systems/wh40k-rpg/templates/chat/partial/wounds-callout.hbs
                     labelKey="WH40K.Combat.WoundsTaken"
-                    badge=this.hit.location
+                    badge=(hitLocationLabel this.hit.location)
                     value=this.damageTaken
                     caption=this.hit.damageType
                     tooltipData=this.woundTransitionTooltip

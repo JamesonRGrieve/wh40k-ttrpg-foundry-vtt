@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { buildConditionCatalog, type EffectDataInput, setConditionCatalog } from '../../rules/condition-registry.ts';
+import { conditionPackFixture } from '../../testing/condition-catalog.ts';
 import { importModelOrSkip } from '../../testing/model-import.ts';
+import type { SupportedLineKey } from '../../utils/item-variant-utils.ts';
 import type { EffectCreationData, EffectPayload } from './effect-creation-dialog.ts';
 
 /** The dialog's form-input shape (re-exported from the source so the test asserts against the real type). */
@@ -25,7 +28,7 @@ interface EffectBuilders {
     _createCharacteristicData: (data: EffectData) => EffectPayload | null;
     _createSkillData: (data: EffectData) => EffectPayload | null;
     _createCombatData: (data: EffectData) => EffectPayload | null;
-    _createConditionData: (data: EffectData) => EffectPayload | null;
+    _createConditionData: (data: EffectData, line: SupportedLineKey) => EffectDataInput | null;
 }
 
 /** A minimal valid EffectPayload literal for tests that only assert on `duration`. */
@@ -187,17 +190,23 @@ describe('EffectCreationDialog payload builders (#341)', () => {
         expect(Builders._createCombatData({ effectType: 'combat', combatType: 'attack', modifierValue: '0' })).toBeNull();
     });
 
-    it('_createConditionData clones a known condition and applies the shared duration block', async () => {
+    it("_createConditionData builds the condition document's payload for the actor's line, with the shared duration block", async () => {
         const Builders = await loadBuilders();
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when DialogV2 runtime is unavailable, not an assertion branch
         if (Builders === undefined) return;
+        setConditionCatalog(buildConditionCatalog(conditionPackFixture()));
 
-        const effect = assertPayload(Builders._createConditionData({ effectType: 'condition', conditionId: 'prone', duration: { rounds: '2' } }));
-        expect(effect.name).toBe('Prone');
-        expect(effect.changes[0]?.key).toBe('system.combat.defense');
-        expect(effect.duration).toEqual({ rounds: 2, startRound: 3, startTurn: 1 });
+        const dh2 = Builders._createConditionData({ effectType: 'condition', conditionId: 'prone', duration: { rounds: '2' } }, 'dh2');
+        expect(dh2?.name).toBe('Prone');
+        expect(dh2?.statuses).toEqual(['prone']);
+        expect(dh2?.changes?.map((c) => c.key)).toEqual(['system.characteristics.weaponSkill.modifier', 'system.combat.defense']);
+        expect(dh2?.duration).toEqual({ rounds: 2, startRound: 3, startTurn: 1 });
 
-        expect(Builders._createConditionData({ effectType: 'condition', conditionId: 'nonexistent' })).toBeNull();
+        const rt = Builders._createConditionData({ effectType: 'condition', conditionId: 'prone' }, 'rt');
+        expect(rt?.changes?.map((c) => c.key)).toEqual(['system.characteristics.weaponSkill.modifier', 'system.skills.dodge.bonus']);
+
+        expect(Builders._createConditionData({ effectType: 'condition', conditionId: 'nonexistent' }, 'dh2')).toBeNull();
+        setConditionCatalog(new Map());
     });
 });
 

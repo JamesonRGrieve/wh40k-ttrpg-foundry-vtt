@@ -5,7 +5,9 @@
  * Returns validation results with human-readable failure reasons.
  */
 
+import { normalizeCharacteristicKey } from '../data/shared/characteristics.ts';
 import type { WH40KSkill, WH40KSkillEntry } from '../types/global.d.ts';
+import { getCharacteristicDisplayInfo } from './origin-ui-labels.ts';
 
 type Prerequisite = {
     type: 'characteristic' | 'skill' | 'talent';
@@ -35,8 +37,6 @@ type SinglePrerequisiteResult = {
     reason?: string;
 };
 
-type CharacteristicAbbreviation = keyof typeof CHAR_ABBREVIATIONS;
-
 type SkillLike = WH40KSkill | WH40KSkillEntry;
 
 /**
@@ -51,35 +51,6 @@ type SkillLike = WH40KSkill | WH40KSkillEntry;
  * @property {boolean} valid - Whether all prerequisites are met
  * @property {string[]} unmet - Array of human-readable unmet requirement descriptions
  */
-
-/**
- * Characteristic key mapping from abbreviations to full keys
- */
-const CHAR_ABBREVIATIONS = {
-    ws: 'weaponSkill',
-    bs: 'ballisticSkill',
-    s: 'strength',
-    str: 'strength',
-    t: 'toughness',
-    tou: 'toughness',
-    ag: 'agility',
-    agi: 'agility',
-    int: 'intelligence',
-    per: 'perception',
-    wp: 'willpower',
-    wil: 'willpower',
-    fel: 'fellowship',
-};
-
-/**
- * Normalize characteristic key from various formats
- * @param {string} key - Input key (e.g., 'Fel', 'fellowship', 'Fellowship')
- * @returns {string} Normalized key (e.g., 'fellowship')
- */
-function normalizeCharacteristicKey(key: string): string {
-    const lower = key.toLowerCase();
-    return lower in CHAR_ABBREVIATIONS ? CHAR_ABBREVIATIONS[lower as CharacteristicAbbreviation] : lower;
-}
 
 /**
  * Check if actor meets all prerequisites for an advancement
@@ -127,13 +98,13 @@ function checkSinglePrerequisite(actor: PrereqActorView, prereq: Prerequisite): 
  */
 function checkCharacteristicPrereq(actor: PrereqActorView, prereq: Prerequisite): SinglePrerequisiteResult {
     const charKey = normalizeCharacteristicKey(prereq.key);
-    const characteristic = actor.system.characteristics[charKey];
+    const characteristic = charKey === null ? undefined : actor.system.characteristics[charKey];
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime safety: key may be absent despite schema
-    if (characteristic === undefined) {
+    if (charKey === null || characteristic === undefined) {
         return {
             valid: false,
-            reason: `Unknown characteristic: ${prereq.key}`,
+            reason: game.i18n.format('WH40K.Notify.Npc.UnknownCharacteristic', { characteristic: prereq.key }),
         };
     }
 
@@ -144,14 +115,10 @@ function checkCharacteristicPrereq(actor: PrereqActorView, prereq: Prerequisite)
         return { valid: true };
     }
 
-    // Get display name for the characteristic — key may be absent at runtime despite schema typing
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const charLabel = CONFIG.wh40k.characteristics[charKey]?.abbreviation ?? prereq.key;
-
     return {
         valid: false,
         reason: game.i18n.format('WH40K.Advancement.Prereq.Characteristic', {
-            char: charLabel,
+            char: getCharacteristicDisplayInfo(charKey).short,
             required: String(requiredValue),
             current: String(currentValue),
         }),

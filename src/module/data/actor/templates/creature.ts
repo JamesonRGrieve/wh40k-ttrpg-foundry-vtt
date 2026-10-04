@@ -10,7 +10,7 @@ import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
 import { WH40KSettings } from '../../../wh40k-rpg-settings.ts';
 import { coerceInt } from '../../fields/coerce.ts';
 import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../../shared/characteristic-math.ts';
-import { buildCharacteristicFields, CHARACTERISTIC_SHORT_TO_FULL } from '../../shared/characteristics.ts';
+import { buildCharacteristicFields, CHARACTERISTIC_SHORT_TO_FULL, normalizeCharacteristicKey } from '../../shared/characteristics.ts';
 import { clampSize, coerceIntFields, sizeNameToInt } from '../../shared/field-coercion.ts';
 import { COMBAT_MODIFIER_KEYS, type CombatModifierKey } from '../../shared/modifiers-template.ts';
 import { computeMovement, sumMovementModifiers } from '../../shared/movement-math.ts';
@@ -146,6 +146,11 @@ function sumModifierSources(sources: readonly ModifierSource[]): number {
 }
 
 /** Extract the compendium-source UUID from a Foundry document, or null. */
+/** The full characteristic key for an authored key (`ws` → `weaponSkill`); an unknown key is kept as written. */
+function fullCharacteristicKey(key: string): string {
+    return normalizeCharacteristicKey(key) ?? key;
+}
+
 function compendiumSourceUuidOf(item: WH40KItem): string | null {
     // eslint-disable-next-line no-restricted-syntax -- boundary: _stats is Foundry-managed document metadata not in our schema
     const stats = (item as { _stats?: { compendiumSource?: string | null } })._stats;
@@ -1117,10 +1122,12 @@ export default class CreatureTemplate extends CommonTemplate {
         bucket: Partial<Record<string, ModifierSource[]>>,
         entries: Record<string, number> | undefined,
         source: Omit<ModifierSource, 'value'>,
+        normalizeKey: (key: string) => string = (key) => key,
     ): void {
         if (entries === undefined) return;
-        for (const [key, value] of Object.entries(entries)) {
+        for (const [rawKey, value] of Object.entries(entries)) {
             if (typeof value !== 'number') continue;
+            const key = normalizeKey(rawKey);
             const list = bucket[key] ?? [];
             list.push({ ...source, value });
             bucket[key] = list;
@@ -1158,9 +1165,10 @@ export default class CreatureTemplate extends CommonTemplate {
             const bucket =
                 entry.target === 'characteristic' ? this.modifierSources.characteristics : entry.target === 'skill' ? this.modifierSources.skills : null;
             if (bucket === null) continue;
-            const list = bucket[entry.key] ?? [];
+            const key = entry.target === 'characteristic' ? fullCharacteristicKey(entry.key) : entry.key;
+            const list = bucket[key] ?? [];
             list.push({ ...source, value: entry.value });
-            bucket[entry.key] = list;
+            bucket[key] = list;
         }
     }
 
@@ -1181,10 +1189,13 @@ export default class CreatureTemplate extends CommonTemplate {
             sourceUuid: compendiumSourceUuidOf(item),
         };
 
-        this.#collectKeyedModifiers(this.modifierSources.characteristics, mods.characteristics, source);
+        // Content authors characteristics by short key too (`ws: -30` on Blinded);
+        // the buckets are keyed by the full key the consumers read, so normalise —
+        // a short key otherwise landed in its own bucket and never applied.
+        this.#collectKeyedModifiers(this.modifierSources.characteristics, mods.characteristics, source, fullCharacteristicKey);
         // Bonus-only characteristic modifiers ("+X Strength Bonus", #415): raise
         // the effective BONUS without changing the underlying characteristic value.
-        this.#collectKeyedModifiers(this.modifierSources.characteristicBonuses, mods.characteristicBonuses, source);
+        this.#collectKeyedModifiers(this.modifierSources.characteristicBonuses, mods.characteristicBonuses, source, fullCharacteristicKey);
         this.#collectKeyedModifiers(this.modifierSources.skills, mods.skills, source);
 
         // Craftsmanship-gated bonuses: fold in only the entries whose tier gate the

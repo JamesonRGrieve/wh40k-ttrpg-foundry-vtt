@@ -3,6 +3,7 @@
  * Enhanced compendium browsing with filtering, searching, and type organization
  */
 
+import { HIT_LOCATION_IDS, hitLocationAbbreviation } from '../rules/hit-locations.ts';
 import { queryItemIndex } from '../utils/compendium-query.ts';
 import { formatSigned } from '../utils/format.ts';
 import type { ApplicationV2Ctor } from './api/application-types.ts';
@@ -328,34 +329,19 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         const coverage = normalizeCoverage(system['coverage']);
 
         // Calculate AP summary
-        const locations: Array<'head' | 'body' | 'leftArm' | 'rightArm' | 'leftLeg' | 'rightLeg'> = [
-            'head',
-            'body',
-            'leftArm',
-            'rightArm',
-            'leftLeg',
-            'rightLeg',
-        ];
+        const locations = HIT_LOCATION_IDS;
         const values = locations.map((loc) => ap[loc] || 0);
         const allSame = values.every((v) => v === values[0]);
 
         let apSummary: string;
         if (allSame && (coverage.includes('all') || coverage.length === 6)) {
-            apSummary = `All: ${values[0]}`;
+            apSummary = game.i18n.format('WH40K.ArmourSilhouette.AllLocationsAp', { ap: String(values[0]) });
         } else {
-            const abbrs: Record<'head' | 'body' | 'leftArm' | 'rightArm' | 'leftLeg' | 'rightLeg', string> = {
-                head: 'H',
-                body: 'B',
-                leftArm: 'LA',
-                rightArm: 'RA',
-                leftLeg: 'LL',
-                rightLeg: 'RL',
-            };
             const nonZero = locations.filter((loc) => (ap[loc] || 0) > 0);
             if (nonZero.length <= 3) {
-                apSummary = nonZero.map((loc) => `${abbrs[loc]}:${ap[loc]}`).join(' ');
+                apSummary = nonZero.map((loc) => `${hitLocationAbbreviation(loc)}:${ap[loc]}`).join(' ');
             } else {
-                apSummary = `${Math.min(...values)}-${Math.max(...values)} AP`;
+                apSummary = game.i18n.format('WH40K.ArmourSilhouette.ApRange', { min: String(Math.min(...values)), max: String(Math.max(...values)) });
             }
         }
 

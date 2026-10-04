@@ -10,10 +10,15 @@
  * - Extreme Range: > weapon range * 3 (-30)
  */
 
+import { t } from '../i18n/t.ts';
+import type { I18nKey } from '../types/i18n-keys';
+
 interface RangeBracket {
-    label: string;
+    /** Langpack key of the bracket name. */
+    labelKey: I18nKey;
     modifier: number;
-    description: string;
+    /** Langpack key of the bracket's tooltip prose. */
+    descriptionKey: I18nKey;
     maxMultiplier: number;
 }
 
@@ -61,36 +66,47 @@ interface RangeBracketMap {
 
 export const RANGE_BRACKETS: RangeBracketMap = {
     pointBlank: {
-        label: 'Point Blank',
+        labelKey: 'WH40K.RangeBracket.PointBlank',
         modifier: 30,
-        description: '2 meters or less',
+        descriptionKey: 'WH40K.RangeBracket.PointBlankDescription',
         maxMultiplier: 0, // Special case: always <= 2m
     },
     short: {
-        label: 'Short Range',
+        labelKey: 'WH40K.RangeBracket.Short',
         modifier: 10,
-        description: 'Half weapon range or less',
+        descriptionKey: 'WH40K.RangeBracket.ShortDescription',
         maxMultiplier: 0.5,
     },
     standard: {
-        label: 'Standard Range',
+        labelKey: 'WH40K.RangeBracket.Standard',
         modifier: 0,
-        description: 'Up to double weapon range',
+        descriptionKey: 'WH40K.RangeBracket.StandardDescription',
         maxMultiplier: 2,
     },
     long: {
-        label: 'Long Range',
+        labelKey: 'WH40K.RangeBracket.Long',
         modifier: -10,
-        description: 'Up to triple weapon range',
+        descriptionKey: 'WH40K.RangeBracket.LongDescription',
         maxMultiplier: 3,
     },
     extreme: {
-        label: 'Extreme Range',
+        labelKey: 'WH40K.RangeBracket.Extreme',
         modifier: -30,
-        description: 'Beyond triple weapon range',
+        descriptionKey: 'WH40K.RangeBracket.ExtremeDescription',
         maxMultiplier: Infinity,
     },
 };
+
+/** Resolve a ranged bracket id to its localized {@link RangeInfo}. */
+function rangeInfoFor(bracket: 'pointBlank' | 'short' | 'standard' | 'long' | 'extreme'): RangeInfo {
+    const { labelKey, modifier, descriptionKey } = RANGE_BRACKETS[bracket];
+    return { bracket, label: t(labelKey), modifier, description: t(descriptionKey) };
+}
+
+/** The no-modifier result for a melee weapon, melee distance, or non-ranged attack. */
+function meleeRangeInfo(): RangeInfo {
+    return { bracket: 'melee', label: t('WH40K.RangeBracket.Melee'), modifier: 0, description: t('WH40K.RangeBracket.MeleeDescription') };
+}
 
 /**
  * Calculate the range bracket for a given distance and weapon range.
@@ -100,72 +116,23 @@ export const RANGE_BRACKETS: RangeBracketMap = {
  */
 export function calculateRangeBracket(distance: number, weaponRange: number): RangeInfo {
     // Handle melee weapons
-    if (weaponRange <= 1 || distance <= 1) {
-        return {
-            bracket: 'melee',
-            label: 'Melee',
-            modifier: 0,
-            description: 'Melee range',
-        };
-    }
-
-    // Handle self-targeting
-    if (distance === 0) {
-        return {
-            bracket: 'self',
-            label: 'Self',
-            modifier: 0,
-            description: 'Self-target',
-        };
-    }
+    // (distance 0, self-targeting, is covered by the `distance <= 1` melee case.)
+    if (weaponRange <= 1 || distance <= 1) return meleeRangeInfo();
 
     // Point Blank: Always 2m or less
-    if (distance <= 2) {
-        return {
-            bracket: 'pointBlank',
-            label: RANGE_BRACKETS.pointBlank.label,
-            modifier: RANGE_BRACKETS.pointBlank.modifier,
-            description: RANGE_BRACKETS.pointBlank.description,
-        };
-    }
+    if (distance <= 2) return rangeInfoFor('pointBlank');
 
     // Short Range: Up to half weapon range
-    if (distance <= weaponRange * RANGE_BRACKETS.short.maxMultiplier) {
-        return {
-            bracket: 'short',
-            label: RANGE_BRACKETS.short.label,
-            modifier: RANGE_BRACKETS.short.modifier,
-            description: RANGE_BRACKETS.short.description,
-        };
-    }
+    if (distance <= weaponRange * RANGE_BRACKETS.short.maxMultiplier) return rangeInfoFor('short');
 
     // Standard Range: Up to double weapon range
-    if (distance <= weaponRange * RANGE_BRACKETS.standard.maxMultiplier) {
-        return {
-            bracket: 'standard',
-            label: RANGE_BRACKETS.standard.label,
-            modifier: RANGE_BRACKETS.standard.modifier,
-            description: RANGE_BRACKETS.standard.description,
-        };
-    }
+    if (distance <= weaponRange * RANGE_BRACKETS.standard.maxMultiplier) return rangeInfoFor('standard');
 
     // Long Range: Up to triple weapon range
-    if (distance <= weaponRange * RANGE_BRACKETS.long.maxMultiplier) {
-        return {
-            bracket: 'long',
-            label: RANGE_BRACKETS.long.label,
-            modifier: RANGE_BRACKETS.long.modifier,
-            description: RANGE_BRACKETS.long.description,
-        };
-    }
+    if (distance <= weaponRange * RANGE_BRACKETS.long.maxMultiplier) return rangeInfoFor('long');
 
     // Extreme Range: Beyond triple weapon range
-    return {
-        bracket: 'extreme',
-        label: RANGE_BRACKETS.extreme.label,
-        modifier: RANGE_BRACKETS.extreme.modifier,
-        description: RANGE_BRACKETS.extreme.description,
-    };
+    return rangeInfoFor('extreme');
 }
 
 /**
@@ -230,14 +197,7 @@ export function calculateRangeModifier(options: RangeCalculationOptions): RangeC
 
     // Melee weapons don't use range brackets
     if (!isRangedWeapon) {
-        return {
-            bracket: 'melee',
-            label: 'Melee',
-            modifier: 0,
-            description: 'Melee range',
-            modifiedBy: null,
-            isMeltaRange: false,
-        };
+        return { ...meleeRangeInfo(), modifiedBy: null, isMeltaRange: false };
     }
 
     // Calculate base range bracket
@@ -334,13 +294,10 @@ export function formatRangeDisplay(rangeInfo: RangeCalculationResult & { descrip
     // Build tooltip
     let tooltip = description;
     if (modifiedBy !== null) {
-        const qualityNames: Record<string, string> = {
-            'gyro-stabilised': 'Gyro-Stabilised',
-        };
-        tooltip += ` (Modified by ${qualityNames[modifiedBy] ?? modifiedBy})`;
+        tooltip += ` (${t('WH40K.RangeBracket.ModifiedBy', { quality: CONFIG.wh40k.getQualityLabel(modifiedBy) })})`;
     }
     if (isMeltaRange) {
-        tooltip += ' | Melta: Double Penetration';
+        tooltip += ` | ${t('WH40K.RangeBracket.MeltaNote')}`;
     }
 
     return {

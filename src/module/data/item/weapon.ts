@@ -1246,10 +1246,10 @@ export default class WeaponData extends ItemDataModel.mixin(
         if (rof.single) {
             modes.push({
                 mode: 'single',
-                label: 'Single Shot',
+                label: t('WH40K.Weapon.FireMode.Single'),
                 rof: 1,
                 modifier: 0,
-                description: 'Fire a single shot',
+                description: t('WH40K.Weapon.FireMode.SingleDescription'),
                 actionType: 'half',
             });
         }
@@ -1259,10 +1259,10 @@ export default class WeaponData extends ItemDataModel.mixin(
             const semiRof = hasStorm ? rof.semi * 2 : rof.semi;
             modes.push({
                 mode: 'semi',
-                label: `Semi-Auto (${semiRof})`,
+                label: t('WH40K.Weapon.FireMode.Semi', { rof: semiRof }),
                 rof: semiRof,
                 modifier: 0,
-                description: 'Additional hit per 2 DoS',
+                description: t('WH40K.Weapon.FireMode.SemiDescription'),
                 actionType: 'half',
             });
         }
@@ -1272,10 +1272,10 @@ export default class WeaponData extends ItemDataModel.mixin(
             const fullRof = hasStorm ? rof.full * 2 : rof.full;
             modes.push({
                 mode: 'full',
-                label: `Full-Auto (${fullRof})`,
+                label: t('WH40K.Weapon.FireMode.Full', { rof: fullRof }),
                 rof: fullRof,
                 modifier: -10,
-                description: 'Additional hit per DoS',
+                description: t('WH40K.Weapon.FireMode.FullDescription'),
                 actionType: 'half',
             });
         }

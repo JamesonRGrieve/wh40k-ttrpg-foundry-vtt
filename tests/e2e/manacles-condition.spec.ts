@@ -37,9 +37,9 @@ interface ManaclesResult {
  * snaps with the sheet OPEN, and asserts the condition is visible on
  * the rendered Active Effects panel.
  *
- * The condition itself is registered in
- * `src/module/rules/active-effects.ts:conditions.manacled` and applied
- * via `src/module/rules/manacles.ts:applyManaclesCondition`. This test
+ * The effect is built by `src/module/rules/manacles.ts:manaclesEffectData`
+ * (Manacled is not a book condition, so it has no condition document) and
+ * applied via `applyManaclesCondition`. This test
  * exercises the full render path: AE creation → sheet render → DOM
  * presence of the AE row.
  */

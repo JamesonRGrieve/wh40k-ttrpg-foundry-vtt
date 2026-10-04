@@ -3,6 +3,7 @@
  * Extracts complex armour computation logic from the main actor document.
  */
 
+import { BODY_LOCATIONS } from '../data/shared/body-locations.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 
@@ -35,8 +36,6 @@ export interface ComputeArmourOptions {
      */
     equippedOnly?: boolean;
 }
-
-const BODY_LOCATIONS: string[] = ['body', 'head', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
 
 /**
  * Read the armour rating carried by a Machine / Natural Armour trait. The rating
@@ -189,4 +188,4 @@ export function computeArmour(actor: WH40KBaseActor, options: ComputeArmourOptio
     return armour;
 }
 
-export { BODY_LOCATIONS, getArmourPointsObject, getArmourAPForLocation };
+export { getArmourPointsObject, getArmourAPForLocation };

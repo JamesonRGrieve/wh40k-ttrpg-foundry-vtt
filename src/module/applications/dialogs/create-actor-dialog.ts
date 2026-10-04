@@ -21,24 +21,11 @@ export const ACTOR_SYSTEM_AVAILABILITY: Record<string, string[]> = {
     im: ['character', 'npc', 'terracraft'],
 };
 
-export const ACTOR_SYSTEM_LABELS: Record<string, string> = {
-    dh2: 'Dark Heresy 2e',
-    dh1: 'Dark Heresy 1e',
-    rt: 'Rogue Trader',
-    bc: 'Black Crusade',
-    ow: 'Only War',
-    dw: 'Deathwatch',
-    im: 'Imperium Maledictum',
-};
+/** Offered actor kinds, in dropdown order; labels resolve via `WH40K.CreateActor.Kinds.<kind>`. */
+export const ACTOR_KINDS: readonly string[] = ['character', 'npc', 'terracraft', 'aircraft', 'watercraft', 'voidcraft'];
 
-export const ACTOR_KIND_LABELS: Record<string, string> = {
-    character: 'Player Character',
-    npc: 'NPC',
-    terracraft: 'Land Vehicle',
-    aircraft: 'Aircraft',
-    watercraft: 'Watercraft',
-    voidcraft: 'Voidcraft',
-};
+/** Offered game systems, in dropdown order; labels resolve via the primary-game-system choice keys. */
+export const ACTOR_SYSTEMS: readonly string[] = Object.keys(ACTOR_SYSTEM_AVAILABILITY);
 
 const localizedSystemLabel = (systemId: string): string => game.i18n.localize(`WH40K.SETTINGS.PrimaryGameSystem.Choices.${systemId}`);
 const localizedKindLabel = (kindId: string): string => game.i18n.localize(`WH40K.CreateActor.Kinds.${kindId}`);
@@ -59,12 +46,11 @@ export class WH40KCreateActorDialog {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: array index may be undefined at runtime
         const initialKind = ACTOR_SYSTEM_AVAILABILITY[initialSystem]?.[0] ?? 'character';
 
-        const systemSelect = Object.keys(ACTOR_SYSTEM_LABELS)
-            .map((k) => `<option value="${k}" ${k === initialSystem ? 'selected' : ''}>${localizedSystemLabel(k)}</option>`)
-            .join('');
+        const systemSelect = ACTOR_SYSTEMS.map((k) => `<option value="${k}" ${k === initialSystem ? 'selected' : ''}>${localizedSystemLabel(k)}</option>`).join(
+            '',
+        );
 
-        const kindSelect = Object.keys(ACTOR_KIND_LABELS)
-            .filter((k) => (ACTOR_SYSTEM_AVAILABILITY[initialSystem] ?? []).includes(k))
+        const kindSelect = ACTOR_KINDS.filter((k) => (ACTOR_SYSTEM_AVAILABILITY[initialSystem] ?? []).includes(k))
             .map((k) => `<option value="${k}" ${k === initialKind ? 'selected' : ''}>${localizedKindLabel(k)}</option>`)
             .join('');
 
@@ -138,8 +124,7 @@ export class WH40KCreateActorDialog {
                     const sys = sysSel.value;
                     const allowed = ACTOR_SYSTEM_AVAILABILITY[sys] ?? [];
                     const current = kindSel.value;
-                    kindSel.innerHTML = Object.keys(ACTOR_KIND_LABELS)
-                        .filter((k) => allowed.includes(k))
+                    kindSel.innerHTML = ACTOR_KINDS.filter((k) => allowed.includes(k))
                         .map((k) => `<option value="${k}" ${k === current ? 'selected' : ''}>${localizedKindLabel(k)}</option>`)
                         .join('');
                     if (!allowed.includes(current)) {

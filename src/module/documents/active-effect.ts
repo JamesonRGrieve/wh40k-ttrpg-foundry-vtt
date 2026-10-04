@@ -1,5 +1,6 @@
 import type { AnyMutableObject } from 'fvtt-types/utils';
 import { type EffectChangeRaw, formatChangeValue, getChangeLabel } from '../helpers/effects.ts';
+import { bearerLine, conditionEffectData, type EffectChange as ConditionEffectChange } from '../rules/condition-registry.ts';
 import { formatRemaining } from '../rules/world-time.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 
@@ -12,11 +13,51 @@ interface EffectChange {
 }
 
 /**
+ * Project a condition change onto Foundry's change shape: the branded mode enum
+ * (resolved from `CONST.ACTIVE_EFFECT_MODES`, ADD for an unrecognised mode) and a
+ * string value.
+ */
+function toFoundryChange(change: ConditionEffectChange): ActiveEffectChangeData {
+    const mode = Object.values(CONST.ACTIVE_EFFECT_MODES).find((m) => m === change.mode) ?? CONST.ACTIVE_EFFECT_MODES.ADD;
+    return { key: change.key, mode, value: String(change.value) };
+}
+
+/** One entry of Foundry's ActiveEffect `changes` creation data. */
+type ActiveEffectChangeData = { key: string; mode: (typeof CONST.ACTIVE_EFFECT_MODES)[keyof typeof CONST.ACTIVE_EFFECT_MODES]; value: string };
+
+/**
  * Extended ActiveEffect document for WH40K RPG system.
  * Integrates with the existing modifier system and provides proper effect application.
  * @extends {ActiveEffect}
  */
 export class WH40KActiveEffect extends ActiveEffect {
+    /**
+     * Build the effect a token-HUD status toggle creates from the CONDITION
+     * DOCUMENT, resolved for the bearer's game line (Direction #7). Core builds it
+     * from the `CONFIG.statusEffects` row alone — id, name and art only — so a
+     * HUD-applied condition carried none of its modifiers. The row stays a
+     * lightweight index entry; the full payload (name, art, `changes` derived from
+     * `system.modifiers`, nature flag) comes from `conditionEffectData`.
+     */
+    protected static override async _fromStatusEffect(
+        statusId: string,
+        effectData: ActiveEffect.CreateData,
+        options?: ActiveEffect.ConstructionContext,
+    ): Promise<ActiveEffect.Implementation> {
+        const condition = conditionEffectData(statusId, bearerLine(options?.parent));
+        if (condition === null) return super._fromStatusEffect(statusId, effectData, options);
+        // The status row carries id / name / img only (no flags of its own), so the
+        // document's payload replaces those and adds its changes and flags.
+        const resolved: ActiveEffect.CreateData = {
+            ...effectData,
+            name: condition.name,
+            img: condition.img,
+            changes: (condition.changes ?? []).map(toFoundryChange),
+            flags: condition.flags,
+        };
+        return super._fromStatusEffect(statusId, resolved, options);
+    }
+
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */

@@ -34,16 +34,15 @@ import { isBurstAction } from '../../rules/auto-fire.ts';
 import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
 import { computeGangUpModifier, gangUpConfigFor, type GangUpTokenLike } from '../../rules/gang-up.ts';
 import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/high-ground.ts';
+import { hitDropdown, resolveHitLocationId } from '../../rules/hit-locations.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import { type AssistCandidate, type AssistSkillSource, eligibleAssistants, retainEligibleSelection } from '../../rules/roll-assist.ts';
 import { getSkillVariantsForKey, normalizeSkillKey } from '../../rules/skill-variant-index.ts';
 import { availableSkillVariants, filterModifiersByVariant, type SkillVariant, variantAutoFails } from '../../rules/skill-variants.ts';
 import {
-    deriveTargetSituationalKeys,
     shouldSkipSelfTargetDefenderMods,
     TARGET_GROUP_COLOR_CLASS,
     TARGET_GROUP_ORDER,
-    targetCombatStateFromConditions,
     type TargetDispositionGroup,
     targetDispositionGroup,
 } from '../../rules/target-situationals.ts';
@@ -464,10 +463,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                     this.#applyTargetDistance(false);
                 }
 
-                // Auto-select situational modifiers from the target's state (#393):
-                // if a weapon roll opens with a target already selected, pre-tick the
-                // Prone / Stunned / Unaware / Helpless rows so they flow into the
-                // aggregate target (#382). No-ops when nothing is targeted.
+                // Auto-select situational modifiers from the target's position (#393 /
+                // #406 / #407): higher ground and cover. The target's CONDITIONS
+                // (Prone, Stunned, …) are applied by the roll itself from the
+                // condition documents (`rules/targeted-conditions.ts`).
                 this.#applyTargetSituationals();
             }
         }
@@ -1054,7 +1053,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             const bracket = RANGE_BRACKETS[this._selectedRangeBracket];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- bracket may be undefined due to noUncheckedIndexedAccess
             if (bracket) {
-                rd.rangeName = bracket.label;
+                rd.rangeName = game.i18n.localize(bracket.labelKey);
                 rd.rangeBonus = bracket.modifier;
                 rd.rangeBracket = this._selectedRangeBracket;
             }
@@ -1075,7 +1074,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                       }
                       return {
                           key,
-                          label: b.label,
+                          label: game.i18n.localize(b.labelKey),
                           modifier: b.modifier,
                           modifierLabel: b.modifier >= 0 ? `+${b.modifier}` : `${b.modifier}`,
                           rangeText,
@@ -1218,7 +1217,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             ammoText: rd['ammoText'],
             isCalledShot: rd['isCalledShot'],
             calledShotLocation: rd['calledShotLocation'],
-            locations: rd.locations,
+            locations: hitDropdown(),
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- rd.actions may be absent at runtime on uninitialised roll data despite its type
             actions: rd.actions ?? {},
             currentAction: rd.action,
@@ -1991,7 +1990,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- bracketData may be undefined due to noUncheckedIndexedAccess
         if (bracketData) {
             const rd = this.rollData;
-            rd.rangeName = bracketData.label;
+            rd.rangeName = game.i18n.localize(bracketData.labelKey);
             rd.rangeBonus = bracketData.modifier;
             rd.rangeBracket = bracket;
         }
@@ -2032,11 +2031,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     /**
-     * Read the active, non-disabled condition tokens off the target actor —
-     * Active-Effect names and Foundry status ids — normalised to lower-case so
-     * the pure {@link targetCombatStateFromConditions} mapping can consume them.
-     * Both surfaces are optional: `statuses` / `effects` are loosely-typed
-     * Foundry framework collections not declared on the system's actor type.
+     * Read the active, non-disabled condition tokens off an actor — Active-Effect
+     * names and Foundry status ids — normalised to lower-case, for the homebrew
+     * sense-channel gate's `blockedBy` match. Both surfaces are optional:
+     * `statuses` / `effects` are loosely-typed Foundry framework collections not
+     * declared on the system's actor type.
      */
     static #collectConditionTokens(actor: ConditionSource): Set<string> {
         const tokens = new Set<string>();
@@ -2054,11 +2053,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     /**
-     * Auto-select the situational modifiers the current target's state implies
-     * (#393). Drops the previous auto-picks first so a target change refreshes
-     * cleanly, then re-derives from the target's active conditions and the
-     * attack variant (ranged/melee). Keys the player toggled by hand are left
-     * untouched — only this method's own picks are recycled. Weapon rolls only.
+     * Auto-select the situational modifiers the current target's POSITION implies
+     * (#393): higher ground and, when enabled, cover. Drops the previous auto-picks
+     * first so a target change refreshes cleanly. Keys the player toggled by hand
+     * are left untouched — only this method's own picks are recycled. Weapon rolls
+     * only. The target's conditions are not selected here: their `system.targeted`
+     * modifiers are collected by the roll (`rules/targeted-conditions.ts`) with
+     * provenance, so a condition is never applied twice.
      */
     #applyTargetSituationals(): void {
         if (this.rollType !== 'weapon') return;
@@ -2078,12 +2079,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (this.#isHomebrewSelfTarget()) return;
 
         const isRanged = rd.weapon?.isRanged === true;
-        const conditions = UnifiedRollDialog.#collectConditionTokens(target);
-        const state = targetCombatStateFromConditions(conditions, isRanged);
-        for (const key of deriveTargetSituationalKeys(state)) {
-            this._activeCombatSituationals.add(key);
-            this._autoSituationals.add(key);
-        }
 
         // #407: RAW Higher Ground — when the attacker's token is above the
         // target's and the line's high-ground mode matches the attack type,
@@ -2487,6 +2482,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         rd.modifiers['difficulty'] = this._currentDifficulty.modifier;
         rd.modifiers['situational'] = this._calculateSituationalModifiers();
         rd.modifiers['modifier'] = this._customModifier;
+        // The selected test variant (Visual / Auditory …), read by the condition
+        // auto-fail resolution in `ActionData._calculateHit`.
+        const selectedVariant = this._selectedSkillVariant;
+        rd.testVariant = selectedVariant ?? '';
 
         // Provenance for the lumped buckets so the chat card renders each modifier
         // as a sourced, hoverable row instead of a summed total (#…). The
@@ -2554,7 +2553,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             weaponRollData.coverAP = damage.coverAP ?? 0;
             if (damage.forceLocation !== undefined) {
                 weaponRollData.isCalledShot = true;
-                weaponRollData.calledShotLocation = damage.forceLocation;
+                weaponRollData.calledShotLocation = resolveHitLocationId(damage.forceLocation) ?? damage.forceLocation;
             }
         }
     }

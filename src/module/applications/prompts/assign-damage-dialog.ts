@@ -2,6 +2,7 @@
  * @file AssignDamageDialog - V2 dialog for damage assignment
  */
 
+import { hitDropdown } from '../../rules/hit-locations.ts';
 import BaseRollDialog from './base-roll-dialog.ts';
 
 /**
@@ -38,6 +39,15 @@ export default class AssignDamageDialog extends BaseRollDialog {
             scrollable: [''],
         },
     };
+
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext must return Record<string,unknown> per framework contract
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        // The location dropdown labels are localized at render time, not baked into the damage data.
+        return { ...(await super._prepareContext(options)), locations: hitDropdown() };
+    }
 
     /* -------------------------------------------- */
     /*  Event Listeners                             */

@@ -273,13 +273,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             record('origin-steps-labels', false, originSteps.__importError);
         } else {
             guarded('origin-steps-labels', () => {
-                const map = originSteps['ORIGIN_STEP_LABELS'];
-                if (map === null || typeof map !== 'object') return 'ORIGIN_STEP_LABELS not an object';
-                const labels = map as SchemaMap;
-                if (labels['homeWorld'] !== 'Home World') return `homeWorld label ${String(labels['homeWorld'])}`;
-                if (labels['lureOfTheVoid'] !== 'Lure of the Void') return 'lureOfTheVoid mismatch';
-                if (labels['regiment'] !== 'Regiment') return 'regiment mismatch';
-                if (labels['elite'] !== 'Elite Advance' || labels['eliteAdvance'] !== 'Elite Advance') return 'elite alias mismatch';
                 const originStepLabel = originSteps['originStepLabel'];
                 if (typeof originStepLabel !== 'function') return 'originStepLabel not a function';
                 // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic-imported helper return type is unshipped; flow asserts the empty / unknown / known branches defensively via typeof
@@ -291,6 +284,9 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                 if (empty !== '') return `empty branch returned ${String(empty)}`;
                 if (typeof unknown !== 'string') return 'unknown branch did not return a string';
                 if (typeof known !== 'string' || known.length === 0) return 'known branch produced empty label';
+                const eliteAlias = stepLabel('eliteAdvance');
+                if (stepLabel('homeWorld') !== 'Home World') return `homeWorld label ${String(stepLabel('homeWorld'))}`;
+                if (stepLabel('elite') !== 'Elite Advance' || eliteAlias !== 'Elite Advance') return 'elite alias mismatch';
                 return true;
             });
         }

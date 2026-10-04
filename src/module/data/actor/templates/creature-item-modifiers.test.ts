@@ -227,6 +227,15 @@ describe.each(SYSTEMS)('Path A — static item modifiers reach the computed targ
         expect(characteristics.ballisticSkill.total).toBe(5);
     });
 
+    // The condition packs author characteristics by SHORT key (`ws: -30` on Blinded).
+    // The buckets are keyed by the full key the totals read, so a short key landed in
+    // its own `ws` bucket and never applied.
+    it('a short-key characteristic modifier (ws) applies to its full characteristic', () => {
+        const { characteristics } = prepare(gameSystem, [makeItem('Blinded', 'condition', { characteristics: { ws: -30, BS: -10 } })]);
+        expect(characteristics.weaponSkill.total).toBe(10); // WS 40 − 30
+        expect(characteristics.ballisticSkill.total).toBe(25); // BS 35 − 10
+    });
+
     // Regression: the Origin Path Builder bakes origin characteristic bonuses into
     // `base` on commit, and `_registerOriginPathModifierSources` ALSO lists them in
     // `modifierSources.characteristics` for the tooltip. `_getTotalCharacteristicModifier`

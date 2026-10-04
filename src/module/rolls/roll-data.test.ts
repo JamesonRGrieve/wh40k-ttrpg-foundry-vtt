@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { buildConditionCatalog, setConditionCatalog } from '../rules/condition-registry.ts';
+import { TARGET_CONDITION_BUCKET } from '../rules/targeted-conditions.ts';
+import { conditionPackFixture } from '../testing/condition-catalog.ts';
 import { readRepoFile } from '../testing/repo-file.ts';
-import { clampModifierToCap, RollData, ROLL_MODIFIER_CAP } from './roll-data';
+import { clampModifierToCap, collectTargetConditionRows, RollData, ROLL_MODIFIER_CAP, WeaponRollData } from './roll-data';
 
 /**
  * Regression tests for the ±60 modifier cap (DH2 core.md L1050).
@@ -107,6 +110,67 @@ describe('RollData.buildModifierSources — roll transparency provenance', () =>
         // The stored expansion entry stays free of the tooltip payload (fresh objects are emitted).
         const first = situational.at(0);
         expect(first !== undefined && 'tooltipData' in first).toBe(false);
+    });
+});
+
+/**
+ * Path B target-condition collection on the weapon roll: the TARGET's condition
+ * documents (`system.targeted`) become one `target-conditions` bucket whose
+ * sourced parts the card expands — never a hand-ticked situational row.
+ */
+describe('WeaponRollData target-condition modifiers (Path B)', () => {
+    beforeEach(() => {
+        vi.stubGlobal('game', {
+            i18n: { localize: (k: string) => k, format: (k: string, data: Record<string, string>) => `${k}:${data['condition'] ?? ''}` },
+        });
+        setConditionCatalog(buildConditionCatalog(conditionPackFixture()));
+    });
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        setConditionCatalog(new Map());
+    });
+
+    const MELEE = { isMelee: true, isRanged: false, rangeBand: 'melee' };
+    const target = (line: 'dh2' | 'rt', ...statuses: string[]): { id: string; system: { gameSystem: string }; statuses: Set<string> } => ({
+        id: 'target',
+        system: { gameSystem: line },
+        statuses: new Set(statuses),
+    });
+
+    function makeRollData(): WeaponRollData {
+        // eslint-disable-next-line no-restricted-syntax -- test: bypass the WH40K-config constructor to unit-test the target-condition fold
+        const rd = Object.create(WeaponRollData.prototype) as WeaponRollData;
+        rd.modifiers = {};
+        rd.expandedBuckets = {};
+        rd.modifierSources = [];
+        return rd;
+    }
+
+    it('melee vs a Prone + Stunned target (dh2): +10 and +20, each a sourced card row', () => {
+        const rd = makeRollData();
+        rd.foldTargetConditionComponents(collectTargetConditionRows(target('dh2', 'prone', 'stunned'), 'attacker', false, MELEE));
+        expect(rd.modifiers[TARGET_CONDITION_BUCKET]).toBe(30);
+        rd.buildModifierSources();
+        expect(rd.modifierSources.map((c) => [c.label, c.value, c.source])).toEqual([
+            ['Prone', 10, 'WH40K.Roll.ModifierSource.TargetCondition:Prone'],
+            ['Stunned', 20, 'WH40K.Roll.ModifierSource.TargetCondition:Stunned'],
+        ]);
+    });
+
+    it('ranged at Point Blank vs a Prone target (rt): the −10 does not apply', () => {
+        const rd = makeRollData();
+        rd.foldTargetConditionComponents(
+            collectTargetConditionRows(target('rt', 'prone'), 'attacker', false, { isMelee: false, isRanged: true, rangeBand: 'pointBlank' }),
+        );
+        expect(rd.modifiers[TARGET_CONDITION_BUCKET]).toBe(0);
+        expect(rd.expandedBuckets[TARGET_CONDITION_BUCKET]).toEqual([]);
+    });
+
+    it('no target, or a homebrew self-target, contributes nothing', () => {
+        expect(collectTargetConditionRows(null, 'attacker', false, MELEE)).toEqual([]);
+        const attackerAsTarget = { ...target('dh2', 'stunned'), id: 'attacker' };
+        expect(collectTargetConditionRows(attackerAsTarget, 'attacker', true, MELEE)).toEqual([]);
+        expect(collectTargetConditionRows(attackerAsTarget, 'attacker', false, MELEE).map((c) => c.value)).toEqual([20]);
     });
 });
 

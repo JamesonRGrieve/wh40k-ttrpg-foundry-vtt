@@ -1,4 +1,5 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
+import { capitalize } from '../../utils/format.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
@@ -193,7 +194,7 @@ export default class NPCQuickCreateDialog extends makeNpcFormDialog({
      * @private
      */
     _getTierDescription(threatLevel: number): string {
-        return game.i18n.localize(`WH40K.NPC.Tier${tierBandFor(threatLevel).label}`);
+        return game.i18n.localize(`WH40K.NPC.Tier${capitalize(tierBandFor(threatLevel).key)}`);
     }
 
     /* -------------------------------------------- */
