@@ -66,9 +66,11 @@
                     <span class="tw-font-semibold tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]">
                         {{this.label}}
                     </span>
+                    {{#if this.summary}}
                     <span class="tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
                         {{this.summary}}
                     </span>
+                    {{/if}}
                 </span>
             </label>
         {{/each}}

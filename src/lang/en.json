@@ -3082,7 +3082,8 @@
                 "Resolved": {
                     "BaseDescription": "Base Effect",
                     "AppliedAlignment": "Applied Alignment"
-                }
+                },
+                "None": "No gifts received yet"
             },
             "DaemonPrince": {
                 "Label": "Daemon Prince",
@@ -3116,7 +3117,7 @@
             },
             "Supplements": {
                 "Label": "Supplement Mechanics",
-                "PanelHeader": "Supplement Mechanics",
+                "PanelHeader": "Daemon Engine",
                 "Irradiated": {
                     "Label": "Irradiated ({rating})",
                     "TicksRemaining": "Ticks Remaining: {count}",

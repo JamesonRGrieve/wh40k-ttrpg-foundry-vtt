@@ -2008,7 +2008,7 @@ export default class CharacterSheet extends BaseActorSheet {
     _prepareDwAmmoPanel(): DwAmmoPanelContext {
         const sys = this.actor.system;
         const selected: DwSelectedAmmoId = sys.selectedAmmo;
-        const labelFor = (id: DwSelectedAmmoId): string => game.i18n.localize(`WH40K.DW.SpecialAmmo.Kind.${titleCase(id)}`);
+        const labelFor = (id: DwSelectedAmmoId): string => game.i18n.localize(`WH40K.DW.SpecialAmmo.Ammo.${titleCase(id)}`);
         const effect = selected === 'standard' ? null : DW_SPECIAL_AMMO_EFFECTS[selected];
         return {
             selected,
@@ -2017,10 +2017,9 @@ export default class CharacterSheet extends BaseActorSheet {
                 id,
                 label: labelFor(id),
                 selected: id === selected,
-                summary:
-                    id === 'standard'
-                        ? game.i18n.localize('WH40K.DW.SpecialAmmo.NoSelection')
-                        : game.i18n.localize(`WH40K.DW.SpecialAmmo.Summary.${titleCase(id)}`),
+                // Only Standard carries a one-line note; a special round's effects are
+                // read out in the panel's detail block once it is loaded.
+                summary: id === 'standard' ? game.i18n.localize('WH40K.DW.SpecialAmmo.NoSelection') : '',
             })),
             effect,
         };
@@ -6541,13 +6540,23 @@ export default class CharacterSheet extends BaseActorSheet {
         }
     }
 
+    /**
+     * Whether a dropped talent the actor lacks must be bought through the XP
+     * Advancement dialog. True for player characters; sheets for actors that hold
+     * talents without an XP economy (NPCs) override it.
+     */
+    protected _buysTalentsWithXp(): boolean {
+        return true;
+    }
+
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry BaseActorSheet _onDropItem returns unknown; overriding preserves the upstream return type
     override async _onDropItem(event: DragEvent, item: WH40KItem): Promise<unknown> {
         // Progression-eligible drops (talents) route through the AdvancementDialog rather
         // than landing on the actor directly — talents cost XP per RAW, so silently creating
         // them on drop bypasses the advancement economy. Already-owned talents fall through
-        // to the normal sort path. See issue #17.
-        const isUnknownTalent = item.type === 'talent' && this.actor.items.get(item.id ?? '') === undefined;
+        // to the normal sort path. See issue #17. Actors that don't buy talents with XP
+        // (NPCs) opt out, so the talent lands on them like any other item.
+        const isUnknownTalent = item.type === 'talent' && this.actor.items.get(item.id ?? '') === undefined && this._buysTalentsWithXp();
         if (isUnknownTalent) {
             const careerKey = (this.actor.system as { originPath?: { career?: string } }).originPath?.career ?? 'rogueTrader';
             AdvancementDialog.open(this.actor, { careerKey });

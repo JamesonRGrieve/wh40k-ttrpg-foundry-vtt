@@ -99,7 +99,7 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
         expect(rankField?.name).toBe('system.originPath.role');
     });
 
-    it('bc returns HomeWorld + Archetype(role) + Pride(background) + Disgrace(trialsAndTravails) + Motivation', () => {
+    it('bc returns Race(homeWorld slot) + Archetype(role) + Pride(background) + Disgrace(trialsAndTravails) + Motivation', () => {
         const fields = SystemConfigRegistry.get('bc').getHeaderFields(makeActor());
         expect(names(fields)).toEqual([
             'system.originPath.homeWorld',
@@ -108,6 +108,10 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
             'system.originPath.trialsAndTravails',
             'system.originPath.motivation',
         ]);
+        // Regression: the first field read "Home World"; Black Crusade has no home
+        // worlds — its first origin step is Race, held in the shared homeWorld slot.
+        expect(fields.find((f) => f.label === 'Race')?.name).toBe('system.originPath.homeWorld');
+        expect(fields.some((f) => f.label === 'Home World')).toBe(false);
         expect(fields.find((f) => f.label === 'Archetype')?.name).toBe('system.originPath.role');
         expect(fields.find((f) => f.label === 'Pride')?.name).toBe('system.originPath.background');
         expect(fields.find((f) => f.label === 'Disgrace')?.name).toBe('system.originPath.trialsAndTravails');

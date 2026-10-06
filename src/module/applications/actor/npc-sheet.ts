@@ -214,6 +214,11 @@ export default class NPCSheet extends CharacterSheet {
     /** NPC sheets default to EDIT mode for GM convenience. */
     override _mode = 2;
 
+    /** NPCs hold talents without an XP economy: a dropped talent lands directly. */
+    protected override _buysTalentsWithXp(): boolean {
+        return false;
+    }
+
     /** Sheet display mode constants (PLAY=1, EDIT=2). */
     static MODES = { PLAY: 1, EDIT: 2 } as const;
 
