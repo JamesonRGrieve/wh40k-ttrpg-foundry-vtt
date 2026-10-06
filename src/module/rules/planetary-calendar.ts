@@ -57,11 +57,17 @@ export function localTimeOfDay(elapsedTerranSeconds: number, body: CelestialBody
     return { hour, minute };
 }
 
-export function localSeason(elapsedTerranSeconds: number, body: CelestialBody): SeasonInfo | null {
+/** How far through its year (0–1, from the spring equinox) the body is, or null when its year is unknown. */
+export function orbitFraction(elapsedTerranSeconds: number, body: CelestialBody): number | null {
     if (body.orbitalDays === undefined || body.orbitalDays <= 0) return null;
     const orbitalSeconds = body.orbitalDays * DAY_SECONDS;
     const intoOrbit = ((elapsedTerranSeconds % orbitalSeconds) + orbitalSeconds) % orbitalSeconds;
-    const fraction = intoOrbit / orbitalSeconds;
+    return intoOrbit / orbitalSeconds;
+}
+
+export function localSeason(elapsedTerranSeconds: number, body: CelestialBody): SeasonInfo | null {
+    const fraction = orbitFraction(elapsedTerranSeconds, body);
+    if (fraction === null) return null;
     const index = Math.floor(fraction * SEASONS.length) % SEASONS.length;
     return SEASONS[index] ?? null;
 }

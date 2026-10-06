@@ -4585,6 +4585,8 @@ export type I18nKey =
     | 'WH40K.Scene.CelestialBody.Hint'
     | 'WH40K.Scene.CelestialBody.Label'
     | 'WH40K.Scene.CelestialBody.None'
+    | 'WH40K.Scene.Latitude.Hint'
+    | 'WH40K.Scene.Latitude.Label'
     | 'WH40K.Scene.WarpWeakness.Hint'
     | 'WH40K.Scene.WarpWeakness.Label'
     | 'WH40K.SceneControls.BatchXP'
