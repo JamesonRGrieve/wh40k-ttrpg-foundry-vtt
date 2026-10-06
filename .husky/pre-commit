@@ -147,6 +147,13 @@ if [ -f "${FOUNDRY_PROBE}" ]; then
     run_bg "e2e" pnpm -s test:e2e
     wait_all
     [ "$FAILED" = "0" ] || exit 1
+    # Psychic-power content gate over the results the e2e run just wrote
+    # (tests/e2e/psychic-powers-all.spec.ts). Content defects never fail the
+    # spec itself; this ratchet blocks a falling passing count or a growing
+    # failure category. Skips (exit 0) when the run produced no results.
+    run_bg "psychic" pnpm -s psychic:ratchet
+    wait_all
+    [ "$FAILED" = "0" ] || exit 1
 else
     echo "[pre-commit] phase 4: e2e skipped — ${FOUNDRY_PROBE} not found (run ./pull-foundry.sh to enable)"
 fi
