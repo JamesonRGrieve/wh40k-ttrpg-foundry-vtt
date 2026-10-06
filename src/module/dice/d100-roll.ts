@@ -8,6 +8,15 @@ import BasicRollWH40K from './basic-roll.ts';
  * @extends BasicRollWH40K
  */
 export default class D100Roll extends BasicRollWH40K {
+    /**
+     * A quick (dialog-free, chat-free) d100 test of `actor` against `target` — the
+     * target side of an opposed contest. `evaluate` builds an instance of the class
+     * it is called on, so the result is a D100Roll.
+     */
+    static async quickCheck(actor: object, target: number): Promise<D100Roll | null> {
+        return (await this.evaluate({ actor, target, configure: false })) as D100Roll | null;
+    }
+
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
