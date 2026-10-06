@@ -75,6 +75,7 @@ playwright-report/
 .e2e-raw-coverage/
 .e2e-source-coverage/
 .e2e-screenshots/
+.e2e-results/
 tests/e2e/screenshots/
 tests/storybook/screenshots/
 

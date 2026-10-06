@@ -1,0 +1,21 @@
+{
+  "passing": 0,
+  "total": 634,
+  "categories": {
+    "activation-undeclared": 634,
+    "attack-flag-mismatch": 13,
+    "card-mismatch": 1,
+    "console-error": 8,
+    "damage-mismatch": 8,
+    "effect-unstructured": 603,
+    "focus-unstructured": 634,
+    "range-mismatch": 6,
+    "range-unresolvable": 108,
+    "sustained-unstructured": 634,
+    "target-undeclared": 634
+  },
+  "strict": false,
+  "strictCategories": [
+    "cast-error"
+  ]
+}
