@@ -149,6 +149,10 @@ export default class ItemDataModel extends SystemDataModel {
         if (systemContainer !== null && typeof systemContainer === 'object' && !Array.isArray(systemContainer)) {
             const systemSource = systemContainer as Record<string, unknown>;
             // No parent/actor at migration time; resolves to the world primary line.
+            // Owned items reach here already resolved to their OWNER's line (no
+            // containers left): `WH40KBaseActor.migrateData` on load,
+            // `WH40KItem.createDocuments` on create, and the hydrate join re-points
+            // compendium-copied content via `resolveOwnedLineContent`.
             const lineKey = inferActiveGameLine();
             materializeItemVariants(systemSource, lineKey);
             return;

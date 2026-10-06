@@ -11,6 +11,7 @@
  */
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildActorVariantJoin, buildHydratedSystem, buildHydrationPatches, hydrateActorInMemory } from './compendium-hydrate.ts';
+import { rememberLineVariantSource } from './utils/item-variant-utils.ts';
 
 /** Minimal structural shape matching the slice of an owned item `buildHydrationPatches` reads. */
 interface MockItem {
@@ -146,6 +147,35 @@ describe('buildHydrationPatches — resilience on the hot prep/render path', () 
         const sys = patches[0]?.['system'] as { description?: { value?: string }; weight?: number };
         expect(sys.description?.value).toBe('Actor override');
         expect(sys.weight).toBe(5);
+    });
+
+    /**
+     * The canonical a join fetches was flattened to the WORLD line when it
+     * loaded. A BC psyker's copy of a BC/DH1 power must join the BC branch, from
+     * the canonical's recorded unflattened source — and an unedited DH1 value
+     * already stored on the copy is re-pointed to BC, in memory only.
+     */
+    it("joins a multi-line canonical on the OWNER's line, not the world line the canonical loaded on", async () => {
+        const pristine = { range: { bc: '15 metres x Psy Rating', dh1: '100m' }, focusPower: { bc: { modifier: 10 }, dh1: { modifier: 0, threshold: 11 } } };
+        const worldFlat = { range: '100m', focusPower: { modifier: 0, threshold: 11 } };
+        const canonical = { type: 'psychicPower', img: null, system: worldFlat, _source: { system: worldFlat } };
+        rememberLineVariantSource(canonical, pristine);
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue(canonical));
+        const item = {
+            id: 'p1',
+            name: 'Fire Bolt',
+            img: null,
+            type: 'psychicPower',
+            system: structuredClone(worldFlat),
+            _stats: { compendiumSource: 'Compendium.wh40k-rpg.bc-core-items-psychic-powers.Item.fb' },
+        };
+
+        const patches = await buildHydrationPatches({ type: 'bc-character', system: {}, items: { contents: [item] } });
+        expect(patches).toHaveLength(1);
+        expect(patches[0]?.['system']).toEqual({ range: '15 metres x Psy Rating', focusPower: { modifier: 10 } });
+
+        // The same canonical, owned on its world line (a DH1 actor), needs no patch.
+        await expect(buildHydrationPatches({ type: 'dh1-character', system: {}, items: { contents: [item] } })).resolves.toEqual([]);
     });
 });
 

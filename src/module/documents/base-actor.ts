@@ -35,6 +35,7 @@ import { weaponFireBlockReason } from '../rules/weapon-jam.ts';
 import { isRecharging, type RechargeMark } from '../rules/weapon-recharge.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
+import { materializeOwnedItemSources } from '../utils/item-variant-utils.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
@@ -93,6 +94,21 @@ export function isCharacterActorType(type: string): boolean {
 export class WH40KBaseActor extends Actor {
     declare system: Actor['system'] & WH40KActorSystemData;
     declare items: Actor['items'] & foundry.utils.Collection<WH40KItem>;
+
+    /**
+     * Resolve embedded items' per-line variant containers to THIS actor's line.
+     *
+     * Foundry migrates the whole actor source here before it recurses into the
+     * embedded `items` collection, where each item's `_migrateData` runs with no
+     * actor context and would collapse its containers to the world line (an
+     * owned item stored with containers — e.g. a pack actor's inline item —
+     * would then load with another line's values on every reload).
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.migrateData receives the raw, unvalidated actor source
+    static override migrateData(source: Record<string, unknown>): Record<string, unknown> {
+        materializeOwnedItemSources(source);
+        return super.migrateData(source);
+    }
 
     /**
      * A quick (dialog-free, chat-free) characteristic test — how any actor, NPC
