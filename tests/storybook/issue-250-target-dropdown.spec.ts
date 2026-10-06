@@ -13,7 +13,7 @@ const SHOT = resolve(SHOT_DIR, 'issue-250-target-dropdown.png');
 
 test('issue #250: weapon panel renders a combatant target dropdown', async ({ page }) => {
     mkdirSync(SHOT_DIR, { recursive: true });
-    await page.goto('/iframe.html?id=prompts-unifiedrolldialog--weapon-target-dropdown&viewMode=story');
+    await page.goto('/iframe.html?id=dev-prompts-unifiedrolldialog--weapon-target-dropdown&viewMode=story');
     await page.waitForSelector('select[name="targetCombatantId"]', { timeout: 10_000 });
     await page.screenshot({ path: SHOT, fullPage: true });
 

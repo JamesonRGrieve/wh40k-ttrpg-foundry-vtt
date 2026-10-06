@@ -67,8 +67,15 @@ function sanitize(input: string): string {
         .replace(/^-+|-+$/g, '');
 }
 
+/**
+ * Every component story sits under the docs hub's developer root: `.storybook/main.ts`
+ * applies `titlePrefix: 'Dev'` to all story globs, so the published title (and the
+ * id derived from it) is `Dev/<meta.title>`.
+ */
+const STORY_TITLE_PREFIX = 'Dev';
+
 function toStoryId(title: string, exportName: string): string {
-    return `${sanitize(title)}--${sanitize(startCase(exportName))}`;
+    return `${sanitize(`${STORY_TITLE_PREFIX}/${title}`)}--${sanitize(startCase(exportName))}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -540,10 +547,6 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     {
         title: 'Actor/Panels/GrappleControllerPanel',
         exports: ['Grappling', 'Controlled'],
-    },
-    {
-        title: 'Actor/Panels/MortificationButton',
-        exports: ['PenitentVisible', 'NonPenitentHidden'],
     },
     {
         title: 'Actor/Panels/NpcInteractionsPanel',

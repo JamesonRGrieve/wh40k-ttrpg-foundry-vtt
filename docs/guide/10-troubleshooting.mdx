@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guide/Troubleshooting" />
+
+# Troubleshooting and Getting Help
+
+## Common messages
+
+| You see | Why | What to do |
+| --- | --- | --- |
+| **No origins available for this step** in the Origin Path Builder | No origin path content is installed for this game line. | Install your content packs, or have the GM create origin path items in the world. See [Installation and Updating](?path=/docs/guide-installation-and-updating--docs). |
+| **Critical Effect text unavailable (content pack not installed).** | Critical effect descriptions come from content packs. | Install the content packs for your line. |
+| The token status list only shows **Dead** | Conditions come from the condition items in your content packs for the world's **Primary Game System**. | Install content packs and check the **Primary Game System** setting. |
+| "Attacks can only be made during an active combat encounter." | **Require Active Combat to Attack** is on. | Start an encounter and add the attacker's token, or have the GM turn the setting off. |
+| "This weapon must be equipped before it can be used to attack." | The weapon is holstered. | Use **Draw Weapon** on the Combat tab. |
+| "This weapon is jammed and cannot fire." | The weapon jammed on an earlier shot. | Use **Clear Jam** on the weapon, then reload. |
+| "This weapon is out of ammunition." | The clip is empty. | Use **Reload**. |
+| "It is not this combatant's turn — only the active combatant may move." | **Movement Automation** is set to **Full Automation**. | Wait for your turn, or ask the GM to change the setting. |
+| "That move exceeds the movement remaining this turn" | You have used your movement for this turn. | Pick a longer move type (Charge or Run) or wait until next turn. |
+| "This skill has test variants — enable …" | The skill has sense channels, but they are switched off. | The GM can turn on **Homebrew: Awareness Sense Channels**. |
+| Dropping a talent opens the Advancement window | Talents are bought with XP. | Buy it in the Advancement window. |
+| Dropping an origin path onto a character is refused | The Origin Path Builder is the supported route. | Use the d20 icon on the sheet, or have the GM enable **Freeform Character Editing**. |
+| **No Career Selected** in the Advancement window | The character has no career from the Origin Path. | Complete the Origin Path Builder first. |
+| An item sheet has no edit controls | The item is in a compendium, or it is one of the types locked behind **Freeform Character Editing**. | Edit the compendium source, or have the GM enable the setting. |
+| "Auto-roll damage failed …" | The automatic damage roll hit an error. | Use **Roll Damage** on the attack card. |
+| "… item(s) could not load their compendium data and are incomplete" | Items on an actor point at compendium entries that are missing. | Make sure the content packs those items came from are installed and enabled. |
+
+## Before reporting a problem
+
+1. Make sure you are on Foundry VTT version 14.
+2. Make sure you are on the latest system version for your channel (official or nightly). See [Installation and Updating](?path=/docs/guide-installation-and-updating--docs).
+3. Try with other modules disabled, to rule out a conflict.
+4. Open the browser console (F12) and note any red errors. For more detailed logs from the system, run this in the console and repeat the problem:
+
+```js
+game.wh40k.debug = true;
+```
+
+## Getting help
+
+Report bugs and request features on the project's GitHub issue tracker:
+
+**[github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/issues](https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/issues)**
+
+Search existing issues first, including closed ones. If you find a matching issue, add your details there. When filing a new issue, include:
+
+- your Foundry version and the system version;
+- the game line, for example Dark Heresy 2e;
+- the steps to reproduce the problem;
+- any console errors;
+- a screenshot of the sheet, dialog or chat card if relevant.
+
+Please do not post rulebook text in issues. The project cannot include copyrighted book content.

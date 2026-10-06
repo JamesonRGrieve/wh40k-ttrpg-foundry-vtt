@@ -36,7 +36,7 @@ test.describe('Issue #204 — Throne Gelt rolls in exactly one origin-path step'
     test('home world step renders exactly one Throne Gelt roll button; background step renders zero', async ({ page }) => {
         // Story id derives from `title: 'Character Creation/OriginPathBuilder'`
         // and the `Issue204HomeWorldThroneGelt` named export, kebab-cased by Storybook.
-        await page.goto('/iframe.html?id=character-creation-originpathbuilder--issue-204-home-world-throne-gelt');
+        await page.goto('/iframe.html?id=dev-character-creation-originpathbuilder--issue-204-home-world-throne-gelt');
 
         // Home World step: the single legitimate Throne Gelt roll button must render.
         const homeWorldButtons = page.locator(THRONES_ROLL_BUTTON_SELECTOR);
@@ -47,7 +47,7 @@ test.describe('Issue #204 — Throne Gelt rolls in exactly one origin-path step'
         await page.screenshot({ path: SCREENSHOT_PATH, fullPage: true });
 
         // Navigate to the background story and assert ZERO Throne Gelt roll buttons.
-        await page.goto('/iframe.html?id=character-creation-originpathbuilder--issue-204-background-no-throne-gelt');
+        await page.goto('/iframe.html?id=dev-character-creation-originpathbuilder--issue-204-background-no-throne-gelt');
 
         const backgroundButtons = page.locator(THRONES_ROLL_BUTTON_SELECTOR);
         await expect(backgroundButtons).toHaveCount(0);

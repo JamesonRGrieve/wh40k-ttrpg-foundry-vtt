@@ -17,7 +17,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Issue #27 — Self-explanatory skill tooltip labels', () => {
     test('characteristic row reads as a complete sentence', async ({ page }) => {
-        await page.goto('/iframe.html?id=shared-skilltooltip--untrained');
+        await page.goto('/iframe.html?id=dev-shared-skilltooltip--untrained');
 
         const host = page.locator('[data-testid="skill-tooltip-host"]');
         await expect(host).toBeAttached();

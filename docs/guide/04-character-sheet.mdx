@@ -1,0 +1,98 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guide/The Character Sheet" />
+
+# The Character Sheet
+
+Each game line has its own sheet, but they share the same layout: a sidebar with the portrait and identity on the left, and tabs on the right. Hover over a tab to see a short description of what it contains.
+
+## Sidebar
+
+| Element | What it does |
+| --- | --- |
+| Portrait | Click to choose an image. |
+| d20 icon | Opens the Origin Path Builder (tooltip **Setup Origin Path**). See [Creating a Character](?path=/docs/guide-creating-a-character--docs). |
+| **Generate portrait (AI)** | GM only. Generates a portrait through the image service configured in the system settings. |
+| **Re-roll portrait** / **Pin this portrait** | GM only, and only when the actor has a pool of several portraits to choose from. |
+| Name and player | Editable name and player name fields. |
+
+The window's header also has a **Reset Window Size** control.
+
+## Tabs
+
+| Tab | Contents |
+| --- | --- |
+| **Overview** | Vitals, active effects, resources, favourite skills and talents, experience, and line-specific panels. |
+| **Statistics** | Characteristics, aptitudes, skills, specialist skills, talents and traits. |
+| **Combat** | The combat station: vitals, Fate Points, armour by location, weapons, movement, combat actions and psychic powers. |
+| **Inventory** | Carried gear and gear stored elsewhere, with weights. |
+| **Biography** | Identity details, appearance, personality and background notes, contacts and adversaries, and a character journal. |
+
+### Overview
+
+- **Active Effects**: each effect shows its remaining duration where it has one. Use the controls to enable, disable or delete an effect.
+- **Resources**: the line's currencies, each with a stepper. In Dark Heresy 2e this shows **Influence**, **Requisition** and **Throne Gelt**, depending on the **DH2e Economy Ruleset** setting. In Homebrew mode, Influence has its own roll button here.
+- **Party Overview** (Dark Heresy 2e): the shared warband **Subtlety** pool. A change made on one acolyte's sheet updates every open sheet.
+- **Favourite skills and talents**: anything you starred on the Statistics tab, for quick access.
+- **Experience**: total, spent and available XP, rank, and an itemised list of **XP Purchases**. Click **Advance** to buy advances. The GM also sees **Add XP**.
+- Clicking the Fate Point icon or label opens **Uses of Fate Points**, a reference list of what a Fate Point can do.
+
+Line-specific panels also appear on the Overview tab:
+
+| Line | Panels |
+| --- | --- |
+| Black Crusade | Chaos Alignment, Psychic Strength, Chaos Ritual, Gifts of the Gods, Supplement Mechanics, Apotheosis |
+| Deathwatch | Adeptus Astartes, Distinctions, Special-Issue Ammunition, Cohesion, Combat Mode, Renown, Requisition, Mission Oath, Mission, Vehicle |
+| Only War | Regiment, Craftsmanship, Regimental Drawback, Comrade, Squad Logistics, Orders, Mission Assignment Gear, Vehicle Movement, Comrade Healing, Mount, Battlefield Awareness |
+
+Some panels only appear when they apply, for example **Possession** while a character is possessed and **Grapple** while a grapple is in progress.
+
+### Statistics
+
+- Click a characteristic or skill to open the roll dialog. See [Rolling Tests](?path=/docs/guide-rolling-tests--docs).
+- Filter the skill list by name, and star skills and talents to add them to the Overview favourites.
+- Add specialisations for skills that take one from the specialist skills panel.
+- Talents and traits are listed with their details. Trait levels can be adjusted.
+
+### Combat
+
+The combat station collects everything you need on your turn:
+
+- **Vitals** and **Fate** (spend and restore Fate Points).
+- **Armour** by hit location.
+- **Weapons**: each equipped weapon is marked. Use the hand button to **Draw Weapon** or **Holster Weapon**. A hand budget shows how many hands your drawn weapons use.
+- **Movement**: Half, Full, Charge and Run distances, plus lift and push/drag capacity. During combat it also shows the movement remaining this turn.
+- **Combat Actions**: action buttons grouped as Half, Full and Reaction actions, plus **Dodge**, **Parry**, initiative and **Assign Damage**. Click an action for a description; Shift+Click posts it to chat.
+- **Psychic Powers**: invoke or attack with a power, with your Psy Rating shown.
+
+See [Combat](?path=/docs/guide-combat--docs) for how attacks and damage work.
+
+### Inventory
+
+Items are split into **Carried** and **Elsewhere**, with weights and an encumbrance warning. Each item has buttons to edit, equip, use, delete, or **Drop on the ground** (which creates a loot pile at your token). Tick several items and use **Give selected items to another character** to hand them over.
+
+### Biography
+
+Fill in identity and appearance fields, longer notes such as background, personality, superstitions and treasured mementos, and the **Contacts** and **Adversaries** lists. Age can be shown as biological or standard age. The **Character Journal** keeps journal entries on the character.
+
+## NPC sheets
+
+NPC sheets use the same layout with these tabs: **Skills**, **Combat**, **Inventory**, **Biography** and **NPC**. The NPC tab holds GM-facing controls such as hordes. NPCs open on the Skills tab.
+
+By default an NPC is a flat stat block. With the **NPCs advance like characters** setting, its stats are treated as purchased advances so you can keep advancing it.
+
+## Vehicle sheets
+
+Land vehicles and aircraft use the vehicle sheet, with **Overview**, **Combat**, **Crew**, **Components** and **Notes** tabs.
+
+## Voidcraft sheets (Rogue Trader)
+
+Voidcraft use the starship sheet, with **Stats**, **Components**, **Weapons**, **Crew**, **History**, **Actions** and **Manoeuvres** tabs.
+
+## Loot piles
+
+A loot pile is a special actor created when someone drops an item on the ground. Right-click the pile's token and use **Pick Up**, or open the pile to take individual items. Players cannot move loot piles.
+
+## Hotbar macros
+
+Drag an item from a character sheet onto Foundry's macro hotbar to create a macro that rolls or uses it.

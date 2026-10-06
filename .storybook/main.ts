@@ -104,20 +104,24 @@ function storyChromeCssPlugin(): Plugin {
 }
 
 const config: StorybookConfig = {
-    // Discover stories from both the top-level `stories/` directory (the
-    // historical convention) and co-located `*.stories.ts` siblings under
-    // `src/module/applications/` (the symmetry-coverage convention — every
-    // sheet/dialog gets a sibling story so renames keep them in lock-step).
+    // The published Storybook is the system's docs hub (GitHub Pages, see
+    // .github/workflows/docs.yml). Its top level is the user guide for players
+    // and GMs (`docs/guide/*.mdx`, titled `Guide/…`). Everything aimed at
+    // developers sits under one `Dev/` root via `titlePrefix`, which also
+    // prefixes story ids with `dev-`:
+    //   - `stories/` — the historical story convention plus the developer docs
+    //     (`stories/dev-docs/*.mdx`, wrapping the Markdown in `docs/`);
+    //   - co-located `*.stories.ts` under `src/module/` (the symmetry-coverage
+    //     convention — every sheet/dialog gets a sibling story);
+    //   - co-located stories under `src/templates/` (panel-only stories that
+    //     target an .hbs partial directly). Without this entry Storybook silently
+    //     misses them and Playwright specs that hit those story slugs get a
+    //     "Couldn't find story matching ..." page — see the issue-190 history.
     stories: [
-        '../stories/**/*.mdx',
-        '../stories/**/*.stories.@(js|ts)',
-        '../src/module/**/*.stories.@(js|ts)',
-        // Co-located stories under `src/templates/` (e.g. panel-only stories
-        // that target an .hbs partial directly). Without this glob Storybook
-        // silently misses them and Playwright specs that hit those story slugs
-        // get a "Couldn't find story matching ..." error page instead of the
-        // intended render — see the issue-190 regression history.
-        '../src/templates/**/*.stories.@(js|ts)',
+        '../docs/guide/*.mdx',
+        { directory: '../stories', files: '**/*.@(mdx|stories.@(js|ts))', titlePrefix: 'Dev' },
+        { directory: '../src/module', files: '**/*.stories.@(js|ts)', titlePrefix: 'Dev' },
+        { directory: '../src/templates', files: '**/*.stories.@(js|ts)', titlePrefix: 'Dev' },
     ],
     // Foundry's compiled `foundry2.css`, `mce.css`, and the rest of
     // `.foundry-release/public/` are NOT bundled. The Storybook deployment
@@ -128,7 +132,7 @@ const config: StorybookConfig = {
     // visible icon should use the registered icon helper which renders the
     // bundled inline SVG, not a Foundry-served URL.
     staticDirs: [],
-    addons: ['@storybook/addon-a11y'],
+    addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
     framework: {
         name: '@storybook/html-vite',
         options: {},

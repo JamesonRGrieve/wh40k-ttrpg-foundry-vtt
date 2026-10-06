@@ -23,7 +23,7 @@ test.describe('Issue #202 — Origin-Roll dialog reroll overflow', () => {
         // The viewport frame around the story is 520 tall; size the page tall
         // enough that anything inside is in-viewport iff it's inside the frame.
         await page.setViewportSize({ width: 1024, height: 768 });
-        await page.goto('/iframe.html?id=character-creation-originrolldialog--reroll-overflow');
+        await page.goto('/iframe.html?id=dev-character-creation-originrolldialog--reroll-overflow');
 
         const previousAttemptsList = page.locator('[data-testid="previous-attempts-list"]');
         await expect(previousAttemptsList).toBeVisible();

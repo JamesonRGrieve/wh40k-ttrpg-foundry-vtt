@@ -27,7 +27,7 @@ test.describe('Issue #216 — resolved aptitude collision no longer renders as r
             if (msg.type() === 'error') consoleErrors.push(msg.text());
         });
 
-        await page.goto('/iframe.html?id=character-creation-originpathbuilder--issue-216-resolved-aptitude-not-a-requirement');
+        await page.goto('/iframe.html?id=dev-character-creation-originpathbuilder--issue-216-resolved-aptitude-not-a-requirement');
 
         // Screenshot first so visual review has the artefact even if a later
         // assertion drops.
@@ -51,7 +51,7 @@ test.describe('Issue #216 — resolved aptitude collision no longer renders as r
     });
 
     test('pre-select: warning banner present (sibling story confirms requirement framing for unresolved entries)', async ({ page }) => {
-        await page.goto('/iframe.html?id=character-creation-originpathbuilder--issue-216-unresolved-aptitude-is-a-requirement');
+        await page.goto('/iframe.html?id=dev-character-creation-originpathbuilder--issue-216-unresolved-aptitude-is-a-requirement');
         await page.screenshot({ path: '.e2e-screenshots/issue-216-unresolved-aptitude.png', fullPage: true });
 
         await expect(page.getByTestId('aptitude-collision-banner')).toHaveCount(1);

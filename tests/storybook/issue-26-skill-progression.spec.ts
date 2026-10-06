@@ -15,7 +15,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Issue #26 — Skill training progression', () => {
     test('renders the 5-tier DH2 ladder with rank-specific modifiers', async ({ page }) => {
-        await page.goto('/iframe.html?id=shared-skilltooltip--untrained');
+        await page.goto('/iframe.html?id=dev-shared-skilltooltip--untrained');
 
         // The story renders asynchronously (the tooltip builder is async),
         // so wait for the resolved host node rather than the "pending"
@@ -48,7 +48,7 @@ test.describe('Issue #26 — Skill training progression', () => {
     });
 
     test('Trained PC highlights +10 — not +20 — as the active rung', async ({ page }) => {
-        await page.goto('/iframe.html?id=shared-skilltooltip--trained-plus-10');
+        await page.goto('/iframe.html?id=dev-shared-skilltooltip--trained-plus-10');
 
         const host = page.locator('[data-testid="skill-tooltip-host"]');
         await expect(host).toBeAttached();

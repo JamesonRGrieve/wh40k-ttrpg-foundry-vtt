@@ -32,7 +32,7 @@ test('issue #201: talent sheet renders cleanly from compendium-mode story', asyn
         }
     });
 
-    await page.goto('/iframe.html?id=item-sheets-talentsheet--compendium-render&viewMode=story');
+    await page.goto('/iframe.html?id=dev-item-sheets-talentsheet--compendium-render&viewMode=story');
 
     // Wait for the rendered template root. A parse error would have prevented
     // the tab nav from rendering at all.

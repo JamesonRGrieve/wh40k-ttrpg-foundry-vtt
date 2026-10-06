@@ -11,7 +11,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Issue #19 — non-Reaction combat action click', () => {
     test('shows description locally, does not post a chat message', async ({ page }) => {
-        await page.goto('/iframe.html?id=actor-charactersheet--issue-19-non-reaction-local-description');
+        await page.goto('/iframe.html?id=dev-actor-charactersheet--issue-19-non-reaction-local-description');
         // Let the story render + the inline click-handler register.
         await page.waitForLoadState('networkidle');
         // Capture state-of-render screenshot before any assertions, so visual

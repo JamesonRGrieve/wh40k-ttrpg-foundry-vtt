@@ -14,6 +14,29 @@ initializeStoryHandlebars();
 
 const preview: Preview = {
     parameters: {
+        options: {
+            // Docs hub order: the user guide first (the hub opens on its
+            // Introduction), then everything under the developer `Dev/` root.
+            storySort: {
+                order: [
+                    'Guide',
+                    [
+                        'Introduction',
+                        'Installation and Updating',
+                        'Creating a Character',
+                        'The Character Sheet',
+                        'Rolling Tests',
+                        'Combat',
+                        'Items and Effects',
+                        'Game Settings',
+                        'Other Tools',
+                        'Troubleshooting',
+                    ],
+                    'Dev',
+                    ['Docs', '*'],
+                ],
+            },
+        },
         controls: {
             matchers: {
                 color: /(background|color)$/i,
