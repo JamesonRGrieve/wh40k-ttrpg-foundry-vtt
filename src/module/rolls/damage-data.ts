@@ -13,7 +13,7 @@ import {
     modeDelta,
 } from '../rules/dynamic-modifiers.ts';
 import { additionalHitLocations, DEFAULT_HIT_LOCATION, getHitLocationForRoll, resolveHitLocationId } from '../rules/hit-locations.ts';
-import { resolvePsyRatingTerm } from '../rules/psychic-range.ts';
+import { type PsychicFormulaValues, resolvePsychicFormulaTerms } from '../rules/psychic-range.ts';
 import { scatterDirection } from '../rules/scatter.ts';
 import { AIM_STATE, type ActorStateSource, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
@@ -41,7 +41,7 @@ interface ActionItemSystem {
     effectiveDamageFormula?: string;
     // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is a Foundry framework union; penetration can be number|string|Roll formula
     effectivePenetration?: unknown;
-    damage?: { formula?: string; type?: string; penetration?: number };
+    damage?: { formula?: string; type?: string; penetration?: number; penetrationFormula?: string };
     damageType?: string;
     // eslint-disable-next-line no-restricted-syntax -- boundary: penetration field accepts numeric or formula strings from legacy data
     penetration?: unknown;
@@ -123,6 +123,17 @@ function addLabelledModifier(map: Partial<Record<string, number>>, label: string
 }
 
 /** The acting actor's states for `condition: whileState` — its conditions plus a declared Aim. */
+/** The caster values a psychic attack's damage / penetration terms name; null for a non-psychic attack. */
+function psychicFormulaValues(attackData: AttackDataLike): PsychicFormulaValues | null {
+    const pr = attackData.rollData.pr;
+    if (pr === undefined) return null;
+    const bonusOf = (key: string): number => {
+        const c = attackData.rollData.sourceActor.getCharacteristicFuzzy(key);
+        return c.effectiveBonus ?? c.bonus;
+    };
+    return { psyRating: pr, willpowerBonus: bonusOf('willpower'), toughnessBonus: bonusOf('toughness') };
+}
+
 function attackStates(rollData: AttackDataLike['rollData']): string[] {
     const states = collectActorStates(rollData.sourceActor);
     if ((rollData.modifiers?.['aim'] ?? 0) > 0 && !states.includes(AIM_STATE)) states.push(AIM_STATE);
@@ -502,7 +513,8 @@ export class Hit {
         if (rollFormula === undefined || typeof rollFormula !== 'string' || rollFormula === '') {
             rollFormula = '0';
         }
-        if (attackData.rollData.pr !== undefined) rollFormula = resolvePsyRatingTerm(rollFormula, attackData.rollData.pr);
+        const casterValues = psychicFormulaValues(attackData);
+        if (casterValues !== null) rollFormula = resolvePsychicFormulaTerms(rollFormula, casterValues);
         // eslint-disable-next-line no-restricted-syntax -- boundary: Roll constructor type differs between Foundry v13/v14 runtime and shipped types
         const damageRoll = new Roll(rollFormula, attackData.rollData) as unknown as Roll;
         this.damageRoll = damageRoll;
@@ -684,15 +696,19 @@ export class Hit {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
 
+        // A penetration printed as a value of the user ("PR") is authored as a formula and wins.
+        const authoredFormula = actionItem.system.damage?.penetrationFormula;
         // eslint-disable-next-line no-restricted-syntax -- boundary: penetration may be a number or Roll formula string from legacy data; union cannot be expressed in the minimal interface
-        const rollFormula = actionItem.system.effectivePenetration ?? actionItem.system.damage?.penetration ?? actionItem.system.penetration;
+        const declaredPenetration = actionItem.system.effectivePenetration ?? actionItem.system.damage?.penetration ?? actionItem.system.penetration;
+        const rollFormula = typeof authoredFormula === 'string' && authoredFormula !== '' ? authoredFormula : declaredPenetration;
         if (typeof rollFormula === 'number' && Number.isInteger(rollFormula)) {
             this.penetration = rollFormula;
         } else if (rollFormula === '') {
             this.penetration = 0;
         } else {
             this.hasPenetrationRoll = true;
-            const penFormula = attackData.rollData.pr !== undefined ? resolvePsyRatingTerm(String(rollFormula), attackData.rollData.pr) : String(rollFormula);
+            const casterValues = psychicFormulaValues(attackData);
+            const penFormula = casterValues !== null ? resolvePsychicFormulaTerms(String(rollFormula), casterValues) : String(rollFormula);
             try {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Roll constructor type differs between Foundry v13/v14 runtime and shipped types
                 const penRoll = new Roll(penFormula, attackData.rollData) as unknown as Roll;

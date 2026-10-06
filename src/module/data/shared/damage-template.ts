@@ -25,6 +25,10 @@ export default class DamageTemplate extends SystemDataModel {
                 }),
                 bonus: new fields.NumberField({ required: true, initial: 0, integer: true }),
                 penetration: new fields.NumberField({ required: true, initial: 0, integer: true, min: 0 }),
+                // A penetration the book prints as a value of the user ("equal to the
+                // psyker's Psy Rating" → "PR"). When set it is rolled instead of `penetration`.
+                // eslint-disable-next-line no-restricted-syntax -- boundary: FormulaField extends StringField, ctor param shape mismatch
+                penetrationFormula: new FormulaField({ required: false, blank: true, initial: '' } as unknown as ConstructorParameters<typeof FormulaField>[0]),
             }),
             special: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: [] }),
         };
