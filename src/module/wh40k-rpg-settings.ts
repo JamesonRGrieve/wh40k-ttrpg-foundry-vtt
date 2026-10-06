@@ -264,7 +264,7 @@ export class WH40KSettings {
         }
     }
 
-    /** Integer offset added to the 20-point characteristic baseline during character generation. Defaults to 0. */
+    /** Integer offset added to the characteristic base (25) during character generation. Defaults to 0. */
     static getCharacteristicOffset(): number {
         try {
             const n = Number(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.characteristicOffset));
@@ -274,7 +274,7 @@ export class WH40KSettings {
         }
     }
 
-    /** Effective base characteristic value used by character generation: 20 + offset. */
+    /** Effective base characteristic value used by character generation: 25 + offset. */
     static getCharacteristicBase(): number {
         // RAW characteristic base for the FFG d100 family (2d10+25 → base 25). The
         // offset setting tunes it per world; experienced starts add +5 on top (#223).

@@ -11,6 +11,8 @@
  * the right per-system data model and sheet automatically.
  */
 
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
+
 export const ACTOR_SYSTEM_AVAILABILITY: Record<string, string[]> = {
     dh2: ['character', 'npc', 'terracraft', 'aircraft'],
     dh1: ['character', 'npc', 'terracraft'],
@@ -42,7 +44,8 @@ export class WH40KCreateActorDialog {
      * Returns the created actor, or null if cancelled.
      */
     static async open(opts: CreateActorOptions = {}): Promise<Actor | null> {
-        const initialSystem = opts.initialSystem ?? 'dh2';
+        // Starts on the world's Primary Game System unless the caller names one.
+        const initialSystem = opts.initialSystem ?? WH40KSettings.getPrimaryGameSystem();
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: array index may be undefined at runtime
         const initialKind = ACTOR_SYSTEM_AVAILABILITY[initialSystem]?.[0] ?? 'character';
 
