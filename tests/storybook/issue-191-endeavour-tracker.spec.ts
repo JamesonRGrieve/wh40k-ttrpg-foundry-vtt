@@ -9,7 +9,7 @@
 import { test } from '@playwright/test';
 import { assertStoryRendered } from './lib/assert-story-rendered';
 
-const STORY_BASE = '/iframe.html?id=actor-panels-endeavourpanel--';
+const STORY_BASE = '/iframe.html?id=dev-actor-panels-endeavourpanel--';
 
 test.describe('Issue #191 — Endeavour tracker renders three canonical states', () => {
     test('Empty story renders + screenshot captured', async ({ page }) => {
