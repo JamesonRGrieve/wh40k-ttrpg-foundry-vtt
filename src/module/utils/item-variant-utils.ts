@@ -415,7 +415,10 @@ const OWNER_LINE_SYSTEMS = new WeakMap<object, Map<SupportedLineKey, ItemSystemS
  * document, before the schema's migration collapses the containers.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: raw Foundry construction source, before schema validation
-export function rememberLineVariantSource(document: object, system: unknown): void {
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry cleanData's `_state.model` is untyped and is not always a model (what-if previews, embedded clean of a parent's source); guarded on the next line
+export function rememberLineVariantSource(document: unknown, system: unknown): void {
+    // Only a real model is a valid WeakMap key; anything else has no source to remember.
+    if (typeof document !== 'object' || document === null) return;
     if (!isPlainObject(system) || !hasLineVariantContainers(system)) return;
     PRISTINE_LINE_SOURCES.set(document, deepClone(system));
     OWNER_LINE_SYSTEMS.delete(document);

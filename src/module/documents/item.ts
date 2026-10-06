@@ -171,7 +171,7 @@ export class WH40KItem extends WH40KItemContainer {
         // it still holds its per-line variant containers. Migration below collapses
         // them to the world line; an owned copy needs its OWNER's line instead
         // (see `resolveOwnedLineContent`). Partial update diffs are not a source.
-        if (_state.model !== undefined && options.partial !== true) rememberLineVariantSource(_state.model, source['system']);
+        if (options.partial !== true) rememberLineVariantSource(_state.model, source['system']);
 
         // CRITICAL: Clean img field if present - V13 validation is very strict
         if ('img' in source) {
