@@ -5,6 +5,7 @@ import {
     localHourOfDay,
     localSeason,
     localTimeOfDay,
+    orbitFraction,
     TERRAN_ROTATION_HOURS,
     terranToLocalDays,
 } from './planetary-calendar.ts';
@@ -41,5 +42,19 @@ describe('localSeason', () => {
 
     it('is null for a body with no orbital period', () => {
         expect(localSeason(0, { name: 'Station', rotationHours: 24 })).toBeNull();
+    });
+});
+
+describe('orbitFraction', () => {
+    it('runs from the spring equinox through the year and wraps', () => {
+        expect(orbitFraction(0, MOON)).toBe(0);
+        expect(orbitFraction(20 * DAY_SECONDS, MOON)).toBeCloseTo(0.25, 9);
+        expect(orbitFraction(100 * DAY_SECONDS, MOON)).toBeCloseTo(0.25, 9);
+        expect(orbitFraction(-20 * DAY_SECONDS, MOON)).toBeCloseTo(0.75, 9);
+    });
+
+    it('is null for a body with no orbital period', () => {
+        expect(orbitFraction(0, { name: 'Station', rotationHours: 24 })).toBeNull();
+        expect(orbitFraction(0, { name: 'Rock', rotationHours: 24, orbitalDays: 0 })).toBeNull();
     });
 });

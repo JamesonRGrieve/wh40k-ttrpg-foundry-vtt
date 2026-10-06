@@ -132,9 +132,11 @@ declare module 'fvtt-types/configuration' {
         Token: {
             'wh40k-rpg': Record<string, unknown>;
         };
-        // Scene-scoped state (Warp weakness, #137; celestial-body binding, #588).
+        // Scene-scoped state (Warp weakness, #137; celestial-body binding and latitude, #588), and
+        // the Zephyr Cartography module's own scene flags, whose `sun` the sun sync reads back.
         Scene: {
             'wh40k-rpg': Record<string, unknown>;
+            'zephyr-cartography'?: Record<string, unknown>;
         };
     }
     /* eslint-enable no-restricted-syntax */

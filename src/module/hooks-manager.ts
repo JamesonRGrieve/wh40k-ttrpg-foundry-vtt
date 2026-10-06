@@ -113,6 +113,7 @@ import { isCharacterActorType, type WH40KBaseActor } from './documents/base-acto
 import { WH40KItem } from './documents/item.ts';
 import { HandlebarManager } from './handlebars/handlebars-manager.ts';
 import { type FlaggableActor, isItemPilesPile, registerItemPilesValuation } from './integrations/item-piles.ts';
+import { syncSceneSuns } from './integrations/zephyr-cartography.ts';
 import {
     createCharacteristicMacro,
     createItemMacro,
@@ -150,7 +151,7 @@ import {
     type PortraitActorLike,
     type PortraitTokenLike,
 } from './rules/portrait-spawn.ts';
-import { buildCelestialBodyField, sceneBodyKey, syncSceneLighting } from './rules/scene-lighting.ts';
+import { buildCelestialBodyField, buildLatitudeField, sceneBodyKey, sceneLatitude, syncSceneLighting } from './rules/scene-lighting.ts';
 import { buildSkillSpecializationIndex } from './rules/skill-specialization-index.ts';
 import { buildSkillVariantIndex } from './rules/skill-variant-index.ts';
 import { SURPRISED_STATUS_ID, surpriseHasExpired } from './rules/surprise.ts';
@@ -603,6 +604,8 @@ export class HooksManager {
         if (Object.keys(bodies).length === 0) return;
         const elapsed = game.time.worldTime - WH40KSettings.getWorldTimeInception();
         await syncSceneLighting(game.scenes, bodies, (body) => localHourOfDay(elapsed, body), canvas.scene);
+        // The sun Zephyr Cartography's drop shadows fall from follows the same body (latitude + axial tilt).
+        await syncSceneSuns(game.scenes, bodies, elapsed);
     }
 
     static async onUpdateWorldTime(dt: number): Promise<void> {
@@ -771,11 +774,20 @@ export class HooksManager {
             WH40KSettings.getCelestialBodies(),
             sceneBodyKey(scene),
         );
+        // Where on the body the scene lies, for the sun its drop shadows fall from.
+        const latitudeField = buildLatitudeField(
+            document,
+            {
+                label: game.i18n.localize('WH40K.Scene.Latitude.Label'),
+                hint: game.i18n.localize('WH40K.Scene.Latitude.Hint'),
+            },
+            sceneLatitude(scene),
+        );
 
         // Append to the ambience/environment tab when present, else the form body,
         // so the controls land somewhere sensible across Foundry's config layouts.
         const host = root.querySelector('.tab[data-tab="ambience"]') ?? root.querySelector('.tab[data-tab="basic"]') ?? root.querySelector('form') ?? root;
-        host.append(warpField, bodyField);
+        host.append(warpField, bodyField, latitudeField);
     }
 
     static onLootTokenHUD(app: LootTokenHUDLike, html: HTMLElement | JQuery): void {

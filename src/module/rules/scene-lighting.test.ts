@@ -3,6 +3,7 @@ import {
     bodiesFromRows,
     bodyKeyFor,
     buildCelestialBodyField,
+    buildLatitudeField,
     CELESTIAL_BODY_INPUT_NAME,
     type CelestialBodies,
     type CelestialBodyRow,
@@ -11,8 +12,10 @@ import {
     type LitScene,
     parseCelestialBodies,
     rowsFromBodies,
+    SCENE_LATITUDE_INPUT_NAME,
     sceneBodyKey,
     sceneDarkness,
+    sceneLatitude,
     sceneLightingUpdate,
     syncSceneLighting,
     weatherLabelKey,
@@ -202,5 +205,44 @@ describe('buildCelestialBodyField', () => {
 
     it('selects "not driven" for an unbound scene', () => {
         expect(buildCelestialBodyField(document, { label: 'Body', hint: 'Hint', none: 'Manual' }, BODIES, null).querySelector('select')?.value).toBe('');
+    });
+
+    it('labels the group and carries its hint', () => {
+        const group = buildCelestialBodyField(document, { label: 'Body', hint: 'Hint', none: 'Manual' }, BODIES, null);
+        expect(group.className).toBe('form-group');
+        expect(group.querySelector('label')?.textContent).toBe('Body');
+        expect(group.querySelector('p.hint')?.textContent).toBe('Hint');
+    });
+});
+
+function latitudeScene(latitude: number | string | undefined): { getFlag: (scope: string, key: string) => number | string | undefined } {
+    return { getFlag: (_scope, key) => (key === 'latitude' ? latitude : undefined) };
+}
+
+describe('sceneLatitude', () => {
+    it('reads a latitude within the poles', () => {
+        expect(sceneLatitude(latitudeScene(45))).toBe(45);
+        expect(sceneLatitude(latitudeScene(-90))).toBe(-90);
+        expect(sceneLatitude(latitudeScene(0))).toBe(0);
+    });
+
+    it('is null when unset, not a number, past a pole, or with no scene', () => {
+        expect(sceneLatitude(latitudeScene(undefined))).toBeNull();
+        expect(sceneLatitude(latitudeScene('45'))).toBeNull();
+        expect(sceneLatitude(latitudeScene(91))).toBeNull();
+        expect(sceneLatitude(latitudeScene(Number.NaN))).toBeNull();
+        expect(sceneLatitude(null)).toBeNull();
+    });
+});
+
+describe('buildLatitudeField', () => {
+    it('builds a number input bounded at the poles, posting under the scene flag', () => {
+        const input = buildLatitudeField(document, { label: 'Latitude', hint: 'Hint' }, 52.5).querySelector('input');
+        expect(input?.name).toBe(SCENE_LATITUDE_INPUT_NAME);
+        expect([input?.type, input?.min, input?.max, input?.step, input?.value]).toEqual(['number', '-90', '90', 'any', '52.5']);
+    });
+
+    it('is empty for a scene with no latitude', () => {
+        expect(buildLatitudeField(document, { label: 'Latitude', hint: 'Hint' }, null).querySelector('input')?.value).toBe('');
     });
 });

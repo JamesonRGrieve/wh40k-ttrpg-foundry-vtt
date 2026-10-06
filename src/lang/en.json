@@ -7664,6 +7664,10 @@
                 "Label": "Celestial Body",
                 "Hint": "Drive this scene's darkness from the body's local time of day and current weather as the world clock advances. Leave unset for interiors, voidships and hand-lit maps.",
                 "None": "Not driven (manual lighting)"
+            },
+            "Latitude": {
+                "Label": "Latitude",
+                "Hint": "Where on its celestial body this scene lies, from −90 (south pole) to 90 (north pole). With a body bound, the sun's place in the sky follows the body's hour, season and axial tilt, and drop shadows fall away from it. Leave empty to keep the map's own sun."
             }
         }
     }

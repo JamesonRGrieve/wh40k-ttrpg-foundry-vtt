@@ -278,11 +278,57 @@ export function sceneBodyKey(scene: BodyBoundScene | null | undefined): string |
     return typeof key === 'string' && key !== '' ? key : null;
 }
 
+/** Scene flag key holding the scene's latitude on its body, in degrees (north positive). */
+const LATITUDE_FLAG = 'latitude';
+
+/** Name the Scene Config latitude input posts under, so the flag round-trips on submit. */
+export const SCENE_LATITUDE_INPUT_NAME = `flags.${SYSTEM_ID}.${LATITUDE_FLAG}`;
+
+/** The scene's latitude (−90–90, north positive), or null when none is set: its sun is then left to the GM. */
+export function sceneLatitude(scene: BodyBoundScene | null | undefined): number | null {
+    if (scene == null) return null;
+    const latitude = scene.getFlag(SYSTEM_ID, LATITUDE_FLAG);
+    return typeof latitude === 'number' && Number.isFinite(latitude) && Math.abs(latitude) <= 90 ? latitude : null;
+}
+
+/**
+ * A Scene Config form-group: its label, the control, and a hint. Returned as a
+ * detached element (never an HTML string — labels come from the langpack and body
+ * names from the GM, and neither may reach a markup-parsing sink).
+ */
+function sceneFormGroup(doc: Document, labels: { label: string; hint: string }, control: HTMLElement): HTMLElement {
+    const group = doc.createElement('div');
+    group.className = 'form-group';
+    const label = doc.createElement('label');
+    label.textContent = labels.label;
+    const fields = doc.createElement('div');
+    fields.className = 'form-fields';
+    fields.appendChild(control);
+    const hint = doc.createElement('p');
+    hint.className = 'hint';
+    hint.textContent = labels.hint;
+    group.append(label, fields, hint);
+    return group;
+}
+
+/**
+ * Build the Scene Config form-group for the scene's latitude: a number from −90
+ * (south pole) to 90 (north pole), empty when unset.
+ */
+export function buildLatitudeField(doc: Document, labels: { label: string; hint: string }, latitude: number | null): HTMLElement {
+    const input = doc.createElement('input');
+    input.type = 'number';
+    input.name = SCENE_LATITUDE_INPUT_NAME;
+    input.min = '-90';
+    input.max = '90';
+    input.step = 'any';
+    input.value = latitude === null ? '' : String(latitude);
+    return sceneFormGroup(doc, labels, input);
+}
+
 /**
  * Build the Scene Config form-group for the body binding: a select of every
- * configured body plus a leading "not driven" option. Returned as a detached
- * element (never an HTML string — labels come from the langpack and body names
- * from the GM, and neither may reach a markup-parsing sink).
+ * configured body plus a leading "not driven" option.
  */
 export function buildCelestialBodyField(
     doc: Document,
@@ -290,14 +336,6 @@ export function buildCelestialBodyField(
     bodies: CelestialBodies,
     selected: string | null,
 ): HTMLElement {
-    const group = doc.createElement('div');
-    group.className = 'form-group';
-
-    const label = doc.createElement('label');
-    label.textContent = labels.label;
-
-    const fields = doc.createElement('div');
-    fields.className = 'form-fields';
     const select = doc.createElement('select');
     select.name = CELESTIAL_BODY_INPUT_NAME;
     const options: Array<[string, string]> = [['', labels.none], ...Object.entries(bodies).map(([key, body]): [string, string] => [key, body.name])];
@@ -309,14 +347,7 @@ export function buildCelestialBodyField(
     }
     // A binding to a body that no longer exists falls back to "not driven".
     select.value = selected !== null && selected in bodies ? selected : '';
-    fields.appendChild(select);
-
-    const hint = doc.createElement('p');
-    hint.className = 'hint';
-    hint.textContent = labels.hint;
-
-    group.append(label, fields, hint);
-    return group;
+    return sceneFormGroup(doc, labels, select);
 }
 
 /* -------------------------------------------- */
