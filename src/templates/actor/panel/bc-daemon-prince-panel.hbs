@@ -1,115 +1,90 @@
 {{!--
-    Black Crusade Daemon Prince panel (#182).
+    Black Crusade apotheosis panel (#182 — BC Core p267).
 
-    Surfaces apotheosis status and the boost granted on ascension, plus
-    the "Ascend" affordance for a still-mortal champion. The button is
-    enabled only when both RAW thresholds (Infamy ≥ 100, Corruption ≥ 70)
-    are satisfied; the action handler defends in depth with the pure
-    resolver before mutating state.
+    At 100 Corruption the champion is claimed: Infamy at or above the
+    GM-set threshold (world setting) makes them a Daemon Prince, anything
+    less a Chaos Spawn. Either way the character leaves play; the book
+    prints no stats for either fate. The panel is the eligibility readout
+    plus the outcome text, and the "Resolve Apotheosis" affordance once the
+    claim is due.
 
-    Context (built by the BC character sheet — wiring lives outside the
-    file list this issue is allowed to edit; the panel reads exactly the
-    fields documented below):
+    Context (built by the BC character sheet):
 
       daemonPrincePanel: {
-        ascended:            boolean                        // isAscended(sys.daemonPrinceAscension)
-        ascendedAt:          number | null                  // sys.daemonPrinceAscension.ascendedAt
+        ascended:            boolean       // a claim record exists
+        ascendedAt:          number | null // world time of the claim
         alignmentAtAscension: 'khorne'|'slaanesh'|'nurgle'|'tzeentch'|'unaligned'
-        infamy:              number                         // sys.infamy
-        corruption:          number                         // sys.corruption
-        infamyThreshold:     number                         // 100 — engine constant
-        corruptionThreshold: number                         // 70  — engine constant
-        canAscend:           boolean                        // both thresholds met
-        boost: {                                            // only present when ascended
-          strengthBonusMultiplier: number
-          toughnessBonusMultiplier: number
-          bonusWounds: number
-          fearRating: number
-          immuneToConditions: string[]
-        } | null
+        infamy:              number        // sys.infamy
+        corruption:          number        // sys.corruption
+        infamyThreshold:     number        // GM setting
+        corruptionThreshold: number        // 100 — engine constant
+        canAscend:           boolean       // Corruption reached, not yet claimed
+        isDaemonPrince:      boolean       // the recorded (or projected) fate
       }
 
     Rendered only for BC actors; the include in tab-overview.hbs gates on
     `isBC`.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-daemon-prince-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson-l40" icon="fa-crown" label=(localize "WH40K.BC.DaemonPrince.PanelHeader") rootAttrs=(safeAttrs "data-bc-ascended" daemonPrincePanel.ascended "data-bc-alignment" daemonPrincePanel.alignmentAtAscension) hasRightSlot=true}}
-    {{!-- Header right slot: ascension status --}}
+    {{!-- Header right slot: claim status --}}
     {{#*inline "rightSlot"}}
-        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] {{#if daemonPrincePanel.ascended}}bc:tw-text-crimson-l40tw-font-bold{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}">
+        <span class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] {{#if daemonPrincePanel.ascended}}bc:tw-text-crimson-l40 tw-font-bold{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}">
             {{#if daemonPrincePanel.ascended}}
-                {{localize "WH40K.BC.DaemonPrince.Status.Ascended"}}
+                {{localize "WH40K.BC.DaemonPrince.Status.Resolved"}}
             {{else}}
-                {{localize "WH40K.BC.DaemonPrince.Status.NotAscended"}}
+                {{localize "WH40K.BC.DaemonPrince.Status.Pending"}}
             {{/if}}
         </span>
     {{/inline}}
 
     {{#if daemonPrincePanel.ascended}}
-        {{!-- Ascended: show record + applied boost --}}
+        {{!-- Claimed: show the record + the fate met --}}
         <div class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-text-[0.78rem]">
             <span class="tw-text-[color:var(--wh40k-text-muted)]">
-                {{localize "WH40K.BC.DaemonPrince.Status.AscendedAt" when=daemonPrincePanel.ascendedAt}}
+                {{localize "WH40K.BC.DaemonPrince.Status.ResolvedAt" when=daemonPrincePanel.ascendedAt}}
             </span>
             <span class="tw-text-[color:var(--wh40k-text-muted)]">
                 {{localize "WH40K.BC.DaemonPrince.Status.AlignmentAt" alignment=daemonPrincePanel.alignmentAtAscension}}
             </span>
         </div>
-
-        <div data-wh40k-hook="bc-dp-boost" class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
-            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.DaemonPrince.Chat.BoostHeader"}}
-            <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]">
-                <li class="tw-flex tw-justify-between tw-gap-2">
-                    <span>{{localize "WH40K.BC.DaemonPrince.Boost.UnnaturalStrength" multiplier=daemonPrincePanel.boost.strengthBonusMultiplier}}</span>
-                </li>
-                <li class="tw-flex tw-justify-between tw-gap-2">
-                    <span>{{localize "WH40K.BC.DaemonPrince.Boost.UnnaturalToughness" multiplier=daemonPrincePanel.boost.toughnessBonusMultiplier}}</span>
-                </li>
-                <li class="tw-flex tw-justify-between tw-gap-2">
-                    <span>{{localize "WH40K.BC.DaemonPrince.Boost.BonusWounds" wounds=daemonPrincePanel.boost.bonusWounds}}</span>
-                </li>
-                <li class="tw-flex tw-justify-between tw-gap-2">
-                    <span>{{localize "WH40K.BC.DaemonPrince.Boost.FearRating" rating=daemonPrincePanel.boost.fearRating}}</span>
-                </li>
-                <li class="tw-flex tw-justify-between tw-gap-2">
-                    <span>{{localize "WH40K.BC.DaemonPrince.Boost.DaemonicTrait"}}</span>
-                </li>
-                <li class="tw-flex tw-flex-col tw-gap-0.5">
-                    <span class="tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em]">
-                        {{localize "WH40K.BC.DaemonPrince.Boost.ImmuneToConditions"}}
-                    </span>
-                    <span class="tw-text-[0.78rem]">
-                        {{#each daemonPrincePanel.boost.immuneToConditions}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
-                    </span>
-                </li>
-            </ul>
-        </div>
     {{else}}
-        {{!-- Not ascended: show thresholds + Ascend button --}}
+        {{!-- Not yet claimed: the requirement and the champion's standing --}}
         <div data-wh40k-hook="bc-dp-thresholds" class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-text-[0.78rem]">
             <span class="tw-text-[color:var(--wh40k-text-muted)]">
-                {{localize "WH40K.BC.DaemonPrince.Status.Thresholds" infamy=daemonPrincePanel.infamyThreshold corruption=daemonPrincePanel.corruptionThreshold}}
+                {{localize "WH40K.BC.DaemonPrince.Status.Requirements" infamy=daemonPrincePanel.infamyThreshold corruption=daemonPrincePanel.corruptionThreshold}}
             </span>
-            <div class="tw-flex tw-justify-between tw-gap-2">
-                <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Advancement.Infamy"}}</span>
-                <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">{{daemonPrincePanel.infamy}} / {{daemonPrincePanel.infamyThreshold}}</span>
-            </div>
             <div class="tw-flex tw-justify-between tw-gap-2">
                 <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Resource.Corruption"}}</span>
                 <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">{{daemonPrincePanel.corruption}} / {{daemonPrincePanel.corruptionThreshold}}</span>
             </div>
+            <div class="tw-flex tw-justify-between tw-gap-2">
+                <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Advancement.Infamy"}}</span>
+                <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">{{daemonPrincePanel.infamy}} / {{daemonPrincePanel.infamyThreshold}}</span>
+            </div>
+            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.DaemonPrince.Outcome.Projected"}}
         </div>
+    {{/if}}
 
+    <p data-wh40k-hook="bc-dp-outcome" class="tw-m-0 tw-px-2 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]">
+        {{#if daemonPrincePanel.isDaemonPrince}}
+            {{localize "WH40K.BC.DaemonPrince.Outcome.DaemonPrince"}}
+        {{else}}
+            {{localize "WH40K.BC.DaemonPrince.Outcome.ChaosSpawn"}}
+        {{/if}}
+    </p>
+
+    {{#unless daemonPrincePanel.ascended}}
         <button type="button"
-                data-wh40k-hook="bc-dp-ascend-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1.5 tw-bg-transparent tw-border tw-border-solid tw-rounded tw-px-2 tw-py-1 tw-text-[0.78rem] tw-uppercase tw-tracking-[0.05em] {{#if daemonPrincePanel.canAscend}}tw-cursor-pointer tw-border-crimson tw-text-crimson-l40hover:tw-bg-crimson hover:tw-text-white{{else}}tw-cursor-not-allowed tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
+                data-wh40k-hook="bc-dp-ascend-btn" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1.5 tw-bg-transparent tw-border tw-border-solid tw-rounded tw-px-2 tw-py-1 tw-text-[0.78rem] tw-uppercase tw-tracking-[0.05em] {{#if daemonPrincePanel.canAscend}}tw-cursor-pointer tw-border-crimson tw-text-crimson-l40 hover:tw-bg-crimson hover:tw-text-white{{else}}tw-cursor-not-allowed tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
                 data-action="bcAscend"
                 {{#unless daemonPrincePanel.canAscend}}disabled{{/unless}}
-                title="{{#if daemonPrincePanel.canAscend}}{{localize 'WH40K.BC.DaemonPrince.AscendButton.Label'}}{{else}}{{localize 'WH40K.BC.DaemonPrince.AscendButton.Disabled'}}{{/if}}">
+                title="{{#if daemonPrincePanel.canAscend}}{{localize 'WH40K.BC.DaemonPrince.AscendButton.Label'}}{{else}}{{localize 'WH40K.BC.DaemonPrince.AscendButton.Disabled' corruption=daemonPrincePanel.corruptionThreshold}}{{/if}}">
             <i class="fas fa-bolt"></i>
             {{#if daemonPrincePanel.canAscend}}
                 {{localize "WH40K.BC.DaemonPrince.AscendButton.Label"}}
             {{else}}
-                {{localize "WH40K.BC.DaemonPrince.AscendButton.Disabled"}}
+                {{localize "WH40K.BC.DaemonPrince.AscendButton.Disabled" corruption=daemonPrincePanel.corruptionThreshold}}
             {{/if}}
         </button>
-    {{/if}}
+    {{/unless}}
 {{/systems/wh40k-rpg/templates/actor/partial/system-card.hbs}}

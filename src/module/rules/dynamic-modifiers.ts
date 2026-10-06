@@ -107,6 +107,12 @@ export interface DynamicModifierSituation {
      * indistinguishable from a working hook aimed at the wrong enemy.
      */
     targetTagAxes?: TargetTagsByAxis | undefined;
+    /**
+     * The targeted actor's document UUID (for `condition: vsActor`) — a hook
+     * aimed at one specific foe rather than a kind of creature, e.g. the Hatred a
+     * Fanatic's "Death to All Who Oppose Me!" confers against the current foe.
+     */
+    targetActorUuid?: string | undefined;
     /** States on the acting actor — `fatigued`, `frenzied`, `aiming`, `sustained`, `braced` (for `whileState`). */
     states?: readonly string[];
     /** Ids of per-attack effects the attacker activated this roll (for `condition: activated`; e.g. `eyeOfVengeance`). */
@@ -229,6 +235,10 @@ function whenMatches(trigger: DynamicTrigger, situation: DynamicModifierSituatio
     if (w === 'onCharge') return situation.isCharge === true;
     if (w === 'onParry') return situation.isParry === true;
     if (w === 'onAction') return trigger.conditionValue === '' || situation.action === trigger.conditionValue;
+    // `onDamaged` never fires on the roll in progress: suffering damage ARMS the
+    // hook on the actor ({@link armOnDamagedHooks}) and the bearer's next test
+    // spends it ({@link consumeArmedTestHooks}).
+    if (w === 'onDamaged') return false;
     // The only remaining `when` member is `atRangeBand`.
     return situation.rangeBand === normalizeTag(trigger.conditionValue);
 }
@@ -301,6 +311,9 @@ function conditionMatches(trigger: DynamicTrigger, situation: DynamicModifierSit
     // alternative was to name-match the talent in `src/` (Direction #7's offender).
     // One authored hook now serves every pick, including GM-invented ones.
     if (c === 'vsSpecialization') return specialisationMatchesTarget(itemSpecialization, situation);
+    // One specific foe, by document UUID — the Hatred a Fanatic's Fate spend
+    // confers against the current foe (see `rules/fanatic.ts`).
+    if (c === 'vsActor') return value !== '' && situation.targetActorUuid === value;
     // The owning item's specialization ('Melee' / 'Ranged') must match the attack mode —
     // e.g. Deathdealer (Melee) fires only on melee attacks (Ranged only on ranged).
     if (c === 'specializationMode') {
@@ -511,4 +524,167 @@ export function collectGrantedQualities(items: Iterable<DynamicModifierItemLike>
     return collectGrantedEffects(items, situation)
         .filter((grant) => grant.kind === 'quality')
         .map(({ name, level, source }) => ({ name, level, source }));
+}
+
+/* -------------------------------------------- */
+/*  Armed test hooks (`when: onDamaged`)        */
+/* -------------------------------------------- */
+
+/** Actor flag (under the system scope) holding the hooks armed by `onDamaged`. */
+export const ARMED_TEST_HOOKS_FLAG = 'armedTestHooks';
+
+/**
+ * A `target: 'test'` hook armed on an actor by an `onDamaged` trigger and waiting
+ * for the bearer's next test(s) — e.g. Penitent's Cleansing Pain: +10 to the first
+ * test made before the end of the bearer's next turn after suffering damage.
+ * Persisted on the actor under {@link ARMED_TEST_HOOKS_FLAG}.
+ */
+interface ArmedTestHook {
+    /** Display label (the hook's `label`, else the owning item's name). */
+    label: string;
+    /** Provenance — the owning item's name. */
+    source: string;
+    /** The resolved magnitude added to each test the hook applies to. */
+    value: number;
+    /** Tests left before the hook is spent; `null` = no test-count limit. */
+    usesRemaining: number | null;
+    /** Last combat round the hook still applies in; `null` = no round limit. */
+    expiresRound: number | null;
+    /** The bearer's own turn-ends left before the hook lapses (`turns` duration); `null` = no turn limit. */
+    turnsRemaining: number | null;
+}
+
+/**
+ * Arm every `when: 'onDamaged'`, `target: 'test'` hook the bearer's items declare,
+ * when the bearer has just suffered `damageSuffered` (after Toughness and armour).
+ * Below 1 damage nothing arms. Each hook's magnitude is resolved against `ctx` at
+ * arming time; `duration.uses` (0 = unlimited) bounds how many tests it applies
+ * to; a `rounds` duration bounds it to `currentRound + duration.value`, and a
+ * `turns` duration to the end of the bearer's `duration.value`-th own turn — the
+ * turn in progress does not count when the bearer is hurt during it, since "his
+ * next turn" is the following one. Outside combat (`currentRound === null`)
+ * neither bound applies. Pure.
+ */
+export function armOnDamagedHooks(
+    items: Iterable<DynamicModifierItemLike>,
+    ctx: DynamicModifierContext,
+    damageSuffered: number,
+    currentRound: number | null,
+    duringOwnTurn = false,
+): ArmedTestHook[] {
+    if (!(damageSuffered >= 1)) return [];
+    const armed: ArmedTestHook[] = [];
+    for (const item of items) {
+        for (const hook of item.system.modifiers?.dynamicModifiers ?? []) {
+            if (hook.when !== 'onDamaged' || hook.target !== 'test') continue;
+            const uses = hook.duration.uses;
+            const inCombat = currentRound !== null;
+            const roundBound = hook.duration.unit === 'rounds' && inCombat;
+            const turnBound = hook.duration.unit === 'turns' && inCombat;
+            armed.push({
+                label: hook.label !== '' ? hook.label : item.name ?? '',
+                source: item.name ?? '',
+                value: resolveDynamicMagnitude(hook, ctx),
+                usesRemaining: uses > 0 ? uses : null,
+                expiresRound: roundBound ? currentRound + hook.duration.value : null,
+                turnsRemaining: turnBound ? hook.duration.value + (duringOwnTurn ? 1 : 0) : null,
+            });
+        }
+    }
+    return armed;
+}
+
+/**
+ * Count one of the bearer's own turns ending: every turn-bound hook loses a turn,
+ * and one with none left lapses. Hooks without a turn bound are untouched. Pure.
+ */
+export function endBearerTurnForArmedHooks(armed: readonly ArmedTestHook[]): ArmedTestHook[] {
+    const remaining: ArmedTestHook[] = [];
+    for (const hook of armed) {
+        if (hook.turnsRemaining === null) {
+            remaining.push(hook);
+            continue;
+        }
+        const turnsRemaining = hook.turnsRemaining - 1;
+        if (turnsRemaining > 0) remaining.push({ ...hook, turnsRemaining });
+    }
+    return remaining;
+}
+
+/** Identity of an armed hook: the same hook armed twice refreshes rather than stacks. */
+function armedKey(hook: ArmedTestHook): string {
+    return `${hook.source}|${hook.label}`;
+}
+
+/**
+ * Merge freshly armed hooks into the actor's existing ones. Suffering damage again
+ * while a hook is still armed refreshes it (new uses, new expiry) rather than
+ * stacking a second copy. Pure.
+ */
+export function mergeArmedTestHooks(existing: readonly ArmedTestHook[], fresh: readonly ArmedTestHook[]): ArmedTestHook[] {
+    const freshKeys = new Set(fresh.map(armedKey));
+    return [...existing.filter((hook) => !freshKeys.has(armedKey(hook))), ...fresh];
+}
+
+/** Result of {@link consumeArmedTestHooks}. */
+interface ArmedTestConsumption {
+    /** Labelled modifiers to add to the test, summed per label. */
+    modifiers: Record<string, number>;
+    /** The hooks still armed after this test (expired and spent ones dropped). */
+    remaining: ArmedTestHook[];
+}
+
+/**
+ * Spend the actor's armed test hooks on one test: expired hooks (combat round past
+ * `expiresRound`) are dropped unapplied, every live hook adds its value and loses
+ * one use, and a hook out of uses is dropped. Pure — the caller persists
+ * `remaining` and adds `modifiers` to the roll.
+ */
+export function consumeArmedTestHooks(armed: readonly ArmedTestHook[], currentRound: number | null): ArmedTestConsumption {
+    const modifiers: Record<string, number> = {};
+    const remaining: ArmedTestHook[] = [];
+    for (const hook of armed) {
+        const expired = currentRound !== null && hook.expiresRound !== null && currentRound > hook.expiresRound;
+        if (expired) continue;
+        modifiers[hook.label] = (modifiers[hook.label] ?? 0) + hook.value;
+        if (hook.usesRemaining === null) {
+            remaining.push(hook);
+            continue;
+        }
+        const usesRemaining = hook.usesRemaining - 1;
+        if (usesRemaining > 0) remaining.push({ ...hook, usesRemaining });
+    }
+    return { modifiers, remaining };
+}
+
+/** Whether a value read off the actor flag is a well-formed {@link ArmedTestHook}. */
+function isArmedTestHook(value: object): value is ArmedTestHook {
+    if (!('label' in value && 'source' in value && 'value' in value && 'usesRemaining' in value && 'expiresRound' in value && 'turnsRemaining' in value))
+        return false;
+    const { label, source, value: magnitude, usesRemaining, expiresRound, turnsRemaining } = value;
+    return (
+        typeof label === 'string' &&
+        typeof source === 'string' &&
+        typeof magnitude === 'number' &&
+        Number.isFinite(magnitude) &&
+        isNullableFiniteNumber(usesRemaining) &&
+        isNullableFiniteNumber(expiresRound) &&
+        isNullableFiniteNumber(turnsRemaining)
+    );
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: a field read off the untyped actor flag; this IS the narrowing type guard
+function isNullableFiniteNumber(value: unknown): value is number | null {
+    return value === null || (typeof value === 'number' && Number.isFinite(value));
+}
+
+/**
+ * Read the armed hooks off the actor flag's raw value, dropping anything
+ * malformed (a hand-edited or legacy flag must not break every test the actor
+ * makes). Pure.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: the value Foundry's Actor.getFlag returns for the armed-hooks flag is untyped; it is validated entry-by-entry here
+export function readArmedTestHooks(raw: unknown): ArmedTestHook[] {
+    if (!Array.isArray(raw)) return [];
+    return raw.filter((entry): entry is ArmedTestHook => typeof entry === 'object' && entry !== null && isArmedTestHook(entry));
 }

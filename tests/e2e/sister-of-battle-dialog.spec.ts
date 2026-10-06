@@ -8,13 +8,12 @@ import { expect, test } from './lib/test';
  * (GitHub #134).
  *
  * Constructs the dialog directly via its deployed module URL — no
- * actor or item is required for the surface, since the talent list
- * comes from `SISTER_OF_BATTLE_TALENTS` in
- * `src/module/rules/sister-of-battle.ts`.
+ * actor or item is required for the surface, since the grant rows are
+ * read from the Sister of Battle elite advance compendium document.
  *
  * The spec asserts:
  *   1. The dialog renders into a real HTMLElement.
- *   2. Three talent grant rows (`[data-talent]`) are present.
+ *   2. The advance document's grant rows (`[data-talent]`) are present.
  *   3. An "Apply" action button (`[data-action="apply"]`) is present.
  *   4. A "Cancel" action button (`[data-action="cancel"]`) is present.
  *
@@ -22,7 +21,7 @@ import { expect, test } from './lib/test';
  */
 
 test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
-    test('opens and renders three talent grants plus Apply / Cancel', async ({ page }) => {
+    test('opens and renders the advance grants plus Apply / Cancel', async ({ page }) => {
         await joinOrSkip(page);
 
         const result = await page.evaluate(async () => {
@@ -59,7 +58,7 @@ test.describe.serial('SisterOfBattleDialog (Tier B)', () => {
 
         expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'dialog did not render').toBe(true);
-        expect(result.talentRowCount, 'expected 3 talent rows').toBe(3);
+        expect(result.talentRowCount, 'expected the advance document grant rows').toBeGreaterThan(0);
         expect(result.hasApplyButton, 'expected Apply action button').toBe(true);
         expect(result.hasCancelButton, 'expected Cancel action button').toBe(true);
 

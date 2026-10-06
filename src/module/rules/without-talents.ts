@@ -14,29 +14,29 @@
  * Talents covered:
  *   1. Field Vivisection   — Medicae replaces WS/BS on Called Shot
  *                            against studied xenos.
- *   2. Hotshot Pilot       — Trade 1 Fatigue for +AgB DoS / -AgB DoF.
- *   3. Hull Down           — Vehicle Size counts as 1 lower during
- *                            Movement actions (attack mods + cover).
- *   4. Leaping Dodge       — Dodge skill replaces Agility for Spray
+ *   2. Leaping Dodge       — Dodge skill replaces Agility for Spray
  *                            avoidance (composes with #103).
- *   5. Push the Limit      — +20 Operate once/round; 4+ DoF triggers a
+ *   3. Push the Limit      — +20 Operate once/round; 4+ DoF triggers a
  *                            motive-systems critical hit.
+ *
+ * Hotshot Pilot and Hull Down have no resolver here: neither had a caller
+ * in the roll flow, and their printed rules (a post-roll Fatigue trade on
+ * degrees; a Size reduction lasting until the start of the next turn) live
+ * on their compendium documents.
  */
 
 import { nonNegInt } from './_num.ts';
 import { resolveSprayAvoidance, type SprayAvoidanceResult } from './spray-avoidance.ts';
-import { FIELD_VIVISECTION, HOTSHOT_PILOT, HULL_DOWN, LEAPING_DODGE, PUSH_THE_LIMIT } from './xenos-features.ts';
+import { FIELD_VIVISECTION, LEAPING_DODGE, PUSH_THE_LIMIT } from './xenos-features.ts';
 
 /** Without-talent constants regrouped for namespace clarity. */
 export const WITHOUT_TALENTS = {
     fieldVivisection: FIELD_VIVISECTION,
-    hotshotPilot: HOTSHOT_PILOT,
-    hullDown: HULL_DOWN,
     leapingDodge: LEAPING_DODGE,
     pushTheLimit: PUSH_THE_LIMIT,
 } as const;
 
-/** Stable identifiers for the five Without novel-mechanic talents. */
+/** Stable identifiers for the Without novel-mechanic talents. */
 export type WithoutTalentId = keyof typeof WITHOUT_TALENTS;
 
 // ---------------------------------------------------------------------------
@@ -95,105 +95,7 @@ export function resolveFieldVivisection(input: FieldVivisectionInput): FieldVivi
 }
 
 // ---------------------------------------------------------------------------
-// 2. Hotshot Pilot — without.md p. 62 (#101)
-// ---------------------------------------------------------------------------
-
-export interface HotshotPilotInput {
-    /** Did the Operate / Survival test succeed? */
-    success: boolean;
-    /** Degrees of success on the test (≥0 when `success === true`). */
-    degreesOfSuccess: number;
-    /** Degrees of failure on the test (≥0 when `success === false`). */
-    degreesOfFailure: number;
-    /** Character's Agility bonus (tens digit of Ag, post-modifiers). */
-    agilityBonus: number;
-    /** Whether the player elected to spend the Fatigue. */
-    spendFatigue: boolean;
-}
-
-export interface HotshotPilotResult {
-    /** Fatigue levels the character takes (0 when the trade is declined). */
-    fatigueGained: number;
-    /** DoS after the talent applies (success path; 0 on failure). */
-    adjustedDegreesOfSuccess: number;
-    /** DoF after the talent applies (failure path; clamped to min 1). */
-    adjustedDegreesOfFailure: number;
-    /** True when the talent actually changed the outcome. */
-    applied: boolean;
-}
-
-/**
- * Apply Hotshot Pilot's Fatigue-for-degrees trade to an Operate /
- * Survival result. On success the character may add +AgB DoS; on
- * failure they may reduce DoF by AgB (minimum 1). The player has to
- * elect the trade — the resolver returns the unaltered numbers when
- * `spendFatigue` is false or AgB ≤ 0.
- */
-export function resolveHotshotPilot(input: HotshotPilotInput): HotshotPilotResult {
-    const agB = nonNegInt(input.agilityBonus);
-    const baseDos = nonNegInt(input.degreesOfSuccess);
-    const baseDof = nonNegInt(input.degreesOfFailure);
-    if (!input.spendFatigue || agB <= 0) {
-        return {
-            fatigueGained: 0,
-            adjustedDegreesOfSuccess: baseDos,
-            adjustedDegreesOfFailure: baseDof,
-            applied: false,
-        };
-    }
-    if (input.success) {
-        return {
-            fatigueGained: HOTSHOT_PILOT.fatigueCost,
-            adjustedDegreesOfSuccess: baseDos + agB,
-            adjustedDegreesOfFailure: 0,
-            applied: true,
-        };
-    }
-    return {
-        fatigueGained: HOTSHOT_PILOT.fatigueCost,
-        adjustedDegreesOfSuccess: 0,
-        adjustedDegreesOfFailure: Math.max(1, baseDof - agB),
-        applied: true,
-    };
-}
-
-// ---------------------------------------------------------------------------
-// 3. Hull Down — without.md p. 62 (#101)
-// ---------------------------------------------------------------------------
-
-export interface HullDownInput {
-    /** Vehicle / steed's RAW Size trait. */
-    baseSize: number;
-    /** True when the character is taking a Vehicle action with the Movement subtype. */
-    duringMovementAction: boolean;
-}
-
-export interface HullDownResult {
-    /** Size value the engine should use for attack-modifier and cover math. */
-    effectiveSize: number;
-    /** True when the talent shaved a tier off. */
-    applied: boolean;
-}
-
-/**
- * Resolve Hull Down's "Size counts as one lower" rider. Only fires
- * during Vehicle combat actions with the Movement subtype; in any
- * other timing window the base Size is returned untouched. Size never
- * drops below 1 — a Massive frame is still trackable, just narrower.
- */
-export function resolveHullDownSize(input: HullDownInput): HullDownResult {
-    const base = Math.max(1, Math.trunc(input.baseSize));
-    if (!input.duringMovementAction) {
-        return { effectiveSize: base, applied: false };
-    }
-    return {
-        effectiveSize: Math.max(1, base - HULL_DOWN.sizeReduction),
-        applied: true,
-    };
-}
-
-// ---------------------------------------------------------------------------
-// 4. Leaping Dodge — composes with #103 spray-avoidance (#101)
+// 2. Leaping Dodge — composes with #103 spray-avoidance (#101)
 // ---------------------------------------------------------------------------
 
 export interface LeapingDodgeInput {
@@ -222,7 +124,7 @@ export function resolveLeapingDodge(input: LeapingDodgeInput): SprayAvoidanceRes
 }
 
 // ---------------------------------------------------------------------------
-// 5. Push the Limit — without.md p. 62 (#101)
+// 3. Push the Limit — without.md p. 62 (#101)
 // ---------------------------------------------------------------------------
 
 export interface PushTheLimitInput {

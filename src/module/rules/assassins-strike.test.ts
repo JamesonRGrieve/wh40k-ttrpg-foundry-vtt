@@ -1,32 +1,50 @@
 /**
- * Pinning tests for the Assassin's Strike errata constants and the
+ * Pinning tests for the Assassin's Strike test lookup and the
  * `hasAssassinsStrike` predicate (#149 — DH2 errata L75).
  *
- *  - The test parameters (Challenging difficulty, Acrobatics skill,
- *    +0 modifier) must not drift; the chat-card dispatch reads them
- *    verbatim and the errata wording locks them in place.
- *  - The predicate matches the talent by its stable `system.identifier`
+ *  - The test (skill + modifier) is read from the owned talent document's
+ *    `system.rollConfig`, never from a constant in `src/`.
+ *  - The talent is matched by its stable `system.identifier`
  *    ('assassinStrike'), not its display name.
  */
 
 import { describe, expect, it } from 'vitest';
-import { ASSASSINS_STRIKE_TEST, hasAssassinsStrike } from './assassins-strike.ts';
+import { assassinsStrikeTest, hasAssassinsStrike } from './assassins-strike.ts';
 
-/** A minimal actor exposing an `items` iterable of `{ type, system.identifier }`. */
-function actorWithItems(items: { type?: string; system?: { identifier?: string } }[]): {
-    items: Iterable<{ type?: string; system?: { identifier?: string } }>;
-} {
+interface StubItem {
+    type?: string;
+    system?: { identifier?: string; rollConfig?: { skill?: string; modifier?: number } };
+}
+
+/** A minimal actor exposing an `items` iterable of owned-item stubs. */
+function actorWithItems(items: StubItem[]): { items: Iterable<StubItem> } {
     return { items };
 }
 
-describe('ASSASSINS_STRIKE_TEST constants (#149 — errata L75)', () => {
-    it('pins the test difficulty to Challenging (+0)', () => {
-        expect(ASSASSINS_STRIKE_TEST.difficulty).toBe('challenging');
-        expect(ASSASSINS_STRIKE_TEST.modifier).toBe(0);
+const assassinTalent = (rollConfig: { skill?: string; modifier?: number }): StubItem => ({
+    type: 'talent',
+    system: { identifier: 'assassinStrike', rollConfig },
+});
+
+describe('assassinsStrikeTest (#149)', () => {
+    it("reads the skill and modifier from the talent document's rollConfig", () => {
+        const actor = actorWithItems([assassinTalent({ skill: 'acrobatics', modifier: 0 })]);
+        expect(assassinsStrikeTest(actor)).toEqual({ skill: 'acrobatics', modifier: 0 });
     });
 
-    it('pins the skill to Acrobatics', () => {
-        expect(ASSASSINS_STRIKE_TEST.skill).toBe('acrobatics');
+    it('carries whatever modifier the document authors', () => {
+        const actor = actorWithItems([assassinTalent({ skill: 'acrobatics', modifier: -10 })]);
+        expect(assassinsStrikeTest(actor)).toEqual({ skill: 'acrobatics', modifier: -10 });
+    });
+
+    it('returns null when the talent document carries no test skill', () => {
+        const actor = actorWithItems([assassinTalent({ skill: '' })]);
+        expect(assassinsStrikeTest(actor)).toBeNull();
+    });
+
+    it('returns null for an actor without the talent', () => {
+        expect(assassinsStrikeTest(actorWithItems([]))).toBeNull();
+        expect(assassinsStrikeTest(null)).toBeNull();
     });
 });
 
@@ -41,12 +59,11 @@ describe('hasAssassinsStrike predicate (#149)', () => {
     });
 
     it('recognises the talent by its stable system.identifier', () => {
-        const actor = actorWithItems([{ type: 'talent', system: { identifier: 'assassinStrike' } }]);
-        expect(hasAssassinsStrike(actor)).toBe(true);
+        expect(hasAssassinsStrike(actorWithItems([assassinTalent({ skill: 'acrobatics', modifier: 0 })]))).toBe(true);
     });
 
     it('ignores a non-talent item that happens to share the identifier', () => {
-        const actor = actorWithItems([{ type: 'trait', system: { identifier: 'assassinStrike' } }]);
+        const actor = actorWithItems([{ type: 'trait', system: { identifier: 'assassinStrike', rollConfig: { skill: 'acrobatics' } } }]);
         expect(hasAssassinsStrike(actor)).toBe(false);
     });
 

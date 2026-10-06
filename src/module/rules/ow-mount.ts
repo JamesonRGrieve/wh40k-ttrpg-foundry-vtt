@@ -6,9 +6,8 @@
  * Pure rules / math layer. Per Direction #7 the per-mount profile
  * (characteristics, full trait list, breed-specific advances) lives in
  * compendium documents; this module bakes in only the four RAW *mounted
- * special actions* and the small set of mechanically-impactful mount
- * traits that the action resolver needs to consult, since those are
- * engine primitives rather than content.
+ * special actions* the action resolver dispatches, since those are engine
+ * primitives rather than content.
  *
  * The engine is RNG-free and actor-decoupled; effect text and display
  * strings come from i18n at the UI layer.
@@ -19,25 +18,11 @@
 /* -------------------------------------------------------------------- */
 
 /**
- * Mechanically-impactful mount traits enumerated here. Cosmetic / pure
- * fluff traits (e.g. breed-flavour entries) live in the compendium and
- * never reach this engine.
+ * The mount traits Hammer of the Emperor prints (p137). A rider's cached
+ * mount link records these ids so the sheet can badge them; none of them
+ * modifies the rider's Weapon Skill, so no trait feeds an attack modifier.
  */
-export type MountTraitId = 'quadruped' | 'sure-footed' | 'steadfast' | 'unnatural-speed' | 'fearless' | 'brutal-charge';
-
-/**
- * A single mount-trait definition. `modifier` is the headline numeric
- * delta the trait contributes when its preconditions are met; the
- * combination logic (which traits apply when) lives in
- * `applyMountedAttackModifier` rather than on the trait itself, because
- * a trait may stack only in certain situations (e.g. Brutal Charge
- * triggers only on a Charge action).
- */
-export interface MountTrait {
-    readonly id: MountTraitId;
-    readonly description: string;
-    readonly modifier?: number;
-}
+export type MountTraitId = 'bred-for-war' | 'enduring' | 'irritable' | 'loyal' | 'paralytic-venom' | 'placid' | 'skittish' | 'terrain-master' | 'wiry';
 
 /* -------------------------------------------------------------------- */
 /*  Mounted special actions                                             */
@@ -100,69 +85,4 @@ export function getMountedAction(id: MountedActionId): MountedAction {
         throw new Error(`Unknown mounted action: ${id}`);
     }
     return found;
-}
-
-/* -------------------------------------------------------------------- */
-/*  Mounted attack modifier                                             */
-/* -------------------------------------------------------------------- */
-
-/**
- * Inputs to `applyMountedAttackModifier`. `roughTerrain` is optional
- * because most encounters are not flagged as rough terrain; when
- * omitted Sure-Footed contributes nothing.
- */
-export interface MountedAttackContext {
-    readonly riderWeaponSkill: number;
-    readonly mountTraits: ReadonlyArray<MountTraitId>;
-    readonly charging: boolean;
-    readonly roughTerrain?: boolean;
-}
-
-/** Result of `applyMountedAttackModifier`. */
-export interface MountedAttackModifierResult {
-    readonly modifier: number;
-    readonly reasons: string[];
-}
-
-/**
- * Combine the mounted-attack situational modifiers into a single delta
- * plus a list of i18n keys explaining the components.
- *
- * Stacking rules (Hammer of the Emperor §"MOUNT TRAITS"):
- *   - Brutal Charge: +20 WS on the turn the mount is charging.
- *   - Steadfast: +10 WS on every mounted attack.
- *   - Sure-Footed: +10 WS when the engagement is on rough terrain.
- *
- * All applicable bonuses sum; the engine never caps the total, since
- * the RAW does not cap it either. `riderWeaponSkill` is plumbed through
- * to keep the call shape compatible with future per-WS rules (e.g. a
- * cap relative to the rider's base WS) without changing the signature.
- */
-export function applyMountedAttackModifier(ctx: MountedAttackContext): MountedAttackModifierResult {
-    // `riderWeaponSkill` is part of the public context shape but
-    // currently informational; reference it so the param is not flagged
-    // as unused while preserving the signature for future RAW additions.
-    void ctx.riderWeaponSkill;
-
-    const reasons: string[] = [];
-    let modifier = 0;
-
-    const hasTrait = (id: MountTraitId): boolean => ctx.mountTraits.includes(id);
-
-    if (ctx.charging && hasTrait('brutal-charge')) {
-        modifier += 20;
-        reasons.push('WH40K.OW.Mount.Modifier.BrutalCharge');
-    }
-
-    if (hasTrait('steadfast')) {
-        modifier += 10;
-        reasons.push('WH40K.OW.Mount.Modifier.Steadfast');
-    }
-
-    if (ctx.roughTerrain === true && hasTrait('sure-footed')) {
-        modifier += 10;
-        reasons.push('WH40K.OW.Mount.Modifier.SureFooted');
-    }
-
-    return { modifier, reasons };
 }

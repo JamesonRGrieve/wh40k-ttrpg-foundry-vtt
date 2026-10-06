@@ -1,30 +1,27 @@
 /**
- * Storybook stories for the Black Crusade Daemon Prince panel (#182).
+ * Storybook stories for the Black Crusade apotheosis panel (#182 — BC Core p267).
  *
  * Two canonical states an operator needs to verify in review:
  *
- *   1. NotAscended — mortal champion, thresholds not yet met → the
- *                    Ascend button is rendered but disabled.
- *   2. Ascended    — apotheosis has fired → record + applied boost
- *                    derived from the live engine ({@link getDaemonPrinceBoost}).
+ *   1. NotAscended — mortal champion below 100 Corruption → the Resolve
+ *                    button is rendered but disabled; the projected fate
+ *                    (Chaos Spawn: Infamy under the threshold) is shown.
+ *   2. Ascended    — the claim has fired with Infamy at the threshold →
+ *                    the record and the Daemon Prince outcome text.
  *
- * Story factories pull the boost from the pure engine so the readouts
- * cannot drift away from the resolver's output (CLAUDE.md "Seeded RNG /
- * deterministic stories"). No randomness, no hand-authored multipliers.
+ * Story factories pull the eligibility and outcome from the pure engine
+ * ({@link resolveApotheosis}) so the readouts cannot drift from the resolver.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
-import {
-    DAEMON_PRINCE_CORRUPTION_THRESHOLD,
-    DAEMON_PRINCE_INFAMY_THRESHOLD,
-    getDaemonPrinceBoost,
-    type DaemonPrinceAlignment,
-    type DaemonPrinceStatBoost,
-} from '../../../module/rules/bc-daemon-prince';
+import { APOTHEOSIS_CORRUPTION, resolveApotheosis, type DaemonPrinceAlignment } from '../../../module/rules/bc-daemon-prince';
 import panelSrc from './bc-daemon-prince-panel.hbs?raw';
 
 initializeStoryHandlebars();
+
+/** The GM's Infamy threshold the stories assume (the setting's default). */
+const STORY_INFAMY_THRESHOLD = 100;
 
 interface DaemonPrincePanelCtx {
     daemonPrincePanel: {
@@ -36,7 +33,7 @@ interface DaemonPrincePanelCtx {
         infamyThreshold: number;
         corruptionThreshold: number;
         canAscend: boolean;
-        boost: DaemonPrinceStatBoost | null;
+        isDaemonPrince: boolean;
     };
 }
 
@@ -51,27 +48,24 @@ function renderPanel(ctx: DaemonPrincePanelCtx): HTMLElement {
 interface BuildArgs {
     infamy: number;
     corruption: number;
-    ascended: boolean;
-    ascendedAt?: number;
-    alignmentAtAscension?: DaemonPrinceAlignment;
+    ascendedAt: number | null;
+    alignmentAtAscension: DaemonPrinceAlignment;
 }
 
 function buildCtx(args: BuildArgs): DaemonPrincePanelCtx {
-    const ascended = args.ascended;
-    const alignment: DaemonPrinceAlignment = args.alignmentAtAscension ?? 'unaligned';
-    const boost: DaemonPrinceStatBoost | null = ascended ? getDaemonPrinceBoost({ ascendedAt: args.ascendedAt ?? 0, alignmentAtAscension: alignment }) : null;
-    const canAscend = !ascended && args.infamy >= DAEMON_PRINCE_INFAMY_THRESHOLD && args.corruption >= DAEMON_PRINCE_CORRUPTION_THRESHOLD;
+    const ascended = args.ascendedAt !== null;
+    const readout = resolveApotheosis({ corruption: args.corruption, infamy: args.infamy, infamyThreshold: STORY_INFAMY_THRESHOLD });
     return {
         daemonPrincePanel: {
             ascended,
-            ascendedAt: ascended ? args.ascendedAt ?? 0 : null,
-            alignmentAtAscension: alignment,
+            ascendedAt: args.ascendedAt,
+            alignmentAtAscension: args.alignmentAtAscension,
             infamy: args.infamy,
             corruption: args.corruption,
-            infamyThreshold: DAEMON_PRINCE_INFAMY_THRESHOLD,
-            corruptionThreshold: DAEMON_PRINCE_CORRUPTION_THRESHOLD,
-            canAscend,
-            boost,
+            infamyThreshold: STORY_INFAMY_THRESHOLD,
+            corruptionThreshold: APOTHEOSIS_CORRUPTION,
+            canAscend: !ascended && readout.claimed,
+            isDaemonPrince: readout.outcome === 'daemonPrince',
         },
     };
 }
@@ -83,13 +77,13 @@ export default meta;
 type Story = StoryObj<DaemonPrincePanelCtx>;
 
 export const NotAscended: Story = {
-    name: 'Not ascended — thresholds not met (button disabled)',
-    args: buildCtx({ infamy: 42, corruption: 31, ascended: false }),
+    name: 'Not claimed — Corruption below 100 (button disabled), spawndom projected',
+    args: buildCtx({ infamy: 42, corruption: 31, ascendedAt: null, alignmentAtAscension: 'unaligned' }),
     render: (args) => renderPanel(args),
 };
 
 export const Ascended: Story = {
-    name: 'Ascended — Tzeentch patron, applied boost rendered',
-    args: buildCtx({ infamy: 100, corruption: 70, ascended: true, ascendedAt: 12, alignmentAtAscension: 'tzeentch' }),
+    name: 'Claimed — Tzeentch patron, Daemon Prince',
+    args: buildCtx({ infamy: 100, corruption: 100, ascendedAt: 12, alignmentAtAscension: 'tzeentch' }),
     render: (args) => renderPanel(args),
 };

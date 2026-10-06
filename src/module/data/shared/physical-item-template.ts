@@ -1,5 +1,5 @@
 import { RENOWN_RANK_ORDER, type RenownRank } from '../../rules/dw-renown.ts';
-import { labelFor, type PlaceRating, placeRatingLabels } from '../../utils/config-choices.ts';
+import { availabilityDisplayLabel, type PlaceRating, placeRatingLabels } from '../../utils/config-choices.ts';
 import { inferActiveGameLine } from '../../utils/item-variant-utils.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
@@ -21,6 +21,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     declare weight: number;
     declare availability: string;
     declare availabilityByPlace: PlaceRating[];
+    declare availabilityRestriction: string;
     declare craftsmanship: string;
     declare renown: RenownRank | null;
     declare quantity: number;
@@ -86,6 +87,10 @@ export default class PhysicalItemTemplate extends SystemDataModel {
                 }),
                 { required: false, initial: [] },
             ),
+            // The restriction words a book prints in place of a rarity ("Special",
+            // "Inquisition only"); blank when it prints a rarity. When set, the item
+            // shows these words and its `availability` is the unprinted default.
+            availabilityRestriction: new fields.StringField({ required: true, blank: true, initial: '' }),
             craftsmanship: new fields.StringField({
                 required: true,
                 initial: 'common',
@@ -350,13 +355,14 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     /* -------------------------------------------- */
 
     /**
-     * Get localized availability label.
+     * Get the availability label: the printed restriction words when the item
+     * carries them, else the localized rarity.
      * @type {string}
      */
     get availabilityLabel(): string {
         // Read the rating's own label key: capitalising the id broke hyphenated
         // ratings (`very-rare` → `WH40K.Availability.Very-rare`, an unknown key).
-        return labelFor(CONFIG.wh40k.availabilities, this.availability);
+        return availabilityDisplayLabel(CONFIG.wh40k.availabilities, this.availability, this.availabilityRestriction);
     }
 
     /**

@@ -9,15 +9,14 @@ import { expect, test } from './lib/test';
  *
  * Renders the Handlebars partial into the deployed Foundry world via
  * the `templates/actor/panel/bc-supplements-panel.hbs` URL, asserts the
- * core controls (daemon engine rating input + Quick & the Dead toggle)
- * render alongside the computed readouts (rage bonus, alignment bonus,
- * post-bonus initiative), then snaps the result. Follows the
- * bc-psychic-strength.spec.ts shape: the rendered DOM stays anchored to
- * a globalThis handle so snap() captures live pixels, and is torn down
- * after capture so the next test starts clean.
+ * daemon engine rating input renders alongside the computed rage bonus,
+ * then snaps the result. Follows the bc-psychic-strength.spec.ts shape:
+ * the rendered DOM stays anchored to a globalThis handle so snap()
+ * captures live pixels, and is torn down after capture so the next test
+ * starts clean.
  */
 test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
-    test('renders daemon engine rating + Quick & the Dead toggle + readouts and snaps', async ({ page }) => {
+    test('renders daemon engine rating + rage readout and snaps', async ({ page }) => {
         await joinOrSkip(page);
 
         const result = await page.evaluate(async () => {
@@ -25,12 +24,8 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
             let error: string | null = null;
             let rendered = false;
             let hasDaemonEngineInput = false;
-            let hasQuickToggle = false;
             let rageBonus = '';
-            let alignmentBonus = '';
-            let initiative = '';
             let daemonEngineRatingAttr = '';
-            let quickActiveAttr = '';
 
             try {
                 /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `fetch`/`Handlebars` globals are injected by the licensed app; Handlebars compile ctx is opaque */
@@ -42,32 +37,16 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
                 const src = await (await g.fetch(templateUrl)).text();
                 const HbsLib = g.Handlebars;
                 if (typeof HbsLib.compile !== 'function') {
-                    return {
-                        rendered,
-                        hasDaemonEngineInput,
-                        hasQuickToggle,
-                        rageBonus,
-                        alignmentBonus,
-                        initiative,
-                        daemonEngineRatingAttr,
-                        quickActiveAttr,
-                        error: 'Handlebars not available on globalThis',
-                    };
+                    return { rendered, hasDaemonEngineInput, rageBonus, daemonEngineRatingAttr, error: 'Handlebars not available on globalThis' };
                 }
                 const tpl = HbsLib.compile(src);
                 // Daemon Engine(3) idle 2 turns → rage = 3 + min(2,3) = 5.
-                // Khorne + Quick & the Dead active → +10 → init 35 → 45.
                 const html = tpl({
                     supplementsPanel: {
                         daemonEngineRating: 3,
                         daemonEngineActive: true,
                         turnsSinceLastDamage: 2,
                         daemonEngineRageBonus: 5,
-                        quickAndTheDeadActive: true,
-                        chaosAlignment: 'khorne',
-                        baseInitiative: 35,
-                        quickAndTheDeadBonus: 10,
-                        quickAndTheDeadInitiative: 45,
                     },
                 });
                 const host = document.createElement('div');
@@ -88,13 +67,8 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
 
                 if (rendered) {
                     hasDaemonEngineInput = host.querySelector('input[data-wh40k-hook="bc-daemon-engine-rating-input"]') !== null;
-                    hasQuickToggle =
-                        host.querySelector('button[data-wh40k-hook="bc-quick-and-the-dead-toggle"][data-action="bcToggleQuickAndTheDead"]') !== null;
                     rageBonus = host.querySelector('[data-wh40k-hook="bc-daemon-engine-rage"]')?.getAttribute('data-rage-bonus') ?? '';
-                    alignmentBonus = host.querySelector('[data-wh40k-hook="bc-quick-and-the-dead-bonus"]')?.getAttribute('data-alignment-bonus') ?? '';
-                    initiative = host.querySelector('[data-wh40k-hook="bc-quick-and-the-dead-initiative"]')?.getAttribute('data-initiative') ?? '';
                     daemonEngineRatingAttr = host.querySelector('section.wh40k-bc-supplements-panel')?.getAttribute('data-bc-daemon-engine-rating') ?? '';
-                    quickActiveAttr = host.querySelector('section.wh40k-bc-supplements-panel')?.getAttribute('data-bc-quick-and-the-dead-active') ?? '';
                 }
 
                 // Hold the host on a global handle so snap() (called
@@ -106,17 +80,7 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
                 error = String(err instanceof Error ? err.message : err);
             }
 
-            return {
-                rendered,
-                hasDaemonEngineInput,
-                hasQuickToggle,
-                rageBonus,
-                alignmentBonus,
-                initiative,
-                daemonEngineRatingAttr,
-                quickActiveAttr,
-                error,
-            };
+            return { rendered, hasDaemonEngineInput, rageBonus, daemonEngineRatingAttr, error };
         });
 
         const hookCounts = await countHooks(page);
@@ -138,20 +102,10 @@ test.describe.serial('BcSupplementMechanicsPanel (Tier B)', () => {
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
-        expectHooks(hookCounts, [
-            'bc-daemon-engine-rating-input',
-            'bc-daemon-engine-rage',
-            'bc-quick-and-the-dead-toggle',
-            'bc-quick-and-the-dead-bonus',
-            'bc-quick-and-the-dead-initiative',
-        ]);
+        expectHooks(hookCounts, ['bc-daemon-engine-rating-input', 'bc-daemon-engine-rage']);
         expect(result.hasDaemonEngineInput, 'daemon engine rating input should render').toBe(true);
-        expect(result.hasQuickToggle, 'Quick & the Dead toggle should render').toBe(true);
         expect(result.rageBonus, 'rage bonus data attr should round-trip').toBe('5');
-        expect(result.alignmentBonus, 'alignment bonus data attr should round-trip').toBe('10');
-        expect(result.initiative, 'initiative data attr should round-trip').toBe('45');
         expect(result.daemonEngineRatingAttr, 'daemon engine rating data attr should round-trip').toBe('3');
-        expect(result.quickActiveAttr, 'quick & the dead active data attr should round-trip').toBe('true');
 
         recordCoverage('panel.render', 'BcSupplementMechanicsPanel');
     });

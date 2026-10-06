@@ -87,7 +87,7 @@ const cases: Array<[name: string, fn: SchemaFieldsFn, keys: string[]]> = [
     ['bcGiftsSchemaFields', bcGiftsSchemaFields, ['gifts']],
     ['bcPsychicSchemaFields', bcPsychicSchemaFields, ['psykerClass', 'psyRating', 'sustainedPowerCount']],
     ['bcRitualSchemaFields', bcRitualSchemaFields, ['ritualMastery']],
-    ['bcSupplementsSchemaFields', bcSupplementsSchemaFields, ['daemonEngineRating', 'quickAndTheDeadActive']],
+    ['bcSupplementsSchemaFields', bcSupplementsSchemaFields, ['daemonEngineRating']],
     ['dwAmmoSchemaFields', dwAmmoSchemaFields, ['selectedAmmo']],
     ['dwAstartesSchemaFields', dwAstartesSchemaFields, ['implants']],
     ['dwCohesionSchemaFields', dwCohesionSchemaFields, ['cohesionMax', 'cohesionCurrent', 'cohesionLostThisTurn', 'rallied']],

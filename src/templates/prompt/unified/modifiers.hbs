@@ -44,6 +44,23 @@
     </div>
     {{/if}}
 
+    {{!-- Roll-twice-keep-one selector (homebrew `roll-keep-modes` setting): empty
+         list = setting off, so nothing renders. --}}
+    {{#if keepModeOptions.length}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-2.5" role="radiogroup" aria-label="{{localize "WH40K.Roll.KeepMode.Label"}}">
+        <span class="tw-text-[0.72rem] tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em] tw-font-medium">{{localize "WH40K.Roll.KeepMode.Label"}}</span>
+        <div class="tw-flex tw-flex-wrap tw-gap-1.5">
+            {{#each keepModeOptions}}
+            <button type="button" role="radio" aria-checked="{{#if active}}true{{else}}false{{/if}}"
+                    class="tw-inline-flex tw-items-center tw-py-1 tw-px-2.5 tw-border tw-rounded-2xl tw-cursor-pointer tw-text-[0.78rem] tw-transition-all {{#if active}}tw-bg-[rgba(201,162,39,0.15)] tw-border-[rgba(201,162,39,0.5)] tw-text-[#e8e4d9] tw-shadow-[0_0_8px_rgba(201,162,39,0.15)]{{else}}tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a] hover:tw-bg-[rgba(201,162,39,0.08)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-text-[#b8b8a8]{{/if}}"
+                    data-action="selectKeepMode" data-keep-mode="{{mode}}" data-tooltip="{{localize hintKey}}">
+                {{localize labelKey}}
+            </button>
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
+
     {{!-- This skill declares variants, but the refinement settings suppress them
          (#490). Rendering nothing is indistinguishable from the feature being
          broken — which is exactly how it was reported — so say so instead. --}}

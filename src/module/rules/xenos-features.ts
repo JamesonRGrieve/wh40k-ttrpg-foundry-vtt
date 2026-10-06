@@ -27,16 +27,6 @@ export const FIELD_VIVISECTION = {
     requiresForbiddenLore: true,
 };
 
-/** Hotshot Pilot — trade Fatigue on Operate for +DoS or reduced failure. */
-export const HOTSHOT_PILOT = {
-    fatigueCost: 1,
-};
-
-/** Hull Down — vehicle Size counts as 1 lower for attack & cover during Movement actions. */
-export const HULL_DOWN = {
-    sizeReduction: 1,
-};
-
 /** Leaping Dodge — use Dodge skill (not raw Ag) against Spray quality. */
 export const LEAPING_DODGE = {
     sprayAvoidanceSkill: 'dodge' as const,
@@ -61,10 +51,4 @@ export const SURVIVORS_PARANOIA = {
 export const SERENITY_OF_THE_GREEN = {
     shockDurationMultiplier: 0.5,
     insanityRecoveryXpCost: 50, // vs 100 baseline
-};
-
-/** Scholarly Discipline (Research Station) — once-per-session reroll on Scholastic Lore. */
-export const SCHOLARLY_DISCIPLINE = {
-    rerollsPerSession: 1,
-    applicableSkill: 'scholasticLore' as const,
 };

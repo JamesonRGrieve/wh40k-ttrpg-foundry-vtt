@@ -42,3 +42,37 @@ export async function queryItemIndex<T>(
     );
     return perPack.flat();
 }
+
+/** One compendium Item matching a lookup, with the id of the pack it came from. */
+interface IdentifiedPackEntry {
+    uuid: string;
+    packId: string;
+}
+
+/**
+ * Pick the entry from the given game line's packs (`wh40k-rpg.<linePrefix>-…`),
+ * falling back to the first match from any line. Pure.
+ */
+export function pickLineEntry(entries: readonly IdentifiedPackEntry[], linePrefix: string): IdentifiedPackEntry | null {
+    const onLine = entries.find((entry) => (entry.packId.split('.').at(1) ?? '').startsWith(`${linePrefix}-`));
+    return onLine ?? entries.at(0) ?? null;
+}
+
+/**
+ * UUID of the system compendium Item of `type` whose `system.identifier` is
+ * `identifier`, preferring the given line's packs — so a mechanic can reach a
+ * content document by its stable identifier instead of its name.
+ */
+export async function findItemUuidByIdentifier(type: string, identifier: string, linePrefix: string): Promise<string | null> {
+    const entries = await queryItemIndex<IdentifiedPackEntry>(
+        ['system.identifier'],
+        (entry, pack) => {
+            const system = entry['system'];
+            if (entry.type !== type || typeof system !== 'object' || system === null) return undefined;
+            if (!('identifier' in system) || system.identifier !== identifier || entry.uuid === undefined) return undefined;
+            return { uuid: entry.uuid, packId: pack.metadata.id };
+        },
+        true,
+    );
+    return pickLineEntry(entries, linePrefix)?.uuid ?? null;
+}

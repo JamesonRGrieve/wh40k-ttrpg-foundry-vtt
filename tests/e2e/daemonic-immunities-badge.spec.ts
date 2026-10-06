@@ -56,7 +56,7 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
                 actorId = actor.id ?? null;
 
                 if (typeof actor.createEmbeddedDocuments === 'function') {
-                    await actor.createEmbeddedDocuments('Item', [{ name: 'Daemonic', type: 'trait' }]);
+                    await actor.createEmbeddedDocuments('Item', [{ name: 'Daemonic (X)', type: 'trait', system: { identifier: 'daemonic' } }]);
                 }
 
                 const sheet = actor.sheet;

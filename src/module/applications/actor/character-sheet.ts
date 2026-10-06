@@ -7,7 +7,6 @@ import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { bcAscend } from '../../actions/bc-daemon-prince-actions.ts';
 import { bcPsychicTest } from '../../actions/bc-psychic-actions.ts';
 import { bcPerformRitual } from '../../actions/bc-ritual-actions.ts';
-import { bcToggleQuickAndTheDead } from '../../actions/bc-supplements-actions.ts';
 import { dwSelectAmmo } from '../../actions/dw-ammo-actions.ts';
 import { dwAstartesToggleImplant } from '../../actions/dw-astartes-actions.ts';
 import { dwCohesionChallenge, dwCohesionRally, dwCohesionRecoverObjective } from '../../actions/dw-cohesion-actions.ts';
@@ -33,6 +32,7 @@ import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-ba
 import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
+import { SYSTEM_ID } from '../../constants.ts';
 import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../../data/actor/mixins/dw-ammo-template.ts';
 import { buildOwCraftsmanshipPanel } from '../../data/actor/mixins/ow-craftsmanship-template.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
@@ -51,22 +51,9 @@ import {
     tallyAdvancesByAlignment,
     type ChaosAdvanceEntry,
 } from '../../rules/bc-alignment-derivation.ts';
-import {
-    DAEMON_PRINCE_CORRUPTION_THRESHOLD,
-    DAEMON_PRINCE_INFAMY_THRESHOLD,
-    getDaemonPrinceBoost,
-    isAscended,
-    type DaemonPrinceAlignment,
-    type DaemonPrinceStatBoost,
-} from '../../rules/bc-daemon-prince.ts';
+import { APOTHEOSIS_CORRUPTION, isAscended, resolveApotheosis, type DaemonPrinceAlignment } from '../../rules/bc-daemon-prince.ts';
 import { maxPushLevel, resolvePsychicTest, type PsyMode } from '../../rules/bc-psychic-strength.ts';
-import {
-    daemonEngineRageBonus,
-    QUICK_AND_THE_DEAD_BONUS_BY_ALIGNMENT,
-    quickAndTheDeadInitiativeBonus,
-    type QuickAndTheDeadAlignment,
-} from '../../rules/bc-supplement-mechanics.ts';
-import { DEATH_TO_OPPOSE_DURATION_ROUNDS, MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
+import { daemonEngineRageBonus } from '../../rules/bc-supplement-mechanics.ts';
 import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
 import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
 import {
@@ -81,6 +68,8 @@ import { isOathActive } from '../../rules/dw-oath.ts';
 import { getRenownRank, RENOWN_RANK_ORDER, RENOWN_THRESHOLDS, type RenownRank, renownRankLabelKey } from '../../rules/dw-renown.ts';
 import { DW_SPECIAL_AMMO_EFFECTS, type AmmoEffect } from '../../rules/dw-special-ammo.ts';
 import { getSupportRange } from '../../rules/dw-squad-mode.ts';
+import type { DynamicModifierItemLike } from '../../rules/dynamic-modifiers.ts';
+import { ENCOUNTER_GRANT_FLAG, HATRED_IDENTIFIER, hasFanaticRole, hatredAgainstFoe } from '../../rules/fanatic.ts';
 import {
     resolveBreakGrapple,
     resolveDamageOpponent,
@@ -114,6 +103,7 @@ import type { WH40KActorSystemData, WH40KArmourLocation, WH40KItemSystemData } f
 import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
 import { getArmourAPForLocation, type ArmourSystemLike } from '../../utils/armour-calculator.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
+import { findItemUuidByIdentifier } from '../../utils/compendium-query.ts';
 import { errorMessage } from '../../utils/error-message.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
@@ -278,7 +268,6 @@ type CharacterSheetContextDeclaredFields = {
     equippedCount?: number;
     encumbrancePercent?: number;
     backpackPercent?: number;
-    hasPenitent?: boolean;
     hasFanatic?: boolean;
     hasCrusader?: boolean;
     grappleState?: GrappleState;
@@ -433,14 +422,9 @@ type BcSupplementsPanelContext = {
     daemonEngineActive: boolean;
     turnsSinceLastDamage: number;
     daemonEngineRageBonus: number;
-    quickAndTheDeadActive: boolean;
-    chaosAlignment: QuickAndTheDeadAlignment;
-    baseInitiative: number;
-    quickAndTheDeadBonus: number;
-    quickAndTheDeadInitiative: number;
 };
 
-/** BC Daemon Prince ascension panel (#182). */
+/** BC apotheosis panel (#182 — BC Core p267). */
 type BcDaemonPrincePanelContext = {
     ascended: boolean;
     ascendedAt: number | null;
@@ -450,7 +434,8 @@ type BcDaemonPrincePanelContext = {
     infamyThreshold: number;
     corruptionThreshold: number;
     canAscend: boolean;
-    boost: DaemonPrinceStatBoost | null;
+    /** The recorded fate once claimed, else the fate the champion would meet now. */
+    isDaemonPrince: boolean;
 };
 
 /** DW Distinctions panel (#171). Catalogue resolution is compendium-driven;
@@ -812,9 +797,6 @@ export default class CharacterSheet extends BaseActorSheet {
             'possessionFrenzyTest': CharacterSheet.#possessionFrenzyTest,
             'possessionMismanifest': CharacterSheet.#possessionMismanifest,
 
-            // Penitent role: Mortification of the Flesh (#94 — within.md p.36)
-            'applyMortification': CharacterSheet.#applyMortification,
-
             // Shock / Snap-Out-Of-It (#66 — core.md §"Shock And Snapping Out Of It")
             'snapOutOfShock': CharacterSheet.#snapOutOfShock,
 
@@ -885,7 +867,6 @@ export default class CharacterSheet extends BaseActorSheet {
             //   Mission (#169), Vehicle Crit (#170).
             //   OW Mission Gear (#155).
             'bcPerformRitual': bcPerformRitual,
-            'bcToggleQuickAndTheDead': bcToggleQuickAndTheDead,
             'bcAscend': bcAscend,
             'dwSelectAmmo': dwSelectAmmo,
             'dwToggleDistinction': dwToggleDistinction,
@@ -1285,30 +1266,12 @@ export default class CharacterSheet extends BaseActorSheet {
         // Prepare active modifiers panel (Phase 5 Integration)
         context.activeModifiers = this.prepareActiveModifiers();
 
-        // Penitent role detection (#94 — within.md p.36).
-        // A Penitent is identified by the presence of a talent/trait/role
-        // item whose name matches "Penitent" or "Mortification of the Flesh"
-        // (case-insensitive). This is intentionally name-based rather than
-        // UUID-based so it works for hand-authored / dropped-in talents in
-        // addition to compendium items.
-        context.hasPenitent = this.actor.items.some((item) => {
-            const itemName = item.name.toLowerCase();
-            return itemName.includes('penitent') || itemName.includes('mortification of the flesh');
-        });
+        // Fanatic role detection (#93 — DH2 Enemies Within p.34): the actor
+        // owns the role whose `system.identifier` is `fanatic`.
+        context.hasFanatic = hasFanaticRole(this.actor.items);
 
-        // Fanatic role detection (#93 — within.md p.34).
-        // A Fanatic is identified by the presence of a talent/trait/role
-        // item whose name matches "Fanatic" or "Death to All Who Oppose Me"
-        // (case-insensitive). Name-based so it works for hand-authored /
-        // dropped-in talents in addition to compendium items.
-        context.hasFanatic = this.actor.items.some((item) => {
-            const itemName = item.name.toLowerCase();
-            return itemName.includes('fanatic') || itemName.includes('death to all who oppose me');
-        });
-
-        // Crusader role detection (#141 — beyond.md p.34). Same name-based
-        // pattern as Penitent/Fanatic above; matches "Crusader" or "Smite
-        // the Unholy".
+        // Crusader role detection (#141 — beyond.md p.34); matches "Crusader"
+        // or "Smite the Unholy".
         context.hasCrusader = hasCrusaderRole(Array.from(this.actor.items));
 
         // Grapple state (#120 — core.md L10155-10180). The flag is set by
@@ -1952,62 +1915,50 @@ export default class CharacterSheet extends BaseActorSheet {
     /**
      * BC Supplement Mechanics panel (#181). Surfaces the Daemon Engine
      * rage bonus (computed against a conservative `turnsSinceLastDamage`
-     * baseline of 0 — the actual delta is dialog-scoped per encounter)
-     * and the Quick-and-the-Dead initiative shift folded against the
-     * actor's chaos alignment.
+     * baseline of 0 — the actual delta is dialog-scoped per encounter).
      */
     _prepareBcSupplementsPanel(): BcSupplementsPanelContext {
-        const sys = this.actor.system;
-        const rating = sys.daemonEngineRating;
+        const rating = this.actor.system.daemonEngineRating;
         const daemonEngineActive = rating > 0;
         const turnsSinceLastDamage = 0;
         const rageBonus = daemonEngineActive ? daemonEngineRageBonus({ rating, turnsSinceLastDamage }) : 0;
-        const alignment: QuickAndTheDeadAlignment = sys.chaosAlignment;
-        const baseInitiative = sys.characteristics.agility.bonus;
-        const qatdActive = sys.quickAndTheDeadActive;
-        const qatdBonus = QUICK_AND_THE_DEAD_BONUS_BY_ALIGNMENT[alignment];
         return {
             daemonEngineRating: rating,
             daemonEngineActive,
             turnsSinceLastDamage,
             daemonEngineRageBonus: rageBonus,
-            quickAndTheDeadActive: qatdActive,
-            chaosAlignment: alignment,
-            baseInitiative,
-            quickAndTheDeadBonus: qatdBonus,
-            quickAndTheDeadInitiative: qatdActive ? quickAndTheDeadInitiativeBonus(baseInitiative, alignment) : baseInitiative,
         };
     }
 
     /* -------------------------------------------- */
 
     /**
-     * BC Daemon Prince ascension panel (#182). Reads the persisted
-     * ascension record off `system.daemonPrinceAscension` and reports
-     * threshold progress + the unlocked boost when apotheosis has fired.
+     * BC apotheosis panel (#182 — BC Core p267). Reads the persisted record off
+     * `system.daemonPrinceAscension` and reports the eligibility readout: the
+     * claim at 100 Corruption, the GM's Infamy threshold, and the fate (Daemon
+     * Prince or Chaos Spawn) met — or faced, before the claim.
      */
     _prepareBcDaemonPrincePanel(): BcDaemonPrincePanelContext {
         const sys = this.actor.system;
         const record = sys.daemonPrinceAscension;
         const ascendedAt = record.ascendedAt;
-        // Build a non-null ascension record for the engine when one exists; isAscended treats a
-        // non-null record as ascended and the boost is derived from the same record.
-        const ascension = ascendedAt === null ? null : { ascendedAt, alignmentAtAscension: record.alignmentAtAscension };
+        const ascension = ascendedAt === null ? null : { ascendedAt, alignmentAtAscension: record.alignmentAtAscension, outcome: record.outcome };
         const ascended = isAscended(ascension);
         const infamy = sys.infamy;
         const corruption = sys.corruption;
-        const canAscend = !ascended && infamy >= DAEMON_PRINCE_INFAMY_THRESHOLD && corruption >= DAEMON_PRINCE_CORRUPTION_THRESHOLD;
-        const boost = ascension === null ? null : getDaemonPrinceBoost(ascension);
+        const infamyThreshold = WH40KSettings.getApotheosisInfamyThreshold();
+        const readout = resolveApotheosis({ corruption, infamy, infamyThreshold });
+        const outcome = ascension === null ? readout.outcome : ascension.outcome;
         return {
             ascended,
             ascendedAt,
             alignmentAtAscension: record.alignmentAtAscension,
             infamy,
             corruption,
-            infamyThreshold: DAEMON_PRINCE_INFAMY_THRESHOLD,
-            corruptionThreshold: DAEMON_PRINCE_CORRUPTION_THRESHOLD,
-            canAscend,
-            boost,
+            infamyThreshold,
+            corruptionThreshold: APOTHEOSIS_CORRUPTION,
+            canAscend: !ascended && readout.claimed,
+            isDaemonPrince: outcome === 'daemonPrince',
         };
     }
 
@@ -5054,118 +5005,64 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * Penitent role — Mortification of the Flesh (#94, within.md p.36).
+     * Fanatic role — Death to All Who Oppose Me! (#93, DH2 Enemies Within p.34).
      *
-     * Applies the {@link MORTIFICATION_OF_THE_FLESH} effect:
-     *   - +N Fatigue via `actor.applyFatigue(fatigueCost)`
-     *   - temporary ActiveEffect granting +WP modifier for durationRounds rounds
-     *   - chat card narrating the action
-     *
-     * Errors surface as in-sheet notifications; the sheet re-renders on the
-     * subsequent fatigue mutation.
-     * @this {CharacterSheet}
-     */
-    static async #applyMortification(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            await this.actor.applyFatigue(MORTIFICATION_OF_THE_FLESH.fatigueCost);
-
-            const effectData = {
-                name: game.i18n.localize('WH40K.Mortification.ChatTitle'),
-                icon: 'icons/svg/aura.svg',
-                changes: [
-                    {
-                        key: 'system.characteristics.willpower.modifier',
-                        mode: 2,
-                        value: String(MORTIFICATION_OF_THE_FLESH.wpBonus),
-                        priority: 20,
-                    },
-                ],
-                duration: { rounds: MORTIFICATION_OF_THE_FLESH.durationRounds },
-                flags: { wh40k: { source: 'mortification' } },
-            };
-            // @ts-expect-error -- boundary: Foundry V14 ActiveEffect CreateData type omits name/icon/changes/duration; the structure matches runtime
-            await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
-
-            const gameSystem = this._resolveGameSystemId() ?? '';
-            const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/mortification-chat.hbs', {
-                _gameSystemId: firstSystemId(this.actor),
-                actorName: this.actor.name,
-                wpBonus: MORTIFICATION_OF_THE_FLESH.wpBonus,
-                durationRounds: MORTIFICATION_OF_THE_FLESH.durationRounds,
-                gameSystem,
-            });
-            await ChatMessage.create({
-                user: game.user.id,
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                content,
-            });
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.MortificationFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('Mortification of the Flesh error:', error);
-        }
-    }
-
-    /**
-     * Fanatic role — Death to All Who Oppose Me (#93, within.md p.34/967).
-     *
-     * RAW: the Fanatic spends a Fate point to count as having Hatred against
-     * their current foe for the duration of the encounter. We model the
-     * encounter window as {@link DEATH_TO_OPPOSE_DURATION_ROUNDS} rounds and
-     * surface the Hatred bonus mechanically as +10 WS / +10 BS via an
-     * ActiveEffect on the actor's characteristic modifiers.
+     * RAW: the Fanatic spends a Fate point to count as having the Hatred talent
+     * against their current foe for the duration of the encounter.
      *
      * Pipeline:
-     *   - refuse if `system.fate.value` is 0 (in-sheet notification)
+     *   - refuse without exactly one targeted foe, or with 0 Fate
+     *   - find this line's Hatred talent document by `system.identifier`
      *   - decrement `system.fate.value` by 1
-     *   - create a temporary ActiveEffect granting +10 to both WS and BS
-     *     `.modifier` for DEATH_TO_OPPOSE_DURATION_ROUNDS rounds
-     *   - emit a chat card narrating the spend
+     *   - grant an encounter-scoped copy of that Hatred talent whose
+     *     `vsSpecialization` hooks are re-aimed at the foe (`vsActor`), so the
+     *     bonus is Hatred's own data; it is removed when the Combat is deleted
+     *   - emit a chat card naming the foe (and the 1 Insanity for leaving combat
+     *     against it, which is GM-adjudicated)
      *
      * Errors surface as in-sheet notifications.
      * @this {CharacterSheet}
      */
     static async #deathToAllWhoOpposeMe(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
+            const targets = Array.from(game.user.targets);
+            const foe = targets.length === 1 ? targets[0]?.actor ?? null : null;
+            const foeUuid = foe?.uuid ?? null;
+            if (foe === null || foeUuid === null) {
+                this._notify('warning', game.i18n.localize('WH40K.Fanatic.NoTarget'), { duration: 3000 });
+                return;
+            }
+
             const fateValue = this.actor.system.fate.value;
             if (fateValue <= 0) {
                 this._notify('warning', game.i18n.localize('WH40K.Fanatic.NoFatePoints'), { duration: 3000 });
                 return;
             }
 
+            const hatredUuid = await findItemUuidByIdentifier('talent', HATRED_IDENTIFIER, gameSystemPackPrefix(this._resolveGameSystemId() ?? undefined));
+            const hatred = hatredUuid === null ? null : await fromUuid(hatredUuid);
+            if (!(hatred instanceof Item)) {
+                this._notify('warning', game.i18n.localize('WH40K.Fanatic.NoHatred'), { duration: 3000 });
+                return;
+            }
+
             await this._updateSystemField('system.fate.value', fateValue - 1);
 
-            const wsBonus = 10;
-            const bsBonus = 10;
-            const effectData = {
-                name: game.i18n.localize('WH40K.Fanatic.ChatTitle'),
-                icon: 'icons/svg/sword.svg',
-                changes: [
-                    {
-                        key: 'system.characteristics.weaponSkill.modifier',
-                        mode: 2,
-                        value: String(wsBonus),
-                        priority: 20,
-                    },
-                    {
-                        key: 'system.characteristics.ballisticSkill.modifier',
-                        mode: 2,
-                        value: String(bsBonus),
-                        priority: 20,
-                    },
-                ],
-                duration: { rounds: DEATH_TO_OPPOSE_DURATION_ROUNDS },
-                flags: { wh40k: { source: 'fanatic-death-to-oppose' } },
-            };
-            // @ts-expect-error -- boundary: Foundry V14 ActiveEffect CreateData type omits name/icon/changes/duration; the structure matches runtime
-            await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+            const source = hatred.toObject();
+            const hatredHooks = (hatred as DynamicModifierItemLike).system.modifiers?.dynamicModifiers ?? [];
+            const grant = foundry.utils.mergeObject(source, {
+                'system.specialization': foe.name,
+                'system.modifiers.dynamicModifiers': hatredAgainstFoe(hatredHooks, foeUuid),
+                [`flags.${SYSTEM_ID}.${ENCOUNTER_GRANT_FLAG}`]: true,
+            });
+            await this.actor.createEmbeddedDocuments('Item', [grant]);
 
             const gameSystem = this._resolveGameSystemId() ?? '';
             const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/fanatic-chat.hbs', {
                 _gameSystemId: firstSystemId(this.actor),
                 actorName: this.actor.name,
-                wsBonus,
-                bsBonus,
-                durationRounds: DEATH_TO_OPPOSE_DURATION_ROUNDS,
+                foeName: foe.name,
+                hatredName: hatred.name,
                 gameSystem,
             });
             await ChatMessage.create({

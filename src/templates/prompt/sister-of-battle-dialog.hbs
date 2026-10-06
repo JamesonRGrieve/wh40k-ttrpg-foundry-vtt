@@ -1,5 +1,5 @@
 {{!-- Sister of Battle Elite Advance Dialog (GitHub #134) --}}
-{{!-- GM confirms the advance; the three talents are listed below. --}}
+{{!-- GM confirms the advance; its requirements and grants come from the advance document. --}}
 <div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2">
 
     <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">
@@ -11,12 +11,7 @@
         <div class="tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-gold dh2:tw-text-gold tw-mb-2">
             {{localize "WH40K.SisterOfBattle.Prerequisites"}}
         </div>
-        <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
-            <li class="tw-text-[#e8e4d9]">{{localize "WH40K.SisterOfBattle.Prereqs.Fellowship"}}</li>
-            <li class="tw-text-[#e8e4d9]">{{localize "WH40K.SisterOfBattle.Prereqs.Willpower"}}</li>
-            <li class="tw-text-[#e8e4d9]">{{localize "WH40K.SisterOfBattle.Prereqs.Female"}}</li>
-            <li class="tw-text-[#e8e4d9]">{{localize "WH40K.SisterOfBattle.Prereqs.Faith"}}</li>
-        </ul>
+        <p class="tw-m-0 tw-text-[0.85rem] tw-text-[#e8e4d9]">{{requirementsText}}</p>
     </div>
 
     {{!-- Grants header --}}
@@ -32,6 +27,11 @@
                 <div class="tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-gold dh2:tw-text-gold">
                     {{this.label}}
                 </div>
+                {{#if this.unlocked}}
+                <div class="tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                    {{localize "WH40K.SisterOfBattle.UnlockedForPurchase"}}
+                </div>
+                {{/if}}
                 <div class="tw-text-[0.85rem] tw-text-[#e8e4d9]">
                     {{this.summary}}
                 </div>

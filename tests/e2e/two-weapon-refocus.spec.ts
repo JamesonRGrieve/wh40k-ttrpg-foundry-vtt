@@ -65,7 +65,7 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
                 const plan = resolve({
                     isMelee: false,
                     mode: 'Standard Attack',
-                    talents: new Set(['Two-Weapon Wielder (Ranged)']),
+                    talents: [{ identifier: 'twoWeaponWielder', specialization: 'Ranged' }],
                 });
                 granted = plan.granted;
                 attackCount = plan.attacks.length;

@@ -1,14 +1,13 @@
 {{!--
     Fanatic role: Death to All Who Oppose Me action button (#93, within.md p.34/967).
 
-    Fate-spend action that costs 1 Fate point in exchange for a temporary
-    Active Effect granting +10 WS / +10 BS for DEATH_TO_OPPOSE_DURATION_ROUNDS
-    rounds. The panel renders only when `hasFanatic` is truthy (computed in
-    CharacterSheet._prepareContext from the actor's items / role flags).
+    Fate-spend action: 1 Fate point to count as having the Hatred talent
+    against the targeted foe for the encounter. The panel renders only when
+    `hasFanatic` is truthy (the actor owns the role with identifier `fanatic`).
 
-    The button itself dispatches `data-action="deathToAllWhoOpposeMe"`, which
+    The button dispatches `data-action="deathToAllWhoOpposeMe"`, which
     resolves to CharacterSheet.#deathToAllWhoOpposeMe — see the action
-    handler for the wired Fate decrement + ActiveEffect + ChatMessage
+    handler for the Fate decrement + encounter Hatred grant + ChatMessage
     pipeline.
 --}}
 {{#if hasFanatic}}

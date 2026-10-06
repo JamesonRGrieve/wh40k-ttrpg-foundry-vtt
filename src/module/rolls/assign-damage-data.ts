@@ -1,10 +1,15 @@
+import { SYSTEM_ID } from '../constants.ts';
 import type { HordeTrait } from '../data/actor/mixins/horde-template.ts';
 import { applyCriticalDamageConditions, type CriticalSideEffectReport } from '../rules/active-effects.ts';
 import { type CriticalDamageRecord, getCriticalDamageRecord } from '../rules/critical-damage.ts';
 import { damageTypeDropdown, normalizeBodyPart } from '../rules/damage-type.ts';
 import { type BreakCheck, magnitudeLossForHit, resolveBreakCheck } from '../rules/dw-horde-magnitude.ts';
 import {
+    ARMED_TEST_HOOKS_FLAG,
+    armOnDamagedHooks,
     collectDynamicComponents,
+    mergeArmedTestHooks,
+    readArmedTestHooks,
     type DynamicModifierContext,
     type DynamicModifierItemLike,
     type DynamicModifierSituation,
@@ -43,8 +48,13 @@ export interface ActorLike extends ActorStateSource {
         horde?: ActorHordeState;
     };
     hasTalent: (name: string) => boolean;
+    /** The Foundry document id — matched against the combat's current combatant for turn-bound hooks. */
+    id?: string | null;
     /** Owned items, walked for defender-side dynamic modifier hooks (e.g. crit reduction). */
     items?: Iterable<DynamicModifierItemLike>;
+    /** Foundry `Actor#getFlag`, read for the hooks already armed by an earlier `onDamaged` trigger. */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.getFlag returns an untyped flag value; readArmedTestHooks validates it
+    getFlag?: (scope: string, key: string) => unknown;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.update accepts arbitrary update data; return type is unknown
     update: (data: Record<string, unknown>) => Promise<unknown>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.createEmbeddedDocuments return type is unknown
@@ -331,6 +341,23 @@ export class AssignDamageData {
     }
 
     /**
+     * The context a defender-side hook is evaluated against during assignment:
+     * only the struck location's Toughness Bonus is known here (`this.tb`).
+     */
+    private _defenderHookContext(): DynamicModifierContext {
+        return {
+            charBonus: { t: this.tb },
+            charTotal: {},
+            dos: 0,
+            pr: 0,
+            cb: 0,
+            level: 0,
+            penetration: 0,
+            armourPoints: 0,
+        };
+    }
+
+    /**
      * Sum the defender-side critical-damage reduction the target's owned items grant
      * via their `dynamicModifiers` hooks (target `critReduction`), so a talent like
      * True Grit reduces crit damage from its declared data rather than a name match
@@ -341,16 +368,7 @@ export class AssignDamageData {
     private _collectCritReduction(): number {
         const items = this.actor.items;
         if (items === undefined) return 0;
-        const ctx: DynamicModifierContext = {
-            charBonus: { t: this.tb },
-            charTotal: {},
-            dos: 0,
-            pr: 0,
-            cb: 0,
-            level: 0,
-            penetration: 0,
-            armourPoints: 0,
-        };
+        const ctx = this._defenderHookContext();
         // The "acting actor" for a defender-side hook is the defender, so `states`
         // comes from ITS conditions (#518). Target tags and a range band are
         // deliberately absent: assignment knows neither the attacker nor the
@@ -365,6 +383,25 @@ export class AssignDamageData {
             }
         }
         return total;
+    }
+
+    /**
+     * Arm the defender's `when: 'onDamaged'` test hooks (e.g. Penitent's Cleansing
+     * Pain) when this hit made them suffer 1+ damage after Toughness and armour —
+     * wound and critical damage both count. The armed hooks are merged into the
+     * actor flag the test pipeline spends them from; re-arming refreshes.
+     */
+    private async _armOnDamagedHooks(): Promise<void> {
+        const items = this.actor.items;
+        if (items === undefined) return;
+        const combat = game.combat;
+        const round = combat?.started === true ? combat.round : null;
+        // Hurt during their own turn, the bearer's "next turn" is the following one.
+        const duringOwnTurn = round !== null && combat?.combatant?.actor?.id === this.actor.id;
+        const fresh = armOnDamagedHooks(items, this._defenderHookContext(), this.damageTaken + this.criticalDamageTaken, round, duringOwnTurn);
+        if (fresh.length === 0) return;
+        const existing = readArmedTestHooks(this.actor.getFlag?.(SYSTEM_ID, ARMED_TEST_HOOKS_FLAG));
+        await this.actor.update({ [`flags.${SYSTEM_ID}.${ARMED_TEST_HOOKS_FLAG}`]: mergeArmedTestHooks(existing, fresh) });
     }
 
     async performActionAndSendToChat(): Promise<void> {
@@ -398,6 +435,7 @@ export class AssignDamageData {
                 'system.wounds.critical': this.actor.system.wounds.critical + this.criticalDamageTaken,
                 'system.fatigue.value': this.actor.system.fatigue.value + this.fatigueTaken,
             });
+            await this._armOnDamagedHooks();
         }
         game.wh40k.log('performActionAndSendToChat', this);
 

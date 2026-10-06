@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import WH40K from '../config.ts';
-import { choicesFrom, choicesRecordFrom, labelFor, placeRatingLabels } from './config-choices.ts';
+import { availabilityDisplayLabel, choicesFrom, choicesRecordFrom, labelFor, placeRatingLabels } from './config-choices.ts';
 
 /**
  * `choicesFrom` / `choicesRecordFrom` derive UI choice lists from a CONFIG map,
@@ -86,6 +86,23 @@ describe('labelFor', () => {
         vi.stubGlobal('game', { i18n: { localize: (key: string): string => `loc:${key}` } });
         expect(labelFor(WH40K.availabilities, 'uncommon')).toBe('loc:WH40K.Availability.Uncommon');
         expect(WH40K.availabilities).toHaveProperty('uncommon.modifier', null);
+    });
+});
+
+describe('availabilityDisplayLabel', () => {
+    it('shows the printed restriction words instead of the (unprinted default) rarity', () => {
+        vi.stubGlobal('game', { i18n: { localize: (key: string): string => `loc:${key}` } });
+        expect(availabilityDisplayLabel(WH40K.availabilities, 'common', 'Inquisition only')).toBe('Inquisition only');
+    });
+
+    it('trims the restriction words', () => {
+        expect(availabilityDisplayLabel(WH40K.availabilities, 'common', '  Special ')).toBe('Special');
+    });
+
+    it('falls back to the localized rarity label when no restriction is printed', () => {
+        vi.stubGlobal('game', { i18n: { localize: (key: string): string => `loc:${key}` } });
+        expect(availabilityDisplayLabel(WH40K.availabilities, 'very-rare', '')).toBe('loc:WH40K.Availability.VeryRare');
+        expect(availabilityDisplayLabel(WH40K.availabilities, 'rare', '   ')).toBe('loc:WH40K.Availability.Rare');
     });
 });
 

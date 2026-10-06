@@ -16,19 +16,16 @@
  *     hit is doubled, but if the firer's Chaos Alignment is Untested or
  *     worse the weapon jams (Overcharge is the canonical "double-edged
  *     sword" of slaaneshi pleasure-tech).
- *   - Legacy Weapons (blood.md :1524): named weapons whose power scales
- *     with kills. Threshold tiers at 10 / 25 / 50 kills mark the points
- *     where the weapon's profile improves.
  *   - Daemon Engine(X) trait (decay.md :1379-1391): rage accumulates
  *     while the engine has not received damage, capped by the trait's
  *     rating. Bonus = rating + min(turnsSinceLastDamage, rating).
- *   - Quick and the Dead trait (fate.md :669): a Tzeentch-touched
- *     initiative perk. Khorne+Slaanesh push for the kill (+10);
- *     Tzeentch and the Unaligned get +5; Nurgle does not benefit.
+ *
+ * The Quick and the Dead trait is not resolved here: its flat +2
+ * Initiative is authored on the trait document (`modifiers.combat.initiative`)
+ * and folded into the actor's Initiative by the central item-modifier path.
  *
  * Per Direction #7 of CLAUDE.md the rating numbers and per-weapon
- * specifics (which weapons carry Irradiated, which Legacy thresholds a
- * specific named blade reaches at tier 3, etc.) are authored in
+ * specifics (which weapons carry Irradiated, etc.) are authored in
  * compendium `_source/*.json` documents. This module owns only the
  * resolution logic over those structured fields.
  */
@@ -130,64 +127,6 @@ export function resolveOverchargedShot(args: OverchargedShotArgs): OverchargeOut
 }
 
 /* -------------------------------------------- */
-/*  Legacy Weapons                              */
-/* -------------------------------------------- */
-
-/**
- * Tier ladder for a Legacy Weapon. Each step represents the named blade
- * (or gun, or daemon-bound thing) growing in power as it racks up
- * kills. The thresholds are authored RAW.
- */
-export type LegacyWeaponTier = 0 | 1 | 2 | 3;
-
-/** State carried on a Legacy Weapon's item document. */
-export interface LegacyWeaponState {
-    /** Total confirmed kills attributed to this weapon. */
-    kills: number;
-    /** Current tier — derived from `kills` via the threshold table. */
-    tier: LegacyWeaponTier;
-}
-
-/**
- * RAW thresholds at which a Legacy Weapon's tier advances. The order
- * is significant: index `i` is the kill count needed to be AT tier
- * `i + 1` (so 10 kills → tier 1, 25 → tier 2, 50 → tier 3).
- */
-export const LEGACY_WEAPON_TIER_THRESHOLDS: readonly [number, number, number] = [10, 25, 50];
-
-/**
- * Compute the tier for a given kill count. Pure helper exported for
- * tests / UI display. Non-finite or negative inputs collapse to tier 0.
- */
-export function legacyWeaponTierForKills(kills: number): LegacyWeaponTier {
-    const k = sanitiseNonNegativeInt(kills);
-    if (k >= LEGACY_WEAPON_TIER_THRESHOLDS[2]) return 3;
-    if (k >= LEGACY_WEAPON_TIER_THRESHOLDS[1]) return 2;
-    if (k >= LEGACY_WEAPON_TIER_THRESHOLDS[0]) return 1;
-    return 0;
-}
-
-/**
- * Add a count of new kills to a Legacy Weapon's state, auto-advancing
- * its tier when a threshold is crossed. Returns a fresh object — the
- * caller decides whether to persist the new state to the item document.
- *
- * Non-finite or negative `killCount` values are sanitised to 0 (no-op).
- * The returned `tier` is recomputed from the new kill total, never
- * inherited blindly from the input — this protects against drift if
- * the persisted tier was tampered with out-of-band.
- */
-export function incrementLegacyWeaponKills(state: LegacyWeaponState, killCount: number): LegacyWeaponState {
-    const priorKills = sanitiseNonNegativeInt(state.kills);
-    const delta = sanitiseNonNegativeInt(killCount);
-    const newKills = priorKills + delta;
-    return {
-        kills: newKills,
-        tier: legacyWeaponTierForKills(newKills),
-    };
-}
-
-/* -------------------------------------------- */
 /*  Daemon Engine(X) trait                      */
 /* -------------------------------------------- */
 
@@ -219,47 +158,6 @@ export function daemonEngineRageBonus(args: DaemonEngineRageArgs): number {
     const rating = sanitiseNonNegativeInt(args.rating);
     const idle = sanitiseNonNegativeInt(args.turnsSinceLastDamage);
     return rating + Math.min(idle, rating);
-}
-
-/* -------------------------------------------- */
-/*  Quick and the Dead trait                    */
-/* -------------------------------------------- */
-
-/**
- * Alignment input accepted by {@link quickAndTheDeadInitiativeBonus}.
- * Mirrors the four Ruinous Powers plus the Unaligned state — the
- * supplement-mechanics layer keeps this local rather than importing the
- * project-wide `ChaosAlignment` to stay decoupled from the config tree
- * (this module is pure-rules and has no other config dependency).
- */
-export type QuickAndTheDeadAlignment = 'khorne' | 'slaanesh' | 'nurgle' | 'tzeentch' | 'unaligned';
-
-/**
- * Per-alignment initiative bonus granted by the Quick and the Dead
- * trait. RAW: Khorne and Slaanesh push for the killing blow (+10);
- * Tzeentch and the Unaligned benefit from the trait's foresight (+5);
- * Nurgle, slow and inevitable, gains nothing.
- */
-export const QUICK_AND_THE_DEAD_BONUS_BY_ALIGNMENT: Readonly<Record<QuickAndTheDeadAlignment, number>> = {
-    khorne: 10,
-    slaanesh: 10,
-    nurgle: 0,
-    tzeentch: 5,
-    unaligned: 5,
-};
-
-/**
- * Resolve the post-bonus initiative score for a character with the
- * Quick and the Dead trait.
- *
- * Returns `baseInitiative + bonus`, where `bonus` comes from
- * {@link QUICK_AND_THE_DEAD_BONUS_BY_ALIGNMENT}. Non-finite or negative
- * `baseInitiative` collapses to 0 before the bonus is added.
- */
-export function quickAndTheDeadInitiativeBonus(baseInitiative: number, alignment: QuickAndTheDeadAlignment): number {
-    const base = sanitiseNonNegativeInt(baseInitiative);
-    const bonus = QUICK_AND_THE_DEAD_BONUS_BY_ALIGNMENT[alignment];
-    return base + bonus;
 }
 
 /* -------------------------------------------- */

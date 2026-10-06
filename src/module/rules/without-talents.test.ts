@@ -1,13 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { resolveSprayAvoidance } from './spray-avoidance';
-import {
-    resolveFieldVivisection,
-    resolveHotshotPilot,
-    resolveHullDownSize,
-    resolveLeapingDodge,
-    resolvePushTheLimit,
-    WITHOUT_TALENTS,
-} from './without-talents';
+import { resolveFieldVivisection, resolveLeapingDodge, resolvePushTheLimit, WITHOUT_TALENTS } from './without-talents';
 
 /**
  * Per-talent contract tests for the Without novel-mechanic talent
@@ -17,8 +10,8 @@ import {
  */
 
 describe('WITHOUT_TALENTS — namespace re-export (#101)', () => {
-    it('groups all five novel-mechanic talents', () => {
-        expect(Object.keys(WITHOUT_TALENTS).sort()).toEqual(['fieldVivisection', 'hotshotPilot', 'hullDown', 'leapingDodge', 'pushTheLimit'].sort());
+    it('groups the novel-mechanic talents that carry resolvers', () => {
+        expect(Object.keys(WITHOUT_TALENTS).sort()).toEqual(['fieldVivisection', 'leapingDodge', 'pushTheLimit'].sort());
     });
 });
 
@@ -64,81 +57,6 @@ describe('Field Vivisection — Medicae substitution (#101)', () => {
             weaponSkillTotal: -5,
         });
         expect(result.target).toBe(0);
-    });
-});
-
-describe('Hotshot Pilot — Fatigue trade (#101)', () => {
-    it('adds AgB DoS on a successful Operate test when invoked', () => {
-        const result = resolveHotshotPilot({
-            success: true,
-            degreesOfSuccess: 1,
-            degreesOfFailure: 0,
-            agilityBonus: 4,
-            spendFatigue: true,
-        });
-        expect(result.applied).toBe(true);
-        expect(result.fatigueGained).toBe(1);
-        expect(result.adjustedDegreesOfSuccess).toBe(5);
-        expect(result.adjustedDegreesOfFailure).toBe(0);
-    });
-
-    it('reduces DoF by AgB on failure, clamped to a minimum of 1', () => {
-        const result = resolveHotshotPilot({
-            success: false,
-            degreesOfSuccess: 0,
-            degreesOfFailure: 3,
-            agilityBonus: 4,
-            spendFatigue: true,
-        });
-        expect(result.applied).toBe(true);
-        expect(result.adjustedDegreesOfFailure).toBe(1);
-        expect(result.adjustedDegreesOfSuccess).toBe(0);
-    });
-
-    it('declined trade leaves DoS/DoF and Fatigue untouched', () => {
-        const result = resolveHotshotPilot({
-            success: true,
-            degreesOfSuccess: 2,
-            degreesOfFailure: 0,
-            agilityBonus: 4,
-            spendFatigue: false,
-        });
-        expect(result.applied).toBe(false);
-        expect(result.fatigueGained).toBe(0);
-        expect(result.adjustedDegreesOfSuccess).toBe(2);
-    });
-
-    it('zero Agility bonus disables the trade even when invoked', () => {
-        const result = resolveHotshotPilot({
-            success: false,
-            degreesOfSuccess: 0,
-            degreesOfFailure: 5,
-            agilityBonus: 0,
-            spendFatigue: true,
-        });
-        expect(result.applied).toBe(false);
-        expect(result.fatigueGained).toBe(0);
-        expect(result.adjustedDegreesOfFailure).toBe(5);
-    });
-});
-
-describe('Hull Down — Size −1 during Movement (#101)', () => {
-    it('shaves one Size tier off during a Movement action', () => {
-        const result = resolveHullDownSize({ baseSize: 5, duringMovementAction: true });
-        expect(result.effectiveSize).toBe(4);
-        expect(result.applied).toBe(true);
-    });
-
-    it('returns the raw Size outside Movement actions', () => {
-        const result = resolveHullDownSize({ baseSize: 5, duringMovementAction: false });
-        expect(result.effectiveSize).toBe(5);
-        expect(result.applied).toBe(false);
-    });
-
-    it('clamps effective Size to a minimum of 1 (no invisible vehicles)', () => {
-        const result = resolveHullDownSize({ baseSize: 1, duringMovementAction: true });
-        expect(result.effectiveSize).toBe(1);
-        expect(result.applied).toBe(true);
     });
 });
 

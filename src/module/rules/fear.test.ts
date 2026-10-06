@@ -29,15 +29,15 @@ describe('clampFearRating (#369 — single-sourced Fear-range clamp)', () => {
 });
 
 describe('getFearTestPenalty (#65)', () => {
-    it('returns −10 × rating', () => {
+    it('returns 10 × (rating − 1): Disturbing +0 … Terrifying −30', () => {
         expect(getFearTestPenalty(0)).toBe(0);
-        expect(getFearTestPenalty(1)).toBe(10);
-        expect(getFearTestPenalty(2)).toBe(20);
-        expect(getFearTestPenalty(3)).toBe(30);
-        expect(getFearTestPenalty(4)).toBe(40);
+        expect(getFearTestPenalty(1)).toBe(0);
+        expect(getFearTestPenalty(2)).toBe(10);
+        expect(getFearTestPenalty(3)).toBe(20);
+        expect(getFearTestPenalty(4)).toBe(30);
     });
     it('caps at MAX_FEAR_RATING and floors at 0', () => {
-        expect(getFearTestPenalty(10)).toBe(40);
+        expect(getFearTestPenalty(10)).toBe(30);
         expect(getFearTestPenalty(-3)).toBe(0);
         expect(getFearTestPenalty(Number.NaN)).toBe(0);
     });
@@ -50,10 +50,11 @@ describe('resolveFearTest (#65)', () => {
         expect(r.target).toBe(40);
     });
 
-    it('target = WP − (10 × rating) for rating 1..4', () => {
-        expect(resolveFearTest({ willpowerTotal: 40, fearRating: 1 }).target).toBe(30);
-        expect(resolveFearTest({ willpowerTotal: 40, fearRating: 2 }).target).toBe(20);
-        expect(resolveFearTest({ willpowerTotal: 40, fearRating: 4 }).target).toBe(0);
+    it('target = WP − 10 × (rating − 1) for rating 1..4', () => {
+        expect(resolveFearTest({ willpowerTotal: 40, fearRating: 1 }).target).toBe(40);
+        expect(resolveFearTest({ willpowerTotal: 40, fearRating: 2 }).target).toBe(30);
+        expect(resolveFearTest({ willpowerTotal: 40, fearRating: 3 }).target).toBe(20);
+        expect(resolveFearTest({ willpowerTotal: 40, fearRating: 4 }).target).toBe(10);
     });
 
     it('target floors at 0', () => {

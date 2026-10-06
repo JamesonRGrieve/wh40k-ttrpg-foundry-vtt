@@ -47,6 +47,18 @@ export function labelFor(map: Record<string, LabelledConfigEntry>, key: string):
     return entry === undefined ? key : game.i18n.localize(entry.label);
 }
 
+/**
+ * The availability text an item shows. When the book prints restriction words
+ * instead of a rarity ("Special", "Inquisition only", …) the item carries them
+ * in `availabilityRestriction` and its `availability` rarity is only the
+ * unprinted schema default — so the words are shown, not the rarity label.
+ * Otherwise the localized rarity label.
+ */
+export function availabilityDisplayLabel(map: Record<string, LabelledConfigEntry>, availability: string, restriction: string): string {
+    const words = restriction.trim();
+    return words !== '' ? words : labelFor(map, availability);
+}
+
 /** A rating printed for a named place ("Scarce (Volg)"). */
 export interface PlaceRating {
     place: string;

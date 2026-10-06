@@ -8,10 +8,10 @@
  *  - Ambidextrous: drops the **off-hand** penalty by an additional 10
  *    (cumulative with Wielder/Master).
  *
- * The talent registry on the actor is read via the same `hasTalent`-style
- * fuzzy lookup used elsewhere in the roll pipeline. We accept either a
- * concrete actor with the lookup method, or an explicit talent-name set
- * for unit-testability without an actor stack.
+ * The talents are read from the fighter's owned talents by their
+ * `system.identifier` (`twoWeaponWielder` / `twoWeaponMaster` /
+ * `ambidextrous`) and, for Wielder and Master, the `system.specialization`
+ * the character picked (Melee / Ranged) — never by display name.
  */
 
 export interface TwoWeaponPenalties {
@@ -21,29 +21,52 @@ export interface TwoWeaponPenalties {
     offPenalty: number;
 }
 
+/** One owned talent, as the resolver reads it: its document identifier and the specialisation picked. */
+export interface TwoWeaponTalent {
+    identifier: string;
+    specialization: string;
+}
+
 export interface TwoWeaponContext {
     /** Whether the fighter is attacking with melee weapons (vs ranged) — gates the per-flavour Wielder/Master talent. */
     isMelee: boolean;
-    /** Set of canonical talent names on the actor (normalised: title-case, trimmed). */
-    talents: ReadonlySet<string>;
+    /** The fighter's owned talents. */
+    talents: readonly TwoWeaponTalent[];
 }
 
-const WIELDER_MELEE = 'Two-Weapon Wielder (Melee)';
-const WIELDER_RANGED = 'Two-Weapon Wielder (Ranged)';
-const MASTER_MELEE = 'Two-Weapon Master (Melee)';
-const MASTER_RANGED = 'Two-Weapon Master (Ranged)';
-const AMBIDEXTROUS = 'Ambidextrous';
+const WIELDER_IDENTIFIER = 'twoWeaponWielder';
+const MASTER_IDENTIFIER = 'twoWeaponMaster';
+const AMBIDEXTROUS_IDENTIFIER = 'ambidextrous';
+
+/**
+ * Whether a Wielder / Master talent's picked specialisation covers this attack's
+ * flavour. A blank specialisation (DH1's unspecialised Two-Weapon Wielder) covers
+ * both; otherwise the specialisation must name Melee or Ranged.
+ */
+function coversFlavour(specialization: string, isMelee: boolean): boolean {
+    const spec = specialization.trim().toLowerCase();
+    if (spec === '') return true;
+    return spec.includes(isMelee ? 'melee' : 'ranged');
+}
+
+/** Whether the fighter owns the talent `identifier` for this attack's flavour. */
+function hasFlavourTalent(ctx: TwoWeaponContext, identifier: string): boolean {
+    return ctx.talents.some((talent) => talent.identifier === identifier && coversFlavour(talent.specialization, ctx.isMelee));
+}
+
+/** Whether the fighter has the matching-flavour Wielder (or Master, which includes it). */
+function hasWielderFor(ctx: TwoWeaponContext): boolean {
+    return hasFlavourTalent(ctx, MASTER_IDENTIFIER) || hasFlavourTalent(ctx, WIELDER_IDENTIFIER);
+}
 
 /**
  * Resolve the main- and off-hand penalty pair for a two-weapon attack
  * given the fighter's talent state and weapon flavour.
  */
 export function resolveTwoWeaponPenalties(ctx: TwoWeaponContext): TwoWeaponPenalties {
-    const wielderTalent = ctx.isMelee ? WIELDER_MELEE : WIELDER_RANGED;
-    const masterTalent = ctx.isMelee ? MASTER_MELEE : MASTER_RANGED;
-    const hasMaster = ctx.talents.has(masterTalent);
-    const hasWielder = hasMaster || ctx.talents.has(wielderTalent);
-    const hasAmbidextrous = ctx.talents.has(AMBIDEXTROUS);
+    const hasMaster = hasFlavourTalent(ctx, MASTER_IDENTIFIER);
+    const hasWielder = hasWielderFor(ctx);
+    const hasAmbidextrous = ctx.talents.some((talent) => talent.identifier === AMBIDEXTROUS_IDENTIFIER);
 
     // Baseline −20 / −20. Wielder zeroes main-hand. Master zeroes both.
     // Ambidextrous reduces the off-hand penalty by 10 (never raises above 0).
@@ -164,9 +187,7 @@ export function isTwoWeaponRefocusMode(mode: TwoWeaponAttackMode, isMelee: boole
  * +10 capped at 0).
  */
 export function resolveTwoWeaponRefocus(ctx: TwoWeaponRefocusContext): TwoWeaponRefocusPlan {
-    const wielderTalent = ctx.isMelee ? WIELDER_MELEE : WIELDER_RANGED;
-    const masterTalent = ctx.isMelee ? MASTER_MELEE : MASTER_RANGED;
-    const hasWielder = ctx.talents.has(masterTalent) || ctx.talents.has(wielderTalent);
+    const hasWielder = hasWielderFor(ctx);
     const modeIsLegal = isTwoWeaponRefocusMode(ctx.mode, ctx.isMelee);
     const { mainPenalty, offPenalty } = resolveTwoWeaponPenalties(ctx);
 

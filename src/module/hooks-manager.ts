@@ -125,6 +125,7 @@ import { EventTracker } from './managers/event-tracker.ts';
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
 import type { ActionData } from './rolls/action-data.ts';
+import { registerKeepExtremeModifier } from './rolls/roll-keep.ts';
 import { registerRollPrompts } from './rolls/roll-prompt.ts';
 import { registerActionEconomy } from './rules/action-economy.ts';
 import { ensureInquisitionArmoury } from './rules/armoury.ts';
@@ -490,7 +491,8 @@ export class HooksManager {
         });
 
         // Per-encounter re-roll uses (talent/trait `reroll` variants with
-        // frequency 'per-encounter') reset when the encounter Combat is deleted.
+        // frequency 'per-encounter') and other encounter-scoped state reset
+        // when the encounter Combat is deleted.
         // First active GM only — clearing the ledger writes a flag to the DB and
         // must run once. Per-session uses reset manually via
         // `actor.resetRerollUses('per-session')` (no native session-end hook).
@@ -509,8 +511,33 @@ export class HooksManager {
                 actor.resetRerollUses('per-encounter').catch((err: unknown) => {
                     console.error('reroll-reset: deleteCombat per-encounter reset failed', err);
                 });
+                // Encounter-scoped grants and armed onDamaged test hooks end with the encounter.
+                // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+                actor.clearEncounterScopedState().catch((err: unknown) => {
+                    console.error('encounter-scope: deleteCombat clear failed', err);
+                });
             }
         });
+
+        // Turn-bound armed test hooks (`turns` duration — Cleansing Pain lasts "until
+        // the end of his next turn") count the end of their bearer's own turn. Foundry
+        // reports the turn that just ended as `prior`. First active GM only (a DB write).
+        // eslint-disable-next-line no-restricted-syntax -- boundary: combatTurnChange hook payloads are framework-typed; we read only the prior combatant → actor
+        hooksOn(
+            'combatTurnChange',
+            (combat: { combatants?: { get?: (id: string) => { actor?: WH40KBaseActor | null } | undefined } }, prior: { combatantId?: string | null }) => {
+                const firstGM = game.users.contents.find((u) => u.active && u.isGM)?.id;
+                if (game.user.id !== firstGM) return;
+                const priorId = prior.combatantId;
+                if (priorId == null) return;
+                const actor = combat.combatants?.get?.(priorId)?.actor;
+                if (actor == null) return;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+                actor.endTurnForArmedTestHooks().catch((err: unknown) => {
+                    console.error('armed-test-hooks: combatTurnChange turn-end failed', err);
+                });
+            },
+        );
 
         // Per-round re-roll uses (frequency 'per-round', e.g. Blademaster's
         // once-per-round attack re-roll) reset at the start of each new combat
@@ -1035,6 +1062,8 @@ export class HooksManager {
 
         // Register custom Roll classes for serialization/deserialization
         CONFIG.Dice.rolls.push(dice.BasicRollWH40K, dice.D100Roll);
+        // The `ke` (keep extreme) die modifier Emphasis tests roll with.
+        registerKeepExtremeModifier();
 
         // Register data models for actors — one per (system, kind) type.
         // DataModels handle schema validation and data preparation.

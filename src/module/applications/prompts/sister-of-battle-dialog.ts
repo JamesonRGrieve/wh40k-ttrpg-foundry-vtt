@@ -1,50 +1,59 @@
 /**
  * @file SisterOfBattleDialog — GM dialog confirming the Sister of
- * Battle elite advance for an applicant. Shows the three granted
- * talents (Faith of the Emperor, Holy Aegis, Sister's Resolve) and
- * emits a chat card listing the grants on confirm.
+ * Battle elite advance for an applicant. Lists what the advance grants
+ * and emits a chat card listing the grants on confirm.
  *
  * No actor mutation here — the advance item is applied through the
- * standard compendium flow. This surface is the GM-facing
- * confirmation step plus the resulting chat announcement, driven
- * from `SISTER_OF_BATTLE_TALENTS` in
- * `src/module/rules/sister-of-battle.ts`.
+ * standard compendium flow. Every row comes from the elite advance
+ * document (found by `system.identifier`), turned into rows by
+ * `advanceGrantCards` in `src/module/rules/sister-of-battle.ts`; no talent
+ * name or rule lives in code.
  *
  * See GitHub issue #134.
  */
 
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
-import { SISTER_OF_BATTLE_TALENTS, type SisterOfBattleTalent } from '../../rules/sister-of-battle.ts';
+import { advanceGrantCards, SISTER_OF_BATTLE_ADVANCE_IDENTIFIER, type AdvanceGrantCard, type AdvanceGrantsLike } from '../../rules/sister-of-battle.ts';
+import { findItemUuidByIdentifier } from '../../utils/compendium-query.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-/** Card view-model — one entry per talent rendered in the dialog + chat card. */
-interface TalentCard {
-    id: string;
-    label: string;
-    summary: string;
-}
+/** The game line whose packs hold the advance (an Enemies Within, DH2 advance). */
+const ADVANCE_LINE = 'dh2';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface SisterOfBattleContext extends Record<string, unknown> {
-    talents: TalentCard[];
+    talents: AdvanceGrantCard[];
+    requirementsText: string;
     canApply: boolean;
 }
 
-function localize(key: string): string {
-    return game.i18n.localize(key);
+/** What the dialog shows, read off the elite advance document. */
+interface AdvanceView {
+    cards: AdvanceGrantCard[];
+    requirementsText: string;
 }
 
-function buildTalentCards(): TalentCard[] {
-    return SISTER_OF_BATTLE_TALENTS.map(
-        (talent: SisterOfBattleTalent): TalentCard => ({
-            id: talent.id,
-            label: localize(talent.label),
-            summary: localize(talent.summary),
-        }),
-    );
+/** The slice of the origin-path DataModel the dialog reads. */
+interface AdvanceSystemLike {
+    grants?: AdvanceGrantsLike;
+    requirements?: { text?: string };
+}
+
+/** Load the elite advance document's requirements and grant rows; empty when the pack lacks it. */
+async function loadAdvanceView(): Promise<AdvanceView> {
+    const empty: AdvanceView = { cards: [], requirementsText: '' };
+    const uuid = await findItemUuidByIdentifier('originPath', SISTER_OF_BATTLE_ADVANCE_IDENTIFIER, ADVANCE_LINE);
+    if (uuid === null) return empty;
+    const advance = await fromUuid(uuid);
+    if (!(advance instanceof Item)) return empty;
+    const system: AdvanceSystemLike = advance.system;
+    return {
+        cards: system.grants === undefined ? [] : advanceGrantCards(system.grants),
+        requirementsText: system.requirements?.text ?? '',
+    };
 }
 
 /**
@@ -54,6 +63,9 @@ function buildTalentCards(): TalentCard[] {
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
 class SisterOfBattleDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+    /** The advance's requirements and grant rows, loaded once on first render. */
+    #view: AdvanceView | null = null;
+
     /* -------------------------------------------- */
 
     /** @override */
@@ -86,6 +98,14 @@ class SisterOfBattleDialog extends ApplicationV2Mixin(ApplicationV2 as unknown a
         },
     };
 
+    /** The advance view, loading it on first use. */
+    async #advanceView(): Promise<AdvanceView> {
+        if (this.#view !== null) return this.#view;
+        const view = await loadAdvanceView();
+        this.#view = view;
+        return view;
+    }
+
     /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
@@ -93,10 +113,12 @@ class SisterOfBattleDialog extends ApplicationV2Mixin(ApplicationV2 as unknown a
     /** @inheritDoc */
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<SisterOfBattleContext> {
         const context = (await super._prepareContext(options)) as SisterOfBattleContext;
+        const view = await this.#advanceView();
         return {
             ...context,
-            talents: buildTalentCards(),
-            canApply: true,
+            talents: view.cards,
+            requirementsText: view.requirementsText,
+            canApply: view.cards.length > 0,
         };
     }
 
@@ -107,8 +129,8 @@ class SisterOfBattleDialog extends ApplicationV2Mixin(ApplicationV2 as unknown a
     static async #onApply(this: SisterOfBattleDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const templateData = {
-            talents: buildTalentCards(),
-            gameSystem: 'dh2',
+            talents: (await this.#advanceView()).cards,
+            gameSystem: ADVANCE_LINE,
         };
 
         await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/sister-of-battle-chat.hbs', templateData);

@@ -16,6 +16,7 @@ import { type ArmourSystemLike, computeArmour, getArmourAPForLocation } from './
  */
 
 interface ItemSystemLike {
+    identifier?: string;
     level?: number;
     specialization?: string;
     state?: { equipped?: boolean };
@@ -33,8 +34,11 @@ interface MockActorOpts {
     items?: ItemLike[];
 }
 
+/** The armour traits' document identifiers, keyed by the display name the tests use. */
+const ARMOUR_TRAIT_IDENTIFIER: Readonly<Record<string, string>> = { 'Machine': 'machine', 'Natural Armour': 'naturalArmour' };
+
 function makeTraitItem(name: string, level: number): ItemLike {
-    return { type: 'trait', name, system: { level } };
+    return { type: 'trait', name, system: { identifier: ARMOUR_TRAIT_IDENTIFIER[name] ?? '', level } };
 }
 
 function makeWornArmourItem(name: string, ap: number): ItemLike {
@@ -154,13 +158,36 @@ describe('computeArmour (#144 errata: Machine + worn-armour stacking)', () => {
         expect(body.traitBonus).toBe(0);
     });
 
-    it('both `Natural Armor` (US spelling) and `Natural Armour` are recognised', () => {
-        const actor = mockActor({
+    it('matches by identifier, not name — a renamed Natural Armour still counts, a same-named trait without it does not', () => {
+        const renamed = mockActor({
             toughnessBonus: 3,
-            items: [makeTraitItem('Natural Armor', 4)],
+            items: [{ type: 'trait', name: 'Natural Armor', system: { identifier: 'naturalArmour', level: 4 } }],
+        });
+        expect(bodyOf(computeArmour(renamed)).traitBonus).toBe(4);
+
+        const impostor = mockActor({
+            toughnessBonus: 3,
+            items: [{ type: 'trait', name: 'Machine', system: { identifier: 'machineSpirit', level: 4 } }],
+        });
+        expect(bodyOf(computeArmour(impostor)).traitBonus).toBe(0);
+    });
+
+    it('regression: an embedded "Machine (X)" trait at level 8 grants 8 armour (the exact-name match gave 0)', () => {
+        const actor = mockActor({
+            toughnessBonus: 4,
+            items: [{ type: 'trait', name: 'Machine (X)', system: { identifier: 'machine', level: 8 } }],
         });
         const body = bodyOf(computeArmour(actor));
-        expect(body.traitBonus).toBe(4);
+        expect(body.traitBonus).toBe(8);
+        expect(body.total).toBe(12);
+    });
+
+    it('reads the rating from the name of a stat-block trait named "Machine (8)" with no level', () => {
+        const actor = mockActor({
+            toughnessBonus: 0,
+            items: [{ type: 'trait', name: 'Machine (8)', system: { identifier: 'machine' } }],
+        });
+        expect(bodyOf(computeArmour(actor)).traitBonus).toBe(8);
     });
 });
 
@@ -175,7 +202,7 @@ describe('computeArmour — SPEC-carried natural-armour rating', () => {
     it('reads the rating from `specialization` when `level` is absent', () => {
         const actor = mockActor({
             toughnessBonus: 3,
-            items: [{ type: 'trait', name: 'Natural Armour', system: { specialization: '3' } }],
+            items: [{ type: 'trait', name: 'Natural Armour', system: { identifier: 'naturalArmour', specialization: '3' } }],
         });
         const body = bodyOf(computeArmour(actor));
         expect(body.traitBonus).toBe(3);
@@ -185,7 +212,7 @@ describe('computeArmour — SPEC-carried natural-armour rating', () => {
     it('parses the leading integer of a composed specialization string', () => {
         const actor = mockActor({
             toughnessBonus: 0,
-            items: [{ type: 'trait', name: 'Machine', system: { specialization: '6 (adamantium)' } }],
+            items: [{ type: 'trait', name: 'Machine', system: { identifier: 'machine', specialization: '6 (adamantium)' } }],
         });
         expect(bodyOf(computeArmour(actor)).traitBonus).toBe(6);
     });
@@ -193,7 +220,7 @@ describe('computeArmour — SPEC-carried natural-armour rating', () => {
     it('prefers a positive `level` over `specialization`', () => {
         const actor = mockActor({
             toughnessBonus: 0,
-            items: [{ type: 'trait', name: 'Natural Armour', system: { level: 5, specialization: '3' } }],
+            items: [{ type: 'trait', name: 'Natural Armour', system: { identifier: 'naturalArmour', level: 5, specialization: '3' } }],
         });
         expect(bodyOf(computeArmour(actor)).traitBonus).toBe(5);
     });

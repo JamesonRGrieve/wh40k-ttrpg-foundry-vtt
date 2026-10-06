@@ -266,6 +266,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
             {
               "choices": undefined,
               "config": true,
+              "default": "false",
+              "key": "roll-keep-modes",
+              "requiresReload": false,
+              "scope": "world",
+              "type": "Boolean",
+            },
+            {
+              "choices": undefined,
+              "config": true,
               "default": "0",
               "key": "high-ground-band",
               "requiresReload": false,
@@ -469,6 +478,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
               "requiresReload": undefined,
               "scope": "world",
               "type": "String",
+            },
+            {
+              "choices": undefined,
+              "config": true,
+              "default": "100",
+              "key": "apotheosis-infamy-threshold",
+              "requiresReload": false,
+              "scope": "world",
+              "type": "Number",
             },
           ]
         `);
@@ -762,6 +780,24 @@ describe('WH40KSettings — system-parameter value spaces (parameterized)', () =
         });
         it('pre-registration → 60', () => {
             expect(WH40KSettings.getCharacteristicPointBuyPool()).toBe(60);
+        });
+    });
+
+    // --- Number: BC apotheosis Infamy threshold (non-negative integer, default 100) ---
+    describe('getApotheosisInfamyThreshold', () => {
+        const cases: ReadonlyArray<readonly [number | string, number]> = [
+            [100, 100],
+            [75, 75],
+            [-5, 0],
+            [90.6, 90],
+            ['nonsense', 100],
+        ];
+        it.each(cases)('stored %p → %p', (stored, expected) => {
+            stubSetting(stored);
+            expect(WH40KSettings.getApotheosisInfamyThreshold()).toBe(expected);
+        });
+        it('pre-registration → 100', () => {
+            expect(WH40KSettings.getApotheosisInfamyThreshold()).toBe(100);
         });
     });
 

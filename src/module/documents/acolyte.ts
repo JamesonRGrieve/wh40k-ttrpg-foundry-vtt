@@ -856,62 +856,43 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     /**
-     * Perform a quick characteristic check without dialog
+     * Perform a quick characteristic check without dialog — the target side of an
+     * opposed power or contest.
      * @param {string} characteristic - The characteristic key
-     * @returns {Promise<D100RollResult|null>} The evaluated roll
+     * @returns {Promise<D100Roll|null>} The evaluated roll
      */
-    override async rollCharacteristicCheck(characteristic: string): Promise<D100RollResult | null> {
+    override async rollCharacteristicCheck(characteristic: string): Promise<D100Roll | null> {
         const char = this.getCharacteristicFuzzy(characteristic);
-        if (!char) {
+        if (char === undefined) {
             game.wh40k.error('Unable to perform characteristic test. Could not find provided characteristic.', characteristic);
             return null;
         }
-
-        // Quick roll without dialog
-        const roll = await D100Roll.evaluate({
-            actor: this,
-            target: char.total,
-            configure: false,
-        });
-
-        return roll as D100RollResult | null;
+        return this.rollCheck(char.total);
     }
 
     /**
      * Perform a quick skill check without dialog — used by opposed skill contests
      * (e.g. Deceive vs the target's Scrutiny, #433).
      * @param {string} skillKey - The skill key
-     * @returns {Promise<D100RollResult|null>} The evaluated roll
+     * @returns {Promise<D100Roll|null>} The evaluated roll
      */
-    override async rollSkillCheck(skillKey: string): Promise<D100RollResult | null> {
+    override async rollSkillCheck(skillKey: string): Promise<D100Roll | null> {
         const skill = this.getSkillFuzzy(skillKey) as WH40KSkill | undefined;
         if (skill === undefined) {
             game.wh40k.error('Unable to perform skill test. Could not find provided skill.', skillKey);
             return null;
         }
-
-        const roll = await D100Roll.evaluate({
-            actor: this,
-            target: skill.current,
-            configure: false,
-        });
-
-        return roll as D100RollResult | null;
+        return this.rollCheck(skill.current);
     }
 
     /**
      * Perform a quick d100 check against a target number
      * @param {number} targetNumber - The target number
-     * @returns {Promise<D100RollResult|null>} The evaluated roll
+     * @returns {Promise<D100Roll|null>} The evaluated roll
      */
-    async rollCheck(targetNumber: number): Promise<D100RollResult | null> {
-        const roll = await D100Roll.evaluate({
-            actor: this,
-            target: targetNumber,
-            configure: false,
-        });
-
-        return roll as D100RollResult | null;
+    async rollCheck(targetNumber: number): Promise<D100Roll | null> {
+        // D100Roll.evaluate builds an instance of the class it is called on.
+        return (await D100Roll.evaluate({ actor: this, target: targetNumber, configure: false })) as D100Roll | null;
     }
 
     /**

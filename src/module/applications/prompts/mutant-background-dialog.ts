@@ -5,12 +5,9 @@
  * (when an actor is provided) applies both on confirm. Also emits
  * a chat card announcing the application.
  *
- * Mechanical hooks come from `MUTANT_STARTING_CORRUPTION` and
- * `canConvertMalignancyToMutation` in
- * `src/module/rules/chaos-backgrounds.ts`. Wires into the
- * Malignancy test pipeline (#67) — when an actor with the Twisted
- * Flesh flag fails a Malignancy test, the chat-card "Convert
- * Failed Malignancy" action becomes available.
+ * The starting Corruption comes from `MUTANT_STARTING_CORRUPTION` in
+ * `src/module/rules/chaos-backgrounds.ts`; the Twisted Flesh flag
+ * marks the background's malignancy-to-mutation option for the GM.
  *
  * See GitHub issue #91.
  */

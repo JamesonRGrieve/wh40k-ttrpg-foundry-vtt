@@ -8,7 +8,7 @@ import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts
 import { Hit } from '../rolls/damage-data.ts';
 import { uuid, postChatCard, emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { actionBudgetForActor, spendActionForActor } from '../rules/action-economy.ts';
-import { ASSASSINS_STRIKE_TEST } from '../rules/assassins-strike.ts';
+import { assassinsStrikeTest } from '../rules/assassins-strike.ts';
 import { DEFAULT_HIT_LOCATION, resolveHitLocationId } from '../rules/hit-locations.ts';
 import { weaponHasQuality } from '../rules/weapon-quality-effects.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
@@ -296,7 +296,8 @@ export class BasicActionManager {
      * L75). Looks up the stored ActionData by `data-roll-id` so the
      * Acrobatics test is dispatched against the same actor that just
      * resolved the melee attack, then opens the unified roll dialog for
-     * a Challenging (+0) Acrobatics Test. On success, the GM narrates
+     * the test the talent document authors in its rollConfig (DH2:
+     * Challenging (+0) Acrobatics). On success, the GM narrates
      * the Half Move (Agility-bonus metres) as a Free Action per the
      * errata — the dispatch posts a short announcement so the audit
      * trail stays in chat.
@@ -313,17 +314,20 @@ export class BasicActionManager {
             return;
         }
 
+        // The test (skill + modifier) is authored on the talent document's
+        // rollConfig; an actor without the talent has nothing to roll.
+        const strikeTest = assassinsStrikeTest(sourceActor);
+        if (strikeTest === null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Action.AcrobaticsDispatchFailed'));
+            return;
+        }
+
         // Disable the button so the action cannot be double-dispatched.
         btn.disabled = true;
 
-        // Open the Acrobatics test dialog at Challenging (+0). The unified
-        // roll dialog reads the modifier from the dispatch options when the
-        // caller surfaces a difficulty band; passing the locked constants
-        // here ensures the chat-card path matches the errata wording.
         try {
-            await sourceActor.rollSkill?.(ASSASSINS_STRIKE_TEST.skill, undefined, {
-                difficulty: ASSASSINS_STRIKE_TEST.difficulty,
-                modifier: ASSASSINS_STRIKE_TEST.modifier,
+            await sourceActor.rollSkill?.(strikeTest.skill, undefined, {
+                modifier: strikeTest.modifier,
                 flavor: game.i18n.localize('WH40K.AssassinsStrike.TestTitle'),
             });
         } catch {
