@@ -33,7 +33,7 @@
  * because it never persists.
  */
 
-import { inferActiveGameLine, materializeItemVariants } from './utils/item-variant-utils.ts';
+import { inferActiveGameLine, materializeItemVariants, resolveOwnedLineContent, sameSourceValue } from './utils/item-variant-utils.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: Foundry item/actor types carry open-ended Record<string,unknown> at framework boundaries */
 type HydratableItem = {
@@ -49,6 +49,8 @@ type HydratableItem = {
 
 type HydratableActor = {
     items: { contents: HydratableItem[] };
+    /** The actor type (`<line>-<role>`), which names the line its items resolve to. */
+    type?: string;
     reset?: () => void;
     /** Identity used only to report an unresolved join to the GM (#499). */
     name?: string | null;
@@ -66,7 +68,13 @@ type HydratableActor = {
     updateSource?: (changes: Record<string, unknown>, options?: SourceReplaceOptions) => void;
 };
 
-type SourceLike = { img: string | null; system: Record<string, unknown> };
+type SourceLike = {
+    img: string | null;
+    /** The item type, naming the system DataModel the owner-line resolution cleans through. */
+    type: string;
+    system: Record<string, unknown>;
+    _source?: { system?: Record<string, unknown> };
+};
 
 /** The `updateSource` option the join passes: replace root keys wholesale (see {@link REPLACE_SYSTEM}). */
 type SourceReplaceOptions = { recursive: false };
@@ -131,28 +139,6 @@ function joinUuid(item: HydratableItem): string | null {
 const MAX_VARIANT_DEPTH = 8;
 
 /**
- * Order-insensitive structural comparison, for "did the join actually change
- * anything".
- *
- * A plain `JSON.stringify` comparison is key-order sensitive, and the merge
- * necessarily reorders: the base's keys land first. Comparing raw strings would
- * therefore report a change on every variant actor whose values already match
- * its base, patch it needlessly, and `reset()` it on every render.
- */
-/* eslint-disable no-restricted-syntax -- boundary: compares two untyped Foundry system payloads, which are `unknown` at every depth by construction */
-function sameSystem(a: unknown, b: unknown): boolean {
-    if (isPlainObject(a) && isPlainObject(b)) {
-        const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
-        return [...keys].every((key) => sameSystem(a[key], b[key]));
-    }
-    if (Array.isArray(a) && Array.isArray(b)) {
-        return a.length === b.length && a.every((value, index) => sameSystem(value, b[index]));
-    }
-    return a === b;
-}
-/* eslint-enable no-restricted-syntax */
-
-/**
  * Resolve an actor's `variantOf` chain into the base system layers to sit UNDER
  * its own values, nearest base first.
  *
@@ -215,7 +201,7 @@ async function buildActorSystemPatch(actor: HydratableActor, unresolved: Unresol
     for (let i = layers.length - 2; i >= 0; i -= 1) merged = deepMerge(merged, layers[i] ?? {});
     merged = deepMerge(merged, persisted);
 
-    return sameSystem(merged, persisted) ? null : merged;
+    return sameSourceValue(merged, persisted) ? null : merged;
 }
 
 /** Actors already reported this session, so a re-render doesn't re-nag the GM. */
@@ -320,18 +306,25 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
             continue;
         }
 
-        // Resolve the canonical body's per-line variant containers to the owning
-        // actor's line BEFORE the merge. `updateSource` (the hydration write path)
-        // re-cleans WITHOUT running `_migrateData`, so an unresolved container
-        // (e.g. `description: { rt: { value } }`) would be stripped by the schema —
-        // exactly what `ItemDataModel._migrateData` → `materializeItemVariants`
-        // prevents on the normal load path (#574). A no-op when already flat.
-        const materializedSource = materializeItemVariants(structuredClone(source.system), lineKey);
+        // Resolve the canonical body's per-line variant containers to the OWNING
+        // actor's line BEFORE the merge. The fetched canonical was itself flattened
+        // to the WORLD line when it loaded, so its recorded unflattened source is
+        // re-resolved for this actor, and any persisted value that is merely an
+        // unedited world-line copy is re-pointed to the actor's line (in memory
+        // only — "persisted wins" for anything the actor customised).
+        // `updateSource` (the hydration write path) re-cleans WITHOUT running
+        // `_migrateData`, so an unresolved container (e.g. `description: { rt:
+        // { value } }`) would be stripped by the schema; the fallback materialize
+        // covers a canonical with no recorded source (#574). A no-op when flat.
         const persisted = item._source?.system ?? item.system;
-        const merged = buildHydratedSystem(materializedSource, persisted);
+        const ownedLine = resolveOwnedLineContent(source, persisted, lineKey);
+        const merged =
+            ownedLine === null
+                ? buildHydratedSystem(materializeItemVariants(structuredClone(source.system), lineKey), persisted)
+                : buildHydratedSystem(ownedLine.base, ownedLine.overlay);
         // Order-insensitive no-op check (as the actor path uses), so a re-render of
         // an already-hydrated item does not needlessly re-patch and `reset()`.
-        if (sameSystem(merged, persisted)) continue; // already full — no-op
+        if (sameSourceValue(merged, persisted)) continue; // already full — no-op
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payload
         const patch: Record<string, unknown> = { _id: item.id, system: merged };

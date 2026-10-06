@@ -11,6 +11,13 @@ import { applyRollModeWhispers, getDegreeForMode, isD100Success, resolveDegreesM
 import type { WH40KItemSystemData } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { capitalize } from '../utils/format.ts';
+import {
+    hasLineVariantContainers,
+    materializeItemVariants,
+    ownerGameLine,
+    rememberLineVariantSource,
+    resolveOwnedLineContent,
+} from '../utils/item-variant-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 import { WH40KItemContainer } from './item-container.ts';
@@ -81,6 +88,65 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     /**
+     * Resolve each new OWNED item's per-line content to its owning actor's line
+     * before Foundry's create workflow runs.
+     *
+     * This is the earliest point the owner is known. The client backend
+     * (`ClientDatabaseBackend#preCreateDocumentArray`) first runs the STATIC
+     * `cleanData` over the raw create data — no parent, so `_migrateData`
+     * collapses every per-line variant container to the WORLD line — and only
+     * then constructs the pending document with its parent. So:
+     *  - create data still carrying containers is materialized for the owner's
+     *    line here, leaving migration nothing to collapse;
+     *  - create data copied from an already-flattened canonical (a compendium
+     *    drop, `fromCompendium`) has each unedited world-line value re-pointed to
+     *    the owner's line from the canonical's recorded unflattened source.
+     * The stored record is therefore the owner's line from the start. Unowned
+     * creations (world items, compendium items) are untouched.
+     */
+    static override async createDocuments<Temporary extends boolean | undefined = undefined>(
+        data: foundry.documents.BaseItem.CreateInput[] = [],
+        operation?: foundry.abstract.Document.Database.CreateOperation<foundry.documents.BaseItem.Database.Create<Temporary>>,
+    ): Promise<Array<foundry.documents.BaseItem.TemporaryIf<Temporary>>> {
+        const line = ownerGameLine(operation?.parent);
+        const prepared = line === null ? data : await Promise.all(data.map(async (entry) => WH40KItem.#resolveForOwnerLine(entry, line)));
+        return super.createDocuments(prepared, operation);
+    }
+
+    /**
+     * One create-data entry resolved for its owner's line (see {@link createDocuments}).
+     * Returns the entry untouched when it carries no line content to resolve.
+     */
+    static async #resolveForOwnerLine(
+        entry: foundry.documents.BaseItem.CreateInput,
+        line: NonNullable<ReturnType<typeof ownerGameLine>>,
+    ): Promise<foundry.documents.BaseItem.CreateInput> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Item.create payload (BaseItem.CreateInput) carries an open-ended system bag
+        const raw = entry as { system?: unknown; _stats?: { compendiumSource?: unknown } | null };
+        const system = raw.system;
+        if (system === null || typeof system !== 'object' || Array.isArray(system)) return entry;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Item.create payload system is an untyped source bag
+        const systemSource = system as Record<string, unknown>;
+        if (hasLineVariantContainers(systemSource)) {
+            return { ...entry, system: materializeItemVariants(foundry.utils.deepClone(systemSource), line) };
+        }
+
+        const sourceUuid = raw._stats?.compendiumSource;
+        if (typeof sourceUuid !== 'string' || sourceUuid === '') return entry;
+        let canonical: Awaited<ReturnType<typeof fromUuid>>;
+        try {
+            canonical = await fromUuid(sourceUuid);
+        } catch (err) {
+            // Best-effort: an unresolvable source leaves the copy as dropped.
+            console.warn(`WH40K | createDocuments: could not resolve ${sourceUuid} for owner-line resolution`, err);
+            return entry;
+        }
+        if (!(canonical instanceof WH40KItem)) return entry;
+        const resolved = resolveOwnedLineContent(canonical, systemSource, line);
+        return resolved === null ? entry : { ...entry, system: resolved.overlay };
+    }
+
+    /**
      * Override to clean/validate img field before validation runs.
      * Foundry V13 has strict img validation - ensure valid file extension.
      * @param {object} source - The candidate data object to clean
@@ -99,6 +165,13 @@ export class WH40KItem extends WH40KItemContainer {
         // Remove explicit undefined values before schema validation runs.
         // Foundry treats `undefined` differently from an omitted field during updates.
         this.#pruneUndefined(source);
+
+        // Constructing a document (`DataModel#_initializeSource` passes the model
+        // under construction as `_state.model`): remember its system payload while
+        // it still holds its per-line variant containers. Migration below collapses
+        // them to the world line; an owned copy needs its OWNER's line instead
+        // (see `resolveOwnedLineContent`). Partial update diffs are not a source.
+        if (_state.model !== undefined && options.partial !== true) rememberLineVariantSource(_state.model, source['system']);
 
         // CRITICAL: Clean img field if present - V13 validation is very strict
         if ('img' in source) {
