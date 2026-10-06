@@ -487,6 +487,9 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
         const update: JsonObj = {};
         for (const key of Object.keys(created.system.characteristics)) update[`system.characteristics.${key}.base`] = characteristicBase;
         if (psy) update['system.psy.rating'] = args.seedPsyRating;
+        // A BC Corruption Test focus rolls against the Corruption total; seed it like a
+        // characteristic so a forced success is a success on every focus key.
+        if (psy && typeof created.system.corruption === 'number') update['system.corruption'] = characteristicBase;
         await helpers.withTimeout(created.update(update), `seed ${type}`);
         return created;
     };
