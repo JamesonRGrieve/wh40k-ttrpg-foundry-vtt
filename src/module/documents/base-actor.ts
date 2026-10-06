@@ -95,12 +95,27 @@ export class WH40KBaseActor extends Actor {
     declare items: Actor['items'] & foundry.utils.Collection<WH40KItem>;
 
     /**
-     * A quick (dialog-free, chat-free) characteristic test, as an opposed contest's
-     * target side rolls it. Null when this actor type cannot make one — the contest
-     * then leaves the initiator's result standing. Acolytes override it.
+     * A quick (dialog-free, chat-free) characteristic test — how any actor, NPC
+     * included, rolls the target side of an opposed power or contest. Null when
+     * the actor has no such characteristic; the contest then leaves the
+     * initiator's result standing.
      */
-    async rollCharacteristicCheck(_characteristic: string): Promise<D100Roll | null> {
-        return Promise.resolve(null);
+    async rollCharacteristicCheck(characteristic: string): Promise<D100Roll | null> {
+        const char = this.getCharacteristicFuzzy(characteristic);
+        if (char === undefined) {
+            game.wh40k.error('Unable to perform characteristic test. Could not find provided characteristic.', characteristic);
+            return null;
+        }
+        return this.rollCheck(char.total);
+    }
+
+    /**
+     * A quick d100 test against a fixed target number, without dialog or chat.
+     * Reaches D100Roll through `game.wh40k` because this module cannot import the
+     * dice classes (they sit on the roll stack, which imports the actor).
+     */
+    async rollCheck(targetNumber: number): Promise<D100Roll | null> {
+        return game.wh40k.D100Roll.quickCheck(this, targetNumber);
     }
 
     /** A quick skill test; actors with a skill table (acolytes) override it. */

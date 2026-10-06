@@ -115,18 +115,21 @@ describe('the psychic cast path (source contract — action-data cannot load und
     });
 });
 
-describe('opposed checks by actor type', () => {
+describe('opposed checks for every actor type', () => {
     const baseActor = readRepoFile('src/module/documents/base-actor.ts');
     const acolyte = readRepoFile('src/module/documents/acolyte.ts');
 
-    it('an acolyte target rolls a real characteristic check', () => {
-        expect(acolyte).toContain('override async rollCharacteristicCheck(characteristic: string): Promise<D100Roll | null>');
-        expect(acolyte).toContain('return this.rollCheck(char.total);');
+    // Regression: NPCs inherited a stub returning null, so an NPC could never
+    // resist an opposed power. Every actor now rolls a real check on the base class.
+    it('the base actor rolls a real characteristic check, so an NPC target resists', () => {
+        expect(baseActor).toContain('async rollCharacteristicCheck(characteristic: string): Promise<D100Roll | null>');
+        expect(baseActor).toContain('return this.rollCheck(char.total);');
     });
 
-    it('any other actor type returns a typed null, which applyOpposedCheck tolerates', () => {
-        expect(baseActor).toContain('async rollCharacteristicCheck(_characteristic: string): Promise<D100Roll | null>');
+    it('reaches D100Roll at runtime, never by a value import that would close a dependency cycle', () => {
+        expect(baseActor).toContain('game.wh40k.D100Roll.quickCheck(this, targetNumber)');
         expect(baseActor).toContain("import type D100Roll from '../dice/d100-roll.ts';");
+        expect(acolyte).not.toContain('override async rollCharacteristicCheck');
     });
 });
 
