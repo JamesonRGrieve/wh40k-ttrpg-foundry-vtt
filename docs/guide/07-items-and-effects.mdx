@@ -1,0 +1,72 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guide/Items and Effects" />
+
+# Items, Equipment and Effects
+
+Almost everything a character has is an item: weapons, armour, gear, ammunition, cybernetics, force fields, talents, traits, skills, psychic powers, conditions, critical injuries and origin paths. Each type has its own item sheet.
+
+## Item sheets and edit mode
+
+Item sheets open read-only. If you are allowed to edit the item, use the edit toggle on the sheet (**Enter Edit Mode** / **Exit Edit Mode**). Items inside a compendium cannot be edited from the sheet.
+
+Some items are locked even in your own world unless the GM enables **Freeform Character Editing**:
+
+- special abilities, malignancies, mutations and mental disorders;
+- a character's own copy of a weapon or origin path. Copies in the world's Items sidebar or in a compendium are not affected.
+
+These items are meant to be maintained in their compendium. A change made there reaches every actor that uses the item.
+
+### Compendium-linked items
+
+Items on an actor stay linked to their compendium entry. With **Hydrate Embedded Items From Compendiums on World Boot** on (the default), each item's description and rules are joined from the compendium when the world loads. Your per-character details, such as skill advances, ammo counts, equipped state, modifications, quantities and XP cost, are kept. A compendium edit therefore reaches every actor on the next load. Sheets also refresh this data whenever they open.
+
+## How items change your rolls
+
+Talents, traits, gear, conditions and effects can all modify tests, damage, penetration and more. The system collects these modifiers in one place, so each one shows on the chat card as a named row with its source. Hover over a row to see where it came from. See [Rolling Tests](?path=/docs/guide-rolling-tests--docs).
+
+Modifiers reach a roll in three ways:
+
+| Kind | Where you see it | Can you switch it off? |
+| --- | --- | --- |
+| Always-on | **Passive Effects** in the roll dialog, already included in the base value | No. These are listed for transparency only. |
+| Situational | Pills in the roll dialog, from talents, traits and conditions | Yes. Click to apply when the situation fits. |
+| Gear | **Gear** chips in the roll dialog, from equipment you carry | Yes. Click to say you are using the item. |
+
+Some modifiers scale with something about the roll, such as a characteristic bonus or Degrees of Success, or only apply in certain cases, such as on a critical hit. These values come from the item's data in the content packs; the system works them out when you roll.
+
+### Active Effects
+
+Foundry Active Effects on an actor show on the **Active Effects** panel on the Overview and Combat tabs, with their remaining duration. Enable, disable or delete them from there. Durations count down as the GM advances in-game time.
+
+## Weapons
+
+The weapon sheet shows the weapon's profile: class, damage, penetration, range, rate of fire, clip and reload. It has tabs for description, modifications and notes.
+
+| Control | What it does |
+| --- | --- |
+| **Reload** | Reload a weapon carried by a character. |
+| **Clear Jam** | Shown when the weapon is jammed. After clearing, the weapon must be reloaded. |
+| **Build Clip** | Load several ammunition types in firing order, for example 3 AP rounds then 2 Hot-shot. Only shown when the GM enables **Enable Magazine Building**. |
+| Ammunition | Load or eject special ammunition by dragging it onto the weapon. |
+| Modifications | Drag weapon modifications onto the weapon. Each can be switched on or off. |
+| Qualities | Click a quality to open its entry. |
+| Roll attack / damage | Start an attack or damage roll from the sheet. |
+
+**Craftsmanship** (Poor, Cheap, Common, Good, Best and so on) is shown on the sheet.
+
+**Unidentified weapons**: in edit mode the GM can untick **Identified** on a weapon. Players then see **???** in place of its stats; the GM always sees the real values.
+
+**Bound items**: an item marked as bound cannot be dropped or traded.
+
+### Weapon qualities
+
+Weapon qualities are compendium items. Each quality's game effect is stored as data on the quality, and the system applies it automatically during attack and damage rolls. For example, a quality can lower the Righteous Fury threshold or change how damage dice are rolled. Qualities that apply to an attack are listed under **Active Qualities** on the attack card. Qualities you may choose to use appear under **Firing options** in the roll dialog.
+
+## Armour and force fields
+
+Armour gives protection by hit location, shown on the Combat tab. Force fields have their own roll; the roll dialog shows whether the field is **Activated**, **Not Activated** or **Overloaded**.
+
+## Carrying, dropping and giving items
+
+See the Inventory section of [The Character Sheet](?path=/docs/guide-the-character-sheet--docs): items can be carried or stored elsewhere, dropped on the ground as a loot pile, or given to another character you control.

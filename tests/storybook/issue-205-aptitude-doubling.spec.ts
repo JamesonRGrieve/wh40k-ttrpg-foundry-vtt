@@ -26,7 +26,7 @@ test.describe('Issue #205 — duplicate aptitude doubling', () => {
             if (msg.type() === 'error') consoleErrors.push(msg.text());
         });
 
-        await page.goto('/iframe.html?id=character-creation-originpathbuilder--issue-205-aptitude-doubling');
+        await page.goto('/iframe.html?id=dev-character-creation-originpathbuilder--issue-205-aptitude-doubling');
 
         // The warning banner must be visible above the aptitudes preview row.
         // Take the screenshot first so visual review has the artefact even

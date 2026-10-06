@@ -19,7 +19,7 @@
  * with 5 weighted result rows covering 1–5.
  *
  * This spec renders the post-roll chat card in Storybook for the
- * Vacuum entry (story id `chat-ship-critical-hit--vacuum`), dumps a
+ * Vacuum entry (story id `dev-chat-ship-critical-hit--vacuum`), dumps a
  * full-page PNG to `.e2e-screenshots/issue-187-critical-hit.png` for
  * visual inspection, and asserts the rendered body is attached. The
  * assertion is lenient on structured selectors — the goal is a
@@ -42,7 +42,7 @@ test.beforeAll(() => {
 test('issue #187: ship critical hit chat card renders the vacuum result', async ({ page }) => {
     // Story id derives from `title: 'Chat/Ship Critical Hit'` plus the
     // `Vacuum` named export, kebab-cased by Storybook.
-    await page.goto('/iframe.html?id=chat-ship-critical-hit--vacuum');
+    await page.goto('/iframe.html?id=dev-chat-ship-critical-hit--vacuum');
     await page.waitForLoadState('networkidle');
 
     // Lenient selector: the body element should be attached and contain
@@ -62,7 +62,7 @@ test('issue #187: ship critical hit chat card renders the vacuum result', async 
 });
 
 test('issue #187: ship critical hit chat card renders the fallback message', async ({ page }) => {
-    await page.goto('/iframe.html?id=chat-ship-critical-hit--table-unavailable-fallback');
+    await page.goto('/iframe.html?id=dev-chat-ship-critical-hit--table-unavailable-fallback');
     await page.waitForLoadState('networkidle');
 
     const body = page.locator('body');

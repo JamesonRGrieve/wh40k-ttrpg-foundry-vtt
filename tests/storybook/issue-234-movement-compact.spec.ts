@@ -13,7 +13,7 @@ const SHOT = resolve(SHOT_DIR, 'issue-234-movement-compact.png');
 
 test('issue #234/#235: compact movement cluster renders Half/Full/Charge/Run', async ({ page }) => {
     mkdirSync(SHOT_DIR, { recursive: true });
-    await page.goto('/iframe.html?id=actor-character-movementpanelcompact--out-of-combat&viewMode=story');
+    await page.goto('/iframe.html?id=dev-actor-character-movementpanelcompact--out-of-combat&viewMode=story');
     await page.waitForSelector('.wh40k-panel', { timeout: 10_000 });
     await page.screenshot({ path: SHOT, fullPage: true });
 

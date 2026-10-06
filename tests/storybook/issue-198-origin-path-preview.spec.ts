@@ -21,7 +21,7 @@ test.describe('Issue #198 — origin path preview against normalized origin', ()
             if (msg.type() === 'error') consoleErrors.push(msg.text());
         });
 
-        await page.goto('/iframe.html?id=character-creation-originpathbuilder--issue-198-void-born-preview');
+        await page.goto('/iframe.html?id=dev-character-creation-originpathbuilder--issue-198-void-born-preview');
 
         // The selection-panel rows produced from the normalized origin's
         // `grants` shape must be visible — this proves the data round-tripped

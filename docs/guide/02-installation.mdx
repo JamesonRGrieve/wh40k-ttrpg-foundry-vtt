@@ -1,0 +1,58 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guide/Installation and Updating" />
+
+# Installation and Updating
+
+## Requirements
+
+| Requirement | Value |
+| --- | --- |
+| Foundry VTT | Version 14 (minimum 14, maximum 14; verified on 14.368) |
+| Content | None required to start. Book content is not included and must be supplied by you. |
+
+Earlier and later major versions of Foundry are not supported; the system's manifest declares compatibility with version 14 only.
+
+## Install from a manifest URL
+
+1. In Foundry's setup screen, open **Game Systems**.
+2. Click **Install System**.
+3. Paste one of the manifest URLs below into the **Manifest URL** field and click **Install**.
+
+### Release channels
+
+| Channel | Manifest URL | What it is |
+| --- | --- | --- |
+| Official release | `https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/latest/download/system.json` | Versioned releases. This URL always points at the newest official release, so installs made from it follow future releases. |
+| Nightly | `https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/download/nightly/system.json` | A rolling, pre-release build of the latest development code, rebuilt on every change. Not an official release; expect rough edges. |
+
+Pick one channel per Foundry installation. Use the official channel for regular games and the nightly channel only if you want to test new features before they are released.
+
+## Updating
+
+Because both manifest URLs are stable, Foundry's normal update check works:
+
+1. Open **Game Systems** in Foundry's setup screen.
+2. Click **Update** on WH40K RPG (Unofficial), or use **Update All**.
+
+Back up your world before updating, as you would with any system.
+
+## What the download contains
+
+Both channels ship the system code, its licence, and only the public, generic compendium packs. **No copyrighted book content is included in either channel.**
+
+## Adding game content
+
+The system reads game content (origin paths, talents, skills, weapons, conditions, critical effects and so on) from compendium packs. Without that content:
+
+- The Origin Path Builder shows **No origins available for this step** unless your GM has created origin path items in the world.
+- The token condition list contains only Foundry's own **Dead** marker.
+- Critical damage cards show **Critical Effect text unavailable (content pack not installed).**
+
+You can still create actors, roll characteristics and skills, and build items by hand inside your world.
+
+## First steps after installing
+
+1. Create a world using **WH40K RPG (Unofficial)**.
+2. As GM, open **Game Settings → Configure Settings → WH40K RPG** and set **Primary Game System** to the line you are running. The system uses it for content viewed outside an actor and for the token condition list. See [Game Settings](?path=/docs/guide-game-settings--docs).
+3. Review the other world settings, especially the house-rule options, before your first session.

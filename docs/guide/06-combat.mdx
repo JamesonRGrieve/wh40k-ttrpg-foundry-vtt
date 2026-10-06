@@ -1,0 +1,121 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guide/Combat" />
+
+# Combat
+
+This page follows one attack from start to finish: starting the encounter, attacking, the defender's reaction, damage, and what happens to the target.
+
+## Starting an encounter
+
+Add the tokens to Foundry's combat tracker and start the encounter as usual.
+
+- **Initiative**: use the initiative action on the sheet's **Combat** tab. A **Roll Initiative** dialog lets you add a situational modifier or tick **Burn a Fate Point (take 10 instead of 1d10)**.
+- **Attacks need an encounter.** By default a weapon attack can only be made while an encounter is running and the attacker's token is in it. Otherwise you see "Attacks can only be made during an active combat encounter." The GM can turn this off with **Require Active Combat to Attack** for out-of-combat or narrative attacks.
+
+### Actions per turn
+
+During combat, each combatant has an action budget (**Full**, **Half**, **Free** and **Reaction**) shown in the combat tracker. It resets at the start of each turn.
+
+### Movement
+
+With **Movement Automation** set to **Full Automation** (the default), during a running encounter:
+
+- Players can only move their own token on its turn. Otherwise: "It is not this combatant's turn — only the active combatant may move."
+- A move cannot exceed the distance left this turn for the chosen move type (Half, Full, Charge or Run). The movement panel on the Combat tab shows what is left.
+- The GM can always move tokens freely.
+
+**Display Only** shows movement without enforcing it; **No Automation** turns it off.
+
+## Making an attack
+
+1. **Draw** the weapon. Only equipped weapons can attack. Use **Draw Weapon** on the sheet's Combat tab.
+2. **Target** the enemy token with Foundry's normal targeting.
+3. Attack with the weapon from your sheet, or use the **Attack** button on a weapon's chat card. The roll dialog opens with weapon options.
+
+A weapon that is jammed, empty or still recharging will not fire, and you get a warning instead. Use **Reload** or **Clear Jam** on the weapon (see [Items and Effects](?path=/docs/guide-items-and-effects--docs)).
+
+### Attack options in the roll dialog
+
+| Option | Choices |
+| --- | --- |
+| **Select Weapon** | Pick which equipped weapon to use. |
+| **Attack Mode** (ranged) | Standard Attack, Semi-Auto, Full-Auto, Suppressing Fire, Overwatch, Called Shot. Only modes the weapon supports are offered. |
+| **Attack Mode** (melee) | Standard Attack, Charge, All-Out Attack, Guarded Attack, Called Shot, plus special options such as Feint, Knockdown, Stun, Manoeuvre and Disarm. |
+| **Called Shot Location** | Where a called shot is aimed. |
+| **Aim** | No Aim, Half Aim, Full Aim. |
+| Range | Point Blank, Short, Standard, Long, Extreme. Set automatically from the distance to your target; you can override the distance. |
+| Target size | Set from the target; you can override it. |
+| Situational | Combat circumstances such as Prone, Unaware Target, Engaged in Melee, Darkness, High Ground, Stunned Target, Helpless Target, fog or smoke, cover levels and Ganging Up. |
+| **Firing options** | Weapon qualities you can choose to use for this attack only. |
+
+**Cover** does not penalise the attack roll. Instead it adds armour at the hit location, absorbing part of the damage.
+
+Two optional settings help here:
+
+- **Auto Line of Sight & Cover** checks the scene's walls between attacker and target and pre-selects the cover option. Off by default.
+- **Higher Ground elevation band** sets how much higher the attacker must be before the High Ground bonus applies.
+
+### Hit location
+
+On a hit, the system reverses the digits of the attack roll (for example 23 becomes 32) and looks up the hit location. It appears on the attack card.
+
+### Defender reactions
+
+When an attack hits a target, the card offers **Dodge** to the defender, and **Parry** against melee attacks. Using one rolls the defender's test and spends their Reaction for the round. A defender who has already reacted, or whose condition prevents reactions, cannot use them.
+
+## Damage
+
+With **Auto-roll Damage on Hit** on (the default), a successful attack rolls its damage straight away and posts a damage card. With it off, click **Roll Damage** on the attack card.
+
+The damage card shows, for each hit:
+
+- the hit number, hit location, and the target's name when hits are spread over several enemies;
+- the damage **Formula**, **Base Damage** and each named damage modifier;
+- the total damage, damage type and **Penetration**;
+- when a target is selected, the **Effective** damage after the target's armour (reduced by penetration) and Toughness Bonus;
+- any weapon effects and Righteous Fury results;
+- **Replace die with DoS**: for hits with Degrees of Success, swap one damage die for the attack's Degrees of Success. This option is only available while the original roll is still in memory, so it disappears after a page reload.
+
+### Righteous Fury
+
+A damage die that rolls 10 triggers Righteous Fury. Some weapon qualities, such as Vengeful or Gauss, lower that threshold. Each trigger is listed on the damage card with its critical effect. The effect text comes from your content packs.
+
+If the target's defences would absorb a Righteous Fury hit completely, it still deals 1 damage, shown as **Absorbed (1)**.
+
+### Applying damage
+
+Click **Assign Damage** on the damage card to apply a hit to the target. The system:
+
+1. reduces the armour at the hit location by the attack's penetration (to a minimum of 0);
+2. subtracts that armour and the target's Toughness Bonus from the damage;
+3. removes the rest from the target's wounds;
+4. treats any damage beyond the remaining wounds as critical damage, rolls the critical effect and applies the conditions it causes.
+
+The **Assign Damage** action on the sheet's Combat tab lets you apply damage and fatigue by hand.
+
+The GM can turn on **Auto-apply Damage to Target**. Damage rolled by the GM against a selected target is then applied automatically, and the card says "Damage applied automatically". Damage from player-rolled attacks is still applied with the button.
+
+In Deathwatch, a target set up as a horde loses Magnitude instead of wounds.
+
+## Psychic powers
+
+Use **Invoke Power** or **Attack Power** from the Psychic Powers panel on the Combat tab. The roll dialog lets you pick the power and a power level:
+
+| Mode | Summary shown in the dialog |
+| --- | --- |
+| **Fettered** | Half PR. No phenomena chance. |
+| **Unfettered** | Full PR. Phenomena on doubles. |
+| **Push** | PR + Push. Always triggers phenomena. Set the **Push Level**. |
+
+With **Auto-roll Psychic Phenomena** on (the default), triggered phenomena are drawn automatically from the Psychic Phenomena roll table, and severe results continue to the Perils of the Warp table. These tables come from your content packs.
+
+A GM can mark a scene as thin-veiled with the **Warp Weakness** checkbox in Scene Configuration, which makes Focus Power tests easier and phenomena more likely and more severe.
+
+## Conditions and effects
+
+- **Conditions** appear in the Token HUD status list. The list is built from the condition items in your content packs for the world's primary game line, plus Foundry's **Dead** marker. Only the GM can add conditions.
+- Conditions and other effects show on the sheet's **Active Effects** panel with any remaining duration.
+- With **Active Effect Processing** on (the default), ongoing effects such as burning or blood loss are processed when the combat turn changes.
+- **Fatigue** follows each line's rules by default. The GM can force one model for every actor with **Fatigue Model**.
+- When a creature gains the **Dead** status and **Dead tokens become lootable piles** is on, its carried gear is dropped as a lootable pile at its token. This requires the Item Piles module.

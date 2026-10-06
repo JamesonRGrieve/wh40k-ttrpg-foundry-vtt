@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Storybook integration', () => {
     test('renders active effects panel actions', async ({ page }) => {
-        await page.goto('/iframe.html?id=shared-components--active-effects-panel');
+        await page.goto('/iframe.html?id=dev-shared-components--active-effects-panel');
 
         await expect(page.locator('[data-action="createEffect"]').first()).toBeVisible();
         await expect(page.locator('[data-action="effectEdit"]')).toHaveCount(2);
@@ -18,7 +18,7 @@ test.describe('Storybook integration', () => {
     });
 
     test('renders weapon sheet composition with loaded ammo and effects', async ({ page }) => {
-        await page.goto('/iframe.html?id=item-sheets-weapon-sheet--standard');
+        await page.goto('/iframe.html?id=dev-item-sheets-weapon-sheet--standard');
 
         await expect(page.locator('[data-action="rollDamage"]').first()).toBeVisible();
         await expect(page.getByText('Kraken Penetrator')).toBeVisible();
@@ -26,7 +26,7 @@ test.describe('Storybook integration', () => {
     });
 
     test('renders the composed DH2 character sheet story', async ({ page }) => {
-        await page.goto('/iframe.html?id=actor-character-sheets--dark-heresy-2-biography');
+        await page.goto('/iframe.html?id=dev-actor-character-sheets--dark-heresy-2-biography');
 
         await expect(page.locator('input[value="Acolyte Vex"]').first()).toBeVisible();
         await expect(page.locator('input[name="system.bio.gender"]')).toHaveValue('Non-binary');
@@ -35,7 +35,7 @@ test.describe('Storybook integration', () => {
     });
 
     test('renders the composed IM NPC sheet story', async ({ page }) => {
-        await page.goto('/iframe.html?id=actor-character-sheets--imperium-maledictum-npc');
+        await page.goto('/iframe.html?id=dev-actor-character-sheets--imperium-maledictum-npc');
 
         await expect(page.locator('input[name="system.threatLevel"]')).toBeVisible();
         await expect(page.getByText('GM Tools')).toBeVisible();
@@ -43,14 +43,14 @@ test.describe('Storybook integration', () => {
     });
 
     test('renders the composed IM character biography story', async ({ page }) => {
-        await page.goto('/iframe.html?id=actor-character-sheets--imperium-maledictum-biography');
+        await page.goto('/iframe.html?id=dev-actor-character-sheets--imperium-maledictum-biography');
 
         await expect(page.locator('input[value="House Varonius"]').first()).toBeVisible();
         await expect(page.locator('input[value="Recover a lost ledger"]').first()).toBeVisible();
     });
 
     test('renders the skill chat card with specializations', async ({ page }) => {
-        await page.goto('/iframe.html?id=chat-skill-card--with-specializations');
+        await page.goto('/iframe.html?id=dev-chat-skill-card--with-specializations');
 
         // Title (`skill.name`) and the joined specializations list both
         // render through plain Handlebars expressions, so they appear in
@@ -67,7 +67,7 @@ test.describe('Storybook integration', () => {
     });
 
     test('renders the composed DH2 weapon inventory panel', async ({ page }) => {
-        await page.goto('/iframe.html?id=inventory-item-table--weapon-panel-dh-2');
+        await page.goto('/iframe.html?id=dev-inventory-item-table--weapon-panel-dh-2');
 
         // The weapon-panel template invokes the production-only
         // `specialDisplay` Handlebars helper (registered at Foundry
@@ -80,13 +80,13 @@ test.describe('Storybook integration', () => {
     });
 
     test('renders the active modifiers shared panel', async ({ page }) => {
-        await page.goto('/iframe.html?id=shared-components--active-modifiers-panel');
+        await page.goto('/iframe.html?id=dev-shared-components--active-modifiers-panel');
 
         await expect(page.locator('.wh40k-rpg, [class*="modifier"]').first()).toBeAttached();
     });
 
     test('renders the weapon quick-actions shared component', async ({ page }) => {
-        await page.goto('/iframe.html?id=shared-components--weapon-quick-actions');
+        await page.goto('/iframe.html?id=dev-shared-components--weapon-quick-actions');
 
         await expect(page.locator('[data-action]').first()).toBeAttached();
     });

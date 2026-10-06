@@ -1,0 +1,98 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guide/Creating a Character" />
+
+# Creating a Character
+
+Character creation has two parts: create the actor, then build it with the **Origin Path Builder**.
+
+## 1. Create the actor
+
+Click **Create Actor** in the Actors sidebar. The system replaces Foundry's default dialog with its own:
+
+| Field | What to choose |
+| --- | --- |
+| **Game System** | The line this actor belongs to. |
+| **Kind** | **Player Character**, **NPC**, or a vehicle kind. |
+| **Name** | Leave blank to get a default such as "New Dark Heresy 2e Player Character". |
+
+The vehicle kinds offered depend on the line:
+
+| Line | Kinds |
+| --- | --- |
+| Dark Heresy 2e, Only War, Deathwatch | Player Character, NPC, Land Vehicle, Aircraft |
+| Dark Heresy 1e, Black Crusade | Player Character, NPC, Land Vehicle |
+| Rogue Trader | Player Character, NPC, Land Vehicle, Aircraft, Voidcraft |
+
+An actor's game line is fixed by its type. To move a player character to another line later, right-click it in the Actors sidebar and choose **Convert System** (see [Other Tools](?path=/docs/guide-other-tools--docs)).
+
+## 2. Open the Origin Path Builder
+
+When you open a character sheet whose origin path has never been completed, the system asks **Origin Path Incomplete** and offers **Build Now** or **Later**. You can tick **Don't show this again for this character**. The GM can turn this prompt off for the whole world with the **Prompt to Build Unfinished Characters** setting.
+
+You can open the builder at any time from the **d20 icon** beside the portrait on the character sheet (tooltip: **Setup Origin Path**).
+
+## The builder at a glance
+
+The top bar of the builder holds:
+
+| Control | What it does |
+| --- | --- |
+| **Randomise Path** | Fills empty slots with random choices (asks for confirmation). |
+| **Reset All** | Clears all selections. |
+| **Guided** / **Free** | Guided follows the origin path chart step by step and only offers valid next choices. Free lets you choose any origins, ignoring path requirements. |
+| **Export Path** / **Import Path** | Save the current path configuration to a file, or load one back. |
+
+Below it, a step tracker shows every step. Click a step to jump to it. In Guided mode later steps stay locked until the earlier ones are complete.
+
+### Steps by game line
+
+| Line | Origin steps | Optional step | Extra steps |
+| --- | --- | --- | --- |
+| Dark Heresy 2e | Home World, Background, Role | Elite Advance | Characteristics, Equip Acolyte |
+| Dark Heresy 1e | Home World, Career | none | Characteristics |
+| Rogue Trader | Home World, Birthright, Lure of the Void, Trials and Travails, Motivation, Career | Lineage | Characteristics |
+| Black Crusade | Race, Archetype, Pride, Disgrace, Motivation | none | Characteristics |
+| Only War | Regiment, Speciality | none | Characteristics |
+| Deathwatch | Chapter, Speciality | none | Characteristics |
+
+Rogue Trader also has a direction switch: build **Home World → Career** or **Career → Home World**. Changing direction resets your current selections.
+
+### Choosing an origin
+
+1. Pick an origin card for the current step. Cards can show badges for choices, advanced options and XP cost.
+2. The selection panel lists what the origin grants: characteristic changes, skills, talents, traits and equipment. Click a granted skill or talent with a link icon to open it.
+3. Use **View Details** for the full entry.
+4. If the origin offers choices, the panel shows **Choices Required**. Use **Make Choice** for each one.
+5. If the origin includes rolls (wounds, Fate Points, or starting Throne Gelt), use **Roll** or enter a value yourself. When rolling you can choose **Roll For Me** or **I'll Roll Myself**.
+6. Click **Confirm Selection** to lock it in and move on (or **Select This Origin** from the details window).
+
+The **Show:** filter toggles origins by provenance: **Official**, **Adapted** and **Homebrew**. Origins created directly in the world rather than in a compendium are marked **Authored in this world, not in a compendium**.
+
+In Dark Heresy 2e, if an origin grants an aptitude your character already has, a **Duplicate aptitude detected** banner appears. Use **Pick replacement** to choose a different aptitude.
+
+## Characteristics
+
+The Characteristics step offers three generation modes:
+
+| Mode | How it works |
+| --- | --- |
+| **Point Buy** | Spend a pool of points; each +1 above a characteristic's base costs 1 point. The pool size is the GM's **Point-Buy Pool** setting (default 60). |
+| **Roll** | Roll 2d10 for each characteristic and add it to the base. **Roll All** rolls every characteristic at once. |
+| **Roll Pool (HB)** | A house-rule mode. Roll a bank of 2d10 results (**Dice Rolls Bank**), then drag each result onto the characteristic you want. You can click a roll chip to type a value in. |
+
+The base value starts at 25, adjusted by the GM's **Characteristic Offset** setting. **Advanced Mode** lets you set custom base values for non-human characters. Origin bonuses are added on top.
+
+## Equip Acolyte (Dark Heresy 2e)
+
+Dark Heresy 2e has a final **Equip Acolyte** step for picking starting gear from the armoury packs. It needs your starting Influence first: roll or enter it under **Starting Resources**. The step shows availability and, when the **DH2e Economy Ruleset** setting is Homebrew, Requisition and Throne Gelt costs. A selection limit applies.
+
+## Apply to the character
+
+When the steps are done, click **Apply to Character** to write everything to the actor. The builder tells you if anything is still outstanding, for example pending choices or rolls, or characteristics that have not been rolled or assigned yet.
+
+## After creation: spending XP
+
+On the sheet's Overview tab, the Experience panel shows total, spent and available XP and an itemised list of **XP Purchases**. Click **Advance** to open the **Character Advancement** window and buy characteristic advances, skills, talents and psychic powers. The Advancement window needs a career from the Origin Path; without one it shows **No Career Selected**.
+
+Talents cost XP, so dropping a new talent onto a character sheet opens the Advancement window instead of adding it directly. A GM can show a drop-to-add zone on the Talents and Traits panels with the **Freeform Talent and Trait Creation** setting. Dragging an origin path item onto a character is refused unless the GM enables **Freeform Character Editing**; the builder is the supported route.

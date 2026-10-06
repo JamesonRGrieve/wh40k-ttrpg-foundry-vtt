@@ -26,7 +26,7 @@ test.describe('Issue #215 — no phantom duplicate-aptitude banner', () => {
             if (msg.type() === 'error') consoleErrors.push(msg.text());
         });
 
-        await page.goto('/iframe.html?id=character-creation-originpathbuilder--issue-215-no-phantom-duplicate');
+        await page.goto('/iframe.html?id=dev-character-creation-originpathbuilder--issue-215-no-phantom-duplicate');
 
         // Screenshot first so visual review has the artefact even if a later
         // assertion drops.

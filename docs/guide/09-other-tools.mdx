@@ -1,0 +1,100 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guide/Other Tools" />
+
+# Other Tools
+
+## The WH40K RPG scene controls
+
+The system adds its own group to Foundry's scene controls, titled **WH40K RPG** (skull icon):
+
+| Tool | Who | What it does |
+| --- | --- | --- |
+| **In-Universe Time** | Everyone | Opens the world-time widget. |
+| **Event Tracker** | GM | A tool for worlds that include a campaign event graph. In other worlds it reports that no graph is loaded. |
+| **Award XP** | GM | Opens **Award XP to Characters**: tick characters (or **Toggle All**), enter **XP to Award** and confirm. A negative amount removes XP. |
+
+## World time and the Imperial calendar
+
+The world-time widget opens when the world loads, and from the scene controls. It shows:
+
+- **Day N since inception**: days since the campaign started.
+- **Standard Date**: the Imperial date. Hover it for an explanation of the format.
+- **Time Elapsed (Terran)**.
+- The local day and time on a selected planet or moon, if you have set any up.
+
+The GM also sees **GM Time Controls**: **+1 Hour**, **+1 Day**, and a custom **Advance** by a number of hours or days. Advancing time:
+
+- counts down timed effects on actors (open sheets refresh);
+- lets characters recover fatigue over the elapsed time;
+- updates scene lighting for scenes linked to a planet or moon.
+
+Set the campaign's start date with the **Campaign Inception Date (Imperial)** setting.
+
+### Celestial bodies, weather and scene lighting
+
+The GM can click **Celestial Bodies & Weather** in the widget to define the campaign's planets and moons. For each, set a **Name**, **Day (h)**, **Year (d)**, **Tilt (°)** and current **Weather** (Clear, Haze, Overcast, Rain, Fog, Dust, Smog, Storm or Ashfall).
+
+To link a scene, open **Scene Configuration** and pick a **Celestial Body**. The scene's darkness then follows that body's local time of day and weather as the clock advances. Leave it as **Not driven (manual lighting)** for interiors, voidships and hand-lit maps.
+
+## Scene options
+
+The system adds two GM-only fields to **Scene Configuration**:
+
+- **Warp Weakness**: the veil is thin here. Focus Power tests get easier, and Psychic Phenomena happen more often and more severely.
+- **Celestial Body**: see above.
+
+## Compendium Browser
+
+Click **Compendium Browser** at the top of Foundry's Compendium sidebar to search and filter the contents of every compendium made for this system in one window:
+
+- search by name;
+- filter by source and category, and group the results;
+- filter armour by type, minimum AP and coverage, and armour modifications by what they apply to;
+- **Clear Filters** to reset.
+
+Click a result to open it, or drag it onto a character sheet.
+
+## Converting a character to another game line
+
+Right-click a player character in the Actors sidebar and choose **Convert System**. Pick the **Target System** and click **Convert**. This creates a replacement actor in the new line, keeps compatible fields, re-points linked scene tokens, and removes the original. Only player characters can be converted.
+
+## Compendium NPCs on the map
+
+By default, dragging an NPC or vehicle from a compendium onto a scene places only a token. It is backed by the compendium entry, tracks its own wounds and changes, and adds nothing to the Actors sidebar. Hold Ctrl while dropping to import a full actor, or change **Compendium drops import a world Actor**. Player characters are always imported.
+
+## Cogitator Terminal
+
+The Cogitator Terminal shows a set of items as an in-world data terminal. Records are listed on the left; selecting one shows its description. Links between records in the same terminal open in place.
+
+Access follows Foundry's ownership: a record the viewer cannot see (below Observer) is listed as **▓ RESTRICTED ▓** and its contents stay sealed. Give a player Observer permission on that item to reveal it.
+
+Open a terminal from a macro. Put the record items in one Item folder and run:
+
+```js
+game.wh40k.openCogitator({ folderId: game.folders.getName('Medicae Archive').id, title: 'Medicae Archive' });
+```
+
+| Option | Meaning |
+| --- | --- |
+| `folderId` | An Item folder whose contents are the records. |
+| `recordUuids` | A list of record item UUIDs, instead of or as well as a folder. |
+| `activeUuid` | The record to show first. |
+| `title` | The window title. |
+| `hideRestricted` | Leave records the viewer cannot read out of the list entirely. |
+
+A good way to use it is a scene Note on a console or archive that runs this macro.
+
+## Macro shortcuts
+
+The system exposes a few launchers for macros:
+
+```js
+game.wh40k.openCompendiumBrowser();
+game.wh40k.openCogitator({ folderId: '...' });
+game.wh40k.openEncounterBuilder();
+game.wh40k.showRollTableDialog();
+game.wh40k.prompts.openFearTestDialog();
+```
+
+`game.wh40k.prompts` also includes launchers for other GM dialogs, such as `openWarpTravelDialog()`, `openMutationRollDialog()` and `openDisorderRollDialog()`.

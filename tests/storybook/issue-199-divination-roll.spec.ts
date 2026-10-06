@@ -34,7 +34,7 @@ test.beforeAll(() => {
 test('issue #199: divination section renders a non-empty roll result', async ({ page }) => {
     // Story id derives from `title: 'Character Creation/Divination Section Issue 199'`
     // and the `Rolled` named export, kebab-cased by Storybook.
-    await page.goto('/iframe.html?id=character-creation-divination-section-issue-199--rolled');
+    await page.goto('/iframe.html?id=dev-character-creation-divination-section-issue-199--rolled');
 
     const input = page.locator('input[data-wh40k-hook="csd-divination-input"]');
     await expect(input).toBeVisible();
@@ -57,7 +57,7 @@ test('issue #199: divination section renders a non-empty roll result', async ({ 
 });
 
 test('issue #199: divination section renders the table-unavailable fallback message', async ({ page }) => {
-    await page.goto('/iframe.html?id=character-creation-divination-section-issue-199--table-unavailable-fallback');
+    await page.goto('/iframe.html?id=dev-character-creation-divination-section-issue-199--table-unavailable-fallback');
 
     const input = page.locator('input[data-wh40k-hook="csd-divination-input"]');
     await expect(input).toBeVisible();

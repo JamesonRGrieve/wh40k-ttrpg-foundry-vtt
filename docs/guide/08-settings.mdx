@@ -1,0 +1,99 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guide/Game Settings" />
+
+# Game Settings Reference
+
+Open **Game Settings → Configure Settings** and select the WH40K RPG section. Only a GM can change **world** settings, which apply to everyone. **Client** settings are personal to each user and browser.
+
+Settings marked **Reload** ask Foundry to reload when changed.
+
+## Game line and rules variants
+
+| Setting | Scope | Default | What it does |
+| --- | --- | --- | --- |
+| **Primary Game System** | World | Dark Heresy 2e | The line this world runs. Used as the line for content viewed outside an actor (for example compendium items), for the token condition list, and for actors created without a line of their own. Choices: Rogue Trader, Dark Heresy 1e, Dark Heresy 2e, Black Crusade, Only War, Deathwatch. **Reload.** |
+| **DH2e Economy Ruleset** | World | Homebrew | **RAW (Influence + Requisition)** uses only Influence and Requisition; Throne Gelt is hidden. **Homebrew (Influence + Requisition + Throne Gelt)** adds Throne Gelt as street-level currency and keeps Influence at 0 until earned (no starting roll). **Reload.** |
+| **Degrees of Success Calculation** | World | RAW (per game system) | How degrees of success and failure are counted. **RAW** picks the method per line. **Gen 1** counts one extra degree per full 10 points of margin. **Gen 2** counts the difference of the tens digits. Both add 1. |
+| **Fatigue Model** | World | Auto (per game system) | **Auto** follows each line's rules. **Halving**: fatigued characteristics count as half (DH1/DH2). **Flat**: −10 to all tests while fatigued (RT/DW/OW/BC). **Condition**: a two-tier Fatigued condition. A specific choice applies to every actor regardless of line. |
+| **Multiple Fate Burn Per Roll (Homebrew)** | World | Off | Allows more than one Fate Point spend on the same roll, for example re-roll and add a Degree of Success. Off means one Fate spend per test. |
+| **Advantage, Disadvantage & Emphasis Rolls** | World | Off | Adds a roll selector to the roll dialog: Advantage (roll twice, keep lower), Disadvantage (keep higher) or Emphasis (keep the result furthest from 50; the first roll stands on a tie). The chat card shows both dice. Off means one d100, as in the rulebooks. |
+| **Homebrew Self-Targeting** | World | Off | When you target yourself, uses point-blank range and skips target size, cover and target-state modifiers. Off follows the rulebook. |
+| **Homebrew: Awareness Sense Channels** | World | Off | Awareness is resolved per sense (Visual, Auditory, Olfactory). The test-variant selector is offered, sense-specific bonuses apply only to their channel, and a blinding or deafening condition auto-fails the matching channel. Off means Awareness rolls as written. |
+| **Higher Ground elevation band** | World | 0 | How far above the target, in scene distance units, the attacker must be before the High Ground bonus applies. 0 means any height above counts. Raise it so a crate or a half-step of rubble does not count. |
+| **Black Crusade apotheosis Infamy** | World | 100 | The Infamy a Black Crusade champion needs, when Corruption reaches 100, to become a Daemon Prince rather than a Chaos Spawn. |
+
+## Character creation and editing
+
+| Setting | Scope | Default | What it does |
+| --- | --- | --- | --- |
+| **Prompt to Build Unfinished Characters** | World | On | Opening a character or NPC sheet whose origin path was never completed offers to open the Origin Path Builder. Players can dismiss it per character. |
+| **Characteristic Offset** | World | 0 | Whole number added to the base characteristic value used by the Origin Path Builder (base 25 + offset). May be negative. |
+| **Point-Buy Pool** | World | 60 | Points a player can spend in point-buy generation. Each +1 above a characteristic's base costs 1 point. |
+| **Freeform Character Editing** | World | Off | Lets you edit special abilities, malignancies, mutations, mental disorders, and a character's own weapons and origin paths directly in Foundry. Also lets you build a character by dragging origin path items onto it. Off makes these read-only, and the builder is the supported route. For lasting changes, edit the compendium source. |
+| **Freeform Talent and Trait Creation** | World | Off | Shows the drop-to-add zone on the Talents and Traits panels of the character sheet. Off hides it, and talents and traits are granted through the advancement and XP flow. |
+| **NPCs advance like characters** | World | Off | Treats NPCs as buildable characters. Their printed characteristics are split into purchasable advances, aptitudes are derived from what they have, and their starting XP equals the cost of those advances, so the Advancement window can keep advancing them. No printed value changes. **Reload.** |
+
+## Rolls
+
+| Setting | Scope | Default | What it does |
+| --- | --- | --- | --- |
+| **Allow manual roll input** | World | Off | Shows the manual dice entry field in roll dialogs, for entering physical dice results. |
+| **Simple Attack Rolls** | Client | Off | Weapon attacks roll a plain Weapon Skill or Ballistic Skill test instead of the full attack automation. **Reload.** |
+| **Simple Psychic Rolls** | Client | Off | Psychic powers roll a plain Willpower test instead of the full power automation. **Reload.** |
+
+## Combat automation
+
+| Setting | Scope | Default | What it does |
+| --- | --- | --- | --- |
+| **Require Active Combat to Attack** | World | On | Weapon attacks can only start during an active encounter that includes the attacker's token. Turn off for out-of-combat or narrative attacks. |
+| **Auto-roll Damage on Hit** | World | On | A successful weapon or psychic attack rolls damage and posts the damage card automatically. Off means clicking **Roll Damage**. |
+| **Auto-apply Damage to Target** | World | Off | When the GM resolves a damage roll against a selected target, the reduced damage (armour by hit location plus Toughness Bonus) is applied automatically, including critical damage. Player-rolled attacks still use the **Assign Damage** button. |
+| **Auto Line of Sight & Cover** | World | Off | The attack dialog checks the scene's walls between attacker and target for line of sight and full or half cover, and pre-selects the cover option. Low cover marked on a scene near the target also counts. Check the results on your own scenes before relying on it. |
+| **Movement Automation** | World | Full Automation | **Full Automation** enforces movement speeds and turn order during combat. **Display Only (no cost enforcement)** shows movement without enforcing it. **No Automation** turns it off. |
+| **Active Effect Processing** | World | On | Processes ongoing effects such as Fire or Blood Loss when the combat turn changes. **Reload.** |
+| **Auto-roll Psychic Phenomena** | World | On | When a power triggers phenomena, draws from the Psychic Phenomena roll table automatically; a draw of 75 or more continues to the Perils of the Warp table. Off lets the GM draw manually. |
+| **Enable Magazine Building** | World | Off | Shows the **Build Clip** action on weapons, for loading several ammunition types in firing order. The standard Reload works either way. |
+| **Dead tokens become lootable piles** | World | Off | When a creature gains the Dead status, its carried gear is dropped as an Item Piles pile at its token. Requires the Item Piles module. Talents, traits, skills, powers and bound items are never dropped. |
+
+## Content, compendiums and tokens
+
+| Setting | Scope | Default | What it does |
+| --- | --- | --- | --- |
+| **Hydrate Embedded Items From Compendiums on World Boot** | World | On | On each world load, joins every embedded item's description and rules from its compendium in memory, without writing to the database. Per-character state is kept. Off leaves items incomplete until their sheet is opened. |
+| **Reconcile Origin-Path Grants on World Boot** | World | On | On each world load (GM only), re-applies each actor's origin paths so missing trained-skill grants repair themselves without re-running character creation. Safe to run every time. |
+| **Compendium drops import a world Actor** | World | Off | Off: dragging an NPC or vehicle from a compendium onto a scene places only a token backed by the compendium entry, with its own wounds and changes, and adds nothing to the Actors sidebar. On: always import a world Actor first (Foundry's default). Player characters always import. Hold Ctrl while dropping to import anyway. |
+
+## In-game time
+
+| Setting | Scope | Default | What it does |
+| --- | --- | --- | --- |
+| **Campaign Inception Date (Imperial)** | World | 0.000.001.M41 | The campaign's start date as an Imperial date (check.fraction.year.millennium, for example 5.420.816.M41). This is Day 0; the world-time widget shows this date advanced by elapsed in-game time. |
+
+## AI image generation
+
+These settings connect the system to an OpenAI-compatible image service you provide. Nothing is generated unless you configure an endpoint.
+
+| Setting | Scope | Default | What it does |
+| --- | --- | --- | --- |
+| **Auto-Generate Token Image** | World | Never | When an actor is dragged in from a compendium: **Never**, **Only if the actor has no image**, **Ask each time**, or **Always**. |
+| **Image Endpoint URL** | World | (blank) | Base URL of an OpenAI-compatible image API. The system posts to `/v1/images/generations`. Blank disables generation. |
+| **Image Model** | World | (blank) | Model name sent to the endpoint. |
+| **Image API Key** | World | (blank) | Optional bearer token sent with requests. Leave blank if the endpoint needs no key. |
+| **Image Size** | World | 1024x1024 | Requested image size. |
+
+The same settings power the GM-only **Generate portrait (AI)** button on actor sheets.
+
+## Maintenance
+
+| Setting | Scope | Default | What it does |
+| --- | --- | --- | --- |
+| **World Version** | World | 1 | Used to handle data migration during system upgrades. Leave it unchanged. **Reload.** |
+
+## Values set elsewhere
+
+Some world data is stored as settings but edited from the game, not from this menu:
+
+- **Warband Subtlety Pool** (Dark Heresy 2e): edited with the Subtlety stepper on any acolyte's sheet.
+- **Celestial Bodies & Weather**: edited from the world-time widget. See [Other Tools](?path=/docs/guide-other-tools--docs).
+- Saved NPC combat presets, and the campaign inception world-time stamp.

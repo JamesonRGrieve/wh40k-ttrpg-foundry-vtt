@@ -13,7 +13,7 @@ const SHOT = resolve(SHOT_DIR, 'issue-238-stats-headings.png');
 
 test('issue #238: specialist + talent panels share the panel.hbs header', async ({ page }) => {
     mkdirSync(SHOT_DIR, { recursive: true });
-    await page.goto('/iframe.html?id=actor-character-statstabheadings--unified-headers&viewMode=story');
+    await page.goto('/iframe.html?id=dev-actor-character-statstabheadings--unified-headers&viewMode=story');
     await page.waitForSelector('.wh40k-panel-header', { timeout: 10_000 });
     await page.screenshot({ path: SHOT, fullPage: true });
 
