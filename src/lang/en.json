@@ -301,7 +301,8 @@
             "FullAction": "Full Action",
             "HalfAction": "Half Action",
             "Passive": "Passive",
-            "Reaction": "Reaction"
+            "Reaction": "Reaction",
+            "Special": "Special"
         },
         "Acquisition": "Acquisition",
         "Actions": "Actions",

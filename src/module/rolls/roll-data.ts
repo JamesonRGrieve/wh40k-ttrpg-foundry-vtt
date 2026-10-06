@@ -877,10 +877,17 @@ export class WeaponRollData extends RollData {
 
 /** The Focus Power test a psychic power declares (PsychicPowerData.focusPower). */
 interface PsychicFocusPower {
+    /** A skill key when the book prints a skill focus test (it wins over `characteristic`). */
+    skill?: string;
     characteristic?: string;
     modifier?: number;
     opposed?: boolean;
     opposedCharacteristic?: string;
+}
+
+/** Actors with a skill table (acolytes) resolve a focus skill; others lack the method. */
+interface FocusSkillResolver {
+    getSkillFuzzy?: (skill: string) => { current: number; label?: string } | null | undefined;
 }
 
 export class PsychicRollData extends RollData {
@@ -961,11 +968,34 @@ export class PsychicRollData extends RollData {
     updateBaseTarget(): void {
         if (!this.sourceActor) return;
         const focusPower = (this.power.system as { focusPower?: PsychicFocusPower }).focusPower;
+
+        // A focus test the book prints as a SKILL (Psyniscience, Awareness) rolls that skill.
+        const skillKey = focusPower?.skill ?? '';
+        if (skillKey !== '') {
+            const skill = (this.sourceActor as FocusSkillResolver).getSkillFuzzy?.(skillKey);
+            if (skill !== undefined && skill !== null) {
+                this.baseTarget = skill.current;
+                this.baseChar = skill.label ?? skillKey;
+                return;
+            }
+        }
+
         const characteristic = focusPower?.characteristic ?? '';
-        const actorCharacteristic = this.sourceActor.getCharacteristicFuzzy(characteristic !== '' ? characteristic : 'willpower');
-        if (actorCharacteristic === undefined) return;
-        this.baseTarget = actorCharacteristic.total;
-        this.baseChar = actorCharacteristic.short;
+        const key = characteristic !== '' ? characteristic : 'willpower';
+        const actorCharacteristic = this.sourceActor.getCharacteristicFuzzy(key);
+        if (actorCharacteristic !== undefined) {
+            this.baseTarget = actorCharacteristic.total;
+            this.baseChar = actorCharacteristic.short;
+            return;
+        }
+
+        // A focus key that is no characteristic names a numeric actor stat the book
+        // tests like one (BC's "Corruption Test" rolls against the Corruption total).
+        const stat = (this.sourceActor.system as Partial<Record<string, number | object | string | boolean | null>>)[key];
+        if (typeof stat === 'number') {
+            this.baseTarget = stat;
+            this.baseChar = game.i18n.localize(`WH40K.Resource.${key.charAt(0).toUpperCase()}${key.slice(1)}`);
+        }
     }
 
     async finalize(): Promise<void> {

@@ -1,6 +1,6 @@
 import { mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { type Page, test as playwrightTest } from '@playwright/test';
+import { expect, type Page, test as playwrightTest } from '@playwright/test';
 import { installInPageHelpers } from './lib/in-page-helpers';
 import { joinAsGM } from './lib/join';
 import { scaledMs } from './lib/timing';
@@ -23,7 +23,9 @@ import { scaledMs } from './lib/timing';
  * `.e2e-results/psychic-powers.json` and gates it (the passing count may not
  * fall, no category may grow). The spec fails only on HARNESS errors: the world
  * did not boot, a pack is missing from the world, or an evaluate threw outside
- * the per-power try/catch.
+ * the per-power try/catch. One test is the exception by design: the cast-effects
+ * guard casts a synthetic, content-agnostic power and FAILS the spec when the
+ * apply step lands an effect on the wrong actor (or lands one on a failed cast).
  *
  * `PSYCHIC_POWER_LIMIT=<n>` caps the powers cast per pack for quick smoke runs;
  * a limited run is recorded as such and the ratchet refuses to gate on it.
@@ -341,7 +343,8 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
         id: string;
         name: string;
         origin: string | null;
-        duration: { rounds: number | null };
+        /** Foundry V14 shape; a legacy `{rounds}` source migrates into `value` + `units`. */
+        duration: { value: number | null; units: string | null };
     }
     interface FieldLike {
         choices?: string[] | Record<string, string> | (() => string[] | Record<string, string>);
@@ -360,12 +363,14 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
     interface ActorLike {
         id: string;
         name: string;
-        system: { characteristics: Record<string, Characteristic | undefined>; wounds?: { value: number } };
+        system: { characteristics: Record<string, Characteristic | undefined>; wounds?: { value: number }; corruption?: number };
         items: { get: (id: string) => ItemLike | undefined };
         effects: { contents: EffectLike[] };
         createEmbeddedDocuments: (type: string, data: JsonObj[]) => Promise<Array<{ id: string }>>;
         deleteEmbeddedDocuments: (type: string, ids: string[]) => Promise<object[]>;
         update: (data: JsonObj) => Promise<object>;
+        /** Acolytes only: a skill's current target and label. */
+        getSkillFuzzy?: (skill: string) => { current: number; label?: string } | null | undefined;
     }
     interface PackDoc {
         system: PowerSystem;
@@ -431,6 +436,8 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
     /** Everything derived from the power's own (materialized) data before the cast. */
     interface Declared {
         focusKey: string | null;
+        /** A skill focus test (Psyniscience, Awareness); rolled instead of `focusKey`. */
+        focusSkill: string | null;
         focusModifier: number | null;
         opposed: boolean;
         targetType: string | null;
@@ -505,6 +512,21 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
         const byKey = entries.find(([k]) => k.toLowerCase() === key.toLowerCase())?.[1];
         return byKey ?? entries.map(([, c]) => c).find((c) => c?.short.toUpperCase() === key.toUpperCase());
     };
+    /**
+     * What a focus test rolls against, as the code resolves it: a declared skill,
+     * else a characteristic, else a numeric actor stat the book tests like one
+     * (BC's Corruption Test).
+     */
+    const resolveFocusBase = (actor: ActorLike, skill: string | null, key: string): { total: number; short: string | null } | undefined => {
+        if (skill !== null) {
+            const s = actor.getSkillFuzzy?.(skill);
+            return s === null || s === undefined ? undefined : { total: s.current, short: null };
+        }
+        const c = resolveCharacteristic(actor, key);
+        if (c !== undefined) return { total: c.total, short: c.short };
+        const stat = key === 'corruption' ? actor.system.corruption : undefined;
+        return typeof stat === 'number' ? { total: stat, short: null } : undefined;
+    };
 
     const findDialog = (powerId: string): DialogLike | null => {
         for (const app of g.foundry.applications.instances.values()) {
@@ -519,10 +541,18 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
      * Structure checks over the power's materialized data. Records failures and
      * returns the declared expectations the cast is then held to.
      */
-    const checkStructure = (m: JsonObj, rawDoc: JsonObj, doc: PackDoc, charKeys: string[], fail: (c: FailureCategory, r: string) => void): Declared => {
+    const checkStructure = (
+        m: JsonObj,
+        rawDoc: JsonObj,
+        doc: PackDoc,
+        charKeys: string[],
+        isFocusStat: (key: string) => boolean,
+        fail: (c: FailureCategory, r: string) => void,
+    ): Declared => {
         const schemaFields = doc.system.schema.fields;
         const focusDecl = m['focusPower'];
         let focusKey: string | null = null;
+        let focusSkill: string | null = null;
         let focusModifier: number | null = null;
         let opposed = false;
         if (!isObj(focusDecl)) {
@@ -536,8 +566,10 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
             const modifier = focusDecl['modifier'];
             const threshold = focusDecl['threshold'];
             const opposedChar = focusDecl['opposedCharacteristic'];
-            if (typeof characteristic !== 'string' || !charKeys.includes(characteristic))
-                problems.push(`characteristic ${describe(characteristic)} is not a characteristic key`);
+            const skill = focusDecl['skill'];
+            const hasSkill = typeof skill === 'string' && skill !== '';
+            if (!hasSkill && (typeof characteristic !== 'string' || !(charKeys.includes(characteristic) || isFocusStat(characteristic))))
+                problems.push(`characteristic ${describe(characteristic)} is not a characteristic key, and no focus skill is declared`);
             if (typeof modifier !== 'number' || !Number.isInteger(modifier)) problems.push(`modifier ${describe(modifier)} is not an integer`);
             if (threshold !== undefined && threshold !== null && typeof threshold !== 'number')
                 problems.push(`threshold ${describe(threshold)} is not a number`);
@@ -549,6 +581,7 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
                 fail('focus-unstructured', problems.join('; '));
             } else {
                 focusKey = typeof characteristic === 'string' ? characteristic : null;
+                focusSkill = hasSkill ? skill : null;
                 focusModifier = typeof modifier === 'number' ? modifier : null;
                 opposed = focusDecl['opposed'] === true;
             }
@@ -590,6 +623,7 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
         const damagePenetration = damageDecl['penetration'];
         return {
             focusKey,
+            focusSkill,
             focusModifier,
             opposed,
             targetType,
@@ -626,15 +660,17 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
         // Focus test: characteristic + modifier with provenance.
         const focusKey = declared.focusKey ?? item.system.focusPower.characteristic;
         const focusModifier = declared.focusModifier ?? item.system.focusPower.modifier;
-        const expectedChar = resolveCharacteristic(pair.psyker, focusKey);
-        if (expectedChar === undefined) {
-            fail('card-mismatch', `focus characteristic '${focusKey}' does not resolve on the psyker`);
+        const focusName = declared.focusSkill ?? focusKey;
+        const expected = resolveFocusBase(pair.psyker, declared.focusSkill, focusKey);
+        if (expected === undefined) {
+            fail('card-mismatch', `focus test '${focusName}' does not resolve on the psyker`);
         } else {
-            if (rd.baseTarget !== expectedChar.total)
-                fail('card-mismatch', `focus base target ${rd.baseTarget}, expected ${expectedChar.short} ${expectedChar.total}`);
-            if (rd.baseChar !== expectedChar.short) fail('card-mismatch', `focus characteristic on card '${rd.baseChar}', expected '${expectedChar.short}'`);
-            if (tokens !== null && !tokens.includes(String(expectedChar.total)))
-                fail('card-mismatch', `card does not show the ${expectedChar.short} base ${expectedChar.total}`);
+            if (rd.baseTarget !== expected.total) fail('card-mismatch', `focus base target ${rd.baseTarget}, expected ${focusName} ${expected.total}`);
+            // A characteristic shows its short label; a skill or stat shows its own label.
+            if (expected.short !== null && rd.baseChar !== expected.short)
+                fail('card-mismatch', `focus characteristic on card '${rd.baseChar}', expected '${expected.short}'`);
+            if (tokens !== null && !tokens.includes(String(expected.total)))
+                fail('card-mismatch', `card does not show the ${focusName} base ${expected.total}`);
         }
         if (focusModifier !== 0 && !rd.modifierSources.some((c) => c.value === focusModifier)) {
             fail('card-mismatch', `focus modifier ${focusModifier} has no provenance row on the card`);
@@ -677,19 +713,44 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
 
         // Effects: every declared structured effect lands on the right actor.
         if (!rd.success || !declared.hasStructuredEffect) return;
-        const recipient = castTarget ?? pair.psyker;
-        const who = castTarget === null ? 'psyker' : 'target';
-        const landed = recipient.effects.contents.filter((e) => !effectsBefore.has(e.id));
-        if (declared.castEffects.length === 0 && landed.length === 0)
-            fail('effect-not-applied', `declared modifiers/conditions produced no effect on the ${who}`);
+        // Each effect lands where rules/psychic-cast-effects.ts sends it: its own
+        // flags.wh40k-rpg.castRecipient, else the psyker for a self-targeted power,
+        // else the target, and always the psyker when the cast named no target.
+        const recipientOf = (effect: JsonObj): { actor: typeof pair.psyker; who: string } => {
+            if (castTarget === null) return { actor: pair.psyker, who: 'psyker' };
+            const flags = effect['flags'];
+            const ours = isObj(flags) ? flags['wh40k-rpg'] : undefined;
+            const declaredRecipient = isObj(ours) ? ours['castRecipient'] : undefined;
+            const toSelf = declaredRecipient === 'self' || (declaredRecipient !== 'target' && declared.targetType === 'self');
+            return toSelf ? { actor: pair.psyker, who: 'psyker' } : { actor: castTarget, who: 'target' };
+        };
+        const defaultRecipient = castTarget ?? pair.psyker;
+        const landedOn = (actor: typeof pair.psyker): typeof actor.effects.contents => actor.effects.contents.filter((e) => !effectsBefore.has(e.id));
+        if (declared.castEffects.length === 0 && landedOn(defaultRecipient).length === 0)
+            fail('effect-not-applied', `declared modifiers/conditions produced no effect on the ${castTarget === null ? 'psyker' : 'target'}`);
         for (const effect of declared.castEffects) {
+            const { actor: recipient, who } = recipientOf(effect);
+            const landed = landedOn(recipient);
             const name = typeof effect['name'] === 'string' ? effect['name'] : '';
+            // Declared either the V14 way ({value, units}) or the legacy way ({rounds}).
             const duration = effect['duration'];
-            const rounds = isObj(duration) && typeof duration['rounds'] === 'number' ? duration['rounds'] : null;
+            const declaredValue = !isObj(duration)
+                ? null
+                : typeof duration['value'] === 'number'
+                ? duration['value']
+                : typeof duration['rounds'] === 'number'
+                ? duration['rounds']
+                : null;
+            const declaredUnits = !isObj(duration) ? null : typeof duration['units'] === 'string' ? duration['units'] : 'rounds';
             const match = landed.find((e) => e.origin === item.uuid || (name !== '' && e.name === name));
             if (match === undefined) fail('effect-not-applied', `effect "${name}" did not land on the ${who}`);
-            else if (rounds !== null && match.duration.rounds !== rounds) {
-                fail('effect-not-applied', `effect "${name}" landed with ${match.duration.rounds ?? 'no'} rounds, data declares ${rounds}`);
+            else if (declaredValue !== null && (match.duration.value !== declaredValue || match.duration.units !== declaredUnits)) {
+                fail(
+                    'effect-not-applied',
+                    `effect "${name}" landed with ${match.duration.value ?? 'no'} ${match.duration.units ?? ''}, data declares ${declaredValue} ${
+                        declaredUnits ?? ''
+                    }`,
+                );
             }
         }
     };
@@ -727,7 +788,14 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
         const rawDoc: JsonObj = isObj(parsedRaw) ? parsedRaw : {};
         const rawSystem = rawDoc['system'];
         const m = variants.materializeItemVariants(structuredClone(isObj(rawSystem) ? rawSystem : {}), entry.line);
-        const declared = checkStructure(m, rawDoc, doc, Object.keys(pair.psyker.system.characteristics), fail);
+        const declared = checkStructure(
+            m,
+            rawDoc,
+            doc,
+            Object.keys(pair.psyker.system.characteristics),
+            (key) => resolveFocusBase(pair.psyker, null, key) !== undefined,
+            fail,
+        );
         const focusDecl = m['focusPower'];
         if (typeof focusDecl === 'string') {
             diagnostics.focusStringCoerced = {
@@ -835,6 +903,225 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
         if (!autoDamage) await g.game.settings.set(args.systemId, 'auto-roll-damage', false);
     }
     return results;
+}
+
+/** A `CONFIG.Dice.randomUniform` value forcing a failed focus test: 0.025 → d100 = 98 (not a double, so no phenomena). */
+const FORCED_FAILURE_UNIFORM = 0.025;
+const CAST_EFFECTS_LINE = 'dh2';
+const GATE_HEX = { name: 'Gate Hex', rounds: 2 };
+const GATE_WARD = { name: 'Gate Ward' };
+
+interface GateArgs {
+    systemId: string;
+    line: string;
+    seedPsyRating: number;
+    psykerBase: number;
+    targetBase: number;
+    successUniform: number;
+    failureUniform: number;
+    hexName: string;
+    hexRounds: number;
+    wardName: string;
+}
+
+interface GateEffectView {
+    name: string;
+    origin: string | null;
+    /** V14 `duration.value` / `duration.units` (a legacy `rounds` source migrates into these). */
+    durationValue: number | null;
+    durationUnits: string;
+    transfer: boolean;
+}
+
+interface GateCastView {
+    /** The resolved roll's success, null when no roll was stored for the power. */
+    success: boolean | null;
+    rolled: number | null;
+    /** Effects created on each actor by this cast. */
+    psyker: GateEffectView[];
+    target: GateEffectView[];
+}
+
+interface GateObservation {
+    error: string | null;
+    itemUuid: string;
+    success: GateCastView | null;
+    failure: GateCastView | null;
+}
+
+/**
+ * Cast one synthetic, content-agnostic psychic power twice (forced success,
+ * then forced failure) and report which effects each cast created on whom. The
+ * Node side holds the observation to the castRecipient rules; this only drives
+ * the real pipeline and leaves both actors and the chat log as it found them.
+ */
+async function inPageCastEffectsGate(args: GateArgs): Promise<GateObservation> {
+    interface EffectLike {
+        id: string;
+        name: string;
+        origin: string | null;
+        transfer: boolean;
+        duration: { value: number | null; units: string };
+    }
+    interface ItemLike {
+        id: string;
+        uuid: string;
+    }
+    interface ActorLike {
+        id: string;
+        system: { characteristics: Record<string, object> };
+        items: { get: (id: string) => ItemLike | undefined };
+        effects: { contents: EffectLike[] };
+        update: (data: Record<string, number>) => Promise<object>;
+        createEmbeddedDocuments: (type: string, data: object[]) => Promise<Array<{ id: string }>>;
+        deleteEmbeddedDocuments: (type: string, ids: string[]) => Promise<object[]>;
+    }
+    interface StoredAction {
+        rollData: { power?: { id: string }; success: boolean; roll?: { total: number } | null };
+    }
+    interface DialogLike {
+        rendered: boolean;
+        actionData?: { rollData?: { psychicPowers?: Array<{ id: string }> } };
+        _systemRoll: () => Promise<void>;
+        close: () => Promise<void>;
+    }
+    interface Globals {
+        game: {
+            messages: { contents: Array<{ id: string }> };
+            settings: { get: (ns: string, key: string) => boolean; set: (ns: string, key: string, v: boolean) => Promise<boolean> };
+        };
+        CONFIG: { Dice: { randomUniform: () => number } };
+        Actor: { create: (data: { name: string; type: string }) => Promise<ActorLike | null | undefined> };
+        ChatMessage: { deleteDocuments: (ids: string[]) => Promise<object[]> };
+        foundry: { applications: { instances: Map<string, object> } };
+        psychicGateActors?: Map<string, { psyker: string; target: string }>;
+    }
+    interface TargetedModule {
+        DHTargetedActionManager: { performPsychicCast: (source: ActorLike, target: ActorLike | null, power: ItemLike) => void };
+    }
+    interface BasicModule {
+        DHBasicActionManager: { storedRolls: Record<string, StoredAction> };
+    }
+    interface DialogModule {
+        default: abstract new (...a: never[]) => object;
+    }
+
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (game, CONFIG, Actor, ChatMessage, foundry) are injected by the licensed app; no shipped types inside page.evaluate
+    const g = globalThis as unknown as Globals;
+    const helpers = globalThis.wh40kE2E;
+    const moduleRoot = `/systems/${args.systemId}/module`;
+    const targeted = (await import(/* @vite-ignore */ `${moduleRoot}/actions/targeted-action-manager.js`)) as TargetedModule;
+    const basic = (await import(/* @vite-ignore */ `${moduleRoot}/actions/basic-action-manager.js`)) as BasicModule;
+    const dialogModule = (await import(/* @vite-ignore */ `${moduleRoot}/applications/prompts/unified-roll-dialog.js`)) as DialogModule;
+    const observation: GateObservation = { error: null, itemUuid: '', success: null, failure: null };
+
+    // Seeded like the pack tests' pairs, and registered so deleteSeededActors removes them.
+    const seed = async (type: string, name: string, base: number, psy: boolean): Promise<ActorLike> => {
+        const actor = await helpers.withTimeout(g.Actor.create({ name, type }), `create ${type}`);
+        if (actor === null || actor === undefined) throw new Error(`could not create ${type}`);
+        const update: Record<string, number> = {};
+        for (const key of Object.keys(actor.system.characteristics)) update[`system.characteristics.${key}.base`] = base;
+        if (psy) update['system.psy.rating'] = args.seedPsyRating;
+        await helpers.withTimeout(actor.update(update), `seed ${type}`);
+        return actor;
+    };
+    const psyker = await seed(`${args.line}-character`, `Psychic Gate Psyker (${args.line} effects)`, args.psykerBase, true);
+    const target = await seed(`${args.line}-npc`, `Psychic Gate Target (${args.line} effects)`, args.targetBase, false);
+    const seeded = g.psychicGateActors ?? new Map<string, { psyker: string; target: string }>();
+    seeded.set(`${args.line}-cast-effects`, { psyker: psyker.id, target: target.id });
+    g.psychicGateActors = seeded;
+
+    const effectsBefore = new Set([...psyker.effects.contents, ...target.effects.contents].map((e) => e.id));
+    const messagesBefore = new Set(g.game.messages.contents.map((m) => m.id));
+    const simplePsychic = g.game.settings.get(args.systemId, 'simple-psychic-rolls');
+    if (simplePsychic) await g.game.settings.set(args.systemId, 'simple-psychic-rolls', false);
+    const dice = g.CONFIG.Dice;
+    const originalUniform = dice.randomUniform;
+
+    const view = (actor: ActorLike, seen: ReadonlySet<string>): GateEffectView[] =>
+        actor.effects.contents
+            .filter((e) => !seen.has(e.id))
+            .map((e) => ({
+                name: e.name,
+                origin: e.origin,
+                durationValue: e.duration.value,
+                durationUnits: e.duration.units,
+                transfer: e.transfer,
+            }));
+    const findDialog = (powerId: string): DialogLike | null => {
+        for (const app of g.foundry.applications.instances.values()) {
+            if (!(app instanceof dialogModule.default)) continue;
+            const dialog = app as DialogLike;
+            if (dialog.actionData?.rollData?.psychicPowers?.some((p) => p.id === powerId) === true) return dialog;
+        }
+        return null;
+    };
+    const cast = async (item: ItemLike, uniform: number, label: string): Promise<GateCastView> => {
+        const seen = new Set([...psyker.effects.contents, ...target.effects.contents].map((e) => e.id));
+        const storedBefore = new Set(Object.keys(basic.DHBasicActionManager.storedRolls));
+        Object.assign(dice, { randomUniform: (): number => uniform });
+        try {
+            targeted.DHTargetedActionManager.performPsychicCast(psyker, target, item);
+            await helpers.waitFor(() => findDialog(item.id)?.rendered === true, `roll dialog (${label})`, helpers.scaledMs(15_000));
+            const dialog = findDialog(item.id);
+            if (dialog === null) throw new Error(`roll dialog (${label}) vanished`);
+            // _systemRoll awaits performActionAndSendToChat, which awaits the effect apply step.
+            await helpers.withTimeout(dialog._systemRoll(), `cast (${label})`, helpers.scaledMs(30_000));
+        } finally {
+            Object.assign(dice, { randomUniform: originalUniform });
+            await findDialog(item.id)
+                ?.close()
+                .catch(() => undefined);
+        }
+        const action = Object.entries(basic.DHBasicActionManager.storedRolls)
+            .filter(([key]) => !storedBefore.has(key))
+            .map(([, stored]) => stored)
+            .find((stored) => stored.rollData.power?.id === item.id);
+        return {
+            success: action === undefined ? null : action.rollData.success,
+            rolled: action?.rollData.roll?.total ?? null,
+            psyker: view(psyker, seen),
+            target: view(target, seen),
+        };
+    };
+
+    let itemId: string | null = null;
+    try {
+        const created = await psyker.createEmbeddedDocuments('Item', [
+            {
+                name: 'Psychic Gate Cast-Effects Power',
+                type: 'psychicPower',
+                system: {
+                    focusPower: { characteristic: 'willpower', modifier: 0, threshold: null, opposed: false, opposedCharacteristic: '' },
+                    isAttack: false,
+                    target: { type: 'creature' },
+                },
+                effects: [
+                    { name: args.hexName, transfer: false, duration: { rounds: args.hexRounds } },
+                    { name: args.wardName, transfer: false, flags: { 'wh40k-rpg': { castRecipient: 'self' } } },
+                ],
+            },
+        ]);
+        itemId = created.at(0)?.id ?? null;
+        const item = itemId === null ? undefined : psyker.items.get(itemId);
+        if (item === undefined) throw new Error('embedding the synthetic power produced no item');
+        observation.itemUuid = item.uuid;
+        observation.success = await cast(item, args.successUniform, 'forced success');
+        observation.failure = await cast(item, args.failureUniform, 'forced failure');
+    } catch (err) {
+        observation.error = err instanceof Error ? err.message : String(err);
+    } finally {
+        Object.assign(dice, { randomUniform: originalUniform });
+        if (simplePsychic) await g.game.settings.set(args.systemId, 'simple-psychic-rolls', true);
+        for (const actor of [psyker, target]) {
+            const createdEffects = actor.effects.contents.filter((e) => !effectsBefore.has(e.id)).map((e) => e.id);
+            if (createdEffects.length > 0) await actor.deleteEmbeddedDocuments('ActiveEffect', createdEffects);
+        }
+        if (itemId !== null) await psyker.deleteEmbeddedDocuments('Item', [itemId]);
+        const createdMessages = g.game.messages.contents.filter((m) => !messagesBefore.has(m.id)).map((m) => m.id);
+        if (createdMessages.length > 0) await g.ChatMessage.deleteDocuments(createdMessages);
+    }
+    return observation;
 }
 
 /** Delete the psykers/targets seeded by {@link inPageCastBatch} (and the UI smoke). */
@@ -1028,5 +1315,57 @@ test.describe('psychic powers — every local power casts as its data declares',
             });
             await deleteSeededActors(page);
         }
+    });
+
+    /*
+     * Code-path guard, not a content measurement: a wrong apply step FAILS the
+     * spec here instead of being recorded as a per-power category.
+     */
+    test('cast effects: a manifested power lands each effect on its recipient, a failed one lands none', async ({ page }) => {
+        test.setTimeout(scaledMs(PACK_BASE_BUDGET_MS));
+        const joined = await joinAsGM(page);
+        test.skip(!joined, 'GM join failed');
+
+        const args: GateArgs = {
+            systemId: SYSTEM_ID,
+            line: CAST_EFFECTS_LINE,
+            seedPsyRating: SEED_PSY_RATING,
+            psykerBase: PSYKER_CHARACTERISTIC_BASE,
+            targetBase: TARGET_CHARACTERISTIC_BASE,
+            successUniform: FORCED_UNIFORM,
+            failureUniform: FORCED_FAILURE_UNIFORM,
+            hexName: GATE_HEX.name,
+            hexRounds: GATE_HEX.rounds,
+            wardName: GATE_WARD.name,
+        };
+        const observed = await (async (): Promise<GateObservation> => {
+            try {
+                return await page.evaluate(inPageCastEffectsGate, args);
+            } finally {
+                await deleteSeededActors(page);
+            }
+        })();
+
+        expect(observed.error).toBeNull();
+        expect(observed.itemUuid).not.toBe('');
+        const { success, failure } = observed;
+        if (success === null || failure === null) throw new Error('a cast produced no observation');
+
+        expect(success.success, `forced d100 ${FORCED_D100} must manifest (rolled ${success.rolled ?? 'nothing'})`).toBe(true);
+        const names = (effects: readonly GateEffectView[]): string[] => effects.map((e) => e.name).sort();
+        expect(names(success.target), 'effects created on the target').toEqual([GATE_HEX.name]);
+        expect(names(success.psyker), 'effects created on the psyker').toEqual([GATE_WARD.name]);
+        expect(success.target.at(0)).toEqual({
+            name: GATE_HEX.name,
+            origin: observed.itemUuid,
+            durationValue: GATE_HEX.rounds,
+            durationUnits: 'rounds',
+            transfer: false,
+        });
+        expect(success.psyker.at(0)?.origin).toBe(observed.itemUuid);
+
+        expect(failure.success, `forced failure must fail the focus test (rolled ${failure.rolled ?? 'nothing'})`).toBe(false);
+        expect(failure.target, 'a failed cast lands nothing on the target').toEqual([]);
+        expect(failure.psyker, 'a failed cast lands nothing on the psyker').toEqual([]);
     });
 });

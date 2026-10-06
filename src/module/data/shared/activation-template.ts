@@ -19,7 +19,8 @@ export default class ActivationTemplate extends SystemDataModel {
                 type: new fields.StringField({
                     required: true,
                     initial: 'action',
-                    choices: ['action', 'half-action', 'full-action', 'extended-action', 'reaction', 'free-action', 'passive'],
+                    // `special`: the book prints "Special" (the action is given in the text).
+                    choices: ['action', 'half-action', 'full-action', 'extended-action', 'reaction', 'free-action', 'passive', 'special'],
                 }),
                 cost: new fields.NumberField({ required: false, initial: 1 }),
                 condition: new fields.StringField({ required: false, blank: true }),

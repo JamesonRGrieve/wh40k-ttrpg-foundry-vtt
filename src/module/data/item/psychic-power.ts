@@ -26,7 +26,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     declare identifier: string;
     declare discipline: string;
     declare prCost: number;
-    declare focusPower: { characteristic: string; modifier: number; threshold: number; opposed: boolean; opposedCharacteristic: string };
+    declare focusPower: { characteristic: string; modifier: number; threshold: number; opposed: boolean; opposedCharacteristic: string; skill: string };
     declare effect: string;
     declare overbleed: string;
     declare isAttack: boolean;
@@ -70,6 +70,9 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
                 threshold: new fields.NumberField({ required: false, initial: null }),
                 opposed: new fields.BooleanField({ required: true, initial: false }),
                 opposedCharacteristic: new fields.StringField({ required: false, blank: true }),
+                // A skill key when the book prints a skill focus test (Psyniscience,
+                // Awareness); when set it is rolled instead of `characteristic`.
+                skill: new fields.StringField({ required: false, blank: true, initial: '' }),
             }),
 
             // Power effect (enhanced description)
