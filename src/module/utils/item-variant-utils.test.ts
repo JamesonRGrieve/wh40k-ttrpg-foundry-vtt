@@ -242,6 +242,15 @@ describe('resolveOwnedLineContent / canonicalSystemForLine', () => {
         expect(canonicalSystemForLine(canonical, 'dh1', identityClean)?.['range']).toBe('100m');
     });
 
+    // Regression: cleanData passes `_state.model` straight through, and some clean
+    // paths (a what-if preview, an actor's embedded-item clean) pass a non-object.
+    // A WeakMap rejects that key, which threw and aborted the whole Actor.create.
+    it.each([true, 'model', 7, null, undefined])('ignores a non-object model (%s) instead of throwing', (model) => {
+        expect(() => {
+            rememberLineVariantSource(model, fireBoltPristine());
+        }).not.toThrow();
+    });
+
     it('returns null for a canonical that carried no line containers', () => {
         const flatDoc = { type: 'psychicPower', _source: { system: { range: '10m' } } };
         rememberLineVariantSource(flatDoc, { range: '10m' });
