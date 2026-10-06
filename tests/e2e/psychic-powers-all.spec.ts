@@ -338,6 +338,9 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
     interface Characteristic {
         total: number;
         short: string;
+        bonus: number;
+        /** Base bonus plus bonus-only modifiers; what damage terms read when present. */
+        effectiveBonus?: number;
     }
     interface EffectLike {
         id: string;
@@ -421,8 +424,14 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
     interface VariantModule {
         materializeItemVariants: (source: JsonObj, line: string) => JsonObj;
     }
+    interface CasterValues {
+        psyRating: number;
+        willpowerBonus: number;
+        toughnessBonus: number;
+    }
     interface RangeModule {
-        parsePsychicRange: (raw: string | number | null | undefined, psyRating: number) => number | null;
+        parsePsychicRange: (raw: string | number | null | undefined, psyRating: number, willpowerBonus?: number) => number | null;
+        resolvePsychicFormulaTerms: (formula: string, values: CasterValues) => string;
     }
     interface TargetedModule {
         DHTargetedActionManager: { performPsychicCast: (source: ActorLike, target: ActorLike | null, power: ItemLike) => void };
@@ -476,6 +485,12 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
             .parseFromString(html, 'text/html')
             .body.textContent.split(/\s+/)
             .filter((t) => t !== '');
+    /** A resolved dice-free penetration ("3", "2*5", "2*5+1") as a number; NaN otherwise. */
+    const sumOfProducts = (formula: string): number =>
+        formula
+            .replace(/\s+/g, '')
+            .split('+')
+            .reduce((sum, term) => sum + term.split('*').reduce((product, factor) => product * Number(factor), 1), 0);
     const diceTerms = (formula: string): string[] => (formula.toLowerCase().match(/\d*d\d+/g) ?? []).map((t) => (t.startsWith('d') ? `1${t}` : t)).sort();
 
     /* -- Seed one psyker + one target per game line (reused across batches) -- */
@@ -515,6 +530,11 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
         const byKey = entries.find(([k]) => k.toLowerCase() === key.toLowerCase())?.[1];
         return byKey ?? entries.map(([, c]) => c).find((c) => c?.short.toUpperCase() === key.toUpperCase());
     };
+    /** A characteristic's bonus as damage terms read it (effective bonus first, as damage-data does). */
+    const bonusOf = (actor: ActorLike, key: string): number => {
+        const c = resolveCharacteristic(actor, key);
+        return c === undefined ? 0 : c.effectiveBonus ?? c.bonus;
+    };
     /**
      * What a focus test rolls against, as the code resolves it: a declared skill,
      * else a characteristic, else a numeric actor stat the book tests like one
@@ -550,6 +570,7 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
         doc: PackDoc,
         charKeys: string[],
         isFocusStat: (key: string) => boolean,
+        caster: CasterValues,
         fail: (c: FailureCategory, r: string) => void,
     ): Declared => {
         const schemaFields = doc.system.schema.fields;
@@ -603,7 +624,10 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
         if (targetType === null) fail('target-undeclared', `target.type ${describe(targetDeclType)}`);
 
         const rangeDecl = m['range'];
-        const rangeMetres = typeof rangeDecl === 'string' || typeof rangeDecl === 'number' ? ranges.parsePsychicRange(rangeDecl, args.seedPsyRating) : null;
+        const rangeMetres =
+            typeof rangeDecl === 'string' || typeof rangeDecl === 'number'
+                ? ranges.parsePsychicRange(rangeDecl, caster.psyRating, caster.willpowerBonus)
+                : null;
         if (rangeMetres === null) fail('range-unresolvable', `range ${describe(rangeDecl)} does not resolve to metres at PR ${args.seedPsyRating}`);
 
         const damageDecl = isObj(m['damage']) ? m['damage'] : {};
@@ -628,7 +652,13 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
             );
 
         const damageType = damageDecl['type'];
-        const damagePenetration = damageDecl['penetration'];
+        // The penetration the code rolls: the authored formula (its caster terms
+        // resolved, e.g. "PR" / "2xWPB") when set, else the integer.
+        const penetrationFormula = damageDecl['penetrationFormula'];
+        const damagePenetration =
+            typeof penetrationFormula === 'string' && penetrationFormula !== ''
+                ? sumOfProducts(ranges.resolvePsychicFormulaTerms(penetrationFormula, caster))
+                : damageDecl['penetration'];
         return {
             focusKey,
             focusSkill,
@@ -638,7 +668,8 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
             rangeText: describe(rangeDecl),
             rangeMetres,
             isAttack,
-            damageFormula,
+            // The dice the code rolls once the caster terms ("PRd10") are resolved.
+            damageFormula: damageFormula === '' ? '' : ranges.resolvePsychicFormulaTerms(damageFormula, caster),
             damageType: typeof damageType === 'string' ? damageType : '',
             damagePenetration: typeof damagePenetration === 'number' ? damagePenetration : 0,
             castEffects,
@@ -802,6 +833,11 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
             doc,
             Object.keys(pair.psyker.system.characteristics),
             (key) => resolveFocusBase(pair.psyker, null, key) !== undefined,
+            {
+                psyRating: args.seedPsyRating,
+                willpowerBonus: bonusOf(pair.psyker, 'willpower'),
+                toughnessBonus: bonusOf(pair.psyker, 'toughness'),
+            },
             fail,
         );
         const focusDecl = m['focusPower'];
