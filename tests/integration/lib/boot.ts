@@ -397,6 +397,17 @@ function scaffoldGame(g: BrowserGlobals): void {
         seed(gameStub, collectionName, emptyCollection());
     }
     seed(gameStub, 'tours', { register: () => undefined, get: () => undefined });
+    // Foundry 14's Actor / Item `_initializeSource` passes every source through
+    // `game.compendiumArt.applyArt`, a helper a joined Game builds. Tier A registers
+    // no compendium art, and with none registered the real helper returns the
+    // source untouched — which is all this stand-in does.
+    seed(gameStub, 'compendiumArt', { enabled: true, applyArt: (_documentClass: object, source: object) => source });
+    // A ClientDocument runs prepareData on construction only once
+    // `game._documentsReady` is set, which a joined Game does after loading the
+    // world. Without it every document the suite builds stays unprepared, so a
+    // "prepareData runs without throwing" test would pass without prepareData
+    // ever running.
+    seed(gameStub, '_documentsReady', true);
     // The system manifest IS the source of the document-type registry Foundry
     // would otherwise receive on join: `game.documentTypes` (used to validate a
     // document's `type`) and `game.system.documentTypes` (used to resolve which
