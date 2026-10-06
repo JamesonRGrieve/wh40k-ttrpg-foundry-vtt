@@ -556,6 +556,7 @@ export type I18nKey =
     | 'WH40K.BC.DaemonPrince.Status.Resolved'
     | 'WH40K.BC.DaemonPrince.Status.ResolvedAt'
     | 'WH40K.BC.Gifts.Label'
+    | 'WH40K.BC.Gifts.None'
     | 'WH40K.BC.Gifts.Resolved.AppliedAlignment'
     | 'WH40K.BC.Gifts.Resolved.BaseDescription'
     | 'WH40K.BC.Gifts.Rider.Khorne'

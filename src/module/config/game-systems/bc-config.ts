@@ -128,7 +128,8 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
         return [
-            this.makeOriginField(actor, 'WH40K.OriginPath.HomeWorld', 'homeWorld'),
+            // BC's first origin step is Race; it is stored in the shared `homeWorld` slot.
+            this.makeOriginField(actor, 'WH40K.OriginPath.Race', 'homeWorld'),
             this.makeOriginField(actor, 'WH40K.OriginPath.Archetype', 'role'),
             this.makeOriginField(actor, 'WH40K.OriginPath.Pride', 'background'),
             this.makeOriginField(actor, 'WH40K.OriginPath.Disgrace', 'trialsAndTravails'),
