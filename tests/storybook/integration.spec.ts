@@ -62,7 +62,7 @@ test.describe('Storybook integration', () => {
         // body-rendered specializations is the load-bearing proof that
         // this is the "with specializations" story variant.
         await expect(page.getByText('Common Lore')).toBeVisible();
-        await expect(page.getByText(/Available Specializations/)).toBeVisible();
+        await expect(page.getByText(/Available Specialisations/)).toBeVisible();
         await expect(page.getByText(/Imperial Creed/)).toBeVisible();
     });
 
