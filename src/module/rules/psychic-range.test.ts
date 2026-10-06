@@ -1,26 +1,40 @@
 import { describe, expect, it } from 'vitest';
-import { parsePsychicRange, resolvePsyRatingTerm } from './psychic-range.ts';
+import { parsePsychicRange, type PsychicFormulaValues, resolvePsychicFormulaTerms } from './psychic-range.ts';
 
-describe('resolvePsyRatingTerm — the PR term in a power’s damage / penetration', () => {
+describe('resolvePsychicFormulaTerms — the caster terms in a power’s damage / penetration', () => {
+    const at = (psyRating: number, willpowerBonus = 4, toughnessBonus = 5): PsychicFormulaValues => ({ psyRating, willpowerBonus, toughnessBonus });
+
     it('substitutes the Psy Rating for every PR term', () => {
-        expect(resolvePsyRatingTerm('1d10+PR', 3)).toBe('1d10+3');
-        expect(resolvePsyRatingTerm('PR*2', 4)).toBe('4*2');
+        expect(resolvePsychicFormulaTerms('1d10+PR', at(3))).toBe('1d10+3');
+        expect(resolvePsychicFormulaTerms('PR*2', at(4))).toBe('4*2');
+        expect(resolvePsychicFormulaTerms('PR', at(3))).toBe('3');
     });
 
     it('turns a written multiple of PR into a product', () => {
-        expect(resolvePsyRatingTerm('1d10+2xPR', 3)).toBe('1d10+2*3');
-        expect(resolvePsyRatingTerm('2d10+3 x PR', 4)).toBe('2d10+3*4');
-        expect(resolvePsyRatingTerm('1d10+2×PR', 2)).toBe('1d10+2*2');
+        expect(resolvePsychicFormulaTerms('1d10+2xPR', at(3))).toBe('1d10+2*3');
+        expect(resolvePsychicFormulaTerms('2d10+3 x PR', at(4))).toBe('2d10+3*4');
+        expect(resolvePsychicFormulaTerms('1d10+2×PR', at(2))).toBe('1d10+2*2');
     });
 
-    it('leaves formulas without the term, and words merely containing it, unchanged', () => {
-        expect(resolvePsyRatingTerm('2d10+4', 3)).toBe('2d10+4');
-        expect(resolvePsyRatingTerm('1d10+PRX', 3)).toBe('1d10+PRX');
+    it('reads PR as a die count (Bolt of Change "PRd10")', () => {
+        expect(resolvePsychicFormulaTerms('PRd10', at(3))).toBe('3d10');
+        expect(resolvePsychicFormulaTerms('PRd10+2', at(4))).toBe('4d10+2');
     });
 
-    it('clamps a non-finite or negative rating to 0', () => {
-        expect(resolvePsyRatingTerm('1d10+PR', Number.NaN)).toBe('1d10+0');
-        expect(resolvePsyRatingTerm('1d10+PR', -2)).toBe('1d10+0');
+    it("substitutes the caster's Willpower Bonus (WPB / WB) and Toughness Bonus (TB)", () => {
+        expect(resolvePsychicFormulaTerms('1d10+WPB', at(3))).toBe('1d10+4');
+        expect(resolvePsychicFormulaTerms('1d10+WB', at(3))).toBe('1d10+4');
+        expect(resolvePsychicFormulaTerms('1d10+TB', at(3))).toBe('1d10+5');
+    });
+
+    it('leaves formulas without a term, and words merely containing one, unchanged', () => {
+        expect(resolvePsychicFormulaTerms('2d10+4', at(3))).toBe('2d10+4');
+        expect(resolvePsychicFormulaTerms('1d10+PRX', at(3))).toBe('1d10+PRX');
+    });
+
+    it('clamps a non-finite or negative value to 0', () => {
+        expect(resolvePsychicFormulaTerms('1d10+PR', at(Number.NaN))).toBe('1d10+0');
+        expect(resolvePsychicFormulaTerms('1d10+PR', at(-2))).toBe('1d10+0');
     });
 });
 

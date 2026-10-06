@@ -131,18 +131,37 @@ function parseRangeText(s: string, pr: number, wb: number): number | null {
     return null;
 }
 
-/** A multiple of Psy Rating as the books write it in damage ("1d10+2xPR"). */
-const PSY_RATING_MULTIPLE_RE = /(\d+)\s*[x×]\s*PR\b/g;
-/** The bare Psy Rating term ("1d10+PR"). */
-const PSY_RATING_TERM_RE = /(?<![A-Za-z])PR\b/g;
+/** The caster values a psychic damage or penetration formula may name. */
+export interface PsychicFormulaValues {
+    psyRating: number;
+    willpowerBonus: number;
+    /** The caster's own Toughness Bonus (Neural Storm, BC Tome of Fate). */
+    toughnessBonus: number;
+}
 
 /**
- * Substitute the psyker's Psy Rating for the `PR` term in an authored damage or
- * penetration formula: `"1d10+PR"` at PR 3 rolls `"1d10+3"`, and `"1d10+2xPR"`
- * rolls `"1d10+2*3"`. Foundry's Roll parser treats a bare `PR` (or `2xPR`) as an
- * unresolvable string term and throws. Pure.
+ * The terms the books write in psychic damage / penetration, and the value each
+ * stands for. A term stands alone ("1d10+PR"), as a written multiple ("2xPR"),
+ * or as a die count ("PRd10").
  */
-export function resolvePsyRatingTerm(formula: string, psyRating: number): string {
-    const pr = String(Number.isFinite(psyRating) ? Math.max(0, Math.trunc(psyRating)) : 0);
-    return formula.replace(PSY_RATING_MULTIPLE_RE, `$1*${pr}`).replace(PSY_RATING_TERM_RE, pr);
+const FORMULA_TERMS: ReadonlyArray<{ pattern: string; value: (v: PsychicFormulaValues) => number }> = [
+    { pattern: 'PR', value: (v) => v.psyRating },
+    { pattern: 'WPB|WB', value: (v) => v.willpowerBonus },
+    { pattern: 'TB', value: (v) => v.toughnessBonus },
+];
+
+/**
+ * Substitute the caster's values for the terms in an authored psychic damage or
+ * penetration formula: at PR 3 and WPB 4, `"1d10+PR"` rolls `"1d10+3"`,
+ * `"1d10+2xPR"` rolls `"1d10+2*3"`, `"PRd10"` rolls `"3d10"` and `"1d10+WPB"`
+ * rolls `"1d10+4"`. Foundry's Roll parser treats such a term as an unresolvable
+ * string and throws. Pure.
+ */
+export function resolvePsychicFormulaTerms(formula: string, values: PsychicFormulaValues): string {
+    return FORMULA_TERMS.reduce((out, term) => {
+        const n = String(wholeNumber(term.value(values)));
+        return out
+            .replace(new RegExp(`(\\d+)\\s*[x×]\\s*(?:${term.pattern})(?![A-Za-z])`, 'g'), `$1*${n}`)
+            .replace(new RegExp(`(?<![A-Za-z])(?:${term.pattern})(?=d\\d|[^A-Za-z]|$)`, 'g'), n);
+    }, formula);
 }
