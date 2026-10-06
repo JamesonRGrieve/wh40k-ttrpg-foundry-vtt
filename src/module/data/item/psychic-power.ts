@@ -30,6 +30,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     declare effect: string;
     declare overbleed: string;
     declare isAttack: boolean;
+    declare narrativeEffect: boolean;
     declare phenomenaModifier: number;
     declare sustained: boolean;
     declare range: string;
@@ -83,6 +84,10 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
 
             // Is this an attack power?
             isAttack: new fields.BooleanField({ required: true, initial: false }),
+
+            // The book prints no mechanical effect (divination, contact, detection,
+            // information): the power is resolved by the GM from its text alone.
+            narrativeEffect: new fields.BooleanField({ required: true, initial: false }),
 
             // Phenomena modifiers
             phenomenaModifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
