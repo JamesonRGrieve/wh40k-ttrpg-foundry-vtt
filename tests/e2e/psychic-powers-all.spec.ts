@@ -619,8 +619,13 @@ async function inPageCastBatch(args: CastArgs): Promise<PowerResult[]> {
         const rawEffects = rawDoc['effects'];
         const castEffects = (Array.isArray(rawEffects) ? rawEffects.filter(isObj) : []).filter((e) => e['transfer'] !== true);
         const hasStructuredEffect = castEffects.length > 0 || nonEmpty(m['modifiers']) || nonEmpty(m['dynamicModifiers']) || nonEmpty(m['conditions']);
-        if (!hasStructuredEffect && !isAttack)
-            fail('effect-unstructured', 'non-attack power declares no ActiveEffect, modifiers, dynamicModifiers or conditions');
+        // A power whose book prints no mechanic is marked narrativeEffect and needs none.
+        const narrative = m['narrativeEffect'] === true;
+        if (!hasStructuredEffect && !isAttack && !narrative)
+            fail(
+                'effect-unstructured',
+                'non-attack power declares no ActiveEffect, modifiers, dynamicModifiers or conditions (and is not marked narrativeEffect)',
+            );
 
         const damageType = damageDecl['type'];
         const damagePenetration = damageDecl['penetration'];

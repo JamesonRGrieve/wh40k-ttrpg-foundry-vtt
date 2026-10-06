@@ -115,6 +115,23 @@ describe('the psychic cast path (source contract — action-data cannot load und
     });
 });
 
+describe('the psychic power schema the content session authors against', () => {
+    const power = readRepoFile('src/module/data/item/psychic-power.ts');
+    const damage = readRepoFile('src/module/data/shared/damage-template.ts');
+
+    // Each field below was silently dropped (or absent) before, so the authored
+    // value never reached a cast: range (stripped), a skill focus test, a
+    // PR-valued penetration, and the no-mechanic marker the gate exempts.
+    it.each([
+        ['range: new fields.StringField', power],
+        ['skill: new fields.StringField', power],
+        ['narrativeEffect: new fields.BooleanField', power],
+        ['penetrationFormula: new FormulaField', damage],
+    ])('declares %s', (field, source) => {
+        expect(source).toContain(field);
+    });
+});
+
 describe('opposed checks for every actor type', () => {
     const baseActor = readRepoFile('src/module/documents/base-actor.ts');
     const acolyte = readRepoFile('src/module/documents/acolyte.ts');
