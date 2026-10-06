@@ -1,157 +1,82 @@
 /**
- * Black Crusade Daemon Prince ascension RAW resolver (#182 — core.md
- * §"Apotheosis" :1490 and §"Daemon Princes" :16053).
+ * Black Crusade apotheosis resolver (#182 — BC Core p267).
  *
- * Pure functions for the apotheosis gate (Infamy ≥ 100 AND Corruption
- * ≥ 70) and the stat-block boost granted to a newly ascended Daemon
- * Prince: Unnatural Strength/Toughness multipliers, bonus wounds, the
- * Daemonic and Fear traits, and the immune-to-conditions list.
+ * When a champion's Corruption reaches 100 the Ruinous Powers claim them.
+ * If they have reached the Infamy threshold the GM sets (a world setting;
+ * the book suggests 75, 90 or 100) they ascend to Daemon Princehood;
+ * otherwise they become a Chaos Spawn. Either way the character leaves
+ * play. The book prints no stat changes for either fate, so this module
+ * only decides eligibility and the outcome.
  *
- * No DataModel coupling, no actor lookups, no Foundry imports. The
- * caller (sheet, advancement dialog, chat card) owns I/O and the
- * downstream actor sub-type integration is a separate follow-up.
+ * No DataModel coupling, no actor lookups, no Foundry imports. The caller
+ * (sheet, action, chat card) reads the live values and the GM's threshold.
  */
 
-/** Multiplier on Strength Bonus granted by apotheosis (RAW: x4). */
-export const DAEMON_PRINCE_UNNATURAL_STRENGTH = 4;
+/** Corruption at which a champion is claimed (BC Core p267). */
+export const APOTHEOSIS_CORRUPTION = 100;
 
-/** Multiplier on Toughness Bonus granted by apotheosis (RAW: x4). */
-export const DAEMON_PRINCE_UNNATURAL_TOUGHNESS = 4;
-
-/** Fear rating granted by apotheosis (RAW: Fear (3)). */
-export const DAEMON_PRINCE_FEAR_RATING = 3;
-
-/** Bonus wounds added on top of the character's existing total. */
-export const DAEMON_PRINCE_BONUS_WOUNDS = 20;
-
-/** Infamy threshold required to ascend (RAW). */
-export const DAEMON_PRINCE_INFAMY_THRESHOLD = 100;
-
-/** Corruption threshold required to ascend (RAW). */
-export const DAEMON_PRINCE_CORRUPTION_THRESHOLD = 70;
-
-/**
- * Conditions a Daemon Prince is immune to per RAW. Stored as a
- * read-only string list so callers can render the labels through the
- * langpack without mutating this canonical set.
- */
-export const DAEMON_PRINCE_IMMUNE_CONDITIONS: ReadonlyArray<string> = ['fatigue', 'fear', 'pinning', 'poison', 'stunning', 'suffocation'];
-
-/** Chaos alignment identifiers used to tag an ascension record. */
+/** Chaos alignment identifiers used to tag an apotheosis record. */
 export type DaemonPrinceAlignment = 'khorne' | 'slaanesh' | 'nurgle' | 'tzeentch' | 'unaligned';
 
+/** The two fates a claimed champion meets. */
+export const APOTHEOSIS_OUTCOMES = ['daemonPrince', 'chaosSpawn'] as const;
+
+/** A claimed champion's fate: Daemon Prince or Chaos Spawn. */
+export type ApotheosisOutcome = (typeof APOTHEOSIS_OUTCOMES)[number];
+
 /**
- * Persisted ascension record. Stored on the character (separate
- * follow-up) once apotheosis succeeds; treated as opaque by this
- * module — used only to detect "is this character ascended?" and to
- * compose the boost.
+ * Persisted apotheosis record. Its presence means the champion has been
+ * claimed and has left play.
  */
 export interface DaemonPrinceAscension {
-    /** World-time (or session number) at which apotheosis fired. */
+    /** World-time at which the champion was claimed. */
     ascendedAt: number;
-    /** Chaos alignment held at the moment of ascension. */
+    /** Chaos alignment held at the moment of the claim. */
     alignmentAtAscension: DaemonPrinceAlignment;
+    /** The fate the champion met. */
+    outcome: ApotheosisOutcome;
 }
 
-/**
- * The mechanical package granted to a Daemon Prince. Consumers apply
- * these as derived modifiers in `prepareDerivedData()`; the engine
- * does not mutate any actor state itself.
- */
-export interface DaemonPrinceStatBoost {
-    /** Strength Bonus multiplier (Unnatural Strength). */
-    strengthBonusMultiplier: number;
-    /** Toughness Bonus multiplier (Unnatural Toughness). */
-    toughnessBonusMultiplier: number;
-    /** Wounds added on top of the character's existing total. */
-    bonusWounds: number;
-    /** Fear rating granted. */
-    fearRating: number;
-    /** The Daemonic trait is always granted on ascension. */
-    daemonicTrait: true;
-    /** Conditions the prince is immune to. */
-    immuneToConditions: ReadonlyArray<string>;
-}
-
-/** Reason an attempted ascension was blocked. */
-type AscensionBlockedReason = 'insufficient-infamy' | 'insufficient-corruption';
-
-/** Input shape for {@link ascendCharacter}. */
-export interface AscendCharacterArgs {
-    /** Current Infamy score. */
-    currentInfamy: number;
+/** Input shape for {@link resolveApotheosis}. */
+interface ApotheosisArgs {
     /** Current Corruption points. */
-    currentCorruption: number;
-    /** Alignment at the moment of the attempt. */
-    alignment: DaemonPrinceAlignment;
+    corruption: number;
+    /** Current Infamy score. */
+    infamy: number;
+    /** The GM-set Infamy threshold for apotheosis. */
+    infamyThreshold: number;
 }
 
-/** Result of an attempted ascension. */
-export interface AscendCharacterResult {
-    /** True when the apotheosis succeeded. */
-    ascended: boolean;
-    /** Populated only when {@link ascended} is `false`. */
-    reason?: AscensionBlockedReason;
+/** Result of {@link resolveApotheosis}. */
+interface ApotheosisReadout {
+    /** True once Corruption has reached {@link APOTHEOSIS_CORRUPTION}: the champion is claimed. */
+    claimed: boolean;
+    /** The fate the champion meets when claimed — or would meet if claimed now. */
+    outcome: ApotheosisOutcome;
 }
-
-/* -------------------------------------------- */
-/*  Boost                                       */
-/* -------------------------------------------- */
 
 /**
- * Resolve the mechanical package granted by an ascension record. The
- * alignment is preserved on the record for downstream effects (gifts,
- * patron interactions) but does NOT alter the base boost — RAW grants
- * the same Unnatural multipliers, fear, daemonic trait, and condition
- * immunities regardless of patron god.
+ * Evaluate the apotheosis rule. The champion is claimed at 100 Corruption;
+ * Infamy at or above the GM's threshold makes the fate Daemon Prince, below
+ * it Chaos Spawn. The outcome is reported even before the claim so the panel
+ * can show what the champion faces. Non-finite inputs are sanitised to 0.
  */
-export function getDaemonPrinceBoost(_ascension: DaemonPrinceAscension): DaemonPrinceStatBoost {
+export function resolveApotheosis(args: ApotheosisArgs): ApotheosisReadout {
+    const corruption = sanitiseNonNegativeInt(args.corruption);
+    const infamy = sanitiseNonNegativeInt(args.infamy);
+    const threshold = sanitiseNonNegativeInt(args.infamyThreshold);
     return {
-        strengthBonusMultiplier: DAEMON_PRINCE_UNNATURAL_STRENGTH,
-        toughnessBonusMultiplier: DAEMON_PRINCE_UNNATURAL_TOUGHNESS,
-        bonusWounds: DAEMON_PRINCE_BONUS_WOUNDS,
-        fearRating: DAEMON_PRINCE_FEAR_RATING,
-        daemonicTrait: true,
-        immuneToConditions: DAEMON_PRINCE_IMMUNE_CONDITIONS,
+        claimed: corruption >= APOTHEOSIS_CORRUPTION,
+        outcome: infamy >= threshold ? 'daemonPrince' : 'chaosSpawn',
     };
 }
 
-/* -------------------------------------------- */
-/*  Ascension query                             */
-/* -------------------------------------------- */
-
 /**
- * Whether the supplied record represents a successfully ascended
- * Daemon Prince. A `null` record means "never ascended".
+ * Whether the supplied record represents a claimed champion. A `null` record
+ * means "never claimed".
  */
 export function isAscended(ascension: DaemonPrinceAscension | null): boolean {
     return ascension !== null;
-}
-
-/* -------------------------------------------- */
-/*  Ascension gate                              */
-/* -------------------------------------------- */
-
-/**
- * Evaluate the RAW apotheosis gate. Ascension requires Infamy ≥ 100
- * AND Corruption ≥ 70; otherwise the attempt is blocked with the
- * matching reason. Infamy is checked first so the caller surfaces the
- * most prestigious blocker.
- *
- * Non-finite inputs are sanitised to 0 (which always fails both
- * thresholds).
- */
-export function ascendCharacter(args: AscendCharacterArgs): AscendCharacterResult {
-    const infamy = sanitiseNonNegativeInt(args.currentInfamy);
-    const corruption = sanitiseNonNegativeInt(args.currentCorruption);
-
-    if (infamy < DAEMON_PRINCE_INFAMY_THRESHOLD) {
-        return { ascended: false, reason: 'insufficient-infamy' };
-    }
-    if (corruption < DAEMON_PRINCE_CORRUPTION_THRESHOLD) {
-        return { ascended: false, reason: 'insufficient-corruption' };
-    }
-    return { ascended: true };
 }
 
 /* -------------------------------------------- */

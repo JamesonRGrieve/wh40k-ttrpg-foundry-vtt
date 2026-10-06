@@ -7,6 +7,8 @@
             {{#with rollData}}
                 {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=baseTarget activeModifiers=activeModifiers modifierSources=modifierSources modifiedTarget=modifiedTarget modifierCapFired=modifierCapFired rawModifierTotal=rawModifierTotal modifierTotal=modifierTotal}}
 
+                {{> systems/wh40k-rpg/templates/chat/partial/card-target-row.hbs target=targetActor}}
+
                 {{!-- Effects --}}
                 {{#each @root.effectOutput as |effect|}}
                     <div class="tw-flex tw-items-start tw-gap-[var(--wh40k-space-sm)] tw-py-1.5 tw-text-[0.85rem]">
@@ -31,7 +33,7 @@
                     </div>
                     {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
                         variant="success"
-                        label="Power Manifested"
+                        label=(localize "WH40K.Psychic.PowerManifested")
                         value=roll.total}}
                 {{else}}
                     <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
@@ -40,7 +42,7 @@
                     </div>
                     {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
                         variant="danger"
-                        label="Power Failed"
+                        label=(localize "WH40K.Psychic.PowerFailed")
                         value=roll.total}}
                 {{/if}}
 

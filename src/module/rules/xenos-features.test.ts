@@ -1,15 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    FIELD_VIVISECTION,
-    HOTSHOT_PILOT,
-    HULL_DOWN,
-    LEAPING_DODGE,
-    PUSH_THE_LIMIT,
-    RIGHT_STUFF,
-    SCHOLARLY_DISCIPLINE,
-    SERENITY_OF_THE_GREEN,
-    SURVIVORS_PARANOIA,
-} from './xenos-features';
+import { FIELD_VIVISECTION, LEAPING_DODGE, PUSH_THE_LIMIT, RIGHT_STUFF, SERENITY_OF_THE_GREEN, SURVIVORS_PARANOIA } from './xenos-features';
 
 /**
  * Contract tests for the Enemies Without supplement constants
@@ -31,14 +21,6 @@ describe('Without novel-mechanic talents (#101)', () => {
         expect(FIELD_VIVISECTION.requiresForbiddenLore).toBe(true);
     });
 
-    it('Hotshot Pilot trades 1 Fatigue', () => {
-        expect(HOTSHOT_PILOT.fatigueCost).toBe(1);
-    });
-
-    it('Hull Down reduces vehicle Size by 1 for attack and cover during Movement', () => {
-        expect(HULL_DOWN.sizeReduction).toBe(1);
-    });
-
     it('Leaping Dodge uses Dodge skill for Spray avoidance (composes with #103)', () => {
         expect(LEAPING_DODGE.sprayAvoidanceSkill).toBe('dodge');
     });
@@ -57,10 +39,5 @@ describe('Without homeworld traits (#102)', () => {
     it('Garden World — Serenity of the Green halves Shock/Trauma duration; 50 XP Insanity recovery', () => {
         expect(SERENITY_OF_THE_GREEN.shockDurationMultiplier).toBe(0.5);
         expect(SERENITY_OF_THE_GREEN.insanityRecoveryXpCost).toBe(50);
-    });
-
-    it('Research Station — Scholarly Discipline grants 1 Scholastic Lore reroll per session', () => {
-        expect(SCHOLARLY_DISCIPLINE.rerollsPerSession).toBe(1);
-        expect(SCHOLARLY_DISCIPLINE.applicableSkill).toBe('scholasticLore');
     });
 });

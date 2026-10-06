@@ -124,7 +124,10 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 getTryAgainAdvice: (skill: string, priorAttempts: number) => { blocksByConvention: boolean; cumulativePenalty: number };
             };
             'two-weapon-fighting': {
-                resolveTwoWeaponPenalties: (input: { isMelee: boolean; talents: Set<string> }) => { mainPenalty: number; offPenalty: number };
+                resolveTwoWeaponPenalties: (input: { isMelee: boolean; talents: Array<{ identifier: string; specialization: string }> }) => {
+                    mainPenalty: number;
+                    offPenalty: number;
+                };
             };
             'untrained-skill': {
                 resolveUntrainedTarget: (input: {
@@ -287,9 +290,9 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             record('two-weapon-penalties', false, twoWeapon.__importError);
         } else {
             guarded('two-weapon-penalties', () => {
-                const baseline = twoWeapon.resolveTwoWeaponPenalties({ isMelee: true, talents: new Set<string>() });
-                const wielder = twoWeapon.resolveTwoWeaponPenalties({ isMelee: true, talents: new Set(['Two-Weapon Wielder (Melee)']) });
-                const master = twoWeapon.resolveTwoWeaponPenalties({ isMelee: false, talents: new Set(['Two-Weapon Master (Ranged)']) });
+                const baseline = twoWeapon.resolveTwoWeaponPenalties({ isMelee: true, talents: [] });
+                const wielder = twoWeapon.resolveTwoWeaponPenalties({ isMelee: true, talents: [{ identifier: 'twoWeaponWielder', specialization: 'Melee' }] });
+                const master = twoWeapon.resolveTwoWeaponPenalties({ isMelee: false, talents: [{ identifier: 'twoWeaponMaster', specialization: 'Ranged' }] });
                 return (
                     baseline.mainPenalty === -20 &&
                     baseline.offPenalty === -20 &&
@@ -386,12 +389,12 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         if (isImportError(fear)) {
             for (const k of ['fear-testPenalty', 'fear-resolveTest', 'fear-shockTableModifier'] as const) record(k, false, fear.__importError);
         } else {
-            guarded('fear-testPenalty', () => fear.getFearTestPenalty(2) === 20 && fear.getFearTestPenalty(10) === 40 && fear.getFearTestPenalty(-3) === 0);
+            guarded('fear-testPenalty', () => fear.getFearTestPenalty(2) === 10 && fear.getFearTestPenalty(10) === 30 && fear.getFearTestPenalty(-3) === 0);
             guarded('fear-resolveTest', () => {
                 const noOp = fear.resolveFearTest({ willpowerTotal: 40, fearRating: 0 });
                 const rated = fear.resolveFearTest({ willpowerTotal: 40, fearRating: 2 });
                 const floored = fear.resolveFearTest({ willpowerTotal: 20, fearRating: 4 });
-                return noOp.isNoOp && rated.target === 20 && !rated.isNoOp && floored.target === 0;
+                return noOp.isNoOp && rated.target === 30 && !rated.isNoOp && floored.target === 0;
             });
             guarded('fear-shockTableModifier', () => fear.getShockTableRollModifier(1) === 0 && fear.getShockTableRollModifier(3) === 20);
         }

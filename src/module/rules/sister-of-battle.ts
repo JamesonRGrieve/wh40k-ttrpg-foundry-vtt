@@ -1,53 +1,61 @@
 /**
- * Sister of Battle elite-advance talents (within.md L1070-1074; #134).
+ * Sister of Battle elite advance (DH2 Enemies Within pp38-39; #134).
  *
- * Each constant exposes the per-talent numbers the engine consumer
- * needs. Talent items are compendium content; this module is the
- * canonical source for the mechanical riders so talent `effect` text
- * can stay i18n-clean prose and downstream consumers pull values
- * here.
+ * The advance and its talents are compendium content. This module only
+ * turns the advance document's `grants` into the rows the confirmation
+ * dialog and chat card list, so every label comes from the document.
  */
 
-export interface SisterOfBattleTalent {
-    /** Stable identifier used by chat cards + dialog wiring. */
-    readonly id: string;
-    /** i18n key for the player-facing label. */
-    readonly label: string;
-    /** i18n key for the summary line shown in the dialog + chat card. */
-    readonly summary: string;
-    /** WS bonus, when the talent grants one. */
-    readonly wsBonus?: number;
-    /** WP bonus, when the talent grants one (e.g. vs psychic powers). */
-    readonly wpBonus?: number;
-    /** Bonus to Fear tests, when the talent grants one. */
-    readonly fearBonus?: number;
-    /** Daemonic-source damage reduction dice expression (e.g. "1d10"). */
-    readonly daemonReduction?: string;
+/** The Sister of Battle elite advance document's `system.identifier`. */
+export const SISTER_OF_BATTLE_ADVANCE_IDENTIFIER = 'sister-of-battle';
+
+/** One row the dialog / chat card lists. */
+export interface AdvanceGrantCard {
+    id: string;
+    label: string;
+    summary: string;
+    /** An unlocked talent: available to purchase at its XP cost, not granted. */
+    unlocked: boolean;
 }
 
-/** +10 WP vs psychic powers. */
-export const FAITH_OF_THE_EMPEROR: SisterOfBattleTalent = {
-    id: 'faith-of-the-emperor',
-    label: 'WH40K.SisterOfBattle.FaithOfEmperor',
-    summary: 'WH40K.SisterOfBattle.FaithOfEmperorSummary',
-    wpBonus: 10,
-};
+/** The slice of an origin-path `grants` block the rows are built from. */
+export interface AdvanceGrantsLike {
+    talents?: ReadonlyArray<{ name?: string; specialization?: string; uuid?: string }>;
+    unlockedTalents?: ReadonlyArray<{ name?: string; uuid?: string }>;
+    specialAbilities?: ReadonlyArray<{ name?: string; description?: string }>;
+}
 
-/** Ignore 1d10 daemonic-source damage once per round. */
-export const HOLY_AEGIS: SisterOfBattleTalent = {
-    id: 'holy-aegis',
-    label: 'WH40K.SisterOfBattle.HolyAegis',
-    summary: 'WH40K.SisterOfBattle.HolyAegisSummary',
-    daemonReduction: '1d10',
-};
+/** Strip markup from a rich-text grant description for a one-line summary. */
+function plainText(html: string): string {
+    return html
+        .replace(/<\/p>\s*<p>/g, ' ')
+        .replace(/<[^>]*>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
 
-/** +20 to Fear tests. */
-export const SISTERS_RESOLVE: SisterOfBattleTalent = {
-    id: 'sisters-resolve',
-    label: 'WH40K.SisterOfBattle.SistersResolve',
-    summary: 'WH40K.SisterOfBattle.SistersResolveSummary',
-    fearBonus: 20,
-};
-
-/** Display order for the dialog + chat card grants list. */
-export const SISTER_OF_BATTLE_TALENTS: readonly SisterOfBattleTalent[] = [FAITH_OF_THE_EMPEROR, HOLY_AEGIS, SISTERS_RESOLVE] as const;
+/**
+ * Rows for the advance's granted talents (name, with its specialisation), the
+ * talents it unlocks for purchase, and its special abilities (name and
+ * description), in that order. Pure.
+ */
+export function advanceGrantCards(grants: AdvanceGrantsLike): AdvanceGrantCard[] {
+    const talents = (grants.talents ?? []).map((talent, index) => {
+        const name = talent.name ?? '';
+        const spec = talent.specialization ?? '';
+        return { id: talent.uuid ?? `talent-${index}`, label: spec === '' ? name : `${name} (${spec})`, summary: '', unlocked: false };
+    });
+    const unlocked = (grants.unlockedTalents ?? []).map((talent, index) => ({
+        id: talent.uuid ?? `unlocked-${index}`,
+        label: talent.name ?? '',
+        summary: '',
+        unlocked: true,
+    }));
+    const abilities = (grants.specialAbilities ?? []).map((ability, index) => ({
+        id: `ability-${index}`,
+        label: ability.name ?? '',
+        summary: plainText(ability.description ?? ''),
+        unlocked: false,
+    }));
+    return [...talents, ...unlocked, ...abilities].filter((card) => card.label !== '');
+}

@@ -3,7 +3,7 @@
  *
  * The badge renders into the actor sheet sidebar header whenever the
  * actor carries the Daemonic trait. DH2 Errata L69-73 makes the trait
- * grant disease + poison immunity plus the Undying revival rider; the
+ * grant disease + poison immunity plus the Undying trait; the
  * pill summarises all three on one line, and the tooltip elaborates.
  *
  * The companion vitest suite covers the rules predicates

@@ -101,6 +101,7 @@ describe('Hit.applyDynamicModifiers — data-driven damage hooks (Direction #7)'
                 sustained: false,
                 upkeep: '',
                 stacking: 'none',
+                uses: 0,
                 save: { characteristic: '', difficulty: 0 },
                 aftereffect: { target: 'characteristic', targetKey: '', value: 0, valueFormula: '', durationUnit: 'instant', durationValue: 0 },
             },

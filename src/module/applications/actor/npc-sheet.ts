@@ -368,8 +368,7 @@ export default class NPCSheet extends CharacterSheet {
 
         // Daemonic immunities header badge (#143 — DH2 Errata L69-73).
         // Surfaces a crimson skull pill above the sidebar-fields panel when
-        // the actor carries the Daemonic trait. Disease/poison auto-skip and
-        // the Undying revival rider both compose through the same predicate.
+        // the actor carries the Daemonic trait (matched by identifier).
         context['isDaemonic'] = hasDaemonic(this.actor);
 
         // Header + NPC-tab additions

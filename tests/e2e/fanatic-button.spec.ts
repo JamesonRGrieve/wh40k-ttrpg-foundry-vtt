@@ -3,16 +3,18 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Fanatic role "Death to All Who Oppose Me" action e2e (#93, within.md p.34/967).
+ * Fanatic role "Death to All Who Oppose Me!" action e2e (#93, DH2 Enemies
+ * Within p.34).
  *
- * Creates a `dh2-character` with a Fanatic-named talent and a starting Fate
- * pool, opens the actor sheet, navigates to the Status tab, clicks the
- * Fanatic button, and snaps the post-click state. Verifies:
- *   - the fate value decremented by 1
- *   - an ActiveEffect tagged with flags.wh40k.source === 'fanatic-death-to-oppose'
- *     now exists on the actor (granting +10 WS / +10 BS for 5 rounds)
+ * Creates a `dh2-character` owning the Fanatic role (an originPath item with
+ * `system.identifier: 'fanatic'`) and a starting Fate pool, opens the actor
+ * sheet on the Overview tab, and clicks the Fanatic button with NO foe
+ * targeted. Verifies:
+ *   - the button renders for the role (matched by identifier, not name)
+ *   - with no targeted foe the Fate spend is refused (Fate unchanged) and no
+ *     encounter Hatred grant is created — the ability needs a current foe.
  */
-test('fanatic-button spends Fate + applies active effect and posts chat (#93)', async ({ page }) => {
+test('fanatic-button renders for the role and refuses the spend without a target (#93)', async ({ page }) => {
     await joinOrSkip(page, 'no Gamemaster user available in this test world');
 
     interface ProbeResult {
@@ -20,12 +22,12 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
         buttonFound?: boolean;
         fateBefore?: number;
         fateAfter?: number;
-        fanaticEffectFound?: boolean;
+        encounterGrantFound?: boolean;
         error: string | null;
     }
     const result = await page.evaluate(async (): Promise<ProbeResult> => {
-        interface ActorEffect {
-            flags?: { wh40k?: { source?: string } };
+        interface ActorItem {
+            flags?: { 'wh40k-rpg'?: { encounterGrant?: boolean } };
         }
         interface ActorSheet {
             render: (force?: boolean) => Promise<void>;
@@ -35,7 +37,7 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
         interface ActorDoc {
             sheet: ActorSheet;
             system?: { fate?: { value?: number } };
-            effects?: Iterable<ActorEffect>;
+            items?: Iterable<ActorItem>;
         }
         interface ActorCtorShape {
             create?: (data: object) => Promise<ActorDoc | null>;
@@ -54,13 +56,7 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
                 name: 'fanatic-probe',
                 type: 'dh2-character',
                 system: { gameSystem: 'dh2', fate: { max: 3, value: 3 } },
-                items: [
-                    {
-                        name: 'Fanatic',
-                        type: 'talent',
-                        system: {},
-                    },
-                ],
+                items: [{ name: 'Fanatic', type: 'originPath', system: { identifier: 'fanatic' } }],
             });
         } catch (err) {
             return { setupOk: false, error: (err as Error).message };
@@ -85,24 +81,18 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
 
         const btn = findButton();
         const buttonFound = btn !== null;
-        const findFanaticEffect = (): ActorEffect | undefined =>
-            (liveActor.effects !== undefined ? Array.from(liveActor.effects) : []).find((e) => e.flags?.wh40k?.source === 'fanatic-death-to-oppose');
         if (btn !== null) {
             btn.click();
-            // Wait for the async action handler to resolve fate.update + ActiveEffect create
-            // (the assertions below report whichever never lands).
-            await pollUntil(() => (liveActor.system?.fate?.value ?? 0) < fateBefore && findFanaticEffect() !== undefined);
+            await settle(500);
         }
 
-        const fateAfter = liveActor.system?.fate?.value ?? 0;
-        const fanaticEffect = findFanaticEffect();
-
+        const items = liveActor.items !== undefined ? Array.from(liveActor.items) : [];
         return {
             setupOk: true,
             buttonFound,
             fateBefore,
-            fateAfter,
-            fanaticEffectFound: fanaticEffect !== undefined,
+            fateAfter: liveActor.system?.fate?.value ?? 0,
+            encounterGrantFound: items.some((i) => i.flags?.['wh40k-rpg']?.encounterGrant === true),
             error: null,
         };
     });
@@ -119,8 +109,8 @@ test('fanatic-button spends Fate + applies active effect and posts chat (#93)', 
         await buttonLocator.screenshot({ path: '.e2e-screenshots/fanatic-button-element.png' });
     }
 
-    expect(result.fateAfter, `expected fate to decrement from ${result.fateBefore}`).toBeLessThan(result.fateBefore ?? 0);
-    expect(result.fanaticEffectFound, 'expected an ActiveEffect with flags.wh40k.source === "fanatic-death-to-oppose"').toBe(true);
+    expect(result.fateAfter, 'no Fate is spent without a targeted foe').toBe(result.fateBefore);
+    expect(result.encounterGrantFound, 'no Hatred grant without a targeted foe').toBe(false);
 
     // Cleanup
     await page.evaluate(async (): Promise<void> => {

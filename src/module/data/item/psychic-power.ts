@@ -32,6 +32,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     declare isAttack: boolean;
     declare phenomenaModifier: number;
     declare sustained: boolean;
+    declare range: string;
     declare rangePerPR: number;
     declare notes: string;
     declare requires: string[];
@@ -87,6 +88,10 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             sustained: new fields.BooleanField({ required: true, initial: false }),
 
             // Range scaling with PR
+            // The authored range ("20 metres x Psy Rating", "Self"), resolved to metres
+            // at cast time by rules/psychic-range.ts parsePsychicRange.
+            range: new fields.StringField({ required: false, blank: true, initial: '' }),
+
             rangePerPR: new fields.NumberField({ required: false, initial: null }),
 
             // Notes

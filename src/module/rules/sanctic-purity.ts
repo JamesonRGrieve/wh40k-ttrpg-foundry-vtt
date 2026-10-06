@@ -1,62 +1,42 @@
 /**
- * Sanctic Purity / Emperor's Anathema (#131 — beyond.md L877–937).
+ * Sanctic Purity (#131 — DH2 Enemies Beyond).
  *
- * The Emperor's Anathema talent (with the Sanctic Purity rider where
- * the actor also draws from the Sanctic discipline) lets the bearer
- * spend a single Fate point to negate a Psychic Phenomena roll
- * outright — the result is discarded and no Phenomena occurs.
+ * When the bearer triggers Psychic Phenomena manifesting a Sanctic
+ * Daemonology power, they may spend a Fate point to negate the result
+ * entirely.
  *
- * This module exposes the two pieces shared by the Fate-spend prompt
- * (`sanctic-purity-prompt.ts`), the chat-card emission, and the
- * Phenomena dispatch path:
+ * This module exposes the two pieces shared by the Fate-spend prompt,
+ * the chat-card emission, and the Phenomena dispatch path:
  *
  *   - `SANCTIC_PURITY_FATE_COST` — number of Fate points the negation
  *     consumes (always 1; pinned so the prompt and the dispatch don't
  *     drift out of sync).
- *   - `hasEmperorsAnathema(actor)` — predicate that the Phenomena
- *     hook calls before offering the prompt.
- *
- * The talent name is matched permissively to absorb the apostrophe /
- * non-apostrophe spellings the compendium data has historically
- * shipped under (compare `assassins-strike.ts`).
+ *   - `hasSancticPurity(actor)` — whether the actor owns the talent,
+ *     matched by its stable `system.identifier` (`sancticPurity`), the
+ *     value a caller passes as `resolveSancticManifestation`'s
+ *     `mitigation.emperorsAnathema`.
  */
 
-import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { hasItemWithIdentifier, type IdentifiableItem } from '../utils/item-identifier.ts';
 
 /** Fate cost paid when accepting the negation prompt. */
 export const SANCTIC_PURITY_FATE_COST = 1 as const;
 
-/**
- * Canonical and alternate spellings of the Emperor's Anathema talent.
- * Sorted longest → shortest so the apostrophe form wins lookups when
- * both are present in a duck-typed `hasTalent` implementation that
- * does substring matching.
- */
-const TALENT_NAMES: readonly string[] = ["Emperor's Anathema", 'Emperors Anathema', 'Emperor Anathema'];
+/** The Sanctic Purity talent document's `system.identifier`. */
+const SANCTIC_PURITY_IDENTIFIER = 'sancticPurity';
 
-/**
- * Minimal duck-type for an actor that exposes the `hasTalent` lookup.
- * Both the DH2 acolyte document and the NPC document satisfy this
- * shape — keep the surface narrow so unit tests can stub it without
- * standing up a full Foundry actor.
- */
-interface ActorWithTalentLookup {
-    hasTalent: (talent: string) => boolean;
+/** Minimal duck-type for an actor that exposes its owned `items`. */
+interface ActorWithItems {
+    items?: Iterable<IdentifiableItem> | undefined;
 }
 
 /**
- * Predicate — does this actor carry the Emperor's Anathema talent?
- * Tolerant of the apostrophe / non-apostrophe spellings the
- * compendium data has historically shipped under. Returns `false`
- * for `null` / `undefined` actors and for actors without a
- * `hasTalent` method, so the caller can use it as a plain guard.
+ * Predicate — does this actor own the Sanctic Purity talent? Matches by the
+ * talent's `system.identifier`, never its name. Returns `false` for `null` /
+ * `undefined` actors and actors without items, so the caller can use it as a
+ * plain guard.
  */
-function hasTalentLookup(value: object): value is ActorWithTalentLookup {
-    return 'hasTalent' in value && typeof (value as Partial<ActorWithTalentLookup>).hasTalent === 'function';
-}
-
-export function hasEmperorsAnathema(actor: WH40KBaseActor | ActorWithTalentLookup | null | undefined): boolean {
-    if (actor == null) return false;
-    if (!hasTalentLookup(actor)) return false;
-    return TALENT_NAMES.some((name) => actor.hasTalent(name));
+export function hasSancticPurity(actor: ActorWithItems | null | undefined): boolean {
+    const items = actor?.items;
+    return items !== undefined && hasItemWithIdentifier(items, 'talent', SANCTIC_PURITY_IDENTIFIER);
 }

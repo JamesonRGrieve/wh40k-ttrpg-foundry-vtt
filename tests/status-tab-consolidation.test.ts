@@ -83,7 +83,6 @@ describe('Status panels relocated to Overview (#263 — no silent data loss)', (
         'ow-mount-panel.hbs',
         'ow-battlefield-panel.hbs',
         'dark-pact-panel.hbs',
-        'mortification-button.hbs',
         'fanatic-button.hbs',
         'crusader-button.hbs',
         'grapple-controller-panel.hbs',

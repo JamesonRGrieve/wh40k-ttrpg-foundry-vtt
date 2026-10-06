@@ -19,11 +19,9 @@
  *      mount-link trait list so the table sees which mount traits
  *      could combine with the resolution.
  *
- * Stateless: the action does not roll the mounted-attack modifier
- * itself — the rider's actual to-hit roll still goes through the
- * regular weapon-skill test path, and the GM combines the engine's
- * `applyMountedAttackModifier` output with the result. This handler
- * is the dispatch record, not the attack resolution.
+ * Stateless: the rider's actual to-hit roll still goes through the
+ * regular weapon-skill test path. This handler is the dispatch record,
+ * not the attack resolution.
  *
  * Strong-typed throughout; no Record casts on `system` (the
  * `OwMountDeclarations` interface is spliced onto CharacterData via

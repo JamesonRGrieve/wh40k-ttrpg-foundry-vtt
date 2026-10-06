@@ -64,6 +64,7 @@ export class WH40KSettings {
         requireCombatToAttack: 'require-combat-to-attack',
         warbandSubtlety: 'warband-subtlety',
         homebrewSelfTargeting: 'homebrew-self-targeting',
+        rollKeepModes: 'roll-keep-modes',
         highGroundBand: 'high-ground-band',
         autoCoverLos: 'auto-cover-los',
         fatigueMode: 'fatigue-mode',
@@ -80,7 +81,15 @@ export class WH40KSettings {
         tokenImageGenModel: 'token-image-gen-model',
         tokenImageGenApiKey: 'token-image-gen-api-key',
         tokenImageGenSize: 'token-image-gen-size',
+        apotheosisInfamyThreshold: 'apotheosis-infamy-threshold',
     };
+
+    /**
+     * Default Infamy a Black Crusade champion needs for apotheosis rather than
+     * spawndom when Corruption reaches 100 (BC Core p267). The book leaves the
+     * threshold to the GM (suggesting 75, 90 or 100); 100 is the default.
+     */
+    static APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT = 100;
 
     /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
     static WARBAND_SUBTLETY_MAX = 100;
@@ -287,6 +296,21 @@ export class WH40KSettings {
         }
     }
 
+    /**
+     * The GM-set Infamy a Black Crusade champion needs for apotheosis (BC Core
+     * p267). Non-negative integer; a non-numeric stored value, or a call before
+     * registration, falls back to {@link APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT}.
+     */
+    static getApotheosisInfamyThreshold(): number {
+        const fallback = WH40KSettings.APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT;
+        try {
+            const n = Number(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.apotheosisInfamyThreshold));
+            return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : fallback;
+        } catch {
+            return fallback;
+        }
+    }
+
     /** Current DH2e ruleset (raw vs homebrew). Safe to call before setting is registered (returns homebrew). */
     /** The configured degrees-of-success mode (defaults to `raw`, which
      *  resolves per game system at the call site). Safe before registration. */
@@ -485,6 +509,18 @@ export class WH40KSettings {
     static isHomebrewSelfTargeting(): boolean {
         try {
             return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.homebrewSelfTargeting) === true;
+        } catch {
+            return false;
+        }
+    }
+
+    /** Homebrew: when true, the roll dialog offers Advantage / Disadvantage /
+     *  Emphasis — the d100 test is rolled twice and one result kept (see
+     *  `rolls/roll-keep.ts`). Off by default (RAW: one d100). Safe to call before
+     *  the setting is registered (returns false). */
+    static isRollKeepModes(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.rollKeepModes) === true;
         } catch {
             return false;
         }
@@ -750,6 +786,17 @@ export class WH40KSettings {
                 type: Boolean,
             },
             {
+                // Homebrew roll-twice-keep-one modes on d100 tests. Off = RAW.
+                key: S.rollKeepModes,
+                name: 'WH40K.SETTINGS.RollKeepModes.Name',
+                hint: 'WH40K.SETTINGS.RollKeepModes.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: false,
+                default: false,
+                type: Boolean,
+            },
+            {
                 // Minimum elevation delta before RAW Higher Ground applies
                 // (#407). Default 0 = RAW: strictly above is higher ground.
                 // Raising it stops a crate or a half-step of rubble from
@@ -990,6 +1037,19 @@ export class WH40KSettings {
                 config: true,
                 default: '1024x1024',
                 type: String,
+            },
+            {
+                // Black Crusade apotheosis (BC Core p267): the Infamy the GM sets for
+                // a champion claimed at 100 Corruption to become a Daemon Prince
+                // rather than a Chaos Spawn.
+                key: S.apotheosisInfamyThreshold,
+                name: 'WH40K.SETTINGS.ApotheosisInfamyThreshold.Name',
+                hint: 'WH40K.SETTINGS.ApotheosisInfamyThreshold.Hint',
+                scope: 'world',
+                config: true,
+                requiresReload: false,
+                default: WH40KSettings.APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT,
+                type: Number,
             },
         ];
         for (const d of descriptors) {

@@ -6,12 +6,11 @@
  * The engine (`src/module/rules/ow-mount.ts`) is RNG-free and
  * actor-decoupled. The only state that must persist on an OW rider
  * is the link to the actor's current mount — the mount's compendium
- * id and the subset of trait ids the engine reads to combine the
- * mounted-attack modifier. Per Direction #7 the full mount profile
- * (characteristics, breed-specific advances, fluff traits) lives on
- * the compendium document keyed by `mountId`; only the trait ids
- * that the rules engine consumes (`MountTraitId`) are cached on the
- * rider.
+ * id and the ids of its printed mount traits, which the sheet badges.
+ * Per Direction #7 the full mount profile (characteristics,
+ * breed-specific advances, trait rules) lives on the compendium
+ * document keyed by `mountId`; no mount trait modifies the rider's
+ * attack.
  *
  * The wrapping `SchemaField` is `nullable: true, initial: null` so an
  * actor that does not currently have a mount persists as
@@ -30,9 +29,7 @@ const { SchemaField, StringField, ArrayField } = foundry.data.fields;
 /**
  * Mount-link entry for a mounted rider. `mountId` is the Foundry UUID
  * of the mount's compendium document (`Compendium.wh40k-rpg.<pack>.<type>.<id>`).
- * `traits` is the rider-visible subset of mechanically-impactful
- * mount traits — the same shape `applyMountedAttackModifier` expects
- * in its `MountedAttackContext.mountTraits`.
+ * `traits` is the ids of the mount's printed traits, shown as badges.
  */
 export interface MountedOnEntry {
     mountId: string;
@@ -60,10 +57,8 @@ export interface OwMountDeclarations {
  *
  * Dismounted riders carry `mountedOn === null`. Trait ids are stored
  * as bare strings because the `StringField` schema cannot express the
- * `MountTraitId` union; the runtime cast is one-way (string → union)
- * and falls back to ignoring unknown trait ids inside the engine's
- * `hasTrait` check, so the worst case is a missed modifier rather
- * than a thrown error.
+ * `MountTraitId` union; an unknown id only renders an untranslated
+ * badge.
  */
 export function owMountSchemaFields(): Record<string, foundry.data.fields.DataField.Any> {
     return {

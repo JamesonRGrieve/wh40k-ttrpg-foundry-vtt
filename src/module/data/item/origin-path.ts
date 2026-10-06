@@ -266,6 +266,17 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     { required: true, initial: [] },
                 ),
 
+                // Talents this step makes AVAILABLE TO PURCHASE (at their XP cost), not
+                // grants — e.g. the Sister of Battle elite advance unlocks its nine
+                // talents (DH2 Enemies Within pp38-39). Never added to the actor.
+                unlockedTalents: new fields.ArrayField(
+                    new fields.SchemaField({
+                        name: new fields.StringField({ required: true }),
+                        uuid: new fields.StringField({ required: false, blank: true }),
+                    }),
+                    { required: true, initial: [] },
+                ),
+
                 // Traits granted
                 traits: new fields.ArrayField(
                     new fields.SchemaField({

@@ -10,36 +10,28 @@ interface DaemonPrinceProbeResult {
     hasAscendButton: boolean;
     ascendButtonDisabled: boolean;
     hasThresholdReadout: boolean;
-    hasBoostBlock: boolean;
-    boostListItems: number;
+    hasOutcome: boolean;
+    ascendedHasButton: boolean;
     ascendButtonClicked: boolean;
     error: string | null;
 }
 
 /**
- * Tier B coverage of the BC Daemon Prince panel (#182).
+ * Tier B coverage of the BC apotheosis panel (#182 — BC Core p267).
  *
  * Renders the Handlebars partial into the deployed Foundry world via
  * the `templates/actor/panel/bc-daemon-prince-panel.hbs` URL, asserts
- * the not-ascended state surfaces the Ascend button + threshold readout,
- * then re-renders the ascended state to verify the applied-boost surface,
- * and snaps both. Follows the bc-alignment-advancement.spec.ts shape:
- * the rendered DOM stays anchored to a globalThis handle so snap()
- * captures live pixels, and is torn down after capture.
+ * the not-yet-claimed state surfaces the Resolve button + requirement
+ * readout + projected fate, then re-renders the claimed state to verify
+ * the outcome text (and no button), and snaps both. The rendered DOM
+ * stays anchored to a globalThis handle so snap() captures live pixels,
+ * and is torn down after capture.
  */
 test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
-    test('renders ascended + not-ascended states, drives the ascend button, and snaps', async ({ page }) => {
+    test('renders claimed + not-claimed states, drives the resolve button, and snaps', async ({ page }) => {
         await joinOrSkip(page);
 
         const result = await page.evaluate(async (): Promise<DaemonPrinceProbeResult> => {
-            interface DaemonPrincePanelBoost {
-                strengthBonusMultiplier: number;
-                toughnessBonusMultiplier: number;
-                bonusWounds: number;
-                fearRating: number;
-                daemonicTrait: boolean;
-                immuneToConditions: string[];
-            }
             interface DaemonPrincePanelContext {
                 daemonPrincePanel: {
                     ascended: boolean;
@@ -50,7 +42,7 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                     infamyThreshold: number;
                     corruptionThreshold: number;
                     canAscend: boolean;
-                    boost: DaemonPrincePanelBoost | null;
+                    isDaemonPrince: boolean;
                 };
             }
             interface FoundryProbeGlobal {
@@ -62,129 +54,94 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals are runtime-only, no shipped types
             const g = globalThis as unknown as FoundryProbeGlobal;
             const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/bc-daemon-prince-panel.hbs';
-            let error: string | null = null;
-            let notAscendedRendered = false;
-            let ascendedRendered = false;
-            let hasAscendButton = false;
-            let ascendButtonDisabled = true;
-            let hasThresholdReadout = false;
-            let hasBoostBlock = false;
-            let boostListItems = 0;
-            let ascendButtonClicked = false;
+            const out: DaemonPrinceProbeResult = {
+                notAscendedRendered: false,
+                ascendedRendered: false,
+                hasAscendButton: false,
+                ascendButtonDisabled: true,
+                hasThresholdReadout: false,
+                hasOutcome: false,
+                ascendedHasButton: true,
+                ascendButtonClicked: false,
+                error: null,
+            };
 
-            try {
-                const src = await (await g.fetch(templateUrl)).text();
-                const HandlebarsLib = g.Handlebars;
-                if (typeof HandlebarsLib.compile !== 'function') {
-                    return {
-                        notAscendedRendered,
-                        ascendedRendered,
-                        hasAscendButton,
-                        ascendButtonDisabled,
-                        hasThresholdReadout,
-                        hasBoostBlock,
-                        boostListItems,
-                        ascendButtonClicked,
-                        error: 'Handlebars not available on globalThis',
-                    };
-                }
-                const tpl = HandlebarsLib.compile(src);
-
-                // ---- Not-ascended view: thresholds met → button enabled ----
-                const notAscendedHtml = tpl({
-                    daemonPrincePanel: {
-                        ascended: false,
-                        ascendedAt: null,
-                        alignmentAtAscension: 'unaligned',
-                        infamy: 100,
-                        corruption: 70,
-                        infamyThreshold: 100,
-                        corruptionThreshold: 70,
-                        canAscend: true,
-                        boost: null,
-                    },
-                });
-
+            const mountHost = (html: string, side: 'left' | 'right'): HTMLElement => {
                 const host = document.createElement('div');
                 host.className = 'wh40k-rpg';
                 host.dataset['wh40kSystem'] = 'bc';
                 host.style.position = 'fixed';
                 host.style.top = '40px';
-                host.style.right = '40px';
+                host.style[side] = '40px';
                 host.style.width = '360px';
                 host.style.zIndex = '99999';
-                host.innerHTML = notAscendedHtml;
+                host.innerHTML = html;
                 document.body.appendChild(host);
+                return host;
+            };
 
-                notAscendedRendered = host.firstElementChild instanceof HTMLElement;
+            try {
+                const src = await (await g.fetch(templateUrl)).text();
+                const HandlebarsLib = g.Handlebars;
+                if (typeof HandlebarsLib.compile !== 'function') return { ...out, error: 'Handlebars not available on globalThis' };
+                const tpl = HandlebarsLib.compile(src);
+
+                // ---- Not yet claimed: Corruption reached 100 → button enabled ----
+                const host = mountHost(
+                    tpl({
+                        daemonPrincePanel: {
+                            ascended: false,
+                            ascendedAt: null,
+                            alignmentAtAscension: 'unaligned',
+                            infamy: 100,
+                            corruption: 100,
+                            infamyThreshold: 100,
+                            corruptionThreshold: 100,
+                            canAscend: true,
+                            isDaemonPrince: true,
+                        },
+                    }),
+                    'right',
+                );
+                out.notAscendedRendered = host.firstElementChild instanceof HTMLElement;
                 const ascendBtn = host.querySelector('button[data-wh40k-hook="bc-dp-ascend-btn"]');
-                hasAscendButton = ascendBtn !== null;
-                ascendButtonDisabled = ascendBtn instanceof HTMLButtonElement ? ascendBtn.disabled : true;
-                hasThresholdReadout = host.querySelector('[data-wh40k-hook="bc-dp-thresholds"]') !== null;
+                out.hasAscendButton = ascendBtn !== null;
+                out.ascendButtonDisabled = ascendBtn instanceof HTMLButtonElement ? ascendBtn.disabled : true;
+                out.hasThresholdReadout = host.querySelector('[data-wh40k-hook="bc-dp-thresholds"]') !== null;
 
-                // Drive at least one interaction: click the ascend
-                // button. The action handler is wired by the
-                // orchestrator and not yet present at Tier-B time, so
-                // we only assert the click does not throw.
+                // The action handler is not bound outside a live sheet, so only
+                // assert the click does not throw.
                 if (ascendBtn instanceof HTMLButtonElement && !ascendBtn.disabled) {
                     ascendBtn.click();
-                    ascendButtonClicked = true;
+                    out.ascendButtonClicked = true;
                 }
-
                 g.__bcDaemonPrincePanelHost = host;
 
-                // ---- Ascended view (rendered into the same host) ----
-                const ascendedHtml = tpl({
-                    daemonPrincePanel: {
-                        ascended: true,
-                        ascendedAt: 7,
-                        alignmentAtAscension: 'tzeentch',
-                        infamy: 110,
-                        corruption: 82,
-                        infamyThreshold: 100,
-                        corruptionThreshold: 70,
-                        canAscend: false,
-                        boost: {
-                            strengthBonusMultiplier: 4,
-                            toughnessBonusMultiplier: 4,
-                            bonusWounds: 20,
-                            fearRating: 3,
-                            daemonicTrait: true,
-                            immuneToConditions: ['fatigue', 'fear', 'pinning', 'poison', 'stunning', 'suffocation'],
+                // ---- Claimed: Chaos Spawn outcome, no button ----
+                const ascendedHost = mountHost(
+                    tpl({
+                        daemonPrincePanel: {
+                            ascended: true,
+                            ascendedAt: 7,
+                            alignmentAtAscension: 'tzeentch',
+                            infamy: 60,
+                            corruption: 100,
+                            infamyThreshold: 100,
+                            corruptionThreshold: 100,
+                            canAscend: false,
+                            isDaemonPrince: false,
                         },
-                    },
-                });
-                const ascendedHost = document.createElement('div');
-                ascendedHost.className = 'wh40k-rpg';
-                ascendedHost.dataset['wh40kSystem'] = 'bc';
-                ascendedHost.style.position = 'fixed';
-                ascendedHost.style.top = '40px';
-                ascendedHost.style.left = '40px';
-                ascendedHost.style.width = '360px';
-                ascendedHost.style.zIndex = '99999';
-                ascendedHost.innerHTML = ascendedHtml;
-                document.body.appendChild(ascendedHost);
-
-                ascendedRendered = ascendedHost.firstElementChild instanceof HTMLElement;
-                hasBoostBlock = ascendedHost.querySelector('[data-wh40k-hook="bc-dp-boost"]') !== null;
-                boostListItems = ascendedHost.querySelectorAll('[data-wh40k-hook="bc-dp-boost"] li').length;
-
+                    }),
+                    'left',
+                );
+                out.ascendedRendered = ascendedHost.firstElementChild instanceof HTMLElement;
+                out.hasOutcome = ascendedHost.querySelector('[data-wh40k-hook="bc-dp-outcome"]') !== null;
+                out.ascendedHasButton = ascendedHost.querySelector('[data-wh40k-hook="bc-dp-ascend-btn"]') !== null;
                 g.__bcDaemonPrincePanelHostAscended = ascendedHost;
             } catch (err) {
-                error = err instanceof Error ? err.message : String(err);
+                out.error = err instanceof Error ? err.message : String(err);
             }
-
-            return {
-                notAscendedRendered,
-                ascendedRendered,
-                hasAscendButton,
-                ascendButtonDisabled,
-                hasThresholdReadout,
-                hasBoostBlock,
-                boostListItems,
-                ascendButtonClicked,
-                error,
-            };
+            return out;
         });
 
         const hookCounts = await countHooks(page);
@@ -200,32 +157,22 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
             }
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals are runtime-only, no shipped types
             const g = globalThis as unknown as PanelHostGlobal;
-            const a = g.__bcDaemonPrincePanelHost;
-            const b = g.__bcDaemonPrincePanelHostAscended;
-            try {
-                a?.remove();
-            } catch {
-                /* ignore */
-            }
-            try {
-                b?.remove();
-            } catch {
-                /* ignore */
-            }
+            g.__bcDaemonPrincePanelHost?.remove();
+            g.__bcDaemonPrincePanelHostAscended?.remove();
             g.__bcDaemonPrincePanelHost = undefined;
             g.__bcDaemonPrincePanelHostAscended = undefined;
         });
 
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
-        expect(result.notAscendedRendered, 'not-ascended panel should render').toBe(true);
-        expect(result.ascendedRendered, 'ascended panel should render').toBe(true);
-        expectHooks(hookCounts, ['bc-dp-boost', 'bc-dp-thresholds', 'bc-dp-ascend-btn']);
-        expect(result.hasAscendButton, 'ascend button should render when not ascended').toBe(true);
-        expect(result.ascendButtonDisabled, 'ascend button should be enabled when thresholds met').toBe(false);
-        expect(result.hasThresholdReadout, 'threshold readout should render in not-ascended state').toBe(true);
-        expect(result.hasBoostBlock, 'boost block should render in ascended state').toBe(true);
-        expect(result.boostListItems, 'expected six boost rows (str/tou/wounds/fear/daemonic/immunity)').toBeGreaterThanOrEqual(5);
-        expect(result.ascendButtonClicked, 'ascend button should be clickable').toBe(true);
+        expect(result.notAscendedRendered, 'not-claimed panel should render').toBe(true);
+        expect(result.ascendedRendered, 'claimed panel should render').toBe(true);
+        expectHooks(hookCounts, ['bc-dp-outcome', 'bc-dp-thresholds', 'bc-dp-ascend-btn']);
+        expect(result.hasAscendButton, 'resolve button should render before the claim').toBe(true);
+        expect(result.ascendButtonDisabled, 'resolve button should be enabled at 100 Corruption').toBe(false);
+        expect(result.hasThresholdReadout, 'requirement readout should render before the claim').toBe(true);
+        expect(result.hasOutcome, 'outcome text should render once claimed').toBe(true);
+        expect(result.ascendedHasButton, 'no resolve button once claimed').toBe(false);
+        expect(result.ascendButtonClicked, 'resolve button should be clickable').toBe(true);
 
         recordCoverage('panel.render', 'BcDaemonPrincePanel');
     });

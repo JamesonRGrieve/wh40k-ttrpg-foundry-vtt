@@ -4,14 +4,13 @@
  *
  * Renders the action button panel against a minimal context. The button
  * itself is gated on `hasFanatic` (computed by
- * CharacterSheet._prepareContext based on actor talent/role names) so the
- * stories cover both the rendered and hidden states.
+ * CharacterSheet._prepareContext from the role with identifier `fanatic`)
+ * so the stories cover both the rendered and hidden states.
  *
  * The companion e2e spec (`tests/e2e/fanatic-button.spec.ts`) creates a
- * dh2-character with a "Fanatic" talent, opens the sheet, clicks the
+ * dh2-character owning the Fanatic role, opens the sheet, clicks the
  * button, and snaps `fanatic-button-clicked` against a live Foundry
- * instance — verifying the Fate value decrements and the ActiveEffect
- * is created.
+ * instance.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import panelSrc from '../../src/templates/actor/panel/fanatic-button.hbs?raw';

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { queryItemIndex, resolvePack } from './compendium-query.ts';
+import { findItemUuidByIdentifier, pickLineEntry, queryItemIndex, resolvePack } from './compendium-query.ts';
 
 /**
  * Coverage for the shared compendium pack-resolution helpers (#289) that #307's
@@ -11,6 +11,9 @@ import { queryItemIndex, resolvePack } from './compendium-query.ts';
 interface IndexEntry {
     _id: string;
     name: string;
+    type?: string;
+    uuid?: string;
+    system?: { identifier?: string };
 }
 interface FakePack {
     metadata: { id: string; name: string; system: string; label: string };
@@ -142,5 +145,50 @@ describe('queryItemIndex', () => {
 
         expect(all.sort()).toEqual(['an-actor', 'an-item']);
         expect(itemsOnly).toEqual(['an-item']);
+    });
+});
+
+describe('pickLineEntry', () => {
+    const dh1 = { uuid: 'Compendium.wh40k-rpg.dh1-core-items-talents.Item.a', packId: 'wh40k-rpg.dh1-core-items-talents' };
+    const dh2 = { uuid: 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.b', packId: 'wh40k-rpg.dh2-core-items-talents' };
+
+    it("prefers the entry from the given line's packs", () => {
+        expect(pickLineEntry([dh1, dh2], 'dh2')).toBe(dh2);
+    });
+
+    it('does not mistake a longer prefix for the line', () => {
+        const dh2e = { uuid: 'x', packId: 'wh40k-rpg.dh2e-misc' };
+        expect(pickLineEntry([dh2e, dh1], 'dh2')).toBe(dh2e);
+    });
+
+    it('falls back to the first match from any line, and to null when there is none', () => {
+        expect(pickLineEntry([dh1], 'rt')).toBe(dh1);
+        expect(pickLineEntry([], 'dh2')).toBeNull();
+    });
+});
+
+describe('findItemUuidByIdentifier', () => {
+    it('finds the Item of the right type and identifier, on the requested line', async () => {
+        setPacks([
+            pack({
+                id: 'wh40k-rpg.dh1-core-items-talents',
+                name: 'dh1-core-items-talents',
+                entries: [{ _id: 'a', name: 'Hatred', type: 'talent', uuid: 'Compendium.dh1.a', system: { identifier: 'hatred' } }],
+            }),
+            pack({
+                id: 'wh40k-rpg.dh2-core-items-talents',
+                name: 'dh2-core-items-talents',
+                entries: [
+                    { _id: 'b', name: 'Hatred', type: 'trait', uuid: 'Compendium.dh2.trait', system: { identifier: 'hatred' } },
+                    { _id: 'c', name: 'Renamed Hatred', type: 'talent', uuid: 'Compendium.dh2.c', system: { identifier: 'hatred' } },
+                ],
+            }),
+        ]);
+        expect(await findItemUuidByIdentifier('talent', 'hatred', 'dh2')).toBe('Compendium.dh2.c');
+    });
+
+    it('returns null when no Item carries the identifier', async () => {
+        setPacks([pack({ id: 'wh40k-rpg.dh2-x', name: 'x', entries: [{ _id: 'a', name: 'Hatred', type: 'talent', uuid: 'u' }] })]);
+        expect(await findItemUuidByIdentifier('talent', 'hatred', 'dh2')).toBeNull();
     });
 });

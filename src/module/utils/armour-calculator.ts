@@ -6,6 +6,7 @@
 import { BODY_LOCATIONS } from '../data/shared/body-locations.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
+import { itemIdentifier } from './item-identifier.ts';
 
 interface ArmourLocationData {
     total: number;
@@ -38,21 +39,53 @@ export interface ComputeArmourOptions {
 }
 
 /**
- * Read the armour rating carried by a Machine / Natural Armour trait. The rating
- * lives in `level` for level-based traits, but the SPEC-philosophy authoring
- * (#261) parks it in `specialization` (e.g. "Natural Armour" with
- * `specialization: "3"`), so fall back to the first integer in that string.
- * @param {object} system - The trait item's system data
+ * `system.identifier`s of the traits whose rating is armour on every location:
+ * Machine (X) and Natural Armour (X). DH2, OW and BC print that the two do not
+ * stack; DH1, RT and DW print nothing on it, so the higher one counts in every
+ * line.
+ */
+const ARMOUR_TRAIT_IDENTIFIERS: ReadonlySet<string> = new Set(['machine', 'naturalArmour']);
+
+/** The first integer in a string, or `null` when there is none. */
+function firstInteger(text: string | null | undefined): number | null {
+    if (typeof text !== 'string') return null;
+    const match = /\d+/.exec(text);
+    return match === null ? null : Number(match[0]);
+}
+
+/**
+ * Read the armour rating carried by a Machine / Natural Armour trait: its
+ * `level`, else the integer in its `specialization` (the SPEC-philosophy
+ * authoring, #261, parks it there — "Natural Armour" with `specialization: "3"`),
+ * else the integer in its name (embedded stat-block traits are named
+ * "Machine (8)").
+ * @param {object} trait - The trait item's name and system data
  * @returns {number} The armour rating, or 0 when none is authored
  */
-function traitArmourRating(system: { level?: number; specialization?: string }): number {
-    if (system.level !== undefined && system.level > 0) return system.level;
-    const spec = system.specialization;
-    if (typeof spec === 'string') {
-        const match = /\d+/.exec(spec);
-        if (match !== null) return Number(match[0]);
+function traitArmourRating(trait: { name: string; system: { level?: number; specialization?: string | null } }): number {
+    const level = trait.system.level;
+    if (level !== undefined && level > 0) return level;
+    return firstInteger(trait.system.specialization) ?? firstInteger(trait.name) ?? 0;
+}
+
+/** The trait-item surface the armour-trait reader needs. */
+interface ArmourTraitLike {
+    type: string;
+    name: string;
+    system: { identifier?: string; level?: number; specialization?: string | null };
+}
+
+/**
+ * The armour the bearer's Machine / Natural Armour traits grant: the highest
+ * single rating (the two never stack), matched by `system.identifier`.
+ */
+function armourTraitBonus(items: Iterable<ArmourTraitLike>): number {
+    let best = 0;
+    for (const item of items) {
+        if (item.type !== 'trait' || !ARMOUR_TRAIT_IDENTIFIERS.has(itemIdentifier(item))) continue;
+        best = Math.max(best, traitArmourRating(item));
     }
-    return 0;
+    return best;
 }
 
 /**
@@ -103,18 +136,13 @@ export function computeArmour(actor: WH40KBaseActor, options: ComputeArmourOptio
 
     const toughness = actor.characteristics['toughness'] as (typeof actor.characteristics)[string] | undefined;
     const toughnessBonus = toughness?.bonus ?? 0;
-    let traitBonus = 0;
 
-    // Compute highest trait bonus from Machine or Natural Armor traits
-    const ARMOUR_TRAIT_NAMES = new Set(['Machine', 'Natural Armor', 'Natural Armour']);
-    const traits = actor.items.filter((item: WH40KItem) => item.type === 'trait');
-    for (const trait of traits) {
-        if (!ARMOUR_TRAIT_NAMES.has(trait.name)) continue;
-        const rating = traitArmourRating(trait.system as { level?: number; specialization?: string });
-        if (rating > traitBonus) {
-            traitBonus = rating;
-        }
-    }
+    // Highest Machine / Natural Armour rating (they do not stack).
+    const traitBonus = armourTraitBonus(
+        actor.items
+            .filter((item: WH40KItem) => item.type === 'trait')
+            .map((item: WH40KItem) => ({ type: item.type, name: item.name, system: item.system as ArmourTraitLike['system'] })),
+    );
 
     // Initialize armour object with base values (TB + trait bonus)
     const armour: Record<string, ArmourLocationData> = BODY_LOCATIONS.reduce(

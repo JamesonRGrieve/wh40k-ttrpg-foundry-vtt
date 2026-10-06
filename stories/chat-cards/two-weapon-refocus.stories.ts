@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { resolveTwoWeaponRefocus, type TwoWeaponRefocusContext, type TwoWeaponRefocusPlan } from '../../src/module/rules/two-weapon-fighting.ts';
+import {
+    resolveTwoWeaponRefocus,
+    type TwoWeaponRefocusContext,
+    type TwoWeaponRefocusPlan,
+    type TwoWeaponTalent,
+} from '../../src/module/rules/two-weapon-fighting.ts';
 import refocusChatSrc from '../../src/templates/chat/two-weapon-refocus-chat.hbs?raw';
 import { initializeStoryHandlebars } from '../template-support';
 import { renderSheet } from '../test-helpers';
@@ -38,9 +43,14 @@ export default meta;
 
 type Story = StoryObj;
 
+/** An owned Two-Weapon Wielder talent picked for Ranged (matched by its document identifier). */
+const RANGED_WIELDER: TwoWeaponTalent = { identifier: 'twoWeaponWielder', specialization: 'Ranged' };
+/** The same talent picked for Melee. */
+const MELEE_WIELDER: TwoWeaponTalent = { identifier: 'twoWeaponWielder', specialization: 'Melee' };
+
 export const RangedSingleShotWielder: Story = {
     name: 'Ranged Wielder — single shot Half-Action ×2',
-    render: () => renderSheet(refocusChatSrc, cardContext({ isMelee: false, mode: 'Standard Attack', talents: new Set(['Two-Weapon Wielder (Ranged)']) })),
+    render: () => renderSheet(refocusChatSrc, cardContext({ isMelee: false, mode: 'Standard Attack', talents: [RANGED_WIELDER] })),
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         // Two Standard Attack rows render (main Half + off Free).
@@ -57,7 +67,7 @@ export const RangedSingleShotWielder: Story = {
 
 export const RangedSemiAutoSameRestrictions: Story = {
     name: 'Ranged Wielder — semi-auto opener, same-mode follow-up',
-    render: () => renderSheet(refocusChatSrc, cardContext({ isMelee: false, mode: 'Semi-Auto Burst', talents: new Set(['Two-Weapon Wielder (Ranged)']) })),
+    render: () => renderSheet(refocusChatSrc, cardContext({ isMelee: false, mode: 'Semi-Auto Burst', talents: [RANGED_WIELDER] })),
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         // The off-hand follows the same restrictions as the opener.
@@ -73,14 +83,17 @@ export const RangedMasterAmbidextrous: Story = {
             cardContext({
                 isMelee: false,
                 mode: 'Full Auto Burst',
-                talents: new Set(['Two-Weapon Master (Ranged)', 'Ambidextrous']),
+                talents: [
+                    { identifier: 'twoWeaponMaster', specialization: 'Ranged' },
+                    { identifier: 'ambidextrous', specialization: '' },
+                ],
             }),
         ),
 };
 
 export const MeleeSwiftAttackVariant: Story = {
     name: 'Melee Wielder (RT) — Swift Attack ×2',
-    render: () => renderSheet(refocusChatSrc, cardContext({ isMelee: true, mode: 'Swift Attack', talents: new Set(['Two-Weapon Wielder (Melee)']) }, 'rt')),
+    render: () => renderSheet(refocusChatSrc, cardContext({ isMelee: true, mode: 'Swift Attack', talents: [MELEE_WIELDER] }, 'rt')),
     play: async ({ canvasElement }) => {
         // Per-system variant anchor differs across the seven systems.
         const root = canvasElement.querySelector('[data-wh40k-hook="twr-card"]');

@@ -1,45 +1,37 @@
 /**
- * Black Crusade Daemon Prince action handlers (#182).
+ * Black Crusade apotheosis action handler (#182 — BC Core p267).
  *
- * Exported static method `bcAscend` is registered into the character
- * sheet's `DEFAULT_OPTIONS.actions` map by the orchestrator via
- * `.integration-staging/182.json`. It is invoked with `this` bound to
- * the sheet instance.
+ * Exported `bcAscend` is registered into the character sheet's
+ * `DEFAULT_OPTIONS.actions` map and invoked with `this` bound to the sheet.
  *
  * Flow:
  *
- *   1. Read live Infamy / Corruption / Chaos alignment off `actor.system`.
- *   2. Evaluate the apotheosis gate via the pure resolver
- *      `ascendCharacter(...)` from `../rules/bc-daemon-prince.ts`.
- *   3. If blocked, surface the matching i18n notification and abort.
- *   4. Otherwise prompt the operator for confirmation via DialogV2; on
- *      accept, persist the ascension record via
- *      `actor.update({ 'system.daemonPrinceAscension': … })` and post
- *      the `bc-ascension-chat.hbs` chat card.
+ *   1. Read live Corruption / Infamy / Chaos alignment off `actor.system` and
+ *      the GM's apotheosis Infamy threshold from the world setting.
+ *   2. Evaluate the rule via the pure resolver `resolveApotheosis(...)`.
+ *   3. Below 100 Corruption, surface a notification and abort.
+ *   4. Otherwise prompt for confirmation via DialogV2; on accept, persist the
+ *      record (with its Daemon Prince / Chaos Spawn outcome) via
+ *      `actor.update({ 'system.daemonPrinceAscension': … })` and post the
+ *      `bc-ascension-chat.hbs` chat card. Either way the character leaves play;
+ *      the book prints no stat changes, so none are applied.
  *
- * The handler is the single mutation point for the ascension record;
- * the pure engine never touches actor state.
+ * The handler is the single mutation point for the record; the pure engine
+ * never touches actor state.
  */
 
 import type { BcDaemonPrinceDeclarations } from '../data/actor/mixins/bc-daemon-prince-template.ts';
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
-import { ascendCharacter, getDaemonPrinceBoost, isAscended, type DaemonPrinceAlignment } from '../rules/bc-daemon-prince.ts';
+import { APOTHEOSIS_CORRUPTION, isAscended, resolveApotheosis, type ApotheosisOutcome, type DaemonPrinceAlignment } from '../rules/bc-daemon-prince.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
 /* -------------------------------------------- */
 /*  Structural sheet contract                   */
 /* -------------------------------------------- */
 
 /**
- * Minimum surface the action reads off `this`. The character sheet
- * (which is what `this` is bound to at runtime) is a superset of this
- * shape; we keep the contract tight so the action module stays
- * uncoupled from the full sheet class.
- *
- * The system shape is the intersection of the BC Daemon Prince
- * declarations and the Chaos / Infamy fields the engine reads. The
- * Chaos alignment field is declared on `CharacterData` upstream of this
- * module; we restate the narrow surface we read so the action stays
- * compile-clean even if the upstream interface is reshaped.
+ * Minimum surface the action reads off `this`. The character sheet (which is
+ * what `this` is bound to at runtime) is a superset of this shape.
  */
 interface BcDaemonPrinceActorSystem extends BcDaemonPrinceDeclarations {
     readonly infamy: number;
@@ -47,12 +39,19 @@ interface BcDaemonPrinceActorSystem extends BcDaemonPrinceDeclarations {
     readonly chaosAlignment: DaemonPrinceAlignment;
 }
 
+/** The record the action persists. */
+interface ApotheosisRecord {
+    ascendedAt: number;
+    alignmentAtAscension: DaemonPrinceAlignment;
+    outcome: ApotheosisOutcome;
+}
+
 interface BcDaemonPrinceSheetLike {
     actor: Actor & {
         readonly _gameSystemId?: string;
         readonly system: BcDaemonPrinceActorSystem;
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update() return shape is the resolved Document or undefined; treat as unknown to caller
-        update: (data: { 'system.daemonPrinceAscension': { ascendedAt: number; alignmentAtAscension: DaemonPrinceAlignment } }) => Promise<unknown>;
+        update: (data: { 'system.daemonPrinceAscension': ApotheosisRecord }) => Promise<unknown>;
     };
 }
 
@@ -68,14 +67,11 @@ async function promptConfirm(): Promise<boolean> {
     const title = i18n.localize('WH40K.BC.DaemonPrince.Confirm.Title');
     const body = i18n.localize('WH40K.BC.DaemonPrince.Confirm.Body');
     const okLabel = i18n.localize('WH40K.BC.DaemonPrince.Confirm.Ok');
-    const cancelLabel = i18n.localize('WH40K.BC.DaemonPrince.Confirm.Cancel');
-
-    const content = `<p>${body}</p>`;
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.prompt return type is `unknown` per Foundry's contract; narrowed below via runtime checks
     const promptResult: unknown = await dialogApi.prompt({
         window: { title },
-        content,
+        content: `<p>${body}</p>`,
         ok: {
             label: okLabel,
             callback: (): true => true,
@@ -83,19 +79,7 @@ async function promptConfirm(): Promise<boolean> {
         rejectClose: false,
     });
 
-    if (promptResult === true) return true;
-    // Some DialogV2 variants surface a cancel button; we treat anything
-    // not strictly `true` as a rejection.
-    if (typeof promptResult === 'object' && promptResult !== null) {
-        // Defensive narrowing for shapes that wrap the callback return.
-        const r = promptResult as { confirmed?: boolean };
-        if (r.confirmed === true) return true;
-    }
-    // Reference cancelLabel so unused-locals lint doesn't catch it; the
-    // label is shown through the dialog API when supported, and stays
-    // available here as documentation of the rejection affordance.
-    void cancelLabel;
-    return false;
+    return promptResult === true;
 }
 
 /* -------------------------------------------- */
@@ -103,13 +87,11 @@ async function promptConfirm(): Promise<boolean> {
 /* -------------------------------------------- */
 
 /**
- * `data-action="bcAscend"` handler. Checks the apotheosis gate, prompts
- * for confirmation, persists the ascension record, and posts the chat
+ * `data-action="bcAscend"` handler. Checks the claim (100 Corruption), prompts
+ * for confirmation, persists the record with its outcome, and posts the chat
  * card.
  *
- * No-op for non-BC actors so a stale wiring on a homologated sheet
- * doesn't surprise the GM with an Apotheosis prompt on (e.g.) a DH2
- * character. Also no-op for already-ascended characters — apotheosis
+ * No-op for non-BC actors and for champions already claimed — the claim
  * fires once.
  */
 export async function bcAscend(this: BcDaemonPrinceSheetLike, _event: Event, _target: HTMLElement): Promise<void> {
@@ -117,42 +99,35 @@ export async function bcAscend(this: BcDaemonPrinceSheetLike, _event: Event, _ta
 
     const system = this.actor.system;
 
-    // Already ascended? Bail without prompt; the panel button should be
-    // hidden in this branch, but defend in depth. The engine's
-    // {@link isAscended} takes a fully-resolved {ascendedAt: number}
-    // record-or-null; we narrow the persisted shape (which carries
-    // `ascendedAt: number | null`) before handing it across.
     const persisted = system.daemonPrinceAscension;
-    const resolvedRecord = persisted.ascendedAt === null ? null : { ascendedAt: persisted.ascendedAt, alignmentAtAscension: persisted.alignmentAtAscension };
+    const resolvedRecord =
+        persisted.ascendedAt === null
+            ? null
+            : { ascendedAt: persisted.ascendedAt, alignmentAtAscension: persisted.alignmentAtAscension, outcome: persisted.outcome };
     if (isAscended(resolvedRecord)) return;
 
-    const gate = ascendCharacter({
-        currentInfamy: system.infamy,
-        currentCorruption: system.corruption,
-        alignment: system.chaosAlignment,
+    const readout = resolveApotheosis({
+        corruption: system.corruption,
+        infamy: system.infamy,
+        infamyThreshold: WH40KSettings.getApotheosisInfamyThreshold(),
     });
 
-    if (!gate.ascended) {
-        const key =
-            gate.reason === 'insufficient-infamy'
-                ? 'WH40K.BC.DaemonPrince.Ascension.Insufficient.Infamy'
-                : 'WH40K.BC.DaemonPrince.Ascension.Insufficient.Corruption';
-        ui.notifications.warn(game.i18n.localize(key));
+    if (!readout.claimed) {
+        ui.notifications.warn(game.i18n.format('WH40K.BC.DaemonPrince.Blocked', { corruption: String(APOTHEOSIS_CORRUPTION) }));
         return;
     }
 
     const confirmed = await promptConfirm();
     if (!confirmed) return;
 
-    const ascendedAt = Math.trunc(Number(game.time.worldTime));
-    const record = {
-        ascendedAt,
+    const record: ApotheosisRecord = {
+        ascendedAt: Math.trunc(Number(game.time.worldTime)),
         alignmentAtAscension: system.chaosAlignment,
+        outcome: readout.outcome,
     };
 
     await this.actor.update({ 'system.daemonPrinceAscension': record });
 
-    const boost = getDaemonPrinceBoost(record);
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker takes WH40KBaseActor; our typed Actor subtype union is structurally compatible
     const speakerActor = this.actor as unknown as Parameters<typeof ChatMessage.getSpeaker>[0];
     // `_gameSystemId` is derived by the helper from the speaker's actor (#422).
@@ -162,7 +137,7 @@ export async function bcAscend(this: BcDaemonPrinceSheetLike, _event: Event, _ta
             gameSystem: 'bc',
             ascendedAt: record.ascendedAt,
             alignmentAtAscension: record.alignmentAtAscension,
-            boost,
+            isDaemonPrince: record.outcome === 'daemonPrince',
         },
         { speaker: ChatMessage.getSpeaker(speakerActor), applyWhispers: true },
     );

@@ -7,6 +7,7 @@ import {
     findMedicaeMechadendrite,
     isMedicaeMechadendrite,
     isMedicaeMechadendriteSystem,
+    mechadendriteMedicaeBonus,
     resolveBloodLossStaunch,
     staunchBloodLoss,
 } from './medicae-mechadendrite.ts';
@@ -21,8 +22,7 @@ describe('MEDICAE_MECHADENDRITE constants (#104, errata p. 183)', () => {
         expect(MEDICAE_MECHADENDRITE.staunchActionKind).toBe('half');
     });
 
-    it('grants the errata +10 Medicae bonus and one melee attack per round', () => {
-        expect(MEDICAE_MECHADENDRITE.medicaeBonus).toBe(10);
+    it('allows one melee attack per round', () => {
         expect(MEDICAE_MECHADENDRITE.meleeAttacksPerRound).toBe(1);
     });
 });
@@ -32,14 +32,14 @@ describe('MEDICAE_MECHADENDRITE constants (#104, errata p. 183)', () => {
 /* -------------------------------------------- */
 
 describe('resolveBloodLossStaunch', () => {
-    it('folds the errata +10 into the Medicae target', () => {
-        const r = resolveBloodLossStaunch(40, 45);
+    it('rolls against the Medicae total as-is — the document bonus is already in it, never added twice', () => {
+        const r = resolveBloodLossStaunch(50, 45);
         expect(r.target).toBe(50);
         expect(r.success).toBe(true); // 45 <= 50
     });
 
-    it('fails when the roll exceeds the bonused target', () => {
-        const r = resolveBloodLossStaunch(30, 55);
+    it('fails when the roll exceeds the target', () => {
+        const r = resolveBloodLossStaunch(40, 55);
         expect(r.target).toBe(40);
         expect(r.success).toBe(false); // 55 > 40
     });
@@ -55,8 +55,8 @@ describe('resolveBloodLossStaunch', () => {
     });
 
     it('reports degrees of success / failure in tens', () => {
-        expect(resolveBloodLossStaunch(40, 20).degrees).toBe(3); // (50-20)/10
-        expect(resolveBloodLossStaunch(20, 60).degrees).toBe(-3); // -(60-30)/10
+        expect(resolveBloodLossStaunch(50, 20).degrees).toBe(3); // (50-20)/10
+        expect(resolveBloodLossStaunch(30, 60).degrees).toBe(-3); // -(60-30)/10
     });
 });
 
@@ -85,25 +85,38 @@ describe('isMedicaeMechadendriteSystem', () => {
 /* -------------------------------------------- */
 
 describe('isMedicaeMechadendrite', () => {
-    it('matches a cybernetic named Medicae Mechadendrite (case-insensitive)', () => {
-        expect(isMedicaeMechadendrite({ name: 'Medicae Mechadendrite', isCybernetic: true })).toBe(true);
-        expect(isMedicaeMechadendrite({ name: 'medicae mechadendrite (Best)', isCybernetic: true })).toBe(true);
+    it('matches the cybernetic by its identifier, in either the camelCase or kebab-case spelling the lines ship', () => {
+        expect(isMedicaeMechadendrite({ isCybernetic: true, system: { identifier: 'medicaeMechadendrite' } })).toBe(true);
+        expect(isMedicaeMechadendrite({ isCybernetic: true, system: { identifier: 'medicae-mechadendrite' } })).toBe(true);
     });
 
-    it('rejects a non-cybernetic item even when named correctly', () => {
-        expect(isMedicaeMechadendrite({ name: 'Medicae Mechadendrite', isCybernetic: false })).toBe(false);
+    it('rejects a non-cybernetic item even with the identifier', () => {
+        expect(isMedicaeMechadendrite({ isCybernetic: false, system: { identifier: 'medicaeMechadendrite' } })).toBe(false);
     });
 
-    it('rejects an unrelated cybernetic', () => {
-        expect(isMedicaeMechadendrite({ name: 'Utility Mechadendrite', isCybernetic: true })).toBe(false);
-        expect(isMedicaeMechadendrite({ name: 'Luminen Capacitor', isCybernetic: true })).toBe(false);
+    it('rejects an unrelated cybernetic, and never matches on a name', () => {
+        expect(isMedicaeMechadendrite({ isCybernetic: true, system: { identifier: 'utilityMechadendrite' } })).toBe(false);
+        expect(isMedicaeMechadendrite({ isCybernetic: true, system: {} })).toBe(false);
+    });
+});
+
+describe('mechadendriteMedicaeBonus', () => {
+    it("reads the bonus from the document's modifiers.skills.medicae", () => {
+        expect(mechadendriteMedicaeBonus({ system: { modifiers: { skills: { medicae: 10, interrogation: 10 } } } })).toBe(10);
+    });
+
+    it('is 0 when the document authors none or there is no mechadendrite', () => {
+        expect(mechadendriteMedicaeBonus({ system: {} })).toBe(0);
+        expect(mechadendriteMedicaeBonus(null)).toBe(0);
     });
 });
 
 interface FakeItem {
-    name: string;
     isCybernetic: boolean;
+    system: { identifier: string };
 }
+
+const MECHADENDRITE: FakeItem = { isCybernetic: true, system: { identifier: 'medicae-mechadendrite' } };
 
 interface FakeEffect {
     id: string;
@@ -134,24 +147,24 @@ function makeActor(opts: { gameSystem?: string; items?: FakeItem[]; medicae?: nu
 
 describe('findMedicaeMechadendrite / actorHasMedicaeMechadendrite', () => {
     it('finds the cybernetic on a DH2 actor that owns one', () => {
-        const actor = makeActor({ gameSystem: 'dh2', items: [{ name: 'Medicae Mechadendrite', isCybernetic: true }] });
+        const actor = makeActor({ gameSystem: 'dh2', items: [MECHADENDRITE] });
         expect(findMedicaeMechadendrite(asActor(actor))).not.toBeNull();
         expect(actorHasMedicaeMechadendrite(asActor(actor))).toBe(true);
     });
 
     it('returns null when the actor owns no matching cybernetic', () => {
-        const actor = makeActor({ gameSystem: 'dh2', items: [{ name: 'Bionic Arm', isCybernetic: true }] });
+        const actor = makeActor({ gameSystem: 'dh2', items: [{ isCybernetic: true, system: { identifier: 'bionicArm' } }] });
         expect(actorHasMedicaeMechadendrite(asActor(actor))).toBe(false);
     });
 
     it('returns null on Imperium Maledictum even with a matching item (homologation gate)', () => {
-        const actor = makeActor({ gameSystem: 'im', items: [{ name: 'Medicae Mechadendrite', isCybernetic: true }] });
+        const actor = makeActor({ gameSystem: 'im', items: [MECHADENDRITE] });
         expect(actorHasMedicaeMechadendrite(asActor(actor))).toBe(false);
     });
 
     it('remains eligible across the other five FFG systems', () => {
         for (const sys of ['dh1', 'bc', 'dw', 'ow', 'rt']) {
-            const actor = makeActor({ gameSystem: sys, items: [{ name: 'Medicae Mechadendrite', isCybernetic: true }] });
+            const actor = makeActor({ gameSystem: sys, items: [MECHADENDRITE] });
             expect(actorHasMedicaeMechadendrite(asActor(actor))).toBe(true);
         }
     });
@@ -186,10 +199,10 @@ describe('staunchBloodLoss (runtime, #104)', () => {
 
     it('on success removes the Blood Loss Active Effect and emits a success card', async () => {
         const bloodLossEffect: FakeEffect = { id: 'ae-1', flags: { 'wh40k-rpg': { bloodloss: true } } };
-        const actor = makeActor({ gameSystem: 'dh2', medicae: 40 });
+        const actor = makeActor({ gameSystem: 'dh2', medicae: 50 });
         actor.effects = [bloodLossEffect];
 
-        // rng 0.29 → rollD100 = 29 (0.29*100 = 28.9999… floors to 28, +1), vs target 40+10=50 → success.
+        // rng 0.29 → rollD100 = 29 (0.29*100 = 28.9999… floors to 28, +1), vs the Medicae total 50 → success.
         const res = await staunchBloodLoss(asActor(actor), () => 0.29);
 
         expect(res.success).toBe(true);
@@ -205,7 +218,7 @@ describe('staunchBloodLoss (runtime, #104)', () => {
         const actor = makeActor({ gameSystem: 'dh2', medicae: 20 });
         actor.effects = [bloodLossEffect];
 
-        // rng 0.89 → rollD100 = 90, vs target 20+10=30 → failure.
+        // rng 0.89 → rollD100 = 90, vs the Medicae total 20 → failure.
         const res = await staunchBloodLoss(asActor(actor), () => 0.89);
 
         expect(res.success).toBe(false);
@@ -221,7 +234,7 @@ describe('staunchBloodLoss (runtime, #104)', () => {
         const actor = makeActor({ gameSystem: 'dh2', medicae: 60 });
         actor.effects = [bloodLoss, stunned];
 
-        // rng 0.09 → rollD100 = 10, vs target 60+10=70 → success.
+        // rng 0.09 → rollD100 = 10, vs the Medicae total 60 → success.
         await staunchBloodLoss(asActor(actor), () => 0.09);
 
         expect(actor.deleteEmbeddedDocuments).toHaveBeenCalledWith('ActiveEffect', ['ae-blood']);
@@ -238,7 +251,7 @@ describe('staunchBloodLoss (runtime, #104)', () => {
         // clamped to 1, so every injected roll was a guaranteed natural 01. A
         // mid-range fraction must now produce a mid-range roll instead.
         const actor = makeActor({ gameSystem: 'dh2', medicae: 30 });
-        // rng 0.62 → rollD100 = 63, vs target 30+10=40 → failure (not a forced 01 success).
+        // rng 0.62 → rollD100 = 63, vs the Medicae total 30 → failure (not a forced 01 success).
         const res = await staunchBloodLoss(asActor(actor), () => 0.62);
         expect(res.roll).toBe(63);
         expect(res.success).toBe(false);

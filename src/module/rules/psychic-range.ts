@@ -86,3 +86,19 @@ export function parsePsychicRange(raw: string | number | null | undefined, psyRa
 
     return null;
 }
+
+/** A multiple of Psy Rating as the books write it in damage ("1d10+2xPR"). */
+const PSY_RATING_MULTIPLE_RE = /(\d+)\s*[x×]\s*PR\b/g;
+/** The bare Psy Rating term ("1d10+PR"). */
+const PSY_RATING_TERM_RE = /(?<![A-Za-z])PR\b/g;
+
+/**
+ * Substitute the psyker's Psy Rating for the `PR` term in an authored damage or
+ * penetration formula: `"1d10+PR"` at PR 3 rolls `"1d10+3"`, and `"1d10+2xPR"`
+ * rolls `"1d10+2*3"`. Foundry's Roll parser treats a bare `PR` (or `2xPR`) as an
+ * unresolvable string term and throws. Pure.
+ */
+export function resolvePsyRatingTerm(formula: string, psyRating: number): string {
+    const pr = String(Number.isFinite(psyRating) ? Math.max(0, Math.trunc(psyRating)) : 0);
+    return formula.replace(PSY_RATING_MULTIPLE_RE, `$1*${pr}`).replace(PSY_RATING_TERM_RE, pr);
+}

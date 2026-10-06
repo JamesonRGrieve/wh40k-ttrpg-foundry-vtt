@@ -1,105 +1,28 @@
 /**
- * Daemonic trait immunities + Undying rider (#143 — DH2 Errata L69-73).
+ * Daemonic trait detection (#143 — DH2 Core p.136, errata).
  *
- * Per DH2 errata p.366, the Daemonic trait grants:
- *   - Immunity to disease (exposure auto-skips, no resist test).
- *   - Immunity to poison (exposure auto-skips, no resist test).
- *   - The Undying trait — once per session, on the first transition past
- *     the death threshold (wounds reduced past 0), the Daemonic creature
- *     recovers to 1 wound instead of dying.
+ * The Daemonic (X) trait makes its bearer immune to disease and poison and
+ * grants the Undying trait. Undying (DH2 Core p139) is immunity to disease,
+ * poison and toxins plus no need to breathe — it has no revival rider. The
+ * immunities themselves are content carried by the trait documents; this
+ * module only answers "does this actor carry Daemonic?" for the sheet badge.
  *
- * This module exposes the pure predicates. The damage-application path
- * checks `shouldSkipDiseaseExposure` / `shouldSkipPoisonExposure` before
- * resolving the standard disease.ts / poison.ts profiles, and consults
- * `resolveUndyingRevival` on death-state transitions. The session flag
- * lives on the actor (a `flags.wh40k-rpg.undyingUsedInSession` boolean is
- * the canonical home but the resolver leaves storage to the caller).
- *
- * Composes with #82 / #85 daemon wiring — when a Daemonhost is bound,
- * the resulting actor carries the Daemonic trait and inherits these
- * immunities automatically.
+ * The trait is matched by its stable `system.identifier` (`daemonic`), never
+ * its display name: the documents ship as "Daemonic", "Daemonic (X)" and
+ * "Daemonic (x)", which an exact-name match silently missed.
  */
 
-/**
- * Minimal duck-typed actor surface. The runtime actor (`WH40KBaseActor`)
- * satisfies this; tests pass plain fixtures.
- *
- * Either `system.traits` (NPC stat blocks, where traits live as inline
- * entries) or an item of type 'trait' on `items` is recognised — the
- * predicate matches case-insensitively against the literal trait name.
- */
+import { hasItemWithIdentifier, type IdentifiableItem } from '../utils/item-identifier.ts';
+
+/** The Daemonic trait's stable `system.identifier`, shared by every line's document. */
+const DAEMONIC_IDENTIFIER = 'daemonic';
+
+/** Minimal duck-typed actor surface: the owned items. */
 export interface DaemonicActorLike {
-    // The index signature keeps this from being a "weak type": a real
-    // DataModel-backed actor `system` (which carries `[key: string]: unknown`)
-    // satisfies it structurally, while plain `{ traits: [...] }` test
-    // fixtures remain assignable too.
-    system?: {
-        traits?: ReadonlyArray<{ name?: string }>;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: open index signature mirrors the DataModel `system`'s `[key: string]: unknown` so a real actor stays structurally assignable to this duck-typed surface; the value type is genuinely unconstrained here
-    } & { [key: string]: unknown };
-    items?: Iterable<{ type?: string; name?: string }>;
+    items?: Iterable<IdentifiableItem>;
 }
 
-/** Case-insensitive trait-name match against the canonical 'Daemonic' tag. */
+/** Whether the actor owns a trait whose `system.identifier` is `daemonic`. */
 export function hasDaemonic(actor: DaemonicActorLike): boolean {
-    const inlineTraits = actor.system?.traits;
-    if (inlineTraits !== undefined) {
-        for (const t of inlineTraits) {
-            if (typeof t.name === 'string' && t.name.toLowerCase() === 'daemonic') return true;
-        }
-    }
-    const items = actor.items;
-    if (items !== undefined) {
-        for (const item of items) {
-            if (item.type === 'trait' && typeof item.name === 'string' && item.name.toLowerCase() === 'daemonic') {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-/**
- * True when a disease-exposure resolution should be skipped entirely.
- * Wraps `hasDaemonic` so callers needn't know the trait name.
- */
-export function shouldSkipDiseaseExposure(actor: DaemonicActorLike): boolean {
-    return hasDaemonic(actor);
-}
-
-/**
- * True when a poison-exposure resolution should be skipped entirely.
- * Wraps `hasDaemonic` so callers needn't know the trait name.
- */
-export function shouldSkipPoisonExposure(actor: DaemonicActorLike): boolean {
-    return hasDaemonic(actor);
-}
-
-/** Outcome of an Undying check at the death-state transition. */
-export interface UndyingRevivalOutcome {
-    /** True when the creature was revived (callers must rewrite wounds.value to `newWoundsValue`). */
-    revived: boolean;
-    /** Target wounds.value after revival; only meaningful when `revived === true`. */
-    newWoundsValue: number;
-    /** True when the session flag should be set to `true` post-call. */
-    consumeSessionFlag: boolean;
-}
-
-/**
- * Decide whether a Daemonic creature is revived on the current death
- * transition. Returns a non-revival outcome for non-Daemonic actors, or
- * when the session's once-per-session Undying use has already been
- * consumed.
- *
- * Callers own session-flag storage; pass the current flag value, and
- * write `true` back to the flag when `consumeSessionFlag` is `true`.
- */
-export function resolveUndyingRevival(actor: DaemonicActorLike, sessionFlagAlreadyUsed: boolean): UndyingRevivalOutcome {
-    if (!hasDaemonic(actor)) {
-        return { revived: false, newWoundsValue: 0, consumeSessionFlag: false };
-    }
-    if (sessionFlagAlreadyUsed) {
-        return { revived: false, newWoundsValue: 0, consumeSessionFlag: false };
-    }
-    return { revived: true, newWoundsValue: 1, consumeSessionFlag: true };
+    return actor.items !== undefined && hasItemWithIdentifier(actor.items, 'trait', DAEMONIC_IDENTIFIER);
 }

@@ -269,7 +269,9 @@ describe('dynamicModifiers schema (data-driven modifier hooks, Direction #7)', (
     it('carries a temporary-effect duration lifecycle with a nested crash after-effect', () => {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.strict.json (flag on).
         const durationFields = entryFieldsOf()['duration']?.fields ?? {};
-        expect(Object.keys(durationFields).sort()).toEqual(['aftereffect', 'save', 'stacking', 'sustained', 'unit', 'upkeep', 'value', 'valueFormula'].sort());
+        expect(Object.keys(durationFields).sort()).toEqual(
+            ['aftereffect', 'save', 'stacking', 'sustained', 'unit', 'upkeep', 'uses', 'value', 'valueFormula'].sort(),
+        );
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.strict.json (flag on).
         expect(durationFields['aftereffect']?.kind).toBe('SchemaField');
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.strict.json (flag on).
@@ -297,6 +299,7 @@ describe('ModifiersTemplate.hasDynamicModifiers getter', () => {
             sustained: false,
             upkeep: '',
             stacking: 'none',
+            uses: 0,
             save: { characteristic: '', difficulty: 0 },
             aftereffect: { target: 'characteristic', targetKey: '', value: 0, valueFormula: '', durationUnit: 'instant', durationValue: 0 },
         },

@@ -1,9 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import type { DynamicModifierEntry, GrantedEffectEntry } from '../data/shared/modifiers-template.ts';
 import {
+    armOnDamagedHooks,
     collectDynamicComponents,
     collectGrantedEffects,
     collectGrantedQualities,
+    consumeArmedTestHooks,
+    endBearerTurnForArmedHooks,
+    mergeArmedTestHooks,
+    readArmedTestHooks,
     type DynamicModifierContext,
     type DynamicModifierItemLike,
     type DynamicModifierSituation,
@@ -35,6 +40,7 @@ function makeHook(overrides: Partial<DynamicModifierEntry> = {}): DynamicModifie
             sustained: false,
             upkeep: '',
             stacking: 'none',
+            uses: 0,
             save: { characteristic: '', difficulty: 0 },
             aftereffect: { target: 'characteristic', targetKey: '', value: 0, valueFormula: '', durationUnit: 'instant', durationValue: 0 },
         },
@@ -442,5 +448,124 @@ describe('collectGrantedEffects', () => {
         };
         expect(collectGrantedEffects([item], { action: 'Standard Attack' })).toEqual([]);
         expect(collectGrantedEffects([item], { action: 'All Out Attack' })).toHaveLength(1);
+    });
+});
+
+/* -------------------------------------------- */
+/*  condition: vsActor                          */
+/* -------------------------------------------- */
+
+describe('condition: vsActor (one specific foe)', () => {
+    const foeHook = makeHook({ target: 'attack', condition: 'vsActor', conditionValue: 'Actor.foe' });
+
+    it('fires only against the actor whose UUID the hook names', () => {
+        expect(hookApplies(foeHook, { targetActorUuid: 'Actor.foe' })).toBe(true);
+        expect(hookApplies(foeHook, { targetActorUuid: 'Actor.other' })).toBe(false);
+    });
+
+    it('does not fire with no target, nor for a hook naming no actor', () => {
+        expect(hookApplies(foeHook, {})).toBe(false);
+        expect(hookApplies(makeHook({ condition: 'vsActor', conditionValue: '' }), { targetActorUuid: '' })).toBe(false);
+    });
+});
+
+/* -------------------------------------------- */
+/*  when: onDamaged — armed test hooks          */
+/* -------------------------------------------- */
+
+describe('when: onDamaged (armed test hooks)', () => {
+    /** Penitent-style Cleansing Pain: +10 to the next test, once, until the end of the next round. */
+    const cleansingPain = makeHook({
+        target: 'test',
+        when: 'onDamaged',
+        value: 10,
+        duration: { ...makeHook().duration, unit: 'rounds', value: 1, uses: 1 },
+    });
+    const penitent: DynamicModifierItemLike = { name: 'Penitent', system: { modifiers: { dynamicModifiers: [cleansingPain] } } };
+
+    it('never fires on the roll in progress — it only arms', () => {
+        expect(hookApplies(cleansingPain, { isCrit: true, isKill: true })).toBe(false);
+        expect(collectDynamicComponents([penitent], makeCtx(), {})).toEqual([]);
+    });
+
+    it('arms only when 1+ damage was suffered after Toughness and armour', () => {
+        expect(armOnDamagedHooks([penitent], makeCtx(), 0, 3)).toEqual([]);
+        const armed = armOnDamagedHooks([penitent], makeCtx(), 1, 3);
+        expect(armed).toEqual([{ label: 'Penitent', source: 'Penitent', value: 10, usesRemaining: 1, expiresRound: 4, turnsRemaining: null }]);
+    });
+
+    it('arms with no round bound outside combat and no use limit when uses is 0', () => {
+        const unlimited = makeHook({ target: 'test', when: 'onDamaged', value: 5, label: 'Grit' });
+        const item: DynamicModifierItemLike = { name: 'Gritty', system: { modifiers: { dynamicModifiers: [unlimited] } } };
+        expect(armOnDamagedHooks([item], makeCtx(), 4, null)).toEqual([
+            { label: 'Grit', source: 'Gritty', value: 5, usesRemaining: null, expiresRound: null, turnsRemaining: null },
+        ]);
+    });
+
+    it('ignores onDamaged hooks aimed at anything but tests', () => {
+        const damageHook = makeHook({ target: 'damage', when: 'onDamaged', value: 3 });
+        const item: DynamicModifierItemLike = { name: 'Odd', system: { modifiers: { dynamicModifiers: [damageHook] } } };
+        expect(armOnDamagedHooks([item], makeCtx(), 5, 1)).toEqual([]);
+    });
+
+    it('spends a one-use hook on the first test: +10, then gone', () => {
+        const armed = armOnDamagedHooks([penitent], makeCtx(), 2, 3);
+        const first = consumeArmedTestHooks(armed, 3);
+        expect(first.modifiers).toEqual({ Penitent: 10 });
+        expect(first.remaining).toEqual([]);
+        expect(consumeArmedTestHooks(first.remaining, 3).modifiers).toEqual({});
+    });
+
+    it('applies through the end of the next round, then expires unapplied', () => {
+        const armed = armOnDamagedHooks([penitent], makeCtx(), 2, 3);
+        expect(consumeArmedTestHooks(armed, 4).modifiers).toEqual({ Penitent: 10 });
+        expect(consumeArmedTestHooks(armed, 5)).toEqual({ modifiers: {}, remaining: [] });
+    });
+
+    it('a multi-use hook counts down', () => {
+        const armed = [{ label: 'X', source: 'X', value: 5, usesRemaining: 2, expiresRound: null, turnsRemaining: null }];
+        const once = consumeArmedTestHooks(armed, null);
+        expect(once.remaining).toEqual([{ label: 'X', source: 'X', value: 5, usesRemaining: 1, expiresRound: null, turnsRemaining: null }]);
+        expect(consumeArmedTestHooks(once.remaining, null).remaining).toEqual([]);
+    });
+
+    it('suffering damage again refreshes the hook rather than stacking it', () => {
+        const old = [{ label: 'Penitent', source: 'Penitent', value: 10, usesRemaining: 1, expiresRound: 2, turnsRemaining: null }];
+        const fresh = [{ label: 'Penitent', source: 'Penitent', value: 10, usesRemaining: 1, expiresRound: 5, turnsRemaining: null }];
+        const other = { label: 'Grit', source: 'Gritty', value: 5, usesRemaining: null, expiresRound: null, turnsRemaining: null };
+        expect(mergeArmedTestHooks([...old, other], fresh)).toEqual([other, ...fresh]);
+    });
+
+    // EW p36 prints Cleansing Pain as lasting "before the end of his next turn" — a
+    // `turns` duration counting the bearer's own turn-ends, not combat rounds.
+    describe("a `turns` duration (until the end of the bearer's next turn)", () => {
+        const nextTurn = makeHook({ target: 'test', when: 'onDamaged', value: 10, duration: { ...makeHook().duration, unit: 'turns', value: 1, uses: 1 } });
+        const bearer: DynamicModifierItemLike = { name: 'Penitent', system: { modifiers: { dynamicModifiers: [nextTurn] } } };
+
+        it('hurt outside their turn, lapses when their next turn ends', () => {
+            const armed = armOnDamagedHooks([bearer], makeCtx(), 3, 2, false);
+            expect(armed[0]?.turnsRemaining).toBe(1);
+            expect(endBearerTurnForArmedHooks(armed)).toEqual([]);
+        });
+
+        it('hurt during their own turn, survives that turn ending and lapses after the next', () => {
+            const armed = armOnDamagedHooks([bearer], makeCtx(), 3, 2, true);
+            const afterThisTurn = endBearerTurnForArmedHooks(armed);
+            expect(afterThisTurn).toHaveLength(1);
+            expect(endBearerTurnForArmedHooks(afterThisTurn)).toEqual([]);
+        });
+
+        it('has no turn bound outside combat, and turn-ends leave unbounded hooks alone', () => {
+            const outside = armOnDamagedHooks([bearer], makeCtx(), 3, null, false);
+            expect(outside[0]?.turnsRemaining).toBeNull();
+            expect(endBearerTurnForArmedHooks(outside)).toEqual(outside);
+        });
+    });
+
+    it('reads the actor flag defensively, dropping malformed entries', () => {
+        const good = { label: 'Penitent', source: 'Penitent', value: 10, usesRemaining: 1, expiresRound: null, turnsRemaining: null };
+        expect(readArmedTestHooks([good, { label: 3 }, null, 'x'])).toEqual([good]);
+        expect(readArmedTestHooks(undefined)).toEqual([]);
+        expect(readArmedTestHooks({ not: 'an array' })).toEqual([]);
     });
 });

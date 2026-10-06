@@ -11,7 +11,7 @@
  * module; this file owns no game logic.
  */
 
-import { MEDICAE_MECHADENDRITE, actorHasMedicaeMechadendrite, staunchBloodLoss } from '../../rules/medicae-mechadendrite.ts';
+import { actorHasMedicaeMechadendrite, findMedicaeMechadendrite, mechadendriteMedicaeBonus, staunchBloodLoss } from '../../rules/medicae-mechadendrite.ts';
 import type { WH40KBaseActorDocument } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
@@ -63,12 +63,12 @@ class MedicaeMechadendriteDialog extends ApplicationV2Mixin(ApplicationV2 as unk
     /** @inheritDoc */
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<MedicaeMechadendriteContext> {
         const context = (await super._prepareContext(options)) as MedicaeMechadendriteContext;
-        const eligible = this.actor !== null && actorHasMedicaeMechadendrite(this.actor);
+        const mechadendrite = this.actor === null ? null : findMedicaeMechadendrite(this.actor);
         return {
             ...context,
             actorName: this.actor?.name ?? '',
-            eligible,
-            medicaeBonus: MEDICAE_MECHADENDRITE.medicaeBonus,
+            eligible: mechadendrite !== null,
+            medicaeBonus: mechadendriteMedicaeBonus(mechadendrite),
         };
     }
 

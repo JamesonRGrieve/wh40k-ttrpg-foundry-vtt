@@ -1,37 +1,27 @@
 {{!--
     Black Crusade Supplement Mechanics panel (#181).
 
-    Surfaces the persisted state the pure resolver in
-    `src/module/rules/bc-supplement-mechanics.ts` consumes for the two
-    actor-scoped supplement mechanics:
+    Surfaces the persisted Daemon Engine(X) rating the pure resolver in
+    `src/module/rules/bc-supplement-mechanics.ts` consumes
+    (daemonEngineRageBonus).
 
-      1. Daemon Engine(X) rating  — drives daemonEngineRageBonus(...)
-      2. Quick and the Dead       — drives quickAndTheDeadInitiativeBonus(...)
+    Irradiated(X) ticks live on the target's effect state. The Quick and
+    the Dead trait has no panel: its +2 Initiative is authored on the
+    trait document and folds into Initiative through the item-modifier path.
 
-    Legacy Weapon kills/tier live on weapon items (out of scope here);
-    Irradiated(X) ticks live on the target's effect state.
-
-    Context (built by the BC character sheet — wiring lives outside the
-    file list this issue is allowed to edit; the panel reads exactly the
-    fields documented below):
+    Context (built by the BC character sheet):
 
       supplementsPanel: {
         daemonEngineRating:  number               // sys.daemonEngineRating
         daemonEngineActive:  boolean              // rating > 0
         turnsSinceLastDamage: number              // ephemeral / dialog-scoped
         daemonEngineRageBonus: number             // daemonEngineRageBonus({rating, turnsSinceLastDamage})
-
-        quickAndTheDeadActive: boolean            // sys.quickAndTheDeadActive
-        chaosAlignment:        QuickAndTheDeadAlignment   // sys.chaosAlignment
-        baseInitiative:        number             // raw initiative score
-        quickAndTheDeadBonus:  number             // QUICK_AND_THE_DEAD_BONUS_BY_ALIGNMENT[alignment]
-        quickAndTheDeadInitiative: number         // quickAndTheDeadInitiativeBonus(base, alignment)
       }
 
     Rendered only for BC actors; the include in tab-overview.hbs gates on
     `isBC`.
 --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-supplements-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson-l40" icon="fa-skull-crossbones" label=(localize "WH40K.BC.Supplements.PanelHeader") rootAttrs=(safeAttrs "data-bc-daemon-engine-rating" supplementsPanel.daemonEngineRating "data-bc-quick-and-the-dead-active" supplementsPanel.quickAndTheDeadActive)}}
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-supplements-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson-l40" icon="fa-skull-crossbones" label=(localize "WH40K.BC.Supplements.PanelHeader") rootAttrs=(safeAttrs "data-bc-daemon-engine-rating" supplementsPanel.daemonEngineRating)}}
 
     {{!-- Daemon Engine(X) rating --}}
     <div class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
@@ -57,46 +47,6 @@
                 <span class="tw-font-semibold tw-tabular-nums">
                     +{{supplementsPanel.daemonEngineRageBonus}}
                 </span>
-            </div>
-        {{/if}}
-    </div>
-
-    {{!-- Quick and the Dead toggle --}}
-    <div class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]">
-        <div class="tw-flex tw-items-center tw-justify-between tw-gap-2">
-            <label class="tw-text-[0.72rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]"
-                   for="bc-quick-and-the-dead">
-                {{localize "WH40K.BC.Supplements.QuickAndTheDead.ToggleLabel"}}
-            </label>
-            <button type="button"
-                    id="bc-quick-and-the-dead"
-                    data-wh40k-hook="bc-quick-and-the-dead-toggle" class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] {{#if supplementsPanel.quickAndTheDeadActive}}tw-border-crimson tw-text-crimson-l40{{else}}tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
-                    data-action="bcToggleQuickAndTheDead"
-                    aria-pressed="{{supplementsPanel.quickAndTheDeadActive}}"
-                    title="{{localize 'WH40K.BC.Supplements.QuickAndTheDead.ToggleTitle'}}">
-                {{#if supplementsPanel.quickAndTheDeadActive}}
-                    {{localize "WH40K.BC.Supplements.QuickAndTheDead.StateActive"}}
-                {{else}}
-                    {{localize "WH40K.BC.Supplements.QuickAndTheDead.StateInactive"}}
-                {{/if}}
-            </button>
-        </div>
-        {{#if supplementsPanel.quickAndTheDeadActive}}
-            <div class="tw-grid tw-grid-cols-2 tw-gap-1 tw-mt-1">
-                <div data-wh40k-hook="bc-quick-and-the-dead-bonus" class="tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
-                     data-alignment-bonus="{{supplementsPanel.quickAndTheDeadBonus}}">
-                    {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Supplements.QuickAndTheDead.AlignmentBonusLabel"}}
-                    <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
-                        +{{supplementsPanel.quickAndTheDeadBonus}}
-                    </span>
-                </div>
-                <div data-wh40k-hook="bc-quick-and-the-dead-initiative" class="tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)]"
-                     data-initiative="{{supplementsPanel.quickAndTheDeadInitiative}}">
-                    {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" labelKey="WH40K.BC.Supplements.QuickAndTheDead.InitiativeLabel"}}
-                    <span class="tw-text-[0.95rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">
-                        {{supplementsPanel.quickAndTheDeadInitiative}}
-                    </span>
-                </div>
             </div>
         {{/if}}
     </div>

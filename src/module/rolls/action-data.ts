@@ -1,11 +1,13 @@
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import type D100Roll from '../dice/d100-roll.ts';
 import { t } from '../i18n/t.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { hitsForDegrees, isBurstAction } from '../rules/auto-fire.ts';
 import { autoFailingConditions, helplessAutoHitConditions, rolledCharacteristic } from '../rules/condition-mechanics.ts';
 import { activeConditionMechanics } from '../rules/condition-registry.ts';
 import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
+import { ARMED_TEST_HOOKS_FLAG, consumeArmedTestHooks, readArmedTestHooks } from '../rules/dynamic-modifiers.ts';
 import { gmProxyActorUpdate } from '../rules/gm-proxy.ts';
 import { DAMAGE_TIER_LABEL_KEYS, firstAidTierPenalty, getDamageTier } from '../rules/healing.ts';
 import { type AllocationTarget, allocateHits } from '../rules/hit-allocation.ts';
@@ -44,6 +46,7 @@ import { type AttackDataLike, Hit, PsychicDamageData, WeaponDamageData } from '.
 import type { ExtendedTestChatContext } from './extended-test-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
+import { keepModeCardNote } from './roll-keep.ts';
 
 /** Langpack keys of the headings the effect rows on an action card are filed under. */
 const EFFECT_TITLE = {
@@ -243,19 +246,23 @@ export class ActionData {
         this.rollData.opposedMargin = result.margin;
     }
 
+    /**
+     * Record the target's side of an opposed contest from its quick d100 test and
+     * resolve the contest. A target that cannot make the test (null) leaves the
+     * initiator's result standing.
+     */
+    applyOpposedCheck(check: D100Roll | null): void {
+        if (check === null) return;
+        this.rollData.opposedRoll = check;
+        this.rollData.opposedTarget = check.target;
+        this.rollData.opposedDos = check.degreesOfSuccess;
+        this.rollData.opposedDof = check.degreesOfFailure;
+        this.applyOpposedResult({ success: check.isSuccess, dos: check.degreesOfSuccess, dof: check.degreesOfFailure, roll: check.evaluatedTotal });
+    }
+
     async checkForOpposed(): Promise<void> {
         if (this.rollData.isOpposed && this.rollData.targetActor !== null) {
-            const targetActor = this.rollData.targetActor;
-            const rollCheck = (await targetActor.rollCharacteristicCheck(this.rollData.opposedChar)) as {
-                roll: Roll;
-                dos: number;
-                dof: number;
-                success: boolean;
-            };
-            this.rollData.opposedRoll = rollCheck.roll;
-            this.rollData.opposedDos = rollCheck.dos;
-            this.rollData.opposedDof = rollCheck.dof;
-            this.applyOpposedResult({ success: rollCheck.success, dos: rollCheck.dos, dof: rollCheck.dof, roll: rollCheck.roll.total });
+            this.applyOpposedCheck(await this.rollData.targetActor.rollCharacteristicCheck(this.rollData.opposedChar));
         }
 
         const weaponRollData = this.rollData as WeaponRollData;
@@ -316,7 +323,11 @@ export class ActionData {
     async _calculateHit(): Promise<void> {
         const weaponRollData = this.rollData as WeaponRollData;
         if ((weaponRollData as { isManualRoll?: boolean }).isManualRoll !== true) {
-            this.rollData.roll = await roll1d100();
+            // Advantage / Disadvantage / Emphasis roll the d100 twice and keep one —
+            // only while the homebrew setting is on (RAW: one d100).
+            const keepMode = WH40KSettings.isRollKeepModes() ? this.rollData.keepMode : 'normal';
+            this.rollData.roll = await roll1d100(keepMode);
+            this.rollData.keepModeNote = keepModeCardNote(keepMode, this.rollData.roll);
         }
         const rollTotal = this.rollData.roll?.total ?? 0;
         const target = this.rollData.modifiedTarget;
@@ -658,8 +669,12 @@ export class ActionData {
     }
 
     async useResources(): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔useAmmo's expected parameter type are duck-typed siblings
-        await useAmmo(this as unknown as Parameters<typeof useAmmo>[0]);
+        // Only a weapon attack spends ammo; a psychic power or skill roll has no
+        // weapon, and useAmmo reads rollData.weapon unconditionally.
+        if (this.rollData instanceof WeaponRollData) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔useAmmo's expected parameter type are duck-typed siblings
+            await useAmmo(this as unknown as Parameters<typeof useAmmo>[0]);
+        }
 
         // A jam still cycles/wastes the round(s) fired, so the ammo spend above
         // runs unconditionally first (#410 playtest note: the jam path must NOT
@@ -751,9 +766,31 @@ export class ActionData {
         }
     }
 
+    /**
+     * Spend the acting actor's armed `onDamaged` test hooks (e.g. Penitent's
+     * Cleansing Pain) on this test: each live hook lands on the roll as its own
+     * named modifier (so the card shows its source), loses a use, and the hooks
+     * left are written back. Expired hooks are dropped unapplied. Runs once per
+     * committed test, before the modifier total is summed.
+     */
+    async spendArmedTestHooks(): Promise<void> {
+        const actor = this.rollData.sourceActor;
+        if (actor === null) return;
+        const armed = readArmedTestHooks(actor.getFlag(SYSTEM_ID, ARMED_TEST_HOOKS_FLAG));
+        if (armed.length === 0) return;
+        const combat = game.combat;
+        const round = combat?.started === true ? combat.round : null;
+        const { modifiers, remaining } = consumeArmedTestHooks(armed, round);
+        for (const [label, value] of Object.entries(modifiers)) {
+            if (value !== 0) this.rollData.modifiers[label] = value;
+        }
+        await actor.update({ [`flags.${SYSTEM_ID}.${ARMED_TEST_HOOKS_FLAG}`]: remaining });
+    }
+
     async performActionAndSendToChat(): Promise<void> {
         DHBasicActionManager.storeActionData(this);
 
+        await this.spendArmedTestHooks();
         await this.rollData.calculateTotalModifiers();
 
         await this.calculateSuccessOrFailure();
@@ -918,6 +955,8 @@ export class PsychicActionData extends ActionData {
     }
 
     override async performActionAndSendToChat(): Promise<void> {
+        // Only an attack power (isAttack) rolls damage; the rest resolve as an effect.
+        this.hasDamage = this.rollData.hasDamage;
         if (!this.rollData.hasDamage) {
             this.rollData.template = 'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs';
             this.template = 'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs';
@@ -926,8 +965,8 @@ export class PsychicActionData extends ActionData {
     }
 
     override async descriptionText(): Promise<void> {
-        const powerSystem = this.rollData.power.system as { description?: string };
-        this.psychicEffect = await foundry.applications.ux.TextEditor.implementation.enrichHTML(powerSystem.description ?? '', {
+        const powerSystem = this.rollData.power.system as { description?: { value?: string } };
+        this.psychicEffect = await foundry.applications.ux.TextEditor.implementation.enrichHTML(powerSystem.description?.value ?? '', {
             // eslint-disable-next-line no-restricted-syntax -- boundary: TextEditor.enrichHTML expects a record-shaped rollData payload
             rollData: this.rollData as unknown as Record<string, unknown>,
         });
@@ -1255,12 +1294,7 @@ export class SocialInfluenceActionData extends SimpleSkillData {
             return;
         }
         // Opposed by a SKILL (Deceive vs Scrutiny) rather than a characteristic.
-        const rollCheck = (await target.rollSkillCheck(opposedSkill)) as { roll: Roll; dos: number; dof: number; success: boolean } | null;
-        if (rollCheck === null) return;
-        this.rollData.opposedRoll = rollCheck.roll;
-        this.rollData.opposedDos = rollCheck.dos;
-        this.rollData.opposedDof = rollCheck.dof;
-        this.applyOpposedResult({ success: rollCheck.success, dos: rollCheck.dos, dof: rollCheck.dof, roll: rollCheck.roll.total });
+        this.applyOpposedCheck(await target.rollSkillCheck(opposedSkill));
     }
 
     override async descriptionText(): Promise<void> {
@@ -1313,12 +1347,7 @@ export class ContestActionData extends SimpleSkillData {
     override async checkForOpposed(): Promise<void> {
         const target = this.rollData.targetActor;
         if (target === null) return;
-        const rollCheck = (await target.rollSkillCheck(this.opposedSkill)) as { roll: Roll; dos: number; dof: number; success: boolean } | null;
-        if (rollCheck === null) return;
-        this.rollData.opposedRoll = rollCheck.roll;
-        this.rollData.opposedDos = rollCheck.dos;
-        this.rollData.opposedDof = rollCheck.dof;
-        this.applyOpposedResult({ success: rollCheck.success, dos: rollCheck.dos, dof: rollCheck.dof, roll: rollCheck.roll.total });
+        this.applyOpposedCheck(await target.rollSkillCheck(this.opposedSkill));
     }
 
     override async descriptionText(): Promise<void> {

@@ -33,6 +33,7 @@ import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { aggregateModifierTotal, aggregateRollTarget } from './aggregate-target.ts';
 import { passiveCombatModifiers } from './passive-modifiers.ts';
+import type { RollKeepMode } from './roll-keep.ts';
 
 // Re-exported for existing consumers (chat-card cap surfacing, tests) that
 // import the cap primitives from this module. The canonical definitions now
@@ -181,6 +182,13 @@ export class RollData {
      * roll dialog. A condition whose `system.autoFail` names it fails the test.
      */
     testVariant: string = '';
+    /**
+     * Roll-twice-keep-one mode chosen in the roll dialog (rolls/roll-keep.ts);
+     * honoured only while the `roll-keep-modes` world setting is on.
+     */
+    keepMode: RollKeepMode = 'normal';
+    /** Card line for a keep-mode roll ("Advantage: rolled 34 and 71, kept 34"); '' for a normal roll. */
+    keepModeNote: string = '';
     /**
      * True when this attack's target bears a `helplessTarget` condition: the hit
      * was automatic and damage is rolled twice and added. Set at resolution
@@ -534,6 +542,7 @@ export class RollData {
             rangeBand: rangeBandOf(this.rangeBracket),
             targetTags: targetTags.all,
             targetTagAxes: targetTags.byAxis,
+            targetActorUuid: this.targetActor?.uuid ?? undefined,
             states,
         };
 
@@ -866,6 +875,14 @@ export class WeaponRollData extends RollData {
     }
 }
 
+/** The Focus Power test a psychic power declares (PsychicPowerData.focusPower). */
+interface PsychicFocusPower {
+    characteristic?: string;
+    modifier?: number;
+    opposed?: boolean;
+    opposedCharacteristic?: string;
+}
+
 export class PsychicRollData extends RollData {
     psychicPowers: WH40KItem[] = [];
     declare power: WH40KItem;
@@ -914,7 +931,9 @@ export class PsychicRollData extends RollData {
 
         this.modifiers['bonus'] = 10 * Math.floor((sourceActor.psy?.rating ?? 0) - this.pr);
         this.modifiers['focus'] = this.hasFocus ? 10 : 0;
-        this.modifiers['power'] = (this.power.system as { target?: { bonus?: number } }).target?.bonus ?? 0;
+        const focusPower = (this.power.system as { focusPower?: PsychicFocusPower }).focusPower;
+        // The Focus Power test's printed difficulty (e.g. Ordinary +10), authored on the power.
+        this.modifiers['power'] = focusPower?.modifier ?? 0;
         this.hasDamage = (this.power.system as { isAttack?: boolean }).isAttack === true;
 
         // #451: a power flagged Opposed resolves as a contest against the target's
@@ -923,7 +942,6 @@ export class PsychicRollData extends RollData {
         // through the #449 engine (checkForOpposed → applyOpposedResult), so the victor
         // and degrees-of-victory (opposedMargin) are computed uniformly. The resist axis
         // is content-authored per power (mind → WP, body → Toughness, kinetic → Strength).
-        const focusPower = (this.power.system as { focusPower?: { opposed?: boolean; opposedCharacteristic?: string } }).focusPower;
         if (focusPower?.opposed === true && this.targetActor !== null) {
             this.isOpposed = true;
             this.opposedChar =
@@ -935,65 +953,19 @@ export class PsychicRollData extends RollData {
         calculatePsychicPowerRange(this);
     }
 
+    /**
+     * The Focus Power test's base: the psyker's focus characteristic as the power
+     * declares it (`focusPower.characteristic`, Willpower by default). The opposed
+     * side is wired in {@link update} from `focusPower.opposed`.
+     */
     updateBaseTarget(): void {
         if (!this.sourceActor) return;
-        // getSkillFuzzy lives on WH40KAcolyte at runtime; the wider WH40KBaseActor
-        // type doesn't declare it. Power rolls only target actors that implement it,
-        // so cast through a structural type rather than widening the base class.
-        type FuzzySkill = { current: number; label?: string };
-        type SkillResolver = WH40KBaseActorDocument & {
-            getSkillFuzzy: (skill: string) => FuzzySkill | undefined;
-            getCharacteristicFuzzy: (characteristic: string) => { total: number; short: string } | undefined;
-        };
-        type PowerTarget = {
-            useSkill?: boolean;
-            skill?: string;
-            characteristic?: string;
-            isOpposed?: boolean;
-            useOpposedSkill?: boolean;
-            opposedSkill?: string;
-            opposed?: string;
-        };
-        const sourceActor = this.sourceActor as SkillResolver;
-        const target = (this.power.system as { target?: PowerTarget }).target;
-        if (!target) return;
-
-        if (target.useSkill === true) {
-            const skill = target.skill ?? '';
-            const actorSkill = sourceActor.getSkillFuzzy(skill);
-            if (actorSkill) {
-                this.baseTarget = actorSkill.current;
-                this.baseChar = actorSkill.label ?? '';
-            }
-        } else {
-            const characteristic = target.characteristic ?? '';
-            const actorCharacteristic = sourceActor.getCharacteristicFuzzy(characteristic);
-            if (actorCharacteristic) {
-                this.baseTarget = actorCharacteristic.total;
-                this.baseChar = actorCharacteristic.short;
-            }
-        }
-
-        if (target.isOpposed === true && this.targetActor) {
-            this.isOpposed = true;
-            const targetActor = this.targetActor as SkillResolver;
-
-            if (target.useOpposedSkill === true) {
-                const skill = target.opposedSkill ?? '';
-                const actorSkill = targetActor.getSkillFuzzy(skill);
-                if (actorSkill) {
-                    this.opposedTarget = actorSkill.current;
-                    this.opposedChar = actorSkill.label ?? '';
-                }
-            } else {
-                const characteristic = target.opposed ?? '';
-                const actorCharacteristic = targetActor.getCharacteristicFuzzy(characteristic);
-                if (actorCharacteristic) {
-                    this.opposedTarget = actorCharacteristic.total;
-                    this.opposedChar = actorCharacteristic.short;
-                }
-            }
-        }
+        const focusPower = (this.power.system as { focusPower?: PsychicFocusPower }).focusPower;
+        const characteristic = focusPower?.characteristic ?? '';
+        const actorCharacteristic = this.sourceActor.getCharacteristicFuzzy(characteristic !== '' ? characteristic : 'willpower');
+        if (actorCharacteristic === undefined) return;
+        this.baseTarget = actorCharacteristic.total;
+        this.baseChar = actorCharacteristic.short;
     }
 
     async finalize(): Promise<void> {

@@ -15,6 +15,7 @@
         {{#each talents}}
             <li class="tw-flex tw-flex-col tw-gap-0.5" data-talent="{{this.id}}">
                 <span class="tw-font-bold tw-text-gold dh2:tw-text-gold">{{this.label}}</span>
+                {{#if this.unlocked}}<span class="tw-italic tw-text-[#9a9a8a]">{{localize "WH40K.SisterOfBattle.UnlockedForPurchase"}}</span>{{/if}}
                 <span class="tw-text-[#e8e4d9]">{{this.summary}}</span>
             </li>
         {{/each}}

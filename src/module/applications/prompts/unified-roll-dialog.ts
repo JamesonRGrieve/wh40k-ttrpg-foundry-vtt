@@ -16,6 +16,7 @@ import { advanceExtendedTest } from '../../rolls/extended-test-data.ts';
 import { type ModifierSourcesShape, type PassiveModifierRow, selectPassiveModifierRows } from '../../rolls/passive-modifiers.ts';
 import type { RollData, RollModifierComponent } from '../../rolls/roll-data.ts';
 import { getDegreeForMode, isD100Success, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
+import { isRollKeepMode, keepModeOptions, type RollKeepMode } from '../../rolls/roll-keep.ts';
 import { ASSIST_BONUS_PER_ALLY, DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
 import {
     AIM_OPTIONS,
@@ -198,6 +199,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _attackModeKey: string;
     /** Selected skill test variant (#246), or null when none chosen / not applicable. */
     declare _selectedSkillVariant: string | null;
+    /** Advantage / Disadvantage / Emphasis choice (homebrew `roll-keep-modes` setting). */
+    declare _keepMode: RollKeepMode;
     declare _aimModeKey: string;
     declare _activeCombatSituationals: Set<string>;
     /** Situational keys auto-selected from the target's state (#393). Tracked
@@ -258,6 +261,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Card-based weapon panel state
         this._attackModeKey = 'standard';
         this._selectedSkillVariant = null;
+        this._keepMode = 'normal';
         this._aimModeKey = 'none';
         this._activeCombatSituationals = new Set();
         this._autoSituationals = new Set();
@@ -305,6 +309,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             selectRangeBracket: UnifiedRollDialog.#onSelectRangeBracket,
             selectTarget: UnifiedRollDialog.#onSelectTarget,
             selectSkillVariant: UnifiedRollDialog.#onSelectSkillVariant,
+            selectKeepMode: UnifiedRollDialog.#onSelectKeepMode,
             selectSkillUse: UnifiedRollDialog.#onSelectSkillUse,
             selectAttackMode: UnifiedRollDialog.#onSelectAttackMode,
             selectAimMode: UnifiedRollDialog.#onSelectAimMode,
@@ -835,6 +840,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             hasSkillVariants: skillVariants.length > 0,
             hasSuppressedSkillVariants: this._hasSuppressedSkillVariants(),
             selectedSkillVariant: this._selectedSkillVariant,
+            // Advantage / Disadvantage / Emphasis selector (homebrew; hidden while the setting is off).
+            keepModeOptions: WH40KSettings.isRollKeepModes() ? keepModeOptions(this._keepMode) : [],
             // Inline skill-use picker (#432) + the shared target selector it reveals
             // for a target-directed use. Both live in the `modifiers` part.
             ...this.#getSkillUseContext(),
@@ -2386,6 +2393,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
+    static async #onSelectKeepMode(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const mode = target.dataset['keepMode'] ?? '';
+        this._keepMode = isRollKeepMode(mode) ? mode : 'normal';
+        await this.render(false, { parts: ['modifiers'] });
+    }
+
     static async #onSelectSkillVariant(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const variant = target.dataset['variant'] ?? null;
         // Re-selecting the active variant clears it (back to the un-gated test).
@@ -2486,6 +2499,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // auto-fail resolution in `ActionData._calculateHit`.
         const selectedVariant = this._selectedSkillVariant;
         rd.testVariant = selectedVariant ?? '';
+        // Roll-twice-keep-one mode; `_calculateHit` honours it only while the setting is on.
+        rd.keepMode = this._keepMode;
 
         // Provenance for the lumped buckets so the chat card renders each modifier
         // as a sourced, hoverable row instead of a summed total (#…). The

@@ -86,6 +86,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs',
             'systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs',
             'systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs',
+            'systems/wh40k-rpg/templates/chat/partial/card-target-row.hbs',
             'systems/wh40k-rpg/templates/chat/partial/extended-test-progress.hbs',
             'systems/wh40k-rpg/templates/chat/partial/reroll-controls.hbs',
             'systems/wh40k-rpg/templates/chat/partial/wounds-callout.hbs',
@@ -150,7 +151,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/rituals-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/acquisitions-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/dark-pact-panel.hbs',
-            'systems/wh40k-rpg/templates/actor/panel/mortification-button.hbs',
             'systems/wh40k-rpg/templates/actor/panel/fanatic-button.hbs',
             'systems/wh40k-rpg/templates/actor/panel/grapple-controller-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/endeavour-panel.hbs',
@@ -235,7 +235,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs',
             'systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs',
             'systems/wh40k-rpg/templates/chat/daemonhost-binding-chat.hbs',
-            'systems/wh40k-rpg/templates/chat/mortification-chat.hbs',
             'systems/wh40k-rpg/templates/chat/fanatic-chat.hbs',
             'systems/wh40k-rpg/templates/chat/shock-snap-chat.hbs',
 

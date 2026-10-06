@@ -1,7 +1,18 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { allCombatActions, calculateCombatActionModifier, type CombatActionModifierInput } from './combat-actions';
 
-function mockRollData(action: string, weaponAttackBonus: number, talents: string[] = [], isMelee = true): CombatActionModifierInput {
+/** An owned talent as the stub actor carries it: document identifier + picked specialisation. */
+interface StubTalent {
+    identifier: string;
+    specialization?: string;
+}
+
+function mockRollData(action: string, weaponAttackBonus: number, talents: StubTalent[] = [], isMelee = true): CombatActionModifierInput {
+    const items = talents.map((t) => ({
+        type: 'talent',
+        name: 'Any Display Name',
+        system: { identifier: t.identifier, specialization: t.specialization ?? '' },
+    }));
     return {
         actions: { [action]: action },
         action,
@@ -10,7 +21,7 @@ function mockRollData(action: string, weaponAttackBonus: number, talents: string
         // The weapon's own attackBonus lives on modifiers['attack'] (set by RollData.update()).
         modifiers: { attack: weaponAttackBonus },
         // eslint-disable-next-line no-restricted-syntax -- test: minimal structural stand-in for the talent-owning actor (#517)
-        sourceActor: { items: talents.map((name) => ({ type: 'talent', name })) } as unknown as CombatActionModifierInput['sourceActor'],
+        sourceActor: { items } as unknown as CombatActionModifierInput['sourceActor'],
         // eslint-disable-next-line no-restricted-syntax -- test: minimal structural stand-in for the weapon's melee/ranged flavour
         weapon: { isMelee, isRanged: !isMelee } as unknown as CombatActionModifierInput['weapon'],
         twoWeaponPlan: null,
@@ -195,7 +206,7 @@ describe('Two-Weapon Fighting penalties (#517)', () => {
 
     it('Two-Weapon Wielder (Melee) drops the main-hand penalty to 0 and leaves the off hand at −20', () => {
         stubGame();
-        const rd = mockRollData('Two-Weapon Fighting', 0, ['Two-Weapon Wielder (Melee)']);
+        const rd = mockRollData('Two-Weapon Fighting', 0, [{ identifier: 'twoWeaponWielder', specialization: 'Melee' }]);
         calculateCombatActionModifier(rd);
         expect(rd.modifiers['combat-action']).toBe(0);
         expect(rd.twoWeaponPlan?.offPenalty).toBe(-20);
@@ -203,7 +214,7 @@ describe('Two-Weapon Fighting penalties (#517)', () => {
 
     it('Two-Weapon Master (Melee) drops both hands to 0', () => {
         stubGame();
-        const rd = mockRollData('Two-Weapon Fighting', 0, ['Two-Weapon Master (Melee)']);
+        const rd = mockRollData('Two-Weapon Fighting', 0, [{ identifier: 'twoWeaponMaster', specialization: 'Melee' }]);
         calculateCombatActionModifier(rd);
         expect(rd.modifiers['combat-action']).toBe(0);
         expect(rd.twoWeaponPlan?.offPenalty).toBe(0);
@@ -211,7 +222,7 @@ describe('Two-Weapon Fighting penalties (#517)', () => {
 
     it('Ambidextrous reduces the off-hand penalty by a further 10', () => {
         stubGame();
-        const rd = mockRollData('Two-Weapon Fighting', 0, ['Ambidextrous']);
+        const rd = mockRollData('Two-Weapon Fighting', 0, [{ identifier: 'ambidextrous' }]);
         calculateCombatActionModifier(rd);
         expect(rd.modifiers['combat-action']).toBe(-20);
         expect(rd.twoWeaponPlan?.offPenalty).toBe(-10);
@@ -219,7 +230,7 @@ describe('Two-Weapon Fighting penalties (#517)', () => {
 
     it('gates the Wielder talent on weapon flavour — the melee talent does not help a ranged pair', () => {
         stubGame();
-        const rd = mockRollData('Two-Weapon Fighting', 0, ['Two-Weapon Wielder (Melee)'], false);
+        const rd = mockRollData('Two-Weapon Fighting', 0, [{ identifier: 'twoWeaponWielder', specialization: 'Melee' }], false);
         calculateCombatActionModifier(rd);
         expect(rd.modifiers['combat-action']).toBe(-20);
         expect(rd.twoWeaponPlan?.isMelee).toBe(false);
@@ -227,7 +238,7 @@ describe('Two-Weapon Fighting penalties (#517)', () => {
 
     it('leaves other actions untouched, so the plan is only set for this action', () => {
         stubGame();
-        const rd = mockRollData('Standard Attack', 0, ['Two-Weapon Master (Melee)']);
+        const rd = mockRollData('Standard Attack', 0, [{ identifier: 'twoWeaponMaster', specialization: 'Melee' }]);
         calculateCombatActionModifier(rd);
         expect(rd.modifiers['combat-action']).toBe(0);
         expect(rd.twoWeaponPlan).toBeNull();

@@ -24,6 +24,9 @@ export type CombatModifierKey = (typeof COMBAT_MODIFIER_KEYS)[number];
  */
 export const DYNAMIC_MODIFIER_TARGETS = [
     'attack',
+    // Any test the bearer makes — characteristic, skill or attack. Consumed by
+    // the armed-hook channel (an `onDamaged` hook arms it; the next test spends it).
+    'test',
     'damage',
     'penetration',
     'defense',
@@ -73,9 +76,19 @@ export const DYNAMIC_SCALE_ROUNDING = ['up', 'down', 'nearest', 'none'] as const
 /** Optional second dynamic factor for product-of-two-variables scaling (Lance = pen × DoS) — survey §D4. */
 export const DYNAMIC_SCALE_MULTIPLIERS = ['', 'dos', 'degrees', 'level'] as const;
 /** When the modifier fires (timing half of the trigger) — survey trigger split. */
-export const DYNAMIC_MODIFIER_WHEN = ['always', 'onHit', 'onCrit', 'onKill', 'onCharge', 'onAction', 'onParry', 'atRangeBand'] as const;
+/**
+ * `onDamaged` is a deferred trigger: when the bearer suffers 1+ damage after
+ * Toughness and armour, the hook is ARMED on the actor and applies to the
+ * bearer's next test(s) — bounded by `duration.uses` and a `rounds` duration —
+ * rather than to the roll in progress.
+ */
+export const DYNAMIC_MODIFIER_WHEN = ['always', 'onHit', 'onCrit', 'onKill', 'onCharge', 'onAction', 'onParry', 'atRangeBand', 'onDamaged'] as const;
 /** Duration units for temporary/consumable effects — survey §D6. */
-export const DYNAMIC_DURATION_UNITS = ['instant', 'rounds', 'minutes', 'hours', 'days', 'encounter', 'scene', 'permanent'] as const;
+/**
+ * `turns` counts the BEARER's own turns, ending at the end of their Nth turn —
+ * "before the end of his next turn" (Penitent's Cleansing Pain) is `turns: 1`.
+ */
+export const DYNAMIC_DURATION_UNITS = ['instant', 'turns', 'rounds', 'minutes', 'hours', 'days', 'encounter', 'scene', 'permanent'] as const;
 /** Per-round action cost to sustain a psychic upkeep buff (`''` = not sustained). */
 export const DYNAMIC_DURATION_UPKEEP = ['', 'free', 'half', 'full'] as const;
 /** How re-application of a temporary effect (a second drug dose) stacks. */
@@ -110,6 +123,8 @@ interface DynamicDuration {
     sustained: boolean;
     upkeep: (typeof DYNAMIC_DURATION_UPKEEP)[number];
     stacking: (typeof DYNAMIC_DURATION_STACKING)[number];
+    /** How many tests an armed hook applies to before it is spent; 0 = no test-count limit. */
+    uses: number;
     save: { characteristic: string; difficulty: number };
     aftereffect: DynamicAftereffect;
 }
@@ -323,6 +338,7 @@ function dynamicModifiersSchema(): foundry.data.fields.DataField.Any {
                 sustained: new fields.BooleanField({ required: true, initial: false }),
                 upkeep: new fields.StringField({ required: true, initial: '', blank: true, choices: [...DYNAMIC_DURATION_UPKEEP] }),
                 stacking: new fields.StringField({ required: true, initial: 'none', choices: [...DYNAMIC_DURATION_STACKING] }),
+                uses: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 save: new fields.SchemaField({
                     characteristic: new fields.StringField({ required: false, blank: true, initial: '' }),
                     difficulty: new fields.NumberField({ required: true, initial: 0 }),

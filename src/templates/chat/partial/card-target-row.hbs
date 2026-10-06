@@ -1,0 +1,7 @@
+{{!-- The roll's declared target, named on the card. Params: target (the target actor, or null). --}}
+{{#if target}}
+    <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]" data-card-target>
+        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{localize "WH40K.Roll.TargetLabel"}}</span>
+        <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{target.name}}</span>
+    </div>
+{{/if}}

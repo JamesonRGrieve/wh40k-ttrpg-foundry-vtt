@@ -5,7 +5,10 @@
  * augmetic. The official errata replaces the entry and adds three
  * mechanical hooks:
  *
- *  1. A +10 bonus to Medicae and Interrogation tests.
+ *  1. A +10 bonus to Medicae and Interrogation tests — authored on the
+ *     cybernetic document's `modifiers.skills` and already folded into the
+ *     bearer's skill totals by the central item-modifier path, so it is
+ *     never added again here.
  *  2. The flesh-staplers may staunch Blood Loss as a **Half Action**
  *     (faster than the standard First Aid Full Action).
  *  3. Once per round the mechadendrite may be used as a melee weapon
@@ -34,8 +37,6 @@ export const MEDICAE_MECHADENDRITE = {
     bloodLossClearAction: 'half' as const,
     /** Once-per-round melee attack allowance. */
     meleeAttacksPerRound: 1,
-    /** Errata p. 183 — flat bonus to Medicae (and Interrogation) tests. */
-    medicaeBonus: 10,
     /**
      * Action verb used when the staplers staunch Blood Loss as a Half
      * Action — distinct from the First Aid Full Action.
@@ -43,23 +44,36 @@ export const MEDICAE_MECHADENDRITE = {
     staunchActionKind: 'half' as const,
 } as const;
 
-/**
- * Substrings (case-insensitive) that identify a cybernetic item as a
- * Medicae Mechadendrite. Matching by name keeps this content-agnostic:
- * the compendium entry is the source of truth; this only narrows the
- * actor's owned cybernetics to the relevant augmetic at runtime. We do
- * NOT key off a hardcoded UUID or a per-entry registry (Direction #7).
- */
-const MEDICAE_MECHADENDRITE_NAME_HINTS: ReadonlyArray<string> = Object.freeze(['medicae mechadendrite']);
+/** The Medicae Mechadendrite document's `system.identifier` (camelCase form). */
+const MEDICAE_MECHADENDRITE_IDENTIFIER = 'medicaeMechadendrite';
+
+/** Normalise a kebab-case identifier to camelCase, so `medicae-mechadendrite` and `medicaeMechadendrite` compare equal. */
+function camelIdentifier(identifier: string): string {
+    return identifier.replace(/-([a-z0-9])/g, (_match, char: string) => char.toUpperCase());
+}
+
+/** The owned-item surface the mechadendrite readers need. */
+interface MechadendriteItemLike {
+    isCybernetic?: boolean;
+    system?: { identifier?: string; modifiers?: { skills?: Record<string, number | undefined> } };
+}
 
 /**
- * True when the supplied cybernetic item is a Medicae Mechadendrite.
- * Pure — used by both eligibility detection and tests.
+ * True when the supplied cybernetic item is a Medicae Mechadendrite, matched by
+ * its document `system.identifier` (never its name). Pure.
  */
-export function isMedicaeMechadendrite(item: { name?: string | null; isCybernetic?: boolean }): boolean {
+export function isMedicaeMechadendrite(item: MechadendriteItemLike): boolean {
     if (item.isCybernetic !== true) return false;
-    const name = (item.name ?? '').toLowerCase();
-    return MEDICAE_MECHADENDRITE_NAME_HINTS.some((hint) => name.includes(hint));
+    return camelIdentifier(item.system?.identifier ?? '') === MEDICAE_MECHADENDRITE_IDENTIFIER;
+}
+
+/**
+ * The Medicae bonus the mechadendrite's document authors (`modifiers.skills.medicae`),
+ * for display only — the central item-modifier path has already added it to the
+ * bearer's Medicae total. 0 when the document authors none.
+ */
+export function mechadendriteMedicaeBonus(item: MechadendriteItemLike | null): number {
+    return item?.system?.modifiers?.skills?.['medicae'] ?? 0;
 }
 
 /**
@@ -98,7 +112,7 @@ export function actorHasMedicaeMechadendrite(actor: WH40KBaseActorDocument): boo
 export interface StaunchResolution {
     /** d100 roll total. */
     readonly roll: number;
-    /** Effective Medicae target after the errata +10. */
+    /** The Medicae target (the skill total, which already carries the mechadendrite's bonus). */
     readonly target: number;
     /** Whether the Medicae test passed. */
     readonly success: boolean;
@@ -108,12 +122,13 @@ export interface StaunchResolution {
 
 /**
  * Pure resolution of a Half-Action Blood-Loss staunch. d100 roll-under
- * against the Medicae skill total plus the errata's flat +10. A natural
- * 01 always succeeds; a natural 100 always fails. Injectable roll keeps
- * tests and stories deterministic.
+ * against the Medicae skill total — which already includes the
+ * mechadendrite's document-authored bonus. A natural 01 always succeeds;
+ * a natural 100 always fails. Injectable roll keeps tests and stories
+ * deterministic.
  */
 export function resolveBloodLossStaunch(medicaeTarget: number, rollTotal: number): StaunchResolution {
-    const target = medicaeTarget + MEDICAE_MECHADENDRITE.medicaeBonus;
+    const target = medicaeTarget;
     const success = isD100Success(rollTotal, target);
     // Degrees route through the shared engine (gen-2 tens-digit method, the DH2
     // default) instead of a hand-rolled margin calculation; sign marks success.
@@ -130,7 +145,8 @@ function getMedicaeTarget(actor: WH40KBaseActorDocument): number {
 }
 
 /**
- * Runtime entry point. Performs the Medicae roll (errata +10 folded in),
+ * Runtime entry point. Performs the Medicae roll (the mechadendrite's bonus
+ * is already in the skill total),
  * and on success staunches Blood Loss by removing the canonical
  * `bloodloss` condition Active Effect — the same model First Aid clears,
  * not a reimplemented one. Emits a chat card either way. Returns the
@@ -177,7 +193,7 @@ export async function staunchBloodLoss(actor: WH40KBaseActorDocument, rng?: Rng)
         success: resolution.success,
         degrees: Math.abs(resolution.degrees),
         bleedStopped,
-        medicaeBonus: MEDICAE_MECHADENDRITE.medicaeBonus,
+        medicaeBonus: mechadendriteMedicaeBonus(findMedicaeMechadendrite(actor)),
         gameSystem,
     };
 

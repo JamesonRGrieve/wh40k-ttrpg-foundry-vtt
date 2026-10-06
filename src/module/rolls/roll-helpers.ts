@@ -1,6 +1,7 @@
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { ActionData } from './action-data.ts';
+import { keepModeFormula, type RollKeepMode } from './roll-keep.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: recursive dot-notation traversal; values are unknown by design
 type DotNotationTarget = Record<string, unknown>;
@@ -107,9 +108,10 @@ export function resolveGettersForTemplate(instance: object): Record<string, unkn
     return out;
 }
 
-export async function roll1d100(): Promise<Roll> {
-    const formula = '1d100';
-    const roll = new Roll(formula, {});
+export async function roll1d100(mode: RollKeepMode = 'normal'): Promise<Roll> {
+    // A keep mode rolls the d100 twice and keeps one (rolls/roll-keep.ts); the
+    // Roll's total is the kept die, so every consumer reads it unchanged.
+    const roll = new Roll(keepModeFormula(mode), {});
     await roll.evaluate();
     return roll;
 }

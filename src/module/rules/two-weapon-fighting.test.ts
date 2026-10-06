@@ -1,7 +1,33 @@
 import { describe, expect, it } from 'vitest';
-import { isTwoWeaponRefocusMode, resolveTwoWeaponPenalties, resolveTwoWeaponRefocus } from './two-weapon-fighting';
+import { isTwoWeaponRefocusMode, resolveTwoWeaponPenalties, resolveTwoWeaponRefocus, type TwoWeaponTalent } from './two-weapon-fighting';
 
-const set = (...t: string[]): Set<string> => new Set(t);
+/** The documents' identifiers, keyed by the base display name the cases below are written in. */
+const IDENTIFIER_BY_NAME: Readonly<Record<string, string>> = {
+    'Two-Weapon Wielder': 'twoWeaponWielder',
+    'Two-Weapon Master': 'twoWeaponMaster',
+    'Ambidextrous': 'ambidextrous',
+};
+
+/** Owned talents written as "Name (Specialisation)", turned into the identifier + specialisation the resolver reads. */
+const set = (...names: string[]): TwoWeaponTalent[] =>
+    names.map((label) => {
+        const match = /^(.*?)(?: \((.*)\))?$/.exec(label);
+        const base = match?.[1] ?? label;
+        return { identifier: IDENTIFIER_BY_NAME[base] ?? '', specialization: match?.[2] ?? '' };
+    });
+
+describe('resolveTwoWeaponPenalties — matched by identifier', () => {
+    it('ignores a talent that only shares the display name (no identifier)', () => {
+        const talents = [{ identifier: '', specialization: 'Melee' }];
+        expect(resolveTwoWeaponPenalties({ isMelee: true, talents })).toEqual({ mainPenalty: -20, offPenalty: -20 });
+    });
+
+    it('an unspecialised Wielder (DH1) covers both melee and ranged', () => {
+        const talents = [{ identifier: 'twoWeaponWielder', specialization: '' }];
+        expect(resolveTwoWeaponPenalties({ isMelee: true, talents }).mainPenalty).toBe(0);
+        expect(resolveTwoWeaponPenalties({ isMelee: false, talents }).mainPenalty).toBe(0);
+    });
+});
 
 describe('resolveTwoWeaponPenalties', () => {
     describe('melee', () => {

@@ -271,11 +271,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         if (chaosBg.__importError != null) {
             fail(['chaos-backgrounds-predicates'], chaosBg.__importError);
         } else {
-            guarded('chaos-backgrounds-predicates', () => {
-                const canConvert = fn<boolean>(chaosBg, 'canConvertMalignancyToMutation');
-                const canDevotion = fn<boolean>(chaosBg, 'canApplyIncorruptibleDevotion');
-                return canConvert(true) && !canConvert(false) && canDevotion(true) && val<number>(chaosBg, 'MUTANT_STARTING_CORRUPTION') === 10;
-            });
+            guarded('chaos-backgrounds-predicates', () => val<number>(chaosBg, 'MUTANT_STARTING_CORRUPTION') === 10);
         }
 
         return out;

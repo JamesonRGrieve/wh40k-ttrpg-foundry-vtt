@@ -4,6 +4,7 @@ import { applyEffectiveCharacteristicFields, computeCharacteristicTotals } from 
 import { isEffectSuppressedByEquipState, isWeaponAttackBlockedByEquip } from '../data/shared/equip-state.ts';
 import { computeMovement } from '../data/shared/movement-math.ts';
 import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shared/subtlety-adjuster.ts';
+import type D100Roll from '../dice/d100-roll.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { t } from '../i18n/t.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
@@ -12,6 +13,8 @@ import { openRollPrompt } from '../rolls/roll-prompt.ts';
 import { type AddictionTier, resolveAddictionCheck } from '../rules/addiction.ts';
 import { bearerLine, conditionEffectData } from '../rules/condition-registry.ts';
 import { clampDisposition } from '../rules/disposition.ts';
+import { ARMED_TEST_HOOKS_FLAG, endBearerTurnForArmedHooks, readArmedTestHooks } from '../rules/dynamic-modifiers.ts';
+import { ENCOUNTER_GRANT_FLAG } from '../rules/fanatic.ts';
 import { getFatigueAfterRest, isFatigueDeath, isFatigueUnconscious } from '../rules/fatigue.ts';
 import { clampFearRating, getFearTestPenalty } from '../rules/fear.ts';
 import { resolveEscapePinningTest, resolvePinningTest } from '../rules/pinning.ts';
@@ -91,13 +94,17 @@ export class WH40KBaseActor extends Actor {
     declare system: Actor['system'] & WH40KActorSystemData;
     declare items: Actor['items'] & foundry.utils.Collection<WH40KItem>;
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: base class stub returns unknown; subclasses override with concrete roll results
-    async rollCharacteristicCheck(_characteristic: string): Promise<unknown> {
+    /**
+     * A quick (dialog-free, chat-free) characteristic test, as an opposed contest's
+     * target side rolls it. Null when this actor type cannot make one — the contest
+     * then leaves the initiator's result standing. Acolytes override it.
+     */
+    async rollCharacteristicCheck(_characteristic: string): Promise<D100Roll | null> {
         return Promise.resolve(null);
     }
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: base class stub returns unknown; subclasses override with concrete roll results
-    async rollSkillCheck(_skillKey: string): Promise<unknown> {
+    /** A quick skill test; actors with a skill table (acolytes) override it. */
+    async rollSkillCheck(_skillKey: string): Promise<D100Roll | null> {
         return Promise.resolve(null);
     }
 
@@ -961,7 +968,7 @@ export class WH40KBaseActor extends Actor {
      * unified roll pipeline (`type='Characteristic'`, `rollKey='willpower'`,
      * `situationalKey='willpower'`) so conditional Willpower talents/traits —
      * Resistance(Fear), Jaded, etc. — surface as selectable situational modifiers
-     * BEFORE the test resolves. The Fear-rating penalty (−10 × X) is applied as a
+     * BEFORE the test resolves. The Fear-rating penalty (−10 × (X − 1)) is applied as a
      * visible named modifier on the card. No-op at rating 0 (no Fear trait).
      */
     rollFearTest(fearRating: number): void {
@@ -1120,6 +1127,29 @@ export class WH40KBaseActor extends Actor {
             next[key] = value;
         }
         if (changed) await this.setFlag(SYSTEM_ID, 'rerollUses', next);
+    }
+
+    /**
+     * Clear the state that lasts only for one encounter, called when the
+     * encounter Combat is deleted: items granted for the encounter (the Hatred
+     * a Fanatic's "Death to All Who Oppose Me!" confers against his foe) and
+     * any `onDamaged` test hooks still armed (Penitent's Cleansing Pain).
+     */
+    async clearEncounterScopedState(): Promise<void> {
+        const grantIds = this.items.filter((item) => item.getFlag(SYSTEM_ID, ENCOUNTER_GRANT_FLAG) === true).map((item) => item.id);
+        if (grantIds.length > 0) await this.deleteEmbeddedDocuments('Item', grantIds);
+        if (this.getFlag(SYSTEM_ID, ARMED_TEST_HOOKS_FLAG) !== undefined) await this.unsetFlag(SYSTEM_ID, ARMED_TEST_HOOKS_FLAG);
+    }
+
+    /**
+     * Count the end of this actor's own combat turn against its turn-bound armed
+     * test hooks (a `turns` duration), lapsing any with no turns left. Called when
+     * the combat moves past this actor's turn.
+     */
+    async endTurnForArmedTestHooks(): Promise<void> {
+        const raw = this.getFlag(SYSTEM_ID, ARMED_TEST_HOOKS_FLAG);
+        if (raw === undefined) return;
+        await this.update({ [`flags.${SYSTEM_ID}.${ARMED_TEST_HOOKS_FLAG}`]: endBearerTurnForArmedHooks(readArmedTestHooks(raw)) });
     }
 
     /* -------------------------------------------- */

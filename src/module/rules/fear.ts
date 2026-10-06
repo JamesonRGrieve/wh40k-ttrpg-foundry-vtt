@@ -2,9 +2,10 @@
  * Fear (X) trait + Fear test resolver (#65 — core.md §"Fear", p.286-287).
  *
  * Fear (X) on a creature triggers a Willpower test when an observer
- * comes face-to-face with it. The test target = WP − (10 × X), where
- * X is the Fear rating (1..4). Failure (3+ DoF on the test) rolls on
- * the Shock table (p.287).
+ * comes face-to-face with it. The test target = WP − 10 × (X − 1),
+ * where X is the Fear rating (1..4): every line prints Disturbing (1)
+ * +0, Frightening (2) −10, Horrifying (3) −20 and Terrifying (4) −30.
+ * Failure rolls on the Shock table (p.287).
  *
  * Composes with `rules/pinning.ts` (#111) — several Shock outcomes
  * call for Pinning.
@@ -30,9 +31,14 @@ export function clampFearRating(rating: number): number {
     return Math.max(0, Math.min(MAX_FEAR_RATING, Math.trunc(Number.isFinite(rating) ? rating : 0)));
 }
 
-/** Per-rating WP penalty: Fear (X) imposes −10 × X on the resist test. */
+/**
+ * Per-rating WP penalty magnitude: Fear (X) imposes −10 × (X − 1) on the
+ * resist test (Disturbing (1) +0 … Terrifying (4) −30). Rating 0 (no Fear)
+ * is no penalty.
+ */
 export function getFearTestPenalty(rating: number): number {
-    return clampFearRating(rating) * 10;
+    const clamped = clampFearRating(rating);
+    return clamped === 0 ? 0 : (clamped - 1) * 10;
 }
 
 export interface FearTestInput {
@@ -49,7 +55,7 @@ export interface FearTestResult {
     isNoOp: boolean;
 }
 
-/** Compose the Fear-test target. RAW: target = WP − (10 × rating). */
+/** Compose the Fear-test target. RAW: target = WP − 10 × (rating − 1). */
 export function resolveFearTest(input: FearTestInput): FearTestResult {
     const rating = clampFearRating(input.fearRating);
     if (rating === 0) return { target: input.willpowerTotal, isNoOp: true };

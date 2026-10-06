@@ -43,7 +43,7 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
                     gameSystem: 'ow',
                     mountedOn: {
                         mountId: 'Compendium.wh40k-rpg.ow-mounts.Actor.test-warhorse',
-                        traits: ['quadruped', 'sure-footed', 'brutal-charge'],
+                        traits: ['bred-for-war', 'loyal', 'terrain-master'],
                     },
                 },
             });

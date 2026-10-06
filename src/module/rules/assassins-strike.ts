@@ -1,37 +1,18 @@
 /**
  * Assassin's Strike — DH2 errata L75 (#149).
  *
- * The original core text described the Assassin's Strike talent as
- * granting "movement" after a successful melee attack without nailing
- * down a metric or test. The errata resolves the ambiguity:
+ * On a successful melee attack the character may attempt an Acrobatics
+ * test (DH2: Challenging (+0); DH1: an Acrobatics Test). On a success
+ * they may move up to a Half Move as a Free Action.
  *
- *   On a successful melee attack, the character may attempt a
- *   Challenging (+0) Acrobatics Test. On a success, they may move
- *   up to a Half Move distance as a Free Action.
- *
- * Half Move in DH2 is Agility-bonus metres (see core movement rules);
- * this module pins the test parameters in isolation so the chat-card
- * dispatch and the unified roll dialog read from a single source of
- * truth. The actual movement distance is resolved by the consumer
- * from the actor's movement table at dispatch time.
+ * The test itself is content: the talent document authors it in its
+ * `system.rollConfig` (`{ skill, modifier }`), so this module reads the
+ * skill and modifier off the actor's owned talent rather than holding a
+ * copy in `src/` (Direction #7). The talent is found by its stable
+ * `system.identifier`, never its display name.
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
-
-/**
- * The post-attack Acrobatics test parameters per the errata. Locked
- * in a `const` so callers can pass the literal `difficulty` /
- * `modifier` straight through to the roll dialog without re-deriving
- * the wording on each consumer.
- */
-export const ASSASSINS_STRIKE_TEST = {
-    /** DH2 difficulty band — "Challenging" maps to +0 in the unified roll dialog. */
-    difficulty: 'challenging',
-    /** Skill key used by `actor.rollSkill(...)`; matches the canonical lowercase identifier. */
-    skill: 'acrobatics',
-    /** Numeric modifier paired with the "Challenging" band. Explicit so the dispatch path can apply it without a lookup. */
-    modifier: 0,
-} as const;
 
 /**
  * The talent's stable `system.identifier`. Matching on this instead of the
@@ -41,10 +22,18 @@ export const ASSASSINS_STRIKE_TEST = {
  */
 const ASSASSINS_STRIKE_IDENTIFIER = 'assassinStrike';
 
-/** Minimal owned-item surface: a typed item carrying a `system.identifier`. */
+/** The post-attack test the talent's document authors in `system.rollConfig`. */
+interface AssassinsStrikeTest {
+    /** Skill key the test rolls (e.g. `acrobatics`). */
+    skill: string;
+    /** Numeric modifier the document prints for the test (Challenging = 0). */
+    modifier: number;
+}
+
+/** Minimal owned-item surface: a typed item carrying a `system.identifier` and its roll config. */
 interface ItemWithIdentifier {
     type?: string;
-    system?: { identifier?: string };
+    system?: { identifier?: string; rollConfig?: { skill?: string; modifier?: number } };
 }
 
 /** Minimal duck-type for an actor that exposes its owned `items`. Both the acolyte and NPC documents satisfy it. */
@@ -57,14 +46,27 @@ function hasItemsLookup(value: object): value is ActorWithItems {
 }
 
 /**
- * Predicate — does this actor carry the Assassin's Strike talent? Matches by the
- * talent's stable `system.identifier`, not its display name.
+ * The Assassin's Strike test this actor's talent authors, or `null` when the
+ * actor has no Assassin's Strike talent or the talent's document carries no
+ * test skill. Read from the owned talent's `system.rollConfig`.
+ */
+export function assassinsStrikeTest(actor: WH40KBaseActor | ActorWithItems | null | undefined): AssassinsStrikeTest | null {
+    if (actor == null) return null;
+    if (!hasItemsLookup(actor)) return null;
+    for (const item of actor.items) {
+        if (item.type !== 'talent' || item.system?.identifier !== ASSASSINS_STRIKE_IDENTIFIER) continue;
+        const config = item.system.rollConfig;
+        const skill = config?.skill ?? '';
+        if (skill === '') return null;
+        return { skill, modifier: config?.modifier ?? 0 };
+    }
+    return null;
+}
+
+/**
+ * Predicate — does this actor carry the Assassin's Strike talent with a usable
+ * test? Matches by the talent's stable `system.identifier`, not its display name.
  */
 export function hasAssassinsStrike(actor: WH40KBaseActor | ActorWithItems | null | undefined): boolean {
-    if (actor == null) return false;
-    if (!hasItemsLookup(actor)) return false;
-    for (const item of actor.items) {
-        if (item.type === 'talent' && item.system?.identifier === ASSASSINS_STRIKE_IDENTIFIER) return true;
-    }
-    return false;
+    return assassinsStrikeTest(actor) !== null;
 }

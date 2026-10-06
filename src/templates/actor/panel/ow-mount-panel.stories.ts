@@ -6,9 +6,9 @@
  *
  *   1. Unmounted             — no mount linked; trait badges absent;
  *                               action Issue buttons disabled.
- *   2. MountedWithTraits     — mount linked with several mechanical
+ *   2. MountedWithTraits     — mount linked with several printed
  *                               trait badges; all action rows live.
- *   3. ChargingWithBrutal    — mount with Brutal Charge highlighted;
+ *   3. ChargingWithBrutal    — a war-bred mount with a longer badge row;
  *                               Charge row is the headline action.
  *
  * Every value is fixed for diff stability (no Math.random).
@@ -16,12 +16,13 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
+import type { MountTraitId } from '../../../module/rules/ow-mount';
 import panelSrc from './ow-mount-panel.hbs?raw';
 
 initializeStoryHandlebars();
 
 interface MountTraitBadge {
-    id: 'quadruped' | 'sure-footed' | 'steadfast' | 'unnatural-speed' | 'fearless' | 'brutal-charge';
+    id: MountTraitId;
     labelKey: string;
 }
 
@@ -103,16 +104,16 @@ export const Unmounted: Story = {
 };
 
 export const MountedWithTraits: Story = {
-    name: 'Mounted with traits — Quadruped + Sure-Footed + Steadfast',
+    name: 'Mounted with traits — Loyal + Placid + Enduring',
     args: {
         mountPanel: {
             mount: {
                 mountId: 'Compendium.wh40k-rpg.ow-mounts.Actor.warhorse-001',
                 mountName: 'Cavalry Warhorse',
                 traits: [
-                    { id: 'quadruped', labelKey: 'WH40K.OW.Mount.Trait.Quadruped' },
-                    { id: 'sure-footed', labelKey: 'WH40K.OW.Mount.Trait.SureFooted' },
-                    { id: 'steadfast', labelKey: 'WH40K.OW.Mount.Trait.Steadfast' },
+                    { id: 'loyal', labelKey: 'WH40K.OW.Mount.Trait.Loyal' },
+                    { id: 'placid', labelKey: 'WH40K.OW.Mount.Trait.Placid' },
+                    { id: 'enduring', labelKey: 'WH40K.OW.Mount.Trait.Enduring' },
                 ],
             },
             actions: FOUR_ACTIONS,
@@ -122,17 +123,17 @@ export const MountedWithTraits: Story = {
 };
 
 export const ChargingWithBrutal: Story = {
-    name: 'Charging with Brutal Charge — Charge headline, brutal-charge badge present',
+    name: 'War-bred mount — Charge headline, four trait badges',
     args: {
         mountPanel: {
             mount: {
                 mountId: 'Compendium.wh40k-rpg.ow-mounts.Actor.destrier-002',
                 mountName: 'Imperial Destrier',
                 traits: [
-                    { id: 'quadruped', labelKey: 'WH40K.OW.Mount.Trait.Quadruped' },
-                    { id: 'brutal-charge', labelKey: 'WH40K.OW.Mount.Trait.BrutalCharge' },
-                    { id: 'unnatural-speed', labelKey: 'WH40K.OW.Mount.Trait.UnnaturalSpeed' },
-                    { id: 'fearless', labelKey: 'WH40K.OW.Mount.Trait.Fearless' },
+                    { id: 'bred-for-war', labelKey: 'WH40K.OW.Mount.Trait.BredForWar' },
+                    { id: 'irritable', labelKey: 'WH40K.OW.Mount.Trait.Irritable' },
+                    { id: 'terrain-master', labelKey: 'WH40K.OW.Mount.Trait.TerrainMaster' },
+                    { id: 'wiry', labelKey: 'WH40K.OW.Mount.Trait.Wiry' },
                 ],
             },
             actions: FOUR_ACTIONS,

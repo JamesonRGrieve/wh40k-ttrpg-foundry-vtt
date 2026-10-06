@@ -1,5 +1,28 @@
 import { describe, expect, it } from 'vitest';
-import { parsePsychicRange } from './psychic-range.ts';
+import { parsePsychicRange, resolvePsyRatingTerm } from './psychic-range.ts';
+
+describe('resolvePsyRatingTerm — the PR term in a power’s damage / penetration', () => {
+    it('substitutes the Psy Rating for every PR term', () => {
+        expect(resolvePsyRatingTerm('1d10+PR', 3)).toBe('1d10+3');
+        expect(resolvePsyRatingTerm('PR*2', 4)).toBe('4*2');
+    });
+
+    it('turns a written multiple of PR into a product', () => {
+        expect(resolvePsyRatingTerm('1d10+2xPR', 3)).toBe('1d10+2*3');
+        expect(resolvePsyRatingTerm('2d10+3 x PR', 4)).toBe('2d10+3*4');
+        expect(resolvePsyRatingTerm('1d10+2×PR', 2)).toBe('1d10+2*2');
+    });
+
+    it('leaves formulas without the term, and words merely containing it, unchanged', () => {
+        expect(resolvePsyRatingTerm('2d10+4', 3)).toBe('2d10+4');
+        expect(resolvePsyRatingTerm('1d10+PRX', 3)).toBe('1d10+PRX');
+    });
+
+    it('clamps a non-finite or negative rating to 0', () => {
+        expect(resolvePsyRatingTerm('1d10+PR', Number.NaN)).toBe('1d10+0');
+        expect(resolvePsyRatingTerm('1d10+PR', -2)).toBe('1d10+0');
+    });
+});
 
 describe('parsePsychicRange — scaling ranges (#568)', () => {
     it('resolves Dominate\'s "5 metres x Psy Rating" against the caster PR', () => {

@@ -134,8 +134,8 @@ describe('rollFearTest', () => {
         expect(rd.type).toBe('Characteristic');
         expect(rd.rollKey).toBe('willpower');
         expect(rd.baseTarget).toBe(45);
-        // Fear (2) → −10 × 2 = −20, shown as a visible named modifier.
-        expect(rd.modifiers['fear']).toBe(-20);
+        // Fear (2) → −10 × (2 − 1) = −10, shown as a visible named modifier.
+        expect(rd.modifiers['fear']).toBe(-10);
     });
 
     it('is a no-op at Fear rating 0 (no Fear trait)', () => {

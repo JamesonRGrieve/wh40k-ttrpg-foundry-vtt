@@ -1,18 +1,19 @@
 /**
- * Storybook stories for the Black Crusade Daemon Prince ascension chat
- * card (#182).
+ * Storybook stories for the Black Crusade apotheosis chat card (#182 —
+ * BC Core p267).
  *
- * Two canonical outcomes the action produces:
+ * The two fates the action records:
  *
- *   1. Tzeentch — patron of change; standard RAW boost.
- *   2. Khorne   — patron of blood; same RAW boost (alignment is preserved
- *                 on the record but does not alter the base mechanical
- *                 package per the resolver).
+ *   1. Tzeentch — Infamy met the GM threshold → Daemon Prince.
+ *   2. Khorne   — Infamy fell short → Chaos Spawn.
+ *
+ * Either way the card states that the champion leaves play; the book prints
+ * no stats for either fate.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { renderSheet } from '../../../stories/test-helpers';
-import { getDaemonPrinceBoost, type DaemonPrinceAlignment, type DaemonPrinceStatBoost } from '../../module/rules/bc-daemon-prince';
+import { resolveApotheosis, type DaemonPrinceAlignment } from '../../module/rules/bc-daemon-prince';
 import cardSrc from './bc-ascension-chat.hbs?raw';
 
 initializeStoryHandlebars();
@@ -21,7 +22,7 @@ interface AscensionChatCtx {
     gameSystem: 'bc';
     ascendedAt: number;
     alignmentAtAscension: DaemonPrinceAlignment;
-    boost: DaemonPrinceStatBoost;
+    isDaemonPrince: boolean;
 }
 
 function renderCard(ctx: AscensionChatCtx): HTMLElement {
@@ -32,12 +33,13 @@ function renderCard(ctx: AscensionChatCtx): HTMLElement {
     return wrapper;
 }
 
-function buildCtx(args: { ascendedAt: number; alignmentAtAscension: DaemonPrinceAlignment }): AscensionChatCtx {
+function buildCtx(args: { ascendedAt: number; alignmentAtAscension: DaemonPrinceAlignment; infamy: number }): AscensionChatCtx {
+    const { outcome } = resolveApotheosis({ corruption: 100, infamy: args.infamy, infamyThreshold: 100 });
     return {
         gameSystem: 'bc',
         ascendedAt: args.ascendedAt,
         alignmentAtAscension: args.alignmentAtAscension,
-        boost: getDaemonPrinceBoost({ ascendedAt: args.ascendedAt, alignmentAtAscension: args.alignmentAtAscension }),
+        isDaemonPrince: outcome === 'daemonPrince',
     };
 }
 
@@ -48,13 +50,13 @@ export default meta;
 type Story = StoryObj<AscensionChatCtx>;
 
 export const Tzeentch: Story = {
-    name: 'Tzeentch — patron of change',
-    args: buildCtx({ ascendedAt: 7, alignmentAtAscension: 'tzeentch' }),
+    name: 'Tzeentch — Infamy met, Daemon Prince',
+    args: buildCtx({ ascendedAt: 7, alignmentAtAscension: 'tzeentch', infamy: 100 }),
     render: (args) => renderCard(args),
 };
 
 export const Khorne: Story = {
-    name: 'Khorne — patron of blood',
-    args: buildCtx({ ascendedAt: 12, alignmentAtAscension: 'khorne' }),
+    name: 'Khorne — Infamy short, Chaos Spawn',
+    args: buildCtx({ ascendedAt: 12, alignmentAtAscension: 'khorne', infamy: 60 }),
     render: (args) => renderCard(args),
 };

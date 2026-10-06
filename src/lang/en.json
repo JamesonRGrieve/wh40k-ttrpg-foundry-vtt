@@ -107,7 +107,9 @@
             "Encumbered": "Encumbered!",
             "GiveSelected": "Give selected items to another character",
             "NoItemsCarried": "No items carried",
-            "NoItemsElsewhere": "No items stored elsewhere"
+            "NoItemsElsewhere": "No items stored elsewhere",
+            "CapacityProperty": "Capacity: {capacity} kg",
+            "CombatVestProperty": "Combat Vest"
         },
         "Bonuses": "Bonuses",
         "ContextMenu": {
@@ -503,7 +505,6 @@
                 "PossessionResetFailed": "Failed to reset possession session: {error}",
                 "FrenzyFailed": "Frenzy test failed: {error}",
                 "MismanifestFailed": "Mismanifest contest failed: {error}",
-                "MortificationFailed": "Failed to apply Mortification of the Flesh: {error}",
                 "DeathToAllFailed": "Failed to apply Death to All Who Oppose Me: {error}",
                 "SmiteFailed": "Smite the Unholy failed: {error}",
                 "ManacledApplyFailed": "Failed to apply Manacled: {error}",
@@ -730,6 +731,18 @@
             "DistanceOverride": "Distance Override (Select Target to Set Automatically)",
             "TargetSizeOverride": "Target Size Override (Select Target to Set Automatically)",
             "TestVariant": "Test Variant",
+            "KeepMode": {
+                "Label": "Roll",
+                "Normal": "Normal",
+                "NormalHint": "Roll the d100 once.",
+                "Advantage": "Advantage",
+                "AdvantageHint": "Roll the d100 twice and keep the lower result.",
+                "Disadvantage": "Disadvantage",
+                "DisadvantageHint": "Roll the d100 twice and keep the higher result.",
+                "Emphasis": "Emphasis",
+                "EmphasisHint": "Roll the d100 twice and keep the result furthest from 50 — the more extreme outcome, success or failure. On a tie the first roll stands.",
+                "CardNote": "{mode}: rolled {kept} and {discarded}, kept {kept}"
+            },
             "TestVariantsDisabled": "This skill has test variants — enable “Awareness sense split” (or the homebrew ruleset) in system settings to choose one.",
             "NotEnoughAmmo": "Not enough ammo to perform action. Do you need to reload?",
             "ForceFieldTitle": "Force Field",
@@ -876,14 +889,6 @@
             "MismanifestEscalated": "Mismanifest lost — escalated to full possession.",
             "MismanifestHeldNotify": "Mismanifest contest won — control retained."
         },
-        "Mortification": {
-            "ButtonLabel": "Mortification of the Flesh",
-            "ButtonTooltip": "Self-inflict 1 Fatigue to gain +10 to all Willpower tests for 60 rounds.",
-            "ChatTitle": "Mortification of the Flesh",
-            "ChatBody": "{name} mortifies the flesh, accepting fatigue in exchange for unshakeable resolve.",
-            "DurationLabel": "Duration",
-            "WpBonusLabel": "Willpower bonus"
-        },
         "Shock": {
             "Header": "Shock",
             "Value": "Current",
@@ -895,13 +900,16 @@
         },
         "Fanatic": {
             "ButtonLabel": "Death to All Who Oppose Me",
-            "ButtonTooltip": "Spend 1 Fate point to gain +10 Weapon Skill and +10 Ballistic Skill for 5 rounds.",
+            "ButtonTooltip": "Spend 1 Fate point to count as having the Hatred talent against your targeted foe for the rest of the encounter. Leaving combat against that foe during the encounter costs 1 Insanity point.",
             "ChatTitle": "Death to All Who Oppose Me",
             "ChatBody": "{name} screams defiance and hurls themselves at the foe — death to all who oppose them.",
-            "DurationLabel": "Duration (rounds)",
-            "WsBonusLabel": "Weapon Skill bonus",
-            "BsBonusLabel": "Ballistic Skill bonus",
-            "NoFatePoints": "No Fate points remaining to spend."
+            "FoeLabel": "Hated foe",
+            "DurationLabel": "Duration",
+            "DurationEncounter": "This encounter",
+            "InsanityReminder": "Leaving combat against this foe during the encounter costs 1 Insanity point.",
+            "NoFatePoints": "No Fate points remaining to spend.",
+            "NoTarget": "Target the foe you hate first.",
+            "NoHatred": "No Hatred talent for this game line was found in the compendiums."
         },
         "CharacteristicSetup": {
             "OnlyForCharacters": "Characteristic setup is only available for characters.",
@@ -1170,7 +1178,9 @@
         },
         "Psychic": {
             "OpposedOvercome": "{target} fails to resist — the power takes hold (by {margin} degree(s)).",
-            "OpposedResisted": "{target} resists the power — it fails."
+            "OpposedResisted": "{target} resists the power — it fails.",
+            "PowerManifested": "Power Manifested",
+            "PowerFailed": "Power Failed"
         },
         "PsychicDiscipline": {
             "Daemonology": "Daemonology",
@@ -1594,6 +1604,10 @@
                 "Name": "Prompt to Build Unfinished Characters",
                 "Hint": "When a character or NPC sheet is opened and its origin path has never been completed, show a prompt offering to open the origin-path builder. Players can dismiss it per-character."
             },
+            "RollKeepModes": {
+                "Name": "Advantage, Disadvantage & Emphasis Rolls",
+                "Hint": "When enabled, the roll dialog lets a test be rolled with Advantage (roll the d100 twice, keep the lower), Disadvantage (roll twice, keep the higher) or Emphasis (roll twice, keep the result furthest from 50 — more extreme either way). The chat card shows both dice. When disabled (default), tests roll one d100 as in the rulebooks."
+            },
             "HomebrewSelfTargeting": {
                 "Name": "Homebrew Self-Targeting",
                 "Hint": "When enabled, targeting yourself in an attack or roll uses the homebrew treatment: point-blank range, and the enemy-defence situational modifiers (target size, cover, target state) are skipped because they do not apply to yourself. When disabled (default), self-targeting follows the rulebook."
@@ -1672,6 +1686,10 @@
             "HighGroundBand": {
                 "Name": "Higher Ground elevation band",
                 "Hint": "How far above the target the attacker must be, in scene distance units, before the RAW Higher Ground +10 applies. 0 (default) is RAW — strictly above counts. Raise it so a crate or a half-step of rubble does not grant the bonus; on a map using the Levels module, any value below the floor height still lets a genuine storey qualify, since a token’s elevation there is its floor’s base height."
+            },
+            "ApotheosisInfamyThreshold": {
+                "Name": "Black Crusade apotheosis Infamy",
+                "Hint": "The Infamy a Black Crusade champion needs, when Corruption reaches 100, to become a Daemon Prince rather than a Chaos Spawn. The book suggests 75, 90 or 100; 100 is the default."
             },
             "AllowManualRoll": {
                 "Name": "Allow manual roll input",
@@ -2512,25 +2530,14 @@
             "DiseaseImmune": "Immune to Disease",
             "PoisonImmune": "Immune to Poison",
             "Undying": "Undying",
-            "Tooltip": "Daemonic creatures are immune to disease and poison, and possess the Undying trait — once per session, the first time they would die they instead recover to 1 wound."
+            "Tooltip": "Daemonic creatures are immune to disease and poison, and possess the Undying trait: immune to disease, poison and toxins, with no need to breathe."
         },
         "SisterOfBattle": {
             "DialogTitle": "Apply Sister of Battle Elite Advance",
-            "Description": "Confirm the Adepta Sororitas elite advance for the applicant. The three Sister of Battle talents below will be granted on apply.",
+            "Description": "Confirm the Adepta Sororitas elite advance for the applicant. The advance grants what is listed below.",
             "Prerequisites": "Prerequisites",
-            "Prereqs": {
-                "Fellowship": "Fellowship 40",
-                "Willpower": "Willpower 35",
-                "Female": "Female applicant (canonical)",
-                "Faith": "Imperial faith confirmed by GM"
-            },
-            "GrantsHeader": "Talents Granted",
-            "FaithOfEmperor": "Faith of the Emperor",
-            "FaithOfEmperorSummary": "+10 Willpower vs psychic powers.",
-            "HolyAegis": "Holy Aegis",
-            "HolyAegisSummary": "Once per round, ignore 1d10 damage from a daemonic source.",
-            "SistersResolve": "Sister's Resolve",
-            "SistersResolveSummary": "+20 to all Fear tests.",
+            "GrantsHeader": "Granted",
+            "UnlockedForPurchase": "Available to purchase with XP",
             "ApplyButton": "Apply",
             "Cancel": "Cancel",
             "ChatTitle": "Sister of Battle Elite Advance"
@@ -3080,41 +3087,31 @@
                 "Label": "Daemon Prince",
                 "PanelHeader": "Apotheosis",
                 "Status": {
-                    "Ascended": "Ascended Daemon Prince",
-                    "NotAscended": "Mortal Champion",
-                    "AscendedAt": "Ascended at: {when}",
+                    "Resolved": "Left Play",
+                    "Pending": "Mortal Champion",
+                    "ResolvedAt": "Claimed at: {when}",
                     "AlignmentAt": "Patron: {alignment}",
-                    "Thresholds": "Requires Infamy ≥ {infamy} & Corruption ≥ {corruption}"
+                    "Requirements": "At {corruption} Corruption the champion is claimed: Infamy {infamy} or more brings apotheosis, anything less brings spawndom."
+                },
+                "Outcome": {
+                    "Projected": "If claimed now",
+                    "DaemonPrince": "Apotheosis: the champion becomes a Daemon Prince and leaves play.",
+                    "ChaosSpawn": "Spawndom: the champion becomes a Chaos Spawn and leaves play."
                 },
                 "AscendButton": {
-                    "Label": "Ascend",
-                    "Disabled": "Thresholds Not Met"
+                    "Label": "Resolve Apotheosis",
+                    "Disabled": "Corruption Below {corruption}"
                 },
                 "Confirm": {
                     "Title": "Confirm Apotheosis",
-                    "Body": "Commit to apotheosis? This change is permanent.",
-                    "Ok": "Ascend",
-                    "Cancel": "Stay Mortal"
+                    "Body": "Resolve the champion's fate? Either way the character leaves play. This change is permanent.",
+                    "Ok": "Resolve",
+                    "Cancel": "Not Yet"
                 },
                 "Chat": {
-                    "Title": "Apotheosis — A New Daemon Prince",
-                    "BoostHeader": "Daemonic Endowments"
+                    "Title": "Apotheosis"
                 },
-                "Ascension": {
-                    "Title": "Apotheosis — Ascension to Daemon Prince",
-                    "Insufficient": {
-                        "Infamy": "Ascension blocked — Infamy below the apotheosis threshold (100).",
-                        "Corruption": "Ascension blocked — Corruption below the apotheosis threshold (70)."
-                    }
-                },
-                "Boost": {
-                    "UnnaturalStrength": "Unnatural Strength (x{multiplier})",
-                    "UnnaturalToughness": "Unnatural Toughness (x{multiplier})",
-                    "BonusWounds": "Bonus Wounds: +{wounds}",
-                    "FearRating": "Fear ({rating})",
-                    "DaemonicTrait": "Daemonic",
-                    "ImmuneToConditions": "Immune to Conditions"
-                }
+                "Blocked": "Apotheosis comes only at {corruption} Corruption."
             },
             "Supplements": {
                 "Label": "Supplement Mechanics",
@@ -3129,25 +3126,11 @@
                     "Jammed": "Overcharge jammed — weapon discharge suppressed.",
                     "Doubled": "Overcharge surge — damage doubled."
                 },
-                "LegacyWeapon": {
-                    "Tier": "Legacy Tier: {tier}",
-                    "Kills": "Confirmed Kills: {count}"
-                },
                 "DaemonEngine": {
                     "Rating": "Daemon Engine ({rating})",
                     "RageBonus": "Rage Bonus: +{bonus}",
                     "RatingLabel": "Daemon Engine Rating",
                     "RageBonusLabel": "Rage Bonus"
-                },
-                "QuickAndTheDead": {
-                    "Initiative": "Quick and the Dead Initiative: {value}",
-                    "AlignmentBonus": "Alignment Bonus: +{bonus}",
-                    "ToggleLabel": "Quick and the Dead",
-                    "ToggleTitle": "Toggle the Quick and the Dead trait",
-                    "StateActive": "Active",
-                    "StateInactive": "Inactive",
-                    "AlignmentBonusLabel": "Alignment Bonus",
-                    "InitiativeLabel": "Initiative"
                 }
             }
         },
@@ -7578,17 +7561,15 @@
                     "Header": "Mounted Combat"
                 },
                 "Trait": {
-                    "Quadruped": "Quadruped",
-                    "SureFooted": "Sure-Footed",
-                    "Steadfast": "Steadfast",
-                    "UnnaturalSpeed": "Unnatural Speed",
-                    "Fearless": "Fearless",
-                    "BrutalCharge": "Brutal Charge"
-                },
-                "Modifier": {
-                    "BrutalCharge": "Brutal Charge (+20)",
-                    "Steadfast": "Steadfast (+10)",
-                    "SureFooted": "Sure-Footed on rough terrain (+10)"
+                    "BredForWar": "Bred for War",
+                    "Enduring": "Enduring",
+                    "Irritable": "Irritable",
+                    "Loyal": "Loyal",
+                    "ParalyticVenom": "Paralytic Venom",
+                    "Placid": "Placid",
+                    "Skittish": "Skittish",
+                    "TerrainMaster": "Terrain Master",
+                    "Wiry": "Wiry"
                 }
             },
             "Battlefield": {

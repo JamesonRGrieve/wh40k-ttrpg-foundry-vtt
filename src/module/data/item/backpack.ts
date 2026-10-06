@@ -14,6 +14,7 @@ export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplat
 
     // Properties from PhysicalItemTemplate
     declare availability: string;
+    declare readonly availabilityLabel: string;
 
     /** @override */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -28,15 +29,12 @@ export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplat
     /** @override */
     get chatProperties(): string[] {
         const props: string[] = [];
-        props.push(`Capacity: ${this.capacity} kg`);
+        props.push(game.i18n.format('WH40K.Backpack.CapacityProperty', { capacity: String(this.capacity) }));
         if (this.isCombatVest) {
-            props.push('Combat Vest');
+            props.push(game.i18n.localize('WH40K.Backpack.CombatVestProperty'));
         }
-        if (this.availability !== '') {
-            const wh40kCfg = CONFIG.wh40k as { availabilities?: Record<string, { label?: string } | undefined> } | undefined;
-            const availLabel = wh40kCfg?.availabilities?.[this.availability]?.label ?? this.availability;
-            props.push(availLabel);
-        }
+        // The shared label: the printed restriction words, else the localized rarity.
+        if (this.availability !== '') props.push(this.availabilityLabel);
         return props;
     }
 

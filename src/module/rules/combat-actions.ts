@@ -1,6 +1,6 @@
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import { hitLocationNames } from './hit-locations.ts';
-import { resolveTwoWeaponPenalties } from './two-weapon-fighting.ts';
+import { resolveTwoWeaponPenalties, type TwoWeaponTalent } from './two-weapon-fighting.ts';
 
 type CombatAction = {
     name: string;
@@ -24,19 +24,22 @@ export type CombatActionModifierInput = Pick<
 const TWO_WEAPON_ACTION = 'Two-Weapon Fighting';
 
 /**
- * Canonical talent names owned by an actor, as the talent-gated rules expect them.
+ * The actor's owned talents as the talent-gated rules read them: each one's
+ * document `system.identifier` and the `system.specialization` picked.
  *
- * Reads the owned `talent` items rather than asking the actor for each name, so
- * the rule receives the actor's real talent state in one pass.
+ * Reads the owned `talent` items in one pass so the rule receives the actor's
+ * real talent state, matched by identifier rather than display name.
  * @param {CombatActionModifierInput['sourceActor']} actor  The acting actor, if any.
- * @returns {ReadonlySet<string>}  Trimmed talent names.
+ * @returns {TwoWeaponTalent[]}  The owned talents.
  */
-function talentNames(actor: CombatActionModifierInput['sourceActor']): ReadonlySet<string> {
-    const names = new Set<string>();
+function ownedTalents(actor: CombatActionModifierInput['sourceActor']): TwoWeaponTalent[] {
+    const talents: TwoWeaponTalent[] = [];
     for (const item of actor?.items ?? []) {
-        if (item.type === 'talent' && typeof item.name === 'string') names.add(item.name.trim());
+        if (item.type !== 'talent') continue;
+        const system = item.system as { identifier?: string; specialization?: string | null };
+        talents.push({ identifier: system.identifier ?? '', specialization: system.specialization ?? '' });
     }
-    return names;
+    return talents;
 }
 
 /**
@@ -73,7 +76,7 @@ export function calculateCombatActionModifier(rollData: CombatActionModifierInpu
     if (rollData.action === TWO_WEAPON_ACTION) {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-unnecessary-boolean-literal-compare -- defensive: `weapon` is declared optional but the non-strict config widens it to always-present, so the compiler reports this guard as redundant; a two-weapon action can still be selected before a weapon is chosen
         const isMelee = rollData.weapon?.isMelee === true;
-        const penalties = resolveTwoWeaponPenalties({ isMelee, talents: talentNames(rollData.sourceActor) });
+        const penalties = resolveTwoWeaponPenalties({ isMelee, talents: ownedTalents(rollData.sourceActor) });
         rollData.modifiers['combat-action'] = penalties.mainPenalty;
         // The off-hand figure is carried rather than applied: it belongs to the
         // Free-Action follow-up, which is a second attack the player declares.

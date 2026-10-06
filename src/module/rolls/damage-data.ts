@@ -13,6 +13,7 @@ import {
     modeDelta,
 } from '../rules/dynamic-modifiers.ts';
 import { additionalHitLocations, DEFAULT_HIT_LOCATION, getHitLocationForRoll, resolveHitLocationId } from '../rules/hit-locations.ts';
+import { resolvePsyRatingTerm } from '../rules/psychic-range.ts';
 import { scatterDirection } from '../rules/scatter.ts';
 import { AIM_STATE, type ActorStateSource, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
@@ -61,6 +62,8 @@ export interface AttackDataLike {
     rollData: {
         weapon?: ActionItemLike;
         power?: ActionItemLike;
+        /** The psyker's Psy Rating on a psychic attack — the `PR` term in its damage / penetration. */
+        pr?: number;
         sourceActor: ActorStateSource & {
             // `effectiveBonus` carries the base bonus PLUS the bonus-only modifier
             // channel and fatigue halving (#415); outcome consumers read it, falling
@@ -499,6 +502,7 @@ export class Hit {
         if (rollFormula === undefined || typeof rollFormula !== 'string' || rollFormula === '') {
             rollFormula = '0';
         }
+        if (attackData.rollData.pr !== undefined) rollFormula = resolvePsyRatingTerm(rollFormula, attackData.rollData.pr);
         // eslint-disable-next-line no-restricted-syntax -- boundary: Roll constructor type differs between Foundry v13/v14 runtime and shipped types
         const damageRoll = new Roll(rollFormula, attackData.rollData) as unknown as Roll;
         this.damageRoll = damageRoll;
@@ -688,9 +692,10 @@ export class Hit {
             this.penetration = 0;
         } else {
             this.hasPenetrationRoll = true;
+            const penFormula = attackData.rollData.pr !== undefined ? resolvePsyRatingTerm(String(rollFormula), attackData.rollData.pr) : String(rollFormula);
             try {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Roll constructor type differs between Foundry v13/v14 runtime and shipped types
-                const penRoll = new Roll(String(rollFormula), attackData.rollData) as unknown as Roll;
+                const penRoll = new Roll(penFormula, attackData.rollData) as unknown as Roll;
                 this.penetrationRoll = penRoll;
                 await penRoll.evaluate();
                 this.penetration = penRoll.total ?? 0;

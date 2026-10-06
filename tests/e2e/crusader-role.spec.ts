@@ -104,7 +104,7 @@ test('crusader-role smite-the-unholy decrements Fate and renders chat (#141)', a
 
         const fateAfter = liveActor.system?.fate?.value ?? 0;
         // Park the sheet on globalThis so the spec-level snap() captures the
-        // live DOM. The fanatic-button + mortification-action specs follow
+        // live DOM. The fanatic-button spec follows
         // the same pattern; the dialog/panel stays OPEN through snap().
         g.__crusaderSheet = actor.sheet;
 
