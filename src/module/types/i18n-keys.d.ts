@@ -846,7 +846,6 @@ export type I18nKey =
     | 'WH40K.Chat.Damage.Effective'
     | 'WH40K.Chat.Damage.EffectiveVs'
     | 'WH40K.Chat.Damage.Formula'
-    | 'WH40K.Chat.Damage.Rolled'
     | 'WH40K.Chat.ForceField.Activated'
     | 'WH40K.Chat.ForceField.Failed'
     | 'WH40K.Chat.ForceField.Overload'

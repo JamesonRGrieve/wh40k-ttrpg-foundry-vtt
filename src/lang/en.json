@@ -1641,11 +1641,11 @@
             },
             "CharacteristicOffset": {
                 "Name": "Characteristic Offset",
-                "Hint": "Integer added to the 20-point baseline used during character generation. Effective base = 20 + offset. May be negative."
+                "Hint": "Integer added to the characteristic base of 25 used during character generation. Effective base = 25 + offset. May be negative."
             },
             "PointBuyPool": {
                 "Name": "Point-Buy Pool",
-                "Hint": "Total points a player may spend in point-buy character generation. Each +1 above a characteristic's base costs 1 point. Defaults to 100."
+                "Hint": "Total points a player may spend in point-buy character generation. Each +1 above a characteristic's base costs 1 point. Defaults to 60."
             },
             "MultipleFateBurnPerRoll": {
                 "Name": "Multiple Fate Burn Per Roll (Homebrew)",
@@ -5292,7 +5292,6 @@
                 "AfterArmour": "after armour {armour} (post-pen) + TB {toughness}",
                 "Absorbed": "Absorbed (1)",
                 "AbsorbedTooltip": "Defences fully absorbed the hit; RAW applies 1 point of damage.",
-                "Rolled": "Rolled {die} (threshold: {threshold}), but failed confirmation roll.",
                 "DamageDieTooltip": "DH2 core: replace one damage die with DoS ({dos}).",
                 "AppliedAutomatically": "Damage applied automatically"
             },
@@ -5361,7 +5360,7 @@
             }
         },
         "CompendiumBrowser": {
-            "Title": "Rogue Trader Compendium Browser",
+            "Title": "Compendium Browser",
             "Subtitle": "Browse, filter, and search through all Rogue Trader compendia",
             "SearchPlaceholder": "Search by name...",
             "AllSources": "All Sources",

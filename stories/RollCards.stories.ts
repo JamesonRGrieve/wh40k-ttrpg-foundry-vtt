@@ -132,6 +132,41 @@ export const DamageWithAssignableHit: Story = {
     render: () => renderSheet(damageRollChatSrc, mockDamageRollData()),
 };
 
+/**
+ * A natural 10 on the damage die: the hit's Righteous Fury entry carries the 1d5
+ * critical-level roll and its looked-up effect. The card shows both; it never
+ * printed them before (it read confirmation fields the data never had).
+ */
+export const DamageWithRighteousFury: Story = {
+    name: 'Damage Roll / Righteous Fury',
+    render: () =>
+        renderSheet(
+            damageRollChatSrc,
+            mockDamageRollData({
+                hits: [
+                    {
+                        location: 'Head',
+                        damageRoll: { formula: '1d10+5', result: '10 + 5' },
+                        modifiers: {},
+                        totalDamage: 15,
+                        damageType: 'Explosive',
+                        totalPenetration: 4,
+                        totalFatigue: 0,
+                        effects: [],
+                        righteousFury: [{ roll: { total: 4 }, effect: 'The target is knocked off their feet and Stunned for 1 round.' }],
+                    },
+                ],
+            }),
+        ),
+    play: async ({ canvasElement }) => {
+        const fury = canvasElement.querySelector('[data-righteous-fury]');
+        await expect(fury).not.toBeNull();
+        await expect(fury?.textContent).toContain('4');
+        await expect(fury?.textContent).toContain('Stunned for 1 round');
+        await expect(canvasElement.textContent).not.toContain('Not Confirmed');
+    },
+};
+
 export const ActionSuccessWithControls: Story = {
     name: 'Action Roll / Success',
     render: () => renderSheet(actionRollChatSrc, mockActionRollData()),
