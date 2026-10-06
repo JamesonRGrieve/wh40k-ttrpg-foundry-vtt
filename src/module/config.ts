@@ -742,6 +742,7 @@ WH40K.actionTypes = {
     'reaction': { label: 'WH40K.ActionType.Reaction' },
     'free-action': { label: 'WH40K.ActionType.FreeAction' },
     'passive': { label: 'WH40K.ActionType.Passive' },
+    'special': { label: 'WH40K.ActionType.Special' },
 };
 
 /* -------------------------------------------- */

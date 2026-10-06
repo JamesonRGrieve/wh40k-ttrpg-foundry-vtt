@@ -21,11 +21,18 @@
  * encode any specific power's value.
  */
 
-/** Metre unit spellings that may appear in an authored range. */
-const UNIT = '(?:m|metre|metres|meter|meters)';
-const SCALING_RE = new RegExp(`^(\\d+)\\s*${UNIT}\\s*[x×*]\\s*psy\\s*rating$`);
-const PLAIN_METRES_RE = new RegExp(`^(\\d+)\\s*${UNIT}$`);
-const PLAIN_INT_RE = /^(\d+)$/;
+/** Distance unit spellings that may appear in an authored range, and their size in metres. */
+const UNIT = '(m|metres?|meters?|km|kilometres?|kilometers?)';
+const KILOMETRE = 1000;
+/** `<N> <unit> x|×|*|per|/ <scale>` — N units per point of Psy Rating or Willpower Bonus. */
+const SCALING_RE = new RegExp(`^(\\d+)\\s*${UNIT}?\\s*(?:[x×*/]|per)\\s*(psy rating|pr|willpower bonus|wb)$`);
+/** `Psy Rating <unit>` — one unit per point of Psy Rating. */
+const PSY_RATING_UNITS_RE = new RegExp(`^(?:psy rating|pr)\\s*${UNIT}$`);
+const PLAIN_RE = new RegExp(`^(\\d+)\\s*${UNIT}?$`);
+/** A trailing cap, "(max. 50m)". */
+const CAP_RE = new RegExp(`^(.*?)\\s*\\(max\\.?\\s*(\\d+)\\s*${UNIT}?\\)$`);
+/** "Self or 10 metres x PR": the bounded alternative. */
+const SELF_OR_RE = /^(?:self|you)\s+or\s+(.+)$/;
 
 /**
  * Non-metric range tokens: real, recognised authored values that simply do not
@@ -50,39 +57,76 @@ const NON_METRIC = new Set<string>([
     'willpower',
     'opposed willpower',
     'psyniscience',
+    'earshot',
+    'line of sight',
+    'unlimited',
+    'special',
 ]);
 
-/** Collapse internal whitespace and lowercase, for tolerant matching. */
+/**
+ * Collapse whitespace, lowercase, drop thousands commas ("1,000") and a trailing
+ * area word ("5 metres x Psy Rating radius" measures the same distance).
+ */
 function normalise(raw: string): string {
-    return raw.trim().replace(/\s+/g, ' ').toLowerCase();
+    return raw
+        .trim()
+        .replace(/\s+/g, ' ')
+        .toLowerCase()
+        .replace(/(\d),(?=\d{3}\b)/g, '$1')
+        .replace(/\s+radius$/, '');
+}
+
+/** Metres per authored unit; no unit means metres. */
+function unitMetres(unit: string | undefined): number {
+    return unit?.startsWith('k') === true ? KILOMETRE : 1;
+}
+
+/** A non-negative integer from a possibly non-finite input. */
+function wholeNumber(value: number): number {
+    return Number.isFinite(value) ? Math.max(0, Math.trunc(value)) : 0;
 }
 
 /**
  * Parse an authored psychic range into metres.
  *
- * @param raw       the power's `system.range` (string or number).
- * @param psyRating the caster's effective Psy Rating, for scaling ranges.
+ * @param raw            the power's `system.range` (string or number).
+ * @param psyRating      the caster's effective Psy Rating, for scaling ranges.
+ * @param willpowerBonus the caster's Willpower Bonus, for "× Willpower Bonus" ranges.
  * @returns metres (>= 0) when recognised, or `null` when the string matches no
  *          known range grammar (caller should log it and fall back to 0).
  */
-export function parsePsychicRange(raw: string | number | null | undefined, psyRating: number): number | null {
+export function parsePsychicRange(raw: string | number | null | undefined, psyRating: number, willpowerBonus = 0): number | null {
     // A missing range is "no bounded distance", not an error — resolve silently.
     if (raw === undefined || raw === null) return 0;
     if (typeof raw === 'number') return Number.isFinite(raw) ? Math.max(0, Math.trunc(raw)) : null;
+    return parseRangeText(normalise(raw), wholeNumber(psyRating), wholeNumber(willpowerBonus));
+}
 
-    const s = normalise(raw);
+function parseRangeText(s: string, pr: number, wb: number): number | null {
     if (NON_METRIC.has(s)) return 0;
 
-    const pr = Number.isFinite(psyRating) ? Math.max(0, Math.trunc(psyRating)) : 0;
+    const selfOr = SELF_OR_RE.exec(s);
+    if (selfOr?.[1] !== undefined) return parseRangeText(selfOr[1], pr, wb);
+
+    const capped = CAP_RE.exec(s);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json types a capture group as string | undefined, the lint project (tsconfig.test.json) as string
+    if (capped?.[1] !== undefined && capped[2] !== undefined) {
+        const inner = parseRangeText(capped[1], pr, wb);
+        return inner === null ? null : Math.min(inner, Number(capped[2]) * unitMetres(capped[3]));
+    }
 
     const scaling = SCALING_RE.exec(s);
-    if (scaling?.[1] !== undefined) return Number(scaling[1]) * pr;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json types a capture group as string | undefined, the lint project (tsconfig.test.json) as string
+    if (scaling?.[1] !== undefined && scaling[3] !== undefined) {
+        const per = scaling[3] === 'willpower bonus' || scaling[3] === 'wb' ? wb : pr;
+        return Number(scaling[1]) * unitMetres(scaling[2]) * per;
+    }
 
-    const metres = PLAIN_METRES_RE.exec(s);
-    if (metres?.[1] !== undefined) return Number(metres[1]);
+    const prUnits = PSY_RATING_UNITS_RE.exec(s);
+    if (prUnits !== null) return pr * unitMetres(prUnits[1]);
 
-    const int = PLAIN_INT_RE.exec(s);
-    if (int?.[1] !== undefined) return Number(int[1]);
+    const plain = PLAIN_RE.exec(s);
+    if (plain?.[1] !== undefined) return Number(plain[1]) * unitMetres(plain[2]);
 
     return null;
 }

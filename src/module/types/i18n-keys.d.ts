@@ -250,6 +250,7 @@ export type I18nKey =
     | 'WH40K.ActionType.HalfAction'
     | 'WH40K.ActionType.Passive'
     | 'WH40K.ActionType.Reaction'
+    | 'WH40K.ActionType.Special'
     | 'WH40K.Actions'
     | 'WH40K.ActiveEffect.Categories.Characteristic'
     | 'WH40K.ActiveEffect.Categories.Combat'

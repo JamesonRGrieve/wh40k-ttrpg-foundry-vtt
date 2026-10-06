@@ -8,12 +8,13 @@ import { autoFailingConditions, helplessAutoHitConditions, rolledCharacteristic 
 import { activeConditionMechanics } from '../rules/condition-registry.ts';
 import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
 import { ARMED_TEST_HOOKS_FLAG, consumeArmedTestHooks, readArmedTestHooks } from '../rules/dynamic-modifiers.ts';
-import { gmProxyActorUpdate } from '../rules/gm-proxy.ts';
+import { type EffectRecipientLike, gmProxyActorUpdate, gmProxyCreateActorEffects } from '../rules/gm-proxy.ts';
 import { DAMAGE_TIER_LABEL_KEYS, firstAidTierPenalty, getDamageTier } from '../rules/healing.ts';
 import { type AllocationTarget, allocateHits } from '../rules/hit-allocation.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/opposed.ts';
 import { resolvePhenomenaTrigger } from '../rules/phenomena-modifier.ts';
+import { type CastRecipient, castEffectsFor, type PowerEffectSource } from '../rules/psychic-cast-effects.ts';
 import type { RerollOption } from '../rules/reroll.ts';
 import { scatterDirection } from '../rules/scatter.ts';
 import {
@@ -962,6 +963,34 @@ export class PsychicActionData extends ActionData {
             this.template = 'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs';
         }
         await super.performActionAndSendToChat();
+        // Success is final here (after any opposed contest): land the power's effects.
+        if (this.rollData.success) await this.applyCastEffects();
+    }
+
+    /**
+     * Land the manifested power's own effects on their recipients, the psyker or
+     * the target (rules/psychic-cast-effects.ts). A target the caster does not
+     * own receives them through the GM proxy.
+     */
+    private async applyCastEffects(): Promise<void> {
+        const power = this.rollData.power;
+        const target = this.rollData.targetActor;
+        const sources = power.effects.contents.map((effect) => effect.toObject() as PowerEffectSource & { _id?: string | null });
+        const targetType = (power.system as { target?: { type?: string } }).target?.type ?? '';
+        const cast = castEffectsFor(sources, targetType, power.uuid ?? '', target !== null);
+        const deliveries: [CastRecipient, EffectRecipientLike | null][] = [
+            ['self', this.rollData.sourceActor as EffectRecipientLike | null],
+            ['target', target as EffectRecipientLike | null],
+        ];
+        await Promise.all(
+            deliveries.map(async ([recipient, actor]) => {
+                if (actor === null) return;
+                await gmProxyCreateActorEffects(
+                    actor,
+                    cast.filter((c) => c.recipient === recipient).map((c) => c.data),
+                );
+            }),
+        );
     }
 
     override async descriptionText(): Promise<void> {

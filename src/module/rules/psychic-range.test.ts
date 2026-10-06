@@ -24,6 +24,38 @@ describe('resolvePsyRatingTerm — the PR term in a power’s damage / penetrati
     });
 });
 
+describe('parsePsychicRange — the printed range grammar the books use (D206)', () => {
+    const PR = 3;
+    const WB = 4;
+    it.each([
+        ['5 metres x Psy Rating radius', 15],
+        ['5m x Psy Rating Radius', 15],
+        ['5 metres per Psy Rating', 15],
+        ['5 metres x PR', 15],
+        ['10 x PR', 30],
+        ['1km x Psy Rating', 3000],
+        ['1 kilometre x psy rating', 3000],
+        ['1,000 kilometres × psy rating', 3_000_000],
+        ['5m × Willpower Bonus', 20],
+        ['1km/Willpower Bonus', 4000],
+        ['Psy Rating metres', 3],
+        ['20 metre radius', 20],
+        ['Self or 10 metres x PR', 30],
+        ['10m x Psy Rating (max. 50m)', 30],
+        ['30m x Psy Rating (max. 50m)', 50],
+    ])('reads "%s" as %i metres', (raw, metres) => {
+        expect(parsePsychicRange(raw, PR, WB)).toBe(metres);
+    });
+
+    it.each(['Earshot', 'Line of Sight', 'Unlimited', 'Special'])('treats "%s" as no bounded distance', (raw) => {
+        expect(parsePsychicRange(raw, PR, WB)).toBe(0);
+    });
+
+    it.each(['2d10 metres x PR', '5 VU x Psy Rating'])('leaves "%s" unresolved (variable or starship scale)', (raw) => {
+        expect(parsePsychicRange(raw, PR, WB)).toBeNull();
+    });
+});
+
 describe('parsePsychicRange — scaling ranges (#568)', () => {
     it('resolves Dominate\'s "5 metres x Psy Rating" against the caster PR', () => {
         // The reported regression: Dominate's authored range.

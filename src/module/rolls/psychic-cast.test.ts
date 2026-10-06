@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readRepoFile } from '../testing/repo-file.ts';
 import { PsychicRollData } from './roll-data.ts';
 
@@ -20,14 +20,22 @@ const CHARACTERISTICS: Record<string, CharacteristicStub> = {
 };
 
 interface PowerSystemStub {
-    focusPower: { characteristic: string; modifier: number };
+    focusPower: { characteristic: string; modifier: number; skill?: string };
 }
+
+const SKILLS: Record<string, { current: number; label: string }> = {
+    psyniscience: { current: 52, label: 'Psyniscience' },
+};
 
 function psychicRoll(system: PowerSystemStub): PsychicRollData {
     // eslint-disable-next-line no-restricted-syntax -- test: bypass the WH40K-config constructor to exercise updateBaseTarget()
     const rd = Object.create(PsychicRollData.prototype) as PsychicRollData;
     Object.assign(rd, {
-        sourceActor: { getCharacteristicFuzzy: (key: string): CharacteristicStub | undefined => CHARACTERISTICS[key] },
+        sourceActor: {
+            getCharacteristicFuzzy: (key: string): CharacteristicStub | undefined => CHARACTERISTICS[key],
+            getSkillFuzzy: (key: string): { current: number; label: string } | undefined => SKILLS[key],
+            system: { corruption: 17 },
+        },
         targetActor: null,
         power: { name: 'Power', system },
         baseTarget: 0,
@@ -49,6 +57,27 @@ describe('PsychicRollData.updateBaseTarget — the Focus Power test base', () =>
         rd.updateBaseTarget();
         expect(rd.baseTarget).toBe(45);
         expect(rd.baseChar).toBe('WP');
+    });
+
+    it('rolls the declared focus skill instead of the characteristic', () => {
+        const rd = psychicRoll({ focusPower: { characteristic: 'willpower', modifier: 0, skill: 'psyniscience' } });
+        rd.updateBaseTarget();
+        expect(rd.baseTarget).toBe(52);
+        expect(rd.baseChar).toBe('Psyniscience');
+    });
+
+    describe('a focus key that is no characteristic', () => {
+        afterEach(() => {
+            vi.unstubAllGlobals();
+        });
+
+        it('tests the numeric actor stat of that name (BC Corruption Test)', () => {
+            vi.stubGlobal('game', { i18n: { localize: (key: string): string => key } });
+            const rd = psychicRoll({ focusPower: { characteristic: 'corruption', modifier: 0 } });
+            rd.updateBaseTarget();
+            expect(rd.baseTarget).toBe(17);
+            expect(rd.baseChar).toBe('WH40K.Resource.Corruption');
+        });
     });
 });
 

@@ -96,7 +96,8 @@ function calculatePsychicAbilityMaxRange(rollData: PsychicRollData): void {
     }
 
     const powerSystem = data.power.system as PsychicPowerRangeSystem;
-    const parsed = parsePsychicRange(powerSystem.range, data.pr);
+    const willpowerBonus = data.sourceActor?.getCharacteristicFuzzy('willpower')?.bonus ?? 0;
+    const parsed = parsePsychicRange(powerSystem.range, data.pr, willpowerBonus);
     if (parsed === null) {
         console.warn(`${SYSTEM_ID} | unrecognised psychic range "${String(powerSystem.range)}" on "${data.power.name}" — max range defaulting to 0`);
     }
