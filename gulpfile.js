@@ -35,6 +35,7 @@ try {
 }
 const { buildUuidIndex, resolveAdventure } = require("./scripts/resolve-adventures.cjs");
 const { iterPackJson } = require("./scripts/lib/iter-pack-json.cjs");
+const { packRecords } = require("./scripts/lib/pack-sublevels.cjs");
 
 const util = require('util');
 if (!util.isDate) {
@@ -306,24 +307,14 @@ async function compilePacks() {
             }
           }
           
-          // Use the Foundry V14 key format: !{collectionType}!{id}
-          // Embedded items on actors are written as sublevel records so
-          // Foundry's boot-time migration doesn't strip them (#560).
+          // Foundry V14 key format: !{collectionType}!{id}, with every embedded
+          // document (actor items, item/actor effects, journal pages, table
+          // results) in its own sublevel record — inline embedded objects are
+          // dropped on load (#560; scripts/lib/pack-sublevels.cjs).
           if (doc._id) {
-            const key = `!${collectionType}!${doc._id}`;
-            const embeddedItems = Array.isArray(doc.items) ? doc.items : [];
-            if (collectionType === 'actors' && embeddedItems.length > 0) {
-              const itemIds = [];
-              for (const item of embeddedItems) {
-                if (item && item._id) {
-                  const itemKey = `!actors.items!${doc._id}.${item._id}`;
-                  ops.push({ type: 'put', key: itemKey, value: item });
-                  itemIds.push(item._id);
-                }
-              }
-              doc.items = itemIds;
-            }
-            ops.push({ type: 'put', key, value: doc });
+            const { records, skipped } = packRecords(collectionType, doc);
+            for (const where of skipped) console.warn(`Skipped an embedded document with no _id (${where}) in ${filePath}`);
+            for (const { key, value } of records) ops.push({ type: 'put', key, value });
           }
         } catch (parseErr) {
           console.error(`Error parsing ${filePath}:`, parseErr);
