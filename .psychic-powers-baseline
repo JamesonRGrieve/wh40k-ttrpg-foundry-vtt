@@ -1,14 +1,12 @@
 {
-  "passing": 18,
+  "passing": 76,
   "total": 634,
   "categories": {
     "activation-undeclared": 124,
     "attack-flag-mismatch": 13,
-    "card-mismatch": 37,
-    "effect-unstructured": 603,
+    "card-mismatch": 1,
+    "effect-unstructured": 541,
     "focus-unstructured": 124,
-    "opposed-not-triggered": 3,
-    "range-mismatch": 19,
     "range-unresolvable": 35,
     "sustained-unstructured": 128,
     "target-undeclared": 123
@@ -17,6 +15,8 @@
   "strictCategories": [
     "cast-error",
     "console-error",
-    "damage-mismatch"
+    "damage-mismatch",
+    "opposed-not-triggered",
+    "range-mismatch"
   ]
 }
