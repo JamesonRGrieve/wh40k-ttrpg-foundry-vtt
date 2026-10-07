@@ -901,7 +901,7 @@
         },
         "Fanatic": {
             "ButtonLabel": "Death to All Who Oppose Me",
-            "ButtonTooltip": "Spend 1 Fate point to count as having the Hatred talent against your targeted foe for the rest of the encounter. Leaving combat against that foe during the encounter costs 1 Insanity point.",
+            "ButtonTooltip": "Spend 1 Fate point: gain Hatred toward your targeted foe until the encounter ends. Breaking off from that foe before then costs 1 Insanity point.",
             "ChatTitle": "Death to All Who Oppose Me",
             "ChatBody": "{name} screams defiance and hurls themselves at the foe — death to all who oppose them.",
             "FoeLabel": "Hated foe",
@@ -2757,7 +2757,7 @@
         },
         "Crusader": {
             "ButtonLabel": "Smite the Unholy",
-            "ButtonTooltip": "Spend 1 Fate point to automatically pass a Fear test with Degrees of Success equal to your Willpower Bonus.",
+            "ButtonTooltip": "Spend 1 Fate point: the Fear test passes outright, with DoS equal to your Willpower Bonus.",
             "ChatTitle": "Smite the Unholy",
             "ChatBody": "{name} steels their soul and calls upon the Emperor's grace — the Fear test passes by sheer faith.",
             "DegreesOfSuccessLabel": "Degrees of Success",
@@ -2845,7 +2845,7 @@
             },
             "Concussive": {
                 "Name": "Concussive (X)",
-                "Description": "On a hit, the target makes a Toughness test (-X×10) or is Stunned for 1 round per degree of failure; if damage exceeds the target's Strength Bonus, they are knocked Prone."
+                "Description": "On a hit, the target tests Toughness at -X×10; each DoF means 1 round Stunned. Damage above the target's Strength Bonus also knocks it Prone."
             },
             "Corrosive": {
                 "Name": "Corrosive",
@@ -4383,7 +4383,7 @@
                 },
                 "AdjustSpeedAndBearing": {
                     "Label": "Adjust Speed & Bearing",
-                    "Benefit": "Turn earlier than normal while moving faster or slower than normal."
+                    "Benefit": "Can turn sooner than usual, even when travelling above or below standard speed."
                 },
                 "ComeToNewHeading": {
                     "Label": "Come to New Heading",
