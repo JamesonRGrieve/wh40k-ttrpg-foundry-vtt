@@ -4166,6 +4166,7 @@ export type I18nKey =
     | 'WH40K.Quality.Shocking.Name'
     | 'WH40K.Quality.Smoke.Description'
     | 'WH40K.Quality.Smoke.Name'
+    | 'WH40K.Quality.Snare.ChatEffect'
     | 'WH40K.Quality.Snare.Description'
     | 'WH40K.Quality.Snare.Name'
     | 'WH40K.Quality.Spray.Description'

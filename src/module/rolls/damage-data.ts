@@ -814,7 +814,7 @@ export class Hit {
                 crippling: () =>
                     `If the target suffers a wound it is considered crippled. If they take more than a half action on a turn, they suffer ${level} damage not reduced by Armour or Toughness!`,
                 felling: () => `The targets unnatural toughness is reduced by ${level} while calculating wounds!`,
-                flame: () => `The target must make an Agility test or be set on fire!`,
+                flame: () => t('WH40K.Quality.Flame.Description'),
                 graviton: () => `This attack deals additional damage equal to the targets Armour points on the struck location!`,
                 hallucinogenic: () => `A creature stuck by this much make a toughness test with ${level * -10} or suffer a delusion!`,
                 haywire: () => `Everything within ${level * -10}m suffers the Haywire Field at strength [[1d10]]!`,
@@ -823,14 +823,9 @@ export class Hit {
                     const bs = bsChar.effectiveBonus ?? bsChar.bonus;
                     return `The attack deviates [[ 1d10 - ${bs}]]m (minimum of 0m) off course to the ${scatterDirection()}!`;
                 },
-                shocking: () =>
-                    `Target must pass a Challenging (+0) Toughness test. If he fails, he suffers 1 level of Fatigue and is Stunned for a number of rounds equal to half of his degrees of failure (rounding up).`,
-                snare: () =>
-                    `Target must pass Agility test with ${
-                        level * -10
-                    } or become immobilised. An immobilised target can attempt no actions other than trying to escape. As a Full Action, they can make a Strength or Agility test with ${
-                        level * -10
-                    } to burst free or wriggle out.`,
+                // Shocking / Snare (DH2 Core, Weapon Qualities): text lives in the langpack.
+                shocking: () => t('WH40K.Quality.Shocking.Description'),
+                snare: () => t('WH40K.Quality.Snare.ChatEffect', { modifier: level * -10 }),
                 toxic: () => {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: system.damageType may be undefined on legacy/minimal items; fallback required
                     const toxicDamageType = actionItem.system.damageType ?? 'Impact';
