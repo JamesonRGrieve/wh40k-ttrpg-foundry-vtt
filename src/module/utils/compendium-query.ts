@@ -20,14 +20,19 @@ export function resolvePack(packName: string): ReturnType<typeof game.packs.get>
  * `game.packs.filter(...) → await getIndex({ fields }) → iterate` scaffold shared
  * by the compendium browser's source / category / result builders (#289).
  *
- * @param itemsOnly  when true, restrict to packs whose `documentName` is `'Item'`.
+ * @param itemsOnly   when true, restrict to packs whose `documentName` is `'Item'`.
+ * @param packFilter  when given, restrict to packs whose id it accepts, so a
+ *                    lookup scoped to one line never cold-loads every line's index.
  */
 export async function queryItemIndex<T>(
     fields: string[],
     collect: (entry: CompendiumIndexEntry, pack: { readonly metadata: { readonly id: string; readonly label: string } }) => T | undefined,
     itemsOnly = false,
+    packFilter?: (packId: string) => boolean,
 ): Promise<T[]> {
-    const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && (!itemsOnly || p.documentName === 'Item'));
+    const packs = game.packs.filter(
+        (p) => p.metadata.system === 'wh40k-rpg' && (!itemsOnly || p.documentName === 'Item') && (packFilter === undefined || packFilter(p.metadata.id)),
+    );
     const perPack = await Promise.all(
         packs.map(async (pack) => {
             const index = await pack.getIndex({ fields });
@@ -49,30 +54,34 @@ interface IdentifiedPackEntry {
     packId: string;
 }
 
+/** Whether a pack id (`wh40k-rpg.<linePrefix>-…`) belongs to the given game line. Pure. */
+export function isLinePack(packId: string, linePrefix: string): boolean {
+    return (packId.split('.').at(1) ?? '').startsWith(`${linePrefix}-`);
+}
+
 /**
  * Pick the entry from the given game line's packs (`wh40k-rpg.<linePrefix>-…`),
  * falling back to the first match from any line. Pure.
  */
 export function pickLineEntry(entries: readonly IdentifiedPackEntry[], linePrefix: string): IdentifiedPackEntry | null {
-    const onLine = entries.find((entry) => (entry.packId.split('.').at(1) ?? '').startsWith(`${linePrefix}-`));
+    const onLine = entries.find((entry) => isLinePack(entry.packId, linePrefix));
     return onLine ?? entries.at(0) ?? null;
 }
 
 /**
  * UUID of the system compendium Item of `type` whose `system.identifier` is
  * `identifier`, preferring the given line's packs — so a mechanic can reach a
- * content document by its stable identifier instead of its name.
+ * content document by its stable identifier instead of its name. The line's own
+ * packs are searched first; every line's index is loaded only when they miss.
  */
 export async function findItemUuidByIdentifier(type: string, identifier: string, linePrefix: string): Promise<string | null> {
-    const entries = await queryItemIndex<IdentifiedPackEntry>(
-        ['system.identifier'],
-        (entry, pack) => {
-            const system = entry['system'];
-            if (entry.type !== type || typeof system !== 'object' || system === null) return undefined;
-            if (!('identifier' in system) || system.identifier !== identifier || entry.uuid === undefined) return undefined;
-            return { uuid: entry.uuid, packId: pack.metadata.id };
-        },
-        true,
-    );
-    return pickLineEntry(entries, linePrefix)?.uuid ?? null;
+    const collect = (entry: CompendiumIndexEntry, pack: { readonly metadata: { readonly id: string } }): IdentifiedPackEntry | undefined => {
+        const system = entry['system'];
+        if (entry.type !== type || typeof system !== 'object' || system === null) return undefined;
+        if (!('identifier' in system) || system.identifier !== identifier || entry.uuid === undefined) return undefined;
+        return { uuid: entry.uuid, packId: pack.metadata.id };
+    };
+    const onLine = (await queryItemIndex(['system.identifier'], collect, true, (packId) => isLinePack(packId, linePrefix))).at(0);
+    if (onLine !== undefined) return onLine.uuid;
+    return pickLineEntry(await queryItemIndex(['system.identifier'], collect, true), linePrefix)?.uuid ?? null;
 }
