@@ -135,7 +135,7 @@ These scripts exist to make the migration measurable. If you are touching an are
 ```text
 src/
   css/           Legacy CSS still being migrated away from
-  icons/         Icon attribution only (game-icons.net, CC BY 3.0) — no icons bundled
+  icons/         Icon attribution (game-icons.net, Font Awesome Free, Lucide)
   lang/          Localization files
   module/        TypeScript application, document, data model, rules, and hook code
   packs/         Public generic compendium source + pack tooling
@@ -183,7 +183,7 @@ This is an unofficial, fan-made game system for Foundry VTT. It is not affiliate
 ### What this repository contains
 
 - **System code** (TypeScript, Handlebars templates, CSS) — original work under the project license.
-- **Icon references** — the system uses [game-icons.net](https://game-icons.net/) icons (CC BY 3.0); see `src/icons/ATTRIBUTION.md`. No image or icon assets are bundled — UI chrome is styled with CSS/Tailwind.
+- **Icon references** — the system uses [game-icons.net](https://game-icons.net/) icons (CC BY 3.0), loaded from a CDN rather than bundled. A small set of [Font Awesome Free](https://fontawesome.com/license/free) icons (CC BY 4.0) and [Lucide](https://lucide.dev/license) icons (ISC License) is inlined as SVG into `src/module/icons/registry.generated.ts`. See `src/icons/ATTRIBUTION.md`. No other image assets are bundled — UI chrome is styled with CSS/Tailwind.
 
 ### What this repository does NOT contain
 
