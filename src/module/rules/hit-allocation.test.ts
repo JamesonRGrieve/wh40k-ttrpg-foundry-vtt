@@ -13,8 +13,8 @@ describe('allocateHits', () => {
     });
 
     it('pins the FIRST hit to the declared target even when spreading', () => {
-        // RAW moves the EXTRA hits: "Extra hits can either be allocated to the
-        // original target or any other targets within two metres".
+        // RAW (DH2 core ch. VII) only lets the hits AFTER the first be moved to
+        // other eligible targets within 2 m.
         const hits = allocateHits({ hitCount: 3, originalTarget: CULTIST, extraTargets: [CHAMPION], strategy: 'spread' });
         expect(hits[0]?.target.id).toBe('cultist');
     });

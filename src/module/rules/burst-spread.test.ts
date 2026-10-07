@@ -5,9 +5,8 @@ import { allocateHits } from './hit-allocation.ts';
 /**
  * RAW eligibility for a burst's extra hits (#513).
  *
- * "Extra hits can either be allocated to the original target or any other targets
- * within two metres, provided none of the new targets would have been harder to
- * hit than the original target."
+ * DH2 core ch. VII: hits after the first may shift to a target within 2 m that
+ * is no harder to hit than the original.
  */
 
 /** Build a candidate with sensible defaults, overriding only what a case cares about. */

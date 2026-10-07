@@ -13,19 +13,17 @@
  * its `originPath` document.
  *
  *   - Death World's "Survivor's Paranoia" hook composes with the surprise
- *     attack pipeline: while the death-world character is Surprised,
- *     non-Surprised attackers do NOT gain the standard +30 bonus to
- *     Weapon Skill and Ballistic Skill tests against them.
+ *     attack pipeline: catching this character Surprised earns attackers
+ *     no +30 WS/BS.
  *   - Garden World's "Serenity of the Green" hook composes with the
  *     Shock / Mental Trauma duration logic (Tables 8-11 / 8-13): the
  *     character halves the duration (rounded up), and the XP cost to
  *     remove Insanity points drops from 100 to 50 per point.
  *   - Research Station's "Pursuit of Data" hook composes with the
- *     scholastic-lore advancement pipeline: whenever the character
- *     reaches Rank 2 (Trained) in a Scholastic Lore skill, they gain
- *     Rank 1 (Known) in one related or identical Forbidden Lore skill
- *     specialisation of their choice (GM is final arbiter of
- *     relatedness).
+ *     scholastic-lore advancement pipeline: each Scholastic Lore that hits
+ *     Trained (Rank 2) also grants Known (Rank 1) in a matching or
+ *     closely linked Forbidden Lore the player picks, subject to GM
+ *     approval.
  *
  * This registry only declares the riders — runtime wiring lives in the
  * relevant sibling pipelines.
@@ -89,10 +87,9 @@ export interface WithoutHomeworldDef extends HomeworldDefBase {
  * Death World (without.md p. 27-28).
  *
  * Compendium basics: +Ag, +Per, -Fel. Fate 2 / Emperor's Blessing on 5+.
- * Wounds 9+1d5. Fieldcraft aptitude. "Survivor's Paranoia": while a
- * death-world character is Surprised, non-Surprised attackers do not gain
- * the normal +30 bonus to their Weapon Skill and Ballistic Skill tests
- * when targeting them.
+ * Wounds 9+1d5. Fieldcraft aptitude. "Survivor's Paranoia": the usual +30
+ * WS/BS for hitting a Surprised target does not apply against this
+ * character.
  */
 const DEATH_WORLD: WithoutHomeworldDef = {
     id: 'deathWorld',
@@ -100,8 +97,7 @@ const DEATH_WORLD: WithoutHomeworldDef = {
     label: 'WH40K.WithoutHomeworld.DeathWorld',
     keyTalents: ["Survivor's Paranoia (suppresses Surprised +30 WS/BS bonus)"],
     recommendedBackgrounds: ['Adeptus Arbites', 'Adeptus Mechanicus', 'Adeptus Ministorum', 'Imperial Guard'],
-    mechanicalHook:
-        "Survivor's Paranoia: while the death-world character is Surprised, non-Surprised attackers do not gain the standard +30 bonus to Weapon Skill and Ballistic Skill tests against them.",
+    mechanicalHook: "Survivor's Paranoia: enemies who catch this character Surprised don't get the usual +30 WS/BS against them.",
     surpriseBonusSuppression: {
         suppressedBonus: 30,
         affectedSkills: ['weaponSkill', 'ballisticSkill'],
@@ -136,10 +132,9 @@ const GARDEN_WORLD: WithoutHomeworldDef = {
  * Research Station (without.md p. 31-32).
  *
  * Compendium basics: +Int, +Per, -Fel. Fate 3 / Emperor's Blessing on 8+.
- * Wounds 8+1d5. Knowledge aptitude. "Pursuit of Data": whenever the
- * character reaches Rank 2 (Trained) in a Scholastic Lore skill, they also
- * gain Rank 1 (Known) in one related or identical Forbidden Lore
- * specialisation of their choice (GM is final arbiter of relatedness).
+ * Wounds 8+1d5. Knowledge aptitude. "Pursuit of Data": raising any
+ * Scholastic Lore to Trained (Rank 2) also grants Known (Rank 1) in a
+ * player-chosen Forbidden Lore that matches or relates to it (GM decides).
  */
 const RESEARCH_STATION: WithoutHomeworldDef = {
     id: 'researchStation',
@@ -148,7 +143,7 @@ const RESEARCH_STATION: WithoutHomeworldDef = {
     keyTalents: ['Pursuit of Data (Scholastic Lore Rank 2 grants Forbidden Lore Rank 1)'],
     recommendedBackgrounds: ['Adeptus Administratum', 'Adeptus Astra Telepathica', 'Adeptus Mechanicus', 'Mutant'],
     mechanicalHook:
-        'Pursuit of Data: whenever the character reaches Rank 2 (Trained) in a Scholastic Lore skill, they gain Rank 1 (Known) in one related or identical Forbidden Lore specialisation of their choice. The GM is the final arbiter of relatedness.',
+        'Pursuit of Data: each time a Scholastic Lore reaches Trained (Rank 2), pick a matching or related Forbidden Lore and gain it at Known (Rank 1). The GM rules on what counts as related.',
     pursuitOfDataRider: {
         triggerScholasticRank: 2,
         grantedForbiddenRank: 1,

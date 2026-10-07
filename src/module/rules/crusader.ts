@@ -4,15 +4,12 @@
  * The Crusader is a Beyond-supplement role granting two interlocking
  * benefits under a single "Smite the Unholy" rider:
  *
- *   1. **Fate-spend auto-pass against Fear.** In addition to the
- *      normal uses of Fate points (core p.293), a Crusader may spend
- *      a Fate point to automatically pass a Fear test with a number
- *      of Degrees of Success equal to his Willpower Bonus.
+ *   1. **Fate-spend auto-pass against Fear.** On top of the standard
+ *      Fate uses (core p.293), one Fate point lets a Crusader pass a
+ *      Fear test outright, with DoS equal to their Willpower Bonus.
  *
- *   2. **Anti-Fear melee bonus.** Whenever the Crusader inflicts a
- *      melee hit against a target with the Fear (X) trait, he deals
- *      X additional damage AND counts the weapon's penetration as
- *      being X higher.
+ *   2. **Anti-Fear melee bonus.** A Crusader's melee hits on a foe
+ *      with Fear (X) gain +X damage and +X penetration.
  *
  * This module exposes pure helpers for both halves. Runtime wiring:
  *   - The Fate-spend is surfaced as a player-facing action button
@@ -92,10 +89,8 @@ export interface SmiteMeleeHitResult {
 /**
  * Apply the Smite-the-Unholy melee rider to a single hit.
  *
- * Per RAW (beyond.md p.34 L839): "whenever he inflicts a hit with a
- * melee attack against a target with the Fear (X) trait, he inflicts
- * X additional damage and counts his weapon's penetration as being
- * X higher."
+ * Per RAW (beyond.md p.34 L839): each melee hit on a target with
+ * Fear (X) adds X to both damage and weapon penetration.
  *
  * Targets without Fear (rating 0) are a no-op — base values pass
  * through unchanged. The Fear rating is clamped to [0, MAX_FEAR_RATING]

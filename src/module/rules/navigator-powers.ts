@@ -20,10 +20,9 @@
  *      sourced from the compendium document (Direction #7); the engine
  *      sums it in.
  *   4. **Opposed branch.** Several powers (Held in my Gaze, The Lidless
- *      Stare) are Opposed Tests. Per core.md L7505–L7520 ("If the Focus
- *      Power Test is an Opposed Test, the Psyker must successfully pass
- *      the Test and gain more successes than at least one of his
- *      opponents to activate the Technique") the resolver requires BOTH
+ *      Stare) are Opposed Tests. Per core.md L7505–L7520 (an opposed
+ *      Focus Power only activates if the user passes and also out-scores
+ *      at least one opponent on successes) the resolver requires BOTH
  *      sides to pass AND the Navigator to beat the opponent's net DoS;
  *      ties favour the target (core convention for opposed tests).
  *   5. **Effect tier.** On a pass, the engine surfaces which of
@@ -32,8 +31,8 @@
  *      Master powers retain the Novice and Adept effects (they are
  *      additive in the RAW), so the engine returns the active level and
  *      a frozen list of every effect tier the Navigator may invoke.
- *   6. **Sustain.** Some powers have a `sustain` clause ("This power
- *      will last as long as the Navigator maintains it"). The engine
+ *   6. **Sustain.** Some powers have a `sustain` clause (the effect
+ *      persists while the Navigator keeps concentrating). The engine
  *      reports whether sustain is applicable; the chat card surfaces it
  *      so the GM can flag the maintain-cost on subsequent rounds.
  *

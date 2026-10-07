@@ -6,17 +6,14 @@
  * came from:
  *
  *   1. HOW MANY ROUNDS LEAVE THE GUN. Ch. V, Rate of Fire: the RoF entry is
- *      "how many rounds or charges it expends"; ch. V, Indirect, confirms the
- *      whole burst is fired even when it misses ("the remaining missed hits …
- *      are still fired, but miss their target"). Storm "doubles … the amount of
- *      ammunition expended".
- *   2. HOW MANY HITS THE ROLL EARNS. Semi-Auto: "a hit for the initial degree
- *      of success plus an additional hit for every two additional degrees of
- *      success". Full Auto: "one hit with his weapon per degree of success".
- *      Suppressing Fire uses the two-DoS progression whichever mode was fired.
- *   3. THE CEILING ON HITS. "cannot exceed the weapon's [semi-automatic /
- *      fully automatic] rate of fire" — and Storm explicitly does NOT raise it
- *      ("up to the weapon's firing rate, as normal"), even though it doubles
+ *      the ammunition a firing mode consumes; ch. V, Indirect, confirms a burst
+ *      spends its full count even when shots miss. Storm doubles the ammunition
+ *      used.
+ *   2. HOW MANY HITS THE ROLL EARNS. Semi-Auto: one hit for passing, then one
+ *      more per two further DoS. Full Auto: one hit per DoS. Suppressing Fire
+ *      uses the two-DoS progression whichever mode was fired.
+ *   3. THE CEILING ON HITS. Hits are capped at the mode's rate of fire — and
+ *      Storm explicitly leaves that cap where it is, even though it doubles
  *      both the hits earned and the ammunition burned.
  *
  * Pure: no Foundry globals, no document reads. The callers supply the weapon's
@@ -35,9 +32,9 @@ interface RateOfFire {
 /**
  * Every action that fires a burst, and which RoF entry it draws on.
  *
- * Suppressing Fire is here because it "fires a Full Auto or Semi-Auto Burst (as
- * per the Full Auto and Semi-Auto Burst actions) and expends the appropriate
- * ammo" — omitting it left it firing a single round and scoring a single hit.
+ * Suppressing Fire is here because RAW treats it as a semi- or full-auto burst
+ * that spends that mode's ammunition (DH2 core ch. VII) — omitting it left it
+ * firing a single round and scoring a single hit.
  *
  * Melee multi-attacks (Swift / Lightning) and psychic barrage / storm share the
  * hit PROGRESSIONS but are deliberately absent: they have no rate of fire, so no

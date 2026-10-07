@@ -1,9 +1,9 @@
 /**
  * Fanatic role — "Death to All Who Oppose Me!" (DH2 Enemies Within p34).
  *
- * In addition to the normal uses of Fate, a Fanatic may spend a Fate point to
- * count as having the Hatred talent against his current foe for the duration
- * of the encounter. (Leaving combat against that foe during the encounter costs
+ * Besides the standard Fate uses, a Fanatic can burn a Fate point to gain
+ * Hatred toward the enemy they are fighting, lasting until the encounter ends.
+ * (Leaving combat against that foe during the encounter costs
  * 1 Insanity point; that half is GM-adjudicated and not automated.)
  *
  * Nothing about Hatred is restated here. The Fanatic is granted an

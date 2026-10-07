@@ -1,11 +1,9 @@
 /**
  * @file Which targets a burst's extra hits may be moved onto (#513).
  *
- * DH2 core ch. VII, Semi-Auto Burst (Full Auto Burst is worded identically):
- *
- *   "Extra hits can either be allocated to the original target or any other
- *    targets within two metres, provided none of the new targets would have been
- *    harder to hit than the original target."
+ * DH2 core ch. VII, Semi-Auto Burst (Full Auto Burst follows the same rule), in
+ * summary: hits after the first may move to another target within 2 m, but only
+ * one that is no harder to hit than the original target.
  *
  * Two constraints, and the second is the subtle one. "Harder to hit" is not about
  * the target's defences — it is about the ATTACK TEST modifiers that target would
