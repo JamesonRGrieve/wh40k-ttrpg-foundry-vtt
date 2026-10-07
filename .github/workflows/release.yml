@@ -7,7 +7,8 @@ name: Release
 #     rolling, ephemeral PRE-RELEASE under the fixed `nightly` tag, so testers can
 #     install from a stable manifest URL. Version = src/system.json's prerelease
 #     base + this workflow's run_number (0.0.1-alpha.N). Not an official release.
-#   * release — pushing a `v<semver>` tag cuts an OFFICIAL versioned release. The
+#   * release — pushing a `v<semver>` tag cuts an OFFICIAL versioned release once
+#     the maintainer approves the `release` environment deployment in GitHub. The
 #     tag must equal src/system.json's committed version (bump it, commit, tag).
 #     It runs the full `pnpm check` gate first. The published manifest URL is the
 #     /releases/latest/ alias (installs follow future releases); the download URL
@@ -43,6 +44,10 @@ jobs:
   publish:
     name: Build + publish (${{ startsWith(github.ref, 'refs/tags/v') && 'release' || 'nightly' }})
     runs-on: ubuntu-latest
+    # A tagged release runs in the `release` environment, which requires the
+    # maintainer's approval in GitHub before any step (and its secrets) runs, and
+    # which only `v*` tags may deploy to. Nightly builds use no environment.
+    environment: ${{ startsWith(github.ref, 'refs/tags/v') && 'release' || '' }}
     env:
       CHANNEL: ${{ startsWith(github.ref, 'refs/tags/v') && 'release' || 'nightly' }}
       TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'nightly' }}
@@ -117,7 +122,7 @@ jobs:
 
       # Register an official (non-prerelease) version on the foundryvtt.com package
       # listing, so Foundry's in-app installer offers it. Needs the package release
-      # token as the FOUNDRY_RELEASE_TOKEN repository secret; the script reads it from
+      # token as the FOUNDRY_RELEASE_TOKEN secret of the `release` environment; the script reads it from
       # the environment and fails loudly if it is missing.
       - name: Publish to the Foundry package listing
         if: env.CHANNEL == 'release' && !contains(github.ref_name, '-')

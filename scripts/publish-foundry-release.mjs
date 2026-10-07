@@ -11,7 +11,7 @@
  * later releases.
  *
  * The package release token is a secret. It is read from FOUNDRY_RELEASE_TOKEN
- * (a GitHub Actions secret), never passed on a command line and never printed.
+ * (a secret of the approval-gated `release` environment), never passed on a command line and never printed.
  * FOUNDRY_RELEASE_DRY_RUN=1 asks the API to validate without publishing.
  */
 import { readFileSync } from 'node:fs';
@@ -46,7 +46,7 @@ export function foundryReleaseBody(manifest, { repoUrl, tag, dryRun }) {
 
 async function main() {
     const token = process.env.FOUNDRY_RELEASE_TOKEN;
-    if (!token) throw new Error('FOUNDRY_RELEASE_TOKEN is not set — add the package release token as a repository secret.');
+    if (!token) throw new Error('FOUNDRY_RELEASE_TOKEN is not set — add the package release token as a secret of the `release` environment.');
     const repoUrl = process.env.REPO_URL;
     const tag = process.env.TAG;
     if (!repoUrl || !tag) throw new Error('REPO_URL and TAG are required.');
