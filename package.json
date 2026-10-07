@@ -1,6 +1,6 @@
 {
   "name": "wh40k-rpg",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Unofficial Foundry VTT system for the Warhammer 40,000 d100 RPG family. Not affiliated with or endorsed by Games Workshop.",
   "scripts": {
     "version": "json -I -f package.json -e \"this.version='$NEXT_VERSION'\" && json -I -f src/system.json -e \"this.version='$NEXT_VERSION'\"",
