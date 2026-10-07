@@ -44,6 +44,25 @@ Icons by game-icons.net contributors, licensed under CC BY 3.0.
 For the full list of contributors and their individual works, please visit:
 https://game-icons.net/about.html
 
+## Font Awesome Free (inlined SVG)
+
+A few solid and regular icons from Font Awesome Free are inlined as SVG markup into
+`src/module/icons/registry.generated.ts` by `scripts/gen-icons.mjs`, which reads them
+from the `@fortawesome/free-solid-svg-icons` and `@fortawesome/free-regular-svg-icons`
+packages (registry keys `fa:` / `far:`).
+
+**Copyright:** Fonticons, Inc. (https://fontawesome.com)
+**License:** CC BY 4.0 (icons)
+**License URL:** https://fontawesome.com/license/free
+
+## Lucide (inlined SVG)
+
+A few Lucide icons are inlined the same way from the `lucide` package (registry key `lucide:`).
+
+**Copyright:** Lucide Contributors (portions Cole Bemis, Feather)
+**License:** ISC License
+**License URL:** https://lucide.dev/license
+
 ## Usage in Code
 
 Icons can be accessed via the helper module:
