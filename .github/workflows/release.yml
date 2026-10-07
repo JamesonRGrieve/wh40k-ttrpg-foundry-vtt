@@ -114,3 +114,13 @@ jobs:
           files: |
             dist/system.json
             wh40k-rpg.zip
+
+      # Register an official (non-prerelease) version on the foundryvtt.com package
+      # listing, so Foundry's in-app installer offers it. Needs the package release
+      # token as the FOUNDRY_RELEASE_TOKEN repository secret; the script reads it from
+      # the environment and fails loudly if it is missing.
+      - name: Publish to the Foundry package listing
+        if: env.CHANNEL == 'release' && !contains(github.ref_name, '-')
+        env:
+          FOUNDRY_RELEASE_TOKEN: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
+        run: node scripts/publish-foundry-release.mjs
