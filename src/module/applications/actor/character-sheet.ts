@@ -5006,8 +5006,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /**
      * Fanatic role — Death to All Who Oppose Me! (#93, DH2 Enemies Within p.34).
      *
-     * RAW: the Fanatic spends a Fate point to count as having the Hatred talent
-     * against their current foe for the duration of the encounter.
+     * Spending 1 Fate grants Hatred toward the chosen foe until the encounter ends.
      *
      * Pipeline:
      *   - refuse without exactly one targeted foe, or with 0 Fate
