@@ -40,9 +40,9 @@ const FIXTURE: FixtureItem[] = [
             damageType: 'Energy',
             bodyPart: 'Arm',
             effects: {
-                1: { text: '<p>The attack grazes the arm; all tests involving that arm suffer a -30 penalty for 1d5 rounds.</p>' },
-                5: { text: '<p>Energy courses through the arm. He is Stunned for 1 round, and the arm is Useless until treated.</p>' },
-                10: { text: '<p>The attack reduces the arm to crimson ash. He immediately dies from shock, clutching his smoking stump.</p>' },
+                1: { text: '<p>Arm crit 1: grazes the arm; -30 to arm tests for 1d5 rounds.</p>' },
+                5: { text: '<p>Arm crit 5: Stunned 1 round; arm Useless.</p>' },
+                10: { text: '<p>Arm crit 10: target immediately dies.</p>' },
             },
         },
     },
@@ -52,7 +52,7 @@ const FIXTURE: FixtureItem[] = [
             bodyPart: 'Body',
             effects: {
                 5: {
-                    text: '<p>The target is knocked Prone and must make a test or catch fire. He must also test or be Stunned for 1 round.</p>',
+                    text: '<p>Body crit 5: Prone; test or catch fire; test or Stunned 1 round.</p>',
                 },
             },
         },
@@ -62,12 +62,12 @@ const FIXTURE: FixtureItem[] = [
             damageType: 'Explosive',
             bodyPart: 'Leg',
             effects: {
-                1: { text: '<p>A glancing blast sends the character backwards one metre. The target must test or be knocked Prone.</p>' },
+                1: { text: '<p>Leg crit 1: pushed back 1 m; test or Prone.</p>' },
                 6: {
-                    text: '<p>The blast shatters the leg bones. The target suffers 1d10 levels of Fatigue. The leg is Useless until treated. He must test or suffer the Lost Foot condition.</p>',
+                    text: '<p>Leg crit 6: 1d10 Fatigue; leg Useless; test or Lost Foot.</p>',
                 },
                 10: {
-                    text: '<p>The leg explodes in an eruption of blood, killing the target immediately and sending fragments hurtling off.</p>',
+                    text: '<p>Leg crit 10: killing the target outright.</p>',
                 },
             },
         },
@@ -77,10 +77,10 @@ const FIXTURE: FixtureItem[] = [
             damageType: 'Impact',
             bodyPart: 'Head',
             effects: {
-                1: { text: '<p>The impact fills the head with a ringing noise. The target must test or suffer 1 level of Fatigue.</p>' },
-                4: { text: '<p>The concussive strike staggers the target. He must test or be Stunned for 1 round and knocked Prone.</p>' },
+                1: { text: '<p>Head crit 1: test or 1 Fatigue.</p>' },
+                4: { text: '<p>Head crit 4: test or Stunned 1 round and Prone.</p>' },
                 8: {
-                    text: "<p>The target's head snaps around to face the opposite direction. His death is instantaneous.</p>",
+                    text: '<p>Head crit 8: death is instantaneous.</p>',
                 },
             },
         },
@@ -90,12 +90,12 @@ const FIXTURE: FixtureItem[] = [
             damageType: 'Rending',
             bodyPart: 'Body',
             effects: {
-                3: { text: '<p>The attack rips a large patch of skin away. The target is Stunned for 1 round and must test or suffer Blood Loss.</p>' },
+                3: { text: '<p>Body crit 3: Stunned 1 round; test or Blood Loss.</p>' },
                 7: {
-                    text: "<p>The attack cuts open the target's abdomen. The target suffers Blood Loss. Permanently reduce his Toughness by 1d5.</p>",
+                    text: '<p>Body crit 7: Blood Loss; -1d5 Toughness permanently.</p>',
                 },
                 9: {
-                    text: '<p>The powerful blow cleaves the target from gullet to groin. The target is now quite dead.</p>',
+                    text: '<p>Body crit 9: target is quite dead.</p>',
                 },
             },
         },
@@ -182,7 +182,7 @@ describe('classifyCriticalEffect (#108)', () => {
     });
 
     it('detects Stunned + Useless (lost-limb) + Fatigue', () => {
-        const r = classifyCriticalEffect('He is Stunned for 1 round. The arm is Useless. He suffers 1d5 levels of Fatigue.');
+        const r = classifyCriticalEffect('Stunned 1 round; arm Useless; 1d5 Fatigue.');
         expect(r.stunned).toBe(true);
         expect(r.lostLimb).toBe(true);
         expect(r.fatigue).toBe(true);
@@ -197,33 +197,29 @@ describe('classifyCriticalEffect (#108)', () => {
 
     it('detects Burning from "catch fire" / "on fire" / "immolate"', () => {
         expect(classifyCriticalEffect('he must test or catch fire').burning).toBe(true);
-        expect(classifyCriticalEffect('the target is completely encased and set on fire').burning).toBe(true);
-        expect(classifyCriticalEffect('the leg immolates and thick fire consumes the target').burning).toBe(true);
+        expect(classifyCriticalEffect('target is now on fire').burning).toBe(true);
+        expect(classifyCriticalEffect('the leg immolates').burning).toBe(true);
     });
 
     it('detects a helmet being torn/knocked off', () => {
-        expect(classifyCriticalEffect('If he is wearing a helmet, it is torn off.').helmetTornOff).toBe(true);
-        expect(classifyCriticalEffect('The blow knocks off his helmet.').helmetTornOff).toBe(true);
+        expect(classifyCriticalEffect('Helmet is torn off.').helmetTornOff).toBe(true);
+        expect(classifyCriticalEffect('Hit knocks off the helmet.').helmetTornOff).toBe(true);
         // "torn off" without a helmet mention is NOT a helmet effect (e.g. a limb).
         expect(classifyCriticalEffect('The arm is torn off at the shoulder.').helmetTornOff).toBe(false);
     });
 
     it('classifies a `negates` armour gate (worn armour cancels the row)', () => {
-        // Head phrasing: "wearing a helmet, he suffers no ill effects; otherwise …"
-        const head = classifyCriticalEffect('If he is wearing a helmet, he suffers no ill effects; otherwise he suffers 1 level of Fatigue.');
+        // Head phrasing: helmet → no ill effect, else a penalty.
+        const head = classifyCriticalEffect('Helmet: no ill effect. Bare head: 1 Fatigue.');
         expect(head.armourGate).toBe('negates');
         expect(head.fatigue).toBe(true); // the "otherwise" branch still flags fatigue; the applier gates it on armour
-        // Body phrasing (inverted): "not wearing armour … he suffers …; if wearing armour, there is no effect"
-        const body = classifyCriticalEffect(
-            'If the target is not wearing armour on this location, he suffers 1 level of Fatigue. If he is wearing armour, there is no effect.',
-        );
+        // Body phrasing (inverted): unarmoured → penalty, armoured → no effect.
+        const body = classifyCriticalEffect('Not wearing armour: 1 Fatigue. Armoured: no effect.');
         expect(body.armourGate).toBe('negates');
     });
 
     it('classifies a `worsensIfUnarmoured` gate (unarmoured location suffers extra)', () => {
-        const r = classifyCriticalEffect(
-            'The attack tears the helmet from his head. If he is not wearing a helmet, he instead loses an ear and is Deafened. The target is Stunned for 1d5 rounds.',
-        );
+        const r = classifyCriticalEffect('Helmet torn off. No helmet: Deafened instead. Stunned 1d5 rounds.');
         expect(r.armourGate).toBe('worsensIfUnarmoured');
         expect(r.helmetTornOff).toBe(true);
         expect(r.deafened).toBe(true);
@@ -234,46 +230,46 @@ describe('classifyCriticalEffect (#108)', () => {
     });
 
     it('detects a "drop held item" hand/arm crit', () => {
-        expect(classifyCriticalEffect('The target must Drop any item held in the hand.').dropsHeldItem).toBe(true);
-        expect(classifyCriticalEffect('He drops anything he was holding and is knocked Prone.').dropsHeldItem).toBe(true);
-        expect(classifyCriticalEffect('The shock forces him to drop his weapon.').dropsHeldItem).toBe(true);
+        expect(classifyCriticalEffect('Drop any item held.').dropsHeldItem).toBe(true);
+        expect(classifyCriticalEffect('Prone; drops anything he was holding.').dropsHeldItem).toBe(true);
+        expect(classifyCriticalEffect('Must drop his weapon.').dropsHeldItem).toBe(true);
         // A crit that doesn't unhand anything is not flagged.
         expect(classifyCriticalEffect('The target is Stunned for 1 round.').dropsHeldItem).toBe(false);
     });
 
     it('detects a held weapon being destroyed / rendered useless', () => {
-        expect(classifyCriticalEffect('Anything he was carrying in that hand is destroyed.').weaponDestroyed).toBe(true);
-        expect(classifyCriticalEffect('Whatever he was holding is badly damaged and unusable until repaired.').weaponDestroyed).toBe(true);
+        expect(classifyCriticalEffect('Held item is destroyed.').weaponDestroyed).toBe(true);
+        expect(classifyCriticalEffect('Held item unusable until repaired.').weaponDestroyed).toBe(true);
         // A plain drop is not a destruction.
-        expect(classifyCriticalEffect('He drops anything he was holding in that hand.').weaponDestroyed).toBe(false);
+        expect(classifyCriticalEffect('Drops anything held.').weaponDestroyed).toBe(false);
     });
 
     it('detects carried munitions cooking off (needs a munition noun AND a detonation verb)', () => {
-        expect(classifyCriticalEffect('If the target is carrying any ammunition, it explodes.').detonatesMunitions).toBe(true);
-        expect(classifyCriticalEffect('If the target is carrying any grenades or missiles, these detonate immediately.').detonatesMunitions).toBe(true);
+        expect(classifyCriticalEffect('Carried ammunition explodes.').detonatesMunitions).toBe(true);
+        expect(classifyCriticalEffect('Carried grenades detonate.').detonatesMunitions).toBe(true);
         // "explodes" without a munition noun (a body-part bursting) is not a cook-off.
-        expect(classifyCriticalEffect("The target's chest explodes outward, killing him.").detonatesMunitions).toBe(false);
+        expect(classifyCriticalEffect('Torso explodes.').detonatesMunitions).toBe(false);
     });
 
     it('detects Blinded / Deafened', () => {
-        const r = classifyCriticalEffect('He is Blinded for 1d10 rounds and permanently Deafened.');
+        const r = classifyCriticalEffect('Blinded 1d10 rounds; Deafened.');
         expect(r.blinded).toBe(true);
         expect(r.deafened).toBe(true);
     });
 
     it('detects fatal rows across the RAW death phrasings', () => {
-        expect(classifyCriticalEffect('He immediately dies from shock.').fatal).toBe(true);
-        expect(classifyCriticalEffect('killing the target immediately').fatal).toBe(true);
-        expect(classifyCriticalEffect('The target is now quite dead.').fatal).toBe(true);
-        expect(classifyCriticalEffect('his death is instantaneous').fatal).toBe(true);
-        expect(classifyCriticalEffect('His death is instantaneous. He dies in a pool of blood.').fatal).toBe(true);
-        expect(classifyCriticalEffect('the target does not survive').fatal).toBe(true);
-        expect(classifyCriticalEffect('He cannot get much deader than this.').fatal).toBe(true);
-        expect(classifyCriticalEffect('this is instantly and messily fatal').fatal).toBe(true);
+        expect(classifyCriticalEffect('immediately dies').fatal).toBe(true);
+        expect(classifyCriticalEffect('killing the target').fatal).toBe(true);
+        expect(classifyCriticalEffect('quite dead').fatal).toBe(true);
+        expect(classifyCriticalEffect('death is instantaneous').fatal).toBe(true);
+        expect(classifyCriticalEffect('dies in a heap').fatal).toBe(true);
+        expect(classifyCriticalEffect('does not survive').fatal).toBe(true);
+        expect(classifyCriticalEffect('deader than this').fatal).toBe(true);
+        expect(classifyCriticalEffect('messily fatal').fatal).toBe(true);
     });
 
     it('a non-lethal row is not flagged fatal', () => {
-        const r = classifyCriticalEffect('The target suffers 1 level of Fatigue from a painful laceration.');
+        const r = classifyCriticalEffect('Painful cut: 1 Fatigue.');
         expect(r.fatal).toBe(false);
     });
 });

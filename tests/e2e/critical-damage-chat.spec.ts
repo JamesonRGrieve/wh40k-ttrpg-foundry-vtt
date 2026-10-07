@@ -59,7 +59,7 @@ test.describe.serial('CriticalDamageChat (Tier B)', () => {
                     damageTypeKey: 'WH40K.CriticalDamage.DamageType.Energy',
                     bodyPartKey: 'WH40K.CriticalDamage.BodyPart.Arm',
                     severityLabel: '5',
-                    effect: 'Energy courses through the arm. He is Stunned for 1 round, and the arm is Useless until the target receives medical treatment.',
+                    effect: 'Arm crit 5: Stunned for 1 round, arm Useless until treated.',
                     riderLabels: ['WH40K.CriticalDamage.Rider.Stunned', 'WH40K.CriticalDamage.Rider.LostLimb'],
                 };
 
