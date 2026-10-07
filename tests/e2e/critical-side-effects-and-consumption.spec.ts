@@ -276,7 +276,7 @@ async function probeCriticalSideEffects(page: Page): Promise<{ results: FlowResu
             await actor.createEmbeddedDocuments?.('Item', [
                 { name: 'E2E Storm Helm', type: 'armour', system: { coverage: ['head'], state: { equipped: true } } },
             ]);
-            const rec = buildRecord('If he is wearing a helmet, he suffers no ill effects.', 'Head', 'Impact');
+            const rec = buildRecord('Helmet worn: no ill effect.', 'Head', 'Impact');
             const report = await aeMod.applyCriticalDamageConditions(actor, rec);
             const helmet = findByName(actor, 'E2E Storm Helm');
             // negated row does not tear the helmet off (equipped stays true)
