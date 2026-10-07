@@ -189,7 +189,7 @@ export function allCombatActions(): CombatAction[] {
             name: 'Standard Attack',
             type: ['Half'],
             subtype: ['Attack', 'Melee', 'Ranged'],
-            description: 'Make one melee or ranged attack; jam on 96+ result.',
+            description: 'A single melee or ranged attack. Ranged rolls of 96+ jam.',
             attack: {
                 modifier: 0,
             },
@@ -204,7 +204,7 @@ export function allCombatActions(): CombatAction[] {
             name: 'Throw',
             type: ['Half'],
             subtype: ['Attack', 'Ranged', 'Thrown'],
-            description: 'Throw a grenade or thrown weapon (Half Action, BS test). Range comes from the weapon; a miss scatters 1d5m in a random direction.',
+            description: 'Half Action BS test to lob a grenade or thrown weapon. The weapon sets the range; on a miss it lands 1d5m off in a random direction.',
             attack: {
                 modifier: 0,
             },
@@ -213,13 +213,13 @@ export function allCombatActions(): CombatAction[] {
             name: 'Aim',
             type: ['Full', 'Half'],
             subtype: ['Concentration'],
-            description: "Grants +10 (Half) or +20 (Full) bonus to character's next attack. Taking a Reaction will remove the bonus from Aiming.",
+            description: 'Next attack gains +10 (Half) or +20 (Full). Using a Reaction first throws the aim away.',
         },
         {
             name: 'All Out Attack',
             type: ['Full'],
             subtype: ['Attack', 'Melee'],
-            description: "Give up that round's Evasion reaction to gain +30 WS.",
+            description: '+30 WS, paid for by forfeiting Evasion this round.',
             attack: {
                 modifier: 30,
             },
@@ -228,13 +228,13 @@ export function allCombatActions(): CombatAction[] {
             name: 'Brace Heavy Weapon',
             type: ['Half'],
             subtype: ['Miscellaneous'],
-            description: 'Support a Heavy weapon. Unbraced heavy weapons incur -30 to BS. May pivot 45-degrees without losing bracing.',
+            description: 'Set a Heavy weapon on a support (firing it unbraced costs -30 BS). The brace survives turning up to 45 degrees.',
         },
         {
             name: 'Called Shot',
             type: ['Full'],
             subtype: ['Attack', 'Concentration', 'Melee', 'Ranged'],
-            description: 'Attack a specific location on a target with a -20 to WS or BS.',
+            description: 'Choose the hit location; -20 WS/BS.',
             attack: {
                 modifier: -20,
             },
@@ -243,7 +243,7 @@ export function allCombatActions(): CombatAction[] {
             name: 'Charge',
             type: ['Full'],
             subtype: ['Attack', 'Melee', 'Movement'],
-            description: 'Move up to 3x AgB (last 4m in straight line at enemy), +20 to WS.',
+            description: 'Rush up to 3x AgB, the final 4m straight at the foe; +20 WS.',
             attack: {
                 modifier: 20,
             },
@@ -252,38 +252,38 @@ export function allCombatActions(): CombatAction[] {
             name: 'Defensive Stance',
             type: ['Full'],
             subtype: ['Concentration', 'Melee'],
-            description: 'Gain an additional Reaction. Opponents suffer -20 WS.',
+            description: 'One extra Reaction; foes take -20 WS against the character.',
         },
         {
             name: 'Delay',
             type: ['Full'],
             subtype: ['Miscellaneous'],
-            description: "May take any Half Action at any time before character's next turn. Attacks count as being part of the next turn.",
+            description: 'Hold a Half Action and spend it whenever you like before your next turn; an attack made this way counts toward that next turn.',
         },
         {
             name: 'Disengage',
             type: ['Full'],
             subtype: ['Movement'],
-            description: 'Break from melee without incurring a free attack.',
+            description: 'Leave melee; adjacent foes get no free strike.',
         },
         {
             name: 'Evasion',
             type: ['Reaction'],
             subtype: ['Movement'],
             description:
-                'Attempt to avoid an attack by using Dodge (ranged or melee) or Parry (melee) skills. Evading an area of effect attack requires the character be able to escape the radius by moving no further than a Half Move.',
+                'Dodge (any attack) or Parry (melee only) to avoid a hit. Against an area attack, it only works if a Half Move would carry the character clear of the area.',
         },
         {
             name: 'Feint',
             type: ['Half'],
             subtype: ['Attack', 'Melee'],
-            description: 'Opposed WS test; if character wins, his next Melee attack cannot be Evaded.',
+            description: 'Opposed WS; on a win the next melee attack is immune to Evasion.',
         },
         {
             name: 'Full Auto Burst',
             type: ['Half'],
             subtype: ['Attack', 'Ranged'],
-            description: 'Grants -10 BS, one hit for every DoS; Jam on 94+ result; 2m spread.',
+            description: '-10 BS; each DoS adds a hit; 94+ jams; hits spread 2m.',
             attack: {
                 modifier: -10,
             },
@@ -292,13 +292,13 @@ export function allCombatActions(): CombatAction[] {
             name: 'Grapple',
             type: ['Half', 'Full'],
             subtype: ['Attack', 'Melee'],
-            description: 'Affect a Grappled opponent or escape from a Grapple.',
+            description: 'Act on a foe held in a grapple, or try to break loose.',
         },
         {
             name: 'Guarded Action',
             type: ['Half'],
             subtype: ['Attack', 'Concentration', 'Melee'],
-            description: 'Grants -10 to WS or BS, +10 to all Evasion tests until start of next turn.',
+            description: '-10 WS/BS on the attack; Evasion tests get +10 until your next turn begins.',
             attack: {
                 modifier: -10,
             },
@@ -307,19 +307,19 @@ export function allCombatActions(): CombatAction[] {
             name: 'Jump or Leap',
             type: ['Full'],
             subtype: ['Movement'],
-            description: 'Jump vertically or leap horizontally.',
+            description: 'Clear a gap or reach upward.',
         },
         {
             name: 'Knock Down',
             type: ['Half'],
             subtype: ['Attack', 'Melee'],
-            description: 'Make an opposed Strength test (with +10 if using Charge). 2+DoS gives (1d5-3)+SB Impact and 1 level of fatigue.',
+            description: 'Opposed Strength (+10 after a Charge). Winning by 2+ DoS also deals (1d5-3)+SB Impact and 1 Fatigue.',
         },
         {
             name: 'Lightning Attack',
             type: ['Half'],
             subtype: ['Attack', 'Melee'],
-            description: 'Grants -10 WS, one hit for every DoS.',
+            description: '-10 WS; each DoS adds a hit.',
             attack: {
                 modifier: -10,
             },
@@ -329,7 +329,7 @@ export function allCombatActions(): CombatAction[] {
             type: ['Half'],
             subtype: ['Attack', 'Movement', 'Melee'],
             description:
-                'Make an opposed WS test against character in melee range; if successful, move them up to 1 metre in direction of choice (character may advance 1 metre as well). Cannot push into obstacles or characters, but can push off of cliffs or edges.',
+                'Opposed WS against an engaged foe. On a win, shove them up to 1m any direction and optionally follow 1m. Walls and bodies block the shove; drops and ledges do not.',
             attack: {
                 modifier: 0,
             },
@@ -339,27 +339,27 @@ export function allCombatActions(): CombatAction[] {
             type: ['Full'],
             subtype: ['Attack', 'Concentration', 'Ranged'],
             description:
-                'Shoot targets coming into a set 45-degree kill zone with Standard/Semi-Auto/Full-Auto attack (specify which) meeting certain criteria, as chosen by the player. Targets of an Overwatch shot must make a +0 Pinning test or become Pinned, even if the attack did no damage.',
+                'Watch a 45-degree arc and fire on anything that enters it and matches your chosen conditions, using a pre-declared Standard, Semi-Auto or Full-Auto attack. Anyone shot at must pass a +0 Pinning test or be Pinned, damaged or not.',
         },
         {
             name: 'Ready',
             type: ['Half'],
             subtype: ['Miscellaneous'],
             description:
-                'Ready a weapon or an item, apply a bandage or coat a blade with poison, stow an item securely in a bag. Dropping an item is considered a Free Action. Can used twice to affect 2 different items.',
+                'Draw or stow a weapon or item, bind a wound, or poison a blade. Letting go of an item is free. Two Readies can handle two separate items.',
         },
         {
             name: 'Reload',
             type: ['Half', 'Full'],
             subtype: ['Miscellaneous'],
             description:
-                'Reload a ranged weapon - the time necessary depends on the specific weapon. If a reload action extends across multiple turns, it counts as being Extended, and is subject to additional tests or interruptions.',
+                'Refill a ranged weapon; how long it takes is set by the weapon. A reload spanning several turns is an Extended action and can be interrupted or need extra tests.',
         },
         {
             name: 'Semi-Auto Burst',
             type: ['Half'],
             subtype: ['Attack', 'Ranged'],
-            description: 'Grants +0 BS, additional hit for every two additional DoS; jam on 94+; 2m spread.',
+            description: '+0 BS; every 2 DoS beyond the first adds a hit; 94+ jams; hits spread 2m.',
             attack: {
                 modifier: 0,
             },
@@ -369,7 +369,7 @@ export function allCombatActions(): CombatAction[] {
             type: ['Half'],
             subtype: ['Attack', 'Melee'],
             description:
-                'Using melee weapon, WS test with -20. Success is 1d10+SB, vs targets TB+(AP on head). If success, target is stunned for the number of rounds equal to difference.',
+                'Melee WS test at -20. On a hit roll 1d10+SB against the target TB + head AP; if it meets or beats that, the target is Stunned for as many rounds as the margin.',
             attack: {
                 modifier: -20,
             },
@@ -378,7 +378,7 @@ export function allCombatActions(): CombatAction[] {
             name: 'Suppressing Fire - Semi',
             type: ['Full'],
             subtype: ['Attack', 'Ranged'],
-            description: 'Fires a semi-auto (in 30 degree arc) burst at -20 to BS. Enemies in the arc must make a -10 Pinning save or become pinned.',
+            description: 'Semi-auto burst sprayed over a 30-degree arc at -20 BS; everyone in the arc tests Pinning at -10 or is Pinned.',
             attack: {
                 modifier: -20,
             },
@@ -387,7 +387,7 @@ export function allCombatActions(): CombatAction[] {
             name: 'Suppressing Fire - Full',
             type: ['Full'],
             subtype: ['Attack', 'Ranged'],
-            description: 'Fires a full-auto (in 45 degree arc) burst at -20 to BS. Enemies in the arc must make a -20 Pinning save or become pinned.',
+            description: 'Full-auto burst sprayed over a 45-degree arc at -20 BS; everyone in the arc tests Pinning at -20 or is Pinned.',
             attack: {
                 modifier: -20,
             },
@@ -396,7 +396,7 @@ export function allCombatActions(): CombatAction[] {
             name: 'Swift Attack',
             type: ['Half'],
             subtype: ['Attack', 'Melee'],
-            description: 'Grants +0 WS, additional hit for every two additional DoS.',
+            description: '+0 WS; every 2 DoS beyond the first adds a hit.',
             attack: {
                 modifier: 0,
             },
@@ -411,20 +411,20 @@ export function allCombatActions(): CombatAction[] {
             type: ['Half'],
             subtype: ['Attack', 'Melee', 'Ranged'],
             description:
-                'Errata p. 132: make a Half-Action attack with one weapon (Standard/Swift/Lightning melee, or single shot/semi-auto burst/full-auto burst ranged). Two-Weapon Wielder (Melee/Ranged) then grants a single additional same-mode Half-Action attack with the other weapon as a Free Action. Baseline −20 to each; Wielder drops the main-hand penalty to 0, Two-Weapon Master drops both to 0, Ambidextrous reduces the off-hand penalty by an additional 10. See `rules/two-weapon-fighting.ts:resolveTwoWeaponRefocus()`.',
+                'Errata p. 132: open with one Half-Action attack from either weapon (Standard/Swift/Lightning melee, or single/semi/full-auto ranged). Two-Weapon Wielder (Melee/Ranged) adds one matching Half-Action attack with the other weapon as a Free Action. Both start at −20; Wielder clears the main-hand penalty, Two-Weapon Master clears both, Ambidextrous trims a further 10 off the off-hand. See `rules/two-weapon-fighting.ts:resolveTwoWeaponRefocus()`.',
         },
         {
             name: 'Unjam',
             type: ['Full'],
             subtype: ['Miscellaneous', 'Ranged'],
             description:
-                'Clear a jammed ranged weapon with a Full Action and a Ballistic Skill test. Success clears the jam, though any ammo loaded in the weapon is lost and the weapon must be reloaded. Failure leaves the jam in place; the character may attempt to clear it again next round.',
+                'Full Action BS test to free a jammed ranged weapon. Success clears it but dumps the loaded ammo, so it needs a reload. Failure leaves it jammed; try again next round.',
         },
         {
             name: 'Tactical Advance',
             type: ['Full'],
             subtype: ['Concentration', 'Movement'],
-            description: 'Make a Half Move from one cover to another. Continue to take bonus from previous cover until reaching new one.',
+            description: 'Half Move between cover positions, keeping the old cover bonus while in transit.',
         },
     ];
 }
