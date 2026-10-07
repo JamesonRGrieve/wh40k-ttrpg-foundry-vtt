@@ -1,13 +1,11 @@
 /**
  * @file Spreading a burst's hits across targets (#513).
  *
- * DH2 core ch. VII, Semi-Auto Burst (Full Auto Burst is worded identically):
- *
- *   "Extra hits can either be allocated to the original target or any other
- *    targets within two metres, provided none of the new targets would have been
- *    harder to hit than the original target. If extra hits are allocated to the
- *    same target, use Table 7-2: Multiple Hits above to determine the extra Hit
- *    Locations."
+ * DH2 core ch. VII, Semi-Auto Burst (Full Auto Burst follows the same rule), in
+ * summary: each hit beyond the first may stay on the original target or move to
+ * another target within 2 m, as long as that target is no harder to hit than the
+ * original. Extra hits kept on one target take their locations from Table 7-2
+ * (Multiple Hits).
  *
  * Two rules live here, and they interact:
  *
@@ -19,9 +17,9 @@
  *      difference between "three hits to the body" and "a hit each on three
  *      people".
  *
- * Suppressing Fire allocates differently — "the GM assigns the hit to a random
- * target within the kill zone, with every extra two degrees of success scoring
- * an extra hit against another random victim" — so it supplies its own ordering
+ * Suppressing Fire allocates differently (DH2 core ch. VII): the GM places each
+ * hit on a randomly chosen occupant of the fire zone, and each further pair of
+ * DoS adds one more randomly placed hit. It therefore supplies its own ordering
  * rather than an attacker-chosen one.
  *
  * Pure: no Foundry globals, no document reads, no RNG. The caller supplies the

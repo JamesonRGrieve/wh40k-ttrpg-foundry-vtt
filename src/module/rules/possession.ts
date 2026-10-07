@@ -149,8 +149,8 @@ export interface FrenzyTestResult {
 }
 
 /**
- * Resolve one round's Possession Frenzy test. RAW: a Challenging (+0)
- * Willpower test each round the power is sustained — the target is the
+ * Resolve one round's Possession Frenzy test. RAW: while the power is kept
+ * up, the psyker rolls Challenging (+0) Willpower every round — the target is the
  * actor's full Willpower (no Possession-specific modifier; corruption
  * harshness applies to the *resist-daemon* test, not this one). A
  * failure means the psyker is Frenzied for the round but, per the

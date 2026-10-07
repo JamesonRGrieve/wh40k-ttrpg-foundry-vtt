@@ -82,16 +82,12 @@ export function resolveTwoWeaponPenalties(ctx: TwoWeaponContext): TwoWeaponPenal
 // Errata p. 132 — Two-Weapon Wielder Half-Action refocus
 // ──────────────────────────────────────────────
 //
-// errata/errata.md L67 — Two-Weapon Wielder (page 132): replace the second
-// sentence with:
-//
-//   "When armed with two one-handed weapons (either melee or ranged
-//    weapons), after making a Half Action attack (this can be a Standard
-//    Attack, a Swift Attack, or a Lightning Attack with a melee weapon,
-//    or it can be a single shot, semiauto burst, or full auto burst with
-//    a ranged weapon), he can make a single additional Half Action attack
-//    following the same restrictions with the other weapon as a Free
-//    Action."
+// errata/errata.md L67 — Two-Weapon Wielder (page 132), second sentence
+// replaced. In summary: a character holding two one-handed weapons (melee or
+// ranged) who makes a Half Action attack — Standard, Swift or Lightning in
+// melee; single shot, semi-auto or full-auto at range — may follow it with one
+// more Half Action attack of the same kind using the off-hand weapon, taken
+// as a Free Action.
 //
 // The old text modelled this as a single Full-Action "Two-Weapon Fighting"
 // lump. The errata restructures it: the first weapon makes one **Half

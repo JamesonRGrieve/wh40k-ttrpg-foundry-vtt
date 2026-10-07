@@ -123,9 +123,9 @@ const MEDICAE_LABEL_KEY: Record<MedicaeActionKind, string> = {
 const MEDICAE_TARGETED: ReadonlySet<MedicaeActionKind> = new Set<MedicaeActionKind>(['firstAid', 'extendedCare', 'surgery', 'extractBullet']);
 
 /**
- * RAW per-target cooldowns on Medicae uses (#458): "A given individual can only be
- * treated with first aid once every 24 hours, and only so long as he is not also
- * undergoing extended care." (DH2 Core p109). Extended Care runs on the same 24-hour
+ * RAW per-target cooldowns on Medicae uses (#458): First Aid can be given to the
+ * same patient at most once per 24 hours, and never while that patient is under
+ * Extended Care (DH2 Core p109). Extended Care runs on the same 24-hour
  * cycle and is the state that blocks First Aid.
  */
 const MEDICAE_TIME_GATES: Partial<Record<MedicaeActionKind, NonNullable<SkillUseDef['timeGate']>>> = {

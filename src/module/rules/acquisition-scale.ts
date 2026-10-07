@@ -173,11 +173,9 @@ export function normaliseScale(raw: string | null | undefined): ScaleKey | null 
 /* -------------------------------------------------------------------- */
 
 /**
- * RT core §"Combining Acquisitions" (core.md §12226):
- * "compare the Availability of the item's components and use the
- *  greatest penalty to determine a base Availability Modifier. Each
- *  additional component then results in an additional -5 penalty to
- *  the base Availability Modifier."
+ * RT core §"Combining Acquisitions" (core.md §12226), in summary: the
+ * component with the worst Availability sets the base modifier, and every
+ * component past the first adds a further -5.
  *
  * "Greatest penalty" means the *lowest* (most negative) modifier among
  * the components. Returns the base availability modifier together with

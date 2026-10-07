@@ -7,12 +7,11 @@ import { type CanonicalBodyPart, type CanonicalDamageType, normalizeBodyPart, no
  *
  * - `none`               — the row applies unconditionally.
  * - `negates`            — worn armour at the location negates the row entirely
- *                          ("If he is wearing a helmet, he suffers no ill
- *                          effects"; "If he is wearing armour, there is no
- *                          effect"). The applier skips the row when armoured.
+ *                          (rows where a helmet or armour means nothing
+ *                          happens). The applier skips the row when armoured.
  * - `worsensIfUnarmoured` — an *unarmoured* location suffers extra harm the
- *                          armoured one avoids ("If he is not wearing a helmet,
- *                          the target instead loses an ear …"). The applier
+ *                          armoured one avoids (e.g. a bare head takes an
+ *                          extra injury a helmet would stop). The applier
  *                          applies the row's conditions when unarmoured and, when
  *                          armoured, surfaces the reduction for GM adjudication
  *                          rather than auto-applying the harsher branch.
@@ -56,8 +55,7 @@ export interface CriticalDamageRiders {
     /** Row is outright lethal (the target dies / does not survive). */
     readonly fatal: boolean;
     /**
-     * Row knocks/tears the target's helmet off ("If he is wearing a helmet, it
-     * is torn off"). The damage-application path unequips the target's equipped
+     * Row strips the target's helmet away. The damage-application path unequips the target's equipped
      * head-covering armour when this is set and one is worn.
      */
     readonly helmetTornOff: boolean;
@@ -76,17 +74,15 @@ export interface CriticalDamageRiders {
      */
     readonly dropsHeldItem: boolean;
     /**
-     * Row destroys / renders useless what the target is holding ("anything he was
-     * carrying in that hand is destroyed", "badly damaged and unusable until
-     * repaired"). The applier marks the held weapon broken (reversible via a
+     * Row destroys / renders useless what the target is holding (the held item is
+     * wrecked, or broken until repaired). The applier marks the held weapon broken (reversible via a
      * Tech-Use Repair) and unequips it. Supersedes {@link dropsHeldItem} on the
      * same weapon.
      */
     readonly weaponDestroyed: boolean;
     /**
-     * Row detonates the target's carried munitions ("If the target is carrying
-     * any ammunition, it explodes"; "any grenades or missiles … detonate
-     * immediately"). The applier finds carried grenades/ammunition, rolls each
+     * Row detonates the target's carried munitions (ammunition, grenades or
+     * missiles go off). The applier finds carried grenades/ammunition, rolls each
      * detonating grenade's own damage, and surfaces the secondary hits for the
      * GM to distribute (blast radius / nearby targets need token positions the
      * damage path does not have).
@@ -176,7 +172,7 @@ const HELMET_OFF_KEYWORDS = [
     'from her head',
     'from their head',
 ] as const;
-/** The row negates its ill effect when the location is armoured ("wearing a helmet, he suffers no ill effects"). */
+/** The row negates its ill effect when the location is armoured (helmet/armour means no effect). */
 const ARMOUR_NEGATE_KEYWORDS = ['no ill effect', 'no effect', 'suffers no', 'is protected', 'protects him', 'thanks the emperor'] as const;
 /** The row worsens for an unarmoured location ("if he is not wearing a helmet, …"). */
 const UNARMOURED_KEYWORDS = ['not wearing', 'no helmet', 'without a helmet', 'has no armour', 'unarmoured'] as const;

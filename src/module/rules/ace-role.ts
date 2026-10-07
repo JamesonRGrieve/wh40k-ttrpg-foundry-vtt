@@ -1,10 +1,9 @@
 /**
  * Ace role — Right Stuff Fate spend (without.md L948-L980, p. 39; #100).
  *
- * "In addition to the normal uses of Fate points, an Ace character may
- *  spend a Fate point to automatically succeed at an Operate or Survival
- *  skill test involving vehicles or living steeds with a number of
- *  degrees of success equal to his Agility bonus."
+ * Summary: besides the usual Fate uses, an Ace can burn one Fate point to
+ * pass a vehicle- or mount-related Operate or Survival test outright, scoring
+ * DoS equal to their Agility bonus.
  *
  * This module is pure logic plus one runtime entry point. The
  * `RightStuffDialog` gates the "Spend Fate (Right Stuff)" button on

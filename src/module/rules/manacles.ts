@@ -1,8 +1,7 @@
 /**
  * Manacles — DH errata p. 176.
  *
- * "A character bound with manacles suffers a –40 penalty to all
- *  Ballistic and Weapon Skill checks."
+ * In summary: while manacled, a character takes –40 on every BS and WS test.
  *
  * Manacled is NOT a book condition (there is no condition document for
  * it), so it is modelled as a tracked, flag-tagged Active Effect built

@@ -1643,8 +1643,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /**
      * Toggle whether a burst's extra hits may spread onto nearby enemies (#513).
      *
-     * RAW makes this the attacker's choice — extra hits "can either be allocated to
-     * the original target or any other targets within two metres" — so it is a
+     * RAW (DH2 core ch. VII) makes this the attacker's choice — hits after the first
+     * may stay on the target or move to an eligible enemy within 2 m — so it is a
      * per-roll decision rather than a setting. `rollData.spreadTargets` is already
      * filtered to the eligible ones; this only picks which allocation strategy
      * `allocateHits` runs.

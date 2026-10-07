@@ -5,9 +5,9 @@
  * 96–100; semi/full-auto and Suppressing Fire on 94–100. Quality
  * overrides:
  *   - Reliable (core.md L6309): jams only on an unmodified 100.
- *   - Unreliable (core.md L6369): jams on a roll of 91 or higher
- *     "even if fired on Semi- or Full Auto" — i.e. the floor drops
- *     to 91 regardless of success/failure. The double-Unreliable
+ *   - Unreliable (core.md L6369): the jam floor is 91 in every fire
+ *     mode, burst or not — i.e. the floor drops to 91 regardless of
+ *     success/failure. The double-Unreliable
  *     case (Poor craftsmanship + Unreliable: jam on any failure
  *     per L6063) is NOT this helper's concern — see the dedicated
  *     branch in `rolls/action-data.ts` (around line 244).

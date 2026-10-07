@@ -409,8 +409,8 @@ export function resolveColonyGrowth(input: ColonyGrowthInput): ColonyGrowthResul
 
         if (outcome === 'decrease') {
             // Pick a random non-Size stat for the 1d5−3 (min 1) penalty.
-            // RAW: "one randomly chosen Characteristic (other than Size)
-            // decreases by 1d5−3 (to a minimum of 1)". We read this as
+            // RAW (RT Stars of Inequity, colony growth): a random non-Size
+            // Characteristic drops by 1d5−3, floored at 1. We read this as
             // "the stat decreases by an amount that is at minimum 1 (and
             // capped by the d5−3 value when that exceeds 1)" — i.e.
             // amount = max(1, d5 − 3).
