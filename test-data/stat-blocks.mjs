@@ -5,18 +5,18 @@
 
 export const TEST_STAT_BLOCKS = {
     // Horizontal format (typical Dark Heresy / Rogue Trader)
-    horizontal: `Clawed Fiend
+    horizontal: `Glassmoor Burrow-Hound
 WS  BS  S   T   Ag  Int Per WP  Fel Inf
-43  01  45  40  40  15  36  28  05  --
-(+3)    (x2)
-Movement: 5/10/15/30
-Wounds: 48
-Skills: Awareness (Per), Climb (S) +10, Dodge (Ag) +10
-Talents: Swift Attack, Lightning Attack
-Traits: Dark Sight, Fear (2), Natural Armour (4), Natural Weapons (Claws), Quadruped, Size (Hulking), Unnatural Strength (x2), Unnatural Toughness (x2)
-Weapons: Claws (1d10+14 R; Pen 3; Tearing, Razor Sharp)
-Armour: Natural Armour (4) All
-Threat Rating: 15`,
+38  02  41  37  44  12  33  24  07  --
+(+2)    (x2)
+Movement: 4/8/12/24
+Wounds: 31
+Skills: Awareness (Per) +10, Dodge (Ag), Stealth (Ag) +10
+Talents: Swift Attack
+Traits: Burrower (3), Dark Sight, Natural Armour (3), Natural Weapons (Fangs), Quadruped, Size (Enormous), Unnatural Strength (x2)
+Weapons: Fangs (1d10+9 R; Pen 2; Tearing)
+Armour: Natural Armour (3) All
+Threat Rating: 11`,
 
     // Vertical format
     vertical: `Chaos Cultist
