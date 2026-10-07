@@ -146,6 +146,22 @@ describe('queryItemIndex', () => {
         expect(all.sort()).toEqual(['an-actor', 'an-item']);
         expect(itemsOnly).toEqual(['an-item']);
     });
+
+    it('packFilter restricts to the packs it accepts and leaves the rest unloaded', async () => {
+        const kept = pack({ id: 'wh40k-rpg.dh2-x', name: 'dh2-x', entries: [{ _id: 'a', name: 'kept' }] });
+        const skipped = pack({ id: 'wh40k-rpg.rt-x', name: 'rt-x', entries: [{ _id: 'b', name: 'skipped' }] });
+        setPacks([kept, skipped]);
+
+        const names = await queryItemIndex(
+            ['name'],
+            (entry) => (entry as IndexEntry).name,
+            true,
+            (packId) => packId === 'wh40k-rpg.dh2-x',
+        );
+
+        expect(names).toEqual(['kept']);
+        expect(skipped.getIndex).not.toHaveBeenCalled();
+    });
 });
 
 describe('pickLineEntry', () => {
@@ -185,6 +201,34 @@ describe('findItemUuidByIdentifier', () => {
             }),
         ]);
         expect(await findItemUuidByIdentifier('talent', 'hatred', 'dh2')).toBe('Compendium.dh2.c');
+    });
+
+    it("searches only the requested line's packs when they hold the Item, never loading another line's index", async () => {
+        const dh1Pack = pack({
+            id: 'wh40k-rpg.dh1-core-items-talents',
+            name: 'dh1-core-items-talents',
+            entries: [{ _id: 'a', name: 'Hatred', type: 'talent', uuid: 'Compendium.dh1.a', system: { identifier: 'hatred' } }],
+        });
+        const dh2Pack = pack({
+            id: 'wh40k-rpg.dh2-core-items-talents',
+            name: 'dh2-core-items-talents',
+            entries: [{ _id: 'b', name: 'Hatred', type: 'talent', uuid: 'Compendium.dh2.b', system: { identifier: 'hatred' } }],
+        });
+        setPacks([dh1Pack, dh2Pack]);
+        expect(await findItemUuidByIdentifier('talent', 'hatred', 'dh2')).toBe('Compendium.dh2.b');
+        expect(dh1Pack.getIndex).not.toHaveBeenCalled();
+    });
+
+    it("falls back to any line's packs when the requested line has no match", async () => {
+        setPacks([
+            pack({
+                id: 'wh40k-rpg.dh1-core-items-talents',
+                name: 'dh1-core-items-talents',
+                entries: [{ _id: 'a', name: 'Hatred', type: 'talent', uuid: 'Compendium.dh1.a', system: { identifier: 'hatred' } }],
+            }),
+            pack({ id: 'wh40k-rpg.dh2-core-items-talents', name: 'dh2-core-items-talents' }),
+        ]);
+        expect(await findItemUuidByIdentifier('talent', 'hatred', 'dh2')).toBe('Compendium.dh1.a');
     });
 
     it('returns null when no Item carries the identifier', async () => {
