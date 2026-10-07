@@ -568,6 +568,10 @@ describe('AssignDamageData — defender-side crit-reduction hooks (Direction #7)
 /* -------------------------------------------------------------------------- */
 
 describe('Hit._calculateSpecials — conditional quality grants (Direction #7, §D8)', () => {
+    // Quality chat text (Shocking/Snare/Flame) resolves through the langpack.
+    beforeEach(() => vi.stubGlobal('game', { i18n: { localize: (k: string) => k, format: (k: string) => k } }));
+    afterEach(() => vi.unstubAllGlobals());
+
     /** Build a complete {@link GrantedEffectEntry} with overrides. */
     function makeGrant(overrides: Partial<GrantedEffectEntry> = {}): GrantedEffectEntry {
         return { kind: 'quality', name: 'Concussive', uuid: '', level: 2, when: 'onAction', condition: '', conditionValue: 'All Out Attack', ...overrides };
@@ -627,6 +631,17 @@ describe('Hit._calculateSpecials — conditional quality grants (Direction #7, �
 
         expect(data.rollData.attackSpecials).toEqual([{ name: 'Shocking', level: 0 }]);
         expect(hit.effects[0]?.name).toBe('Shocking');
+    });
+
+    it('localizes Snare chat text with the level-scaled test modifier', () => {
+        const format = vi.fn((k: string, params: Record<string, string>) => `${k}|${params['modifier'] ?? ''}`);
+        vi.stubGlobal('game', { i18n: { localize: (k: string) => k, format } });
+        const snare = grantItem('Snare Grant', [makeGrant({ name: 'Snare', level: 2 })]);
+        const data = attackData([snare], { isMelee: true, action: 'All Out Attack' });
+        const hit = new Hit();
+        hit._calculateSpecials(data);
+
+        expect(hit.effects[0]?.effect).toBe('WH40K.Quality.Snare.ChatEffect|-20');
     });
 
     it('does not double-add a quality the weapon already carries', () => {

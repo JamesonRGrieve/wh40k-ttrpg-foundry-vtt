@@ -2626,7 +2626,7 @@
             "LockOn": {
                 "Name": "Lock On",
                 "OutcomeSuccess": "The pilot manoeuvres behind the foe. The pilot and crew gain +20 BS against that craft.",
-                "OutcomeFail": "The pilot fails to gain position. Other enemies gain +10 BS against the pilot's craft until the start of the pilot's next turn."
+                "OutcomeFail": "The pilot fails to gain position. Until the pilot's next turn begins, other enemies get +10 BS when shooting at this craft."
             },
             "TightTurn": {
                 "Name": "Tight Turn",
@@ -2893,7 +2893,7 @@
             },
             "Shocking": {
                 "Name": "Shocking",
-                "Description": "On a hit, the target makes a Toughness test or suffers 1 level of Fatigue and is Stunned for a number of rounds equal to half the degrees of failure (round up)."
+                "Description": "On a hit, the target tests Challenging (+0) Toughness. Failure: +1 Fatigue and Stunned for ⌈DoF ÷ 2⌉ rounds."
             },
             "Smoke": {
                 "Name": "Smoke (X)",
@@ -2901,7 +2901,8 @@
             },
             "Snare": {
                 "Name": "Snare (X)",
-                "Description": "On a hit, the target makes an Agility test (-X×10) or is Snared until they escape with a Strength or Agility test (-X×10) as a Full Action."
+                "Description": "On a hit, the target makes an Agility test (-X×10) or is Snared until they escape with a Strength or Agility test (-X×10) as a Full Action.",
+                "ChatEffect": "Target tests Agility at {modifier} or is Snared. While Snared it can only struggle: a Full Action Strength or Agility test at {modifier} frees it."
             },
             "Spray": {
                 "Name": "Spray",
