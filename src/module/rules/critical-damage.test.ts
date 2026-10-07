@@ -226,7 +226,7 @@ describe('classifyCriticalEffect (#108)', () => {
     });
 
     it('leaves the armour gate at `none` when the row does not mention armour', () => {
-        expect(classifyCriticalEffect('The target is Stunned for 1 round and suffers Blood Loss.').armourGate).toBe('none');
+        expect(classifyCriticalEffect('Stunned 1 round; Blood Loss.').armourGate).toBe('none');
     });
 
     it('detects a "drop held item" hand/arm crit', () => {
