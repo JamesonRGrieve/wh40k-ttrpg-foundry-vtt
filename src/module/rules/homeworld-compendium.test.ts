@@ -71,9 +71,9 @@ const WITHIN_DOCS: RawDoc[] = [
                 fateThreshold: 2,
                 woundsFormula: '8+1d5',
                 aptitudes: ['Strength'],
-                specialAbilities: [{ name: 'Strength from the Land', description: 'An agri-world character starts with the Brutal Charge (2) trait.' }],
+                specialAbilities: [{ name: 'Strength from the Land', description: 'Fixture text: starts with Brutal Charge (2).' }],
             },
-            notes: { dh2: "Emperor's Blessing: On a roll of 7+ on 1d10, the character begins with an extra Fate Point." },
+            notes: { dh2: "Emperor's Blessing: roll of 7+ on 1d10 → +1 Fate." },
         },
     },
     {
@@ -88,11 +88,11 @@ const WITHIN_DOCS: RawDoc[] = [
                 specialAbilities: [
                     {
                         name: 'At Home in Armour',
-                        description: 'A feudal world character ignores the maximum Agility value imposed by any armour he is wearing.',
+                        description: 'Fixture text: armour never caps Agility.',
                     },
                 ],
             },
-            notes: { dh2: "Emperor's Blessing: On a roll of 6+ on 1d10, the character begins with an extra Fate Point." },
+            notes: { dh2: "Emperor's Blessing: roll of 6+ on 1d10 → +1 Fate." },
         },
     },
 ];
@@ -106,9 +106,9 @@ const BEYOND_DAEMON: RawDoc = {
             fateThreshold: 3,
             woundsFormula: '7+1d5',
             aptitudes: ['Willpower'],
-            specialAbilities: [{ name: 'Touched by the Warp', description: 'A daemon world native begins with one rank in the Psyniscience skill.' }],
+            specialAbilities: [{ name: 'Touched by the Warp', description: 'Fixture text: starts with Psyniscience at rank 1.' }],
         },
-        notes: { dh2: "Emperor's Blessing: On a roll of 4+ on 1d10, the character begins with an extra Fate Point." },
+        notes: { dh2: "Emperor's Blessing: roll of 4+ on 1d10 → +1 Fate." },
     },
 };
 
@@ -124,11 +124,11 @@ const WITHOUT_DEATH: RawDoc = {
             specialAbilities: [
                 {
                     name: "Survivor's Paranoia",
-                    description: 'While a death world character is Surprised, non-Surprised attackers do not gain the normal +30 bonus.',
+                    description: 'Fixture text: no +30 for attackers while Surprised.',
                 },
             ],
         },
-        notes: { dh2: "Emperor's Blessing: On a roll of 5+ on 1d10, the character begins with an extra Fate Point." },
+        notes: { dh2: "Emperor's Blessing: roll of 5+ on 1d10 → +1 Fate." },
     },
 };
 
@@ -222,7 +222,7 @@ describe('readHomeworldMechanics', () => {
             emperorsBlessingMin: 7,
             aptitudes: ['Strength'],
             bonusName: 'Strength from the Land',
-            bonusDescription: 'An agri-world character starts with the Brutal Charge (2) trait.',
+            bonusDescription: 'Fixture text: starts with Brutal Charge (2).',
             woundsFlat: 8,
             woundsDice: 1,
             woundsFaces: 5,
