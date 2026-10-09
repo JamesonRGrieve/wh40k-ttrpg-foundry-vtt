@@ -8,6 +8,7 @@ import {
     currentPortraitIndex,
     decideSpawnPortrait,
     effectivePoolSize,
+    PendingPortraitPicks,
     type PortraitActorLike,
     type PortraitTokenLike,
     type PortraitUpdate,
@@ -176,9 +177,77 @@ describe('applyPortraitOnPreCreate', () => {
 
     it('applies a chosen portrait when a pool exists', () => {
         const actor = mockActor({ variants: [{ img: 'b.webp', tokenFrame: { cx: 0.4, cy: 0.25 } }] });
-        applyPortraitOnPreCreate(actor, rngOf(0.9));
+        expect(applyPortraitOnPreCreate(actor, rngOf(0.9))?.img).toBe('b.webp');
         expect(actor.updates).toHaveLength(1);
         expect(actor.updates[0]?.img).toBe('b.webp');
+    });
+
+    it('returns null on a no-op', () => {
+        expect(applyPortraitOnPreCreate(mockActor(), rngOf(0.9))).toBeNull();
+    });
+});
+
+describe('PendingPortraitPicks (#567 batch spawn)', () => {
+    const pooled = (): MockActor =>
+        mockActor({
+            img: 'a.webp',
+            variants: [
+                { img: 'b.webp', tokenFrame: null },
+                { img: 'c.webp', tokenFrame: null },
+            ],
+        });
+
+    it('gives each actor of one batch a different face before any is created', () => {
+        const pending = new PendingPortraitPicks();
+        const picks: string[] = [];
+        // Same RNG each time: without the ledger all three would roll index 0.
+        for (let i = 0; i < 3; i++) {
+            const chosen = applyPortraitOnPreCreate(pooled(), rngOf(0), pending.withPending(new Set()));
+            if (chosen !== null) {
+                pending.reserve(chosen.img);
+                picks.push(chosen.img);
+            }
+        }
+        expect(picks.sort()).toEqual(['a.webp', 'b.webp', 'c.webp']);
+    });
+
+    it('releases a pick once its document is created', () => {
+        const pending = new PendingPortraitPicks();
+        pending.reserve('a.webp');
+        pending.release('a.webp');
+        expect([...pending.withPending(new Set())]).toEqual([]);
+    });
+
+    it('reference-counts a repeated pick from an exhausted pool', () => {
+        const pending = new PendingPortraitPicks();
+        pending.reserve('a.webp');
+        pending.reserve('a.webp');
+        pending.release('a.webp');
+        expect(pending.withPending(new Set()).has('a.webp')).toBe(true);
+        pending.release('a.webp');
+        expect(pending.withPending(new Set()).has('a.webp')).toBe(false);
+    });
+
+    it('ignores releases of unknown or missing images', () => {
+        const pending = new PendingPortraitPicks();
+        pending.release('never.webp');
+        pending.release(null);
+        pending.release(undefined);
+        expect(pending.withPending(new Set(['used.webp']))).toEqual(new Set(['used.webp']));
+    });
+
+    it('does not mutate the caller-supplied used set', () => {
+        const pending = new PendingPortraitPicks();
+        pending.reserve('b.webp');
+        const used = new Set(['a.webp']);
+        expect(pending.withPending(used)).toEqual(new Set(['a.webp', 'b.webp']));
+        expect(used).toEqual(new Set(['a.webp']));
+    });
+
+    it('returns the per-token pick so the token ledger can reserve it', () => {
+        const token = { actorLink: false, updateSource: (): void => undefined };
+        expect(applyPortraitOnPreCreateToken(token, pooled(), rngOf(0))?.img).toBe('a.webp');
+        expect(applyPortraitOnPreCreateToken({ ...token, actorLink: true }, pooled(), rngOf(0))).toBeNull();
     });
 });
 

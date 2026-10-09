@@ -148,6 +148,7 @@ import {
     applyPortraitOnPreCreate,
     applyPortraitOnPreCreateToken,
     collectUsedPortraitImgs,
+    PendingPortraitPicks,
     type PortraitActorLike,
     type PortraitTokenLike,
 } from './rules/portrait-spawn.ts';
@@ -443,17 +444,27 @@ export class HooksManager {
         // without replacement across the placed set), repeating only once the
         // pool is exhausted, so a crowd of the same statblock stays varied.
         // eslint-disable-next-line no-restricted-syntax -- boundary: preCreateActor payload is a framework-typed Actor; narrowed to PortraitActorLike inside portrait-spawn.ts
+        // Picks still awaiting creation are reserved in a ledger so actors created in
+        // one batch do not all roll the same face; `createActor` releases each.
+        const pendingActorPortraits = new PendingPortraitPicks();
         hooksOn('preCreateActor', (actor: Parameters<typeof applyPortraitOnPreCreate>[0]) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors is a Foundry WorldCollection typed loosely by fvtt-types; narrowed to the { img } surface collectUsedPortraitImgs reads
             const worldActors = game.actors as unknown as Iterable<{ img?: string | null }>;
-            applyPortraitOnPreCreate(actor, Math.random, collectUsedPortraitImgs(worldActors));
+            const chosen = applyPortraitOnPreCreate(actor, Math.random, pendingActorPortraits.withPending(collectUsedPortraitImgs(worldActors)));
+            if (chosen !== null) pendingActorPortraits.reserve(chosen.img);
+        });
+        hooksOn('createActor', (actor: { img?: string | null }) => {
+            pendingActorPortraits.release(actor.img);
         });
 
         // Per-token portrait variance (#567): when an UNLINKED token of a pooled
         // actor is placed (dragging a mob from the sidebar or the compendium),
         // roll a distinct portrait for THAT token so the squad doesn't share one
         // face. Avoids portraits already on sibling tokens of the same actor on the
-        // scene. Linked tokens and pool-less actors are a no-op inside the handler.
+        // scene, and portraits picked earlier in the same drop batch (the ledger is
+        // released per token on `createToken`). Linked tokens and pool-less actors
+        // are a no-op inside the handler.
+        const pendingTokenPortraits = new PendingPortraitPicks();
         // eslint-disable-next-line no-restricted-syntax -- boundary: preCreateToken payload is a framework-typed TokenDocument; narrowed to the slice the per-token roll reads
         hooksOn(
             'preCreateToken',
@@ -475,9 +486,13 @@ export class HooksManager {
                         if (typeof src === 'string' && src.trim() !== '') used.add(src);
                     }
                 }
-                applyPortraitOnPreCreateToken(token, poolActor, Math.random, used);
+                const chosen = applyPortraitOnPreCreateToken(token, poolActor, Math.random, pendingTokenPortraits.withPending(used));
+                if (chosen !== null) pendingTokenPortraits.reserve(chosen.img);
             },
         );
+        hooksOn('createToken', (token: { texture?: { src?: string | null } | null }) => {
+            pendingTokenPortraits.release(token.texture?.src);
+        });
 
         // Auto-generate an actor image on spawn via a configured OpenAI-compatible
         // endpoint (#576), gated behind the token-image-gen mode setting. GM-only and

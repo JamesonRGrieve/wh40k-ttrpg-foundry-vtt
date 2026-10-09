@@ -102,11 +102,17 @@ export function applySpawnPortrait(actor: PortraitActorLike, chosen: PortraitVar
 /**
  * `preCreateActor` handler: choose and apply a portrait, or no-op. `usedImgs`
  * (portraits already placed in the world) is avoided until the pool is exhausted.
+ * Returns the applied portrait, or `null` when nothing was changed.
  */
-export function applyPortraitOnPreCreate(actor: PortraitActorLike, rng: () => number = Math.random, usedImgs: ReadonlySet<string> = NO_USED_IMGS): void {
+export function applyPortraitOnPreCreate(
+    actor: PortraitActorLike,
+    rng: () => number = Math.random,
+    usedImgs: ReadonlySet<string> = NO_USED_IMGS,
+): PortraitVariant | null {
     const chosen = decideSpawnPortrait(actor, rng, usedImgs);
-    if (chosen === null) return;
+    if (chosen === null) return null;
     applySpawnPortrait(actor, chosen);
+    return chosen;
 }
 
 /** The pending-token-source update {@link applyPortraitOnPreCreateToken} writes. */
@@ -128,23 +134,55 @@ export interface PortraitTokenLike {
  * mob varies instead of all sharing the actor's single image (#567). No-op for a
  * LINKED token (it mirrors its actor's sheet image) or an actor with no pool.
  * `usedImgs` are the portraits already on sibling tokens of the same actor on the
- * scene, avoided until the pool is exhausted. Pure; the RNG is injected for tests.
+ * scene, avoided until the pool is exhausted. Returns the applied portrait, or
+ * `null` on a no-op. Pure; the RNG is injected for tests.
  */
 export function applyPortraitOnPreCreateToken(
     token: PortraitTokenLike,
     poolActor: PortraitActorLike | null,
     rng: () => number = Math.random,
     usedImgs: ReadonlySet<string> = NO_USED_IMGS,
-): void {
-    if (token.actorLink === true) return;
-    if (poolActor === null) return;
+): PortraitVariant | null {
+    if (token.actorLink === true) return null;
+    if (poolActor === null) return null;
     const chosen = decideSpawnPortrait(poolActor, rng, usedImgs);
-    if (chosen === null) return;
+    if (chosen === null) return null;
     token.updateSource({
         texture: { src: chosen.img },
         ring: { subject: { scale: DEFAULT_RING_SUBJECT_SCALE } },
         flags: { [SYSTEM_ID]: { tokenFrame: chosen.tokenFrame } },
     });
+    return chosen;
+}
+
+/**
+ * Portraits picked by a `preCreate` handler whose document has not been created
+ * yet (#567). Foundry runs every `preCreate` of one batch (a multi-actor import,
+ * a mob drop) before any document lands in `game.actors` / `scene.tokens`, so
+ * without this ledger each spawn in a batch sees the same "used" set and they
+ * collide on one face. A pick is reserved at `preCreate` and released at the
+ * matching `create`, by which point the document is visible on its own.
+ * Reference-counted, since a pool that is already exhausted repeats images.
+ */
+export class PendingPortraitPicks {
+    readonly #counts = new Map<string, number>();
+
+    reserve(img: string): void {
+        this.#counts.set(img, (this.#counts.get(img) ?? 0) + 1);
+    }
+
+    release(img: string | null | undefined): void {
+        if (typeof img !== 'string') return;
+        const count = this.#counts.get(img);
+        if (count === undefined) return;
+        if (count <= 1) this.#counts.delete(img);
+        else this.#counts.set(img, count - 1);
+    }
+
+    /** `used` plus every portrait still pending creation, as a new set. */
+    withPending(used: ReadonlySet<string>): Set<string> {
+        return new Set([...used, ...this.#counts.keys()]);
+    }
 }
 
 /**
