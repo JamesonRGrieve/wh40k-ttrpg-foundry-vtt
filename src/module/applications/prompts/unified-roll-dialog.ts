@@ -53,6 +53,7 @@ import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { detectTargetVisibility } from '../../utils/cover-geometry.ts';
 import { buildDifficultyPresets, type DifficultyPreset } from '../../utils/difficulty-presets.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
+import { hooksOn } from '../../utils/hooks-on.ts';
 import { calculateTokenDistance, RANGE_BRACKETS, tokenElevation } from '../../utils/range-calculator.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
@@ -932,11 +933,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 this.#applyTargetSituationals();
                 void this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
             };
-            // Foundry's Hooks.on is deprecated in V14's typings and its payload typing
-            // varies by hook name; bind a minimal typed shim at this framework boundary
-            // (mirrors the hooksOn shim in hooks-manager.ts / combat-tracker-economy.ts).
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-deprecated, no-restricted-syntax -- framework boundary: Hooks.on payload typing varies by hook name and is deprecated in the V14 typings; the runtime API is current
-            const hooksOn = Hooks.on.bind(Hooks) as (event: string, fn: (...args: any[]) => unknown) => number;
             this._targetHookId = hooksOn('targetToken', onTarget);
         }
 

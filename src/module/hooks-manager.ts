@@ -162,6 +162,7 @@ import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.
 import { DHTourMain } from './tours/main-tour.ts';
 import type { WH40KGameSystem } from './types/global.d.ts';
 import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
+import { hooksOn } from './utils/hooks-on.ts';
 import { inferActiveGameLine } from './utils/item-variant-utils.ts';
 import { backfillOriginPathUuids } from './utils/origin-path-uuid-backfill.ts';
 import { RollTableUtils } from './utils/roll-table-utils.ts';
@@ -202,12 +203,6 @@ interface LootMoveTokenLike {
 // biome-ignore lint/complexity/noStaticOnlyClass: stable system-bootstrap API surface with many callers
 export class HooksManager {
     static registerHooks(): void {
-        // Foundry's Hooks.on overloads in fvtt-types are tightly typed by hook name;
-        // cast to a permissive shim so non-core hooks (system-emitted events) compile.
-        /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-deprecated, no-restricted-syntax -- framework boundary: Hooks.on is deprecated in V14; hook payload typing varies by hook name; hooksOn shim return type must be unknown */
-        // biome-ignore lint/suspicious/noExplicitAny: framework boundary — Foundry hook payloads are heterogeneous by hook name
-        const hooksOn = Hooks.on.bind(Hooks) as (event: string, fn: (...args: any[]) => unknown) => number;
-        /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-deprecated, no-restricted-syntax */
         Hooks.once('init', () => {
             HooksManager.init();
             registerItemPilesValuation();

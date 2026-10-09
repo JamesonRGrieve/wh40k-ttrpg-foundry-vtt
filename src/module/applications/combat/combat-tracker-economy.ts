@@ -14,6 +14,7 @@
  */
 
 import { actionBudgetForActor } from '../../rules/action-economy.ts';
+import { hooksOn } from '../../utils/hooks-on.ts';
 
 const TRACKER_ECONOMY_TEMPLATE = 'systems/wh40k-rpg/templates/combat/tracker-action-economy.hbs';
 /**
@@ -113,13 +114,6 @@ function onUpdateCombatant(
 
 /** Register the combat-tracker action-economy surfacing hooks (#264). */
 export function registerCombatTrackerEconomy(): void {
-    // Foundry's Hooks.on overloads in fvtt-types are tightly typed per hook name;
-    // cast to a permissive shim so these handlers' narrowed param shapes compile
-    // (mirrors HooksManager's `hooksOn` boundary).
-    /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-deprecated, no-restricted-syntax -- framework boundary: Hooks.on is deprecated in V14 and its payload typing varies by hook name */
-    // biome-ignore lint/suspicious/noExplicitAny: framework boundary — Foundry hook payloads are heterogeneous by hook name
-    const hooksOn = Hooks.on.bind(Hooks) as (event: string, fn: (...args: any[]) => unknown) => number;
-    /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-deprecated, no-restricted-syntax */
     hooksOn('renderCombatTracker', (_app, html: HTMLElement | JQuery) => {
         void onRenderCombatTracker(_app, html);
     });
