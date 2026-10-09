@@ -152,9 +152,8 @@ export default class VoidcraftData extends VehicleData {
     declare acceleration: string;
     /**
      * Printed crew headcount, e.g. "20,000 crew, approx." — flavour, and NOT
-     * the same quantity as `crew.population`. RAW is explicit that Crew
-     * Population and Morale "are abstract representations, rather than a
-     * concrete measurement of crewmembers" (RT core p.224), both rated ~0–100.
+     * the same quantity as `crew.population`. RAW treats Crew Population and
+     * Morale as abstract ratings, not headcounts (RT core p.224), both ~0–100.
      * Conflating the two is what put five-digit headcounts into the mechanical
      * pool across the authored ships.
      */

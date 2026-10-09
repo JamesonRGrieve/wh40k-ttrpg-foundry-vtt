@@ -153,8 +153,8 @@ describe('blastHitsForBlastValue — Blast (X) auto-hits X times', () => {
 
 describe('flameHitsForRange — ceil(range/4) + 1d5', () => {
     it('range 10 + d5 of 3 → 3 + 3 = 6 hits (book example range 10, 1d5+3)', () => {
-        // Book example: "a flame weapon with a range of 10 will hit a Horde
-        // 1d5+3 times." For a rolled 3 the total is 6.
+        // The book's worked example: range 10 → 1d5+3 hits on a Horde.
+        // For a rolled 3 the total is 6.
         expect(flameHitsForRange(10, 3)).toBe(6);
     });
     it('range 20 + d5 of 1 → 5 + 1 = 6 hits', () => {

@@ -6,8 +6,7 @@ import { type ArmourSystemLike, computeArmour, getArmourAPForLocation } from './
 /**
  * Regression tests for the DH2 errata stacking rules (errata.md L69-73):
  *
- *   "Machine Trait: This armour stacks with worn armour, but not with
- *    the Natural Armour trait..."
+ *   Machine trait AP adds to worn armour but not to Natural Armour.
  *
  * `computeArmour()` already implements this — Machine and Natural Armour
  * are taken as the higher of the two for `traitBonus`, and equipped

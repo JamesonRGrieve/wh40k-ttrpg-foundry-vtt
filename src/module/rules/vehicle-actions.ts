@@ -81,7 +81,7 @@ export const VEHICLE_ACTIONS: VehicleAction[] = [
         type: ['Half'],
         subtype: ['Aerial', 'Movement', 'Operate'],
         description:
-            'Manoeuvre behind an enemy craft. Opposed Challenging (+0) Operate test vs. a single enemy craft; on a win, ending movement able to target it, the pilot and all aboard gain +20 BS vs. that craft. On 3+ degrees of success over the foe, pilot-controlled weapons may fire at it immediately as a Free Action. Other enemies gain +10 BS vs. the pilot’s craft until the start of the pilot’s next turn.',
+            'Manoeuvre behind an enemy craft. Opposed Challenging (+0) Operate test vs. a single enemy craft; on a win, ending movement able to target it, the pilot and all aboard gain +20 BS vs. that craft. On 3+ degrees of success over the foe, pilot-controlled weapons may fire at it immediately as a Free Action. Meanwhile, any other foe shooting at this craft gets +10 BS until your next turn begins.',
         skill: 'operate',
         modifier: 20,
         flyerOnly: true,

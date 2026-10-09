@@ -45,8 +45,7 @@
 
 /**
  * Colony Characteristic keys. Size is unique in that it shifts on a
- * bounded 0..10 scale; the other four are unbounded above (RT-RAW: "a
- * scale that begins at 0 and increases from there"), but for plumbing
+ * bounded 0..10 scale; the other four start at 0 with no RAW ceiling, but for plumbing
  * purposes we cap at 99 to keep the schema integers manageable.
  */
 export type ColonyCharacteristicKey = 'size' | 'complacency' | 'order' | 'productivity' | 'piety';

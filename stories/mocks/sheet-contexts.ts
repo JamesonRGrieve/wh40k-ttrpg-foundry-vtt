@@ -236,7 +236,7 @@ function defaultSystemActorOverrides(systemId: GameSystemId): MockActorInput {
                 motivation: isIM ? 'Recover a lost ledger' : 'Duty',
                 trialsAndTravails: '',
                 career: 'Adept',
-                divination: 'Trust in your fellow man, and put your faith in the Emperor.',
+                divination: 'A clean lasgun outlasts a clever plan.',
             },
         },
     };

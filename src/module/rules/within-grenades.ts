@@ -57,7 +57,7 @@ export const WITHIN_GRENADES: Record<string, GrenadeDefinition> = {
         damage: '',
         specialQualities: ['Blast (6)'],
         save: { characteristic: 'agility', difficulty: 10 },
-        failEffect: 'Blinded for a number of rounds equal to the degrees of failure.',
+        failEffect: 'Blinded for 1 round per degree of failure.',
         accentClass: 'tw-text-white',
     },
     psychotroke: {

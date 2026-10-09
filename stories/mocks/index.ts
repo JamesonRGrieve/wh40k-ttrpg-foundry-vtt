@@ -229,7 +229,7 @@ export function mockActor(overrides?: DeepPartial<MockActor>): MockActor {
                 trialsAndTravails: '',
                 motivation: 'Duty',
                 career: 'Guardsman',
-                divination: 'Trust in your fellow man, and put your faith in the Emperor.',
+                divination: 'A clean lasgun outlasts a clever plan.',
             },
             wounds: { value: 12, max: 12 },
             fate: { value: 3, max: 3 },
