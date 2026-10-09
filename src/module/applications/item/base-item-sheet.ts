@@ -3,7 +3,7 @@
  * Based on dnd5e's ItemSheet5e pattern for Foundry V13+
  */
 
-import WH40K from '../../config.ts';
+import { WH40K } from '../../config.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { getMaterializedItemSource, remapSubmitDataToVariantPaths } from '../../utils/item-variant-utils.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';

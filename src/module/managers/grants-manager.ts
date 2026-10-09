@@ -871,6 +871,3 @@ export class GrantsManager {
         }
     }
 }
-
-// Export for convenience
-export default GrantsManager;

@@ -65,18 +65,20 @@ function kebabToPascal(name) {
         .join('');
 }
 
+// Each package is required by a literal specifier so dependency analysis (knip)
+// can see that the generator uses it.
 function resolveFontAwesome(name) {
-    return resolveFa(name, '@fortawesome/free-solid-svg-icons', 'fa');
+    return resolveFa(name, () => require('@fortawesome/free-solid-svg-icons'), 'fa');
 }
 
 function resolveFontAwesomeRegular(name) {
-    return resolveFa(name, '@fortawesome/free-regular-svg-icons', 'fa');
+    return resolveFa(name, () => require('@fortawesome/free-regular-svg-icons'), 'fa');
 }
 
-function resolveFa(name, modulePath, exportPrefix) {
+function resolveFa(name, loadModule, exportPrefix) {
     let mod;
     try {
-        mod = require(modulePath);
+        mod = loadModule();
     } catch {
         return null;
     }

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import WH40K from '../config.ts';
+import { WH40K } from '../config.ts';
 import { buildLangStub } from '../testing/lang-stub.ts';
 import type { WH40KSkill } from '../types/global.d.ts';
 import { checkPrerequisites, parsePrerequisiteString, type PrereqActorView } from './prerequisite-validator.ts';

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import WH40K from '../config.ts';
+import { WH40K } from '../config.ts';
 import { availabilityDisplayLabel, choicesFrom, choicesRecordFrom, labelFor, placeRatingLabels } from './config-choices.ts';
 
 /**

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import WH40K from '../src/module/config.ts';
+import { WH40K } from '../src/module/config.ts';
 import { buildLangStub } from '../src/module/testing/lang-stub.ts';
 import {
     applyQualityModifiers,

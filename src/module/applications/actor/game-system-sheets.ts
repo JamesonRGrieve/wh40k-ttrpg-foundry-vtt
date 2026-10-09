@@ -15,10 +15,6 @@
  * The factories below generate both halves from the same config so a single
  * touch to a system's CSS class or skill ranks updates its PC and NPC sheets
  * in lock-step.
- *
- * `DarkHeresy2Sheet` (and friends) remain exported as aliases for their
- * `…PlayerSheet` counterparts so existing `flags.core.sheetClass` values on
- * player actors keep resolving without a world migration.
  */
 
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
@@ -121,16 +117,3 @@ export const ImperiumMaledictumCraftSheet = makeSystemVariant(CraftActorSheet, '
 // Only RT fields voidcraft. Factory leaves room for other systems.
 
 export const RogueTraderVoidcraftSheet = makeSystemVariant(VoidcraftActorSheet, 'RogueTraderVoidcraftSheet', SYSTEMS.rt, 'own-header');
-
-// -- Back-compat aliases ---------------------------------------------------
-// `DarkHeresy2Sheet` (etc.) was the PC sheet export name before the split.
-// Keep the aliases so existing `flags.core.sheetClass = 'wh40k-rpg.DarkHeresy2Sheet'`
-// values on player actors keep resolving without a world migration.
-
-export const DarkHeresy2Sheet = DarkHeresy2PlayerSheet;
-export const RogueTraderSheet = RogueTraderPlayerSheet;
-export const BlackCrusadeSheet = BlackCrusadePlayerSheet;
-export const OnlyWarSheet = OnlyWarPlayerSheet;
-export const DeathwatchSheet = DeathwatchPlayerSheet;
-export const DarkHeresy1Sheet = DarkHeresy1PlayerSheet;
-export const ImperiumMaledictumSheet = ImperiumMaledictumPlayerSheet;

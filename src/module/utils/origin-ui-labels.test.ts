@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import WH40K from '../config.ts';
+import { WH40K } from '../config.ts';
 import { buildLangStub } from '../testing/lang-stub.ts';
 import { getAllCharacteristicDisplayInfo, getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from './origin-ui-labels.ts';
 

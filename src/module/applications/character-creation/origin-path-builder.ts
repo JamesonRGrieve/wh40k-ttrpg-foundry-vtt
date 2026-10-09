@@ -12,7 +12,7 @@
 import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { GameSystemId, OriginStepConfig, OriginStepDef } from '../../config/game-systems/types.ts';
-import WH40K, { type AvailabilityConfig } from '../../config.ts';
+import { type AvailabilityConfig, WH40K } from '../../config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';

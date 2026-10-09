@@ -5,7 +5,7 @@
 
 import { hydrateActorInMemory } from '../../compendium-hydrate.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
-import WH40K from '../../config.ts';
+import { WH40K } from '../../config.ts';
 import { skillKeysForSystem } from '../../data/shared/skill-definitions.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';

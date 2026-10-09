@@ -1953,7 +1953,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 const [created] = (await this.actor.createEmbeddedDocuments('Item', [itemData] as never[])) as unknown as Item[];
 
                 try {
-                    const { default: GrantsManager } = await import('../../managers/grants-manager.ts');
+                    const { GrantsManager } = await import('../../managers/grants-manager.ts');
                     // eslint-disable-next-line no-restricted-syntax -- boundary: cross-cast between Foundry Item and project WH40KItem
                     await GrantsManager.applyItemGrants(created as unknown as WH40KItem, this.actor, { showNotification: false });
                 } catch (err) {

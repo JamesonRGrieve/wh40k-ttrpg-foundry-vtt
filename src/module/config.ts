@@ -1443,9 +1443,3 @@ WH40K.advancementTiers = {
  * @type {string[]}
  */
 WH40K.tierOrder = ['simple', 'intermediate', 'trained', 'expert'];
-
-/* -------------------------------------------- */
-/*  Export                                      */
-/* -------------------------------------------- */
-
-export default WH40K;

@@ -1,5 +1,5 @@
 import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
-import WH40K from '../config.ts';
+import { WH40K } from '../config.ts';
 import { combatActionIcon, combatTimingKey } from '../rules/combat-action-display.ts';
 import { HIT_LOCATION_IDS, hitLocationAbbreviation, hitLocationLabel } from '../rules/hit-locations.ts';
 import { capitalize, formatSigned } from '../utils/format.ts';

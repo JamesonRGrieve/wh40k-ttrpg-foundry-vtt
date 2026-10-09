@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import WH40K from '../config.ts';
+import { WH40K } from '../config.ts';
 import { lineResourceRows } from './acquisition-resources.ts';
 
 /**
