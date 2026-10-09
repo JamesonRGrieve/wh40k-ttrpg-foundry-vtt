@@ -11,6 +11,7 @@ import postcss from 'postcss';
 import postcssNested from 'postcss-nested';
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
+import remarkGfm from 'remark-gfm';
 
 // Absolute paths for the Storybook-specific Tailwind profile + chrome stylesheet.
 // The chrome stylesheet replaces Foundry's `foundry2.css` (which we are no longer
@@ -132,7 +133,14 @@ const config: StorybookConfig = {
     // visible icon should use the registered icon helper which renders the
     // bundled inline SVG, not a Foundry-served URL.
     staticDirs: [],
-    addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
+    // MDX compiles CommonMark only; remark-gfm adds the GitHub tables the guide is written in.
+    addons: [
+        {
+            name: '@storybook/addon-docs',
+            options: { mdxPluginOptions: { mdxCompileOptions: { remarkPlugins: [remarkGfm] } } },
+        },
+        '@storybook/addon-a11y',
+    ],
     framework: {
         name: '@storybook/html-vite',
         options: {},

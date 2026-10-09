@@ -2,19 +2,13 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta title="Guide/Rolling Tests" />
 
-# Rolling Tests
+# Rolling tests
 
-Every test in the system, whether a characteristic, skill, weapon attack or psychic power, goes through the same **roll dialog** and produces a chat card that shows exactly how the result was reached.
+Every test uses the same **roll dialog** and posts a chat card with the full calculation. Open it by clicking a characteristic or skill on **Statistics**, or a weapon or power on **Combat**.
 
-## Starting a roll
+## Target and difficulty
 
-Click a characteristic or skill on the **Statistics** tab, or a weapon or power on the **Combat** tab. The roll dialog opens with your actor's name and portrait in its header.
-
-## The roll dialog
-
-### Target number and difficulty
-
-The large number at the top is your **final target**: you succeed if the d100 roll is equal to or under it. A roll of 1 always succeeds and a roll of 100 always fails. Next to it is the difficulty button. Click it to pick a difficulty:
+The large number is the **final target**: roll equal to or under it on d100 to succeed. A 1 always succeeds; a 100 always fails. Click the difficulty button to change difficulty:
 
 | Difficulty | Modifier |
 | --- | --- |
@@ -32,88 +26,68 @@ The large number at the top is your **final target**: you succeed if the d100 ro
 | Punishing | −50 |
 | Hellish | −60 |
 
-Under the target, a breakdown line shows **Base**, the difficulty, **Mods** (situational modifiers) and **Custom**, so you can see where the number comes from before you roll.
+The line under the target shows **Base**, difficulty, **Mods** (situational) and **Custom**. Total modifiers are capped at ±60.
 
-### Modifier sections
+## Modifier sections
 
-Only the sections that apply to the current test are shown.
+Only sections that apply to the test appear.
 
-| Section | What it does |
-| --- | --- |
-| Skill uses | For skills with several distinct uses, pick the one you are attempting. Some uses ask you to pick a target. |
-| **Test Variant** | Pick a sense channel (Visual, Auditory, Olfactory) for skills that declare one. Requires the **Homebrew: Awareness Sense Channels** setting or the homebrew ruleset; otherwise the dialog tells you the variants are disabled. |
-| **Roll** (keep mode) | Normal, Advantage, Disadvantage or Emphasis. Only shown when the GM enables **Advantage, Disadvantage & Emphasis Rolls**. See below. |
-| Situational pills | Optional bonuses and penalties from your talents, traits and conditions. Click a pill to switch it on or off. Hover to see when it applies. |
-| **Gear** | Equipment you carry that could help this test. Click a chip to say you are using that item. |
-| **Assistants** | One chip per friendly character on the scene who is trained in the skill. Each assistant you select adds +10, up to a cap. Selected assistants are named on the chat card. |
-| **Passive Effects** | Always-on modifiers from talents, traits, effects and conditions. These are listed so you can see them, but they are **already included in the base** and cannot be switched off. |
-| **Extended Test** | Tick to make this an extended test and set a **Threshold** of total degrees of success. Progress carries over between attempts. |
-| **Custom Modifier** | Add any extra modifier the GM calls for. |
+- **Skill uses**: pick the use you are attempting. Some uses ask for a target.
+- **Test Variant**: a sense channel (Visual, Auditory, Olfactory). Requires **Homebrew: Awareness Sense Channels** or the homebrew ruleset.
+- **Roll**: keep mode. Requires **Advantage, Disadvantage & Emphasis Rolls**. See below.
+- **Situational pills**: optional modifiers from talents, traits and conditions. Click to toggle; hover for details.
+- **Gear**: carried equipment that could help. Click a chip to use the item.
+- **Assistants**: friendly characters on the scene trained in the skill. Each adds +10, up to a cap, and is named on the card.
+- **Passive Effects**: always-on modifiers, **already in the base**. Listed for reference only.
+- **Extended Test**: tick and set a **Threshold** of total degrees of success. Progress carries between attempts.
+- **Custom Modifier**: any extra modifier the GM calls for.
 
-Other notices you may see:
+Notices:
 
-- **Untrained skills**: the characteristic is shown as **Halved (untrained)**, and an untrained advanced skill shows **Advanced skill — cannot attempt untrained.** Where the skill allows alternatives, you can choose which characteristic it uses.
-- **Trying Again**: if you retry a test in the same scene, a warning explains the rule and shows any cumulative penalty. It never blocks the roll.
+- **Untrained**: the characteristic shows **Halved (untrained)**. An untrained advanced skill shows **Advanced skill — cannot attempt untrained.** Some skills let you choose an alternative characteristic.
+- **Trying Again**: retrying a test in the same scene shows the rule and any cumulative penalty. It never blocks the roll.
 
-### Rolling or entering your own dice
+## Roll or enter dice
 
-| Button | What it does |
-| --- | --- |
-| **Roll** | Rolls the dice and posts the result to chat. |
-| Chat bubble | Posts the target to chat without rolling (**Post Target**), so you can roll physical dice. If you entered a manual roll, it submits that instead (**Submit Roll**). |
-| **Cancel** | Closes the dialog. |
+- **Roll**: roll and post to chat.
+- **Chat bubble**: **Post Target** to roll physical dice, or **Submit Roll** when you entered a manual roll.
+- **Cancel**: close the dialog.
 
-If the GM enables **Allow manual roll input**, a **Manual Roll** section appears. Enter physical dice either as **Two Dice** (separate **Tens** and **Units**) or as a **Single Input**. The dialog previews **SUCCESS** or **FAILURE** and the degrees before you submit.
-
-### The ±60 modifier cap
-
-The total of all modifiers is capped at +60 and −60. If the cap applies, the chat card shows a **Modifier cap (±60)** row with the raw total and the capped total.
+With **Allow manual roll input**, a **Manual Roll** section accepts **Two Dice** (**Tens** and **Units**) or a **Single Input**, and previews **SUCCESS** or **FAILURE** and degrees.
 
 ## Advantage, Disadvantage and Emphasis
 
-These house-rule modes are **off by default**. The GM turns them on with the world setting **Advantage, Disadvantage & Emphasis Rolls**. When on, the roll dialog shows a **Roll** selector:
+A house rule enabled by **Advantage, Disadvantage & Emphasis Rolls**:
 
-| Mode | Dice | Kept result |
-| --- | --- | --- |
-| Normal | One d100 | That roll |
-| Advantage | Two d100 | The lower roll (better, since you roll under the target) |
-| Disadvantage | Two d100 | The higher roll |
-| Emphasis | Two d100 | The roll furthest from 50, the more extreme result either way. On a tie, the first roll stands. |
+- **Normal**: one d100.
+- **Advantage**: two d100, keep the lower.
+- **Disadvantage**: two d100, keep the higher.
+- **Emphasis**: two d100, keep the roll furthest from 50. On a tie the first roll stands.
 
-The chat card shows both dice, with a note such as "Advantage: rolled 23 and 71, kept 23". In the dice tooltip, the discarded die is shown struck through.
+The card shows both dice, for example "Advantage: rolled 23 and 71, kept 23". The dice tooltip strikes through the discarded die.
 
-## Reading the chat card
+## The chat card
 
-The card prints the whole calculation, not just the total.
+**Target side**: **Base**, one row per modifier with its source (Difficulty, Aim, Range, Assistance, a talent, gear), then **Target**. Hover a row for its derivation. A **Modifier cap (±60)** row shows raw and capped totals when the cap applied.
 
-### Target side
+**Result side**:
 
-The card lists the **Base** value, then **one row per modifier** with its source (for example Difficulty, Aim, Range, Assistance, a talent or a piece of gear), then the final **Target**. **Hover over any modifier row** to see a tooltip explaining where that value came from. If the ±60 cap applied, a **Modifier cap (±60)** row shows the raw and capped totals.
+- **Roll vs Target**.
+- **Degrees of Success** or **Degrees of Failure**, with the formula, for example "3 DoS = 1 + 2 (roll 27 vs target 49)". Hover for an explanation.
+- **Success** or **Failure**, and the **hit location** for a successful attack.
+- The opponent's roll and result for opposed tests.
 
-### Result side
+### Degrees
 
-- **Roll vs Target**: your roll compared with the target.
-- **Degrees of Success** or **Degrees of Failure**, with the formula underneath, for example "3 DoS = 1 + 2 (roll 27 vs target 49)". Hover the formula for an explanation.
-- **Success** or **Failure**, and for successful attacks the **hit location**.
-- For opposed tests, the opponent's roll and result.
+Degrees start at 1. Extra degrees depend on the line, unless the GM sets **Degrees of Success Calculation**:
 
-### How degrees are counted
+- **Gen 1** (Dark Heresy 1e, Deathwatch, Rogue Trader): one per full 10 points between roll and target.
+- **Gen 2** (Dark Heresy 2e, Black Crusade, Only War): the difference between the tens digits.
 
-Degrees always start at 1 for a success or failure. Extra degrees depend on the game line, unless the GM forces one method with the **Degrees of Success Calculation** setting:
+## Card buttons
 
-| Method | Lines (by default) | Extra degrees |
-| --- | --- | --- |
-| Gen 1 | Dark Heresy 1e, Deathwatch, Rogue Trader | One per full 10 points between roll and target |
-| Gen 2 | Dark Heresy 2e, Black Crusade, Only War | The difference between the tens digits of roll and target |
+- **Refund**: refund the ammo, Fate and other resources the action spent, after confirmation.
+- **+1 DoS**: on a success, spend a Fate Point for one more Degree of Success.
+- **Re-roll**: spend a Fate Point to re-roll. Talents and traits that grant re-rolls add their own buttons, which may be limited per encounter or session.
 
-## Fate Points and re-rolls on the card
-
-The buttons under a result let you act on it:
-
-| Button | What it does |
-| --- | --- |
-| **Refund** | Refunds the ammo, Fate and other resources this action spent (asks for confirmation). |
-| **+1 DoS** | On a success, spend a Fate Point to add one Degree of Success. |
-| **Re-roll** | Spend a Fate Point to re-roll the test. Talents or traits that grant re-rolls add their own buttons, which may be limited per encounter or per session. |
-
-By default you can only spend one Fate Point per roll. The GM can allow more with **Multiple Fate Burn Per Roll (Homebrew)**.
+You can spend one Fate Point per roll unless the GM enables **Multiple Fate Burn Per Roll (Homebrew)**.

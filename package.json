@@ -208,6 +208,7 @@
     "postcss-import": "^16.1.1",
     "postcss-nested": "^7.0.2",
     "prettier": "2.8.8",
+    "remark-gfm": "^4.0.1",
     "size-limit": "^12.1.0",
     "storybook": "^10.6.1",
     "stylelint": "^17.11.0",
