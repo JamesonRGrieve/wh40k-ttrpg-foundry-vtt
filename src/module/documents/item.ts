@@ -8,6 +8,17 @@ import {
     type OriginModifierBag,
 } from '../origin-grant-ledger.ts';
 import { applyRollModeWhispers, getDegreeForMode, isD100Success, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
+import {
+    NAVIGATOR_LEVEL_LABEL_KEY,
+    type NavigatorPowerLevel,
+    type NavigatorTargetComponentKey,
+    emitNavigatorPowerEffects,
+    isNavigatorPowerLevel,
+    isNavigatorPowerSystem,
+    navigatorPowerTargetComponents,
+    resolveNavigatorPower,
+    resolveOpposedNavigatorPower,
+} from '../rules/navigator-powers.ts';
 import type { WH40KItemSystemData } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { capitalize } from '../utils/format.ts';
@@ -773,13 +784,18 @@ export class WH40KItem extends WH40KItemContainer {
             ...opts.extra,
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate(opts.template, cardData);
+        return this.#postRollCard(opts.template, cardData, [roll]);
+    }
 
+    /** Render a roll card template and post it as this item's actor. */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate takes a template-shaped context bag; ChatMessage.create returns an opaque document
+    async #postRollCard(template: string, cardData: Record<string, unknown>, rolls: Roll[]): Promise<unknown> {
+        const html = await foundry.applications.handlebars.renderTemplate(template, cardData);
         return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            rolls: [roll],
+            rolls,
         });
     }
 
@@ -834,27 +850,93 @@ export class WH40KItem extends WH40KItemContainer {
             return this.sendToChat();
         }
 
-        // Navigator powers typically use Perception or Willpower
         const navActor = this.#wh40kActor();
         if (navActor === null) return this.sendToChat();
-        const perception = navActor.characteristics['perception'];
-        const willpower = navActor.characteristics['willpower'];
+        const power = this.system;
+        if (!isNavigatorPowerSystem(power)) return this.sendToChat();
+        const charKey = power.test.characteristic.toLowerCase();
+        const characteristic = navActor.characteristics[charKey];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
-        if (perception === undefined || willpower === undefined) return this.sendToChat();
+        if (characteristic === undefined) return this.sendToChat();
 
-        // Use the higher of the two as base, modified by Navigator Rank
-        // eslint-disable-next-line no-restricted-syntax -- boundary: navigatorRank lives outside the shared system schema
-        const navigatorRank: number = ((navActor.system as Record<string, unknown> | undefined)?.['navigatorRank'] as number | undefined) ?? 0;
-        const perceptionTotal: number = perception.total;
-        const willpowerTotal: number = willpower.total;
-        const baseChar = perceptionTotal > willpowerTotal ? perception : willpower;
-        const targetValue = baseChar.total + navigatorRank * 5;
+        // RAW (RT core §"Using Navigator Powers"): the power's own characteristic
+        // + the mastery bonus (+0/+10/+20) + the power's difficulty from the compendium.
+        const level: NavigatorPowerLevel = isNavigatorPowerLevel(power.mastery) ? power.mastery : 'novice';
+        const testInput = { characteristic: characteristic.total, level, difficultyModifier: power.test.modifier };
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        if (roll.total === undefined) return this.sendToChat();
+        const rolls: Roll[] = [roll];
+        const navigatorTest = { ...testInput, roll: roll.total };
+        const result = resolveNavigatorPower(navigatorTest);
 
-        return this.#rollSimpleD100({
-            targetValue,
-            itemTypeLabel: 'Navigator Power',
-            template: 'systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs',
+        const opponent = power.test.opposed ? this.#navigatorOpponentCharacteristic(power.test.opposedCharacteristic) : null;
+        let success = result.success;
+        let opposed: Record<string, number> | undefined;
+        if (opponent !== null) {
+            const opponentRoll = new Roll('1d100');
+            await opponentRoll.evaluate();
+            if (opponentRoll.total !== undefined) {
+                rolls.push(opponentRoll);
+                const contest = resolveOpposedNavigatorPower({ navigator: navigatorTest, opponent: { characteristic: opponent, roll: opponentRoll.total } });
+                success = contest.success;
+                opposed = {
+                    navigatorRoll: contest.navigator.roll,
+                    navigatorTarget: contest.navigator.target,
+                    navigatorDos: contest.navigator.dos,
+                    opponentRoll: contest.opponent.roll,
+                    opponentTarget: contest.opponent.target,
+                    opponentDos: contest.opponent.dos,
+                    netDos: contest.netDos,
+                };
+            }
+        }
+
+        const levelLabel = game.i18n.localize(NAVIGATOR_LEVEL_LABEL_KEY[level]);
+        const componentLabels: Record<NavigatorTargetComponentKey, string> = {
+            mastery: game.i18n.format('WH40K.NavigatorPowers.MasteryBonus', { level: levelLabel }),
+            difficulty: game.i18n.localize('WH40K.NavigatorPowers.PowerDifficulty'),
+            situational: game.i18n.localize('WH40K.NavigatorPowers.Situational'),
+        };
+        const modifierSources = navigatorPowerTargetComponents(testInput).map(({ key, value }) => {
+            const label = componentLabels[key];
+            const source = key === 'difficulty' ? this.name : label;
+            return { key, label, value, source, tooltipData: JSON.stringify({ title: label, sources: [{ name: source, value }] }) };
         });
+
+        return this.#postRollCard(
+            'systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs',
+            {
+                item: this,
+                roll,
+                baseTarget: characteristic.total,
+                baseLabel: game.i18n.localize(characteristic.label),
+                modifierSources,
+                targetValue: result.target,
+                success,
+                degrees: result.success ? result.dos : result.dof,
+                effectTiers: emitNavigatorPowerEffects(power.levels, level).map((tier) => ({ ...tier, levelLabelKey: NAVIGATOR_LEVEL_LABEL_KEY[tier.level] })),
+                sustainText: power.sustain,
+                opposed,
+                actor: this.actor.name,
+                gameSystem: firstSystemId(this.actor),
+            },
+            rolls,
+        );
+    }
+
+    /**
+     * The tested characteristic total of the single targeted opponent for an
+     * opposed Navigator power, or `null` when the test cannot be contested
+     * (no opposing characteristic authored, or not exactly one target).
+     */
+    #navigatorOpponentCharacteristic(opposedCharacteristic: string): number | null {
+        if (opposedCharacteristic === '' || game.user.targets.size !== 1) return null;
+        const opponent = Array.from(game.user.targets).at(0)?.actor;
+        if (opponent == null) return null;
+        const characteristic = opponent.characteristics[opposedCharacteristic.toLowerCase()];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json types characteristics[key] as possibly undefined, tsconfig.test.json does not
+        return characteristic === undefined ? null : characteristic.total;
     }
 
     /**

@@ -9,6 +9,11 @@
     gameSystem=gameSystem
     footerLabel=actor
 }}
+    {{#if modifierSources}}
+    <div class="tw-mb-2">
+        {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=baseTarget baseLabel=baseLabel modifierSources=modifierSources modifiedTarget=targetValue}}
+    </div>
+    {{/if}}
     <div class="tw-p-7 tw-rounded-md tw-border-2 tw-border-gold tw-bg-[var(--wh40k-panel-bg-solid)] tw-shadow-[0_0_20px_rgba(201,162,39,0.3)] tw-text-center {{#if success}}tw-border-success{{else}}tw-border-failure{{/if}}">
         <div class="tw-text-xs tw-uppercase tw-opacity-70">{{localize "WH40K.NavigatorPowers.RollVsTarget"}}</div>
         <div class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-2xl tw-font-bold">
@@ -43,7 +48,7 @@
         <div class="tw-text-xs tw-uppercase tw-opacity-70 tw-mb-1">{{localize "WH40K.NavigatorPowers.EffectByLevel"}}</div>
         <ul class="tw-text-sm tw-list-none tw-m-0 tw-p-0">
             {{#each effectTiers}}
-            <li><strong>{{localize this.levelLabelKey}}:</strong> {{this.effect}}</li>
+            <li><strong>{{localize this.levelLabelKey}}:</strong> {{{this.effect}}}</li>
             {{/each}}
         </ul>
     </div>
@@ -57,7 +62,7 @@
 
     {{#if sustainText}}
     <div class="tw-mt-2 tw-text-sm">
-        <strong>{{localize "WH40K.NavigatorPowers.Sustained"}}:</strong> {{sustainText}}
+        <strong>{{localize "WH40K.NavigatorPowers.Sustained"}}:</strong> {{{sustainText}}}
     </div>
     {{/if}}
 

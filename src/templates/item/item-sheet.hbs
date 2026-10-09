@@ -13,6 +13,14 @@
 
         <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-[var(--wh40k-space-md)]">
             <div class="tab active" data-tab="description" data-group="primary">
+                {{#if (eq item.type "navigatorPower")}}
+                <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mb-2">
+                    <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide" for="{{item.id}}-mastery">{{localize "WH40K.NavigatorPowers.Mastery"}}</label>
+                    <select id="{{item.id}}-mastery" class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.mastery" {{disabled (not editable)}}>
+                        {{selectOptions system.masteryChoices selected=system.mastery localize=true}}
+                    </select>
+                </div>
+                {{/if}}
                 {{> systems/wh40k-rpg/templates/item/panel/description-panel.hbs}}
             </div>
 

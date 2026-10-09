@@ -59,6 +59,13 @@ export const NAVIGATOR_LEVEL_BONUS: Readonly<Record<NavigatorPowerLevel, number>
 /** Canonical ordering Novice → Adept → Master. */
 export const NAVIGATOR_LEVEL_ORDER: ReadonlyArray<NavigatorPowerLevel> = Object.freeze(['novice', 'adept', 'master']);
 
+/** Langpack key naming each mastery tier (a mechanic primitive, not content). */
+export const NAVIGATOR_LEVEL_LABEL_KEY: Readonly<Record<NavigatorPowerLevel, string>> = Object.freeze({
+    novice: 'WH40K.Chat.Item.Novice',
+    adept: 'WH40K.Chat.Item.Adept',
+    master: 'WH40K.Chat.Item.Master',
+});
+
 /**
  * Inputs for a non-opposed Navigator-power test.
  * - `characteristic` — Navigator's tested characteristic value (e.g. WP).
@@ -135,6 +142,31 @@ export function navigatorPowerTarget(input: Omit<NavigatorTestInput, 'roll'>): n
     const bonus = NAVIGATOR_LEVEL_BONUS[input.level];
     const raw = input.characteristic + bonus + (input.difficultyModifier ?? 0) + (input.situationalModifier ?? 0);
     return clampTarget(raw);
+}
+
+/** Which term of the target formula a {@link NavigatorTargetComponent} is. */
+export type NavigatorTargetComponentKey = 'mastery' | 'difficulty' | 'situational';
+
+/** One signed, provenance-keyed term added to the characteristic base. */
+export interface NavigatorTargetComponent {
+    readonly key: NavigatorTargetComponentKey;
+    readonly value: number;
+}
+
+/**
+ * Decompose {@link navigatorPowerTarget} into its terms so the chat card can
+ * print `characteristic ± each component = target` instead of a lumped total.
+ * The mastery term is always present (a Novice +0 is still provenance); the
+ * difficulty and situational terms appear only when non-zero. The terms sum
+ * with the characteristic to the *unclamped* target.
+ */
+export function navigatorPowerTargetComponents(input: Omit<NavigatorTestInput, 'roll'>): NavigatorTargetComponent[] {
+    const components: NavigatorTargetComponent[] = [{ key: 'mastery', value: NAVIGATOR_LEVEL_BONUS[input.level] }];
+    const difficulty = input.difficultyModifier ?? 0;
+    if (difficulty !== 0) components.push({ key: 'difficulty', value: difficulty });
+    const situational = input.situationalModifier ?? 0;
+    if (situational !== 0) components.push({ key: 'situational', value: situational });
+    return components;
 }
 
 /**
@@ -247,6 +279,23 @@ export function emitNavigatorPowerEffects(levels: NavigatorPowerLevels, activeLe
 // eslint-disable-next-line no-restricted-syntax -- boundary: type guard for external/dialog input
 export function isNavigatorPowerLevel(value: unknown): value is NavigatorPowerLevel {
     return value === 'novice' || value === 'adept' || value === 'master';
+}
+
+/**
+ * The slice of a Navigator-power item's `system` the roll reads — structurally
+ * satisfied by `NavigatorPowerData` without the Document layer importing the
+ * DataModel (which would close an import cycle through `ItemDataModel`).
+ */
+export interface NavigatorPowerSystem {
+    readonly test: { readonly characteristic: string; readonly modifier: number; readonly opposed: boolean; readonly opposedCharacteristic: string };
+    readonly mastery: string;
+    readonly levels: NavigatorPowerLevels;
+    readonly sustain: string;
+}
+
+/** Narrow an item `system` to the Navigator-power shape the roll reads. */
+export function isNavigatorPowerSystem(system: object): system is NavigatorPowerSystem {
+    return 'test' in system && 'levels' in system && 'mastery' in system && 'sustain' in system;
 }
 
 /* -------------------------------------------------------------------------- */

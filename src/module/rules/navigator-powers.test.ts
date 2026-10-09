@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
     NAVIGATOR_LEVEL_BONUS,
+    NAVIGATOR_LEVEL_LABEL_KEY,
     NAVIGATOR_LEVEL_ORDER,
+    navigatorPowerTargetComponents,
+    isNavigatorPowerSystem,
     type NavigatorPowerLevel,
     emitNavigatorPowerEffects,
     isNavigatorPowerLevel,
@@ -201,5 +204,52 @@ describe('isNavigatorPowerLevel (#194)', () => {
         expect(isNavigatorPowerLevel(undefined)).toBe(false);
         expect(isNavigatorPowerLevel(null)).toBe(false);
         expect(isNavigatorPowerLevel(42)).toBe(false);
+    });
+});
+
+describe('navigatorPowerTargetComponents', () => {
+    it('always surfaces the mastery term, even a Novice +0', () => {
+        expect(navigatorPowerTargetComponents({ characteristic: 40, level: 'novice' })).toEqual([{ key: 'mastery', value: 0 }]);
+    });
+
+    it('adds difficulty and situational terms only when non-zero', () => {
+        expect(navigatorPowerTargetComponents({ characteristic: 40, level: 'adept', difficultyModifier: -10, situationalModifier: 0 })).toEqual([
+            { key: 'mastery', value: 10 },
+            { key: 'difficulty', value: -10 },
+        ]);
+        expect(navigatorPowerTargetComponents({ characteristic: 40, level: 'master', difficultyModifier: 0, situationalModifier: 5 })).toEqual([
+            { key: 'mastery', value: 20 },
+            { key: 'situational', value: 5 },
+        ]);
+    });
+
+    it('sums with the characteristic to the target (unclamped range)', () => {
+        const input = { characteristic: 45, level: 'master', difficultyModifier: -10, situationalModifier: 5 } as const;
+        const sum = navigatorPowerTargetComponents(input).reduce<number>((acc, c) => acc + c.value, input.characteristic);
+        expect(sum).toBe(navigatorPowerTarget(input));
+    });
+});
+
+describe('isNavigatorPowerSystem', () => {
+    it('accepts a Navigator-power system shape', () => {
+        const system = {
+            test: { characteristic: 'willpower', modifier: -10, opposed: false, opposedCharacteristic: '' },
+            mastery: 'adept',
+            levels: {},
+            sustain: '',
+        };
+        expect(isNavigatorPowerSystem(system)).toBe(true);
+    });
+
+    it('rejects another item type system', () => {
+        expect(isNavigatorPowerSystem({ damage: {}, test: {} })).toBe(false);
+    });
+});
+
+describe('NAVIGATOR_LEVEL_LABEL_KEY', () => {
+    it('labels every mastery tier', () => {
+        for (const level of NAVIGATOR_LEVEL_ORDER) {
+            expect(NAVIGATOR_LEVEL_LABEL_KEY[level]).toMatch(/^WH40K\./);
+        }
     });
 });

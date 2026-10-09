@@ -1,3 +1,4 @@
+import { NAVIGATOR_LEVEL_LABEL_KEY, NAVIGATOR_LEVEL_ORDER, type NavigatorPowerLevel } from '../../rules/navigator-powers.ts';
 import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -19,6 +20,8 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
         adept: { effect: string; prerequisite: string };
         master: { effect: string; prerequisite: string };
     };
+    /** The owning Navigator's mastery of this power — per-actor state, not content. */
+    declare mastery: NavigatorPowerLevel;
     declare sustain: string;
     declare sideEffects: string;
     declare notes: string;
@@ -63,6 +66,9 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
                 }),
             }),
 
+            // Owning Navigator's mastery tier (Novice / Adept / Master)
+            mastery: new fields.StringField({ required: true, initial: 'novice', choices: [...NAVIGATOR_LEVEL_ORDER] }),
+
             // Sustain description
             sustain: new fields.HTMLField({ required: false, blank: true }),
 
@@ -81,6 +87,11 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
     /** @override */
     get isRollable(): boolean {
         return true;
+    }
+
+    /** Mastery tier → langpack label key, for the item sheet's mastery select. */
+    get masteryChoices(): Readonly<Record<NavigatorPowerLevel, string>> {
+        return NAVIGATOR_LEVEL_LABEL_KEY;
     }
 
     /**
