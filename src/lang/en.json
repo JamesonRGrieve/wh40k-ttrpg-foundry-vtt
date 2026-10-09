@@ -639,7 +639,7 @@
             "NoActiveCombatEncounter": "No active combat encounter.",
             "WeaponNotEquipped": "This weapon must be equipped before it can be used to attack. Equip it from the Combat tab first.",
             "RangeFormulaFailed": "Range formula failed — setting to 0",
-            "WeaponJammed": "This weapon is jammed and cannot fire. Clear the jam (Unjam action) before firing again.",
+            "WeaponJammed": "This weapon is jammed and cannot fire. Use Clear Jam before firing again.",
             "WeaponRecharging": "This weapon is recharging after its last shot and cannot fire again until next round.",
             "WeaponEmpty": "This weapon is out of ammunition. Reload before firing again.",
             "InvalidAmmunition": "Invalid ammunition item",
@@ -744,7 +744,7 @@
                 "EmphasisHint": "Roll the d100 twice and keep the result furthest from 50 — the more extreme outcome, success or failure. On a tie the first roll stands.",
                 "CardNote": "{mode}: rolled {kept} and {discarded}, kept {kept}"
             },
-            "TestVariantsDisabled": "This skill has test variants — enable “Awareness sense split” (or the homebrew ruleset) in system settings to choose one.",
+            "TestVariantsDisabled": "This skill has test variants — enable “Homebrew: Awareness Sense Channels” (or the homebrew ruleset) in system settings to choose one.",
             "NotEnoughAmmo": "Not enough ammo to perform action. Do you need to reload?",
             "ForceFieldTitle": "Force Field",
             "ForceFieldNotActivated": "Force Field not activated!",
