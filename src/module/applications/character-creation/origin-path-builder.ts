@@ -12,7 +12,7 @@
 import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { GameSystemId, OriginStepConfig, OriginStepDef } from '../../config/game-systems/types.ts';
-import { type AvailabilityConfig, WH40K } from '../../config.ts';
+import type { AvailabilityConfig } from '../../config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
@@ -2109,7 +2109,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         const configWh40k = (CONFIG as { wh40k?: { availabilities?: Record<string, AvailabilityConfig> } }).wh40k;
-        const availabilityConfig = configWh40k?.availabilities ?? WH40K.availabilities;
+        // CONFIG.wh40k is the system config set at init; reading it here (not the
+        // config module) keeps this builder out of the config.ts import cycle.
+        const availabilityConfig = configWh40k?.availabilities ?? {};
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: availabilityConfig['scarce'] may be absent; modifier may be absent
         const scarceModifier = availabilityConfig['scarce']?.modifier ?? 0;
         const packLoadResults = await Promise.all(
