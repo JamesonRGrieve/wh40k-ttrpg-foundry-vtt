@@ -1849,7 +1849,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const rd = this.rollData;
         // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.sourceActor.system is the untyped Foundry actor payload; narrowed to the modifierSources provenance slice
         const withSources = rd.sourceActor?.system as { modifierSources?: ModifierSourcesShape } | undefined;
-        return selectPassiveModifierRows(rd.type, rd.rollKey, withSources?.modifierSources);
+        return selectPassiveModifierRows(rd.type, rd.rollKey, withSources?.modifierSources, rd.baseCharacteristicKey);
     }
 
     static async #onToggleAssistant(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {

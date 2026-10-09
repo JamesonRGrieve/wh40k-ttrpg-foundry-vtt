@@ -170,6 +170,12 @@ export class RollData {
 
     baseTarget: number = 0;
     baseChar: string = '';
+    /**
+     * The characteristic key (`'ballisticSkill'`, `'weaponSkill'`, …) the base
+     * target was read from, when a roll has no `rollKey` of its own (a weapon
+     * attack). Lets the dialog show the passive modifiers baked into that base.
+     */
+    baseCharacteristicKey: string = '';
 
     // Unified-roll metadata (set by `WH40KBaseActor._buildSimpleSkillRoll`): the
     // displayed roll category ('Characteristic' | 'Skill' | 'Attack' | …) and the
@@ -815,16 +821,19 @@ export class WeaponRollData extends RollData {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
             this.baseTarget = sourceActor.characteristics['ballisticSkill']?.total ?? 0;
             this.baseChar = 'BS';
+            this.baseCharacteristicKey = 'ballisticSkill';
         } else {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
             this.baseTarget = sourceActor.characteristics['weaponSkill']?.total ?? 0;
             this.baseChar = 'WS';
+            this.baseCharacteristicKey = 'weaponSkill';
         }
 
         if (this.action === 'Knock Down') {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
             this.baseTarget = sourceActor.characteristics['strength']?.total ?? 0;
             this.baseChar = 'S';
+            this.baseCharacteristicKey = 'strength';
         }
     }
 

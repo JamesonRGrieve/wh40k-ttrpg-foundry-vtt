@@ -76,7 +76,26 @@ function bucketForType(type: string, sources: ModifierSourcesShape): Record<stri
  * @param rollKey  the rolled key (e.g. `'medicae'`, `'weaponSkill'`).
  * @param sources  the actor's `system.modifierSources`, or `undefined`.
  */
-export function selectPassiveModifierRows(type: string, rollKey: string, sources: ModifierSourcesShape | undefined): PassiveModifierRow[] {
+export function selectPassiveModifierRows(type: string, rollKey: string, sources: ModifierSourcesShape | undefined): PassiveModifierRow[];
+/**
+ * A roll with no `rollKey` but a characteristic base (a weapon attack rolls BS or
+ * WS) reads that characteristic's bucket instead: those are the modifiers baked
+ * into its base target. The combat `attack` bucket is not shown here — it is added
+ * to the target as its own sourced rows, so listing it again would double-count.
+ */
+export function selectPassiveModifierRows(
+    type: string,
+    rollKey: string,
+    sources: ModifierSourcesShape | undefined,
+    baseCharacteristicKey: string,
+): PassiveModifierRow[];
+export function selectPassiveModifierRows(
+    type: string,
+    rollKey: string,
+    sources: ModifierSourcesShape | undefined,
+    baseCharacteristicKey = '',
+): PassiveModifierRow[] {
+    if (rollKey === '' && baseCharacteristicKey !== '') return selectPassiveModifierRows('Characteristic', baseCharacteristicKey, sources);
     if (rollKey === '' || sources === undefined) return [];
     const entries = bucketForType(type, sources)?.[rollKey];
     if (entries === undefined) return [];

@@ -36,6 +36,25 @@ describe('selectPassiveModifierRows (#484 read-only passive display)', () => {
         expect(rows).toEqual([{ label: 'Deadeye Shot', value: 10, valueLabel: '–', type: 'talent' }]);
     });
 
+    it('shows a weapon attack the passive modifiers baked into its base characteristic (no rollKey, BS base)', () => {
+        const sources: ModifierSourcesShape = {
+            characteristics: { ballisticSkill: [{ name: 'Bionic Eye', type: 'gear', value: 5 }] },
+            combat: { attack: [{ name: 'Deadeye Shot', type: 'talent', value: 10 }] },
+        };
+        // The combat `attack` bucket is added to the target as its own rows, so it is NOT listed here.
+        expect(selectPassiveModifierRows('Attack', '', sources, 'ballisticSkill')).toEqual([{ label: 'Bionic Eye', value: 5, valueLabel: '–', type: 'gear' }]);
+    });
+
+    it('prefers the rollKey over the base characteristic when both are set', () => {
+        expect(selectPassiveModifierRows('Skill', 'medicae', superiorChirurgeon, 'intelligence')).toEqual([
+            { label: 'Superior Chirurgeon', value: 20, valueLabel: '–', type: 'talent' },
+        ]);
+    });
+
+    it('returns nothing for a roll with neither a rollKey nor a base characteristic', () => {
+        expect(selectPassiveModifierRows('Attack', '', superiorChirurgeon, '')).toEqual([]);
+    });
+
     it('returns nothing for a skill with no recorded provenance', () => {
         expect(selectPassiveModifierRows('Skill', 'awareness', superiorChirurgeon)).toEqual([]);
     });
