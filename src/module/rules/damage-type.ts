@@ -17,9 +17,8 @@ const CANONICAL_DAMAGE_TYPES: ReadonlyArray<CanonicalDamageType> = ['Energy', 'E
 /**
  * Normalise a free-form damage-type string (any casing, possibly an
  * abbreviation) to one of the four canonical types. Returns null when
- * the input does not resolve — callers fall back to Impact per
- * core.md L10646 ("If a source of damage does not specify a type,
- * treat it as Impact.").
+ * the input does not resolve — callers fall back to Impact, the
+ * default for untyped damage (core.md L10646).
  */
 export function normalizeDamageType(value: string | null | undefined): CanonicalDamageType | null {
     if (typeof value !== 'string' || value === '') return null;

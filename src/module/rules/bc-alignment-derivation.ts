@@ -10,9 +10,8 @@
  *
  * Caveats encoded here:
  * - Unaligned advances are never tallied (`core.md` :2561).
- * - Archetype-granted advances are excluded (`core.md` :2561, "any
- *   advances granted as part of the Archetype do not count toward
- *   Alignment"). Callers pass `fromArchetype: true` to skip them.
+ * - Archetype-granted advances are excluded (`core.md` :2561): they never
+ *   count toward Alignment. Callers pass `fromArchetype: true` to skip them.
  * - The 10-CP re-check is gated on actually CROSSING a threshold since
  *   the last check; `shouldRecheckAlignment` exposes that gate.
  *

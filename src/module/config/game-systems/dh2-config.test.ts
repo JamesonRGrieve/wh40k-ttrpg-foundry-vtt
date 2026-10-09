@@ -5,8 +5,7 @@ import { DH2eSystemConfig } from './dh2-config';
 /**
  * DH2 errata regression tests (errata.md L33):
  *
- *   "Table 2–5: Skill Aptitudes (Page 81): Replace the Aptitude 2 for
- *    the Common Lore skill with *General*."
+ *   Table 2–5 (p.81): Common Lore's second aptitude becomes General.
  *
  * The codebase already encodes this — `commonLore: ['Intelligence',
  * 'General']` in `getSkillAptitudeTable()`. This test pins the value so

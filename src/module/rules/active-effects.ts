@@ -329,8 +329,7 @@ export interface CriticalSideEffectReport {
  *
  * Armour decision trees (content-agnostic, resolved against the target's armour
  * at the crit body-part — a helmet for Head hits, location armour otherwise):
- *   - `negates` + armoured → the whole row is skipped ("wearing a helmet, he
- *     suffers no ill effects").
+ *   - `negates` + armoured → the whole row is skipped (the armour absorbs it).
  *   - `worsensIfUnarmoured` + armoured → the harsher conditions are withheld and
  *     the reduction surfaced for the GM (the prose can't be split mechanically).
  *
@@ -379,7 +378,7 @@ export async function applyCriticalDamageConditions(actor: WH40KBaseActorDocumen
         }
     }
 
-    // Helmet knocked/torn off ("If he is wearing a helmet, it is torn off"): unequip
+    // Helmet knocked/torn off by the crit: unequip
     // the worn head armour so it stops contributing head AP. Reversible.
     if (record.riders.helmetTornOff) {
         const helmet = findEquippedArmourAt(actor, 'Head');

@@ -37,8 +37,8 @@ export const OW_DEFAULT_LOGISTICS_RATING = 10;
 export const OW_MUNITORUM_INFLUENCE_BONUS = 5;
 
 /**
- * Bonus applied when the requested gear is part of the standard kit
- * for ANY regiment engaged within the warzone (OW core.md line 7084).
+ * Bonus applied when some regiment fighting in the warzone issues the
+ * requested gear as standard (OW core.md line 7084).
  */
 export const OW_STANDARD_KIT_BONUS = 20;
 
@@ -257,8 +257,7 @@ export interface LogisticsTestResult {
  *
  * Per OW d100 conventions a roll equal to the target is a success
  * (roll-under-or-equal). DoS / DoF are reported per OW core.md line
- * 7066 ("for every Degree of Success on the Test, the character
- * receives a +10 bonus") — i.e. one degree per 10-point margin.
+ * 7066 (each DoS is worth +10) — i.e. one degree per 10-point margin.
  */
 export function resolveLogisticsTest(ctx: LogisticsContext, roll: number): LogisticsTestResult {
     const { target, breakdown } = computeLogisticsTarget(ctx);

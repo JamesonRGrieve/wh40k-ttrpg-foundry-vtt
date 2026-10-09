@@ -65,17 +65,15 @@ A few Lucide icons are inlined the same way from the `lucide` package (registry 
 
 ## Usage in Code
 
-Icons can be accessed via the helper module:
+The inlined Font Awesome and Lucide SVGs are generated into `src/module/icons/registry.generated.ts` by `scripts/gen-icons.mjs`, and rendered by key:
 
 ```javascript
-import { getIconUrl, getDefaultIcon } from './module/helpers/game-icons.mjs';
+import { icon } from './module/icons/icon.ts';
 
-// Get a specific icon
-const swordIcon = getIconUrl('lorc/sword');
-
-// Get default icon for an item type
-const weaponIcon = getDefaultIcon('weapon');
+const dice = icon('fa:dice-d20', { class: 'tw-w-4 tw-h-4' });
 ```
+
+In templates: `{{iconSvg "lucide:settings" label="Settings"}}`. game-icons.net icons are referenced by CDN URL, not bundled.
 
 ## How to Attribute
 
