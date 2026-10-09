@@ -35,20 +35,11 @@ export function seedRandom(seed: number): () => number {
 }
 
 const DEFAULT_SEED = 0xc0deba5e;
-let defaultRng = seedRandom(DEFAULT_SEED);
+const defaultRng = seedRandom(DEFAULT_SEED);
 
 /**
- * Reset the default RNG used by `randomId(prefix)` (no-seed form). Call once
- * per story or once per test to pin determinism.
- */
-export function resetDefaultRng(seed = DEFAULT_SEED): void {
-    defaultRng = seedRandom(seed);
-}
-
-/**
- * Deterministic ID. With no `rng`, uses the module-default RNG (which can be
- * reset via `resetDefaultRng`). Pass an explicit `rng` returned from
- * `seedRandom(seed)` to scope determinism per-call.
+ * Deterministic ID. With no `rng`, uses the module-default RNG. Pass an
+ * explicit `rng` returned from `seedRandom(seed)` to scope determinism per-call.
  */
 export function randomId(prefix = 'mock', rng: () => number = defaultRng): string {
     const n = Math.floor(rng() * 0x100000000);
@@ -194,50 +185,6 @@ export function mockVehicleActor(overrides?: Partial<MockVehicleActor>): MockVeh
                 armour: { front: 25, sides: 22, rear: 15 },
                 integrity: { value: 30, max: 30 },
                 crew: { driver: '', gunner: '' },
-            },
-            ...(overrides?.system ?? {}),
-        },
-    };
-}
-
-export interface MockStarshipActor extends Omit<MockActor, 'system'> {
-    system: MockActor['system'] & {
-        starship: {
-            hullClass: string;
-            speed: number;
-            manoeuvrability: number;
-            detectionRating: number;
-            voidShields: { value: number; max: number };
-            armour: number;
-            hullIntegrity: { value: number; max: number };
-            morale: { value: number; max: number };
-            crew: { value: number; max: number; rating: number };
-        };
-    };
-}
-
-export function mockStarshipActor(overrides?: Partial<MockStarshipActor>): MockStarshipActor {
-    const base = mockActor({
-        type: 'rt-starship',
-        name: 'Sword of Terra',
-        img: 'icons/vehicles/voidship.webp',
-    });
-    return {
-        ...base,
-        ...(overrides ?? {}),
-        _id: randomId('mock-starship'),
-        system: {
-            ...base.system,
-            starship: {
-                hullClass: 'frigate',
-                speed: 8,
-                manoeuvrability: 15,
-                detectionRating: 10,
-                voidShields: { value: 1, max: 1 },
-                armour: 18,
-                hullIntegrity: { value: 35, max: 35 },
-                morale: { value: 100, max: 100 },
-                crew: { value: 80, max: 100, rating: 40 },
             },
             ...(overrides?.system ?? {}),
         },

@@ -6,7 +6,7 @@ import { test } from './lib/test';
 /**
  * Tier B coverage of the *second* batch of pure-logic modules under
  * `src/module/rules/*` — the canonical RAW resolvers (difficulty ladder,
- * scatter, surprise, retry, two-weapon, untrained, cover, pinning,
+ * scatter, surprise, retry, two-weapon, untrained, pinning,
  * fatigue, fear, hit-locations, hazards, healing, attack-options) that
  * `rules-engine.spec.ts` does NOT touch. Like that spec, every module
  * here is at 0% Tier B function coverage before this lands because no
@@ -29,8 +29,6 @@ import { test } from './lib/test';
  *     ranged + talent-gated branches).
  *   - `untrained-skill.ts` — `resolveUntrainedTarget` (trained / basic /
  *     advanced / halved / alt-characteristic branches).
- *   - `cover.ts` — `resolveCoverHit` (absorb / overflow / destroyed),
- *     `startingCoverAP`.
  *   - `pinning.ts` — `resolvePinningTest`, `resolveEscapePinningTest`
  *     (cover / not-being-shot-at bonus, non-stacking).
  *   - `fatigue.ts` — `getFatigueThreshold`, `isFatigueUnconscious`,
@@ -61,8 +59,6 @@ const RULE_PURE_FLOWS = [
     'trying-again-advice',
     'two-weapon-penalties',
     'untrained-skill-target',
-    'cover-resolveHit',
-    'cover-startingAP',
     'pinning-resolveTest',
     'pinning-escapeTest',
     'fatigue-threshold',
@@ -142,11 +138,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     halved: boolean;
                     usedAltCharacteristic: boolean;
                 };
-            };
-            'cover': {
-                resolveCoverHit: (input: { incomingDamage: number; coverAP: number }) => { overflowToActor: number; coverDestroyed: boolean };
-                startingCoverAP: (kind: string) => number;
-                COVER_AP: Record<string, number>;
             };
             'pinning': {
                 resolvePinningTest: (input: { willpowerTotal: number; triggerModifier?: number }) => { target: number };
@@ -315,20 +306,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 const alt = untrained.resolveUntrainedTarget({ advance: 10, isBasic: true, characteristicTotal: 30, altCharacteristicTotal: 50 });
                 return trained.target === 40 && advanced.untrainedAdvanced && halved.halved && alt.usedAltCharacteristic;
             });
-        }
-
-        // ---------- cover ----------
-        const cover = await loadModule('cover');
-        if (isImportError(cover)) {
-            for (const k of ['cover-resolveHit', 'cover-startingAP'] as const) record(k, false, cover.__importError);
-        } else {
-            guarded('cover-resolveHit', () => {
-                const absorbed = cover.resolveCoverHit({ incomingDamage: 5, coverAP: 8 });
-                const destroyed = cover.resolveCoverHit({ incomingDamage: 4, coverAP: 4 });
-                const overflow = cover.resolveCoverHit({ incomingDamage: 10, coverAP: 4 });
-                return absorbed.overflowToActor === 0 && !absorbed.coverDestroyed && destroyed.coverDestroyed && overflow.overflowToActor === 6;
-            });
-            guarded('cover-startingAP', () => typeof cover.startingCoverAP('sandbags') === 'number' && cover.COVER_AP.barricade === 12);
         }
 
         // ---------- pinning ----------

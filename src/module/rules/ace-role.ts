@@ -14,7 +14,7 @@
  * the constants.
  *
  * Sister file to `medicae-mechadendrite.ts` (errata Half-Action staunch)
- * and `aerial-manoeuvres.ts` neighbours under `rules/`. Per Direction
+ * under `rules/`. Per Direction
  * #7, the role and its applicable skills are content from the
  * compendium and `RIGHT_STUFF.applicableSkills`; this file is the
  * content-agnostic resolution primitive only.

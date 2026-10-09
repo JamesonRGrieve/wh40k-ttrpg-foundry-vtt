@@ -6,10 +6,9 @@ import { test } from './lib/test';
 /**
  * Tier B coverage of the *third* batch of pure-logic modules under
  * `src/module/rules/*` — the affliction / social / vehicle resolvers
- * (addiction, assistance, characteristic-damage, combat-circumstance-
- * modifiers, disposition, disease, poison, phenomena-modifier,
- * reinforcement, requisition-test, spray-avoidance, vehicle-actions,
- * vehicle-hazards) that neither `rules-engine.spec.ts` nor
+ * (addiction, assistance, disposition, disease, poison,
+ * phenomena-modifier, reinforcement, requisition-test, spray-avoidance)
+ * that neither `rules-engine.spec.ts` nor
  * `rules-pure-logic.spec.ts` touches. Same rationale as those specs:
  * every module here is at 0% Tier B function coverage because no other
  * Tier B test imports it directly — the system code reaches these
@@ -28,11 +27,6 @@ const RULE_AFFLICTION_FLOWS = [
     'addiction-resolveCheck',
     'addiction-treatmentDays',
     'assistance-bonus',
-    'characteristic-damage-atZero',
-    'characteristic-damage-effective',
-    'characteristic-damage-healed',
-    'combat-modifiers-registry',
-    'combat-modifiers-sumSelected',
     'disposition-label',
     'disposition-modifier',
     'disease-exposure',
@@ -44,9 +38,6 @@ const RULE_AFFLICTION_FLOWS = [
     'requisition-test-target',
     'requisition-test-influenceLoss',
     'spray-avoidance-resolve',
-    'vehicle-actions-registry',
-    'vehicle-hazards-resolveRoll',
-    'vehicle-hazards-repairDifficulty',
 ] as const;
 
 type FlowName = (typeof RULE_AFFLICTION_FLOWS)[number];
@@ -62,9 +53,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         // Runtime-loaded module surfaces. Each module is dynamic-imported by
         // name; the interfaces below describe exactly the exports the probe
         // touches, so the comparisons downstream stay fully typed.
-        interface CombatModifier {
-            id?: string;
-        }
         interface RuleModules {
             'addiction': {
                 resolveAddictionCheck: (input: { willpowerTotal: number; substanceRating: number; currentTier: string }) => {
@@ -77,17 +65,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             'assistance': {
                 getAssistanceBonus: (assistants: number, perAssistant?: number) => number;
                 DEFAULT_ASSISTANT_CAP: number;
-            };
-            'characteristic-damage': {
-                getAtZeroEffect: (characteristic: string) => { effect: string } | undefined;
-                getEffectiveCharacteristic: (total: number, damage: number) => number;
-                getCharacteristicDamageHealed: (damage: number, healed: number) => number;
-            };
-            'combat-circumstance-modifiers': {
-                COMBAT_CIRCUMSTANCE_MODIFIERS: readonly CombatModifier[];
-                getCombatModifier: (id: string) => CombatModifier | undefined;
-                getCombatModifiersForTarget: (target: string) => readonly CombatModifier[];
-                sumSelectedCombatModifiers: (ids: readonly (string | undefined)[]) => number;
             };
             'disposition': {
                 labelForDisposition: (value: number) => string;
@@ -133,15 +110,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     skill: string;
                     target: number;
                 };
-            };
-            'vehicle-actions': {
-                getVehicleActionNames: () => readonly string[];
-                getVehicleAction: (name: string) => { skill: string } | undefined;
-                VEHICLE_ACTIONS: readonly { name?: string }[];
-            };
-            'vehicle-hazards': {
-                resolveHazardRoll: (kind: string, roll: number) => { label: string } | undefined;
-                getRepairDifficulty: (degrees: number, dc: number) => number;
             };
         }
         interface DiseaseProfile {
@@ -219,52 +187,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     assistance.getAssistanceBonus(5, 5) === 50 &&
                     assistance.DEFAULT_ASSISTANT_CAP === 2
                 );
-            });
-        }
-
-        // ---------- characteristic-damage ----------
-        const charDamage = await loadModule('characteristic-damage');
-        if (isImportError(charDamage)) {
-            fail(['characteristic-damage-atZero', 'characteristic-damage-effective', 'characteristic-damage-healed'], charDamage.__importError);
-        } else {
-            guarded('characteristic-damage-atZero', () => {
-                const ws = charDamage.getAtZeroEffect('weaponSkill');
-                const tough = charDamage.getAtZeroEffect('toughness');
-                const missing = charDamage.getAtZeroEffect('not-a-characteristic');
-                return ws?.effect === 'cannot-test' && tough?.effect === 'death' && missing === undefined;
-            });
-            guarded(
-                'characteristic-damage-effective',
-                () => charDamage.getEffectiveCharacteristic(40, 10) === 30 && charDamage.getEffectiveCharacteristic(10, 50) === 0,
-            );
-            guarded(
-                'characteristic-damage-healed',
-                () => charDamage.getCharacteristicDamageHealed(5, 3) === 3 && charDamage.getCharacteristicDamageHealed(2, 10) === 2,
-            );
-        }
-
-        // ---------- combat-circumstance-modifiers ----------
-        const ccm = await loadModule('combat-circumstance-modifiers');
-        if (isImportError(ccm)) {
-            fail(['combat-modifiers-registry', 'combat-modifiers-sumSelected'], ccm.__importError);
-        } else {
-            guarded('combat-modifiers-registry', () => {
-                const reg = ccm.COMBAT_CIRCUMSTANCE_MODIFIERS;
-                if (reg.length === 0) return false;
-                const first = reg[0];
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: tsconfig.json types reg[0] as possibly-undefined; tsconfig.test.json (eslint's program) does not
-                const byId = ccm.getCombatModifier(first?.id ?? '');
-                const missing = ccm.getCombatModifier('does-not-exist');
-                const forTargetCount = ccm.getCombatModifiersForTarget('bs').length;
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: tsconfig.json types reg[0] as possibly-undefined; tsconfig.test.json (eslint's program) does not
-                return byId?.id === first?.id && missing === undefined && Number.isInteger(forTargetCount);
-            });
-            guarded('combat-modifiers-sumSelected', () => {
-                const reg = ccm.COMBAT_CIRCUMSTANCE_MODIFIERS;
-                const ids = reg.slice(0, 2).map((m) => m.id);
-                const sum = ccm.sumSelectedCombatModifiers(ids);
-                const empty = ccm.sumSelectedCombatModifiers([]);
-                return typeof sum === 'number' && empty === 0;
             });
         }
 
@@ -402,42 +324,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 const floored = spray.resolveSprayAvoidance({ hasLeapingDodge: false, agilityTotal: -10, dodgeTotal: 30 });
                 return def.skill === 'agility' && def.target === 40 && leaping.skill === 'dodge' && leaping.target === 55 && floored.target === 0;
             });
-        }
-
-        // ---------- vehicle-actions ----------
-        const vehicleActions = await loadModule('vehicle-actions');
-        if (isImportError(vehicleActions)) {
-            fail(['vehicle-actions-registry'], vehicleActions.__importError);
-        } else {
-            guarded('vehicle-actions-registry', () => {
-                const names = vehicleActions.getVehicleActionNames();
-                const ram = vehicleActions.getVehicleAction('Ram');
-                const missing = vehicleActions.getVehicleAction('Not An Action');
-                return (
-                    Array.isArray(names) &&
-                    names.includes('Ram') &&
-                    ram?.skill === 'operate' &&
-                    missing === undefined &&
-                    Array.isArray(vehicleActions.VEHICLE_ACTIONS)
-                );
-            });
-        }
-
-        // ---------- vehicle-hazards ----------
-        const vehicleHazards = await loadModule('vehicle-hazards');
-        if (isImportError(vehicleHazards)) {
-            fail(['vehicle-hazards-resolveRoll', 'vehicle-hazards-repairDifficulty'], vehicleHazards.__importError);
-        } else {
-            guarded('vehicle-hazards-resolveRoll', () => {
-                const skid = vehicleHazards.resolveHazardRoll('outOfControl', 1);
-                const crash = vehicleHazards.resolveHazardRoll('crash', 10);
-                const fire = vehicleHazards.resolveHazardRoll('onFire', 1);
-                return skid?.label === 'Wide Skid' && crash?.label === 'Catastrophic' && fire?.label === 'Smouldering';
-            });
-            guarded(
-                'vehicle-hazards-repairDifficulty',
-                () => typeof vehicleHazards.getRepairDifficulty(5, 10) === 'number' && typeof vehicleHazards.getRepairDifficulty(1, 10) === 'number',
-            );
         }
 
         return out;

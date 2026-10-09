@@ -14,7 +14,7 @@ import { expect, test } from './lib/test';
  * The posted message is left in the chat log through `snap()` (it is
  * only deleted afterward) so the screenshot captures the live card —
  * mirroring the open-through-snap discipline of
- * `disorder-roll-dialog.spec.ts` and `aerial-manoeuvres.spec.ts`.
+ * `disorder-roll-dialog.spec.ts`.
  */
 
 test.describe.serial('Without talents — Push the Limit chat card (Tier B)', () => {

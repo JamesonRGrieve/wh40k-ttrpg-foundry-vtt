@@ -4,10 +4,9 @@
  *
  * The size→to-hit rule is `(size − 4) × 10`: every size step away from Average
  * (4) shifts the attack test by ±10, from Minuscule (1 → −30) to Titanic
- * (10 → +60). Both the auto-modifier in `rolls/roll-data.ts` and the size rows
- * in `rules/combat-circumstance-modifiers.ts` derive from this function so the
- * formula and its RAW range are defined exactly once and can never diverge
- * (#421). The ±60 roll-modifier cap is a separate concern and lives in
+ * (10 → +60). The auto-modifier in `rolls/roll-data.ts` derives from this
+ * function, so the formula and its RAW range are defined exactly once (#421).
+ * The ±60 roll-modifier cap is a separate concern and lives in
  * `rolls/aggregate-target.ts:clampModifierToCap`.
  */
 

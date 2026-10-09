@@ -15,7 +15,7 @@ import { expect, test } from './lib/test';
  *  2. Posts the `right-stuff-chat.hbs` auto-success card to the live
  *     chat log via `ChatMessage.create`, asserts the card root, the
  *     per-system `data-wh40k-system` anchor, and the auto-success
- *     banner all render (mirrors `aerial-manoeuvres.spec.ts`).
+ *     banner all render.
  *
  * Each posted artefact (dialog handle, chat message) is left in place
  * through the `snap()` call and torn down only afterward so the

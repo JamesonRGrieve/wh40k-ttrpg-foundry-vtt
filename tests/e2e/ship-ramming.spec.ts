@@ -12,8 +12,7 @@ import { expect, test } from './lib/test';
  *
  * The posted message is left in the chat log through `snap()` so the
  * screenshot captures the live card — mirrors the open-through-snap
- * discipline of `disorder-roll-dialog.spec.ts` and
- * `aerial-manoeuvres.spec.ts`.
+ * discipline of `disorder-roll-dialog.spec.ts`.
  */
 test.describe.serial('Ship Ramming chat card (Tier B)', () => {
     test('posts the ramming hit card and snaps', async ({ page }) => {

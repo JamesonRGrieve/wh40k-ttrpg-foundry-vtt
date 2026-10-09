@@ -2608,33 +2608,6 @@
             "StandUp": "Stand Up",
             "Move": "Move While Grappling"
         },
-        "AerialManoeuvre": {
-            "ChatTitle": "Aerial Manoeuvre",
-            "Success": "Success",
-            "Failure": "Failure",
-            "AltitudeLabel": "Resulting Altitude",
-            "PilotBonusLabel": "Pilot & Crew BS",
-            "EnemyBonusLabel": "Enemy BS (vs. craft)",
-            "OutcomeLabel": "Outcome",
-            "FreeAttack": "Pilot-controlled weapons may fire at the target immediately as a Free Action.",
-            "Altitude": {
-                "Ground": "Ground",
-                "Low": "Low Altitude",
-                "High": "High Altitude",
-                "Orbital": "Orbital"
-            },
-            "LockOn": {
-                "Name": "Lock On",
-                "OutcomeSuccess": "The pilot manoeuvres behind the foe. The pilot and crew gain +20 BS against that craft.",
-                "OutcomeFail": "The pilot fails to gain position. Until the pilot's next turn begins, other enemies get +10 BS when shooting at this craft."
-            },
-            "TightTurn": {
-                "Name": "Tight Turn",
-                "OutcomeSuccess": "The flyer wrenches around — 90° turns this move, and Altitude may shift one level.",
-                "OutcomeFail": "The turn is mishandled; the flyer drops one Altitude tier.",
-                "OutcomeDestabilise": "The turn is mishandled at ground level; the flyer destabilises (resolve on the Out-of-Control table)."
-            }
-        },
         "CriticalDamage": {
             "ChatTitle": "Critical Damage",
             "DamageTypeLabel": "Damage Type",
@@ -4364,39 +4337,6 @@
                 "NotifyCancelled": "Prior-turn damage cancelled: +{hull} hull, +{crew} crew, +{morale} morale.",
                 "NotifyNothingToCancel": "No prior-turn damage to cancel.",
                 "NotifyReplenished": "Crew morale replenished between combats."
-            },
-            "Manoeuvre": {
-                "BarTitle": "Manoeuvre Actions",
-                "Helmsman": "Helmsman",
-                "Target": "Target",
-                "Opposed": "Opposed",
-                "Roll": "Roll",
-                "RollTitle": "Roll this Manoeuvre Action (Pilot (Space Craft) + Manoeuvrability)",
-                "Empty": "No Manoeuvre Actions available for this game system.",
-                "AdjustBearing": {
-                    "Label": "Adjust Bearing",
-                    "Benefit": "Turn earlier than normal."
-                },
-                "AdjustSpeed": {
-                    "Label": "Adjust Speed",
-                    "Benefit": "Move faster or slower than normal."
-                },
-                "AdjustSpeedAndBearing": {
-                    "Label": "Adjust Speed & Bearing",
-                    "Benefit": "Can turn sooner than usual, even when travelling above or below standard speed."
-                },
-                "ComeToNewHeading": {
-                    "Label": "Come to New Heading",
-                    "Benefit": "Make two turns in one Round (-20 BS to fire this turn)."
-                },
-                "Disengage": {
-                    "Label": "Disengage",
-                    "Benefit": "Escape combat (opposed by enemy Detection+Scrutiny within 20 VU)."
-                },
-                "EvasiveManoeuvres": {
-                    "Label": "Evasive Manoeuvres",
-                    "Benefit": "Inflicts -10 (per DoS) penalty on incoming fire; same penalty applies to own shooting."
-                }
             },
             "Ramming": {
                 "ChatTitle": "Ramming Action",
