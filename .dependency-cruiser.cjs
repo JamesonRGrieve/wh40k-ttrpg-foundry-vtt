@@ -34,6 +34,8 @@ module.exports = {
                     '\\.d\\.ts$',
                     'src/module/wh40k-rpg\\.ts$',
                     'src/module/types/.*\\.d\\.ts$',
+                    // Ambient module augmentation kept as .ts so it is type-checked.
+                    'src/module/types/fvtt-config\\.ts$',
                     'src/module/icons/registry\\.generated\\.ts$',
                     '\\.stories\\.ts$',
                     '\\.test\\.ts$',

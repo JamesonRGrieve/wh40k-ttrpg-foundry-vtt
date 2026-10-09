@@ -33,11 +33,12 @@ const args = new Set(process.argv.slice(2));
 /**
  * Modules that are legitimately imported by nothing:
  *   - the system entry point Foundry itself loads;
- *   - ambient/generated declaration files;
+ *   - ambient/generated declaration files, including `types/fvtt-config.ts` (a
+ *     `.ts` ambient module augmentation, kept out of `.d.ts` so it is type-checked);
  *   - test-only infrastructure, reached solely from *.test.ts (which the graph excludes).
  * Mirrors the `pathNot` exemptions on dependency-cruiser's `no-orphans` rule.
  */
-const ENTRY_POINT = /^src\/module\/wh40k-rpg\.ts$|\.d\.ts$|registry\.generated\.ts$|^src\/module\/testing\//;
+const ENTRY_POINT = /^src\/module\/wh40k-rpg\.ts$|\.d\.ts$|^src\/module\/types\/fvtt-config\.ts$|registry\.generated\.ts$|^src\/module\/testing\//;
 
 const raw = execFileSync('pnpm', ['exec', 'depcruise', '--config', '.dependency-cruiser.cjs', '--output-type', 'json', 'src/module'], {
     encoding: 'utf8',
