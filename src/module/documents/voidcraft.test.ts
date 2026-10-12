@@ -184,7 +184,7 @@ describe('WH40KStarship', () => {
 
 /**
  * Issue #189 — RT Crew Population & Morale combat economy. Asserts that
- * the document's `applyHullDamage` / `cancelPriorTurnDamage` /
+ * the document's `applyHullDamage` / `reducePriorTurnDamage` /
  * `replenishBetweenCombat` methods route through the rules helpers and
  * write the expected dotted-path updates. Per-system gating: non-RT
  * hulls must not have crew/morale touched.
@@ -192,7 +192,6 @@ describe('WH40KStarship', () => {
 describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
     type PriorTurnDamage = { hullLoss: number; crewLoss: number; moraleLoss: number; turn: number };
     type HullDamageDelta = { hullLoss: number; crewLoss: number; moraleLoss: number };
-    type RestoredDelta = { hullRestored: number; crewRestored: number; moraleRestored: number };
     type UpdatePayload = Record<string, number | PriorTurnDamage>;
 
     interface FakeStarship {
@@ -210,8 +209,18 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
 
     interface StarshipMethods {
         applyHullDamage: (this: FakeStarship, n: number) => Promise<HullDamageDelta>;
-        cancelPriorTurnDamage: (this: FakeStarship) => Promise<RestoredDelta>;
+        reducePriorTurnDamage: (this: FakeStarship, pool: 'morale' | 'crewPopulation', amount: number) => Promise<number>;
         replenishBetweenCombat: (this: FakeStarship) => Promise<void>;
+    }
+
+    /** The document's private state readers the public methods call on `this`. */
+    interface StarshipStateReaders {
+        _readShipCombatState: (this: FakeStarship) => {
+            hullIntegrity: { value: number; max: number };
+            crew: { population: number; morale: { value: number; max: number } };
+        };
+        _readPriorTurnSnapshot: (this: FakeStarship) => PriorTurnDamage;
+        _currentStrategicTurn: (this: FakeStarship) => number;
     }
 
     async function makeFakeStarship(opts: { gameSystem?: string; priorTurnDamage?: PriorTurnDamage } = {}): Promise<
@@ -225,7 +234,7 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: reading the document's prototype methods through a structural test interface (the class type and StarshipMethods do not overlap)
-        const proto = mod.WH40KVoidcraft.prototype as unknown as StarshipMethods;
+        const proto = mod.WH40KVoidcraft.prototype as unknown as StarshipMethods & StarshipStateReaders;
         const desc = Object.getOwnPropertyDescriptor(mod.WH40KVoidcraft.prototype, 'usesRTCrewEconomy');
         if (desc === undefined) throw new Error('usesRTCrewEconomy descriptor missing on WH40KStarship prototype');
 
@@ -257,11 +266,17 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
                 await Promise.resolve();
             },
         };
+        // The document's private state readers, so the public methods run against the fake.
+        Object.assign(fake, {
+            _readShipCombatState: proto._readShipCombatState,
+            _readPriorTurnSnapshot: proto._readPriorTurnSnapshot,
+            _currentStrategicTurn: proto._currentStrategicTurn,
+        });
         return {
             fake,
             methods: {
                 applyHullDamage: proto.applyHullDamage,
-                cancelPriorTurnDamage: proto.cancelPriorTurnDamage,
+                reducePriorTurnDamage: proto.reducePriorTurnDamage,
                 replenishBetweenCombat: proto.replenishBetweenCombat,
                 usesRTCrewEconomy: desc,
             },
@@ -311,7 +326,9 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         expect(fake._lastUpdate?.['system.crew.population']).toBeUndefined();
     });
 
-    it('cancelPriorTurnDamage restores the recorded snapshot when invoked the next turn', async () => {
+    // Regression (#189): Hold Fast! used to restore ALL of last turn's hull,
+    // crew and morale with no test. RAW it reduces only Morale, by 1 + DoS.
+    it('reducePriorTurnDamage("morale") restores only Morale, capped by the amount, next turn', async () => {
         const setup = await makeFakeStarship({
             gameSystem: 'rt',
             priorTurnDamage: { hullLoss: 5, crewLoss: 5, moraleLoss: 5, turn: 1 },
@@ -320,31 +337,24 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         if (setup === undefined) return;
         const { fake, methods } = setup;
         Object.defineProperty(fake, 'usesRTCrewEconomy', methods.usesRTCrewEconomy);
-        // Simulate the actor having taken last turn's damage already
         fake.system.hullIntegrity.value = 30;
         fake.system.crew.population = 95;
         fake.system.crew.morale.value = 95;
 
-        // Stub current turn to 2 (one strictly-greater than snapshot's turn=1).
-        const stubGame = { combats: { active: { round: 2 } } };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: globalThis.game shim for unit test
-        const prev = (globalThis as { game?: unknown }).game;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: globalThis.game shim for unit test
-        (globalThis as { game?: unknown }).game = stubGame;
+        vi.stubGlobal('game', { combats: { active: { round: 2 } } });
         try {
-            const restored = await methods.cancelPriorTurnDamage.call(fake);
-            expect(restored).toEqual({ hullRestored: 5, crewRestored: 5, moraleRestored: 5 });
-            expect(fake.system.hullIntegrity.value).toBe(35);
-            expect(fake.system.crew.population).toBe(100);
-            expect(fake.system.crew.morale.value).toBe(100);
-            expect(fake.system.priorTurnDamage?.hullLoss).toBe(0);
+            const restored = await methods.reducePriorTurnDamage.call(fake, 'morale', 2);
+            expect(restored).toBe(2);
+            expect(fake.system.crew.morale.value).toBe(97);
+            expect(fake.system.hullIntegrity.value).toBe(30);
+            expect(fake.system.crew.population).toBe(95);
+            expect(fake.system.priorTurnDamage?.moraleLoss).toBe(3);
         } finally {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: globalThis.game shim for unit test
-            (globalThis as { game?: unknown }).game = prev;
+            vi.unstubAllGlobals();
         }
     });
 
-    it('cancelPriorTurnDamage is a no-op on non-RT hulls', async () => {
+    it('reducePriorTurnDamage is a no-op on non-RT hulls', async () => {
         const setup = await makeFakeStarship({
             gameSystem: 'dh2',
             priorTurnDamage: { hullLoss: 5, crewLoss: 5, moraleLoss: 5, turn: 1 },
@@ -353,8 +363,8 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         if (setup === undefined) return;
         const { fake, methods } = setup;
         Object.defineProperty(fake, 'usesRTCrewEconomy', methods.usesRTCrewEconomy);
-        const restored = await methods.cancelPriorTurnDamage.call(fake);
-        expect(restored.hullRestored).toBe(0);
+        const restored = await methods.reducePriorTurnDamage.call(fake, 'crewPopulation', 3);
+        expect(restored).toBe(0);
         expect(fake._lastUpdate).toBeUndefined();
     });
 

@@ -885,8 +885,9 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      *
      * Locates the action either by `data-action-uuid` (compendium or world)
      * or `data-action-id` (owned), renders the chat card template, and posts
-     * it to the chat log. Mechanical resolution (rolls, modifiers, success
-     * effects) is intentionally out of scope at this stage and is a follow-up.
+     * it to the chat log. Rolling the action's test and applying its effect
+     * (Hold Fast! / Triage via `WH40KVoidcraft.reducePriorTurnDamage`, #189)
+     * is the #186 follow-up.
      */
     static async #dispatchExtendedAction(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
@@ -896,27 +897,11 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
 
         const cardData = this.#buildActionCardData(item, actor);
 
-        // Issue #189 — route content-agnostic shipActionEffect tags into the
-        // RT Crew/Morale economy. Compendium-side, Hold Fast! / Triage opt-in
-        // via `system.shipActionEffect = 'cancelPriorTurnDamage'`; replenish
-        // helpers opt in via `'replenishMorale'`. No name string-matching.
+        // Content-agnostic `shipActionEffect` tag (#189). The old blanket
+        // `cancelPriorTurnDamage` route is gone: it restored all hull, crew
+        // and morale with no test, which is not what Hold Fast! / Triage do.
         const effectSys = item.system as { shipActionEffect?: string };
-        const effect = effectSys.shipActionEffect ?? '';
-        if (effect === 'cancelPriorTurnDamage') {
-            const restored = await actor.cancelPriorTurnDamage();
-            const i18n = game.i18n;
-            if (restored.hullRestored > 0 || restored.crewRestored > 0 || restored.moraleRestored > 0) {
-                ui.notifications.info(
-                    i18n.format('WH40K.Voidcraft.Crew.NotifyCancelled', {
-                        hull: String(restored.hullRestored),
-                        crew: String(restored.crewRestored),
-                        morale: String(restored.moraleRestored),
-                    }),
-                );
-            } else {
-                ui.notifications.info(i18n.localize('WH40K.Voidcraft.Crew.NotifyNothingToCancel'));
-            }
-        } else if (effect === 'replenishMorale') {
+        if (effectSys.shipActionEffect === 'replenishMorale') {
             await actor.replenishBetweenCombat();
             ui.notifications.info(game.i18n.localize('WH40K.Voidcraft.Crew.NotifyReplenished'));
         }

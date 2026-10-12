@@ -1,3 +1,4 @@
+import type { PriorTurnDamageSnapshot } from '../../rules/ship-crew-morale.ts';
 import VehicleData, { LOCOMOTION_CHOICES } from './vehicle.ts';
 
 /** Subset of ship-component item.system fields used in voidcraft preparation. */
@@ -22,6 +23,9 @@ interface ShipItemView {
     /** Foundry stamps a `_stats.compendiumSource` UUID on imported entries. */
     _stats?: { compendiumSource?: string };
 }
+
+/** Options of every loss counter in the per-turn damage record (#189). */
+const TURN_LOSS_FIELD_OPTIONS = { required: true, initial: 0, min: 0, integer: true } as const;
 
 /** The three item types whose `shipPoints` count toward the build budget. */
 function contributesSp(type: string): boolean {
@@ -239,23 +243,27 @@ export default class VoidcraftData extends VehicleData {
     }>;
 
     /**
-     * Prior-turn damage snapshot for the Hold Fast! / Triage cancel
-     * mechanic (issue #189). Tracks the total Hull / Crew Population /
-     * Morale lost during the most-recent fully-recorded strategic turn,
-     * plus the turn number that snapshot belongs to. A Hold Fast! or
-     * Triage extended action resolved on the *following* turn reverts
-     * these losses; turn rollover (or actor reset) clears the record.
+     * Per-turn damage record for Hold Fast! / Triage (issue #189, RT Core
+     * p.218). Tracks the Hull / Crew Population / Morale lost during the
+     * current strategic turn, plus the turn before it as `previous`. A
+     * successful Hold Fast! (Morale) or Triage (Crew Population) on the
+     * following turn reduces one pool of the previous turn's loss.
      *
-     * Content-agnostic primitive (numbers only) per Direction #7 — the
-     * compendium-side `order` items opt into the cancel by tagging
-     * `system.shipActionEffect: 'cancelPriorTurnDamage'`.
+     * Content-agnostic primitive (numbers only) per Direction #7 — which
+     * pool an action reduces is authored on the `order` item's `shipEffect`.
      */
-    declare priorTurnDamage: {
-        hullLoss: number;
-        crewLoss: number;
-        moraleLoss: number;
-        turn: number;
-    };
+    declare priorTurnDamage: PriorTurnDamageSnapshot;
+
+    /** The loss counters one recorded strategic turn carries. */
+    static _turnLossesFields(): Record<'hullLoss' | 'crewLoss' | 'moraleLoss' | 'turn', foundry.data.fields.NumberField<typeof TURN_LOSS_FIELD_OPTIONS>> {
+        const fields = foundry.data.fields;
+        return {
+            hullLoss: new fields.NumberField(TURN_LOSS_FIELD_OPTIONS),
+            crewLoss: new fields.NumberField(TURN_LOSS_FIELD_OPTIONS),
+            moraleLoss: new fields.NumberField(TURN_LOSS_FIELD_OPTIONS),
+            turn: new fields.NumberField(TURN_LOSS_FIELD_OPTIONS),
+        };
+    }
 
     /** Computed during _prepareCombatStats */
     declare detectionBonus: number;
@@ -412,15 +420,14 @@ export default class VoidcraftData extends VehicleData {
                 { required: true, initial: [] },
             ),
 
-            // Prior-turn damage snapshot for Hold Fast! / Triage (issue #189).
-            // All four numeric fields default to 0 — `turn: 0` is the sentinel
-            // for "no snapshot recorded yet". See document `applyHullDamage` /
-            // `cancelPriorTurnDamage` for the write path.
+            // Per-turn damage record for Hold Fast! / Triage (issue #189).
+            // All numeric fields default to 0 — `turn: 0` is the sentinel for
+            // "nothing recorded yet". `previous` keeps the turn before the
+            // current one once a newer turn's hit lands. See document
+            // `applyHullDamage` / `reducePriorTurnDamage` for the write path.
             priorTurnDamage: new fields.SchemaField({
-                hullLoss: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                crewLoss: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                moraleLoss: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                turn: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                ...VoidcraftData._turnLossesFields(),
+                previous: new fields.SchemaField(VoidcraftData._turnLossesFields()),
             }),
         };
     }

@@ -4575,8 +4575,6 @@
                 "Role": "Role",
                 "Officer": "Officer",
                 "Bonus": "Bonus",
-                "NotifyCancelled": "Prior-turn damage cancelled: +{hull} hull, +{crew} crew, +{morale} morale.",
-                "NotifyNothingToCancel": "No prior-turn damage to cancel.",
                 "NotifyReplenished": "Crew morale replenished between combats."
             },
             "Ramming": {

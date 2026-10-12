@@ -1,14 +1,14 @@
 import { t } from '../i18n/t.ts';
 import { supportsShipAssault, type ShipAssaultShip } from '../rules/ship-assault.ts';
 import {
-    cancelPriorTurnDamage as cancelPriorTurnDamageRule,
-    canCancelPriorTurnDamage as canCancelPriorTurnDamageRule,
     emptySnapshot,
     isCrippled as isCrippledRule,
     recordCrewMoraleHit,
     recordHullHit,
+    reducePriorTurnDamage as reducePriorTurnDamageRule,
     replenishBetweenCombat as replenishBetweenCombatRule,
     type PriorTurnDamageSnapshot,
+    type PriorTurnPool,
     type ShipCombatState,
 } from '../rules/ship-crew-morale.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
@@ -290,7 +290,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
      *     same amount of hull lost (floor 0);
      *   • appends the loss to `priorTurnDamage` so a Hold Fast! /
      *     Triage extended action on the *next* strategic turn can
-     *     revert it.
+     *     reduce its Morale / Crew Population part.
      *
      * Returns the deltas actually applied so callers (chat cards,
      * tests) can render the breakdown.
@@ -427,43 +427,22 @@ export class WH40KVoidcraft extends WH40KBaseActor {
     }
 
     /**
-     * Hold Fast! / Triage hook. Revert the prior-turn hull + crew +
-     * morale losses recorded on the actor. No-op when the snapshot is
-     * empty, belongs to the current turn, or this hull is not under
-     * the RT crew economy.
-     *
-     * Returns the deltas actually restored so callers can display a
-     * chat card or post a notification.
+     * Hold Fast! / Triage (RT Core p.218, #189): reduce one pool of the
+     * previous turn's damage — Morale or Crew Population — by `amount`, never
+     * by more than that pool lost. RT only. Returns the amount restored (0 when
+     * nothing was recorded for the previous turn).
      */
-    async cancelPriorTurnDamage(): Promise<{
-        hullRestored: number;
-        crewRestored: number;
-        moraleRestored: number;
-    }> {
-        if (!this.usesRTCrewEconomy) {
-            return { hullRestored: 0, crewRestored: 0, moraleRestored: 0 };
-        }
-        const turn = this._currentStrategicTurn();
-        const snap = this._readPriorTurnSnapshot();
-        if (!canCancelPriorTurnDamageRule(snap, turn)) {
-            return { hullRestored: 0, crewRestored: 0, moraleRestored: 0 };
-        }
+    async reducePriorTurnDamage(pool: PriorTurnPool, amount: number): Promise<number> {
+        if (!this.usesRTCrewEconomy) return 0;
         const before = this._readShipCombatState();
-        const { next, snapshot } = cancelPriorTurnDamageRule(before, snap);
-        const restored = {
-            hullRestored: next.hullIntegrity.value - before.hullIntegrity.value,
-            crewRestored: next.crew.population - before.crew.population,
-            moraleRestored: next.crew.morale.value - before.crew.morale.value,
-        };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update accepts dotted-path Record
-        const updates: Record<string, unknown> = {
-            'system.hullIntegrity.value': next.hullIntegrity.value,
+        const { next, snapshot, restored } = reducePriorTurnDamageRule(before, this._readPriorTurnSnapshot(), pool, amount, this._currentStrategicTurn());
+        if (restored === 0) return 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
+        await (this as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
             'system.crew.population': next.crew.population,
             'system.crew.morale.value': next.crew.morale.value,
             'system.priorTurnDamage': snapshot,
-        };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
-        await (this as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update(updates);
+        });
         return restored;
     }
 

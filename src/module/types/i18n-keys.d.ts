@@ -5913,8 +5913,6 @@ export type I18nKey =
     | 'WH40K.Voidcraft.Crew.Header'
     | 'WH40K.Voidcraft.Crew.MoraleCurrent'
     | 'WH40K.Voidcraft.Crew.MoraleMax'
-    | 'WH40K.Voidcraft.Crew.NotifyCancelled'
-    | 'WH40K.Voidcraft.Crew.NotifyNothingToCancel'
     | 'WH40K.Voidcraft.Crew.NotifyReplenished'
     | 'WH40K.Voidcraft.Crew.Officer'
     | 'WH40K.Voidcraft.Crew.Officers'

@@ -33,11 +33,11 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
     declare typeAndAction: string;
 
     /**
-     * Optional content-agnostic effect identifier (issue #189). Compendium
-     * Hold Fast! / Triage entries tag themselves with the matching primitive
-     * (`cancelPriorTurnDamage` / `replenishMorale`) so the document layer
-     * can route the dispatch into the RT Crew/Morale economy without
-     * string-matching display names. Empty string ⇒ no built-in effect.
+     * Optional content-agnostic effect identifier (issue #189). An order
+     * tagged `replenishMorale` refills the ship's Morale between combats.
+     * Empty string ⇒ no built-in effect. Hold Fast! / Triage are NOT routed
+     * here: RAW they need a test and reduce one pool by 1 + DoS (see
+     * `WH40KVoidcraft.reducePriorTurnDamage`).
      */
     declare shipActionEffect: ShipActionEffect | '';
 

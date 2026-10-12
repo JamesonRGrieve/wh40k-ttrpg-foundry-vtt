@@ -5,10 +5,12 @@
  *
  *   • Every Hull Integrity point lost ALSO decrements Crew Population by 1
  *     AND Morale by 1, floored at 0. (Battlefleet Koronus / RT Core p.222.)
- *   • The Hold Fast! and Triage extended actions, when successfully
- *     resolved on the strategic turn AFTER a hit, *cancel the prior turn's
- *     hull/crew/morale damage* — represented here by reverting from the
- *     snapshot recorded at the moment of impact.
+ *   • The Hold Fast! and Triage extended actions (RT Core p.218), on a
+ *     success, each reduce ONE pool of the previous turn's damage — Hold
+ *     Fast! Morale, Triage Crew Population — by 1 plus 1 per degree of
+ *     success, never by more than that pool actually lost. Neither touches
+ *     Hull Integrity. The losses come from the per-turn snapshot that
+ *     `recordHullHit` / `recordCrewMoraleHit` keep.
  *   • Between combats, the ship replenishes Morale to its maximum and
  *     does NOT replenish Crew Population (lost crew stay lost — they are
  *     recruited via Endeavours, off-screen).
@@ -16,10 +18,9 @@
  *     its maximum; the helper here exists so call sites and tests can
  *     reason about composition without instantiating a Foundry actor.
  *
- * These primitives are content-agnostic per Direction #7: per-system
- * mechanic toggles (RT-only) and per-action wiring (`cancelPriorTurnDamage`,
- * `replenishMorale`) live in the calling Document layer; this module
- * just provides the math.
+ * These primitives are content-agnostic per Direction #7: the per-system
+ * gate (RT only) lives in the calling Document layer; this module just
+ * provides the math.
  *
  * @issue #189
  */
@@ -36,24 +37,50 @@ export interface ShipCombatState {
 }
 
 /**
- * Delta recorded against the actor's current strategic-turn snapshot so
- * Hold Fast! / Triage can revert exactly what the prior turn took away.
- * All values are POSITIVE losses (the amount that came off).
+ * The losses one strategic turn recorded. All values are POSITIVE losses
+ * (the amount that came off).
  */
-export interface PriorTurnDamageSnapshot {
-    /** Hull Integrity points lost since the snapshot opened. */
+export interface TurnLosses {
+    /** Hull Integrity points lost during the turn. */
     hullLoss: number;
-    /** Crew Population lost since the snapshot opened. */
+    /** Crew Population lost during the turn. */
     crewLoss: number;
-    /** Morale points lost since the snapshot opened. */
+    /** Morale points lost during the turn. */
     moraleLoss: number;
-    /** Strategic turn number this snapshot is valid for; 0 == no snapshot. */
+    /** Strategic turn number the losses belong to; 0 == nothing recorded. */
     turn: number;
+}
+
+/**
+ * The running damage record Hold Fast! / Triage read: the current turn's
+ * losses, plus the turn before it once a hit lands in a newer turn (so a hit
+ * taken this turn does not wipe out last turn's record before it is cancelled).
+ */
+export interface PriorTurnDamageSnapshot extends TurnLosses {
+    /** The losses of the turn immediately before `turn`, if any. */
+    previous?: TurnLosses;
 }
 
 /** The opening (zero) snapshot. */
 export function emptySnapshot(turn = 0): PriorTurnDamageSnapshot {
-    return { hullLoss: 0, crewLoss: 0, moraleLoss: 0, turn };
+    return { hullLoss: 0, crewLoss: 0, moraleLoss: 0, turn, previous: { hullLoss: 0, crewLoss: 0, moraleLoss: 0, turn: 0 } };
+}
+
+/** The losses-only view of a snapshot (no `previous`). */
+function turnLosses(snapshot: TurnLosses): TurnLosses {
+    return { hullLoss: snapshot.hullLoss, crewLoss: snapshot.crewLoss, moraleLoss: snapshot.moraleLoss, turn: snapshot.turn };
+}
+
+/**
+ * The snapshot to append a hit taken on `turn` to. A snapshot for the same
+ * turn (or an empty one) keeps running; a newer turn opens a fresh record and
+ * keeps the old one as `previous` when it is the turn immediately before.
+ */
+function snapshotForTurn(snapshot: PriorTurnDamageSnapshot, turn: number): PriorTurnDamageSnapshot {
+    if (snapshot.turn === turn || snapshot.turn === 0) return snapshot;
+    const fresh = emptySnapshot(turn);
+    if (snapshot.turn === turn - 1) fresh.previous = turnLosses(snapshot);
+    return fresh;
 }
 
 /**
@@ -103,50 +130,66 @@ export function applyHullDamageToCrew(
     };
 }
 
-/**
- * Cancel (revert) the recorded prior-turn damage on a starship.
- *
- * Restores hull / crew / morale by exactly the snapshot's losses,
- * clamped at each stat's max. Returns the restored state and a fresh
- * zero snapshot for the current turn.
- *
- * The caller (Hold Fast! / Triage handler) is responsible for
- * verifying the snapshot's `turn` matches the *previous* strategic
- * turn before invoking this — see `canCancelPriorTurnDamage`.
- */
-export function cancelPriorTurnDamage(state: ShipCombatState, snapshot: PriorTurnDamageSnapshot): { next: ShipCombatState; snapshot: PriorTurnDamageSnapshot } {
-    const hullRestored = Math.min(state.hullIntegrity.max, state.hullIntegrity.value + Math.max(0, snapshot.hullLoss));
-    const moraleRestored = Math.min(state.crew.morale.max, state.crew.morale.value + Math.max(0, snapshot.moraleLoss));
-    // Crew Population has no schema-level max in the RT economy — population
-    // can rise above its starting value via Endeavours — so we restore the
-    // exact crew lost without clamping. Note this is asymmetric with morale
-    // and reflects the RAW.
-    const crewRestored = state.crew.population + Math.max(0, snapshot.crewLoss);
+/** The damage pools Hold Fast! (Morale) and Triage (Crew Population) reduce. */
+export const PRIOR_TURN_POOLS = ['morale', 'crewPopulation'] as const;
+export type PriorTurnPool = (typeof PRIOR_TURN_POOLS)[number];
 
-    return {
-        next: {
-            hullIntegrity: { value: hullRestored, max: state.hullIntegrity.max },
-            crew: {
-                population: crewRestored,
-                morale: { value: moraleRestored, max: state.crew.morale.max },
-            },
-        },
-        snapshot: emptySnapshot(snapshot.turn),
-    };
+/**
+ * The losses recorded for the turn immediately before `currentTurn`, or null
+ * when nothing was recorded for it. RAW (RT Core p.218): Hold Fast! / Triage
+ * "may only cancel ... damage suffered during the previous turn" — not this
+ * turn's, and not anything older.
+ */
+export function previousTurnLosses(snapshot: PriorTurnDamageSnapshot, currentTurn: number): TurnLosses | null {
+    const wanted = currentTurn - 1;
+    if (wanted < 1) return null;
+    if (snapshot.turn === wanted) return turnLosses(snapshot);
+    if (snapshot.turn === currentTurn && snapshot.previous?.turn === wanted) return snapshot.previous;
+    return null;
 }
 
 /**
- * Decide whether the Hold Fast! / Triage cancel may fire. RAW: cancels
- * only the *prior* turn's damage — the current turn's hits are not
- * affected, and a snapshot with no recorded losses is a no-op.
+ * Reduce one pool of the previous turn's damage (Hold Fast! → Morale,
+ * Triage → Crew Population, RT Core p.218) by `amount`.
+ *
+ * The reduction never exceeds what that pool lost in the previous turn, and
+ * Morale never rises above its maximum. Crew Population has no schema max
+ * (Endeavours can raise it), so only the recorded loss caps it. Hull
+ * Integrity is never touched. The restored amount is taken off the recorded
+ * loss, so a second success the same turn can only cancel what is left.
  */
-export function canCancelPriorTurnDamage(snapshot: PriorTurnDamageSnapshot, currentTurn: number): boolean {
-    if (snapshot.turn === 0) return false;
-    if (snapshot.hullLoss === 0 && snapshot.crewLoss === 0 && snapshot.moraleLoss === 0) {
-        return false;
-    }
-    // The snapshot must reflect the IMMEDIATELY PRECEDING strategic turn.
-    return snapshot.turn < currentTurn;
+export function reducePriorTurnDamage(
+    state: ShipCombatState,
+    snapshot: PriorTurnDamageSnapshot,
+    pool: PriorTurnPool,
+    amount: number,
+    currentTurn: number,
+): { next: ShipCombatState; snapshot: PriorTurnDamageSnapshot; restored: number } {
+    const losses = previousTurnLosses(snapshot, currentTurn);
+    const wanted = Math.max(0, Math.floor(amount));
+    if (losses === null || wanted === 0) return { next: state, snapshot, restored: 0 };
+
+    const lost = pool === 'morale' ? losses.moraleLoss : losses.crewLoss;
+    const headroom = pool === 'morale' ? Math.max(0, state.crew.morale.max - state.crew.morale.value) : Number.POSITIVE_INFINITY;
+    const restored = Math.min(wanted, lost, headroom);
+    if (restored === 0) return { next: state, snapshot, restored: 0 };
+
+    const reduced: TurnLosses =
+        pool === 'morale' ? { ...losses, moraleLoss: losses.moraleLoss - restored } : { ...losses, crewLoss: losses.crewLoss - restored };
+    const nextSnapshot: PriorTurnDamageSnapshot =
+        snapshot.turn === losses.turn ? { ...reduced, ...(snapshot.previous ? { previous: snapshot.previous } : {}) } : { ...snapshot, previous: reduced };
+
+    const next: ShipCombatState =
+        pool === 'morale'
+            ? {
+                  hullIntegrity: { ...state.hullIntegrity },
+                  crew: { population: state.crew.population, morale: { value: state.crew.morale.value + restored, max: state.crew.morale.max } },
+              }
+            : {
+                  hullIntegrity: { ...state.hullIntegrity },
+                  crew: { population: state.crew.population + restored, morale: { ...state.crew.morale } },
+              };
+    return { next, snapshot: nextSnapshot, restored };
 }
 
 /**
@@ -198,12 +241,13 @@ export function recordHullHit(
     turn: number,
 ): { next: ShipCombatState; snapshot: PriorTurnDamageSnapshot } {
     const { next, delta } = applyHullDamageToCrew(state, hullDamage);
-    // If the recorded snapshot belongs to a stale turn, start a fresh one
-    // for the current hit; otherwise append to the running tally.
-    const baseSnapshot: PriorTurnDamageSnapshot = snapshot.turn === turn || snapshot.turn === 0 ? snapshot : emptySnapshot(turn);
+    // A snapshot from an older turn rolls over (keeping the immediately
+    // preceding turn as `previous`); otherwise append to the running tally.
+    const baseSnapshot = snapshotForTurn(snapshot, turn);
     return {
         next,
         snapshot: {
+            ...baseSnapshot,
             hullLoss: baseSnapshot.hullLoss + delta.hullLoss,
             crewLoss: baseSnapshot.crewLoss + delta.crewLoss,
             moraleLoss: baseSnapshot.moraleLoss + delta.moraleLoss,
@@ -227,13 +271,14 @@ export function recordCrewMoraleHit(
 ): { next: ShipCombatState; snapshot: PriorTurnDamageSnapshot } {
     const crewAfter = Math.max(0, state.crew.population - Math.max(0, Math.floor(crewDamage)));
     const moraleAfter = Math.max(0, state.crew.morale.value - Math.max(0, Math.floor(moraleDamage)));
-    const baseSnapshot: PriorTurnDamageSnapshot = snapshot.turn === turn || snapshot.turn === 0 ? snapshot : emptySnapshot(turn);
+    const baseSnapshot = snapshotForTurn(snapshot, turn);
     return {
         next: {
             hullIntegrity: { ...state.hullIntegrity },
             crew: { population: crewAfter, morale: { value: moraleAfter, max: state.crew.morale.max } },
         },
         snapshot: {
+            ...baseSnapshot,
             hullLoss: baseSnapshot.hullLoss,
             crewLoss: baseSnapshot.crewLoss + (state.crew.population - crewAfter),
             moraleLoss: baseSnapshot.moraleLoss + (state.crew.morale.value - moraleAfter),
@@ -243,14 +288,13 @@ export function recordCrewMoraleHit(
 }
 
 /**
- * Recognised content-agnostic effect identifiers an `order` item may
- * declare via the `shipActionEffect` field to participate in the RT
- * Crew/Morale economy.
+ * Content-agnostic effect identifiers an `order` item may declare via its
+ * `shipActionEffect` field. A PRIMITIVE (mechanic enum), not a content name
+ * (Direction #7).
  *
- * These are PRIMITIVES (mechanic enums), not content names — the
- * compendium-side `Hold Fast!` and `Triage` entries opt-in by tagging
- * `shipActionEffect: 'cancelPriorTurnDamage'`. No string-matching
- * against display names happens in `src/` (Direction #7).
+ * `cancelPriorTurnDamage` was removed (#189): it restored ALL of last turn's
+ * hull, crew and morale with no test. Hold Fast! / Triage instead roll their
+ * test and call `reducePriorTurnDamage` for one pool.
  */
-export const SHIP_ACTION_EFFECTS = ['cancelPriorTurnDamage', 'replenishMorale'] as const;
+export const SHIP_ACTION_EFFECTS = ['replenishMorale'] as const;
 export type ShipActionEffect = (typeof SHIP_ACTION_EFFECTS)[number];

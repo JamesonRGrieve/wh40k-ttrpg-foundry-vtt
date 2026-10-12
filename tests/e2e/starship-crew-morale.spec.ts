@@ -6,7 +6,7 @@ import { expect, test } from './lib/test';
 /**
  * Tier B coverage of the Rogue Trader Crew Population & Morale combat
  * economy (issue #189). Probes the starship document's
- * `applyHullDamage` / `cancelPriorTurnDamage` / `replenishBetweenCombat`
+ * `applyHullDamage` / `reducePriorTurnDamage` / `replenishBetweenCombat`
  * methods against a freshly-created RT starship actor, then snaps the
  * open sheet's Crew tab so the visual review captures the panel after
  * the state mutations have propagated.
@@ -42,7 +42,7 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                 system?: StarshipSystem;
                 usesRTCrewEconomy?: boolean;
                 applyHullDamage?: (n: number) => Promise<void>;
-                cancelPriorTurnDamage?: () => Promise<void>;
+                reducePriorTurnDamage?: (pool: 'morale' | 'crewPopulation', amount: number) => Promise<number>;
                 replenishBetweenCombat?: () => Promise<void>;
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update accepts arbitrary partial-update payloads
                 update?: (data: Record<string, unknown>) => Promise<void>;
@@ -182,15 +182,20 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
                 crewAfter = Number(actor?.system?.crew?.population ?? 0);
                 moraleAfter = Number(actor?.system?.crew?.morale?.value ?? 0);
 
-                // Advance the strategic turn so cancelPriorTurnDamage sees a
-                // strictly-prior snapshot (snapshot.turn 1 < currentTurn 2).
+                // Advance the strategic turn so the turn-1 losses are the
+                // previous turn's (Hold Fast! / Triage, RT Core p.218).
                 if (combat != null && typeof combat.update === 'function') {
                     await combat.update({ round: 2 });
                 }
-                if (typeof actor?.cancelPriorTurnDamage === 'function') {
-                    await actor.cancelPriorTurnDamage();
+                if (typeof actor?.reducePriorTurnDamage === 'function') {
+                    // Hold Fast! reduces Morale only, Triage Crew Population only;
+                    // neither restores Hull Integrity (#189).
+                    await actor.reducePriorTurnDamage('morale', 5);
+                    await actor.reducePriorTurnDamage('crewPopulation', 5);
                     cancelRestored =
-                        Number(actor.system?.crew?.population ?? 0) === crewBefore && Number(actor.system?.crew?.morale?.value ?? 0) === moraleBefore;
+                        Number(actor.system?.crew?.population ?? 0) === crewBefore &&
+                        Number(actor.system?.crew?.morale?.value ?? 0) === moraleBefore &&
+                        Number(actor.system?.hullIntegrity?.value ?? 0) === hullAfter;
                 }
 
                 // Drop morale, then replenishBetweenCombat → morale back to max.
@@ -340,8 +345,8 @@ test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () =
             result.crewBefore - 5,
         );
         expect(result.moraleAfter, 'morale should drop by exactly 5').toBe(result.moraleBefore - 5);
-        // Cancel reverted the prior turn's losses.
-        expect(result.cancelRestored, 'Hold Fast! / Triage cancel should restore crew + morale').toBe(true);
+        // Hold Fast! / Triage reduced the previous turn's morale / crew losses, not hull.
+        expect(result.cancelRestored, 'Hold Fast! / Triage should restore morale + crew and leave hull alone').toBe(true);
         // Replenish between combat brings morale back to max.
         expect(result.replenishedMorale, 'replenishBetweenCombat should refill morale to max').toBe(100);
         // Non-RT hull damage path leaves crew untouched.

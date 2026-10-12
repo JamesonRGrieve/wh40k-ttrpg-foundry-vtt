@@ -6,12 +6,12 @@
 import { describe, expect, it } from 'vitest';
 import {
     applyHullDamageToCrew,
-    canCancelPriorTurnDamage,
-    cancelPriorTurnDamage,
     emptySnapshot,
     isCrippled,
+    previousTurnLosses,
     recordCrewMoraleHit,
     recordHullHit,
+    reducePriorTurnDamage,
     replenishBetweenCombat,
     rolloverSnapshot,
     SHIP_ACTION_EFFECTS,
@@ -67,7 +67,7 @@ describe('applyHullDamageToCrew', () => {
     });
 });
 
-describe('recordHullHit + cancelPriorTurnDamage (Hold Fast! / Triage)', () => {
+describe('recordHullHit + reducePriorTurnDamage (Hold Fast! / Triage)', () => {
     it('records cumulative losses to the snapshot for the current turn', () => {
         let state = baseState();
         let snap = emptySnapshot(2);
@@ -89,51 +89,94 @@ describe('recordHullHit + cancelPriorTurnDamage (Hold Fast! / Triage)', () => {
         expect(snap.turn).toBe(1);
         expect(snap.hullLoss).toBe(5);
 
-        // Turn rolls over — the next hit's snapshot is fresh for turn 2.
+        // Turn rolls over — the next hit's snapshot is fresh for turn 2, and
+        // turn 1's losses are kept as `previous` for Hold Fast! / Triage.
         ({ next: state, snapshot: snap } = recordHullHit(state, snap, 2, 2));
         expect(snap.turn).toBe(2);
         expect(snap.hullLoss).toBe(2);
+        expect(snap.previous).toEqual({ hullLoss: 5, crewLoss: 5, moraleLoss: 5, turn: 1 });
     });
 
-    it('cancels prior-turn damage exactly and clamps morale at its max', () => {
+    it('drops the old record when a hit lands two or more turns later', () => {
+        const { snapshot } = recordHullHit(baseState(), { hullLoss: 4, crewLoss: 4, moraleLoss: 4, turn: 1 }, 1, 3);
+        expect(snapshot.previous).toEqual({ hullLoss: 0, crewLoss: 0, moraleLoss: 0, turn: 0 });
+    });
+
+    // Regression (#189): Hold Fast! / Triage used to restore ALL of the
+    // previous turn's hull, crew AND morale. RAW (RT Core p.218) each reduces
+    // ONE pool — Hold Fast! Morale, Triage Crew Population — by 1 + DoS.
+    it('Hold Fast! reduces only the previous turn Morale loss, by the amount given', () => {
         let state = baseState();
         let snap = emptySnapshot(1);
         ({ next: state, snapshot: snap } = recordHullHit(state, snap, 6, 1));
-        // Now on turn 2 the captain orders Hold Fast! → cancel turn 1's losses.
-        const cancelled = cancelPriorTurnDamage(state, snap);
-        expect(cancelled.next.hullIntegrity.value).toBe(35);
-        expect(cancelled.next.crew.population).toBe(100);
-        expect(cancelled.next.crew.morale.value).toBe(100);
-        expect(cancelled.snapshot.hullLoss).toBe(0);
-        expect(cancelled.snapshot.crewLoss).toBe(0);
-        expect(cancelled.snapshot.moraleLoss).toBe(0);
+        const held = reducePriorTurnDamage(state, snap, 'morale', 2, 2);
+        expect(held.restored).toBe(2);
+        expect(held.next.crew.morale.value).toBe(96);
+        expect(held.next.hullIntegrity.value).toBe(29);
+        expect(held.next.crew.population).toBe(94);
+        expect(held.snapshot.moraleLoss).toBe(4);
+        expect(held.snapshot.crewLoss).toBe(6);
+        expect(held.snapshot.hullLoss).toBe(6);
     });
 
-    it('cancelling never floats morale above its max', () => {
-        const state: ShipCombatState = {
-            hullIntegrity: { value: 30, max: 35 },
-            crew: { population: 95, morale: { value: 99, max: 100 } },
-        };
-        const snap = { hullLoss: 5, crewLoss: 5, moraleLoss: 5, turn: 1 };
-        const cancelled = cancelPriorTurnDamage(state, snap);
-        expect(cancelled.next.crew.morale.value).toBe(100);
-        expect(cancelled.next.hullIntegrity.value).toBe(35);
-        // Crew Population intentionally unclamped (no schema max).
-        expect(cancelled.next.crew.population).toBe(100);
+    it('Triage reduces only the previous turn Crew Population loss', () => {
+        let state = baseState();
+        let snap = emptySnapshot(1);
+        ({ next: state, snapshot: snap } = recordCrewMoraleHit(state, snap, 5, 3, 1));
+        const treated = reducePriorTurnDamage(state, snap, 'crewPopulation', 3, 2);
+        expect(treated.restored).toBe(3);
+        expect(treated.next.crew.population).toBe(98);
+        expect(treated.next.crew.morale.value).toBe(97);
+        expect(treated.snapshot.crewLoss).toBe(2);
+        expect(treated.snapshot.moraleLoss).toBe(3);
     });
 
-    it('canCancelPriorTurnDamage requires a non-empty snapshot from a strictly prior turn', () => {
-        expect(canCancelPriorTurnDamage(emptySnapshot(0), 5)).toBe(false);
-        expect(canCancelPriorTurnDamage({ hullLoss: 0, crewLoss: 0, moraleLoss: 0, turn: 1 }, 2)).toBe(false);
-        // Same turn — current turn's damage cannot be cancelled per RAW.
-        expect(canCancelPriorTurnDamage({ hullLoss: 3, crewLoss: 3, moraleLoss: 3, turn: 2 }, 2)).toBe(false);
-        // Strictly-prior, non-empty snapshot → eligible.
-        expect(canCancelPriorTurnDamage({ hullLoss: 3, crewLoss: 3, moraleLoss: 3, turn: 1 }, 2)).toBe(true);
+    it('never restores more than was lost, nor Morale above its max', () => {
+        const snap = { hullLoss: 5, crewLoss: 2, moraleLoss: 5, turn: 1 };
+        const crew = reducePriorTurnDamage(baseState(), snap, 'crewPopulation', 9, 2);
+        expect(crew.restored).toBe(2);
+        const nearFull: ShipCombatState = { hullIntegrity: { value: 30, max: 35 }, crew: { population: 95, morale: { value: 99, max: 100 } } };
+        const morale = reducePriorTurnDamage(nearFull, snap, 'morale', 4, 2);
+        expect(morale.restored).toBe(1);
+        expect(morale.next.crew.morale.value).toBe(100);
+    });
+
+    it('a second success the same turn only cancels what is left', () => {
+        const first = reducePriorTurnDamage(baseState(), { hullLoss: 0, crewLoss: 0, moraleLoss: 3, turn: 1 }, 'morale', 2, 2);
+        const second = reducePriorTurnDamage(first.next, first.snapshot, 'morale', 2, 2);
+        expect(second.restored).toBe(0);
+    });
+
+    it('reduces the previous turn even after this turn has taken a hit', () => {
+        let state = baseState();
+        let snap = emptySnapshot(1);
+        ({ next: state, snapshot: snap } = recordHullHit(state, snap, 4, 1));
+        ({ next: state, snapshot: snap } = recordHullHit(state, snap, 2, 2));
+        const held = reducePriorTurnDamage(state, snap, 'morale', 3, 2);
+        expect(held.restored).toBe(3);
+        expect(held.snapshot.previous?.moraleLoss).toBe(1);
+        // This turn's own loss is untouched.
+        expect(held.snapshot.moraleLoss).toBe(2);
+    });
+
+    it('cannot touch this turn or anything older than the previous turn', () => {
+        const thisTurn = reducePriorTurnDamage(baseState(), { hullLoss: 0, crewLoss: 0, moraleLoss: 3, turn: 2 }, 'morale', 3, 2);
+        expect(thisTurn.restored).toBe(0);
+        const older = reducePriorTurnDamage(baseState(), { hullLoss: 0, crewLoss: 0, moraleLoss: 3, turn: 1 }, 'morale', 3, 3);
+        expect(older.restored).toBe(0);
+    });
+
+    it('previousTurnLosses reads the current record or its `previous`', () => {
+        expect(previousTurnLosses(emptySnapshot(0), 5)).toBeNull();
+        expect(previousTurnLosses({ hullLoss: 3, crewLoss: 3, moraleLoss: 3, turn: 1 }, 2)?.moraleLoss).toBe(3);
+        const rolled = { hullLoss: 1, crewLoss: 1, moraleLoss: 1, turn: 2, previous: { hullLoss: 4, crewLoss: 4, moraleLoss: 4, turn: 1 } };
+        expect(previousTurnLosses(rolled, 2)?.moraleLoss).toBe(4);
+        expect(previousTurnLosses(rolled, 3)?.moraleLoss).toBe(1);
     });
 
     it('rolloverSnapshot returns a zero snapshot for the new turn', () => {
         const rolled = rolloverSnapshot(7);
-        expect(rolled).toEqual({ hullLoss: 0, crewLoss: 0, moraleLoss: 0, turn: 7 });
+        expect(rolled).toMatchObject({ hullLoss: 0, crewLoss: 0, moraleLoss: 0, turn: 7 });
     });
 });
 
@@ -189,7 +232,7 @@ describe('recordCrewMoraleHit', () => {
         expect(next.hullIntegrity.value).toBe(35);
         expect(next.crew.population).toBe(93);
         expect(next.crew.morale.value).toBe(96);
-        expect(snapshot).toEqual({ hullLoss: 0, crewLoss: 7, moraleLoss: 4, turn: 3 });
+        expect(snapshot).toMatchObject({ hullLoss: 0, crewLoss: 7, moraleLoss: 4, turn: 3 });
     });
 
     it('floors at 0 and records only what was actually lost', () => {
@@ -197,20 +240,20 @@ describe('recordCrewMoraleHit', () => {
         const { next, snapshot } = recordCrewMoraleHit(state, emptySnapshot(0), 5, 5, 1);
         expect(next.crew.population).toBe(0);
         expect(next.crew.morale.value).toBe(0);
-        expect(snapshot).toEqual({ hullLoss: 0, crewLoss: 3, moraleLoss: 2, turn: 1 });
+        expect(snapshot).toMatchObject({ hullLoss: 0, crewLoss: 3, moraleLoss: 2, turn: 1 });
     });
 
-    it('appends to a snapshot from the same turn and replaces a stale one', () => {
+    it('appends to a snapshot from the same turn and rolls the previous turn over', () => {
         const same = recordCrewMoraleHit(baseState(), { hullLoss: 2, crewLoss: 2, moraleLoss: 2, turn: 4 }, 1, 1, 4).snapshot;
         expect(same).toEqual({ hullLoss: 2, crewLoss: 3, moraleLoss: 3, turn: 4 });
-        const stale = recordCrewMoraleHit(baseState(), { hullLoss: 2, crewLoss: 2, moraleLoss: 2, turn: 3 }, 1, 1, 4).snapshot;
-        expect(stale).toEqual({ hullLoss: 0, crewLoss: 1, moraleLoss: 1, turn: 4 });
+        const rolled = recordCrewMoraleHit(baseState(), { hullLoss: 2, crewLoss: 2, moraleLoss: 2, turn: 3 }, 1, 1, 4).snapshot;
+        expect(rolled).toEqual({ hullLoss: 0, crewLoss: 1, moraleLoss: 1, turn: 4, previous: { hullLoss: 2, crewLoss: 2, moraleLoss: 2, turn: 3 } });
     });
 });
 
 describe('SHIP_ACTION_EFFECTS enum', () => {
-    it('contains the two RT-economy effects the compendium opts into', () => {
-        expect(SHIP_ACTION_EFFECTS).toContain('cancelPriorTurnDamage');
-        expect(SHIP_ACTION_EFFECTS).toContain('replenishMorale');
+    // Regression (#189): the blanket untested cancel is no longer an effect an order can opt into.
+    it('offers replenishMorale and no longer offers the blanket cancelPriorTurnDamage', () => {
+        expect([...SHIP_ACTION_EFFECTS]).toEqual(['replenishMorale']);
     });
 });
