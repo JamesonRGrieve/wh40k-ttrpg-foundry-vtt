@@ -18,8 +18,10 @@ import tabsSrc from '../../../templates/actor/player/tabs.hbs?raw';
 import headerSrc from '../../../templates/actor/voidcraft/header.hbs?raw';
 import crewTabSrc from '../../../templates/actor/voidcraft/tab-crew.hbs?raw';
 import extendedActionsTabSrc from '../../../templates/actor/voidcraft/tab-extended-actions.hbs?raw';
+import manoeuvreActionsTabSrc from '../../../templates/actor/voidcraft/tab-manoeuvre-actions.hbs?raw';
 import statsTabSrc from '../../../templates/actor/voidcraft/tab-stats.hbs?raw';
 import shipWeaponChatSrc from '../../../templates/chat/ship-weapon-chat.hbs?raw';
+import { shipActionRows, type ShipActionOrderView } from '../../rules/ship-actions.ts';
 
 initializeStoryHandlebars();
 
@@ -196,53 +198,58 @@ export const SystemIM: Story = makePerSystemVoidcraftStory('im', 'Vagabond-class
 
 // ── Issue #186 — Starship Extended Actions panel ─────────────────────────────
 //
-// Renders the extended-actions tab with a pre-seeded list of the 13 RAW
-// Rogue Trader Extended Actions. The list is fed via context (no compendium
-// access from inside a Storybook story); each entry has the shape returned
-// by `StarshipSheet._prepareExtendedActions`.
+// Renders the Extended and Manoeuvre Action tabs from one mixed list of
+// `order` views — the RT Core Table 8-10 / 8-11 names and tests — run
+// through the sheet's own `shipActionRows`, so the story exercises the same
+// actionType split the sheet uses on the real pack (no compendium access
+// from inside a Storybook story).
 
-const issue186ExtendedActions = [
-    { uuid: 'rt-ea-active-augury', id: 'active-augury', name: 'Active Augury', img: '', skill: 'Scrutiny', modifier: 0, duration: '1 Round' },
-    { uuid: 'rt-ea-brace-for-impact', id: 'brace-for-impact', name: 'Brace for Impact', img: '', skill: 'Command', modifier: 0, duration: '1 Round' },
-    {
-        uuid: 'rt-ea-defensive-stance',
-        id: 'defensive-stance',
-        name: 'Defensive Stance',
+/** One RT ship order as the sheet sees it after load: name, action type and test. */
+function rtOrder(name: string, actionType: string, skill: string, modifier: number, characteristic = ''): ShipActionOrderView {
+    const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    return {
+        uuid: `Compendium.wh40k-rpg.rt-core-items-ship-orders.Item.${id}`,
+        id,
+        name,
         img: '',
-        skill: 'Pilot (Space Craft)',
-        modifier: 0,
-        duration: '1 Round',
-    },
-    { uuid: 'rt-ea-disengage', id: 'disengage', name: 'Disengage', img: '', skill: 'Pilot (Space Craft)', modifier: 0, duration: '1 Round' },
-    { uuid: 'rt-ea-emergency-repair', id: 'emergency-repair', name: 'Emergency Repair', img: '', skill: 'Tech-Use', modifier: -10, duration: '1d5 Rounds' },
-    {
-        uuid: 'rt-ea-evasive-manoeuvres',
-        id: 'evasive-manoeuvres',
-        name: 'Evasive Manoeuvres',
-        img: '',
-        skill: 'Pilot (Space Craft)',
-        modifier: 0,
-        duration: '1 Round',
-    },
-    { uuid: 'rt-ea-focused-augury', id: 'focused-augury', name: 'Focused Augury', img: '', skill: 'Scrutiny', modifier: -10, duration: '1 Round' },
-    { uuid: 'rt-ea-lock-on', id: 'lock-on', name: 'Lock On', img: '', skill: 'Ballistic Skill', modifier: 0, duration: '1 Round' },
-    { uuid: 'rt-ea-plot-course', id: 'plot-course', name: 'Plot Course', img: '', skill: 'Navigation (Warp)', modifier: 0, duration: '1d5 Rounds' },
-    { uuid: 'rt-ea-quick-repair', id: 'quick-repair', name: 'Quick Repair', img: '', skill: 'Tech-Use', modifier: -20, duration: '1 Round' },
-    { uuid: 'rt-ea-rapid-reload', id: 'rapid-reload', name: 'Rapid Reload', img: '', skill: 'Command', modifier: 0, duration: '1 Round' },
-    {
-        uuid: 'rt-ea-set-up-boarding-action',
-        id: 'set-up-boarding-action',
-        name: 'Set Up Boarding Action',
-        img: '',
-        skill: 'Command',
-        modifier: 0,
-        duration: '1 Round',
-    },
-    { uuid: 'rt-ea-suppressive-fire', id: 'suppressive-fire', name: 'Suppressive Fire', img: '', skill: 'Ballistic Skill', modifier: 0, duration: '1 Round' },
+        system: {
+            actionType,
+            test: { skill, characteristic, modifier },
+            duration: name === 'Emergency Repairs' ? '1d5 Turns' : '',
+            requirements: '',
+            typeAndAction: actionType === 'maneuver-action' ? 'Manoeuvre Action' : 'Extended Action',
+            description: { value: '' },
+        },
+    };
+}
+
+const rtShipOrders: ShipActionOrderView[] = [
+    rtOrder('Active Augury', 'extended-action', 'Scrutiny', 0),
+    rtOrder('Aid the Machine Spirit', 'extended-action', 'Tech-Use', 0),
+    rtOrder('Disinformation', 'extended-action', 'Deceive or Blather', -10),
+    rtOrder('Emergency Repairs', 'extended-action', 'Tech-Use', -10),
+    rtOrder('Flank Speed', 'extended-action', 'Tech-Use', 0),
+    rtOrder('Focused Augury', 'extended-action', 'Scrutiny', 0),
+    rtOrder('Hail the Enemy', 'extended-action', 'Interaction Skill', 0),
+    rtOrder('Hit and Run', 'extended-action', 'Pilot (Spacecraft)', 0),
+    rtOrder('Hold Fast!', 'extended-action', '', 0, 'Willpower'),
+    rtOrder('Jam Communications', 'extended-action', 'Tech-Use', -10),
+    rtOrder('Lock on Target', 'extended-action', 'Scrutiny', 0),
+    rtOrder('Prepare to Repel Boarders!', 'extended-action', 'Command', 0),
+    rtOrder('Put Your Backs Into It!', 'extended-action', 'Intimidate or Charm', 0),
+    rtOrder('Triage', 'extended-action', 'Medicae', -10),
+    rtOrder('Standard Move', 'maneuver-action', 'Pilot (Spacecraft)', 0),
+    rtOrder('Adjust Bearing', 'maneuver-action', 'Pilot (Spacecraft)', 0),
+    rtOrder('Adjust Speed', 'maneuver-action', 'Pilot (Spacecraft)', 0),
+    rtOrder('Adjust Speed & Bearing', 'maneuver-action', 'Pilot (Spacecraft)', -20),
+    rtOrder('Come to New Heading', 'maneuver-action', 'Pilot (Spacecraft)', -10),
+    rtOrder('Disengage', 'maneuver-action', 'Pilot (Spacecraft)', 0),
+    rtOrder('Evasive Manoeuvres', 'maneuver-action', 'Pilot (Spacecraft)', -10),
+    rtOrder('Ramming Speed', 'maneuver-action', 'Pilot (Spacecraft)', -20),
 ];
 
-function renderExtendedActionsPanel(ctx: SheetContextLike): HTMLElement {
-    const panel = renderSheetParts([{ template: headerSrc }, { template: tabsSrc }, { template: extendedActionsTabSrc, partClass: 'wh40k-body tw-p-2' }], ctx, {
+function renderActionsPanel(tabSrc: string, ctx: SheetContextLike): HTMLElement {
+    const panel = renderSheetParts([{ template: headerSrc }, { template: tabsSrc }, { template: tabSrc, partClass: 'wh40k-body tw-p-2' }], ctx, {
         systemId: systemIdOf(ctx),
     });
     panel.classList.add('voidcraft', 'tw-flex', 'tw-flex-col');
@@ -508,19 +515,40 @@ export const ExtendedActions: Story = {
         ...defaultCtxWithSource,
         tab: { id: 'extendedActions', group: 'primary', active: true, cssClass: 'tab-extended-actions' },
         // eslint-disable-next-line no-restricted-syntax -- boundary: SheetContextLike is an open record for story context
-        extendedActions: issue186ExtendedActions,
+        extendedActions: shipActionRows(rtShipOrders, 'extended'),
     },
-    render: (args) => renderExtendedActionsPanel(args),
+    render: (args) => renderActionsPanel(extendedActionsTabSrc, args),
     play: async ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         // List heading must localize-render
         await expect(storyCanvas.getByText(/Extended Actions/i)).toBeVisible();
-        // Every one of the 13 actions appears as a list item
+        // Every one of the 14 RAW extended actions appears, and no manoeuvre leaks in
         await expect(storyCanvas.getByText('Active Augury')).toBeVisible();
-        await expect(storyCanvas.getByText('Brace for Impact')).toBeVisible();
-        await expect(storyCanvas.getByText('Suppressive Fire')).toBeVisible();
-        // Every action exposes a dispatchExtendedAction button
+        await expect(storyCanvas.getByText('Lock on Target')).toBeVisible();
+        await expect(storyCanvas.getByText('Triage')).toBeVisible();
+        await expect(storyCanvas.queryByText('Standard Move')).toBeNull();
+        // Hold Fast! tests a characteristic, shown in place of a skill
+        await expect(storyCanvas.getByText(/Willpower/)).toBeVisible();
         const dispatchButtons = canvasElement.querySelectorAll('[data-action="dispatchExtendedAction"]');
-        await expect(dispatchButtons.length).toBeGreaterThanOrEqual(13);
+        await expect(dispatchButtons.length).toBe(14);
+    },
+};
+
+export const ManoeuvreActions: Story = {
+    name: 'Issue #186 — Manoeuvre Actions panel',
+    args: {
+        ...defaultCtxWithSource,
+        tab: { id: 'manoeuvreActions', group: 'primary', active: true, cssClass: 'tab-manoeuvre-actions' },
+        // eslint-disable-next-line no-restricted-syntax -- boundary: SheetContextLike is an open record for story context
+        manoeuvreActions: shipActionRows(rtShipOrders, 'manoeuvre'),
+    },
+    render: (args) => renderActionsPanel(manoeuvreActionsTabSrc, args),
+    play: async ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByText('Standard Move')).toBeVisible();
+        await expect(storyCanvas.getByText('Disengage')).toBeVisible();
+        await expect(storyCanvas.queryByText('Triage')).toBeNull();
+        const dispatchButtons = canvasElement.querySelectorAll('[data-action="dispatchManoeuvreAction"]');
+        await expect(dispatchButtons.length).toBe(8);
     },
 };

@@ -59,6 +59,11 @@ export function isLinePack(packId: string, linePrefix: string): boolean {
     return (packId.split('.').at(1) ?? '').startsWith(`${linePrefix}-`);
 }
 
+/** Whether a pack id is the given line's own pack or that line's homebrew pack (`hb-<linePrefix>-…`). Pure. */
+export function isLineOrHomebrewPack(packId: string, linePrefix: string): boolean {
+    return isLinePack(packId, linePrefix) || isLinePack(packId, `hb-${linePrefix}`);
+}
+
 /**
  * Pick the entry from the given game line's packs (`wh40k-rpg.<linePrefix>-…`),
  * falling back to the first match from any line. Pure.

@@ -1,3 +1,4 @@
+import { migrateLegacyOrderTest, ORDER_ACTION_TYPES, type OrderActionType } from '../../rules/ship-actions.ts';
 import { SHIP_ACTION_EFFECTS, type ShipActionEffect } from '../../rules/ship-crew-morale.ts';
 import type { RammingProfile } from '../../rules/ship-ramming.ts';
 import { formatSigned } from '../../utils/format.ts';
@@ -13,13 +14,23 @@ import DescriptionTemplate from '../shared/description-template.ts';
 export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
+    declare description: { value: string; chat: string; summary: string };
     declare category: string;
-    declare actionType: string;
+    declare actionType: OrderActionType;
     declare test: { skill: string; characteristic: string; modifier: number };
     declare requirements: string;
     declare effect: string;
     declare failure: string;
     declare notes: string;
+
+    /**
+     * How long the action runs, as printed ("1d5 Turns"). Optional; per-line
+     * content authors it as a `{ <line>: … }` container (#186).
+     */
+    declare duration: string;
+
+    /** The printed action-type line ("Manoeuvre Action", "Basic Order\nHalf Action"). Optional (#186). */
+    declare typeAndAction: string;
 
     /**
      * Optional content-agnostic effect identifier (issue #189). Compendium
@@ -57,8 +68,12 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
             actionType: new fields.StringField({
                 required: true,
                 initial: 'extended-action',
-                choices: ['extended-action', 'reaction', 'shooting-action', 'maneuver-action'],
+                choices: [...ORDER_ACTION_TYPES],
             }),
+
+            // Printed duration and action-type line (#186). Optional.
+            duration: new fields.StringField({ required: false, initial: '', blank: true }),
+            typeAndAction: new fields.StringField({ required: false, initial: '', blank: true }),
 
             // Required test
             test: new fields.SchemaField({
@@ -101,6 +116,18 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
                 { required: false },
             ),
         };
+    }
+
+    /**
+     * Fold the flat `skill` / `modifier` the order content carries into the
+     * schema's `test` block, which the cleaner would otherwise strip (#186).
+     * @param {object} source  The source data
+     * @protected
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData receives untyped Foundry source data; Record<string,unknown> is the documented DataModel pattern
+    static override _migrateData(source: Record<string, unknown>): void {
+        super._migrateData(source);
+        migrateLegacyOrderTest(source);
     }
 
     /* -------------------------------------------- */

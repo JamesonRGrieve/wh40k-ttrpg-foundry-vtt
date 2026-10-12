@@ -13,9 +13,12 @@ import VoidcraftData, {
     type ShipStatModifierSource,
     type VoidcraftBuildValidation,
 } from '../../data/actor/voidcraft.ts';
+import type OrderData from '../../data/item/order.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
+import { shipActionRows, toShipActionRow, type ShipActionKind, type ShipActionOrderView, type ShipActionRow } from '../../rules/ship-actions.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
+import { isLineOrHomebrewPack, queryItemIndex } from '../../utils/compendium-query.ts';
 import { capitalize } from '../../utils/format.ts';
 import { openShipAssaultDialog } from '../ship-assault/ship-assault-dialog.ts';
 import { foundryLocalize, type ShipAssaultTab } from '../ship-assault/ship-assault-flow.ts';
@@ -23,40 +26,49 @@ import { findShipAssault, shipAssaultButtons, type ShipAssaultButton } from '../
 import BaseActorSheet from './base-actor-sheet.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
 
-/** One ship-action row surfaced in the Extended / Manoeuvre Actions tabs. */
-interface ShipActionRow {
-    uuid: string;
-    id: string;
-    name: string;
-    img: string;
-    skill: string;
-    modifier: number;
-    duration: string;
-    description: string;
-    requirements: string;
-    typeAndAction: string;
-}
-
 /**
  * Chat-card payload shared by the Extended Action and Manoeuvre Action
  * dispatchers. A `type` alias (not an interface) so it carries the implicit
  * index signature `renderTemplate`'s `Record<string, unknown>` param requires.
  */
 type ActionCardData = {
-    action: {
-        name: string | null;
-        img: string;
-        skill: string;
-        modifier: number;
-        duration: string;
-        requirements: string;
-        typeAndAction: string;
-        description: string;
-    };
+    action: ShipActionRow;
     actorName: string | null;
     gameSystem: string;
     _gameSystemId?: string | undefined;
 };
+
+/** An `order` item, its system typed to the OrderData DataModel. */
+type OrderItem = WH40KItem & { system: OrderData };
+
+/** An `order` item viewed through the fields a ship-action row reads. */
+function shipActionOrderView(item: WH40KItem): ShipActionOrderView {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KItem.uuid not in shipped types for our narrow view
+    const uuid = (item as unknown as { uuid?: string }).uuid ?? '';
+    const order = item as OrderItem;
+    return { uuid, id: item.id ?? '', name: item.name, img: item.img ?? '', system: order.system };
+}
+
+/**
+ * The `order` items in a game line's own and homebrew Item packs. Found by
+ * pack index (`type`), so no pack name is assumed; an unavailable pack (early
+ * render before the world is ready) contributes nothing.
+ */
+async function loadLineOrders(line: string): Promise<ShipActionOrderView[]> {
+    try {
+        const uuids = await queryItemIndex(
+            [],
+            (entry) => (entry.type === 'order' ? entry.uuid : undefined),
+            true,
+            (packId) => isLineOrHomebrewPack(packId, line),
+        );
+        const docs = await Promise.all(uuids.map(async (uuid) => fromUuid(uuid)));
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns Foundry's untyped document union; the index already filtered to `order` Items
+        return docs.filter((doc) => doc !== null).map((doc) => shipActionOrderView(doc as unknown as WH40KItem));
+    } catch {
+        return [];
+    }
+}
 
 /** Localization key per essential slot for the build panel. */
 const ESSENTIAL_SLOT_LABEL_KEY: Record<string, string> = {
@@ -400,18 +412,14 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Resolve the list of starship Extended Actions to surface in the sheet.
-     *
-     * Pulls owned items of type `order` with `shipAction: true` AND any
-     * `order` items from the active game system's compendium pack(s) that
-     * carry the same flags. This keeps the list correct whether the GM has
-     * already imported the compendium entries onto the actor or not — per
-     * Direction #7 the source of truth is the compendium pack.
+     * Resolve the list of starship Extended Actions to surface in the sheet:
+     * the `order` items whose `actionType` is `extended-action`, owned or in
+     * the voidcraft's line packs (see `_prepareShipActions`).
      *
      * @issue #186
      */
     async _prepareExtendedActions(): Promise<ShipActionRow[]> {
-        return this._prepareShipActions('shipAction', 'ship-extended-actions');
+        return this._prepareShipActions('extended');
     }
 
     /* -------------------------------------------- */
@@ -432,100 +440,38 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     /**
      * Resolve the list of starship Manoeuvre Actions to surface in the sheet.
      *
-     * Mirrors `_prepareExtendedActions` but filters on the
-     * `manoeuvreAction: true` flag so the fixed RAW Rogue Trader /
-     * Battlefleet Koronus manoeuvre catalogue (Standard Move, Come to New
-     * Heading, Hard Brake, Adjust Speed, All Stop, Disengage, Ramming Speed,
-     * Evasive Manoeuvres, Burn Retros, Plot Course Change) surfaces as a
-     * separate tab from the broader Extended Actions list. Per Direction #7
-     * the source of truth is the compendium pack
-     * `rt-items-ship-manoeuvre-actions` — content is never hardcoded in
-     * `src/`.
+     * Mirrors `_prepareExtendedActions` for the `order` items whose
+     * `actionType` is `maneuver-action` (Standard Move, Adjust Bearing,
+     * Disengage, Ramming Speed, …).
      *
      * @issue #185
      */
     async _prepareManoeuvreActions(): Promise<ShipActionRow[]> {
-        return this._prepareShipActions('manoeuvreAction', 'ship-manoeuvre-actions');
+        return this._prepareShipActions('manoeuvre');
     }
 
     /* -------------------------------------------- */
 
     /**
-     * Shared resolver for the Extended / Manoeuvre Actions tabs. Pulls owned
-     * `order` items plus the active game system's `wh40k-rpg.<sys>-items-<suffix>`
-     * compendium pack, keeping only those whose `filterFlag` is set and whose
-     * optional `gameSystems` list admits the active system. Per Direction #7 the
-     * compendium pack is the source of truth, so the list is correct whether or
-     * not the GM has imported the entries onto the actor.
+     * Shared resolver for the Extended / Manoeuvre Actions tabs: the `order`
+     * items owned by the actor plus those in the voidcraft line's own and
+     * homebrew Item packs (`<line>-…`, `hb-<line>-…`), listed by their
+     * `actionType`. The packs are found by their index, not by name, so the
+     * list holds whatever orders pack the line ships (RT: `rt-core-items-ship-orders`).
+     * Per Direction #7 the compendium is the source of truth, so the list is
+     * correct whether or not the GM has imported the entries onto the actor.
      */
-    async _prepareShipActions(filterFlag: 'shipAction' | 'manoeuvreAction', packSuffix: string): Promise<ShipActionRow[]> {
+    async _prepareShipActions(kind: ShipActionKind): Promise<ShipActionRow[]> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
         const actor = this.actor as unknown as WH40KVoidcraft;
-        const gameSystemId = (actor.system as { gameSystem: string }).gameSystem;
+        const line = actor.system.gameSystem;
 
-        const out: ShipActionRow[] = [];
-        const seenUuids = new Set<string>();
-
-        const pushItem = (item: WH40KItem, uuid: string): void => {
-            if (seenUuids.has(uuid)) return;
-            seenUuids.add(uuid);
-            const sys = item.system as {
-                shipAction?: boolean;
-                manoeuvreAction?: boolean;
-                gameSystems?: string[];
-                skill?: string;
-                modifier?: number;
-                duration?: string;
-                requirements?: string;
-                typeAndAction?: string;
-                description?: { value?: string };
-            };
-            if (sys[filterFlag] !== true) return;
-            const systems = sys.gameSystems ?? [];
-            if (systems.length > 0 && !systems.includes(gameSystemId)) return;
-            out.push({
-                uuid,
-                id: item.id ?? '',
-                name: item.name,
-                img: item.img ?? '',
-                skill: sys.skill ?? '',
-                modifier: sys.modifier ?? 0,
-                duration: sys.duration ?? '',
-                description: sys.description?.value ?? '',
-                requirements: sys.requirements ?? '',
-                typeAndAction: sys.typeAndAction ?? '',
-            });
-        };
-
-        // 1. Owned items already on the actor.
+        const orders: ShipActionOrderView[] = [];
         for (const item of actor.items) {
-            if (item.type !== 'order') continue;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KItem.uuid not in shipped types for our narrow view
-            const uuid = (item as unknown as { uuid?: string }).uuid ?? '';
-            if (uuid === '') continue;
-            pushItem(item, uuid);
+            if (item.type === 'order') orders.push(shipActionOrderView(item));
         }
-
-        // 2. Compendium pack: wh40k-rpg.<sys>-items-<suffix> (and any future per-system equivalent).
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs typing in fvtt-types is loose
-        const packs = (globalThis as unknown as { game?: { packs?: { get?: (id: string) => unknown } } }).game?.packs;
-        const packId = `wh40k-rpg.${gameSystemId}-items-${packSuffix}`;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumCollection narrowed locally
-        const pack = packs?.get?.(packId) as undefined | { getDocuments?: () => Promise<Array<WH40KItem & { uuid: string }>> };
-        if (pack?.getDocuments !== undefined) {
-            try {
-                const docs = await pack.getDocuments();
-                for (const doc of docs) {
-                    if (doc.type !== 'order') continue;
-                    pushItem(doc, doc.uuid);
-                }
-            } catch {
-                // Pack unavailable (e.g. during early sheet renders before world ready) — silently skip.
-            }
-        }
-
-        out.sort((a, b) => a.name.localeCompare(b.name));
-        return out;
+        orders.push(...(await loadLineOrders(line)));
+        return shipActionRows(orders, kind);
     }
 
     /* -------------------------------------------- */
@@ -910,27 +856,10 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
 
     /** Build the shared chat-card payload both action dispatchers render. */
     #buildActionCardData(item: WH40KItem, actor: WH40KVoidcraft): ActionCardData {
-        const sys = item.system as {
-            skill?: string;
-            modifier?: number;
-            duration?: string;
-            requirements?: string;
-            typeAndAction?: string;
-            description?: { value?: string };
-        };
         return {
-            action: {
-                name: item.name,
-                img: item.img ?? '',
-                skill: sys.skill ?? '',
-                modifier: sys.modifier ?? 0,
-                duration: sys.duration ?? '',
-                requirements: sys.requirements ?? '',
-                typeAndAction: sys.typeAndAction ?? '',
-                description: sys.description?.value ?? '',
-            },
+            action: toShipActionRow(shipActionOrderView(item)),
             actorName: actor.name,
-            gameSystem: (actor.system as { gameSystem: string }).gameSystem,
+            gameSystem: actor.system.gameSystem,
             _gameSystemId: firstSystemId(actor),
         };
     }
