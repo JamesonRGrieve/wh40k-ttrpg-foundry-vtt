@@ -3,6 +3,7 @@
  * Based on dnd5e's BaseActorSheet pattern for Foundry V13+
  */
 
+import { awardConferralRenown, refuseBelowRenownRank } from '../../actions/dw-distinction-actions.ts';
 import { hydrateActorInMemory } from '../../compendium-hydrate.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { WH40K } from '../../config.ts';
@@ -2607,6 +2608,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Reorder within the same actor.
         if (action === 'sort') return this._onSortItem(event, item);
 
+        // A Deathwatch Distinction / Mark / Advanced Special Ability can only be
+        // conferred at or above its required Renown rank (#171). No-op elsewhere.
+        if (refuseBelowRenownRank(this.actor, item)) return false;
+
         // Create on the receiver. Surface validation/creation failures instead of
         // letting them fail silently — e.g. armour whose coverage resolves empty
         // throws in _validateJoint, which otherwise looks like the drop did
@@ -2618,6 +2623,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             if (action === 'transfer' && sourceActor != null) {
                 await sourceActor.deleteEmbeddedDocuments('Item', [item.id]);
             }
+            // Conferring a Distinction pays its Renown reward (#171). No-op elsewhere.
+            await awardConferralRenown(this.actor, item);
             return created;
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
