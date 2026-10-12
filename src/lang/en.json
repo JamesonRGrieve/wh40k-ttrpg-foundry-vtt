@@ -774,7 +774,11 @@
                 "CombatSituational": "Combat Situational",
                 "TargetConditions": "Target Conditions",
                 "TargetCondition": "{condition} (target)",
-                "CorruptionTrack": "Corruption Track"
+                "CorruptionTrack": "Corruption Track",
+                "CraftsmanshipRepair": "Craftsmanship (repair)",
+                "XenosLore": "Hard (−20): xenos device",
+                "XenosRepair": "Xenos device: alien nature",
+                "XenosLoreInsight": "Forbidden Lore insight (+5 per DoS)"
             },
             "ModifierCap": {
                 "Label": "Modifier cap (±60)",
@@ -1072,7 +1076,16 @@
                 "Unlocked": "{item} is unlocked.",
                 "BypassFailed": "The lock on {item} holds.",
                 "Broke": "{item} is smashed and broken.",
-                "BreakFailed": "You fail to break {item}."
+                "BreakFailed": "You fail to break {item}.",
+                "RepairDestroyed": "The repair fails so badly that {item} is destroyed. It can never be repaired.",
+                "XenosMakerTitle": "Xenos device",
+                "XenosMakerQuestion": "Does the warband know which alien race built {item}? (GM ruling)",
+                "XenosTooAlien": "Without knowing which race built {item}, it is too alien to repair.",
+                "XenosLorePickTitle": "Forbidden Lore — the race that built it",
+                "XenosLorePickHint": "Pick the Forbidden Lore specialisation that covers the race that built this device.",
+                "XenosNoLore": "You need a Forbidden Lore specialisation covering this device's makers before you can repair it.",
+                "XenosLoreFailed": "The workings of {item} stay a mystery. It cannot be repaired on this attempt.",
+                "XenosLoreSucceeded": "You grasp how {item} works ({degrees} DoS). Your next Tech-Use repair of it takes −20, +5 per DoS."
             },
             "Palm": {
                 "Steal": "Steal / Pickpocket",
@@ -2884,7 +2897,18 @@
                 "Failure": "Failure",
                 "CriticalLabel": "Catastrophic failure — roll on:",
                 "MotiveSystemsTable": "Table 7-32: Motive Systems Critical Hit Effects (DH Core p. 257)",
-                "ImpactLegTable": "Table 7-18: Impact Critical Effects — Leg (DH Core p. 239)"
+                "ImpactLegTable": "Table 7-18: Impact Critical Effects — Leg (DH Core p. 239)",
+                "CriticalEffect": "Failed by {degrees} degrees while pushing the limit — immediately roll 1d5 on {table} and apply the result."
+            },
+            "LeapingDodge": {
+                "AvoidSpray": "Avoid Spray",
+                "AvoidSprayTooltip": "Everyone caught in the Spray tests to avoid the hit: Agility, or Dodge with Leaping Dodge. Select your token(s) first; otherwise the card's target rolls.",
+                "NoDefender": "Select the token(s) caught in the Spray, or target one before attacking.",
+                "UsingDodge": "{name} avoids the Spray with Dodge (Leaping Dodge).",
+                "AgilityFlavor": "Avoid Spray (Agility)"
+            },
+            "FieldVivisection": {
+                "Base": "Medicae ({characteristic}) — Field Vivisection"
             }
         },
         "Quality": {
@@ -4556,18 +4580,29 @@
                 "NotifyReplenished": "Crew morale replenished between combats."
             },
             "Ramming": {
-                "ChatTitle": "Ramming Action",
-                "OutcomeHit": "Ram lands",
-                "OutcomeMiss": "Ram misses",
-                "AttackerDoS": "Attacker Pilot DoS",
-                "DefenderDoS": "Defender Pilot DoS",
-                "NetDoS": "Net DoS",
-                "DamageHeader": "Collision Damage",
-                "DefenderHull": "Defender Hull damage",
-                "AttackerHull": "Attacker Hull damage",
-                "ArmourSuffix": "armour",
-                "BonusDamage": "Imposing / Good an' Ard prow bonus",
-                "MissExplain": "The defender out-flew the ram; no collision occurs and neither hull takes damage."
+                "ChatTitle": "Ramming",
+                "Action": "Ram",
+                "ActionHint": "Within one VU, bow facing the enemy, give up the Shooting Action: Hard (−20) Pilot (Space Craft) + Manoeuvrability. Damage ignores void shields.",
+                "Citation": "Rogue Trader Core Rulebook p.215",
+                "TestTitle": "Ram — Hard (−20) Pilot (Space Craft) + Manoeuvrability",
+                "MissExplain": "The helmsman misses the ram; no collision occurs and neither hull takes damage.",
+                "DefenderHull": "Hull Integrity damage to {ship} (ignores void shields)",
+                "AttackerHull": "Hull Integrity damage to {ship} on impact (ignores void shields)",
+                "DamageLegend": "Collision damage",
+                "MissingFormula": "Ramming Speed has no damage die for this hull type. Enter the ram damage dice in the dialog.",
+                "Field": {
+                    "DamageFormula": "Ram damage dice (blank: by hull size)",
+                    "BonusFormula": "Additional ram damage dice",
+                    "BonusLabel": "Additional damage source",
+                    "BonusDefault": "Prow component"
+                },
+                "Component": {
+                    "DamageDie": "{formula} ({hull} hull)",
+                    "ProwArmour": "Prow armour ({ship})",
+                    "Bonus": "{label} ({formula})",
+                    "DefenderArmour": "Armour ({ship})",
+                    "ReboundDie": "{formula} impact"
+                }
             },
             "Assault": {
                 "Header": "Ship Assault Actions",
@@ -4595,7 +4630,7 @@
                     "PilotSkill": "Helmsman's Pilot (Space Craft)",
                     "Manoeuvrability": "Manoeuvrability ({ship})",
                     "Situational": "{label}",
-                    "DieRoll": "{formula} rolled"
+                    "Hard": "Hard (−20)"
                 }
             },
             "Boarding": {
@@ -4625,7 +4660,6 @@
                     "HullDegrees": "Degrees spent on Hull Integrity (the rest on crew)"
                 },
                 "Component": {
-                    "LockDifficulty": "Hard (−20)",
                     "CommandSkill": "Warrior leader's Command",
                     "CrewAdvantage": "Larger Crew Population ({mine} vs {theirs})",
                     "HullAdvantage": "Higher Hull Integrity ({mine} vs {theirs})",
@@ -4636,27 +4670,34 @@
                 }
             },
             "HitAndRun": {
-                "ChatTitle": "Hit-and-Run Action",
-                "ApproachHeader": "Approach (Pilot vs Turret Rating)",
-                "PilotTarget": "Composed Pilot target",
-                "Outcome": "Outcome",
-                "OutcomeApproachHit": "Boarding craft reaches target",
-                "OutcomeApproachMiss": "Boarders forced back to ship",
-                "OutcomeShotDown": "Boarding craft shot down (4+ DoF)",
-                "ApproachDoS": "Approach DoS",
-                "ApproachDoF": "Approach DoF",
-                "CommandHeader": "Opposed Command (Ordinary +10)",
-                "AttackerCommandDoS": "Attacker Command DoS",
-                "DefenderCommandDoS": "Defender Command DoS",
-                "NetDoS": "Net DoS",
-                "OutcomeCommandWin": "Sabotage succeeds",
-                "OutcomeCommandLose": "Boarders forced to retreat",
-                "ResultHeader": "Result — pick-worse 1d5 crit + Hull damage",
-                "CritPicks": "Crit picks (1d5 ×2)",
-                "AppliedCrit": "Applied crit (attacker picks)",
-                "HullDamage": "Hull Integrity damage (1 / DoS)",
-                "ShotDownExplain": "The boarding craft is destroyed. The pilot is stranded in a crippled craft or killed at the GM's discretion.",
-                "NoResultExplain": "The Hit-and-Run resolves with no damage to the target."
+                "ChatTitle": "Hit and Run",
+                "Action": "Hit and Run",
+                "ActionHint": "Extended Action: raid a ship within 5 VUs by boarding craft — Challenging (+0) Pilot (Space Craft), −10 per Turret Rating point, then opposed Ordinary (+10) Command.",
+                "Citation": "Rogue Trader Core Rulebook p.218",
+                "ApproachTitle": "Approach — Challenging (+0) Pilot (Space Craft)",
+                "CommandTitle": "Command — {ship}",
+                "RaidLegend": "Raid leader of {ship}",
+                "DefenceLegend": "Troop commander of {ship}",
+                "RaidSucceeds": "The raiders win by {degrees} degree(s) and cause mayhem.",
+                "RaidRepelled": "The raiders are forced back to their boarding craft without causing mayhem.",
+                "TurnedBackExplain": "The boarding craft is forced to return to its ship.",
+                "ShotDownExplain": "Failed by four or more degrees: the boarding craft is shot down. The pilot is stranded in a crippled craft or killed at the GM's discretion.",
+                "CritLegend": "Two 1d5 rolls on the Critical Hit chart — the raider selects one",
+                "CritField": "Critical Hit to inflict",
+                "CritOption": "Critical Hit roll {roll}",
+                "CritPicks": "Critical Hit rolls: {first} and {second}.",
+                "CritChosen": "Inflicted: Critical Hit roll {roll}.",
+                "HullDamage": "Hull Integrity damage (1 per degree won by)",
+                "Field": {
+                    "Command": "Command skill"
+                },
+                "Component": {
+                    "ApproachDifficulty": "Challenging (+0)",
+                    "Turrets": "Turret Rating {rating} ({ship})",
+                    "CommandSkill": "Command",
+                    "CommandDifficulty": "Ordinary (+10)",
+                    "NetDegrees": "{degrees} degree(s) won by"
+                }
             },
             "History": {
                 "MachineSpirit": "Machine Spirit Oddities",

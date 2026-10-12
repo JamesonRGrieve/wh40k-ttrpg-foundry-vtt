@@ -29,6 +29,16 @@ import {
 } from '../rules/targeted-conditions.ts';
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
 import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
+import {
+    FIELD_VIVISECTION_TARGET_TAG,
+    fieldVivisectionMode,
+    findWithoutTalent,
+    hasForbiddenLoreXenos,
+    medicaeAgainstCharacteristic,
+    resolveFieldVivisection,
+    type FieldVivisectionSkills,
+    type WithoutTalentItemLike,
+} from '../rules/without-talents.ts';
 import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { aggregateModifierTotal, aggregateRollTarget } from './aggregate-target.ts';
@@ -88,6 +98,10 @@ const MODIFIER_KEY_META: Record<string, string> = {
     'situational': 'Situational',
     'combat-situational': 'CombatSituational',
     'corruption-track': 'CorruptionTrack',
+    'craftsmanship-repair': 'CraftsmanshipRepair',
+    'xenos-lore': 'XenosLore',
+    'xenos-repair': 'XenosRepair',
+    'xenos-lore-insight': 'XenosLoreInsight',
     [TARGET_CONDITION_BUCKET]: 'TargetConditions',
 };
 
@@ -171,6 +185,12 @@ export class RollData {
 
     baseTarget: number = 0;
     baseChar: string = '';
+    /**
+     * Provenance label for the base row of the card's target formula when the
+     * base is not the default (a test substituted for another — Field
+     * Vivisection's Medicae for WS/BS). Empty → the card's generic "Base".
+     */
+    baseLabel: string = '';
     /**
      * The characteristic key (`'ballisticSkill'`, `'weaponSkill'`, …) the base
      * target was read from, when a roll has no `rollKey` of its own (a weapon
@@ -571,6 +591,13 @@ export class RollData {
     }
 }
 
+/** The attacker surface Field Vivisection reads (a structural slice of the actor). */
+interface FieldVivisectionAttacker {
+    readonly items: Iterable<WithoutTalentItemLike>;
+    readonly system: { readonly skills: FieldVivisectionSkills };
+    getCharacteristicFuzzy: (key: string) => { readonly total: number } | undefined;
+}
+
 export class WeaponRollData extends RollData {
     weapons: WH40KItem[] = [];
     declare weapon: WH40KItem;
@@ -836,6 +863,50 @@ export class WeaponRollData extends RollData {
             this.baseChar = 'S';
             this.baseCharacteristicKey = 'strength';
         }
+        this.applyFieldVivisection(
+            {
+                // The owned items as the identifier lookup reads them (the shape `combat-actions.ts` projects for Two-Weapon Fighting).
+                items: Array.from(sourceActor.items, (item) => ({ type: item.type, system: item.system as WithoutTalentItemLike['system'] })),
+                system: sourceActor.system,
+                getCharacteristicFuzzy: (key) => sourceActor.getCharacteristicFuzzy(key),
+            },
+            this.targetActor as TargetTagSource | null,
+            this.weapon.isRanged,
+        );
+    }
+
+    /**
+     * Field Vivisection (#101, DH2 Enemies Without p. 62): on a Called Shot of
+     * the talent's Specialisation against a xenos the attacker's Forbidden Lore
+     * (Xenos) covers, the test is Medicae (WS) / Medicae (BS) instead of WS / BS.
+     * Ownership is read by talent identifier; the target's xenos status from its
+     * schema `nature` tag. The swap is labelled on the card's base row.
+     * @param {FieldVivisectionAttacker} sourceActor  The attacker.
+     * @param {TargetTagSource | null} target  The attack's target, if any.
+     * @param {boolean} isRanged  Whether the attack is ranged (the active weapon mode).
+     */
+    applyFieldVivisection(sourceActor: FieldVivisectionAttacker, target: TargetTagSource | null, isRanged: boolean): void {
+        this.baseLabel = '';
+        if (!this.isCalledShot) return;
+        const talent = findWithoutTalent(sourceActor.items, 'fieldVivisection');
+        if (talent === undefined) return;
+        const mode = fieldVivisectionMode(talent.system.specialization);
+        if (mode === null || (mode === 'ranged') !== isRanged) return;
+        const skills = sourceActor.system.skills;
+        const medicae = skills.medicae;
+        if (medicae === undefined) return;
+        const medicaeCharacteristic = sourceActor.getCharacteristicFuzzy(medicae.characteristic)?.total ?? 0;
+        const result = resolveFieldVivisection({
+            mode,
+            isCalledShot: true,
+            targetIsStudiedXenos: collectTargetTags(target).byAxis.vsType.includes(FIELD_VIVISECTION_TARGET_TAG),
+            hasForbiddenLoreXenos: hasForbiddenLoreXenos(skills),
+            weaponSkillTotal: this.baseTarget,
+            medicaeTotal: medicaeAgainstCharacteristic(medicae.current, medicaeCharacteristic, this.baseTarget),
+        });
+        if (!result.swapped) return;
+        this.baseTarget = result.target;
+        this.baseLabel = runtimeI18n()?.format?.('WH40K.WithoutTalents.FieldVivisection.Base', { characteristic: this.baseChar }) ?? this.baseChar;
     }
 
     /**

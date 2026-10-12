@@ -1,6 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { resolveSprayAvoidance } from './spray-avoidance';
-import { resolveFieldVivisection, resolveLeapingDodge, resolvePushTheLimit, WITHOUT_TALENTS } from './without-talents';
+import {
+    FIELD_VIVISECTION_TARGET_TAG,
+    fieldVivisectionMode,
+    findWithoutTalent,
+    hasForbiddenLoreXenos,
+    medicaeAgainstCharacteristic,
+    resolveFieldVivisection,
+    resolveLeapingDodge,
+    resolvePushTheLimit,
+    sprayAvoidanceTest,
+    WITHOUT_TALENTS,
+} from './without-talents';
 
 /**
  * Per-talent contract tests for the Without novel-mechanic talent
@@ -150,5 +161,57 @@ describe('Push the Limit — +20 Operate / 4+ DoF crit (#101)', () => {
         });
         expect(result.invoked).toBe(false);
         expect(result.triggersCritical).toBe(false);
+    });
+});
+
+describe('talent lookups — matched by identifier, never by name (#101)', () => {
+    const talent = (identifier: string, specialization = ''): { type: string; system: { identifier: string; specialization: string } } => ({
+        type: 'talent',
+        system: { identifier, specialization },
+    });
+
+    it('findWithoutTalent finds an owned talent by its compendium identifier', () => {
+        const items = [talent('sprintMaster'), talent('leapingDodge')];
+        expect(findWithoutTalent(items, 'leapingDodge')).toBe(items[1]);
+        expect(findWithoutTalent(items, 'pushTheLimit')).toBeUndefined();
+    });
+
+    it('ignores a non-talent item that happens to share the identifier', () => {
+        expect(findWithoutTalent([{ type: 'trait', system: { identifier: 'leapingDodge' } }], 'leapingDodge')).toBeUndefined();
+    });
+
+    it('fieldVivisectionMode reads the purchased Specialisation', () => {
+        expect(fieldVivisectionMode('Ranged')).toBe('ranged');
+        expect(fieldVivisectionMode(' melee ')).toBe('melee');
+        expect(fieldVivisectionMode('')).toBeNull();
+        expect(fieldVivisectionMode(null)).toBeNull();
+    });
+});
+
+describe('sprayAvoidanceTest — Leaping Dodge wiring (#101 / #103)', () => {
+    it('rolls Agility without the talent and Dodge with it', () => {
+        expect(sprayAvoidanceTest([], 41, 55)).toEqual({ skill: 'agility', target: 41 });
+        expect(sprayAvoidanceTest([{ type: 'talent', system: { identifier: 'leapingDodge' } }], 41, 55)).toEqual({ skill: 'dodge', target: 55 });
+    });
+});
+
+describe('Field Vivisection gate helpers (#101)', () => {
+    it('requires a Forbidden Lore (Xenos…) row at Known or better', () => {
+        expect(hasForbiddenLoreXenos({ forbiddenLore: { entries: [{ name: 'Xenos', rank: 1 }] } })).toBe(true);
+        expect(hasForbiddenLoreXenos({ forbiddenLore: { entries: [{ name: '', specialization: 'Xenos (Orks)', trained: true }] } })).toBe(true);
+        expect(hasForbiddenLoreXenos({ forbiddenLore: { entries: [{ name: 'Xenos', rank: 0 }] } })).toBe(false);
+        expect(hasForbiddenLoreXenos({ forbiddenLore: { entries: [{ name: 'Daemonology', rank: 3 }] } })).toBe(false);
+        expect(hasForbiddenLoreXenos({})).toBe(false);
+    });
+
+    it('Medicae (BS) keeps Medicae training over the attack characteristic', () => {
+        // Medicae 55 over Int 45 = +10 training; BS 38 → 48.
+        expect(medicaeAgainstCharacteristic(55, 45, 38)).toBe(48);
+        // Untrained Medicae (Int 45 → 25) carries its −20.
+        expect(medicaeAgainstCharacteristic(25, 45, 38)).toBe(18);
+    });
+
+    it('keys the studied-xenos test off the NPC nature tag', () => {
+        expect(FIELD_VIVISECTION_TARGET_TAG).toBe('xenos');
     });
 });

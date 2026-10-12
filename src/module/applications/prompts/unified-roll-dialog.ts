@@ -49,6 +49,7 @@ import {
 } from '../../rules/target-situationals.ts';
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
 import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
+import { findWithoutTalent, resolvePushTheLimit, type PushTheLimitCriticalTable } from '../../rules/without-talents.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { detectTargetVisibility } from '../../utils/cover-geometry.ts';
 import { buildDifficultyPresets, type DifficultyPreset } from '../../utils/difficulty-presets.ts';
@@ -127,9 +128,21 @@ interface SelectableQualityOption {
     isSelected: boolean;
 }
 
+/** The tests Push the Limit's +20 applies to (Enemies Without p. 63): Operate, or Survival on a living steed. */
+const PUSH_THE_LIMIT_SKILLS: ReadonlySet<string> = new Set(['operate', 'survival']);
+/** The skill that marks the living-steed case (Impact Critical — Leg instead of Motive Systems). */
+const PUSH_THE_LIMIT_MOUNT_SKILL = 'survival';
+/** The printed critical tables Push the Limit routes a catastrophe to. */
+const PUSH_THE_LIMIT_TABLE_KEYS: Record<PushTheLimitCriticalTable, string> = {
+    'motive-systems': 'WH40K.WithoutTalents.PushTheLimit.MotiveSystemsTable',
+    'impact-leg': 'WH40K.WithoutTalents.PushTheLimit.ImpactLegTable',
+};
+
 interface SituationalModifierEntry {
     key: string;
     source: string;
+    /** Owning item id — set by the actor's `getSituationalModifiers`. */
+    itemId?: string;
     sourceType?: string;
     value: number;
     condition?: string;
@@ -1297,7 +1310,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 getSituationalModifiers: (
                     type: string,
                     key: string | null,
-                ) => Array<{ key: string; source: string; value: number; label: string; appliesToVariant?: string }>;
+                ) => Array<{ key: string; source: string; value: number; label: string; appliesToVariant?: string; itemId?: string }>;
             }
         ).getSituationalModifiers(type, key);
     }
@@ -1380,6 +1393,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      */
     async _resolveSimpleActionHooks(): Promise<void> {
         this.#applySenseChannelGate();
+        this.#applyPushTheLimit();
         await this.actionData.checkForOpposed();
         await this.actionData.descriptionText();
     }
@@ -1390,6 +1404,45 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      * deafened → Auditory), auto-fail the roll and surface why. The token↔channel
      * relationship is authored on the compendium variant (`blockedBy`), not here.
      */
+    /**
+     * Push the Limit (#101, DH2 Enemies Without p. 63): the talent's +20 is its
+     * own situational modifier on Operate (and Survival, for a living steed). When
+     * the player toggled it on and the test fails by 4+ degrees, the card names
+     * the critical table to roll — Motive Systems for a vehicle, Impact (Leg) for
+     * a mount. The talent is recognised by the toggled row's owning item
+     * identifier, never by name.
+     */
+    #applyPushTheLimit(): void {
+        if (this.rollType !== 'simple' || this.rollData.type !== 'Skill') return;
+        const skillKey = this.rollData.rollKey;
+        if (!PUSH_THE_LIMIT_SKILLS.has(skillKey)) return;
+        const source = this.rollData.sourceActor;
+        if (source === null) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is dialog state (null = not yet collected), not a DataModel field
+        const active = (this._cachedSituationalModifiers ?? []).filter((mod) => this._situationalModifiers[`${mod.key}_${mod.source}`]);
+        const owners = active.flatMap((mod) => {
+            const item = mod.itemId === undefined ? undefined : source.items.get(mod.itemId);
+            return item === undefined ? [] : [{ type: item.type, system: item.system as { identifier?: string } }];
+        });
+        if (findWithoutTalent(owners, 'pushTheLimit') === undefined) return;
+        const rd = this.actionData.rollData;
+        const result = resolvePushTheLimit({
+            invoke: true,
+            alreadyUsedThisRound: false,
+            rawDegrees: rd.success ? rd.dos : rd.dof,
+            success: rd.success,
+            livingMount: skillKey === PUSH_THE_LIMIT_MOUNT_SKILL,
+        });
+        if (result.criticalTable === null) return;
+        this.actionData.addEffect(
+            game.i18n.localize('WH40K.WithoutTalents.PushTheLimit.ChatTitle'),
+            game.i18n.format('WH40K.WithoutTalents.PushTheLimit.CriticalEffect', {
+                degrees: String(rd.dof),
+                table: game.i18n.localize(PUSH_THE_LIMIT_TABLE_KEYS[result.criticalTable]),
+            }),
+        );
+    }
+
     #applySenseChannelGate(): void {
         if (this.rollType !== 'simple' || this.rollData.type !== 'Skill') return;
         const variantName = this._selectedSkillVariant;

@@ -36,8 +36,34 @@ export const WITHOUT_TALENTS = {
     pushTheLimit: PUSH_THE_LIMIT,
 } as const;
 
-/** Stable identifiers for the Without novel-mechanic talents. */
+/**
+ * Stable identifiers for the Without novel-mechanic talents. Each equals the
+ * compendium talent's `system.identifier`, which is how an actor's ownership is
+ * read — matched by identifier, never by display name (as `two-weapon-fighting.ts`).
+ */
 export type WithoutTalentId = keyof typeof WITHOUT_TALENTS;
+
+/** An owned item as the talent lookups read it. */
+export interface WithoutTalentItemLike {
+    readonly type: string;
+    readonly system: { readonly identifier?: string | null | undefined; readonly specialization?: string | null | undefined };
+}
+
+/** The actor's owned talent with `identifier`, or undefined. */
+export function findWithoutTalent<T extends WithoutTalentItemLike>(items: Iterable<T>, identifier: WithoutTalentId): T | undefined {
+    for (const item of items) {
+        if (item.type === 'talent' && item.system.identifier === identifier) return item;
+    }
+    return undefined;
+}
+
+/** The Field Vivisection Specialisation a talent row was bought under ('Melee' / 'Ranged'), or null when unset. */
+export function fieldVivisectionMode(specialization: string | null | undefined): FieldVivisectionMode | null {
+    const value = (specialization ?? '').trim().toLowerCase();
+    if (value === 'melee') return 'melee';
+    if (value === 'ranged') return 'ranged';
+    return null;
+}
 
 // ---------------------------------------------------------------------------
 // 1. Field Vivisection — without.md p. 62 (#101)
@@ -68,6 +94,46 @@ export interface FieldVivisectionResult {
     target: number;
     /** True when the swap to Medicae fired (every precondition met). */
     swapped: boolean;
+}
+
+/**
+ * The target tag a studied xenos carries: the NPC schema `nature` enum value
+ * (`situation-tags.ts` derives it), never a creature name.
+ */
+export const FIELD_VIVISECTION_TARGET_TAG = 'xenos';
+
+/** The Forbidden Lore specialisation family the talent requires (Xenos–Any). */
+const FORBIDDEN_LORE_XENOS = 'xenos';
+
+/** The attacker's skills the Field Vivisection gate reads. */
+export interface FieldVivisectionSkills {
+    readonly forbiddenLore?:
+        | {
+              readonly entries?:
+                  | readonly { readonly name?: string; readonly specialization?: string; readonly rank?: number; readonly trained?: boolean }[]
+                  | undefined;
+          }
+        | undefined;
+    readonly medicae?: { readonly current: number; readonly characteristic: string } | undefined;
+}
+
+/** Whether the attacker has a Forbidden Lore (Xenos…) specialisation at Known (rank 1) or better. */
+export function hasForbiddenLoreXenos(skills: FieldVivisectionSkills): boolean {
+    for (const entry of skills.forbiddenLore?.entries ?? []) {
+        const name = (entry.name ?? '') === '' ? entry.specialization ?? '' : entry.name ?? '';
+        if (!name.trim().toLowerCase().startsWith(FORBIDDEN_LORE_XENOS)) continue;
+        if ((entry.rank ?? 0) >= 1 || entry.trained === true) return true;
+    }
+    return false;
+}
+
+/**
+ * Medicae (WS) / Medicae (BS): the attack characteristic plus the Medicae
+ * skill's own training offset (its total minus its usual characteristic), so an
+ * untrained or advanced Medicae carries over exactly.
+ */
+export function medicaeAgainstCharacteristic(medicaeTotal: number, medicaeCharacteristicTotal: number, attackCharacteristicTotal: number): number {
+    return attackCharacteristicTotal + (medicaeTotal - medicaeCharacteristicTotal);
 }
 
 /**
@@ -121,6 +187,14 @@ export function resolveLeapingDodge(input: LeapingDodgeInput): SprayAvoidanceRes
         agilityTotal: input.agilityTotal,
         dodgeTotal: input.dodgeTotal,
     });
+}
+
+/**
+ * The test a defender makes to avoid a Spray attack: Agility, or Dodge when it
+ * owns Leaping Dodge (read by talent identifier).
+ */
+export function sprayAvoidanceTest(items: Iterable<WithoutTalentItemLike>, agilityTotal: number, dodgeTotal: number): SprayAvoidanceResult {
+    return resolveLeapingDodge({ hasLeapingDodge: findWithoutTalent(items, 'leapingDodge') !== undefined, agilityTotal, dodgeTotal });
 }
 
 // ---------------------------------------------------------------------------

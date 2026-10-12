@@ -3,6 +3,7 @@
 // module's graph and formed 72 of the repo's import cycles for one symbol.
 import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
 import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { ActionData } from '../rolls/action-data.ts';
 import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';
 import { Hit } from '../rolls/damage-data.ts';
@@ -11,6 +12,7 @@ import { actionBudgetForActor, spendActionForActor } from '../rules/action-econo
 import { assassinsStrikeTest } from '../rules/assassins-strike.ts';
 import { DEFAULT_HIT_LOCATION, resolveHitLocationId } from '../rules/hit-locations.ts';
 import { weaponHasQuality } from '../rules/weapon-quality-effects.ts';
+import { sprayAvoidanceTest } from '../rules/without-talents.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
@@ -28,6 +30,9 @@ type WithRollSkill = WH40KBaseActorDocument & {
     // eslint-disable-next-line no-restricted-syntax -- boundary: rollSkill options object is forwarded to Foundry's roll dispatcher
     rollSkill?: (skill: string, spec?: string, opts?: Record<string, unknown>) => Promise<void>;
 };
+
+/** A defender rolling to avoid a Spray attack. */
+type SprayDefender = WH40KBaseActor;
 
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
@@ -105,6 +110,11 @@ export class BasicActionManager {
             html.querySelectorAll('.roll-control__attempt-parry').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._attemptReaction(ev, 'parry');
+                });
+            });
+            html.querySelectorAll('.roll-control__avoid-spray').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    void this._avoidSpray(ev);
                 });
             });
         });
@@ -426,6 +436,41 @@ export class BasicActionManager {
 
         // Spend the Reaction once the test has been dispatched.
         if (defenderId !== null) spendActionForActor(defenderId, 'reaction');
+    }
+
+    /**
+     * Spray avoidance (#103, DH2 Enemies Without p. 63): everyone caught in a
+     * Spray weapon's cone tests to avoid the hit. The defenders are the tokens
+     * the clicking user controls (several may be in the cone), falling back to
+     * the card's target. Each rolls Agility — or Dodge when it owns Leaping
+     * Dodge — through its own roll pipeline. Not a Reaction, so nothing is spent.
+     */
+    async _avoidSpray(event: Event): Promise<void> {
+        event.preventDefault();
+        const btn = event.currentTarget as HTMLButtonElement;
+        const actionData = this.#resolveStoredAction(btn, game.i18n.localize('WH40K.FateActionExpired'));
+        const controlled = (canvas.tokens?.controlled ?? []).map((token) => token.actor).filter((actor): actor is NonNullable<typeof actor> => actor != null);
+        const fallback = actionData?.rollData.targetActor ?? null;
+        const defenders: SprayDefender[] = controlled.length > 0 ? controlled : fallback === null ? [] : [fallback];
+        if (defenders.length === 0) {
+            ui.notifications.warn(game.i18n.localize('WH40K.WithoutTalents.LeapingDodge.NoDefender'));
+            return;
+        }
+        for (const defender of defenders) {
+            const items = Array.from(defender.items, (item) => ({ type: item.type, system: item.system as { identifier?: string } }));
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json types characteristics[key] as possibly undefined, tsconfig.test.json does not
+            const agility = defender.characteristics['agility']?.total ?? 0;
+            const dodge = (defender.system as { skills?: Partial<Record<string, { current: number }>> }).skills?.['dodge']?.current ?? 0;
+            const test = sprayAvoidanceTest(items, agility, dodge);
+            if (test.skill === 'dodge') {
+                ui.notifications.info(game.i18n.format('WH40K.WithoutTalents.LeapingDodge.UsingDodge', { name: defender.name }));
+                // `rollSkill` lives on the character / NPC subclasses, not the base actor (same reach as `_attemptReaction`).
+                // eslint-disable-next-line no-await-in-loop -- sequential by design: each defender's test opens its own roll dialog
+                await (defender as SprayDefender & { rollSkill?: (skill: string) => Promise<void> }).rollSkill?.('dodge');
+            } else {
+                defender.rollCharacteristic('agility', game.i18n.localize('WH40K.WithoutTalents.LeapingDodge.AgilityFlavor'));
+            }
+        }
     }
 
     async _refundResources(event: Event): Promise<void> {

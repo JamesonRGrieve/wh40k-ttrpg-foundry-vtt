@@ -58,6 +58,10 @@ interface ActionRollData {
     isOpposed?: boolean;
     ignoreDegrees?: boolean;
     ignoreSuccess?: boolean;
+    /** Spray-quality attack — shows the avoidance control (#101 / #103). */
+    isSpray?: boolean;
+    /** Provenance label for a substituted base (Field Vivisection, #101). */
+    baseLabel?: string;
 }
 
 interface ActionRollChatCtx {
@@ -339,5 +343,40 @@ export const SystemFrameIM: Story = {
         await expect(framed.length).toBeGreaterThan(0);
         const rows = canvasElement.querySelectorAll('[data-wh40k-tooltip="modifier"]');
         await expect(rows.length).toBe(SOURCED_COMPONENTS.length);
+    },
+};
+
+// ── Without talents (#101) ────────────────────────────────────────────────────
+
+/** A Spray attack is a forced hit; the card offers everyone in the cone the avoidance test (Agility, or Dodge with Leaping Dodge). */
+export const SprayAvoidance: Story = {
+    name: 'Spray — Avoid Spray control (Leaping Dodge)',
+    args: {
+        id: 'roll-spray',
+        label: 'Flamer',
+        rollData: successRollData({ name: 'Flamer', ignoreControls: false, isSpray: true, ignoreDegrees: true, ignoreModifiers: true }),
+        effectOutput: [],
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        const avoid = canvasElement.querySelector<HTMLButtonElement>('.roll-control__avoid-spray');
+        await expect(avoid).not.toBeNull();
+        await expect(avoid?.dataset['rollId']).toBe('roll-spray');
+    },
+};
+
+/** Field Vivisection: a Called Shot rolled as Medicae (BS) names the substituted base on the formula's first row. */
+export const FieldVivisectionBase: Story = {
+    name: 'Called Shot — Field Vivisection Medicae (BS) base',
+    args: {
+        id: 'roll-vivisection',
+        label: 'Ballistic Skill Test',
+        rollData: successRollData({ action: 'Called Shot', baseLabel: 'Medicae (BS) — Field Vivisection' }),
+        effectOutput: [],
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.textContent).toContain('Medicae (BS) — Field Vivisection');
+        await expect(canvasElement.querySelector('.roll-control__avoid-spray')).toBeNull();
     },
 };

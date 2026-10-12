@@ -46,7 +46,7 @@
                 {{> systems/wh40k-rpg/templates/chat/partial/card-target-row.hbs target=targetActor}}
 
                 {{#unless ignoreModifiers}}
-                    {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=baseTarget activeModifiers=activeModifiers modifierSources=modifierSources modifiedTarget=modifiedTarget modifierCapFired=modifierCapFired rawModifierTotal=rawModifierTotal modifierTotal=modifierTotal}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=baseTarget baseLabel=baseLabel activeModifiers=activeModifiers modifierSources=modifierSources modifiedTarget=modifiedTarget modifierCapFired=modifierCapFired rawModifierTotal=rawModifierTotal modifierTotal=modifierTotal}}
 
                     {{!-- Audit: tie the d100 result to the final target so the table can
                           see exactly how success/failure was reached. Skipped for
@@ -167,6 +167,18 @@
                         {{!-- Defender reactions (#414): on a hit against a target, let the
                               defender Attempt Dodge (any attack) or Parry (melee), rolling
                               their own reaction test and spending their Reaction for the round. --}}
+                        {{!-- Spray avoidance (#103 / #101): everyone in the cone tests to avoid
+                              the hit — Agility, or Dodge with Leaping Dodge. Not a Reaction. --}}
+                        {{#if isSpray}}
+                            <button
+                                class="roll-control__avoid-spray tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_var(--wh40k-gold-glow)] hover:-tw-translate-y-px active:tw-translate-y-0"
+                                data-roll-id="{{@root.id}}"
+                                title="{{localize 'WH40K.WithoutTalents.LeapingDodge.AvoidSprayTooltip'}}"
+                            >
+                                <i class="fas fa-person-running tw-text-[0.75rem]" aria-hidden="true"></i>
+                                <span>{{localize "WH40K.WithoutTalents.LeapingDodge.AvoidSpray"}}</span>
+                            </button>
+                        {{/if}}
                         {{#if success}}
                             {{#if targetActor}}
                                 <div class="tw-flex tw-gap-1.5">

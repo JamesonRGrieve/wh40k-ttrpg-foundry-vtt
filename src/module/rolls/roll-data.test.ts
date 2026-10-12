@@ -184,6 +184,76 @@ describe('result formula transparency (#… — central derivation in ActionData
     });
 });
 
+describe('Field Vivisection swaps a Called Shot onto Medicae (#101, Enemies Without p. 62)', () => {
+    beforeEach(() => {
+        vi.stubGlobal('game', { i18n: { localize: (k: string) => k, format: (k: string, d: Record<string, string>) => `${k}:${d['characteristic'] ?? ''}` } });
+    });
+    afterEach(() => vi.unstubAllGlobals());
+
+    const attacker = (specialization: string, loreRank: number): Parameters<WeaponRollData['applyFieldVivisection']>[0] => ({
+        items: [{ type: 'talent', system: { identifier: 'fieldVivisection', specialization } }],
+        system: {
+            skills: {
+                forbiddenLore: { entries: [{ name: 'Xenos', rank: loreRank }] },
+                medicae: { current: 55, characteristic: 'intelligence' },
+            },
+        },
+        getCharacteristicFuzzy: (key: string) => (key === 'intelligence' ? { total: 45 } : undefined),
+    });
+
+    interface AttackCase {
+        readonly calledShot: boolean;
+        readonly ranged: boolean;
+        readonly nature: string;
+    }
+
+    function attack(opts: AttackCase, spec: string, rank: number): WeaponRollData {
+        // eslint-disable-next-line no-restricted-syntax -- test: bypass the WH40K-config constructor to unit-test one method, as the cases above do
+        const rd = Object.create(WeaponRollData.prototype) as WeaponRollData;
+        rd.isCalledShot = opts.calledShot;
+        rd.baseTarget = 38;
+        rd.baseChar = 'BS';
+        rd.applyFieldVivisection(attacker(spec, rank), { system: { nature: opts.nature }, items: [] }, opts.ranged);
+        return rd;
+    }
+
+    it('rolls Medicae (BS) — Medicae training over BS — and labels the base row', () => {
+        const rd = attack({ calledShot: true, ranged: true, nature: 'xenos' }, 'Ranged', 1);
+        expect(rd.baseTarget).toBe(48);
+        expect(rd.baseLabel).toBe('WH40K.WithoutTalents.FieldVivisection.Base:BS');
+    });
+
+    it.each([
+        ['not a Called Shot', { calledShot: false, ranged: true, nature: 'xenos' }, 'Ranged', 1],
+        ['the wrong Specialisation', { calledShot: true, ranged: true, nature: 'xenos' }, 'Melee', 1],
+        ['a non-xenos target', { calledShot: true, ranged: true, nature: 'creature' }, 'Ranged', 1],
+        ['no Forbidden Lore (Xenos)', { calledShot: true, ranged: true, nature: 'xenos' }, 'Ranged', 0],
+    ] as const)('leaves BS alone for %s', (_case, opts, spec, rank) => {
+        const rd = attack(opts, spec, rank);
+        expect(rd.baseTarget).toBe(38);
+        expect(rd.baseLabel).toBe('');
+    });
+});
+
+describe('Without talents reach the roll flow (#101)', () => {
+    it('Spray attack cards offer the avoidance test, routed through the Leaping Dodge resolver', () => {
+        expect(readRepoFile('src/templates/chat/action-roll-chat.hbs')).toContain('roll-control__avoid-spray');
+        const manager = readRepoFile('src/module/actions/basic-action-manager.ts');
+        expect(manager).toContain("querySelectorAll('.roll-control__avoid-spray')");
+        expect(manager).toContain('sprayAvoidanceTest(');
+    });
+
+    it('Push the Limit is resolved on every simple skill roll path', () => {
+        const dialog = readRepoFile('src/module/applications/prompts/unified-roll-dialog.ts');
+        expect(dialog).toMatch(/_resolveSimpleActionHooks\(\): Promise<void> \{[^}]*this\.#applyPushTheLimit\(\);/);
+        expect(dialog).toContain('resolvePushTheLimit(');
+    });
+
+    it('the attack card prints the substituted base label', () => {
+        expect(readRepoFile('src/templates/chat/action-roll-chat.hbs')).toContain('baseLabel=baseLabel');
+    });
+});
+
 describe('opposed psychic resolution wired to the #449 engine (#451)', () => {
     const rollData = readRepoFile('src/module/rolls/roll-data.ts');
     const actionData = readRepoFile('src/module/rolls/action-data.ts');
