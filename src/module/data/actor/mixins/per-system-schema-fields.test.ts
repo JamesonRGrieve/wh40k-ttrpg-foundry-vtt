@@ -60,7 +60,6 @@ const { bcSupplementsSchemaFields } = await import('./bc-supplements-template.ts
 const { dwAmmoSchemaFields } = await import('./dw-ammo-template.ts');
 const { dwAstartesSchemaFields } = await import('./dw-astartes-template.ts');
 const { dwCohesionSchemaFields } = await import('./dw-cohesion-template.ts');
-const { dwDistinctionSchemaFields } = await import('./dw-distinction-template.ts');
 const { dwMissionSchemaFields } = await import('./dw-mission-template.ts');
 const { dwModeSchemaFields } = await import('./dw-mode-template.ts');
 const { dwOathSchemaFields } = await import('./dw-oath-template.ts');
@@ -89,7 +88,6 @@ const cases: Array<[name: string, fn: SchemaFieldsFn, keys: string[]]> = [
     ['dwAmmoSchemaFields', dwAmmoSchemaFields, ['selectedAmmo']],
     ['dwAstartesSchemaFields', dwAstartesSchemaFields, ['implants']],
     ['dwCohesionSchemaFields', dwCohesionSchemaFields, ['cohesionMax', 'cohesionCurrent', 'cohesionLostThisTurn', 'rallied']],
-    ['dwDistinctionSchemaFields', dwDistinctionSchemaFields, ['distinctions', 'marksOfDistinction']],
     ['dwMissionSchemaFields', dwMissionSchemaFields, ['activeMission']],
     ['dwModeSchemaFields', dwModeSchemaFields, ['combatMode', 'sustainedAbilities']],
     ['dwOathSchemaFields', dwOathSchemaFields, ['activeOathId', 'isLeader']],

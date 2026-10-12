@@ -1,5 +1,6 @@
 import type { FatigueModelDef } from '../config/game-systems/types.ts';
 import { DEAD_STATUS_ID, SYSTEM_ID, UNCONSCIOUS_STATUS_ID } from '../constants.ts';
+import { buildSpecialAbilityLookup, migrateLegacyDistinctionLists, specialAbilityIndexEntries } from '../data/actor/legacy-distinction-lists.ts';
 import { applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../data/shared/characteristic-math.ts';
 import { isEffectSuppressedByEquipState, isWeaponAttackBlockedByEquip } from '../data/shared/equip-state.ts';
 import { computeMovement } from '../data/shared/movement-math.ts';
@@ -92,6 +93,8 @@ export class WH40KBaseActor extends Actor {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.migrateData receives the raw, unvalidated actor source
     static override migrateData(source: Record<string, unknown>): Record<string, unknown> {
+        // #171: the retired Distinction id lists become owned special-ability items.
+        migrateLegacyDistinctionLists(source, () => buildSpecialAbilityLookup(typeof game === 'undefined' ? [] : specialAbilityIndexEntries(game.packs)));
         materializeOwnedItemSources(source);
         return super.migrateData(source);
     }

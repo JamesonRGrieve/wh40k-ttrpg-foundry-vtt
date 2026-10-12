@@ -13,7 +13,6 @@ import { bcSupplementsSchemaFields, type BcSupplementsDeclarations } from './mix
 import { dwAmmoSchemaFields, type DwAmmoDeclarations } from './mixins/dw-ammo-template.ts';
 import { dwAstartesSchemaFields, type DwAstartesDeclarations } from './mixins/dw-astartes-template.ts';
 import { dwCohesionSchemaFields, type DwCohesionDeclarations } from './mixins/dw-cohesion-template.ts';
-import { dwDistinctionSchemaFields, type DwDistinctionDeclarations } from './mixins/dw-distinction-template.ts';
 import { dwMissionSchemaFields, type DwMissionDeclarations } from './mixins/dw-mission-template.ts';
 import { dwModeSchemaFields, type DwModeDeclarations } from './mixins/dw-mode-template.ts';
 import { dwOathSchemaFields, type DwOathDeclarations } from './mixins/dw-oath-template.ts';
@@ -382,7 +381,6 @@ export default class CharacterData extends CreatureTemplate {
             ...bcRitualSchemaFields(),
             ...bcSupplementsSchemaFields(),
             ...dwAmmoSchemaFields(),
-            ...dwDistinctionSchemaFields(),
             ...dwMissionSchemaFields(),
             ...dwOathSchemaFields(),
             ...dwVehicleSchemaFields(),
@@ -1350,7 +1348,6 @@ export default interface CharacterData
         BcRitualDeclarations,
         BcSupplementsDeclarations,
         DwAmmoDeclarations,
-        DwDistinctionDeclarations,
         DwMissionDeclarations,
         DwOathDeclarations,
         DwVehicleDeclarations,

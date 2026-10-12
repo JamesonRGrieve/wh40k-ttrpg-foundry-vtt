@@ -49,7 +49,6 @@
     "src/module/data/actor/mixins/dw-ammo-template.ts",
     "src/module/data/actor/mixins/dw-astartes-template.ts",
     "src/module/data/actor/mixins/dw-cohesion-template.ts",
-    "src/module/data/actor/mixins/dw-distinction-template.ts",
     "src/module/data/actor/mixins/dw-mission-template.ts",
     "src/module/data/actor/mixins/dw-mode-template.ts",
     "src/module/data/actor/mixins/dw-oath-template.ts",
