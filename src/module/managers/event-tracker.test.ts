@@ -141,7 +141,14 @@ interface WorldStub {
 }
 
 /** A world with registered tracker settings, a (GM or player) user, journals, and a spied `Hooks.callAll`. */
-function stubWorld(isGM = true, journals: Array<{ name: string; uuid: string; flags: Record<string, never> }> = []): WorldStub {
+/** A world journal entry, optionally carrying the vault writer's identity flag. */
+interface WorldJournalStub {
+    name: string;
+    uuid: string;
+    flags: { [SYSTEM_ID]?: { vault: { path: string; entityType: string; name: string } } };
+}
+
+function stubWorld(isGM = true, journals: WorldJournalStub[] = []): WorldStub {
     const settings = stubSettings();
     const callAll = vi.fn();
     vi.stubGlobal('game', { settings, user: { isGM }, journal: journals, i18n: { localize: (key: string) => key } });
@@ -296,6 +303,24 @@ describe('EventTracker journal links', () => {
         expect(EventTracker.resolveJournalLink({ kind: 'location', name: 'The Sump' })).toBe('JournalEntry.sump');
         EventTracker.registerJournalLinkResolver(null);
         expect(EventTracker.resolveJournalLink({ kind: 'character', name: 'Varo' })).toBeNull();
+    });
+
+    it('matches the vault identity flag before the journal name, preferring the kind-fitting entity type', () => {
+        stubWorld(true, [
+            { name: 'Garrick Varo', uuid: 'JournalEntry.byName', flags: {} },
+            {
+                name: 'Varo (notes)',
+                uuid: 'JournalEntry.note',
+                flags: { [SYSTEM_ID]: { vault: { path: 'Lore/Varo.md', entityType: 'note', name: 'Garrick Varo' } } },
+            },
+            {
+                name: 'Varo (renamed)',
+                uuid: 'JournalEntry.character',
+                flags: { [SYSTEM_ID]: { vault: { path: 'Characters/Garrick Varo.md', entityType: 'character', name: 'Garrick Varo' } } },
+            },
+        ]);
+        expect(EventTracker.resolveJournalLink({ kind: 'character', name: 'Garrick Varo' })).toBe('JournalEntry.character');
+        expect(EventTracker.resolveJournalLink({ kind: 'location', name: 'Garrick Varo' })).toBe('JournalEntry.note');
     });
 });
 

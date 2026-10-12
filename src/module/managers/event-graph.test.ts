@@ -9,7 +9,9 @@ import {
     evaluateRequirement,
     eventLocationName,
     eventSourceName,
+    findJournalUuid,
     findJournalUuidByName,
+    findJournalUuidByVaultIdentity,
     flattenRequirements,
     isEventAvailable,
     isPartyDisposition,
@@ -18,6 +20,7 @@ import {
     isResolvedState,
     isValidCampaignDay,
     type JournalRef,
+    type NamedJournal,
     nextDispositionShift,
     normaliseRequirements,
     omitKey,
@@ -31,6 +34,8 @@ import {
     stepCampaignDay,
     stripWikiLink,
     UNDATED_SOURCE_SORT_KEY,
+    type VaultEntityType,
+    type VaultJournalIdentity,
     withPcAttitude,
 } from './event-graph.ts';
 
@@ -349,5 +354,48 @@ describe('journal link resolution', () => {
     it('resolves nothing for an unknown or empty name', () => {
         expect(resolveJournalUuid({ kind: 'item', name: 'Nope' }, null, fallback)).toBeNull();
         expect(resolveJournalUuid({ kind: 'item', name: '' }, () => 'JournalEntry.x', fallback)).toBeNull();
+    });
+});
+
+describe('vault-identity journal lookup', () => {
+    const vault = (entityType: VaultEntityType, name: string): VaultJournalIdentity => ({ path: `${entityType}/${name}.md`, entityType, name });
+
+    it('a vault-flag match wins over an exact journal-name match', () => {
+        const journals: NamedJournal[] = [
+            { name: 'The Sump', uuid: 'JournalEntry.byName' },
+            { name: 'Bar (renamed by the GM)', uuid: 'JournalEntry.byFlag', vault: vault('location', 'The Sump') },
+        ];
+        expect(findJournalUuid(journals, { kind: 'location', name: 'The Sump' })).toBe('JournalEntry.byFlag');
+    });
+
+    it('prefers the entity type that fits the reference kind', () => {
+        const journals: NamedJournal[] = [
+            { name: 'Varo note', uuid: 'JournalEntry.note', vault: vault('note', 'Garrick Varo') },
+            { name: 'Varo', uuid: 'JournalEntry.character', vault: vault('character', 'Garrick Varo') },
+        ];
+        expect(findJournalUuid(journals, { kind: 'character', name: 'Garrick Varo' })).toBe('JournalEntry.character');
+        // No fitting type: the first flag match still beats the name lookup.
+        expect(findJournalUuid(journals, { kind: 'location', name: 'Garrick Varo' })).toBe('JournalEntry.note');
+    });
+
+    it('an event source prefers a journal, then a quest', () => {
+        const journals: NamedJournal[] = [
+            { name: 'q', uuid: 'JournalEntry.quest', vault: vault('quest', 'Day 4') },
+            { name: 'j', uuid: 'JournalEntry.journal', vault: vault('journal', 'Day 4') },
+        ];
+        expect(findJournalUuid(journals, { kind: 'event-source', name: 'Day 4' })).toBe('JournalEntry.journal');
+        expect(findJournalUuid(journals.slice(0, 1), { kind: 'event-source', name: 'Day 4' })).toBe('JournalEntry.quest');
+        expect(findJournalUuid(journals, { kind: 'quest', name: 'Day 4' })).toBe('JournalEntry.quest');
+    });
+
+    it('falls back to the exact journal name when no vault flag names the reference', () => {
+        const journals: NamedJournal[] = [
+            { name: 'The Sump', uuid: 'JournalEntry.sump' },
+            { name: 'Other', uuid: 'JournalEntry.other', vault: vault('location', 'Elsewhere') },
+        ];
+        expect(findJournalUuid(journals, { kind: 'location', name: 'The Sump' })).toBe('JournalEntry.sump');
+        expect(findJournalUuidByVaultIdentity(journals, { kind: 'location', name: 'The Sump' })).toBeNull();
+        expect(findJournalUuid(journals, { kind: 'location', name: '' })).toBeNull();
+        expect(findJournalUuid(journals, { kind: 'location', name: 'Nowhere' })).toBeNull();
     });
 });

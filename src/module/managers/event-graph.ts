@@ -136,11 +136,37 @@ export interface JournalRef {
 /** Maps a reference to a JournalEntry / JournalEntryPage UUID, or null when it has none. */
 export type JournalLinkResolver = (ref: JournalRef) => string | null;
 
-/** The fields of a journal document the built-in name lookup reads. */
+/** The vault entity types a vault-written JournalEntry can carry (the vault's `entity_type`). */
+export type VaultEntityType = 'character' | 'location' | 'item' | 'quest' | 'journal' | 'note';
+
+/**
+ * The vault identity the vault→Foundry journal writer stamps on every
+ * JournalEntry as `flags['wh40k-rpg'].vault` — the entry's vault file path,
+ * its entity type and its vault display name. It survives a GM renaming the
+ * journal, so it is matched before the journal's own name.
+ */
+export interface VaultJournalIdentity {
+    readonly path: string;
+    readonly entityType: VaultEntityType;
+    readonly name: string;
+}
+
+/** The fields of a journal document the built-in lookup reads. */
 export interface NamedJournal {
     readonly name: string;
     readonly uuid: string;
+    /** The vault identity flag, when the vault writer created this journal. */
+    readonly vault?: VaultJournalIdentity | undefined;
 }
+
+/** The vault entity types that fit each reference kind, most preferred first. */
+const VAULT_TYPES_FOR_KIND: Readonly<Record<JournalRefKind, readonly VaultEntityType[]>> = {
+    'character': ['character'],
+    'location': ['location'],
+    'item': ['item'],
+    'quest': ['quest'],
+    'event-source': ['journal', 'quest'],
+};
 
 /** The disposition target that means "the whole party". */
 const PARTY_TARGET = 'party';
@@ -414,13 +440,43 @@ export function sourceRefKind(event: EventDef): JournalRefKind {
     return event.source_file?.startsWith('Quests/') === true ? 'quest' : 'event-source';
 }
 
-/** The built-in lookup: the UUID of the first journal whose name is exactly `name`, or null. */
+/** The UUID of the first journal whose name is exactly `name`, or null. */
 export function findJournalUuidByName(journals: Iterable<NamedJournal>, name: string): string | null {
     if (name === '') return null;
     for (const journal of journals) {
         if (journal.name === name) return journal.uuid;
     }
     return null;
+}
+
+/**
+ * The UUID of the journal whose vault identity names `ref`, or null.
+ *
+ * Among journals whose `vault.name` equals the reference name, one whose
+ * entity type fits the reference kind wins (earlier types in
+ * {@link VAULT_TYPES_FOR_KIND} first); with none fitting, the first name match.
+ */
+export function findJournalUuidByVaultIdentity(journals: Iterable<NamedJournal>, ref: JournalRef): string | null {
+    if (ref.name === '') return null;
+    const preferred = VAULT_TYPES_FOR_KIND[ref.kind];
+    let best: { uuid: string; rank: number } | null = null;
+    for (const journal of journals) {
+        if (journal.vault?.name !== ref.name) continue;
+        const typeRank = preferred.indexOf(journal.vault.entityType);
+        const rank = typeRank === -1 ? preferred.length : typeRank;
+        if (best === null || rank < best.rank) best = { uuid: journal.uuid, rank };
+        if (rank === 0) break;
+    }
+    return best?.uuid ?? null;
+}
+
+/**
+ * The built-in lookup: a vault-identity match first (see
+ * {@link findJournalUuidByVaultIdentity}), then an exact journal-name match.
+ */
+export function findJournalUuid(journals: Iterable<NamedJournal>, ref: JournalRef): string | null {
+    const list = Array.from(journals);
+    return findJournalUuidByVaultIdentity(list, ref) ?? findJournalUuidByName(list, ref.name);
 }
 
 /** A usable resolver answer: a non-empty string. Anything else (including a JS caller's junk) is null. */

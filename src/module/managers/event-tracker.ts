@@ -23,7 +23,7 @@ import {
     type ComputedCharacterState,
     computeCharacterStates,
     type EventGraph,
-    findJournalUuidByName,
+    findJournalUuid,
     isEventAvailable,
     isPcAttitudeMap,
     isResolved,
@@ -33,6 +33,7 @@ import {
     type JournalLinkResolver,
     type JournalRef,
     lookup,
+    type NamedJournal,
     omitKey,
     type PcAttitudeMap,
     type ResolvedState,
@@ -152,7 +153,7 @@ function changeContext(options: EventTrackerChangeOptions): EventTrackerChangeCo
  *
  * **Journal links.** {@link EventTracker.registerJournalLinkResolver} lets an
  * integration map each named reference to its Foundry journal UUID; without
- * one, references resolve by exact journal name.
+ * one, references resolve by vault identity flag, then by exact journal name.
  */
 // biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with static state and many callers
 export class EventTracker {
@@ -372,19 +373,25 @@ export class EventTracker {
      *
      * One resolver at a time: a later registration replaces the earlier one and
      * `null` unregisters it. When no resolver is registered, or it returns null
-     * (or throws), the built-in fallback — an exact-name match over
-     * `game.journal` — is used. With neither resolving, the plain name renders.
+     * (or throws), the built-in fallback — {@link EventTracker.findJournalByName},
+     * a vault-identity then exact-name match over `game.journal` — is used. With neither resolving, the plain name renders.
      */
     static registerJournalLinkResolver(resolver: JournalLinkResolver | null): void {
         EventTracker.#journalResolver = resolver;
     }
 
-    /** The built-in resolver: an exact-name match over the world's journals. */
+    /**
+     * The built-in resolver over the world's journals: an entry whose vault
+     * identity flag (`flags['wh40k-rpg'].vault`) names the reference wins,
+     * preferring an entity type that fits the reference kind; otherwise an
+     * exact journal-name match.
+     */
     static findJournalByName(this: void, ref: JournalRef): string | null {
         const journal = game.journal;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: `game.journal` is undefined until Foundry's `setup` phase
         if (journal === undefined) return null;
-        return findJournalUuidByName(journal, ref.name);
+        const candidates: NamedJournal[] = Array.from(journal, (entry) => ({ name: entry.name, uuid: entry.uuid, vault: entry.flags[SYSTEM_ID]?.vault }));
+        return findJournalUuid(candidates, ref);
     }
 
     /** The journal UUID for a reference (registered resolver first, then the name lookup), or null. */

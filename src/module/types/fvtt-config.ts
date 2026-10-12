@@ -95,6 +95,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { ChatMessageWH40K } from '../documents/chat-message.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import type { TokenDocumentWH40K } from '../documents/token.ts';
+import type { VaultJournalIdentity } from '../managers/event-graph.ts';
 
 declare module 'fvtt-types/configuration' {
     interface SystemNameConfig {
@@ -123,9 +124,11 @@ declare module 'fvtt-types/configuration' {
         };
         // The GM-only campaign event graph lives in a JournalEntry flag (#33) —
         // declaring the scope here is what lets `entry.flags['wh40k-rpg']` be read
-        // without a cast at the one site that reads it.
+        // without a cast at the one site that reads it. `vault` is the identity the
+        // vault→Foundry journal writer stamps on every entry it writes, which the
+        // Event Tracker's built-in journal-link lookup matches first.
         JournalEntry: {
-            'wh40k-rpg': Record<string, unknown>;
+            'wh40k-rpg': { vault?: VaultJournalIdentity; [key: string]: unknown };
         };
         // Token-scoped state (the rounded-rect ring mode, #587; the bust frame)
         // written through TokenDocument#updateSource.
