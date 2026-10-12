@@ -6,6 +6,7 @@
  * on. See issue #221.
  */
 
+import { MUTATION_CATEGORIES } from '../../rules/mutation-categories.ts';
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
 import FreeformGatedItemSheet from './freeform-gated-item-sheet.ts';
 
@@ -15,9 +16,6 @@ interface MutationSystem {
     drawback?: string;
     visible?: boolean;
 }
-
-/** Category choices, mirrored from {@link MutationData.defineSchema}. */
-const CATEGORY_CHOICES = ['minor', 'major', 'malignancy'] as const;
 
 /** Sheet for mutation items. */
 const MutationSheet = defineSimpleItemSheet({
@@ -40,7 +38,7 @@ const MutationSheet = defineSimpleItemSheet({
                 name: 'system.category',
                 labelKey: 'WH40K.Mutation.Category',
                 value: category,
-                options: CATEGORY_CHOICES.map((c) => ({ value: c, labelKey: `WH40K.MutationCategory.${c.capitalize()}`, selected: c === category })),
+                options: MUTATION_CATEGORIES.map((c) => ({ value: c, labelKey: `WH40K.MutationCategory.${c.capitalize()}`, selected: c === category })),
             },
             {
                 kind: 'checkbox',

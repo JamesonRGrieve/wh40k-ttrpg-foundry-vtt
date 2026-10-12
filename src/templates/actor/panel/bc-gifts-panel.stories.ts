@@ -16,7 +16,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { renderSheet } from '../../../../stories/test-helpers';
 import type { ChaosAlignment } from '../../../module/config/game-systems/types';
-import { mergeGiftDeltas, resolveGiftForAlignment, type GiftDef } from '../../../module/rules/bc-gifts';
+import { mergeGiftDeltas, resolveGiftForAlignment, type GiftAlignment, type GiftDef, type GiftRider } from '../../../module/rules/bc-gifts';
 import panelSrc from './bc-gifts-panel.hbs?raw';
 
 interface RenderedGift {
@@ -54,58 +54,59 @@ function deltaEntries(delta: Record<string, number>): Array<{ key: string; value
         .map(([key, value]) => ({ key, value }));
 }
 
-/** Catalogue of gift definitions used by the stories (mirrors the shape compendium entries would supply). */
-const GIFT_CATALOGUE: Record<string, GiftDef> = {
-    bestial_aspect: {
-        id: 'bestial_aspect',
-        name: 'Bestial Aspect',
-        baseDescription: 'The Heretic gains a feral, monstrous mien — beasts cower.',
-        baseCharacteristicDelta: { s: 5 },
-        riders: [
-            { alignment: 'khorne', description: 'Khorne marks the bearer: rage incarnate; +5 WS.', characteristicDelta: { ws: 5 } },
-            { alignment: 'slaanesh', description: 'Slaanesh refines the form into terrible beauty; +5 Fel.', characteristicDelta: { fel: 5 } },
-            { alignment: 'nurgle', description: 'Nurgle bloats the bearer; +5 T.', characteristicDelta: { t: 5 } },
-            { alignment: 'tzeentch', description: 'Tzeentch warps perception; +5 Per.', characteristicDelta: { per: 5 } },
-        ],
-    },
-    additional_limb: {
-        id: 'additional_limb',
-        name: 'Additional Limb',
-        baseDescription: 'A new limb sprouts from the body — roll on the limb sub-table.',
-        baseCharacteristicDelta: { ag: 3 },
-        riders: [
-            { alignment: 'khorne', description: 'A chitinous bone-blade arm; +5 S.', characteristicDelta: { s: 5 } },
-            { alignment: 'tzeentch', description: 'A coiling tendril humming with warp-light; +5 WP.', characteristicDelta: { wp: 5 } },
-        ],
-        subTableId: 'limb',
-    },
-    daemonic_resilience: {
-        id: 'daemonic_resilience',
-        name: 'Daemonic Resilience',
-        baseDescription: 'The flesh knits itself with unnatural speed.',
-        baseCharacteristicDelta: { t: 3 },
-        riders: [
-            { alignment: 'nurgle', description: "Nurgle's blessing: +5 T, immunity to disease.", characteristicDelta: { t: 5 } },
-            { alignment: 'slaanesh', description: 'Slaanesh deadens pain into rapture; +3 WP.', characteristicDelta: { wp: 3 } },
-        ],
-    },
-};
+/** A rider fixture; unset channels default to empty, as the DataModel does. */
+function rider(alignment: GiftAlignment, description: string, characteristics: Record<string, number>): GiftRider {
+    return { alignment, description, characteristics, skills: {}, grants: [], activeEffect: '' };
+}
+
+/** A structural gift fixture (not catalogue content — that lives in the compendium). */
+function gift(id: string, baseCharacteristics: Record<string, number>, riders: GiftRider[], subTable: GiftDef['subTable'] = ''): GiftDef {
+    return {
+        id,
+        name: `Fixture Gift ${id.toUpperCase()}`,
+        baseDescription: `Base effect of fixture gift ${id}.`,
+        baseCharacteristics,
+        baseSkills: {},
+        baseGrants: [],
+        riders,
+        subTable,
+    };
+}
+
+/** Fixture catalogue used by the stories. */
+const GIFT_CATALOGUE = {
+    alpha: gift('alpha', { strength: 5 }, [
+        rider('khorne', 'Khorne rider of fixture alpha.', { weaponSkill: 5 }),
+        rider('slaanesh', 'Slaanesh rider of fixture alpha.', { fellowship: 5 }),
+        rider('nurgle', 'Nurgle rider of fixture alpha.', { toughness: 5 }),
+        rider('tzeentch', 'Tzeentch rider of fixture alpha.', { perception: 5 }),
+    ]),
+    beta: gift(
+        'beta',
+        { agility: 3 },
+        [rider('khorne', 'Khorne rider of fixture beta.', { strength: 5 }), rider('tzeentch', 'Tzeentch rider of fixture beta.', { willpower: 5 })],
+        'limb',
+    ),
+    gamma: gift('gamma', { toughness: 3 }, [
+        rider('nurgle', 'Nurgle rider of fixture gamma.', { toughness: 5 }),
+        rider('slaanesh', 'Slaanesh rider of fixture gamma.', { willpower: 3 }),
+    ]),
+} satisfies Record<string, GiftDef>;
 
 /** Build the panel context from a current alignment and list of gift ids. */
 function buildCtx(currentAlignment: ChaosAlignment, giftIds: ReadonlyArray<keyof typeof GIFT_CATALOGUE>): GiftsPanelCtx {
     const gifts: RenderedGift[] = giftIds.map((id) => {
-        const gift = GIFT_CATALOGUE[id];
-        const resolved = resolveGiftForAlignment(gift, currentAlignment);
-        const matchingRider = gift.riders.find((r) => r.alignment === resolved.appliedAlignment);
+        const def = GIFT_CATALOGUE[id];
+        const resolved = resolveGiftForAlignment(def, currentAlignment);
         return {
-            id: gift.id,
-            name: gift.name,
-            baseDescription: gift.baseDescription,
-            riderDescription: matchingRider?.description ?? '',
+            id: def.id,
+            name: def.name,
+            baseDescription: def.baseDescription,
+            riderDescription: resolved.riderDescription,
             appliedAlignment: resolved.appliedAlignment,
-            subTableLabel: gift.subTableId === 'limb' ? 'Additional Limb' : gift.subTableId === 'animal' ? 'Animal' : '',
+            subTableLabel: def.subTable === 'limb' ? 'Additional Limb' : def.subTable === 'animal' ? 'Animal' : '',
             characteristicDelta: deltaEntries(resolved.characteristicDelta),
-            traits: resolved.traits,
+            traits: resolved.grants,
             activeEffects: resolved.activeEffects,
         };
     });
@@ -131,19 +132,19 @@ type Story = StoryObj<GiftsPanelCtx>;
 
 export const KhorneSingle: Story = {
     name: 'Khorne — single gift, Khorne rider active',
-    args: buildCtx('khorne', ['bestial_aspect']),
+    args: buildCtx('khorne', ['alpha']),
     render: (args) => renderPanel(args),
 };
 
 export const KhorneMulti: Story = {
     name: 'Khorne — two gifts, merged delta aggregates',
-    args: buildCtx('khorne', ['bestial_aspect', 'additional_limb']),
+    args: buildCtx('khorne', ['alpha', 'beta']),
     render: (args) => renderPanel(args),
 };
 
 export const KhorneNoMatch: Story = {
     name: 'Khorne — gift with no Khorne rider falls back to base only',
-    args: buildCtx('khorne', ['daemonic_resilience']),
+    args: buildCtx('khorne', ['gamma']),
     render: (args) => renderPanel(args),
 };
 
@@ -153,19 +154,19 @@ export const KhorneNoMatch: Story = {
 
 export const SlaaneshSingle: Story = {
     name: 'Slaanesh — single gift, Slaanesh rider active',
-    args: buildCtx('slaanesh', ['bestial_aspect']),
+    args: buildCtx('slaanesh', ['alpha']),
     render: (args) => renderPanel(args),
 };
 
 export const SlaaneshMulti: Story = {
     name: 'Slaanesh — two gifts, merged delta aggregates',
-    args: buildCtx('slaanesh', ['bestial_aspect', 'daemonic_resilience']),
+    args: buildCtx('slaanesh', ['alpha', 'gamma']),
     render: (args) => renderPanel(args),
 };
 
 export const SlaaneshNoMatch: Story = {
     name: 'Slaanesh — gift with no Slaanesh rider falls back to base only',
-    args: buildCtx('slaanesh', ['additional_limb']),
+    args: buildCtx('slaanesh', ['beta']),
     render: (args) => renderPanel(args),
 };
 
@@ -175,19 +176,19 @@ export const SlaaneshNoMatch: Story = {
 
 export const NurgleSingle: Story = {
     name: 'Nurgle — single gift, Nurgle rider active',
-    args: buildCtx('nurgle', ['daemonic_resilience']),
+    args: buildCtx('nurgle', ['gamma']),
     render: (args) => renderPanel(args),
 };
 
 export const NurgleMulti: Story = {
     name: 'Nurgle — two gifts, merged delta aggregates',
-    args: buildCtx('nurgle', ['bestial_aspect', 'daemonic_resilience']),
+    args: buildCtx('nurgle', ['alpha', 'gamma']),
     render: (args) => renderPanel(args),
 };
 
 export const NurgleNoMatch: Story = {
     name: 'Nurgle — gift with no Nurgle rider falls back to base only',
-    args: buildCtx('nurgle', ['additional_limb']),
+    args: buildCtx('nurgle', ['beta']),
     render: (args) => renderPanel(args),
 };
 
@@ -197,19 +198,19 @@ export const NurgleNoMatch: Story = {
 
 export const TzeentchSingle: Story = {
     name: 'Tzeentch — single gift, Tzeentch rider active',
-    args: buildCtx('tzeentch', ['bestial_aspect']),
+    args: buildCtx('tzeentch', ['alpha']),
     render: (args) => renderPanel(args),
 };
 
 export const TzeentchMulti: Story = {
     name: 'Tzeentch — two gifts, merged delta aggregates',
-    args: buildCtx('tzeentch', ['bestial_aspect', 'additional_limb']),
+    args: buildCtx('tzeentch', ['alpha', 'beta']),
     render: (args) => renderPanel(args),
 };
 
 export const TzeentchNoMatch: Story = {
     name: 'Tzeentch — gift with no Tzeentch rider falls back to base only',
-    args: buildCtx('tzeentch', ['daemonic_resilience']),
+    args: buildCtx('tzeentch', ['gamma']),
     render: (args) => renderPanel(args),
 };
 
@@ -219,13 +220,13 @@ export const TzeentchNoMatch: Story = {
 
 export const UnalignedSingle: Story = {
     name: 'Unaligned — base effect only, no rider applies',
-    args: buildCtx('unaligned', ['bestial_aspect']),
+    args: buildCtx('unaligned', ['alpha']),
     render: (args) => renderPanel(args),
 };
 
 export const UnalignedMulti: Story = {
     name: 'Unaligned — multiple gifts, base deltas merge',
-    args: buildCtx('unaligned', ['bestial_aspect', 'additional_limb', 'daemonic_resilience']),
+    args: buildCtx('unaligned', ['alpha', 'beta', 'gamma']),
     render: (args) => renderPanel(args),
 };
 

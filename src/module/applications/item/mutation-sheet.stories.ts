@@ -57,6 +57,7 @@ const scalars = (): ContentScalar[] => [
             { value: 'minor', labelKey: 'WH40K.MutationCategory.Minor', selected: false },
             { value: 'major', labelKey: 'WH40K.MutationCategory.Major', selected: true },
             { value: 'malignancy', labelKey: 'WH40K.MutationCategory.Malignancy', selected: false },
+            { value: 'gift', labelKey: 'WH40K.MutationCategory.Gift', selected: false },
         ],
     },
     { kind: 'checkbox', name: 'system.visible', labelKey: 'WH40K.Mutation.Visible', checked: true },

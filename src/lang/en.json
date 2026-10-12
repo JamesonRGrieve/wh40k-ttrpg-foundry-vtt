@@ -1756,7 +1756,6 @@
             }
         },
         "ActiveEffect": {
-            "NewEffect": "New Effect",
             "DurationRounds": "{rounds} rounds",
             "DurationTurns": "{turns} turns",
             "DurationSeconds": "{seconds} seconds",
@@ -4727,7 +4726,8 @@
         "MutationCategory": {
             "Minor": "Minor",
             "Major": "Major",
-            "Malignancy": "Malignancy"
+            "Malignancy": "Malignancy",
+            "Gift": "Gift of the Gods"
         },
         "MentalDisorder": {
             "Severity": "Severity",

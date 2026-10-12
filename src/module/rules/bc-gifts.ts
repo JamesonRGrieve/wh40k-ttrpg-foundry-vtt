@@ -1,188 +1,236 @@
 /**
  * Black Crusade Gifts of the Gods resolver (#180 — core.md Table 9-1
- * "Gifts of the Gods", :13581, plus sub-tables 9-2 "Additional Limb"
- * and 9-4 "Animal").
+ * "Gifts of the Gods", plus sub-tables 9-2 "Limb Table" and 9-4
+ * "Random Creatures").
  *
- * Pure-rules engine over a structural representation of a Gift entry.
- * Per Direction #7 of CLAUDE.md, the actual catalogue of gifts — names,
- * descriptions, characteristic deltas, alignment-specific riders — is
- * authored in compendium `_source/*.json` documents. This module owns
- * only the data shape and the resolution logic:
+ * A Gift of the Gods is a `mutation` item whose `category` is
+ * {@link GIFT_MUTATION_CATEGORY}. The item's own `effect` is the base
+ * effect every recipient gets; its `modifiers` block (ModifiersTemplate,
+ * Path A) holds the flat characteristic / skill changes; and its
+ * `system.gift` block ({@link GiftData}) holds what is particular to a
+ * Gift: the alignment riders, the granted items, the sub-table to roll
+ * on, and the dice-valued characteristic changes the recipient rolls
+ * once when the Gift is gained.
  *
- *   - {@link GiftDef} declares a single gift's base effect plus its 4
- *     alignment-keyed riders (Khorne/Slaanesh/Nurgle/Tzeentch). A gift
- *     may optionally reference a sub-table (`'limb' | 'animal'`) so the
- *     UI can drive a secondary roll without this module knowing the
- *     contents of those tables.
+ * This module is the single source of that `system.gift` shape — the
+ * MutationData schema is built from the constants and types declared
+ * here — and of the pure resolution logic:
+ *
+ *   - {@link giftDefFromMutation} adapts an owned mutation item to a
+ *     {@link GiftDef}.
  *   - {@link resolveGiftForAlignment} merges the base effect with the
- *     rider matching the Heretic's current Chaos Alignment. When the
- *     Heretic is Unaligned (or no rider matches their alignment), only
- *     the base effect applies — riders never apply twice and never
- *     stack across alignments.
- *   - {@link mergeGiftDeltas} sums characteristic deltas across all the
- *     gifts a character holds, so the actor data-prep step can fold the
- *     aggregate into derived characteristics.
+ *     rider matching the Heretic's current Chaos Alignment. An Unaligned
+ *     Heretic (or one whose god has no rider) gets the base effect only;
+ *     riders never apply twice and never stack across alignments.
+ *   - {@link mergeGiftDeltas} sums deltas across every Gift a character
+ *     holds.
+ *   - {@link pendingGiftRolls} lists the acquisition rolls a Gift still
+ *     needs, given the results already stored on the owned item.
  *
- * No DataModel coupling, no actor lookups, no Foundry imports. The
- * caller (sheet, chat card, gift-grant dialog) owns I/O.
+ * Per Direction #7 the catalogue itself — names, descriptions, riders,
+ * values — lives in compendium `_source/*.json`. No Foundry imports.
  */
 
 import type { ChaosAlignment } from '../config/game-systems/types.ts';
 
 /* -------------------------------------------- */
-/*  Public shapes                               */
+/*  Vocabulary                                  */
+/* -------------------------------------------- */
+
+/** The `mutation.category` value that marks a mutation as a Gift of the Gods. */
+export const GIFT_MUTATION_CATEGORY = 'gift';
+
+/** The Ruinous Powers a rider can be keyed to. */
+export const GIFT_ALIGNMENTS = ['khorne', 'slaanesh', 'nurgle', 'tzeentch'] as const;
+/** A Ruinous Power a rider can be keyed to. */
+export type GiftAlignment = (typeof GIFT_ALIGNMENTS)[number];
+
+/** The secondary tables a Gift can send the recipient to; `''` = none. */
+export const GIFT_SUB_TABLES = ['', 'limb', 'animal'] as const;
+/** A secondary table reference. */
+export type GiftSubTable = (typeof GIFT_SUB_TABLES)[number];
+
+/** Whether a rolled characteristic change raises or lowers the characteristic. */
+export const GIFT_ROLL_DIRECTIONS = ['gain', 'loss'] as const;
+/** The direction of a rolled characteristic change. */
+export type GiftRollDirection = (typeof GIFT_ROLL_DIRECTIONS)[number];
+
+/* -------------------------------------------- */
+/*  Stored shape (MutationData `system.gift`)   */
 /* -------------------------------------------- */
 
 /**
- * Alignment-specific rider on a {@link GiftDef}. Each gift in Table 9-1
- * carries up to one rider per Ruinous Power. When the holder's alignment
- * matches this rider's `alignment`, the rider's deltas, trait, and
- * Active Effect compose with the gift's base entries.
+ * Alignment-specific rider. When the holder's alignment matches, the
+ * rider composes with the base effect.
  */
-interface GiftRider {
-    /** The Chaos alignment that activates this rider. */
-    alignment: ChaosAlignment;
-    /** Narrative description of the rider's effect. */
+export interface GiftRider {
+    /** The Ruinous Power that activates this rider. */
+    alignment: GiftAlignment;
+    /** Rules text of the rider. */
     description: string;
-    /**
-     * Optional characteristic delta map. Keys are characteristic
-     * identifiers (e.g. `'ws'`, `'bs'`, `'s'`); values are signed
-     * integers (may be negative).
-     */
-    characteristicDelta?: Record<string, number>;
-    /** Optional trait identifier granted by the rider. */
-    trait?: string;
-    /** Optional Active Effect identifier applied by the rider. */
-    activeEffect?: string;
+    /** Flat characteristic changes, keyed like `modifiers.characteristics`. */
+    characteristics: Record<string, number>;
+    /** Flat skill-test modifiers, keyed like `modifiers.skills`. */
+    skills: Record<string, number>;
+    /** Compendium UUIDs of the traits / talents the rider grants. */
+    grants: string[];
+    /** Id of an Active Effect embedded on the Gift that the rider applies; `''` = none. */
+    activeEffect: string;
 }
 
 /**
- * Structural definition of a single Gift of the Gods entry. The
- * content of this object is authored in the compendium; consumers in
- * `src/` must not hardcode specific gift names or numeric values.
+ * A dice-valued characteristic change the recipient rolls once, when the
+ * Gift is gained ("permanently reduce Intelligence by 1d10+5"). The result
+ * is stored on the owned item's `modifiers.characteristics`.
  */
-export interface GiftDef {
-    /** Stable identifier (typically the compendium document id). */
-    id: string;
-    /** Display name; resolved through `uuidNameCache` at render time. */
-    name: string;
-    /** Narrative description of the base effect (applies to all alignments). */
-    baseDescription: string;
-    /** Optional base characteristic delta map. */
-    baseCharacteristicDelta?: Record<string, number>;
-    /** Optional trait identifier granted by the base effect. */
-    baseTrait?: string;
-    /** Optional Active Effect identifier applied by the base effect. */
-    baseActiveEffect?: string;
-    /** Riders keyed by alignment. Order is not significant. */
+export interface GiftCharacteristicRoll {
+    /** Characteristic key, as `modifiers.characteristics` keys it. */
+    characteristic: string;
+    /** Dice formula of the magnitude, e.g. `1d10+5`. */
+    formula: string;
+    /** Whether the rolled magnitude is added or subtracted. */
+    direction: GiftRollDirection;
+}
+
+/** The `system.gift` block of a mutation item. Every field defaults to empty. */
+export interface GiftData {
+    /** Compendium UUIDs of the traits / talents the base effect grants. */
+    grants: string[];
+    /** Alignment riders. Order is not significant. */
     riders: GiftRider[];
-    /** Optional sub-table reference for secondary rolls. */
-    subTableId?: 'limb' | 'animal';
+    /** Secondary table the Gift rolls on. */
+    subTable: GiftSubTable;
+    /** Dice-valued characteristic changes rolled on acquisition. */
+    characteristicRolls: GiftCharacteristicRoll[];
 }
 
-/**
- * Result of resolving a {@link GiftDef} against a specific alignment.
- * The merged characteristic delta, traits, and Active Effects reflect
- * base + matching rider; if no rider matches, only the base applies.
- */
-export interface ResolvedGift {
-    /** Gift identifier, copied through from the input. */
+/* -------------------------------------------- */
+/*  Resolution shapes                           */
+/* -------------------------------------------- */
+
+/** A Gift as the resolver reads it: identity + base effect + the `system.gift` block. */
+export interface GiftDef {
+    /** Owned-item id. */
     id: string;
-    /** Base description, copied through from the input. */
+    /** Display name. */
+    name: string;
+    /** Rules text of the base effect. */
     baseDescription: string;
-    /** Sum of base + rider characteristic deltas. Always a real object. */
+    /** Flat base characteristic changes (the item's `modifiers.characteristics`). */
+    baseCharacteristics: Record<string, number>;
+    /** Flat base skill-test modifiers (the item's `modifiers.skills`). */
+    baseSkills: Record<string, number>;
+    /** Traits / talents the base effect grants. */
+    baseGrants: string[];
+    /** Alignment riders. */
+    riders: GiftRider[];
+    /** Secondary table reference. */
+    subTable: GiftSubTable;
+}
+
+/** A Gift resolved against one alignment. */
+export interface ResolvedGift {
+    id: string;
+    name: string;
+    baseDescription: string;
+    /** Text of the applied rider; `''` when none applies. */
+    riderDescription: string;
+    /** Base + rider characteristic changes. */
     characteristicDelta: Record<string, number>;
-    /** Base trait first, then rider trait (deduplicated). */
-    traits: string[];
-    /** Base Active Effect first, then rider Active Effect (deduplicated). */
+    /** Base + rider skill-test modifiers. */
+    skillDelta: Record<string, number>;
+    /** Base grants first, then rider grants (deduplicated). */
+    grants: string[];
+    /** The applied rider's Active Effect, when it names one. */
     activeEffects: string[];
-    /** The alignment whose rider was applied (or `'unaligned'` if none). */
+    /** The alignment whose rider was applied, or `'unaligned'` if none. */
     appliedAlignment: ChaosAlignment;
+}
+
+/** The structural slice of an owned mutation item {@link giftDefFromMutation} reads. */
+export interface GiftMutationLike {
+    id: string | null;
+    name: string;
+    system: {
+        effect: string;
+        modifiers: { characteristics: Record<string, number>; skills: Record<string, number> };
+        gift: GiftData;
+    };
 }
 
 /* -------------------------------------------- */
 /*  Resolver                                    */
 /* -------------------------------------------- */
 
-/**
- * Merge a gift's base effect with the rider matching the given
- * alignment, if any. When `alignment` is `'unaligned'` or no rider
- * matches, the result is the base effect alone with
- * {@link ResolvedGift.appliedAlignment} set to `'unaligned'`.
- *
- * Characteristic deltas are summed per key (rider value adds to base).
- * Traits and Active Effects are concatenated in `[base, rider]` order
- * with empties dropped; duplicates between base and rider are removed
- * so the consumer cannot double-apply the same trait.
- */
-export function resolveGiftForAlignment(gift: GiftDef, alignment: ChaosAlignment): ResolvedGift {
-    const matchingRider = alignment === 'unaligned' ? undefined : gift.riders.find((r) => r.alignment === alignment);
-
-    const characteristicDelta = sumDeltas(gift.baseCharacteristicDelta, matchingRider?.characteristicDelta);
-
-    const traits = dedupe([gift.baseTrait, matchingRider?.trait]);
-    const activeEffects = dedupe([gift.baseActiveEffect, matchingRider?.activeEffect]);
-
+/** Adapt an owned mutation item to the resolver's {@link GiftDef}. */
+export function giftDefFromMutation(item: GiftMutationLike): GiftDef {
+    const { effect, modifiers, gift } = item.system;
     return {
-        id: gift.id,
-        baseDescription: gift.baseDescription,
-        characteristicDelta,
-        traits,
-        activeEffects,
-        appliedAlignment: matchingRider ? matchingRider.alignment : 'unaligned',
+        id: item.id ?? '',
+        name: item.name,
+        baseDescription: effect,
+        baseCharacteristics: modifiers.characteristics,
+        baseSkills: modifiers.skills,
+        baseGrants: gift.grants,
+        riders: gift.riders,
+        subTable: gift.subTable,
     };
 }
 
 /**
- * Sum characteristic deltas across many gifts (typically the full set
- * the actor currently holds, already resolved against their current
- * alignment). Keys absent from a given map contribute 0; negative
- * deltas are preserved.
- *
- * An empty input array yields an empty object.
+ * Merge a Gift's base effect with the rider matching `alignment`, if any.
+ * Deltas sum per key; grants concatenate `[base, rider]` with duplicates
+ * dropped so a consumer cannot grant the same item twice.
  */
-export function mergeGiftDeltas(deltas: ReadonlyArray<Record<string, number>>): Record<string, number> {
+export function resolveGiftForAlignment(gift: GiftDef, alignment: ChaosAlignment): ResolvedGift {
+    const rider = alignment === 'unaligned' ? undefined : gift.riders.find((r) => r.alignment === alignment);
+    return {
+        id: gift.id,
+        name: gift.name,
+        baseDescription: gift.baseDescription,
+        riderDescription: rider?.description ?? '',
+        characteristicDelta: mergeGiftDeltas([gift.baseCharacteristics, rider?.characteristics ?? {}]),
+        skillDelta: mergeGiftDeltas([gift.baseSkills, rider?.skills ?? {}]),
+        grants: dedupe([...gift.baseGrants, ...(rider?.grants ?? [])]),
+        activeEffects: dedupe([rider?.activeEffect ?? '']),
+        appliedAlignment: rider ? rider.alignment : 'unaligned',
+    };
+}
+
+/**
+ * Sum deltas across many maps (typically every Gift the actor holds,
+ * already resolved for their alignment). Absent keys contribute 0,
+ * negative values are preserved, non-finite values are ignored.
+ */
+export function mergeGiftDeltas(deltas: ReadonlyArray<Readonly<Record<string, number>>>): Record<string, number> {
     const merged: Record<string, number> = {};
     for (const delta of deltas) {
         for (const [key, value] of Object.entries(delta)) {
             if (!Number.isFinite(value)) continue;
-            const prior = merged[key] ?? 0;
-            merged[key] = prior + value;
+            merged[key] = (merged[key] ?? 0) + value;
         }
     }
     return merged;
+}
+
+/**
+ * The acquisition rolls a Gift still needs: every
+ * {@link GiftCharacteristicRoll} whose characteristic has no stored result
+ * in `rolled` (the owned item's `modifiers.characteristics`) yet.
+ */
+export function pendingGiftRolls(gift: GiftData, rolled: Readonly<Record<string, number>>): GiftCharacteristicRoll[] {
+    return gift.characteristicRolls.filter((roll) => !Object.prototype.hasOwnProperty.call(rolled, roll.characteristic));
+}
+
+/** The signed value a rolled magnitude contributes, per its direction. */
+export function signedGiftRoll(roll: GiftCharacteristicRoll, magnitude: number): number {
+    return roll.direction === 'loss' ? -magnitude : magnitude;
 }
 
 /* -------------------------------------------- */
 /*  internals                                   */
 /* -------------------------------------------- */
 
-function sumDeltas(base: Record<string, number> | undefined, rider: Record<string, number> | undefined): Record<string, number> {
-    const out: Record<string, number> = {};
-    if (base) {
-        for (const [key, value] of Object.entries(base)) {
-            if (!Number.isFinite(value)) continue;
-            out[key] = (out[key] ?? 0) + value;
-        }
-    }
-    if (rider) {
-        for (const [key, value] of Object.entries(rider)) {
-            if (!Number.isFinite(value)) continue;
-            out[key] = (out[key] ?? 0) + value;
-        }
-    }
-    return out;
-}
-
-function dedupe(values: ReadonlyArray<string | undefined>): string[] {
-    const out: string[] = [];
-    const seen = new Set<string>();
-    for (const value of values) {
-        if (value === undefined) continue;
-        if (value === '') continue;
-        if (seen.has(value)) continue;
-        seen.add(value);
-        out.push(value);
-    }
-    return out;
+function dedupe(values: readonly string[]): string[] {
+    return [...new Set(values.filter((value) => value !== ''))];
 }
