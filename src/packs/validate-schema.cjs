@@ -60,9 +60,10 @@ const COST_SHAPE = {
  * Item types whose `system.cost` (when present) is an XP / advancement cost — a
  * plain number, or a per-line `{ line: xp }` map — NOT an acquisition-currency
  * object. The currency-shape check below does not apply to them; their cost is a
- * NumberField validated by the data model. Talents cost XP ("900 XP"), not gelt.
+ * NumberField validated by the data model. Talents cost XP ("900 XP"), not gelt;
+ * so do Deathwatch Marks of Distinction and Distinctions (`specialAbility`, #171).
  */
-const XP_COST_TYPES = new Set(['talent', 'trait', 'psychicPower']);
+const XP_COST_TYPES = new Set(['talent', 'trait', 'psychicPower', 'specialAbility']);
 
 /**
  * Affliction item types with NO acquisition cost at all. Malignancies, mutations, and
