@@ -37,8 +37,9 @@ import { test } from './lib/test';
  *     `getShockTableRollModifier`.
  *   - `hit-locations.ts` — `reverseAttackRollDigits`,
  *     `getHitLocationForRoll`, `hitDropdown`.
- *   - `hazards.ts` — `getFallingDiceCount`, `getFallingDamageFormula`,
- *     `resolveDrowningTest`.
+ *   - `hazards.ts` — `getFallingDamageBonus`, `getFallingDamageFormula`,
+ *     `resolveSuffocation` (per-metre vs DH1 table falling; conserving vs
+ *     strenuous breath and the per-line endgame).
  *   - `healing.ts` — `getDamageTier`, `getNaturalHealingDays`.
  *   - `attack-options.ts` — `getAvailableAttackModes`,
  *     `getSituationalModifiers`, `getAimModifier`.
@@ -70,9 +71,9 @@ const RULE_PURE_FLOWS = [
     'hit-locations-reverseDigits',
     'hit-locations-forRoll',
     'hit-locations-dropdown',
-    'hazards-fallingDice',
+    'hazards-fallingBonus',
     'hazards-fallingFormula',
-    'hazards-drowningTest',
+    'hazards-suffocation',
     'healing-damageTier',
     'healing-naturalDays',
     'attack-options-availableModes',
@@ -165,9 +166,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 hitLocationNames: () => readonly string[];
             };
             'hazards': {
-                getFallingDiceCount: (metres: number) => number;
-                getFallingDamageFormula: (metres: number) => string;
-                resolveDrowningTest: (input: { toughnessTotal: number; roundsSubmerged: number }) => { target: number };
+                getFallingDamageBonus: (metres: number, line: string) => number | null;
+                getFallingDamageFormula: (metres: number, line: string) => string;
+                resolveSuffocation: (input: { toughnessBonus: number; strenuous: boolean; line: string }) => {
+                    allotment: { count: number; unit: string; strenuousUnsupported: boolean };
+                    endgame: string;
+                    roundsUntilDeath: number;
+                } | null;
             };
             'healing': {
                 getDamageTier: (currentWounds: number, maxWounds: number) => string;
@@ -402,23 +407,44 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         // ---------- hazards ----------
         const hazards = await loadModule('hazards');
         if (isImportError(hazards)) {
-            for (const k of ['hazards-fallingDice', 'hazards-fallingFormula', 'hazards-drowningTest'] as const) record(k, false, hazards.__importError);
+            for (const k of ['hazards-fallingBonus', 'hazards-fallingFormula', 'hazards-suffocation'] as const) record(k, false, hazards.__importError);
         } else {
+            // 1d10 + 1 per metre (DH2 Core p. 243); DH1 reads Table 7-27 by bracket (DH1 Core p. 210).
             guarded(
-                'hazards-fallingDice',
-                () => hazards.getFallingDiceCount(1) === 0 && hazards.getFallingDiceCount(2) === 1 && hazards.getFallingDiceCount(7) === 3,
+                'hazards-fallingBonus',
+                () =>
+                    hazards.getFallingDamageBonus(0, 'dh2') === null &&
+                    hazards.getFallingDamageBonus(7, 'dh2') === 7 &&
+                    hazards.getFallingDamageBonus(2, 'dh1') === null &&
+                    hazards.getFallingDamageBonus(10, 'dh1') === 7 &&
+                    hazards.getFallingDamageBonus(30, 'dh1') === 20 &&
+                    hazards.getFallingDamageBonus(10, 'im') === null,
             );
             guarded(
                 'hazards-fallingFormula',
                 () =>
-                    hazards.getFallingDamageFormula(1) === '' &&
-                    hazards.getFallingDamageFormula(4) === '2d10' &&
-                    hazards.getFallingDamageFormula(10) === '5d10',
+                    hazards.getFallingDamageFormula(0, 'dh2') === '' &&
+                    hazards.getFallingDamageFormula(4, 'dh2') === '1d10+4' &&
+                    hazards.getFallingDamageFormula(10, 'dh1') === '1d10+7',
             );
-            guarded('hazards-drowningTest', () => {
-                const r1 = hazards.resolveDrowningTest({ toughnessTotal: 40, roundsSubmerged: 1 });
-                const r3 = hazards.resolveDrowningTest({ toughnessTotal: 40, roundsSubmerged: 3 });
-                return r1.target === 40 && r3.target === 20;
+            // Drowning is suffocation: TB minutes conserving, 2 x TB rounds strenuous (DH2 Core p. 243).
+            guarded('hazards-suffocation', () => {
+                const calm = hazards.resolveSuffocation({ toughnessBonus: 4, strenuous: false, line: 'dh2' });
+                const strenuous = hazards.resolveSuffocation({ toughnessBonus: 4, strenuous: true, line: 'dh2' });
+                const dh1 = hazards.resolveSuffocation({ toughnessBonus: 4, strenuous: true, line: 'dh1' });
+                return (
+                    calm?.allotment.count === 4 &&
+                    calm.allotment.unit === 'minute' &&
+                    calm.endgame === 'diesAfterTbRounds' &&
+                    calm.roundsUntilDeath === 4 &&
+                    strenuous?.allotment.count === 8 &&
+                    strenuous.allotment.unit === 'round' &&
+                    dh1?.allotment.unit === 'minute' &&
+                    dh1.allotment.strenuousUnsupported &&
+                    dh1.endgame === 'damagePerRound' &&
+                    dh1.roundsUntilDeath === 0 &&
+                    hazards.resolveSuffocation({ toughnessBonus: 4, strenuous: false, line: 'im' }) === null
+                );
             });
         }
 

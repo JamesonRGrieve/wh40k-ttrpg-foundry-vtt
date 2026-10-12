@@ -979,9 +979,9 @@ const RULE_PURE_FLOWS = [
     'hit-locations-reverseDigits',
     'hit-locations-forRoll',
     'hit-locations-dropdown',
-    'hazards-fallingDice',
+    'hazards-fallingBonus',
     'hazards-fallingFormula',
-    'hazards-drowningTest',
+    'hazards-suffocation',
     'healing-damageTier',
     'healing-naturalDays',
     'attack-options-availableModes',
@@ -1006,7 +1006,7 @@ const RULE_AFFLICTION_FLOWS = [
     'disposition-label',
     'disposition-modifier',
     'phenomena-modifier-compose',
-    'reinforcement-callTarget',
+    'reinforcement-callPlan',
     'requisition-test-target',
     'requisition-test-influenceLoss',
     'spray-avoidance-resolve',
@@ -1037,10 +1037,10 @@ const RULE_OCCULT_FLOWS = [
     'psychic-push-resolveMode',
     'summoning-prepareRitual',
     'summoning-bindingDuration',
-    'xenos-equipment-condition',
-    'xenos-equipment-tickDegradation',
+    'xenos-equipment-isXenos',
+    'xenos-equipment-repair',
     'inquest-revelationsCrossed',
-    'inquest-currentTier',
+    'inquest-revelationThresholds',
     'malignancy-thresholdsCrossed',
     'malignancy-testTarget',
     'chaos-backgrounds-predicates',
@@ -1053,15 +1053,13 @@ recordDimension('rule-occult.flow', covered['rule-occult.flow'], RULE_OCCULT_FLO
 // spec drives directly. Several of these modules ship NO vitest unit
 // test, so they were at 0% on every coverage surface before this spec
 // landed. Pushes source-code coverage on
-// `src/module/rules/{aim,altitude,attack-specials,
+// `src/module/rules/{aim,attack-specials,
 // medicae-mechadendrite,combat-actions,daemon-weapon,daemonhost}.ts`.
 // Keys MUST match the recordCoverage('rule-tactical.flow', ...) calls
 // in the spec.
 const RULE_TACTICAL_FLOWS = [
     'aim-modifiers',
     'aim-calculateBonus',
-    'altitude-canChange',
-    'altitude-profiles',
     'attack-specials-list',
     'attack-specials-names',
     'medicae-mechadendrite-data',

@@ -34,10 +34,10 @@ const RULE_OCCULT_FLOWS = [
     'psychic-push-resolveMode',
     'summoning-prepareRitual',
     'summoning-bindingDuration',
-    'xenos-equipment-condition',
-    'xenos-equipment-tickDegradation',
+    'xenos-equipment-isXenos',
+    'xenos-equipment-repair',
     'inquest-revelationsCrossed',
-    'inquest-currentTier',
+    'inquest-revelationThresholds',
     'malignancy-thresholdsCrossed',
     'malignancy-testTarget',
     'chaos-backgrounds-predicates',
@@ -228,18 +228,30 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         // ---------- xenos-equipment ----------
         const xenos = await loadModule('xenos-equipment');
         if (xenos.__importError != null) {
-            fail(['xenos-equipment-condition', 'xenos-equipment-tickDegradation'], xenos.__importError);
+            fail(['xenos-equipment-isXenos', 'xenos-equipment-repair'], xenos.__importError);
         } else {
-            guarded('xenos-equipment-condition', () => {
-                const condition = fn<string>(xenos, 'getXenosCondition');
-                return condition(8) === 'pristine' && condition(4) === 'worn' && condition(1) === 'degraded' && condition(0) === 'ruined';
-            });
-            guarded('xenos-equipment-tickDegradation', () => {
-                const ticked = fn<{ newCharges: number; newCondition: string }>(xenos, 'tickXenosDegradation')(8, 1);
+            guarded('xenos-equipment-isXenos', () => {
+                // Weapons and armour typed `xenos` are xenos equipment; other items never are.
+                const isXenos = fn<boolean>(xenos, 'isXenosEquipment');
                 return (
-                    typeof ticked.newCharges === 'number' &&
-                    typeof ticked.newCondition === 'string' &&
-                    typeof fn<string>(xenos, 'nextConditionUp')('degraded') === 'string'
+                    isXenos({ type: 'weapon', system: { type: 'xenos' } }) &&
+                    isXenos({ type: 'armour', system: { type: 'xenos' } }) &&
+                    !isXenos({ type: 'weapon', system: { type: 'las' } }) &&
+                    !isXenos({ type: 'gear', system: { type: 'xenos' } })
+                );
+            });
+            guarded('xenos-equipment-repair', () => {
+                // Enemies Without p. 42: -20 for the alien nature, +5 per DoS on the Forbidden Lore test.
+                const rules = { loreModifier: -20, repairModifier: -20, bonusPerLoreDegree: 5 };
+                const mods = fn<{ alienNature: number; loreInsight: number }>(xenos, 'xenosRepairModifiers')(rules, 3);
+                const read = fn<{ actorUuid: string; degrees: number } | null>(xenos, 'readXenosRepairInsight');
+                const own = read({ actorUuid: 'Actor.a', degrees: 3 }, 'Actor.a');
+                return (
+                    mods.alienNature === -20 &&
+                    mods.loreInsight === 15 &&
+                    own?.degrees === 3 &&
+                    read({ actorUuid: 'Actor.b', degrees: 3 }, 'Actor.a') === null &&
+                    read('garbage', 'Actor.a') === null
                 );
             });
         }
@@ -247,16 +259,40 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         // ---------- inquest ----------
         const inquest = await loadModule('inquest');
         if (inquest.__importError != null) {
-            fail(['inquest-revelationsCrossed', 'inquest-currentTier'], inquest.__importError);
+            fail(['inquest-revelationsCrossed', 'inquest-revelationThresholds'], inquest.__importError);
         } else {
             guarded('inquest-revelationsCrossed', () => {
+                // Only upward crossings count; a drop never un-reveals anything.
                 const crossed = fn<number>(inquest, 'inquestRevelationsCrossed');
-                return crossed(300, 300) === 0 && crossed(150, 250) === 1 && crossed(0, 1200) === 5;
+                const reached = fn<number>(inquest, 'inquestRevelationsReached');
+                const ladder = [300, 600, 900];
+                return (
+                    crossed(ladder, 300, 300) === 0 &&
+                    crossed(ladder, 250, 350) === 1 &&
+                    crossed(ladder, 0, 900) === 3 &&
+                    crossed(ladder, 900, 0) === 0 &&
+                    reached(ladder, 299) === 0 &&
+                    reached(ladder, 600) === 2
+                );
             });
-            guarded('inquest-currentTier', () => {
-                const tier = fn<number>(inquest, 'getCurrentRevelationTier');
-                const thresholds = val<readonly object[]>(inquest, 'INQUEST_THRESHOLDS');
-                return tier(0) === 0 && tier(199) === 0 && Array.isArray([...thresholds]);
+            guarded('inquest-revelationThresholds', () => {
+                // Enemies Within pp. 63-66: a Revelation every 300 IP by default, GM-tailored
+                // thresholds otherwise, and the completion total is always the final Revelation.
+                const rules = {
+                    scopes: {
+                        minoris: { requiredPoints: 600, influenceReward: 3 },
+                        majoris: { requiredPoints: 900, influenceReward: 5 },
+                        extremis: { requiredPoints: 1200, influenceReward: 7 },
+                    },
+                    revelationInterval: 300,
+                };
+                const thresholds = fn<number[]>(inquest, 'inquestRevelationThresholds');
+                const same = (a: readonly number[], b: readonly number[]): boolean => a.length === b.length && a.every((v, i) => v === b[i]);
+                return (
+                    same(thresholds(rules, { scope: 'minoris', extraRequiredPoints: 0, revelationThresholds: [] }), [300, 600]) &&
+                    same(thresholds(rules, { scope: 'minoris', extraRequiredPoints: 200, revelationThresholds: [] }), [300, 600, 800]) &&
+                    same(thresholds(rules, { scope: 'majoris', extraRequiredPoints: 0, revelationThresholds: [250, 950] }), [250, 900])
+                );
             });
         }
 
@@ -270,8 +306,16 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 return crossed(15, 15) === 0 && crossed(8, 12) === 1 && crossed(5, 35) === 3;
             });
             guarded('malignancy-testTarget', () => {
+                // Table 8-14: the Corruption Track modifier is banded (+0 to 30 CP, -10 to 60, -20 to 90, -30 to 99).
                 const target = fn<number>(malignancy, 'getMalignancyTestTarget');
-                return target(40, 0) === 40 && target(40, 25) === 20 && target(5, 95) === 0;
+                return (
+                    target(40, 0) === 40 &&
+                    target(40, 30) === 40 &&
+                    target(40, 31) === 30 &&
+                    target(40, 75) === 20 &&
+                    target(40, 95) === 10 &&
+                    target(5, 95) === 0
+                );
             });
         }
 

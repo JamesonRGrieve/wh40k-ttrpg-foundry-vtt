@@ -6,7 +6,7 @@ import { test } from './lib/test';
 /**
  * Tier B coverage of the *fifth* batch of pure-logic modules under
  * `src/module/rules/*` — the tactical / registry resolvers (aim,
- * altitude, attack-specials, medicae-mechadendrite,
+ * attack-specials, medicae-mechadendrite,
  * combat-actions, daemon-weapon, daemonhost) that none of the prior
  * rules-*.spec.ts batches touch. Several of these modules ship NO
  * vitest unit test, so they were at 0% coverage on every surface
@@ -23,8 +23,6 @@ import { test } from './lib/test';
 const RULE_TACTICAL_FLOWS = [
     'aim-modifiers',
     'aim-calculateBonus',
-    'altitude-canChange',
-    'altitude-profiles',
     'attack-specials-list',
     'attack-specials-names',
     'medicae-mechadendrite-data',
@@ -78,16 +76,9 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             v !== null && v !== undefined && typeof v === 'object' && Object.keys(v).length > 0;
 
         // Per-module export shapes (only the surfaces this probe touches).
-        interface AltitudeProfile {
-            rangedAttackModifier: number;
-        }
         interface AimModule {
             aimModifiers: () => Record<number, string>;
             calculateAimBonus: (rollData: { weapon?: { name: string }; power?: { name: string } }) => void;
-        }
-        interface AltitudeModule {
-            canChangeAltitude: (from: string, to: string) => boolean;
-            ALTITUDE_PROFILES: Record<string, AltitudeProfile | undefined>;
         }
         interface AttackSpecialsModule {
             attackSpecials: () => Array<{ name?: string; hasLevel?: boolean }>;
@@ -122,24 +113,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 aim.calculateAimBonus({ weapon: { name: 'probe' } });
                 aim.calculateAimBonus({ power: { name: 'probe' } });
                 return true;
-            });
-        }
-
-        // ---------- altitude ----------
-        const altitude = await loadModule<AltitudeModule>('altitude');
-        if (hasImportError(altitude)) {
-            fail(['altitude-canChange', 'altitude-profiles'], altitude.__importError);
-        } else {
-            guarded('altitude-canChange', () => {
-                return (
-                    altitude.canChangeAltitude('ground', 'ground') &&
-                    altitude.canChangeAltitude('ground', 'low') &&
-                    !altitude.canChangeAltitude('ground', 'orbital')
-                );
-            });
-            guarded('altitude-profiles', () => {
-                const p = altitude.ALTITUDE_PROFILES;
-                return isPopulatedObject(p) && p.ground?.rangedAttackModifier === 0 && p.orbital?.rangedAttackModifier === -60;
             });
         }
 

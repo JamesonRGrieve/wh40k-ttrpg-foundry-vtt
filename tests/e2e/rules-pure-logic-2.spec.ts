@@ -30,7 +30,7 @@ const RULE_AFFLICTION_FLOWS = [
     'disposition-label',
     'disposition-modifier',
     'phenomena-modifier-compose',
-    'reinforcement-callTarget',
+    'reinforcement-callPlan',
     'requisition-test-target',
     'requisition-test-influenceLoss',
     'spray-avoidance-resolve',
@@ -75,9 +75,14 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 };
             };
             'reinforcement': {
-                getReinforcementCallTarget: (influence: number, tier: string) => number;
-                isReinforcementTier: (tier: string) => boolean;
-                REINFORCEMENT_MODIFIER: Record<string, number>;
+                reinforcementFinalCost: (baseCost: number, peerDiscount: number, gmAdjustment: number) => number;
+                maxWarbandContribution: (finalCost: number) => number;
+                planReinforcementCall: (input: {
+                    callerInfluence: number;
+                    influenceMinimum: number;
+                    finalCost: number;
+                    contributions: Array<{ id: string; influence: number; amount: number }>;
+                }) => { ok: true; plan: { finalCost: number; callerPays: number; subtletyLoss: number } } | { ok: false; problem: string };
             };
             'requisition-test': {
                 getRequisitionTestTarget: (input: {
@@ -202,18 +207,32 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         // ---------- reinforcement ----------
         const reinforcement = await loadModule('reinforcement');
         if (isImportError(reinforcement)) {
-            fail(['reinforcement-callTarget'], reinforcement.__importError);
+            fail(['reinforcement-callPlan'], reinforcement.__importError);
         } else {
-            guarded('reinforcement-callTarget', () => {
-                const standard = reinforcement.getReinforcementCallTarget(40, 'standard');
-                const elite = reinforcement.getReinforcementCallTarget(40, 'elite');
+            // DH2 core pp. 294-295: Influence Minimum gate, the warband pays at most half the
+            // cost (rounded up), and the warband's Subtlety drops by the final cost.
+            guarded('reinforcement-callPlan', () => {
+                const finalCost = reinforcement.reinforcementFinalCost(20, 5, 0);
+                const call = (callerInfluence: number, amount: number): ReturnType<typeof reinforcement.planReinforcementCall> =>
+                    reinforcement.planReinforcementCall({
+                        callerInfluence,
+                        influenceMinimum: 30,
+                        finalCost,
+                        contributions: [{ id: 'ally', influence: 10, amount }],
+                    });
+                const ok = call(40, 8);
+                const overCap = call(40, 9);
+                const belowMinimum = call(20, 0);
                 return (
-                    typeof standard === 'number' &&
-                    typeof elite === 'number' &&
-                    standard >= elite &&
-                    reinforcement.isReinforcementTier('standard') &&
-                    !reinforcement.isReinforcementTier('apprentice') &&
-                    reinforcement.REINFORCEMENT_MODIFIER.master === -30
+                    finalCost === 15 &&
+                    reinforcement.maxWarbandContribution(finalCost) === 8 &&
+                    ok.ok &&
+                    ok.plan.callerPays === 7 &&
+                    ok.plan.subtletyLoss === 15 &&
+                    !overCap.ok &&
+                    overCap.problem === 'contributionCap' &&
+                    !belowMinimum.ok &&
+                    belowMinimum.problem === 'belowMinimum'
                 );
             });
         }

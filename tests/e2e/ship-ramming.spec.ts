@@ -1,14 +1,17 @@
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
+import { countDamageSections, deleteChatMessage, postShipAssaultCard } from './lib/ship-assault';
 import { expect, test } from './lib/test';
 
 /**
  * Tier B coverage of the Rogue Trader Ramming chat card (GitHub #188 —
- * core.md L9997 §Ramming and Boarding Actions). Renders
- * `ship-ramming-chat.hbs` through Foundry's `renderTemplate` API, posts
- * it via `ChatMessage.create`, and asserts the card root + per-system
- * `data-wh40k-system` anchor + damage-row text all reach the DOM.
+ * RT Core p.215). Drives the real ramming flow with fixed dice: the Hard
+ * (−20) Pilot + Manoeuvrability test, then the rammed ship's hull-size die
+ * (read from the Ramming Speed order in the RT compendium) + the rammer's prow
+ * armour, and the rammer's rebound of the defender's Armour + 1d5. Renders
+ * `ship-ramming-chat.hbs`, posts it via `ChatMessage.create`, and asserts the
+ * card root + per-system `data-wh40k-system` anchor + both damage sections.
  *
  * The posted message is left in the chat log through `snap()` so the
  * screenshot captures the live card — mirrors the open-through-snap
@@ -18,96 +21,60 @@ test.describe.serial('Ship Ramming chat card (Tier B)', () => {
     test('posts the ramming hit card and snaps', async ({ page }) => {
         await joinOrSkip(page);
 
-        const result = await page.evaluate(async () => {
-            interface FoundryGlobal {
-                foundry?: {
-                    applications?: {
-                        handlebars?: {
-                            renderTemplate?: (p: string, c: object) => Promise<string>;
-                        };
-                    };
-                };
-                ChatMessage?: { create: (data: object) => Promise<{ id: string } | null> };
-                game?: { user?: { id?: string }; i18n?: { localize?: (k: string) => string } };
-            }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
-            const fg = globalThis as unknown as FoundryGlobal;
-
-            let error: string | null = null;
-            let rendered = false;
-            let hasCardRoot = false;
-            let hasSystemAnchor = false;
-            let hasDamageBlock = false;
-            let messageId: string | null = null;
-
-            try {
-                const renderTemplateFn = fg.foundry?.applications?.handlebars?.renderTemplate;
-                if (!renderTemplateFn) {
-                    return { rendered, hasCardRoot, hasSystemAnchor, hasDamageBlock, messageId, error: 'renderTemplate unavailable' };
-                }
-
-                const template = 'systems/wh40k-rpg/templates/chat/ship-ramming-chat.hbs';
-                const context = {
-                    attackerName: 'The Errant Vector',
-                    defenderName: 'Ork Kroozer "Grimskull"',
-                    gameSystem: 'rt',
-                    toHit: {
-                        success: true,
-                        attackerDoS: 4,
-                        defenderDoS: 0,
-                        netDoS: 4,
-                    },
-                    damage: {
-                        defender: { raw: 15, armour: 12, hullDamage: 3 },
-                        attacker: { raw: 15, armour: 16, hullDamage: 0 },
-                        bonusDamage: 0,
-                    },
-                };
-
-                const html = await renderTemplateFn(template, context);
-                rendered = typeof html === 'string' && html.length > 0;
-                hasCardRoot = html.includes('data-wh40k-hook="ship-ramming-card"');
-                hasSystemAnchor = html.includes('data-wh40k-system="rt"');
-                // Resolve the i18n key to the rendered label so the assertion
-                // holds whether or not the key exists in the langpack (a bare
-                // key string only appears when localize can't resolve it).
-                const defenderHullLabel = fg.game?.i18n?.localize?.('WH40K.Voidcraft.Ramming.DefenderHull') ?? 'WH40K.Voidcraft.Ramming.DefenderHull';
-                hasDamageBlock = html.includes(defenderHullLabel);
-
-                const ChatMessageCls = fg.ChatMessage;
-                const msg = await ChatMessageCls?.create({ user: fg.game?.user?.id, content: html });
-                messageId = msg?.id ?? null;
-            } catch (err) {
-                error = err instanceof Error ? err.message : String(err);
-            }
-
-            return { rendered, hasCardRoot, hasSystemAnchor, hasDamageBlock, messageId, error };
+        // Pilot 45 + Manoeuvrability 15 − 20 = 40; a roll of 20 rams.
+        const result = await postShipAssaultCard(page, {
+            flowModule: 'ramming-flow',
+            flowExport: 'RAMMING_FLOW',
+            attacker: {
+                profile: {
+                    name: 'The Errant Vector',
+                    hullType: 'frigate',
+                    manoeuvrability: 15,
+                    armour: 18,
+                    turretRating: 1,
+                    crewPopulation: 80,
+                    hullIntegrity: 35,
+                    morale: 75,
+                },
+                crewRating: 45,
+            },
+            defender: {
+                profile: {
+                    name: 'Ork Kroozer Grimskull',
+                    hullType: 'cruiser',
+                    manoeuvrability: 5,
+                    armour: 16,
+                    turretRating: 2,
+                    crewPopulation: 90,
+                    hullIntegrity: 70,
+                    morale: 80,
+                },
+                crewRating: 40,
+            },
+            rolls: [{ total: 20 }, { total: 7 }, { total: 3 }],
+            form: {},
+            labels: {
+                defenderHull: { key: 'WH40K.Voidcraft.Ramming.DefenderHull', data: { ship: 'Ork Kroozer Grimskull' } },
+                attackerHull: { key: 'WH40K.Voidcraft.Ramming.AttackerHull', data: { ship: 'The Errant Vector' } },
+            },
         });
 
         await snap(page, 'ship-ramming-chat');
+        await deleteChatMessage(page, result.messageId);
 
-        // Card captured; remove it so it does not leak into the
-        // next serial test's chat log.
-        await page.evaluate(async (id: string | null) => {
-            interface CleanupGlobal {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ChatMessage.delete returns Promise<this> with no shipped types
-                game?: { messages?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-            }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser globals untyped at the realm boundary
-            const fg = globalThis as unknown as CleanupGlobal;
-            if (id === null) return;
-            try {
-                await fg.game?.messages?.get?.(id)?.delete?.();
-            } catch {
-                /* ignore */
-            }
-        }, result.messageId);
-
-        expect(result.error, `chat-card probe error: ${result.error ?? ''}`).toBeNull();
-        expect(result.rendered, 'ship-ramming card did not render').toBe(true);
-        expect(result.hasCardRoot, 'card root [data-wh40k-hook="ship-ramming-card"] missing').toBe(true);
-        expect(result.hasSystemAnchor, 'per-system data-wh40k-system anchor missing').toBe(true);
-        expect(result.hasDamageBlock, 'damage block should render on a hit').toBe(true);
+        expect(result.error, `ship-ramming flow error: ${result.error ?? ''}`).toBeNull();
+        expect(result.html.length, 'ship-ramming card did not render').toBeGreaterThan(0);
+        expect(result.html, 'card root [data-wh40k-hook="ship-ramming-card"] missing').toContain('data-wh40k-hook="ship-ramming-card"');
+        expect(result.html, 'per-system data-wh40k-system anchor missing').toContain('data-wh40k-system="rt"');
+        expect(result.html, 'damage block should render on a hit').toContain(result.labels['defenderHull']);
+        expect(result.html, 'the rammer rebound damage should render on a hit').toContain(result.labels['attackerHull']);
+        expect(countDamageSections(result.html), 'one damage section per ship').toBe(2);
+        // A frigate rams with 1d10 (the Ramming Speed order's hull-size table); the rebound is 1d5.
+        expect(result.formulas).toEqual(['1d100', '1d10', '1d5']);
+        expect(result.unusedRolls, 'the flow should consume every queued die').toBe(0);
+        // Rammed ship: 7 + 18 prow armour. Rammer: 16 Armour + 3. Neither is reduced by armour or shields.
+        expect(result.defender.hull).toEqual([25]);
+        expect(result.attacker.hull).toEqual([19]);
         expect(result.messageId, 'ChatMessage.create returned no id').not.toBeNull();
 
         recordCoverage('chat.render', 'ShipRamming');
