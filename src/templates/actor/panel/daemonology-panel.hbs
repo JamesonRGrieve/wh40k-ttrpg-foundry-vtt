@@ -4,6 +4,7 @@
     Shown on a DH2 character that has a Forbidden Lore (Daemonology) row, the
     skill every ritual opens with. Surfaces the lore total and launches the
     ritual dialogs:
+      - Summoning (#80, p. 59): target the Daemon's token to pre-fill its Willpower.
       - Exorcism (#83, p. 71): target the possessed individual's token first.
 
     Context: daemonologyPanel { loreTotal: number }
@@ -17,6 +18,14 @@
     {{/inline}}
 
     <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
+        <button type="button"
+                data-wh40k-hook="daemonology-summoning-btn"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-1.5 tw-rounded tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-bright)] tw-cursor-pointer hover:tw-bg-[rgba(255,255,255,0.06)]"
+                data-action="performSummoning"
+                title="{{localize 'WH40K.Daemonology.Summoning.PerformTitle'}}">
+            <i class="fas fa-pentagram" aria-hidden="true"></i>
+            <span>{{localize "WH40K.Daemonology.Summoning.Perform"}}</span>
+        </button>
         <button type="button"
                 data-wh40k-hook="daemonology-exorcism-btn"
                 class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-1.5 tw-rounded tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-bright)] tw-cursor-pointer hover:tw-bg-[rgba(255,255,255,0.06)]"

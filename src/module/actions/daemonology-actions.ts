@@ -27,7 +27,7 @@ import {
     type ExorcismModifierId,
     type ExorcismState,
 } from '../rules/exorcism.ts';
-import { resolveTest, type TestOutcome } from '../rules/summoning-ritual.ts';
+import { prepareSummoningRitual, resolveMasteryContest, resolveTest, type MasteryContestResult, type TestOutcome } from '../rules/summoning-ritual.ts';
 
 /** Dice source: one evaluated formula total per call. */
 export interface RitualDice {
@@ -292,5 +292,108 @@ export function buildExorcismCard(args: {
         collapsed: outcome.state.status === 'collapsed',
         corruptionGained: outcome.corruptionGained,
         hostTest: outcome.hostTest,
+    };
+}
+
+/* -------------------------------------------- */
+/*  Summoning                                   */
+/* -------------------------------------------- */
+
+export interface SummoningInputs {
+    readonly hasTrueName: boolean;
+    readonly servesPatron: boolean;
+    readonly daemonWillpower: number;
+    readonly daemonWillpowerBonus: number;
+    readonly loreCircumstanceLabel: string;
+    readonly loreCircumstanceValue: number;
+    readonly masteryCircumstanceLabel: string;
+    readonly masteryCircumstanceValue: number;
+}
+
+/** Read the summoning dialog's form. */
+export function parseSummoningForm(data: FormData): SummoningInputs {
+    const daemonWillpower = formInt(data, 'daemonWillpower');
+    return {
+        hasTrueName: data.get('hasTrueName') !== null,
+        servesPatron: data.get('servesPatron') !== null,
+        daemonWillpower,
+        daemonWillpowerBonus: Math.floor(daemonWillpower / 10),
+        loreCircumstanceLabel: formText(data, 'loreCircumstanceLabel'),
+        loreCircumstanceValue: formInt(data, 'loreCircumstanceValue', { signed: true }),
+        masteryCircumstanceLabel: formText(data, 'masteryCircumstanceLabel'),
+        masteryCircumstanceValue: formInt(data, 'masteryCircumstanceValue', { signed: true }),
+    };
+}
+
+export interface SummoningOutcome {
+    readonly lore: RitualTestComposition;
+    readonly mastery: RitualTestComposition;
+    readonly loreTest: TestOutcome;
+    /** The Mastery contest — only when the ritual succeeded and the Daemon appeared. */
+    readonly contest: MasteryContestResult | null;
+}
+
+/** Perform the ritual, then — if the Daemon appears — the opposed Daemonic Mastery test. */
+export async function runSummoning(summoner: RitualActorSystem, inputs: SummoningInputs, dice: RitualDice): Promise<SummoningOutcome> {
+    const willpower = ritualCharacteristic(summoner, 'willpower');
+    const { lore, mastery } = prepareSummoningRitual({
+        forbiddenLoreTotal: daemonologyLoreTotal(summoner),
+        willpowerTotal: willpower.total,
+        hasTrueName: inputs.hasTrueName,
+        servesPatron: inputs.servesPatron,
+        loreFactors: [circumstanceFactor('lore-circumstance', inputs.loreCircumstanceLabel, inputs.loreCircumstanceValue)],
+        masteryFactors: [circumstanceFactor('mastery-circumstance', inputs.masteryCircumstanceLabel, inputs.masteryCircumstanceValue)],
+    });
+    const loreTest = resolveTest(await dice.roll('1d100'), lore.target);
+    if (!loreTest.success) return { lore, mastery, loreTest, contest: null };
+    const summonerRoll = await dice.roll('1d100');
+    const daemonRoll = await dice.roll('1d100');
+    const contest = resolveMasteryContest({
+        summonerRoll,
+        summonerTarget: mastery.target,
+        summonerWillpowerBonus: willpower.bonus,
+        daemonRoll,
+        daemonWillpower: inputs.daemonWillpower,
+        daemonWillpowerBonus: inputs.daemonWillpowerBonus,
+    });
+    return { lore, mastery, loreTest, contest };
+}
+
+/** The summoning chat card's context (`chat/daemonology-ritual-chat.hbs`). */
+export interface SummoningCardContext {
+    readonly mode: 'summoning';
+    readonly gameSystem: string;
+    readonly actorName: string;
+    readonly daemonName: string | null;
+    readonly loreTest: CardTest;
+    readonly loreResult: TestOutcome;
+    readonly masteryTest: CardTest;
+    readonly contest: MasteryContestResult | null;
+    readonly summonerWon: boolean;
+    readonly daemonWon: boolean;
+    readonly stalemate: boolean;
+}
+
+/** Card context for a summoning. */
+export function buildSummoningCard(args: {
+    summonerName: string;
+    daemonName: string | null;
+    outcome: SummoningOutcome;
+    localize: Localize;
+    gameSystem: string;
+}): SummoningCardContext {
+    const { outcome, localize } = args;
+    return {
+        mode: 'summoning',
+        gameSystem: args.gameSystem,
+        actorName: args.summonerName,
+        daemonName: args.daemonName,
+        loreTest: toCardTest(outcome.lore, localize('WH40K.Daemonology.Card.LoreBase'), localize),
+        loreResult: outcome.loreTest,
+        masteryTest: toCardTest(outcome.mastery, localize('WH40K.Daemonology.Card.WillpowerBase'), localize),
+        contest: outcome.contest,
+        summonerWon: outcome.contest?.winner === 'summoner',
+        daemonWon: outcome.contest?.winner === 'daemon',
+        stalemate: outcome.contest?.winner === 'stalemate',
     };
 }

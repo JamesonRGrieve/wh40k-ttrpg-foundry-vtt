@@ -133,7 +133,7 @@ import InquestTrackerDialog from '../dialogs/inquest-tracker-dialog.ts';
 import { inquestPanelRows } from '../dialogs/inquest-view.ts';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import ColonyGrowthDialog from '../prompts/colony-growth-dialog.ts';
-import { openExorcismDialog } from '../prompts/daemonology-ritual-dialog.ts';
+import { openDaemonologyRitualDialog } from '../prompts/daemonology-ritual-dialog.ts';
 import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
 import BaseActorSheet, { ADVANCE_XP_COSTS, type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
@@ -794,6 +794,8 @@ export default class CharacterSheet extends BaseActorSheet {
             'possessionMismanifest': CharacterSheet.#possessionMismanifest,
             // Daemonology rituals (DH2 Enemies Beyond) — Exorcism (#83).
             'performExorcism': CharacterSheet.#performExorcism,
+            // Daemonology rituals — Summoning (#80).
+            'performSummoning': CharacterSheet.#performSummoning,
 
             // Shock / Snap-Out-Of-It (#66 — core.md §"Shock And Snapping Out Of It")
             'snapOutOfShock': CharacterSheet.#snapOutOfShock,
@@ -4995,7 +4997,16 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static #performExorcism(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
         if (!isActorOnLine(this.actor, 'dh2')) return;
-        openExorcismDialog(this.actor);
+        openDaemonologyRitualDialog(this.actor, 'exorcism');
+    }
+
+    /**
+     * Open the Summoning dialog (#80, DH2 Enemies Beyond p. 59) with this actor
+     * as the summoner. DH2-only, like the Exorcism.
+     */
+    static #performSummoning(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
+        if (!isActorOnLine(this.actor, 'dh2')) return;
+        openDaemonologyRitualDialog(this.actor, 'summoning');
     }
 
     static async #possessionMismanifest(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {

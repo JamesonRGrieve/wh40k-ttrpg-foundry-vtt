@@ -1,10 +1,12 @@
 /**
- * Daemonology ritual chat card — Exorcism (#83, DH2 Enemies Beyond p. 71).
+ * Daemonology ritual chat card — Exorcism (#83, p. 71) and Summoning (#80,
+ * p. 59), DH2 Enemies Beyond.
  *
- * Contexts come from the real orchestration (`runExorcism`) driven by scripted
- * dice and the real card builder, localised from en.json, so the card always
- * renders the live payload shape. Covers a cast-out Daemon with the host's
- * survival test, a collapse, and the same card framed under each game system.
+ * Contexts come from the real orchestration (`runExorcism` / `runSummoning`)
+ * driven by scripted dice and the real card builders, localised from en.json,
+ * so the card always renders the live payload shape. Covers a cast-out Daemon
+ * with the host's survival test, a collapse, a bound / free / failed summoning,
+ * and the exorcism card framed under each game system.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
@@ -12,7 +14,14 @@ import type { SystemId } from '../../../stories/mocks/extended';
 import { localizeKey } from '../../../stories/mocks/lang-localize';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { renderSheet } from '../../../stories/test-helpers';
-import { buildExorcismCard, runExorcism, type RitualActorSystem, type RitualDice } from '../../module/actions/daemonology-actions';
+import {
+    buildExorcismCard,
+    buildSummoningCard,
+    runExorcism,
+    runSummoning,
+    type RitualActorSystem,
+    type RitualDice,
+} from '../../module/actions/daemonology-actions';
 import cardSrc from './daemonology-ritual-chat.hbs?raw';
 
 initializeStoryHandlebars();
@@ -102,5 +111,58 @@ export const PerSystem: Story = {
         grid.style.gap = '12px';
         for (const el of (loaded as { els: HTMLElement[] }).els) grid.appendChild(el);
         return grid;
+    },
+};
+
+const SUMMONING_INPUTS = {
+    hasTrueName: true,
+    servesPatron: false,
+    daemonWillpower: 45,
+    daemonWillpowerBonus: 4,
+    loreCircumstanceLabel: 'Summoning power (PR 3)',
+    loreCircumstanceValue: 30,
+    masteryCircumstanceLabel: '',
+    masteryCircumstanceValue: 0,
+};
+
+/** Ritual at 45 − 60 + 30 + 30 = 45; Mastery at 50 − 30 + 30 = 50 against the Daemon's WP 45. */
+async function summoningCard(d100: number[]): Promise<HTMLElement> {
+    const outcome = await runSummoning(EXORCIST, SUMMONING_INPUTS, dice(d100, []));
+    const context = buildSummoningCard({
+        summonerName: 'Interrogator Vael',
+        daemonName: 'Ka’zhar the Unbidden',
+        outcome,
+        localize: (key) => localizeKey(key),
+        gameSystem: 'dh2',
+    });
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('wh40k-rpg');
+    wrapper.dataset['wh40kSystem'] = 'dh2';
+    wrapper.appendChild(renderSheet(cardSrc, { ...context, _gameSystemId: 'dh2' }));
+    return wrapper;
+}
+
+export const SummoningBound: Story = {
+    loaders: [async () => ({ el: await summoningCard([10, 15, 70]) })],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-summoning-outcome="bound"]')?.textContent).toContain('4');
+        await expect(canvasElement.querySelectorAll('[data-wh40k-tooltip="modifier"]').length).toBeGreaterThan(3);
+    },
+};
+
+export const SummoningFree: Story = {
+    loaders: [async () => ({ el: await summoningCard([10, 80, 20]) })],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-summoning-outcome="free"]')).not.toBeNull();
+    },
+};
+
+export const SummoningRitualFails: Story = {
+    loaders: [async () => ({ el: await summoningCard([90]) })],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-summoning-outcome="failed"]')).not.toBeNull();
     },
 };

@@ -2,15 +2,17 @@
     Daemonology ritual dialog — DH2 Enemies Beyond.
     Exorcism (#83, p. 71): Table 2–21 toggles, the threshold inputs (Daemon WP
     bonus + possessed Corruption bonus) and a GM circumstance row.
+    Summoning (#80, p. 59): True Name / patron service, the Daemon's Willpower
+    for the opposed Mastery test, and a GM row for each of the two tests.
 
-    Context: actorName, loreTotal, willpowerTotal, fatigueValue, fatigueMax,
-    hostName, modifiers[{id, labelKey, signed, checked}], daemonWillpowerBonus,
-    possessedCorruptionBonus.
+    Context: isExorcism, performLabelKey, actorName, loreTotal, willpowerTotal, fatigueValue,
+    fatigueMax, targetName, modifiers[{id, labelKey, signed, checked}],
+    daemonWillpowerBonus, possessedCorruptionBonus, daemonWillpower.
 --}}
 <div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2" data-wh40k-hook="daemonology-ritual-dialog">
 
     <p class="tw-m-0 tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">
-        {{localize "WH40K.Daemonology.Exorcism.DialogIntro"}}
+        {{#if isExorcism}}{{localize "WH40K.Daemonology.Exorcism.DialogIntro"}}{{else}}{{localize "WH40K.Daemonology.Summoning.DialogIntro"}}{{/if}}
     </p>
 
     {{!-- The performer's numbers the ritual reads --}}
@@ -29,63 +31,78 @@
         </div>
     </dl>
 
-    {{!-- Possessed individual (the user's target) --}}
-    <p class="tw-m-0 tw-mb-3 tw-text-[0.85rem]" data-wh40k-hook="daemonology-host">
-        {{#if hostName}}
-            {{localize "WH40K.Daemonology.Exorcism.HostTargeted" name=hostName}}
+    {{!-- The user's target: the possessed individual, or the Daemon --}}
+    <p class="tw-m-0 tw-mb-3 tw-text-[0.85rem]" data-wh40k-hook="daemonology-target">
+        {{#if targetName}}
+            {{#if isExorcism}}{{localize "WH40K.Daemonology.Exorcism.HostTargeted" name=targetName}}{{else}}{{localize "WH40K.Daemonology.Summoning.DaemonTargeted" name=targetName}}{{/if}}
         {{else}}
-            <span class="tw-text-[#9a9a8a] tw-italic">{{localize "WH40K.Daemonology.Exorcism.NoHostTargeted"}}</span>
+            <span class="tw-text-[#9a9a8a] tw-italic">{{#if isExorcism}}{{localize "WH40K.Daemonology.Exorcism.NoHostTargeted"}}{{else}}{{localize "WH40K.Daemonology.Summoning.NoDaemonTargeted"}}{{/if}}</span>
         {{/if}}
     </p>
 
-    {{!-- Threshold inputs --}}
-    <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-mb-4">
-        <label class="tw-flex tw-flex-col tw-gap-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
-            {{localize "WH40K.Daemonology.Exorcism.DaemonWillpowerBonus"}}
-            <input type="number" name="daemonWillpowerBonus" value="{{daemonWillpowerBonus}}" min="0" step="1"
-                   class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
-        </label>
-        <label class="tw-flex tw-flex-col tw-gap-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
-            {{localize "WH40K.Daemonology.Exorcism.PossessedCorruptionBonus"}}
-            <input type="number" name="possessedCorruptionBonus" value="{{possessedCorruptionBonus}}" min="0" step="1"
-                   class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
-        </label>
-    </div>
-
-    {{!-- Table 2–21: Exorcism Modifiers --}}
-    <fieldset class="tw-m-0 tw-mb-4 tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(201,162,39,0.25)]">
-        <legend class="tw-px-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Daemonology.Exorcism.ModifiersLegend"}}</legend>
-        <div class="tw-flex tw-flex-col tw-gap-1.5">
-            {{#each modifiers}}
-                <label class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-cursor-pointer">
-                    <span class="tw-flex tw-items-center tw-gap-2">
-                        <input type="checkbox" name="modifiers" value="{{this.id}}" {{#if this.checked}}checked{{/if}} />
-                        {{localize this.labelKey}}
-                    </span>
-                    <span class="tw-font-bold tw-tabular-nums">{{this.signed}}</span>
-                </label>
-            {{/each}}
+    {{#if isExorcism}}
+        {{!-- Threshold inputs --}}
+        <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-mb-4">
+            <label class="tw-flex tw-flex-col tw-gap-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
+                {{localize "WH40K.Daemonology.Exorcism.DaemonWillpowerBonus"}}
+                <input type="number" name="daemonWillpowerBonus" value="{{daemonWillpowerBonus}}" min="0" step="1"
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
+            </label>
+            <label class="tw-flex tw-flex-col tw-gap-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
+                {{localize "WH40K.Daemonology.Exorcism.PossessedCorruptionBonus"}}
+                <input type="number" name="possessedCorruptionBonus" value="{{possessedCorruptionBonus}}" min="0" step="1"
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
+            </label>
         </div>
-    </fieldset>
 
-    {{!-- GM circumstance row --}}
-    <div class="tw-grid tw-grid-cols-[1fr_6rem] tw-gap-3">
-        <label class="tw-flex tw-flex-col tw-gap-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
-            {{localize "WH40K.Daemonology.Dialog.CircumstanceLabel"}}
-            <input type="text" name="circumstanceLabel" value="" placeholder="{{localize 'WH40K.Daemonology.Dialog.CircumstancePlaceholder'}}"
+        {{!-- Table 2–21: Exorcism Modifiers --}}
+        <fieldset class="tw-m-0 tw-mb-4 tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(201,162,39,0.25)]">
+            <legend class="tw-px-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Daemonology.Exorcism.ModifiersLegend"}}</legend>
+            <div class="tw-flex tw-flex-col tw-gap-1.5">
+                {{#each modifiers}}
+                    <label class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-cursor-pointer">
+                        <span class="tw-flex tw-items-center tw-gap-2">
+                            <input type="checkbox" name="modifiers" value="{{this.id}}" {{#if this.checked}}checked{{/if}} />
+                            {{localize this.labelKey}}
+                        </span>
+                        <span class="tw-font-bold tw-tabular-nums">{{this.signed}}</span>
+                    </label>
+                {{/each}}
+            </div>
+        </fieldset>
+
+        {{> systems/wh40k-rpg/templates/prompt/partial/daemonology-circumstance-row.hbs
+            titleKey="WH40K.Daemonology.Dialog.CircumstanceLabel" labelName="circumstanceLabel" valueName="circumstanceValue"}}
+    {{else}}
+        {{!-- Printed factors (p. 59) --}}
+        <fieldset class="tw-m-0 tw-mb-4 tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(201,162,39,0.25)]">
+            <legend class="tw-px-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Daemonology.Summoning.FactorsLegend"}}</legend>
+            <label class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-cursor-pointer">
+                <span class="tw-flex tw-items-center tw-gap-2"><input type="checkbox" name="hasTrueName" />{{localize "WH40K.Daemonology.Factor.TrueName"}}</span>
+                <span class="tw-font-bold tw-tabular-nums">{{localize "WH40K.Daemonology.Summoning.TrueNameBoth"}}</span>
+            </label>
+            <label class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-cursor-pointer tw-mt-1.5">
+                <span class="tw-flex tw-items-center tw-gap-2"><input type="checkbox" name="servesPatron" />{{localize "WH40K.Daemonology.Factor.PatronServant"}}</span>
+                <span class="tw-font-bold tw-tabular-nums">{{localize "WH40K.Daemonology.Summoning.PatronMastery"}}</span>
+            </label>
+        </fieldset>
+
+        <label class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
+            {{localize "WH40K.Daemonology.Summoning.DaemonWillpower"}}
+            <input type="number" name="daemonWillpower" value="{{daemonWillpower}}" min="0" step="1"
                    class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
         </label>
-        <label class="tw-flex tw-flex-col tw-gap-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
-            {{localize "WH40K.Daemonology.Dialog.CircumstanceValue"}}
-            <input type="number" name="circumstanceValue" value="0" step="1"
-                   class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
-        </label>
-    </div>
+
+        {{> systems/wh40k-rpg/templates/prompt/partial/daemonology-circumstance-row.hbs
+            titleKey="WH40K.Daemonology.Summoning.LoreCircumstance" labelName="loreCircumstanceLabel" valueName="loreCircumstanceValue"}}
+        {{> systems/wh40k-rpg/templates/prompt/partial/daemonology-circumstance-row.hbs
+            titleKey="WH40K.Daemonology.Summoning.MasteryCircumstance" labelName="masteryCircumstanceLabel" valueName="masteryCircumstanceValue"}}
+    {{/if}}
 
     {{> systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs
         rootClass="tw-border-[rgba(201,162,39,0.2)]"
         confirmAction="perform"
         confirmIcon="fa-book-skull"
-        confirmLabelKey="WH40K.Daemonology.Exorcism.Perform"
+        confirmLabelKey=performLabelKey
         cancelLabelKey="WH40K.Cancel"}}
 </div>

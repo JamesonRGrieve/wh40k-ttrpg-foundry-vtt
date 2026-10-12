@@ -1,6 +1,7 @@
 {{!--
     Daemonology ritual chat card — DH2 Enemies Beyond.
-    Built by `actions/daemonology-actions.ts` (buildExorcismCard). Every test
+    Built by `actions/daemonology-actions.ts` (buildExorcismCard /
+    buildSummoningCard; `mode` picks the section). Every test
     prints base ± each sourced component = target through the shared
     modifier-breakdown partial (hoverable "modifier" tooltip rows), then the
     roll and its degrees. The wh40k-rpg class is added to the message root by
@@ -14,9 +15,54 @@
     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
         <i class="fas fa-book-skull tw-text-[1.1rem] {{themeClassFor 'accent'}}" aria-hidden="true"></i>
         <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]">
-            {{localize "WH40K.Daemonology.Exorcism.ChatTitle"}}
+            {{#if (eq mode 'summoning')}}{{localize "WH40K.Daemonology.Summoning.ChatTitle"}}{{else}}{{localize "WH40K.Daemonology.Exorcism.ChatTitle"}}{{/if}}
         </div>
     </div>
+
+    {{#if (eq mode 'summoning')}}
+    <p class="tw-m-0 tw-mb-3 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)]">
+        {{#if daemonName}}{{localize "WH40K.Daemonology.Summoning.ChatSubject" summoner=actorName daemon=daemonName}}{{else}}{{localize "WH40K.Daemonology.Summoning.ChatSubjectNoDaemon" summoner=actorName}}{{/if}}
+    </p>
+
+    {{!-- 1. The ritual: Hellish Forbidden Lore (Daemonology) --}}
+    {{> systems/wh40k-rpg/templates/chat/partial/daemonology-test-row.hbs
+        titleKey="WH40K.Daemonology.Summoning.RitualTest"
+        test=loreTest
+        result=loreResult}}
+
+    {{#if contest}}
+        {{!-- 2. Opposed Daemonic Mastery --}}
+        {{> systems/wh40k-rpg/templates/chat/partial/daemonology-test-row.hbs
+            titleKey="WH40K.Daemonology.Card.MasteryTest"
+            test=masteryTest
+            result=contest.summoner}}
+        <div class="tw-flex tw-justify-between tw-items-center tw-text-[0.85rem]">
+            <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Daemonology.Summoning.DaemonRoll" roll=contest.daemon.roll target=contest.daemon.target}}</span>
+            <span class="tw-font-bold tw-tabular-nums">{{#if contest.daemon.success}}{{localize "WH40K.Daemonology.Card.DoS" value=contest.daemon.dos}}{{else}}{{localize "WH40K.Daemonology.Card.DoF" value=contest.daemon.dof}}{{/if}}</span>
+        </div>
+        {{#if summonerWon}}
+            <div class="tw-mt-3 tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-border-emerald-600/60 tw-bg-emerald-900/30 tw-text-[0.85rem]" data-wh40k-hook="summoning-outcome" data-summoning-outcome="bound">
+                <div class="tw-font-bold">{{localize "WH40K.Daemonology.Summoning.Bound" hours=contest.boundHours}}</div>
+                <div class="tw-mt-1 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Daemonology.Summoning.BoundHint"}}</div>
+            </div>
+        {{/if}}
+        {{#if daemonWon}}
+            <div class="tw-mt-3 tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-border-rose-600/60 tw-bg-rose-950/40 tw-text-[0.85rem] tw-font-bold" data-wh40k-hook="summoning-outcome" data-summoning-outcome="free">
+                {{localize "WH40K.Daemonology.Summoning.Free"}}
+            </div>
+        {{/if}}
+        {{#if stalemate}}
+            <div class="tw-mt-3 tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-border-amber-600/60 tw-bg-amber-950/40 tw-text-[0.85rem]" data-wh40k-hook="summoning-outcome" data-summoning-outcome="stalemate">
+                {{localize "WH40K.Daemonology.Summoning.Stalemate"}}
+            </div>
+        {{/if}}
+    {{else}}
+        <div class="tw-mt-3 tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-text-[0.85rem]" data-wh40k-hook="summoning-outcome" data-summoning-outcome="failed">
+            {{localize "WH40K.Daemonology.Summoning.RitualFailed"}}
+        </div>
+    {{/if}}
+    <div class="tw-mt-2 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Daemonology.Summoning.CorruptionNote"}}</div>
+    {{else}}
     <p class="tw-m-0 tw-mb-3 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)]">
         {{#if hostName}}{{localize "WH40K.Daemonology.Exorcism.ChatSubject" exorcist=actorName host=hostName}}{{else}}{{localize "WH40K.Daemonology.Exorcism.ChatSubjectNoHost" exorcist=actorName}}{{/if}}
     </p>
@@ -91,5 +137,6 @@
             <div class="tw-font-bold">{{localize "WH40K.Daemonology.Exorcism.Collapsed"}}</div>
             <div class="tw-mt-1">{{localize "WH40K.Daemonology.Exorcism.CorruptionGained" value=corruptionGained}}</div>
         </div>
+    {{/if}}
     {{/if}}
 </div>

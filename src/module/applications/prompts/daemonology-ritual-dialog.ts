@@ -8,15 +8,24 @@
  * `actions/daemonology-actions.ts`; the exorcist's Fatigue (and Corruption, on
  * a collapse) are written back, a cast-out Daemon clears the host's possession
  * track, and a chat card prints every test's formula with sourced rows.
+ *
+ * Summoning (#80, p. 59): the summoner targets the Daemon's token (its
+ * Willpower pre-fills), notes a known True Name / patron service and any GM
+ * factors, and confirms. The Hellish ritual test is rolled; if the Daemon
+ * appears, the opposed Daemonic Mastery test decides whether it is bound and
+ * for how many hours.
  */
 
 import {
     buildExorcismCard,
+    buildSummoningCard,
     daemonologyLoreTotal,
     exorcistUpdate,
     parseExorcismForm,
+    parseSummoningForm,
     ritualCharacteristic,
     runExorcism,
+    runSummoning,
     type RitualActorSystem,
     type RitualDice,
 } from '../../actions/daemonology-actions.ts';
@@ -44,16 +53,23 @@ class FoundryRitualDice implements RitualDice {
     }
 }
 
-/** What the dialog reads off the possessed individual (the user's single target). */
-interface HostInfo {
+/** Which ritual the dialog performs. */
+export type RitualMode = 'exorcism' | 'summoning';
+
+/**
+ * What the dialog reads off the user's single target: the possessed individual
+ * for an Exorcism, the Daemon for a Summoning.
+ */
+interface TargetInfo {
     readonly actor: Actor;
     readonly name: string;
     readonly toughness: number;
+    readonly willpower: number;
     readonly corruption: number;
     readonly possessionState: string;
 }
 
-function readTargetedHost(): HostInfo | null {
+function readTarget(): TargetInfo | null {
     if (game.user.targets.size !== 1) return null;
     const actor = Array.from(game.user.targets).at(0)?.actor;
     if (actor == null) return null;
@@ -63,22 +79,37 @@ function readTargetedHost(): HostInfo | null {
         name: actor.name,
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json types characteristics[key] as possibly undefined, tsconfig.test.json does not
         toughness: actor.characteristics['toughness']?.total ?? 0,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json types characteristics[key] as possibly undefined, tsconfig.test.json does not
+        willpower: actor.characteristics['willpower']?.total ?? 0,
         corruption: typeof system.corruption === 'number' ? system.corruption : 0,
         possessionState: system.possession?.state ?? 'none',
     };
 }
 
+const TITLE_KEYS: Record<RitualMode, string> = {
+    exorcism: 'WH40K.Daemonology.Exorcism.DialogTitle',
+    summoning: 'WH40K.Daemonology.Summoning.DialogTitle',
+};
+
+const PERFORM_KEYS: Record<RitualMode, string> = {
+    exorcism: 'WH40K.Daemonology.Exorcism.Perform',
+    summoning: 'WH40K.Daemonology.Summoning.Perform',
+};
+
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface RitualDialogContext extends Record<string, unknown> {
+    isExorcism: boolean;
+    performLabelKey: string;
     actorName: string;
     loreTotal: number;
     willpowerTotal: number;
     fatigueValue: number;
     fatigueMax: number;
-    hostName: string | null;
+    targetName: string | null;
     modifiers: { id: string; labelKey: string; signed: string; checked: boolean }[];
     daemonWillpowerBonus: number;
     possessedCorruptionBonus: number;
+    daemonWillpower: number;
 }
 
 function signed(value: number): string {
@@ -88,12 +119,14 @@ function signed(value: number): string {
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
 class DaemonologyRitualDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     declare performer: RitualPerformer;
-    declare host: HostInfo | null;
+    declare mode: RitualMode;
+    declare target: TargetInfo | null;
 
-    constructor(performer: RitualPerformer, options: ApplicationV2Config.DefaultOptions = {}) {
-        super(options);
+    constructor(performer: RitualPerformer, mode: RitualMode) {
+        super({ window: { title: TITLE_KEYS[mode] } });
         this.performer = performer;
-        this.host = readTargetedHost();
+        this.mode = mode;
+        this.target = readTarget();
     }
 
     static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
@@ -106,7 +139,7 @@ class DaemonologyRitualDialog extends ApplicationV2Mixin(ApplicationV2 as unknow
             cancel: DaemonologyRitualDialog.#onCancel,
         },
         position: { width: 520 },
-        window: { title: 'WH40K.Daemonology.Exorcism.DialogTitle', resizable: false },
+        window: { resizable: false },
     };
 
     static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
@@ -116,24 +149,27 @@ class DaemonologyRitualDialog extends ApplicationV2Mixin(ApplicationV2 as unknow
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<RitualDialogContext> {
         const context = await super._prepareContext(options);
         const system = this.performer.system;
-        const host = this.host;
+        const target = this.target;
         return {
             ...context,
+            isExorcism: this.mode === 'exorcism',
+            performLabelKey: PERFORM_KEYS[this.mode],
             actorName: this.performer.name,
             loreTotal: daemonologyLoreTotal(system),
             willpowerTotal: ritualCharacteristic(system, 'willpower').total,
             fatigueValue: system.fatigue.value,
             fatigueMax: system.fatigue.max,
-            hostName: host?.name ?? null,
+            targetName: target?.name ?? null,
             modifiers: EXORCISM_MODIFIER_ORDER.map((id) => ({
                 id,
                 labelKey: EXORCISM_MODIFIERS[id].labelKey,
                 signed: signed(EXORCISM_MODIFIERS[id].modifier),
                 // Table 2–21's first row applies when the exorcist targets himself.
-                checked: id === 'SELF_EXORCISM' && host?.actor.id === this.performer.id,
+                checked: id === 'SELF_EXORCISM' && target?.actor.id === this.performer.id,
             })),
             daemonWillpowerBonus: 0,
-            possessedCorruptionBonus: host === null ? 0 : corruptionBonus(host.corruption),
+            possessedCorruptionBonus: target === null ? 0 : corruptionBonus(target.corruption),
+            daemonWillpower: target?.willpower ?? 0,
         };
     }
 
@@ -141,9 +177,30 @@ class DaemonologyRitualDialog extends ApplicationV2Mixin(ApplicationV2 as unknow
         event.preventDefault();
         const form = this.element instanceof HTMLFormElement ? this.element : null;
         if (form === null) return;
-        const inputs = parseExorcismForm(new FormData(form));
+        if (this.mode === 'summoning') await this.#performSummoning(new FormData(form));
+        else await this.#performExorcism(new FormData(form));
+        await this.close();
+    }
+
+    async #performSummoning(data: FormData): Promise<void> {
         const performer = this.performer;
-        const host = this.host;
+        const dice = new FoundryRitualDice();
+        const outcome = await runSummoning(performer.system, parseSummoningForm(data), dice);
+        const card = buildSummoningCard({
+            summonerName: performer.name,
+            daemonName: this.target?.name ?? null,
+            outcome,
+            localize: (key) => game.i18n.localize(key),
+            gameSystem: performer.system.gameSystem,
+        });
+        const speaker = ChatMessage.getSpeaker({ actor: performer });
+        await emitChatFromTemplate(CHAT_TEMPLATE, { ...card }, { speaker, rolls: dice.rolls, applyWhispers: true });
+    }
+
+    async #performExorcism(data: FormData): Promise<void> {
+        const inputs = parseExorcismForm(data);
+        const performer = this.performer;
+        const host = this.target;
         const dice = new FoundryRitualDice();
         const outcome = await runExorcism(performer.system, host === null ? null : { toughness: host.toughness }, inputs, dice);
 
@@ -162,7 +219,6 @@ class DaemonologyRitualDialog extends ApplicationV2Mixin(ApplicationV2 as unknow
         });
         const speaker = ChatMessage.getSpeaker({ actor: performer });
         await emitChatFromTemplate(CHAT_TEMPLATE, { ...card }, { speaker, rolls: dice.rolls, applyWhispers: true });
-        await this.close();
     }
 
     static async #onCancel(this: DaemonologyRitualDialog, event: Event): Promise<void> {
@@ -171,7 +227,7 @@ class DaemonologyRitualDialog extends ApplicationV2Mixin(ApplicationV2 as unknow
     }
 }
 
-/** Open the exorcism dialog for `performer` (DH2 only — the caller gates the line). */
-export function openExorcismDialog(performer: RitualPerformer): void {
-    void new DaemonologyRitualDialog(performer).render({ force: true });
+/** Open a ritual dialog for `performer` (DH2 only — the caller gates the line). */
+export function openDaemonologyRitualDialog(performer: RitualPerformer, mode: RitualMode): void {
+    void new DaemonologyRitualDialog(performer, mode).render({ force: true });
 }

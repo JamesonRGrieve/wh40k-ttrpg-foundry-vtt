@@ -35,5 +35,6 @@ export const Daemonologist: Story = {
         const exorcise = canvasElement.querySelector<HTMLButtonElement>('[data-action="performExorcism"]');
         await expect(exorcise).not.toBeNull();
         await expect(exorcise?.disabled).toBe(false);
+        await expect(canvasElement.querySelector('[data-action="performSummoning"]')).not.toBeNull();
     },
 };

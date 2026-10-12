@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
     buildExorcismCard,
+    buildSummoningCard,
     daemonologyLoreTotal,
     exorcismFactors,
     exorcistUpdate,
     findDaemonologyLore,
     parseExorcismForm,
+    parseSummoningForm,
     runExorcism,
+    runSummoning,
     toCardTest,
     type RitualActorSystem,
     type RitualDice,
@@ -175,5 +178,67 @@ describe('card shaping', () => {
         const card = buildExorcismCard({ exorcistName: 'Ana', hostName: null, outcome, localize, gameSystem: 'dh2', hostCleared: false });
         expect(card).toMatchObject({ mode: 'exorcism', collapsed: true, banished: false, corruptionGained: 6, threshold: 2 });
         expect(card.attempts[0]?.number).toBe(1);
+    });
+});
+
+/** Summoning orchestration (#80 — DH2 Enemies Beyond p. 59). */
+describe('parseSummoningForm', () => {
+    it('reads the checkboxes, derives the Daemon WP bonus and the two GM rows', () => {
+        const data = new FormData();
+        data.set('hasTrueName', 'on');
+        data.set('daemonWillpower', '47');
+        data.set('loreCircumstanceLabel', 'Summoning power');
+        data.set('loreCircumstanceValue', '30');
+        data.set('masteryCircumstanceValue', '-10');
+        expect(parseSummoningForm(data)).toEqual({
+            hasTrueName: true,
+            servesPatron: false,
+            daemonWillpower: 47,
+            daemonWillpowerBonus: 4,
+            loreCircumstanceLabel: 'Summoning power',
+            loreCircumstanceValue: 30,
+            masteryCircumstanceLabel: '',
+            masteryCircumstanceValue: -10,
+        });
+    });
+});
+
+describe('runSummoning', () => {
+    const inputs = {
+        hasTrueName: true,
+        servesPatron: false,
+        daemonWillpower: 40,
+        daemonWillpowerBonus: 4,
+        loreCircumstanceLabel: '',
+        loreCircumstanceValue: 0,
+        masteryCircumstanceLabel: '',
+        masteryCircumstanceValue: 0,
+    };
+
+    it('a failed ritual stops before the Mastery test', async () => {
+        // Lore 45 − 60 + 30 = 15; roll 50 fails.
+        const dice = scripted({ '1d100': [50] });
+        const outcome = await runSummoning(actor(), inputs, dice);
+        expect(outcome.lore.target).toBe(15);
+        expect(outcome.loreTest.success).toBe(false);
+        expect(outcome.contest).toBeNull();
+        expect(dice.calls).toEqual(['1d100']);
+        expect(buildSummoningCard({ summonerName: 'Ana', daemonName: null, outcome, localize: (k) => k, gameSystem: 'dh2' })).toMatchObject({
+            contest: null,
+            summonerWon: false,
+        });
+    });
+
+    it('a successful ritual rolls the opposed Mastery test and binds on a win', async () => {
+        // Mastery 50 − 30 + 30 = 50; summoner 15 → 4 DoS, Daemon 60 vs 40 fails.
+        const dice = scripted({ '1d100': [5, 15, 60] });
+        const outcome = await runSummoning(actor(), inputs, dice);
+        expect(outcome.mastery.target).toBe(50);
+        expect(outcome.contest).toMatchObject({ winner: 'summoner', bound: true, boundHours: 4 });
+        expect(buildSummoningCard({ summonerName: 'Ana', daemonName: 'Ka’zhar', outcome, localize: (k) => k, gameSystem: 'dh2' })).toMatchObject({
+            mode: 'summoning',
+            summonerWon: true,
+            daemonWon: false,
+        });
     });
 });

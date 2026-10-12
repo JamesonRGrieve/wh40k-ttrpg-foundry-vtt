@@ -2788,6 +2788,31 @@
                 "SurvivingPossession": "Surviving Possession consequences apply (Enemies Beyond p. 71).",
                 "Collapsed": "The exorcist loses consciousness — the exorcism fails.",
                 "CorruptionGained": "The exorcist gains {value} Corruption."
+            },
+            "Summoning": {
+                "DialogTitle": "Summon a Daemon",
+                "DialogIntro": "A Hellish (−60) Forbidden Lore (Daemonology) test performs the ritual. If the Daemon appears, an opposed Daemonic Mastery test (Very Hard) decides whether it is bound — for one hour per degree of success.",
+                "DaemonTargeted": "Daemon: {name}",
+                "NoDaemonTargeted": "No Daemon targeted — enter its Willpower below.",
+                "FactorsLegend": "Printed factors (Enemies Beyond p. 59)",
+                "TrueNameBoth": "+30 / +30",
+                "PatronMastery": "+10 Mastery",
+                "DaemonWillpower": "Daemon's Willpower",
+                "LoreCircumstance": "Ritual circumstance (components, assistants, powers…)",
+                "MasteryCircumstance": "Mastery circumstance (Incursion, Baneful Presence…)",
+                "Perform": "Summon Daemon",
+                "PerformTitle": "Perform a summoning ritual (Enemies Beyond p. 59). Target the Daemon's token to pre-fill its Willpower.",
+                "ChatTitle": "Daemonic Summoning",
+                "ChatSubject": "{summoner} calls {daemon} forth from the Warp.",
+                "ChatSubjectNoDaemon": "{summoner} performs a summoning ritual.",
+                "RitualTest": "Ritual — Forbidden Lore (Daemonology) test",
+                "DaemonRoll": "Daemon: rolled {roll} against Willpower {target}",
+                "Bound": "The Daemon is bound to serve for {hours} hour(s).",
+                "BoundHint": "When the binding lapses, another Daemonic Mastery test extends it; an order against its nature needs a further test at −30.",
+                "Free": "The summoner fails to master the Daemon — it is free to act as it wills.",
+                "Stalemate": "Both fail the Mastery test — the Daemon is not bound (the GM may call for a re-roll).",
+                "RitualFailed": "The ritual fails — no Daemon answers.",
+                "CorruptionNote": "Everyone who takes part in or witnesses the ritual gains Corruption (DH2 Core p. 289)."
             }
         },
         "Cybernetics": {
@@ -4081,6 +4106,39 @@
         },
         "PartyOverview": {
             "Header": "Party Overview"
+        },
+        "Reinforcement": {
+            "PanelTitle": "Reinforcement Character",
+            "OpenCall": "Call in",
+            "DialogTitle": "Call a Reinforcement Character",
+            "DialogTitleFor": "Call in: {name}",
+            "GmOnly": "Only the GM can call in a Reinforcement Character.",
+            "InfluenceMinimum": "Influence Minimum",
+            "InfluenceCost": "Influence Cost",
+            "InfluenceShort": "Influence {value}",
+            "BelowMinimum": "below minimum",
+            "Caller": "Calling Acolyte",
+            "Contributions": "Warband contributions (at most {cap})",
+            "PeerDiscount": "Caller has Peer ({peer}): cost −{amount}",
+            "PeerShort": "Peer ({peer})",
+            "GmAdjustment": "GM cost adjustment",
+            "GmAdjustmentHint": "Raise the cost for a vague rationale, a long stay or a hard-to-reach RC; lower it at your discretion (core p. 295).",
+            "FinalCost": "Final Influence Cost",
+            "CallerPays": "Caller spends",
+            "SubtletyLoss": "Warband Subtlety",
+            "Call": "Call in",
+            "Cancel": "Cancel",
+            "ChatTitle": "Reinforcement Character called",
+            "CalledBy": "Called by {name}",
+            "Paid": "{name} spends {amount} Influence",
+            "Problem": {
+                "noTerms": "This NPC has no printed Influence Minimum and Cost.",
+                "noCaller": "Choose the calling Acolyte.",
+                "belowMinimum": "The caller's Influence is below the Influence Minimum.",
+                "contributionCap": "The rest of the warband may contribute at most half the cost, rounded up.",
+                "contributorShort": "A contributor is spending more Influence than they have.",
+                "callerShort": "The caller cannot cover the rest of the cost."
+            }
         },
         "Inquest": {
             "PanelHeader": "Inquests",

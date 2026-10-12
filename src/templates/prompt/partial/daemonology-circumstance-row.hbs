@@ -1,0 +1,21 @@
+{{!--
+    A GM circumstance row on a daemonology ritual dialog: free-text label plus
+    a signed modifier ("other factors" every ritual allows).
+
+    Hash params:
+        titleKey   — langpack key for the row heading
+        labelName  — form field name for the text
+        valueName  — form field name for the modifier
+--}}
+<div class="tw-grid tw-grid-cols-[1fr_6rem] tw-gap-3 tw-mb-3">
+    <label class="tw-flex tw-flex-col tw-gap-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
+        {{localize titleKey}}
+        <input type="text" name="{{labelName}}" value="" placeholder="{{localize 'WH40K.Daemonology.Dialog.CircumstancePlaceholder'}}"
+               class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
+    </label>
+    <label class="tw-flex tw-flex-col tw-gap-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
+        {{localize "WH40K.Daemonology.Dialog.CircumstanceValue"}}
+        <input type="number" name="{{valueName}}" value="0" step="1"
+               class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
+    </label>
+</div>
