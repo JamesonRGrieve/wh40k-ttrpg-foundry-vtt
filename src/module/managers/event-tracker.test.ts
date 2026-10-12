@@ -322,6 +322,19 @@ describe('EventTracker journal links', () => {
         expect(EventTracker.resolveJournalLink({ kind: 'character', name: 'Garrick Varo' })).toBe('JournalEntry.character');
         expect(EventTracker.resolveJournalLink({ kind: 'location', name: 'Garrick Varo' })).toBe('JournalEntry.note');
     });
+
+    it('reads the location vault identity a spawned scene copies from the world journals', () => {
+        stubWorld(true, [
+            { name: 'The Sump', uuid: 'JournalEntry.plain', flags: {} },
+            {
+                name: 'Sump (renamed)',
+                uuid: 'JournalEntry.sump',
+                flags: { [SYSTEM_ID]: { vault: { path: 'Locations/The Sump.md', entityType: 'location', name: 'The Sump' } } },
+            },
+        ]);
+        expect(EventTracker.findLocationVaultIdentity('The Sump')).toEqual({ path: 'Locations/The Sump.md', entityType: 'location', name: 'The Sump' });
+        expect(EventTracker.findLocationVaultIdentity('Nowhere')).toBeNull();
+    });
 });
 
 describe('EventTracker.open', () => {

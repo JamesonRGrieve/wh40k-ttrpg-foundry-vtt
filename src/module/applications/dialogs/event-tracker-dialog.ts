@@ -15,9 +15,20 @@
  * All grouping and view decisions are the pure {@link buildEventTrackerView}.
  */
 
+import { SYSTEM_ID } from '../../constants.ts';
 import { isCharacterActorType } from '../../documents/actor-types.ts';
 import { t } from '../../i18n/t.ts';
-import { type CharacterState, type EventGraph, type JournalRef, type PcAttitudeMap, type ResolvedState, stepCampaignDay } from '../../managers/event-graph.ts';
+import {
+    type CharacterState,
+    type EventGraph,
+    findSceneForLocation,
+    type JournalRef,
+    type PcAttitudeMap,
+    type ResolvedState,
+    sceneLocationName,
+    stepCampaignDay,
+    type VaultJournalIdentity,
+} from '../../managers/event-graph.ts';
 import { asEventTrackerTab, buildEventTrackerView, type EventTrackerTab, type EventTrackerView } from './event-tracker-view.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -46,6 +57,19 @@ export interface EventTrackerSource {
     getAllPcAttitudes: () => PcAttitudeMap;
     setPcAttitude: (npc: string, pc: string, attitude: string) => Promise<void>;
     resolveJournalLink: (ref: JournalRef) => string | null;
+    findLocationVaultIdentity: (location: string) => VaultJournalIdentity | null;
+}
+
+/** A world Scene paired with the fields the location lookup reads. */
+interface WorldScene {
+    readonly scene: Scene.Implementation;
+    readonly name: string;
+    readonly vault: VaultJournalIdentity | undefined;
+}
+
+/** The world's Scenes, each with its vault identity flag (if any). */
+function worldScenes(): WorldScene[] {
+    return Array.from(game.scenes, (scene) => ({ scene, name: scene.name, vault: scene.flags[SYSTEM_ID]?.vault }));
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 context is a free-form template payload; Record<string, unknown> is the correct base shape
@@ -118,6 +142,8 @@ export default class EventTrackerDialog extends HandlebarsApplicationMixin(Appli
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<EventTrackerContext> {
         const context = await super._prepareContext(options);
         const source = this.#source;
+        const scenes = worldScenes();
+        const activeScene = scenes.find(({ scene }) => scene.active);
         const view = buildEventTrackerView({
             graph: source.graph ?? {},
             characters: source.characters,
@@ -129,8 +155,9 @@ export default class EventTrackerDialog extends HandlebarsApplicationMixin(Appli
                 .map((actor) => actor.name)
                 .sort((a, b) => a.localeCompare(b)),
             activeTab: this.#activeTab,
-            activeSceneName: game.scenes.active?.name ?? '',
-            sceneNames: new Set(game.scenes.map((scene) => scene.name)),
+            activeSceneName: activeScene === undefined ? '' : sceneLocationName(activeScene),
+            // A scene answers for its own name and, when vault-flagged, for its location.
+            sceneNames: new Set(scenes.flatMap((scene) => [scene.name, sceneLocationName(scene)])),
             journalLink: (ref) => source.resolveJournalLink(ref),
         });
         return { ...context, ...view };
@@ -220,15 +247,25 @@ export default class EventTrackerDialog extends HandlebarsApplicationMixin(Appli
     }
 
     static async #onViewScene(this: EventTrackerDialog, _event: Event, target: HTMLElement): Promise<void> {
-        const scene = game.scenes.getName(target.dataset['location'] ?? '');
-        if (scene !== undefined) await scene.view();
+        const match = findSceneForLocation(worldScenes(), target.dataset['location'] ?? '');
+        if (match !== undefined) await match.scene.view();
     }
 
     static async #onSpawnScene(this: EventTrackerDialog, _event: Event, target: HTMLElement): Promise<void> {
         const name = target.dataset['location'] ?? '';
         if (name === '') return;
         try {
-            await Scene.create({ name, width: SPAWNED_SCENE_DIMENSION, height: SPAWNED_SCENE_DIMENSION });
+            // Stamp the vault identity only when the location's journal carries one,
+            // so the scene is found by flag; otherwise it stays unflagged.
+            const identity = this.#source.findLocationVaultIdentity(name);
+            await Scene.create({
+                name,
+                width: SPAWNED_SCENE_DIMENSION,
+                height: SPAWNED_SCENE_DIMENSION,
+                ...(identity === null
+                    ? {}
+                    : { flags: { [SYSTEM_ID]: { vault: { path: identity.path, entityType: identity.entityType, name: identity.name } } } }),
+            });
         } catch (err) {
             console.error(`EventTracker: failed to create scene "${name}"`, err);
             ui.notifications.error(t('WH40K.EventTracker.SceneSpawnFailed', { name }));

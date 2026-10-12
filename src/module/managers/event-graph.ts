@@ -470,6 +470,37 @@ export function findJournalUuidByVaultIdentity(journals: Iterable<NamedJournal>,
     return best?.uuid ?? null;
 }
 
+/** The vault identity of the location journal named `location`, or null when no journal carries one. */
+export function findLocationVaultIdentity(journals: Iterable<NamedJournal>, location: string): VaultJournalIdentity | null {
+    if (location === '') return null;
+    for (const journal of journals) {
+        if (journal.vault?.entityType === 'location' && journal.vault.name === location) return journal.vault;
+    }
+    return null;
+}
+
+/** The fields of a Scene the location lookup reads. */
+export interface LocatableScene {
+    readonly name: string;
+    /** The vault identity flag, when the vault writer (or the tracker, from a vault journal) created this scene. */
+    readonly vault?: VaultJournalIdentity | undefined;
+}
+
+/** The location a scene stands for: its vault location name when flagged, else its own name. */
+export function sceneLocationName(scene: LocatableScene): string {
+    return scene.vault?.entityType === 'location' ? scene.vault.name : scene.name;
+}
+
+/**
+ * The scene for a location: one whose vault identity flag names the location
+ * (entity type `location`) wins, then one whose own name is the location.
+ */
+export function findSceneForLocation<T extends LocatableScene>(scenes: Iterable<T>, location: string): T | undefined {
+    if (location === '') return undefined;
+    const list = Array.from(scenes);
+    return list.find((scene) => scene.vault?.entityType === 'location' && scene.vault.name === location) ?? list.find((scene) => scene.name === location);
+}
+
 /**
  * The built-in lookup: a vault-identity match first (see
  * {@link findJournalUuidByVaultIdentity}), then an exact journal-name match.

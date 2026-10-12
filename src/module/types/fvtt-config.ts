@@ -137,8 +137,10 @@ declare module 'fvtt-types/configuration' {
         };
         // Scene-scoped state (Warp weakness, #137; celestial-body binding and latitude, #588), and
         // the Zephyr Cartography module's own scene flags, whose `sun` the sun sync reads back.
+        // `vault` is the vault identity a direct-writer scene carries (or the Event
+        // Tracker copies from the location's journal when it spawns one).
         Scene: {
-            'wh40k-rpg': Record<string, unknown>;
+            'wh40k-rpg': { vault?: VaultJournalIdentity; [key: string]: unknown };
             'zephyr-cartography'?: Record<string, unknown>;
         };
     }

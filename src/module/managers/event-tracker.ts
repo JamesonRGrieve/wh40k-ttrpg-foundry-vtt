@@ -24,6 +24,7 @@ import {
     computeCharacterStates,
     type EventGraph,
     findJournalUuid,
+    findLocationVaultIdentity,
     isEventAvailable,
     isPcAttitudeMap,
     isResolved,
@@ -38,6 +39,7 @@ import {
     type PcAttitudeMap,
     type ResolvedState,
     resolveJournalUuid,
+    type VaultJournalIdentity,
     withPcAttitude,
 } from './event-graph.ts';
 
@@ -387,11 +389,25 @@ export class EventTracker {
      * exact journal-name match.
      */
     static findJournalByName(this: void, ref: JournalRef): string | null {
+        return findJournalUuid(EventTracker.#worldJournals(), ref);
+    }
+
+    /**
+     * The vault identity of the world journal for a location (a JournalEntry
+     * whose vault flag has entity type `location` and that name), or null.
+     * A Scene spawned for the location copies it, so the scene is found by
+     * flag even after either is renamed.
+     */
+    static findLocationVaultIdentity(this: void, location: string): VaultJournalIdentity | null {
+        return findLocationVaultIdentity(EventTracker.#worldJournals(), location);
+    }
+
+    /** The world's journals as the pure lookups read them (empty before Foundry's `setup` phase). */
+    static #worldJournals(): NamedJournal[] {
         const journal = game.journal;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: `game.journal` is undefined until Foundry's `setup` phase
-        if (journal === undefined) return null;
-        const candidates: NamedJournal[] = Array.from(journal, (entry) => ({ name: entry.name, uuid: entry.uuid, vault: entry.flags[SYSTEM_ID]?.vault }));
-        return findJournalUuid(candidates, ref);
+        if (journal === undefined) return [];
+        return Array.from(journal, (entry) => ({ name: entry.name, uuid: entry.uuid, vault: entry.flags[SYSTEM_ID]?.vault }));
     }
 
     /** The journal UUID for a reference (registered resolver first, then the name lookup), or null. */

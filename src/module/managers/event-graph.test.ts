@@ -12,6 +12,8 @@ import {
     findJournalUuid,
     findJournalUuidByName,
     findJournalUuidByVaultIdentity,
+    findLocationVaultIdentity,
+    findSceneForLocation,
     flattenRequirements,
     isEventAvailable,
     isPartyDisposition,
@@ -27,6 +29,7 @@ import {
     predicateCriteria,
     type ResolvedState,
     resolveJournalUuid,
+    sceneLocationName,
     sourceDayLabel,
     sourceDayNumber,
     sourceRefKind,
@@ -397,5 +400,43 @@ describe('vault-identity journal lookup', () => {
         expect(findJournalUuidByVaultIdentity(journals, { kind: 'location', name: 'The Sump' })).toBeNull();
         expect(findJournalUuid(journals, { kind: 'location', name: '' })).toBeNull();
         expect(findJournalUuid(journals, { kind: 'location', name: 'Nowhere' })).toBeNull();
+    });
+});
+
+describe('vault-identity scene lookup', () => {
+    const sump: VaultJournalIdentity = { path: 'Locations/The Sump.md', entityType: 'location', name: 'The Sump' };
+
+    it('a scene flagged for the location wins over a scene named for it', () => {
+        const scenes = [
+            { name: 'The Sump', id: 'byName' },
+            { name: 'Sump bar (battlemap)', id: 'byFlag', vault: sump },
+        ];
+        expect(findSceneForLocation(scenes, 'The Sump')?.id).toBe('byFlag');
+    });
+
+    it('ignores a flag of another entity type, then falls back to the scene name', () => {
+        const scenes = [
+            { name: 'Varo', id: 'character', vault: { path: 'Characters/The Sump.md', entityType: 'character' as const, name: 'The Sump' } },
+            { name: 'The Sump', id: 'byName' },
+        ];
+        expect(findSceneForLocation(scenes, 'The Sump')?.id).toBe('byName');
+        expect(findSceneForLocation(scenes, 'Nowhere')).toBeUndefined();
+        expect(findSceneForLocation(scenes, '')).toBeUndefined();
+    });
+
+    it('a flagged scene stands for its vault location', () => {
+        expect(sceneLocationName({ name: 'Sump bar (battlemap)', vault: sump })).toBe('The Sump');
+        expect(sceneLocationName({ name: 'Plain scene' })).toBe('Plain scene');
+    });
+
+    it('finds the location journal identity to stamp on a spawned scene', () => {
+        const journals: NamedJournal[] = [
+            { name: 'Sump notes', uuid: 'JournalEntry.note', vault: { path: 'Lore/The Sump.md', entityType: 'note', name: 'The Sump' } },
+            { name: 'The Sump (renamed)', uuid: 'JournalEntry.sump', vault: sump },
+            { name: 'Keller', uuid: 'JournalEntry.keller' },
+        ];
+        expect(findLocationVaultIdentity(journals, 'The Sump')).toEqual(sump);
+        expect(findLocationVaultIdentity(journals, 'Keller')).toBeNull();
+        expect(findLocationVaultIdentity(journals, '')).toBeNull();
     });
 });
