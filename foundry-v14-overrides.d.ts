@@ -759,6 +759,30 @@ declare module 'fvtt-types/configuration' {
                 userId: string,
                 interactionId: string | false,
             ) => boolean | void;
+
+            /**
+             * wh40k-rpg Event Tracker: an event was marked resolved (or unresolved)
+             * through `EventTracker.setResolved`. Fires on the client that made the change.
+             */
+            'wh40k-rpg.eventResolved': (
+                eventId: string,
+                resolved: boolean,
+                context: import('./src/module/managers/event-tracker.ts').EventTrackerChangeContext,
+            ) => void;
+
+            /** wh40k-rpg Event Tracker: the campaign day changed through `EventTracker.setCampaignDay`. */
+            'wh40k-rpg.campaignDayChanged': (day: number, context: import('./src/module/managers/event-tracker.ts').EventTrackerChangeContext) => void;
+
+            /**
+             * wh40k-rpg Event Tracker: a PC's attitude toward an NPC changed through
+             * `EventTracker.setPcAttitude`. `attitude` is `''` when it was cleared.
+             */
+            'wh40k-rpg.pcAttitudeChanged': (
+                npc: string,
+                pc: string,
+                attitude: string,
+                context: import('./src/module/managers/event-tracker.ts').EventTrackerChangeContext,
+            ) => void;
         }
     }
 }

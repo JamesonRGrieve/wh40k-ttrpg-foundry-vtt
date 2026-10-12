@@ -1,67 +1,44 @@
 /**
- * Solenne Campaign — Event Tracker
+ * Solenne Campaign — Event Tracker (domain + public API).
  *
- * GM-only event dependency dashboard that tracks which narrative hooks
- * have been resolved, computes which are now available, and displays
- * blocking reasons for locked events.
+ * The system is the single owner of the campaign Event Tracker state:
  *
- * Usage: Create a macro with `game.wh40k.EventTracker.open()`
+ * - the GM-only event graph (loaded from a flagged JournalEntry, #33);
+ * - which events are resolved (`event-tracker-state` world setting);
+ * - the current campaign day (`event-tracker-campaign-day` world setting);
+ * - each PC's attitude toward each NPC (`event-tracker-pc-attitudes` world setting).
  *
- * State is stored in a world setting (persists across sessions).
- * Only the GM can see or interact with the tracker.
+ * Usage: `game.wh40k.EventTracker.open()` (or the WH40K scene-control button).
+ *
+ * Integrations (e.g. a Kanka sync module) read and write that state ONLY through
+ * this class's public API and the hooks it fires — see {@link EventTracker}.
+ * The system itself has no knowledge of any external sync target.
  */
 
 import { SYSTEM_ID } from '../constants.ts';
-
-interface EventDef {
-    id: string;
-    name: string;
-    location?: string;
-    requires?: string[];
-    requires_any?: string[];
-    excuse?: string;
-    is_day_end?: boolean;
-    branch?: string;
-    source_name?: string;
-    source_file?: string;
-}
-
-interface ResolvedState {
-    [eventId: string]: { resolvedAt: string };
-}
-
-interface EventGraph {
-    [eventId: string]: EventDef;
-}
-
-interface DispositionEntry {
-    target: string; // "party" or a character name
-    attitude: string;
-    default?: boolean;
-    trigger?: string;
-    note?: string;
-}
-
-interface RelationshipInfluence {
-    event: string;
-    to: string;
-    note?: string;
-}
-
-interface RelationshipEntry {
-    target: string;
-    type: string;
-    state: string;
-    summary?: string;
-    is_private?: boolean;
-    influences?: RelationshipInfluence[];
-}
-
-interface CharacterState {
-    dispositions?: DispositionEntry[];
-    relationships?: RelationshipEntry[];
-    source_file?: string;
-}
+import { t } from '../i18n/t.ts';
+import {
+    type ChangeOrigin,
+    type CharacterState,
+    type ComputedCharacterState,
+    computeCharacterStates,
+    type EventGraph,
+    findJournalUuidByName,
+    isEventAvailable,
+    isPcAttitudeMap,
+    isResolved,
+    isResolvedState,
+    isStoredCampaignDay,
+    isValidCampaignDay,
+    type JournalLinkResolver,
+    type JournalRef,
+    lookup,
+    omitKey,
+    type PcAttitudeMap,
+    type ResolvedState,
+    resolveJournalUuid,
+    withPcAttitude,
+} from './event-graph.ts';
 
 interface EventDataFile {
     events: EventGraph;
@@ -69,7 +46,45 @@ interface EventDataFile {
     characters?: Record<string, CharacterState> | null;
 }
 
-const SETTING_KEY = 'event-tracker-state';
+/** World-setting keys (scope `wh40k-rpg`) that hold the tracker's state. */
+export const EVENT_TRACKER_SETTINGS = {
+    /** `{ [eventId]: { resolvedAt: ISO string } }` */
+    resolved: 'event-tracker-state',
+    /** Non-negative integer campaign day (`>= 100` reads as `Day M<n-100>`). */
+    campaignDay: 'event-tracker-campaign-day',
+    /** `{ [npcName]: { [pcName]: attitude } }` */
+    pcAttitudes: 'event-tracker-pc-attitudes',
+} as const;
+
+/** The hooks fired after each Event Tracker state change. Payloads are typed in `foundry-v14-overrides.d.ts`. */
+export const EVENT_TRACKER_HOOKS = {
+    eventResolved: 'wh40k-rpg.eventResolved',
+    campaignDayChanged: 'wh40k-rpg.campaignDayChanged',
+    pcAttitudeChanged: 'wh40k-rpg.pcAttitudeChanged',
+} as const;
+
+/** Options accepted by every Event Tracker setter. */
+export interface EventTrackerChangeOptions {
+    /**
+     * Who is making the change (default `'manual'`).
+     *
+     * - `'manual'`: the GM, by hand (the dashboard).
+     * - `'sync'`: a sync adapter applying state it PULLED from a remote source.
+     *   The write still happens and the hook still fires, but with
+     *   `context.origin === 'sync'`, so the adapter's own push listener skips it
+     *   — the echo-loop guard.
+     * - `'auto'`: an automatic completion trigger (e.g. game state resolving an event).
+     */
+    origin?: ChangeOrigin;
+    /** Free-text provenance (e.g. which trigger fired), carried to the hook and, for events, stored. */
+    detail?: string;
+}
+
+/** The final argument of every Event Tracker hook. */
+export interface EventTrackerChangeContext {
+    readonly origin: ChangeOrigin;
+    readonly detail?: string;
+}
 
 /**
  * Flag key on the GM-only JournalEntry that carries the graph (#33).
@@ -95,20 +110,81 @@ function isEventDataFile(value: unknown): value is EventDataFile {
     return events !== null && typeof events === 'object' && !Array.isArray(events);
 }
 
+/** A narrowing guard over a stored setting value. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: the guard's input is Foundry's untyped `game.settings.get` value
+type SettingGuard<T> = (value: unknown) => value is T;
+
+/** Read one of the tracker's world settings through its guard; a malformed stored value reads as `fallback`. */
+function readSetting<T>(key: string, guard: SettingGuard<T>, fallback: T): T {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped stored value; `guard` narrows it on the next line
+    const stored: unknown = game.settings.get(SYSTEM_ID, key);
+    return guard(stored) ? stored : fallback;
+}
+
+function changeContext(options: EventTrackerChangeOptions): EventTrackerChangeContext {
+    return { origin: options.origin ?? 'manual', ...(options.detail !== undefined ? { detail: options.detail } : {}) };
+}
+
+/**
+ * The campaign Event Tracker — domain state and the public API published as
+ * `game.wh40k.EventTracker`.
+ *
+ * **Reads** work on any client (a player client simply has no graph).
+ * **Writes are GM-only**: every setter rejects with an `Error` on a non-GM client.
+ * Setters are idempotent — writing the value already stored does nothing and
+ * fires no hook.
+ *
+ * **Hooks.** After a setter changes stored state it fires, on the calling client:
+ *
+ * ```ts
+ * Hooks.on('wh40k-rpg.eventResolved', (eventId: string, resolved: boolean, context: EventTrackerChangeContext) => …);
+ * Hooks.on('wh40k-rpg.campaignDayChanged', (day: number, context: EventTrackerChangeContext) => …);
+ * Hooks.on('wh40k-rpg.pcAttitudeChanged', (npc: string, pc: string, attitude: string, context: EventTrackerChangeContext) => …);
+ * ```
+ *
+ * `attitude` is `''` when the attitude was cleared (the PC has "not met" the NPC).
+ *
+ * **Origin.** Every setter takes `{ origin?: 'manual' | 'sync' | 'auto', detail?: string }`
+ * (default origin `'manual'`), passed through as the hook's `context`; for
+ * events it is also stored on the resolved entry. Sync adapters that pull
+ * remote state pass `{ origin: 'sync' }` and their own push listener ignores
+ * `context.origin === 'sync'` — so a pulled change is never echoed back.
+ *
+ * **Journal links.** {@link EventTracker.registerJournalLinkResolver} lets an
+ * integration map each named reference to its Foundry journal UUID; without
+ * one, references resolve by exact journal name.
+ */
 // biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with static state and many callers
 export class EventTracker {
     static _graph: EventGraph | null = null;
     static _characters: Record<string, CharacterState> | null = null;
     static _dataVersion = 1;
+    static #journalResolver: JournalLinkResolver | null = null;
 
     /**
-     * Register the world setting for state persistence.
+     * Register the world settings that persist the tracker's state.
      * Call during system init.
      */
     static registerSettings(): void {
-        game.settings.register(SYSTEM_ID, SETTING_KEY, {
+        game.settings.register(SYSTEM_ID, EVENT_TRACKER_SETTINGS.resolved, {
             name: 'WH40K.Notify.EventTracker.SettingName',
             hint: 'WH40K.Notify.EventTracker.SettingHint',
+            scope: 'world',
+            config: false,
+            type: Object,
+            default: {},
+        });
+        game.settings.register(SYSTEM_ID, EVENT_TRACKER_SETTINGS.campaignDay, {
+            name: 'WH40K.EventTracker.Setting.CampaignDayName',
+            hint: 'WH40K.EventTracker.Setting.CampaignDayHint',
+            scope: 'world',
+            config: false,
+            type: Number,
+            default: 0,
+        });
+        game.settings.register(SYSTEM_ID, EVENT_TRACKER_SETTINGS.pcAttitudes, {
+            name: 'WH40K.EventTracker.Setting.PcAttitudesName',
+            hint: 'WH40K.EventTracker.Setting.PcAttitudesHint',
             scope: 'world',
             config: false,
             type: Object,
@@ -188,441 +264,154 @@ export class EventTracker {
         }
     }
 
-    /** Get resolved event IDs from world settings. */
+    /** Reject a write from a non-GM client. */
+    static #assertGM(operation: string): void {
+        if (!game.user.isGM) throw new Error(`EventTracker.${operation} is GM-only`);
+    }
+
+    /* -------------------------------------------- */
+    /*  Resolved events                             */
+    /* -------------------------------------------- */
+
+    /** Resolved events keyed by event id. A malformed stored value reads as none resolved. */
     static getResolved(): ResolvedState {
-        return (game.settings.get(SYSTEM_ID, SETTING_KEY) as ResolvedState | undefined) ?? {};
+        return readSetting(EVENT_TRACKER_SETTINGS.resolved, isResolvedState, {});
     }
 
-    /** Mark an event as resolved (or unresolved). */
-    static async setResolved(eventId: string, resolved = true): Promise<void> {
+    /**
+     * Mark an event resolved (or unresolved). GM-only. Fires
+     * `wh40k-rpg.eventResolved(eventId, resolved, context)` when the stored state changes.
+     */
+    static async setResolved(eventId: string, resolved = true, options: EventTrackerChangeOptions = {}): Promise<void> {
+        EventTracker.#assertGM('setResolved');
+        if (eventId === '') throw new Error('EventTracker.setResolved: eventId must be non-empty');
         const state = EventTracker.getResolved();
-        if (resolved) {
-            state[eventId] = { resolvedAt: new Date().toISOString() };
-        } else {
-            delete state[eventId];
-        }
-        await game.settings.set(SYSTEM_ID, SETTING_KEY, state);
+        if (isResolved(state, eventId) === resolved) return;
+        const context = changeContext(options);
+        const next = resolved ? { ...state, [eventId]: { resolvedAt: new Date().toISOString(), ...context } } : omitKey(state, eventId);
+        await game.settings.set(SYSTEM_ID, EVENT_TRACKER_SETTINGS.resolved, next);
+        Hooks.callAll(EVENT_TRACKER_HOOKS.eventResolved, eventId, resolved, context);
     }
 
-    /** Check if an event's prerequisites are all met. */
+    /** Whether an event's prerequisites are all met. */
     static isAvailable(eventId: string): boolean {
-        const event = EventTracker._graph?.[eventId];
-        if (event === undefined) return false;
-        const resolved = EventTracker.getResolved();
-
-        const reqsMet = event.requires === undefined || event.requires.length === 0 || event.requires.every((id: string) => id in resolved);
-
-        const reqsAnyMet = event.requires_any === undefined || event.requires_any.length === 0 || event.requires_any.some((id: string) => id in resolved);
-
-        return reqsMet && reqsAnyMet;
-    }
-
-    /** Get the unmet prerequisites for a locked event. */
-    static getBlockingReasons(eventId: string): string[] {
-        const event = EventTracker._graph?.[eventId];
-        if (event === undefined) return [];
-        const resolved = EventTracker.getResolved();
-        const reasons: string[] = [];
-
-        if (event.requires !== undefined && event.requires.length > 0) {
-            const unmet = event.requires.filter((id: string) => !(id in resolved));
-            for (const id of unmet) {
-                const dep = EventTracker._graph?.[id];
-                const depName = dep?.name ?? id;
-                const depLoc = dep?.location !== undefined && dep.location !== '' ? ` (${dep.location})` : '';
-                reasons.push(game.i18n.format('WH40K.Notify.EventTracker.Requires', { event: `${depName}${depLoc}` }));
-            }
-        }
-
-        if (event.requires_any !== undefined && event.requires_any.length > 0) {
-            const anyMet = event.requires_any.some((id: string) => id in resolved);
-            if (!anyMet) {
-                const options = event.requires_any.map((id: string) => {
-                    const dep = EventTracker._graph?.[id];
-                    const depName = dep?.name ?? id;
-                    const depLoc = dep?.location !== undefined && dep.location !== '' ? ` (${dep.location})` : '';
-                    return `${depName}${depLoc}`;
-                });
-                reasons.push(
-                    game.i18n.format('WH40K.Notify.EventTracker.RequiresOneOf', {
-                        events: options.join(game.i18n.localize('WH40K.Notify.EventTracker.OrSeparator')),
-                    }),
-                );
-            }
-        }
-
-        return reasons;
-    }
-
-    /**
-     * Compute the current disposition/relationship state for every character
-     * whose data was loaded from events.json, by walking dispositions[] and
-     * relationships[].influences[] against the currently-resolved events.
-     *
-     * For dispositions: returns the triggered entry whose `trigger` event is
-     * resolved; falls back to the `default: true` entry; falls back to the
-     * first entry. Grouped by target (party vs per-PC).
-     *
-     * For relationships: walks influences[] in array order, taking the `to`
-     * of the last entry whose `event` is resolved; falls back to the
-     * declared `state`.
-     */
-    static computeCharacterStates(): Record<
-        string,
-        {
-            dispositions: Record<string, DispositionEntry>;
-            relationships: Array<{ target: string; type: string; currentState: string; summary?: string; trigger?: string }>;
-        }
-    > {
-        const out: Record<
-            string,
-            {
-                dispositions: Record<string, DispositionEntry>;
-                relationships: Array<{ target: string; type: string; currentState: string; summary?: string; trigger?: string }>;
-            }
-        > = {};
-
-        const characters = EventTracker._characters;
-        if (!characters) return out;
-        const resolved = EventTracker.getResolved();
-
-        for (const [name, data] of Object.entries(characters)) {
-            const entry: {
-                dispositions: Record<string, DispositionEntry>;
-                relationships: Array<{ target: string; type: string; currentState: string; summary?: string; trigger?: string }>;
-            } = { dispositions: {}, relationships: [] };
-
-            // Dispositions: pick per target, prefer triggered → default → first
-            const byTarget = new Map<string, DispositionEntry[]>();
-            for (const d of data.dispositions ?? []) {
-                const t = d.target !== '' ? d.target : 'party';
-                const existing = byTarget.get(t);
-                if (existing !== undefined) {
-                    existing.push(d);
-                } else {
-                    byTarget.set(t, [d]);
-                }
-            }
-            for (const [target, entries] of byTarget.entries()) {
-                const triggered = entries.find((e) => e.trigger !== undefined && e.trigger !== '' && e.trigger in resolved);
-                const fallback = entries.find((e) => e.default === true) ?? entries[0];
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; entries[0] may be undefined
-                if (fallback === undefined) continue;
-                entry.dispositions[target] = triggered ?? fallback;
-            }
-
-            // Relationships: walk influences[] in order; last-resolved wins
-            for (const r of data.relationships ?? []) {
-                let currentState = r.state;
-                let lastTrigger: string | undefined;
-                for (const inf of r.influences ?? []) {
-                    if (inf.event in resolved) {
-                        currentState = inf.to;
-                        lastTrigger = inf.event;
-                    }
-                }
-                entry.relationships.push({
-                    target: r.target,
-                    type: r.type,
-                    currentState,
-                    ...(r.summary !== undefined ? { summary: r.summary } : {}),
-                    ...(lastTrigger !== undefined ? { trigger: lastTrigger } : {}),
-                });
-            }
-            out[name] = entry;
-        }
-        return out;
-    }
-
-    /**
-     * CSS color mapping for disposition/state badges.
-     * Matches the palette used elsewhere in the system for semantic clarity.
-     */
-    static _stateColor(state: string): string {
-        const colors: Record<string, string> = {
-            'ally': '#2d6',
-            'friendly': '#2d6',
-            'helpful': '#2d6',
-            'neutral': '#888',
-            'cautious-neutral': '#aa8',
-            'wary': '#c96',
-            'rival': '#c96',
-            'enemy': '#c66',
-            'hostile': '#c66',
-            'enraged': '#c44',
-            'missing': '#68c',
-        };
-        return colors[state] ?? '#888';
-    }
-
-    /** Build the events pane HTML (the original, unchanged content). */
-    static _buildEventsPane(): string {
         const graph = EventTracker._graph;
-        if (!graph) return `<p>${game.i18n.localize('WH40K.Notify.EventTracker.PaneNotLoaded')}</p>`;
-
-        const resolved = EventTracker.getResolved();
-
-        // Group events by source
-        const groups = new Map<string, (EventDef & { id: string })[]>();
-        for (const [id, event] of Object.entries(graph)) {
-            const src =
-                event.source_name !== undefined && event.source_name !== ''
-                    ? event.source_name
-                    : event.source_file !== undefined && event.source_file !== ''
-                    ? event.source_file
-                    : 'Unknown';
-            const { id: _id, ...rest } = event;
-            const existing = groups.get(src);
-            if (existing !== undefined) {
-                existing.push({ id, ...rest });
-            } else {
-                groups.set(src, [{ id, ...rest }]);
-            }
-        }
-
-        // Count stats
-        const total = Object.keys(graph).length;
-        const resolvedCount = Object.keys(resolved).length;
-        const availableCount = Object.keys(graph).filter((id) => !(id in resolved) && EventTracker.isAvailable(id)).length;
-
-        let html = `<style>
-            .evt-tracker { font-family: var(--font-primary); font-size: 13px; max-height: 70vh; overflow-y: auto; }
-            .evt-stats { padding: 4px 0 8px; font-size: 12px; color: #aaa; border-bottom: 1px solid #444; margin-bottom: 8px; }
-            .evt-group { margin-bottom: 12px; }
-            .evt-group h3 { margin: 0 0 4px; font-size: 14px; border-bottom: 1px solid #666; padding-bottom: 2px; }
-            .evt-row { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
-            .evt-row.resolved { opacity: 0.5; }
-            .evt-row.locked { color: #999; }
-            .evt-row.available { color: #2d6; font-weight: bold; }
-            .evt-name { flex: 1; }
-            .evt-block { font-size: 11px; color: #c66; margin-left: 24px; font-style: italic; }
-            .evt-excuse { font-size: 11px; color: #c96; margin-left: 24px; }
-            .evt-loc { font-size: 11px; color: #888; }
-            .evt-day-end { font-size: 10px; color: #68c; margin-left: 4px; }
-        </style><div class="evt-tracker">`;
-
-        html += `<div class="evt-stats">${game.i18n.format('WH40K.Notify.EventTracker.Summary', {
-            resolved: String(resolvedCount),
-            total: String(total),
-            available: String(availableCount),
-        })}</div>`;
-
-        for (const [groupName, events] of groups.entries()) {
-            html += `<div class="evt-group"><h3>${groupName}</h3>`;
-            for (const evt of events) {
-                const isResolved = evt.id in resolved;
-                const isAvail = EventTracker.isAvailable(evt.id);
-                const cls = isResolved ? 'resolved' : isAvail ? 'available' : 'locked';
-                const checked = isResolved ? 'checked' : '';
-                const disabled = !isResolved && !isAvail ? 'disabled' : '';
-
-                html += `<div class="evt-row ${cls}">`;
-                html += `<input type="checkbox" data-event-id="${evt.id}" ${checked} ${disabled}>`;
-                html += `<span class="evt-name">${evt.name}</span>`;
-                if (evt.location !== undefined && evt.location !== '') html += `<span class="evt-loc">${evt.location}</span>`;
-                if (evt.is_day_end === true) html += `<span class="evt-day-end">${game.i18n.localize('WH40K.Notify.EventTracker.DayEnd')}</span>`;
-                html += `</div>`;
-
-                // Show blocking reasons for locked events
-                if (!isResolved && !isAvail) {
-                    const reasons = EventTracker.getBlockingReasons(evt.id);
-                    for (const reason of reasons) {
-                        html += `<div class="evt-block">${reason}</div>`;
-                    }
-                    if (evt.excuse !== undefined && evt.excuse !== '') {
-                        html += `<div class="evt-excuse">${game.i18n.format('WH40K.Notify.EventTracker.Excuse', { excuse: evt.excuse })}</div>`;
-                    }
-                }
-            }
-            html += `</div>`;
-        }
-        html += `</div>`;
-        return html;
+        return graph !== null && isEventAvailable(graph, EventTracker.getResolved(), eventId);
     }
 
-    /** Build the NPC State pane HTML (dispositions + relationships). */
-    static _buildNPCStatePane(): string {
-        const states = EventTracker.computeCharacterStates();
-        const names = Object.keys(states).sort((a, b) => a.localeCompare(b));
-        if (!names.length) {
-            return `<div class="evt-tracker"><p style="color:#888;">${game.i18n.localize('WH40K.Notify.EventTracker.NoCharacterData')}</p></div>`;
-        }
+    /* -------------------------------------------- */
+    /*  Campaign day                                */
+    /* -------------------------------------------- */
 
-        let html = `<div class="evt-tracker evt-npc-state">`;
-        html += `<div class="evt-stats">${game.i18n.format('WH40K.Notify.EventTracker.NpcSummary', { count: String(names.length) })}</div>`;
-
-        for (const name of names) {
-            const s = states[name] as (typeof states)[string] | undefined;
-            if (s === undefined) continue;
-            html += `<div class="evt-group evt-npc-group">`;
-            html += `<h3>${name}</h3>`;
-
-            // Dispositions section
-            const dispTargets = Object.keys(s.dispositions);
-            if (dispTargets.length) {
-                html += `<div class="evt-npc-disp">`;
-                for (const target of dispTargets.sort((a, b) => (a === 'party' ? -1 : b === 'party' ? 1 : a.localeCompare(b)))) {
-                    const d = s.dispositions[target] as DispositionEntry | undefined;
-                    if (d === undefined) continue;
-                    const color = EventTracker._stateColor(d.attitude);
-                    const badge = `<span class="evt-badge" style="background:${color};">${
-                        d.attitude !== '' ? d.attitude : game.i18n.localize('WH40K.Notify.EventTracker.Unknown')
-                    }</span>`;
-                    const targetLabel = target === 'party' ? `<strong>${game.i18n.localize('WH40K.Notify.EventTracker.Party')}</strong>` : target;
-                    const triggered =
-                        d.trigger !== undefined && d.trigger !== ''
-                            ? ` <span class="evt-trigger">${game.i18n.format('WH40K.Notify.EventTracker.Via', {
-                                  event: EventTracker._graph?.[d.trigger]?.name ?? d.trigger,
-                              })}</span>`
-                            : '';
-                    html += `<div class="evt-row"><span class="evt-npc-target">${targetLabel}</span> ${badge}${triggered}`;
-                    if (d.note !== undefined && d.note !== '') html += `<div class="evt-npc-note">${d.note}</div>`;
-                    html += `</div>`;
-                }
-                html += `</div>`;
-            }
-
-            // Relationships section
-            if (s.relationships.length) {
-                html += `<div class="evt-npc-rel">`;
-                for (const r of s.relationships) {
-                    const color = EventTracker._stateColor(r.currentState);
-                    const badge = `<span class="evt-badge" style="background:${color};">${r.currentState}</span>`;
-                    const triggered =
-                        r.trigger !== undefined && r.trigger !== ''
-                            ? ` <span class="evt-trigger">${game.i18n.format('WH40K.Notify.EventTracker.Via', {
-                                  event: EventTracker._graph?.[r.trigger]?.name ?? r.trigger,
-                              })}</span>`
-                            : '';
-                    html += `<div class="evt-row"><span class="evt-npc-target">${r.target}</span> <span class="evt-npc-type">${r.type}</span> ${badge}${triggered}`;
-                    if (r.summary !== undefined && r.summary !== '') html += `<div class="evt-npc-note">${r.summary}</div>`;
-                    html += `</div>`;
-                }
-                html += `</div>`;
-            }
-
-            html += `</div>`;
-        }
-        html += `</div>`;
-        return html;
+    /** The current campaign day (0 when unset or malformed). */
+    static getCampaignDay(): number {
+        return readSetting(EVENT_TRACKER_SETTINGS.campaignDay, isStoredCampaignDay, 0);
     }
 
     /**
-     * Build the dialog body: a two-tab container (Events / NPC State) with
-     * the tab selector at the top. Selected tab is determined by a dataset
-     * attribute; the open() handler re-renders on change.
+     * Set the current campaign day (a non-negative integer). GM-only. Fires
+     * `wh40k-rpg.campaignDayChanged(day, context)` when the stored day changes.
      */
-    static _buildContent(activeTab: 'events' | 'npcs' = 'events'): string {
-        const eventsClass = activeTab === 'events' ? 'active' : '';
-        const npcsClass = activeTab === 'npcs' ? 'active' : '';
-        const hasCharacters = EventTracker._characters !== null && Object.keys(EventTracker._characters).length > 0;
-
-        let html = `<style>
-            .evt-tracker { font-family: var(--font-primary); font-size: 13px; max-height: 70vh; overflow-y: auto; }
-            .evt-tabs { display: flex; gap: 4px; border-bottom: 1px solid #444; margin-bottom: 8px; }
-            .evt-tab-btn { background: transparent; border: none; color: #aaa; padding: 6px 14px; cursor: pointer; font-size: 13px; border-bottom: 2px solid transparent; }
-            .evt-tab-btn.active { color: #fff; border-bottom-color: #2d6; font-weight: bold; }
-            .evt-tab-btn:hover { color: #fff; }
-            .evt-tab-pane { display: none; }
-            .evt-tab-pane.active { display: block; }
-            .evt-stats { padding: 4px 0 8px; font-size: 12px; color: #aaa; border-bottom: 1px solid #444; margin-bottom: 8px; }
-            .evt-group { margin-bottom: 12px; }
-            .evt-group h3 { margin: 0 0 4px; font-size: 14px; border-bottom: 1px solid #666; padding-bottom: 2px; }
-            .evt-row { display: flex; align-items: center; gap: 6px; padding: 2px 0; flex-wrap: wrap; }
-            .evt-row.resolved { opacity: 0.5; }
-            .evt-row.locked { color: #999; }
-            .evt-row.available { color: #2d6; font-weight: bold; }
-            .evt-name { flex: 1; }
-            .evt-block { font-size: 11px; color: #c66; margin-left: 24px; font-style: italic; }
-            .evt-excuse { font-size: 11px; color: #c96; margin-left: 24px; }
-            .evt-loc { font-size: 11px; color: #888; }
-            .evt-day-end { font-size: 10px; color: #68c; margin-left: 4px; }
-            .evt-npc-disp, .evt-npc-rel { padding: 2px 0; }
-            .evt-npc-target { min-width: 160px; display: inline-block; }
-            .evt-npc-type { color: #aaa; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-            .evt-badge { color: #000; background: #888; padding: 1px 6px; border-radius: 3px; font-size: 11px; font-weight: bold; }
-            .evt-trigger { color: #68c; font-size: 11px; }
-            .evt-npc-note { font-size: 11px; color: #bbb; margin-left: 20px; font-style: italic; flex-basis: 100%; }
-        </style>`;
-        html += `<div class="evt-tabs">`;
-        html += `<button type="button" class="evt-tab-btn ${eventsClass}" data-tab="events">${game.i18n.localize(
-            'WH40K.Notify.EventTracker.TabEvents',
-        )}</button>`;
-        if (hasCharacters) {
-            html += `<button type="button" class="evt-tab-btn ${npcsClass}" data-tab="npcs">${game.i18n.localize(
-                'WH40K.Notify.EventTracker.TabNpcState',
-            )}</button>`;
-        }
-        html += `</div>`;
-        html += `<div class="evt-tab-pane ${eventsClass}" data-pane="events">${EventTracker._buildEventsPane()}</div>`;
-        if (hasCharacters) {
-            html += `<div class="evt-tab-pane ${npcsClass}" data-pane="npcs">${EventTracker._buildNPCStatePane()}</div>`;
-        }
-        return html;
+    static async setCampaignDay(day: number, options: EventTrackerChangeOptions = {}): Promise<void> {
+        EventTracker.#assertGM('setCampaignDay');
+        if (!isValidCampaignDay(day)) throw new Error(`EventTracker.setCampaignDay: ${day} is not a non-negative integer`);
+        if (EventTracker.getCampaignDay() === day) return;
+        await game.settings.set(SYSTEM_ID, EVENT_TRACKER_SETTINGS.campaignDay, day);
+        Hooks.callAll(EVENT_TRACKER_HOOKS.campaignDayChanged, day, changeContext(options));
     }
 
-    /** Open the tracker dialog. GM only. */
+    /* -------------------------------------------- */
+    /*  Per-PC attitudes                            */
+    /* -------------------------------------------- */
+
+    /** Every stored per-PC attitude: `{ [npcName]: { [pcName]: attitude } }`. */
+    static getAllPcAttitudes(): PcAttitudeMap {
+        return readSetting(EVENT_TRACKER_SETTINGS.pcAttitudes, isPcAttitudeMap, {});
+    }
+
+    /** Each PC's attitude toward one NPC: `{ [pcName]: attitude }`. A PC with no entry has not met them. */
+    static getPcAttitudes(npc: string): Record<string, string> {
+        return lookup(EventTracker.getAllPcAttitudes(), npc) ?? {};
+    }
+
+    /**
+     * Set one PC's attitude toward one NPC. A blank attitude clears it ("Not Met").
+     * GM-only. Fires `wh40k-rpg.pcAttitudeChanged(npc, pc, attitude, context)` when the
+     * stored value changes; `attitude` is the trimmed stored value, `''` when cleared.
+     */
+    static async setPcAttitude(npc: string, pc: string, attitude: string, options: EventTrackerChangeOptions = {}): Promise<void> {
+        EventTracker.#assertGM('setPcAttitude');
+        if (npc === '' || pc === '') throw new Error('EventTracker.setPcAttitude: npc and pc must be non-empty');
+        const map = EventTracker.getAllPcAttitudes();
+        const value = attitude.trim();
+        if ((lookup(lookup(map, npc) ?? {}, pc) ?? '') === value) return;
+        await game.settings.set(SYSTEM_ID, EVENT_TRACKER_SETTINGS.pcAttitudes, withPcAttitude(map, npc, pc, value));
+        Hooks.callAll(EVENT_TRACKER_HOOKS.pcAttitudeChanged, npc, pc, value, changeContext(options));
+    }
+
+    /* -------------------------------------------- */
+    /*  Characters                                  */
+    /* -------------------------------------------- */
+
+    /**
+     * The current disposition (per target) and relationship state of every
+     * character in the graph, recomputed from the resolved events. See
+     * {@link computeCharacterStates} for the selection rules.
+     */
+    static computeCharacterStates(): Record<string, ComputedCharacterState> {
+        const characters = EventTracker._characters;
+        return characters === null ? {} : computeCharacterStates(characters, EventTracker.getResolved());
+    }
+
+    /**
+     * Register the function that maps a tracker reference (a character,
+     * location, event source, quest or item, by name) to the UUID of its
+     * Foundry JournalEntry / JournalEntryPage. The dashboard renders every
+     * resolved reference as a native content link, so clicking opens the
+     * journal under Foundry's own ownership rules.
+     *
+     * One resolver at a time: a later registration replaces the earlier one and
+     * `null` unregisters it. When no resolver is registered, or it returns null
+     * (or throws), the built-in fallback — an exact-name match over
+     * `game.journal` — is used. With neither resolving, the plain name renders.
+     */
+    static registerJournalLinkResolver(resolver: JournalLinkResolver | null): void {
+        EventTracker.#journalResolver = resolver;
+    }
+
+    /** The built-in resolver: an exact-name match over the world's journals. */
+    static findJournalByName(this: void, ref: JournalRef): string | null {
+        const journal = game.journal;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: `game.journal` is undefined until Foundry's `setup` phase
+        if (journal === undefined) return null;
+        return findJournalUuidByName(journal, ref.name);
+    }
+
+    /** The journal UUID for a reference (registered resolver first, then the name lookup), or null. */
+    static resolveJournalLink(ref: JournalRef): string | null {
+        return resolveJournalUuid(ref, EventTracker.#journalResolver, EventTracker.findJournalByName);
+    }
+
+    /**
+     * Open the GM dashboard. GM only; warns when the graph is not loaded.
+     * The dialog module is loaded on demand, so this domain module stays free
+     * of the ApplicationV2 runtime (and unit-testable without it).
+     */
     static open(): void {
         if (!game.user.isGM) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Notify.EventTracker.GmOnly'));
+            ui.notifications.warn(t('WH40K.Notify.EventTracker.GmOnly'));
             return;
         }
-
-        if (!EventTracker._graph) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Notify.EventTracker.GraphNotLoaded'));
+        if (EventTracker._graph === null) {
+            ui.notifications.warn(t('WH40K.Notify.EventTracker.GraphNotLoaded'));
             return;
         }
-
-        // Track the active tab across re-renders so toggling a checkbox
-        // doesn't throw the GM back to the Events pane.
-        let activeTab: 'events' | 'npcs' = 'events';
-
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Dialog V1 used intentionally; DialogV2 migration tracked separately
-        const d = new Dialog({
-            title: game.i18n.localize('WH40K.Notify.EventTracker.DialogTitle'),
-            content: EventTracker._buildContent(activeTab),
-            buttons: {
-                close: { label: game.i18n.localize('WH40K.Close') },
-            },
-            render: (html: JQuery) => {
-                const $html = html instanceof HTMLElement ? $(html) : html;
-                const rebind = (): void => {
-                    // Event checkboxes
-                    $html
-                        .find('input[type="checkbox"]')
-                        .off('change')
-                        .on('change', (ev: JQuery.ChangeEvent) => {
-                            const target = ev.currentTarget as HTMLInputElement;
-                            const id = target.dataset['eventId'];
-                            if (id === undefined || id === '') return;
-                            const isChecked = target.checked;
-                            void EventTracker.setResolved(id, isChecked).then(() => {
-                                $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent(activeTab));
-                                rebind();
-                            });
-                        });
-                    // Tab buttons
-                    $html
-                        .find('.evt-tab-btn')
-                        .off('click')
-                        .on('click', (ev: JQuery.ClickEvent) => {
-                            const target = ev.currentTarget as HTMLElement;
-                            const rawTab = target.dataset['tab'];
-                            if (rawTab === undefined || rawTab === '') return;
-                            const tab = rawTab as 'events' | 'npcs';
-                            if (tab === activeTab) return;
-                            activeTab = tab;
-                            $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent(activeTab));
-                            rebind();
-                        });
-                };
-                rebind();
-            },
-            default: 'close',
-        });
-        d.options.width = 650;
-        d.options.height = 750;
-        d.options.resizable = true;
-        d.render(true);
+        import('../applications/dialogs/event-tracker-dialog.ts')
+            .then(({ default: EventTrackerDialog }) => {
+                EventTrackerDialog.show(EventTracker);
+            })
+            .catch((err: Error) => {
+                console.error('EventTracker: failed to open the dashboard', err);
+            });
     }
 }

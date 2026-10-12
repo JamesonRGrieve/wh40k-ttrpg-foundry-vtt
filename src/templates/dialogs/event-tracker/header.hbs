@@ -1,0 +1,37 @@
+{{!-- Event Tracker header: campaign-day bar, tab strip and (event tabs) the stats line. --}}
+<div class="tw-flex tw-flex-col tw-font-ui tw-text-[13px] tw-select-text">
+    <div class="tw-flex tw-items-center tw-justify-center tw-gap-3 tw-px-2 tw-py-1.5 tw-border-0 tw-border-b tw-border-solid tw-border-[#444] tw-bg-[rgba(0,0,0,0.15)]" data-wh40k-hook="evt-day-bar">
+        <button type="button"
+                class="tw-w-auto tw-bg-transparent tw-border tw-border-solid tw-border-[#666] tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-xs tw-text-[#ccc] tw-cursor-pointer hover:tw-border-[#aaa] hover:tw-text-white disabled:tw-opacity-30 disabled:tw-cursor-default"
+                data-action="stepDay" data-delta="-1"
+                aria-label="{{localize "WH40K.EventTracker.PreviousDay"}}" data-tooltip="{{localize "WH40K.EventTracker.PreviousDay"}}"
+                {{#unless day.canStepBack}}disabled{{/unless}}>
+            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <span class="tw-text-[#ccc]">{{localize "WH40K.EventTracker.CampaignDay"}}
+            <strong class="tw-text-white" data-wh40k-hook="evt-day-label">{{#if day.midnight}}{{localize "WH40K.EventTracker.DayMidnight" number=day.number}}{{else}}{{localize "WH40K.EventTracker.Day" number=day.number}}{{/if}}</strong>
+        </span>
+        <button type="button"
+                class="tw-w-auto tw-bg-transparent tw-border tw-border-solid tw-border-[#666] tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-xs tw-text-[#ccc] tw-cursor-pointer hover:tw-border-[#aaa] hover:tw-text-white"
+                data-action="stepDay" data-delta="1"
+                aria-label="{{localize "WH40K.EventTracker.NextDay"}}" data-tooltip="{{localize "WH40K.EventTracker.NextDay"}}">
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <nav class="tw-flex tw-px-2 tw-border-0 tw-border-b-2 tw-border-solid tw-border-[#444]" role="tablist">
+        {{#each tabs}}
+        <button type="button" role="tab" aria-selected="{{#if active}}true{{else}}false{{/if}}"
+                class="tw-w-auto tw-flex-none tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-solid tw-px-3.5 tw-py-1.5 tw--mb-0.5 tw-text-[13px] tw-cursor-pointer {{#if active}}active tw-text-white tw-border-[#6af]{{else}}tw-text-[#888] tw-border-transparent hover:tw-text-[#ccc]{{/if}}"
+                data-action="selectTab" data-tab="{{id}}">
+            <i class="{{icon}}" aria-hidden="true"></i> {{localize labelKey}}
+        </button>
+        {{/each}}
+    </nav>
+
+    {{#unless (eq activeTab "relations")}}
+    <div class="tw-px-2 tw-py-1.5 tw-text-xs tw-text-[#aaa] tw-border-0 tw-border-b tw-border-solid tw-border-[#444]" data-wh40k-hook="evt-stats">
+        {{localize "WH40K.EventTracker.Stats" resolved=stats.resolved total=stats.total available=stats.available}}
+    </div>
+    {{/unless}}
+</div>

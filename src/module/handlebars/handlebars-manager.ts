@@ -203,6 +203,11 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/dialogs/template-selector.hbs',
             'systems/wh40k-rpg/templates/dialogs/fate-uses.hbs',
             'systems/wh40k-rpg/templates/dialogs/celestial-bodies.hbs',
+            'systems/wh40k-rpg/templates/dialogs/event-tracker/header.hbs',
+            'systems/wh40k-rpg/templates/dialogs/event-tracker/body.hbs',
+            'systems/wh40k-rpg/templates/dialogs/event-tracker/event-group.hbs',
+            'systems/wh40k-rpg/templates/dialogs/event-tracker/npc-card.hbs',
+            'systems/wh40k-rpg/templates/dialogs/event-tracker/journal-link.hbs',
             'systems/wh40k-rpg/templates/dialogs/inventory-generator-dialog.hbs',
 
             // NPC applications

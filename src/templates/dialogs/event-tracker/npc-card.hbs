@@ -1,0 +1,42 @@
+{{!-- One NPC on the Relations tab: party disposition recomputed from resolved events, its trigger and
+     next shift, relationships, and an editable attitude per player character.
+     Context: npc = NpcCardView, hasPcs = boolean --}}
+<article class="tw-mb-2 tw-px-2.5 tw-py-2 tw-rounded tw-border tw-border-solid tw-border-[#444] tw-bg-[rgba(0,0,0,0.1)]" data-wh40k-hook="evt-npc-card" data-npc="{{npc.npcName}}">
+    <header class="tw-flex tw-items-center tw-justify-between tw-mb-1">
+        <span class="tw-text-sm tw-font-bold">{{> systems/wh40k-rpg/templates/dialogs/event-tracker/journal-link.hbs link=npc.name}}</span>
+        <span class="tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.5px] {{npc.toneClass}}" data-wh40k-hook="evt-npc-attitude">{{#if npc.attitude}}{{npc.attitude}}{{else}}{{localize "WH40K.EventTracker.NoDisposition"}}{{/if}}</span>
+    </header>
+    {{#if npc.note}}<div class="tw-mb-1 tw-text-xs tw-text-[#ccc]">{{npc.note}}</div>{{/if}}
+    {{#if npc.triggerName}}<div class="tw-text-[11px] tw-italic tw-text-[#888]">{{localize "WH40K.EventTracker.TriggeredBy" event=npc.triggerName}}</div>{{/if}}
+    {{#if npc.next}}<div class="tw-mt-0.5 tw-text-[11px] tw-text-[#68c]">{{localize "WH40K.EventTracker.NextShift" attitude=npc.next.attitude event=npc.next.triggerName}}</div>{{/if}}
+
+    {{#if npc.relationships.length}}
+    <div class="tw-mt-1.5 tw-pt-1.5 tw-border-0 tw-border-t tw-border-solid tw-border-[#333]">
+        <div class="tw-mb-0.5 tw-text-[11px] tw-uppercase tw-text-[#aaa]">{{localize "WH40K.EventTracker.Relationships"}}</div>
+        {{#each npc.relationships}}
+        <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1.5 tw-text-xs">
+            <span>{{> systems/wh40k-rpg/templates/dialogs/event-tracker/journal-link.hbs link=target}}</span>
+            <span class="tw-text-[11px] tw-uppercase tw-tracking-[0.5px] tw-text-[#aaa]">{{type}}</span>
+            <span class="tw-font-bold {{toneClass}}">{{state}}</span>
+            {{#if triggerName}}<span class="tw-text-[11px] tw-text-[#68c]">{{localize "WH40K.EventTracker.Via"}} {{triggerName}}</span>{{/if}}
+            {{#if summary}}<div class="tw-basis-full tw-pl-5 tw-text-[11px] tw-italic tw-text-[#bbb]">{{summary}}</div>{{/if}}
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if hasPcs}}
+    <div class="tw-mt-1.5 tw-pt-1.5 tw-border-0 tw-border-t tw-border-solid tw-border-[#333]">
+        <div class="tw-mb-0.5 tw-text-[11px] tw-uppercase tw-text-[#aaa]">{{localize "WH40K.EventTracker.PcAttitudes"}}</div>
+        {{#each npc.pcs}}
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-mb-0.5">
+            <span class="tw-min-w-[80px] tw-text-right tw-text-[11px] tw-text-[#aaa]">{{> systems/wh40k-rpg/templates/dialogs/event-tracker/journal-link.hbs link=pc}}</span>
+            <input type="text" id="{{inputId}}"
+                   class="tw-flex-1 tw-px-1.5 tw-py-0.5 tw-text-xs tw-text-[#ccc] tw-rounded-sm tw-border tw-border-solid tw-border-[#444] tw-bg-[rgba(0,0,0,0.2)] focus:tw-border-[#6af] focus:tw-outline-none"
+                   value="{{value}}" placeholder="{{localize "WH40K.EventTracker.NotMet"}}" aria-label="{{pcName}}"
+                   data-wh40k-hook="evt-pc-attitude" data-npc="{{../npc.npcName}}" data-pc="{{pcName}}">
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
+</article>

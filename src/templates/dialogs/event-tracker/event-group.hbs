@@ -1,0 +1,70 @@
+{{!-- One event group (a source on the Timeline tab, a location on the Location tab) and its event rows.
+     Context: group = EventGroupView --}}
+<section class="tw-mb-3.5 tw-rounded {{#if group.isCurrent}}tw-px-1.5 tw-py-1 tw-bg-[rgba(100,170,255,0.06)]{{/if}}{{#if group.isActiveScene}}tw-px-1.5 tw-py-1 tw-bg-[rgba(100,255,170,0.06)]{{/if}}{{#if group.isFuture}} tw-opacity-40{{/if}}"
+         data-wh40k-hook="evt-group" data-group-key="{{group.key}}">
+    <header class="tw-flex tw-items-center tw-gap-2 tw-mb-1 tw-pb-0.5 tw-border-0 tw-border-b tw-border-solid {{#if group.isCurrent}}tw-border-[#6af]{{else if group.isActiveScene}}tw-border-[#2d6]{{else}}tw-border-[#555]{{/if}}">
+        <h3 class="tw-flex-1 tw-m-0 tw-text-sm tw-border-0">
+            {{#if group.title}}{{> systems/wh40k-rpg/templates/dialogs/event-tracker/journal-link.hbs link=group.title}}{{else}}{{localize group.untitledKey}}{{/if}}
+            {{#if group.isCurrent}}<span class="tw-ml-1 tw-text-[11px] tw-font-normal tw-text-[#6af]" data-wh40k-hook="evt-today">← {{localize "WH40K.EventTracker.Today"}}</span>{{/if}}
+            {{#if group.isActiveScene}}<span class="tw-ml-1 tw-text-[11px] tw-font-normal tw-text-[#2d6]">← {{localize "WH40K.EventTracker.ActiveScene"}}</span>{{/if}}
+            <span class="tw-text-[11px] tw-font-normal tw-text-[#888]">({{group.resolvedCount}}/{{group.total}})</span>
+        </h3>
+        {{#if (eq group.sceneAction "go")}}
+        <button type="button" class="tw-w-auto tw-flex-none tw-bg-transparent tw-border tw-border-solid tw-border-[#666] tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-[11px] tw-text-[#aaa] tw-whitespace-nowrap tw-cursor-pointer hover:tw-border-[#aaa] hover:tw-text-white"
+                data-action="viewScene" data-location="{{group.key}}">
+            <i class="fa-solid fa-eye" aria-hidden="true"></i> {{localize "WH40K.EventTracker.GoToScene"}}
+        </button>
+        {{else if (eq group.sceneAction "spawn")}}
+        <button type="button" class="tw-w-auto tw-flex-none tw-bg-transparent tw-border tw-border-solid tw-border-[#666] tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-[11px] tw-text-[#aaa] tw-whitespace-nowrap tw-cursor-pointer hover:tw-border-[#aaa] hover:tw-text-white"
+                data-action="spawnScene" data-location="{{group.key}}">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i> {{localize "WH40K.EventTracker.SpawnScene"}}
+        </button>
+        {{/if}}
+    </header>
+
+    {{#each group.rows}}
+    <div data-wh40k-hook="evt-row" data-event-id="{{id}}">
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-0.5{{#if resolved}} tw-opacity-50 tw-line-through{{/if}}{{#if available}} tw-font-bold tw-text-[#2d6]{{/if}}{{#if locked}} tw-text-[#999]{{/if}}">
+            <input type="checkbox" class="tw-m-0 tw-flex-none disabled:tw-opacity-30"
+                   data-action="toggleResolved" data-event-id="{{id}}"
+                   aria-label="{{localize "WH40K.EventTracker.MarkResolved" name=name}}"
+                   {{#if resolved}}checked{{/if}} {{#if locked}}disabled{{/if}}>
+            <span class="tw-flex-1">{{name}}</span>
+            {{#if (ne autoResolvedDetail null)}}<span class="tw-text-[10px] tw-font-normal tw-no-underline tw-text-[#68c] tw-whitespace-nowrap" data-wh40k-hook="evt-auto-resolved">{{localize "WH40K.EventTracker.ResolvedAutomatically"}}{{#if autoResolvedDetail}}: {{autoResolvedDetail}}{{/if}}</span>{{/if}}
+            {{#if quest}}<span class="tw-text-[11px] tw-font-normal tw-whitespace-nowrap">{{localize "WH40K.EventTracker.OpensQuest"}} {{> systems/wh40k-rpg/templates/dialogs/event-tracker/journal-link.hbs link=quest}}</span>{{/if}}
+            {{#if detail}}<span class="tw-text-[11px] tw-font-normal tw-text-[#888] tw-whitespace-nowrap">{{> systems/wh40k-rpg/templates/dialogs/event-tracker/journal-link.hbs link=detail}}</span>{{/if}}
+            {{#if isDayEnd}}<span class="tw-ml-1 tw-text-[10px] tw-font-normal tw-text-[#68c] tw-whitespace-nowrap">{{localize "WH40K.Notify.EventTracker.DayEnd"}}</span>{{/if}}
+        </div>
+        {{#each requirements}}
+        <div class="{{indentClass}} tw-py-px tw-text-[11px] tw-leading-normal {{#if isEvent}}{{#if met}}tw-text-[#696] tw-line-through tw-opacity-60{{else}}tw-text-[#c66]{{/if}}{{else}}tw-italic tw-text-[#aaa]{{/if}}"
+             data-wh40k-hook="evt-requirement">
+            {{#if isAll}}<strong>{{localize "WH40K.EventTracker.RequiresAll"}}</strong>{{/if}}
+            {{#if isAny}}<strong>{{localize "WH40K.EventTracker.RequiresAny"}}</strong>{{/if}}
+            {{#if isPredicate}}○ {{localize "WH40K.EventTracker.CharacterPredicate" criteria=criteria}}{{/if}}
+            {{#if isEvent}}
+                {{#if met}}✓{{else}}○{{/if}} <strong class="tw-font-semibold tw-text-[#daa]">{{name}}</strong>
+                {{#if location}}
+                    {{localize "WH40K.EventTracker.At"}}
+                    <button type="button" class="tw-inline tw-w-auto tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[11px] tw-text-[#6af] tw-underline tw-decoration-dotted tw-cursor-pointer hover:tw-text-[#9cf]"
+                            data-action="jumpToGroup" data-tab="location" data-group="{{location}}">{{location}}</button>
+                {{/if}}
+                {{#if source}}
+                    {{#if sourceDay}}
+                        {{localize "WH40K.EventTracker.On"}}
+                        <button type="button" class="tw-inline tw-w-auto tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[11px] tw-text-[#6af] tw-underline tw-decoration-dotted tw-cursor-pointer hover:tw-text-[#9cf]"
+                                data-action="jumpToGroup" data-tab="timeline" data-group="{{source}}">{{sourceDay}}</button>
+                        {{localize "WH40K.EventTracker.OrLater"}}
+                    {{else}}
+                        {{localize "WH40K.EventTracker.Via"}}
+                        <button type="button" class="tw-inline tw-w-auto tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[11px] tw-text-[#6af] tw-underline tw-decoration-dotted tw-cursor-pointer hover:tw-text-[#9cf]"
+                                data-action="jumpToGroup" data-tab="timeline" data-group="{{source}}">{{source}}</button>
+                    {{/if}}
+                {{/if}}
+                {{#if excuse}} — <span class="tw-not-italic tw-text-[#c96]">{{excuse}}</span>{{/if}}
+            {{/if}}
+        </div>
+        {{/each}}
+        {{#if excuse}}<div class="tw-pl-6 tw-text-[11px] tw-text-[#c96]">{{localize "WH40K.Notify.EventTracker.Excuse" excuse=excuse}}</div>{{/if}}
+    </div>
+    {{/each}}
+</section>

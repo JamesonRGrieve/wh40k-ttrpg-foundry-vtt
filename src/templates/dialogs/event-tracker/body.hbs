@@ -1,0 +1,14 @@
+{{!-- Event Tracker body: the active tab's event groups, or the Relations tab's NPC cards. --}}
+<div class="tw-px-2 tw-pt-2 tw-pb-2 tw-font-ui tw-text-[13px] tw-select-text" data-wh40k-hook="evt-body" data-active-tab="{{activeTab}}" role="tabpanel">
+    {{#if (eq activeTab "relations")}}
+        {{#each npcs}}
+            {{> systems/wh40k-rpg/templates/dialogs/event-tracker/npc-card.hbs npc=this hasPcs=../hasPcs}}
+        {{else}}
+            <p class="tw-p-2 tw-text-[#888]">{{localize "WH40K.EventTracker.NoCharacters"}}</p>
+        {{/each}}
+    {{else}}
+        {{#each groups}}
+            {{> systems/wh40k-rpg/templates/dialogs/event-tracker/event-group.hbs group=this}}
+        {{/each}}
+    {{/if}}
+</div>

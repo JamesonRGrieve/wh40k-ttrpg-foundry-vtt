@@ -1,0 +1,4 @@
+{{!-- A tracker name as a native Foundry content link to its journal (opened by Foundry's own
+     a[data-link] handler, under the journal's ownership); plain text when nothing resolved.
+     Context: link = { label, uuid } --}}
+{{#if link.uuid}}<a class="content-link" draggable="true" data-link data-uuid="{{link.uuid}}" data-wh40k-hook="evt-journal-link"><i class="fa-solid fa-book-open" aria-hidden="true"></i>{{link.label}}</a>{{else}}{{link.label}}{{/if}}

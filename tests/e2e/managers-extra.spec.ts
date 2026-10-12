@@ -12,11 +12,9 @@ import { scaledMs } from './lib/timing';
  *
  *   - src/module/managers/event-tracker.ts
  *       (registerSettings / getResolved / setResolved / isAvailable /
- *        getBlockingReasons / computeCharacterStates / _stateColor /
- *        _buildEventsPane / _buildNPCStatePane / _buildContent / open —
- *        exercised by directly seeding the `_graph` / `_characters` static
- *        fields and the persisted world setting, then asserting on derived
- *        state + rendered HTML).
+ *        computeCharacterStates / open — exercised by directly seeding the
+ *        `_graph` / `_characters` static fields and the persisted world
+ *        setting, then asserting on derived state + the rendered dashboard).
  *   - src/module/managers/item-drop-manager.ts
  *       (dropItemFromActor no-token + non-droppable short-circuits, the
  *        full create-loot-pile path against a real Scene + Token, and
@@ -116,15 +114,10 @@ interface EventTrackerLike {
     setResolved: (id: string, resolved: boolean) => Promise<void>;
     getResolved: () => Record<string, { resolvedAt?: string | number }> | null | undefined;
     isAvailable: (id: string) => boolean;
-    getBlockingReasons: (id: string) => string[];
     computeCharacterStates: () => Record<
         string,
         { dispositions: Record<string, { attitude?: string; trigger?: string }>; relationships: Array<{ currentState?: string; trigger?: string }> }
     >;
-    _buildEventsPane: () => string;
-    _buildNPCStatePane: () => string;
-    _buildContent: (tab: string) => string;
-    _stateColor: (state: string) => string;
     open: () => void;
     _graph?: Record<string, object> | null;
     _characters?: Record<string, object> | null;
@@ -215,6 +208,16 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
             // Compendium-walking inventory-generator calls get longer budgets.
             const INVENTORY_APPLY_TIMEOUT_MS = globalThis.wh40kE2E.scaledMs(10_000);
             const COLLECT_CANDIDATES_TIMEOUT_MS = globalThis.wh40kE2E.scaledMs(15_000);
+
+            /** The Event Tracker dashboard's ApplicationV2 id (its window element's DOM id). */
+            const EVENT_TRACKER_APP_ID = 'wh40k-event-tracker';
+
+            /** Close the Event Tracker dashboard (an ApplicationV2, so not in ui.windows) via its header close control. */
+            async function closeEventTracker(): Promise<void> {
+                const app = (): HTMLElement | null => document.getElementById(EVENT_TRACKER_APP_ID);
+                app()?.querySelector<HTMLElement>('[data-action="close"]')?.click();
+                await pollUntil(() => app() == null);
+            }
 
             /** Drain any dialog the previous probe left open. */
             async function closeOpenDialogs(): Promise<void> {
@@ -393,44 +396,48 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
 
             /* ============================================================
              * Flow 4: event-tracker-blocking-reasons
-             * With a graph whose `evt-gate` requires an unmet `evt-root`
-             * and one-of [evt-side-a, evt-side-b], getBlockingReasons
-             * returns a "Requires: <name> (<location>)" line and a
-             * "Requires one of: ... OR ..." line.
+             * The requirement shapes `export_events.py` actually writes — a
+             * bare-string `requires` and a nested {all/any} tree — gate
+             * isAvailable() until the blocking events resolve.
              * ============================================================ */
             async function probeBlockingReasons(): Promise<void> {
                 try {
                     const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                     const ET = mod.EventTracker ?? mod.default;
                     if (ET == null) {
-                        notes['event-tracker-blocking-reasons'] = 'EventTracker.getBlockingReasons unavailable';
+                        notes['event-tracker-blocking-reasons'] = 'EventTracker.isAvailable unavailable';
                     } else {
                         const prevGraph = ET._graph;
                         ET._graph = {
-                            'evt-root': { id: 'evt-root', name: 'Root Event', location: 'Hive Sibellus' },
-                            'evt-gate': {
-                                id: 'evt-gate',
-                                name: 'Gate Event',
-                                requires: ['evt-root'],
-                                requires_any: ['evt-side-a', 'evt-side-b'],
-                            },
+                            'evt-root': { id: 'evt-root', name: 'Root Event', location: '[[Hive Sibellus]]' },
+                            'evt-next': { id: 'evt-next', name: 'Next Event', requires: 'evt-root' },
+                            'evt-tree': { id: 'evt-tree', name: 'Tree Event', requires: { all: ['evt-root', { any: ['evt-side-a', 'evt-side-b'] }] } },
                             'evt-side-a': { id: 'evt-side-a', name: 'Side A' },
                             'evt-side-b': { id: 'evt-side-b', name: 'Side B' },
                         };
                         try {
-                            const unknownReasons = ET.getBlockingReasons('does-not-exist');
-                            const reasons = ET.getBlockingReasons('evt-gate');
-                            const hasRequires = Array.isArray(reasons) && reasons.some((r) => r.includes('Root Event') && r.includes('Hive Sibellus'));
-                            const hasOneOf = Array.isArray(reasons) && reasons.some((r) => r.includes('Requires one of:') && r.includes(' OR '));
-                            if (Array.isArray(unknownReasons) && unknownReasons.length === 0 && hasRequires && hasOneOf) {
+                            const nextBefore = ET.isAvailable('evt-next');
+                            const treeBefore = ET.isAvailable('evt-tree');
+                            await withTimeout(ET.setResolved('evt-root', true), 'resolve evt-root');
+                            const nextAfter = ET.isAvailable('evt-next');
+                            const treeHalf = ET.isAvailable('evt-tree');
+                            await withTimeout(ET.setResolved('evt-side-a', true), 'resolve evt-side-a');
+                            const treeAfter = ET.isAvailable('evt-tree');
+                            if (!nextBefore && !treeBefore && nextAfter && !treeHalf && treeAfter) {
                                 fired['event-tracker-blocking-reasons'] = true;
-                                notes['event-tracker-blocking-reasons'] = `reasons=${JSON.stringify(reasons)}; unknown-event returns []`;
+                                notes['event-tracker-blocking-reasons'] = 'bare-string and nested all/any requirements block until resolved';
                             } else {
-                                notes['event-tracker-blocking-reasons'] = `unknownLen=${
-                                    Array.isArray(unknownReasons) ? unknownReasons.length : 'n/a'
-                                } hasRequires=${hasRequires} hasOneOf=${hasOneOf}`;
+                                notes[
+                                    'event-tracker-blocking-reasons'
+                                ] = `nextBefore=${nextBefore} treeBefore=${treeBefore} nextAfter=${nextAfter} treeHalf=${treeHalf} treeAfter=${treeAfter}`;
                             }
                         } finally {
+                            try {
+                                await ET.setResolved('evt-root', false);
+                                await ET.setResolved('evt-side-a', false);
+                            } catch {
+                                /* best-effort */
+                            }
                             ET._graph = prevGraph;
                         }
                     }
@@ -511,18 +518,19 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
 
             /* ============================================================
              * Flow 6: event-tracker-build-content-html
-             * _buildContent() composes _buildEventsPane() +
-             * _buildNPCStatePane() and embeds the Events/NPC tab markup
-             * + _stateColor() badge colours. With a graph + characters
-             * seeded, the HTML must contain the event name, the NPC
-             * State tab, and a coloured badge.
+             * With a graph + characters seeded, open() renders the GM
+             * dashboard: timeline rows, the requirement tree of a locked
+             * event, three tabs, and — after switching to Relations — the
+             * NPC card with its computed disposition.
              * ============================================================ */
             async function probeBuildContentHtml(): Promise<void> {
                 try {
                     const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
                     const ET = mod.EventTracker ?? mod.default;
                     if (ET == null) {
-                        notes['event-tracker-build-content-html'] = 'EventTracker._buildContent unavailable';
+                        notes['event-tracker-build-content-html'] = 'EventTracker.open unavailable';
+                    } else if (gameGbl?.user?.isGM !== true) {
+                        notes['event-tracker-build-content-html'] = 'not joined as GM — the dashboard is GM-only';
                     } else {
                         const prevGraph = ET._graph;
                         const prevChars = ET._characters;
@@ -548,26 +556,31 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             },
                         };
                         try {
-                            const colorAlly = ET._stateColor('ally');
-                            const colorUnknown = ET._stateColor('not-a-state'); // → fallback grey
-                            const eventsPane = ET._buildEventsPane();
-                            const npcPane = ET._buildNPCStatePane();
-                            const html = ET._buildContent('events');
-                            const npcHtml = ET._buildContent('npcs');
-                            const hasEvent = html.includes('Arrival at the Spire');
-                            const hasTabs = html.includes('data-tab="events"') && html.includes('data-tab="npcs"');
-                            const hasBadge = npcPane.includes('evt-badge') && npcPane.includes(colorAlly);
-                            const hasLockedReason = eventsPane.includes('Requires: Arrival at the Spire');
-                            const npcActive = npcHtml.includes('data-pane="npcs"');
-                            if (hasEvent && hasTabs && hasBadge && hasLockedReason && npcActive && colorAlly === '#2d6' && colorUnknown === '#888') {
+                            ET.open();
+                            const root = (): HTMLElement | null => document.getElementById(EVENT_TRACKER_APP_ID);
+                            await pollUntil(() => root()?.querySelector('[data-event-id="evt-locked"] [data-wh40k-hook="evt-requirement"]') != null);
+                            const hasEvent = root()?.querySelector('[data-event-id="evt-arrival"]')?.textContent.includes('Arrival at the Spire') === true;
+                            const hasLockedReason =
+                                root()
+                                    ?.querySelector('[data-event-id="evt-locked"] [data-wh40k-hook="evt-requirement"]')
+                                    ?.textContent.includes('Arrival at the Spire') === true;
+                            const hasTabs = root()?.querySelectorAll('[data-action="selectTab"]').length === 3;
+                            root()?.querySelector<HTMLElement>('[data-action="selectTab"][data-tab="relations"]')?.click();
+                            await pollUntil(() => root()?.querySelector('[data-wh40k-hook="evt-npc-card"][data-npc="Magos Holt"]') != null);
+                            const npcAttitude = root()
+                                ?.querySelector('[data-wh40k-hook="evt-npc-card"][data-npc="Magos Holt"] [data-wh40k-hook="evt-npc-attitude"]')
+                                ?.textContent.trim();
+                            if (hasEvent && hasLockedReason && hasTabs && npcAttitude === 'ally') {
                                 fired['event-tracker-build-content-html'] = true;
-                                notes['event-tracker-build-content-html'] = 'events pane + NPC pane + tab scaffold + _stateColor mapping rendered';
+                                notes['event-tracker-build-content-html'] =
+                                    'dashboard rendered timeline rows, a requirement tree, three tabs and the Relations NPC card';
                             } else {
                                 notes[
                                     'event-tracker-build-content-html'
-                                ] = `hasEvent=${hasEvent} hasTabs=${hasTabs} hasBadge=${hasBadge} hasLockedReason=${hasLockedReason} npcActive=${npcActive} colorAlly=${colorAlly} colorUnknown=${colorUnknown}`;
+                                ] = `hasEvent=${hasEvent} hasLockedReason=${hasLockedReason} hasTabs=${hasTabs} npcAttitude=${String(npcAttitude)}`;
                             }
                         } finally {
+                            await closeEventTracker();
                             ET._graph = prevGraph;
                             ET._characters = prevChars;
                         }
@@ -599,27 +612,19 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                             'evt-open-probe': { id: 'evt-open-probe', name: 'Open Probe Event', source_name: 'Probe Act' },
                         };
                         try {
-                            const before = Object.keys(uiGbl?.windows ?? {}).length;
-                            const trackerOpened = (): boolean =>
-                                Object.keys(uiGbl?.windows ?? {}).length > before ||
-                                Object.values(uiGbl?.windows ?? {}).some((w) =>
-                                    String(w.title ?? '')
-                                        .toLowerCase()
-                                        .includes('event tracker'),
-                                );
+                            const trackerOpened = (): boolean => document.getElementById(EVENT_TRACKER_APP_ID) != null;
                             ET.open();
-                            // open() starts Dialog#render; wait for the window
-                            // to register (the check below reports it if it never does).
+                            // open() loads the dashboard module and renders the
+                            // ApplicationV2; wait for its element to mount.
                             await pollUntil(trackerOpened);
-                            const opened = trackerOpened();
-                            if (opened) {
+                            if (trackerOpened()) {
                                 fired['event-tracker-open-dialog'] = true;
-                                notes['event-tracker-open-dialog'] = 'tracker Dialog rendered into ui.windows';
+                                notes['event-tracker-open-dialog'] = 'tracker dashboard rendered';
                             } else {
                                 notes['event-tracker-open-dialog'] = 'open() did not produce a tracker window';
                             }
                         } finally {
-                            await closeOpenDialogs();
+                            await closeEventTracker();
                             ET._graph = prevGraph;
                         }
                     }

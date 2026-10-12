@@ -364,20 +364,8 @@
                 "SettingName": "Event Tracker State",
                 "SettingHint": "Stores which campaign events have been resolved.",
                 "DialogTitle": "Solenne Campaign — Event Tracker",
-                "PaneNotLoaded": "Event graph not loaded. Check console.",
-                "Requires": "Requires: {event}",
-                "RequiresOneOf": "Requires one of: {events}",
-                "OrSeparator": " OR ",
-                "Summary": "{resolved}/{total} resolved &bull; {available} available now",
                 "DayEnd": "[DAY END]",
-                "Excuse": "Excuse: {excuse}",
-                "NoCharacterData": "No character dispositions or relationships loaded. Backfill <code>dispositions</code> / <code>relationships</code> frontmatter on character files and re-run <code>export_events.py</code>.",
-                "NpcSummary": "{count} NPC(s) with disposition/relationship data &bull; state recomputed from resolved events",
-                "Unknown": "unknown",
-                "Party": "Party",
-                "Via": "(via {event})",
-                "TabEvents": "Events",
-                "TabNpcState": "NPC State"
+                "Excuse": "Excuse: {excuse}"
             },
             "Actor": {
                 "SpecialityExists": "Speciality already exists. Unable to create."
@@ -6673,6 +6661,50 @@
             "Draw": "Draw",
             "DrawTooltip": "Draw weapon",
             "NoDrawTooltip": "No weapons to draw"
+        },
+        "EventTracker": {
+            "Tab": {
+                "Timeline": "Timeline",
+                "Location": "Location",
+                "Relations": "Relations"
+            },
+            "Setting": {
+                "CampaignDayName": "Event Tracker Campaign Day",
+                "CampaignDayHint": "The current campaign day shown on the Event Tracker.",
+                "PcAttitudesName": "Event Tracker Party Attitudes",
+                "PcAttitudesHint": "Each player character's attitude toward each NPC."
+            },
+            "CampaignDay": "Campaign Day:",
+            "Day": "Day {number}",
+            "DayMidnight": "Day M{number}",
+            "PreviousDay": "Previous day",
+            "NextDay": "Next day",
+            "Stats": "{resolved}/{total} resolved · {available} available now",
+            "Today": "Today",
+            "ActiveScene": "Active scene",
+            "UnknownSource": "Unknown",
+            "NoLocation": "No Location",
+            "GoToScene": "Go to Scene",
+            "SpawnScene": "Spawn Scene",
+            "SceneSpawnFailed": "Could not create the scene \"{name}\".",
+            "UpdateFailed": "The Event Tracker could not save that change.",
+            "MarkResolved": "Resolved: {name}",
+            "ResolvedAutomatically": "resolved automatically",
+            "RequiresAll": "Requires all:",
+            "RequiresAny": "Requires any:",
+            "At": "at",
+            "On": "on",
+            "OrLater": "or later",
+            "Via": "via",
+            "CharacterPredicate": "Character — {criteria}",
+            "OpensQuest": "Opens",
+            "TriggeredBy": "Triggered by: {event}",
+            "NextShift": "Next shift: {attitude} (if {event})",
+            "NoDisposition": "No disposition",
+            "Relationships": "Relationships",
+            "PcAttitudes": "Party attitudes",
+            "NotMet": "Not Met",
+            "NoCharacters": "No NPC dispositions configured."
         },
         "SceneControls": {
             "GroupTitle": "WH40K RPG",
