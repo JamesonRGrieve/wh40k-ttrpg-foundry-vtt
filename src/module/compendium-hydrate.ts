@@ -395,9 +395,21 @@ const REPLACE_SYSTEM: SourceReplaceOptions = { recursive: false };
  */
 async function hydrateActorReporting(actor: HydratableActor): Promise<{ patched: number; unresolved: UnresolvedJoin[] }> {
     const { patches, unresolved, actorSystem } = await buildHydration(actor);
+    let patched = 0;
     for (const patch of patches) {
         const item = actor.items.contents.find((i) => i.id === patch['_id']);
-        item?.updateSource?.({ system: patch['system'], ...(patch['img'] !== undefined ? { img: patch['img'] } : {}) }, REPLACE_SYSTEM);
+        // One item whose canonical body fails validation must not abort the whole
+        // join: the boot path awaits every actor, so a throw here used to stop the
+        // system's `ready` before conditions, caches and the event graph loaded.
+        try {
+            item?.updateSource?.({ system: patch['system'], ...(patch['img'] !== undefined ? { img: patch['img'] } : {}) }, REPLACE_SYSTEM);
+            patched += 1;
+        } catch (err) {
+            console.error(
+                `compendium-hydrate: skipped item ${String(patch['_id'])} on ${actor.name ?? 'Unknown actor'}; its canonical body failed validation`,
+                err,
+            );
+        }
     }
     // The actor's own join, same in-memory contract as its items': `updateSource`
     // touches only `_source`, so a named individual gains its class's stats at
@@ -416,9 +428,9 @@ async function hydrateActorReporting(actor: HydratableActor): Promise<{ patched:
         }
     }
     if (actorSystem !== null) actor.updateSource?.({ system: actorSystem }, REPLACE_SYSTEM);
-    if (patches.length > 0 || actorSystem !== null) actor.reset?.();
+    if (patched > 0 || actorSystem !== null) actor.reset?.();
     // Report from the single join site, so EVERY path (boot, import, sheet
     // render) surfaces a failed join without each caller re-implementing it.
     reportUnresolvedJoins(actor.name ?? 'Unknown actor', actor.uuid ?? actor.id ?? actor.name ?? '', unresolved);
-    return { patched: patches.length, unresolved };
+    return { patched, unresolved };
 }

@@ -1347,7 +1347,12 @@ export class HooksManager {
         if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.resyncOnReady) === false) return;
         await Promise.all(
             game.actors.contents.map(async (actor) => {
-                await hydrateActorInMemory(actor);
+                // One actor's failed join is logged, never allowed to abort `ready`.
+                try {
+                    await hydrateActorInMemory(actor);
+                } catch (err) {
+                    console.error(`hydrateWorldActorsOnReady: ${actor.name} failed to hydrate`, err);
+                }
             }),
         );
     }
