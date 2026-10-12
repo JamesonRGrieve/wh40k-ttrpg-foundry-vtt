@@ -9,6 +9,7 @@ import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass, thresholdLadder } from './degree-ladders.ts';
 import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
+import { buildSafeAttrs } from './safe-attrs.ts';
 import { formatSourceLabel, type SourceInput } from './source-label.ts';
 
 /**
@@ -228,19 +229,11 @@ export function registerHandlebarsHelpers(): void {
     // stringified (a boolean renders "true"/"false", matching an inline
     // {{#if}}…{{else}}…), HTML-escaped, and null/undefined/empty-name pairs are
     // skipped. Output goes into a triple-stache so it is not double-escaped.
-    Handlebars.registerHelper('safeAttrs', (...args: TplValue[]): Handlebars.SafeString => {
-        const pairs = args.slice(0, -1); // drop the trailing Handlebars options object
-        const out: string[] = [];
-        for (let i = 0; i + 1 < pairs.length; i += 2) {
-            const name = pairs[i];
-            const value = pairs[i + 1];
-            if (typeof name !== 'string' || name === '') continue;
-            // Only primitive values become attributes; objects/arrays/null/undefined are skipped.
-            if (typeof value !== 'string' && typeof value !== 'number' && typeof value !== 'boolean') continue;
-            out.push(`${name}="${Handlebars.escapeExpression(String(value))}"`);
-        }
-        return new Handlebars.SafeString(out.join(' '));
-    });
+    Handlebars.registerHelper(
+        'safeAttrs',
+        // Drop the trailing Handlebars options object; the builder is shared with the story template support.
+        (...args: TplValue[]): Handlebars.SafeString => new Handlebars.SafeString(buildSafeAttrs(args.slice(0, -1), (s) => Handlebars.escapeExpression(s))),
+    );
 
     // Truthiness helper: preserves Handlebars-style truthy semantics for templates.
     const isTruthy = (v: TplValue): boolean => v !== undefined && v !== null && v !== false && v !== 0 && v !== '';

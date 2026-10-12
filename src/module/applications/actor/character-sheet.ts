@@ -5,12 +5,13 @@
 
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { bcAscend } from '../../actions/bc-daemon-prince-actions.ts';
+import { bcRollGiftCharacteristic } from '../../actions/bc-gift-actions.ts';
 import { bcPsychicTest } from '../../actions/bc-psychic-actions.ts';
 import { bcPerformRitual } from '../../actions/bc-ritual-actions.ts';
 import { dwSelectAmmo } from '../../actions/dw-ammo-actions.ts';
 import { dwAstartesToggleImplant } from '../../actions/dw-astartes-actions.ts';
 import { dwCohesionChallenge, dwCohesionRally, dwCohesionRecoverObjective } from '../../actions/dw-cohesion-actions.ts';
-import { dwToggleDistinction, dwToggleMark } from '../../actions/dw-distinction-actions.ts';
+import { readSpecialAbility } from '../../actions/dw-distinction-actions.ts';
 import { dwCompleteMission, dwToggleComplication, dwToggleObjective } from '../../actions/dw-mission-actions.ts';
 import { dwEnterSquadMode, dwLeaveSquadMode } from '../../actions/dw-mode-actions.ts';
 import { dwReleaseOath, dwSwearOath } from '../../actions/dw-oath-actions.ts';
@@ -52,6 +53,7 @@ import {
     type ChaosAdvanceEntry,
 } from '../../rules/bc-alignment-derivation.ts';
 import { APOTHEOSIS_CORRUPTION, isAscended, resolveApotheosis, type DaemonPrinceAlignment } from '../../rules/bc-daemon-prince.ts';
+import { isGiftItem } from '../../rules/bc-gifts.ts';
 import { maxPushLevel, resolvePsychicTest, type PsyMode } from '../../rules/bc-psychic-strength.ts';
 import { daemonEngineRageBonus } from '../../rules/bc-supplement-mechanics.ts';
 import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
@@ -64,6 +66,14 @@ import {
     IMPLANT_EFFECTS,
     type AstartesImplantId,
 } from '../../rules/dw-astartes.ts';
+import {
+    canGainSpecialAbility,
+    type MarkGrantSource,
+    mergeMarkGrants,
+    SPECIAL_ABILITY_CATEGORIES,
+    type SpecialAbilityCategory,
+    specialAbilityCategoryLabelKey,
+} from '../../rules/dw-distinction.ts';
 import { isOathActive } from '../../rules/dw-oath.ts';
 import { getRenownRank, RENOWN_RANK_ORDER, RENOWN_THRESHOLDS, type RenownRank, renownRankLabelKey } from '../../rules/dw-renown.ts';
 import { DW_SPECIAL_AMMO_EFFECTS, type AmmoEffect } from '../../rules/dw-special-ammo.ts';
@@ -122,6 +132,7 @@ import ColonyGrowthDialog from '../prompts/colony-growth-dialog.ts';
 import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
 import BaseActorSheet, { ADVANCE_XP_COSTS, type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
+import { buildBcGiftsPanel, labelOf, type BcGiftsPanelContext, type GiftPanelItem } from './bc-gifts-panel-context.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; double-cast is the only way to extract the TextEditor implementation
@@ -399,26 +410,6 @@ type BcRitualPanelContext = {
     ritualMastery: number;
 };
 
-/** BC Gifts of the Gods panel (#180). The full gift catalogue lives in
- *  compendium (Direction #7); without a live catalogue lookup at sheet
- *  render time we surface the persisted ids plus the current alignment
- *  and let the panel's empty-state path handle missing display data. */
-type BcGiftsPanelContext = {
-    currentAlignment: 'unaligned' | 'khorne' | 'nurgle' | 'slaanesh' | 'tzeentch';
-    gifts: Array<{
-        id: string;
-        name: string;
-        baseDescription: string;
-        riderDescription: string;
-        appliedAlignment: string;
-        subTableLabel: string;
-        characteristicDelta: Array<{ key: string; value: number }>;
-        traits: string[];
-        activeEffects: string[];
-    }>;
-    mergedDelta: Array<{ key: string; value: number }>;
-};
-
 /** BC Supplement Mechanics panel (#181). */
 type BcSupplementsPanelContext = {
     daemonEngineRating: number;
@@ -441,24 +432,21 @@ type BcDaemonPrincePanelContext = {
     isDaemonPrince: boolean;
 };
 
-/** DW Distinctions panel (#171). Catalogue resolution is compendium-driven;
- *  without a live catalogue lookup the orchestrator-built context surfaces
- *  the persisted id lists and a stub merged-grant readout the engine
- *  produces from an empty MarkOfDistinction set. */
+/** DW Distinctions panel (#171): the actor's owned special-ability items with
+ *  their category, Renown gate, Renown reward and XP cost, plus the merged
+ *  grant of every Mark of Distinction they bear. */
 type DwDistinctionPanelContext = {
-    distinctions: Array<{
+    abilities: Array<{
         id: string;
         name: string;
-        renownReward: number;
+        category: SpecialAbilityCategory;
+        categoryLabel: string;
+        /** Localised required Renown rank; blank when the ability has none. */
         renownRequired: string;
-        earned: boolean;
+        renownReward: number;
+        cost: number;
+        /** The bearer's Renown rank is now below the ability's requirement. */
         rankTooLow: boolean;
-    }>;
-    marks: Array<{
-        id: string;
-        name: string;
-        description: string;
-        borne: boolean;
     }>;
     merged: {
         characteristicDelta: Array<{ key: string; value: number; displayValue: string }>;
@@ -867,16 +855,14 @@ export default class CharacterSheet extends BaseActorSheet {
             'owAdjustSituational': owAdjustSituational,
 
             // Batch-2 engines:
-            //   BC Ritual (#179), Supplements (#181), Daemon Prince (#182).
-            //   (BC Gifts #180 is a passive readout — no action.)
+            //   BC Ritual (#179), Gifts (#180), Supplements (#181), Daemon Prince (#182).
             //   DW Special Ammo (#172), Distinctions (#171), Oath (#168),
             //   Mission (#169), Vehicle Crit (#170).
             //   OW Mission Gear (#155).
             'bcPerformRitual': bcPerformRitual,
+            'bcRollGiftCharacteristic': bcRollGiftCharacteristic,
             'bcAscend': bcAscend,
             'dwSelectAmmo': dwSelectAmmo,
-            'dwToggleDistinction': dwToggleDistinction,
-            'dwToggleMark': dwToggleMark,
             'dwSwearOath': dwSwearOath,
             'dwReleaseOath': dwReleaseOath,
             'dwToggleObjective': dwToggleObjective,
@@ -1890,31 +1876,26 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * BC Gifts of the Gods panel (#180). The catalogue + per-alignment
-     * riders live in compendium content (Direction #7); without a live
-     * lookup at sheet render time we surface the persisted ids and the
-     * actor's current alignment so the panel's empty-state path renders
-     * cleanly. A future enhancement will resolve gift catalogue entries
-     * via `uuidNameCache` and apply `resolveGiftForAlignment` +
-     * `mergeGiftDeltas` here.
+     * BC Gifts of the Gods panel (#180). The actor's Gifts are its owned
+     * mutation items with category `gift` (catalogue: compendium, Direction
+     * #7); each is resolved against the current Chaos Alignment by
+     * `buildBcGiftsPanel`. The characteristic / skill changes themselves are
+     * applied in data prep (`CreatureTemplate._computeItemModifiers`); this
+     * only lays them out.
      */
     _prepareBcGiftsPanel(): BcGiftsPanelContext {
         const sys = this.actor.system;
-        return {
-            currentAlignment: sys.chaosAlignment,
-            gifts: sys.gifts.map((id) => ({
-                id,
-                name: id,
-                baseDescription: '',
-                riderDescription: '',
-                appliedAlignment: sys.chaosAlignment,
-                subTableLabel: '',
-                characteristicDelta: [],
-                traits: [],
-                activeEffects: [],
-            })),
-            mergedDelta: [],
-        };
+        const items: GiftPanelItem[] = [];
+        for (const item of this.actor.items.contents) {
+            if (isGiftItem(item)) items.push(item);
+        }
+        return buildBcGiftsPanel({
+            alignment: sys.chaosAlignment,
+            items,
+            characteristicLabel: (key) => labelOf(sys.characteristics, key),
+            skillLabel: (key) => labelOf(sys.skills, key),
+            grantName: (uuid) => uuidNameCache.getName(uuid),
+        });
     }
 
     /* -------------------------------------------- */
@@ -1972,34 +1953,45 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * DW Distinctions panel (#171). The catalogue itself is compendium
-     * content; without a runtime catalogue lookup we surface the
-     * persisted id arrays and let `mergeMarkGrants(empty)` produce the
-     * stub merged-grant readout. The panel's empty-state paths handle
-     * missing catalogue entries cleanly.
+     * DW Distinctions panel (#171). Lists every owned special-ability item —
+     * speciality, Advanced Special Ability, Distinction, Mark — with its
+     * category, required Renown rank, Renown reward and XP cost, ordered by
+     * category then name, and folds the borne Marks' grants through
+     * `mergeMarkGrants`. All values come from the items themselves.
      */
     _prepareDwDistinctionPanel(): DwDistinctionPanelContext {
-        const sys = this.actor.system;
-        const earned = new Set(sys.distinctions);
-        const borne = new Set(sys.marksOfDistinction);
+        const actorRenownRank = getRenownRank(this.actor.system.renown);
+        const abilities: DwDistinctionPanelContext['abilities'] = [];
+        const marks: MarkGrantSource[] = [];
+        for (const item of this.actor.items) {
+            const ability = readSpecialAbility(item);
+            if (ability === null) continue;
+            if (ability.category === 'mark') marks.push(ability.markGrant);
+            abilities.push({
+                id: item.id,
+                name: item.name,
+                category: ability.category,
+                categoryLabel: game.i18n.localize(specialAbilityCategoryLabelKey(ability.category)),
+                renownRequired: ability.renownRequired === null ? '' : game.i18n.localize(renownRankLabelKey(ability.renownRequired)),
+                renownReward: ability.renownReward,
+                cost: ability.cost,
+                rankTooLow: !canGainSpecialAbility({ ability, actorRenownRank }).allowed,
+            });
+        }
+        const categoryOrder = (category: SpecialAbilityCategory): number => SPECIAL_ABILITY_CATEGORIES.indexOf(category);
+        abilities.sort((a, b) => categoryOrder(a.category) - categoryOrder(b.category) || a.name.localeCompare(b.name, game.i18n.lang));
+
+        const merged = mergeMarkGrants(marks);
         return {
-            distinctions: sys.distinctions.map((id) => ({
-                id,
-                name: id,
-                renownReward: 0,
-                renownRequired: '',
-                earned: earned.has(id),
-                rankTooLow: false,
-            })),
-            marks: sys.marksOfDistinction.map((id) => ({
-                id,
-                name: id,
-                description: '',
-                borne: borne.has(id),
-            })),
+            abilities,
             merged: {
-                characteristicDelta: [],
-                traits: [],
+                characteristicDelta: Object.keys(merged.characteristicDelta)
+                    .sort()
+                    .map((key) => {
+                        const value = merged.characteristicDelta[key] ?? 0;
+                        return { key, value, displayValue: formatSigned(value) };
+                    }),
+                traits: merged.traits.map((uuid) => uuidNameCache.getName(uuid)),
             },
         };
     }

@@ -158,6 +158,20 @@ export interface GiftMutationLike {
     };
 }
 
+/** The `system` of a mutation item that is a Gift of the Gods. */
+export type GiftMutationSystem = GiftMutationLike['system'] & { readonly category: typeof GIFT_MUTATION_CATEGORY };
+
+/**
+ * Whether an item is a Gift of the Gods: a `mutation` whose category is
+ * {@link GIFT_MUTATION_CATEGORY}. The MutationData schema guarantees such an
+ * item carries the `gift` block, so the guard narrows `system` to the slice
+ * the resolver reads — one narrowing point for data prep, sheet and actions.
+ */
+export function isGiftItem<T extends { readonly type: string; readonly system: object }>(item: T): item is T & { readonly system: GiftMutationSystem } {
+    const { system } = item;
+    return item.type === 'mutation' && 'category' in system && system.category === GIFT_MUTATION_CATEGORY && 'gift' in system;
+}
+
 /* -------------------------------------------- */
 /*  Resolver                                    */
 /* -------------------------------------------- */

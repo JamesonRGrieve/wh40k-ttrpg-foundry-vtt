@@ -1,237 +1,187 @@
 /**
  * Storybook stories for the Black Crusade Gifts of the Gods panel (#180).
  *
- * The panel is a passive readout — gift acquisition / removal happens
- * elsewhere. These stories drive the live {@link resolveGiftForAlignment}
- * resolver over a fixed mini-catalogue so each story shows what the
- * player would see for the same gift set held by an actor of a given
- * alignment. Per "Seeded RNG in stories" in CLAUDE.md, no story uses
- * `Math.random()` — every value is fixed for diff stability.
+ * The context is built the way `CharacterSheet._prepareBcGiftsPanel` builds it
+ * — through the real `buildBcGiftsPanel` (and so `resolveGiftForAlignment` /
+ * `mergeGiftDeltas` / `pendingGiftRolls`) — over structural fixture Gifts, so a
+ * change to those rules shows up here without re-authoring. The panel is
+ * rendered through the same `isBC` gate the overview tab uses, so the
+ * other-line stories show it is absent off Black Crusade.
  *
- * Three stories per alignment, covering the canonical states an operator
- * needs to verify in review (Khorne / Slaanesh / Nurgle / Tzeentch /
- * Unaligned × { single rider-bearing gift, multi-gift merged delta,
- * gifts with no matching rider }).
+ *   - Khorne / Tzeentch — the same Gifts resolved for two alignments.
+ *   - Unaligned        — base effects only.
+ *   - PendingRoll      — a Gift whose acquisition roll is still to be made.
+ *   - Empty            — a BC Heretic with no Gifts.
+ *   - OtherLineDh2 / OtherLineDw — the same Gifts on other lines: no panel.
+ *
+ * Fixtures are structural, not catalogue content (Direction #7); every value
+ * is fixed for diff stability.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
+import { mockActor } from '../../../../stories/mocks';
+import { withSystem, type SystemId } from '../../../../stories/mocks/extended';
+import { localizeKey } from '../../../../stories/mocks/lang-localize';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
+import { buildBcGiftsPanel, type BcGiftsPanelContext, type GiftPanelItem } from '../../../module/applications/actor/bc-gifts-panel-context';
 import type { ChaosAlignment } from '../../../module/config/game-systems/types';
-import { mergeGiftDeltas, resolveGiftForAlignment, type GiftAlignment, type GiftDef, type GiftRider } from '../../../module/rules/bc-gifts';
-import panelSrc from './bc-gifts-panel.hbs?raw';
+import type { GiftData, GiftRider } from '../../../module/rules/bc-gifts';
 
-interface RenderedGift {
-    id: string;
-    name: string;
-    baseDescription: string;
-    riderDescription: string;
-    appliedAlignment: ChaosAlignment;
-    subTableLabel: string;
-    characteristicDelta: Array<{ key: string; value: number }>;
-    traits: string[];
-    activeEffects: string[];
+initializeStoryHandlebars();
+
+/** The include exactly as `tab-overview.hbs` gates it. */
+const GATED_PANEL = '{{#if isBC}}{{> systems/wh40k-rpg/templates/actor/panel/bc-gifts-panel.hbs giftsPanel=giftsPanel}}{{/if}}';
+
+const GRANT_UUID = 'Compendium.wh40k-rpg.story.Item.fixtureTrait01';
+/** Story-local stand-in for `uuidNameCache`. */
+const GRANT_NAMES: Record<string, string> = { [GRANT_UUID]: 'Fixture Trait' };
+const LABELS: Record<string, string> = { strength: 'Strength', toughness: 'Toughness', intelligence: 'Intelligence', awareness: 'Awareness' };
+
+function rider(alignment: GiftRider['alignment'], characteristics: Record<string, number>, grants: string[] = []): GiftRider {
+    return { alignment, description: `<p>Rider of the fixture for ${alignment}.</p>`, characteristics, skills: {}, grants, activeEffect: '' };
 }
 
-interface GiftsPanelCtx {
-    giftsPanel: {
-        currentAlignment: ChaosAlignment;
-        gifts: RenderedGift[];
-        mergedDelta: Array<{ key: string; value: number }>;
-    };
-}
-
-function renderPanel(ctx: GiftsPanelCtx): HTMLElement {
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('wh40k-rpg');
-    wrapper.dataset['wh40kSystem'] = 'bc';
-    wrapper.appendChild(renderSheet(panelSrc, ctx));
-    return wrapper;
-}
-
-/** Convert a Record<string, number> to the ordered array shape the panel iterates. */
-function deltaEntries(delta: Record<string, number>): Array<{ key: string; value: number }> {
-    return Object.entries(delta)
-        .filter(([, value]) => value !== 0)
-        .map(([key, value]) => ({ key, value }));
-}
-
-/** A rider fixture; unset channels default to empty, as the DataModel does. */
-function rider(alignment: GiftAlignment, description: string, characteristics: Record<string, number>): GiftRider {
-    return { alignment, description, characteristics, skills: {}, grants: [], activeEffect: '' };
-}
-
-/** A structural gift fixture (not catalogue content — that lives in the compendium). */
-function gift(id: string, baseCharacteristics: Record<string, number>, riders: GiftRider[], subTable: GiftDef['subTable'] = ''): GiftDef {
+function giftItem(id: string, characteristics: Record<string, number>, gift: Partial<GiftData>, skills: Record<string, number> = {}): GiftPanelItem {
     return {
         id,
         name: `Fixture Gift ${id.toUpperCase()}`,
-        baseDescription: `Base effect of fixture gift ${id}.`,
-        baseCharacteristics,
-        baseSkills: {},
-        baseGrants: [],
-        riders,
-        subTable,
-    };
-}
-
-/** Fixture catalogue used by the stories. */
-const GIFT_CATALOGUE = {
-    alpha: gift('alpha', { strength: 5 }, [
-        rider('khorne', 'Khorne rider of fixture alpha.', { weaponSkill: 5 }),
-        rider('slaanesh', 'Slaanesh rider of fixture alpha.', { fellowship: 5 }),
-        rider('nurgle', 'Nurgle rider of fixture alpha.', { toughness: 5 }),
-        rider('tzeentch', 'Tzeentch rider of fixture alpha.', { perception: 5 }),
-    ]),
-    beta: gift(
-        'beta',
-        { agility: 3 },
-        [rider('khorne', 'Khorne rider of fixture beta.', { strength: 5 }), rider('tzeentch', 'Tzeentch rider of fixture beta.', { willpower: 5 })],
-        'limb',
-    ),
-    gamma: gift('gamma', { toughness: 3 }, [
-        rider('nurgle', 'Nurgle rider of fixture gamma.', { toughness: 5 }),
-        rider('slaanesh', 'Slaanesh rider of fixture gamma.', { willpower: 3 }),
-    ]),
-} satisfies Record<string, GiftDef>;
-
-/** Build the panel context from a current alignment and list of gift ids. */
-function buildCtx(currentAlignment: ChaosAlignment, giftIds: ReadonlyArray<keyof typeof GIFT_CATALOGUE>): GiftsPanelCtx {
-    const gifts: RenderedGift[] = giftIds.map((id) => {
-        const def = GIFT_CATALOGUE[id];
-        const resolved = resolveGiftForAlignment(def, currentAlignment);
-        return {
-            id: def.id,
-            name: def.name,
-            baseDescription: def.baseDescription,
-            riderDescription: resolved.riderDescription,
-            appliedAlignment: resolved.appliedAlignment,
-            subTableLabel: def.subTable === 'limb' ? 'Additional Limb' : def.subTable === 'animal' ? 'Animal' : '',
-            characteristicDelta: deltaEntries(resolved.characteristicDelta),
-            traits: resolved.grants,
-            activeEffects: resolved.activeEffects,
-        };
-    });
-    const merged = mergeGiftDeltas(gifts.map((g) => Object.fromEntries(g.characteristicDelta.map((d) => [d.key, d.value]))));
-    return {
-        giftsPanel: {
-            currentAlignment,
-            gifts,
-            mergedDelta: deltaEntries(merged),
+        img: 'icons/svg/biohazard.svg',
+        system: {
+            effect: `<p>Base effect of fixture gift <strong>${id}</strong>.</p>`,
+            modifiers: { characteristics, skills },
+            gift: { grants: [], riders: [], subTable: '', characteristicRolls: [], ...gift },
         },
     };
 }
 
-const meta: Meta<GiftsPanelCtx> = {
+const ALPHA = giftItem(
+    'alpha',
+    { strength: 3 },
+    { riders: [rider('khorne', { strength: 5 }, [GRANT_UUID]), rider('tzeentch', { toughness: 2 })], subTable: 'limb' },
+);
+const BETA = giftItem('beta', { toughness: 4 }, { grants: [GRANT_UUID] }, { awareness: 10 });
+const PENDING = giftItem('gamma', {}, { characteristicRolls: [{ characteristic: 'intelligence', formula: '1d10+5', direction: 'loss' }] });
+
+interface StoryArgs {
+    systemId: SystemId;
+    isBC: boolean;
+    giftsPanel: BcGiftsPanelContext;
+}
+
+function storyArgs(systemId: SystemId, alignment: ChaosAlignment, items: GiftPanelItem[]): StoryArgs {
+    const actor = withSystem(mockActor({ name: 'Heretic Vane' }), systemId);
+    return {
+        systemId,
+        // The sheet's gate is the active game system; the mock carries it in its type.
+        isBC: actor.type.startsWith('bc-'),
+        giftsPanel: buildBcGiftsPanel({
+            alignment,
+            items,
+            characteristicLabel: (key) => LABELS[key] ?? key,
+            skillLabel: (key) => LABELS[key] ?? key,
+            grantName: (uuid) => GRANT_NAMES[uuid] ?? uuid,
+        }),
+    };
+}
+
+function renderPanel(args: StoryArgs): HTMLElement {
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('wh40k-rpg');
+    wrapper.dataset['wh40kSystem'] = args.systemId;
+    wrapper.appendChild(renderSheet(GATED_PANEL, { isBC: args.isBC, giftsPanel: args.giftsPanel }));
+    return wrapper;
+}
+
+function entries(root: HTMLElement): HTMLElement[] {
+    return Array.from(root.querySelectorAll<HTMLElement>('[data-wh40k-hook="bc-gift-entry"]'));
+}
+
+function mergedDeltas(root: HTMLElement): Array<[string | undefined, string | undefined]> {
+    return Array.from(root.querySelectorAll<HTMLElement>('[data-wh40k-hook="bc-gifts-merged-delta"]')).map((m) => [
+        m.dataset['deltaKey'],
+        m.dataset['deltaValue'],
+    ]);
+}
+
+const meta: Meta<StoryArgs> = {
     title: 'Actor/Character/BcGiftsPanel',
+    render: (args) => renderPanel(args),
 };
 export default meta;
-type Story = StoryObj<GiftsPanelCtx>;
+type Story = StoryObj<StoryArgs>;
 
-/* -------------------------------------------- */
-/*  Khorne                                      */
-/* -------------------------------------------- */
-
-export const KhorneSingle: Story = {
-    name: 'Khorne — single gift, Khorne rider active',
-    args: buildCtx('khorne', ['alpha']),
-    render: (args) => renderPanel(args),
+export const Khorne: Story = {
+    name: 'Khorne — rider applied, grants and sub-table shown',
+    args: storyArgs('bc', 'khorne', [ALPHA, BETA]),
+    play: async ({ canvasElement }) => {
+        const rows = entries(canvasElement);
+        await expect(rows.map((row) => row.dataset['appliedAlignment'])).toEqual(['khorne', 'unaligned']);
+        await expect(rows[0]?.querySelector('[data-rider-alignment="khorne"]')?.textContent).toContain('Rider of the fixture for khorne');
+        await expect(rows[0]?.querySelector('[data-wh40k-hook="bc-gift-subtable"]')?.textContent).toContain(localizeKey('WH40K.BC.Gifts.SubTable.Limb'));
+        await expect(rows[0]?.querySelector('[data-gift-grants]')?.textContent).toContain('Fixture Trait');
+        await expect(rows[0]?.querySelector('[data-wh40k-hook="bc-gift-delta"]')?.getAttribute('data-delta-value')).toBe('8');
+        await expect(rows[1]?.querySelector('[data-skill-delta-key="awareness"]')?.getAttribute('data-delta-value')).toBe('10');
+        await expect(mergedDeltas(canvasElement)).toEqual([
+            ['strength', '8'],
+            ['toughness', '4'],
+        ]);
+    },
 };
 
-export const KhorneMulti: Story = {
-    name: 'Khorne — two gifts, merged delta aggregates',
-    args: buildCtx('khorne', ['alpha', 'beta']),
-    render: (args) => renderPanel(args),
+export const Tzeentch: Story = {
+    name: 'Tzeentch — the same Gifts resolve to the Tzeentch rider',
+    args: storyArgs('bc', 'tzeentch', [ALPHA, BETA]),
+    play: async ({ canvasElement }) => {
+        await expect(entries(canvasElement)[0]?.dataset['appliedAlignment']).toBe('tzeentch');
+        await expect(mergedDeltas(canvasElement)).toEqual([
+            ['strength', '3'],
+            ['toughness', '6'],
+        ]);
+    },
 };
 
-export const KhorneNoMatch: Story = {
-    name: 'Khorne — gift with no Khorne rider falls back to base only',
-    args: buildCtx('khorne', ['gamma']),
-    render: (args) => renderPanel(args),
+export const Unaligned: Story = {
+    name: 'Unaligned — base effects only',
+    args: storyArgs('bc', 'unaligned', [ALPHA, BETA]),
+    play: async ({ canvasElement }) => {
+        await expect(entries(canvasElement).every((row) => row.dataset['appliedAlignment'] === 'unaligned')).toBe(true);
+        await expect(canvasElement.querySelector('[data-rider-alignment]')).toBeNull();
+    },
 };
 
-/* -------------------------------------------- */
-/*  Slaanesh                                    */
-/* -------------------------------------------- */
-
-export const SlaaneshSingle: Story = {
-    name: 'Slaanesh — single gift, Slaanesh rider active',
-    args: buildCtx('slaanesh', ['alpha']),
-    render: (args) => renderPanel(args),
+export const PendingRoll: Story = {
+    name: 'Pending acquisition roll — a roll button per unrolled characteristic',
+    args: storyArgs('bc', 'unaligned', [PENDING]),
+    play: async ({ canvasElement }) => {
+        const buttonEl = canvasElement.querySelector<HTMLElement>('[data-action="bcRollGiftCharacteristic"]');
+        await expect(buttonEl?.dataset['itemId']).toBe('gamma');
+        await expect(buttonEl?.dataset['characteristic']).toBe('intelligence');
+        await expect(buttonEl?.textContent).toContain('1d10+5');
+    },
 };
 
-export const SlaaneshMulti: Story = {
-    name: 'Slaanesh — two gifts, merged delta aggregates',
-    args: buildCtx('slaanesh', ['alpha', 'gamma']),
-    render: (args) => renderPanel(args),
+export const Empty: Story = {
+    name: 'Empty — a Heretic with no Gifts',
+    args: storyArgs('bc', 'unaligned', []),
+    play: async ({ canvasElement }) => {
+        await expect(entries(canvasElement).length).toBe(0);
+        await expect(canvasElement.textContent).toContain(localizeKey('WH40K.BC.Gifts.None'));
+    },
 };
 
-export const SlaaneshNoMatch: Story = {
-    name: 'Slaanesh — gift with no Slaanesh rider falls back to base only',
-    args: buildCtx('slaanesh', ['beta']),
-    render: (args) => renderPanel(args),
+export const OtherLineDh2: Story = {
+    name: 'Other line (DH2) — the panel is not rendered',
+    args: storyArgs('dh2', 'unaligned', [ALPHA, BETA]),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('.wh40k-bc-gifts-panel')).toBeNull();
+    },
 };
 
-/* -------------------------------------------- */
-/*  Nurgle                                      */
-/* -------------------------------------------- */
-
-export const NurgleSingle: Story = {
-    name: 'Nurgle — single gift, Nurgle rider active',
-    args: buildCtx('nurgle', ['gamma']),
-    render: (args) => renderPanel(args),
-};
-
-export const NurgleMulti: Story = {
-    name: 'Nurgle — two gifts, merged delta aggregates',
-    args: buildCtx('nurgle', ['alpha', 'gamma']),
-    render: (args) => renderPanel(args),
-};
-
-export const NurgleNoMatch: Story = {
-    name: 'Nurgle — gift with no Nurgle rider falls back to base only',
-    args: buildCtx('nurgle', ['beta']),
-    render: (args) => renderPanel(args),
-};
-
-/* -------------------------------------------- */
-/*  Tzeentch                                    */
-/* -------------------------------------------- */
-
-export const TzeentchSingle: Story = {
-    name: 'Tzeentch — single gift, Tzeentch rider active',
-    args: buildCtx('tzeentch', ['alpha']),
-    render: (args) => renderPanel(args),
-};
-
-export const TzeentchMulti: Story = {
-    name: 'Tzeentch — two gifts, merged delta aggregates',
-    args: buildCtx('tzeentch', ['alpha', 'beta']),
-    render: (args) => renderPanel(args),
-};
-
-export const TzeentchNoMatch: Story = {
-    name: 'Tzeentch — gift with no Tzeentch rider falls back to base only',
-    args: buildCtx('tzeentch', ['gamma']),
-    render: (args) => renderPanel(args),
-};
-
-/* -------------------------------------------- */
-/*  Unaligned                                   */
-/* -------------------------------------------- */
-
-export const UnalignedSingle: Story = {
-    name: 'Unaligned — base effect only, no rider applies',
-    args: buildCtx('unaligned', ['alpha']),
-    render: (args) => renderPanel(args),
-};
-
-export const UnalignedMulti: Story = {
-    name: 'Unaligned — multiple gifts, base deltas merge',
-    args: buildCtx('unaligned', ['alpha', 'beta', 'gamma']),
-    render: (args) => renderPanel(args),
-};
-
-export const UnalignedEmpty: Story = {
-    name: 'Unaligned — no gifts held; empty-state notice',
-    args: buildCtx('unaligned', []),
-    render: (args) => renderPanel(args),
+export const OtherLineDw: Story = {
+    name: 'Other line (DW) — the panel is not rendered',
+    args: storyArgs('dw', 'unaligned', [ALPHA, BETA]),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('.wh40k-bc-gifts-panel')).toBeNull();
+    },
 };

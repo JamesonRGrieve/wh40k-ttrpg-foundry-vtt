@@ -7,7 +7,6 @@ import { parseCharacteristicBonusTerm } from '../shared/characteristic-formula.t
 import { experienceBalance } from '../shared/experience-math.ts';
 import { originStepLabel } from '../shared/origin-steps.ts';
 import { bcDaemonPrinceSchemaFields, type BcDaemonPrinceDeclarations } from './mixins/bc-daemon-prince-template.ts';
-import { bcGiftsSchemaFields, type BcGiftsDeclarations } from './mixins/bc-gifts-template.ts';
 import { bcPsychicSchemaFields, type BcPsychicDeclarations } from './mixins/bc-psychic-template.ts';
 import { bcRitualSchemaFields, type BcRitualDeclarations } from './mixins/bc-ritual-template.ts';
 import { bcSupplementsSchemaFields, type BcSupplementsDeclarations } from './mixins/bc-supplements-template.ts';
@@ -380,7 +379,6 @@ export default class CharacterData extends CreatureTemplate {
 
             // Batch-2 engine slots (BC #179-#182, DW #168-#172, OW #155).
             ...bcDaemonPrinceSchemaFields(),
-            ...bcGiftsSchemaFields(),
             ...bcRitualSchemaFields(),
             ...bcSupplementsSchemaFields(),
             ...dwAmmoSchemaFields(),
@@ -1349,7 +1347,6 @@ export default interface CharacterData
         OwOrdersDeclarations,
         OwRegimentDeclarations,
         BcDaemonPrinceDeclarations,
-        BcGiftsDeclarations,
         BcRitualDeclarations,
         BcSupplementsDeclarations,
         DwAmmoDeclarations,

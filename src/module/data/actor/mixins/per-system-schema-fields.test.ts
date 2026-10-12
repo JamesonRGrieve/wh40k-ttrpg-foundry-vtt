@@ -54,7 +54,6 @@ afterAll(() => {
 
 // Imported after the stub is in place (mixins destructure foundry.data.fields at load).
 const { bcDaemonPrinceSchemaFields } = await import('./bc-daemon-prince-template.ts');
-const { bcGiftsSchemaFields } = await import('./bc-gifts-template.ts');
 const { bcPsychicSchemaFields } = await import('./bc-psychic-template.ts');
 const { bcRitualSchemaFields } = await import('./bc-ritual-template.ts');
 const { bcSupplementsSchemaFields } = await import('./bc-supplements-template.ts');
@@ -84,7 +83,6 @@ type SchemaFieldsFn = () => Record<string, object>;
 
 const cases: Array<[name: string, fn: SchemaFieldsFn, keys: string[]]> = [
     ['bcDaemonPrinceSchemaFields', bcDaemonPrinceSchemaFields, ['daemonPrinceAscension']],
-    ['bcGiftsSchemaFields', bcGiftsSchemaFields, ['gifts']],
     ['bcPsychicSchemaFields', bcPsychicSchemaFields, ['psykerClass', 'psyRating', 'sustainedPowerCount']],
     ['bcRitualSchemaFields', bcRitualSchemaFields, ['ritualMastery']],
     ['bcSupplementsSchemaFields', bcSupplementsSchemaFields, ['daemonEngineRating']],

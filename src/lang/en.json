@@ -946,7 +946,15 @@
             "Reroll": "Re-roll portrait",
             "Pin": "Pin this portrait (spawns stop rolling)",
             "Unpin": "Unpin portrait (resume random)",
-            "Generate": "Generate portrait (AI)"
+            "Generate": "Generate portrait (AI)",
+            "Journal": {
+                "Open": "Open journal entry",
+                "Clear": "Unlink journal entry (drop a journal on the portrait to link one)",
+                "Linked": "{actor} is now linked to its journal entry.",
+                "OwnerOnly": "Only an owner of {actor} can link its journal entry.",
+                "NoPermission": "You do not have permission to view this journal entry.",
+                "NotFound": "The linked journal entry could not be found."
+            }
         },
         "Utility": {
             "MenuTooltip": "Utility Actions",
@@ -1451,6 +1459,7 @@
             },
             "Refusal": {
                 "Bound": "This item is bound and cannot be traded.",
+                "Discretion": "This line's availability table leaves this rating to the GM's discretion.",
                 "NoEconomy": "This game line has no requisition economy — purchase with currency instead.",
                 "Renown": "Requires Renown {required}; this Battle-Brother has {renown}.",
                 "Pool": "Costs {cost}; only {pool} available.",
@@ -3060,8 +3069,8 @@
                     "Title": "Gifts of the Gods"
                 },
                 "SubTable": {
-                    "Limb": "Additional Limb",
-                    "Animal": "Animal"
+                    "Limb": "Roll on the Limb Table",
+                    "Animal": "Roll on the Random Creatures table"
                 },
                 "Rider": {
                     "Khorne": "Khorne Rider",
@@ -3073,6 +3082,14 @@
                 "Resolved": {
                     "BaseDescription": "Base Effect",
                     "AppliedAlignment": "Applied Alignment"
+                },
+                "Grants": "Grants:",
+                "PendingRolls": "To roll:",
+                "RollButton": "{characteristic} {direction} {formula}",
+                "RollFlavor": "{gift}: {characteristic} {direction}",
+                "Direction": {
+                    "Gain": "gain",
+                    "Loss": "loss"
                 },
                 "None": "No gifts received yet"
             },
@@ -3181,35 +3198,23 @@
                 "GateFailure": "Renown rank insufficient to requisition this item."
             },
             "Distinction": {
-                "Label": "Distinction",
-                "Earn": {
-                    "RankTooLow": "Renown rank too low to earn this Distinction."
+                "Panel": {
+                    "Title": "Special Abilities & Distinctions"
+                },
+                "Gate": {
+                    "RankTooLow": "{name} requires Renown rank {rank}; {actor} is {current}."
                 },
                 "Award": {
-                    "Granted": "Distinction granted."
-                },
-                "Mark": {
-                    "Label": "Mark of Distinction",
-                    "Plural": "Marks of Distinction",
-                    "Empty": "No Marks of Distinction borne."
+                    "Renown": "{actor} gains {amount} Renown for {name}."
                 },
                 "List": {
-                    "Plural": "Distinctions",
-                    "Empty": "No Distinctions earned yet."
+                    "Empty": "No special abilities or Distinctions yet."
                 },
-                "Toggle": {
-                    "Distinction": "Toggle Distinction",
-                    "Mark": "Toggle Mark of Distinction"
-                },
+                "RankLocked": "Renown rank is below this ability's requirement.",
                 "Delta": {
                     "Characteristics": "Characteristic Bonuses",
                     "Traits": "Granted Traits",
                     "None": "None"
-                },
-                "Advanced": {
-                    "Label": "Advanced Special Ability",
-                    "RankTooLow": "Renown rank too low to use this Advanced Special Ability.",
-                    "InsufficientCohesion": "Insufficient Cohesion to activate this Advanced Special Ability."
                 },
                 "RenownReward": "Renown Reward",
                 "Merged": {
@@ -4707,7 +4712,15 @@
             }
         },
         "SpecialAbility": {
-            "Benefit": "Benefit"
+            "Benefit": "Benefit",
+            "Cost": "Experience Cost",
+            "XpCost": "{cost} XP",
+            "Category": {
+                "Speciality": "Speciality Ability",
+                "Advanced": "Advanced Special Ability",
+                "Distinction": "Distinction",
+                "Mark": "Mark of Distinction"
+            }
         },
         "Malignancy": {
             "Effect": "Effect",

@@ -2,6 +2,7 @@ import HandlebarsLib from 'handlebars';
 import enLang from '../src/lang/en.json';
 import { type GameSystemId, SystemConfigRegistry, type SystemThemeRole, themeClassFor } from '../src/module/config/game-systems/index.ts';
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass } from '../src/module/handlebars/degree-ladders.ts';
+import { buildSafeAttrs } from '../src/module/handlebars/safe-attrs.ts';
 import { formatSourceLabel, type SourceInput } from '../src/module/handlebars/source-label.ts';
 import { ICON_REGISTRY } from '../src/module/icons/registry.generated.ts';
 import { combatActionIcon, combatTimingKey } from '../src/module/rules/combat-action-display.ts';
@@ -165,6 +166,10 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         args.pop();
         return args.every(Boolean);
     });
+    HandlebarsLib.registerHelper(
+        'safeAttrs',
+        (...args: HbsValue[]) => new HandlebarsLib.SafeString(buildSafeAttrs(args.slice(0, -1), (s) => HandlebarsLib.escapeExpression(s))),
+    );
     HandlebarsLib.registerHelper('or', (...args: HbsValue[]) => {
         args.pop();
         return args.find(Boolean) ?? args[args.length - 1] ?? '';

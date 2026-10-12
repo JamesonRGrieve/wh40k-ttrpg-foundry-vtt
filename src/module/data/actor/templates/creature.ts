@@ -1,8 +1,9 @@
 import { BaseSystemConfig } from '../../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../../config/game-systems/index.ts';
-import type { FatigueModelDef } from '../../../config/game-systems/types.ts';
+import type { ChaosAlignment, FatigueModelDef } from '../../../config/game-systems/types.ts';
 import type { WH40KItem } from '../../../documents/item.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
+import { giftDefFromMutation, isGiftItem, resolveGiftForAlignment } from '../../../rules/bc-gifts.ts';
 import { FATIGUE_MODES, getFatigueHalvedCharacteristic, getFatigueTestModifier, getFatigueThreshold, resolveFatigueModel } from '../../../rules/fatigue.ts';
 import { resolveCraftsmanshipGatedModifiers } from '../../../rules/ow-craftsmanship.ts';
 import { computeArmour } from '../../../utils/armour-calculator.ts';
@@ -1098,6 +1099,9 @@ export default class CreatureTemplate extends CommonTemplate {
                 (item.isTalent ||
                     item.isTrait ||
                     item.isCondition ||
+                    // A Mark of Distinction's characteristic changes ride its
+                    // modifiers map (#171); other special abilities carry none.
+                    item.isSpecialAbility ||
                     (item.type === 'armour' && item.system.state.equipped === true) ||
                     (item.type === 'cybernetic' && item.system.state.equipped === true) ||
                     (item.type === 'gear' && item.system.state.equipped === true)),
@@ -1105,6 +1109,29 @@ export default class CreatureTemplate extends CommonTemplate {
 
         for (const item of modifierItems) {
             this._applyItemModifiers(item);
+        }
+
+        this.#applyGiftModifiers(actor.items.filter((item: WH40KItem) => item.isMutation));
+    }
+
+    /**
+     * Fold every owned Gift of the Gods (#180) into the characteristic and skill
+     * provenance buckets. A Gift's base `modifiers` (Path A) and the rider for the
+     * actor's Chaos Alignment are merged by {@link resolveGiftForAlignment}, so
+     * the change lands — with the Gift as its source — on the same totals and
+     * tooltips as any other item modifier. An Unaligned bearer (or any actor
+     * without an alignment) gets the base effect only. Gifts are not in the
+     * generic item filter above, so nothing is counted twice.
+     * @param {WH40KItem[]} mutations  The actor's mutation items.
+     */
+    #applyGiftModifiers(mutations: readonly WH40KItem[]): void {
+        const alignment = (this as { chaosAlignment?: ChaosAlignment }).chaosAlignment ?? 'unaligned';
+        for (const item of mutations) {
+            if (!isGiftItem(item)) continue;
+            const resolved = resolveGiftForAlignment(giftDefFromMutation(item), alignment);
+            const source = { name: item.name, type: item.type, id: item.id, uuid: item.uuid, sourceUuid: compendiumSourceUuidOf(item) };
+            this.#collectKeyedModifiers(this.modifierSources.characteristics, resolved.characteristicDelta, source, fullCharacteristicKey);
+            this.#collectKeyedModifiers(this.modifierSources.skills, resolved.skillDelta, source);
         }
     }
 
