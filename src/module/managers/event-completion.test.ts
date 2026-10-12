@@ -271,6 +271,7 @@ type ResolveFn = (eventId: string, detail: string) => Promise<void>;
 
 interface FakeEnv extends CompletionEnvironment {
     state: ResolvedState;
+    suppressedIds: Set<string>;
     resolve: Mock<ResolveFn>;
     announce: Mock<ResolveFn>;
 }
@@ -278,6 +279,8 @@ interface FakeEnv extends CompletionEnvironment {
 function fakeEnv(graph: EventGraph, opts: { gm?: boolean } = {}): FakeEnv {
     const env = {
         state: {} as ResolvedState,
+        suppressedIds: new Set<string>(),
+        suppressed: () => env.suppressedIds,
         isActiveGM: () => opts.gm ?? true,
         graph: () => graph,
         resolved: () => env.state,
@@ -324,13 +327,13 @@ describe('EventCompletionWatcher', () => {
         expect(env.announce).toHaveBeenCalledTimes(1);
     });
 
-    it('does not re-resolve an event the GM undid', async () => {
+    it('skips a suppressed event, and fires again once the suppression is lifted', async () => {
         const env = fakeEnv(DEATH_GRAPH);
+        env.suppressedIds.add('ANA_DIES');
         const watcher = new EventCompletionWatcher(env);
-        await watcher.notify(DIED);
-        env.state = {};
         await expect(watcher.notify(DIED)).resolves.toEqual([]);
-        expect(env.resolve).toHaveBeenCalledTimes(1);
+        env.suppressedIds.clear();
+        await expect(watcher.notify(DIED)).resolves.toHaveLength(1);
     });
 
     it('chains through event-resolved triggers and stops on a cycle', async () => {
@@ -527,5 +530,123 @@ describe('registerEventCompletionHooks', () => {
         });
         expect(set).not.toHaveBeenCalled();
         expect(create).not.toHaveBeenCalled();
+    });
+});
+
+/* -------------------------------------------- */
+/*  Persisted GM undo (#591)                    */
+/* -------------------------------------------- */
+
+/** A store-backed world: settings survive a simulated reload (fresh modules, same store). */
+function persistentWorld(store: Map<string, object>, isGM: boolean, isActiveGM: boolean): Map<string, Handler> {
+    const handlers = new Map<string, Handler>();
+    vi.stubGlobal('game', {
+        users: { activeGM: { isSelf: isActiveGM } },
+        user: { id: 'gm', isGM },
+        settings: {
+            register: (scope: string, key: string, config: { default: object }) => {
+                if (!store.has(`${scope}.${key}`)) store.set(`${scope}.${key}`, config.default);
+            },
+            get: (scope: string, key: string) => store.get(`${scope}.${key}`),
+            set: async (scope: string, key: string, value: object) => {
+                store.set(`${scope}.${key}`, value);
+                return Promise.resolve(value);
+            },
+        },
+        i18n: { localize: (key: string) => key, format: (key: string) => key },
+        actors: { contents: [] },
+        scenes: { contents: [] },
+    });
+    vi.stubGlobal('Hooks', {
+        on: (event: string, fn: Handler) => handlers.set(event, fn).size,
+        callAll: (event: string, ...args: never[]) => handlers.get(event)?.(...args),
+    });
+    vi.stubGlobal('foundry', { applications: { handlebars: { renderTemplate: async () => Promise.resolve('') } } });
+    vi.stubGlobal('ChatMessage', { create: async () => Promise.resolve(), getWhisperRecipients: () => [] });
+    return handlers;
+}
+
+/** Boot the tracker and watcher from fresh module state, as a reload or another GM client would. */
+async function boot(
+    store: Map<string, object>,
+    opts: { isGM?: boolean; isActiveGM?: boolean } = {},
+): Promise<{
+    tracker: typeof EventTracker;
+    handlers: Map<string, Handler>;
+}> {
+    const handlers = persistentWorld(store, opts.isGM ?? true, opts.isActiveGM ?? true);
+    vi.resetModules();
+    const trackerModule = await import('./event-tracker.ts');
+    const completion = await import('./event-completion.ts');
+    const tracker = trackerModule.EventTracker;
+    tracker.registerSettings();
+    tracker._graph = DEATH_GRAPH;
+    completion.registerEventCompletionHooks();
+    return { tracker, handlers };
+}
+
+const anaDeath = { id: 'e1', disabled: false, statuses: new Set(['dead']), parent: { ...pcActor, name: 'Ana Vell', hasPlayerOwner: false } };
+
+describe('a GM undo of an automatic resolution persists', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        vi.resetModules();
+    });
+
+    it('survives a reload: the next trigger leaves the undone event alone', async () => {
+        const store = new Map<string, object>();
+        const first = await boot(store);
+        fire(first.handlers, 'createActiveEffect', anaDeath);
+        await vi.waitFor(() => {
+            expect(first.tracker.getResolved()).toMatchObject({ ANA_DIES: { origin: 'auto' } });
+        });
+        await first.tracker.setResolved('ANA_DIES', false);
+        expect(first.tracker.getAutoSuppressed()).toEqual(['ANA_DIES']);
+
+        const reloaded = await boot(store);
+        expect(reloaded.tracker.getAutoSuppressed()).toEqual(['ANA_DIES']);
+        fire(reloaded.handlers, 'createActiveEffect', anaDeath);
+        fire(reloaded.handlers, 'createActiveEffect', { ...anaDeath, id: 'e2' });
+        await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+        });
+        expect(reloaded.tracker.getResolved()).toEqual({});
+    });
+
+    it('a manual re-resolve clears the suppression, so the next undo suppresses again', async () => {
+        const store = new Map<string, object>();
+        const { tracker } = await boot(store);
+        await tracker.setResolved('ANA_DIES', true, { origin: 'auto', detail: 'died' });
+        await tracker.setResolved('ANA_DIES', false);
+        expect(tracker.getAutoSuppressed()).toEqual(['ANA_DIES']);
+        await tracker.setResolved('ANA_DIES', true);
+        expect(tracker.getAutoSuppressed()).toEqual([]);
+        // Resolved by hand now, so un-resolving it is not an undo of an automatic resolution.
+        await tracker.setResolved('ANA_DIES', false);
+        expect(tracker.getAutoSuppressed()).toEqual([]);
+    });
+
+    it('only a manual undo suppresses; a sync or auto un-resolve does not', async () => {
+        const store = new Map<string, object>();
+        const { tracker } = await boot(store);
+        await tracker.setResolved('ANA_DIES', true, { origin: 'auto' });
+        await tracker.setResolved('ANA_DIES', false, { origin: 'sync' });
+        expect(tracker.getAutoSuppressed()).toEqual([]);
+    });
+
+    it('suppression is GM-only: a player cannot write it', async () => {
+        const store = new Map<string, object>();
+        const gm = await boot(store);
+        await gm.tracker.setResolved('ANA_DIES', true, { origin: 'auto' });
+        const player = await boot(store, { isGM: false, isActiveGM: false });
+        await expect(player.tracker.setResolved('ANA_DIES', false)).rejects.toThrow('GM-only');
+        expect(player.tracker.getAutoSuppressed()).toEqual([]);
+    });
+
+    it('a malformed stored set reads as empty', async () => {
+        const store = new Map<string, object>();
+        const { tracker } = await boot(store);
+        store.set('wh40k-rpg.event-tracker-auto-suppressed', { ANA_DIES: true });
+        expect(tracker.getAutoSuppressed()).toEqual([]);
     });
 });

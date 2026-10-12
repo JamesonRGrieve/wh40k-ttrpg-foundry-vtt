@@ -425,6 +425,25 @@ function isResolvedEntry(entry: unknown): entry is ResolvedEntry {
     return (origin === undefined || CHANGE_ORIGINS.some((known) => known === origin)) && (detail === undefined || typeof detail === 'string');
 }
 
+/** Narrow a stored `event-tracker-auto-suppressed` setting value: a list of event ids. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped stored value; this guard is what narrows it
+export function isEventIdList(value: unknown): value is string[] {
+    return Array.isArray(value) && value.every((id) => typeof id === 'string');
+}
+
+/**
+ * The auto-suppressed set after a resolution change (#591). A GM un-resolving
+ * (`manual`) an event whose stored resolution was automatic suppresses its
+ * auto-resolution, so the GM's undo is never fought by the next trigger; a
+ * manual resolve clears it. Every other change leaves the set as it is.
+ */
+export function nextAutoSuppressed(suppressed: readonly string[], eventId: string, resolved: boolean, origin: ChangeOrigin, previous: ResolvedState): string[] {
+    if (origin !== 'manual') return [...suppressed];
+    if (resolved) return suppressed.filter((id) => id !== eventId);
+    const wasAuto = lookup(previous, eventId)?.origin === 'auto';
+    return wasAuto && !suppressed.includes(eventId) ? [...suppressed, eventId] : [...suppressed];
+}
+
 /** Narrow a stored `event-tracker-campaign-day` setting value. */
 // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped stored value; this guard is what narrows it
 export function isStoredCampaignDay(value: unknown): value is number {

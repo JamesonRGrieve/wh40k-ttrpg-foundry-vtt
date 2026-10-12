@@ -51,6 +51,8 @@ export interface CompletionEnvironment {
     isActiveGM: () => boolean;
     graph: () => EventGraph | null;
     resolved: () => ResolvedState;
+    /** Events whose auto-resolution the GM undid; never auto-resolved again. */
+    suppressed: () => ReadonlySet<string>;
     resolver: () => RefResolver;
     /** Human description of why the trigger fired. */
     describe: (trigger: CompletionTrigger, change: GameStateChange) => string;
@@ -65,15 +67,14 @@ export interface CompletionEnvironment {
  *
  * Changes are handled one at a time, in arrival order, so two hooks fired
  * together cannot both read an event as unresolved and resolve it twice. An
- * event resolved automatically is remembered for the session and never
- * auto-resolved again, so a GM who undoes one on the dashboard is not
- * overruled by the next token move. Chains (an `event-resolved` trigger)
- * terminate: each step resolves an event that was unresolved, and nothing
- * here ever un-resolves one.
+ * event the GM un-resolved after an automatic resolution is in the tracker's
+ * persisted suppression set ({@link EventTracker.getAutoSuppressed}) and is
+ * skipped, so the undo holds across reloads and GM clients. Chains (an
+ * `event-resolved` trigger) terminate: each step resolves an event that was
+ * unresolved, and nothing here ever un-resolves one.
  */
 export class EventCompletionWatcher {
     readonly #env: CompletionEnvironment;
-    readonly #fired = new Set<string>();
     #queue: Promise<void> = Promise.resolve();
 
     constructor(env: CompletionEnvironment) {
@@ -96,12 +97,11 @@ export class EventCompletionWatcher {
     async #handle(change: GameStateChange): Promise<AutoResolution[]> {
         const graph = this.#env.graph();
         if (graph === null) return [];
-        const due = autoResolutions(graph, this.#env.resolved(), change, this.#env.resolver(), this.#fired);
+        const due = autoResolutions(graph, this.#env.resolved(), change, this.#env.resolver(), this.#env.suppressed());
         // Sequential: each resolution fires the eventResolved hook and must land
         // before the next, and the chat cards follow resolution order.
         await due.reduce(async (previous, { eventId, trigger }) => {
             await previous;
-            this.#fired.add(eventId);
             const detail = this.#env.describe(trigger, change);
             await this.#env.resolve(eventId, detail);
             await this.#env.announce(eventId, detail);
@@ -215,6 +215,7 @@ const liveEnvironment: CompletionEnvironment = {
     isActiveGM: () => game.users.activeGM?.isSelf === true,
     graph: () => EventTracker.graph,
     resolved: () => EventTracker.getResolved(),
+    suppressed: () => new Set(EventTracker.getAutoSuppressed()),
     resolver: () => createRefResolver(worldDocs),
     describe: (trigger, change) => describeTrigger(trigger, change, eventDisplayName),
     resolve: async (eventId, detail) => EventTracker.setResolved(eventId, true, { origin: 'auto', detail }),

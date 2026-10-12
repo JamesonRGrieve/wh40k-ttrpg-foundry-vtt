@@ -26,6 +26,7 @@ import {
     findJournalUuid,
     findLocationVaultIdentity,
     isEventAvailable,
+    isEventIdList,
     isPcAttitudeMap,
     isResolved,
     isResolvedState,
@@ -35,6 +36,7 @@ import {
     type JournalRef,
     lookup,
     type NamedJournal,
+    nextAutoSuppressed,
     omitKey,
     type PcAttitudeMap,
     type ResolvedState,
@@ -57,6 +59,8 @@ export const EVENT_TRACKER_SETTINGS = {
     campaignDay: 'event-tracker-campaign-day',
     /** `{ [npcName]: { [pcName]: attitude } }` */
     pcAttitudes: 'event-tracker-pc-attitudes',
+    /** Event ids the GM un-resolved after an automatic resolution; never auto-resolved again (#591). */
+    autoSuppressed: 'event-tracker-auto-suppressed',
 } as const;
 
 /** The hooks fired after each Event Tracker state change. Payloads are typed in `foundry-v14-overrides.d.ts`. */
@@ -185,6 +189,14 @@ export class EventTracker {
             type: Number,
             default: 0,
         });
+        game.settings.register(SYSTEM_ID, EVENT_TRACKER_SETTINGS.autoSuppressed, {
+            name: 'WH40K.EventTracker.Setting.AutoSuppressedName',
+            hint: 'WH40K.EventTracker.Setting.AutoSuppressedHint',
+            scope: 'world',
+            config: false,
+            type: Array,
+            default: [],
+        });
         game.settings.register(SYSTEM_ID, EVENT_TRACKER_SETTINGS.pcAttitudes, {
             name: 'WH40K.EventTracker.Setting.PcAttitudesName',
             hint: 'WH40K.EventTracker.Setting.PcAttitudesHint',
@@ -282,15 +294,31 @@ export class EventTracker {
     }
 
     /**
+     * Event ids whose automatic resolution the GM undid (#591). Completion
+     * triggers never resolve these again, across reloads and GM clients, until
+     * the GM resolves the event by hand.
+     */
+    static getAutoSuppressed(): string[] {
+        return readSetting(EVENT_TRACKER_SETTINGS.autoSuppressed, isEventIdList, []);
+    }
+
+    /**
      * Mark an event resolved (or unresolved). GM-only. Fires
      * `wh40k-rpg.eventResolved(eventId, resolved, context)` when the stored state changes.
+     *
+     * Un-resolving by hand (`manual`) an event that was resolved automatically
+     * suppresses its completion triggers; resolving it by hand lifts that
+     * (see {@link EventTracker.getAutoSuppressed}).
      */
     static async setResolved(eventId: string, resolved = true, options: EventTrackerChangeOptions = {}): Promise<void> {
         EventTracker.#assertGM('setResolved');
         if (eventId === '') throw new Error('EventTracker.setResolved: eventId must be non-empty');
         const state = EventTracker.getResolved();
-        if (isResolved(state, eventId) === resolved) return;
         const context = changeContext(options);
+        const suppressed = EventTracker.getAutoSuppressed();
+        const nextSuppressed = nextAutoSuppressed(suppressed, eventId, resolved, context.origin, state);
+        if (nextSuppressed.length !== suppressed.length) await game.settings.set(SYSTEM_ID, EVENT_TRACKER_SETTINGS.autoSuppressed, nextSuppressed);
+        if (isResolved(state, eventId) === resolved) return;
         const next = resolved ? { ...state, [eventId]: { resolvedAt: new Date().toISOString(), ...context } } : omitKey(state, eventId);
         await game.settings.set(SYSTEM_ID, EVENT_TRACKER_SETTINGS.resolved, next);
         Hooks.callAll(EVENT_TRACKER_HOOKS.eventResolved, eventId, resolved, context);

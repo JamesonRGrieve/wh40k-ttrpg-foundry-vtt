@@ -2031,6 +2031,8 @@ export type I18nKey =
     | 'WH40K.EventTracker.RequiresAny'
     | 'WH40K.EventTracker.ResolvedAutomatically'
     | 'WH40K.EventTracker.SceneSpawnFailed'
+    | 'WH40K.EventTracker.Setting.AutoSuppressedHint'
+    | 'WH40K.EventTracker.Setting.AutoSuppressedName'
     | 'WH40K.EventTracker.Setting.CampaignDayHint'
     | 'WH40K.EventTracker.Setting.CampaignDayName'
     | 'WH40K.EventTracker.Setting.PcAttitudesHint'

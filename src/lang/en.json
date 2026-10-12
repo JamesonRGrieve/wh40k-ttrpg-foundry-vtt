@@ -6731,7 +6731,9 @@
                 "CampaignDayName": "Event Tracker Campaign Day",
                 "CampaignDayHint": "The current campaign day shown on the Event Tracker.",
                 "PcAttitudesName": "Event Tracker Party Attitudes",
-                "PcAttitudesHint": "Each player character's attitude toward each NPC."
+                "PcAttitudesHint": "Each player character's attitude toward each NPC.",
+                "AutoSuppressedName": "Event Tracker Suppressed Auto-Resolutions",
+                "AutoSuppressedHint": "Events the GM un-resolved after an automatic resolution; completion triggers leave them alone until resolved by hand."
             },
             "CampaignDay": "Campaign Day:",
             "Day": "Day {number}",
