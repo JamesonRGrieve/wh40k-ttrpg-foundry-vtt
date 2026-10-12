@@ -17,6 +17,7 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
 import { deltaFromModifiers, originDeltaFlagPath, originIdentityKey, type OriginModifierBag } from '../../origin-grant-ledger.ts';
+import { AVAILABILITY_KEYS, normaliseAvailability } from '../../rules/acquisition-ladder.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import { resolvePack } from '../../utils/compendium-query.ts';
 import { capitalize } from '../../utils/format.ts';
@@ -286,7 +287,6 @@ interface EquipmentItemEntry {
     weaponTypes: string[];
     availability: string;
     availabilityLabel: string;
-    availabilityOrder: number;
     requisition: number | null;
     throneGelt: number | null;
 }
@@ -2096,7 +2096,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Load Armoury items (Chapter V) for the Equip Acolyte step, filtering to Scarce (-10) or better.
+     * Load Armoury items (Chapter V) for the Equip Acolyte step, filtering to Scarce or better.
      * @private
      */
     async _loadEquipmentItems(): Promise<void> {
@@ -2112,8 +2112,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // CONFIG.wh40k is the system config set at init; reading it here (not the
         // config module) keeps this builder out of the config.ts import cycle.
         const availabilityConfig = configWh40k?.availabilities ?? {};
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: availabilityConfig['scarce'] may be absent; modifier may be absent
-        const scarceModifier = availabilityConfig['scarce']?.modifier ?? 0;
+        const scarceRank = AVAILABILITY_KEYS.indexOf('scarce');
         const packLoadResults = await Promise.all(
             packNames.map(async (packName): Promise<EquipmentEntry[]> => {
                 const pack = resolvePack(packName);
@@ -2140,9 +2139,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     if (availability === undefined || availability === '') continue;
                     const availabilityEntry = availabilityConfig[availability] as AvailabilityConfig | undefined;
                     if (availabilityEntry === undefined) continue;
-                    // Unrated availabilities (no printed modifier) cannot be shown to meet the Scarce floor.
-                    const modifier = availabilityEntry.modifier;
-                    if (modifier === null || modifier < scarceModifier) continue;
+                    // Ratings outside the ordered scale (`uncommon`) cannot be shown to meet the Scarce floor.
+                    const rating = normaliseAvailability(availability);
+                    if (rating === null || AVAILABILITY_KEYS.indexOf(rating) > scarceRank) continue;
                     if (entry.name?.startsWith('! Default') === true) continue;
                     const homebrewCost = entrySys?.cost?.dh2?.homebrew;
                     const equipEntry: EquipmentEntry = {
@@ -2153,7 +2152,6 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                         weaponTypes: entrySys?.weaponTypes ?? [],
                         availability,
                         availabilityLabel: game.i18n.localize(availabilityEntry.label),
-                        availabilityOrder: modifier,
                         requisition: homebrewCost?.requisition ?? null,
                         throneGelt: homebrewCost?.throneGelt ?? null,
                     };

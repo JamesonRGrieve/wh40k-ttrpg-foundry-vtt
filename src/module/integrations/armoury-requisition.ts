@@ -25,14 +25,21 @@
  * trade (a pile, a hand-built shop) keeps paying in coin, untouched.
  */
 
+import { acquisitionLadderFor } from '../config/game-systems/index.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
 import { degreesOfFailure, degreesOfSuccess, isD100Success } from '../rules/_dice.ts';
-import { normaliseAvailability } from '../rules/acquisition-scale.ts';
+import {
+    type AcquisitionLadder,
+    type AvailabilityKey,
+    type CraftsmanshipKey,
+    normaliseAvailability,
+    normaliseCraftsmanship,
+} from '../rules/acquisition-ladder.ts';
 import { type FlaggedActorLike, findArmoury } from '../rules/armoury.ts';
 import { isRenownRank, RENOWN_THRESHOLDS } from '../rules/dw-renown.ts';
 import { isTestBasedEconomy, requisitionEconomyFor, type RequesterState, type RequestedItem, type RequisitionEconomy } from '../rules/requisition-rail.ts';
-import type { AvailabilityKey, CraftsmanshipKey, RequisitionModifier } from '../rules/requisition-test.ts';
+import type { RequisitionModifier } from '../rules/requisition-test.ts';
 import { applyRequisition, planRequisition, type RequisitionRequest } from '../rules/requisition-transfer.ts';
 import type { I18nKey } from '../types/i18n-keys';
 
@@ -88,12 +95,6 @@ const POOL_PATHS: Partial<Record<RequisitionEconomy, string>> = {
     'profit-factor': 'system.rogueTrader.profitFactor.current',
 };
 
-const CRAFTSMANSHIP_KEYS: ReadonlySet<string> = new Set<CraftsmanshipKey>(['poor', 'common', 'good', 'best']);
-
-function isCraftsmanshipKey(value: string | undefined): value is CraftsmanshipKey {
-    return value !== undefined && CRAFTSMANSHIP_KEYS.has(value);
-}
-
 function readRequisitionPool(system: RequisitionerSystem): RequesterState {
     return { rating: 0, pool: system.requisition ?? 0, renown: system.renown ?? 0 };
 }
@@ -124,14 +125,14 @@ export function readRequesterState(system: RequisitionerSystem, economy: Requisi
 export function requestedItemFrom(item: RequisitionableItem, economy: RequisitionEconomy): RequestedItem | null {
     const availability: AvailabilityKey | null = normaliseAvailability(item.system.availability);
     if (availability === null) return null;
-    const craftsmanship = item.system.craftsmanship;
+    const craftsmanship = normaliseCraftsmanship(item.system.craftsmanship);
     const renownRank = item.system.renown;
     let cost: number | undefined;
     if (economy === 'requisition-points') cost = item.system.cost?.dw?.requisition ?? undefined;
     if (economy === 'profit-factor') cost = item.system.cost?.rt?.profitFactor ?? undefined;
     return {
         availability,
-        craftsmanship: isCraftsmanshipKey(craftsmanship) ? craftsmanship : undefined,
+        craftsmanship: craftsmanship ?? undefined,
         bound: item.system.bound === true,
         cost,
         renownRequired: isRenownRank(renownRank) ? RENOWN_THRESHOLDS[renownRank].min : undefined,
@@ -170,6 +171,8 @@ export interface ArmouryRequisitionOutcome {
  */
 export function resolveArmouryRequisition(input: {
     economy: RequisitionEconomy;
+    /** The buyer's line's printed availability / craftsmanship ladder (#192). */
+    ladder: AcquisitionLadder | null;
     requester: RequesterState;
     entries: readonly ItemPilesTradeEntry[];
     infiniteStock: boolean;
@@ -191,6 +194,7 @@ export function resolveArmouryRequisition(input: {
         }
         const request: RequisitionRequest = {
             economy,
+            ladder: input.ladder,
             requester: standing,
             item: requested,
             stock: { quantity: item.system.quantity, infinite: input.infiniteStock },
@@ -203,7 +207,8 @@ export function resolveArmouryRequisition(input: {
             break;
         }
         let rolled: { total: number; success: boolean; dos: number; dof: number } | undefined;
-        if (isTestBasedEconomy(economy)) {
+        // A rating the ladder prints "Automatic" passes with no roll.
+        if (isTestBasedEconomy(economy) && plan.gate.automatic !== true) {
             const total = input.rollD100();
             const target = plan.gate.target ?? 0;
             const success = isD100Success(total, target);
@@ -294,8 +299,9 @@ function modifierLabel(modifier: RequisitionModifier, translate: Translate): str
     if (availability !== null) {
         return translate('WH40K.Requisition.Source.Availability', { rating: translate(AVAILABILITY_LABEL_KEYS[availability]) });
     }
-    if (modifier.source === 'craftsmanship' && isCraftsmanshipKey(detail)) {
-        return translate('WH40K.Requisition.Source.Craftsmanship', { rating: translate(CRAFTSMANSHIP_LABEL_KEYS[detail]) });
+    const craftsmanship = modifier.source === 'craftsmanship' ? normaliseCraftsmanship(detail) : null;
+    if (craftsmanship !== null) {
+        return translate('WH40K.Requisition.Source.Craftsmanship', { rating: translate(CRAFTSMANSHIP_LABEL_KEYS[craftsmanship]) });
     }
     return translate('WH40K.Requisition.Source.Other');
 }
@@ -419,6 +425,7 @@ export function gateArmouryTrade(
     const rolls: Roll[] = [];
     const outcome = resolveArmouryRequisition({
         economy,
+        ladder: acquisitionLadderFor(buyer.system.gameSystem),
         requester: readRequesterState(buyer.system, economy),
         entries: prices.buyerReceive,
         infiniteStock: hasInfiniteStock(seller),

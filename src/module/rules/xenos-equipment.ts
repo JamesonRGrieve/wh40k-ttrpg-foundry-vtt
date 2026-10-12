@@ -13,7 +13,7 @@
  */
 
 import { nonNegInt } from './_num.ts';
-import { AVAILABILITY_MODIFIERS, type AvailabilityKey } from './requisition-test.ts';
+import { type AcquisitionLadder, type AvailabilityKey, availabilityTerm } from './acquisition-ladder.ts';
 
 export type XenosCondition = 'pristine' | 'worn' | 'degraded' | 'ruined';
 
@@ -51,16 +51,14 @@ export function tickXenosDegradation(remainingCharges: number, ticks = 1): { new
     return { newCharges, newCondition: getXenosCondition(newCharges) };
 }
 
-/**
- * The repair Tech-Use target uses the same Availability modifier as
- * the canonical acquisition test (`requisition-test.ts:AVAILABILITY_MODIFIERS`).
- * Re-exported here under a descriptive alias for downstream readers.
- */
-export { AVAILABILITY_MODIFIERS as AVAILABILITY_REPAIR_MODIFIER } from './requisition-test.ts';
-
 export interface XenosRepairInput {
     /** Actor's Tech-Use skill total. */
     techUseTotal: number;
+    /**
+     * The line's acquisition ladder: the repair test takes the same Availability
+     * modifier as the line's acquisition test (#192).
+     */
+    ladder: AcquisitionLadder;
     /** Item's Availability key. */
     availability: AvailabilityKey;
     /** Current condition (worn / degraded / ruined repairable; pristine is no-op). */
@@ -68,8 +66,11 @@ export interface XenosRepairInput {
 }
 
 export interface XenosRepairResult {
-    /** Effective Tech-Use target for the repair test. */
-    target: number;
+    /**
+     * Effective Tech-Use target for the repair test; `null` when the ladder
+     * prints the item's rating without a number (Automatic / GM's discretion).
+     */
+    target: number | null;
     /** True when the item is in pristine condition (no repair needed). */
     isNoOp: boolean;
     /** True when the item is ruined beyond field repair (RAW: requires Forge-world facility). */
@@ -82,10 +83,9 @@ export function resolveXenosRepairTarget(input: XenosRepairInput): XenosRepairRe
         return { target: input.techUseTotal, isNoOp: true, requiresFacility: false };
     }
     const tu = nonNegInt(input.techUseTotal);
-    const modifier = AVAILABILITY_MODIFIERS[input.availability];
-    const target = Math.max(0, tu + modifier);
+    const availability = availabilityTerm(input.ladder, input.availability);
     return {
-        target,
+        target: availability.kind === 'modifier' ? Math.max(0, tu + availability.value) : null,
         isNoOp: false,
         requiresFacility: input.currentCondition === 'ruined',
     };

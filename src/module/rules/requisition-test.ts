@@ -1,9 +1,10 @@
 /**
- * Requisition Test math (core.md §"The Requisition Test", p. 142).
+ * Requisition-style test math: a rating (Influence, Logistics, Infamy) plus the
+ * item's availability and craftsmanship modifiers plus any GM modifier.
  *
- * Target = Influence + availability modifier + scarcity modifier +
- * craftsmanship modifier. The acquisition dialog computes each piece;
- * this module exposes the pure tables and the composition function.
+ * The availability / craftsmanship values are the active line's printed
+ * ladder (`BaseSystemConfig.acquisitionLadder`, #192) — they differ between
+ * lines, so the caller passes the ladder in and this module holds none.
  *
  * Homebrew gating (DH2 vs RAW economy): `WH40KSettings.getRuleset()`
  * controls whether Throne Gelt surfaces alongside the test, NOT the
@@ -11,45 +12,12 @@
  */
 
 import { nonNegInt } from './_num.ts';
-
-export type AvailabilityKey =
-    | 'ubiquitous'
-    | 'abundant'
-    | 'plentiful'
-    | 'common'
-    | 'average'
-    | 'scarce'
-    | 'rare'
-    | 'veryRare'
-    | 'extremelyRare'
-    | 'nearUnique'
-    | 'unique';
-
-export const AVAILABILITY_MODIFIERS: Record<AvailabilityKey, number> = {
-    ubiquitous: 30,
-    abundant: 20,
-    plentiful: 10,
-    common: 0,
-    average: 0,
-    scarce: -10,
-    rare: -20,
-    veryRare: -30,
-    extremelyRare: -50,
-    nearUnique: -70,
-    unique: -90,
-};
-
-export type CraftsmanshipKey = 'poor' | 'common' | 'good' | 'best';
-
-export const CRAFTSMANSHIP_MODIFIERS: Record<CraftsmanshipKey, number> = {
-    poor: 10,
-    common: 0,
-    good: -10,
-    best: -30,
-};
+import { type AcquisitionLadder, type AvailabilityKey, availabilityTerm, type CraftsmanshipKey } from './acquisition-ladder.ts';
 
 export interface RequisitionTestInput {
     influence: number;
+    /** The line's printed ladder. */
+    ladder: AcquisitionLadder;
     availability: AvailabilityKey;
     craftsmanship?: CraftsmanshipKey;
     /** GM-supplied free-form modifier (e.g. Peer +10, faction discount, etc.). */
@@ -71,24 +39,38 @@ export interface RequisitionModifier {
     detail?: string | undefined;
 }
 
-export interface RequisitionTestResult {
-    target: number;
-    /** Modifier breakdown for chat-card display — one row per component, never a lumped total. */
-    breakdown: RequisitionModifier[];
-}
+/**
+ * How the test resolves. `test`: roll against `target`. `automatic`: the ladder
+ * prints the rating as "Automatic" — passed with no roll. `discretion`: the
+ * ladder prints "GM's discretion" — no target can be derived.
+ */
+export type RequisitionTestResult =
+    | {
+          kind: 'test';
+          target: number;
+          /** Modifier breakdown for chat-card display — one row per component, never a lumped total. */
+          breakdown: RequisitionModifier[];
+      }
+    | { kind: 'automatic' }
+    | { kind: 'discretion' };
 
 export function getRequisitionTestTarget(input: RequisitionTestInput): RequisitionTestResult {
+    const availability = availabilityTerm(input.ladder, input.availability);
+    if (availability.kind !== 'modifier') return { kind: availability.kind };
+
     const breakdown: RequisitionModifier[] = [];
     breakdown.push({ source: 'rating', value: input.influence });
-    breakdown.push({ source: 'availability', value: AVAILABILITY_MODIFIERS[input.availability], detail: input.availability });
-    if (input.craftsmanship !== undefined) {
-        breakdown.push({ source: 'craftsmanship', value: CRAFTSMANSHIP_MODIFIERS[input.craftsmanship], detail: input.craftsmanship });
+    breakdown.push({ source: 'availability', value: availability.value, detail: input.availability });
+    // A line whose test takes no craftsmanship modifier (ladder.craftsmanship null) prints no row.
+    const craftsmanship = input.ladder.craftsmanship;
+    if (input.craftsmanship !== undefined && craftsmanship !== null) {
+        breakdown.push({ source: 'craftsmanship', value: craftsmanship[input.craftsmanship], detail: input.craftsmanship });
     }
     if (input.extra !== undefined && input.extra !== 0) {
         breakdown.push({ source: 'other', value: input.extra });
     }
     const target = breakdown.reduce((sum, m) => sum + m.value, 0);
-    return { target: Math.max(0, target), breakdown };
+    return { kind: 'test', target: Math.max(0, target), breakdown };
 }
 
 /**

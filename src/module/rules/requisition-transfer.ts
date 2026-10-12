@@ -13,6 +13,7 @@
  * requester, set the armoury's remaining stock — and does no deciding of its own.
  */
 
+import type { AcquisitionLadder } from './acquisition-ladder.ts';
 import {
     evaluateRequisition,
     type RequesterState,
@@ -34,6 +35,8 @@ interface StockLine {
 /** A requisition request, with the armoury's side included. */
 export interface RequisitionRequest {
     economy: RequisitionEconomy;
+    /** The active line's printed availability / craftsmanship ladder (#192). */
+    ladder: AcquisitionLadder | null;
     requester: RequesterState;
     item: RequestedItem;
     stock: StockLine;
@@ -65,7 +68,7 @@ const DEFAULT_TAKEN = 1;
  */
 export function planRequisition(request: RequisitionRequest): RequisitionPlan {
     const taken = Math.max(1, Math.trunc(request.taken ?? DEFAULT_TAKEN));
-    const gate = evaluateRequisition(request.economy, request.requester, request.item);
+    const gate = evaluateRequisition(request.economy, request.requester, request.item, request.ladder);
     if (!gate.allowed) {
         return { gate, allowed: false, reason: gate.reason, taken };
     }

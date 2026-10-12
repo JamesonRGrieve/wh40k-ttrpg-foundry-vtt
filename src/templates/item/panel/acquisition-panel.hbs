@@ -39,7 +39,7 @@
           <option value="">{{localize "WH40K.Availability.None"}}</option>
           {{#each config.availabilities}}
           <option value="{{@key}}" {{selected (eq @key ../system.availability)}}>
-            {{label}} ({{signedNumber modifier}})
+            {{label}}
           </option>
           {{/each}}
         </select>

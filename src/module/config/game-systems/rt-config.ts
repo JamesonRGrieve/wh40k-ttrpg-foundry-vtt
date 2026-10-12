@@ -5,16 +5,39 @@
 
 // The RT career registry is read from the compendium-backed boot cache.
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { type CareerTable, getCareerAdvancementRegistry } from '../advancements/career-advancement-cache.ts';
 import { getCareerKeyFromName } from '../advancements/index.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
 
+/**
+ * Profit Factor Acquisition Test — core Table 9-35: Acquisition Modifiers
+ * (p. 272). Every cell is a number, which the RT resolver relies on.
+ */
+export const RT_ACQUISITION_LADDER = {
+    availability: {
+        ubiquitous: 70,
+        abundant: 50,
+        plentiful: 30,
+        common: 20,
+        average: 10,
+        scarce: 0,
+        rare: -10,
+        veryRare: -20,
+        extremelyRare: -30,
+        nearUnique: -50,
+        unique: -70,
+    },
+    craftsmanship: { poor: 10, common: 0, good: -10, best: -30 },
+} as const satisfies AcquisitionLadder;
+
 export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'rt' as const;
     readonly usesMalignancyTest = true;
     readonly maleficCorruptionOnManifest = false;
+    readonly acquisitionLadder: AcquisitionLadder = RT_ACQUISITION_LADDER;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.rt';
     readonly cssClass = 'rogue-trader';
     readonly theme = {

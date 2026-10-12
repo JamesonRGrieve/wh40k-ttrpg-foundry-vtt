@@ -4,14 +4,38 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
+
+/**
+ * Requisition test — core Table 5-1: Availability Modifiers and Table 5-2:
+ * Craftsmanship, Requisition, and Repair (p. 141). Ubiquitous is printed
+ * "Automatic"; Unique "Hellish (–60)/GM's discretion".
+ */
+export const DH2_ACQUISITION_LADDER: AcquisitionLadder = {
+    availability: {
+        ubiquitous: 'automatic',
+        abundant: 30,
+        plentiful: 20,
+        common: 10,
+        average: 0,
+        scarce: -10,
+        rare: -20,
+        veryRare: -30,
+        extremelyRare: -40,
+        nearUnique: -50,
+        unique: -60,
+    },
+    craftsmanship: { poor: 10, common: 0, good: -20, best: -30 },
+};
 
 export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'dh2' as const;
     readonly usesMalignancyTest = true;
     readonly maleficCorruptionOnManifest = true;
+    readonly acquisitionLadder: AcquisitionLadder = DH2_ACQUISITION_LADDER;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dh2';
     readonly cssClass = 'dark-heresy';
     readonly theme = {

@@ -3,6 +3,7 @@
  * Provides type-safe access to per-system configuration via singleton instances.
  */
 
+import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BaseSystemConfig } from './base-system-config.ts';
 import { BCSystemConfig } from './bc-config.ts';
 import { DH1eSystemConfig } from './dh1-config.ts';
@@ -58,6 +59,16 @@ export const SystemConfigRegistry = {
         return id in SYSTEM_CONFIGS;
     },
 } as const;
+
+/**
+ * A line's acquisition ladder (#192), or `null` for an unknown line or one with
+ * no availability-modified acquisition test.
+ * @param line  `system.gameSystem` id.
+ */
+export function acquisitionLadderFor(line: string | undefined): AcquisitionLadder | null {
+    if (line === undefined) return null;
+    return SystemConfigRegistry.getOrNull(line)?.acquisitionLadder ?? null;
+}
 
 /**
  * Tailwind utility prefixes for each `SystemThemeRole`.

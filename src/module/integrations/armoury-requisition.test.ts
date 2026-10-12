@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { DH2_ACQUISITION_LADDER } from '../config/game-systems/dh2-config.ts';
 import {
     buildArmouryCardContext,
     gateArmouryTrade,
@@ -82,19 +83,37 @@ describe('resolveArmouryRequisition', () => {
     it('grants a line whose Influence test passes, without touching standing', () => {
         const outcome = resolveArmouryRequisition({
             economy: 'influence',
+            ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 50 },
             entries: [entry(item({ availability: 'common' }))],
             infiniteStock: true,
             rollD100: () => 20,
         });
         expect(outcome.allowed).toBe(true);
-        expect(outcome.attempts[0]).toMatchObject({ outcome: 'granted', target: 50, roll: 20, dos: 4 });
+        // DH2 Common is Ordinary (+10): 50 + 10 = 60.
+        expect(outcome.attempts[0]).toMatchObject({ outcome: 'granted', target: 60, roll: 20 });
         expect(standingUpdate(outcome)).toBeNull();
+    });
+
+    it('grants a rating the ladder prints "Automatic" without rolling', () => {
+        const rollD100 = vi.fn(() => 100);
+        const outcome = resolveArmouryRequisition({
+            economy: 'influence',
+            ladder: DH2_ACQUISITION_LADDER,
+            requester: { rating: 5 },
+            entries: [entry(item({ availability: 'ubiquitous' }))],
+            infiniteStock: true,
+            rollD100,
+        });
+        expect(outcome.allowed).toBe(true);
+        expect(outcome.attempts[0]?.outcome).toBe('granted');
+        expect(rollD100).not.toHaveBeenCalled();
     });
 
     it('denies a failed test and drops Influence on a 3+ DoF failure', () => {
         const outcome = resolveArmouryRequisition({
             economy: 'influence',
+            ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 40 },
             entries: [entry(item({ availability: 'rare' }))],
             infiniteStock: true,
@@ -109,6 +128,7 @@ describe('resolveArmouryRequisition', () => {
         const rollD100 = vi.fn(() => 1);
         const outcome = resolveArmouryRequisition({
             economy: 'influence',
+            ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 90 },
             entries: [entry(item({ bound: true }))],
             infiniteStock: true,
@@ -122,6 +142,7 @@ describe('resolveArmouryRequisition', () => {
     it('refuses an unrated line by name', () => {
         const outcome = resolveArmouryRequisition({
             economy: 'influence',
+            ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 90 },
             entries: [entry(item({ availability: 'uncommon' }, 'Relic Blade'))],
             infiniteStock: true,
@@ -133,6 +154,7 @@ describe('resolveArmouryRequisition', () => {
     it('refuses more than a finite armoury holds', () => {
         const outcome = resolveArmouryRequisition({
             economy: 'influence',
+            ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 90 },
             entries: [entry(item({ quantity: 1 }), 3)],
             infiniteStock: false,
@@ -144,6 +166,7 @@ describe('resolveArmouryRequisition', () => {
     it('spends a Deathwatch Requisition pool line by line and stops at the first refusal', () => {
         const outcome = resolveArmouryRequisition({
             economy: 'requisition-points',
+            ladder: null,
             requester: { rating: 0, pool: 20, renown: 10 },
             entries: [entry(item({ cost: { dw: { requisition: 15 } } }, 'Bolter')), entry(item({ cost: { dw: { requisition: 15 } } }, 'Second Bolter'))],
             infiniteStock: true,
@@ -158,6 +181,7 @@ describe('resolveArmouryRequisition', () => {
     it('ignores currency/attribute lines of the trade', () => {
         const outcome = resolveArmouryRequisition({
             economy: 'influence',
+            ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 50 },
             entries: [{ type: 'attribute', quantity: 5 }],
             infiniteStock: true,
@@ -190,6 +214,7 @@ describe('buildArmouryCardContext — roll transparency', () => {
         stubI18n();
         const outcome = resolveArmouryRequisition({
             economy: 'influence',
+            ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 40 },
             entries: [entry(item({ availability: 'rare', craftsmanship: 'good' }))],
             infiniteStock: true,
@@ -199,12 +224,13 @@ describe('buildArmouryCardContext — roll transparency', () => {
         const attempt = ctx.attempts.at(0);
         expect(attempt?.baseLabel).toBe('WH40K.Requisition.Economy.influence');
         expect(attempt?.baseTarget).toBe(40);
-        expect(attempt?.modifierSources.map((r) => r.value)).toEqual([-20, -10]);
+        // DH2: Rare −20, Good −20 (core Tables 5-1 / 5-2).
+        expect(attempt?.modifierSources.map((r) => r.value)).toEqual([-20, -20]);
         const availabilityRow = attempt?.modifierSources.at(0);
         expect(availabilityRow?.label).toContain('WH40K.Requisition.Source.Availability');
         const tooltip = JSON.parse(availabilityRow?.tooltipData ?? '{}') as { sources: { value: number }[] };
         expect(tooltip.sources.at(0)?.value).toBe(-20);
-        expect(attempt?.target).toBe(10);
+        expect(attempt?.target).toBe(0);
         expect(ctx.gameSystem).toBe('dh2');
     });
 
@@ -212,6 +238,7 @@ describe('buildArmouryCardContext — roll transparency', () => {
         stubI18n();
         const outcome = resolveArmouryRequisition({
             economy: 'none',
+            ladder: null,
             requester: { rating: 0 },
             entries: [entry(item())],
             infiniteStock: true,

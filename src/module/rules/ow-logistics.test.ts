@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { OW_ACQUISITION_LADDER } from '../config/game-systems/ow-config.ts';
 import {
-    OW_CRAFTSMANSHIP_MODIFIER,
     OW_DEFAULT_LOGISTICS_RATING,
     OW_FRONT_ACTIVE_MOD,
     OW_MUNITORUM_INFLUENCE_BONUS,
@@ -99,16 +99,15 @@ describe('computeLogisticsTarget — craftsmanship axis (Table 6-6)', () => {
         ['best', -50],
     ];
     it.each(cases)('%s craftsmanship contributes %d', (craftsmanship, expected) => {
-        expect(OW_CRAFTSMANSHIP_MODIFIER[craftsmanship]).toBe(expected);
         const { breakdown, target } = computeLogisticsTarget(baseline({ craftsmanship }));
         expect(breakdown.craftsmanship).toBe(expected);
         expect(target).toBe(Math.max(0, 10 + expected));
     });
 
-    it('OW craftsmanship values differ from DH2 — Poor is +20 (not +10), Best is -50 (not -30)', () => {
-        // Smoke-test the divergence note in the module docstring.
-        expect(OW_CRAFTSMANSHIP_MODIFIER.poor).toBe(20);
-        expect(OW_CRAFTSMANSHIP_MODIFIER.best).toBe(-50);
+    it('reads the craftsmanship axis from the OW acquisition ladder, its single source (#192)', () => {
+        for (const [craftsmanship] of cases) {
+            expect(computeLogisticsTarget(baseline({ craftsmanship })).breakdown.craftsmanship).toBe(OW_ACQUISITION_LADDER.craftsmanship[craftsmanship]);
+        }
     });
 });
 

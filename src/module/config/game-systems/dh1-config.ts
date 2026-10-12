@@ -4,6 +4,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
@@ -13,6 +14,29 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
     readonly usesMalignancyTest = true;
     // Disciples of the Dark Gods prints its own Malefic powers; its cost rule is unverified.
     readonly maleficCorruptionOnManifest = false;
+
+    /**
+     * Influence requisition — Ascension Table 1-5: Availability Modifiers (p. 14).
+     * The test "may be modified by the duration of the requisition, the
+     * Availability of the Item, or the number of individuals" (p. 16): no
+     * craftsmanship modifier.
+     */
+    readonly acquisitionLadder: AcquisitionLadder = {
+        availability: {
+            ubiquitous: 70,
+            abundant: 50,
+            plentiful: 30,
+            common: 20,
+            average: 10,
+            scarce: 0,
+            rare: -10,
+            veryRare: -20,
+            extremelyRare: -30,
+            nearUnique: -50,
+            unique: -70,
+        },
+        craftsmanship: null,
+    };
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dh1';
     readonly cssClass = 'dark-heresy-1e';
     readonly theme = {

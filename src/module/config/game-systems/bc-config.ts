@@ -16,6 +16,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import {
     type ChaosAdvanceEntry,
     deriveAlignmentFromTally,
@@ -61,6 +62,29 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'bc' as const;
     readonly usesMalignancyTest = false;
     readonly maleficCorruptionOnManifest = false;
+
+    /**
+     * Infamy Acquisition Test — core Table 9-11: Acquisition Test Modifiers
+     * (p. 306). (Table 5-20's ladder on p. 200 is daemon-weapon crafting, not
+     * acquisition.)
+     */
+    readonly acquisitionLadder: AcquisitionLadder = {
+        availability: {
+            ubiquitous: 70,
+            abundant: 50,
+            plentiful: 30,
+            common: 20,
+            average: 10,
+            scarce: 0,
+            rare: -10,
+            veryRare: -20,
+            extremelyRare: -30,
+            nearUnique: -50,
+            unique: -70,
+        },
+        craftsmanship: { poor: 10, common: 0, good: -10, best: -20 },
+    };
+
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.bc';
     readonly cssClass = 'black-crusade';
     readonly theme = {

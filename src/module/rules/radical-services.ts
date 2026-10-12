@@ -8,7 +8,7 @@
  * the GM's narrative purview).
  */
 
-import type { AvailabilityKey } from './requisition-test.ts';
+import type { AvailabilityKey } from './acquisition-ladder.ts';
 
 export type RadicalServiceId =
     | 'bountyHunter'

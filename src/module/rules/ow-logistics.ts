@@ -19,12 +19,14 @@
  * Distinct from DH2's `requisition-test.ts`: OW uses Squad Logistics
  * Rating (not Influence), Table 6-2's four cumulative front axes (not
  * a single availability tier), and OW-specific craftsmanship deltas
- * (Poor +20 / Good -30 / Best -50 vs DH2 +10 / -10 / -30).
+ * (Poor +20 / Good -30 / Best -50 vs DH2 +10 / -20 / -30).
  *
  * RNG-free and actor-decoupled; no I/O, no Foundry Document reads.
  */
 
+import { OW_ACQUISITION_LADDER } from '../config/game-systems/ow-config.ts';
 import { degreesOfFailure, degreesOfSuccess, isD100Success } from './_dice.ts';
+import type { CraftsmanshipKey } from './acquisition-ladder.ts';
 
 /* -------------------------------------------------------------------- */
 /*  Base rating + flat bonuses                                          */
@@ -46,25 +48,14 @@ export const OW_STANDARD_KIT_BONUS = 20;
 /*  Craftsmanship axis — Table 6-6 (core.md line 7273)                  */
 /* -------------------------------------------------------------------- */
 
-export type Craftsmanship = 'poor' | 'common' | 'good' | 'best';
+export type Craftsmanship = CraftsmanshipKey;
 
 /**
- * **Table 6-6: Craftsmanship and Logistics** (OW core.md line 7273-7279).
- *
- * Note these are OW-specific values and intentionally differ from DH2's
- * `CRAFTSMANSHIP_MODIFIERS` in `requisition-test.ts` (DH2 uses Poor +10 /
- * Good -10 / Best -30). Do NOT consolidate the two tables.
+ * **Table 6-6: Craftsmanship and Logistics** — OW's own values, read from the
+ * line's acquisition ladder (`OW_ACQUISITION_LADDER` in `ow-config.ts`), the
+ * single source for them (#192).
  */
-export const OW_CRAFTSMANSHIP_MODIFIER: Record<Craftsmanship, number> = {
-    /** Routine (+20) — core.md line 7276. */
-    poor: 20,
-    /** Ordinary (+0) — core.md line 7277. */
-    common: 0,
-    /** Very Hard (-30) — core.md line 7278. */
-    good: -30,
-    /** Punishing (-50) — core.md line 7279. */
-    best: -50,
-};
+const OW_CRAFTSMANSHIP_MODIFIER = OW_ACQUISITION_LADDER.craftsmanship;
 
 /* -------------------------------------------------------------------- */
 /*  Front condition axes — Table 6-2 (core.md line 7100)                */

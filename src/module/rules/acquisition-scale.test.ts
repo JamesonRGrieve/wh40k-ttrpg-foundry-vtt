@@ -1,32 +1,23 @@
 import { describe, expect, it } from 'vitest';
-import {
-    ACQUISITION_AVAILABILITY_MODIFIERS,
-    ACQUISITION_CRAFTSMANSHIP_MODIFIERS,
-    ACQUISITION_SCALE_MODIFIERS,
-    combineAvailabilityModifier,
-    normaliseAvailability,
-    normaliseCraftsmanship,
-    normaliseScale,
-    resolveAcquisitionTest,
-} from './acquisition-scale';
+import { RT_ACQUISITION_LADDER } from '../config/game-systems/rt-config.ts';
+import { AVAILABILITY_KEYS, CRAFTSMANSHIP_KEYS } from './acquisition-ladder.ts';
+import { ACQUISITION_SCALE_MODIFIERS, combineAvailabilityModifier, normaliseScale, resolveAcquisitionTest } from './acquisition-scale';
 
 /* -------------------------------------------------------------- */
 /*  Table integrity                                               */
 /* -------------------------------------------------------------- */
 
 describe('Acquisition modifier tables (RT Table 9-35)', () => {
-    it('Availability spans +70 (Ubiquitous) to −70 (Unique)', () => {
-        expect(ACQUISITION_AVAILABILITY_MODIFIERS.ubiquitous).toBe(70);
-        expect(ACQUISITION_AVAILABILITY_MODIFIERS.abundant).toBe(50);
-        expect(ACQUISITION_AVAILABILITY_MODIFIERS.plentiful).toBe(30);
-        expect(ACQUISITION_AVAILABILITY_MODIFIERS.common).toBe(20);
-        expect(ACQUISITION_AVAILABILITY_MODIFIERS.average).toBe(10);
-        expect(ACQUISITION_AVAILABILITY_MODIFIERS.scarce).toBe(0);
-        expect(ACQUISITION_AVAILABILITY_MODIFIERS.rare).toBe(-10);
-        expect(ACQUISITION_AVAILABILITY_MODIFIERS.veryRare).toBe(-20);
-        expect(ACQUISITION_AVAILABILITY_MODIFIERS.extremelyRare).toBe(-30);
-        expect(ACQUISITION_AVAILABILITY_MODIFIERS.nearUnique).toBe(-50);
-        expect(ACQUISITION_AVAILABILITY_MODIFIERS.unique).toBe(-70);
+    // The Availability / Craftsmanship columns are pinned to the book in
+    // acquisition-ladder.test.ts; here, the resolver must read that ladder.
+    it.each(AVAILABILITY_KEYS)('resolver prices %s from the RT ladder', (availability) => {
+        const r = resolveAcquisitionTest({ profitFactor: 0, availability, scale: 'standard' });
+        expect(r.breakdown[0]?.value).toBe(RT_ACQUISITION_LADDER.availability[availability]);
+    });
+
+    it.each(CRAFTSMANSHIP_KEYS)('resolver prices %s craftsmanship from the RT ladder', (craftsmanship) => {
+        const r = resolveAcquisitionTest({ profitFactor: 0, craftsmanship, scale: 'standard' });
+        expect(r.breakdown[1]?.value).toBe(RT_ACQUISITION_LADDER.craftsmanship[craftsmanship]);
     });
 
     it('Scale spans +30 (Negligible) to −30 (Vast) with Standard at 0', () => {
@@ -38,45 +29,14 @@ describe('Acquisition modifier tables (RT Table 9-35)', () => {
         expect(ACQUISITION_SCALE_MODIFIERS.significant).toBe(-20);
         expect(ACQUISITION_SCALE_MODIFIERS.vast).toBe(-30);
     });
-
-    it('Craftsmanship Best is −30 (RT) not −20 (DH2)', () => {
-        expect(ACQUISITION_CRAFTSMANSHIP_MODIFIERS.poor).toBe(10);
-        expect(ACQUISITION_CRAFTSMANSHIP_MODIFIERS.common).toBe(0);
-        expect(ACQUISITION_CRAFTSMANSHIP_MODIFIERS.good).toBe(-10);
-        expect(ACQUISITION_CRAFTSMANSHIP_MODIFIERS.best).toBe(-30);
-    });
 });
 
 /* -------------------------------------------------------------- */
 /*  Normalisation                                                 */
 /* -------------------------------------------------------------- */
 
-describe('Availability normalisation (handles ship-component enums + RAW Title-Case)', () => {
-    it('accepts hyphenated "very-rare" → veryRare', () => {
-        expect(normaliseAvailability('very-rare')).toBe('veryRare');
-    });
-    it('accepts spaced "Very Rare" → veryRare', () => {
-        expect(normaliseAvailability('Very Rare')).toBe('veryRare');
-    });
-    it('accepts camelCase "veryRare" → veryRare', () => {
-        expect(normaliseAvailability('veryRare')).toBe('veryRare');
-    });
-    it('accepts mixed-case "extremely_rare" → extremelyRare', () => {
-        expect(normaliseAvailability('extremely_rare')).toBe('extremelyRare');
-    });
-    it('returns null for unknown input', () => {
-        expect(normaliseAvailability('xyz')).toBeNull();
-        expect(normaliseAvailability(null)).toBeNull();
-        expect(normaliseAvailability(undefined)).toBeNull();
-    });
-});
-
-describe('Craftsmanship + Scale normalisation', () => {
-    it('craftsmanship: trim + case-insensitive', () => {
-        expect(normaliseCraftsmanship('  Best  ')).toBe('best');
-        expect(normaliseCraftsmanship('GOOD')).toBe('good');
-        expect(normaliseCraftsmanship('zzz')).toBeNull();
-    });
+// Availability / craftsmanship normalisation is tested with the ladder module.
+describe('Scale normalisation', () => {
     it('scale: "Significan" (source typo) and "significant" both resolve', () => {
         expect(normaliseScale('Significan')).toBe('significant');
         expect(normaliseScale('significant')).toBe('significant');

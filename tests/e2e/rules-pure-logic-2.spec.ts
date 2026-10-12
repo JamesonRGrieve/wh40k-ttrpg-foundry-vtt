@@ -100,10 +100,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 REINFORCEMENT_MODIFIER: Record<string, number>;
             };
             'requisition-test': {
-                getRequisitionTestTarget: (input: { influence: number; availability: string; craftsmanship: string }) => { target: number };
+                getRequisitionTestTarget: (input: {
+                    influence: number;
+                    ladder: { availability: Record<string, number | string>; craftsmanship: Record<string, number> | null };
+                    availability: string;
+                    craftsmanship: string;
+                }) => { kind: string; target?: number };
                 applyInfluenceLossOnBigFailure: (influence: number, degrees: number) => number;
-                AVAILABILITY_MODIFIERS: Record<string, number>;
-                CRAFTSMANSHIP_MODIFIERS: Record<string, number>;
             };
             'spray-avoidance': {
                 resolveSprayAvoidance: (input: { hasLeapingDodge: boolean; agilityTotal: number; dodgeTotal: number }) => {
@@ -302,15 +305,18 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             fail(['requisition-test-target', 'requisition-test-influenceLoss'], requisition.__importError);
         } else {
             guarded('requisition-test-target', () => {
-                const common = requisition.getRequisitionTestTarget({ influence: 40, availability: 'common', craftsmanship: 'common' });
-                const clamped = requisition.getRequisitionTestTarget({ influence: 40, availability: 'rare', craftsmanship: 'best' });
-                const residual = requisition.getRequisitionTestTarget({ influence: 80, availability: 'rare', craftsmanship: 'best' });
-                return common.target === 40 && clamped.target === 0 && residual.target === 30 && requisition.AVAILABILITY_MODIFIERS.ubiquitous === 30;
+                // DH2 core Tables 5-1 / 5-2 (the ladder lives on the line config, #192).
+                const ladder = {
+                    availability: { ubiquitous: 'automatic', common: 10, rare: -20 },
+                    craftsmanship: { poor: 10, common: 0, good: -20, best: -30 },
+                };
+                const common = requisition.getRequisitionTestTarget({ influence: 40, ladder, availability: 'common', craftsmanship: 'common' });
+                const clamped = requisition.getRequisitionTestTarget({ influence: 40, ladder, availability: 'rare', craftsmanship: 'best' });
+                const residual = requisition.getRequisitionTestTarget({ influence: 80, ladder, availability: 'rare', craftsmanship: 'best' });
+                const automatic = requisition.getRequisitionTestTarget({ influence: 5, ladder, availability: 'ubiquitous', craftsmanship: 'common' });
+                return common.target === 50 && clamped.target === 0 && residual.target === 30 && automatic.kind === 'automatic';
             });
-            guarded(
-                'requisition-test-influenceLoss',
-                () => typeof requisition.applyInfluenceLossOnBigFailure(40, 3) === 'number' && requisition.CRAFTSMANSHIP_MODIFIERS.best === -30,
-            );
+            guarded('requisition-test-influenceLoss', () => requisition.applyInfluenceLossOnBigFailure(40, 3) === 39);
         }
 
         // ---------- spray-avoidance ----------

@@ -24,13 +24,11 @@ export interface LabelModifierConfig {
     modifier: number;
 }
 /**
- * An availability rating. `modifier` is null for a rating the books print only
- * as an item's availability cell, never in a modifier table (DH1/BC "Uncommon"):
- * it is stored RAW and unrated rather than given an invented scale position.
+ * An availability rating's display entry. Its test modifier is per line — the
+ * line's `acquisitionLadder` (game-system config, #192) — so none is held here.
  */
 export interface AvailabilityConfig {
     label: string;
-    modifier: number | null;
 }
 interface LabelDescriptionConfig {
     label: string;
@@ -252,23 +250,24 @@ WH40K.resources = {
 /* -------------------------------------------- */
 
 /**
- * Item availability ratings. `uncommon` is printed by DH1 supplements and BC as
- * an availability cell only — no book gives it a modifier — so it is unrated
- * (null) and sits outside the ordered scale.
+ * Item availability ratings (labels only — each line's modifiers are its
+ * `acquisitionLadder`, #192). `uncommon` is printed by DH1 supplements and BC as
+ * an availability cell only — no ladder rates it — so it sits outside the
+ * ordered scale.
  */
 WH40K.availabilities = {
-    'ubiquitous': { label: 'WH40K.Availability.Ubiquitous', modifier: 70 },
-    'abundant': { label: 'WH40K.Availability.Abundant', modifier: 50 },
-    'plentiful': { label: 'WH40K.Availability.Plentiful', modifier: 30 },
-    'common': { label: 'WH40K.Availability.Common', modifier: 20 },
-    'average': { label: 'WH40K.Availability.Average', modifier: 10 },
-    'scarce': { label: 'WH40K.Availability.Scarce', modifier: 0 },
-    'rare': { label: 'WH40K.Availability.Rare', modifier: -10 },
-    'very-rare': { label: 'WH40K.Availability.VeryRare', modifier: -20 },
-    'extremely-rare': { label: 'WH40K.Availability.ExtremelyRare', modifier: -30 },
-    'near-unique': { label: 'WH40K.Availability.NearUnique', modifier: -50 },
-    'unique': { label: 'WH40K.Availability.Unique', modifier: -70 },
-    'uncommon': { label: 'WH40K.Availability.Uncommon', modifier: null },
+    'ubiquitous': { label: 'WH40K.Availability.Ubiquitous' },
+    'abundant': { label: 'WH40K.Availability.Abundant' },
+    'plentiful': { label: 'WH40K.Availability.Plentiful' },
+    'common': { label: 'WH40K.Availability.Common' },
+    'average': { label: 'WH40K.Availability.Average' },
+    'scarce': { label: 'WH40K.Availability.Scarce' },
+    'rare': { label: 'WH40K.Availability.Rare' },
+    'very-rare': { label: 'WH40K.Availability.VeryRare' },
+    'extremely-rare': { label: 'WH40K.Availability.ExtremelyRare' },
+    'near-unique': { label: 'WH40K.Availability.NearUnique' },
+    'unique': { label: 'WH40K.Availability.Unique' },
+    'uncommon': { label: 'WH40K.Availability.Uncommon' },
 };
 
 /* -------------------------------------------- */

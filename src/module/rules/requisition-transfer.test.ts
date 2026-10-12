@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
+import { DH2_ACQUISITION_LADDER } from '../config/game-systems/dh2-config.ts';
 import { applyRequisition, planRequisition, type RequisitionRequest } from './requisition-transfer.ts';
 
 /** A DH2 acolyte with Influence 40 requisitioning a scarce item from finite stock. */
 function request(overrides: Partial<RequisitionRequest> = {}): RequisitionRequest {
     return {
         economy: 'influence',
+        ladder: DH2_ACQUISITION_LADDER,
         requester: { rating: 40 },
         item: { availability: 'scarce' },
         stock: { quantity: 3, infinite: false },

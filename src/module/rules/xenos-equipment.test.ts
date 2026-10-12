@@ -1,12 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import {
-    AVAILABILITY_REPAIR_MODIFIER,
-    XENOS_CONDITION_THRESHOLDS,
-    getXenosCondition,
-    nextConditionUp,
-    resolveXenosRepairTarget,
-    tickXenosDegradation,
-} from './xenos-equipment';
+import { DH2_ACQUISITION_LADDER } from '../config/game-systems/dh2-config.ts';
+import { XENOS_CONDITION_THRESHOLDS, getXenosCondition, nextConditionUp, resolveXenosRepairTarget, tickXenosDegradation } from './xenos-equipment';
+
+const ladder = DH2_ACQUISITION_LADDER;
 
 describe('getXenosCondition (#136)', () => {
     it('pristine ≥ 8 charges', () => {
@@ -44,27 +40,32 @@ describe('tickXenosDegradation (#136)', () => {
 
 describe('resolveXenosRepairTarget (#136)', () => {
     it('returns the techUseTotal unchanged when pristine (no-op)', () => {
-        const r = resolveXenosRepairTarget({ techUseTotal: 40, availability: 'rare', currentCondition: 'pristine' });
+        const r = resolveXenosRepairTarget({ techUseTotal: 40, ladder, availability: 'rare', currentCondition: 'pristine' });
         expect(r).toEqual({ target: 40, isNoOp: true, requiresFacility: false });
     });
 
-    it('applies the Availability modifier for non-pristine repair attempts', () => {
-        // worn + rare (-20) → 40 - 20 = 20
-        const r = resolveXenosRepairTarget({ techUseTotal: 40, availability: 'rare', currentCondition: 'worn' });
+    it("applies the line ladder's Availability modifier for non-pristine repair attempts (#192)", () => {
+        // DH2: worn + Rare (−20) → 40 − 20 = 20
+        const r = resolveXenosRepairTarget({ techUseTotal: 40, ladder, availability: 'rare', currentCondition: 'worn' });
         expect(r.target).toBe(20);
         expect(r.isNoOp).toBe(false);
         expect(r.requiresFacility).toBe(false);
     });
 
     it('flags requiresFacility when the item is ruined', () => {
-        const r = resolveXenosRepairTarget({ techUseTotal: 40, availability: 'common', currentCondition: 'ruined' });
+        const r = resolveXenosRepairTarget({ techUseTotal: 40, ladder, availability: 'common', currentCondition: 'ruined' });
         expect(r.requiresFacility).toBe(true);
     });
 
     it('floors the target at 0', () => {
-        const r = resolveXenosRepairTarget({ techUseTotal: 10, availability: 'unique', currentCondition: 'degraded' });
-        // 10 + (-90) → floored to 0
+        // DH2: 10 + (−60, Unique) → floored to 0
+        const r = resolveXenosRepairTarget({ techUseTotal: 10, ladder, availability: 'unique', currentCondition: 'degraded' });
         expect(r.target).toBe(0);
+    });
+
+    it('derives no target for a rating the ladder prints without a number', () => {
+        const r = resolveXenosRepairTarget({ techUseTotal: 40, ladder, availability: 'ubiquitous', currentCondition: 'worn' });
+        expect(r.target).toBeNull();
     });
 });
 
@@ -79,13 +80,7 @@ describe('nextConditionUp (#136)', () => {
     });
 });
 
-describe('AVAILABILITY_REPAIR_MODIFIER (#136)', () => {
-    it('is re-exported from requisition-test.ts (single source of truth)', () => {
-        // Common-spec sanity check: should carry the canonical key set.
-        expect(AVAILABILITY_REPAIR_MODIFIER.scarce).toBe(-10);
-        expect(AVAILABILITY_REPAIR_MODIFIER.unique).toBe(-90);
-    });
-
+describe('XENOS_CONDITION_THRESHOLDS (#136)', () => {
     it('thresholds table is exposed (sheet-display convenience)', () => {
         expect(XENOS_CONDITION_THRESHOLDS.pristine.minCharges).toBe(8);
         expect(XENOS_CONDITION_THRESHOLDS.ruined.minCharges).toBe(0);

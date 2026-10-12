@@ -16,13 +16,8 @@
  */
 
 import type { I18nKey } from '../types/i18n-keys';
-import {
-    applyInfluenceLossOnBigFailure,
-    type AvailabilityKey,
-    type CraftsmanshipKey,
-    getRequisitionTestTarget,
-    type RequisitionModifier,
-} from './requisition-test.ts';
+import type { AcquisitionLadder, AvailabilityKey, CraftsmanshipKey } from './acquisition-ladder.ts';
+import { applyInfluenceLossOnBigFailure, getRequisitionTestTarget, type RequisitionModifier } from './requisition-test.ts';
 
 /**
  * Why a requisition was refused, as a langpack key plus its format data. The
@@ -105,6 +100,8 @@ export interface RequisitionGate {
     reason?: RequisitionRefusal | undefined;
     /** Test target, for a test economy. */
     target?: number | undefined;
+    /** True when the line's ladder prints the rating "Automatic": passed with no roll. */
+    automatic?: boolean | undefined;
     /** Modifier provenance, for the chat card (never a lumped total). */
     breakdown?: RequisitionModifier[] | undefined;
     /** Points this costs, for a pool economy. */
@@ -120,9 +117,15 @@ export interface RequisitionGate {
  * @param {RequisitionEconomy} economy  The active line's economy.
  * @param {RequesterState} requester  The acolyte/warband's standing.
  * @param {RequestedItem} item  What is being requisitioned.
+ * @param {AcquisitionLadder | null} ladder  The active line's printed availability / craftsmanship ladder.
  * @returns {RequisitionGate}  The verdict and its terms.
  */
-export function evaluateRequisition(economy: RequisitionEconomy, requester: RequesterState, item: RequestedItem): RequisitionGate {
+export function evaluateRequisition(
+    economy: RequisitionEconomy,
+    requester: RequesterState,
+    item: RequestedItem,
+    ladder: AcquisitionLadder | null,
+): RequisitionGate {
     if (item.bound === true) {
         return { economy, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.Bound' } };
     }
@@ -131,12 +134,16 @@ export function evaluateRequisition(economy: RequisitionEconomy, requester: Requ
     }
 
     if (isTestBasedEconomy(economy)) {
-        const { target, breakdown } = getRequisitionTestTarget({
+        if (ladder === null) return { economy, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.NoEconomy' } };
+        const result = getRequisitionTestTarget({
             influence: requester.rating,
+            ladder,
             availability: item.availability,
             ...(item.craftsmanship === undefined ? {} : { craftsmanship: item.craftsmanship }),
         });
-        return { economy, allowed: true, target, breakdown };
+        if (result.kind === 'automatic') return { economy, allowed: true, automatic: true };
+        if (result.kind === 'discretion') return { economy, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.Discretion' } };
+        return { economy, allowed: true, target: result.target, breakdown: result.breakdown };
     }
 
     // Pool economies: no roll, but the pool must cover it — and DW gates on Renown.
@@ -189,6 +196,8 @@ export function resolveRequisition(
     if (!gate.allowed) {
         return { transfer: false, ratingAfter: requester.rating, poolAfter: requester.pool };
     }
+
+    if (gate.automatic === true) return { transfer: true, ratingAfter: requester.rating, poolAfter: requester.pool };
 
     if (isTestBasedEconomy(gate.economy)) {
         // No roll supplied for a test economy is a caller error, not a pass —

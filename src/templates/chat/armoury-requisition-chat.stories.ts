@@ -14,6 +14,7 @@ import { expect, within } from 'storybook/test';
 import type { SystemId } from '../../../stories/mocks/extended';
 import { localizeKey } from '../../../stories/mocks/lang-localize';
 import { renderSheet } from '../../../stories/test-helpers';
+import { DH2_ACQUISITION_LADDER } from '../../module/config/game-systems/dh2-config';
 import {
     buildArmouryCardContext,
     type ItemPilesTradeEntry,
@@ -49,6 +50,8 @@ function card(opts: {
 }): HTMLElement {
     const outcome = resolveArmouryRequisition({
         economy: opts.economy,
+        // Influence stories price against DH2's ladder; the per-system story only reframes the card.
+        ladder: opts.economy === 'influence' ? DH2_ACQUISITION_LADDER : null,
         requester: { rating: opts.rating ?? 0, pool: opts.pool, renown: 30 },
         entries: opts.entries,
         infiniteStock: true,

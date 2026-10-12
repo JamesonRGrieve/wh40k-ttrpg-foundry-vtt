@@ -4,6 +4,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type {
     GameSystemId,
@@ -53,6 +54,13 @@ export abstract class BaseSystemConfig {
      * lines whose rule has been verified opt in.
      */
     abstract readonly maleficCorruptionOnManifest: boolean;
+
+    /**
+     * The line's printed availability / craftsmanship modifier ladder for its
+     * acquisition test (Requisition, Logistics, Infamy, Profit Factor), or
+     * `null` when the line has no availability-modified test (#192).
+     */
+    abstract readonly acquisitionLadder: AcquisitionLadder | null;
 
     // ── Starting Resources ────────────────────────────────────────
 

@@ -1,17 +1,15 @@
+import { RT_ACQUISITION_LADDER } from '../../config/game-systems/rt-config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import {
+    AVAILABILITY_KEYS,
     type AvailabilityKey,
+    CRAFTSMANSHIP_KEYS,
     type CraftsmanshipKey,
-    type ScaleKey,
-    AVAILABILITY_KEYS_ORDERED,
-    CRAFTSMANSHIP_KEYS_ORDERED,
-    SCALE_KEYS_ORDERED,
     normaliseAvailability,
     normaliseCraftsmanship,
-    normaliseScale,
-    resolveAcquisitionTest,
-} from '../../rules/acquisition-scale.ts';
+} from '../../rules/acquisition-ladder.ts';
+import { ACQUISITION_SCALE_MODIFIERS, type ScaleKey, SCALE_KEYS_ORDERED, normaliseScale, resolveAcquisitionTest } from '../../rules/acquisition-scale.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { applySystemDataset } from '../api/apply-system-dataset.ts';
 import DialogResolution from './dialog-resolution.ts';
@@ -117,39 +115,11 @@ const SCALE_LABEL_KEYS: Record<ScaleKey, string> = {
     vast: 'WH40K.AcquisitionScale.Scale.Vast',
 };
 
-// Modifier integer lookup used for sidebar display. Mirrors
-// `ACQUISITION_*_MODIFIERS` from the rules module; kept inline here to
-// avoid runtime cost of resolving the table for every render.
-const AVAILABILITY_MOD_VALUES: Record<AvailabilityKey, number> = {
-    ubiquitous: 70,
-    abundant: 50,
-    plentiful: 30,
-    common: 20,
-    average: 10,
-    scarce: 0,
-    rare: -10,
-    veryRare: -20,
-    extremelyRare: -30,
-    nearUnique: -50,
-    unique: -70,
-};
-
-const CRAFTSMANSHIP_MOD_VALUES: Record<CraftsmanshipKey, number> = {
-    poor: 10,
-    common: 0,
-    good: -10,
-    best: -30,
-};
-
-const SCALE_MOD_VALUES: Record<ScaleKey, number> = {
-    negligible: 30,
-    trivial: 20,
-    minor: 10,
-    standard: 0,
-    major: -10,
-    significant: -20,
-    vast: -30,
-};
+// The Profit Factor Acquisition Test is Rogue Trader's: its Table 9-35 ladder
+// (the line config, #192) and Scale column (the rules module) are the sources.
+const AVAILABILITY_MOD_VALUES = RT_ACQUISITION_LADDER.availability;
+const CRAFTSMANSHIP_MOD_VALUES = RT_ACQUISITION_LADDER.craftsmanship;
+const SCALE_MOD_VALUES = ACQUISITION_SCALE_MODIFIERS;
 
 interface RogueTraderSystem {
     rogueTrader?: {
@@ -320,13 +290,13 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         context.scaleModifier = SCALE_MOD_VALUES[this.selectedScale];
 
         // Selector option lists for the template.
-        context.availabilityChoices = AVAILABILITY_KEYS_ORDERED.map((k) => ({
+        context.availabilityChoices = AVAILABILITY_KEYS.map((k) => ({
             key: k,
             labelKey: AVAILABILITY_LABEL_KEYS[k],
             value: AVAILABILITY_MOD_VALUES[k],
             selected: k === this.selectedAvailability,
         }));
-        context.craftsmanshipChoices = CRAFTSMANSHIP_KEYS_ORDERED.map((k) => ({
+        context.craftsmanshipChoices = CRAFTSMANSHIP_KEYS.map((k) => ({
             key: k,
             labelKey: CRAFTSMANSHIP_LABEL_KEYS[k],
             value: CRAFTSMANSHIP_MOD_VALUES[k],
@@ -390,9 +360,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /**
-     * Get availability modifier — RT Table 9-35.
-     * Delegates to the shared rules module so all 7 systems and any
-     * other consumer see the same numbers.
+     * Get availability modifier — RT Table 9-35, from the RT ladder.
      * @param {string} availability  Availability rating (any case / separator).
      * @returns {number}  Modifier value (0 when unrecognised).
      */

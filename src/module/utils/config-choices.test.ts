@@ -82,10 +82,10 @@ describe('labelFor', () => {
         expect(labelFor(SAMPLE, 'not-a-key')).toBe('not-a-key');
     });
 
-    it('labels the unrated "uncommon" availability, which carries no modifier', () => {
+    it('labels the unrated "uncommon" availability; modifiers live on each line\'s ladder, not here (#192)', () => {
         vi.stubGlobal('game', { i18n: { localize: (key: string): string => `loc:${key}` } });
         expect(labelFor(WH40K.availabilities, 'uncommon')).toBe('loc:WH40K.Availability.Uncommon');
-        expect(WH40K.availabilities).toHaveProperty('uncommon.modifier', null);
+        expect(Object.values(WH40K.availabilities).every((entry) => !('modifier' in entry))).toBe(true);
     });
 });
 

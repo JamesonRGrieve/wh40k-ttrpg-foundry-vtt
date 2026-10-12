@@ -25,106 +25,16 @@
  * are unaffected.
  */
 
-/* -------------------------------------------------------------------- */
-/*  Availability                                                        */
-/* -------------------------------------------------------------------- */
+import { RT_ACQUISITION_LADDER } from '../config/game-systems/rt-config.ts';
+import type { AvailabilityKey, CraftsmanshipKey } from './acquisition-ladder.ts';
 
-export type AvailabilityKey =
-    | 'ubiquitous'
-    | 'abundant'
-    | 'plentiful'
-    | 'common'
-    | 'average'
-    | 'scarce'
-    | 'rare'
-    | 'veryRare'
-    | 'extremelyRare'
-    | 'nearUnique'
-    | 'unique';
-
-/**
- * Table 9-35 Availability column (RT core p.272). Values are absolute
- * Acquisition Modifier contributions — added to PF before the roll.
+/*
+ * The Availability and Craftsmanship columns of Table 9-35 are Rogue Trader's
+ * acquisition ladder, read from the line's config (`RT_ACQUISITION_LADDER`),
+ * its single source (#192). Every RT cell is a number.
  */
-export const ACQUISITION_AVAILABILITY_MODIFIERS: Record<AvailabilityKey, number> = {
-    ubiquitous: 70,
-    abundant: 50,
-    plentiful: 30,
-    common: 20,
-    average: 10,
-    scarce: 0,
-    rare: -10,
-    veryRare: -20,
-    extremelyRare: -30,
-    nearUnique: -50,
-    unique: -70,
-};
-
-/**
- * Case-insensitive, separator-tolerant lookup that resolves hyphenated /
- * spaced / Title-Case variants (`'very rare'`, `'Very Rare'`,
- * `'very-rare'`, `'veryRare'`) to a canonical AvailabilityKey. Returns
- * null if no match — callers fall back to `'scarce'` (the table's 0).
- *
- * This is the normalisation the dialog needs because `PhysicalItemTemplate`
- * stores availability lowercased with space separators while ship
- * components stored hyphenated (`'very-rare'`) — see issue #192.
- */
-const AVAILABILITY_NORMALISATION: Readonly<Record<string, AvailabilityKey>> = {
-    ubiquitous: 'ubiquitous',
-    abundant: 'abundant',
-    plentiful: 'plentiful',
-    common: 'common',
-    average: 'average',
-    scarce: 'scarce',
-    rare: 'rare',
-    veryrare: 'veryRare',
-    extremelyrare: 'extremelyRare',
-    nearunique: 'nearUnique',
-    unique: 'unique',
-};
-
-export function normaliseAvailability(raw: string | null | undefined): AvailabilityKey | null {
-    if (raw === null || raw === undefined) return null;
-    const collapsed = raw
-        .trim()
-        .toLowerCase()
-        .replace(/[\s_-]+/g, '');
-    return AVAILABILITY_NORMALISATION[collapsed] ?? null;
-}
-
-/* -------------------------------------------------------------------- */
-/*  Craftsmanship                                                       */
-/* -------------------------------------------------------------------- */
-
-export type CraftsmanshipKey = 'poor' | 'common' | 'good' | 'best';
-
-/**
- * Table 9-35 Craftsmanship column. Note: RT diverges from DH2 here —
- * Best is −30 (RT), not −20 (DH2-style). Treat this as RT-specific.
- */
-export const ACQUISITION_CRAFTSMANSHIP_MODIFIERS: Record<CraftsmanshipKey, number> = {
-    poor: 10,
-    common: 0,
-    good: -10,
-    best: -30,
-};
-
-const CRAFTSMANSHIP_NORMALISATION: Readonly<Record<string, CraftsmanshipKey>> = {
-    poor: 'poor',
-    common: 'common',
-    good: 'good',
-    best: 'best',
-};
-
-export function normaliseCraftsmanship(raw: string | null | undefined): CraftsmanshipKey | null {
-    if (raw === null || raw === undefined) return null;
-    const collapsed = raw
-        .trim()
-        .toLowerCase()
-        .replace(/[\s_-]+/g, '');
-    return CRAFTSMANSHIP_NORMALISATION[collapsed] ?? null;
-}
+const RT_AVAILABILITY_MODIFIERS = RT_ACQUISITION_LADDER.availability;
+const RT_CRAFTSMANSHIP_MODIFIERS = RT_ACQUISITION_LADDER.craftsmanship;
 
 /* -------------------------------------------------------------------- */
 /*  Scale                                                               */
@@ -206,7 +116,7 @@ export function combineAvailabilityModifier(input: CombineAvailabilityInput): Co
     if (input.components.length === 0) {
         return { baseModifier: 0, combinePenalty: 0, total: 0, extraComponents: 0 };
     }
-    const mods = input.components.map((k) => ACQUISITION_AVAILABILITY_MODIFIERS[k]);
+    const mods = input.components.map((k) => RT_AVAILABILITY_MODIFIERS[k]);
     // "Greatest penalty" = lowest (most negative) modifier among components.
     let base = mods[0] ?? 0;
     for (const m of mods) {
@@ -299,7 +209,7 @@ export function resolveAcquisitionTest(input: ResolveAcquisitionInput): ResolveA
             });
         }
     } else if (input.availability !== undefined) {
-        availabilityValue = ACQUISITION_AVAILABILITY_MODIFIERS[input.availability];
+        availabilityValue = RT_AVAILABILITY_MODIFIERS[input.availability];
         breakdown.push({
             labelKey: 'WH40K.AcquisitionScale.Availability',
             value: availabilityValue,
@@ -310,7 +220,7 @@ export function resolveAcquisitionTest(input: ResolveAcquisitionInput): ResolveA
 
     // 2. Craftsmanship.
     const craftKey: CraftsmanshipKey = input.craftsmanship ?? 'common';
-    const craftValue = ACQUISITION_CRAFTSMANSHIP_MODIFIERS[craftKey];
+    const craftValue = RT_CRAFTSMANSHIP_MODIFIERS[craftKey];
     breakdown.push({ labelKey: 'WH40K.AcquisitionScale.Craftsmanship', value: craftValue });
 
     // 3. Scale.
@@ -339,21 +249,5 @@ export function resolveAcquisitionTest(input: ResolveAcquisitionInput): ResolveA
 /* -------------------------------------------------------------------- */
 /*  Ordered keys (for templates / dropdowns)                            */
 /* -------------------------------------------------------------------- */
-
-export const AVAILABILITY_KEYS_ORDERED: ReadonlyArray<AvailabilityKey> = [
-    'ubiquitous',
-    'abundant',
-    'plentiful',
-    'common',
-    'average',
-    'scarce',
-    'rare',
-    'veryRare',
-    'extremelyRare',
-    'nearUnique',
-    'unique',
-];
-
-export const CRAFTSMANSHIP_KEYS_ORDERED: ReadonlyArray<CraftsmanshipKey> = ['poor', 'common', 'good', 'best'];
 
 export const SCALE_KEYS_ORDERED: ReadonlyArray<ScaleKey> = ['negligible', 'trivial', 'minor', 'standard', 'major', 'significant', 'vast'];

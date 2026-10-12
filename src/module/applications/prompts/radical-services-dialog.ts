@@ -6,6 +6,7 @@
  * and applies the Subtlety hit.
  */
 
+import { DH2_ACQUISITION_LADDER } from '../../config/game-systems/dh2-config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { RADICAL_SERVICES, type RadicalServiceDefinition, type RadicalServiceId } from '../../rules/radical-services.ts';
 import { getRequisitionTestTarget } from '../../rules/requisition-test.ts';
@@ -27,6 +28,16 @@ function threatBadgeClass(level: number): string {
     return THREAT_BADGE_CLASSES[level] ?? 'tw-bg-yellow-400';
 }
 
+/**
+ * The Requisition target for hiring a service. Radical Services is DH2 Enemies
+ * Within content, so it prices against DH2's ladder (core Table 5-1, #192).
+ * `null` when the ladder prints the rating without a number (no service does).
+ */
+function serviceTarget(influence: number, service: RadicalServiceDefinition): number | null {
+    const result = getRequisitionTestTarget({ influence, ladder: DH2_ACQUISITION_LADDER, availability: service.availability });
+    return result.kind === 'test' ? result.target : null;
+}
+
 interface ServiceRow {
     id: RadicalServiceId;
     label: string;
@@ -35,7 +46,7 @@ interface ServiceRow {
     threatLevel: number;
     threatBadgeClass: string;
     subtletyOnHire: number;
-    target: number;
+    target: number | null;
     selected: boolean;
 }
 
@@ -100,7 +111,7 @@ class RadicalServicesDialog extends ApplicationV2Mixin(ApplicationV2 as unknown 
         const context = (await super._prepareContext(options)) as RadicalServicesContext;
         const influence = this.#getInfluence();
         const services: ServiceRow[] = Object.values(RADICAL_SERVICES).map((s) => {
-            const { target } = getRequisitionTestTarget({ influence, availability: s.availability });
+            const target = serviceTarget(influence, s);
             return {
                 id: s.id,
                 label: game.i18n.localize(`WH40K.RadicalServices.Names.${s.id}`),
@@ -149,8 +160,8 @@ class RadicalServicesDialog extends ApplicationV2Mixin(ApplicationV2 as unknown 
         const id = this.selectedServiceId;
         if (id === null) return;
         const service = RADICAL_SERVICES[id];
-        const influence = this.#getInfluence();
-        const { target } = getRequisitionTestTarget({ influence, availability: service.availability });
+        const target = serviceTarget(this.#getInfluence(), service);
+        if (target === null) return;
 
         const roll = new Roll('1d100');
         await roll.evaluate();
