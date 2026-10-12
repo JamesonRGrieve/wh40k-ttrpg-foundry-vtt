@@ -108,8 +108,10 @@ declare module 'fvtt-types/configuration' {
 
     /* eslint-disable no-restricted-syntax -- boundary: Foundry FlagConfig requires Record<string,unknown> shapes per fvtt-types interface */
     interface FlagConfig {
+        // `journalLink` is the explicit portrait journal link (#590): a JournalEntry /
+        // JournalEntryPage UUID set by dropping a journal onto the portrait.
         Actor: {
-            'wh40k-rpg': Record<string, unknown>;
+            'wh40k-rpg': { journalLink?: string; [key: string]: unknown };
             'rt'?: Record<string, unknown>;
         };
         Item: {

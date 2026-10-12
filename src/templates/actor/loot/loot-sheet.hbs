@@ -5,7 +5,10 @@
 --}}
 <div class="tw-flex tw-flex-col tw-h-full tw-gap-3 tw-p-3 tw-bg-[var(--color-bg-primary,#1a1a1a)] tw-text-[color:var(--wh40k-text-primary)]">
     <header class="tw-flex tw-items-center tw-gap-3 tw-pb-2 tw-border-b tw-border-[var(--wh40k-border-light)]">
-        <img src="{{actor.img}}" alt="{{actor.name}}" class="tw-w-10 tw-h-10 tw-object-cover tw-rounded-sm tw-border tw-border-[var(--wh40k-border-light)]" />
+        <div data-wh40k-hook="actor-portrait" class="tw-relative tw-shrink-0 tw-w-10 tw-h-10">
+            <img src="{{actor.img}}" alt="{{actor.name}}" class="tw-w-10 tw-h-10 tw-object-cover tw-rounded-sm tw-border tw-border-[var(--wh40k-border-light)]" />
+            {{> systems/wh40k-rpg/templates/actor/partial/portrait-journal-link.hbs compact=true}}
+        </div>
         <div class="tw-flex tw-flex-col tw-min-w-0">
             <span class="tw-font-semibold tw-text-gold dh2:tw-text-gold-raw rt:tw-text-amber-400 im:tw-text-failure-l40 tw-truncate">{{actor.name}}</span>
             {{#if lootSource}}

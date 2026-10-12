@@ -27,6 +27,7 @@ export class HandlebarManager {
         const templates = [
             // Essential partials
             'systems/wh40k-rpg/templates/actor/partial/actor-identity.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/portrait-journal-link.hbs',
             'systems/wh40k-rpg/templates/actor/partial/character-field.hbs',
             'systems/wh40k-rpg/templates/actor/partial/display-toggle.hbs',
             'systems/wh40k-rpg/templates/actor/partial/sidebar-header.hbs',

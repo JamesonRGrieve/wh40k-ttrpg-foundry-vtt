@@ -1,0 +1,34 @@
+{{!-- Portrait journal link (#590): a journal icon overlaid on an actor portrait,
+     rendered only when the actor has a journal entry the viewer may open.
+     Include it INSIDE a `tw-relative` portrait container.
+
+     Context: `portraitJournal` = { uuid, canClear } | null, set for every actor
+     sheet by BaseActorSheet._prepareCommonContext.
+
+     The open control is a native <button>, so it is keyboard-focusable and
+     Enter / Space activate it like a click; both dispatch `openPortraitJournal`.
+     `canClear` (an owner, with an explicit link set by dropping a journal on the
+     portrait) adds the `clearPortraitJournal` unlink button.
+
+     Hash params (optional):
+       - compact   boolean — smaller controls for thumbnail-sized portraits. --}}
+{{#if portraitJournal}}
+<div class="tw-absolute tw-bottom-1 tw-right-1 tw-z-10 tw-flex tw-items-center tw-gap-1">
+    {{#if portraitJournal.canClear}}
+    <button type="button"
+            class="tw-flex tw-items-center tw-justify-center tw-m-0 tw-p-0 {{#if compact}}tw-h-4 tw-w-4 tw-text-[0.55rem]{{else}}tw-h-6 tw-w-6 tw-text-xs{{/if}} tw-cursor-pointer tw-rounded-full tw-border tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-black/60 tw-text-gold {{themeClassFor 'accent'}} tw-opacity-70 tw-transition-all hover:tw-opacity-100 focus-visible:tw-opacity-100 focus-visible:tw-outline focus-visible:tw-outline-2 focus-visible:tw-outline-[#f0d060]"
+            data-action="clearPortraitJournal"
+            data-tooltip="{{localize 'WH40K.Portrait.Journal.Clear'}}"
+            aria-label="{{localize 'WH40K.Portrait.Journal.Clear'}}">
+        <i class="fa-solid fa-link-slash" aria-hidden="true"></i>
+    </button>
+    {{/if}}
+    <button type="button"
+            class="tw-flex tw-items-center tw-justify-center tw-m-0 tw-p-0 {{#if compact}}tw-h-5 tw-w-5 tw-text-[0.65rem]{{else}}tw-h-8 tw-w-8 tw-text-base{{/if}} tw-cursor-pointer tw-rounded-full tw-border tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-black/60 tw-text-gold {{themeClassFor 'accent'}} tw-opacity-80 tw-transition-all hover:tw-opacity-100 hover:tw-text-[#f0d060] hover:tw-drop-shadow-[0_0_8px_rgba(212,175,55,0.9)] focus-visible:tw-opacity-100 focus-visible:tw-outline focus-visible:tw-outline-2 focus-visible:tw-outline-[#f0d060]"
+            data-action="openPortraitJournal"
+            data-tooltip="{{localize 'WH40K.Portrait.Journal.Open'}}"
+            aria-label="{{localize 'WH40K.Portrait.Journal.Open'}}">
+        <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+    </button>
+</div>
+{{/if}}

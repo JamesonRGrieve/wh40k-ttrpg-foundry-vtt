@@ -10,6 +10,13 @@ import { skillKeysForSystem } from '../../data/shared/skill-definitions.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
+import {
+    applyPortraitJournalDrop,
+    clearActorJournalLink,
+    hasExplicitJournalLink,
+    openActorJournal,
+    portraitJournalLink,
+} from '../../managers/actor-journal-link.ts';
 import { ItemDropManager } from '../../managers/item-drop-manager.ts';
 import { effectivePoolSize, type PortraitActorLike } from '../../rules/portrait-spawn.ts';
 import { generateActorImageOnDemand, type TokenImageActor } from '../../rules/token-image-gen-runtime.ts';
@@ -327,6 +334,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             rerollPortrait: BaseActorSheet.#onRerollPortrait,
             togglePortraitPin: BaseActorSheet.#onTogglePortraitPin,
             generatePortrait: BaseActorSheet.#onGeneratePortrait,
+            openPortraitJournal: BaseActorSheet.#onOpenPortraitJournal,
+            clearPortraitJournal: BaseActorSheet.#onClearPortraitJournal,
             roll: BaseActorSheet.#roll,
             itemRoll: BaseActorSheet.#itemRoll,
             itemEdit: BaseActorSheet.#itemEdit,
@@ -503,6 +512,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const portraitActor = this.actor as unknown as PortraitActorLike;
         context['hasPortraitPool'] = effectivePoolSize(portraitActor) > 1;
         context['portraitPinned'] = (portraitActor.system?.portraits?.pinned ?? null) !== null;
+        // Portrait journal link (#590): the journal icon renders only when a link
+        // resolves to an entry this user may view; an owner may clear an explicit one.
+        const journalUuid = portraitJournalLink(this.actor);
+        context['portraitJournal'] = journalUuid === null ? null : { uuid: journalUuid, canClear: this.actor.isOwner && hasExplicitJournalLink(this.actor) };
     }
 
     /* -------------------------------------------- */
@@ -1933,6 +1946,34 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (!game.user.isGM) return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: the sheet's rich WH40KBaseActor narrowed to the generator's TokenImageActor slice
         await generateActorImageOnDemand(this.actor as unknown as TokenImageActor);
+    }
+
+    /**
+     * Open the actor's journal entry from the portrait icon (#590). Re-resolved
+     * at click time rather than read from the DOM, and opened under Foundry's
+     * ownership rules, so a player cannot reach a GM-only entry.
+     */
+    static async #onOpenPortraitJournal(this: BaseActorSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        await openActorJournal(this.actor);
+    }
+
+    /** Clear the explicit portrait journal link (#590), falling back to name resolution. Owners only. */
+    static async #onClearPortraitJournal(this: BaseActorSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        await clearActorJournalLink(this.actor);
+    }
+
+    /**
+     * A JournalEntry / JournalEntryPage dropped onto the portrait sets the
+     * actor's explicit journal link (#590), owners only. Every other drop —
+     * including an Item dropped onto the portrait — takes the normal path.
+     */
+    async _onDrop(event: DragEvent): Promise<void> {
+        const onPortrait = event.target instanceof Element && event.target.closest('[data-wh40k-hook="actor-portrait"]') !== null;
+        if (onPortrait && (await applyPortraitJournalDrop(this.actor, foundry.applications.ux.TextEditor.implementation.getDragEventData(event)))) return;
+        // The mixin chain erases ActorSheetV2's `_onDrop` from the static type, so
+        // reach it through the prototype (same pattern as `_preparePartContext`).
+        const proto = Object.getPrototypeOf(BaseActorSheet.prototype) as { _onDrop?: (this: BaseActorSheet, event: DragEvent) => Promise<void> };
+        await proto._onDrop?.call(this, event);
     }
 
     static async #onEditImage(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
