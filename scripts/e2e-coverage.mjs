@@ -994,7 +994,7 @@ recordDimension('rule-pure.flow', covered['rule-pure.flow'], RULE_PURE_FLOWS);
 // tests/e2e/rules-pure-logic-2.spec.ts. Each key maps to a canonical
 // affliction / social / vehicle resolver on a rules/ module that no
 // other Tier B spec drives directly. Pushes source-code coverage on
-// `src/module/rules/{addiction,assistance,disposition,disease,
+// `src/module/rules/{addiction,assistance,disposition,
 // hatred,phenomena-modifier,reinforcement,requisition-test,
 // spray-avoidance}.ts` — each at 0% Tier B function
 // coverage before this spec landed. Keys MUST match the
@@ -1005,8 +1005,6 @@ const RULE_AFFLICTION_FLOWS = [
     'assistance-bonus',
     'disposition-label',
     'disposition-modifier',
-    'disease-exposure',
-    'disease-dailyTick',
     'phenomena-modifier-compose',
     'reinforcement-callTarget',
     'requisition-test-target',

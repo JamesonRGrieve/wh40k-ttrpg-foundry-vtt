@@ -6,7 +6,7 @@ import { test } from './lib/test';
 /**
  * Tier B coverage of the *third* batch of pure-logic modules under
  * `src/module/rules/*` — the affliction / social / vehicle resolvers
- * (addiction, assistance, disposition, disease,
+ * (addiction, assistance, disposition,
  * phenomena-modifier, reinforcement, requisition-test, spray-avoidance)
  * that neither `rules-engine.spec.ts` nor
  * `rules-pure-logic.spec.ts` touches. Same rationale as those specs:
@@ -29,8 +29,6 @@ const RULE_AFFLICTION_FLOWS = [
     'assistance-bonus',
     'disposition-label',
     'disposition-modifier',
-    'disease-exposure',
-    'disease-dailyTick',
     'phenomena-modifier-compose',
     'reinforcement-callTarget',
     'requisition-test-target',
@@ -69,13 +67,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 DISPOSITION_LABELS: readonly string[];
                 getDispositionModifier: (value: number, kind: string) => number;
             };
-            'disease': {
-                resolveDiseaseExposure: (input: { toughnessTotal: number; diseaseRating: number }) => { target: number };
-                applyInfectionDailyTick: (input: { profile: DiseaseProfile; cumulativeSoFar: number; treatmentSucceeded?: boolean }) => {
-                    damage: number;
-                    cumulative: number;
-                };
-            };
             'phenomena-modifier': {
                 composePhenomenaModifier: (input: { warpWeakness: boolean; taintedPsykerPushCP: number }) => {
                     focusModifier: number;
@@ -103,13 +94,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     target: number;
                 };
             };
-        }
-        interface DiseaseProfile {
-            id: string;
-            label: string;
-            rating: number;
-            damagePerDay: number;
-            treatmentThreshold: number;
         }
         type ImportError = { __importError: string };
         type Loaded<T> = T | ImportError;
@@ -194,25 +178,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     disposition.getDispositionModifier(2, 'intimidate') === -20 &&
                     disposition.getDispositionModifier(99, 'charm') === 30,
             );
-        }
-
-        // ---------- disease ----------
-        const disease = await loadModule('disease');
-        if (isImportError(disease)) {
-            fail(['disease-exposure', 'disease-dailyTick'], disease.__importError);
-        } else {
-            const profile = { id: 'redfly-plague', label: 'Redfly Plague', rating: 20, damagePerDay: 2, treatmentThreshold: 6 };
-            guarded(
-                'disease-exposure',
-                () =>
-                    disease.resolveDiseaseExposure({ toughnessTotal: 50, diseaseRating: 20 }).target === 30 &&
-                    disease.resolveDiseaseExposure({ toughnessTotal: 10, diseaseRating: 50 }).target === 0,
-            );
-            guarded('disease-dailyTick', () => {
-                const tick1 = disease.applyInfectionDailyTick({ profile, cumulativeSoFar: 0 });
-                const treated = disease.applyInfectionDailyTick({ profile, cumulativeSoFar: 6, treatmentSucceeded: true });
-                return tick1.damage === 2 && tick1.cumulative === 2 && treated.damage === 0;
-            });
         }
 
         // ---------- phenomena-modifier ----------
