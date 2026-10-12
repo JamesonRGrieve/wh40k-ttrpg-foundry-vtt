@@ -1,0 +1,95 @@
+{{!--
+    Daemonology ritual chat card — DH2 Enemies Beyond.
+    Built by `actions/daemonology-actions.ts` (buildExorcismCard). Every test
+    prints base ± each sourced component = target through the shared
+    modifier-breakdown partial (hoverable "modifier" tooltip rows), then the
+    roll and its degrees. The wh40k-rpg class is added to the message root by
+    the renderChatMessageHTML hook so tw-* utilities apply outside a sheet.
+--}}
+<div class="tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] {{themeClassFor 'border'}} tw-bg-[rgba(16,8,12,0.9)]"
+     data-wh40k-system="{{gameSystem}}"
+     data-wh40k-hook="daemonology-ritual-card"
+     data-ritual-mode="{{mode}}">
+
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-book-skull tw-text-[1.1rem] {{themeClassFor 'accent'}}" aria-hidden="true"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]">
+            {{localize "WH40K.Daemonology.Exorcism.ChatTitle"}}
+        </div>
+    </div>
+    <p class="tw-m-0 tw-mb-3 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)]">
+        {{#if hostName}}{{localize "WH40K.Daemonology.Exorcism.ChatSubject" exorcist=actorName host=hostName}}{{else}}{{localize "WH40K.Daemonology.Exorcism.ChatSubjectNoHost" exorcist=actorName}}{{/if}}
+    </p>
+
+    {{!-- 1. Preparatory Forbidden Lore (Daemonology) test --}}
+    {{> systems/wh40k-rpg/templates/chat/partial/daemonology-test-row.hbs
+        titleKey="WH40K.Daemonology.Card.LoreTest"
+        test=loreTest
+        result=loreResult}}
+
+    {{!-- 2. The extended Daemonic Mastery test --}}
+    <div class="tw-mt-3 tw-text-[0.7rem] tw-uppercase tw-tracking-[0.06em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Daemonology.Card.MasteryTest"}}</div>
+    {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs
+        baseTarget=attemptTest.baseTarget
+        baseLabel=attemptTest.baseLabel
+        modifiedTarget=attemptTest.modifiedTarget
+        modifierSources=attemptTest.modifierSources
+        activeModifiers=attemptTest.activeModifiers
+        modifierCapFired=attemptTest.modifierCapFired
+        rawModifierTotal=attemptTest.rawModifierTotal
+        modifierTotal=attemptTest.modifierTotal}}
+
+    <table class="tw-w-full tw-text-[0.8rem] tw-tabular-nums tw-border-collapse" data-wh40k-hook="exorcism-attempts">
+        <thead>
+            <tr class="tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.7rem] tw-uppercase">
+                <th class="tw-text-left tw-font-normal">#</th>
+                <th class="tw-text-right tw-font-normal">{{localize "WH40K.Daemonology.Card.Roll"}}</th>
+                <th class="tw-text-right tw-font-normal">{{localize "WH40K.Daemonology.Card.Degrees"}}</th>
+                <th class="tw-text-right tw-font-normal">{{localize "WH40K.Daemonology.Card.Hours"}}</th>
+                <th class="tw-text-right tw-font-normal">{{localize "WH40K.Daemonology.Card.Fatigue"}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each attempts}}
+                <tr>
+                    <td>{{this.number}}</td>
+                    <td class="tw-text-right">{{this.roll}}</td>
+                    <td class="tw-text-right {{#if this.success}}tw-text-[var(--wh40k-success-secondary)]{{else}}tw-text-[var(--wh40k-danger-secondary)]{{/if}}">
+                        {{#if this.success}}{{localize "WH40K.Daemonology.Card.DoS" value=this.dos}}{{else}}{{localize "WH40K.Daemonology.Card.DoF" value=this.dof}}{{/if}}
+                    </td>
+                    <td class="tw-text-right">{{this.hours}}</td>
+                    <td class="tw-text-right">{{#if this.fatigue}}+{{this.fatigue}}{{else}}—{{/if}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-mt-2 tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.85rem]">
+        <li class="tw-flex tw-justify-between"><span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Daemonology.Card.DosTotal"}}</span><span class="tw-font-bold tw-tabular-nums">{{localize "WH40K.Daemonology.Card.DosAgainstThreshold" total=totalDos threshold=threshold}}</span></li>
+        <li class="tw-flex tw-justify-between"><span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Daemonology.Card.TotalHours"}}</span><span class="tw-font-bold tw-tabular-nums">{{hours}}</span></li>
+        <li class="tw-flex tw-justify-between"><span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Daemonology.Card.FatigueGained"}}</span><span class="tw-font-bold tw-tabular-nums">{{fatigueGained}}</span></li>
+    </ul>
+
+    {{!-- 3. Outcome --}}
+    {{#if banished}}
+        <div class="tw-mt-3 tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-border-emerald-600/60 tw-bg-emerald-900/30 tw-text-[0.85rem]" data-wh40k-hook="exorcism-outcome" data-exorcism-outcome="banished">
+            <div class="tw-font-bold">{{localize "WH40K.Daemonology.Exorcism.Banished"}}</div>
+            {{#if hostTest}}
+                <div class="tw-mt-1">
+                    {{localize "WH40K.Daemonology.Exorcism.HostTest" roll=hostTest.roll target=hostTest.target}}
+                    — {{#if hostTest.success}}{{localize "WH40K.Daemonology.Exorcism.HostSurvives"}}{{else}}<strong class="tw-text-[var(--wh40k-danger-secondary)]">{{localize "WH40K.Daemonology.Exorcism.HostDies"}}</strong>{{/if}}
+                </div>
+            {{else}}
+                <div class="tw-mt-1 tw-italic">{{localize "WH40K.Daemonology.Exorcism.HostTestManual"}}</div>
+            {{/if}}
+            {{#if hostCleared}}<div class="tw-mt-1">{{localize "WH40K.Daemonology.Exorcism.TrackCleared"}}</div>{{/if}}
+            <div class="tw-mt-1 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Daemonology.Exorcism.SurvivingPossession"}}</div>
+        </div>
+    {{/if}}
+    {{#if collapsed}}
+        <div class="tw-mt-3 tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-border-rose-600/60 tw-bg-rose-950/40 tw-text-[0.85rem]" data-wh40k-hook="exorcism-outcome" data-exorcism-outcome="collapsed">
+            <div class="tw-font-bold">{{localize "WH40K.Daemonology.Exorcism.Collapsed"}}</div>
+            <div class="tw-mt-1">{{localize "WH40K.Daemonology.Exorcism.CorruptionGained" value=corruptionGained}}</div>
+        </div>
+    {{/if}}
+</div>

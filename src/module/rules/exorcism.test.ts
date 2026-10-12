@@ -1,63 +1,104 @@
 import { describe, expect, it } from 'vitest';
-import { EXORCISM_MODIFIERS, getExorcismThreshold, getHostSurvivalTarget, prepareExorcismAttempt } from './exorcism';
+import {
+    corruptionBonus,
+    EXORCISM_MODIFIER_ORDER,
+    EXORCISM_MODIFIERS,
+    getExorcismThreshold,
+    getHostSurvivalTarget,
+    isExorcismComplete,
+    loreBonusFactor,
+    prepareExorcismAttempt,
+    prepareExorcismLoreTest,
+    startExorcism,
+    stepExorcism,
+} from './exorcism';
 
-/**
- * Exorcism ritual (#83 — beyond.md p.70). An Extended Daemonic Mastery
- * test against the possessor; threshold = 2 × daemon WP bonus. Per-
- * attempt modifiers come from the EXORCISM_MODIFIERS table. The host
- * makes a Toughness test (target = TB − 10) to survive on success.
- */
+/** Exorcism (#83 — DH2 Enemies Beyond p. 71). */
+describe('Table 2–21: Exorcism Modifiers', () => {
+    it('matches the printed values', () => {
+        expect(EXORCISM_MODIFIERS.SELF_EXORCISM.modifier).toBe(-10);
+        expect(EXORCISM_MODIFIERS.NO_PROPER_TOOLS.modifier).toBe(-10);
+        expect(EXORCISM_MODIFIERS.HIGHER_INFLUENCE.modifier).toBe(-10);
+        expect(EXORCISM_MODIFIERS.WEAK_VEIL.modifier).toBe(-10);
+        expect(EXORCISM_MODIFIERS.SACRED_GROUND.modifier).toBe(10);
+        expect(EXORCISM_MODIFIERS.PATRON_SERVANT.modifier).toBe(10);
+        expect(EXORCISM_MODIFIERS.TRUE_NAME.modifier).toBe(30);
+    });
 
-describe('EXORCISM_MODIFIERS table (#83)', () => {
-    it('Sanctified Ground +20', () => {
-        expect(EXORCISM_MODIFIERS.SANCTIFIED_GROUND.modifier).toBe(20);
+    it('lists every row once in printed order', () => {
+        expect([...EXORCISM_MODIFIER_ORDER].sort()).toEqual(Object.keys(EXORCISM_MODIFIERS).sort());
     });
-    it('Holy Relic +10', () => {
-        expect(EXORCISM_MODIFIERS.HOLY_RELIC.modifier).toBe(10);
-    });
-    it('Priest Assist +10', () => {
-        expect(EXORCISM_MODIFIERS.PRIEST_ASSIST.modifier).toBe(10);
-    });
-    it('Host Fights Back −20', () => {
-        expect(EXORCISM_MODIFIERS.HOST_FIGHTS_BACK.modifier).toBe(-20);
-    });
-    it('No Ritual Tools −20', () => {
-        expect(EXORCISM_MODIFIERS.NO_RITUAL_TOOLS.modifier).toBe(-20);
+
+    it('lore preparation grants +5 per degree of success', () => {
+        expect(loreBonusFactor(3).modifier).toBe(15);
+        expect(loreBonusFactor(-2).modifier).toBe(0);
     });
 });
 
-describe('getExorcismThreshold (#83)', () => {
-    it('returns 2 × possessor WP bonus', () => {
-        expect(getExorcismThreshold(3)).toBe(6);
-        expect(getExorcismThreshold(5)).toBe(10);
-        expect(getExorcismThreshold(7)).toBe(14);
+describe('getExorcismThreshold', () => {
+    it('is the Daemon WP bonus plus the possessed Corruption bonus (regression: was 2 × WPB)', () => {
+        expect(getExorcismThreshold(5, 3)).toBe(8);
+        expect(getExorcismThreshold(0, 0)).toBe(0);
     });
-    it('floors at 1 (cannot be zero or negative)', () => {
-        expect(getExorcismThreshold(0)).toBe(1);
-        expect(getExorcismThreshold(-3)).toBe(1);
+
+    it('must be exceeded, not met', () => {
+        expect(isExorcismComplete(8, 8)).toBe(false);
+        expect(isExorcismComplete(9, 8)).toBe(true);
+    });
+
+    it('derives the Corruption bonus from the tens digit', () => {
+        expect(corruptionBonus(37)).toBe(3);
+        expect(corruptionBonus(9)).toBe(0);
     });
 });
 
-describe('prepareExorcismAttempt (#83)', () => {
-    it('composes the per-attempt Daemonic Mastery target with BASE_DIFFICULTY + caller factors', () => {
-        const result = prepareExorcismAttempt({
-            exorcistWillpower: 50,
-            factors: [EXORCISM_MODIFIERS.SANCTIFIED_GROUND],
-        });
-        const labels = result.breakdown.map((b) => b.label);
-        expect(labels).toContain('Daemonic Mastery (base Very Hard)');
-        expect(labels).toContain('Sanctified Ground');
+describe('prepareExorcismLoreTest / prepareExorcismAttempt', () => {
+    it('the lore test is Challenging (+0)', () => {
+        expect(prepareExorcismLoreTest(45).target).toBe(45);
+    });
+
+    it('composes WP − 30 + lore bonus + table rows with provenance', () => {
+        const r = prepareExorcismAttempt({ exorcistWillpower: 50, loreDos: 2, factors: [EXORCISM_MODIFIERS.SACRED_GROUND, EXORCISM_MODIFIERS.WEAK_VEIL] });
+        expect(r.target).toBe(50 - 30 + 10 + 10 - 10);
+        expect(r.components.map((c) => c.id)).toEqual(['base-difficulty', 'lore-preparation', 'sacred-ground', 'weak-veil']);
     });
 });
 
-describe('getHostSurvivalTarget (#83)', () => {
-    it('returns TB − 10', () => {
-        expect(getHostSurvivalTarget(40)).toBe(30);
-        expect(getHostSurvivalTarget(30)).toBe(20);
+describe('stepExorcism', () => {
+    const begin = (fatigueThreshold = 3, startingFatigue = 0): ReturnType<typeof startExorcism> =>
+        startExorcism({ threshold: 2, attemptTarget: 40, startingFatigue, fatigueThreshold });
+
+    it('accumulates DoS until the threshold is exceeded', () => {
+        let s = begin();
+        s = stepExorcism(s, 30, 2); // 2 DoS
+        expect(s.status).toBe('in-progress');
+        s = stepExorcism(s, 40, 1); // 1 DoS → 3 > 2
+        expect(s.status).toBe('banished');
+        expect(s.totalDos).toBe(3);
+        expect(s.hours).toBe(3);
     });
-    it('floors at 0', () => {
-        expect(getHostSurvivalTarget(5)).toBe(0);
-        expect(getHostSurvivalTarget(0)).toBe(0);
+
+    it('failure costs 1 Fatigue per degree of failure', () => {
+        const s = stepExorcism(begin(), 61, 4); // 3 DoF
+        expect(s.fatigueGained).toBe(3);
+        expect(s.attempts[0]?.fatigue).toBe(3);
+        expect(s.status).toBe('in-progress');
+    });
+
+    it('collapses when Fatigue passes the exorcist threshold', () => {
+        const s = stepExorcism(begin(3, 1), 61, 4); // 1 + 3 > 3
+        expect(s.status).toBe('collapsed');
+    });
+
+    it('ignores further rolls once settled', () => {
+        const collapsed = stepExorcism(begin(0), 99, 1);
+        expect(stepExorcism(collapsed, 1, 1)).toBe(collapsed);
+    });
+});
+
+describe('getHostSurvivalTarget', () => {
+    it('is a Challenging (+0) Toughness test (regression: was T − 10)', () => {
+        expect(getHostSurvivalTarget(40)).toBe(40);
         expect(getHostSurvivalTarget(-5)).toBe(0);
     });
 });

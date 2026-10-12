@@ -99,10 +99,11 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         } else {
             guarded('daemonic-mastery-buildTest', () => {
                 const factors = val<Readonly<Record<string, object>>>(dm, 'DAEMONIC_MASTERY_FACTORS');
-                const build = fn<{ target: number; breakdown: readonly object[] }>(dm, 'buildDaemonicMasteryTest');
-                const baseOnly = build({ willpowerTotal: 40, factors: [factors.BASE_DIFFICULTY] });
-                const trueName = build({ willpowerTotal: 40, factors: [factors.BASE_DIFFICULTY, factors.TRUE_NAME] });
-                return baseOnly.target === 10 && trueName.target === 40 && Array.isArray(trueName.breakdown);
+                const build = fn<{ target: number; components: readonly object[] }>(dm, 'buildDaemonicMasteryTest');
+                // The Very Hard base is always applied; factors stack on top of it.
+                const baseOnly = build({ willpowerTotal: 40, factors: [] });
+                const trueName = build({ willpowerTotal: 40, factors: [factors.TRUE_NAME] });
+                return baseOnly.target === 10 && trueName.target === 40 && trueName.components.length === 2;
             });
         }
 
@@ -130,15 +131,20 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         } else {
             guarded('exorcism-threshold', () => {
                 const threshold = fn<number>(exorcism, 'getExorcismThreshold');
-                return threshold(5) === 10 && threshold(0) === 1;
+                // Daemon WP bonus + possessed Corruption bonus (Enemies Beyond p. 71).
+                return threshold(5, 3) === 8 && threshold(0, 0) === 0;
             });
             guarded('exorcism-prepareAttempt', () => {
-                const r = fn<{ target: number; breakdown: readonly object[] }>(exorcism, 'prepareExorcismAttempt')({ exorcistWillpower: 40, factors: [] });
-                return typeof r.target === 'number' && Array.isArray(r.breakdown) && r.breakdown.length > 0;
+                const r = fn<{ target: number; components: readonly object[] }>(
+                    exorcism,
+                    'prepareExorcismAttempt',
+                )({ exorcistWillpower: 40, factors: [], loreDos: 2 });
+                return r.target === 20 && r.components.length === 2;
             });
             guarded('exorcism-hostSurvival', () => {
+                // Challenging (+0) Toughness.
                 const survival = fn<number>(exorcism, 'getHostSurvivalTarget');
-                return survival(40) === 30 && survival(5) === 0;
+                return survival(40) === 40 && survival(-5) === 0;
             });
         }
 
@@ -203,12 +209,15 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         if (summoning.__importError != null) {
             fail(['summoning-prepareRitual', 'summoning-bindingDuration'], summoning.__importError);
         } else {
-            const baseRitual = { forbiddenLoreTotal: 80, willpowerTotal: 40, hasTrueName: false, hasComponents: true, extraFactors: [] };
+            const baseRitual = { forbiddenLoreTotal: 80, willpowerTotal: 40, hasTrueName: false, servesPatron: false, loreFactors: [], masteryFactors: [] };
             guarded('summoning-prepareRitual', () => {
-                const prepare = fn<{ forbiddenLoreTarget: number; masteryBreakdown: readonly object[] }>(summoning, 'prepareSummoningRitual');
+                const prepare = fn<{ lore: { target: number }; mastery: { target: number; components: readonly object[] } }>(
+                    summoning,
+                    'prepareSummoningRitual',
+                );
                 const r = prepare(baseRitual);
                 const floored = prepare({ ...baseRitual, forbiddenLoreTotal: 50 });
-                return r.forbiddenLoreTarget === 20 && floored.forbiddenLoreTarget === 0 && Array.isArray(r.masteryBreakdown) && r.masteryBreakdown.length > 0;
+                return r.lore.target === 20 && floored.lore.target === 0 && r.mastery.target === 10 && r.mastery.components.length > 0;
             });
             guarded('summoning-bindingDuration', () => {
                 const duration = fn<number>(summoning, 'bindingDurationHours');

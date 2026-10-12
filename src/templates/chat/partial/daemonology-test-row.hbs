@@ -1,0 +1,26 @@
+{{!--
+    One resolved d100 test on a daemonology ritual card: a title, the full
+    target formula (shared modifier-breakdown partial) and the roll with its
+    degrees.
+
+    Hash params:
+        titleKey — langpack key for the test name
+        test     — CardTest (actions/daemonology-actions.ts toCardTest)
+        result   — TestOutcome {roll, target, success, dos, dof}
+--}}
+<div class="tw-mt-2 tw-text-[0.7rem] tw-uppercase tw-tracking-[0.06em] tw-text-[color:var(--wh40k-text-muted)]">{{localize titleKey}}</div>
+{{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs
+    baseTarget=test.baseTarget
+    baseLabel=test.baseLabel
+    modifiedTarget=test.modifiedTarget
+    modifierSources=test.modifierSources
+    activeModifiers=test.activeModifiers
+    modifierCapFired=test.modifierCapFired
+    rawModifierTotal=test.rawModifierTotal
+    modifierTotal=test.modifierTotal}}
+<div class="tw-flex tw-justify-between tw-items-center tw-text-[0.85rem]" data-test-success="{{result.success}}">
+    <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Daemonology.Card.RollAgainst" roll=result.roll target=result.target}}</span>
+    <span class="tw-font-bold tw-tabular-nums {{#if result.success}}tw-text-[var(--wh40k-success-secondary)]{{else}}tw-text-[var(--wh40k-danger-secondary)]{{/if}}">
+        {{#if result.success}}{{localize "WH40K.Daemonology.Card.DoS" value=result.dos}}{{else}}{{localize "WH40K.Daemonology.Card.DoF" value=result.dof}}{{/if}}
+    </span>
+</div>

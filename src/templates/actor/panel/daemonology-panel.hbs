@@ -1,0 +1,29 @@
+{{!--
+    Daemonology panel — DH2 Enemies Beyond rituals.
+
+    Shown on a DH2 character that has a Forbidden Lore (Daemonology) row, the
+    skill every ritual opens with. Surfaces the lore total and launches the
+    ritual dialogs:
+      - Exorcism (#83, p. 71): target the possessed individual's token first.
+
+    Context: daemonologyPanel { loreTotal: number }
+--}}
+{{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-daemonology-panel" accentBorderClass=(themeClassFor 'border') accentIconClass=(themeClassFor 'accent') icon="fa-book-skull" label=(localize "WH40K.Daemonology.PanelTitle") hasRightSlot=true}}
+    {{#*inline "rightSlot"}}
+        <span class="tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-medium)]">
+            {{localize "WH40K.Daemonology.Dialog.Lore"}}
+            <strong class="tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)]">{{daemonologyPanel.loreTotal}}</strong>
+        </span>
+    {{/inline}}
+
+    <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
+        <button type="button"
+                data-wh40k-hook="daemonology-exorcism-btn"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-1.5 tw-rounded tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-bright)] tw-cursor-pointer hover:tw-bg-[rgba(255,255,255,0.06)]"
+                data-action="performExorcism"
+                title="{{localize 'WH40K.Daemonology.Exorcism.PerformTitle'}}">
+            <i class="fas fa-cross" aria-hidden="true"></i>
+            <span>{{localize "WH40K.Daemonology.Exorcism.Perform"}}</span>
+        </button>
+    </div>
+{{/systems/wh40k-rpg/templates/actor/partial/system-card.hbs}}
