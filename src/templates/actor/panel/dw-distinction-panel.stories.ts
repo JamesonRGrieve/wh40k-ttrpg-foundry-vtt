@@ -27,7 +27,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
-import { mergeMarkGrants, type MarkOfDistinction } from '../../../module/rules/dw-distinction.ts';
+import { mergeMarkGrants, type MarkGrantSource } from '../../../module/rules/dw-distinction.ts';
 import panelSrc from './dw-distinction-panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -90,7 +90,7 @@ interface CatalogueEntry {
     /** If embodied as a Mark, the grant payload + description. */
     mark?: {
         description: string;
-        grant: MarkOfDistinction['grant'];
+        source: MarkGrantSource;
     };
 }
 
@@ -103,7 +103,7 @@ const CATALOGUE: ReadonlyArray<CatalogueEntry> = [
         canEarnAtCurrentRank: true,
         mark: {
             description: '+5 Willpower while bearing this Mark.',
-            grant: { id: 'honoured-of-the-chapter', description: '+5 WP', characteristicDelta: { WP: 5 } },
+            source: { grant: { trait: '', activeEffect: '' }, modifiers: { characteristics: { WP: 5 } } },
         },
     },
     {
@@ -114,12 +114,7 @@ const CATALOGUE: ReadonlyArray<CatalogueEntry> = [
         canEarnAtCurrentRank: true,
         mark: {
             description: '+5 Toughness; gains the Resistance (Fear) trait.',
-            grant: {
-                id: 'iron-resolve',
-                description: '+5 T, Resistance (Fear)',
-                characteristicDelta: { T: 5 },
-                trait: 'Resistance (Fear)',
-            },
+            source: { grant: { trait: 'Resistance (Fear)', activeEffect: '' }, modifiers: { characteristics: { T: 5 } } },
         },
     },
     {
@@ -137,12 +132,7 @@ const CATALOGUE: ReadonlyArray<CatalogueEntry> = [
         canEarnAtCurrentRank: false,
         mark: {
             description: '+5 WS, gains True Grit.',
-            grant: {
-                id: 'crux-terminatus',
-                description: '+5 WS, True Grit',
-                characteristicDelta: { WS: 5 },
-                trait: 'True Grit',
-            },
+            source: { grant: { trait: 'True Grit', activeEffect: '' }, modifiers: { characteristics: { WS: 5 } } },
         },
     },
 ];
@@ -167,13 +157,7 @@ function buildCtx(args: { earnedIds: ReadonlyArray<string>; borneMarkIds: Readon
         borne: borne.has(entry.id),
     }));
 
-    const borneMarkObjects: MarkOfDistinction[] = CATALOGUE.filter((entry) => entry.mark !== undefined && borne.has(entry.id)).map((entry) => ({
-        id: entry.id,
-        name: entry.name,
-        description: entry.mark?.description ?? '',
-        // entry.mark is guaranteed non-undefined by the filter above.
-        grant: (entry.mark ?? { description: '', grant: { id: entry.id, description: '' } }).grant,
-    }));
+    const borneMarkObjects: MarkGrantSource[] = CATALOGUE.flatMap((entry) => (entry.mark !== undefined && borne.has(entry.id) ? [entry.mark.source] : []));
 
     const merged = mergeMarkGrants(borneMarkObjects);
     const characteristicDelta: MergedCharacteristicCtx[] = Object.keys(merged.characteristicDelta)

@@ -1,205 +1,128 @@
 import { describe, expect, it } from 'vitest';
 import {
-    type AdvancedSpecialAbility,
-    type DistinctionDef,
-    type MarkOfDistinction,
+    type MarkGrantSource,
+    type SpecialAbilityDistinctionFields,
     awardDistinction,
-    canEarnDistinction,
-    canEarnDistinctionFromRenown,
-    canUseAdvancedAbility,
+    canGainSpecialAbility,
+    canGainSpecialAbilityFromRenown,
+    isRenownCategory,
+    isSpecialAbilityCategory,
     mergeMarkGrants,
+    specialAbilityCategoryLabelKey,
 } from './dw-distinction';
 
-const makeDistinction = (over: Partial<DistinctionDef> = {}): DistinctionDef => ({
-    id: 'honoris-crux',
-    name: 'Honoris Crux',
-    description: 'Awarded for conspicuous valour in the face of the alien.',
-    renownRequired: 'respected',
-    renownReward: 5,
-    ...over,
+type GateAbility = Pick<SpecialAbilityDistinctionFields, 'category' | 'renownRequired'>;
+type RewardAbility = Pick<SpecialAbilityDistinctionFields, 'category' | 'renownReward'>;
+
+const makeMark = (over: { trait?: string; activeEffect?: string; characteristics?: Record<string, number> } = {}): MarkGrantSource => ({
+    grant: { trait: over.trait ?? '', activeEffect: over.activeEffect ?? '' },
+    modifiers: { characteristics: over.characteristics ?? {} },
 });
 
-const makeMark = (over: Partial<MarkOfDistinction> & { grantOver?: Partial<MarkOfDistinction['grant']> } = {}): MarkOfDistinction => {
-    const { grantOver, ...rest } = over;
-    return {
-        id: 'mark-honoris-crux',
-        name: 'Mark of Honoris Crux',
-        description: 'A laurel of the Long War.',
-        grant: {
-            id: 'mark-honoris-crux',
-            description: 'A laurel of the Long War.',
-            ...grantOver,
-        },
-        ...rest,
-    };
-};
-
-const makeAbility = (over: Partial<AdvancedSpecialAbility> = {}): AdvancedSpecialAbility => ({
-    id: 'rite-of-fury',
-    name: 'Rite of Fury',
-    description: 'Channel the Emperor’s wrath.',
-    renownRequired: 'distinguished',
-    cohesionCost: 2,
-    ...over,
-});
-
-describe('canEarnDistinction', () => {
-    it('allows earning when actor rank equals required rank', () => {
-        const result = canEarnDistinction({
-            distinction: makeDistinction({ renownRequired: 'respected' }),
-            actorRenownRank: 'respected',
-        });
-        expect(result).toEqual({ allowed: true });
+describe('special-ability categories', () => {
+    it('recognises the four categories and nothing else', () => {
+        expect(['speciality', 'advanced', 'distinction', 'mark'].every((c) => isSpecialAbilityCategory(c))).toBe(true);
+        expect(isSpecialAbilityCategory('honour')).toBe(false);
+        expect(isSpecialAbilityCategory(null)).toBe(false);
     });
 
-    it('allows earning when actor rank exceeds required rank', () => {
-        const result = canEarnDistinction({
-            distinction: makeDistinction({ renownRequired: 'respected' }),
-            actorRenownRank: 'famed',
-        });
-        expect(result).toEqual({ allowed: true });
+    it('builds a langpack key per category', () => {
+        expect(specialAbilityCategoryLabelKey('mark')).toBe('WH40K.SpecialAbility.Category.Mark');
+        expect(specialAbilityCategoryLabelKey('speciality')).toBe('WH40K.SpecialAbility.Category.Speciality');
     });
 
-    it('refuses earning when actor rank is below the required rank', () => {
-        const result = canEarnDistinction({
-            distinction: makeDistinction({ renownRequired: 'famed' }),
-            actorRenownRank: 'respected',
-        });
-        expect(result).toEqual({ allowed: false, reason: 'rank-too-low' });
+    it('takes only advanced / distinction / mark into the Renown rules', () => {
+        expect(isRenownCategory('speciality')).toBe(false);
+        expect(isRenownCategory('advanced')).toBe(true);
+        expect(isRenownCategory('distinction')).toBe(true);
+        expect(isRenownCategory('mark')).toBe(true);
     });
 });
 
-describe('canEarnDistinctionFromRenown', () => {
-    it('resolves rank from raw Renown and applies the gate', () => {
-        const result = canEarnDistinctionFromRenown({
-            distinction: makeDistinction({ renownRequired: 'distinguished' }),
-            actorRenown: 40,
-        });
-        expect(result).toEqual({ allowed: true });
+describe('canGainSpecialAbility', () => {
+    const gated: GateAbility = { category: 'advanced', renownRequired: 'famed' };
+
+    it('allows gaining when the actor rank equals the required rank', () => {
+        expect(canGainSpecialAbility({ ability: gated, actorRenownRank: 'famed' })).toEqual({ allowed: true });
     });
 
-    it('refuses when the raw Renown resolves below the required rank', () => {
-        const result = canEarnDistinctionFromRenown({
-            distinction: makeDistinction({ renownRequired: 'hero' }),
-            actorRenown: 25,
+    it('allows gaining when the actor rank exceeds the required rank', () => {
+        expect(canGainSpecialAbility({ ability: gated, actorRenownRank: 'hero' })).toEqual({ allowed: true });
+    });
+
+    it('refuses below the required rank and names the rank needed', () => {
+        expect(canGainSpecialAbility({ ability: gated, actorRenownRank: 'distinguished' })).toEqual({
+            allowed: false,
+            reason: 'rank-too-low',
+            requiredRank: 'famed',
         });
-        expect(result).toEqual({ allowed: false, reason: 'rank-too-low' });
+    });
+
+    it('lets an ability with no printed requirement through at any rank', () => {
+        expect(canGainSpecialAbility({ ability: { category: 'mark', renownRequired: null }, actorRenownRank: 'initiated' })).toEqual({ allowed: true });
+    });
+
+    it('never gates a speciality ability, even if a rank were authored on it', () => {
+        expect(canGainSpecialAbility({ ability: { category: 'speciality', renownRequired: 'hero' }, actorRenownRank: 'initiated' })).toEqual({
+            allowed: true,
+        });
+    });
+});
+
+describe('canGainSpecialAbilityFromRenown', () => {
+    const gated: GateAbility = { category: 'distinction', renownRequired: 'distinguished' };
+
+    it('resolves the rank from the raw Renown score (40 = Distinguished)', () => {
+        expect(canGainSpecialAbilityFromRenown({ ability: gated, actorRenown: 40 })).toEqual({ allowed: true });
+    });
+
+    it('refuses one point under the threshold', () => {
+        expect(canGainSpecialAbilityFromRenown({ ability: gated, actorRenown: 39 })).toMatchObject({ allowed: false, reason: 'rank-too-low' });
     });
 });
 
 describe('awardDistinction', () => {
-    it('adds the reward to current Renown and echoes the distinction id', () => {
-        const result = awardDistinction({
-            distinction: makeDistinction({ id: 'd1', renownReward: 5 }),
-            currentRenown: 22,
-        });
-        expect(result).toEqual({ newRenown: 27, distinctionId: 'd1' });
-    });
+    const rewarded: RewardAbility = { category: 'distinction', renownReward: 5 };
 
-    it('clamps the floor at zero when current Renown was negative input (defensive)', () => {
-        const result = awardDistinction({
-            distinction: makeDistinction({ renownReward: 0 }),
-            currentRenown: Number.NaN,
-        });
-        expect(result.newRenown).toBe(0);
+    it('adds the reward to the current Renown', () => {
+        expect(awardDistinction({ ability: rewarded, currentRenown: 20 })).toEqual({ newRenown: 25, changed: true });
     });
 
     it('does not clamp the ceiling — Hero Marines exceed 100', () => {
-        const result = awardDistinction({
-            distinction: makeDistinction({ renownReward: 25 }),
-            currentRenown: 90,
-        });
-        expect(result.newRenown).toBe(115);
-    });
-});
-
-describe('canUseAdvancedAbility', () => {
-    it('allows activation when rank is met and Cohesion covers the cost', () => {
-        const result = canUseAdvancedAbility({
-            ability: makeAbility({ renownRequired: 'distinguished', cohesionCost: 2 }),
-            actorRenownRank: 'famed',
-            currentCohesion: 5,
-        });
-        expect(result).toEqual({ allowed: true });
+        expect(awardDistinction({ ability: { category: 'mark', renownReward: 10 }, currentRenown: 98 })).toEqual({ newRenown: 108, changed: true });
     });
 
-    it('refuses when rank is below the required rank', () => {
-        const result = canUseAdvancedAbility({
-            ability: makeAbility({ renownRequired: 'hero', cohesionCost: 1 }),
-            actorRenownRank: 'distinguished',
-            currentCohesion: 10,
-        });
-        expect(result).toEqual({ allowed: false, reason: 'rank-too-low' });
+    it('leaves Renown alone for a zero reward', () => {
+        expect(awardDistinction({ ability: { category: 'mark', renownReward: 0 }, currentRenown: 30 })).toEqual({ newRenown: 30, changed: false });
     });
 
-    it('refuses when Cohesion is below the ability cost', () => {
-        const result = canUseAdvancedAbility({
-            ability: makeAbility({ renownRequired: 'respected', cohesionCost: 3 }),
-            actorRenownRank: 'respected',
-            currentCohesion: 2,
+    it('never rewards a speciality ability', () => {
+        expect(awardDistinction({ ability: { category: 'speciality', renownReward: 5 }, currentRenown: 30 })).toEqual({
+            newRenown: 30,
+            changed: false,
         });
-        expect(result).toEqual({ allowed: false, reason: 'insufficient-cohesion' });
-    });
-
-    it('skips the Cohesion check when the ability has no cost (passive ability)', () => {
-        const passive: AdvancedSpecialAbility = {
-            id: 'passive',
-            name: 'Passive',
-            description: '',
-            renownRequired: 'respected',
-        };
-        const result = canUseAdvancedAbility({
-            ability: passive,
-            actorRenownRank: 'respected',
-            currentCohesion: 0,
-        });
-        expect(result).toEqual({ allowed: true });
-    });
-
-    it('treats rank failure as primary even when Cohesion would also be short', () => {
-        const result = canUseAdvancedAbility({
-            ability: makeAbility({ renownRequired: 'hero', cohesionCost: 99 }),
-            actorRenownRank: 'initiated',
-            currentCohesion: 0,
-        });
-        expect(result).toEqual({ allowed: false, reason: 'rank-too-low' });
     });
 });
 
 describe('mergeMarkGrants', () => {
-    it('returns empty payload for an empty mark list', () => {
-        expect(mergeMarkGrants([])).toEqual({
-            characteristicDelta: {},
-            traits: [],
-            activeEffects: [],
-        });
+    it('returns an empty payload for no marks', () => {
+        expect(mergeMarkGrants([])).toEqual({ characteristicDelta: {}, traits: [], activeEffects: [] });
     });
 
-    it('sums characteristic deltas across marks', () => {
-        const marks = [
-            makeMark({ id: 'a', grantOver: { id: 'a', characteristicDelta: { WS: 5, T: 5 } } }),
-            makeMark({ id: 'b', grantOver: { id: 'b', characteristicDelta: { WS: 5, S: 3 } } }),
-        ];
-        expect(mergeMarkGrants(marks).characteristicDelta).toEqual({ WS: 10, T: 5, S: 3 });
+    it('sums characteristic changes from each mark’s modifiers', () => {
+        const merged = mergeMarkGrants([makeMark({ characteristics: { perception: 10 } }), makeMark({ characteristics: { perception: 5, willpower: 10 } })]);
+        expect(merged.characteristicDelta).toEqual({ perception: 15, willpower: 10 });
     });
 
-    it('coalesces duplicate trait and active-effect ids', () => {
-        const marks = [
-            makeMark({ id: 'a', grantOver: { id: 'a', trait: 'fearless', activeEffect: 'effect-x' } }),
-            makeMark({ id: 'b', grantOver: { id: 'b', trait: 'fearless', activeEffect: 'effect-y' } }),
-        ];
-        const merged = mergeMarkGrants(marks);
-        expect(merged.traits).toEqual(['fearless']);
-        expect(merged.activeEffects.sort()).toEqual(['effect-x', 'effect-y']);
+    it('coalesces duplicate traits and Active Effect ids and skips blanks', () => {
+        const trait = 'Compendium.wh40k-rpg.dw-core-items-traits.Item.abc';
+        const merged = mergeMarkGrants([makeMark({ trait, activeEffect: 'fx' }), makeMark({ trait, activeEffect: 'fx' }), makeMark()]);
+        expect(merged.traits).toEqual([trait]);
+        expect(merged.activeEffects).toEqual(['fx']);
     });
 
-    it('ignores non-finite characteristic deltas defensively', () => {
-        const marks = [
-            makeMark({
-                id: 'a',
-                grantOver: { id: 'a', characteristicDelta: { WS: Number.NaN, BS: 5 } },
-            }),
-        ];
-        expect(mergeMarkGrants(marks).characteristicDelta).toEqual({ BS: 5 });
+    it('ignores non-finite characteristic changes defensively', () => {
+        const merged = mergeMarkGrants([makeMark({ characteristics: { strength: Number.NaN, toughness: 5 } })]);
+        expect(merged.characteristicDelta).toEqual({ toughness: 5 });
     });
 });
