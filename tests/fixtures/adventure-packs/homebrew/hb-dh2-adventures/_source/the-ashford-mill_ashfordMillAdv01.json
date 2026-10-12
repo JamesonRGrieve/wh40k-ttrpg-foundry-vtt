@@ -1,0 +1,201 @@
+{
+    "_id": "ashfordMillAdv01",
+    "name": "The Ashford Mill",
+    "type": "Adventure",
+    "img": "icons/sundries/books/book-red-exclamation.webp",
+    "caption": "A sample homebrew adventure",
+    "description": "<p>A short sample adventure for the Event Tracker. The night shift at a village grain mill has gone quiet, the miller is missing, and the foreman will not let anyone near the lower floor.</p>",
+    "sort": 0,
+    "folder": null,
+    "ownership": { "default": 0 },
+    "flags": {},
+    "journal": [
+        {
+            "_id": "ashGmGuide000001",
+            "name": "The Ashford Mill — GM Guide",
+            "folder": null,
+            "sort": 0,
+            "ownership": { "default": 0 },
+            "flags": {},
+            "pages": [
+                {
+                    "_id": "ashScenarioPg001",
+                    "name": "Scenario",
+                    "type": "text",
+                    "sort": 100000,
+                    "ownership": { "default": -1 },
+                    "title": { "show": true, "level": 1 },
+                    "text": {
+                        "format": 1,
+                        "content": "<p>The party arrives in the village of Ashford, questions the mill workers about the missing miller, and confronts the foreman Orrin Vael, who has been hiding what happened on the lower floor. The adventure ends when the party leaves Ashford.</p>"
+                    },
+                    "flags": {
+                        "wh40k-rpg": {
+                            "scenario": {
+                                "id": "ashford-mill",
+                                "source": { "provenance": "homebrew", "book": "The Ashford Mill", "page": "1" },
+                                "act": 1,
+                                "entrySceneId": "arrival",
+                                "scenes": [
+                                    {
+                                        "id": "arrival",
+                                        "name": "Arrival at Ashford",
+                                        "type": "investigation",
+                                        "sceneUuid": null,
+                                        "readAloud": "<p>The mill wheel turns, but no light shows in the mill's windows.</p>",
+                                        "gmNotes": "<p>The workers are frightened of the foreman and say little until pressed.</p>",
+                                        "checks": [],
+                                        "encounters": [],
+                                        "leads": [{ "text": "<p>A worker admits the foreman keeps the lower floor locked.</p>", "revealsSceneId": "mill-floor" }],
+                                        "rewards": [],
+                                        "transitions": [{ "toSceneId": "mill-floor", "condition": "The party goes to the mill at night." }]
+                                    },
+                                    {
+                                        "id": "mill-floor",
+                                        "name": "The Mill Floor",
+                                        "type": "combat",
+                                        "sceneUuid": null,
+                                        "readAloud": "<p>The foreman stands between you and the stair to the lower floor.</p>",
+                                        "gmNotes": "<p>Orrin fights rather than let the party see the lower floor.</p>",
+                                        "checks": [],
+                                        "encounters": [
+                                            {
+                                                "actorUuid": "Compendium.wh40k-rpg.hb-dh2-ashford-actors-npcs.Actor.ashOrrinVael0001",
+                                                "count": 1,
+                                                "disposition": "hostile",
+                                                "tactics": "Holds the stairway and fights until downed."
+                                            }
+                                        ],
+                                        "leads": [],
+                                        "rewards": [],
+                                        "transitions": []
+                                    }
+                                ],
+                                "eventGraph": {
+                                    "events": {
+                                        "ARRIVE": {
+                                            "name": "Arrive in Ashford",
+                                            "source": { "uuid": "JournalEntry.ashChapter000001" },
+                                            "day": 1,
+                                            "act": 1,
+                                            "requires": null
+                                        },
+                                        "QUESTION_WORKERS": {
+                                            "name": "Question the Mill Workers",
+                                            "source": { "uuid": "JournalEntry.ashChapter000001" },
+                                            "location": { "uuid": "JournalEntry.ashMillPlace0001" },
+                                            "day": 1,
+                                            "act": 1,
+                                            "requires": "ARRIVE"
+                                        },
+                                        "FOREMAN_FALLS": {
+                                            "name": "The Foreman Falls",
+                                            "source": { "uuid": "JournalEntry.ashChapter000002" },
+                                            "location": { "uuid": "JournalEntry.ashMillPlace0001" },
+                                            "day": 2,
+                                            "act": 1,
+                                            "requires": "QUESTION_WORKERS",
+                                            "completion": [
+                                                {
+                                                    "kind": "actor-died",
+                                                    "actor": { "uuid": "Compendium.wh40k-rpg.hb-dh2-ashford-actors-npcs.Actor.ashOrrinVael0001" }
+                                                }
+                                            ]
+                                        },
+                                        "LEAVE_ASHFORD": {
+                                            "name": "Leave Ashford",
+                                            "source": { "uuid": "JournalEntry.ashChapter000002" },
+                                            "day": 2,
+                                            "act": 1,
+                                            "requires": "FOREMAN_FALLS",
+                                            "is_day_end": true
+                                        }
+                                    },
+                                    "characters": {
+                                        "foreman": {
+                                            "actor": { "uuid": "Compendium.wh40k-rpg.hb-dh2-ashford-actors-npcs.Actor.ashOrrinVael0001" },
+                                            "dispositions": [
+                                                { "target": "party", "attitude": "guarded", "default": true, "note": "Polite, but keeps the party away from the lower floor." },
+                                                { "target": "party", "attitude": "hostile", "trigger": "QUESTION_WORKERS", "note": "Knows the workers have talked." }
+                                            ],
+                                            "relationships": []
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "_id": "ashChapter000001",
+            "name": "Chapter 1 — Arrival",
+            "folder": null,
+            "sort": 100000,
+            "ownership": { "default": 0 },
+            "flags": {},
+            "pages": [
+                {
+                    "_id": "ashCh1Page000001",
+                    "name": "Arrival",
+                    "type": "text",
+                    "sort": 100000,
+                    "ownership": { "default": -1 },
+                    "title": { "show": true, "level": 1 },
+                    "text": {
+                        "format": 1,
+                        "content": "<p>The party reaches Ashford at dusk. The mill workers drink at the village tavern rather than work the night shift, and will talk about the missing miller if the party earns their trust.</p>"
+                    },
+                    "flags": {}
+                }
+            ]
+        },
+        {
+            "_id": "ashChapter000002",
+            "name": "Chapter 2 — The Night Shift",
+            "folder": null,
+            "sort": 200000,
+            "ownership": { "default": 0 },
+            "flags": {},
+            "pages": [
+                {
+                    "_id": "ashCh2Page000001",
+                    "name": "The Night Shift",
+                    "type": "text",
+                    "sort": 100000,
+                    "ownership": { "default": -1 },
+                    "title": { "show": true, "level": 1 },
+                    "text": {
+                        "format": 1,
+                        "content": "<p>At night the foreman works the mill alone. If the party tries to reach the lower floor he fights them. Once he is down the party is free to leave Ashford.</p>"
+                    },
+                    "flags": {}
+                }
+            ]
+        },
+        {
+            "_id": "ashMillPlace0001",
+            "name": "Ashford Mill",
+            "folder": null,
+            "sort": 300000,
+            "ownership": { "default": 2 },
+            "flags": {},
+            "pages": [
+                {
+                    "_id": "ashMillPage00001",
+                    "name": "Ashford Mill",
+                    "type": "text",
+                    "sort": 100000,
+                    "ownership": { "default": -1 },
+                    "title": { "show": true, "level": 1 },
+                    "text": {
+                        "format": 1,
+                        "content": "<p>A three-storey stone grain mill on the river at the edge of the village. The wheel still turns at night.</p>"
+                    },
+                    "flags": {}
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,50 @@
+{
+    "_id": "ashOrrinVael0001",
+    "name": "Orrin Vael",
+    "type": "dh2-npc",
+    "img": "icons/svg/mystery-man.svg",
+    "system": {
+        "characteristics": {
+            "ws": 35,
+            "bs": 30,
+            "s": 40,
+            "t": 40,
+            "ag": 30,
+            "int": 30,
+            "per": 35,
+            "wp": 35,
+            "fel": 30
+        },
+        "wounds": {
+            "max": 12,
+            "value": 12,
+            "critical": 0
+        },
+        "size": 4,
+        "move": "3/6/9/18",
+        "weapons": {
+            "mode": "embedded",
+            "simple": []
+        },
+        "description": {
+            "dh2": {
+                "value": "<p>The foreman of the Ashford grain mill: a broad, tired man who has kept the night shift running alone since the miller went missing, and who will not let anyone near the lower floor.</p>",
+                "chat": "",
+                "summary": "The Ashford mill's foreman, fixture NPC of the sample adventure The Ashford Mill."
+            }
+        },
+        "gameSystem": "dh2",
+        "gameSystems": ["dh2"],
+        "source": {
+            "dh2": {
+                "provenance": "homebrew",
+                "url": null
+            }
+        },
+        "tier": "troop",
+        "threatLevel": 5
+    },
+    "items": [],
+    "effects": [],
+    "flags": {}
+}

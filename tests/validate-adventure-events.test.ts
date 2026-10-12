@@ -17,7 +17,8 @@ import {
 } from '../scripts/validate-adventure-events.cjs';
 import { COMPLETION_TRIGGER_FIELDS as TS_TRIGGER_FIELDS, TRIGGER_OPTION_FIELDS as TS_OPTION_FIELDS } from '../src/module/managers/event-graph.ts';
 
-const PUBLIC_PACKS = resolve(__dirname, '../src/packs');
+/** The test-fixture pack root holding The Ashford Mill (never shipped). */
+const FIXTURE_PACKS = resolve(__dirname, 'fixtures/adventure-packs');
 // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse returns unknown; these are pack source files
 const readSource = (filePath: string): PackSourceDocument => JSON.parse(readFileSync(filePath, 'utf8')) as PackSourceDocument;
 
@@ -187,9 +188,9 @@ describe('validateAdventurePacks', () => {
         root = null;
     });
 
-    it('passes the public fixture adventure against the public packs', () => {
-        const index = buildUuidIndex(PUBLIC_PACKS, readSource);
-        expect(validateAdventurePacks(PUBLIC_PACKS, index, readSource)).toEqual([]);
+    it('passes the fixture adventure against its fixture pack root', () => {
+        const index = buildUuidIndex(FIXTURE_PACKS, readSource);
+        expect(validateAdventurePacks(FIXTURE_PACKS, index, readSource)).toEqual([]);
     });
 
     it('reports each error with its source path, ignoring non-adventure packs', () => {

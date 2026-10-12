@@ -1,5 +1,6 @@
 /**
- * Round trip of the public fixture adventure, The Ashford Mill (#592):
+ * Round trip of the test-fixture adventure, The Ashford Mill (#592, under
+ * tests/fixtures/adventure-packs — a fixture only, never a shipped pack):
  * compile (the build's Adventure resolver) → import (Foundry's `keepId` create of
  * every embedded document) → the Event Tracker's loader → the completion watcher.
  *
@@ -29,7 +30,8 @@ import {
 import { identifyActor } from '../src/module/managers/event-completion.ts';
 import { autoResolutions, createRefResolver, type EventDef, isEventAvailable } from '../src/module/managers/event-graph.ts';
 
-const PACKS = resolve(__dirname, '../src/packs');
+/** The fixture pack root: The Ashford Mill and its NPC, in the `<group>/<pack>/_source` layout. Never shipped. */
+const PACKS = resolve(__dirname, 'fixtures/adventure-packs');
 const SOURCE = resolve(PACKS, 'homebrew/hb-dh2-adventures/_source/the-ashford-mill_ashfordMillAdv01.json');
 const ACTOR_UUID = 'Compendium.wh40k-rpg.hb-dh2-ashford-actors-npcs.Actor.ashOrrinVael0001';
 

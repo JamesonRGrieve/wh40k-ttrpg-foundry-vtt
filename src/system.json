@@ -528,41 +528,8 @@
         },
         "JournalEntryPage": {}
     },
-    "packs": [
-        {
-            "name": "hb-dh2-ashford-actors-npcs",
-            "label": "Homebrew: The Ashford Mill, NPCs",
-            "path": "packs/homebrew/hb-dh2-ashford-actors-npcs",
-            "system": "wh40k-rpg",
-            "type": "Actor",
-            "ownership": {
-                "PLAYER": "OBSERVER",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        },
-        {
-            "name": "hb-dh2-adventures",
-            "label": "Homebrew: Adventures",
-            "path": "packs/homebrew/hb-dh2-adventures",
-            "system": "wh40k-rpg",
-            "type": "Adventure",
-            "ownership": {
-                "PLAYER": "NONE",
-                "ASSISTANT": "OWNER"
-            },
-            "flags": {}
-        }
-    ],
-    "packFolders": [
-        {
-            "name": "Homebrew Samples",
-            "sorting": "a",
-            "color": null,
-            "packs": ["hb-dh2-adventures", "hb-dh2-ashford-actors-npcs"],
-            "folders": []
-        }
-    ],
+    "packs": [],
+    "packFolders": [],
     "grid": {
         "distance": 1,
         "units": "m"

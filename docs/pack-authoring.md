@@ -1185,8 +1185,14 @@ Folders that imports as a unit.
 | Handout / player doc | JournalEntry page | the Adventure | embedded, permissioned |
 | Random table | RollTable | `<line>-<book>-rolltables` | UUID |
 
-GM-only vs player-facing handouts use Foundry JournalEntry **permission** levels
-(GM-only ↔ Observer).
+- **Adventure packs are GM-only.** Every `*-adventures` pack declaration gives
+  players `"PLAYER": "NONE"` (assistants `OWNER`): an Adventure carries the GM
+  journal, its scenario and event graph — every unfired event — and the
+  adventure's NPCs, so players never browse or import it. What players see
+  comes from the world documents the GM imports.
+
+Inside an imported adventure, GM-only vs player-facing handouts use Foundry
+JournalEntry **permission** levels (GM-only ↔ Observer).
 
 ### Anthology books vs. multi-act campaigns
 
@@ -1327,4 +1333,6 @@ automatic resolution by completion triggers. It is the tracker's own event shape
   a UUID that resolves neither in the compiled packs nor to the Adventure's own
   documents (`scripts/validate-adventure-events.cjs`).
 
-The public `hb-dh2-adventures` pack's *The Ashford Mill* is the reference example.
+A complete worked example, *The Ashford Mill*, lives as a **test fixture only**
+(`tests/fixtures/adventure-packs/`, never a shipped pack); the round-trip and
+validator tests compile it, import it and load it into the tracker.
