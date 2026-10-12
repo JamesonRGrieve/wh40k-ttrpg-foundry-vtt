@@ -11,6 +11,7 @@ import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'ow' as const;
     readonly usesMalignancyTest = true;
+    readonly maleficCorruptionOnManifest = false;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.ow';
     readonly cssClass = 'only-war';
     readonly theme = {

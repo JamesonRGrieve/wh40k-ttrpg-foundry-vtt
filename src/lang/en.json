@@ -6035,9 +6035,11 @@
                 "ChemUse": "Chem-Use",
                 "Blather": "Blather",
                 "WarCry": "War Cry",
-                "Malignancy": "Malignancy"
+                "Malignancy": "Malignancy",
+                "Malefic": "Malefic Daemonology"
             },
             "PsychicPhenomena": "The warp convulses with energy!",
+            "MaleficCorruption": "The daemonic power taints its wielder: +{corruption} Corruption (Psy Rating {pr} used).",
             "Feint": {
                 "Failed": "The character fails to feint against the target!",
                 "Succeeded": "Feint landed: this turn, the next melee Standard Attack on the same target can't be Evaded!",

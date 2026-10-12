@@ -11,6 +11,8 @@ import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './ty
 export class DH1eSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dh1' as const;
     readonly usesMalignancyTest = true;
+    // Disciples of the Dark Gods prints its own Malefic powers; its cost rule is unverified.
+    readonly maleficCorruptionOnManifest = false;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dh1';
     readonly cssClass = 'dark-heresy-1e';
     readonly theme = {

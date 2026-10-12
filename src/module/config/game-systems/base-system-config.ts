@@ -47,6 +47,13 @@ export abstract class BaseSystemConfig {
      */
     abstract readonly usesMalignancyTest: boolean;
 
+    /**
+     * Whether a successful Malefic Daemonology manifestation costs the psyker
+     * Corruption equal to the Psy Rating used (DH2 Enemies Beyond p. 56). Only
+     * lines whose rule has been verified opt in.
+     */
+    abstract readonly maleficCorruptionOnManifest: boolean;
+
     // ── Starting Resources ────────────────────────────────────────
 
     /** Starting XP for a new character in this system */

@@ -11,6 +11,7 @@ import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './ty
 export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'im' as const;
     readonly usesMalignancyTest = false;
+    readonly maleficCorruptionOnManifest = false;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.im';
     readonly cssClass = 'imperium-maledictum';
     readonly theme = {

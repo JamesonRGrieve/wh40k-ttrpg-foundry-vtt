@@ -1,4 +1,5 @@
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
+import { SystemConfigRegistry } from '../config/game-systems/index.ts';
 import type { GameSystemId } from '../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import type D100Roll from '../dice/d100-roll.ts';
@@ -13,6 +14,7 @@ import { type EffectRecipientLike, gmProxyActorUpdate, gmProxyCreateActorEffects
 import { DAMAGE_TIER_LABEL_KEYS, firstAidTierPenalty, getDamageTier } from '../rules/healing.ts';
 import { type AllocationTarget, allocateHits } from '../rules/hit-allocation.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
+import { getMaleficCorruptionCost } from '../rules/malefic-corruption.ts';
 import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/opposed.ts';
 import { resolvePhenomenaTrigger } from '../rules/phenomena-modifier.ts';
 import { type CastRecipient, castEffectsFor, type PowerEffectSource } from '../rules/psychic-cast-effects.ts';
@@ -41,7 +43,7 @@ import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
 import { attackTriggersRecharge } from '../rules/weapon-recharge.ts';
 import { playWeaponAttackSoundsForRoll } from '../rules/weapon-sounds.ts';
 import { DAY_SECONDS } from '../rules/world-time.ts';
-import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import type { WH40KBaseActorDocument, WH40KCorruptionInsanity } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, WeaponDamageData } from './damage-data.ts';
@@ -85,6 +87,7 @@ const EFFECT_TITLE = {
     blather: 'WH40K.ActionEffect.Title.Blather',
     warCry: 'WH40K.ActionEffect.Title.WarCry',
     malignancy: 'WH40K.ActionEffect.Title.Malignancy',
+    malefic: 'WH40K.ActionEffect.Title.Malefic',
 } as const;
 
 export class ActionData {
@@ -974,6 +977,52 @@ export class PsychicActionData extends ActionData {
         if (this.rollData.success) await this.applyCastEffects();
     }
 
+    /** Spending the cast's resources also charges its Malefic Corruption. */
+    override async useResources(): Promise<void> {
+        await super.useResources();
+        await this.#adjustCorruption(this.#maleficCorruption);
+    }
+
+    /** A refunded (re-rolled) cast returns the Malefic Corruption it charged. */
+    override async refundResources(): Promise<void> {
+        await super.refundResources();
+        await this.#adjustCorruption(-this.#maleficCorruption);
+    }
+
+    /** Corruption this cast costs the psyker (Malefic Daemonology), fixed when the card is written. */
+    #maleficCorruption = 0;
+
+    /**
+     * Corruption a successful Malefic manifestation costs: the Psy Rating used
+     * (beyond.md p. 56), on lines whose config opts in. 0 for any other power,
+     * a failed cast, or a psyker with no Corruption track.
+     */
+    #maleficCorruptionCost(): number {
+        if (this.rollData.sourceActor === null) return 0;
+        const config = SystemConfigRegistry.getOrNull(this.rollData.gameSystemId ?? '');
+        if (config?.maleficCorruptionOnManifest !== true) return 0;
+        return getMaleficCorruptionCost(this.#powerDiscipline, this.rollData.pr, this.rollData.success);
+    }
+
+    /** The manifested power's discipline choice (`malefic`, `sanctic`, …; normalised by the psychic-power DataModel). */
+    get #powerDiscipline(): string {
+        const discipline = this.rollData.power.system['discipline'];
+        return typeof discipline === 'string' ? discipline : '';
+    }
+
+    /**
+     * Move the psyker's Corruption by `delta` (a Malefic charge or its refund).
+     * Raising it also queues any Malignancy Test the gain crosses. No-op for a
+     * zero delta or an actor without a Corruption track.
+     */
+    async #adjustCorruption(delta: number): Promise<void> {
+        const actor = this.rollData.sourceActor;
+        if (actor === null || delta === 0) return;
+        const system: { corruption?: number | WH40KCorruptionInsanity | undefined } = actor.system;
+        if (typeof system.corruption !== 'number') return;
+        await actor.update({ 'system.corruption': Math.max(0, system.corruption + delta) });
+    }
+
     /**
      * Land the manifested power's own effects on their recipients, the psyker or
      * the target (rules/psychic-cast-effects.ts). A target the caster does not
@@ -1016,6 +1065,12 @@ export class PsychicActionData extends ActionData {
                 t(EFFECT_TITLE.psychic),
                 game.i18n.format(key, { target: this.rollData.targetActor.name, margin: String(this.rollData.opposedMargin) }),
             );
+        }
+
+        // Success is final here, so the Malefic cost is known before the card posts.
+        this.#maleficCorruption = this.#maleficCorruptionCost();
+        if (this.#maleficCorruption > 0) {
+            this.addEffect(t(EFFECT_TITLE.malefic), t('WH40K.ActionEffect.MaleficCorruption', { corruption: this.#maleficCorruption, pr: this.rollData.pr }));
         }
     }
 }

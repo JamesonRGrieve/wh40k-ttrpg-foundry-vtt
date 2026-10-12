@@ -11,6 +11,7 @@ import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './ty
 export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'dh2' as const;
     readonly usesMalignancyTest = true;
+    readonly maleficCorruptionOnManifest = true;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dh2';
     readonly cssClass = 'dark-heresy';
     readonly theme = {

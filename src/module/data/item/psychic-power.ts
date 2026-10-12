@@ -4,15 +4,7 @@ import IdentifierField from '../fields/identifier-field.ts';
 import ActivationTemplate from '../shared/activation-template.ts';
 import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-
-/**
- * Canonical psychic-discipline choices. Shared between defineSchema() and the
- * `_migrateData` coercion so a corrupt/legacy value (e.g. an imported
- * `"Telepathy"` with title-case, or a stray surrounding space) is normalised to
- * a valid choice instead of failing strict V14 validation — which would drop the
- * power from its owning actor and break token/ActorDelta creation on drop.
- */
-const PSYCHIC_DISCIPLINE_CHOICES = ['telepathy', 'telekinesis', 'divination', 'pyromancy', 'biomancy', 'daemonology', 'malefic', 'sanctic', 'minor'] as const;
+import { normalisePsychicDiscipline, PSYCHIC_DISCIPLINE_CHOICES } from './psychic-discipline.ts';
 
 /**
  * Data model for Psychic Power items.
@@ -121,14 +113,12 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         // `discipline` is a strict choice field, but legacy/compendium data is
-        // messy: title-case spellings ("Telepathy"), surrounding whitespace, etc.
-        // An out-of-choice value fails V14 validation and drops the whole power
-        // from its owning actor (breaking token/ActorDelta creation on drop).
-        // Normalise the recoverable forms; fall back to 'minor' (the "no tree"
-        // bucket) for anything unrecognised.
+        // messy: title-case spellings ("Telepathy"), qualified headings ("Malefic
+        // Daemonology"), surrounding whitespace, etc. An out-of-choice value fails
+        // V14 validation and drops the whole power from its owning actor (breaking
+        // token/ActorDelta creation on drop). Normalise the recoverable forms.
         if (typeof source['discipline'] === 'string') {
-            const v = source['discipline'].trim().toLowerCase();
-            source['discipline'] = (PSYCHIC_DISCIPLINE_CHOICES as readonly string[]).includes(v) ? v : 'minor';
+            source['discipline'] = normalisePsychicDiscipline(source['discipline']);
         }
     }
 
