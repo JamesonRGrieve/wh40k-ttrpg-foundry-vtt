@@ -6,6 +6,8 @@
  * refunded for a re-roll. Lines opt in through their game-system config.
  */
 
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 import { buildApplicationV2Api, type ApplicationV2Api } from '../src/module/testing/app-v2-stub.ts';
 
@@ -56,6 +58,7 @@ stubs.game = {
 
 // Imports must come AFTER the stubs so module-init code finds the shims.
 const { PsychicActionData } = await import('../src/module/rolls/action-data.ts');
+const { SystemConfigRegistry } = await import('../src/module/config/game-systems/index.ts');
 
 afterAll(() => {
     Object.assign(stubs, ORIGINAL);
@@ -71,7 +74,10 @@ async function cast(opts: {
 }): Promise<{ action: InstanceType<typeof PsychicActionData>; update: ReturnType<typeof vi.fn> }> {
     const action = new PsychicActionData();
     const update = vi.fn().mockResolvedValue({});
-    const actor = { system: { gameSystem: opts.gameSystem, corruption: opts.corruption }, update };
+    // `chargesMaleficCorruption` mirrors WH40KAcolyte's getter (the Document cannot load
+    // under happy-dom): the line's config flag.
+    const chargesMaleficCorruption = SystemConfigRegistry.getOrNull(opts.gameSystem)?.maleficCorruptionOnManifest === true;
+    const actor = { system: { gameSystem: opts.gameSystem, corruption: opts.corruption }, update, chargesMaleficCorruption };
     // eslint-disable-next-line no-restricted-syntax -- boundary: a structural psyker stub standing in for the Foundry Actor document the roll data holds
     action.rollData.sourceActor = actor as unknown as typeof action.rollData.sourceActor;
     // eslint-disable-next-line no-restricted-syntax -- boundary: a structural power stub standing in for the Foundry Item document the roll data holds
@@ -119,5 +125,12 @@ describe('Malefic Corruption on a Psychic cast', () => {
             await action.useResources();
             expect(update).not.toHaveBeenCalled();
         }
+    });
+
+    it('reads the line flag through the character document', () => {
+        const acolyteSrc = readFileSync(resolve(__dirname, '../src/module/documents/acolyte.ts'), 'utf8');
+        expect(acolyteSrc).toMatch(
+            /get chargesMaleficCorruption\(\): boolean \{\s*return SystemConfigRegistry\.getOrNull\(this\.system\.gameSystem\)\?\.maleficCorruptionOnManifest === true;/,
+        );
     });
 });

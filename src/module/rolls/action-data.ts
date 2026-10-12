@@ -1,8 +1,9 @@
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
-import { SystemConfigRegistry } from '../config/game-systems/index.ts';
+import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
 import type { GameSystemId } from '../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import type D100Roll from '../dice/d100-roll.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { t } from '../i18n/t.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { hitsForDegrees, isBurstAction } from '../rules/auto-fire.ts';
@@ -19,6 +20,8 @@ import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/oppos
 import { resolvePhenomenaTrigger } from '../rules/phenomena-modifier.ts';
 import { type CastRecipient, castEffectsFor, type PowerEffectSource } from '../rules/psychic-cast-effects.ts';
 import type { RerollOption } from '../rules/reroll.ts';
+import { isSancticDiscipline } from '../rules/sanctic-daemonology.ts';
+import { hasSancticPurity, SANCTIC_PURITY_FATE_COST } from '../rules/sanctic-purity.ts';
 import { scatterDirection } from '../rules/scatter.ts';
 import {
     applyFirstAidOutcome,
@@ -49,8 +52,11 @@ import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, WeaponDamageData } from './damage-data.ts';
 import type { ExtendedTestChatContext } from './extended-test-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
-import { getDegreeForMode, isD100Success, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
+import { emitChatFromTemplate, getDegreeForMode, isD100Success, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
 import { keepModeCardNote } from './roll-keep.ts';
+
+/** The "Phenomena Negated" card Sanctic Purity posts when the psyker spends Fate. */
+const SANCTIC_PURITY_NEGATED_TEMPLATE = 'systems/wh40k-rpg/templates/chat/sanctic-purity-negated-chat.hbs';
 
 /** Langpack keys of the headings the effect rows on an action card are filed under. */
 const EFFECT_TITLE = {
@@ -212,6 +218,11 @@ export class ActionData {
 
         if (!outcome.triggered) return;
 
+        if (await this.#negatePhenomenaBySancticPurity(sourceActor)) {
+            this.addEffect(t(EFFECT_TITLE.psychicPhenomena), t('WH40K.SancticPurity.NegatedChatBody'));
+            return;
+        }
+
         this.addEffect(t(EFFECT_TITLE.psychicPhenomena), t('WH40K.ActionEffect.PsychicPhenomena'));
 
         let autoRoll = true;
@@ -223,6 +234,44 @@ export class ActionData {
         if (!autoRoll) return;
 
         await RollTableUtils.rollPsychicPhenomena(sourceActor, outcome.modifier, outcome.ladderStep);
+    }
+
+    /** The rolled power's discipline choice (`malefic`, `sanctic`, …; normalised by the psychic-power DataModel), or '' with no power. */
+    protected get powerDiscipline(): string {
+        const discipline = this.rollData.power?.system['discipline'];
+        return typeof discipline === 'string' ? discipline : '';
+    }
+
+    /**
+     * Sanctic Purity (#131): a psyker holding the talent who triggers Psychic
+     * Phenomena manifesting a Sanctic Daemonology power may spend a Fate point to
+     * negate it entirely. Asks the roller; on acceptance spends the Fate and posts
+     * the "Phenomena Negated" card. Returns whether the Phenomena was negated.
+     */
+    async #negatePhenomenaBySancticPurity(actor: WH40KBaseActor): Promise<boolean> {
+        if (!isSancticDiscipline(this.powerDiscipline) || !hasSancticPurity(actor)) return false;
+        const fateBefore = actor.system.fate?.value ?? 0;
+        if (fateBefore < SANCTIC_PURITY_FATE_COST) return false;
+        const spend = await ConfirmationDialog.confirm({
+            title: t('WH40K.SancticPurity.PromptTitle'),
+            content: t('WH40K.SancticPurity.PromptBody'),
+            confirmLabel: t('WH40K.SancticPurity.SpendButton'),
+            cancelLabel: t('WH40K.SancticPurity.DeclineButton'),
+        });
+        if (!spend) return false;
+        await actor.spendFate();
+        await emitChatFromTemplate(
+            SANCTIC_PURITY_NEGATED_TEMPLATE,
+            {
+                gameSystem: this.rollData.gameSystemId,
+                actorName: actor.name,
+                fateCost: SANCTIC_PURITY_FATE_COST,
+                fateBefore,
+                fateAfter: fateBefore - SANCTIC_PURITY_FATE_COST,
+            },
+            { speaker: ChatMessage.getSpeaker({ actor }) },
+        );
+        return true;
     }
 
     /**
@@ -994,20 +1043,15 @@ export class PsychicActionData extends ActionData {
 
     /**
      * Corruption a successful Malefic manifestation costs: the Psy Rating used
-     * (beyond.md p. 56), on lines whose config opts in. 0 for any other power,
-     * a failed cast, or a psyker with no Corruption track.
+     * (beyond.md p. 56), on lines whose config opts in (read through the
+     * character's `chargesMaleficCorruption`, so this layer does not import the
+     * game-system configs). 0 for any other power, a failed cast, or a psyker
+     * with no Corruption track.
      */
     #maleficCorruptionCost(): number {
-        if (this.rollData.sourceActor === null) return 0;
-        const config = SystemConfigRegistry.getOrNull(this.rollData.gameSystemId ?? '');
-        if (config?.maleficCorruptionOnManifest !== true) return 0;
-        return getMaleficCorruptionCost(this.#powerDiscipline, this.rollData.pr, this.rollData.success);
-    }
-
-    /** The manifested power's discipline choice (`malefic`, `sanctic`, …; normalised by the psychic-power DataModel). */
-    get #powerDiscipline(): string {
-        const discipline = this.rollData.power.system['discipline'];
-        return typeof discipline === 'string' ? discipline : '';
+        const actor = this.rollData.sourceActor;
+        if (actor === null || !('chargesMaleficCorruption' in actor) || actor.chargesMaleficCorruption !== true) return 0;
+        return getMaleficCorruptionCost(this.powerDiscipline, this.rollData.pr, this.rollData.success);
     }
 
     /**

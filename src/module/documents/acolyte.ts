@@ -377,6 +377,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
         return SystemConfigRegistry.getOrNull(this.system.gameSystem)?.usesMalignancyTest === true;
     }
 
+    /** Whether this character's line charges Corruption for a successful Malefic Daemonology cast. */
+    get chargesMaleficCorruption(): boolean {
+        return SystemConfigRegistry.getOrNull(this.system.gameSystem)?.maleficCorruptionOnManifest === true;
+    }
+
     /**
      * Queue a Malignancy Test for every 10-CP threshold a Corruption gain
      * crosses, in the same write, so the owed tests survive until rolled however
