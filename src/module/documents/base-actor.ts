@@ -25,10 +25,10 @@ import {
     desiredSubtletyAdjusterEffects,
     type ExistingSubtletyAdjusterEffect,
     planSubtletyAdjusterEffects,
-    type SubtletyAdjusterEffectPlan,
     SUBTLETY_EFFECT_FLAG_KEY,
     SUBTLETY_EFFECT_FLAG_SCOPE,
     SUBTLETY_EFFECT_ICON,
+    type SubtletyAdjusterEffectPlan,
 } from '../rules/subtlety-adjuster-effects.ts';
 import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type SubtletySourceRef } from '../rules/subtlety-adjusters.ts';
 import { weaponFireBlockReason } from '../rules/weapon-jam.ts';
@@ -40,6 +40,7 @@ import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { isActorWritable } from './actor-liveness.ts';
+import { isCharacterActorType } from './actor-types.ts';
 import type { WH40KItem } from './item.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: these utility types intersect with Record<string, unknown> to allow index access on opaque roll/characteristic/skill data models */
@@ -73,23 +74,8 @@ type ItemModifierCarrier = WH40KItem & {
     };
 };
 
-/**
- * True for player-character actor types — the per-line `<system>-character`
- * types and the generic `character` fallback — and false for everything else
- * (NPCs, vehicles, starships, loot). Drives the linked-token default in
- * `_preCreate` (#479): characters are actor-linked so a placed token stays a
- * live view of the one canonical Actor, while NPCs stay unlinked so one bestiary
- * entry can place many independent mook tokens.
- *
- * Exported and pure so the gate is unit-testable without booting Foundry — the
- * bug it replaced tested `=== 'acolyte' || === 'character'`, which matched no
- * real per-line type (`acolyte` is not a registered type; `character` is only
- * the generic fallback), so every `dh2-character` / `bc-character` / … fell
- * through and was created unlinked.
- */
-export function isCharacterActorType(type: string): boolean {
-    return type === 'character' || type.endsWith('-character');
-}
+/** Re-exported from its leaf module so existing `base-actor` importers keep working. */
+export { isCharacterActorType };
 
 export class WH40KBaseActor extends Actor {
     declare system: Actor['system'] & WH40KActorSystemData;
