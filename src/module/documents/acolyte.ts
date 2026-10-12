@@ -1,4 +1,4 @@
-import { SystemConfigRegistry } from '../config/game-systems/index.ts';
+import { itemRepairRulesFor, SystemConfigRegistry } from '../config/game-systems/index.ts';
 import type { GameSystemId } from '../config/game-systems/types.ts';
 // Direct, not via dice/_module.ts: that barrel also re-exports
 // RollConfigurationDialog, so importing it drags the applications layer into
@@ -21,14 +21,17 @@ import {
     DosReadoutActionData,
     MalignancyTestActionData,
     SkillUseActionData,
+    XenosLoreActionData,
 } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { resolveGainedMalignancy } from '../rolls/malignancy-outcome.ts';
 import { openDamagePrompt, openRollPrompt } from '../rolls/roll-prompt.ts';
 import { firstTargetedActor, promptItemChoice } from '../rolls/skill-use-picker.ts';
 import { TWISTED_FLESH_FLAG } from '../rules/chaos-backgrounds.ts';
+import { craftsmanshipRepairModifier } from '../rules/item-repair.ts';
 import { corruptionTrackModifier, malignancyTestsQueued } from '../rules/malignancy-test.ts';
 import { getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
+import { isXenosEquipment, readXenosRepairInsight, XENOS_REPAIR_INSIGHT_FLAG, xenosRepairModifiers, type XenosRepairRules } from '../rules/xenos-equipment.ts';
 import type {
     WH40KActorBio,
     WH40KActorSystemData,
@@ -779,10 +782,12 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const candidates = pools.flat().filter((item: WH40KItem) => {
             if (!item.isWeapon && !item.isArmour && !item.isGear) return false;
             // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; narrow to the runtime state slots this reads
-            const sys = item.system as unknown as { state?: { broken?: boolean; locked?: boolean }; jammed?: boolean };
+            const sys = item.system as unknown as { state?: { broken?: boolean; locked?: boolean; destroyed?: boolean }; jammed?: boolean };
             const broken = (sys.state?.broken ?? false) || sys.jammed === true;
+            // A destroyed item can never be repaired (DH2 core p. 142, #444).
+            const repairable = broken && sys.state?.destroyed !== true;
             // Repair → broken/jammed; bypass → locked; break → an intact item to smash.
-            const flagged = mode === 'repair' ? broken : mode === 'bypassLock' ? sys.state?.locked ?? false : !broken;
+            const flagged = mode === 'repair' ? repairable : mode === 'bypassLock' ? sys.state?.locked ?? false : !broken;
             return flagged && item.id !== null;
         });
         const pickable = candidates.map((i: WH40KItem) => ({ id: i.id as string, name: i.name }));
@@ -804,10 +809,35 @@ export class WH40KAcolyte extends WH40KBaseActor {
             return;
         }
         const owner = target?.items.get(chosen.id) !== undefined ? target : this;
+        const chosenItem = owner.items.get(chosen.id);
+        if (chosenItem === undefined) return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: the resolved Item satisfies StatefulItem structurally (id/name/update)
-        const statefulItem = owner.items.get(chosen.id) as unknown as StatefulItem;
+        const statefulItem = chosenItem as unknown as StatefulItem;
 
-        const objectAction = new ObjectStateActionData(mode, statefulItem);
+        // The line's printed repair rule (#444): DH2 applies the Table 5-2 craftsmanship
+        // modifier and destroys the item on 4+ DoF; other lines keep the plain test.
+        const repairRules = mode === 'repair' ? itemRepairRulesFor(this.system.gameSystem) : null;
+        const extraModifiers: Record<string, number> = {};
+        let consumesXenosInsight = false;
+        if (repairRules !== null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; craftsmanship is on the physical-item template, `type` on weapon/armour
+            const itemSystem = chosenItem.system as unknown as { craftsmanship?: string; type?: string };
+            extraModifiers['craftsmanship-repair'] = craftsmanshipRepairModifier(repairRules, itemSystem.craftsmanship);
+            if (repairRules.xenos !== null && isXenosEquipment({ type: chosenItem.type, system: itemSystem })) {
+                const insight = this.uuid === null ? null : readXenosRepairInsight(chosenItem.getFlag(SYSTEM_ID, XENOS_REPAIR_INSIGHT_FLAG), this.uuid);
+                if (insight === null) {
+                    // First the Hard (−20) Forbidden Lore test (Enemies Without p. 42, #136).
+                    await this._rollXenosRepairLore(statefulItem, chosen.name, repairRules.xenos);
+                    return;
+                }
+                const xenos = xenosRepairModifiers(repairRules.xenos, insight.degrees);
+                extraModifiers['xenos-repair'] = xenos.alienNature;
+                extraModifiers['xenos-lore-insight'] = xenos.loreInsight;
+                consumesXenosInsight = true;
+            }
+        }
+
+        const objectAction = new ObjectStateActionData(mode, statefulItem, { rules: repairRules, consumesXenosInsight });
         this._buildSimpleSkillRoll({
             key: skillKey,
             type: 'skill',
@@ -815,9 +845,52 @@ export class WH40KAcolyte extends WH40KBaseActor {
             target: targetValue,
             situationalKey: skillKey,
             instance: objectAction,
+            extraModifiers,
             ...(skillRank !== undefined ? { skillRank } : {}),
         });
         openRollPrompt(objectAction);
+    }
+
+    /**
+     * The Forbidden Lore step before repairing a xenos item (DH2 Enemies Without
+     * p. 42, #136). If the race that built the item is unknown it cannot be
+     * repaired at all, which is a GM ruling made here. Otherwise the Acolyte picks
+     * the Forbidden Lore specialisation that covers that race and rolls it at Hard
+     * (−20); success records the insight their next repair attempt reads.
+     */
+    async _rollXenosRepairLore(item: StatefulItem, itemName: string, rules: XenosRepairRules): Promise<void> {
+        const makerKnown = await foundry.applications.api.DialogV2.confirm({
+            window: { title: t('WH40K.SkillUse.Object.XenosMakerTitle') },
+            content: `<p>${foundry.utils.escapeHTML(game.i18n.format('WH40K.SkillUse.Object.XenosMakerQuestion', { item: itemName }))}</p>`,
+        });
+        if (!makerKnown) {
+            ui.notifications.warn(game.i18n.format('WH40K.SkillUse.Object.XenosTooAlien', { item: itemName }));
+            return;
+        }
+        const loreKey = this._resolveSkillName('forbiddenLore');
+        const lore = this.skills[loreKey] as WH40KSkill | undefined;
+        const entries = (lore?.entries ?? []) as SkillEntry[];
+        const pickable = entries.map((lorEntry, index) => ({ id: String(index), name: lorEntry.name ?? lorEntry.label ?? '' })).filter((e) => e.name !== '');
+        if (lore === undefined || pickable.length === 0 || this.uuid === null) {
+            ui.notifications.warn(t('WH40K.SkillUse.Object.XenosNoLore'));
+            return;
+        }
+        const chosen = await promptItemChoice(pickable, t('WH40K.SkillUse.Object.XenosLorePickTitle'), t('WH40K.SkillUse.Object.XenosLorePickHint'));
+        if (chosen === null) return;
+        const entry = entries.at(Number(chosen.id));
+        if (entry === undefined) return;
+        const loreAction = new XenosLoreActionData(item, this.uuid);
+        this._buildSimpleSkillRoll({
+            key: loreKey,
+            type: 'skill',
+            label: `${lore.label ?? loreKey}: ${chosen.name} (${itemName})`,
+            target: entry.current ?? lore.current,
+            situationalKey: loreKey,
+            instance: loreAction,
+            extraModifiers: { 'xenos-lore': rules.loreModifier },
+            skillRank: entry.rank ?? (entry.trained === true ? 1 : 0),
+        });
+        openRollPrompt(loreAction);
     }
 
     /**

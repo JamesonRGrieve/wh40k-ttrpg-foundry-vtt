@@ -39,6 +39,7 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly maleficCorruptionOnManifest = false;
     readonly acquisitionLadder: AcquisitionLadder = RT_ACQUISITION_LADDER;
     readonly inquestRules = null;
+    readonly itemRepair = null;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.rt';
     readonly cssClass = 'rogue-trader';
     readonly theme = {

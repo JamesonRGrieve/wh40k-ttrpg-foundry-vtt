@@ -7,6 +7,7 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
+import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type {
     GameSystemId,
     SkillRankDef,
@@ -69,6 +70,14 @@ export abstract class BaseSystemConfig {
      * turns on the Party Overview Inquest panel and tracker.
      */
     abstract readonly inquestRules: InquestRules | null;
+
+    /**
+     * The line's printed item-repair rule (DH2 core p. 142: Table 5–2 repair
+     * modifier + destruction on a bad failure, #444; plus the Enemies Without
+     * xenos step, #136), or `null` for a line whose book leaves the Tech-Use
+     * repair difficulty to the GM.
+     */
+    abstract readonly itemRepair: ItemRepairRules | null;
 
     // ── Starting Resources ────────────────────────────────────────
 

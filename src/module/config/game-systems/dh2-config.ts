@@ -4,11 +4,18 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import type { AcquisitionLadder, CraftsmanshipKey } from '../../rules/acquisition-ladder.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
+import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
+
+/**
+ * Core Table 5-2: Craftsmanship, Requisition, and Repair (p. 141) — one column
+ * serves both the Requisition test and the Tech-Use repair test (p. 142).
+ */
+const DH2_CRAFTSMANSHIP_MODIFIERS: Readonly<Record<CraftsmanshipKey, number>> = { poor: 10, common: 0, good: -20, best: -30 };
 
 /**
  * Requisition test — core Table 5-1: Availability Modifiers and Table 5-2:
@@ -29,7 +36,19 @@ export const DH2_ACQUISITION_LADDER: AcquisitionLadder = {
         nearUnique: -50,
         unique: -60,
     },
-    craftsmanship: { poor: 10, common: 0, good: -20, best: -30 },
+    craftsmanship: DH2_CRAFTSMANSHIP_MODIFIERS,
+};
+
+/**
+ * Item repair — core p. 142 "Repairing Items": Tech-Use with the Table 5-2
+ * modifier, destroyed on four or more degrees of failure; xenos equipment
+ * (Enemies Without p. 42) first needs a Hard (−20) Forbidden Lore test, then
+ * repairs at −20 +5 per degree of success on it.
+ */
+export const DH2_ITEM_REPAIR_RULES: ItemRepairRules = {
+    craftsmanship: DH2_CRAFTSMANSHIP_MODIFIERS,
+    destroyedAtDegreesOfFailure: 4,
+    xenos: { loreModifier: -20, repairModifier: -20, bonusPerLoreDegree: 5 },
 };
 
 /**
@@ -58,6 +77,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly maleficCorruptionOnManifest = true;
     readonly acquisitionLadder: AcquisitionLadder = DH2_ACQUISITION_LADDER;
     readonly inquestRules: InquestRules = DH2_INQUEST_RULES;
+    readonly itemRepair: ItemRepairRules = DH2_ITEM_REPAIR_RULES;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dh2';
     readonly cssClass = 'dark-heresy';
     readonly theme = {

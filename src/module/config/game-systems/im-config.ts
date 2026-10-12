@@ -15,6 +15,7 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
     /** IM has no availability-modified acquisition test. */
     readonly acquisitionLadder = null;
     readonly inquestRules = null;
+    readonly itemRepair = null;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.im';
     readonly cssClass = 'imperium-maledictum';
     readonly theme = {

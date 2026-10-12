@@ -69,6 +69,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * acquisition.)
      */
     readonly inquestRules = null;
+    readonly itemRepair = null;
     readonly acquisitionLadder: AcquisitionLadder = {
         availability: {
             ubiquitous: 70,

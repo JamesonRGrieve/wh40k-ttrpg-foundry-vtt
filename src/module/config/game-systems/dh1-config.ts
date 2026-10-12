@@ -22,6 +22,7 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
      * craftsmanship modifier.
      */
     readonly inquestRules = null;
+    readonly itemRepair = null;
     readonly acquisitionLadder: AcquisitionLadder = {
         availability: {
             ubiquitous: 70,

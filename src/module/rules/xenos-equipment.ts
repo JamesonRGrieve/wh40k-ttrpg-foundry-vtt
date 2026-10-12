@@ -1,99 +1,71 @@
 /**
- * Modifying / Repairing Xenos Equipment (#136 — without.md L1145-1490).
+ * Modifying and Repairing Xenos Equipment (DH2 Enemies Without p. 42, #136).
  *
- * Xenos items degrade with use; refit requires a Tech-Use test modified
- * by the item's Availability. This module exposes:
- *  - The condition ladder (pristine → worn → degraded → ruined).
- *  - A degradation-tick helper for use-counter hooks.
- *  - A Tech-Use repair-target composer that consumes the Availability
- *    modifier per RAW.
+ * "To repair and modify xenos equipment, a character must first make a Hard
+ * (–20) Forbidden Lore test, and the Specialisation for the Forbidden Lore
+ * must be the same as the alien race that constructed the item (if this is
+ * unknown, then the item cannot be repaired or modified — it is simply too
+ * alien!) … He then repairs/modifies the item using the rules on page 142 or
+ * 162 of the DARK HERESY Core Rulebook. There is a base –20 penalty on the
+ * test, due to the alien nature of the item, but a +5 bonus on the attempt
+ * for every degree of success on the Forbidden Lore test."
  *
- * Item schema field for degradation, the on-fire decrement hook, and
- * the sheet surface remain follow-ups under #136.
+ * The flow is two tests. The lore test's degrees of success are recorded on
+ * the item as a "repair insight" for the Acolyte who rolled it. Their next
+ * Tech-Use Repair on that item reads the insight and takes the −20 / +5-per-DoS
+ * modifiers. Whether the maker race is known is a GM ruling made at repair
+ * time, because items carry no maker field. The printed values live on the
+ * line config (`ItemRepairRules.xenos`); this module holds only the math.
  */
 
 import { nonNegInt } from './_num.ts';
-import { type AcquisitionLadder, type AvailabilityKey, availabilityTerm } from './acquisition-ladder.ts';
 
-export type XenosCondition = 'pristine' | 'worn' | 'degraded' | 'ruined';
+/** A line's printed xenos-repair rule. */
+export interface XenosRepairRules {
+    /** Difficulty of the Forbidden Lore test (Hard, −20). */
+    loreModifier: number;
+    /** Base penalty on the repair test for the item's alien nature (−20). */
+    repairModifier: number;
+    /** Bonus on the repair test per degree of success on the Forbidden Lore test (+5). */
+    bonusPerLoreDegree: number;
+}
 
-const CONDITION_LADDER: readonly XenosCondition[] = ['pristine', 'worn', 'degraded', 'ruined'];
+/** The item flag (under the system scope) holding the pending {@link XenosRepairInsight}. */
+export const XENOS_REPAIR_INSIGHT_FLAG = 'xenosRepairInsight';
 
-/** Charges-remaining threshold at which the item drops to the next condition. */
-export const XENOS_CONDITION_THRESHOLDS: Record<XenosCondition, { minCharges: number }> = {
-    pristine: { minCharges: 8 },
-    worn: { minCharges: 4 },
-    degraded: { minCharges: 1 },
-    ruined: { minCharges: 0 },
-};
+/** An Acolyte's successful Forbidden Lore test on one xenos item, awaiting the repair attempt. */
+export interface XenosRepairInsight {
+    /** The Acolyte who rolled the lore test. */
+    actorUuid: string;
+    /** Degrees of success on that test. */
+    degrees: number;
+}
 
-/**
- * Map a remaining-charge count to the canonical condition tier.
- * Returns `'ruined'` for any non-positive charge count.
- */
-export function getXenosCondition(remainingCharges: number): XenosCondition {
-    const n = Number.isFinite(remainingCharges) ? Math.trunc(remainingCharges) : 0;
-    if (n >= XENOS_CONDITION_THRESHOLDS.pristine.minCharges) return 'pristine';
-    if (n >= XENOS_CONDITION_THRESHOLDS.worn.minCharges) return 'worn';
-    if (n >= XENOS_CONDITION_THRESHOLDS.degraded.minCharges) return 'degraded';
-    return 'ruined';
+/** The item surface the xenos check reads: its document type and its own `system.type`. */
+export interface XenosCandidateItem {
+    readonly type: string;
+    readonly system: { readonly type?: string | undefined };
+}
+
+/** Weapons and armour typed `xenos` are xenos equipment. */
+export function isXenosEquipment(item: XenosCandidateItem): boolean {
+    return (item.type === 'weapon' || item.type === 'armour') && item.system.type === 'xenos';
+}
+
+/** The repair test's two xenos modifiers: the alien-nature penalty and the lore bonus. */
+export function xenosRepairModifiers(rules: XenosRepairRules, loreDegrees: number): { alienNature: number; loreInsight: number } {
+    return { alienNature: rules.repairModifier, loreInsight: nonNegInt(loreDegrees) * rules.bonusPerLoreDegree };
 }
 
 /**
- * Decrement a use-counter and report the new condition. The caller
- * persists the new charge count via the item document; this helper is
- * a pure projection.
+ * Read a stored insight flag for `actorUuid`: only that Acolyte's own lore
+ * test counts toward their repair. Anything malformed reads as no insight.
  */
-export function tickXenosDegradation(remainingCharges: number, ticks = 1): { newCharges: number; newCondition: XenosCondition } {
-    const start = nonNegInt(remainingCharges);
-    const decrement = nonNegInt(ticks);
-    const newCharges = Math.max(0, start - decrement);
-    return { newCharges, newCondition: getXenosCondition(newCharges) };
-}
-
-export interface XenosRepairInput {
-    /** Actor's Tech-Use skill total. */
-    techUseTotal: number;
-    /**
-     * The line's acquisition ladder: the repair test takes the same Availability
-     * modifier as the line's acquisition test (#192).
-     */
-    ladder: AcquisitionLadder;
-    /** Item's Availability key. */
-    availability: AvailabilityKey;
-    /** Current condition (worn / degraded / ruined repairable; pristine is no-op). */
-    currentCondition: XenosCondition;
-}
-
-export interface XenosRepairResult {
-    /**
-     * Effective Tech-Use target for the repair test; `null` when the ladder
-     * prints the item's rating without a number (Automatic / GM's discretion).
-     */
-    target: number | null;
-    /** True when the item is in pristine condition (no repair needed). */
-    isNoOp: boolean;
-    /** True when the item is ruined beyond field repair (RAW: requires Forge-world facility). */
-    requiresFacility: boolean;
-}
-
-/** Compose the Tech-Use target for a field repair attempt. */
-export function resolveXenosRepairTarget(input: XenosRepairInput): XenosRepairResult {
-    if (input.currentCondition === 'pristine') {
-        return { target: input.techUseTotal, isNoOp: true, requiresFacility: false };
-    }
-    const tu = nonNegInt(input.techUseTotal);
-    const availability = availabilityTerm(input.ladder, input.availability);
-    return {
-        target: availability.kind === 'modifier' ? Math.max(0, tu + availability.value) : null,
-        isNoOp: false,
-        requiresFacility: input.currentCondition === 'ruined',
-    };
-}
-
-/** Repairing one tier up the ladder (worn → pristine, degraded → worn, etc.). */
-export function nextConditionUp(current: XenosCondition): XenosCondition {
-    const idx = CONDITION_LADDER.indexOf(current);
-    if (idx <= 0) return current;
-    return CONDITION_LADDER[idx - 1] ?? current;
+// eslint-disable-next-line no-restricted-syntax -- boundary: validates an untyped Item#getFlag result
+export function readXenosRepairInsight(raw: unknown, actorUuid: string): XenosRepairInsight | null {
+    if (raw === null || typeof raw !== 'object') return null;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the flag object, read field-by-field through the typeof guards below
+    const record = raw as { actorUuid?: unknown; degrees?: unknown };
+    if (record.actorUuid !== actorUuid || typeof record.degrees !== 'number') return null;
+    return { actorUuid, degrees: nonNegInt(record.degrees) };
 }

@@ -15,6 +15,7 @@ import { type EffectRecipientLike, gmProxyActorUpdate, gmProxyCreateActorEffects
 import { DAMAGE_TIER_LABEL_KEYS, firstAidTierPenalty, getDamageTier } from '../rules/healing.ts';
 import { type AllocationTarget, allocateHits } from '../rules/hit-allocation.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
+import { type ItemRepairRules, repairDestroysItem } from '../rules/item-repair.ts';
 import { getMaleficCorruptionCost } from '../rules/malefic-corruption.ts';
 import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/opposed.ts';
 import { resolvePhenomenaTrigger } from '../rules/phenomena-modifier.ts';
@@ -46,6 +47,7 @@ import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
 import { attackTriggersRecharge } from '../rules/weapon-recharge.ts';
 import { playWeaponAttackSoundsForRoll } from '../rules/weapon-sounds.ts';
 import { DAY_SECONDS } from '../rules/world-time.ts';
+import { XENOS_REPAIR_INSIGHT_FLAG, type XenosRepairInsight } from '../rules/xenos-equipment.ts';
 import type { WH40KBaseActorDocument, WH40KCorruptionInsanity } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
@@ -1617,16 +1619,35 @@ export class DemolitionActionData extends SimpleSkillData {
 export class ObjectStateActionData extends SimpleSkillData {
     readonly mode: 'repair' | 'bypassLock' | 'breakObject';
     readonly item: StatefulItem;
+    /** The line's printed item-repair rule (#444), or null where the book prints none. */
+    readonly repairRules: ItemRepairRules | null;
+    /** Whether this repair spends the roller's pending xenos lore insight on the item (#136). */
+    readonly consumesXenosInsight: boolean;
 
-    constructor(mode: 'repair' | 'bypassLock' | 'breakObject', item: StatefulItem) {
+    constructor(
+        mode: 'repair' | 'bypassLock' | 'breakObject',
+        item: StatefulItem,
+        repair: { rules: ItemRepairRules | null; consumesXenosInsight: boolean } = { rules: null, consumesXenosInsight: false },
+    ) {
         super();
         this.mode = mode;
         this.item = item;
+        this.repairRules = repair.rules;
+        this.consumesXenosInsight = repair.consumesXenosInsight;
     }
 
     override async descriptionText(): Promise<void> {
         const itemName = this.item.name;
+        // A xenos lore insight covers one repair attempt, whatever its outcome.
+        if (this.mode === 'repair' && this.consumesXenosInsight) {
+            await this.item.update({ [`flags.${SYSTEM_ID}.-=${XENOS_REPAIR_INSIGHT_FLAG}`]: null });
+        }
         if (!this.rollData.success) {
+            if (this.mode === 'repair' && this.repairRules !== null && repairDestroysItem(this.repairRules, false, this.rollData.dof)) {
+                await this.item.update({ 'system.state.destroyed': true, 'system.state.broken': true });
+                this.addEffect(t(EFFECT_TITLE.techUse), game.i18n.format('WH40K.SkillUse.Object.RepairDestroyed', { item: itemName }));
+                return;
+            }
             const failKey =
                 this.mode === 'repair'
                     ? 'WH40K.SkillUse.Object.RepairFailed'
@@ -1649,6 +1670,38 @@ export class ObjectStateActionData extends SimpleSkillData {
         }
         await this.item.update({ 'system.state.locked': false });
         this.addEffect(t(EFFECT_TITLE.security), game.i18n.format('WH40K.SkillUse.Object.Unlocked', { item: itemName }));
+    }
+}
+
+/**
+ * The Hard (−20) Forbidden Lore test that must precede repairing a xenos item
+ * (DH2 Enemies Without p. 42, #136). On success it records the degrees of
+ * success on the item as the roller's repair insight; their next Tech-Use
+ * Repair of that item reads it (−20, +5 per degree). On failure nothing is
+ * recorded and the item cannot be repaired on this attempt.
+ */
+export class XenosLoreActionData extends SimpleSkillData {
+    readonly item: StatefulItem;
+    readonly actorUuid: string;
+
+    constructor(item: StatefulItem, actorUuid: string) {
+        super();
+        this.item = item;
+        this.actorUuid = actorUuid;
+    }
+
+    override async descriptionText(): Promise<void> {
+        const itemName = this.item.name;
+        if (!this.rollData.success) {
+            this.addEffect(t(EFFECT_TITLE.object), game.i18n.format('WH40K.SkillUse.Object.XenosLoreFailed', { item: itemName }));
+            return;
+        }
+        const insight: XenosRepairInsight = { actorUuid: this.actorUuid, degrees: this.rollData.dos };
+        await this.item.update({ [`flags.${SYSTEM_ID}.${XENOS_REPAIR_INSIGHT_FLAG}`]: insight });
+        this.addEffect(
+            t(EFFECT_TITLE.object),
+            game.i18n.format('WH40K.SkillUse.Object.XenosLoreSucceeded', { item: itemName, degrees: String(insight.degrees) }),
+        );
     }
 }
 

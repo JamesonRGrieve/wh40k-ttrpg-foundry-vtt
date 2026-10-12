@@ -38,6 +38,7 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly maleficCorruptionOnManifest = false;
     readonly acquisitionLadder: AcquisitionLadder = OW_ACQUISITION_LADDER;
     readonly inquestRules = null;
+    readonly itemRepair = null;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.ow';
     readonly cssClass = 'only-war';
     readonly theme = {

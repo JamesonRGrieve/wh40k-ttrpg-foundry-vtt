@@ -28,6 +28,8 @@ export interface EquippableState {
      * auspex, a smashed lock mechanism). Transient per-instance state.
      */
     broken: boolean;
+    /** Whether a failed repair destroyed the item (#444, DH2 core p. 142); it can no longer be repaired. */
+    destroyed: boolean;
     /**
      * Whether this item's lock is engaged (#443) — a Security/Lock-picking bypass
      * clears it. For lockable containers / strongboxes / door-items. Transient state.
@@ -86,6 +88,9 @@ export default class EquippableTemplate extends SystemDataModel {
                 }),
                 // #444 — device broken/inoperable until a Tech-Use Repair clears it.
                 broken: new fields.BooleanField({ required: true, initial: false }),
+                // DH2 core p. 142 — a repair failed by 4+ degrees destroys the item;
+                // no further repair attempts are possible (#444).
+                destroyed: new fields.BooleanField({ required: true, initial: false }),
                 // #443 — lock engaged until a Security/Lock-picking bypass clears it.
                 locked: new fields.BooleanField({ required: true, initial: false }),
                 // #445 — Demolition arming: active + trigger + the setter's degrees
