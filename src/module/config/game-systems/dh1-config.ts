@@ -21,6 +21,7 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
      * Availability of the Item, or the number of individuals" (p. 16): no
      * craftsmanship modifier.
      */
+    readonly inquestRules = null;
     readonly acquisitionLadder: AcquisitionLadder = {
         availability: {
             ubiquitous: 70,

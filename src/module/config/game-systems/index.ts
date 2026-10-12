@@ -4,6 +4,7 @@
  */
 
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import type { InquestRules } from '../../rules/inquest.ts';
 import type { BaseSystemConfig } from './base-system-config.ts';
 import { BCSystemConfig } from './bc-config.ts';
 import { DH1eSystemConfig } from './dh1-config.ts';
@@ -68,6 +69,16 @@ export const SystemConfigRegistry = {
 export function acquisitionLadderFor(line: string | undefined): AcquisitionLadder | null {
     if (line === undefined) return null;
     return SystemConfigRegistry.getOrNull(line)?.acquisitionLadder ?? null;
+}
+
+/**
+ * A line's Inquest tables (#90), or `null` for an unknown line or one that
+ * prints no Inquest rules (every line but DH2).
+ * @param line  `system.gameSystem` id.
+ */
+export function inquestRulesFor(line: string | undefined): InquestRules | null {
+    if (line === undefined) return null;
+    return SystemConfigRegistry.getOrNull(line)?.inquestRules ?? null;
 }
 
 /**

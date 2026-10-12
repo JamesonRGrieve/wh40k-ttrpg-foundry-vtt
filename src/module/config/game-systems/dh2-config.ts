@@ -6,6 +6,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
+import type { InquestRules } from '../../rules/inquest.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
 
@@ -31,11 +32,32 @@ export const DH2_ACQUISITION_LADDER: AcquisitionLadder = {
     craftsmanship: { poor: 10, common: 0, good: -20, best: -30 },
 };
 
+/**
+ * Inquests — DH2 Enemies Within pp. 62–69: scope totals (p. 63), Table 2–7:
+ * Clue Values, lead-test and lead-investigator IP (pp. 64–65), the default
+ * 300-IP Revelation (p. 66), and Table 2–9: Inquest Rewards with the
+ * surplus/shortfall steps (p. 69).
+ */
+export const DH2_INQUEST_RULES: InquestRules = {
+    scopes: {
+        minoris: { requiredPoints: 600, influenceReward: 3 },
+        majoris: { requiredPoints: 900, influenceReward: 5 },
+        extremis: { requiredPoints: 1200, influenceReward: 7 },
+    },
+    revelationInterval: 300,
+    clueValues: { minor: 50, major: 100, vital: 200 },
+    pointsPerLeadDegree: 10,
+    leadInvestigatorClueBonus: 25,
+    rewardPointStep: 300,
+    maxSurplusInfluence: 3,
+};
+
 export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'dh2' as const;
     readonly usesMalignancyTest = true;
     readonly maleficCorruptionOnManifest = true;
     readonly acquisitionLadder: AcquisitionLadder = DH2_ACQUISITION_LADDER;
+    readonly inquestRules: InquestRules = DH2_INQUEST_RULES;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dh2';
     readonly cssClass = 'dark-heresy';
     readonly theme = {

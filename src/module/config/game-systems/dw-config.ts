@@ -14,6 +14,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly maleficCorruptionOnManifest = false;
     /** DW spends Requisition points: availability sets an item's point cost, not a test modifier. */
     readonly acquisitionLadder = null;
+    readonly inquestRules = null;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dw';
     readonly cssClass = 'deathwatch';
     readonly theme = {

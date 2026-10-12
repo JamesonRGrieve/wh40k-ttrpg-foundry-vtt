@@ -1,0 +1,52 @@
+{{!--
+    Warband Inquests panel (DH2 Enemies Within pp. 62–69, #90).
+
+    Read-only progress for the warband's Inquests (the world-scoped
+    `warband-inquests` setting): target, scope, Investigation points against
+    the completion total, and Revelations reached. The GM's button opens the
+    Inquest tracker (`openInquestTracker` sheet action), where clues, lead
+    tests and resolution are recorded.
+
+    Rendered inside the DH2 Party Overview, and only when the sheet context
+    carries `inquestPanel` (built only for a line whose config declares
+    `inquestRules`).
+--}}
+<section data-wh40k-hook="inquest-panel" class="tw-flex tw-flex-col tw-gap-1.5 tw-mt-2">
+    <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 tw-border-l-2 tw-border-solid tw-border-l-gold dh2:tw-border-l-gold-raw tw-pl-1">
+        <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+        <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Inquest.PanelHeader"}}</span>
+        {{#if inquestPanel.canOpen}}
+            <button type="button"
+                    class="tw-ml-auto tw-inline-flex tw-items-center tw-gap-1 tw-bg-transparent tw-border-none tw-p-0 tw-text-[0.72rem] tw-opacity-80 tw-cursor-pointer hover:tw-opacity-100 tw-text-[color:var(--color-text-secondary)]"
+                    data-action="openInquestTracker"
+                    title="{{localize 'WH40K.Inquest.OpenTracker'}}">
+                <i class="fas fa-pen-to-square" aria-hidden="true"></i> {{localize "WH40K.Inquest.OpenTracker"}}
+            </button>
+        {{/if}}
+    </div>
+
+    {{#each inquestPanel.rows as |row|}}
+        <div data-wh40k-hook="inquest-panel-row" class="tw-flex tw-flex-col tw-gap-0.5 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-[color:rgba(0,0,0,0.25)] dh2:tw-border-bronze{{#unless row.isActive}} tw-opacity-60{{/unless}}"
+             data-inquest-id="{{row.id}}">
+            <div class="tw-flex tw-items-center tw-gap-2 tw-text-[0.78rem]">
+                <span class="tw-font-semibold tw-truncate tw-text-[color:var(--wh40k-text-bright)]" title="{{row.target}}">{{row.target}}</span>
+                <span class="tw-ml-auto tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">{{localize row.scopeLabelKey}}</span>
+            </div>
+            {{#if row.isActive}}
+                <div class="tw-flex tw-justify-between tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-medium)]">
+                    <span>{{localize "WH40K.Inquest.Progress" points=row.points required=row.progress.required}}</span>
+                    <span>{{localize "WH40K.Inquest.RevelationsReached" reached=row.progress.revelationsReached count=row.progress.revelationCount}}</span>
+                </div>
+                <div class="tw-h-1 tw-rounded-full tw-bg-[rgba(0,0,0,0.3)] tw-overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{row.progress.percent}}" aria-label="{{row.target}}">
+                    <div class="tw-h-full tw-bg-gold dh2:tw-bg-gold-raw" style="width: {{row.progress.percent}}%"></div>
+                </div>
+            {{else}}
+                <span class="tw-text-[0.72rem] tw-italic">{{localize row.statusLabelKey}}</span>
+            {{/if}}
+        </div>
+    {{else}}
+        <div data-wh40k-hook="inquest-panel-empty" class="tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.Inquest.Empty"}}
+        </div>
+    {{/each}}
+</section>

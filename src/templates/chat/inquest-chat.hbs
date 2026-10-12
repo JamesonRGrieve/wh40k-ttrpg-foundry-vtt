@@ -1,0 +1,43 @@
+{{!--
+    Inquest chat card (DH2 Enemies Within pp. 66–69, #90). Posted by the GM
+    Inquest tracker:
+      - kind "revelation": the IP total crossed a Revelation threshold (p. 66);
+      - kind "resolution": the Inquest was resolved, with each Acolyte's
+        Influence change and its parts (Table 2–9, p. 69).
+    `gameSystem` is set on the root because chat cards render outside a sheet.
+--}}
+<div class="tw-p-3 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[rgba(0,0,0,0.45)] tw-to-[rgba(0,0,0,0.25)] dh2:tw-border-bronze"
+     data-wh40k-hook="inquest-chat" data-inquest-card="{{kind}}" {{#if gameSystem}}data-wh40k-system="{{gameSystem}}"{{/if}}>
+
+    <header class="tw-mb-2 tw-pb-2 tw-border-b tw-border-solid tw-border-[rgba(201,162,39,0.25)]">
+        <div class="tw-text-[0.75rem] tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
+            {{#if (eq kind "revelation")}}{{localize "WH40K.Inquest.ChatRevelationTitle"}}{{else}}{{localize "WH40K.Inquest.ChatResolutionTitle"}}{{/if}}
+            · {{scopeLabel}}
+        </div>
+        <div class="tw-text-[1.05rem] tw-font-bold tw-text-gold dh2:tw-text-gold-raw">{{target}}</div>
+    </header>
+
+    <div class="tw-text-[0.8rem] tw-text-[#cfcab8]">
+        {{localize "WH40K.Inquest.Progress" points=points required=required}}
+    </div>
+
+    {{#if (eq kind "revelation")}}
+        <div class="tw-mt-2 tw-px-3 tw-py-2 tw-rounded-md tw-text-center tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-bg-amber-900/40 tw-text-amber-200 tw-border tw-border-solid tw-border-amber-500/40">
+            {{#if isFinal}}
+                {{localize "WH40K.Inquest.FinalRevelation"}}
+            {{else}}
+                {{localize "WH40K.Inquest.RevelationReached" revelation=revelation count=revelationCount}}
+            {{/if}}
+        </div>
+    {{else}}
+        <div class="tw-mt-2 tw-px-3 tw-py-2 tw-rounded-md tw-text-center tw-font-semibold tw-uppercase tw-tracking-[0.08em] {{#if goalsMet}}tw-bg-emerald-900/40 tw-text-emerald-300 tw-border tw-border-solid tw-border-emerald-500/40{{else}}tw-bg-rose-900/40 tw-text-rose-300 tw-border tw-border-solid tw-border-rose-500/40{{/if}}">
+            {{#if goalsMet}}{{localize "WH40K.Inquest.Status.goalsMet"}}{{else}}{{localize "WH40K.Inquest.Status.goalsFailed"}}{{/if}}
+        </div>
+        <dl class="tw-mt-2 tw-grid tw-grid-cols-[1fr_auto] tw-gap-x-3 tw-gap-y-0.5 tw-text-[0.8rem] tw-text-[#cfcab8]">
+            <dt>{{localize "WH40K.Inquest.ScopeReward"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">{{scopeReward}}</dd>
+            <dt>{{localize "WH40K.Inquest.SurplusBonus"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">+{{surplusBonus}}</dd>
+            <dt>{{localize "WH40K.Inquest.ShortfallPenalty"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">{{shortfallPenalty}}</dd>
+            <dt class="tw-font-bold">{{localize "WH40K.Inquest.InfluencePerAcolyte"}}</dt><dd data-wh40k-hook="inquest-influence" class="tw-m-0 tw-text-right tw-font-bold tw-tabular-nums">{{influenceTotal}}</dd>
+        </dl>
+    {{/if}}
+</div>

@@ -3,11 +3,13 @@
  * This is the main player character sheet for WH40K RPG
  */
 
+import { isActorOnLine } from '../../actions/actor-line-gate.ts';
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { bcAscend } from '../../actions/bc-daemon-prince-actions.ts';
 import { bcRollGiftCharacteristic } from '../../actions/bc-gift-actions.ts';
 import { bcPsychicTest } from '../../actions/bc-psychic-actions.ts';
 import { bcPerformRitual } from '../../actions/bc-ritual-actions.ts';
+import { daemonologyLoreTotal, findDaemonologyLore } from '../../actions/daemonology-actions.ts';
 import { dwSelectAmmo } from '../../actions/dw-ammo-actions.ts';
 import { dwAstartesToggleImplant } from '../../actions/dw-astartes-actions.ts';
 import { dwCohesionChallenge, dwCohesionRally, dwCohesionRecoverObjective } from '../../actions/dw-cohesion-actions.ts';
@@ -31,7 +33,7 @@ import { owVehicleAction } from '../../actions/ow-vehicle-actions.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
 import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
-import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import { inquestRulesFor, SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../../constants.ts';
 import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../../data/actor/mixins/dw-ammo-template.ts';
@@ -127,8 +129,11 @@ import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import FateUsesDialog from '../dialogs/fate-uses-dialog.ts';
+import InquestTrackerDialog from '../dialogs/inquest-tracker-dialog.ts';
+import { inquestPanelRows } from '../dialogs/inquest-view.ts';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import ColonyGrowthDialog from '../prompts/colony-growth-dialog.ts';
+import { openExorcismDialog } from '../prompts/daemonology-ritual-dialog.ts';
 import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
 import BaseActorSheet, { ADVANCE_XP_COSTS, type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
@@ -787,6 +792,8 @@ export default class CharacterSheet extends BaseActorSheet {
             'resetPossessionSession': CharacterSheet.#resetPossessionSession,
             'possessionFrenzyTest': CharacterSheet.#possessionFrenzyTest,
             'possessionMismanifest': CharacterSheet.#possessionMismanifest,
+            // Daemonology rituals (DH2 Enemies Beyond) — Exorcism (#83).
+            'performExorcism': CharacterSheet.#performExorcism,
 
             // Shock / Snap-Out-Of-It (#66 — core.md §"Shock And Snapping Out Of It")
             'snapOutOfShock': CharacterSheet.#snapOutOfShock,
@@ -819,6 +826,8 @@ export default class CharacterSheet extends BaseActorSheet {
             // Subtlety panel (#87) — DH2 warband-subtlety stepper + breakdown popout.
             'adjustSubtletyManually': CharacterSheet.#adjustSubtletyManually,
             'viewSubtletyBreakdown': CharacterSheet.#viewSubtletyBreakdown,
+            // Inquest panel (#90) — GM opens the warband Inquest tracker.
+            'openInquestTracker': CharacterSheet.#openInquestTracker,
 
             // Malignancy Test owed by a Corruption gain (Corruption Track lines).
             'rollMalignancyTest': CharacterSheet.#rollMalignancyTest,
@@ -1191,6 +1200,13 @@ export default class CharacterSheet extends BaseActorSheet {
             }
         }
 
+        // Daemonology rituals (DH2 Enemies Beyond) — shown to a DH2 character that
+        // carries a Forbidden Lore (Daemonology) row, the test every ritual opens with.
+        if (isDH2 && findDaemonologyLore(this.actor.system) !== undefined) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: sheet→template payload written into the free-form CharacterSheetContext
+            (context as Record<string, unknown>)['daemonologyPanel'] = { loreTotal: daemonologyLoreTotal(this.actor.system) };
+        }
+
         // Subtlety adjusters (#87) — surfaced for the DH2 Subtlety panel template
         // (`src/templates/actor/panel/subtlety-panel.hbs`). Collected on the
         // active actor via `WH40KBaseActor.collectSubtletyAdjusters()`; safe to
@@ -1198,6 +1214,16 @@ export default class CharacterSheet extends BaseActorSheet {
         if (isDH2) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: sheet→template payload; the typed `CollectedAdjuster[]` is widened to fit the free-form CharacterSheetContext shape.
             (context as Record<string, unknown>)['subtletyAdjusters'] = this.actor.collectSubtletyAdjusters();
+        }
+        // Warband Inquests (#90) — read-only progress for the Party Overview panel,
+        // built only for a line whose config prints Inquest rules (DH2).
+        const inquestRules = inquestRulesFor(activeGameSystem ?? undefined);
+        if (inquestRules !== null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: sheet→template payload written into the free-form CharacterSheetContext
+            (context as Record<string, unknown>)['inquestPanel'] = {
+                canOpen: game.user.isGM,
+                rows: inquestPanelRows(inquestRules, WH40KSettings.getWarbandInquests()),
+            };
         }
         context.isHomebrew = isDH2 && ruleset === 'homebrew';
         const isRaw = isDH2 && ruleset === 'raw';
@@ -4963,6 +4989,15 @@ export default class CharacterSheet extends BaseActorSheet {
      * wired (same placeholder convention as the grapple opposed roller).
      * @this {CharacterSheet}
      */
+    /**
+     * Open the Exorcism dialog (#83, DH2 Enemies Beyond p. 71) with this actor
+     * as the exorcist. DH2-only: the ritual is that line's printed rule.
+     */
+    static #performExorcism(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
+        if (!isActorOnLine(this.actor, 'dh2')) return;
+        openExorcismDialog(this.actor);
+    }
+
     static async #possessionMismanifest(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
             const slot = this._readPossessionSlot();
@@ -5544,6 +5579,11 @@ export default class CharacterSheet extends BaseActorSheet {
             content,
             ok: { label: 'OK' },
         });
+    }
+
+    /** Open the GM Inquest tracker (#90) for this actor's line. */
+    static #openInquestTracker(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
+        InquestTrackerDialog.open(this._resolveGameSystemId() ?? undefined);
     }
 
     /** Roll one Malignancy Test the character owes (button shown while any are due). */

@@ -9,6 +9,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SYSTEM_ID } from './constants.ts';
+import { createInquest } from './rules/inquest.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
 describe('WH40KSettings generation defaults (#223)', () => {
@@ -414,6 +415,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
             {
               "choices": undefined,
               "config": false,
+              "default": ""[]"",
+              "key": "warband-inquests",
+              "requiresReload": undefined,
+              "scope": "world",
+              "type": "String",
+            },
+            {
+              "choices": undefined,
+              "config": false,
               "default": "0",
               "key": "world-time-inception",
               "requiresReload": undefined,
@@ -565,6 +575,40 @@ describe('WH40KSettings — warband Subtlety pool (#64)', () => {
         expect(() => {
             WH40KSettings.rerenderSubtletyDependentSheets();
         }).not.toThrow();
+    });
+});
+
+describe('WH40KSettings — warband Inquests (#90)', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('getWarbandInquests returns [] when game.settings is unavailable', () => {
+        expect(WH40KSettings.getWarbandInquests()).toEqual([]);
+    });
+
+    it('getWarbandInquests returns [] for blank, unparseable or non-array JSON', () => {
+        for (const stored of ['', '{not json', '{}', 42]) {
+            vi.stubGlobal('game', { settings: { get: () => stored } });
+            expect(WH40KSettings.getWarbandInquests()).toEqual([]);
+            vi.unstubAllGlobals();
+        }
+    });
+
+    it('round-trips the list through setWarbandInquests / getWarbandInquests', async () => {
+        let stored = '[]';
+        vi.stubGlobal('game', {
+            settings: {
+                get: () => stored,
+                set: (_ns: string, key: string, value: string) => {
+                    expect(key).toBe(WH40KSettings.SETTINGS.warbandInquests);
+                    stored = value;
+                },
+            },
+        });
+        const inquests = [createInquest('q1', { target: 'Zethor', scope: 'majoris', investigationPoints: 450 })];
+        await WH40KSettings.setWarbandInquests(inquests);
+        expect(WH40KSettings.getWarbandInquests()).toEqual(inquests);
     });
 });
 

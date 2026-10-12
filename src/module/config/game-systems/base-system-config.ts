@@ -6,6 +6,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
+import type { InquestRules } from '../../rules/inquest.ts';
 import type {
     GameSystemId,
     SkillRankDef,
@@ -61,6 +62,13 @@ export abstract class BaseSystemConfig {
      * `null` when the line has no availability-modified test (#192).
      */
     abstract readonly acquisitionLadder: AcquisitionLadder | null;
+
+    /**
+     * The line's printed Inquest tables (DH2 Enemies Within pp. 62–69, #90), or
+     * `null` for a line that prints no Inquest rules. A non-null value is what
+     * turns on the Party Overview Inquest panel and tracker.
+     */
+    abstract readonly inquestRules: InquestRules | null;
 
     // ── Starting Resources ────────────────────────────────────────
 

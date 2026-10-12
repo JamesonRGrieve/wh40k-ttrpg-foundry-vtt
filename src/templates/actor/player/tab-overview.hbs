@@ -82,6 +82,9 @@
                 </div>
                 <div class="tw-p-2">
                     {{> systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs}}
+                    {{#if inquestPanel}}
+                    {{> systems/wh40k-rpg/templates/actor/panel/inquest-panel.hbs}}
+                    {{/if}}
                 </div>
             </section>
             {{/if}}
@@ -274,6 +277,12 @@
         {{!-- Possession (#82) — only when the possession track is engaged. --}}
         {{#if (neq system.possession.state 'none')}}
             {{> systems/wh40k-rpg/templates/actor/panel/possession-panel.hbs}}
+        {{/if}}
+
+        {{!-- Daemonology rituals (DH2 Enemies Beyond) — built only for a DH2
+             character with a Forbidden Lore (Daemonology) row. --}}
+        {{#if daemonologyPanel}}
+            {{> systems/wh40k-rpg/templates/actor/panel/daemonology-panel.hbs}}
         {{/if}}
 
         {{!-- BC Alignment / Infamy (#173) — Black-Crusade-only. --}}

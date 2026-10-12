@@ -1,0 +1,106 @@
+{{!-- Inquest tracker (DH2 Enemies Within pp. 62–69, #90) — the GM's editor for the warband's Inquests. --}}
+<div class="tw-flex tw-flex-col tw-gap-3 tw-p-3">
+    <p class="tw-m-0 tw-text-[0.8rem] tw-opacity-80">{{localize "WH40K.Inquest.Intro"}}</p>
+
+    {{#each inquests as |inquest|}}
+        <section data-wh40k-hook="inquest-card" class="tw-flex tw-flex-col tw-gap-2 tw-p-2 tw-rounded-md tw-border tw-border-solid tw-border-[color:rgba(0,0,0,0.25)] tw-bg-[rgba(0,0,0,0.12)] dh2:tw-border-bronze" data-inquest-status="{{inquest.status}}">
+            <input type="hidden" data-field="id" value="{{inquest.id}}" />
+            <input type="hidden" data-field="status" value="{{inquest.status}}" />
+
+            <div class="tw-grid tw-grid-cols-2 tw-gap-2">
+                <label class="tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.7rem] tw-uppercase tw-tracking-wider">
+                    {{localize "WH40K.Inquest.Target"}}
+                    <input type="text" data-field="target" value="{{inquest.target}}" />
+                </label>
+                <label class="tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.7rem] tw-uppercase tw-tracking-wider">
+                    {{localize "WH40K.Inquest.LeadInvestigator"}}
+                    <input type="text" data-field="leadInvestigator" value="{{inquest.leadInvestigator}}" />
+                </label>
+                <label class="tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.7rem] tw-uppercase tw-tracking-wider">
+                    {{localize "WH40K.Inquest.ScopeLabel"}}
+                    <select data-field="scope">
+                        {{#each @root.scopeOptions as |option|}}
+                            <option value="{{option.value}}" {{#if (eq option.value inquest.scope)}}selected{{/if}}>{{option.label}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+                <label class="tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.7rem] tw-uppercase tw-tracking-wider">
+                    {{localize "WH40K.Inquest.ApproachLabel"}}
+                    <select data-field="approach">
+                        {{#each @root.approachOptions as |option|}}
+                            <option value="{{option.value}}" {{#if (eq option.value inquest.approach)}}selected{{/if}}>{{option.label}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+                <label class="tw-col-span-2 tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.7rem] tw-uppercase tw-tracking-wider">
+                    {{localize "WH40K.Inquest.Objective"}}
+                    <input type="text" data-field="objective" value="{{inquest.objective}}" />
+                </label>
+                <label class="tw-col-span-2 tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.7rem] tw-uppercase tw-tracking-wider">
+                    {{localize "WH40K.Inquest.Requirements"}}
+                    <textarea data-field="requirements" rows="2">{{inquest.requirements}}</textarea>
+                </label>
+                <label class="tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.7rem] tw-uppercase tw-tracking-wider">
+                    {{localize "WH40K.Inquest.Points"}}
+                    <input type="number" data-field="investigationPoints" value="{{inquest.investigationPoints}}" min="0" step="1" />
+                </label>
+                <label class="tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.7rem] tw-uppercase tw-tracking-wider" data-tooltip="{{localize "WH40K.Inquest.ExtraRequiredHint"}}">
+                    {{localize "WH40K.Inquest.ExtraRequired"}}
+                    <input type="number" data-field="extraRequiredPoints" value="{{inquest.extraRequiredPoints}}" min="0" step="10" />
+                </label>
+                <label class="tw-col-span-2 tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.7rem] tw-uppercase tw-tracking-wider" data-tooltip="{{localize "WH40K.Inquest.ThresholdsHint"}}">
+                    {{localize "WH40K.Inquest.Thresholds"}}
+                    <input type="text" data-field="revelationThresholds" value="{{inquest.revelationThresholds}}" placeholder="{{localize "WH40K.Inquest.ThresholdsPlaceholder"}}" />
+                </label>
+            </div>
+
+            {{#if inquest.progress}}
+                <div data-wh40k-hook="inquest-progress" class="tw-flex tw-flex-col tw-gap-1">
+                    <div class="tw-flex tw-justify-between tw-text-[0.75rem]">
+                        <span>{{localize "WH40K.Inquest.Progress" points=inquest.investigationPoints required=inquest.progress.required}}</span>
+                        <span>{{localize "WH40K.Inquest.RevelationsReached" reached=inquest.progress.revelationsReached count=inquest.progress.revelationCount}}</span>
+                    </div>
+                    <div class="tw-h-1.5 tw-rounded-full tw-bg-[rgba(0,0,0,0.3)] tw-overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{inquest.progress.percent}}" aria-label="{{localize "WH40K.Inquest.Points"}}">
+                        <div class="tw-h-full tw-bg-gold dh2:tw-bg-gold-raw" style="width: {{inquest.progress.percent}}%"></div>
+                    </div>
+                </div>
+            {{/if}}
+
+            {{#if inquest.isActive}}
+                <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
+                    <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-wider tw-opacity-70">{{localize "WH40K.Inquest.AddClue"}}</span>
+                    {{#each @root.clueButtons as |clue|}}
+                        <button type="button" data-action="addClue" data-index="{{inquest.index}}" data-significance="{{clue.significance}}">{{clue.label}} (+{{clue.points}})</button>
+                    {{/each}}
+                    <label class="tw-flex tw-items-center tw-gap-1 tw-text-[0.75rem]">
+                        <input type="checkbox" data-lead-relevant />
+                        {{localize "WH40K.Inquest.LeadRelevant" bonus=@root.leadInvestigatorClueBonus}}
+                    </label>
+                </div>
+                <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
+                    <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-wider tw-opacity-70">{{localize "WH40K.Inquest.LeadTest"}}</span>
+                    <button type="button" data-action="leadTest" data-index="{{inquest.index}}" data-degrees="1">{{localize "WH40K.Inquest.LeadDoS" points=@root.pointsPerLeadDegree}}</button>
+                    <button type="button" data-action="leadTest" data-index="{{inquest.index}}" data-degrees="-1">{{localize "WH40K.Inquest.LeadDoF" points=@root.pointsPerLeadDegree}}</button>
+                </div>
+                <div class="tw-flex tw-flex-wrap tw-gap-2 tw-justify-end">
+                    <button type="button" data-action="resolveInquest" data-index="{{inquest.index}}" data-goals-met="true"><i class="fas fa-gavel" aria-hidden="true"></i> {{localize "WH40K.Inquest.ResolveMet"}}</button>
+                    <button type="button" data-action="resolveInquest" data-index="{{inquest.index}}" data-goals-met="false"><i class="fas fa-xmark" aria-hidden="true"></i> {{localize "WH40K.Inquest.ResolveFailed"}}</button>
+                    <button type="button" data-action="removeInquest" data-index="{{inquest.index}}" aria-label="{{localize "WH40K.Inquest.Remove"}}" data-tooltip="{{localize "WH40K.Inquest.Remove"}}"><i class="fas fa-trash" aria-hidden="true"></i></button>
+                </div>
+            {{else}}
+                <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-justify-end">
+                    <span data-wh40k-hook="inquest-status" class="tw-mr-auto tw-text-[0.8rem] tw-font-semibold">{{inquest.statusLabel}}</span>
+                    <button type="button" data-action="reopenInquest" data-index="{{inquest.index}}"><i class="fas fa-rotate-left" aria-hidden="true"></i> {{localize "WH40K.Inquest.Reopen"}}</button>
+                    <button type="button" data-action="removeInquest" data-index="{{inquest.index}}" aria-label="{{localize "WH40K.Inquest.Remove"}}" data-tooltip="{{localize "WH40K.Inquest.Remove"}}"><i class="fas fa-trash" aria-hidden="true"></i></button>
+                </div>
+            {{/if}}
+        </section>
+    {{else}}
+        <p data-wh40k-hook="inquest-empty" class="tw-m-0 tw-text-[0.8rem] tw-italic tw-opacity-70">{{localize "WH40K.Inquest.Empty"}}</p>
+    {{/each}}
+
+    <div class="tw-flex tw-gap-2 tw-justify-between">
+        <button type="button" data-action="addInquest"><i class="fas fa-plus" aria-hidden="true"></i> {{localize "WH40K.Inquest.Add"}}</button>
+        <button type="button" data-action="save"><i class="fas fa-save" aria-hidden="true"></i> {{localize "WH40K.Inquest.Save"}}</button>
+    </div>
+</div>

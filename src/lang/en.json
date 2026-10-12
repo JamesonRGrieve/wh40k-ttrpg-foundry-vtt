@@ -4511,20 +4511,71 @@
                 "BonusDamage": "Imposing / Good an' Ard prow bonus",
                 "MissExplain": "The defender out-flew the ram; no collision occurs and neither hull takes damage."
             },
+            "Assault": {
+                "Header": "Ship Assault Actions",
+                "Open": "Resolve",
+                "DialogTitle": "Ship Assault Action",
+                "Unsupported": "Ramming, boarding and Hit and Run are Rogue Trader starship actions; this ship's game system has no such actions.",
+                "NoTargets": "No other Rogue Trader ship is available to target. Target a ship token, or place one on the scene.",
+                "Roll": "Roll",
+                "Apply": "Apply & Post",
+                "Back": "Back",
+                "Rolled": "Rolled {roll}",
+                "Success": "Success — {dos} DoS",
+                "Failure": "Failure — {dof} DoF",
+                "Total": "Total",
+                "NotApplied": "You do not own the losing ship, so its damage was not applied. The GM applies it by hand.",
+                "HelmsmanLegend": "Helmsman of {ship}",
+                "Field": {
+                    "Target": "Target ship",
+                    "PilotSkill": "Pilot (Space Craft) skill",
+                    "SituationalValue": "Situational modifier",
+                    "SituationalLabel": "Modifier source",
+                    "SituationalDefault": "Situational"
+                },
+                "Component": {
+                    "PilotSkill": "Helmsman's Pilot (Space Craft)",
+                    "Manoeuvrability": "Manoeuvrability ({ship})",
+                    "Situational": "{label}",
+                    "DieRoll": "{formula} rolled"
+                }
+            },
             "Boarding": {
                 "ChatTitle": "Boarding Action",
-                "OutcomeBreach": "Boarders breach the hull",
-                "OutcomeRepelled": "Defenders repel the boarders",
-                "OutcomeBoardersLost": "Boarding party lost",
-                "AttackerCommandDoS": "Attacker Command DoS",
-                "DefenderCommandDoS": "Defender Command DoS",
-                "NetDoS": "Net DoS",
-                "DamageHeader": "Damage to defender",
-                "HullDamage": "Hull Integrity damage (1 / DoS)",
-                "CrewDamage": "Crew Population damage (1d5)",
-                "MoraleDamage": "Morale damage (1d5)",
-                "RepelledExplain": "The defenders held the breach; the boarders withdrew without inflicting damage.",
-                "BoardersLostExplain": "The defenders won the Command Test by 3+ degrees of success — the boarding party is captured or killed."
+                "LockTitle": "Boarding Action — Lock On",
+                "LockTestTitle": "Lock on — Hard (−20) Pilot (Space Craft) + Manoeuvrability",
+                "Locked": "The ships crash together and are locked. Neither may take Manoeuvre or Shooting Actions; resolve a boarding round each Strategic Turn.",
+                "LockFailed": "The helmsman fails to bring the ships together; no boarding action begins.",
+                "CommandTestTitle": "Command — {ship}",
+                "Winner": "{winner} wins the Command Test by {degrees} degree(s).",
+                "HullDamage": "Hull Integrity damage (1 per degree)",
+                "CrewDamage": "Crew Population damage (1d5 per degree)",
+                "MoraleDamage": "Morale damage (1d5 per degree)",
+                "MoraleCheck": "{loser} tests Morale: rolled {roll} against {morale}.",
+                "FightsOn": "The crew fights on. Both ships test Command again next Strategic Turn.",
+                "Routs": "The crew routs and surrenders to its captors.",
+                "Citation": "Rogue Trader Core Rulebook p.215",
+                "Board": "Board",
+                "BoardHint": "Within 1 VU, give up the Shooting Action: Hard (−20) Pilot (Space Craft) + Manoeuvrability to lock the ships together.",
+                "Round": "Boarding Round",
+                "RoundHint": "Once per Strategic Turn while locked: opposed Command Test; the winner deals damage per degree, the loser tests Morale.",
+                "SideLegend": "{ship}",
+                "ChoiceLegend": "{winner} won by {degrees} degree(s). Each degree deals 1 Hull Integrity, or 1d5 Crew Population and 1d5 Morale.",
+                "Field": {
+                    "Command": "Warrior leader's Command skill",
+                    "FailedBreakFree": "Tried and failed to break free this turn (−20)",
+                    "HullDegrees": "Degrees spent on Hull Integrity (the rest on crew)"
+                },
+                "Component": {
+                    "LockDifficulty": "Hard (−20)",
+                    "CommandSkill": "Warrior leader's Command",
+                    "CrewAdvantage": "Larger Crew Population ({mine} vs {theirs})",
+                    "HullAdvantage": "Higher Hull Integrity ({mine} vs {theirs})",
+                    "Turrets": "Turret Rating {rating}",
+                    "FailedBreakFree": "Failed to break free",
+                    "ChargeDegrees": "{degrees} degree(s) setting charges",
+                    "CrewDegree": "1d5 — degree {degree}"
+                }
             },
             "HitAndRun": {
                 "ChatTitle": "Hit-and-Run Action",

@@ -68,6 +68,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * (p. 306). (Table 5-20's ladder on p. 200 is daemon-weapon crafting, not
      * acquisition.)
      */
+    readonly inquestRules = null;
     readonly acquisitionLadder: AcquisitionLadder = {
         availability: {
             ubiquitous: 70,

@@ -2,6 +2,7 @@ import { ALL_SYSTEM_IDS, type GameSystemId } from './config/game-systems/types.t
 import { SYSTEM_ID } from './constants.ts';
 import type { FatigueMode } from './rules/fatigue.ts';
 import { type ImperialDate, parseImperialDate } from './rules/imperial-date.ts';
+import { type InquestState, parseInquests } from './rules/inquest.ts';
 import { type CelestialBodies, parseCelestialBodies } from './rules/scene-lighting.ts';
 import { coerceTokenImageGenMode, type TokenImageGenConfig, type TokenImageGenMode } from './rules/token-image-gen.ts';
 
@@ -82,6 +83,7 @@ export class WH40KSettings {
         tokenImageGenApiKey: 'token-image-gen-api-key',
         tokenImageGenSize: 'token-image-gen-size',
         apotheosisInfamyThreshold: 'apotheosis-infamy-threshold',
+        warbandInquests: 'warband-inquests',
     };
 
     /**
@@ -444,6 +446,30 @@ export class WH40KSettings {
     /** Persist the celestial bodies (#588); world-scoped, so every client sees it. */
     static async setCelestialBodies(bodies: CelestialBodies): Promise<void> {
         await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.celestialBodies, JSON.stringify(bodies));
+    }
+
+    /** The warband's Inquests (#90): a world-scoped list stored as JSON and
+     *  validated on read. Anything unparseable reads as no Inquests. Safe
+     *  before registration (returns []). */
+    static getWarbandInquests(): InquestState[] {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
+        let raw: unknown;
+        try {
+            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.warbandInquests);
+        } catch {
+            return [];
+        }
+        if (typeof raw !== 'string' || raw.trim() === '') return [];
+        try {
+            return parseInquests(JSON.parse(raw));
+        } catch {
+            return [];
+        }
+    }
+
+    /** Persist the warband's Inquests (#90). World-scoped, so only a GM can write it. */
+    static async setWarbandInquests(inquests: readonly InquestState[]): Promise<void> {
+        await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.warbandInquests, JSON.stringify(inquests));
     }
 
     /** When true, the manual roll input (physical dice entry) is shown in the
@@ -953,6 +979,21 @@ export class WH40KSettings {
                 config: false,
                 default: WH40KSettings.WARBAND_SUBTLETY_DEFAULT,
                 type: Number,
+                onChange: () => {
+                    WH40KSettings.rerenderSubtletyDependentSheets();
+                },
+            },
+            {
+                // Warband Inquests (#90): world-scoped JSON list, edited through the
+                // GM Inquest tracker (config: false). Shown in the same DH2 Party
+                // Overview as Subtlety, so the same sheets re-render on change.
+                key: S.warbandInquests,
+                name: 'WH40K.SETTINGS.WarbandInquests.Name',
+                hint: 'WH40K.SETTINGS.WarbandInquests.Hint',
+                scope: 'world',
+                config: false,
+                default: '[]',
+                type: String,
                 onChange: () => {
                     WH40KSettings.rerenderSubtletyDependentSheets();
                 },
