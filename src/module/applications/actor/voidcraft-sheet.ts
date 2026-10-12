@@ -17,7 +17,9 @@ import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { capitalize } from '../../utils/format.ts';
-import { RollTableUtils } from '../../utils/roll-table-utils.ts';
+import { openShipAssaultDialog } from '../ship-assault/ship-assault-dialog.ts';
+import { foundryLocalize, type ShipAssaultTab } from '../ship-assault/ship-assault-flow.ts';
+import { findShipAssault, shipAssaultButtons, type ShipAssaultButton } from '../ship-assault/ship-assault-registry.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
 
@@ -108,6 +110,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             lowerVoidShield: VoidcraftActorSheet.#lowerVoidShield,
             restoreVoidShields: VoidcraftActorSheet.#restoreVoidShields,
             rollShipCriticalHit: VoidcraftActorSheet.#rollShipCriticalHit,
+            openShipAssault: VoidcraftActorSheet.#openShipAssault,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
         // `player` opts into the shared sidebar + body grid (dark window body) the
@@ -383,10 +386,12 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
 
         if (partId === 'extendedActions') {
             partContext['extendedActions'] = await this._prepareExtendedActions();
+            partContext['shipAssaults'] = this._prepareShipAssaults('extended');
         }
 
         if (partId === 'manoeuvreActions') {
             partContext['manoeuvreActions'] = await this._prepareManoeuvreActions();
+            partContext['shipAssaults'] = this._prepareShipAssaults('manoeuvre');
         }
 
         return partContext;
@@ -407,6 +412,19 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      */
     async _prepareExtendedActions(): Promise<ShipActionRow[]> {
         return this._prepareShipActions('shipAction', 'ship-extended-actions');
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * The RT ship assault actions (ramming, boarding, Hit and Run, #188) a tab
+     * offers. Empty for the other lines' voidcraft — the gate is explicit.
+     */
+    _prepareShipAssaults(tab: ShipAssaultTab): ShipAssaultButton[] {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
+        if (!actor.supportsShipAssault) return [];
+        return shipAssaultButtons(tab, foundryLocalize);
     }
 
     /* -------------------------------------------- */
@@ -996,97 +1014,26 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      *
      * The drawn result is appended to `system.shipStatuses` (a typed array
      * on `VoidcraftData`) AND posted to chat via the
-     * `ship-critical-hit-chat.hbs` template.
+     * `ship-critical-hit-chat.hbs` template. The resolution lives on the
+     * document (`WH40KVoidcraft.rollShipCriticalHit`) so Hit and Run can
+     * inflict a chosen result through the same path.
      */
     static async #rollShipCriticalHit(this: VoidcraftActorSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
-        const actor = this.actor as unknown as WH40KVoidcraft;
-        const i18n = game.i18n;
+        await (this.actor as unknown as WH40KVoidcraft).rollShipCriticalHit();
+    }
 
-        // Resolve the Critical Hit table via the shared util: world tables
-        // first, then the RT ship-combat compendium pack (scoped so a shared
-        // "Critical Hit" name can't mis-resolve across systems), with the util's
-        // out-of-range clamp. The d5 fallback below remains the last branch.
-        let rolled = 0;
-        let resultText = '';
-        const draw = await RollTableUtils.rollTable('Critical Hit', {
-            displayChat: false,
-            pack: 'wh40k-rpg.rt-core-rolltables-ship-combat',
-        });
-        if (draw !== null) {
-            rolled = draw.roll.total ?? 0;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's RollTable result Collection is untyped; reading the drawn result's display text
-            const first = (draw.results as unknown as Array<{ text?: string }>)[0];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json has the flag off, but tsc (flag on) types the array index as possibly-undefined and requires this optional chain
-            resultText = first?.text ?? '';
-        }
+    /* -------------------------------------------- */
 
-        // Fallback — bare 1d5 with table-unavailable message.
-        if (resultText === '') {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Roll typings vary between versions
-            const RollCtor = (globalThis as unknown as { Roll?: new (formula: string) => { evaluate: () => Promise<{ total: number }>; total?: number } }).Roll;
-            if (RollCtor !== undefined) {
-                try {
-                    const roll = new RollCtor('1d5');
-                    const result = await roll.evaluate();
-                    rolled = result.total;
-                } catch {
-                    rolled = Math.floor(Math.random() * 5) + 1;
-                }
-            } else {
-                rolled = Math.floor(Math.random() * 5) + 1;
-            }
-            resultText = i18n.format('WH40K.Voidcraft.Critical.TableUnavailable', { rolled: String(rolled) });
-        }
-
-        // Map 1d5 result → stable status id + localized label.
-        const STATUS_IDS = ['vacuum', 'fire', 'bridge', 'drive', 'crew'] as const;
-        const STATUS_LABEL_KEYS = [
-            'WH40K.Voidcraft.Critical.Effect.Vacuum',
-            'WH40K.Voidcraft.Critical.Effect.Fire',
-            'WH40K.Voidcraft.Critical.Effect.Bridge',
-            'WH40K.Voidcraft.Critical.Effect.Drive',
-            'WH40K.Voidcraft.Critical.Effect.Crew',
-        ] as const;
-        const idx = Math.min(Math.max(rolled, 1), 5) - 1;
-        const statusId = STATUS_IDS[idx] ?? 'vacuum';
-        const statusLabel = i18n.localize(STATUS_LABEL_KEYS[idx] ?? STATUS_LABEL_KEYS[0]);
-
-        // Append to system.shipStatuses (persistent until cleared by a repair action).
-        const sys = actor.system as { shipStatuses?: Array<{ id: string; rolled: number; text: string; appliedAt: number }> };
-        const existing = Array.isArray(sys.shipStatuses) ? sys.shipStatuses : [];
-        const next = [...existing, { id: statusId, rolled, text: resultText, appliedAt: Date.now() }];
-        try {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update payload is a Foundry framework boundary
-            await (actor as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
-                'system.shipStatuses': next,
-            });
-        } catch {
-            // Update may fail in test / mock contexts — chat card still posts.
-        }
-
-        // Render and post chat card.
-        const cardData = {
-            _gameSystemId: firstSystemId(actor),
-            actorName: actor.name,
-            resultName: statusLabel,
-            resultText,
-            statusLabel,
-            rolled,
-            rollLabel: i18n.format('WH40K.Voidcraft.Critical.RollLabel', { rolled: String(rolled) }),
-            image: 'icons/svg/explosion.svg',
-            gameSystem: (actor.system as { gameSystem: string }).gameSystem,
-        };
-
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-critical-hit-chat.hbs', cardData);
-
-        const speaker = ChatMessage.getSpeaker({
-            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KVoidcraft satisfies Actor.Implementation but typings widen
-            actor: actor as unknown as Actor.Implementation,
-        });
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
-        const payload = { user: game.user.id, speaker, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
-        void ChatMessage.create(payload);
+    /**
+     * Open the RT ship assault dialog (ramming, boarding, Hit and Run, #188)
+     * for the action named by the button's `data-assault`.
+     */
+    static #openShipAssault(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): void {
+        const entry = findShipAssault(target.dataset['assault'] ?? '');
+        if (entry === undefined) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        openShipAssaultDialog(this.actor as unknown as WH40KVoidcraft, entry);
     }
 
     /* -------------------------------------------- */

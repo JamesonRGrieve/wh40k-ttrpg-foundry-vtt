@@ -1,4 +1,5 @@
 import { SHIP_ACTION_EFFECTS, type ShipActionEffect } from '../../rules/ship-crew-morale.ts';
+import type { RammingProfile } from '../../rules/ship-ramming.ts';
 import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -28,6 +29,13 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
      * string-matching display names. Empty string ⇒ no built-in effect.
      */
     declare shipActionEffect: ShipActionEffect | '';
+
+    /**
+     * Optional ramming content (RT Core p.215, #188), authored on the
+     * Ramming Speed order: the damage die per attacking hull type and the
+     * die the rammer takes back on impact. Empty on every other order.
+     */
+    declare ramming: RammingProfile;
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -78,6 +86,20 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
                 blank: true,
                 choices: ['', ...SHIP_ACTION_EFFECTS],
             }),
+
+            // RT ramming content (#188). Compendium opt-in on Ramming Speed.
+            ramming: new fields.SchemaField(
+                {
+                    damage: new fields.ArrayField(
+                        new fields.SchemaField({
+                            hullType: new fields.StringField({ required: true, blank: false }),
+                            formula: new fields.StringField({ required: true, blank: false }),
+                        }),
+                    ),
+                    reboundDamage: new fields.StringField({ required: false, initial: '', blank: true }),
+                },
+                { required: false },
+            ),
         };
     }
 

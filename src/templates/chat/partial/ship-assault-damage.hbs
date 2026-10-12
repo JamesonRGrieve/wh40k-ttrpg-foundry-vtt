@@ -1,0 +1,23 @@
+{{!--
+    One damage total of an RT ship assault action, with every term shown.
+
+    Each row (die roll, armour value, degree count, GM bonus) is hoverable to
+    its source through the shared wh40k-tooltip "modifier" type, so the card
+    shows exactly how the total was reached.
+
+    Hash params:
+        damage — AssaultDamageView {title, rows: [{label, value, tooltipData}], total}
+--}}
+<section data-wh40k-hook="ship-assault-damage" class="tw-mb-2 tw-p-2 tw-rounded-sm tw-border tw-border-[var(--wh40k-danger-secondary)] tw-bg-[rgba(96,16,32,0.2)]">
+    <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-[var(--wh40k-card-muted)] tw-mb-1">{{damage.title}}</div>
+    {{#each damage.rows as |row|}}
+        <div class="tw-flex tw-justify-between tw-items-center tw-py-0.5 tw-text-[0.9rem] tw-pl-3 tw-border-l-2 tw-border-l-[var(--wh40k-border-color)] tw-ml-1 tw-cursor-help" data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{row.tooltipData}}">
+            <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{row.label}}</span>
+            <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{row.value}}</span>
+        </div>
+    {{/each}}
+    <div class="tw-flex tw-justify-between tw-items-center tw-px-3 tw-py-1 tw-mt-1 tw-bg-[var(--wh40k-accent-overlay)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md">
+        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Voidcraft.Assault.Total"}}</span>
+        <span class="tw-text-[1.1rem] tw-font-bold tw-text-[var(--wh40k-danger-secondary)]">{{damage.total}}</span>
+    </div>
+</section>

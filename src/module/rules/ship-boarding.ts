@@ -1,161 +1,199 @@
 /**
- * Boarding Actions resolver — Rogue Trader (#188 — core.md L9997
- * §Ramming and Boarding Actions, with the Tenebro-Maze / Reinforcements
- * /  Repel Boarders ! / Crew Population / Morale modifiers that show up
- * at L9383, L9463, L10288, L10292, L10321).
+ * Boarding Actions resolver — Rogue Trader (#188 — RT Core p.215
+ * §Ramming and Boarding Actions; turret bonus p.220).
  *
- * RAW shape (boarding action):
- *   - The attacker sends boarders across at ≤1 VU. Resolution is a
- *     single opposed Command test between the attacker (boarding-party
- *     commander) and the defender (the ship's commander).
- *   - Each side's Command target is its Command skill total + any
- *     modifiers from hull components (Tenebro-Maze, Reinforcements),
- *     extended actions (Prepare to Repel Boarders!), Crew Population /
- *     Morale penalties, or the GM.
- *   - On a successful boarding test, the attacker inflicts:
- *       • 1 Hull Integrity damage per Degree of Success;
- *       • 1d5 Crew Population damage and 1d5 Morale damage on the
- *         defender (the boarders mauled the ship before withdrawing or
- *         seizing ground).
- *   - On a tie or attacker loss the boarders are repelled with no
- *     damage to the defender. On a defender win by 3+ DoS, the boarding
- *     party is captured or destroyed (caller routes to capture / KIA
- *     handling — `boardersLost: true`).
- *   - Crew Population / Morale modifiers shift the *targets*, not the
- *     rolls themselves; the caller composes the final target externally
- *     and the resolver works on the pre-composed numbers.
+ * RAW shape:
+ *   1. **Lock on.** A ship that ends its Manoeuvre Action within 1 VU of its
+ *      target may give up its Shooting Action to board. The helmsman makes a
+ *      **Hard (−20) Pilot (Space Craft) + Manoeuvrability Test**; on a success
+ *      the two ships crash together and the boarding action begins.
+ *   2. **Boarding round.** Each Strategic Turn while locked, the leader of each
+ *      ship's warriors makes an **opposed Command Test**:
+ *        • the ship with the larger Crew Population gains +10 per full 10
+ *          points of difference;
+ *        • the ship with the higher remaining Hull Integrity gains +10 per
+ *          full 10 points of difference;
+ *        • each point of a ship's Turret Rating adds +10 to its side (p.220);
+ *        • a ship that tried and failed to break free this turn suffers −20.
+ *   3. **Damage.** For each degree the winner wins by, the winner inflicts ONE
+ *      of: 1d5 Crew Population and 1d5 Morale damage, or 1 point of Hull
+ *      Integrity damage (which also costs Crew Population and Morale as normal,
+ *      p.221).
+ *   4. **Morale check.** The loser rolls d100 against its current Morale; an
+ *      equal or lower roll fights on, a higher roll routs and surrenders.
  *
- * Pure module: no RNG, no Foundry. The caller rolls the d100s and the
- * 1d5/1d5 damage dice and feeds the totals through {@link resolveBoarding}.
+ * The printed text grants the higher-Hull ship its bonus "for every full 10
+ * points difference in Crew Population" — a copy of the preceding sentence.
+ * The bonus is read here as scaling with the Hull Integrity difference, the
+ * only reading under which the Hull Integrity clause does anything distinct.
+ *
+ * Ties in the opposed test resolve for the defender (the boarded ship), which
+ * then wins by 0 degrees and inflicts nothing.
+ *
+ * Pure module: no RNG, no Foundry. The caller rolls the d100s and the d5s.
  */
 
-/** Tie in the opposed Command test favours the defender (no breach). */
+import { resolveOpposedByDoS } from './_dice.ts';
+import {
+    deriveTarget,
+    HARD_DIFFICULTY_KEY,
+    situationalComponents,
+    type ShipAssaultShip,
+    type ShipTestComponent,
+    type ShipTestDerivation,
+    type SituationalModifier,
+} from './ship-assault.ts';
+
+/** Tie in the opposed Command test favours the defender. */
 export const BOARDING_RESOLUTION_FAVORS_DEFENDER = true;
 
-/** Hull-Integrity damage inflicted per Degree of Success on a successful boarding test. */
-export const BOARDING_HULL_DAMAGE_PER_DOS = 1;
+/** Printed difficulty of the lock-on Pilot (Space Craft) + Manoeuvrability Test — Hard (−20). */
+export const BOARDING_LOCK_DIFFICULTY = -20;
 
-/** DoS margin for the defender at which the boarding party is captured/destroyed. */
-export const BOARDING_BOARDERS_LOST_DOS = 3;
+/** Penalty to the Command Test of a ship that tried and failed to break free. */
+export const BOARDING_FAILED_BREAK_FREE_PENALTY = -20;
 
-import { degreesOfSuccess, resolveOpposedByDoS } from './_dice.ts';
+/** Crew Population / Hull Integrity difference per bonus step. */
+export const BOARDING_DIFFERENCE_STEP = 10;
 
-/** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
-export { degreesOfSuccess };
+/** Command bonus per full difference step. */
+export const BOARDING_BONUS_PER_STEP = 10;
 
-/** Composed Command targets after content modifiers have been applied. */
-export interface BoardingOpposedInput {
-    /** Attacker (boarding-party commander) d100 roll (1-100). */
-    attackerRoll: number;
-    /** Attacker's *composed* Command target (skill + modifiers). */
-    attackerCommandTarget: number;
-    /** Defender (ship commander) d100 roll (1-100). */
-    defenderRoll: number;
-    /** Defender's *composed* Command target (skill + modifiers). */
-    defenderCommandTarget: number;
-}
+/** Command bonus per point of the ship's Turret Rating (p.220). */
+export const BOARDING_TURRET_BONUS_PER_POINT = 10;
 
-/** Outcome of the opposed Command test. */
-export interface BoardingOpposedResolution {
-    /** True when the attacker wins (boarders breach and run amok). */
-    success: boolean;
-    attackerDoS: number;
-    defenderDoS: number;
-    /** netDoS = attackerDoS − defenderDoS. */
-    netDoS: number;
-    /**
-     * True only when the defender beat the attacker by
-     * {@link BOARDING_BOARDERS_LOST_DOS} or more DoS. Caller routes the
-     * boarding-party to capture / KIA handling.
-     */
-    boardersLost: boolean;
-}
+/** Hull Integrity damage per degree spent on setting charges. */
+export const BOARDING_HULL_DAMAGE_PER_DEGREE = 1;
+
+/** Langpack keys for the boarding components. */
+export const BOARDING_KEYS = {
+    lockDifficulty: HARD_DIFFICULTY_KEY,
+    commandSkill: 'WH40K.Voidcraft.Boarding.Component.CommandSkill',
+    crewAdvantage: 'WH40K.Voidcraft.Boarding.Component.CrewAdvantage',
+    hullAdvantage: 'WH40K.Voidcraft.Boarding.Component.HullAdvantage',
+    turrets: 'WH40K.Voidcraft.Boarding.Component.Turrets',
+    failedBreakFree: 'WH40K.Voidcraft.Boarding.Component.FailedBreakFree',
+} as const;
 
 /**
- * Resolve the opposed Command test between attacker and defender. Tie
- * goes to the defender. Defender wins by 3+ DoS routes to "boarders
- * lost".
+ * Bonus a side earns for out-numbering its opponent on a stat: +10 per full 10
+ * points of difference, and nothing for the side that trails or ties.
  */
-export function resolveBoardingOpposed(input: BoardingOpposedInput): BoardingOpposedResolution {
-    // Attacker only wins on strictly more DoS (tie → defender); a both-fail
-    // 0–0 contest also routes to the defender — the boarders never made it
-    // across the gap, so there is no breach.
-    const {
-        success,
-        aDoS: attackerDoS,
-        bDoS: defenderDoS,
-        netDoS,
-    } = resolveOpposedByDoS(
-        { roll: input.attackerRoll, target: input.attackerCommandTarget },
-        { roll: input.defenderRoll, target: input.defenderCommandTarget },
+export function boardingDifferenceBonus(mine: number, theirs: number): number {
+    if (mine <= theirs) return 0;
+    return Math.floor((mine - theirs) / BOARDING_DIFFERENCE_STEP) * BOARDING_BONUS_PER_STEP;
+}
+
+/** One side's inputs to the opposed Command Test. */
+export interface BoardingSideInput {
+    /** The ship this side fights for. */
+    readonly ship: ShipAssaultShip;
+    /** Command skill target of the character leading the ship's warriors. */
+    readonly commandSkill: number;
+    /** True when this ship tried and failed to break free this turn. */
+    readonly failedBreakFree: boolean;
+    readonly situational?: SituationalModifier;
+}
+
+/** Compose one side's Command target against its opponent's ship. */
+export function composeBoardingCommand(side: BoardingSideInput, opponent: ShipAssaultShip): ShipTestDerivation {
+    const modifiers: ShipTestComponent[] = [];
+    const crew = boardingDifferenceBonus(side.ship.crewPopulation, opponent.crewPopulation);
+    if (crew !== 0) {
+        modifiers.push({ labelKey: BOARDING_KEYS.crewAdvantage, value: crew, data: { mine: side.ship.crewPopulation, theirs: opponent.crewPopulation } });
+    }
+    const hull = boardingDifferenceBonus(side.ship.hullIntegrity, opponent.hullIntegrity);
+    if (hull !== 0) {
+        modifiers.push({ labelKey: BOARDING_KEYS.hullAdvantage, value: hull, data: { mine: side.ship.hullIntegrity, theirs: opponent.hullIntegrity } });
+    }
+    const turrets = side.ship.turretRating * BOARDING_TURRET_BONUS_PER_POINT;
+    if (turrets !== 0) {
+        modifiers.push({ labelKey: BOARDING_KEYS.turrets, value: turrets, data: { rating: side.ship.turretRating } });
+    }
+    if (side.failedBreakFree) {
+        modifiers.push({ labelKey: BOARDING_KEYS.failedBreakFree, value: BOARDING_FAILED_BREAK_FREE_PENALTY });
+    }
+    modifiers.push(...situationalComponents(side.situational));
+    return deriveTarget({ labelKey: BOARDING_KEYS.commandSkill, value: side.commandSkill }, modifiers);
+}
+
+/** Rolled opposed Command Test. */
+export interface BoardingRoundInput {
+    readonly attackerRoll: number;
+    readonly attackerTarget: number;
+    readonly defenderRoll: number;
+    readonly defenderTarget: number;
+}
+
+/** Outcome of a boarding round's opposed Command Test. */
+export interface BoardingRoundResolution {
+    /** Which ship won the round. Ties go to the defender. */
+    readonly winner: 'attacker' | 'defender';
+    readonly attackerDoS: number;
+    readonly defenderDoS: number;
+    /** Degrees the winner won by — each buys one damage option. */
+    readonly degrees: number;
+}
+
+/** Resolve the opposed Command Test of one boarding round. */
+export function resolveBoardingRound(input: BoardingRoundInput): BoardingRoundResolution {
+    const { success, aDoS, bDoS, netDoS } = resolveOpposedByDoS(
+        { roll: input.attackerRoll, target: input.attackerTarget },
+        { roll: input.defenderRoll, target: input.defenderTarget },
         { tie: 'b' },
     );
-    const boardersLost = !success && -netDoS >= BOARDING_BOARDERS_LOST_DOS;
-    return { success, attackerDoS, defenderDoS, netDoS, boardersLost };
+    return { winner: success ? 'attacker' : 'defender', attackerDoS: aDoS, defenderDoS: bDoS, degrees: Math.abs(netDoS) };
 }
 
-/** Inputs for the post-success damage payload. */
-export interface BoardingDamageInput {
-    /** netDoS from the opposed test — `BOARDING_HULL_DAMAGE_PER_DOS × netDoS` Hull damage. */
-    netDoS: number;
-    /** Pre-rolled 1d5 crew-population damage (1-5). */
-    rolledCrewD5: number;
-    /** Pre-rolled 1d5 morale damage (1-5). */
-    rolledMoraleD5: number;
-}
-
-/** Resolved damage payload. */
-export interface BoardingDamageResolution {
-    /** Hull Integrity damage applied to the defender. */
-    hullDamage: number;
-    /** Crew Population damage applied to the defender. */
-    crewDamage: number;
-    /** Morale damage applied to the defender. */
-    moraleDamage: number;
-}
-
-/** Compute the defender-side damage payload from a successful boarding test. */
-export function computeBoardingDamage(input: BoardingDamageInput): BoardingDamageResolution {
-    return {
-        hullDamage: Math.max(0, input.netDoS) * BOARDING_HULL_DAMAGE_PER_DOS,
-        crewDamage: input.rolledCrewD5,
-        moraleDamage: input.rolledMoraleD5,
-    };
-}
-
-/** Top-level boarding action input — wraps both phases. */
-export interface BoardingInput {
-    opposed: BoardingOpposedInput;
-    /**
-     * Pre-rolled crew/morale damage dice. The caller rolls 1d5 + 1d5
-     * up front and passes them in; the resolver only reads them when
-     * the attacker actually wins.
-     */
-    rolledCrewD5: number;
-    rolledMoraleD5: number;
-}
-
-/** Top-level boarding action result. */
-export interface BoardingResolution {
-    opposed: BoardingOpposedResolution;
-    /** Defined only when the attacker breached; null otherwise. */
-    damage: BoardingDamageResolution | null;
+/** How the winner spends its degrees. */
+export interface BoardingAllocation {
+    /** Degrees spent on 1 Hull Integrity damage each. */
+    readonly hullDegrees: number;
+    /** Degrees spent on 1d5 Crew Population + 1d5 Morale damage each. */
+    readonly crewDegrees: number;
 }
 
 /**
- * Convenience wrapper: resolves the opposed Command test and computes
- * the damage payload when the breach succeeds. On a miss or boarders-lost
- * outcome the damage payload is `null`.
+ * Split the winner's degrees between Hull Integrity and crew damage. The
+ * requested Hull share is clamped to `[0, degrees]`; the rest goes to crew.
  */
-export function resolveBoarding(input: BoardingInput): BoardingResolution {
-    const opposed = resolveBoardingOpposed(input.opposed);
-    if (!opposed.success) return { opposed, damage: null };
+export function allocateBoardingDegrees(degrees: number, requestedHullDegrees: number): BoardingAllocation {
+    const total = Math.max(0, Math.floor(degrees));
+    const hullDegrees = Math.min(total, Math.max(0, Math.floor(requestedHullDegrees)));
+    return { hullDegrees, crewDegrees: total - hullDegrees };
+}
+
+/** Pre-rolled damage dice for a boarding round. */
+export interface BoardingDamageInput {
+    readonly allocation: BoardingAllocation;
+    /** One 1d5 Crew Population roll per crew degree. */
+    readonly crewD5s: readonly number[];
+    /** One 1d5 Morale roll per crew degree. */
+    readonly moraleD5s: readonly number[];
+}
+
+/** Damage the loser suffers. Hull damage also costs crew/morale downstream. */
+export interface BoardingDamageResolution {
+    readonly hullDamage: number;
+    readonly crewDamage: number;
+    readonly moraleDamage: number;
+}
+
+/** Total the loser's damage from the allocation and the rolled d5s. */
+export function computeBoardingDamage(input: BoardingDamageInput): BoardingDamageResolution {
+    const crewDice = input.crewD5s.slice(0, input.allocation.crewDegrees);
+    const moraleDice = input.moraleD5s.slice(0, input.allocation.crewDegrees);
     return {
-        opposed,
-        damage: computeBoardingDamage({
-            netDoS: opposed.netDoS,
-            rolledCrewD5: input.rolledCrewD5,
-            rolledMoraleD5: input.rolledMoraleD5,
-        }),
+        hullDamage: input.allocation.hullDegrees * BOARDING_HULL_DAMAGE_PER_DEGREE,
+        crewDamage: crewDice.reduce((total, die) => total + die, 0),
+        moraleDamage: moraleDice.reduce((total, die) => total + die, 0),
     };
+}
+
+/**
+ * The loser's morale check: a d100 at or under its current Morale fights on;
+ * a higher roll routs and surrenders.
+ */
+export function resolveBoardingMorale(roll: number, morale: number): { readonly fightsOn: boolean } {
+    return { fightsOn: roll <= morale };
 }

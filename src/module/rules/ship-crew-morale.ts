@@ -213,6 +213,36 @@ export function recordHullHit(
 }
 
 /**
+ * Record direct Crew Population / Morale damage that does not come through
+ * Hull Integrity (e.g. a boarding party cutting through the crew, RT Core
+ * p.215). Floors both stats at 0 and appends the losses to the running
+ * prior-turn snapshot so Hold Fast! / Triage can cancel them next turn.
+ */
+export function recordCrewMoraleHit(
+    state: ShipCombatState,
+    snapshot: PriorTurnDamageSnapshot,
+    crewDamage: number,
+    moraleDamage: number,
+    turn: number,
+): { next: ShipCombatState; snapshot: PriorTurnDamageSnapshot } {
+    const crewAfter = Math.max(0, state.crew.population - Math.max(0, Math.floor(crewDamage)));
+    const moraleAfter = Math.max(0, state.crew.morale.value - Math.max(0, Math.floor(moraleDamage)));
+    const baseSnapshot: PriorTurnDamageSnapshot = snapshot.turn === turn || snapshot.turn === 0 ? snapshot : emptySnapshot(turn);
+    return {
+        next: {
+            hullIntegrity: { ...state.hullIntegrity },
+            crew: { population: crewAfter, morale: { value: moraleAfter, max: state.crew.morale.max } },
+        },
+        snapshot: {
+            hullLoss: baseSnapshot.hullLoss,
+            crewLoss: baseSnapshot.crewLoss + (state.crew.population - crewAfter),
+            moraleLoss: baseSnapshot.moraleLoss + (state.crew.morale.value - moraleAfter),
+            turn,
+        },
+    };
+}
+
+/**
  * Recognised content-agnostic effect identifiers an `order` item may
  * declare via the `shipActionEffect` field to participate in the RT
  * Crew/Morale economy.

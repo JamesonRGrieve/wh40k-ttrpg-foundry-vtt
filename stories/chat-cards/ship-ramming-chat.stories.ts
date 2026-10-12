@@ -1,137 +1,67 @@
 /**
- * Storybook story for the Rogue Trader Ramming chat card (#188 —
- * core.md L9997 §Ramming and Boarding Actions, with the Imposing /
- * Good an' Ard +1d10 bonus from L9453 / L9778).
+ * Storybook stories for the Rogue Trader Ramming chat card (#188 — RT Core
+ * p.215).
  *
- * Renders `ship-ramming-chat.hbs` against four canonical outcomes
- * driven by the pure resolver `resolveRamming`:
+ * Each story drives the real ramming flow (queued dice, an inline Ramming
+ * Speed profile standing in for the compendium content) and renders the card:
  *
- *   1. Hit — straightforward damage exchange.
- *   2. Miss — defender outpiloted the rammer.
- *   3. Tie — defender wins per `RAMMING_RESOLUTION_FAVORS_DEFENDER`.
- *   4. Hit with Imposing prow bonus (+1d10 damage on the rammer).
- *
- * Card carries `data-wh40k-system` so per-system Tailwind variants
- * fire outside the sheet root.
+ *   1. Ram lands — the Hard (−20) Pilot + Manoeuvrability test, then the
+ *      rammed ship's hull-size die + prow armour (+ a power ram bonus) and the
+ *      rammer's rebound of defender Armour + 1d5, every term a provenance row.
+ *   2. Ram misses — no collision, no damage sections.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { resolveRamming, type RammingResolution } from '../../src/module/rules/ship-ramming.ts';
+import { createRammingFlow } from '../../src/module/applications/ship-assault/ramming-flow.ts';
+import { readAssaultForm } from '../../src/module/applications/ship-assault/ship-assault-fields.ts';
 import shipRammingChatSrc from '../../src/templates/chat/ship-ramming-chat.hbs?raw';
+import { ATTACKER_SHIP, DEFENDER_SHIP, queueStoryRolls, storyLocalize, storyShipActor } from '../mocks/ship-assault';
 import { initializeStoryHandlebars } from '../template-support';
 import { renderSheet } from '../test-helpers';
 
 initializeStoryHandlebars();
 
-interface CardArgs {
-    attackerName: string;
-    defenderName: string;
-    gameSystem: string;
-    resolution: RammingResolution;
+const FLOW = createRammingFlow(async () => Promise.resolve({ damage: [{ hullType: 'frigate', formula: '1d10' }], reboundDamage: '1d5' }));
+
+/** Run the flow on the given dice (and optional bonus die) and render its final card. */
+async function card(rolls: number[], bonus: boolean): Promise<HTMLElement> {
+    const session = FLOW.start({ attacker: storyShipActor(ATTACKER_SHIP), defender: storyShipActor(DEFENDER_SHIP), localize: storyLocalize });
+    queueStoryRolls(...rolls);
+    const form = document.createElement('form');
+    if (bonus) form.innerHTML = '<input name="bonusFormula" value="1d10" /><input name="bonusLabel" value="Power Ram" />';
+    await session.roll(readAssaultForm(form));
+    const applied = await session.apply(readAssaultForm(form));
+    return renderSheet(shipRammingChatSrc, applied?.card.data ?? {});
 }
 
-interface RammingChatContext {
-    attackerName: string;
-    defenderName: string;
-    gameSystem: string;
-    toHit: RammingResolution['toHit'];
-    damage: RammingResolution['damage'];
-}
-
-function cardContext(args: CardArgs): RammingChatContext {
-    return {
-        attackerName: args.attackerName,
-        defenderName: args.defenderName,
-        gameSystem: args.gameSystem,
-        toHit: args.resolution.toHit,
-        damage: args.resolution.damage,
-    };
-}
-
-const meta: Meta<CardArgs> = {
+const meta: Meta = {
     title: 'Chat/Ship Ramming (#188)',
-    render: (args) => renderSheet(shipRammingChatSrc, cardContext(args)),
 };
-
 export default meta;
 
-type Story = StoryObj<CardArgs>;
+type Story = StoryObj;
 
-const ATTACKER = 'The Errant Vector';
-const DEFENDER = 'Ork Kroozer "Grimskull"';
-
-export const Hit: Story = {
-    name: 'Ram lands — defender takes the hit through armour',
-    args: {
-        attackerName: ATTACKER,
-        defenderName: DEFENDER,
-        gameSystem: 'rt',
-        resolution: resolveRamming({
-            toHit: { attackerRoll: 20, attackerTarget: 50, defenderRoll: 80, defenderTarget: 40 },
-            damage: { rolledD10: 8, attackerSpeed: 7, defenderArmour: 12, attackerArmour: 16 },
-        }),
-    },
+export const RamLands: Story = {
+    loaders: [async () => ({ el: await card([20, 7, 3, 6], true) })],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
     play: async ({ canvasElement }) => {
-        const card = canvasElement.querySelector('[data-wh40k-hook="ship-ramming-card"]');
-        await expect(card).toBeTruthy();
-        await expect(canvasElement.querySelector('[data-wh40k-system="rt"]')).toBeTruthy();
-        // Damage block must render hull-damage rows when the ram lands.
-        const storyCanvas = within(canvasElement);
-        await expect(storyCanvas.getByText(/WH40K\.Starship\.Ramming\.DefenderHull/)).toBeTruthy();
+        const view = within(canvasElement);
+        await expect(view.getByText('Hard (−20)')).toBeTruthy();
+        await expect(view.getByText(/1d10 \(frigate hull\)/)).toBeTruthy();
+        await expect(view.getByText(/Power Ram/)).toBeTruthy();
+        const damage = canvasElement.querySelectorAll('[data-wh40k-hook="ship-assault-damage"]');
+        await expect(damage.length).toBe(2);
+        // Rammed ship: 7 + 18 prow armour + 6 bonus; rammer: 16 Armour + 3.
+        await expect(within(damage[0] as HTMLElement).getByText('31')).toBeTruthy();
+        await expect(within(damage[1] as HTMLElement).getByText('19')).toBeTruthy();
     },
 };
 
-export const Miss: Story = {
-    name: 'Ram misses — defender outpiloted the rammer',
-    args: {
-        attackerName: ATTACKER,
-        defenderName: DEFENDER,
-        gameSystem: 'rt',
-        resolution: resolveRamming({
-            toHit: { attackerRoll: 80, attackerTarget: 40, defenderRoll: 20, defenderTarget: 50 },
-            damage: { rolledD10: 8, attackerSpeed: 7, defenderArmour: 12, attackerArmour: 16 },
-        }),
-    },
+export const RamMisses: Story = {
+    loaders: [async () => ({ el: await card([95], false) })],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
     play: async ({ canvasElement }) => {
-        const storyCanvas = within(canvasElement);
-        await expect(storyCanvas.getByText(/WH40K\.Starship\.Ramming\.OutcomeMiss/)).toBeTruthy();
-        await expect(storyCanvas.getByText(/WH40K\.Starship\.Ramming\.MissExplain/)).toBeTruthy();
-    },
-};
-
-export const Tie: Story = {
-    name: 'Tie — defender wins per tie-handling rule',
-    args: {
-        attackerName: ATTACKER,
-        defenderName: DEFENDER,
-        gameSystem: 'rt',
-        resolution: resolveRamming({
-            toHit: { attackerRoll: 30, attackerTarget: 50, defenderRoll: 30, defenderTarget: 50 },
-            damage: { rolledD10: 6, attackerSpeed: 7, defenderArmour: 12, attackerArmour: 16 },
-        }),
-    },
-};
-
-export const ImposingProwBonus: Story = {
-    name: 'Imposing / Good an Ard prow — +1d10 to ram damage',
-    args: {
-        attackerName: ATTACKER,
-        defenderName: DEFENDER,
-        gameSystem: 'rt',
-        resolution: resolveRamming({
-            toHit: { attackerRoll: 15, attackerTarget: 55, defenderRoll: 70, defenderTarget: 40 },
-            damage: {
-                rolledD10: 7,
-                attackerSpeed: 8,
-                defenderArmour: 14,
-                attackerArmour: 18,
-                attackerExtraRamDamage: true,
-                bonusRolledD10: 9,
-            },
-        }),
-    },
-    play: async ({ canvasElement }) => {
-        const storyCanvas = within(canvasElement);
-        await expect(storyCanvas.getByText(/WH40K\.Starship\.Ramming\.BonusDamage/)).toBeTruthy();
+        await expect(within(canvasElement).getByText(/misses the ram/)).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-assault-damage"]')).toBeNull();
     },
 };

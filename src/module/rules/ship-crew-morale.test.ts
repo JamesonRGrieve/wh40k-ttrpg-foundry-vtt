@@ -10,6 +10,7 @@ import {
     cancelPriorTurnDamage,
     emptySnapshot,
     isCrippled,
+    recordCrewMoraleHit,
     recordHullHit,
     replenishBetweenCombat,
     rolloverSnapshot,
@@ -179,6 +180,31 @@ describe('isCrippled (composition)', () => {
         ({ next: state } = applyHullDamageToCrew(state, 1));
         expect(state.hullIntegrity.value).toBe(17);
         expect(isCrippled(state.hullIntegrity)).toBe(true);
+    });
+});
+
+describe('recordCrewMoraleHit', () => {
+    it('drops crew and morale without touching hull, and records the losses', () => {
+        const { next, snapshot } = recordCrewMoraleHit(baseState(), emptySnapshot(0), 7, 4, 3);
+        expect(next.hullIntegrity.value).toBe(35);
+        expect(next.crew.population).toBe(93);
+        expect(next.crew.morale.value).toBe(96);
+        expect(snapshot).toEqual({ hullLoss: 0, crewLoss: 7, moraleLoss: 4, turn: 3 });
+    });
+
+    it('floors at 0 and records only what was actually lost', () => {
+        const state: ShipCombatState = { hullIntegrity: { value: 10, max: 35 }, crew: { population: 3, morale: { value: 2, max: 100 } } };
+        const { next, snapshot } = recordCrewMoraleHit(state, emptySnapshot(0), 5, 5, 1);
+        expect(next.crew.population).toBe(0);
+        expect(next.crew.morale.value).toBe(0);
+        expect(snapshot).toEqual({ hullLoss: 0, crewLoss: 3, moraleLoss: 2, turn: 1 });
+    });
+
+    it('appends to a snapshot from the same turn and replaces a stale one', () => {
+        const same = recordCrewMoraleHit(baseState(), { hullLoss: 2, crewLoss: 2, moraleLoss: 2, turn: 4 }, 1, 1, 4).snapshot;
+        expect(same).toEqual({ hullLoss: 2, crewLoss: 3, moraleLoss: 3, turn: 4 });
+        const stale = recordCrewMoraleHit(baseState(), { hullLoss: 2, crewLoss: 2, moraleLoss: 2, turn: 3 }, 1, 1, 4).snapshot;
+        expect(stale).toEqual({ hullLoss: 0, crewLoss: 1, moraleLoss: 1, turn: 4 });
     });
 });
 

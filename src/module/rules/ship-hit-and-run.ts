@@ -1,213 +1,124 @@
 /**
- * Hit-and-Run Action resolver — Rogue Trader (#188 — core.md L10083 /
- * L10093-10097 §Hit and Run).
+ * Hit and Run resolver — Rogue Trader (#188 — RT Core p.218 §Hit and Run;
+ * turret penalty p.220).
  *
  * RAW shape:
- *   1. **Approach Pilot test.** Attacker makes a **Challenging (+0) Pilot
- *      (Space Craft) Test**, modified by the *negative* of the target
- *      ship's Turret Rating (a high turret rating turns the approach
- *      into a death-run). Fail by 4+ DoF → the boarding craft is shot
- *      down; fail by less → forced back to ship with no effect.
- *   2. **Command test.** On the approach success, an opposed
- *      **Ordinary (+10) Command Test** vs. the enemy ship's commander
- *      (also +10 baseline; modifiers from Reinforcements / Tenebro-Maze
- *      / Hidden sally-ports / Death-dealers / Crew Population / Morale
- *      stack on the appropriate side).
- *   3. **Outcome.** Win the Command test → roll 1d5 *twice* on the
- *      Critical Hit chart and **select one to apply**, plus 1 point of
- *      Hull damage per DoS on the Command test. Lose / tie → boarders
- *      retreat with no effect.
+ *   1. **Approach.** The raid leader makes a **Challenging (+0) Pilot (Space
+ *      Craft) Test** to reach an enemy ship within 5 VUs in a boarding craft.
+ *      Each point of the target's Turret Rating imposes **−10** on it (p.220).
+ *      A failure forces the craft back to its ship; failing by **four or more
+ *      degrees** gets it shot down.
+ *   2. **Raid.** On a successful approach the leader makes an opposed
+ *      **Ordinary (+10) Command Test** against the commander of the enemy
+ *      ship's troops. Ties go to the defender.
+ *   3. **Outcome.** A win rolls 1d5 on the Critical Hit chart **twice** and the
+ *      raider selects one result to apply, plus 1 Hull Integrity damage per
+ *      degree of success. A loss sends the raiders back with no effect.
  *
- * This module exposes:
- *   - {@link APPROACH_BASE_DIFFICULTY} — +0 (Challenging) per RAW.
- *   - {@link APPROACH_SHOTDOWN_DOF} — 4+ DoF on the approach test downs
- *     the boarding craft.
- *   - {@link COMMAND_BASE_DIFFICULTY} — +10 (Ordinary) per RAW.
- *   - {@link HIT_AND_RUN_HULL_DAMAGE_PER_DOS} — 1 Hull per DoS on the
- *     Command test, ditto.
- *   - {@link HIT_AND_RUN_CRIT_PICKS} — count of crit-chart rolls
- *     (2 by RAW; the attacker picks the worse one to apply).
- *   - {@link computeApproachTarget} — pure helper that applies the
- *     turret-rating penalty to the base Pilot target.
- *   - {@link resolveHitAndRunApproach} — Pilot-side resolver returning
- *     { hit, shotDown, dof }.
- *   - {@link resolveHitAndRunCommand} — opposed-Command resolver that
- *     mirrors {@link ship-boarding} but at the Hit-and-Run baseline.
- *   - {@link pickWorseCritRoll} — utility: of two 1d5 picks, the
- *     attacker picks the result that yields the higher (worse) effect
- *     for the target. Per RAW the attacker chooses; in pure form this
- *     just returns `Math.max(a, b)` — the chart is ordered by
- *     severity so the higher roll is the meaner result.
- *   - {@link resolveHitAndRun} — top-level orchestrator that composes
- *     the three phases into a single payload the chat card can render.
+ * "Per degree of success" is read as the margin the raider won the opposed
+ * test by (net degrees), as before.
  *
- * Pure module: no RNG, no Foundry. The caller pre-rolls the d100s and
- * the 1d5 × 2 crit picks.
+ * Pure module: no RNG, no Foundry. The caller rolls the dice.
  */
 
-import { degreesOfFailure as degreesOfFailureCore, degreesOfSuccess, isD100Success, resolveOpposedByDoS } from './_dice.ts';
+import { resolveOpposedByDoS } from './_dice.ts';
+import {
+    deriveTarget,
+    PILOT_SKILL_KEY,
+    situationalComponents,
+    type ShipAssaultShip,
+    type ShipTestDerivation,
+    type ShipTestResult,
+    type SituationalModifier,
+} from './ship-assault.ts';
 
-/** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
-export { degreesOfSuccess };
-
-/** Base Pilot (Space Craft) test difficulty — Challenging (+0). */
+/** Approach Pilot (Space Craft) difficulty — Challenging (+0). */
 export const APPROACH_BASE_DIFFICULTY = 0;
 
-/** 4+ DoF on the approach test downs the boarding craft. */
+/** Penalty to the approach test per point of the target's Turret Rating (p.220). */
+export const APPROACH_TURRET_PENALTY_PER_POINT = -10;
+
+/** Failing the approach by this many degrees or more downs the boarding craft. */
 export const APPROACH_SHOTDOWN_DOF = 4;
 
-/** Base Command-test difficulty — Ordinary (+10). */
+/** Raid Command difficulty — Ordinary (+10), for both sides. */
 export const COMMAND_BASE_DIFFICULTY = 10;
 
-/** 1 Hull damage per DoS on the Command test, per RAW. */
+/** Hull Integrity damage per degree the raider wins by. */
 export const HIT_AND_RUN_HULL_DAMAGE_PER_DOS = 1;
 
-/** RAW: roll 1d5 twice on the Critical Hit chart and pick one. */
+/** RAW: roll 1d5 on the Critical Hit chart twice and select one. */
 export const HIT_AND_RUN_CRIT_PICKS = 2;
 
-/**
- * Degrees of Failure for the approach test: floor((roll − target − 1) / 10) + 1
- * on a fail, 0 on a pass — used to detect the "shot down" outcome at 4+ DoF.
- * This counts the margin from the first point *past* the target (a bare fail at
- * target + 1 is 1 DoF), so it uses the shared core's `inclusive: false` mode.
- */
-export function degreesOfFailure(roll: number, target: number): number {
-    return degreesOfFailureCore(roll, target, { inclusive: false });
-}
+/** Langpack keys for the Hit and Run components. */
+export const HIT_AND_RUN_KEYS = {
+    approachDifficulty: 'WH40K.Voidcraft.HitAndRun.Component.ApproachDifficulty',
+    turrets: 'WH40K.Voidcraft.HitAndRun.Component.Turrets',
+    commandSkill: 'WH40K.Voidcraft.HitAndRun.Component.CommandSkill',
+    commandDifficulty: 'WH40K.Voidcraft.HitAndRun.Component.CommandDifficulty',
+} as const;
 
-/**
- * Apply the target ship's Turret Rating as a *penalty* on the attacker's
- * Pilot (Space Craft) target. Negative turret values (unusual but
- * legal) flow through as bonuses; the helper deliberately does not
- * floor or clamp — RAW does not specify either.
- */
-export function computeApproachTarget(basePilotSkill: number, targetTurretRating: number): number {
-    return basePilotSkill + APPROACH_BASE_DIFFICULTY - targetTurretRating;
-}
-
-/** Inputs for the approach Pilot test. */
+/** Inputs to the approach Pilot (Space Craft) Test. */
 export interface HitAndRunApproachInput {
-    /** Attacker d100 roll (1-100). */
-    pilotRoll: number;
-    /** Attacker's Pilot (Space Craft) skill total (already includes any +Manoeuvrability bonus the GM allows). */
-    pilotSkill: number;
-    /** Target ship's Turret Rating (subtracts from the attacker's target). */
-    targetTurretRating: number;
+    readonly pilotSkill: number;
+    /** The ship being raided — its Turret Rating penalises the approach. */
+    readonly target: ShipAssaultShip;
+    readonly situational?: SituationalModifier;
 }
 
-/** Result of the approach Pilot test. */
-export interface HitAndRunApproachResolution {
-    /** Composed Pilot target after turret-rating penalty. */
-    target: number;
-    /** True when the approach test passed. */
-    hit: boolean;
-    /** True when the failure was by 4+ DoF (craft shot down). */
-    shotDown: boolean;
-    /** Degrees of Success (0 when test failed). */
-    dos: number;
-    /** Degrees of Failure (0 when test passed). */
-    dof: number;
+/** Compose the approach test: Challenging (+0) − 10 per target Turret Rating point. */
+export function composeApproachTest(input: HitAndRunApproachInput): ShipTestDerivation {
+    const turret = input.target.turretRating * APPROACH_TURRET_PENALTY_PER_POINT;
+    return deriveTarget({ labelKey: PILOT_SKILL_KEY, value: input.pilotSkill }, [
+        { labelKey: HIT_AND_RUN_KEYS.approachDifficulty, value: APPROACH_BASE_DIFFICULTY },
+        ...(turret === 0 ? [] : [{ labelKey: HIT_AND_RUN_KEYS.turrets, value: turret, data: { ship: input.target.name, rating: input.target.turretRating } }]),
+        ...situationalComponents(input.situational),
+    ]);
 }
 
-/** Resolve the approach Pilot test. */
-export function resolveHitAndRunApproach(input: HitAndRunApproachInput): HitAndRunApproachResolution {
-    const target = computeApproachTarget(input.pilotSkill, input.targetTurretRating);
-    const hit = isD100Success(input.pilotRoll, target);
-    const dos = hit ? degreesOfSuccess(input.pilotRoll, target) : 0;
-    const dof = hit ? 0 : degreesOfFailure(input.pilotRoll, target);
-    const shotDown = !hit && dof >= APPROACH_SHOTDOWN_DOF;
-    return { target, hit, shotDown, dos, dof };
+/** True when a failed approach failed by enough degrees to down the craft. */
+export function isShotDown(approach: ShipTestResult): boolean {
+    return !approach.success && approach.dof >= APPROACH_SHOTDOWN_DOF;
 }
 
-/** Inputs for the opposed Command test phase. */
-export interface HitAndRunCommandInput {
-    /** Attacker d100 roll (1-100). */
-    attackerRoll: number;
-    /** Attacker's *composed* Command target (raid commander; +10 baseline already applied externally if the caller prefers, else pass the raw skill and let the resolver add `COMMAND_BASE_DIFFICULTY`). */
-    attackerCommandTarget: number;
-    /** Defender d100 roll (1-100). */
-    defenderRoll: number;
-    /** Defender's *composed* Command target (ship commander). */
-    defenderCommandTarget: number;
-    /**
-     * When true, the resolver adds `COMMAND_BASE_DIFFICULTY` (+10) to
-     * both `attackerCommandTarget` and `defenderCommandTarget`. Defaults
-     * to true so callers passing raw Command skill values get the RAW
-     * Ordinary (+10) baseline applied automatically.
-     */
-    applyOrdinaryBaseline?: boolean;
+/** Compose one side's raid Command test: skill + Ordinary (+10) + situational. */
+export function composeRaidCommand(commandSkill: number, situational?: SituationalModifier): ShipTestDerivation {
+    return deriveTarget({ labelKey: HIT_AND_RUN_KEYS.commandSkill, value: commandSkill }, [
+        { labelKey: HIT_AND_RUN_KEYS.commandDifficulty, value: COMMAND_BASE_DIFFICULTY },
+        ...situationalComponents(situational),
+    ]);
 }
 
-/** Outcome of the opposed Command test. */
+/** Outcome of the opposed raid Command test. */
 export interface HitAndRunCommandResolution {
-    /** True when the attacker wins the opposed Command test. */
-    success: boolean;
-    attackerDoS: number;
-    defenderDoS: number;
-    /** netDoS = attackerDoS − defenderDoS. */
-    netDoS: number;
+    /** True when the raider wins. Ties go to the defender. */
+    readonly success: boolean;
+    readonly attackerDoS: number;
+    readonly defenderDoS: number;
+    /** attackerDoS − defenderDoS. */
+    readonly netDoS: number;
 }
 
-/** Resolve the opposed Command test. Tie goes to defender. */
-export function resolveHitAndRunCommand(input: HitAndRunCommandInput): HitAndRunCommandResolution {
-    const apply = input.applyOrdinaryBaseline !== false;
-    const atkTarget = input.attackerCommandTarget + (apply ? COMMAND_BASE_DIFFICULTY : 0);
-    const defTarget = input.defenderCommandTarget + (apply ? COMMAND_BASE_DIFFICULTY : 0);
-    // Attacker wins on strictly more DoS (tie → defender); both-fail also
-    // routes to the defender, so the boarding craft never breaches.
-    const {
-        success,
-        aDoS: attackerDoS,
-        bDoS: defenderDoS,
-        netDoS,
-    } = resolveOpposedByDoS({ roll: input.attackerRoll, target: atkTarget }, { roll: input.defenderRoll, target: defTarget }, { tie: 'b' });
-    return { success, attackerDoS, defenderDoS, netDoS };
+/** Resolve the opposed raid Command test from both rolled tests. */
+export function resolveHitAndRunCommand(attacker: ShipTestResult, defender: ShipTestResult): HitAndRunCommandResolution {
+    const { success, aDoS, bDoS, netDoS } = resolveOpposedByDoS(
+        { roll: attacker.roll, target: attacker.target },
+        { roll: defender.roll, target: defender.target },
+        { tie: 'b' },
+    );
+    return { success, attackerDoS: aDoS, defenderDoS: bDoS, netDoS };
 }
 
 /**
- * Per RAW, the attacker rolls 1d5 on the Critical Hit chart twice and
- * **selects one to apply**. The chart is ordered by severity (1 = lightest
- * effect, 5 = harshest), so a rational attacker picks the higher roll.
- * The helper returns `Math.max(a, b)`; callers who let the attacker pick
- * deliberately (e.g. a player chose the *less* damaging result on purpose)
- * can ignore this and resolve manually.
+ * The default of the two 1d5 Critical Hit picks: the chart is ordered by
+ * severity, so the higher roll is the harsher result. The raider may still
+ * choose the other one.
  */
 export function pickWorseCritRoll(a: number, b: number): number {
     return Math.max(a, b);
 }
 
-/** Inputs for the orchestrator. */
-export interface HitAndRunInput {
-    approach: HitAndRunApproachInput;
-    command: HitAndRunCommandInput;
-    /** First 1d5 crit-chart pick (1-5). */
-    rolledCritA: number;
-    /** Second 1d5 crit-chart pick (1-5). */
-    rolledCritB: number;
-}
-
-/** Outcome of a full Hit-and-Run action. */
-export interface HitAndRunResolution {
-    approach: HitAndRunApproachResolution;
-    /** Defined when the approach landed. */
-    command: HitAndRunCommandResolution | null;
-    /** Defined when the Command test succeeded. */
-    appliedCrit: number | null;
-    /** Defined when the Command test succeeded — netDoS × 1 Hull. */
-    hullDamage: number | null;
-}
-
-/**
- * Orchestrate the full Hit-and-Run: approach test → command test → crit
- * pick + hull damage. Each phase short-circuits cleanly so the chat card
- * can render whichever stage the action terminated at.
- */
-export function resolveHitAndRun(input: HitAndRunInput): HitAndRunResolution {
-    const approach = resolveHitAndRunApproach(input.approach);
-    if (!approach.hit) return { approach, command: null, appliedCrit: null, hullDamage: null };
-    const command = resolveHitAndRunCommand(input.command);
-    if (!command.success) return { approach, command, appliedCrit: null, hullDamage: null };
-    const appliedCrit = pickWorseCritRoll(input.rolledCritA, input.rolledCritB);
-    const hullDamage = command.netDoS * HIT_AND_RUN_HULL_DAMAGE_PER_DOS;
-    return { approach, command, appliedCrit, hullDamage };
+/** Hull Integrity damage for a successful raid. */
+export function hitAndRunHullDamage(command: HitAndRunCommandResolution): number {
+    return command.success ? command.netDoS * HIT_AND_RUN_HULL_DAMAGE_PER_DOS : 0;
 }

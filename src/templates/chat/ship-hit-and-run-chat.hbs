@@ -1,5 +1,6 @@
-{{!-- Rogue Trader Hit-and-Run chat card (#188 — core.md L10093-10097). --}}
-<div data-wh40k-hook="ship-har-card" class="wh40k-rpg tw-p-4 tw-rounded-md tw-border-2 {{themeClassFor 'border'}} tw-bg-[rgba(8,16,28,0.9)]"
+{{!-- Rogue Trader Hit and Run chat card (#188 — RT Core p.218). --}}
+{{!-- Approach Pilot test → opposed raid Command tests → chosen Critical Hit + Hull damage. --}}
+<div data-wh40k-hook="ship-har-card" class="wh40k-rpg tw-p-4 tw-rounded-md tw-border-2 {{themeClassFor 'border'}} tw-bg-[rgba(8,16,28,0.9)] tw-text-[#e8e4d9]"
      data-wh40k-system="{{gameSystem}}">
     <header class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
         <i class="fas fa-user-ninja tw-text-[1.1rem] tw-text-violet-300"></i>
@@ -8,107 +9,45 @@
         </div>
     </header>
 
-    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
+    <div class="tw-text-[0.95rem] tw-mb-3">
         <strong class="tw-text-violet-200">{{attackerName}}</strong>
         <span class="tw-mx-1 tw-text-violet-400">→</span>
         <strong class="tw-text-violet-200">{{defenderName}}</strong>
     </div>
 
-    {{!-- Phase 1 — approach Pilot test --}}
-    <section class="tw-mb-2 tw-p-2 tw-rounded-sm tw-border tw-border-violet-500/30 tw-bg-[rgba(40,16,72,0.25)]">
-        <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-violet-300 tw-mb-1">
-            {{localize "WH40K.Voidcraft.HitAndRun.ApproachHeader"}}
-        </div>
-        <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
-            <li class="tw-flex tw-justify-between tw-gap-3">
-                <span class="tw-text-violet-300">{{localize "WH40K.Voidcraft.HitAndRun.PilotTarget"}}</span>
-                <span class="tw-font-bold tw-text-violet-200">{{approach.target}}</span>
-            </li>
-            <li class="tw-flex tw-justify-between tw-gap-3">
-                <span class="tw-text-violet-300">{{localize "WH40K.Voidcraft.HitAndRun.Outcome"}}</span>
-                <span class="tw-font-bold">
-                    {{#if approach.shotDown}}
-                        <span class="tw-text-rose-500">{{localize "WH40K.Voidcraft.HitAndRun.OutcomeShotDown"}}</span>
-                    {{else if approach.hit}}
-                        <span class="tw-text-emerald-300">{{localize "WH40K.Voidcraft.HitAndRun.OutcomeApproachHit"}}</span>
-                    {{else}}
-                        <span class="tw-text-rose-300">{{localize "WH40K.Voidcraft.HitAndRun.OutcomeApproachMiss"}}</span>
-                    {{/if}}
-                </span>
-            </li>
-            {{#if approach.hit}}
-            <li class="tw-flex tw-justify-between tw-gap-3">
-                <span class="tw-text-violet-300">{{localize "WH40K.Voidcraft.HitAndRun.ApproachDoS"}}</span>
-                <span class="tw-font-bold tw-text-emerald-300">{{approach.dos}}</span>
-            </li>
-            {{else}}
-            <li class="tw-flex tw-justify-between tw-gap-3">
-                <span class="tw-text-violet-300">{{localize "WH40K.Voidcraft.HitAndRun.ApproachDoF"}}</span>
-                <span class="tw-font-bold tw-text-rose-300">{{approach.dof}}</span>
-            </li>
-            {{/if}}
-        </ul>
-    </section>
+    {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=approach.test}}
+    {{#unless approach.test.success}}
+        {{#if approach.shotDown}}
+            <p class="tw-m-0 tw-text-[0.85rem] tw-font-semibold tw-text-rose-400">{{localize "WH40K.Voidcraft.HitAndRun.ShotDownExplain"}}</p>
+        {{else}}
+            <p class="tw-m-0 tw-text-[0.85rem] tw-text-violet-300">{{localize "WH40K.Voidcraft.HitAndRun.TurnedBackExplain"}}</p>
+        {{/if}}
+    {{/unless}}
 
-    {{!-- Phase 2 — opposed Command test --}}
     {{#if command}}
-    <section class="tw-mb-2 tw-p-2 tw-rounded-sm tw-border tw-border-violet-500/30 tw-bg-[rgba(40,16,72,0.25)]">
-        <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-violet-300 tw-mb-1">
-            {{localize "WH40K.Voidcraft.HitAndRun.CommandHeader"}}
-        </div>
-        <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
-            <li class="tw-flex tw-justify-between tw-gap-3">
-                <span class="tw-text-violet-300">{{localize "WH40K.Voidcraft.HitAndRun.AttackerCommandDoS"}}</span>
-                <span class="tw-font-bold tw-text-emerald-300">{{command.attackerDoS}}</span>
-            </li>
-            <li class="tw-flex tw-justify-between tw-gap-3">
-                <span class="tw-text-violet-300">{{localize "WH40K.Voidcraft.HitAndRun.DefenderCommandDoS"}}</span>
-                <span class="tw-font-bold tw-text-rose-300">{{command.defenderDoS}}</span>
-            </li>
-            <li class="tw-flex tw-justify-between tw-gap-3">
-                <span class="tw-text-violet-300">{{localize "WH40K.Voidcraft.HitAndRun.NetDoS"}}</span>
-                <span class="tw-font-bold tw-text-violet-200">{{command.netDoS}}</span>
-            </li>
-            <li class="tw-flex tw-justify-between tw-gap-3">
-                <span class="tw-text-violet-300">{{localize "WH40K.Voidcraft.HitAndRun.Outcome"}}</span>
-                <span class="tw-font-bold">
-                    {{#if command.success}}
-                        <span class="tw-text-emerald-300">{{localize "WH40K.Voidcraft.HitAndRun.OutcomeCommandWin"}}</span>
-                    {{else}}
-                        <span class="tw-text-rose-300">{{localize "WH40K.Voidcraft.HitAndRun.OutcomeCommandLose"}}</span>
-                    {{/if}}
-                </span>
-            </li>
-        </ul>
-    </section>
+        {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=command.attackerTest}}
+        {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=command.defenderTest}}
+        {{#if command.success}}
+            <p class="tw-m-0 tw-mb-2 tw-text-[0.9rem] tw-font-semibold tw-text-emerald-300">{{localize "WH40K.Voidcraft.HitAndRun.RaidSucceeds" degrees=command.netDoS}}</p>
+        {{else}}
+            <p class="tw-m-0 tw-text-[0.85rem] tw-text-violet-300">{{localize "WH40K.Voidcraft.HitAndRun.RaidRepelled"}}</p>
+        {{/if}}
     {{/if}}
 
-    {{!-- Phase 3 — pick-worse crit + hull damage --}}
-    {{#if appliedCrit}}
-    <div class="tw-p-2 tw-mb-2 tw-rounded-sm tw-border tw-border-violet-500/50 tw-bg-[rgba(48,12,96,0.32)] tw-text-[0.85rem] tw-text-violet-100">
-        <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-violet-300 tw-mb-1">
-            {{localize "WH40K.Voidcraft.HitAndRun.ResultHeader"}}
+    {{#if critPicks}}
+        <div class="tw-mb-2 tw-p-2 tw-rounded-sm tw-border tw-border-violet-500/40 tw-text-[0.85rem]">
+            <div>{{localize "WH40K.Voidcraft.HitAndRun.CritPicks" first=critPicks.[0] second=critPicks.[1]}}</div>
+            {{#if chosenCrit}}
+                <div class="tw-font-semibold tw-text-violet-200">{{localize "WH40K.Voidcraft.HitAndRun.CritChosen" roll=chosenCrit}}</div>
+            {{/if}}
         </div>
-        <div class="tw-flex tw-justify-between tw-gap-3">
-            <span>{{localize "WH40K.Voidcraft.HitAndRun.CritPicks"}}</span>
-            <span class="tw-font-bold tw-text-violet-200">{{rolledCritA}} / {{rolledCritB}}</span>
-        </div>
-        <div class="tw-flex tw-justify-between tw-gap-3">
-            <span>{{localize "WH40K.Voidcraft.HitAndRun.AppliedCrit"}}</span>
-            <span class="tw-font-bold tw-text-rose-300">{{appliedCrit}}</span>
-        </div>
-        <div class="tw-flex tw-justify-between tw-gap-3">
-            <span>{{localize "WH40K.Voidcraft.HitAndRun.HullDamage"}}</span>
-            <span class="tw-font-bold tw-text-rose-300">{{hullDamage}}</span>
-        </div>
-    </div>
-    {{else if approach.shotDown}}
-    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-rose-700/60 tw-bg-[rgba(64,8,16,0.32)] tw-text-[0.85rem] tw-text-rose-200">
-        {{localize "WH40K.Voidcraft.HitAndRun.ShotDownExplain"}}
-    </div>
-    {{else}}
-    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(56,189,248,0.4)] tw-bg-[rgba(14,116,144,0.18)] tw-text-[0.85rem] tw-text-[#e0f2fe]">
-        {{localize "WH40K.Voidcraft.HitAndRun.NoResultExplain"}}
-    </div>
+    {{/if}}
+
+    {{#if hull}}
+        {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-damage.hbs damage=hull}}
+    {{/if}}
+
+    {{#if unapplied}}
+        <p class="tw-m-0 tw-mt-2 tw-text-[0.8rem] tw-italic tw-text-amber-200">{{localize "WH40K.Voidcraft.Assault.NotApplied"}}</p>
     {{/if}}
 </div>

@@ -1,15 +1,18 @@
 import { t } from '../i18n/t.ts';
+import { supportsShipAssault, type ShipAssaultShip } from '../rules/ship-assault.ts';
 import {
     cancelPriorTurnDamage as cancelPriorTurnDamageRule,
     canCancelPriorTurnDamage as canCancelPriorTurnDamageRule,
     emptySnapshot,
     isCrippled as isCrippledRule,
+    recordCrewMoraleHit,
     recordHullHit,
     replenishBetweenCombat as replenishBetweenCombatRule,
     type PriorTurnDamageSnapshot,
     type ShipCombatState,
 } from '../rules/ship-crew-morale.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
+import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 import type { WH40KItem } from './item.ts';
 
@@ -40,7 +43,31 @@ type VoidcraftSystemData = WH40KBaseActor['system'] & {
         keel: number;
     };
     priorTurnDamage: PriorTurnDamageSnapshot;
+    shipStatuses: ShipStatus[];
 };
+
+/** One persistent Critical Hit status recorded on a ship. */
+interface ShipStatus {
+    id: string;
+    rolled: number;
+    text: string;
+    appliedAt: number;
+}
+
+/** Stable status id per 1d5 Critical Hit result (1–5). */
+const CRITICAL_STATUS_IDS = ['vacuum', 'fire', 'bridge', 'drive', 'crew'] as const;
+
+/** Langpack label per 1d5 Critical Hit result (1–5). */
+const CRITICAL_STATUS_LABEL_KEYS = [
+    'WH40K.Voidcraft.Critical.Effect.Vacuum',
+    'WH40K.Voidcraft.Critical.Effect.Fire',
+    'WH40K.Voidcraft.Critical.Effect.Bridge',
+    'WH40K.Voidcraft.Critical.Effect.Drive',
+    'WH40K.Voidcraft.Critical.Effect.Crew',
+] as const;
+
+/** Compendium pack the RT ship Critical Hit table is scoped to. */
+const CRITICAL_HIT_TABLE_PACK = 'wh40k-rpg.rt-core-rolltables-ship-combat';
 
 /**
  * Game-system id the RT Crew Population & Morale combat economy is
@@ -297,6 +324,106 @@ export class WH40KVoidcraft extends WH40KBaseActor {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
         await (this as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update(updates);
         return delta;
+    }
+
+    /**
+     * Can this ship take the RT assault actions (ramming, boarding, Hit and
+     * Run)? Explicit per-system gate — the other lines' voidcraft have no
+     * such actions.
+     */
+    get supportsShipAssault(): boolean {
+        return supportsShipAssault(this.system.gameSystem);
+    }
+
+    /** The stats the assault-action rules read, as a plain snapshot. */
+    get assaultProfile(): ShipAssaultShip {
+        return {
+            name: this.name,
+            hullType: this.hullType,
+            manoeuvrability: this.manoeuvrability,
+            armour: this.armour,
+            turretRating: this.turretRating,
+            crewPopulation: this.crew.population,
+            hullIntegrity: this.hullIntegrity.value,
+            morale: this.crew.morale.value,
+        };
+    }
+
+    /**
+     * Apply direct Crew Population / Morale damage (a boarding party cutting
+     * through the crew, RT Core p.215). RT only; records the losses in the
+     * prior-turn snapshot so Hold Fast! / Triage can cancel them next turn.
+     * Returns the losses actually applied.
+     */
+    async applyCrewMoraleDamage(crewDamage: number, moraleDamage: number): Promise<{ crewLoss: number; moraleLoss: number }> {
+        if (!this.usesRTCrewEconomy) return { crewLoss: 0, moraleLoss: 0 };
+        const before = this._readShipCombatState();
+        const { next, snapshot } = recordCrewMoraleHit(before, this._readPriorTurnSnapshot(), crewDamage, moraleDamage, this._currentStrategicTurn());
+        const delta = {
+            crewLoss: before.crew.population - next.crew.population,
+            moraleLoss: before.crew.morale.value - next.crew.morale.value,
+        };
+        if (delta.crewLoss === 0 && delta.moraleLoss === 0) return delta;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
+        await (this as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
+            'system.crew.population': next.crew.population,
+            'system.crew.morale.value': next.crew.morale.value,
+            'system.priorTurnDamage': snapshot,
+        });
+        return delta;
+    }
+
+    /**
+     * Roll on the Rogue Trader Critical Hit chart (issue #187) and record the
+     * result as a persistent ship status, posting the critical-hit chat card.
+     *
+     * `rolled` pre-selects the 1d5 result — Hit and Run (#188) rolls 1d5 twice
+     * and lets the raider choose — otherwise the table rolls its own die.
+     * Resolution order: world `RollTable` "Critical Hit", then the RT
+     * ship-combat compendium pack, then a bare 1d5 with the
+     * table-unavailable message so the GM applies the effect by hand.
+     */
+    async rollShipCriticalHit(rolled?: number): Promise<void> {
+        const preRoll = rolled === undefined ? null : await new Roll(String(rolled)).evaluate();
+        let result = 0;
+        let resultText = '';
+        const draw = await RollTableUtils.rollTable('Critical Hit', { displayChat: false, pack: CRITICAL_HIT_TABLE_PACK, roll: preRoll });
+        if (draw !== null) {
+            result = draw.roll.total ?? 0;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's RollTable result Collection is untyped; reading the drawn result's display text
+            const first = (draw.results as unknown as Array<{ text?: string }>).at(0);
+            resultText = first?.text ?? '';
+        }
+        if (resultText === '') {
+            result = rolled ?? Number((await new Roll('1d5').evaluate()).total);
+            resultText = t('WH40K.Voidcraft.Critical.TableUnavailable', { rolled: result });
+        }
+
+        const index = Math.min(Math.max(result, 1), CRITICAL_STATUS_IDS.length) - 1;
+        const statusId = CRITICAL_STATUS_IDS.at(index) ?? CRITICAL_STATUS_IDS[0];
+        const statusLabel = t(CRITICAL_STATUS_LABEL_KEYS.at(index) ?? CRITICAL_STATUS_LABEL_KEYS[0]);
+
+        // Persistent until cleared by an Emergency Repair or Quick Repair action.
+        const next: ShipStatus[] = [...this.system.shipStatuses, { id: statusId, rolled: result, text: resultText, appliedAt: Date.now() }];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
+        await (this as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.shipStatuses': next });
+
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-critical-hit-chat.hbs', {
+            _gameSystemId: firstSystemId(this),
+            actorName: this.name,
+            resultName: statusLabel,
+            resultText,
+            statusLabel,
+            rolled: result,
+            rollLabel: t('WH40K.Voidcraft.Critical.RollLabel', { rolled: result }),
+            image: 'icons/svg/explosion.svg',
+            gameSystem: this.system.gameSystem,
+        });
+        await ChatMessage.create({
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker requires Actor.Implementation; WH40KVoidcraft extends it but the typings widen
+            speaker: ChatMessage.getSpeaker({ actor: this as unknown as Actor.Implementation }),
+            content: html,
+        });
     }
 
     /**

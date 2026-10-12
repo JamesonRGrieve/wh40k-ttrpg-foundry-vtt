@@ -1,61 +1,30 @@
-{{!-- Rogue Trader Ramming chat card (#188 — core.md L9997). --}}
-{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
-{{!-- wh40k-rpg keeps utility cascade alive outside the sheet root.       --}}
-<div data-wh40k-hook="ship-ramming-card" class="wh40k-rpg tw-p-4 tw-rounded-md tw-border-2 {{themeClassFor 'border'}} tw-bg-[rgba(8,16,28,0.9)]"
+{{!-- Rogue Trader Ramming chat card (#188 — RT Core p.215). --}}
+{{!-- The Hard (−20) Pilot + Manoeuvrability test, then both ships' collision damage (void shields ignored). --}}
+<div data-wh40k-hook="ship-ramming-card" class="wh40k-rpg tw-p-4 tw-rounded-md tw-border-2 {{themeClassFor 'border'}} tw-bg-[rgba(8,16,28,0.9)] tw-text-[#e8e4d9]"
      data-wh40k-system="{{gameSystem}}">
     <header class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
-        <i class="fas fa-bullseye tw-text-[1.1rem] tw-text-amber-300"></i>
+        <i class="fas fa-meteor tw-text-[1.1rem] tw-text-amber-300"></i>
         <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-amber-200">
             {{localize "WH40K.Voidcraft.Ramming.ChatTitle"}}
         </div>
     </header>
 
-    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
+    <div class="tw-text-[0.95rem] tw-mb-3">
         <strong class="tw-text-amber-200">{{attackerName}}</strong>
         <span class="tw-mx-1 tw-text-amber-400">→</span>
         <strong class="tw-text-amber-200">{{defenderName}}</strong>
-        — {{#if toHit.success}}<span class="tw-text-emerald-300">{{localize "WH40K.Voidcraft.Ramming.OutcomeHit"}}</span>{{else}}<span class="tw-text-rose-300">{{localize "WH40K.Voidcraft.Ramming.OutcomeMiss"}}</span>{{/if}}
     </div>
 
-    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
-        <li class="tw-flex tw-justify-between tw-gap-3">
-            <span class="tw-text-amber-300">{{localize "WH40K.Voidcraft.Ramming.AttackerDoS"}}</span>
-            <span class="tw-font-bold tw-text-emerald-300">{{toHit.attackerDoS}}</span>
-        </li>
-        <li class="tw-flex tw-justify-between tw-gap-3">
-            <span class="tw-text-amber-300">{{localize "WH40K.Voidcraft.Ramming.DefenderDoS"}}</span>
-            <span class="tw-font-bold tw-text-rose-300">{{toHit.defenderDoS}}</span>
-        </li>
-        <li class="tw-flex tw-justify-between tw-gap-3">
-            <span class="tw-text-amber-300">{{localize "WH40K.Voidcraft.Ramming.NetDoS"}}</span>
-            <span class="tw-font-bold tw-text-amber-200">{{toHit.netDoS}}</span>
-        </li>
-    </ul>
+    {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=test}}
 
-    {{#if damage}}
-    <div class="tw-p-2 tw-mb-2 tw-rounded-sm tw-border tw-border-amber-500/50 tw-bg-[rgba(96,64,16,0.25)] tw-text-[0.85rem] tw-text-amber-100">
-        <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-300 tw-mb-1">
-            {{localize "WH40K.Voidcraft.Ramming.DamageHeader"}}
-        </div>
-        <div class="tw-flex tw-justify-between tw-gap-3">
-            <span>{{localize "WH40K.Voidcraft.Ramming.DefenderHull"}}</span>
-            <span class="tw-font-bold tw-text-rose-300">{{damage.defender.hullDamage}}
-                <span class="tw-text-amber-400/80 tw-font-normal">({{damage.defender.raw}} − {{damage.defender.armour}} {{localize "WH40K.Voidcraft.Ramming.ArmourSuffix"}})</span></span>
-        </div>
-        <div class="tw-flex tw-justify-between tw-gap-3">
-            <span>{{localize "WH40K.Voidcraft.Ramming.AttackerHull"}}</span>
-            <span class="tw-font-bold tw-text-rose-300">{{damage.attacker.hullDamage}}
-                <span class="tw-text-amber-400/80 tw-font-normal">({{damage.attacker.raw}} − {{damage.attacker.armour}} {{localize "WH40K.Voidcraft.Ramming.ArmourSuffix"}})</span></span>
-        </div>
-        {{#if damage.bonusDamage}}
-        <div class="tw-mt-1 tw-text-[0.8rem] tw-text-amber-200">
-            <i class="fas fa-plus-circle tw-mr-1"></i>{{localize "WH40K.Voidcraft.Ramming.BonusDamage"}} +{{damage.bonusDamage}}
-        </div>
-        {{/if}}
-    </div>
+    {{#if defenderDamage}}
+        {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-damage.hbs damage=defenderDamage}}
+        {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-damage.hbs damage=attackerDamage}}
     {{else}}
-    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(56,189,248,0.4)] tw-bg-[rgba(14,116,144,0.18)] tw-text-[0.85rem] tw-text-[#e0f2fe]">
-        {{localize "WH40K.Voidcraft.Ramming.MissExplain"}}
-    </div>
+        <p class="tw-m-0 tw-text-[0.85rem] tw-text-amber-100">{{localize "WH40K.Voidcraft.Ramming.MissExplain"}}</p>
+    {{/if}}
+
+    {{#if unapplied}}
+        <p class="tw-m-0 tw-mt-2 tw-text-[0.8rem] tw-italic tw-text-amber-200">{{localize "WH40K.Voidcraft.Assault.NotApplied"}}</p>
     {{/if}}
 </div>

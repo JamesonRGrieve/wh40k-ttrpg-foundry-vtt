@@ -1,138 +1,103 @@
 import { describe, expect, it } from 'vitest';
-import { computeRammingDamage, degreesOfSuccess, RAMMING_RESOLUTION_FAVORS_DEFENDER, resolveRamming, resolveRammingToHit } from './ship-ramming';
+import { HARD_DIFFICULTY_KEY, MANOEUVRABILITY_KEY, resolveShipTest, type ShipAssaultShip } from './ship-assault';
+import { composeRammingTest, computeRammingDamage, RAMMING_DIFFICULTY, RAMMING_KEYS, ramDamageFormula, type RammingProfile } from './ship-ramming';
 
 /**
- * RT Ramming resolver pins (#188 — core.md L9997 §Ramming and Boarding
- * Actions, +1d10 prow bonuses at L9453 / L9778).
+ * RT Ramming pins (#188 — RT Core p.215).
  *
- * The tests pin:
- *   - DoS math at the boundary (exact pass, 1-DoS step, complete miss).
- *   - Tie semantics (defender wins) for the opposed Pilot test.
- *   - Damage math with and without the Imposing / Good an' Ard +1d10.
- *   - Armour subtraction floors at 0 on both sides.
- *   - Top-level resolver returns `damage: null` on a miss.
+ * Regression guards for the RAW corrections: the previous resolver made the
+ * ram an OPPOSED Pilot test, dealt 1d10 + attacker Speed, and subtracted each
+ * side's armour from the hit. RAW is an unopposed Hard (−20) Pilot +
+ * Manoeuvrability test; the rammed ship takes the hull-size die + the rammer's
+ * prow armour; the rammer takes the defender's Armour + 1d5; void shields are
+ * ignored and armour does not reduce either hit.
  */
-describe('ship-ramming — invariants', () => {
-    it('declares the tie-handling convention explicitly', () => {
-        expect(RAMMING_RESOLUTION_FAVORS_DEFENDER).toBe(true);
+
+const RAMMER: ShipAssaultShip = {
+    name: 'Errant Vector',
+    hullType: 'frigate',
+    manoeuvrability: 15,
+    armour: 18,
+    turretRating: 1,
+    crewPopulation: 80,
+    hullIntegrity: 35,
+    morale: 75,
+};
+const TARGET: ShipAssaultShip = { ...RAMMER, name: 'Whispering Star', hullType: 'raider', armour: 16 };
+
+const PROFILE: RammingProfile = {
+    damage: [
+        { hullType: 'raider', formula: '1d5' },
+        { hullType: 'frigate', formula: '1d10' },
+        { hullType: 'cruiser', formula: '2d10' },
+    ],
+    reboundDamage: '1d5',
+};
+
+describe('ship-ramming — test', () => {
+    it('is an unopposed Hard (−20) Pilot + Manoeuvrability test', () => {
+        expect(RAMMING_DIFFICULTY).toBe(-20);
+        const derivation = composeRammingTest({ pilotSkill: 40, ship: RAMMER });
+        expect(derivation.modifiers.map((m) => [m.labelKey, m.value])).toEqual([
+            [MANOEUVRABILITY_KEY, 15],
+            [HARD_DIFFICULTY_KEY, -20],
+        ]);
+        expect(derivation.target).toBe(35);
+        expect(resolveShipTest(derivation, 35).success).toBe(true);
+        expect(resolveShipTest(derivation, 36).success).toBe(false);
+    });
+
+    it('stacks a situational bonus such as a Ram Ship', () => {
+        expect(composeRammingTest({ pilotSkill: 40, ship: RAMMER, situational: { value: 20, label: 'WAAAGH!' } }).target).toBe(55);
     });
 });
 
-describe('ship-ramming — degrees of success', () => {
-    it('returns 0 when the roll exceeds the target', () => {
-        expect(degreesOfSuccess(75, 40)).toBe(0);
+describe('ship-ramming — hull-size damage table', () => {
+    it('reads the die for the rammer hull type from the authored table', () => {
+        expect(ramDamageFormula(PROFILE, 'frigate')).toBe('1d10');
+        expect(ramDamageFormula(PROFILE, 'cruiser')).toBe('2d10');
     });
 
-    it('returns 1 on a bare pass', () => {
-        expect(degreesOfSuccess(40, 40)).toBe(1);
-    });
-
-    it('returns 1 per full 10 the roll beats the target by', () => {
-        expect(degreesOfSuccess(30, 40)).toBe(2);
-        expect(degreesOfSuccess(11, 40)).toBe(3);
-        expect(degreesOfSuccess(1, 40)).toBe(4);
+    it('returns null for a hull type the table does not cover', () => {
+        expect(ramDamageFormula(PROFILE, 'battlecruiser')).toBeNull();
     });
 });
 
-describe('ship-ramming — resolveRammingToHit', () => {
-    it('attacker wins when they pass and defender fails', () => {
-        const r = resolveRammingToHit({ attackerRoll: 30, attackerTarget: 50, defenderRoll: 75, defenderTarget: 40 });
-        expect(r.success).toBe(true);
-        expect(r.attackerDoS).toBe(3);
-        expect(r.defenderDoS).toBe(0);
-        expect(r.netDoS).toBe(3);
-    });
-
-    it('attacker loses when defender scores more DoS', () => {
-        const r = resolveRammingToHit({ attackerRoll: 35, attackerTarget: 40, defenderRoll: 10, defenderTarget: 40 });
-        expect(r.success).toBe(false);
-        expect(r.attackerDoS).toBe(1);
-        expect(r.defenderDoS).toBe(4);
-        expect(r.netDoS).toBe(-3);
-    });
-
-    it('tie favours the defender (success === false on equal DoS)', () => {
-        const r = resolveRammingToHit({ attackerRoll: 30, attackerTarget: 50, defenderRoll: 30, defenderTarget: 50 });
-        expect(r.attackerDoS).toBe(r.defenderDoS);
-        expect(r.netDoS).toBe(0);
-        expect(r.success).toBe(false);
-    });
-
-    it('both-fail still routes to defender', () => {
-        const r = resolveRammingToHit({ attackerRoll: 90, attackerTarget: 40, defenderRoll: 95, defenderTarget: 40 });
-        expect(r.attackerDoS).toBe(0);
-        expect(r.defenderDoS).toBe(0);
-        expect(r.success).toBe(false);
-    });
-});
-
-describe('ship-ramming — computeRammingDamage', () => {
-    it('rolls (1d10 + Speed) through armour on both sides', () => {
-        const dmg = computeRammingDamage({
-            rolledD10: 7,
-            attackerSpeed: 4,
-            defenderArmour: 13,
-            attackerArmour: 18,
+describe('ship-ramming — collision damage', () => {
+    it('adds the die to the rammer prow armour, unreduced by the defender armour', () => {
+        const damage = computeRammingDamage({
+            attacker: RAMMER,
+            defender: TARGET,
+            damage: { formula: '1d10', total: 7 },
+            rebound: { formula: '1d5', total: 3 },
         });
-        expect(dmg.defender.raw).toBe(11);
-        expect(dmg.defender.armour).toBe(13);
-        expect(dmg.defender.hullDamage).toBe(0); // 11 − 13 floors at 0
-        expect(dmg.attacker.raw).toBe(11);
-        expect(dmg.attacker.armour).toBe(18);
-        expect(dmg.attacker.hullDamage).toBe(0);
-        expect(dmg.bonusDamage).toBe(0);
+        expect(damage.defender.total).toBe(25);
+        expect(damage.defender.components.map((c) => c.labelKey)).toEqual([RAMMING_KEYS.damageDie, RAMMING_KEYS.prowArmour]);
     });
 
-    it('applies Imposing / Good an Ard +1d10 when attackerExtraRamDamage is set', () => {
-        const dmg = computeRammingDamage({
-            rolledD10: 6,
-            attackerSpeed: 6,
-            defenderArmour: 14,
-            attackerArmour: 16,
-            attackerExtraRamDamage: true,
-            bonusRolledD10: 9,
+    it('rebounds the defender Armour + 1d5 onto the rammer', () => {
+        const damage = computeRammingDamage({
+            attacker: RAMMER,
+            defender: TARGET,
+            damage: { formula: '1d10', total: 7 },
+            rebound: { formula: '1d5', total: 3 },
         });
-        expect(dmg.bonusDamage).toBe(9);
-        expect(dmg.defender.raw).toBe(6 + 6 + 9);
-        expect(dmg.defender.hullDamage).toBe(21 - 14);
-        expect(dmg.attacker.raw).toBe(21);
-        expect(dmg.attacker.hullDamage).toBe(21 - 16);
+        expect(damage.attacker.total).toBe(19);
+        expect(damage.attacker.components.map((c) => [c.labelKey, c.value])).toEqual([
+            [RAMMING_KEYS.defenderArmour, 16],
+            [RAMMING_KEYS.reboundDie, 3],
+        ]);
     });
 
-    it('does not add the bonus die when extraRamDamage is false', () => {
-        const dmg = computeRammingDamage({
-            rolledD10: 8,
-            attackerSpeed: 5,
-            defenderArmour: 12,
-            attackerArmour: 12,
-            attackerExtraRamDamage: false,
-            bonusRolledD10: 10, // ignored
+    it('adds a rolled component bonus as its own provenance row', () => {
+        const damage = computeRammingDamage({
+            attacker: RAMMER,
+            defender: TARGET,
+            damage: { formula: '1d10', total: 7 },
+            rebound: { formula: '1d5', total: 3 },
+            bonus: { formula: '1d10', total: 6, label: 'Power Ram' },
         });
-        expect(dmg.bonusDamage).toBe(0);
-        expect(dmg.defender.raw).toBe(13);
-        expect(dmg.defender.hullDamage).toBe(1);
-        expect(dmg.attacker.hullDamage).toBe(1);
-    });
-});
-
-describe('ship-ramming — resolveRamming', () => {
-    it('returns null damage on a miss', () => {
-        const r = resolveRamming({
-            toHit: { attackerRoll: 80, attackerTarget: 40, defenderRoll: 30, defenderTarget: 50 },
-            damage: { rolledD10: 8, attackerSpeed: 6, defenderArmour: 14, attackerArmour: 16 },
-        });
-        expect(r.toHit.success).toBe(false);
-        expect(r.damage).toBeNull();
-    });
-
-    it('computes the damage payload on a hit', () => {
-        const r = resolveRamming({
-            toHit: { attackerRoll: 20, attackerTarget: 50, defenderRoll: 80, defenderTarget: 40 },
-            damage: { rolledD10: 10, attackerSpeed: 8, defenderArmour: 14, attackerArmour: 16 },
-        });
-        expect(r.toHit.success).toBe(true);
-        expect(r.damage).not.toBeNull();
-        expect(r.damage?.defender.hullDamage).toBe(18 - 14);
-        expect(r.damage?.attacker.hullDamage).toBe(18 - 16);
+        expect(damage.defender.total).toBe(31);
+        expect(damage.defender.components.at(-1)).toEqual({ labelKey: RAMMING_KEYS.bonus, value: 6, data: { formula: '1d10', label: 'Power Ram' } });
     });
 });

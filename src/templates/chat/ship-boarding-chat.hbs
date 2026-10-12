@@ -1,66 +1,56 @@
-{{!-- Rogue Trader Boarding Action chat card (#188 — core.md L9997). --}}
-<div data-wh40k-hook="ship-boarding-card" class="wh40k-rpg tw-p-4 tw-rounded-md tw-border-2 {{themeClassFor 'border'}} tw-bg-[rgba(8,16,28,0.9)]"
+{{!-- Rogue Trader Boarding Action chat card (#188 — RT Core p.215). --}}
+{{!-- Phase `lock`: the Hard (−20) Pilot + Manoeuvrability Test that locks the ships together. --}}
+{{!-- Phase `round`: the opposed Command Test, the winner's per-degree damage and the loser's Morale check. --}}
+<div data-wh40k-hook="ship-boarding-card" class="wh40k-rpg tw-p-4 tw-rounded-md tw-border-2 {{themeClassFor 'border'}} tw-bg-[rgba(8,16,28,0.9)] tw-text-[#e8e4d9]"
      data-wh40k-system="{{gameSystem}}">
     <header class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
         <i class="fas fa-skull-crossbones tw-text-[1.1rem] tw-text-rose-300"></i>
         <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-rose-200">
-            {{localize "WH40K.Voidcraft.Boarding.ChatTitle"}}
+            {{#if lock}}{{localize "WH40K.Voidcraft.Boarding.LockTitle"}}{{else}}{{localize "WH40K.Voidcraft.Boarding.ChatTitle"}}{{/if}}
         </div>
     </header>
 
-    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
+    <div class="tw-text-[0.95rem] tw-mb-3">
         <strong class="tw-text-rose-200">{{attackerName}}</strong>
         <span class="tw-mx-1 tw-text-rose-400">⚔</span>
         <strong class="tw-text-rose-200">{{defenderName}}</strong>
-        — {{#if opposed.success}}
-            <span class="tw-text-emerald-300">{{localize "WH40K.Voidcraft.Boarding.OutcomeBreach"}}</span>
-        {{else if opposed.boardersLost}}
-            <span class="tw-text-rose-500">{{localize "WH40K.Voidcraft.Boarding.OutcomeBoardersLost"}}</span>
+    </div>
+
+    {{#if lock}}
+        {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=lock.test}}
+        {{#if lock.test.success}}
+            <p class="tw-m-0 tw-text-[0.85rem] tw-text-emerald-300">{{localize "WH40K.Voidcraft.Boarding.Locked"}}</p>
         {{else}}
-            <span class="tw-text-rose-300">{{localize "WH40K.Voidcraft.Boarding.OutcomeRepelled"}}</span>
+            <p class="tw-m-0 tw-text-[0.85rem] tw-text-rose-300">{{localize "WH40K.Voidcraft.Boarding.LockFailed"}}</p>
         {{/if}}
-    </div>
+    {{/if}}
 
-    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
-        <li class="tw-flex tw-justify-between tw-gap-3">
-            <span class="tw-text-rose-300">{{localize "WH40K.Voidcraft.Boarding.AttackerCommandDoS"}}</span>
-            <span class="tw-font-bold tw-text-emerald-300">{{opposed.attackerDoS}}</span>
-        </li>
-        <li class="tw-flex tw-justify-between tw-gap-3">
-            <span class="tw-text-rose-300">{{localize "WH40K.Voidcraft.Boarding.DefenderCommandDoS"}}</span>
-            <span class="tw-font-bold tw-text-rose-300">{{opposed.defenderDoS}}</span>
-        </li>
-        <li class="tw-flex tw-justify-between tw-gap-3">
-            <span class="tw-text-rose-300">{{localize "WH40K.Voidcraft.Boarding.NetDoS"}}</span>
-            <span class="tw-font-bold tw-text-rose-200">{{opposed.netDoS}}</span>
-        </li>
-    </ul>
+    {{#if round}}
+        {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=round.attackerTest}}
+        {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=round.defenderTest}}
+        <p class="tw-m-0 tw-mb-2 tw-text-[0.9rem] tw-font-semibold tw-text-rose-200">
+            {{localize "WH40K.Voidcraft.Boarding.Winner" winner=round.winnerName degrees=round.degrees}}
+        </p>
 
-    {{#if damage}}
-    <div class="tw-p-2 tw-mb-2 tw-rounded-sm tw-border tw-border-rose-500/50 tw-bg-[rgba(96,16,32,0.25)] tw-text-[0.85rem] tw-text-rose-100">
-        <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-rose-300 tw-mb-1">
-            {{localize "WH40K.Voidcraft.Boarding.DamageHeader"}}
-        </div>
-        <div class="tw-flex tw-justify-between tw-gap-3">
-            <span>{{localize "WH40K.Voidcraft.Boarding.HullDamage"}}</span>
-            <span class="tw-font-bold tw-text-rose-300">{{damage.hullDamage}}</span>
-        </div>
-        <div class="tw-flex tw-justify-between tw-gap-3">
-            <span>{{localize "WH40K.Voidcraft.Boarding.CrewDamage"}}</span>
-            <span class="tw-font-bold tw-text-rose-300">{{damage.crewDamage}}</span>
-        </div>
-        <div class="tw-flex tw-justify-between tw-gap-3">
-            <span>{{localize "WH40K.Voidcraft.Boarding.MoraleDamage"}}</span>
-            <span class="tw-font-bold tw-text-rose-300">{{damage.moraleDamage}}</span>
-        </div>
-    </div>
-    {{else if opposed.boardersLost}}
-    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-rose-700/60 tw-bg-[rgba(64,8,16,0.32)] tw-text-[0.85rem] tw-text-rose-200">
-        {{localize "WH40K.Voidcraft.Boarding.BoardersLostExplain"}}
-    </div>
-    {{else}}
-    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(56,189,248,0.4)] tw-bg-[rgba(14,116,144,0.18)] tw-text-[0.85rem] tw-text-[#e0f2fe]">
-        {{localize "WH40K.Voidcraft.Boarding.RepelledExplain"}}
-    </div>
+        {{#if damage}}
+            {{#if damage.hull}}{{> systems/wh40k-rpg/templates/chat/partial/ship-assault-damage.hbs damage=damage.hull}}{{/if}}
+            {{#if damage.crew}}{{> systems/wh40k-rpg/templates/chat/partial/ship-assault-damage.hbs damage=damage.crew}}{{/if}}
+            {{#if damage.morale}}{{> systems/wh40k-rpg/templates/chat/partial/ship-assault-damage.hbs damage=damage.morale}}{{/if}}
+        {{/if}}
+
+        {{#if morale}}
+            <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color)] tw-text-[0.85rem]">
+                <div>{{localize "WH40K.Voidcraft.Boarding.MoraleCheck" loser=morale.loserName roll=morale.roll morale=morale.value}}</div>
+                {{#if morale.fightsOn}}
+                    <div class="tw-font-semibold tw-text-amber-200">{{localize "WH40K.Voidcraft.Boarding.FightsOn"}}</div>
+                {{else}}
+                    <div class="tw-font-semibold tw-text-rose-400">{{localize "WH40K.Voidcraft.Boarding.Routs"}}</div>
+                {{/if}}
+            </div>
+        {{/if}}
+    {{/if}}
+
+    {{#if unapplied}}
+        <p class="tw-m-0 tw-mt-2 tw-text-[0.8rem] tw-italic tw-text-amber-200">{{localize "WH40K.Voidcraft.Assault.NotApplied"}}</p>
     {{/if}}
 </div>
