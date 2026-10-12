@@ -7,6 +7,7 @@ import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
+import { burnFateUpdate, type FateState } from '../../rules/fate.ts';
 import type { WH40KCharacteristic, WH40KSkill } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor, ContextMenuEntryLike, DialogV2Like, FoundryApplicationUXLike } from './application-types.ts';
 
@@ -495,10 +496,11 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
             });
 
             if (confirmed) {
-                const fate = (this.actor.system as { fate?: { total?: number } }).fate;
-                const currentTotal = fate?.total ?? 0;
-                if (currentTotal > 0) {
-                    await this.actor.update({ 'system.fate.total': currentTotal - 1 });
+                // Fate's total is `fate.max`; the schema has no separate total field (#42).
+                const fate = (this.actor.system as { fate?: FateState }).fate;
+                const burn = fate === undefined ? null : burnFateUpdate(fate);
+                if (burn !== null) {
+                    await this.actor.update(burn);
                     ui.notifications.warn(game.i18n.localize('WH40K.Notify.Fate.Burned'));
                 }
             }

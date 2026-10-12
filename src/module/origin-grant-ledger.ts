@@ -129,6 +129,17 @@ type ReconcilableResource = 'wounds' | 'fate' | 'fateThreshold' | 'corruption' |
 /** Per-resource `system.*` sub-paths the reverse-then-add writes for one applier. */
 export type ResourcePathMap = Partial<Record<ReconcilableResource, readonly string[]>>;
 
+/**
+ * Where `WH40KItem.applyOriginToActor` puts an origin's Wounds and Fate.
+ * Wounds raise the maximum. Fate raises the Fate total — `fate.max`, DH2's Fate
+ * threshold — and the current points with it, since a character starts with his
+ * full Fate. (The schema has no separate total field: #42.)
+ */
+export const ORIGIN_RESOURCE_PATHS = {
+    wounds: ['wounds.max'],
+    fate: ['fate.max', 'fate.value'],
+} as const satisfies ResourcePathMap;
+
 /** A single origin/grant's resource contribution, normalized for {@link reconcileResourceDeltas}. */
 export interface ResourceContribution {
     /** Characteristic advances keyed by characteristic id (e.g. `weaponSkill`). */
@@ -165,7 +176,7 @@ function valueAtPath(system: object, path: string): unknown {
  * `current − priorDelta + contribution`, so re-applying the same contribution
  * converges instead of stacking — the ledger idempotency invariant. The
  * resource→path map is a parameter, NOT collapsed: `applyOriginToActor` writes
- * `wounds.max` / `fate.total` only, while a resource-grant applier might write
+ * {@link ORIGIN_RESOURCE_PATHS}, while a resource-grant applier might write
  * `wounds.value`+`.max` / `fate.value`+`.max` plus threshold / corruption /
  * insanity — each passes its own {@link ResourcePathMap}. A resource's single
  * prior reverses across all of its configured sub-paths. Characteristics the

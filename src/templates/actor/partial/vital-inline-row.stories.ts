@@ -73,7 +73,7 @@ export const MentalCorruption: Story = {
     args: {
         icon: 'fa-skull',
         label: 'Corruption',
-        field: 'system.corruption.value',
+        field: 'system.corruption',
         current: 32,
         max: 100,
         rowClass: 'wh40k-mental-row',

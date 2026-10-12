@@ -23,6 +23,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { burnFateUpdate } from '../../rules/fate.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 
 /**
@@ -234,8 +235,50 @@ async function restoreFateImpl(this: Host, _event: Event, _target: HTMLElement):
 
 export const restoreFate = throttledAction('restoreFate', 500, restoreFateImpl);
 
+/**
+ * Burn Fate (RAW: the total drops by 1 and points above it are lost; possible
+ * even with no points left, so it is not gated on the current pool).
+ */
+async function burnFate(this: Host): Promise<void> {
+    const fate = this.actor.system.fate;
+    const burn = fate === undefined ? null : burnFateUpdate({ max: fate.max ?? 0, value: fate.value ?? 0 });
+    if (burn === null) {
+        this._notify('warning', game.i18n.localize('WH40K.Notify.Stat.NoFateAvailable'), { duration: 3000 });
+        return;
+    }
+    const confirmBurn = await ConfirmationDialog.confirm({
+        title: game.i18n.localize('WH40K.Notify.Stat.BurnFateTitle'),
+        content: game.i18n.localize('WH40K.Notify.Stat.BurnFateContent'),
+        confirmLabel: game.i18n.localize('WH40K.Notify.Stat.BurnFateConfirm'),
+        cancelLabel: game.i18n.localize('WH40K.Cancel'),
+    });
+    if (!confirmBurn) return;
+    await this.actor.update(burn);
+    await postFateMessage(this, game.i18n.format('WH40K.Notify.Stat.FateBurnedMessage', { actor: this.actor.name }));
+}
+
+/** Announce a Fate spend or burn in chat. */
+async function postFateMessage(host: Host, message: string): Promise<void> {
+    await ChatMessage.create({
+        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is assignment-compatible but getSpeaker expects the concrete Foundry type
+        speaker: ChatMessage.getSpeaker({ actor: host.actor as unknown as WH40KBaseActor }),
+        content: `
+            <div class="wh40k-fate-spend-message">
+                <div style="display: flex; align-items: center; gap: 8px; padding: 12px; background: rgba(196, 135, 29, 0.1); border-left: 3px solid #c4871d; border-radius: 4px;">
+                    <i class="fas fa-star" style="font-size: 1.5rem; color: #c4871d;"></i>
+                    <div>${message}</div>
+                </div>
+            </div>
+        `,
+    });
+}
+
 async function spendFateImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
     const action = target.dataset['fateAction'];
+    if (action === 'burn') {
+        await burnFate.call(this);
+        return;
+    }
     const currentFate = this.actor.system.fate?.value ?? 0;
 
     if (currentFate <= 0) {
@@ -251,39 +294,11 @@ async function spendFateImpl(this: Host, _event: Event, target: HTMLElement): Pr
         avoid: game.i18n.format('WH40K.Notify.Stat.FateSpentAvoid', { actor: this.actor.name }),
     };
 
-    let message: string;
-    if (action === 'burn') {
-        const confirmBurn = await ConfirmationDialog.confirm({
-            title: game.i18n.localize('WH40K.Notify.Stat.BurnFateTitle'),
-            content: game.i18n.localize('WH40K.Notify.Stat.BurnFateContent'),
-            confirmLabel: game.i18n.localize('WH40K.Notify.Stat.BurnFateConfirm'),
-            cancelLabel: game.i18n.localize('WH40K.Cancel'),
-        });
-        if (!confirmBurn) return;
-        message = game.i18n.format('WH40K.Notify.Stat.FateBurnedMessage', { actor: this.actor.name });
-        await this.actor.update({
-            'system.fate.max': Math.max(0, (this.actor.system.fate?.max ?? 0) - 1),
-        });
-    } else {
-        const mapped = action === undefined ? undefined : messages[action];
-        if (mapped === undefined) return;
-        message = mapped;
-    }
+    const message = action === undefined ? undefined : messages[action];
+    if (message === undefined) return;
 
     await this._updateSystemField('system.fate.value', currentFate - 1);
-
-    await ChatMessage.create({
-        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is assignment-compatible but getSpeaker expects the concrete Foundry type
-        speaker: ChatMessage.getSpeaker({ actor: this.actor as unknown as WH40KBaseActor }),
-        content: `
-            <div class="wh40k-fate-spend-message">
-                <div style="display: flex; align-items: center; gap: 8px; padding: 12px; background: rgba(196, 135, 29, 0.1); border-left: 3px solid #c4871d; border-radius: 4px;">
-                    <i class="fas fa-star" style="font-size: 1.5rem; color: #c4871d;"></i>
-                    <div>${message}</div>
-                </div>
-            </div>
-        `,
-    });
+    await postFateMessage(this, message);
 }
 
 export async function spendFate(this: Host, event: Event, target: HTMLElement): Promise<void> {

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { SYSTEM_ID } from './constants.ts';
 import {
     ORIGIN_GRANT_DELTAS_FLAG,
+    ORIGIN_RESOURCE_PATHS,
     type OriginAppliedDelta,
     deltaFromModifiers,
     type OriginIdentityItemLike,
@@ -128,12 +129,13 @@ describe('origin-grant-ledger: flag plumbing', () => {
 describe('origin-grant-ledger: reconcileResourceDeltas convergence (idempotency property)', () => {
     /**
      * Drive the real shared helper with the boot reconcile's
-     * (`WH40KItem.applyOriginToActor`) resource→path map: `wounds.max` /
-     * `fate.total` only, contribution derived from `deltaFromModifiers`. We assert
-     * the convergence invariant: once the ledger records an origin's delta,
-     * re-applying it is a no-op.
+     * (`WH40KItem.applyOriginToActor`) resource→path map, ORIGIN_RESOURCE_PATHS:
+     * `wounds.max` and Fate onto `fate.max` + `fate.value`, contribution derived
+     * from `deltaFromModifiers`. We assert the convergence invariant: once the
+     * ledger records an origin's delta, re-applying it is a no-op. `fate` here is
+     * the Fate total; the fixture starts each character with full Fate points.
      */
-    const ITEM_PATHS = { wounds: ['wounds.max'], fate: ['fate.total'] } as const;
+    const ITEM_PATHS = ORIGIN_RESOURCE_PATHS;
 
     interface ResourceState {
         wounds: number;
@@ -141,11 +143,15 @@ describe('origin-grant-ledger: reconcileResourceDeltas convergence (idempotency 
         characteristics: Record<string, number>;
     }
 
-    /** Build the `system` snapshot the helper reads (wounds.max / fate.total / characteristics.*.advance). */
-    function toSystem(state: ResourceState): { wounds: { max: number }; fate: { total: number }; characteristics: Record<string, { advance: number }> } {
+    /** Build the schema-shaped `system` snapshot the helper reads (wounds.max / fate.{max,value} / characteristics.*.advance). */
+    function toSystem(state: ResourceState): {
+        wounds: { max: number };
+        fate: { max: number; value: number; threshold: number };
+        characteristics: Record<string, { advance: number }>;
+    } {
         const characteristics: Record<string, { advance: number }> = {};
         for (const [k, advance] of Object.entries(state.characteristics)) characteristics[k] = { advance };
-        return { wounds: { max: state.wounds }, fate: { total: state.fate }, characteristics };
+        return { wounds: { max: state.wounds }, fate: { max: state.fate, value: state.fate, threshold: 0 }, characteristics };
     }
 
     /** Apply the helper's `system.*` update bag back onto a state snapshot (the actor.update() Foundry does for real). */
@@ -153,7 +159,9 @@ describe('origin-grant-ledger: reconcileResourceDeltas convergence (idempotency 
     function applyUpdates(state: ResourceState, updates: Record<string, unknown>): ResourceState {
         const next: ResourceState = { wounds: state.wounds, fate: state.fate, characteristics: { ...state.characteristics } };
         if (typeof updates['system.wounds.max'] === 'number') next.wounds = updates['system.wounds.max'];
-        if (typeof updates['system.fate.total'] === 'number') next.fate = updates['system.fate.total'];
+        // Fate total and current points move together from a full pool.
+        expect(updates['system.fate.value']).toBe(updates['system.fate.max']);
+        if (typeof updates['system.fate.max'] === 'number') next.fate = updates['system.fate.max'];
         // Every characteristic in these convergence cases is pre-seeded on the state, so replaying by known key covers all writes.
         for (const key of Object.keys(next.characteristics)) {
             const value = updates[`system.characteristics.${key}.advance`];
@@ -207,6 +215,16 @@ describe('origin-grant-ledger: reconcileResourceDeltas convergence (idempotency 
         const stamped = deltaFromModifiers(grantMods);
         const reconciled = reconcile(afterAbsoluteWrite, grantMods, stamped);
         expect(reconciled.next).toEqual(afterAbsoluteWrite);
+    });
+
+    it('lands origin Fate on the schema fields — fate.max and fate.value, never a phantom fate.total (#42)', () => {
+        const { updates } = reconcileResourceDeltas(
+            toSystem({ wounds: 10, fate: 2, characteristics: {} }),
+            { characteristics: {}, resources: { fate: 1 } },
+            {},
+            ITEM_PATHS,
+        );
+        expect(updates).toEqual({ 'system.fate.max': 3, 'system.fate.value': 3 });
     });
 
     it('changing selections re-bases off the recorded delta instead of stacking', () => {

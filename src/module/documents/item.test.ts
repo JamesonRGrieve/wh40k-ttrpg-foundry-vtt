@@ -48,7 +48,7 @@ function makeOriginActor(): {
         system: {
             characteristics: { willpower: { advance: 0 } },
             wounds: { max: 0 },
-            fate: { total: 0 },
+            fate: { max: 0, value: 0, threshold: 0 },
         },
         flags: {},
     };
@@ -66,8 +66,8 @@ function makeOriginActor(): {
         }),
         createEmbeddedDocuments: vi.fn(async () => Promise.resolve([])),
         readState() {
-            const sys = root['system'] as { characteristics: { willpower: { advance: number } }; wounds: { max: number }; fate: { total: number } };
-            return { wp: sys.characteristics.willpower.advance, wounds: sys.wounds.max, fate: sys.fate.total };
+            const sys = root['system'] as { characteristics: { willpower: { advance: number } }; wounds: { max: number }; fate: { max: number } };
+            return { wp: sys.characteristics.willpower.advance, wounds: sys.wounds.max, fate: sys.fate.max };
         },
     };
 }

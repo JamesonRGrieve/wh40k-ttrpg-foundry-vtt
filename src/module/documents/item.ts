@@ -1,6 +1,7 @@
 import { identifierFromNameIfBlank } from '../data/fields/identifier-utils.ts';
 import {
     deltaFromModifiers,
+    ORIGIN_RESOURCE_PATHS,
     originDeltaFlagPath,
     originIdentityKey,
     readOriginDelta,
@@ -1031,17 +1032,13 @@ export class WH40KItem extends WH40KItemContainer {
         const priorDelta = readOriginDelta(actor.flags, identityKey);
         const md = deltaFromModifiers(modifiers);
 
-        // Reverse-then-add reconcile via the shared origin-grant-ledger helper. This
-        // applier writes `wounds.max` / `fate.total` only — its resource→path map is a
-        // parameter so other appliers can write a different set of paths.
+        // Reverse-then-add reconcile via the shared origin-grant-ledger helper, onto
+        // this applier's own resource→path map (Fate onto `fate.max` + `fate.value`).
         const { updates: resourceUpdates, newDelta } = reconcileResourceDeltas(
             actor.system,
             { characteristics: md.characteristics, resources: { wounds: md.wounds, fate: md.fate } },
             priorDelta,
-            {
-                wounds: ['wounds.max'],
-                fate: ['fate.total'],
-            },
+            ORIGIN_RESOURCE_PATHS,
         );
         Object.assign(updates, resourceUpdates);
 

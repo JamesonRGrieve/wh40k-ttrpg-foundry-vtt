@@ -4923,7 +4923,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 resourceUpdate['system.wounds.value'] = woundsRolled;
             }
             if (fateRolled > 0) {
-                resourceUpdate['system.fate.total'] = fateRolled;
+                // The rolled Fate is the Fate total (`fate.max`, DH2's Fate threshold);
+                // the character starts with all of it. The schema has no separate total field (#42).
+                resourceUpdate['system.fate.max'] = fateRolled;
                 resourceUpdate['system.fate.value'] = fateRolled;
             }
             if (Object.keys(resourceUpdate).length > 0) {
