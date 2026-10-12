@@ -10,7 +10,7 @@ import { scaledMs } from './lib/timing';
  * Tier B coverage of per-sheet `static DEFAULT_OPTIONS.actions` handlers
  * defined uniquely on individual item-sheet classes under
  * `src/module/applications/item/*-sheet.ts`. The base-class action map
- * (`editImage`, `toggleEditMode`, `effectCreate`, `effectEdit`,
+ * (`editImage`, `toggleEditMode`, `createEffect`, `effectEdit`,
  * `effectDelete`, `effectToggle`, `toggleSection`) is already exercised
  * by `sheet-mixins.spec.ts`; the simple-factory sheets
  * (`critical-injury-sheet`, `skill-sheet`) are already covered by

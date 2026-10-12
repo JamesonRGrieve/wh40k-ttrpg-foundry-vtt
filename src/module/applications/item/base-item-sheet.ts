@@ -13,6 +13,7 @@ import type { EffectsOwner } from '../api/effect-actions.ts';
 import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.ts';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
+import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -72,7 +73,7 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
         actions: {
             editImage: BaseItemSheet.#onEditImage,
             toggleEditMode: BaseItemSheet.#toggleEditMode,
-            effectCreate: BaseItemSheet.#effectCreate,
+            createEffect: BaseItemSheet.#createEffect,
             effectEdit: EffectActions.effectEdit,
             effectDelete: EffectActions.effectDelete,
             effectToggle: EffectActions.effectToggle,
@@ -425,11 +426,12 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
     /* -------------------------------------------- */
 
     /**
-     * Handle creating an effect. Item effects carry an `origin` back-ref and
-     * default disabled; the shared primitive owns the create call.
+     * Handle creating an effect: open the same effect-creation dialog the actor
+     * sheets use, on this item, with the item's `origin` back-reference laid under
+     * the built effect. Dismissal creates nothing.
      */
-    static async #effectCreate(this: BaseItemSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        await EffectActions.createEffect(this.effectsOwner, { origin: this.item.uuid, disabled: true }, { renderSheet: true });
+    static async #createEffect(this: BaseItemSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        await EffectCreationDialog.show(this.effectsOwner, { origin: this.item.uuid });
     }
 
     /* -------------------------------------------- */

@@ -3,16 +3,27 @@
  * Streamlined, thematic dialog for creating Active Effects in WH40K RPG
  */
 
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { bearerLine, conditionEffectData, conditionPickerRows, type EffectDataInput, type EffectDuration } from '../../rules/condition-registry.ts';
 import { capitalize } from '../../utils/format.ts';
 import type { SupportedLineKey } from '../../utils/item-variant-utils.ts';
+import type { ActiveEffectLike, EffectsOwner } from '../api/effect-actions.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
 
 const { DialogV2 } = foundry.applications.api;
 
+/**
+ * Fields laid under every payload the dialog builds. An item sheet passes the
+ * item's `origin` back-reference, so an effect authored on an item records where
+ * it came from once the item's effects transfer to an actor.
+ */
+export interface EffectCreationDefaults {
+    origin?: string | null;
+}
+
 interface EffectCreationDialogOptions {
-    actor: WH40KBaseActor;
+    /** The actor or item that receives the effect (the sheet's `effectsOwner`). */
+    owner: EffectsOwner;
+    defaults: EffectCreationDefaults;
 }
 
 /**
@@ -61,13 +72,14 @@ interface CustomEffectPayload {
 }
 
 export default class EffectCreationDialog extends DialogV2 {
-    declare actor: WH40KBaseActor;
+    declare owner: EffectsOwner;
+    declare defaults: EffectCreationDefaults;
     declare selectedCategory: string;
     declare element: HTMLElement;
     declare submit: () => Promise<void>;
 
     /** Promise-resolution plumbing (#287); dismissal without a submit resolves null. */
-    readonly #resolution = new DialogResolution<ActiveEffect | null>(null);
+    readonly #resolution = new DialogResolution<ActiveEffectLike | null>(null);
 
     /** @override */
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
@@ -123,12 +135,14 @@ export default class EffectCreationDialog extends DialogV2 {
     };
 
     /**
-     * Create and render the dialog
-     * @param {WH40KBaseActor} actor     The target actor
-     * @returns {Promise<ActiveEffect|null>}
+     * Create and render the dialog.
+     * @param owner     The document that receives the effect: an actor, or an item
+     *                  (whose effects transfer to the actor that later owns it).
+     * @param defaults  Fields merged under every built payload, e.g. an item
+     *                  effect's `origin` back-reference.
      */
-    static async show(actor: WH40KBaseActor): Promise<ActiveEffect | null> {
-        const dialog = new this({ actor });
+    static async show(owner: EffectsOwner, defaults: EffectCreationDefaults = {}): Promise<ActiveEffectLike | null> {
+        const dialog = new this({ owner, defaults });
         // Track resolution before rendering; resolved on submit, or null via close()→resolveDefault() on dismiss.
         const result = dialog.#resolution.track();
         // eslint-disable-next-line @typescript-eslint/no-floating-promises -- render returns a Promise but the dialog lifecycle is awaited via #resolution
@@ -139,7 +153,8 @@ export default class EffectCreationDialog extends DialogV2 {
     constructor(options: EffectCreationDialogOptions) {
         // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 constructor accepts Record<string,unknown>; EffectCreationDialogOptions is structurally compatible
         super(options as unknown as Record<string, unknown>);
-        this.actor = options.actor;
+        this.owner = options.owner;
+        this.defaults = options.defaults;
         this.selectedCategory = 'custom';
     }
 
@@ -152,13 +167,12 @@ export default class EffectCreationDialog extends DialogV2 {
         const context: Record<string, unknown> = {};
         /* eslint-enable no-restricted-syntax */
 
-        context['actor'] = this.actor;
         context['selectedCategory'] = this.selectedCategory;
 
         // Conditions come from the condition compendium documents (#495), resolved
-        // for this actor's line — the same catalog the token HUD and crit riders
+        // for the owner's line — the same catalog the token HUD and crit riders
         // apply from, so a condition picked here is the same document.
-        context['conditions'] = conditionPickerRows(bearerLine(this.actor));
+        context['conditions'] = conditionPickerRows(bearerLine(this.owner));
 
         // Characteristics
         context['characteristics'] = [
@@ -236,7 +250,7 @@ export default class EffectCreationDialog extends DialogV2 {
         const Ctor = this.constructor as typeof EffectCreationDialog;
         // Handle based on effect type
         if (data.effectType === 'condition') {
-            effectData = Ctor._createConditionData(data, bearerLine(this.actor));
+            effectData = Ctor._createConditionData(data, bearerLine(this.owner));
         } else if (data.effectType === 'characteristic') {
             effectData = Ctor._createCharacteristicData(data);
         } else if (data.effectType === 'skill') {
@@ -254,11 +268,9 @@ export default class EffectCreationDialog extends DialogV2 {
             return;
         }
 
-        // Create the effect
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect.createEmbeddedDocuments accepts Record<string,unknown>; EffectPayload/CustomEffectPayload are structurally valid creation payloads but the framework method is untyped
-        const effects = await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData as unknown as Record<string, unknown> & { name: string }]);
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess: effects[0] is Document|undefined; cast to ActiveEffect|null after null-coalescing guard
-        this.#resolution.resolve((effects[0] ?? null) as ActiveEffect | null);
+        // Create the effect on the owner (actor or item), with the caller's defaults underneath.
+        const created = await this.owner.createEmbeddedDocuments('ActiveEffect', [{ ...this.defaults, ...effectData }]);
+        this.#resolution.resolve(created[0] ?? null);
     }
 
     /* -------------------------------------------- */

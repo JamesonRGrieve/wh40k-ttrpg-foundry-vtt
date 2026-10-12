@@ -4,8 +4,8 @@
  * These previously lived as #-prefixed static methods triplicated across
  * CharacterSheet / BaseActorSheet / BaseItemSheet. The tests stub the
  * structural owner / effect shapes and verify the resolve-then-act mechanic:
- * id resolution (closest + self fallback), create payload merge, and the
- * edit / delete / toggle dispatches.
+ * id resolution (closest + self fallback) and the edit / delete / toggle
+ * dispatches. Creation goes through EffectCreationDialog (#516).
  */
 
 import { describe, expect, it, vi } from 'vitest';
@@ -73,24 +73,6 @@ describe('resolveEffect', () => {
     it('returns undefined for unknown / missing id', () => {
         expect(EffectActions.resolveEffect(makeOwner(makeEffect()), targetWith('nope'))).toBeUndefined();
         expect(EffectActions.resolveEffect(makeOwner(makeEffect()), targetWith(null))).toBeUndefined();
-    });
-});
-
-describe('createEffect', () => {
-    it('merges caller overrides over the defaults and forwards the operation', async () => {
-        // The default name is a langpack key; echo keys so the assertion names it.
-        vi.stubGlobal('game', { i18n: { localize: (key: string): string => key } });
-        try {
-            const owner = makeOwner();
-            await EffectActions.createEffect(owner, { origin: owner.uuid, disabled: true }, { renderSheet: true });
-            expect(owner.createEmbeddedDocuments).toHaveBeenCalledWith(
-                'ActiveEffect',
-                [{ name: 'WH40K.ActiveEffect.NewEffect', img: 'icons/svg/aura.svg', origin: 'Item.abc', disabled: true }],
-                { renderSheet: true },
-            );
-        } finally {
-            vi.unstubAllGlobals();
-        }
     });
 });
 

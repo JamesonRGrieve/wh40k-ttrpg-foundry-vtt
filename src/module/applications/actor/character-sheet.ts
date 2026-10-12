@@ -6084,7 +6084,7 @@ export default class CharacterSheet extends BaseActorSheet {
             // The effect-creation dialog builds a real effect (a line-resolved
             // condition, or a characteristic / skill / combat modifier with its
             // duration) instead of a blank, change-less one. Dismissal creates nothing.
-            const effect = await EffectCreationDialog.show(this.actor);
+            const effect = await EffectCreationDialog.show(this.effectsOwner);
             if (effect === null) return;
 
             this._notify('info', game.i18n.localize('WH40K.Notify.CharacterSheet.EffectCreated'), {

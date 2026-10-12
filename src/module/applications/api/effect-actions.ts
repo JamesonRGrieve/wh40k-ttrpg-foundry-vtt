@@ -20,7 +20,8 @@
  * The sheet must expose an `effectsOwner` accessor (the Actor or Item that owns
  * the ActiveEffect collection). Sheets that layer their own UX (toast
  * notifications, delete confirmation — e.g. CharacterSheet) call the lower
- * level `resolveEffect` / `createEffect` primitives directly instead.
+ * level `resolveEffect` primitive directly instead. Creation is not here: every
+ * sheet's "Create Effect" opens `EffectCreationDialog` on its `effectsOwner`.
  */
 
 /* eslint-disable no-restricted-syntax -- boundary: structural adapters over Foundry's untyped ActiveEffect / Document API */
@@ -38,7 +39,12 @@ export interface ActiveEffectLike {
 export interface EffectsOwner {
     uuid: string;
     effects: { get: (id: string) => ActiveEffectLike | undefined };
-    createEmbeddedDocuments: (type: 'ActiveEffect', data: ReadonlyArray<Record<string, unknown>>, operation?: Record<string, unknown>) => Promise<unknown>;
+    /** Resolves to the created effects (a pre-create veto omits its entry). */
+    createEmbeddedDocuments: (
+        type: 'ActiveEffect',
+        data: ReadonlyArray<Record<string, unknown>>,
+        operation?: Record<string, unknown>,
+    ) => Promise<ReadonlyArray<ActiveEffectLike>>;
 }
 
 /** The sheet shape these `this`-typed actions expect. */
@@ -62,19 +68,6 @@ export function effectIdFromTarget(target: HTMLElement): string | undefined {
 export function resolveEffect(owner: EffectsOwner, target: HTMLElement): ActiveEffectLike | undefined {
     const effectId = effectIdFromTarget(target);
     return effectId !== undefined ? owner.effects.get(effectId) : undefined;
-}
-
-/** Create an ActiveEffect on the owner, merging caller overrides over defaults. */
-export async function createEffect(
-    owner: EffectsOwner,
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect creation payload is a free-form Foundry data bag
-    overrides: Record<string, unknown> = {},
-    // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments operation options are an opaque Foundry bag
-    operation?: Record<string, unknown>,
-    // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments resolves to an opaque Foundry document result
-): Promise<unknown> {
-    const data = { name: game.i18n.localize('WH40K.ActiveEffect.NewEffect'), img: 'icons/svg/aura.svg', ...overrides };
-    return owner.createEmbeddedDocuments('ActiveEffect', [data], operation);
 }
 
 /** Open the ActiveEffect's own sheet for editing. */

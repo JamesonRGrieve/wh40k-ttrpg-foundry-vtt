@@ -33,7 +33,7 @@ import { scaledMs } from './lib/timing';
  *   - src/module/applications/api/context-menu-mixin.ts
  *     (WH40KContextMenu.triggerEvent contextmenu re-dispatch).
  *   - src/module/applications/api/effect-actions.ts (effectIdFromTarget,
- *     resolveEffect, createEffect, effectToggle, effectDelete).
+ *     resolveEffect, effectToggle, effectDelete).
  *   - src/module/applications/api/item-target.ts (itemIdFromTarget closest
  *     + dataset fallback + empty-id rejection).
  *   - src/module/applications/components/active-modifiers-panel.ts
@@ -754,7 +754,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
         /* ============================================================
          * Flow 14: effect-actions-crud
          * Drive the effect-actions free functions against the real
-         * PC actor: createEffect → resolveEffect (via a target
+         * PC actor: seed an effect → resolveEffect (via a target
          * carrying data-effect-id) → effectToggle (disabled flip) →
          * effectDelete. Assert each step round-trips through the
          * Foundry ActiveEffect collection.
@@ -767,7 +767,6 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
             interface EffectActionsModule {
                 effectIdFromTarget: (target: HTMLElement) => string | undefined;
                 resolveEffect: (actor: ProbeActor, target: HTMLElement) => ProbeEffect | null | undefined;
-                createEffect: (actor: ProbeActor, data: object) => Promise<ProbeEffect[] | null>;
                 effectToggle: (this: { effectsOwner: ProbeActor }, event: Event, target: HTMLElement) => Promise<void>;
                 effectDelete: (this: { effectsOwner: ProbeActor }, event: Event, target: HTMLElement) => Promise<void>;
             }
@@ -778,11 +777,12 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
                 } else {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
                     const mod = (await import(`${base}/applications/api/effect-actions.js`)) as unknown as EffectActionsModule;
-                    const { effectIdFromTarget, resolveEffect, createEffect, effectToggle, effectDelete } = mod;
-                    const created = await withTimeout(createEffect(live, { name: 'probe-effect' }), 'createEffect');
-                    const effect: ProbeEffect | null = created != null ? created.at(0) ?? null : null;
+                    const { effectIdFromTarget, resolveEffect, effectToggle, effectDelete } = mod;
+                    // Creation is the EffectCreationDialog's job (#516); seed the effect directly.
+                    const created = await withTimeout(live.createEmbeddedDocuments('ActiveEffect', [{ name: 'probe-effect' }]), 'createEmbeddedDocuments');
+                    const effect: ProbeEffect | null = created.at(0) ?? null;
                     if (effect?.id == null) {
-                        notes['effect-actions-crud'] = 'createEffect did not return an ActiveEffect';
+                        notes['effect-actions-crud'] = 'createEmbeddedDocuments did not return an ActiveEffect';
                     } else {
                         const target = document.createElement('div');
                         target.dataset['effectId'] = effect.id;
