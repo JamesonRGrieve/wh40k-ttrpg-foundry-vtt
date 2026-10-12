@@ -1601,6 +1601,10 @@
                 "Name": "Warband Subtlety Pool",
                 "Hint": "The single warband-wide Subtlety value (DH2) shared by every acolyte. Edited from any acolyte's Subtlety stepper rather than this menu; changing it updates the shared pool and re-renders all open character sheets."
             },
+            "WarbandInquests": {
+                "Name": "Warband Inquests",
+                "Hint": "The warband's Inquests (DH2), stored as data. Edited from the GM Inquest tracker on any acolyte's Party Overview rather than this menu."
+            },
             "WorldTimeInception": {
                 "Name": "Campaign Inception (World Time)",
                 "Hint": "The world-time stamp, in seconds, treated as Day 0 for the day-since-inception counter. Day 0 is the campaign/mission inception and is fixed once at campaign start — it is not re-anchorable from the world-time widget."
@@ -2719,6 +2723,71 @@
                 "Fettered": "Fettered",
                 "Unfettered": "Unfettered",
                 "Push": "Push"
+            }
+        },
+        "Daemonology": {
+            "PanelTitle": "Daemonology",
+            "Factor": {
+                "MasteryBase": "Daemonic Mastery (Very Hard)",
+                "TrueName": "The Daemon's True Name is known",
+                "PatronServant": "Servant of the Daemon's patron Chaos God",
+                "AgainstNature": "Ordered to act against its nature",
+                "Circumstance": "GM circumstance",
+                "Hellish": "Summoning ritual (Hellish)",
+                "SelfExorcism": "The possessed individual is also the exorcist",
+                "NoProperTools": "The exorcist lacks the proper tools",
+                "HigherInfluence": "The Daemon's Influence is higher than the exorcist's",
+                "WeakVeil": "The veil is weak (tainted ground, a ship in the Warp)",
+                "SacredGround": "The exorcism occurs on sacred ground",
+                "LorePreparation": "Forbidden Lore (Daemonology) preparation"
+            },
+            "Dialog": {
+                "Lore": "Forbidden Lore (Daemonology)",
+                "Willpower": "Willpower",
+                "Fatigue": "Fatigue",
+                "CircumstanceLabel": "Other circumstance",
+                "CircumstancePlaceholder": "e.g. relic, sacrifice, assistants",
+                "CircumstanceValue": "Modifier"
+            },
+            "Card": {
+                "LoreBase": "Forbidden Lore (Daemonology)",
+                "WillpowerBase": "Willpower",
+                "LoreTest": "Forbidden Lore (Daemonology) test",
+                "MasteryTest": "Daemonic Mastery test",
+                "Roll": "Roll",
+                "Degrees": "Degrees",
+                "Hours": "Hours",
+                "Fatigue": "Fatigue",
+                "DoS": "{value} DoS",
+                "DoF": "{value} DoF",
+                "DosTotal": "Degrees of success",
+                "DosAgainstThreshold": "{total} (must exceed {threshold})",
+                "TotalHours": "Hours spent",
+                "FatigueGained": "Fatigue suffered",
+                "RollAgainst": "Rolled {roll} against {target}"
+            },
+            "Exorcism": {
+                "DialogTitle": "Perform an Exorcism",
+                "DialogIntro": "An Extended Daemonic Mastery test: the Daemon is cast out once the degrees of success exceed its Willpower bonus plus the possessed individual's Corruption bonus. Each failure costs 1 Fatigue per degree of failure.",
+                "HostTargeted": "Possessed individual: {name}",
+                "NoHostTargeted": "No possessed individual targeted — target their token to roll their survival test automatically.",
+                "DaemonWillpowerBonus": "Daemon's Willpower bonus",
+                "PossessedCorruptionBonus": "Possessed Corruption bonus",
+                "ModifiersLegend": "Exorcism modifiers (Table 2–21)",
+                "Perform": "Perform Exorcism",
+                "PerformTitle": "Drive a possessing Daemon out of its host (Enemies Beyond p. 71). Target the possessed individual's token first.",
+                "ChatTitle": "Exorcism",
+                "ChatSubject": "{exorcist} attempts to cast the Daemon out of {host}.",
+                "ChatSubjectNoHost": "{exorcist} attempts an exorcism.",
+                "Banished": "The Daemon is cast out.",
+                "HostTest": "Survival — Challenging (+0) Toughness: rolled {roll} against {target}",
+                "HostSurvives": "the host survives.",
+                "HostDies": "the host dies (unless Fate Threshold is burned).",
+                "HostTestManual": "The possessed individual must pass a Challenging (+0) Toughness test or die (Fate Threshold may be burned).",
+                "TrackCleared": "The host's possession track is cleared.",
+                "SurvivingPossession": "Surviving Possession consequences apply (Enemies Beyond p. 71).",
+                "Collapsed": "The exorcist loses consciousness — the exorcism fails.",
+                "CorruptionGained": "The exorcist gains {value} Corruption."
             }
         },
         "Cybernetics": {
@@ -4012,6 +4081,70 @@
         },
         "PartyOverview": {
             "Header": "Party Overview"
+        },
+        "Inquest": {
+            "PanelHeader": "Inquests",
+            "OpenTracker": "Inquest tracker",
+            "TrackerTitle": "Inquest Tracker",
+            "GmOnly": "Only the GM can edit the warband's Inquests.",
+            "Intro": "The warband's targeted investigations. Each clue adds Investigation points; reaching a Revelation threshold posts a chat card. Resolve an Inquest to post each Acolyte's Influence reward.",
+            "Empty": "No Inquests under way.",
+            "Add": "New Inquest",
+            "Save": "Save",
+            "Remove": "Remove Inquest",
+            "RemoveTitle": "Remove Inquest",
+            "RemoveConfirm": "Remove this Inquest and its Investigation point record?",
+            "Reopen": "Reopen",
+            "Target": "Target heresy",
+            "Objective": "Objective",
+            "Requirements": "Requirements",
+            "LeadInvestigator": "Lead investigator",
+            "ScopeLabel": "Scope",
+            "ScopeOption": "{scope} ({points} IP)",
+            "ApproachLabel": "Approach",
+            "Points": "Investigation points",
+            "ExtraRequired": "Added IP requirement",
+            "ExtraRequiredHint": "Investigation points added to the scope total, e.g. +200 for the Catspaws complication.",
+            "Thresholds": "Revelation thresholds",
+            "ThresholdsHint": "Comma-separated IP totals for each Revelation before the last. Leave blank for one Revelation every 300 IP. The completion total is always the final Revelation.",
+            "ThresholdsPlaceholder": "e.g. 200, 500",
+            "Progress": "{points} / {required} IP",
+            "RevelationsReached": "Revelations {reached} / {count}",
+            "AddClue": "Clue",
+            "LeadRelevant": "Relevant to the lead investigator (+{bonus})",
+            "LeadTest": "Lead test",
+            "LeadDoS": "+1 DoS (+{points})",
+            "LeadDoF": "+1 DoF (−{points})",
+            "ResolveMet": "Resolve: goals met",
+            "ResolveFailed": "Resolve: goals failed",
+            "ChatSpeaker": "Inquest",
+            "ChatRevelationTitle": "Revelation",
+            "ChatResolutionTitle": "Inquest resolved",
+            "RevelationReached": "Revelation {revelation} of {count}",
+            "FinalRevelation": "Final Revelation — the last Confrontation awaits",
+            "ScopeReward": "Scope reward",
+            "SurplusBonus": "Surplus Investigation points",
+            "ShortfallPenalty": "Investigation point shortfall",
+            "InfluencePerAcolyte": "Influence per Acolyte",
+            "Scope": {
+                "minoris": "Hereticus Minoris",
+                "majoris": "Hereticus Majoris",
+                "extremis": "Hereticus Extremis"
+            },
+            "Approach": {
+                "covert": "Covert",
+                "open": "Open"
+            },
+            "Clue": {
+                "minor": "Minor",
+                "major": "Major",
+                "vital": "Vital"
+            },
+            "Status": {
+                "active": "Under way",
+                "goalsMet": "Resolved — goals met",
+                "goalsFailed": "Resolved — goals failed"
+            }
         },
         "SubtletyPanel": {
             "Header": "Subtlety",
@@ -6727,6 +6860,11 @@
                 "Location": "Location",
                 "Relations": "Relations"
             },
+            "Graph": {
+                "All": "All",
+                "Campaign": "Campaign",
+                "FilterLabel": "Show events from"
+            },
             "Setting": {
                 "CampaignDayName": "Event Tracker Campaign Day",
                 "CampaignDayHint": "The current campaign day shown on the Event Tracker.",
@@ -6780,7 +6918,44 @@
         "SceneControls": {
             "GroupTitle": "WH40K RPG",
             "EventTracker": "Event Tracker",
-            "BatchXP": "Award XP"
+            "BatchXP": "Award XP",
+            "Hazard": "Environmental Hazards"
+        },
+        "Hazard": {
+            "DialogTitle": "Environmental Hazard",
+            "GmOnly": "Only the GM can resolve environmental hazards.",
+            "KindLabel": "Hazard",
+            "SubjectsLabel": "Selected tokens",
+            "NoSubjects": "Select the tokens the hazard befalls on the canvas, then reopen this dialog.",
+            "Unsupported": "No rule for this game line",
+            "Resolve": "Resolve Hazard",
+            "Apply": "Apply Damage",
+            "Falling": {
+                "Title": "Falling",
+                "Subtitle": "Fell {metres} m",
+                "MetresLabel": "Distance fallen (metres)",
+                "Hint": "Impact damage to a random hit location; Armour offers no protection, Toughness Bonus still applies.",
+                "NoDamage": "Too short to harm",
+                "Damage": "Falling Damage",
+                "Caption": "{formula} {type} · ignores Armour",
+                "Die": "1d10",
+                "MetreBonus": "+1 per metre ({metres} m)",
+                "TableBonus": "Falling Damage table ({metres} m)"
+            },
+            "Suffocation": {
+                "Title": "Suffocation",
+                "Subtitle": "Toughness Bonus {tb}",
+                "StrenuousLabel": "Strenuous activity (combat, swimming) rather than conserving oxygen",
+                "StrenuousUnsupported": "This game line gives only the conserving-oxygen allotment.",
+                "Allotment": "Breath held",
+                "Minutes": "{count} minutes",
+                "Rounds": "{count} rounds",
+                "TestEachMinute": "Each minute: Challenging (+0) Toughness test; failure costs {fatigue} level of Fatigue.",
+                "TestEachRound": "Each round: Challenging (+0) Toughness test; failure costs {fatigue} level of Fatigue.",
+                "Unconscious": "Without fresh oxygen by the end of that time, the character falls Unconscious.",
+                "DiesAfter": "Unconscious and still deprived of oxygen, the character dies after {rounds} rounds.",
+                "DamagePerRound": "Unconscious and still deprived of oxygen, the character suffers {formula} damage each round, ignoring Armour and Toughness, until dead."
+            }
         },
         "XP": {
             "BatchTitle": "Award XP to Characters",

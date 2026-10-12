@@ -1,0 +1,30 @@
+{{!--
+    Suffocation hazard card (#118) — posted per subject by the GM hazard dialog.
+    States the subject's breath allotment (from his Toughness Bonus and activity,
+    per his own game line), the per-interval Challenging (+0) Toughness test and
+    its Fatigue cost, and what follows once the allotment runs out.
+
+    Context: actor ({uuid, name}), gameSystem, toughnessBonus, allotmentCount,
+    isRounds, strenuousUnsupported, diesAfterTbRounds, roundsUntilDeath,
+    endgameDamage, fatigue, appliedCondition.
+--}}
+{{#> systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs actorName=actor.name titleKey="WH40K.Hazard.Suffocation.Title" subtitle=(localize "WH40K.Hazard.Suffocation.Subtitle" tb=toughnessBonus) gameSystem=gameSystem}}
+    <div class="tw-flex tw-justify-between tw-items-center tw-px-[14px] tw-py-[10px] tw-my-2 tw-bg-[var(--wh40k-warning-bg)] tw-border-l-[3px] tw-border-l-[var(--wh40k-warning-primary)] tw-rounded-r-[4px]">
+        <span class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-warning-secondary)]">{{localize "WH40K.Hazard.Suffocation.Allotment"}}</span>
+        <span class="tw-text-[1.1rem] tw-font-bold tw-text-[color:var(--wh40k-text-dark)]">{{#if isRounds}}{{localize "WH40K.Hazard.Suffocation.Rounds" count=allotmentCount}}{{else}}{{localize "WH40K.Hazard.Suffocation.Minutes" count=allotmentCount}}{{/if}}</span>
+    </div>
+
+    {{#if strenuousUnsupported}}
+        <p class="tw-m-0 tw-my-2 tw-text-[0.8rem] tw-italic tw-text-[var(--wh40k-card-muted)]">{{localize "WH40K.Hazard.Suffocation.StrenuousUnsupported"}}</p>
+    {{/if}}
+
+    <ul class="tw-m-0 tw-my-2 tw-pl-5 tw-text-[0.85rem] tw-leading-[1.5]">
+        <li>{{#if isRounds}}{{localize "WH40K.Hazard.Suffocation.TestEachRound" fatigue=fatigue}}{{else}}{{localize "WH40K.Hazard.Suffocation.TestEachMinute" fatigue=fatigue}}{{/if}}</li>
+        <li>{{localize "WH40K.Hazard.Suffocation.Unconscious"}}</li>
+        <li>{{#if diesAfterTbRounds}}{{localize "WH40K.Hazard.Suffocation.DiesAfter" rounds=roundsUntilDeath}}{{else}}{{localize "WH40K.Hazard.Suffocation.DamagePerRound" formula=endgameDamage}}{{/if}}</li>
+    </ul>
+
+    {{#if appliedCondition}}
+        <p class="tw-m-0 tw-my-2 tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-danger-secondary)]">{{localize "WH40K.Condition.Tick.ConditionApplied" condition=appliedCondition}}</p>
+    {{/if}}
+{{/systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs}}

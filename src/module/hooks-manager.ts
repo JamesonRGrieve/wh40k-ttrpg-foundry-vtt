@@ -328,6 +328,18 @@ export class HooksManager {
                 button: true,
                 order: order++,
             };
+            // #118: falling / suffocation for the selected tokens, per their own game line.
+            tools['hazard'] = {
+                name: 'hazard',
+                title: 'WH40K.SceneControls.Hazard',
+                icon: 'fa-solid fa-person-falling',
+                visible: game.user.isGM,
+                onChange: () => {
+                    void import('./applications/prompts/hazard-dialog.ts').then(({ openHazardDialog }) => openHazardDialog());
+                },
+                button: true,
+                order: order++,
+            };
             controls['wh40k'] = {
                 name: 'wh40k',
                 title: 'WH40K.SceneControls.GroupTitle',
@@ -1373,6 +1385,8 @@ export class HooksManager {
         // Foundry serves to every authenticated client). On a player client the
         // document is simply absent, which is the intended outcome.
         await EventTracker.loadGraph();
+        // #592: imported Adventures carry their own event graphs; reload when one is imported.
+        EventTracker.watchAdventureImports();
         // #591: resolve tracker events from game state (item, death, status, scene and
         // chained-event triggers authored on the graph). Acts only on the active GM.
         registerEventCompletionHooks();

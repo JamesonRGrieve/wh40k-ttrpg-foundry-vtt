@@ -1,0 +1,67 @@
+{{!-- Environmental hazard dialog (#118) — GM-only. --}}
+{{!-- Resolve a fall or suffocation for the selected tokens' actors, each against its own game line. --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]">
+
+    {{!-- Hazard picker --}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4">
+        <label for="wh40k-hazard-kind" class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
+            {{localize "WH40K.Hazard.KindLabel"}}
+        </label>
+        <select id="wh40k-hazard-kind" name="kind"
+                class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold">
+            {{#each kinds}}
+                <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{localize this.labelKey}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    {{!-- Hazard inputs --}}
+    {{#if isFalling}}
+        <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4">
+            <label for="wh40k-hazard-metres" class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
+                {{localize "WH40K.Hazard.Falling.MetresLabel"}}
+            </label>
+            <input id="wh40k-hazard-metres" type="number" name="metres" value="{{metres}}" min="0" step="1" data-dtype="Number"
+                   class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
+            <p class="tw-m-0 tw-text-[0.75rem] tw-italic tw-text-[#9a9a8a]">{{localize "WH40K.Hazard.Falling.Hint"}}</p>
+        </div>
+    {{else}}
+        <label class="tw-flex tw-items-center tw-gap-2 tw-mb-4 tw-cursor-pointer">
+            <input type="checkbox" name="strenuous" {{#if strenuous}}checked{{/if}} class="tw-w-4 tw-h-4 tw-cursor-pointer tw-accent-[var(--wh40k-color-gold)]" />
+            <span class="tw-text-[0.85rem]">{{localize "WH40K.Hazard.Suffocation.StrenuousLabel"}}</span>
+        </label>
+    {{/if}}
+
+    {{!-- Subjects: the selected tokens --}}
+    <div class="tw-mb-2 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Hazard.SubjectsLabel"}}</div>
+    {{#if subjects.length}}
+        <ul class="tw-list-none tw-m-0 tw-p-2 tw-flex tw-flex-col tw-gap-1 tw-max-h-[220px] tw-overflow-y-auto tw-bg-[rgba(0,0,0,0.2)] tw-rounded-md" aria-label="{{localize 'WH40K.Hazard.SubjectsLabel'}}">
+            {{#each subjects}}
+                <li class="tw-flex tw-items-center tw-gap-2 tw-p-1.5 tw-rounded">
+                    <img src="{{this.img}}" alt="{{this.name}}" class="tw-w-6 tw-h-6 tw-rounded tw-object-cover tw-border tw-border-[rgba(201,162,39,0.3)]" />
+                    <span class="tw-text-[0.85rem] tw-font-medium">{{this.name}}</span>
+                    <span class="tw-ml-auto tw-text-[0.75rem] tw-tabular-nums tw-text-[#9a9a8a]">
+                        {{#unless this.supported}}
+                            {{localize "WH40K.Hazard.Unsupported"}}
+                        {{else if ../isFalling}}
+                            {{#if this.formula}}{{this.formula}}{{else}}{{localize "WH40K.Hazard.Falling.NoDamage"}}{{/if}}
+                        {{else}}
+                            {{#if (eq this.allotmentUnit "round")}}{{localize "WH40K.Hazard.Suffocation.Rounds" count=this.allotmentCount}}{{else}}{{localize "WH40K.Hazard.Suffocation.Minutes" count=this.allotmentCount}}{{/if}}
+                        {{/unless}}
+                    </span>
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p class="tw-m-0 tw-p-3 tw-text-[0.85rem] tw-italic tw-text-[#9a9a8a] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-md">{{localize "WH40K.Hazard.NoSubjects"}}</p>
+    {{/if}}
+
+    {{> systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs
+        rootClass="tw-border-[rgba(201,162,39,0.2)]"
+        confirmAction="resolve"
+        confirmIcon="fa-dice-d20"
+        confirmLabelKey="WH40K.Hazard.Resolve"
+        confirmDisabled=cannotResolve
+        confirmDisabledClass="tw-opacity-50 tw-cursor-not-allowed"}}
+
+</div>

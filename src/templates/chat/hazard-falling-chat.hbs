@@ -1,0 +1,30 @@
+{{!--
+    Falling hazard card (#118) — posted per subject by the GM hazard dialog.
+    The rolled damage is hoverable (die + the line's per-metre / table bonus)
+    through the shared `modifier` rich tooltip, and the apply button routes the
+    hit through the standard damage-assignment path (armour ignored, Toughness
+    Bonus of the struck location still applies).
+
+    Context: actor ({uuid, name}), gameSystem, metres, formula, damage,
+    damageType, location (hit-location id), locationLabel, tooltipData.
+--}}
+{{#> systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs actorName=actor.name titleKey="WH40K.Hazard.Falling.Title" subtitle=(localize "WH40K.Hazard.Falling.Subtitle" metres=metres) gameSystem=gameSystem}}
+    {{> systems/wh40k-rpg/templates/chat/partial/wounds-callout.hbs
+        labelKey="WH40K.Hazard.Falling.Damage"
+        badge=locationLabel
+        value=damage
+        caption=(localize "WH40K.Hazard.Falling.Caption" formula=formula type=damageType)
+        tooltipData=tooltipData}}
+
+    <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 -tw-mx-4 -tw-mb-3 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
+        {{> systems/wh40k-rpg/templates/chat/partial/wounds-action-button.hbs
+            action="roll-control__apply-damage"
+            labelKey="WH40K.Hazard.Apply"
+            dataType=damageType
+            dataIgnoreArmour="true"
+            dataLocation=location
+            dataUuid=actor.uuid
+            dataDamage=damage
+            dataFatigue=0}}
+    </div>
+{{/systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs}}
