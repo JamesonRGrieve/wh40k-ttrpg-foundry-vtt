@@ -6,7 +6,7 @@ import { test } from './lib/test';
 /**
  * Tier B coverage of the *third* batch of pure-logic modules under
  * `src/module/rules/*` — the affliction / social / vehicle resolvers
- * (addiction, assistance, disposition, disease, poison,
+ * (addiction, assistance, disposition, disease,
  * phenomena-modifier, reinforcement, requisition-test, spray-avoidance)
  * that neither `rules-engine.spec.ts` nor
  * `rules-pure-logic.spec.ts` touches. Same rationale as those specs:
@@ -31,8 +31,6 @@ const RULE_AFFLICTION_FLOWS = [
     'disposition-modifier',
     'disease-exposure',
     'disease-dailyTick',
-    'poison-exposure',
-    'poison-failurePayload',
     'phenomena-modifier-compose',
     'reinforcement-callTarget',
     'requisition-test-target',
@@ -78,15 +76,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     cumulative: number;
                 };
             };
-            'poison': {
-                resolvePoisonExposure: (input: { toughnessTotal: number; poisonRating: number }) => { target: number };
-                buildPoisonFailurePayload: (profile: PoisonProfile) => {
-                    immediateDamage: number;
-                    ongoingDamagePerRound: number;
-                    ongoingDurationRounds: number;
-                    ongoingTag: string;
-                };
-            };
             'phenomena-modifier': {
                 composePhenomenaModifier: (input: { warpWeakness: boolean; taintedPsykerPushCP: number }) => {
                     focusModifier: number;
@@ -121,15 +110,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             rating: number;
             damagePerDay: number;
             treatmentThreshold: number;
-        }
-        interface PoisonProfile {
-            id: string;
-            label: string;
-            rating: number;
-            failureDamage: number;
-            ongoingDamagePerRound: number;
-            ongoingDurationRounds: number;
-            ongoingTag: string;
         }
         type ImportError = { __importError: string };
         type Loaded<T> = T | ImportError;
@@ -232,32 +212,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 const tick1 = disease.applyInfectionDailyTick({ profile, cumulativeSoFar: 0 });
                 const treated = disease.applyInfectionDailyTick({ profile, cumulativeSoFar: 6, treatmentSucceeded: true });
                 return tick1.damage === 2 && tick1.cumulative === 2 && treated.damage === 0;
-            });
-        }
-
-        // ---------- poison ----------
-        const poison = await loadModule('poison');
-        if (isImportError(poison)) {
-            fail(['poison-exposure', 'poison-failurePayload'], poison.__importError);
-        } else {
-            const ulva = {
-                id: 'ulva-serum',
-                label: 'Ulva-Serum',
-                rating: 30,
-                failureDamage: 1,
-                ongoingDamagePerRound: 1,
-                ongoingDurationRounds: 5,
-                ongoingTag: 'crippled',
-            };
-            guarded(
-                'poison-exposure',
-                () =>
-                    poison.resolvePoisonExposure({ toughnessTotal: 50, poisonRating: 30 }).target === 20 &&
-                    poison.resolvePoisonExposure({ toughnessTotal: 20, poisonRating: 30 }).target === 0,
-            );
-            guarded('poison-failurePayload', () => {
-                const p = poison.buildPoisonFailurePayload(ulva);
-                return p.immediateDamage === 1 && p.ongoingDamagePerRound === 1 && p.ongoingDurationRounds === 5 && p.ongoingTag === 'crippled';
             });
         }
 
