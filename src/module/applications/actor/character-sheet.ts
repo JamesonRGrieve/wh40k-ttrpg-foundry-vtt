@@ -119,6 +119,7 @@ import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import FateUsesDialog from '../dialogs/fate-uses-dialog.ts';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import ColonyGrowthDialog from '../prompts/colony-growth-dialog.ts';
+import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
 import BaseActorSheet, { ADVANCE_XP_COSTS, type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
@@ -6080,7 +6081,11 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #createEffect(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
-            await EffectActions.createEffect(this.effectsOwner, { disabled: false, duration: {}, changes: [] });
+            // The effect-creation dialog builds a real effect (a line-resolved
+            // condition, or a characteristic / skill / combat modifier with its
+            // duration) instead of a blank, change-less one. Dismissal creates nothing.
+            const effect = await EffectCreationDialog.show(this.actor);
+            if (effect === null) return;
 
             this._notify('info', game.i18n.localize('WH40K.Notify.CharacterSheet.EffectCreated'), {
                 duration: 2000,

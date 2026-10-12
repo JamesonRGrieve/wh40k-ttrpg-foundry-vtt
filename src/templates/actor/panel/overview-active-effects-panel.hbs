@@ -41,4 +41,11 @@
                         <span>{{localize "WH40K.Effects.NoneShort"}}</span>
                     </div>
                     {{/if}}
+                    {{!-- Opens the effect-creation dialog (condition / characteristic /
+                          skill / combat / custom) on this actor. --}}
+                    <button type="button" class="tw-self-start tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-px-1.5 tw-py-[2px] tw-text-[0.7rem] tw-bg-transparent tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-text-[color:var(--color-text-secondary)]"
+                            data-action="createEffect">
+                        <i class="fas fa-plus" aria-hidden="true"></i>
+                        <span>{{localize "WH40K.Effects.Create"}}</span>
+                    </button>
             {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
