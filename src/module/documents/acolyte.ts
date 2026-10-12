@@ -3,6 +3,7 @@ import type { GameSystemId } from '../config/game-systems/types.ts';
 // Direct, not via dice/_module.ts: that barrel also re-exports
 // RollConfigurationDialog, so importing it drags the applications layer into
 // every document that just wants a roll class.
+import { SYSTEM_ID } from '../constants.ts';
 import type D100Roll from '../dice/d100-roll.ts';
 import { t } from '../i18n/t.ts';
 import {
@@ -22,8 +23,10 @@ import {
     SkillUseActionData,
 } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
+import { resolveGainedMalignancy } from '../rolls/malignancy-outcome.ts';
 import { openDamagePrompt, openRollPrompt } from '../rolls/roll-prompt.ts';
 import { firstTargetedActor, promptItemChoice } from '../rolls/skill-use-picker.ts';
+import { TWISTED_FLESH_FLAG } from '../rules/chaos-backgrounds.ts';
 import { corruptionTrackModifier, malignancyTestsQueued } from '../rules/malignancy-test.ts';
 import { getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
 import type {
@@ -406,14 +409,32 @@ export class WH40KAcolyte extends WH40KBaseActor {
         return undefined;
     }
 
+    /** Whether the Mutant background's Twisted Flesh bonus applies (within.md p. 32). */
+    get hasTwistedFlesh(): boolean {
+        return this.getFlag(SYSTEM_ID, TWISTED_FLESH_FLAG) === true;
+    }
+
     /**
-     * Roll one owed Malignancy Test: a Willpower test through the unified roll
-     * pipeline, with the Corruption Track modifier as its own named row on the
-     * card. Rolling spends a queued test; a failure draws on the line's
-     * Malignancies table. No-op when no test is owed.
+     * Roll one owed Malignancy Test. No-op when no test is owed. A Twisted Flesh
+     * Mutant is first offered RAW's choice to fail it (within.md p. 32: "can
+     * always choose to fail any test associated with resisting malignancy").
      */
     rollMalignancyTest(): void {
         if (!this.usesMalignancyTest || this.system.malignancyTestsPending <= 0) return;
+        if (this.hasTwistedFlesh) {
+            void this.#offerTwistedFleshFailure();
+            return;
+        }
+        this.#openMalignancyTest();
+    }
+
+    /**
+     * Open the Malignancy Test: a Willpower test through the unified roll
+     * pipeline, with the Corruption Track modifier as its own named row on the
+     * card. Rolling spends a queued test; a failure draws on the line's
+     * Malignancies table (or, with Twisted Flesh, Mutations if chosen).
+     */
+    #openMalignancyTest(): void {
         const willpower = this.characteristics['willpower'];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
         if (willpower === undefined) return;
@@ -429,9 +450,33 @@ export class WH40KAcolyte extends WH40KBaseActor {
             target: willpower.total,
             situationalKey: 'willpower',
             extraModifiers: { 'corruption-track': corruptionTrackModifier(this.system.corruption) },
-            instance: new MalignancyTestActionData(ledger, this.system.gameSystem),
+            instance: new MalignancyTestActionData(ledger, this.system.gameSystem, this.hasTwistedFlesh),
         });
         openRollPrompt(rollData);
+    }
+
+    /**
+     * Twisted Flesh: resist with the Willpower test as normal, or choose to fail
+     * it. Choosing to fail spends the owed test with no roll and resolves the
+     * gained Malignancy straight away, where the Mutant may take a Mutation
+     * instead. Dismissing the choice spends nothing.
+     */
+    async #offerTwistedFleshFailure(): Promise<void> {
+        const choice = await promptItemChoice(
+            [
+                { id: 'resist', name: t('WH40K.Malignancy.TwistedFlesh.Resist') },
+                { id: 'fail', name: t('WH40K.Malignancy.TwistedFlesh.ChooseFail') },
+            ],
+            t('WH40K.Malignancy.TwistedFlesh.Title'),
+            t('WH40K.Malignancy.TwistedFlesh.ResistHint'),
+        );
+        if (choice === null) return;
+        if (choice.id === 'resist') {
+            this.#openMalignancyTest();
+            return;
+        }
+        await this.#adjustMalignancyTests(-1);
+        await resolveGainedMalignancy(this.system.gameSystem, true);
     }
 
     /** Move the owed-test queue by `delta`, never below zero. */

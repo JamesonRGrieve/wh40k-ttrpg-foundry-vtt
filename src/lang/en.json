@@ -4728,7 +4728,17 @@
             "Resisted": "The taint is held at bay — no Malignancy manifests.",
             "Manifests": "Corruption takes form — roll on the Malignancies table.",
             "TestsDue": "Malignancy Tests due: {count}",
-            "RollTest": "Roll Malignancy Test"
+            "RollTest": "Roll Malignancy Test",
+            "TwistedFlesh": {
+                "Title": "Twisted Flesh",
+                "ResistHint": "A Mutant can always choose to fail a test to resist malignancy.",
+                "Resist": "Resist — Willpower Test",
+                "ChooseFail": "Choose to Fail",
+                "OutcomeHint": "Whenever a Mutant would gain a malignancy, he may roll on the Mutations table to gain a mutation instead.",
+                "TakeMalignancy": "Gain the Malignancy",
+                "TakeMutation": "Roll a Mutation Instead",
+                "MutationInstead": "Twisted Flesh — the taint takes the flesh: roll on the Mutations table."
+            }
         },
         "Mutation": {
             "Category": "Category",
@@ -5864,6 +5874,42 @@
             "AttackSpecial": {
                 "HasLevel": "Has Level",
                 "Enabled": "Enabled"
+            },
+            "Reference": {
+                "View": "Open item",
+                "NotFound": "Referenced item not found: {uuid}",
+                "Rejected": "{name} cannot be dropped here.",
+                "ActiveEffect": "Applied Active Effect"
+            },
+            "Gift": {
+                "BaseGrants": "Granted by the base effect",
+                "SubTable": "Sub-table",
+                "SubTableNone": "No sub-table",
+                "Riders": "Alignment Riders",
+                "RiderAlignment": "Rider alignment",
+                "RiderCharacteristics": "Characteristic changes",
+                "RiderGrants": "Granted by the rider",
+                "NoGrants": "Grants nothing",
+                "DropGrant": "Drop a trait or talent here",
+                "NoDeltas": "No characteristic changes",
+                "NoRiders": "No alignment riders",
+                "AddRider": "Add rider",
+                "CharacteristicRolls": "Acquisition Rolls",
+                "RollCharacteristic": "Characteristic",
+                "RollDirection": "Gain or loss",
+                "RollFormula": "Dice formula",
+                "NoRolls": "No acquisition rolls",
+                "AddRoll": "Add roll"
+            },
+            "Distinction": {
+                "Category": "Ability Category",
+                "NoRenownRequirement": "None",
+                "Marks": "Marks of Distinction",
+                "NoMarks": "No Marks combined",
+                "DropMark": "Drop a Mark of Distinction here",
+                "GrantTrait": "Granted Trait",
+                "NoGrantTrait": "Grants no trait",
+                "DropGrantTrait": "Drop a trait here"
             }
         },
         "Prompt": {
@@ -6703,6 +6749,16 @@
             "UpdateFailed": "The Event Tracker could not save that change.",
             "MarkResolved": "Resolved: {name}",
             "ResolvedAutomatically": "resolved automatically",
+            "Auto": {
+                "ChatTitle": "Event resolved automatically",
+                "ChatUndoHint": "Undo it from the Event Tracker if this was premature.",
+                "ItemAcquired": "{item} acquired by {holder}",
+                "ActorDied": "{actor} died",
+                "StatusGained": "{actor} gained {status}",
+                "StatusLost": "{actor} lost {status}",
+                "SceneEntered": "{actor} entered {scene}",
+                "EventResolved": "{event} resolved"
+            },
             "RequiresAll": "Requires all:",
             "RequiresAny": "Requires any:",
             "At": "at",

@@ -12,8 +12,9 @@
  * See GitHub issue #91.
  */
 
+import { SYSTEM_ID } from '../../constants.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
-import { MUTANT_STARTING_CORRUPTION, mutantCorruptionUpdate } from '../../rules/chaos-backgrounds.ts';
+import { MUTANT_STARTING_CORRUPTION, mutantCorruptionUpdate, TWISTED_FLESH_FLAG } from '../../rules/chaos-backgrounds.ts';
 import type { WH40KMutantBackgroundTarget } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
@@ -119,7 +120,7 @@ class MutantBackgroundDialog extends ApplicationV2Mixin(ApplicationV2 as unknown
             }
             if (typeof actor.setFlag === 'function') {
                 try {
-                    await actor.setFlag('wh40k-rpg', 'twistedFlesh', true);
+                    await actor.setFlag(SYSTEM_ID, TWISTED_FLESH_FLAG, true);
                 } catch {
                     /* swallow */
                 }

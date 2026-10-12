@@ -18,6 +18,25 @@
  */
 export const MUTANT_STARTING_CORRUPTION = 10;
 
+/**
+ * The actor flag (scope `wh40k-rpg`) the Mutant background dialog sets to record
+ * the Twisted Flesh background bonus.
+ */
+export const TWISTED_FLESH_FLAG = 'twistedFlesh';
+
+/** What a Malignancy the character would gain resolves to. */
+export type MalignancyOutcome = 'malignancy' | 'mutation';
+
+/**
+ * The outcomes a gained Malignancy may take. Twisted Flesh (within.md p. 32):
+ * "Whenever he would gain a malignancy, he may roll on Table 8-16: Mutations to
+ * gain a mutation instead" — a choice, so both remain open; without it, only
+ * the Malignancy.
+ */
+export function malignancyOutcomes(twistedFlesh: boolean): readonly MalignancyOutcome[] {
+    return twistedFlesh ? ['malignancy', 'mutation'] : ['malignancy'];
+}
+
 /** The actor update that adds a Mutant's starting Corruption to its current total. */
 export type MutantCorruptionUpdate = {
     /** Character Corruption is a plain `NumberField` at `system.corruption` (no `.value`). */

@@ -220,10 +220,16 @@ export class RollTableUtils {
 
     /**
      * Roll on the Mutations table.
+     * @param {GameSystemId} [gameSystem] - Scope the lookup to this line's core
+     *   roll-table pack (as {@link rollMalignancy} does), so a Twisted Flesh
+     *   mutation draws the rolling line's table.
      * @returns {Promise<TableResult>}
      */
-    static async rollMutation(): Promise<RollTableResult | null> {
-        return this.rollTable('Mutations', { displayChat: true });
+    static async rollMutation(gameSystem?: GameSystemId): Promise<RollTableResult | null> {
+        return this.rollTable('Mutations', {
+            displayChat: true,
+            ...(gameSystem !== undefined ? { pack: coreRollTablePack(gameSystem) } : {}),
+        });
     }
 
     /**

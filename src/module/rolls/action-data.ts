@@ -51,6 +51,7 @@ import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, WeaponDamageData } from './damage-data.ts';
 import type { ExtendedTestChatContext } from './extended-test-data.ts';
+import { resolveGainedMalignancy } from './malignancy-outcome.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
 import { emitChatFromTemplate, getDegreeForMode, isD100Success, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
 import { keepModeCardNote } from './roll-keep.ts';
@@ -1398,16 +1399,19 @@ export interface MalignancyTestLedger {
  * A Malignancy Test (Corruption Track lines): the Willpower test a Corruption
  * gain queues on the character. Rolling it spends one queued test — returned
  * when the roll is refunded for a re-roll — and a failure draws on the line's
- * Malignancies table.
+ * Malignancies table, or, for a Twisted Flesh Mutant who chooses it, on the
+ * Mutations table instead (within.md p. 32).
  */
 export class MalignancyTestActionData extends SimpleSkillData {
     readonly #ledger: MalignancyTestLedger;
     readonly #gameSystem: GameSystemId;
+    readonly #twistedFlesh: boolean;
 
-    constructor(ledger: MalignancyTestLedger, gameSystem: GameSystemId) {
+    constructor(ledger: MalignancyTestLedger, gameSystem: GameSystemId, twistedFlesh = false) {
         super();
         this.#ledger = ledger;
         this.#gameSystem = gameSystem;
+        this.#twistedFlesh = twistedFlesh;
     }
 
     override async descriptionText(): Promise<void> {
@@ -1415,8 +1419,8 @@ export class MalignancyTestActionData extends SimpleSkillData {
             this.addEffect(t(EFFECT_TITLE.malignancy), t('WH40K.Malignancy.Resisted'));
             return;
         }
-        this.addEffect(t(EFFECT_TITLE.malignancy), t('WH40K.Malignancy.Manifests'));
-        await RollTableUtils.rollMalignancy(this.#gameSystem);
+        const outcome = await resolveGainedMalignancy(this.#gameSystem, this.#twistedFlesh);
+        this.addEffect(t(EFFECT_TITLE.malignancy), t(outcome === 'mutation' ? 'WH40K.Malignancy.TwistedFlesh.MutationInstead' : 'WH40K.Malignancy.Manifests'));
     }
 
     override async useResources(): Promise<void> {

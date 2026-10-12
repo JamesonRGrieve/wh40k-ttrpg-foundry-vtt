@@ -18,7 +18,7 @@
 
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 import { buildApplicationV2Api, type ApplicationV2Api } from '../src/module/testing/app-v2-stub.ts';
 
 interface FoundryStub {
@@ -114,6 +114,57 @@ describe('MalignancyTestActionData', () => {
     });
 });
 
+/**
+ * Twisted Flesh (DH2 Enemies Within p. 32, Mutant background): "Whenever he would
+ * gain a malignancy, he may roll on Table 8-16: Mutations to gain a mutation
+ * instead." A failed test offers the choice; without the bonus nothing is asked.
+ */
+describe('MalignancyTestActionData — Twisted Flesh (#91)', () => {
+    let rollMalignancy: MockInstance<typeof RollTableUtils.rollMalignancy>;
+    let rollMutation: MockInstance<typeof RollTableUtils.rollMutation>;
+    const wait = vi.fn<(config: { buttons: { action: string }[] }) => Promise<string | null>>();
+
+    beforeEach(() => {
+        vi.restoreAllMocks();
+        rollMalignancy = vi.spyOn(RollTableUtils, 'rollMalignancy').mockResolvedValue(null);
+        rollMutation = vi.spyOn(RollTableUtils, 'rollMutation').mockResolvedValue(null);
+        wait.mockReset();
+        Object.assign(stubs.foundry?.applications.api ?? {}, { DialogV2: { wait } });
+    });
+
+    it('a Mutant who takes the Mutation rolls the Mutations table instead', async () => {
+        wait.mockResolvedValue('mutation');
+        const action = new MalignancyTestActionData(makeLedger(), 'dh2', true);
+        action.rollData.success = false;
+        await action.descriptionText();
+        expect(wait.mock.calls[0]?.[0].buttons.map((b) => b.action)).toEqual(['malignancy', 'mutation']);
+        expect(rollMutation).toHaveBeenCalledWith('dh2');
+        expect(rollMalignancy).not.toHaveBeenCalled();
+        expect(JSON.stringify(action.effectOutput)).toContain('WH40K.Malignancy.TwistedFlesh.MutationInstead');
+    });
+
+    it('a Mutant who keeps the Malignancy, or dismisses the choice, draws the Malignancy', async () => {
+        for (const answer of ['malignancy', null]) {
+            rollMalignancy.mockClear();
+            wait.mockResolvedValueOnce(answer);
+            const action = new MalignancyTestActionData(makeLedger(), 'dh2', true);
+            action.rollData.success = false;
+            // eslint-disable-next-line no-await-in-loop -- each case resolves its own failed test in turn
+            await action.descriptionText();
+            expect(rollMalignancy).toHaveBeenCalledWith('dh2');
+        }
+        expect(rollMutation).not.toHaveBeenCalled();
+    });
+
+    it('without Twisted Flesh a failure asks nothing', async () => {
+        const action = new MalignancyTestActionData(makeLedger(), 'dh2');
+        action.rollData.success = false;
+        await action.descriptionText();
+        expect(wait).not.toHaveBeenCalled();
+        expect(rollMalignancy).toHaveBeenCalledWith('dh2');
+    });
+});
+
 describe("Malignancies table lookup in the rolling line's pack", () => {
     /** One RollTable pack whose index holds a single entry. */
     function tablePack(collection: string, name: string): object {
@@ -152,13 +203,35 @@ describe('Malignancy Test wiring (source text)', () => {
         expect(body).toContain('this.usesMalignancyTest');
     });
 
-    it('rolls through the unified pipeline with the Corruption Track as a named row', () => {
-        const start = acolyteSrc.indexOf('rollMalignancyTest(): void');
+    /** The source of one acolyte member, up to the next doc comment. */
+    function member(signature: string): string {
+        const start = acolyteSrc.indexOf(signature);
         expect(start).toBeGreaterThan(-1);
-        const body = acolyteSrc.slice(start, acolyteSrc.indexOf('\n    /**', start));
+        return acolyteSrc.slice(start, acolyteSrc.indexOf('\n    /**', start));
+    }
+
+    it('rolls through the unified pipeline with the Corruption Track as a named row', () => {
+        const body = member('#openMalignancyTest(): void');
         expect(body).toContain("'corruption-track': corruptionTrackModifier(");
-        expect(body).toContain('new MalignancyTestActionData(');
+        expect(body).toContain('new MalignancyTestActionData(ledger, this.system.gameSystem, this.hasTwistedFlesh)');
         expect(body).toContain('openRollPrompt(');
+    });
+
+    it('offers a Twisted Flesh Mutant the choice to fail before rolling (#91)', () => {
+        expect(member('rollMalignancyTest(): void')).toContain('this.hasTwistedFlesh');
+        const offer = member('async #offerTwistedFleshFailure(): Promise<void>');
+        // Resisting opens the normal test; choosing to fail spends the owed test with no roll.
+        expect(offer).toContain("choice.id === 'resist'");
+        expect(offer).toContain('this.#openMalignancyTest()');
+        expect(offer).toContain('this.#adjustMalignancyTests(-1)');
+        expect(offer).toContain('resolveGainedMalignancy(this.system.gameSystem, true)');
+        expect(offer).not.toContain('openRollPrompt(');
+    });
+
+    it('reads Twisted Flesh from the flag the Mutant background dialog sets', () => {
+        const dialogSrc = readFileSync(resolve(__dirname, '../src/module/applications/prompts/mutant-background-dialog.ts'), 'utf8');
+        expect(dialogSrc).toContain('setFlag(SYSTEM_ID, TWISTED_FLESH_FLAG, true)');
+        expect(member('get hasTwistedFlesh(): boolean')).toContain('this.getFlag(SYSTEM_ID, TWISTED_FLESH_FLAG) === true');
     });
 
     it('surfaces owed tests on the sheet as a rollable button', () => {
