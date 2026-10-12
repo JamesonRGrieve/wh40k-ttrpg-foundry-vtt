@@ -223,26 +223,27 @@ describe('origin-grant-ledger: reconcileResourceDeltas convergence (idempotency 
 
 describe('origin-grant-ledger: reconcileResourceDeltas path-map parameterization', () => {
     /**
-     * `GrantsProcessor.applyGrants` reconciles five resources and writes both
+     * A resource-grant applier reconciles five resources and writes both
      * `value` and `max` for wounds/fate — its resource→path map differs from the
      * boot reconcile's. These pin that the shared helper honours an arbitrary map
      * without collapsing the per-applier divergence (the load-bearing point of
-     * parameterizing it).
+     * parameterizing it). Corruption / Insanity are plain numbers on the
+     * character schema, so their path has no `.value`.
      */
     const PROCESSOR_PATHS = {
         wounds: ['wounds.value', 'wounds.max'],
         fate: ['fate.value', 'fate.max'],
         fateThreshold: ['fate.threshold'],
-        corruption: ['corruption.value'],
-        insanity: ['insanity.value'],
+        corruption: ['corruption'],
+        insanity: ['insanity'],
     } as const;
 
     it("fans a resource's single prior across all its configured sub-paths", () => {
         const system = {
             wounds: { value: 10, max: 10 },
             fate: { value: 3, max: 3, threshold: 0 },
-            corruption: { value: 0 },
-            insanity: { value: 0 },
+            corruption: 0,
+            insanity: 0,
             characteristics: {},
         };
         const { updates, newDelta } = reconcileResourceDeltas(system, { characteristics: {}, resources: { wounds: 4 } }, {}, PROCESSOR_PATHS);
@@ -261,8 +262,8 @@ describe('origin-grant-ledger: reconcileResourceDeltas path-map parameterization
         const system = {
             wounds: { value: 14, max: 14 },
             fate: { value: 5, max: 5, threshold: 2 },
-            corruption: { value: 3 },
-            insanity: { value: 1 },
+            corruption: 3,
+            insanity: 1,
             characteristics: {},
         };
         const prior: OriginAppliedDelta = { wounds: 4, fate: 2, fateThreshold: 2, corruption: 3, insanity: 1 };
@@ -279,8 +280,8 @@ describe('origin-grant-ledger: reconcileResourceDeltas path-map parameterization
         expect(updates['system.fate.value']).toBe(3);
         expect(updates['system.fate.max']).toBe(3);
         expect(updates['system.fate.threshold']).toBe(0);
-        expect(updates['system.corruption.value']).toBe(0);
-        expect(updates['system.insanity.value']).toBe(0);
+        expect(updates['system.corruption']).toBe(0);
+        expect(updates['system.insanity']).toBe(0);
     });
 
     it('skips characteristics the actor does not carry but still records them in the delta', () => {

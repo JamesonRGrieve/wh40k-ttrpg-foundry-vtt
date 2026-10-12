@@ -10,6 +10,7 @@
 import { createGrant, type GrantConfig } from '../data/grant/_module.ts';
 import type BaseGrantData from '../data/grant/base-grant.ts';
 import type { GrantAppliedEntry } from '../data/grant/base-grant.ts'; // eslint-disable-line no-duplicate-imports -- separate type-only named import; TS does not allow merging default-type with named-type in one declaration
+import { isGrantResource, isResourceAppliedState, resourceReverseUpdates } from '../data/grant/resource-paths.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 
@@ -77,6 +78,14 @@ interface ApplyItemGrantsOptions {
 /** Options accepted by {@link GrantsManager.applyBatchGrants}. */
 interface ApplyBatchGrantsOptions extends ApplyItemGrantsOptions {
     reverseExisting?: boolean;
+}
+
+/**
+ * What the resource reversal touches on the actor: its current values are read
+ * by path (`foundry.utils.getProperty`) and the reversal written via `update`.
+ */
+interface ResourceReversalTarget {
+    update: (data: Record<string, number>) => Promise<object | undefined>;
 }
 
 /** Result of a single-grant reverse operation. */
@@ -731,29 +740,14 @@ export class GrantsManager {
      * Reverse resource grant.
      * @private
      */
-    static async _reverseResourceGrant(actor: WH40KBaseActor, applied: Record<string, GrantAppliedEntry>, result: GrantReverseResult): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update payload
-        const updates: Record<string, unknown> = {};
+    static async _reverseResourceGrant(actor: ResourceReversalTarget, applied: Record<string, GrantAppliedEntry>, result: GrantReverseResult): Promise<void> {
+        const updates: Record<string, number> = {};
+        const read = (path: string): number => Number(foundry.utils.getProperty(actor, path)) || 0;
 
-        const resourcePaths: Partial<Record<string, { value: string; max?: string }>> = {
-            wounds: { value: 'system.wounds.value', max: 'system.wounds.max' },
-            fate: { value: 'system.fatePoints.value', max: 'system.fatePoints.max' },
-            corruption: { value: 'system.corruption.value' },
-            insanity: { value: 'system.insanity.value' },
-        };
-
-        for (const [resourceType, raw] of Object.entries(applied)) {
-            const paths = resourcePaths[resourceType];
-            if (paths === undefined) continue;
-            const state = raw as { previousValue?: number; previousMax?: number };
-
-            if (state.previousValue !== undefined) {
-                updates[paths.value] = state.previousValue;
-            }
-            if (state.previousMax !== undefined && paths.max !== undefined) {
-                updates[paths.max] = state.previousMax;
-            }
-
+        // The same paths and reversal ResourceGrantData uses (resource-paths.ts).
+        for (const [resourceType, state] of Object.entries(applied)) {
+            if (!isGrantResource(resourceType) || !isResourceAppliedState(state)) continue;
+            Object.assign(updates, resourceReverseUpdates(resourceType, state, read));
             result.notifications.push(`Reversed ${resourceType}`);
         }
 

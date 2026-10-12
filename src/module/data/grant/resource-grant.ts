@@ -1,6 +1,15 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { resolveCharacteristicBonusRefs } from '../shared/characteristic-formula.ts';
 import BaseGrantData, { type GrantApplicationResult, type GrantApplyOptions, type GrantRestoreData, type GrantSummary } from './base-grant.ts';
+import {
+    GRANT_RESOURCES,
+    isGrantResource,
+    RESOURCE_PATHS,
+    resourceApplyUpdates,
+    type ResourceAppliedState,
+    resourceRestoreUpdates,
+    resourceReverseUpdates,
+} from './resource-paths.ts';
 
 /**
  * A single resource configuration within a resource grant.
@@ -13,33 +22,15 @@ interface ResourceConfig {
 }
 
 /**
- * State stored per resource type after application.
- */
-interface ResourceAppliedState {
-    formula: string;
-    rolledValue: number;
-    additive: boolean;
-    previousValue: number;
-    previousMax: number | null;
-    newValue: number;
-    newMax: number | null;
-}
-
-/**
  * Data shape returned by reverse() for resource grants.
  */
 interface ResourceRestoreData {
     resources: Record<string, ResourceAppliedState>;
 }
 
-/**
- * Definition of a resource type and its actor paths.
- */
-interface ResourceDefinition {
-    label: string;
-    valuePath: string;
-    maxPath: string | null;
-    affectsMax: boolean;
+/** Reads a resource's current number off the actor (0 when unset). */
+function actorReader(actor: WH40KBaseActor): (path: string) => number {
+    return (path) => Number(foundry.utils.getProperty(actor, path)) || 0;
 }
 
 /**
@@ -56,37 +47,6 @@ export default class ResourceGrantData extends BaseGrantData {
 
     static override TYPE = 'resource';
     static override ICON = 'icons/svg/aura.svg';
-
-    /**
-     * Valid resource types and their paths.
-     * @type {object}
-     */
-    static RESOURCES: Partial<Record<string, ResourceDefinition>> = {
-        wounds: {
-            label: 'WH40K.Resource.Wounds',
-            valuePath: 'system.wounds.value',
-            maxPath: 'system.wounds.max',
-            affectsMax: true,
-        },
-        fate: {
-            label: 'WH40K.Resource.Fate',
-            valuePath: 'system.fate.value',
-            maxPath: 'system.fate.max',
-            affectsMax: true,
-        },
-        corruption: {
-            label: 'WH40K.Resource.Corruption',
-            valuePath: 'system.corruption.value',
-            maxPath: null,
-            affectsMax: false,
-        },
-        insanity: {
-            label: 'WH40K.Resource.Insanity',
-            valuePath: 'system.insanity.value',
-            maxPath: null,
-            affectsMax: false,
-        },
-    };
 
     /** Property declarations */
     declare resources: ResourceConfig[];
@@ -108,7 +68,7 @@ export default class ResourceGrantData extends BaseGrantData {
                     // Resource type (wounds, fate, corruption, insanity)
                     type: new fields.StringField({
                         required: true,
-                        choices: Object.keys(ResourceGrantData.RESOURCES),
+                        choices: [...GRANT_RESOURCES],
                     }),
                     // Formula or flat value (e.g., "1d5+2", "5", "2xTB")
                     formula: new fields.StringField({ required: true }),
@@ -135,23 +95,27 @@ export default class ResourceGrantData extends BaseGrantData {
 
     /** @inheritDoc */
     override async _applyGrant(actor: WH40KBaseActor, data: GrantRestoreData, options: GrantApplyOptions, result: GrantApplicationResult): Promise<void> {
-        const ctor = this.constructor as typeof ResourceGrantData;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
-        const updates: Record<string, unknown> = {};
+        const updates: Record<string, number> = {};
+        const read = actorReader(actor);
         const selectedResources = (data['selected'] as string[] | undefined) ?? this.resources.map((r) => r.type);
         const rolledValues = (data['rolledValues'] as Record<string, number> | undefined) ?? {};
 
         for (const resourceConfig of this.resources) {
             const { type, formula, optional: resOptional, additive } = resourceConfig;
 
-            const resourceDef = ctor.RESOURCES[type];
-            if (resourceDef === undefined) {
+            if (!isGrantResource(type)) {
                 result.errors.push(`Invalid resource type: ${type}`);
                 continue;
             }
-
             if (!selectedResources.includes(type)) {
                 if (!resOptional && !this.optional) result.errors.push(`Required resource ${type} not selected`);
+                continue;
+            }
+
+            const { label, valuePath } = RESOURCE_PATHS[type];
+            // NPCs carry no Corruption / Insanity: never write a field the actor's schema lacks.
+            if (foundry.utils.getProperty(actor, valuePath) === undefined) {
+                result.errors.push(`Actor has no ${type} to grant`);
                 continue;
             }
 
@@ -159,34 +123,12 @@ export default class ResourceGrantData extends BaseGrantData {
             const value = rolledValues[type] ?? (await this._evaluateFormula(formula, actor));
             if (value === 0) continue;
 
-            const currentValue = Number(foundry.utils.getProperty(actor, resourceDef.valuePath)) || 0;
-            let currentMax: number | null = null;
-            if (resourceDef.affectsMax && resourceDef.maxPath !== null) {
-                currentMax = Number(foundry.utils.getProperty(actor, resourceDef.maxPath)) || 0;
-            }
+            const application = resourceApplyUpdates(type, { formula, value, additive }, read);
+            Object.assign(updates, application.updates);
+            result.applied[type] = application.state;
 
-            const isAdditive = additive;
-            const newValue = isAdditive ? currentValue + value : value;
-            const newMax = currentMax !== null ? (isAdditive ? currentMax + value : value) : null;
-
-            updates[resourceDef.valuePath] = newValue;
-            if (resourceDef.affectsMax && resourceDef.maxPath !== null) {
-                updates[resourceDef.maxPath] = newMax;
-            }
-
-            result.applied[type] = {
-                formula,
-                rolledValue: value,
-                additive: isAdditive,
-                previousValue: currentValue,
-                previousMax: currentMax,
-                newValue,
-                newMax,
-            };
-
-            const label = game.i18n.localize(resourceDef.label);
-            const prefix = isAdditive ? (value > 0 ? '+' : '') : '=';
-            result.notifications.push(`${label} ${prefix}${value}`);
+            const prefix = additive ? (value > 0 ? '+' : '') : '=';
+            result.notifications.push(`${game.i18n.localize(label)} ${prefix}${value}`);
         }
 
         await this._applyUpdates(actor, updates, options);
@@ -194,33 +136,13 @@ export default class ResourceGrantData extends BaseGrantData {
 
     /** @inheritDoc */
     override async reverse(actor: WH40KBaseActor, appliedState: Record<string, ResourceAppliedState>): Promise<ResourceRestoreData> {
-        const ctor = this.constructor as typeof ResourceGrantData;
+        const read = actorReader(actor);
 
-        // Per-field delta mapper: replace grants restore the captured value/max
-        // exactly; additive grants subtract the rolled value from the current
-        // value/max. Unknown resource types are skipped. The shared
-        // merge/apply/guard tail lives in BaseGrantData._reverseWithDeltaMap (#345).
+        // The shared merge/apply/guard tail lives in BaseGrantData._reverseWithDeltaMap (#345);
+        // the per-resource reversal is resource-paths.ts's, shared with GrantsManager.
         const restores = await this._reverseWithDeltaMap(actor, appliedState, (type, state) => {
-            const resourceDef = ctor.RESOURCES[type];
-            if (resourceDef === undefined) return null;
-
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
-            const deltas: Record<string, unknown> = {};
-            if (!state.additive) {
-                deltas[resourceDef.valuePath] = state.previousValue;
-                if (resourceDef.affectsMax && resourceDef.maxPath !== null && state.previousMax !== null) {
-                    deltas[resourceDef.maxPath] = state.previousMax;
-                }
-            } else {
-                const currentValue = Number(foundry.utils.getProperty(actor, resourceDef.valuePath)) || 0;
-                deltas[resourceDef.valuePath] = currentValue - state.rolledValue;
-                if (resourceDef.affectsMax && resourceDef.maxPath !== null) {
-                    const currentMax = Number(foundry.utils.getProperty(actor, resourceDef.maxPath)) || 0;
-                    deltas[resourceDef.maxPath] = currentMax - state.rolledValue;
-                }
-            }
-
-            return { deltas, restore: { type, state } };
+            if (!isGrantResource(type)) return null;
+            return { deltas: resourceReverseUpdates(type, state, read), restore: { type, state } };
         });
 
         const restoreData: ResourceRestoreData = { resources: {} };
@@ -230,23 +152,13 @@ export default class ResourceGrantData extends BaseGrantData {
 
     /** @inheritDoc */
     override async restore(actor: WH40KBaseActor, restoreData: GrantRestoreData & ResourceRestoreData): Promise<GrantApplicationResult> {
-        const ctor = this.constructor as typeof ResourceGrantData;
         const result = this._initResult();
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
-        const updates: Record<string, unknown> = {};
+        const updates: Record<string, number> = {};
+        const read = actorReader(actor);
 
         for (const [type, state] of Object.entries(restoreData.resources)) {
-            const resourceDef = ctor.RESOURCES[type];
-            if (resourceDef === undefined) continue;
-
-            const currentValue = Number(foundry.utils.getProperty(actor, resourceDef.valuePath)) || 0;
-            updates[resourceDef.valuePath] = currentValue + state.rolledValue;
-
-            if (resourceDef.affectsMax && resourceDef.maxPath !== null) {
-                const currentMax = Number(foundry.utils.getProperty(actor, resourceDef.maxPath)) || 0;
-                updates[resourceDef.maxPath] = currentMax + state.rolledValue;
-            }
-
+            if (!isGrantResource(type)) continue;
+            Object.assign(updates, resourceRestoreUpdates(type, state, read));
             result.applied[type] = state;
         }
 
@@ -277,8 +189,7 @@ export default class ResourceGrantData extends BaseGrantData {
         summary.icon = ctor.ICON;
 
         for (const resourceConfig of this.resources) {
-            const def = ctor.RESOURCES[resourceConfig.type];
-            const label = def !== undefined ? game.i18n.localize(def.label) : resourceConfig.type;
+            const label = isGrantResource(resourceConfig.type) ? game.i18n.localize(RESOURCE_PATHS[resourceConfig.type].label) : resourceConfig.type;
 
             summary.details.push({
                 label: label,

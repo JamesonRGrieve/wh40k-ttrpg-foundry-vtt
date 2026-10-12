@@ -1,4 +1,4 @@
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it, type Mock, vi } from 'vitest';
 
 /**
  * grants-manager.ts transitively imports the grant DataModels, which evaluate
@@ -15,15 +15,33 @@ class FakeDataModel {
 // FakeDataModel value and the real (abstract) foundry DataModel ctor — keeps the
 // `globalThis as GlobalShim` cast valid.
 type AnyCtor = abstract new (...args: never[]) => object;
+/** A nested numeric fixture, the shape of an actor's resource fields. */
+type Tree = { [key: string]: number | Tree };
+
+/** The actor surface the resource reversal reads (`system`) and writes (`update`). */
+interface ResourceActorStub {
+    system: Tree;
+    update: Mock<(data: Record<string, number>) => Promise<undefined>>;
+}
+
 interface FoundryStub {
     abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };
+    utils: { getProperty: (target: ResourceActorStub, path: string) => number | Tree | undefined };
 }
 interface GlobalShim {
     foundry?: FoundryStub | undefined;
 }
+
+/** `foundry.utils.getProperty` for a `system.…` path on the stub actor. */
+function readSystemPath(target: ResourceActorStub, path: string): number | Tree | undefined {
+    let node: number | Tree | undefined = target.system;
+    for (const part of path.split('.').slice(1)) node = typeof node === 'object' ? node[part] : undefined;
+    return node;
+}
+
 const G = globalThis as GlobalShim;
 const ORIGINAL_FOUNDRY = G.foundry;
-G.foundry = { abstract: { DataModel: FakeDataModel, TypeDataModel: FakeDataModel } };
+G.foundry = { abstract: { DataModel: FakeDataModel, TypeDataModel: FakeDataModel }, utils: { getProperty: readSystemPath } };
 
 afterAll(() => {
     G.foundry = ORIGINAL_FOUNDRY;
@@ -134,5 +152,56 @@ describe('GrantsManager._getSkillLevelUpdates', () => {
             'system.plus10': false,
             'system.plus20': false,
         });
+    });
+});
+
+describe('_reverseResourceGrant writes the real schema paths (#91 follow-up)', () => {
+    /** A schema-shaped character after an additive grant of 3 Wounds, 1 Fate, 10 Corruption, 5 Insanity. */
+    function grantedActor(): ResourceActorStub {
+        return {
+            system: { wounds: { max: 15, value: 12, critical: 0 }, fate: { max: 4, value: 3, threshold: 0 }, corruption: 17, insanity: 9 },
+            update: vi.fn<(data: Record<string, number>) => Promise<undefined>>().mockResolvedValue(undefined),
+        };
+    }
+    const applied = (rolledValue: number, previousValue: number): object => ({
+        formula: String(rolledValue),
+        rolledValue,
+        additive: true,
+        previousValue,
+        previousMax: null,
+        newValue: previousValue + rolledValue,
+        newMax: null,
+    });
+
+    it('reverses wounds, fate, corruption and insanity on the paths ResourceGrantData wrote', async () => {
+        const actor = grantedActor();
+        const result = { notifications: [] as string[] };
+        await GrantsManager._reverseResourceGrant(
+            actor,
+            {
+                wounds: applied(3, 9),
+                fate: applied(1, 2),
+                corruption: applied(10, 7),
+                insanity: applied(5, 4),
+            },
+            result,
+        );
+        expect(actor.update).toHaveBeenCalledWith({
+            'system.wounds.value': 9,
+            'system.wounds.max': 12,
+            'system.fate.value': 2,
+            'system.fate.max': 3,
+            'system.corruption': 7,
+            'system.insanity': 4,
+        });
+        expect(result.notifications).toHaveLength(4);
+    });
+
+    it('skips unknown resources and malformed stored state', async () => {
+        const actor = grantedActor();
+        const result = { notifications: [] as string[] };
+        await GrantsManager._reverseResourceGrant(actor, { fatePoints: applied(1, 2), corruption: 'x' }, result);
+        expect(actor.update).not.toHaveBeenCalled();
+        expect(result.notifications).toEqual([]);
     });
 });
