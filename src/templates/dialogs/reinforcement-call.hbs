@@ -1,0 +1,56 @@
+{{!-- Reinforcement Character call (DH2 core pp. 294–295, #77): who calls, who contributes, the final cost. --}}
+<div class="tw-flex tw-flex-col tw-gap-3 tw-p-3" data-wh40k-hook="rc-call">
+    <dl class="tw-m-0 tw-grid tw-grid-cols-[1fr_auto] tw-gap-x-3 tw-gap-y-0.5 tw-text-[0.8rem]">
+        <dt>{{localize "WH40K.Reinforcement.InfluenceMinimum"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">{{view.influenceMinimum}}</dd>
+        <dt>{{localize "WH40K.Reinforcement.InfluenceCost"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">{{view.baseCost}}</dd>
+    </dl>
+
+    <label class="tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.7rem] tw-uppercase tw-tracking-wider">
+        {{localize "WH40K.Reinforcement.Caller"}}
+        <select name="callerId">
+            {{#each view.rows as |row|}}
+                <option value="{{row.id}}" {{#if row.isCaller}}selected{{/if}}>{{row.name}} ({{localize "WH40K.Reinforcement.InfluenceShort" value=row.influence}}){{#unless row.meetsMinimum}} — {{localize "WH40K.Reinforcement.BelowMinimum"}}{{/unless}}</option>
+            {{/each}}
+        </select>
+    </label>
+
+    <fieldset class="tw-flex tw-flex-col tw-gap-1 tw-m-0 tw-p-2 tw-border tw-border-solid tw-border-[color:rgba(0,0,0,0.25)] tw-rounded-md">
+        <legend class="tw-text-[0.7rem] tw-uppercase tw-tracking-wider">{{localize "WH40K.Reinforcement.Contributions" cap=view.contributionCap}}</legend>
+        {{#each view.rows as |row|}}
+            {{#unless row.isCaller}}
+                <label data-wh40k-hook="rc-contribution" class="tw-grid tw-grid-cols-[1fr_5rem] tw-items-center tw-gap-2 tw-text-[0.8rem]">
+                    <span>{{row.name}} ({{localize "WH40K.Reinforcement.InfluenceShort" value=row.influence}})</span>
+                    <input type="number" name="contribution.{{row.id}}" value="{{row.contribution}}" min="0" max="{{row.influence}}" step="1" />
+                </label>
+            {{/unless}}
+        {{/each}}
+    </fieldset>
+
+    {{#if view.peer}}
+        <label class="tw-flex tw-items-center tw-gap-2 tw-text-[0.8rem]">
+            <input type="checkbox" name="peerApplied" {{#if peerApplied}}checked{{/if}} />
+            {{localize "WH40K.Reinforcement.PeerDiscount" peer=view.peer amount=view.peerAmount}}
+            {{#if peerApplied}}{{#if peerFormula}}<span data-wh40k-hook="rc-peer-roll" class="tw-ml-auto tw-font-semibold tw-tabular-nums">−{{view.peerDiscount}}</span>{{/if}}{{/if}}
+        </label>
+    {{/if}}
+
+    <label class="tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.7rem] tw-uppercase tw-tracking-wider" data-tooltip="{{localize "WH40K.Reinforcement.GmAdjustmentHint"}}">
+        {{localize "WH40K.Reinforcement.GmAdjustment"}}
+        <input type="number" name="gmAdjustment" value="{{view.gmAdjustment}}" step="1" />
+    </label>
+
+    <div data-wh40k-hook="rc-summary" class="tw-flex tw-flex-col tw-gap-1 tw-p-2 tw-rounded-md tw-bg-[rgba(0,0,0,0.15)] tw-text-[0.85rem]">
+        <div class="tw-flex tw-justify-between"><span>{{localize "WH40K.Reinforcement.FinalCost"}}</span><span data-wh40k-hook="rc-final-cost" class="tw-font-bold tw-tabular-nums">{{view.finalCost}}</span></div>
+        {{#if view.result.ok}}
+            <div class="tw-flex tw-justify-between"><span>{{localize "WH40K.Reinforcement.CallerPays"}}</span><span data-wh40k-hook="rc-caller-pays" class="tw-tabular-nums">{{view.result.plan.callerPays}}</span></div>
+            <div class="tw-flex tw-justify-between"><span>{{localize "WH40K.Reinforcement.SubtletyLoss"}}</span><span class="tw-tabular-nums">−{{view.result.plan.subtletyLoss}}</span></div>
+        {{else}}
+            <p data-wh40k-hook="rc-problem" class="tw-m-0 tw-text-rose-300">{{localize view.problemKey}}</p>
+        {{/if}}
+    </div>
+
+    <div class="tw-flex tw-gap-2 tw-justify-end">
+        <button type="button" data-action="cancel">{{localize "WH40K.Reinforcement.Cancel"}}</button>
+        <button type="button" data-action="callReinforcement" {{#unless view.result.ok}}disabled aria-disabled="true"{{/unless}}><i class="fas fa-people-arrows" aria-hidden="true"></i> {{localize "WH40K.Reinforcement.Call"}}</button>
+    </div>
+</div>

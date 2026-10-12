@@ -292,10 +292,16 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     declare disposition: { value: number };
     /**
      * Flag marking this NPC as available as a Reinforcement Character
-     * (core.md §"Reinforcement Characters", p. 294). Picked up by the
-     * acquisition flow (#77) when the warband calls in support.
+     * (core.md §"Reinforcement Characters", p. 294). Shows the GM's
+     * "Call in" panel on the NPC sheet (#77).
      */
     declare isReinforcement: boolean;
+    /** The RC's printed call terms (core p. 294, #77). */
+    declare reinforcement: {
+        influenceMinimum: number | null;
+        influenceCost: number | null;
+        peerDiscount: { peer: string; amount: string };
+    };
 
     // From HordeTemplate mixin
     declare horde: HordeData;
@@ -574,6 +580,19 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             // === REINFORCEMENT (core.md §"Reinforcement Characters", p. 294) ===
             // True when this NPC may be called in via Influence as a Reinforcement.
             isReinforcement: new BooleanField({ required: true, initial: false }),
+            // The RC's printed call terms (core p. 294): Influence Minimum, Influence
+            // Cost, and an optional Peer-talent discount ("Peer (X) talent lowers
+            // Influence Cost by N"). Null/blank for an NPC with no printed terms.
+            reinforcement: new SchemaField({
+                influenceMinimum: new NumberField({ required: true, nullable: true, initial: null, min: 0, integer: true }),
+                influenceCost: new NumberField({ required: true, nullable: true, initial: null, min: 0, integer: true }),
+                peerDiscount: new SchemaField({
+                    /** The Peer talent's group, as printed (e.g. "Adepta Sororitas"). */
+                    peer: new StringField({ required: true, initial: '', blank: true }),
+                    /** The discount: a number or a dice formula (the Arco-Flagellant's "1d5"). */
+                    amount: new StringField({ required: true, initial: '', blank: true }),
+                }),
+            }),
         };
     }
 

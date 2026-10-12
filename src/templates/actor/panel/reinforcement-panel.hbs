@@ -1,0 +1,31 @@
+{{!--
+    Reinforcement Character panel (DH2 core pp. 294–295, #77), GM-only, on the
+    NPC sheet of an NPC flagged `isReinforcement`. Shows the RC's printed call
+    terms and opens the call dialog (`callReinforcement` sheet action).
+    Rendered only when the sheet context carries `reinforcementPanel`, which
+    the NPC sheet builds only for a DH2 Reinforcement Character.
+--}}
+<div class="wh40k-panel" data-wh40k-hook="rc-panel">
+    <div class="wh40k-panel-header">
+        <i class="fa-solid fa-people-arrows" aria-hidden="true"></i>
+        <span>{{localize "WH40K.Reinforcement.PanelTitle"}}</span>
+    </div>
+    <div class="wh40k-panel-body tw-flex tw-flex-col tw-gap-2">
+        {{#if reinforcementPanel.hasTerms}}
+            <dl class="tw-m-0 tw-grid tw-grid-cols-[1fr_auto] tw-gap-x-3 tw-gap-y-0.5 tw-text-[0.8rem]">
+                <dt>{{localize "WH40K.Reinforcement.InfluenceMinimum"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">{{reinforcementPanel.influenceMinimum}}</dd>
+                <dt>{{localize "WH40K.Reinforcement.InfluenceCost"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">{{reinforcementPanel.influenceCost}}</dd>
+            </dl>
+            {{#if reinforcementPanel.peer}}
+                <p class="tw-m-0 tw-text-[0.75rem] tw-italic">{{localize "WH40K.Reinforcement.PeerDiscount" peer=reinforcementPanel.peer amount=reinforcementPanel.peerAmount}}</p>
+            {{/if}}
+        {{else}}
+            <p data-wh40k-hook="rc-panel-no-terms" class="tw-m-0 tw-text-[0.75rem] tw-italic">{{localize "WH40K.Reinforcement.Problem.noTerms"}}</p>
+        {{/if}}
+        <button type="button" class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-w-full tw-py-2 tw-rounded-md tw-border tw-border-solid tw-border-amber-600 tw-bg-amber-700/20 tw-text-amber-200 tw-text-xs tw-font-semibold tw-uppercase tw-cursor-pointer hover:tw-bg-amber-700/40 hover:tw-border-amber-500"
+                data-action="callReinforcement" {{#unless reinforcementPanel.hasTerms}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fa-solid fa-people-arrows" aria-hidden="true"></i>
+            <span>{{localize "WH40K.Reinforcement.OpenCall"}}</span>
+        </button>
+    </div>
+</div>

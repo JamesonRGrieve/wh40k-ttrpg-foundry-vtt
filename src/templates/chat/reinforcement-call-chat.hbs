@@ -1,0 +1,32 @@
+{{!--
+    Reinforcement Character call card (DH2 core pp. 294–295, #77): who called
+    the RC, how the final Influence Cost was reached, who paid what, and the
+    warband's Subtlety loss. `gameSystem` is set on the root because chat cards
+    render outside a sheet.
+--}}
+<div class="tw-p-3 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[rgba(0,0,0,0.45)] tw-to-[rgba(0,0,0,0.25)] dh2:tw-border-bronze"
+     data-wh40k-hook="rc-call-chat" {{#if gameSystem}}data-wh40k-system="{{gameSystem}}"{{/if}}>
+    <header class="tw-mb-2 tw-pb-2 tw-border-b tw-border-solid tw-border-[rgba(201,162,39,0.25)]">
+        <div class="tw-text-[0.75rem] tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Reinforcement.ChatTitle"}}</div>
+        <div class="tw-text-[1.05rem] tw-font-bold tw-text-gold dh2:tw-text-gold-raw">{{rcName}}</div>
+        <div class="tw-text-[0.8rem] tw-text-[#cfcab8]">{{localize "WH40K.Reinforcement.CalledBy" name=callerName}}</div>
+    </header>
+
+    <dl class="tw-m-0 tw-grid tw-grid-cols-[1fr_auto] tw-gap-x-3 tw-gap-y-0.5 tw-text-[0.8rem] tw-text-[#cfcab8]">
+        <dt>{{localize "WH40K.Reinforcement.InfluenceCost"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">{{baseCost}}</dd>
+        {{#if peerDiscount}}<dt>{{localize "WH40K.Reinforcement.PeerShort" peer=peer}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">−{{peerDiscount}}</dd>{{/if}}
+        {{#if gmAdjustment}}<dt>{{localize "WH40K.Reinforcement.GmAdjustment"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">{{gmAdjustment}}</dd>{{/if}}
+        <dt class="tw-font-bold">{{localize "WH40K.Reinforcement.FinalCost"}}</dt><dd data-wh40k-hook="rc-chat-final-cost" class="tw-m-0 tw-text-right tw-font-bold tw-tabular-nums">{{finalCost}}</dd>
+    </dl>
+
+    <ul class="tw-mt-2 tw-mb-0 tw-pl-4 tw-text-[0.8rem] tw-text-[#cfcab8]">
+        {{#each payments as |payment|}}
+            <li data-wh40k-hook="rc-chat-payment">{{localize "WH40K.Reinforcement.Paid" name=payment.name amount=payment.amount}}</li>
+        {{/each}}
+    </ul>
+
+    <div class="tw-mt-2 tw-text-[0.8rem] tw-text-[#f87171] tw-text-center">
+        <i class="fas fa-eye-slash" aria-hidden="true"></i>
+        {{localize "WH40K.Reinforcement.SubtletyLoss"}}: −{{subtletyLoss}}
+    </div>
+</div>

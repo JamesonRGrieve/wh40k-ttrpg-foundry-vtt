@@ -14,6 +14,7 @@ import { resolveSenses, senseBearersOf, tokenSensesUpdate } from '../../rules/to
 import { tokenPresetFromActor } from '../../utils/token-footprint.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import InventoryGeneratorDialog from '../dialogs/inventory-generator-dialog.ts';
+import ReinforcementCallDialog from '../dialogs/reinforcement-call-dialog.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
 import StatBlockParser from '../npc/stat-block-parser.ts';
@@ -289,6 +290,8 @@ export default class NPCSheet extends CharacterSheet {
             toggleGMTools: NPCSheet.#toggleGMTools,
             toggleAbilityDesc: NPCSheet.#toggleAbilityDesc,
             generateInventory: NPCSheet.#generateInventory,
+            // Reinforcement Character call (DH2 core p. 294, #77)
+            callReinforcement: NPCSheet.#callReinforcement,
             // Interaction tally (DH2 errata p.125, #145)
             adjustInteractionCount: NPCSheet.#adjustInteractionCount,
         },
@@ -394,6 +397,20 @@ export default class NPCSheet extends CharacterSheet {
         this._prepareHordeContext(context);
         this._prepareItems(context);
         this._prepareInteractionsContext(context);
+
+        // Reinforcement Character call (DH2 core p. 294, #77): GM-only, for a DH2
+        // NPC flagged as an RC. Other lines print no RC rules.
+        const npc = this.npcActor.system;
+        if (game.user.isGM && npc.isReinforcement && this._resolveGameSystemId() === 'dh2') {
+            const terms = npc.reinforcement;
+            context['reinforcementPanel'] = {
+                hasTerms: terms.influenceMinimum !== null && terms.influenceCost !== null,
+                influenceMinimum: terms.influenceMinimum,
+                influenceCost: terms.influenceCost,
+                peer: terms.peerDiscount.peer,
+                peerAmount: terms.peerDiscount.amount,
+            };
+        }
 
         return context;
     }
@@ -1572,6 +1589,11 @@ export default class NPCSheet extends CharacterSheet {
      * Open the compendium-driven inventory generator for this NPC / vendor.
      * @param {Event} event - The triggering event.
      */
+    /** Open the GM's Reinforcement Character call dialog (#77). */
+    static #callReinforcement(this: NPCSheet): void {
+        ReinforcementCallDialog.open(this.npcActor, this._resolveGameSystemId());
+    }
+
     static async #generateInventory(this: NPCSheet, event: Event): Promise<void> {
         event.preventDefault();
         const applied = await InventoryGeneratorDialog.show(this.npcActor);
