@@ -1,0 +1,18 @@
+{{!--
+  Remove button for a row of a reference list or an array editor. Dispatches the
+  `removeEntry` action of ReferenceListItemSheet, which removes element `index`
+  from the list at `path`, or clears the single value at `path` when no index
+  is given.
+
+  Hash arguments:
+    path  — `system.`-prefixed form path of the list / value. Required.
+    index — element index; omit (or pass a negative index) to clear a single reference.
+--}}
+<button type="button"
+        class="tw-inline-flex tw-h-7 tw-w-7 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-md tw-border tw-border-[var(--color-border-secondary)] tw-bg-[var(--wh40k-btn-bg)] tw-text-crimson tw-font-bold tw-cursor-pointer hover:tw-scale-[1.08] hover:tw-shadow-[0_2px_6px_var(--wh40k-shadow-soft)]"
+        data-action="removeEntry"
+        data-path="{{path}}"{{#if (gte index 0)}} data-index="{{index}}"{{/if}}
+        aria-label="{{localize 'WH40K.Common.Remove'}}"
+        title="{{localize 'WH40K.Common.Remove'}}">
+  <i class="fas fa-times" aria-hidden="true"></i>
+</button>

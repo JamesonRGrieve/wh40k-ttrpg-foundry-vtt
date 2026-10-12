@@ -8,6 +8,8 @@
         { kind: 'select',   name, labelKey, value, options: [{ value, labelKey, selected }] }
       | { kind: 'checkbox', name, labelKey, checked } >
     - notes          : system.notes (rendered directly below)
+    - giftPanel        (optional) : GiftPanelContext — mutation sheet, Gift of the Gods only (#597)
+    - distinctionPanel (optional) : DistinctionPanelContext — special-ability sheet, Renown categories only (#597)
 
   Editing is gated: canEdit / inEditMode already require the Freeform Character
   Editing world setting via FreeformGatedItemSheet, so the pencil and the
@@ -45,9 +47,7 @@
       {{!-- Scalar fields (selects / checkboxes) --}}
       {{#each contentScalars}}
       <div class="tw-mb-3">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold {{themeClassFor 'accent'}}">
-          <i class="fas fa-sliders tw-opacity-70"></i> {{localize this.labelKey}}
-        </h3>
+        {{> systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs icon="fa-sliders" labelKey=this.labelKey}}
         <div class="tw-px-1">
           {{#if (eq this.kind "select")}}
             {{#if ../inEditMode}}
@@ -75,9 +75,7 @@
 
       {{!-- Description --}}
       <div class="tw-mb-3">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold {{themeClassFor 'accent'}}">
-          <i class="fas fa-book tw-opacity-70"></i> {{localize "WH40K.Item.Tabs.Description"}}
-        </h3>
+        {{> systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs icon="fa-book" labelKey="WH40K.Item.Tabs.Description"}}
         <div class="tw-px-1">
           {{#if inEditMode}}
           {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
@@ -90,9 +88,7 @@
       {{!-- Type-specific HTML fields --}}
       {{#each contentFields}}
       <div class="tw-mb-3">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold {{themeClassFor 'accent'}}">
-          <i class="fas fa-bolt tw-opacity-70"></i> {{localize this.labelKey}}
-        </h3>
+        {{> systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs icon="fa-bolt" labelKey=this.labelKey}}
         <div class="tw-px-1">
           {{#if ../inEditMode}}
           {{editor this.value target=this.name button=true editable=../editable engine="prosemirror"}}
@@ -103,11 +99,19 @@
       </div>
       {{/each}}
 
+      {{!-- Gift of the Gods (mutation, category gift only) --}}
+      {{#if giftPanel}}
+      {{> systems/wh40k-rpg/templates/item/partial/mutation-gift-panel.hbs panel=giftPanel inEditMode=inEditMode editable=editable}}
+      {{/if}}
+
+      {{!-- Distinction / Renown (special ability, Renown categories only) --}}
+      {{#if distinctionPanel}}
+      {{> systems/wh40k-rpg/templates/item/partial/special-ability-distinction-panel.hbs panel=distinctionPanel inEditMode=inEditMode}}
+      {{/if}}
+
       {{!-- Notes --}}
       <div class="tw-mb-3">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold {{themeClassFor 'accent'}}">
-          <i class="fas fa-sticky-note tw-opacity-70"></i> {{localize "WH40K.Item.Tabs.Notes"}}
-        </h3>
+        {{> systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs icon="fa-sticky-note" labelKey="WH40K.Item.Tabs.Notes"}}
         <div class="tw-px-1">
           {{#if inEditMode}}
           <textarea name="system.notes" rows="3" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
@@ -119,9 +123,7 @@
 
       {{!-- Modifiers --}}
       <div class="tw-mb-3">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold {{themeClassFor 'accent'}}">
-          <i class="fas fa-chart-line tw-opacity-70"></i> {{localize "WH40K.Item.Tabs.Modifiers"}}
-        </h3>
+        {{> systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs icon="fa-chart-line" labelKey="WH40K.Item.Tabs.Modifiers"}}
         <div class="tw-px-1">
           {{#if inEditMode}}
           {{> systems/wh40k-rpg/templates/item/panel/modifiers-editor-panel.hbs config=dh}}

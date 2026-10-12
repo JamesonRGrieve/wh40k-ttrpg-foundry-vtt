@@ -1,0 +1,11 @@
+{{!--
+  Section heading of the content-block item sheet (item-content-block-sheet.hbs)
+  and the panels it embeds.
+
+  Hash arguments:
+    icon     — Font Awesome icon class (e.g. "fa-gift"). Required.
+    labelKey — i18n key of the heading text. Required.
+--}}
+<h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2 tw-text-gold {{themeClassFor 'accent'}}">
+  <i class="fas {{icon}} tw-opacity-70"></i> {{localize labelKey}}
+</h3>

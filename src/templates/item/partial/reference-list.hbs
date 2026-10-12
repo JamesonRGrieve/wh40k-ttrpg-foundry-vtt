@@ -1,0 +1,42 @@
+{{!--
+  A UUID reference — a list of referenced items, or a single one — with a drop
+  zone in edit mode (#597). The context is built by `buildReferenceList` in
+  `src/module/applications/item/reference-list-edits.ts`; drops and removals are
+  handled by ReferenceListItemSheet.
+
+  Hash arguments:
+    ref        — ReferenceListContext { path, mode, accept, entries[{uuid, name, index}], emptyKey, dropKey }. Required.
+    inEditMode — renders the remove buttons and the drop zone. Required.
+--}}
+<div class="tw-flex tw-flex-col tw-gap-1" data-reference-list="{{ref.path}}">
+  {{#each ref.entries}}
+  <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm">
+    <button type="button"
+            class="tw-flex tw-flex-1 tw-items-center tw-gap-1 tw-min-w-0 tw-bg-transparent tw-border-0 tw-p-0 tw-text-left tw-text-sm tw-cursor-pointer hover:tw-underline"
+            data-action="viewReference"
+            data-uuid="{{this.uuid}}"
+            title="{{localize 'WH40K.ItemSheet.Reference.View'}}">
+      <i class="fas fa-link tw-opacity-60" aria-hidden="true"></i>
+      <span class="tw-truncate">{{this.name}}</span>
+    </button>
+    {{#if ../inEditMode}}
+    {{> systems/wh40k-rpg/templates/item/partial/remove-entry-button.hbs path=../ref.path index=this.index}}
+    {{/if}}
+  </div>
+  {{else}}
+  {{#unless inEditMode}}
+  <div class="tw-text-sm tw-italic tw-opacity-70">{{localize ref.emptyKey}}</div>
+  {{/unless}}
+  {{/each}}
+
+  {{#if inEditMode}}
+  <div class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-p-2 tw-rounded tw-border-2 tw-border-dashed tw-border-[var(--wh40k-border-color-light)] tw-text-xs tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] tw-transition-colors hover:tw-border-gold"
+       data-drop-zone="reference"
+       data-reference-path="{{ref.path}}"
+       data-reference-mode="{{ref.mode}}"
+       data-reference-accept="{{ref.accept}}">
+    <i class="fas fa-hand-pointer" aria-hidden="true"></i>
+    <span>{{localize ref.dropKey}}</span>
+  </div>
+  {{/if}}
+</div>

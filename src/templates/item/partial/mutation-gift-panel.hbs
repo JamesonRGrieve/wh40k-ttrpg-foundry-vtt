@@ -1,0 +1,142 @@
+{{!--
+  Gift of the Gods panel of the mutation sheet (#597) — rendered by
+  item-content-block-sheet.hbs only for a mutation whose category is `gift`.
+  Edits the `system.gift` block (shape: GiftData in src/module/rules/bc-gifts.ts).
+  The context is built by `buildGiftPanelContext` in
+  src/module/applications/item/mutation-gift-panel.ts.
+
+  Hash arguments:
+    panel      — GiftPanelContext. Required.
+    inEditMode — edit controls vs. read-only display. Required.
+    editable   — forwarded to the rider description editors.
+--}}
+<div class="tw-mb-3" data-gift-panel>
+  {{> systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs icon="fa-gift" labelKey="WH40K.BC.Gifts.Label"}}
+  <div class="tw-flex tw-flex-col tw-gap-3 tw-px-1">
+
+    {{!-- Base grants --}}
+    <div class="tw-flex tw-flex-col tw-gap-1">
+      <h4 class="tw-m-0 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-opacity-80">{{localize "WH40K.ItemSheet.Gift.BaseGrants"}}</h4>
+      {{> systems/wh40k-rpg/templates/item/partial/reference-list.hbs ref=panel.grants inEditMode=inEditMode}}
+    </div>
+
+    {{!-- Sub-table --}}
+    <div class="tw-flex tw-flex-col tw-gap-1">
+      <h4 class="tw-m-0 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-opacity-80" id="wh40k-gift-subtable-label">{{localize "WH40K.ItemSheet.Gift.SubTable"}}</h4>
+      {{#if inEditMode}}
+      <select name="{{panel.subTablePath}}" aria-labelledby="wh40k-gift-subtable-label" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+        {{#each panel.subTableOptions}}
+        <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{localize this.labelKey}}</option>
+        {{/each}}
+      </select>
+      {{else}}
+      <div class="tw-text-sm">{{localize panel.subTableLabelKey}}</div>
+      {{/if}}
+    </div>
+
+    {{!-- Alignment riders --}}
+    <div class="tw-flex tw-flex-col tw-gap-2">
+      <h4 class="tw-m-0 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-opacity-80">{{localize "WH40K.ItemSheet.Gift.Riders"}}</h4>
+      {{#each panel.riders}}
+      <div class="tw-flex tw-flex-col tw-gap-2 tw-p-2 tw-rounded tw-border tw-border-solid tw-border-[var(--wh40k-border-color)]" data-gift-rider="{{this.index}}">
+        <div class="tw-flex tw-items-center tw-gap-2">
+          {{#if ../inEditMode}}
+          <select name="{{this.alignmentPath}}" aria-label="{{localize 'WH40K.ItemSheet.Gift.RiderAlignment'}}" class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+            {{#each this.alignmentOptions}}
+            <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{localize this.labelKey}}</option>
+            {{/each}}
+          </select>
+          {{> systems/wh40k-rpg/templates/item/partial/remove-entry-button.hbs path="system.gift.riders" index=this.index}}
+          {{else}}
+          <strong class="tw-text-sm">{{localize this.alignmentLabelKey}}</strong>
+          {{/if}}
+        </div>
+
+        <div class="tw-text-sm">
+          {{#if ../inEditMode}}
+          {{editor this.description target=this.descriptionPath button=true editable=../editable engine="prosemirror"}}
+          {{else}}
+          <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] [&_p]:tw-mb-2">{{{this.description}}}</div>
+          {{/if}}
+        </div>
+
+        <div class="tw-flex tw-flex-col tw-gap-1">
+          <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-opacity-80">{{localize "WH40K.ItemSheet.Gift.RiderCharacteristics"}}</span>
+          {{#if ../inEditMode}}
+          <div class="tw-grid tw-grid-cols-5 tw-gap-1">
+            {{#each this.characteristics}}
+            <label class="tw-flex tw-flex-col tw-items-center tw-gap-0.5 tw-text-xs" title="{{localize this.labelKey}}">
+              <span>{{this.abbreviation}}</span>
+              <input type="number" name="{{this.path}}" value="{{this.value}}" placeholder="0" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-sm tw-text-center" />
+            </label>
+            {{/each}}
+          </div>
+          {{else}}
+          <div class="tw-flex tw-flex-wrap tw-gap-2 tw-text-sm">
+            {{#each this.deltas}}<span>{{this.abbreviation}} {{this.value}}</span>{{else}}<span class="tw-italic tw-opacity-70">{{localize "WH40K.ItemSheet.Gift.NoDeltas"}}</span>{{/each}}
+          </div>
+          {{/if}}
+        </div>
+
+        <div class="tw-flex tw-flex-col tw-gap-1">
+          <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-opacity-80">{{localize "WH40K.ItemSheet.Gift.RiderGrants"}}</span>
+          {{> systems/wh40k-rpg/templates/item/partial/reference-list.hbs ref=this.grants inEditMode=../inEditMode}}
+        </div>
+
+        <div class="tw-flex tw-flex-col tw-gap-1">
+          <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-opacity-80">{{localize "WH40K.ItemSheet.Reference.ActiveEffect"}}</span>
+          {{#if ../inEditMode}}
+          <select name="{{this.activeEffectPath}}" aria-label="{{localize 'WH40K.ItemSheet.Reference.ActiveEffect'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+            <option value="">{{localize "WH40K.Common.None"}}</option>
+            {{#each this.activeEffectOptions}}
+            <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+          {{else}}
+          <div class="tw-text-sm">{{#if this.activeEffectName}}{{this.activeEffectName}}{{else}}{{localize "WH40K.Common.None"}}{{/if}}</div>
+          {{/if}}
+        </div>
+      </div>
+      {{else}}
+      {{#unless inEditMode}}
+      <div class="tw-text-sm tw-italic tw-opacity-70">{{localize "WH40K.ItemSheet.Gift.NoRiders"}}</div>
+      {{/unless}}
+      {{/each}}
+      {{#if inEditMode}}{{#if panel.canAddRider}}
+      {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs action="addGiftRider" labelKey="WH40K.ItemSheet.Gift.AddRider"}}
+      {{/if}}{{/if}}
+    </div>
+
+    {{!-- Acquisition rolls --}}
+    <div class="tw-flex tw-flex-col tw-gap-2">
+      <h4 class="tw-m-0 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-opacity-80">{{localize "WH40K.ItemSheet.Gift.CharacteristicRolls"}}</h4>
+      {{#each panel.rolls}}
+      <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm" data-gift-roll="{{this.index}}">
+        {{#if ../inEditMode}}
+        <select name="{{this.characteristicPath}}" aria-label="{{localize 'WH40K.ItemSheet.Gift.RollCharacteristic'}}" class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+          {{#each this.characteristicOptions}}
+          <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{localize this.labelKey}}</option>
+          {{/each}}
+        </select>
+        <select name="{{this.directionPath}}" aria-label="{{localize 'WH40K.ItemSheet.Gift.RollDirection'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+          {{#each this.directionOptions}}
+          <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{localize this.labelKey}}</option>
+          {{/each}}
+        </select>
+        <input type="text" name="{{this.formulaPath}}" value="{{this.formula}}" aria-label="{{localize 'WH40K.ItemSheet.Gift.RollFormula'}}" class="tw-w-24 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+        {{> systems/wh40k-rpg/templates/item/partial/remove-entry-button.hbs path="system.gift.characteristicRolls" index=this.index}}
+        {{else}}
+        <span>{{localize this.characteristicLabelKey}} {{localize this.directionLabelKey}} {{this.formula}}</span>
+        {{/if}}
+      </div>
+      {{else}}
+      {{#unless inEditMode}}
+      <div class="tw-text-sm tw-italic tw-opacity-70">{{localize "WH40K.ItemSheet.Gift.NoRolls"}}</div>
+      {{/unless}}
+      {{/each}}
+      {{#if inEditMode}}
+      {{> systems/wh40k-rpg/templates/dialogs/partial/dashed-add-button.hbs action="addGiftCharacteristicRoll" labelKey="WH40K.ItemSheet.Gift.AddRoll"}}
+      {{/if}}
+    </div>
+  </div>
+</div>

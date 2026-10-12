@@ -1,0 +1,75 @@
+{{!--
+  Distinction / Renown panel of the special-ability sheet (#597) — rendered by
+  item-content-block-sheet.hbs only for the Renown categories (advanced /
+  distinction / mark). Edits the fields of SpecialAbilityDistinctionFields
+  (src/module/rules/dw-distinction.ts). The context is built by
+  `buildDistinctionPanelContext` in
+  src/module/applications/item/special-ability-distinction-panel.ts.
+
+  Hash arguments:
+    panel      — DistinctionPanelContext. Required.
+    inEditMode — edit controls vs. read-only display. Required.
+--}}
+<div class="tw-mb-3" data-distinction-panel>
+  {{> systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs icon="fa-medal" labelKey="WH40K.DW.Renown.Label"}}
+  <div class="tw-flex tw-flex-col tw-gap-3 tw-px-1">
+
+    <div class="tw-grid tw-grid-cols-3 tw-gap-2">
+      <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">
+        <span class="tw-opacity-80">{{localize "WH40K.DW.Renown.Required"}}</span>
+        {{#if inEditMode}}
+        <select name="{{panel.renownRequiredPath}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-normal-case tw-font-normal">
+          {{#each panel.renownRequiredOptions}}
+          <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{localize this.labelKey}}</option>
+          {{/each}}
+        </select>
+        {{else}}
+        <span class="tw-text-sm tw-normal-case tw-font-normal">{{localize panel.renownRequiredLabelKey}}</span>
+        {{/if}}
+      </label>
+      <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">
+        <span class="tw-opacity-80">{{localize "WH40K.DW.Distinction.RenownReward"}}</span>
+        {{#if inEditMode}}
+        <input type="number" name="{{panel.renownRewardPath}}" value="{{panel.renownReward}}" min="0" step="1" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-normal-case tw-font-normal" />
+        {{else}}
+        <span class="tw-text-sm tw-normal-case tw-font-normal">{{panel.renownReward}}</span>
+        {{/if}}
+      </label>
+      <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">
+        <span class="tw-opacity-80">{{localize "WH40K.SpecialAbility.Cost"}}</span>
+        {{#if inEditMode}}
+        <input type="number" name="{{panel.costPath}}" value="{{panel.cost}}" min="0" step="1" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-normal-case tw-font-normal" />
+        {{else}}
+        <span class="tw-text-sm tw-normal-case tw-font-normal">{{localize "WH40K.SpecialAbility.XpCost" cost=panel.cost}}</span>
+        {{/if}}
+      </label>
+    </div>
+
+    {{#if panel.marks}}
+    <div class="tw-flex tw-flex-col tw-gap-1">
+      <h4 class="tw-m-0 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-opacity-80">{{localize "WH40K.ItemSheet.Distinction.Marks"}}</h4>
+      {{> systems/wh40k-rpg/templates/item/partial/reference-list.hbs ref=panel.marks inEditMode=inEditMode}}
+    </div>
+    {{/if}}
+
+    {{#if panel.grant}}
+    <div class="tw-flex tw-flex-col tw-gap-1">
+      <h4 class="tw-m-0 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-opacity-80">{{localize "WH40K.ItemSheet.Distinction.GrantTrait"}}</h4>
+      {{> systems/wh40k-rpg/templates/item/partial/reference-list.hbs ref=panel.grant.trait inEditMode=inEditMode}}
+    </div>
+    <div class="tw-flex tw-flex-col tw-gap-1">
+      <h4 class="tw-m-0 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-opacity-80">{{localize "WH40K.ItemSheet.Reference.ActiveEffect"}}</h4>
+      {{#if inEditMode}}
+      <select name="{{panel.grant.activeEffectPath}}" aria-label="{{localize 'WH40K.ItemSheet.Reference.ActiveEffect'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+        <option value="">{{localize "WH40K.Common.None"}}</option>
+        {{#each panel.grant.activeEffectOptions}}
+        <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+        {{/each}}
+      </select>
+      {{else}}
+      <div class="tw-text-sm">{{#if panel.grant.activeEffectName}}{{panel.grant.activeEffectName}}{{else}}{{localize "WH40K.Common.None"}}{{/if}}</div>
+      {{/if}}
+    </div>
+    {{/if}}
+  </div>
+</div>

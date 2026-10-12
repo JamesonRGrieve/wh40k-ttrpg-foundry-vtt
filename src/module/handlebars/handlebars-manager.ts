@@ -218,6 +218,13 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs',
             'systems/wh40k-rpg/templates/item/partial/item-accent-tab-strip.hbs',
             'systems/wh40k-rpg/templates/item/partial/item-name-input.hbs',
+
+            // Content-block item sheet partials (mutation Gift / special-ability Distinction panels, #597)
+            'systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs',
+            'systems/wh40k-rpg/templates/item/partial/reference-list.hbs',
+            'systems/wh40k-rpg/templates/item/partial/remove-entry-button.hbs',
+            'systems/wh40k-rpg/templates/item/partial/mutation-gift-panel.hbs',
+            'systems/wh40k-rpg/templates/item/partial/special-ability-distinction-panel.hbs',
             'systems/wh40k-rpg/templates/item/npc-template/header.hbs',
             'systems/wh40k-rpg/templates/item/npc-template/tabs.hbs',
             'systems/wh40k-rpg/templates/item/npc-template/tab-basics.hbs',
