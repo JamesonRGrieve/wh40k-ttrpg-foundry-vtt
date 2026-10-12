@@ -110,12 +110,14 @@ declare module 'fvtt-types/configuration' {
     interface FlagConfig {
         // `journalLink` is the explicit portrait journal link (#590): a JournalEntry /
         // JournalEntryPage UUID set by dropping a journal onto the portrait.
+        // `vault` is the vault identity the direct world writer stamps on an actor
+        // (#591: Event Tracker completion triggers match it before the name).
         Actor: {
-            'wh40k-rpg': { journalLink?: string; [key: string]: unknown };
+            'wh40k-rpg': { journalLink?: string; vault?: VaultJournalIdentity; [key: string]: unknown };
             'rt'?: Record<string, unknown>;
         };
         Item: {
-            'wh40k-rpg': Record<string, unknown>;
+            'wh40k-rpg': { vault?: VaultJournalIdentity; [key: string]: unknown };
             'rt'?: Record<string, unknown>;
         };
         ChatMessage: {

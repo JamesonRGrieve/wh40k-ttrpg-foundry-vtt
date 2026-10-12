@@ -10,6 +10,8 @@
  * Nothing here knows about Kanka or any other external sync target.
  */
 
+import { DEAD_STATUS_ID } from '../constants.ts';
+
 /** A character-attribute predicate leaf (`{char: {skill: 'scrutiny'}}`), authored in the vault. */
 export interface CharacterPredicate {
     readonly char: Readonly<Record<string, string | readonly string[]>>;
@@ -51,6 +53,8 @@ export interface EventDef {
     branch?: string | null;
     /** Wiki link to the side quest this event opens. */
     initiates_quest?: string | null;
+    /** Game-state triggers that resolve the event automatically (#591). Absent: resolved by hand. */
+    completion?: readonly CompletionTrigger[];
     source_name?: string;
     source_file?: string;
 }
@@ -531,4 +535,200 @@ export function resolveJournalUuid(ref: JournalRef, registered: JournalLinkResol
         }
     }
     return usableUuid(fallback(ref));
+}
+
+/* -------------------------------------------- */
+/*  Completion triggers (#591)                  */
+/* -------------------------------------------- */
+
+/**
+ * A reference a completion trigger names, as `export_events.py` writes it: a
+ * vault entity by its vault identity (`{name, path}`, the same identity the
+ * vault writer stamps as `flags['wh40k-rpg'].vault`), or a compendium document
+ * by UUID (`{uuid}`).
+ */
+type TriggerRef = { readonly name: string; readonly path: string } | { readonly uuid: string };
+
+/** The `holder` keyword meaning "any player character". */
+const PARTY_HOLDER = 'party';
+
+/** Whether a status was put on (`gained`) or taken off (`lost`). */
+export type StatusChange = 'gained' | 'lost';
+
+interface TriggerOptions {
+    /** Fire even while the event's requirements are unmet. */
+    readonly ignoreRequirements?: boolean;
+}
+
+/** An item enters an inventory: a player character's, or `holder`'s. */
+interface ItemAcquiredTrigger extends TriggerOptions {
+    readonly kind: 'item-acquired';
+    readonly item: TriggerRef;
+    readonly holder?: TriggerRef | typeof PARTY_HOLDER;
+}
+
+/** An actor gains the `dead` status. */
+interface ActorDiedTrigger extends TriggerOptions {
+    readonly kind: 'actor-died';
+    readonly actor: TriggerRef;
+}
+
+/** An actor gains or loses a status from the condition registry. */
+interface ActorStatusTrigger extends TriggerOptions {
+    readonly kind: 'actor-status';
+    readonly actor: TriggerRef;
+    readonly status: string;
+    readonly change: StatusChange;
+}
+
+/** A player character's token enters the scene of a location. */
+interface SceneEnteredTrigger extends TriggerOptions {
+    readonly kind: 'scene-entered';
+    readonly location: TriggerRef;
+}
+
+/** Another event is resolved. */
+interface EventResolvedTrigger extends TriggerOptions {
+    readonly kind: 'event-resolved';
+    readonly event: string;
+}
+
+/** One completion trigger of an event (the `completion` list authored in the vault). */
+export type CompletionTrigger = ItemAcquiredTrigger | ActorDiedTrigger | ActorStatusTrigger | SceneEnteredTrigger | EventResolvedTrigger;
+
+/** The vault identity fields a reference match reads (a document's `flags['wh40k-rpg'].vault`). */
+interface VaultIdentityLike {
+    readonly path?: string | undefined;
+    readonly name?: string | undefined;
+}
+
+/** A world document as the reference matcher sees it. */
+export interface IdentifiedDoc {
+    readonly name: string;
+    readonly vault?: VaultIdentityLike | undefined;
+    /** UUIDs the document stands for: its compendium source, legacy `core.sourceId`, its own UUID. */
+    readonly sources: readonly string[];
+}
+
+/** An actor as the evaluators see it. */
+export interface IdentifiedActor extends IdentifiedDoc {
+    /** A player character (owned by a player). */
+    readonly isPartyMember: boolean;
+}
+
+/**
+ * A game-state change, normalised from a Foundry hook. Death is an
+ * `actor-status` change of the `dead` status — the system has one death state (#495).
+ */
+export type GameStateChange =
+    | { readonly kind: 'item-acquired'; readonly item: IdentifiedDoc; readonly holder: IdentifiedActor }
+    | { readonly kind: 'actor-status'; readonly actor: IdentifiedActor; readonly status: string; readonly change: StatusChange }
+    | { readonly kind: 'scene-entered'; readonly scene: IdentifiedDoc; readonly actor: IdentifiedActor }
+    | { readonly kind: 'event-resolved'; readonly eventId: string };
+
+/** The world collection a referenced document lives in. */
+export type RefCollection = 'actor' | 'item' | 'scene';
+
+/** How strongly a document matches a reference, strongest first. */
+type RefMatchTier = 'vault' | 'name' | 'compendium';
+
+/**
+ * The strongest way `doc` matches `ref`, or null.
+ *
+ * - `vault`: the document's vault identity flag names the reference (same vault
+ *   path, or same vault name), so a renamed document still matches.
+ * - `name`: the document's own name is the reference's name.
+ * - `compendium`: a `{uuid}` reference is one of the document's sources.
+ */
+export function refMatchTier(ref: TriggerRef, doc: IdentifiedDoc): RefMatchTier | null {
+    if ('uuid' in ref) return doc.sources.includes(ref.uuid) ? 'compendium' : null;
+    const vault = doc.vault;
+    if (vault !== undefined && (vault.path === ref.path || vault.name === ref.name)) return 'vault';
+    return doc.name === ref.name ? 'name' : null;
+}
+
+/** Matches a trigger's references against world documents. */
+export interface RefResolver {
+    matches: (ref: TriggerRef, doc: IdentifiedDoc, collection: RefCollection) => boolean;
+}
+
+/**
+ * The reference resolver over a world: a document matches when it matches the
+ * reference at all, unless it matches only by NAME while some document of the
+ * same collection carries the reference's vault identity — the flagged
+ * document is then the one the reference means.
+ * @param {Function} candidates  The world documents of a collection.
+ */
+export function createRefResolver(candidates: (collection: RefCollection) => Iterable<IdentifiedDoc>): RefResolver {
+    return {
+        matches: (ref, doc, collection) => {
+            const tier = refMatchTier(ref, doc);
+            if (tier !== 'name') return tier !== null;
+            for (const other of candidates(collection)) {
+                if (refMatchTier(ref, other) === 'vault') return false;
+            }
+            return true;
+        },
+    };
+}
+
+function holderMatches(trigger: ItemAcquiredTrigger, holder: IdentifiedActor, resolver: RefResolver): boolean {
+    const wanted = trigger.holder;
+    if (wanted === undefined || wanted === PARTY_HOLDER) return holder.isPartyMember;
+    return resolver.matches(wanted, holder, 'actor');
+}
+
+/** Whether a game-state change fires a completion trigger. */
+export function triggerFires(trigger: CompletionTrigger, change: GameStateChange, resolver: RefResolver): boolean {
+    if (trigger.kind === 'event-resolved') return change.kind === 'event-resolved' && change.eventId === trigger.event;
+    if (trigger.kind === 'item-acquired') {
+        return change.kind === 'item-acquired' && resolver.matches(trigger.item, change.item, 'item') && holderMatches(trigger, change.holder, resolver);
+    }
+    if (trigger.kind === 'scene-entered') {
+        return change.kind === 'scene-entered' && change.actor.isPartyMember && resolver.matches(trigger.location, change.scene, 'scene');
+    }
+    if (change.kind !== 'actor-status' || !resolver.matches(trigger.actor, change.actor, 'actor')) return false;
+    if (trigger.kind === 'actor-died') return change.status === DEAD_STATUS_ID && change.change === 'gained';
+    return change.status === trigger.status && change.change === trigger.change;
+}
+
+/** An event a change resolves, and the trigger that fired. */
+export interface AutoResolution {
+    readonly eventId: string;
+    readonly trigger: CompletionTrigger;
+}
+
+/**
+ * The still-unresolved events a game-state change resolves: for each event,
+ * the first of its triggers that fires — provided the event is available, or
+ * the trigger ignores requirements. Events in `skip` (already being resolved,
+ * or already resolved automatically) are left alone.
+ */
+export function autoResolutions(
+    graph: EventGraph,
+    resolved: ResolvedState,
+    change: GameStateChange,
+    resolver: RefResolver,
+    skip: ReadonlySet<string> = new Set(),
+): AutoResolution[] {
+    const out: AutoResolution[] = [];
+    for (const [eventId, event] of Object.entries(graph)) {
+        const triggers = event.completion;
+        if (triggers === undefined || isResolved(resolved, eventId) || skip.has(eventId)) continue;
+        const available = isEventAvailable(graph, resolved, eventId);
+        const trigger = triggers.find((candidate) => (available || candidate.ignoreRequirements === true) && triggerFires(candidate, change, resolver));
+        if (trigger !== undefined) out.push({ eventId, trigger });
+    }
+    return out;
+}
+
+/**
+ * The status transitions one ActiveEffect makes on its actor. A status counts as
+ * gained (or lost) only when no OTHER enabled effect on the actor carries it, so
+ * stacking a second effect with a status the actor already has is no change.
+ * @param {Iterable<string>} statuses  The effect's status ids.
+ * @param {ReadonlySet<string>} otherStatuses  Status ids of the actor's other enabled effects.
+ */
+export function effectStatusTransitions(statuses: Iterable<string>, otherStatuses: ReadonlySet<string>): string[] {
+    return Array.from(statuses).filter((status) => !otherStatuses.has(status));
 }

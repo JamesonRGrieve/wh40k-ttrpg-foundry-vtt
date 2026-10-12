@@ -123,6 +123,7 @@ import {
     rollItemMacro,
     rollSkillMacro,
 } from './macros/macro-manager.ts';
+import { registerEventCompletionHooks } from './managers/event-completion.ts';
 import { EventTracker } from './managers/event-tracker.ts';
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
@@ -1372,6 +1373,9 @@ export class HooksManager {
         // Foundry serves to every authenticated client). On a player client the
         // document is simply absent, which is the intended outcome.
         await EventTracker.loadGraph();
+        // #591: resolve tracker events from game state (item, death, status, scene and
+        // chained-event triggers authored on the graph). Acts only on the active GM.
+        registerEventCompletionHooks();
         // #496: spawn the Inquisition Armoury when a DH2 campaign runs in
         // homebrew requisition mode. Idempotent and GM-only; a no-op elsewhere.
         await ensureInquisitionArmoury();

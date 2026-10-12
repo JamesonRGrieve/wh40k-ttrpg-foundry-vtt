@@ -320,6 +320,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/dw-cohesion-chat.hbs',
             'systems/wh40k-rpg/templates/chat/dw-mode-chat.hbs',
             'systems/wh40k-rpg/templates/chat/dw-requisition-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/event-auto-resolved-chat.hbs',
             'systems/wh40k-rpg/templates/chat/ow-comrade-chat.hbs',
             'systems/wh40k-rpg/templates/chat/ow-logistics-chat.hbs',
             'systems/wh40k-rpg/templates/chat/ow-orders-chat.hbs',

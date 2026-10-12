@@ -1,0 +1,13 @@
+{{!-- Event Tracker: an event resolved automatically by a completion trigger (#591). --}}
+{{!-- Whispered to the GM only. The wh40k-rpg class lets the tw- utilities apply outside a sheet root. --}}
+<div class="wh40k-rpg tw-p-3 tw-rounded-md tw-border tw-border-[color:var(--wh40k-accent-gold)] tw-bg-[rgba(14,22,28,0.88)]">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-bolt tw-text-[color:var(--wh40k-accent-gold)]" aria-hidden="true"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-gold)]">
+            {{localize "WH40K.EventTracker.Auto.ChatTitle"}}
+        </div>
+    </div>
+    <div class="tw-text-[0.95rem] tw-font-bold tw-text-slate-50 tw-mb-1">{{eventName}}</div>
+    <div class="tw-text-[0.85rem] tw-text-slate-200 tw-mb-2">{{detail}}</div>
+    <div class="tw-text-xs tw-italic tw-text-slate-400">{{localize "WH40K.EventTracker.Auto.ChatUndoHint"}}</div>
+</div>
