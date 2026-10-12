@@ -18,8 +18,9 @@ import { initializeStoryHandlebars } from '../../../../stories/template-support'
 import { assertActiveTab, renderSheetParts } from '../../../../stories/test-helpers';
 import bodySrc from '../../../templates/dialogs/event-tracker/body.hbs?raw';
 import headerSrc from '../../../templates/dialogs/event-tracker/header.hbs?raw';
+import { CAMPAIGN_GRAPH_ID, type GraphSource } from '../../managers/adventure-event-graph.ts';
 import { type CharacterState, type EventGraph, type PcAttitudeMap, type ResolvedState, stepCampaignDay, withPcAttitude } from '../../managers/event-graph.ts';
-import { asEventTrackerTab, buildEventTrackerView, type EventTrackerTab } from './event-tracker-view.ts';
+import { ALL_GRAPHS, asEventTrackerTab, asGraphFilter, buildEventTrackerView, type EventTrackerTab } from './event-tracker-view.ts';
 
 initializeStoryHandlebars();
 seedRandom(0xe7e7);
@@ -27,20 +28,20 @@ seedRandom(0xe7e7);
 const AT = { resolvedAt: '2026-01-01T00:00:00.000Z' };
 
 const GRAPH: EventGraph = {
-    BRIEFING: {
+    'BRIEFING': {
         name: 'Document Review and Cover Story',
         location: '[[The Errant Vector]]',
         source_name: 'Day 0 — Transit and Arrival',
         source_file: 'Days/Day 0.md',
     },
-    CREW_MEAL: {
+    'CREW_MEAL': {
         name: 'Crew Meal and Briefing',
         location: '[[The Errant Vector]]',
         source_name: 'Day 0 — Transit and Arrival',
         source_file: 'Days/Day 0.md',
         requires: 'BRIEFING',
     },
-    VISIT_SUMP: {
+    'VISIT_SUMP': {
         name: 'A Drink at the Sump',
         location: '[[The Sump]]',
         source_name: 'Day 1 — First Full Day',
@@ -49,14 +50,41 @@ const GRAPH: EventGraph = {
         excuse: { CREW_MEAL: 'The crew are still at table.' },
         is_day_end: true,
     },
-    SICK_CHILD: {
+    'SICK_CHILD': {
         name: 'The Sick Child',
         source_name: 'The Sick Child',
         source_file: 'Quests/The Sick Child.md',
         requires: 'VISIT_SUMP',
         excuse: 'Nobody has mentioned the child yet.',
     },
+    // An imported adventure's events (#592), as the loader namespaces them: ids prefixed
+    // with the scenario id, references resolved to the imported journals' UUIDs.
+    'ashford-mill:ARRIVE': {
+        id: 'ashford-mill:ARRIVE',
+        name: 'Arrive at Ashford',
+        graph: 'ashford-mill',
+        source_name: 'Chapter 1 — Arrival',
+        location: 'Ashford Mill',
+        requires: null,
+        day: 1,
+        links: { source: 'JournalEntry.ashChapter1', location: 'JournalEntry.ashMillPlace' },
+    },
+    'ashford-mill:NIGHT_SHIFT': {
+        id: 'ashford-mill:NIGHT_SHIFT',
+        name: 'Watch the Night Shift',
+        graph: 'ashford-mill',
+        source_name: 'Chapter 1 — Arrival',
+        location: 'Ashford Mill',
+        requires: 'ashford-mill:ARRIVE',
+        day: 1,
+        links: { source: 'JournalEntry.ashChapter1', location: 'JournalEntry.ashMillPlace' },
+    },
 };
+
+const SOURCES: readonly GraphSource[] = [
+    { id: CAMPAIGN_GRAPH_ID, label: '' },
+    { id: 'ashford-mill', label: 'The Ashford Mill' },
+];
 
 const CHARACTERS: Record<string, CharacterState> = {
     'Garrick Varo': {
@@ -76,13 +104,14 @@ const JOURNALS = new Map([
 
 interface TrackerState {
     activeTab: EventTrackerTab;
+    activeGraph: string;
     campaignDay: number;
     resolved: ResolvedState;
     pcAttitudes: PcAttitudeMap;
 }
 
 function initialState(activeTab: EventTrackerTab): TrackerState {
-    return { activeTab, campaignDay: 0, resolved: { BRIEFING: AT }, pcAttitudes: { 'Garrick Varo': { Ibnad: 'trusting' } } };
+    return { activeTab, activeGraph: ALL_GRAPHS, campaignDay: 0, resolved: { BRIEFING: AT }, pcAttitudes: { 'Garrick Varo': { Ibnad: 'trusting' } } };
 }
 
 function renderInto(root: HTMLElement, state: TrackerState): void {
@@ -94,6 +123,8 @@ function renderInto(root: HTMLElement, state: TrackerState): void {
         pcAttitudes: state.pcAttitudes,
         pcNames: ['Gus', 'Ibnad'],
         activeTab: state.activeTab,
+        sources: SOURCES,
+        activeGraph: state.activeGraph,
         activeSceneName: 'The Sump',
         sceneNames: new Set(['The Sump']),
         journalLink: (ref) => JOURNALS.get(ref.name) ?? null,
@@ -119,6 +150,7 @@ function mountTracker(activeTab: EventTrackerTab): HTMLElement {
         if (target === null) return;
         const action = target.dataset['action'];
         if (action === 'selectTab' || action === 'jumpToGroup') state.activeTab = asEventTrackerTab(target.dataset['tab']);
+        else if (action === 'selectGraph') state.activeGraph = asGraphFilter(target.dataset['graph'], SOURCES);
         else if (action === 'stepDay') state.campaignDay = stepCampaignDay(state.campaignDay, Number(target.dataset['delta']));
         else if (action === 'toggleResolved' && target instanceof HTMLInputElement) {
             const id = target.dataset['eventId'] ?? '';
@@ -196,6 +228,31 @@ export const Interactions: Story = {
         gus.value = 'wary';
         gus.dispatchEvent(new Event('change', { bubbles: true }));
         await expect(canvasElement.querySelector<HTMLInputElement>('[data-wh40k-hook="evt-pc-attitude"][data-pc="Gus"]')?.value).toBe('wary');
+    },
+};
+
+export const Adventures: Story = {
+    render: () => mountTracker('timeline'),
+    play: async ({ canvasElement }) => {
+        const groupKeys = (): Array<string | null> =>
+            [...canvasElement.querySelectorAll('[data-wh40k-hook="evt-group"]')].map((group) => group.getAttribute('data-group-key'));
+
+        // Every graph listed: the adventure's chapter is its own group, labelled with the adventure,
+        // and its source links straight to the imported chapter journal the loader resolved.
+        await expect(canvasElement.querySelector('[data-action="selectGraph"][data-graph="*"]')?.getAttribute('aria-pressed')).toBe('true');
+        await expect(groupKeys()).toContain('ashford-mill:Chapter 1 — Arrival');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="evt-group-graph"]')?.textContent.trim()).toBe('The Ashford Mill');
+        await expect(canvasElement.querySelector('a.content-link[data-uuid="JournalEntry.ashChapter1"]')).not.toBeNull();
+
+        // Filter to the adventure: only its group remains, with no adventure label.
+        canvasElement.querySelector<HTMLElement>('[data-action="selectGraph"][data-graph="ashford-mill"]')?.click();
+        await expect(groupKeys()).toEqual(['ashford-mill:Chapter 1 — Arrival']);
+        await expect(canvasElement.querySelector('[data-wh40k-hook="evt-group-graph"]')).toBeNull();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="evt-stats"]')?.textContent.trim()).toBe('0/2 resolved · 1 available now');
+
+        // Filter to the campaign: the adventure's events are gone.
+        canvasElement.querySelector<HTMLElement>(`[data-action="selectGraph"][data-graph="${CAMPAIGN_GRAPH_ID}"]`)?.click();
+        await expect(groupKeys()).not.toContain('ashford-mill:Chapter 1 — Arrival');
     },
 };
 

@@ -18,6 +18,7 @@
 import { SYSTEM_ID } from '../../constants.ts';
 import { isCharacterActorType } from '../../documents/actor-types.ts';
 import { t } from '../../i18n/t.ts';
+import type { GraphSource } from '../../managers/adventure-event-graph.ts';
 import {
     type CharacterState,
     type EventGraph,
@@ -29,7 +30,7 @@ import {
     stepCampaignDay,
     type VaultJournalIdentity,
 } from '../../managers/event-graph.ts';
-import { asEventTrackerTab, buildEventTrackerView, type EventTrackerTab, type EventTrackerView } from './event-tracker-view.ts';
+import { ALL_GRAPHS, asEventTrackerTab, asGraphFilter, buildEventTrackerView, type EventTrackerTab, type EventTrackerView } from './event-tracker-view.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -50,6 +51,8 @@ const REFRESH_HOOKS = ['wh40k-rpg.eventResolved', 'wh40k-rpg.campaignDayChanged'
 export interface EventTrackerSource {
     readonly graph: EventGraph | null;
     readonly characters: Readonly<Record<string, CharacterState>> | null;
+    /** The graphs loaded: the campaign's and each imported adventure's (#592). */
+    readonly sources: readonly GraphSource[];
     getResolved: () => ResolvedState;
     setResolved: (eventId: string, resolved: boolean) => Promise<void>;
     getCampaignDay: () => number;
@@ -93,6 +96,8 @@ export default class EventTrackerDialog extends HandlebarsApplicationMixin(Appli
             // eslint-disable-next-line @typescript-eslint/unbound-method
             selectTab: EventTrackerDialog.#onSelectTab,
             // eslint-disable-next-line @typescript-eslint/unbound-method
+            selectGraph: EventTrackerDialog.#onSelectGraph,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             stepDay: EventTrackerDialog.#onStepDay,
             // eslint-disable-next-line @typescript-eslint/unbound-method
             toggleResolved: EventTrackerDialog.#onToggleResolved,
@@ -113,6 +118,7 @@ export default class EventTrackerDialog extends HandlebarsApplicationMixin(Appli
 
     readonly #source: EventTrackerSource;
     #activeTab: EventTrackerTab = 'timeline';
+    #activeGraph: string = ALL_GRAPHS;
     #hookIds: Array<[(typeof REFRESH_HOOKS)[number], number]> = [];
 
     constructor(source: EventTrackerSource) {
@@ -155,6 +161,8 @@ export default class EventTrackerDialog extends HandlebarsApplicationMixin(Appli
                 .map((actor) => actor.name)
                 .sort((a, b) => a.localeCompare(b)),
             activeTab: this.#activeTab,
+            sources: source.sources,
+            activeGraph: asGraphFilter(this.#activeGraph, source.sources),
             activeSceneName: activeScene === undefined ? '' : sceneLocationName(activeScene),
             // A scene answers for its own name and, when vault-flagged, for its location.
             sceneNames: new Set(scenes.flatMap((scene) => [scene.name, sceneLocationName(scene)])),
@@ -215,6 +223,11 @@ export default class EventTrackerDialog extends HandlebarsApplicationMixin(Appli
 
     static async #onSelectTab(this: EventTrackerDialog, _event: Event, target: HTMLElement): Promise<void> {
         this.#activeTab = asEventTrackerTab(target.dataset['tab']);
+        await this.render();
+    }
+
+    static async #onSelectGraph(this: EventTrackerDialog, _event: Event, target: HTMLElement): Promise<void> {
+        this.#activeGraph = asGraphFilter(target.dataset['graph'], this.#source.sources);
         await this.render();
     }
 

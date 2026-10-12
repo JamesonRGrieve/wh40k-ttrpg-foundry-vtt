@@ -18,6 +18,16 @@
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
 import {
+    CAMPAIGN_GRAPH_ID,
+    type DocLookup,
+    type GraphSource,
+    isAdventureScenario,
+    type LoadedGraph,
+    loadAdventureGraph,
+    mergeGraphs,
+    type ResolvedDocRef,
+} from './adventure-event-graph.ts';
+import {
     type ChangeOrigin,
     type CharacterState,
     type ComputedCharacterState,
@@ -103,6 +113,56 @@ export interface EventTrackerChangeContext {
 export const EVENT_GRAPH_FLAG = 'eventGraph';
 
 /**
+ * Flag key on an Adventure's GM JournalEntry PAGE carrying its scenario
+ * (`docs/pack-authoring.md` → Adventures). Its `eventGraph` (#592) is loaded
+ * beside the campaign graph, namespaced by the scenario `id`.
+ */
+export const SCENARIO_FLAG = 'scenario';
+
+/** A world document as the reference lookup reads it. */
+interface LookupDocument {
+    readonly id: string | null;
+    readonly name: string;
+    readonly uuid: string;
+    readonly _stats: { readonly compendiumSource?: string | null };
+}
+
+/** The world documents of one primary document class an Adventure imports and a graph references. */
+function worldDocuments(documentName: string): readonly LookupDocument[] {
+    if (documentName === 'Actor') return game.actors.contents;
+    if (documentName === 'Item') return game.items.contents;
+    if (documentName === 'Scene') return game.scenes.contents;
+    if (documentName === 'JournalEntry') return game.journal.contents;
+    return [];
+}
+
+function resolvedDoc(doc: LookupDocument): ResolvedDocRef {
+    return { name: doc.name, uuid: doc.uuid };
+}
+
+/** The live lookups over the world (and its compendium indexes) that adventure references resolve through. */
+const worldDocLookup: DocLookup = {
+    imported: (documentName, id, compendiumUuid) => {
+        const docs = worldDocuments(documentName);
+        const fromSource = docs.find((doc) => doc._stats.compendiumSource === compendiumUuid);
+        if (fromSource !== undefined) return resolvedDoc(fromSource);
+        // Adventure import keeps the embedded copy's id; accept it unless it claims a different source.
+        const sameId = docs.find((doc) => doc.id === id && (doc._stats.compendiumSource ?? null) === null);
+        return sameId === undefined ? null : resolvedDoc(sameId);
+    },
+    byUuid: (uuid) => {
+        try {
+            const doc = fromUuidSync(uuid, { strict: false });
+            if (doc === null || typeof doc !== 'object' || !('name' in doc) || typeof doc.name !== 'string') return null;
+            return { name: doc.name, uuid: 'uuid' in doc && typeof doc.uuid === 'string' ? doc.uuid : uuid };
+        } catch (err) {
+            console.warn(`EventTracker: could not resolve ${uuid}`, err);
+            return null;
+        }
+    },
+};
+
+/**
  * True when a flag payload carries the `events` map the tracker needs.
  *
  * The flag is written by `deploy.sh` from the vault export, so nothing about its
@@ -166,6 +226,7 @@ export class EventTracker {
     static _graph: EventGraph | null = null;
     static _characters: Record<string, CharacterState> | null = null;
     static _dataVersion = 1;
+    static _sources: GraphSource[] = [];
     static #journalResolver: JournalLinkResolver | null = null;
 
     /**
@@ -222,6 +283,34 @@ export class EventTracker {
         return EventTracker._dataVersion;
     }
 
+    /** The graphs loaded: the campaign's (id `''`) when present, then each imported adventure's. */
+    static get sources(): readonly GraphSource[] {
+        return EventTracker._sources;
+    }
+
+    /**
+     * The event graphs of the Adventures imported into the world (#592), each
+     * namespaced by its scenario id. An adventure's scenario flag sits on a page
+     * of its GM journal, which the import creates in the world; the journal's
+     * name labels the adventure.
+     */
+    static findAdventureGraphs(): Array<LoadedGraph & { source: GraphSource }> {
+        const journal = game.journal;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: `game.journal` is undefined until Foundry's `setup` phase
+        if (journal === undefined) return [];
+        const out: Array<LoadedGraph & { source: GraphSource }> = [];
+        const seen = new Set<string>();
+        for (const entry of journal) {
+            for (const page of entry.pages) {
+                const scenario = page.flags[SYSTEM_ID]?.[SCENARIO_FLAG];
+                if (!isAdventureScenario(scenario) || seen.has(scenario.id)) continue;
+                seen.add(scenario.id);
+                out.push({ ...loadAdventureGraph(scenario, entry.name, worldDocLookup), source: { id: scenario.id, label: entry.name } });
+            }
+        }
+        return out;
+    }
+
     /**
      * The graph payload from the GM-only JournalEntry, or undefined.
      *
@@ -259,24 +348,42 @@ export class EventTracker {
     static async loadGraph(): Promise<void> {
         try {
             const data = EventTracker.findGraphPayload();
-            if (data === undefined) {
+            const adventures = EventTracker.findAdventureGraphs();
+            if (data === undefined && adventures.length === 0) {
                 console.warn(
                     'EventTracker: no GM-only event-graph document found — run deploy.sh --restart to write it (players never see this document, so this is expected on a player client)',
                 );
                 return;
             }
-            EventTracker._graph = data.events;
-            EventTracker._dataVersion = data.version ?? 1;
-            EventTracker._characters = data.characters ?? null;
-            const charCount = EventTracker._characters ? Object.keys(EventTracker._characters).length : 0;
+            const campaign: LoadedGraph[] = data === undefined ? [] : [{ events: data.events, characters: data.characters ?? {} }];
+            const merged = mergeGraphs([...campaign, ...adventures]);
+            EventTracker._graph = merged.events;
+            EventTracker._dataVersion = data?.version ?? 1;
+            EventTracker._characters = data?.characters != null || Object.keys(merged.characters).length > 0 ? merged.characters : null;
+            EventTracker._sources = [
+                // The dashboard labels the campaign from the langpack.
+                ...(data === undefined ? [] : [{ id: CAMPAIGN_GRAPH_ID, label: '' }]),
+                ...adventures.map(({ source }) => source),
+            ];
+            const charCount = Object.keys(merged.characters).length;
             console.warn(
-                `EventTracker: loaded ${Object.keys(data.events).length} events${
+                `EventTracker: loaded ${Object.keys(merged.events).length} events${
                     charCount > 0 ? `, ${charCount} characters with disposition/relationship data` : ''
-                } (schema v${EventTracker._dataVersion})`,
+                } from ${EventTracker._sources.length} graph(s) (schema v${EventTracker._dataVersion})`,
             );
         } catch (err) {
             console.error('EventTracker: failed to load the event-graph document', err);
         }
+    }
+
+    /**
+     * Reload the graph whenever an Adventure is imported, so its events appear
+     * without a world reload. Call once, at `ready`.
+     */
+    static watchAdventureImports(): void {
+        Hooks.on('importAdventure', () => {
+            void EventTracker.loadGraph();
+        });
     }
 
     /** Reject a write from a non-GM client. */

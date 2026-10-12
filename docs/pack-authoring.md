@@ -1259,3 +1259,72 @@ flags['wh40k-rpg'].scenario = {
   duplicated.
 - **`rewards[].currency.key`** is a `CONFIG.wh40k.currencies` key (the currency
   registry is documented in `docs/VALUATION.md`).
+
+### Event graph
+
+A scenario may carry an **`eventGraph`**, so the adventure runs as a campaign on the
+GM's Event Tracker: availability, the timeline / location / relations views, and
+automatic resolution by completion triggers. It is the tracker's own event shape
+(`EventDef` / `CharacterState` in `src/module/managers/event-graph.ts`, with
+`L = UuidRef`), so the types there are the schema:
+
+```jsonc
+"eventGraph": {
+  "events": {                                   // keyed by event id: [A-Za-z0-9_-], no ":"
+    "ARRIVE": { "name": "Arrive in Ashford", "source": { "uuid": "JournalEntry.ashChapter000001" }, "day": 1, "act": 1, "requires": null },
+    "FOREMAN_FALLS": {
+      "name": "The Foreman Falls",
+      "source": { "uuid": "JournalEntry.ashChapter000002" },        // the journal the event is written up in
+      "location": { "uuid": "JournalEntry.ashMillPlace0001" },      // a Scene, JournalEntry or page
+      "day": 2, "act": 1,
+      "requires": "ARRIVE",                                         // event id, list (= all), {all}/{any}, {char}
+      "requires_any": [],
+      "completion": [
+        { "kind": "actor-died", "actor": { "uuid": "Compendium.wh40k-rpg.hb-dh2-ashford-actors-npcs.Actor.ashOrrinVael0001" } }
+      ],
+      "initiates_quest": null                                       // or a JournalEntry ref
+    }
+  },
+  "characters": {                               // keyed by a local handle: [A-Za-z0-9_-]
+    "foreman": {
+      "actor": { "uuid": "Compendium.wh40k-rpg.hb-dh2-ashford-actors-npcs.Actor.ashOrrinVael0001" },
+      "dispositions": [
+        { "target": "party", "attitude": "guarded", "default": true },
+        { "target": "party", "attitude": "hostile", "trigger": "ARRIVE" }
+      ],
+      "relationships": [ { "target": { "uuid": "Actor.<id>" }, "type": "rival", "state": "wary", "influences": [ { "event": "FOREMAN_FALLS", "to": "enemy" } ] } ]
+    }
+  }
+}
+```
+
+- **Every reference is `{ "uuid": … }`, never a name.** Either a Compendium UUID
+  into the content packs (`Compendium.wh40k-rpg.<pack>.<Class>.<id>`, a page as
+  `….JournalEntry.<id>.JournalEntryPage.<id>`), or an **adventure-internal** UUID
+  naming one of the Adventure's own Actors, Scenes or JournalEntries
+  (`JournalEntry.<id>`, `Scene.<id>`, `Actor.<id>`). Foundry's Adventure import
+  keeps embedded ids (`keepId`), so an internal UUID *is* the imported world
+  document's UUID. Items are referenced by Compendium UUID only.
+- **Every Compendium reference is embedded.** The build copies each referenced
+  Actor / Item / Scene / JournalEntry into the Adventure (like `encounters` and
+  `rewards`) and stamps the copy's `_stats.compendiumSource` with the UUID, so the
+  imported world document still answers to it.
+- **Fields.** `name` is required; `source`, `location`, `initiates_quest` are refs;
+  `day` / `act` non-negative integers; `requires` / `requires_any` / `excuse` /
+  `is_day_end` / `branch` as in the vault export. `completion` triggers are the
+  `CompletionTrigger` union: `item-acquired` (`item`, optional `holder`: `"party"`
+  or an Actor ref), `actor-died` (`actor`), `actor-status` (`actor`, `status`, `change`:
+  `gained` / `lost`), `scene-entered` (`location`: a Scene ref), `event-resolved`
+  (`event`); any may add `ignoreRequirements: true`. `status` is the
+  `system.identifier` of a condition in the compiled packs, or `dead`.
+- **`id`** (the scenario's) is a lowercase slug: it **namespaces** the graph. On
+  load every event id becomes `<scenarioId>:<eventId>` (and every reference to one
+  with it) and every character `<scenarioId>:<key>`, so several adventures and the
+  home campaign (whose ids stay bare) share one tracker.
+- **Validation.** `pnpm packs` fails on a dangling event id (requirements, excuses,
+  `event-resolved`, disposition triggers, influences), an unknown trigger kind or
+  field, a missing required field, an unknown status id, a bare-name reference, and
+  a UUID that resolves neither in the compiled packs nor to the Adventure's own
+  documents (`scripts/validate-adventure-events.cjs`).
+
+The public `hb-dh2-adventures` pack's *The Ashford Mill* is the reference example.

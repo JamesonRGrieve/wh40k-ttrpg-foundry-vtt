@@ -7,6 +7,7 @@
  * same function — every grouping, sort, highlight and link decision lives here.
  */
 
+import { CAMPAIGN_GRAPH_ID, eventGraphId, type GraphSource, namespacedId } from '../../managers/adventure-event-graph.ts';
 import {
     activeDisposition,
     type CharacterState,
@@ -15,6 +16,7 @@ import {
     computeCharacterStates,
     type EventDef,
     type EventGraph,
+    eventDayNumber,
     eventLocationName,
     eventSourceName,
     flattenRequirements,
@@ -30,13 +32,29 @@ import {
     type RequirementRow,
     type ResolvedState,
     sourceDayLabel,
-    sourceDayNumber,
     sourceRefKind,
     stripWikiLink,
+    UNDATED_SOURCE_SORT_KEY,
 } from '../../managers/event-graph.ts';
 
+/** The graph filter that shows every loaded graph (the campaign and each adventure). */
+export const ALL_GRAPHS = '*';
+
+/** Narrow a `data-graph` attribute to a loaded graph id, falling back to {@link ALL_GRAPHS}. */
+export function asGraphFilter(raw: string | undefined, sources: readonly GraphSource[]): string {
+    return sources.find((source) => source.id === raw)?.id ?? ALL_GRAPHS;
+}
+
+/**
+ * The key a group is filed under: its name, scoped to its graph so two
+ * adventures' "Chapter 1" never merge. Campaign groups keep the bare name.
+ */
+function groupKey(graphId: string, name: string): string {
+    return graphId === CAMPAIGN_GRAPH_ID ? name : namespacedId(graphId, name);
+}
+
 /** The dashboard's tabs, in display order. */
-const EVENT_TRACKER_TABS =['timeline', 'location', 'relations'] as const;
+const EVENT_TRACKER_TABS = ['timeline', 'location', 'relations'] as const;
 export type EventTrackerTab = (typeof EVENT_TRACKER_TABS)[number];
 
 const TAB_META: Record<EventTrackerTab, { labelKey: string; icon: string }> = {
@@ -94,7 +112,11 @@ interface RequirementRowView {
     met: boolean;
     name: string;
     location: string;
+    /** The Location tab group the location jump targets. */
+    locationKey: string;
     source: string;
+    /** The Timeline tab group the source jump targets. */
+    sourceKey: string;
     /** `Day 3` when the source is a day plan (rendered "on Day 3 or later"), else null. */
     sourceDay: string | null;
     excuse: string | null;
@@ -119,8 +141,12 @@ interface EventRowView {
 }
 
 export interface EventGroupView {
-    /** Group key: the source name (timeline) or plain location name (location); '' for none. */
+    /** Group key: the source (timeline) or plain location (location) name, scoped to its adventure; '' for none. */
     key: string;
+    /** The plain source / location name ('' for none) — what Go to / Spawn Scene look up. */
+    name: string;
+    /** The adventure the group belongs to, shown while every graph is listed; null for the campaign. */
+    graphLabel: string | null;
     title: JournalLinkView | null;
     /** Langpack key shown when the group has no title (no source / no location). */
     untitledKey: string;
@@ -169,9 +195,25 @@ interface EventTrackerTabView {
     active: boolean;
 }
 
+/** One chip of the graph filter: an adventure by name, or the "all" / campaign chip by langpack key. */
+interface GraphFilterView {
+    id: string;
+    label: string;
+    labelKey: string | null;
+    active: boolean;
+}
+
+/** The chip for a loaded graph. */
+function graphFilterView(source: GraphSource, activeGraph: string): GraphFilterView {
+    const isCampaign = source.id === CAMPAIGN_GRAPH_ID;
+    return { id: source.id, label: source.label, labelKey: isCampaign ? 'WH40K.EventTracker.Graph.Campaign' : null, active: source.id === activeGraph };
+}
+
 export interface EventTrackerView {
     activeTab: EventTrackerTab;
     tabs: EventTrackerTabView[];
+    /** The graph filter chips; empty when only one graph is loaded. */
+    graphs: GraphFilterView[];
     day: { value: number; midnight: boolean; number: number; canStepBack: boolean };
     stats: { resolved: number; total: number; available: number };
     groups: EventGroupView[];
@@ -187,6 +229,10 @@ export interface EventTrackerViewInput {
     pcAttitudes: PcAttitudeMap;
     pcNames: readonly string[];
     activeTab: EventTrackerTab;
+    /** The loaded graphs: the campaign and each imported adventure (#592). */
+    sources: readonly GraphSource[];
+    /** The graph shown: a source id, or {@link ALL_GRAPHS}. */
+    activeGraph: string;
     /** Name of the active Scene ('' when none). */
     activeSceneName: string;
     /** Names of every Scene in the world. */
@@ -197,7 +243,11 @@ export interface EventTrackerViewInput {
 
 interface Context {
     input: EventTrackerViewInput;
-    link: (kind: JournalRefKind, name: string) => JournalLinkView;
+    /** The events of the graph shown. */
+    shown: EventGraph;
+    /** A name as a journal link: `uuid` when the loader already resolved it (adventure references), else looked up. */
+    link: (kind: JournalRefKind, name: string, uuid?: string) => JournalLinkView;
+    graphLabel: (graphId: string) => string | null;
 }
 
 function eventName(graph: EventGraph, id: string): string {
@@ -214,7 +264,9 @@ function requirementRowView(row: RequirementRow, event: EventDef, graph: EventGr
         met: false,
         name: '',
         location: '',
+        locationKey: '',
         source: '',
+        sourceKey: '',
         sourceDay: null,
         excuse: null,
         criteria: '',
@@ -225,6 +277,8 @@ function requirementRowView(row: RequirementRow, event: EventDef, graph: EventGr
     if (row.kind !== 'event') return base;
     const dep = lookup(graph, row.eventId);
     const source = dep === undefined ? '' : eventSourceName(dep);
+    const location = dep === undefined ? '' : eventLocationName(dep);
+    const depGraph = dep === undefined ? CAMPAIGN_GRAPH_ID : eventGraphId(dep);
     const excuses = event.excuse;
     const excuse =
         excuses !== undefined && excuses !== null && typeof excuses !== 'string' && Object.hasOwn(excuses, row.eventId) ? excuses[row.eventId] ?? null : null;
@@ -232,8 +286,10 @@ function requirementRowView(row: RequirementRow, event: EventDef, graph: EventGr
         ...base,
         met: row.met,
         name: dep?.name ?? row.eventId,
-        location: dep === undefined ? '' : eventLocationName(dep),
+        location,
+        locationKey: groupKey(depGraph, location),
         source,
+        sourceKey: groupKey(depGraph, source),
         sourceDay: sourceDayLabel(source),
         excuse,
     };
@@ -246,11 +302,18 @@ function eventRowView(ctx: Context, id: string, event: EventDef, detailKind: 'lo
     const locked = !isDone && !available;
     const location = eventLocationName(event);
     const source = eventSourceName(event);
+    const links = event.links ?? {};
     const detail =
-        detailKind === 'location' ? (location === '' ? null : ctx.link('location', location)) : source === '' ? null : ctx.link(sourceRefKind(event), source);
+        detailKind === 'location'
+            ? location === ''
+                ? null
+                : ctx.link('location', location, links.location)
+            : source === ''
+            ? null
+            : ctx.link(sourceRefKind(event), source, links.source);
     const quest =
         event.initiates_quest !== undefined && event.initiates_quest !== null && event.initiates_quest !== ''
-            ? ctx.link('quest', stripWikiLink(event.initiates_quest))
+            ? ctx.link('quest', stripWikiLink(event.initiates_quest), links.quest)
             : null;
     const entry = lookup(resolved, id);
     return {
@@ -268,36 +331,59 @@ function eventRowView(ctx: Context, id: string, event: EventDef, detailKind: 'lo
     };
 }
 
-function groupEvents(graph: EventGraph, keyOf: (event: EventDef) => string): Map<string, Array<[string, EventDef]>> {
-    const groups = new Map<string, Array<[string, EventDef]>>();
+/** Events filed under one source or location of one graph. */
+interface EventBucket {
+    key: string;
+    name: string;
+    graphId: string;
+    events: Array<[string, EventDef]>;
+}
+
+function groupEvents(graph: EventGraph, nameOf: (event: EventDef) => string): EventBucket[] {
+    const groups = new Map<string, EventBucket>();
     for (const [id, event] of Object.entries(graph)) {
-        const key = keyOf(event);
-        groups.set(key, [...(groups.get(key) ?? []), [id, event]]);
+        const name = nameOf(event);
+        const graphId = eventGraphId(event);
+        const key = groupKey(graphId, name);
+        const bucket = groups.get(key) ?? { key, name, graphId, events: [] };
+        bucket.events.push([id, event]);
+        groups.set(key, bucket);
     }
-    return groups;
+    return [...groups.values()];
 }
 
 function countResolved(events: ReadonlyArray<[string, EventDef]>, resolved: ResolvedState): number {
     return events.filter(([id]) => isResolved(resolved, id)).length;
 }
 
+/** A timeline group's day: its first event's (see {@link eventDayNumber}), else undated. */
+function bucketDay(bucket: EventBucket): number | null {
+    const first = bucket.events.at(0);
+    return first === undefined ? null : eventDayNumber(first[1]);
+}
+
 function timelineGroups(ctx: Context): EventGroupView[] {
-    const { graph, resolved, campaignDay } = ctx.input;
-    const groups = [...groupEvents(graph, eventSourceName)].sort(([a], [b]) => compareSources(a, b));
-    return groups.map(([source, events]): EventGroupView => {
-        const day = sourceDayNumber(source);
-        const firstEvent = events.at(0);
+    const { resolved, campaignDay } = ctx.input;
+    const sortKey = (bucket: EventBucket): number => bucketDay(bucket) ?? UNDATED_SOURCE_SORT_KEY;
+    const groups = groupEvents(ctx.shown, eventSourceName).sort(
+        (a, b) => sortKey(a) - sortKey(b) || compareSources(a.name, b.name) || a.key.localeCompare(b.key),
+    );
+    return groups.map((bucket): EventGroupView => {
+        const day = bucketDay(bucket);
+        const firstEvent = bucket.events.at(0)?.[1];
         return {
-            key: source,
-            title: source === '' || firstEvent === undefined ? null : ctx.link(sourceRefKind(firstEvent[1]), source),
+            key: bucket.key,
+            name: bucket.name,
+            graphLabel: ctx.graphLabel(bucket.graphId),
+            title: bucket.name === '' || firstEvent === undefined ? null : ctx.link(sourceRefKind(firstEvent), bucket.name, firstEvent.links?.source),
             untitledKey: 'WH40K.EventTracker.UnknownSource',
             isCurrent: day === campaignDay,
             isFuture: day !== null && day > campaignDay,
             isActiveScene: false,
             sceneAction: null,
-            resolvedCount: countResolved(events, resolved),
-            total: events.length,
-            rows: events.map(([id, event]) => eventRowView(ctx, id, event, 'location')),
+            resolvedCount: countResolved(bucket.events, resolved),
+            total: bucket.events.length,
+            rows: bucket.events.map(([id, event]) => eventRowView(ctx, id, event, 'location')),
         };
     });
 }
@@ -306,26 +392,30 @@ function locationGroups(ctx: Context): EventGroupView[] {
     const { graph, resolved, activeSceneName, sceneNames } = ctx.input;
     const hasAvailable = (events: ReadonlyArray<[string, EventDef]>): boolean =>
         events.some(([id]) => !isResolved(resolved, id) && isEventAvailable(graph, resolved, id));
-    const rank = (name: string, events: ReadonlyArray<[string, EventDef]>): number => {
+    const rank = ({ name, events }: EventBucket): number => {
         if (name !== '' && name === activeSceneName) return 0;
         if (name === '') return 3;
         return hasAvailable(events) ? 1 : 2;
     };
-    const groups = [...groupEvents(graph, eventLocationName)].sort(([a, ea], [b, eb]) => rank(a, ea) - rank(b, eb) || a.localeCompare(b));
-    return groups.map(
-        ([location, events]): EventGroupView => ({
-            key: location,
-            title: location === '' ? null : ctx.link('location', location),
+    const groups = groupEvents(ctx.shown, eventLocationName).sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name) || a.key.localeCompare(b.key));
+    return groups.map((bucket): EventGroupView => {
+        const location = bucket.name;
+        const linked = bucket.events.find(([, event]) => event.links?.location !== undefined)?.[1].links?.location;
+        return {
+            key: bucket.key,
+            name: location,
+            graphLabel: ctx.graphLabel(bucket.graphId),
+            title: location === '' ? null : ctx.link('location', location, linked),
             untitledKey: 'WH40K.EventTracker.NoLocation',
             isCurrent: false,
             isFuture: false,
             isActiveScene: location !== '' && location === activeSceneName,
             sceneAction: location === '' ? null : sceneNames.has(location) ? 'go' : 'spawn',
-            resolvedCount: countResolved(events, resolved),
-            total: events.length,
-            rows: events.map(([id, event]) => eventRowView(ctx, id, event, 'source')),
-        }),
-    );
+            resolvedCount: countResolved(bucket.events, resolved),
+            total: bucket.events.length,
+            rows: bucket.events.map(([id, event]) => eventRowView(ctx, id, event, 'source')),
+        };
+    });
 }
 
 function npcCards(ctx: Context): NpcCardView[] {
@@ -333,8 +423,11 @@ function npcCards(ctx: Context): NpcCardView[] {
     if (characters === null) return [];
     const triggerName = (id: string | undefined): string | null => (id === undefined || id === '' ? null : eventName(graph, id));
     const computed = computeCharacterStates(characters, resolved);
+    const shownGraph = ctx.input.activeGraph;
+    const label = (key: string): string => lookup(characters, key)?.label ?? key;
     return Object.keys(characters)
-        .sort((a, b) => a.localeCompare(b))
+        .filter((name) => shownGraph === ALL_GRAPHS || eventGraphId(lookup(characters, name) ?? {}) === shownGraph)
+        .sort((a, b) => label(a).localeCompare(label(b)))
         .map((name, npcIndex): NpcCardView => {
             const data = lookup(characters, name) ?? {};
             const party = (data.dispositions ?? []).filter(isPartyDisposition);
@@ -342,7 +435,7 @@ function npcCards(ctx: Context): NpcCardView[] {
             const next = active === undefined ? undefined : nextDispositionShift(party, active, resolved);
             const attitudes = lookup(pcAttitudes, name) ?? {};
             return {
-                name: ctx.link('character', name),
+                name: ctx.link('character', label(name), data.link),
                 npcName: name,
                 attitude: active?.attitude ?? null,
                 toneClass: stateToneClass(active?.attitude ?? ''),
@@ -351,7 +444,7 @@ function npcCards(ctx: Context): NpcCardView[] {
                 next: next === undefined ? null : { attitude: next.attitude, triggerName: eventName(graph, next.trigger) },
                 relationships: (lookup(computed, name)?.relationships ?? []).map(
                     (relationship): RelationshipView => ({
-                        target: ctx.link('character', relationship.target),
+                        target: ctx.link('character', relationship.target, relationship.targetLink),
                         type: relationship.type,
                         state: relationship.currentState,
                         toneClass: stateToneClass(relationship.currentState),
@@ -371,11 +464,18 @@ function npcCards(ctx: Context): NpcCardView[] {
 
 /** Build the dashboard's template context from a snapshot of the tracker state. */
 export function buildEventTrackerView(input: EventTrackerViewInput): EventTrackerView {
+    const { activeGraph, sources } = input;
+    const shown =
+        activeGraph === ALL_GRAPHS ? input.graph : Object.fromEntries(Object.entries(input.graph).filter(([, event]) => eventGraphId(event) === activeGraph));
+    // A group names its adventure only while several graphs share the list.
+    const listsSeveral = activeGraph === ALL_GRAPHS && sources.length > 1;
     const ctx: Context = {
         input,
-        link: (kind, name) => ({ label: name, uuid: input.journalLink({ kind, name }) }),
+        shown,
+        link: (kind, name, uuid) => ({ label: name, uuid: uuid ?? input.journalLink({ kind, name }) }),
+        graphLabel: (graphId) => (listsSeveral && graphId !== CAMPAIGN_GRAPH_ID ? sources.find((source) => source.id === graphId)?.label ?? graphId : null),
     };
-    const ids = Object.keys(input.graph);
+    const ids = Object.keys(shown);
     const groupsFor: Record<EventTrackerTab, () => EventGroupView[]> = {
         timeline: () => timelineGroups(ctx),
         location: () => locationGroups(ctx),
@@ -384,6 +484,13 @@ export function buildEventTrackerView(input: EventTrackerViewInput): EventTracke
     return {
         activeTab: input.activeTab,
         tabs: EVENT_TRACKER_TABS.map((id) => ({ id, ...TAB_META[id], active: id === input.activeTab })),
+        graphs:
+            sources.length > 1
+                ? [
+                      { id: ALL_GRAPHS, label: '', labelKey: 'WH40K.EventTracker.Graph.All', active: activeGraph === ALL_GRAPHS },
+                      ...sources.map((source) => graphFilterView(source, activeGraph)),
+                  ]
+                : [],
         day: { value: input.campaignDay, ...campaignDayParts(input.campaignDay), canStepBack: input.campaignDay > 0 },
         stats: {
             resolved: ids.filter((id) => isResolved(input.resolved, id)).length,

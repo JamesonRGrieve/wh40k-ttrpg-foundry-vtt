@@ -5,6 +5,7 @@
  */
 
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
+import { DEAD_STATUS_ID } from '../constants.ts';
 import {
     type CompletionEnvironment,
     EventCompletionWatcher,
@@ -263,6 +264,30 @@ describe('identifyDoc', () => {
             vault: undefined,
             sources: [],
         });
+    });
+
+    it('also stands for the world document an item was duplicated from', () => {
+        const owned = identifyDoc(
+            { name: 'Ledger', uuid: 'Actor.a.Item.c', flags: {}, _stats: { compendiumSource: null, duplicateSource: 'Item.worldLedger' } },
+            undefined,
+        );
+        expect(owned.sources).toEqual(['Item.worldLedger', 'Actor.a.Item.c']);
+    });
+});
+
+describe('identifyActor', () => {
+    const base = { name: 'Orrin Vael', flags: {}, hasPlayerOwner: false };
+
+    it('lets an unlinked token stand for its base world actor, so an Adventure actor reference matches it (#592)', () => {
+        const token = identifyActor({ ...base, uuid: 'Scene.s.Token.t.Actor.orrin', id: 'orrin', isToken: true });
+        expect(token.sources).toEqual(['Scene.s.Token.t.Actor.orrin', 'Actor.orrin']);
+        const resolver = createRefResolver(() => []);
+        const change = { kind: 'actor-status', actor: token, status: DEAD_STATUS_ID, change: 'gained' } as const;
+        expect(triggerFires({ kind: 'actor-died', actor: { uuid: 'Actor.orrin' } }, change, resolver)).toBe(true);
+    });
+
+    it('adds nothing for a world actor, which already carries its own UUID', () => {
+        expect(identifyActor({ ...base, uuid: 'Actor.orrin', id: 'orrin', isToken: false }).sources).toEqual(['Actor.orrin']);
     });
 });
 

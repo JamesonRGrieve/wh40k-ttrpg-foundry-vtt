@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import type { CharacterState, EventGraph, JournalRef } from '../../managers/event-graph.ts';
 import {
+    ALL_GRAPHS,
     asEventTrackerTab,
+    asGraphFilter,
     buildEventTrackerView,
     type EventGroupView,
     type EventTrackerViewInput,
@@ -54,6 +56,8 @@ function input(overrides: Partial<EventTrackerViewInput> = {}): EventTrackerView
         pcAttitudes: { 'Garrick Varo': { Ibnad: 'trusting' } },
         pcNames: ['Gus', 'Ibnad'],
         activeTab: 'timeline',
+        sources: [],
+        activeGraph: ALL_GRAPHS,
         activeSceneName: '',
         sceneNames: new Set<string>(),
         journalLink: (ref: JournalRef) => (ref.name === 'The Sump' || ref.name === 'Garrick Varo' ? `JournalEntry.${ref.kind}` : null),
@@ -202,5 +206,97 @@ describe('buildEventTrackerView — relations', () => {
 
     it('is empty without character data', () => {
         expect(buildEventTrackerView(input({ activeTab: 'relations', characters: null })).npcs).toEqual([]);
+    });
+});
+
+describe('buildEventTrackerView — adventure graphs (#592)', () => {
+    const SOURCES = [
+        { id: '', label: '' },
+        { id: 'mill', label: 'The Mill' },
+        { id: 'tower', label: 'The Tower' },
+    ];
+    // Two adventures that both have a "Chapter 1" and an "Old Mill" location, as the loader leaves them.
+    const ADVENTURE_GRAPH: EventGraph = {
+        ...GRAPH,
+        'mill:A': {
+            name: 'Mill A',
+            graph: 'mill',
+            source_name: 'Chapter 1',
+            location: 'Old Mill',
+            day: 1,
+            links: { source: 'JournalEntry.millCh1', location: 'JournalEntry.millPlace' },
+        },
+        'mill:B': { name: 'Mill B', graph: 'mill', source_name: 'Chapter 1', location: 'Old Mill', requires: 'mill:A', day: 1 },
+        'tower:A': { name: 'Tower A', graph: 'tower', source_name: 'Chapter 1', location: 'Old Mill', day: 3 },
+    };
+    const ADVENTURE_CHARACTERS: Record<string, CharacterState> = {
+        ...CHARACTERS,
+        'mill:foreman': {
+            graph: 'mill',
+            label: 'Orrin Vael',
+            link: 'Actor.orrin',
+            dispositions: [{ target: 'party', attitude: 'guarded', default: true }],
+            relationships: [{ target: 'Ada Vael', type: 'family', state: 'friendly', targetLink: 'Actor.ada' }],
+        },
+    };
+    const adventures = (overrides: Partial<EventTrackerViewInput> = {}): EventTrackerViewInput =>
+        input({ graph: ADVENTURE_GRAPH, characters: ADVENTURE_CHARACTERS, sources: SOURCES, ...overrides });
+
+    it('keeps two adventures’ same-named chapters in separate groups, ordered by day, labelled by adventure', () => {
+        const { groups } = buildEventTrackerView(adventures({ campaignDay: 1 }));
+        expect(groups.map((g) => [g.key, g.name, g.graphLabel, g.isCurrent])).toEqual([
+            ['Day 0 — Transit', 'Day 0 — Transit', null, false],
+            ['Day 1 — First Day', 'Day 1 — First Day', null, true],
+            ['mill:Chapter 1', 'Chapter 1', 'The Mill', true],
+            ['tower:Chapter 1', 'Chapter 1', 'The Tower', false],
+            ['The Sick Child', 'The Sick Child', null, false],
+        ]);
+    });
+
+    it('links adventure references to the UUIDs the loader resolved, not a name lookup', () => {
+        const { groups } = buildEventTrackerView(adventures({ activeGraph: 'mill' }));
+        expect(groups.at(0)?.title).toEqual({ label: 'Chapter 1', uuid: 'JournalEntry.millCh1' });
+        expect(rowsOf(groups, 0).at(0)?.detail).toEqual({ label: 'Old Mill', uuid: 'JournalEntry.millPlace' });
+        // A row without its own link falls back to the name lookup (which knows nothing of it here).
+        expect(rowsOf(groups, 0).at(1)?.detail).toEqual({ label: 'Old Mill', uuid: null });
+    });
+
+    it('jumps a requirement to its own adventure’s groups', () => {
+        const locked = rowsOf(buildEventTrackerView(adventures({ activeGraph: 'mill' })).groups, 0).at(1);
+        expect(locked?.requirements.at(0)).toMatchObject({ name: 'Mill A', sourceKey: 'mill:Chapter 1', locationKey: 'mill:Old Mill' });
+    });
+
+    it('filters groups, stats and NPC cards to one graph, with go / spawn reading the plain location name', () => {
+        const view = buildEventTrackerView(adventures({ activeTab: 'location', activeGraph: 'mill', sceneNames: new Set(['Old Mill']) }));
+        expect(view.groups.map((g) => [g.key, g.name, g.sceneAction, g.graphLabel])).toEqual([['mill:Old Mill', 'Old Mill', 'go', null]]);
+        expect(view.stats).toEqual({ resolved: 0, total: 2, available: 1 });
+        const relations = buildEventTrackerView(adventures({ activeTab: 'relations', activeGraph: 'mill' }));
+        expect(relations.npcs).toMatchObject([
+            {
+                npcName: 'mill:foreman',
+                name: { label: 'Orrin Vael', uuid: 'Actor.orrin' },
+                attitude: 'guarded',
+                relationships: [{ target: { label: 'Ada Vael', uuid: 'Actor.ada' } }],
+            },
+        ]);
+        const campaign = buildEventTrackerView(adventures({ activeTab: 'relations', activeGraph: '' }));
+        expect(campaign.npcs.map((npc) => npc.npcName)).toEqual(['Abel Harsk', 'Garrick Varo']);
+    });
+
+    it('offers a filter chip per graph plus "all", only when more than one graph is loaded', () => {
+        expect(buildEventTrackerView(adventures({ activeGraph: 'tower' })).graphs).toEqual([
+            { id: ALL_GRAPHS, label: '', labelKey: 'WH40K.EventTracker.Graph.All', active: false },
+            { id: '', label: '', labelKey: 'WH40K.EventTracker.Graph.Campaign', active: false },
+            { id: 'mill', label: 'The Mill', labelKey: null, active: false },
+            { id: 'tower', label: 'The Tower', labelKey: null, active: true },
+        ]);
+        expect(buildEventTrackerView(input()).graphs).toEqual([]);
+    });
+
+    it('narrows a data-graph attribute to a loaded graph, else all', () => {
+        expect(asGraphFilter('mill', SOURCES)).toBe('mill');
+        expect(asGraphFilter('', SOURCES)).toBe('');
+        expect(asGraphFilter('gone', SOURCES)).toBe(ALL_GRAPHS);
+        expect(asGraphFilter(undefined, SOURCES)).toBe(ALL_GRAPHS);
     });
 });

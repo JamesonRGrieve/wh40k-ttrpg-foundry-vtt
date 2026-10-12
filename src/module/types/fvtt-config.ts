@@ -134,6 +134,11 @@ declare module 'fvtt-types/configuration' {
         JournalEntry: {
             'wh40k-rpg': { vault?: VaultJournalIdentity; [key: string]: unknown };
         };
+        // An Adventure's GM journal page carries its `scenario` (docs/pack-authoring.md →
+        // Adventures), whose `eventGraph` the Event Tracker loads (#592).
+        JournalEntryPage: {
+            'wh40k-rpg': Record<string, unknown>;
+        };
         // Token-scoped state (the rounded-rect ring mode, #587; the bust frame)
         // written through TokenDocument#updateSource.
         Token: {

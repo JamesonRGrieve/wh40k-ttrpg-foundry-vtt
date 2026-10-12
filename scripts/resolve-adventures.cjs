@@ -115,10 +115,28 @@ function findScenario(journalEntries) {
     return null;
 }
 
-/** Collect every Compendium UUID a scenario references, grouped by Adventure field. */
+/** `Compendium.wh40k-rpg.<pack>.<Class>.<id>`, optionally naming a page of a JournalEntry. */
+const COMPENDIUM_DOC_RE = /^(Compendium\.wh40k-rpg\.[a-z0-9-]+\.(Actor|Item|Scene|JournalEntry|RollTable)\.[A-Za-z0-9]{16})(?:\.JournalEntryPage\.[A-Za-z0-9]{16})?$/;
+
+/** Every `{uuid}` reference string in an event graph (#592), however deeply nested. */
+function collectGraphRefs(value, out) {
+    if (Array.isArray(value)) {
+        for (const item of value) collectGraphRefs(item, out);
+    } else if (value !== null && typeof value === 'object') {
+        if (typeof value.uuid === 'string') out.push(value.uuid);
+        for (const item of Object.values(value)) collectGraphRefs(item, out);
+    }
+    return out;
+}
+
+/**
+ * Collect every Compendium UUID a scenario references, grouped by Adventure
+ * field: its scenes' maps, encounters and rewards, and every Compendium
+ * reference in its `eventGraph` (a page reference embeds its JournalEntry).
+ */
 function collectScenarioUuids(scenario) {
     /** @type {Record<string, Set<string>>} */
-    const byField = { actors: new Set(), items: new Set(), scenes: new Set() };
+    const byField = { actors: new Set(), items: new Set(), scenes: new Set(), journal: new Set() };
     for (const scene of scenario?.scenes ?? []) {
         if (typeof scene.sceneUuid === 'string') byField.scenes.add(scene.sceneUuid);
         for (const enc of scene.encounters ?? []) {
@@ -127,6 +145,11 @@ function collectScenarioUuids(scenario) {
         for (const rew of scene.rewards ?? []) {
             if (typeof rew.itemUuid === 'string') byField.items.add(rew.itemUuid);
         }
+    }
+    for (const uuid of collectGraphRefs(scenario?.eventGraph, [])) {
+        const match = COMPENDIUM_DOC_RE.exec(uuid);
+        const target = match === null ? undefined : UUID_CLASS_TO_ADVENTURE_FIELD[match[2]];
+        if (target !== undefined && byField[target.field] !== undefined) byField[target.field].add(match[1]);
     }
     return byField;
 }
@@ -137,9 +160,11 @@ function collectScenarioUuids(scenario) {
  * - Inline `journal[]` entries (handout + GM-scenario pages) are carried into
  *   the Adventure's `journal` set as-is (legacy `pages[]`-on-the-Adventure
  *   shape is normalised into a single wrapping JournalEntry first).
- * - Every Compendium UUID the scenario references is resolved against the
- *   global index and a COPY embedded into the matching content set
- *   (`actors` / `items` / `scenes`). Already-embedded ids are de-duplicated.
+ * - Every Compendium UUID the scenario references (its scenes and its
+ *   `eventGraph`) is resolved against the global index and a COPY embedded into
+ *   the matching content set (`actors` / `items` / `scenes` / `journal`), with
+ *   `_stats.compendiumSource` set to that UUID. Already-embedded ids are
+ *   de-duplicated.
  * - The scenario flag is left UUID-referenced on the GM journal page (it is
  *   the machine-readable graph, not a duplication target).
  *
@@ -172,7 +197,7 @@ function resolveAdventure(source, uuidIndex, sourceLabel) {
     }
 
     const refs = collectScenarioUuids(scenario);
-    const seen = { actors: new Set(), items: new Set(), scenes: new Set() };
+    const seen = { actors: new Set(), items: new Set(), scenes: new Set(), journal: new Set(journalEntries.map((entry) => entry._id)) };
     const missing = [];
 
     for (const [adventureField, uuids] of Object.entries(refs)) {
@@ -187,8 +212,12 @@ function resolveAdventure(source, uuidIndex, sourceLabel) {
                 missing.push(uuid);
                 continue;
             }
-            // Embed a deep COPY, keyed by the resolved doc's own id, de-duped.
+            // Embed a deep COPY, keyed by the resolved doc's own id, de-duped. Stamp
+            // the compendium source the way Foundry's own compendium import does, so
+            // the world document the Adventure import creates still answers to the
+            // Compendium UUID the scenario names (the Event Tracker matches by it, #592).
             const copy = JSON.parse(JSON.stringify(entry.doc));
+            copy._stats = { ...(copy._stats ?? {}), compendiumSource: uuid };
             const id = copy._id;
             if (seen[target.field].has(id)) continue;
             seen[target.field].add(id);

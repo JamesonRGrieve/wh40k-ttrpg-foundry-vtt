@@ -38,11 +38,40 @@ interface AnyRequirement {
  */
 export type RequirementNode = null | string | AllRequirement | AnyRequirement | CharacterPredicate;
 
-/** One event of the graph, as `export_events.py` writes it. */
-export interface EventDef {
+/**
+ * A document named by UUID. In an adventure pack (#592) this is either a
+ * Compendium UUID (`Compendium.wh40k-rpg.<pack>.<Class>.<id>`) or an
+ * adventure-internal UUID (`JournalEntry.<id>`, `Scene.<id>`, `Actor.<id>`) naming
+ * one of the Adventure's own documents — which Foundry's Adventure import creates
+ * with the same id (`keepId`), so it is the imported world document's UUID.
+ */
+export interface UuidRef {
+    readonly uuid: string;
+}
+
+/**
+ * How a graph names a linked document (an event's location, quest and source; a
+ * character's actor and relationship targets): a display name in a loaded graph
+ * (the vault export, or an adventure graph once {@link loadAdventureGraph}
+ * resolved it), a {@link UuidRef} as authored in an adventure pack.
+ */
+type LinkForm = string | UuidRef;
+
+/** The world UUIDs an adventure event's references resolved to, set by the loader. */
+interface EventLinks {
+    source?: string;
+    location?: string;
+    quest?: string;
+}
+
+/**
+ * One event of the graph, as `export_events.py` writes it (`L = string`) or as an
+ * adventure pack's scenario `eventGraph` authors it (`L = UuidRef`, #592).
+ */
+export interface EventDef<L extends LinkForm = string> {
     id?: string;
     name: string;
-    location?: string | null;
+    location?: L | null;
     /** A single node, or a legacy list read as an implicit `all`. */
     requires?: RequirementNode | readonly RequirementNode[];
     /** Legacy flat OR, folded into the requirement tree by {@link normaliseRequirements}. */
@@ -51,15 +80,25 @@ export interface EventDef {
     excuse?: string | Readonly<Record<string, string>> | null;
     is_day_end?: boolean;
     branch?: string | null;
-    /** Wiki link to the side quest this event opens. */
-    initiates_quest?: string | null;
+    /** The side quest this event opens (a wiki link in the vault export). */
+    initiates_quest?: L | null;
     /** Game-state triggers that resolve the event automatically (#591). Absent: resolved by hand. */
     completion?: readonly CompletionTrigger[];
     source_name?: string;
     source_file?: string;
+    /** The journal the event is written up in. Adventure packs; the loader turns it into `source_name` + `links.source`. */
+    source?: L;
+    /** The day the event is planned for. Vault events take it from their day-plan source instead. */
+    day?: number;
+    /** The act of a multi-act adventure. */
+    act?: number;
+    /** The adventure scenario id the event was loaded from (set by the loader). Absent: the home campaign graph. */
+    graph?: string;
+    /** World UUIDs of the event's references (set by the loader for adventure events). */
+    links?: EventLinks;
 }
 
-export type EventGraph = Record<string, EventDef>;
+export type EventGraph<L extends LinkForm = string> = Record<string, EventDef<L>>;
 
 /**
  * Who made a tracker change: the GM by hand, a sync adapter applying pulled
@@ -83,9 +122,9 @@ export type ResolvedState = Record<string, ResolvedEntry>;
 /** Per-PC attitudes per NPC: `{ [npcName]: { [pcName]: attitude } }`. */
 export type PcAttitudeMap = Record<string, Record<string, string>>;
 
-export interface DispositionEntry {
-    /** `party`, empty, or a character name. */
-    target?: string;
+export interface DispositionEntry<L extends LinkForm = string> {
+    /** `party`, empty, or a character (its name, or in an adventure pack its actor). */
+    target?: L | typeof PARTY_TARGET;
     attitude: string;
     default?: boolean;
     trigger?: string;
@@ -98,19 +137,29 @@ interface RelationshipInfluence {
     note?: string;
 }
 
-interface RelationshipEntry {
-    target: string;
+interface RelationshipEntry<L extends LinkForm = string> {
+    target: L;
     type: string;
     state: string;
     summary?: string;
     is_private?: boolean;
     influences?: readonly RelationshipInfluence[];
+    /** World UUID of the target (set by the loader for adventure characters). */
+    targetLink?: string;
 }
 
-export interface CharacterState {
-    dispositions?: readonly DispositionEntry[];
-    relationships?: readonly RelationshipEntry[];
+export interface CharacterState<L extends LinkForm = string> {
+    /** The actor the character is. Adventure packs; the loader turns it into `label` + `link`. */
+    actor?: L;
+    dispositions?: readonly DispositionEntry<L>[];
+    relationships?: readonly RelationshipEntry<L>[];
     source_file?: string;
+    /** Display name, when the map key is not one (adventure characters are keyed `<adventureId>:<key>`). */
+    label?: string;
+    /** World UUID of the character's actor (set by the loader). */
+    link?: string;
+    /** The adventure scenario id the character was loaded from. Absent: the home campaign graph. */
+    graph?: string;
 }
 
 /** A relationship with its state recomputed from the resolved events. */
@@ -120,6 +169,7 @@ interface ComputedRelationship {
     currentState: string;
     summary?: string;
     trigger?: string;
+    targetLink?: string;
 }
 
 /** The current disposition / relationship state of one character. */
@@ -295,6 +345,11 @@ export function stripWikiLink(value: string): string {
     return WIKI_LINK_PATTERN.exec(value)?.[1]?.trim() ?? value.trim();
 }
 
+/** The day an event falls on: its own `day`, else the day its source is named for, else null. */
+export function eventDayNumber(event: EventDef): number | null {
+    return event.day ?? sourceDayNumber(eventSourceName(event));
+}
+
 /** The source an event was authored in (day plan or quest), or '' when unrecorded. */
 export function eventSourceName(event: EventDef): string {
     if (event.source_name !== undefined && event.source_name !== '') return event.source_name;
@@ -380,6 +435,7 @@ export function computeCharacterStates(characters: Readonly<Record<string, Chara
                 currentState: fired?.to ?? relationship.state,
                 ...(relationship.summary !== undefined ? { summary: relationship.summary } : {}),
                 ...(fired !== undefined ? { trigger: fired.event } : {}),
+                ...(relationship.targetLink !== undefined ? { targetLink: relationship.targetLink } : {}),
             };
         });
         out[name] = { dispositions, relationships };
@@ -566,7 +622,7 @@ export function resolveJournalUuid(ref: JournalRef, registered: JournalLinkResol
  * vault writer stamps as `flags['wh40k-rpg'].vault`), or a compendium document
  * by UUID (`{uuid}`).
  */
-type TriggerRef = { readonly name: string; readonly path: string } | { readonly uuid: string };
+type TriggerRef = { readonly name: string; readonly path: string } | UuidRef;
 
 /** The `holder` keyword meaning "any player character". */
 const PARTY_HOLDER = 'party';
@@ -614,6 +670,33 @@ interface EventResolvedTrigger extends TriggerOptions {
 
 /** One completion trigger of an event (the `completion` list authored in the vault). */
 export type CompletionTrigger = ItemAcquiredTrigger | ActorDiedTrigger | ActorStatusTrigger | SceneEnteredTrigger | EventResolvedTrigger;
+
+type TriggerKind = CompletionTrigger['kind'];
+
+/** The fields of one trigger kind, other than `kind` and the shared options. */
+type TriggerFieldName<K extends TriggerKind> = Exclude<keyof Extract<CompletionTrigger, { kind: K }>, 'kind' | keyof TriggerOptions>;
+
+/**
+ * The required and optional fields of each trigger kind — the runtime mirror of
+ * the {@link CompletionTrigger} union (the `satisfies` clause rejects a field the
+ * union lacks). The adventure-pack validator (`scripts/validate-adventure-events.cjs`)
+ * carries the same table; a unit test holds the two equal.
+ */
+export const COMPLETION_TRIGGER_FIELDS = {
+    'item-acquired': { required: ['item'], optional: ['holder'] },
+    'actor-died': { required: ['actor'], optional: [] },
+    'actor-status': { required: ['actor', 'status', 'change'], optional: [] },
+    'scene-entered': { required: ['location'], optional: [] },
+    'event-resolved': { required: ['event'], optional: [] },
+} as const satisfies { [K in TriggerKind]: { required: readonly TriggerFieldName<K>[]; optional: readonly TriggerFieldName<K>[] } };
+
+/** The options any trigger kind may carry. */
+export const TRIGGER_OPTION_FIELDS = ['ignoreRequirements'] as const satisfies ReadonlyArray<keyof TriggerOptions>;
+
+/** True for a known trigger kind. */
+export function isTriggerKind(kind: string): kind is TriggerKind {
+    return Object.hasOwn(COMPLETION_TRIGGER_FIELDS, kind);
+}
 
 /** The vault identity fields a reference match reads (a document's `flags['wh40k-rpg'].vault`). */
 interface VaultIdentityLike {

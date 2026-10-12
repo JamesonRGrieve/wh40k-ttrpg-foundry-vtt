@@ -14,7 +14,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { EVENT_GRAPH_FLAG, EVENT_TRACKER_HOOKS, EVENT_TRACKER_SETTINGS, EventTracker, type EventTrackerChangeContext } from './event-tracker.ts';
+import { EVENT_GRAPH_FLAG, EVENT_TRACKER_HOOKS, EVENT_TRACKER_SETTINGS, EventTracker, type EventTrackerChangeContext, SCENARIO_FLAG } from './event-tracker.ts';
 
 /** The hook context of a change made by hand (the default origin). */
 const MANUAL: EventTrackerChangeContext = { origin: 'manual' };
@@ -34,15 +34,16 @@ interface JournalStub {
     flags: Record<string, Record<string, GraphFlag>>;
 }
 
-/** A journal collection carrying the given entries, shaped like Foundry's. */
+/** A journal collection carrying the given entries (with no pages), shaped like Foundry's. */
 function stubJournal(entries: JournalStub[]): void {
-    vi.stubGlobal('game', { journal: entries });
+    vi.stubGlobal('game', { journal: entries.map((entry) => ({ ...entry, pages: [] })) });
 }
 
 function resetTracker(): void {
     EventTracker._graph = null;
     EventTracker._characters = null;
     EventTracker._dataVersion = 1;
+    EventTracker._sources = [];
 }
 
 afterEach(() => {
@@ -106,6 +107,126 @@ describe('EventTracker graph transport (#33)', () => {
         vi.stubGlobal('game', {});
         await expect(EventTracker.loadGraph()).resolves.toBeUndefined();
         expect(EventTracker.graph).toBeNull();
+    });
+});
+
+describe('EventTracker adventure graphs (#592)', () => {
+    const ACTOR_SOURCE = 'Compendium.wh40k-rpg.hb-dh2-ashford-actors-npcs.Actor.ashOrrinVael0001';
+
+    /** A world document as the lookups read it. */
+    interface DocStub {
+        id: string;
+        name: string;
+        uuid: string;
+        _stats: { compendiumSource: string | null };
+    }
+
+    const doc = (documentName: string, id: string, name: string, compendiumSource: string | null = null): DocStub => ({
+        id,
+        name,
+        uuid: `${documentName}.${id}`,
+        _stats: { compendiumSource },
+    });
+
+    /** A flag payload: plain JSON, as a world document stores it. */
+    type Json = string | number | boolean | null | Json[] | { [key: string]: Json };
+    type JsonObject = { [key: string]: Json };
+
+    /** A world journal entry and its pages, as the scan reads them. */
+    interface JournalWithPages {
+        name: string;
+        flags: JsonObject;
+        pages: Array<{ flags: JsonObject }>;
+    }
+
+    /** The scenario flag an imported adventure's GM journal page carries. */
+    const scenario = (id: string): JsonObject => ({
+        id,
+        eventGraph: {
+            events: {
+                ARRIVE: { name: 'Arrive', source: { uuid: 'JournalEntry.ashChapter000001' }, day: 1 },
+                FOREMAN_DOWN: {
+                    name: 'The Foreman Falls',
+                    source: { uuid: 'JournalEntry.ashChapter000001' },
+                    location: { uuid: 'JournalEntry.ashMillPlace0001' },
+                    requires: 'ARRIVE',
+                    completion: [{ kind: 'actor-died', actor: { uuid: ACTOR_SOURCE } }, { kind: 'no-such-kind' }],
+                },
+            },
+            characters: { foreman: { actor: { uuid: ACTOR_SOURCE }, dispositions: [{ target: 'party', attitude: 'hostile', trigger: 'ARRIVE' }] } },
+        },
+    });
+
+    /** A world holding the campaign graph document, an imported adventure's journals, and its imported actor. */
+    function stubWorldWithAdventure(journals: JournalWithPages[]): void {
+        const journalDocs = [doc('JournalEntry', 'ashChapter000001', 'Chapter 1 — Arrival'), doc('JournalEntry', 'ashMillPlace0001', 'Ashford Mill')];
+        const actors = [doc('Actor', 'ashOrrinVael0001', 'Orrin Vael', ACTOR_SOURCE)];
+        const byUuid = new Map([...journalDocs, ...actors].map((entry) => [entry.uuid, entry]));
+        vi.stubGlobal('game', {
+            journal: Object.assign(journals, { contents: journalDocs }),
+            actors: { contents: actors },
+            items: { contents: [] },
+            scenes: { contents: [] },
+        });
+        vi.stubGlobal('fromUuidSync', (uuid: string) => byUuid.get(uuid) ?? null);
+    }
+
+    const campaignJournal: JournalWithPages = {
+        name: 'Campaign Graph',
+        flags: { [SYSTEM_ID]: { [EVENT_GRAPH_FLAG]: { events: { BRIEFING: { id: 'BRIEFING', name: 'Briefing' } } } } },
+        pages: [],
+    };
+    const adventureJournal = (id: string, name: string): JournalWithPages => ({
+        name,
+        flags: {},
+        pages: [{ flags: {} }, { flags: { [SYSTEM_ID]: { [SCENARIO_FLAG]: scenario(id) } } }],
+    });
+
+    it('loads an imported adventure beside the campaign, namespaced, with the campaign ids unchanged', async () => {
+        stubWorldWithAdventure([campaignJournal, adventureJournal('ashford-mill', 'The Ashford Mill — GM Guide')]);
+        await EventTracker.loadGraph();
+        expect(Object.keys(EventTracker.graph ?? {})).toEqual(['BRIEFING', 'ashford-mill:ARRIVE', 'ashford-mill:FOREMAN_DOWN']);
+        expect(EventTracker.sources).toEqual([
+            { id: '', label: '' },
+            { id: 'ashford-mill', label: 'The Ashford Mill — GM Guide' },
+        ]);
+    });
+
+    it('resolves references to the imported world documents and keeps only well-formed triggers', async () => {
+        stubWorldWithAdventure([adventureJournal('ashford-mill', 'The Ashford Mill — GM Guide')]);
+        await EventTracker.loadGraph();
+        expect(EventTracker.graph?.['ashford-mill:FOREMAN_DOWN']).toMatchObject({
+            graph: 'ashford-mill',
+            source_name: 'Chapter 1 — Arrival',
+            location: 'Ashford Mill',
+            requires: 'ashford-mill:ARRIVE',
+            links: { source: 'JournalEntry.ashChapter000001', location: 'JournalEntry.ashMillPlace0001' },
+            completion: [{ kind: 'actor-died', actor: { uuid: ACTOR_SOURCE } }],
+        });
+        // The compendium actor reference resolves to the actor the import created from it.
+        expect(EventTracker.characters?.['ashford-mill:foreman']).toMatchObject({
+            label: 'Orrin Vael',
+            link: 'Actor.ashOrrinVael0001',
+            dispositions: [{ target: 'party', attitude: 'hostile', trigger: 'ashford-mill:ARRIVE' }],
+        });
+    });
+
+    it('loads several adventures side by side, and only one graph per scenario id', async () => {
+        stubWorldWithAdventure([
+            adventureJournal('ashford-mill', 'Ashford'),
+            adventureJournal('tower', 'Tower'),
+            adventureJournal('ashford-mill', 'Ashford (duplicate import)'),
+        ]);
+        await EventTracker.loadGraph();
+        expect(Object.keys(EventTracker.graph ?? {})).toEqual(['ashford-mill:ARRIVE', 'ashford-mill:FOREMAN_DOWN', 'tower:ARRIVE', 'tower:FOREMAN_DOWN']);
+        expect(EventTracker.sources.map((source) => source.id)).toEqual(['ashford-mill', 'tower']);
+    });
+
+    it('reloads the graph when an adventure is imported', () => {
+        const on = vi.fn();
+        vi.stubGlobal('Hooks', { on });
+        EventTracker.watchAdventureImports();
+        expect(on).toHaveBeenCalledWith('importAdventure', expect.any(Function));
     });
 });
 

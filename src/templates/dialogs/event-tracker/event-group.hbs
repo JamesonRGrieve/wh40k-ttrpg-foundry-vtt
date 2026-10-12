@@ -8,15 +8,16 @@
             {{#if group.isCurrent}}<span class="tw-ml-1 tw-text-[11px] tw-font-normal tw-text-[#6af]" data-wh40k-hook="evt-today">← {{localize "WH40K.EventTracker.Today"}}</span>{{/if}}
             {{#if group.isActiveScene}}<span class="tw-ml-1 tw-text-[11px] tw-font-normal tw-text-[#2d6]">← {{localize "WH40K.EventTracker.ActiveScene"}}</span>{{/if}}
             <span class="tw-text-[11px] tw-font-normal tw-text-[#888]">({{group.resolvedCount}}/{{group.total}})</span>
+            {{#if group.graphLabel}}<span class="tw-ml-1 tw-text-[10px] tw-font-normal tw-uppercase tw-tracking-[0.5px] tw-text-[#68c]" data-wh40k-hook="evt-group-graph">{{group.graphLabel}}</span>{{/if}}
         </h3>
         {{#if (eq group.sceneAction "go")}}
         <button type="button" class="tw-w-auto tw-flex-none tw-bg-transparent tw-border tw-border-solid tw-border-[#666] tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-[11px] tw-text-[#aaa] tw-whitespace-nowrap tw-cursor-pointer hover:tw-border-[#aaa] hover:tw-text-white"
-                data-action="viewScene" data-location="{{group.key}}">
+                data-action="viewScene" data-location="{{group.name}}">
             <i class="fa-solid fa-eye" aria-hidden="true"></i> {{localize "WH40K.EventTracker.GoToScene"}}
         </button>
         {{else if (eq group.sceneAction "spawn")}}
         <button type="button" class="tw-w-auto tw-flex-none tw-bg-transparent tw-border tw-border-solid tw-border-[#666] tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-[11px] tw-text-[#aaa] tw-whitespace-nowrap tw-cursor-pointer hover:tw-border-[#aaa] hover:tw-text-white"
-                data-action="spawnScene" data-location="{{group.key}}">
+                data-action="spawnScene" data-location="{{group.name}}">
             <i class="fa-solid fa-plus" aria-hidden="true"></i> {{localize "WH40K.EventTracker.SpawnScene"}}
         </button>
         {{/if}}
@@ -46,18 +47,18 @@
                 {{#if location}}
                     {{localize "WH40K.EventTracker.At"}}
                     <button type="button" class="tw-inline tw-w-auto tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[11px] tw-text-[#6af] tw-underline tw-decoration-dotted tw-cursor-pointer hover:tw-text-[#9cf]"
-                            data-action="jumpToGroup" data-tab="location" data-group="{{location}}">{{location}}</button>
+                            data-action="jumpToGroup" data-tab="location" data-group="{{locationKey}}">{{location}}</button>
                 {{/if}}
                 {{#if source}}
                     {{#if sourceDay}}
                         {{localize "WH40K.EventTracker.On"}}
                         <button type="button" class="tw-inline tw-w-auto tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[11px] tw-text-[#6af] tw-underline tw-decoration-dotted tw-cursor-pointer hover:tw-text-[#9cf]"
-                                data-action="jumpToGroup" data-tab="timeline" data-group="{{source}}">{{sourceDay}}</button>
+                                data-action="jumpToGroup" data-tab="timeline" data-group="{{sourceKey}}">{{sourceDay}}</button>
                         {{localize "WH40K.EventTracker.OrLater"}}
                     {{else}}
                         {{localize "WH40K.EventTracker.Via"}}
                         <button type="button" class="tw-inline tw-w-auto tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[11px] tw-text-[#6af] tw-underline tw-decoration-dotted tw-cursor-pointer hover:tw-text-[#9cf]"
-                                data-action="jumpToGroup" data-tab="timeline" data-group="{{source}}">{{source}}</button>
+                                data-action="jumpToGroup" data-tab="timeline" data-group="{{sourceKey}}">{{source}}</button>
                     {{/if}}
                 {{/if}}
                 {{#if excuse}} — <span class="tw-not-italic tw-text-[#c96]">{{excuse}}</span>{{/if}}

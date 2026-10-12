@@ -29,6 +29,19 @@
         {{/each}}
     </nav>
 
+    {{#if graphs.length}}
+    <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1.5 tw-px-2 tw-py-1.5 tw-border-0 tw-border-b tw-border-solid tw-border-[#444]"
+         role="group" aria-label="{{localize "WH40K.EventTracker.Graph.FilterLabel"}}" data-wh40k-hook="evt-graph-filter">
+        {{#each graphs}}
+        <button type="button" aria-pressed="{{#if active}}true{{else}}false{{/if}}"
+                class="tw-w-auto tw-flex-none tw-rounded-sm tw-border tw-border-solid tw-px-2 tw-py-0.5 tw-text-[11px] tw-cursor-pointer {{#if active}}tw-border-[#6af] tw-text-white{{else}}tw-border-[#555] tw-bg-transparent tw-text-[#aaa] hover:tw-text-white{{/if}}"
+                data-action="selectGraph" data-graph="{{id}}">
+            {{#if labelKey}}{{localize labelKey}}{{else}}{{label}}{{/if}}
+        </button>
+        {{/each}}
+    </div>
+    {{/if}}
+
     {{#unless (eq activeTab "relations")}}
     <div class="tw-px-2 tw-py-1.5 tw-text-xs tw-text-[#aaa] tw-border-0 tw-border-b tw-border-solid tw-border-[#444]" data-wh40k-hook="evt-stats">
         {{localize "WH40K.EventTracker.Stats" resolved=stats.resolved total=stats.total available=stats.available}}

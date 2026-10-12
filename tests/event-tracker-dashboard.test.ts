@@ -7,7 +7,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { buildEventTrackerView, type EventTrackerTab } from '../src/module/applications/dialogs/event-tracker-view.ts';
+import { ALL_GRAPHS, buildEventTrackerView, type EventTrackerTab } from '../src/module/applications/dialogs/event-tracker-view.ts';
 import type { EventGraph } from '../src/module/managers/event-graph.ts';
 import bodySrc from '../src/templates/dialogs/event-tracker/body.hbs?raw';
 import headerSrc from '../src/templates/dialogs/event-tracker/header.hbs?raw';
@@ -39,6 +39,8 @@ function render(activeTab: EventTrackerTab, campaignDay = 0): HTMLElement {
         pcAttitudes: { 'Garrick Varo': { Ibnad: 'trusting' } },
         pcNames: ['Gus', 'Ibnad'],
         activeTab,
+        sources: [],
+        activeGraph: ALL_GRAPHS,
         activeSceneName: '',
         sceneNames: new Set(['The Sump']),
         journalLink: (ref) => (ref.name === 'The Sump' ? 'JournalEntry.sump' : null),

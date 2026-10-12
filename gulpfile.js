@@ -34,6 +34,7 @@ try {
   };
 }
 const { buildUuidIndex, resolveAdventure } = require("./scripts/resolve-adventures.cjs");
+const { validateAdventurePacks } = require("./scripts/validate-adventure-events.cjs");
 const { iterPackJson } = require("./scripts/lib/iter-pack-json.cjs");
 const { packRecords } = require("./scripts/lib/pack-sublevels.cjs");
 
@@ -197,6 +198,15 @@ async function compilePacks() {
   // Adventure documents. Built once, reused across all adventure packs. Reuses
   // the same reference-stub resolution as ordinary pack compilation.
   const uuidIndex = buildUuidIndex(path.resolve(__dirname, PACK_SRC), resolvePackSourceDocument);
+
+  // Adventure event graphs (#592) run as campaigns on the Event Tracker, so a
+  // dangling event id, an unknown trigger or an unresolvable reference is a
+  // broken adventure, not a style deviation: unlike the schema pass above, this
+  // one fails the build.
+  const adventureErrors = validateAdventurePacks(path.resolve(__dirname, PACK_SRC), uuidIndex, resolvePackSourceDocument);
+  if (adventureErrors.length > 0) {
+    throw new Error(`${adventureErrors.length} adventure event-graph error(s):\n  ${adventureErrors.join('\n  ')}`);
+  }
 
   const packsDir = path.resolve(__dirname, PACK_BUILD_DIR);
 

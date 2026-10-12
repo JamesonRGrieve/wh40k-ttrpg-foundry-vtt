@@ -119,22 +119,40 @@ interface IdentifiableDocument {
     readonly name: string | null;
     readonly uuid: string | null;
     readonly flags: { readonly [SYSTEM_ID]?: { readonly vault?: { readonly path?: string; readonly name?: string } | undefined } | undefined };
-    readonly _stats?: { readonly compendiumSource?: string | null | undefined } | undefined;
+    readonly _stats?: { readonly compendiumSource?: string | null | undefined; readonly duplicateSource?: string | null | undefined } | undefined;
 }
 
 /** The actor fields the watcher reads. */
 interface WatchedActor extends IdentifiableDocument {
+    readonly id?: string | null;
     readonly hasPlayerOwner: boolean;
+    /** A token's synthetic actor (an unlinked token), whose id is its base actor's. */
+    readonly isToken?: boolean;
 }
 
-/** A document as the reference matcher sees it. `core.sourceId` is the pre-V12 spelling of the compendium source. */
+function presentUuids(uuids: ReadonlyArray<string | null | undefined>): string[] {
+    return uuids.filter((uuid): uuid is string => typeof uuid === 'string' && uuid !== '');
+}
+
+/**
+ * A document as the reference matcher sees it: its compendium source,
+ * `core.sourceId` (the pre-V12 spelling of it), the world document it was
+ * duplicated from (an item dragged from the sidebar onto an actor), and its own UUID.
+ */
 export function identifyDoc(doc: IdentifiableDocument, legacySourceId: string | undefined): IdentifiedDoc {
-    const sources = [doc._stats?.compendiumSource, legacySourceId, doc.uuid].filter((uuid): uuid is string => typeof uuid === 'string' && uuid !== '');
+    const sources = presentUuids([doc._stats?.compendiumSource, legacySourceId, doc._stats?.duplicateSource, doc.uuid]);
     return { name: doc.name ?? '', vault: doc.flags[SYSTEM_ID]?.vault, sources };
 }
 
+/**
+ * An actor as the reference matcher sees it. An unlinked token's synthetic actor
+ * also stands for its base world actor, so a reference to an Adventure's actor
+ * (`Actor.<id>`, #592) matches every token placed from it.
+ */
 export function identifyActor(actor: WatchedActor): IdentifiedActor {
-    return { ...identifyDoc(actor, undefined), isPartyMember: actor.hasPlayerOwner };
+    const doc = identifyDoc(actor, undefined);
+    const base = actor.isToken === true && typeof actor.id === 'string' ? [`Actor.${actor.id}`] : [];
+    return { ...doc, sources: [...doc.sources, ...base], isPartyMember: actor.hasPlayerOwner };
 }
 
 /** The ActiveEffect fields the watcher reads. */
