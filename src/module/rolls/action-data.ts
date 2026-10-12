@@ -1,4 +1,5 @@
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
+import type { GameSystemId } from '../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import type D100Roll from '../dice/d100-roll.ts';
 import { t } from '../i18n/t.ts';
@@ -83,6 +84,7 @@ const EFFECT_TITLE = {
     chemUse: 'WH40K.ActionEffect.Title.ChemUse',
     blather: 'WH40K.ActionEffect.Title.Blather',
     warCry: 'WH40K.ActionEffect.Title.WarCry',
+    malignancy: 'WH40K.ActionEffect.Title.Malignancy',
 } as const;
 
 export class ActionData {
@@ -750,8 +752,13 @@ export class ActionData {
     }
 
     async refundResources(): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔refundAmmo's expected parameter type are duck-typed siblings
-        await refundAmmo(this as unknown as Parameters<typeof refundAmmo>[0]);
+        // Mirrors useResources: only a weapon attack spent ammo, and refundAmmo reads
+        // rollData.weapon unconditionally — a re-rolled skill/characteristic test
+        // has no weapon and would throw here before the re-roll ran.
+        if (this.rollData instanceof WeaponRollData) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔refundAmmo's expected parameter type are duck-typed siblings
+            await refundAmmo(this as unknown as Parameters<typeof refundAmmo>[0]);
+        }
 
         // Undo a persisted jam alongside the refunded ammo (re-roll / manual refund).
         await this._persistWeaponJam(false);
@@ -1277,6 +1284,50 @@ export class DosReadoutActionData extends SimpleSkillData {
         const readout = resolveDosReadout(this.family, this.rollData.dos, this.rollData.success);
         this.addEffect(t(EFFECT_TITLE.readout), game.i18n.format(readout.labelKey, { tier: String(readout.tier) }));
         return Promise.resolve();
+    }
+}
+
+/** The owed-test ledger a Malignancy Test spends from — the rolling actor's queue. */
+export interface MalignancyTestLedger {
+    /** Spend one queued test. */
+    consume: () => Promise<void>;
+    /** Return a spent test (the roll was refunded for a re-roll). */
+    refund: () => Promise<void>;
+}
+
+/**
+ * A Malignancy Test (Corruption Track lines): the Willpower test a Corruption
+ * gain queues on the character. Rolling it spends one queued test — returned
+ * when the roll is refunded for a re-roll — and a failure draws on the line's
+ * Malignancies table.
+ */
+export class MalignancyTestActionData extends SimpleSkillData {
+    readonly #ledger: MalignancyTestLedger;
+    readonly #gameSystem: GameSystemId;
+
+    constructor(ledger: MalignancyTestLedger, gameSystem: GameSystemId) {
+        super();
+        this.#ledger = ledger;
+        this.#gameSystem = gameSystem;
+    }
+
+    override async descriptionText(): Promise<void> {
+        if (this.rollData.success) {
+            this.addEffect(t(EFFECT_TITLE.malignancy), t('WH40K.Malignancy.Resisted'));
+            return;
+        }
+        this.addEffect(t(EFFECT_TITLE.malignancy), t('WH40K.Malignancy.Manifests'));
+        await RollTableUtils.rollMalignancy(this.#gameSystem);
+    }
+
+    override async useResources(): Promise<void> {
+        await super.useResources();
+        await this.#ledger.consume();
+    }
+
+    override async refundResources(): Promise<void> {
+        await super.refundResources();
+        await this.#ledger.refund();
     }
 }
 

@@ -41,6 +41,12 @@ export abstract class BaseSystemConfig {
     /** Whether this system uses career-based advance tables */
     abstract readonly usesCareerTables: boolean;
 
+    /**
+     * Whether gaining every 10 Corruption Points forces a Malignancy Test
+     * against the Corruption Track (DH1 / DH2 / OW / RT core rules).
+     */
+    abstract readonly usesMalignancyTest: boolean;
+
     // ── Starting Resources ────────────────────────────────────────
 
     /** Starting XP for a new character in this system */

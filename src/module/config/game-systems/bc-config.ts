@@ -59,6 +59,7 @@ function readBcSystem(actor: WH40KBaseActor): BcCharacterSystem {
 
 export class BCSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'bc' as const;
+    readonly usesMalignancyTest = false;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.bc';
     readonly cssClass = 'black-crusade';
     readonly theme = {

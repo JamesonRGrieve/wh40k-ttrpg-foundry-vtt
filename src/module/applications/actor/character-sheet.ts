@@ -185,6 +185,8 @@ type CharacterSheetContextDeclaredFields = {
     isIM?: boolean;
     isHomebrew?: boolean;
     isRaw?: boolean;
+    /** Malignancy Tests owed by Corruption gains; 0 on lines without a Corruption Track. */
+    malignancyTestsDue?: number;
     alignmentPanel?: BcAlignmentPanelContext;
     psychicPanel?: BcPsychicPanelContext;
     astartesPanel?: DwAstartesPanelContext;
@@ -829,6 +831,9 @@ export default class CharacterSheet extends BaseActorSheet {
             'adjustSubtletyManually': CharacterSheet.#adjustSubtletyManually,
             'viewSubtletyBreakdown': CharacterSheet.#viewSubtletyBreakdown,
 
+            // Malignancy Test owed by a Corruption gain (Corruption Track lines).
+            'rollMalignancyTest': CharacterSheet.#rollMalignancyTest,
+
             // BC Alignment / Infamy advancement panel (#173).
             'recheckBcAlignment': CharacterSheet.#recheckBcAlignment,
             'buyBcInfamyAdvance': CharacterSheet.#buyBcInfamyAdvance,
@@ -1186,6 +1191,7 @@ export default class CharacterSheet extends BaseActorSheet {
         context.isOW = isOW;
         context.isDW = isDW;
         context.isIM = isIM;
+        context.malignancyTestsDue = this.actor.usesMalignancyTest ? this.actor.system.malignancyTestsPending : 0;
 
         // Per-system overview panels — table-driven (#282). Each system's entries
         // (see PANEL_BUILDERS above) are written into the context under their exact
@@ -5545,6 +5551,11 @@ export default class CharacterSheet extends BaseActorSheet {
             content,
             ok: { label: 'OK' },
         });
+    }
+
+    /** Roll one Malignancy Test the character owes (button shown while any are due). */
+    static #rollMalignancyTest(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
+        this.actor.rollMalignancyTest();
     }
 
     /**

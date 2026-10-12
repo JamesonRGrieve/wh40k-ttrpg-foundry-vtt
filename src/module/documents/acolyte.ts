@@ -1,7 +1,10 @@
+import { SystemConfigRegistry } from '../config/game-systems/index.ts';
+import type { GameSystemId } from '../config/game-systems/types.ts';
 // Direct, not via dice/_module.ts: that barrel also re-exports
 // RollConfigurationDialog, so importing it drags the applications layer into
 // every document that just wants a roll class.
 import type D100Roll from '../dice/d100-roll.ts';
+import { t } from '../i18n/t.ts';
 import {
     type ActionData,
     applySkillUseToRollData,
@@ -15,11 +18,13 @@ import {
     type ExplosiveItem,
     type StatefulItem,
     DosReadoutActionData,
+    MalignancyTestActionData,
     SkillUseActionData,
 } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { openDamagePrompt, openRollPrompt } from '../rolls/roll-prompt.ts';
 import { firstTargetedActor, promptItemChoice } from '../rolls/skill-use-picker.ts';
+import { corruptionTrackModifier, malignancyTestsQueued } from '../rules/malignancy-test.ts';
 import { getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
 import type {
     WH40KActorBio,
@@ -53,8 +58,10 @@ interface CharacterModifierSources {
  * The more-specific field types shadow the optional/looser types from the base.
  */
 type WH40KCharacterSystemData = WH40KActorSystemData & {
+    gameSystem: GameSystemId;
     insanity: number;
     corruption: number;
+    malignancyTestsPending: number;
     fatigue: WH40KFatigue;
     fate: WH40KFate;
     psy: WH40KPsy;
@@ -75,6 +82,11 @@ type WH40KCharacterSystemData = WH40KActorSystemData & {
     _getTotalSkillModifier: (skillKey: string) => number;
     _getTotalCombatModifier: (combatKey: string) => number;
 };
+
+/** The slice of a candidate character update the Malignancy queue reads and writes. */
+interface CorruptionChange {
+    system?: { corruption?: number; malignancyTestsPending?: number };
+}
 
 /** Interface representing a resolved D100Roll result used in opposed tests. */
 interface D100RollResult {
@@ -354,6 +366,72 @@ export class WH40KAcolyte extends WH40KBaseActor {
         combatKey: string | null = null,
     ): Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string }> {
         return this.getSituationalModifiers('combat', combatKey);
+    }
+
+    /* -------------------------------------------- */
+    /*  Malignancy Tests                            */
+    /* -------------------------------------------- */
+
+    /** Whether this character's line forces a Malignancy Test per 10 Corruption gained. */
+    get usesMalignancyTest(): boolean {
+        return SystemConfigRegistry.getOrNull(this.system.gameSystem)?.usesMalignancyTest === true;
+    }
+
+    /**
+     * Queue a Malignancy Test for every 10-CP threshold a Corruption gain
+     * crosses, in the same write, so the owed tests survive until rolled however
+     * the Corruption arrived (sheet edit, power cost, GM macro). An update that
+     * sets the queue explicitly is left alone.
+     * @param {never} changed  The candidate update (typed `never` by the framework).
+     * @param {never} options  Update options.
+     * @param {never} user  The requesting user.
+     * @returns {Promise<boolean | undefined>}  `false` aborts the update.
+     */
+    protected override async _preUpdate(changed: never, options: never, user: never): Promise<boolean | undefined> {
+        const allowed = await super._preUpdate(changed, options, user);
+        if (allowed === false) return false;
+
+        const delta: CorruptionChange = changed;
+        const corruption = delta.system?.corruption;
+        if (corruption === undefined || delta.system === undefined || delta.system.malignancyTestsPending !== undefined) return undefined;
+        if (!this.usesMalignancyTest) return undefined;
+        const pending = this.system.malignancyTestsPending;
+        const queued = malignancyTestsQueued(pending, this.system.corruption, corruption);
+        if (queued !== pending) delta.system.malignancyTestsPending = queued;
+        return undefined;
+    }
+
+    /**
+     * Roll one owed Malignancy Test: a Willpower test through the unified roll
+     * pipeline, with the Corruption Track modifier as its own named row on the
+     * card. Rolling spends a queued test; a failure draws on the line's
+     * Malignancies table. No-op when no test is owed.
+     */
+    rollMalignancyTest(): void {
+        if (!this.usesMalignancyTest || this.system.malignancyTestsPending <= 0) return;
+        const willpower = this.characteristics['willpower'];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
+        if (willpower === undefined) return;
+
+        const ledger = {
+            consume: async (): Promise<void> => this.#adjustMalignancyTests(-1),
+            refund: async (): Promise<void> => this.#adjustMalignancyTests(1),
+        };
+        const rollData = this._buildSimpleSkillRoll({
+            key: 'willpower',
+            type: 'characteristic',
+            label: t('WH40K.Malignancy.TestLabel'),
+            target: willpower.total,
+            situationalKey: 'willpower',
+            extraModifiers: { 'corruption-track': corruptionTrackModifier(this.system.corruption) },
+            instance: new MalignancyTestActionData(ledger, this.system.gameSystem),
+        });
+        openRollPrompt(rollData);
+    }
+
+    /** Move the owed-test queue by `delta`, never below zero. */
+    async #adjustMalignancyTests(delta: number): Promise<void> {
+        await this.update({ 'system.malignancyTestsPending': Math.max(0, this.system.malignancyTestsPending + delta) });
     }
 
     /* -------------------------------------------- */
@@ -963,16 +1041,16 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     hasTalent(talent: string): boolean {
-        return this.items.filter((i) => i.type === 'talent').find((t) => t.name === talent) !== undefined;
+        return this.items.filter((i) => i.type === 'talent').find((owned) => owned.name === talent) !== undefined;
     }
 
     hasTalentFuzzyWords(words: string[]): boolean {
         return (
             this.items
                 .filter((i) => i.type === 'talent')
-                .find((t) => {
+                .find((owned) => {
                     for (const word of words) {
-                        if (!t.name.includes(word)) return false;
+                        if (!owned.name.includes(word)) return false;
                     }
                     return true;
                 }) !== undefined

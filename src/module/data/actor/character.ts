@@ -267,6 +267,12 @@ export default class CharacterData extends CreatureTemplate {
     declare insanity: number;
     declare corruption: number;
     /**
+     * Malignancy Tests queued by Corruption gains and not yet rolled (one per
+     * 10 CP crossed, on lines with a Corruption Track). Queued by
+     * `WH40KAcolyte._preUpdate`; consumed by `rollMalignancyTest`.
+     */
+    declare malignancyTestsPending: number;
+    /**
      * Aptitude set used for XP-cost matching. DERIVED at prep time from the
      * origin path (home world / background / role / elite / divination grants +
      * resolved choices) unioned with the validated {@link electiveAptitudes}.
@@ -559,6 +565,7 @@ export default class CharacterData extends CreatureTemplate {
             insanity: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             // insanityBonus: new NumberField({ required: true, initial: 0, min: 0, integer: true }), // Derived
             corruption: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            malignancyTestsPending: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             // corruptionBonus: new NumberField({ required: true, initial: 0, min: 0, integer: true }), // Derived
 
             // ===== APTITUDES (DH2e/BC/OW) =====

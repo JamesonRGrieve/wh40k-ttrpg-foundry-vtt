@@ -2,6 +2,7 @@ import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeCla
 import { WH40K } from '../config.ts';
 import { combatActionIcon, combatTimingKey } from '../rules/combat-action-display.ts';
 import { HIT_LOCATION_IDS, hitLocationAbbreviation, hitLocationLabel } from '../rules/hit-locations.ts';
+import { corruptionTrackModifier, DAMNED_CORRUPTION } from '../rules/malignancy-test.ts';
 import { capitalize, formatSigned } from '../utils/format.ts';
 import { buildQualityLabel, parseQualityLevel } from '../utils/quality-id.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
@@ -707,19 +708,10 @@ export function registerHandlebarsHelpers(): void {
     /**
      * Get corruption modifier for checks
      */
-    Handlebars.registerHelper('corruptionModifier', (corruption: TplValue): string =>
-        thresholdLadder(
-            numberOr0(corruption),
-            [
-                [0, '+0'],
-                [30, '+0'],
-                [60, '-10'],
-                [90, '-20'],
-                [99, '-30'],
-            ],
-            'DEAD',
-        ),
-    );
+    Handlebars.registerHelper('corruptionModifier', (corruption: TplValue): string => {
+        const points = numberOr0(corruption);
+        return points >= DAMNED_CORRUPTION ? 'DEAD' : formatSigned(corruptionTrackModifier(points));
+    });
 
     /**
      * Get insanity degree from insanity points (0-100)

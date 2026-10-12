@@ -64,6 +64,28 @@ export const PlayerDH2: Story = {
 };
 
 /**
+ * A Corruption gain has queued Malignancy Tests: the Vitals body surfaces the
+ * owed count as a button wired to `rollMalignancyTest`. With none owed the
+ * button is absent (the PlayerDH2 story above).
+ */
+export const PlayerDH2MalignancyDue: Story = {
+    args: combatContext(mockPlayerSheetContext({ systemId: 'dh2', activeTab: 'combat' }), { malignancyTestsDue: 2 }),
+    play: async ({ canvasElement }) => {
+        const button = canvasElement.querySelector<HTMLButtonElement>('[data-action="rollMalignancyTest"]');
+        await expect(button).not.toBeNull();
+        await expect(button?.textContent).toContain('2');
+    },
+};
+
+/** No test owed — the Malignancy button must not render. */
+export const PlayerDH2NoMalignancyDue: Story = {
+    args: combatContext(mockPlayerSheetContext({ systemId: 'dh2', activeTab: 'combat' }), { malignancyTestsDue: 0 }),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-action="rollMalignancyTest"]')).toBeNull();
+    },
+};
+
+/**
  * The same tab at the compact width the acceptance names. The Row-1 grid is
  * `minmax(0,2fr) minmax(320px,1fr)`, so this is where the right column would
  * crowd the left if the change had broken the layout.

@@ -87,6 +87,7 @@ const MODIFIER_KEY_META: Record<string, string> = {
     'difficulty': 'Difficulty',
     'situational': 'Situational',
     'combat-situational': 'CombatSituational',
+    'corruption-track': 'CorruptionTrack',
     [TARGET_CONDITION_BUCKET]: 'TargetConditions',
 };
 

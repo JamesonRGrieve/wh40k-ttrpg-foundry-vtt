@@ -10,6 +10,7 @@ import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './ty
 
 export class DH1eSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dh1' as const;
+    readonly usesMalignancyTest = true;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dh1';
     readonly cssClass = 'dark-heresy-1e';
     readonly theme = {

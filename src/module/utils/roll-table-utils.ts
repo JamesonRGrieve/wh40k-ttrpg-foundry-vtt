@@ -1,5 +1,12 @@
+import type { GameSystemId } from '../config/game-systems/types.ts';
+import { SYSTEM_ID } from '../constants.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KGameSystem } from '../types/global.d.ts';
+
+/** The compendium id of a line's core roll-table pack (`<line>-core-rolltables`). */
+function coreRollTablePack(gameSystem: GameSystemId): string {
+    return `${SYSTEM_ID}.${gameSystem}-core-rolltables`;
+}
 
 type RollTableResult = Awaited<ReturnType<RollTable['roll']>>;
 type RollTableDialog = HTMLDialogElement;
@@ -137,7 +144,10 @@ export class RollTableUtils {
 
             // eslint-disable-next-line no-await-in-loop -- sequential pack search; early-exit on first match requires ordered iteration
             const index = await pack.getIndex();
-            const entry = index.find((e) => e.name === tableName);
+            // Case-insensitive: some books print the heading in capitals (Only
+            // War's table is "MALIGNANCIES"), so an exact match misses it.
+            const wanted = tableName.toLowerCase();
+            const entry = index.find((e) => e.name?.toLowerCase() === wanted);
 
             if (entry) {
                 // eslint-disable-next-line no-await-in-loop -- sequential pack search; early-exit on first match requires ordered iteration
@@ -218,10 +228,16 @@ export class RollTableUtils {
 
     /**
      * Roll on the Malignancies table.
+     * @param {GameSystemId} [gameSystem] - Scope the lookup to this line's core
+     *   roll-table pack, so a failed Malignancy Test draws that line's table rather
+     *   than whichever line's copy of the shared name is found first.
      * @returns {Promise<TableResult>}
      */
-    static async rollMalignancy(): Promise<RollTableResult | null> {
-        return this.rollTable('Malignancies', { displayChat: true });
+    static async rollMalignancy(gameSystem?: GameSystemId): Promise<RollTableResult | null> {
+        return this.rollTable('Malignancies', {
+            displayChat: true,
+            ...(gameSystem !== undefined ? { pack: coreRollTablePack(gameSystem) } : {}),
+        });
     }
 
     /**

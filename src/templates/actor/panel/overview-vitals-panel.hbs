@@ -128,6 +128,14 @@
                         valueClass="wh40k-mental-value"
                         stateClass=(corruptionDegreeClass system.corruption)
                         degreeText=(corruptionDegree system.corruption)}}
+                    {{#if (gt malignancyTestsDue 0)}}
+                        <button type="button" data-action="rollMalignancyTest"
+                                class="tw-flex tw-w-full tw-items-center tw-justify-center tw-gap-1.5 tw-my-1 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-solid tw-border-crimson tw-bg-transparent tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-crimson-l40 tw-cursor-pointer hover:tw-bg-crimson hover:tw-text-white"
+                                title="{{localize 'WH40K.Malignancy.RollTest'}}">
+                            <i class="fas fa-biohazard" aria-hidden="true"></i>
+                            <span>{{localize "WH40K.Malignancy.TestsDue" count=malignancyTestsDue}}</span>
+                        </button>
+                    {{/if}}
                     {{> systems/wh40k-rpg/templates/actor/partial/vital-inline-row
                         icon="fa-brain"
                         label=(localize "WH40K.Resource.Insanity")

@@ -10,6 +10,7 @@ import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './ty
 
 export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dw' as const;
+    readonly usesMalignancyTest = false;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dw';
     readonly cssClass = 'deathwatch';
     readonly theme = {
