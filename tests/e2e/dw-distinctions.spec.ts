@@ -8,188 +8,95 @@ import { expect, test } from './lib/test';
  * Tier B coverage of the Deathwatch Distinctions panel (#171).
  *
  * Renders the Handlebars partial into the deployed Foundry world via
- * `templates/actor/panel/dw-distinction-panel.hbs`, asserts the
- * Distinction list, Mark list, and merged-effects readout render with
- * a mixed catalogue (one Mark borne, one rank-locked, one ceremonial),
- * then exercises the Distinction toggle (DOM-level — the
- * orchestrator-wired action handler updates the actor, which is out of
- * scope for this Tier B render snap), and snaps the result.
+ * `templates/actor/panel/dw-distinction-panel.hbs` with one owned special
+ * ability per category (one of them below its Renown rank, one Mark carrying a
+ * characteristic change and a trait) and asserts each row's category, Renown
+ * gate, reward and XP cost render, plus the merged Mark readout. Each row opens
+ * its item through the shared `itemEdit` action, which is exercised elsewhere.
  *
  * Follows the dw-astartes / bc-alignment shape: the rendered DOM stays
- * anchored to a globalThis handle so snap() captures live pixels, and
- * is torn down after capture so the next test starts clean.
+ * anchored to a globalThis handle so snap() captures live pixels, and is torn
+ * down after capture so the next test starts clean.
  */
 test.describe.serial('DwDistinctionPanel (Tier B)', () => {
-    test('renders distinctions + marks + merged effects and toggles a Distinction', async ({ page }) => {
+    test('renders owned special abilities with category, Renown gate, reward, cost and merged Mark effects', async ({ page }) => {
         await joinOrSkip(page);
 
         const result = await page.evaluate(async () => {
             const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/dw-distinction-panel.hbs';
             let error: string | null = null;
             let rendered = false;
-            let distinctionEntryCount = 0;
-            let markCount = 0;
-            let hasMergedReadout = false;
+            let entryCount = 0;
+            let categoryLabels: string[] = [];
+            let rankCount = 0;
+            let rewardCount = 0;
+            let costCount = 0;
+            let lockedCount = 0;
             let mergedCharBadgeCount = 0;
             let mergedTraitBadgeCount = 0;
-            let lockedEntries = 0;
-            let toggleInitialPressed = '';
-            let toggleAfterPressed = '';
 
-            interface CatalogueEntry {
-                id: string;
-                name: string;
-                renownReward: number;
-                renownRequiredLabel: string;
-                canEarnAtCurrentRank: boolean;
-                mark?: {
-                    description: string;
-                    characteristicDelta?: Record<string, number>;
-                    trait?: string;
-                };
-            }
-
-            const CATALOGUE: CatalogueEntry[] = [
-                {
-                    id: 'honoured-of-the-chapter',
-                    name: 'Honoured of the Chapter',
-                    renownReward: 5,
-                    renownRequiredLabel: 'Respected',
-                    canEarnAtCurrentRank: true,
-                    mark: { description: '+5 WP', characteristicDelta: { WP: 5 } },
-                },
-                {
-                    id: 'iron-resolve',
-                    name: 'Iron Resolve',
-                    renownReward: 5,
-                    renownRequiredLabel: 'Respected',
-                    canEarnAtCurrentRank: true,
-                    mark: {
-                        description: '+5 T, Resistance (Fear)',
-                        characteristicDelta: { T: 5 },
-                        trait: 'Resistance (Fear)',
-                    },
-                },
-                {
-                    id: 'duty-unto-death',
-                    name: 'Duty Unto Death',
-                    renownReward: 10,
-                    renownRequiredLabel: 'Distinguished',
-                    canEarnAtCurrentRank: true,
-                },
-                {
-                    id: 'crux-terminatus',
-                    name: 'Bearer of the Crux Terminatus',
-                    renownReward: 15,
-                    renownRequiredLabel: 'Hero',
-                    canEarnAtCurrentRank: false,
-                    mark: {
-                        description: '+5 WS, True Grit',
-                        characteristicDelta: { WS: 5 },
-                        trait: 'True Grit',
-                    },
-                },
-            ];
-
-            interface BuiltCtx {
+            const ctx = {
                 distinctionPanel: {
-                    distinctions: { id: string; name: string; renownReward: number; renownRequired: string; earned: boolean; rankTooLow: boolean }[];
-                    marks: { id: string; name: string; description: string; borne: boolean }[];
-                    merged: {
-                        characteristicDelta: { key: string; value: number; displayValue: string }[];
-                        traits: string[];
-                    };
-                };
-            }
-            function buildCtx(earnedIds: string[], borneMarkIds: string[]): BuiltCtx {
-                const earned = new Set(earnedIds);
-                const borne = new Set(borneMarkIds);
-                const distinctions = CATALOGUE.map((entry) => ({
-                    id: entry.id,
-                    name: entry.name,
-                    renownReward: entry.renownReward,
-                    renownRequired: entry.renownRequiredLabel,
-                    earned: earned.has(entry.id),
-                    rankTooLow: !entry.canEarnAtCurrentRank,
-                }));
-                const marks = CATALOGUE.filter((e) => e.mark !== undefined).map((e) => ({
-                    id: e.id,
-                    name: e.name,
-                    description: e.mark?.description ?? '',
-                    borne: borne.has(e.id),
-                }));
-
-                const charSums: Record<string, number> = {};
-                const traitsSet = new Set<string>();
-                for (const entry of CATALOGUE) {
-                    if (entry.mark === undefined) continue;
-                    if (!borne.has(entry.id)) continue;
-                    const deltas = entry.mark.characteristicDelta ?? {};
-                    for (const k of Object.keys(deltas)) {
-                        charSums[k] = (charSums[k] ?? 0) + (deltas[k] ?? 0);
-                    }
-                    if (entry.mark.trait !== undefined && entry.mark.trait.length > 0) {
-                        traitsSet.add(entry.mark.trait);
-                    }
-                }
-                const characteristicDelta = Object.keys(charSums)
-                    .sort()
-                    .map((key) => {
-                        const value = charSums[key] ?? 0;
-                        return {
-                            key,
-                            value,
-                            displayValue: value >= 0 ? `+${value}` : `${value}`,
-                        };
-                    });
-
-                return {
-                    distinctionPanel: {
-                        distinctions,
-                        marks,
-                        merged: {
-                            characteristicDelta,
-                            traits: Array.from(traitsSet),
+                    abilities: [
+                        {
+                            id: 'spec1',
+                            name: 'Enhance Healing',
+                            category: 'speciality',
+                            categoryLabel: 'Speciality Ability',
+                            renownRequired: '',
+                            renownReward: 0,
+                            cost: 0,
+                            rankTooLow: false,
                         },
+                        {
+                            id: 'adv1',
+                            name: 'Command and Control',
+                            category: 'advanced',
+                            categoryLabel: 'Advanced Special Ability',
+                            renownRequired: 'Famed',
+                            renownReward: 0,
+                            cost: 0,
+                            rankTooLow: true,
+                        },
+                        {
+                            id: 'dist1',
+                            name: 'Tyrannic War Veteran',
+                            category: 'distinction',
+                            categoryLabel: 'Distinction',
+                            renownRequired: '',
+                            renownReward: 5,
+                            cost: 1100,
+                            rankTooLow: false,
+                        },
+                        {
+                            id: 'mark1',
+                            name: 'Watcher',
+                            category: 'mark',
+                            categoryLabel: 'Mark of Distinction',
+                            renownRequired: 'Respected',
+                            renownReward: 0,
+                            cost: 500,
+                            rankTooLow: false,
+                        },
+                    ],
+                    merged: {
+                        characteristicDelta: [{ key: 'perception', value: 10, displayValue: '+10' }],
+                        traits: ['Resistance (Fear)'],
                     },
-                };
-            }
+                },
+            };
 
             try {
                 /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `fetch`/`Handlebars` globals are injected by the licensed app; Handlebars compile ctx is opaque */
                 const g = globalThis as unknown as {
                     fetch: (u: string) => Promise<Response>;
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars compile context is opaque template data
-                    Handlebars: { compile: (s: string) => (ctx: unknown) => string };
+                    Handlebars: { compile: (s: string) => (context: typeof ctx) => string };
                 };
                 const src = await (await g.fetch(templateUrl)).text();
-                const HandlebarsRuntime = g.Handlebars;
-                if (typeof HandlebarsRuntime.compile !== 'function') {
-                    return {
-                        rendered,
-                        distinctionEntryCount,
-                        markCount,
-                        hasMergedReadout,
-                        mergedCharBadgeCount,
-                        mergedTraitBadgeCount,
-                        lockedEntries,
-                        toggleInitialPressed,
-                        toggleAfterPressed,
-                        error: 'Handlebars not available on globalThis',
-                    };
-                }
-
-                const tpl = HandlebarsRuntime.compile(src);
-
-                const initialEarned = ['honoured-of-the-chapter', 'iron-resolve', 'duty-unto-death'];
-                const initialMarks = ['iron-resolve'];
-                const html = tpl(buildCtx(initialEarned, initialMarks));
+                const tpl = g.Handlebars.compile(src);
 
                 const host = document.createElement('div');
-                // Tailwind utilities are scoped to .wh40k-rpg via tailwind.config.js
-                // `important: '.wh40k-rpg'`; without an ancestor with that class
-                // every tw-* class is dropped. See CLAUDE.md
-                // "Check the .wh40k-rpg ancestor for ALL tw-* utilities".
+                // Tailwind utilities are scoped to .wh40k-rpg (tailwind.config.js `important`).
                 host.className = 'wh40k-rpg';
                 host.dataset['wh40kSystem'] = 'dw';
                 host.style.position = 'fixed';
@@ -197,29 +104,19 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
                 host.style.right = '40px';
                 host.style.width = '560px';
                 host.style.zIndex = '99999';
-                host.innerHTML = html;
+                host.innerHTML = tpl(ctx);
                 document.body.appendChild(host);
                 rendered = host.firstElementChild instanceof HTMLElement;
 
                 if (rendered) {
-                    distinctionEntryCount = host.querySelectorAll('button[data-wh40k-hook="dw-distinction-entry"]').length;
-                    markCount = host.querySelectorAll('button[data-wh40k-hook="dw-distinction-mark"]').length;
-                    hasMergedReadout = host.querySelector('[data-wh40k-hook="dw-distinction-merged"]') !== null;
+                    entryCount = host.querySelectorAll('button[data-wh40k-hook="dw-distinction-entry"][data-action="itemEdit"]').length;
+                    categoryLabels = Array.from(host.querySelectorAll('[data-wh40k-hook="dw-distinction-category"]')).map((el) => el.textContent.trim());
+                    rankCount = host.querySelectorAll('[data-wh40k-hook="dw-distinction-rank"]').length;
+                    rewardCount = host.querySelectorAll('[data-wh40k-hook="dw-distinction-reward"]').length;
+                    costCount = host.querySelectorAll('[data-wh40k-hook="dw-distinction-cost"]').length;
+                    lockedCount = host.querySelectorAll('[data-wh40k-hook="dw-distinction-locked"]').length;
                     mergedCharBadgeCount = host.querySelectorAll('[data-wh40k-hook="dw-distinction-merged-char"]').length;
                     mergedTraitBadgeCount = host.querySelectorAll('[data-wh40k-hook="dw-distinction-merged-trait"]').length;
-                    lockedEntries = host.querySelectorAll('[data-wh40k-hook="dw-distinction-locked"]').length;
-
-                    const dutyBtn = host.querySelector<HTMLButtonElement>('button[data-distinction-id="duty-unto-death"]');
-                    toggleInitialPressed = dutyBtn?.getAttribute('aria-pressed') ?? '';
-
-                    // Toggle "duty-unto-death" off by re-rendering with it removed
-                    // from the earned set. The action handler itself is integration-
-                    // tested via actor.update round-trip in unit tests; this Tier B
-                    // probe only verifies the partial reflects state changes.
-                    const withoutDuty = initialEarned.filter((id) => id !== 'duty-unto-death');
-                    host.innerHTML = tpl(buildCtx(withoutDuty, initialMarks));
-                    const dutyBtnAfter = host.querySelector<HTMLButtonElement>('button[data-distinction-id="duty-unto-death"]');
-                    toggleAfterPressed = dutyBtnAfter?.getAttribute('aria-pressed') ?? '';
                 }
 
                 // eslint-disable-next-line no-restricted-syntax -- boundary: stashing a DOM host on globalThis for cross-evaluate cleanup; no shipped types
@@ -228,18 +125,7 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
                 error = String((err as Error).message);
             }
 
-            return {
-                rendered,
-                distinctionEntryCount,
-                markCount,
-                hasMergedReadout,
-                mergedCharBadgeCount,
-                mergedTraitBadgeCount,
-                lockedEntries,
-                toggleInitialPressed,
-                toggleAfterPressed,
-                error,
-            };
+            return { rendered, entryCount, categoryLabels, rankCount, rewardCount, costCount, lockedCount, mergedCharBadgeCount, mergedTraitBadgeCount, error };
         });
 
         const hookCounts = await countHooks(page);
@@ -249,11 +135,7 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
         await page.evaluate(() => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: reading back DOM host stashed on globalThis from the prior evaluate; no shipped types
             const g = globalThis as unknown as { __dwDistinctionPanelHost: HTMLElement | undefined };
-            try {
-                g.__dwDistinctionPanelHost?.remove();
-            } catch {
-                /* ignore */
-            }
+            g.__dwDistinctionPanelHost?.remove();
             g.__dwDistinctionPanelHost = undefined;
         });
 
@@ -261,22 +143,23 @@ test.describe.serial('DwDistinctionPanel (Tier B)', () => {
         expect(result.rendered, 'panel did not render').toBe(true);
         expectHooks(hookCounts, [
             'dw-distinction-entry',
+            'dw-distinction-category',
+            'dw-distinction-rank',
+            'dw-distinction-reward',
+            'dw-distinction-cost',
             'dw-distinction-locked',
-            'dw-distinction-mark',
             'dw-distinction-merged',
             'dw-distinction-merged-char',
             'dw-distinction-merged-trait',
         ]);
-        expect(result.distinctionEntryCount, 'expected 4 Distinction entries').toBe(4);
-        expect(result.markCount, 'expected 3 Mark entries (catalogue Marks)').toBe(3);
-        expect(result.hasMergedReadout, 'merged-effects readout should render').toBe(true);
-        // Single borne Mark (iron-resolve) → 1 char badge (T+5), 1 trait badge.
+        expect(result.entryCount, 'one item-opening row per owned special ability').toBe(4);
+        expect(result.categoryLabels).toEqual(['Speciality Ability', 'Advanced Special Ability', 'Distinction', 'Mark of Distinction']);
+        expect(result.rankCount, 'only abilities with a printed Renown rank show one').toBe(2);
+        expect(result.rewardCount, 'only abilities with a Renown reward show one').toBe(1);
+        expect(result.costCount, 'only abilities with an XP cost show one').toBe(2);
+        expect(result.lockedCount, 'the below-rank ability is marked locked').toBe(1);
         expect(result.mergedCharBadgeCount, 'merged characteristic badge count').toBe(1);
         expect(result.mergedTraitBadgeCount, 'merged trait badge count').toBe(1);
-        // crux-terminatus is rank-locked in this mock catalogue.
-        expect(result.lockedEntries, 'expected one locked entry').toBe(1);
-        expect(result.toggleInitialPressed, 'duty-unto-death starts pressed=true').toBe('true');
-        expect(result.toggleAfterPressed, 'duty-unto-death flips to pressed=false after toggle').toBe('false');
 
         recordCoverage('panel.render', 'DwDistinctionPanel');
     });

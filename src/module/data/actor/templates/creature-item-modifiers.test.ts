@@ -62,6 +62,7 @@ interface FakeItem {
     isTalent: boolean;
     isTrait: boolean;
     isCondition: boolean;
+    isSpecialAbility: boolean;
     system: { modifiers: ModifiersBlock; state?: { equipped: boolean } };
 }
 
@@ -75,6 +76,7 @@ function makeItem(name: string, type: string, modifiers: ModifiersBlock, equippe
         isTalent: type === 'talent',
         isTrait: type === 'trait',
         isCondition: type === 'condition',
+        isSpecialAbility: type === 'specialAbility',
         system: { modifiers, ...(equipped === undefined ? {} : { state: { equipped } }) },
     };
 }
@@ -167,6 +169,14 @@ describe.each(SYSTEMS)('Path A — static item modifiers reach the computed targ
         expect(modifierSources.characteristics['perception']).toEqual([
             expect.objectContaining({ name: 'Bionic Eye', type: 'gear', id: 'Bionic Eye-id', value: 10 }),
         ]);
+    });
+
+    it('a special ability (a Mark of Distinction) raises the characteristic total with provenance (#171)', () => {
+        const mark = makeItem('Watcher', 'specialAbility', { characteristics: { perception: 10 } });
+        const { characteristics, modifierSources } = prepare(gameSystem, [mark]);
+
+        expect(characteristics.perception.total).toBe(40);
+        expect(modifierSources.characteristics['perception']).toEqual([expect.objectContaining({ name: 'Watcher', type: 'specialAbility', value: 10 })]);
     });
 
     it('an equipped armour and cybernetic each contribute, stacking with their own provenance rows', () => {
