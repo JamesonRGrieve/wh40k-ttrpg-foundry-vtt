@@ -373,7 +373,8 @@ export interface WH40KMutantBackgroundTarget {
     /** `null` on an unsaved Document, per Foundry's `Document#id`. */
     id?: string | null | undefined;
     name?: string | undefined;
-    system?: { corruption?: { value?: number } | number };
+    /** Character Corruption Points: a plain `NumberField` at `system.corruption`. */
+    system?: { corruption?: number };
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update accepts a path-keyed payload and resolves to the updated Document (framework signature)
     update?: (data: Record<string, unknown>) => Promise<unknown>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.setFlag stores arbitrary serializable values keyed by scope/key (framework signature)

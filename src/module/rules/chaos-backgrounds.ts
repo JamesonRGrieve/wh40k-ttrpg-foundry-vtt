@@ -17,3 +17,18 @@
  * is the sole applier, so the value is not counted twice.
  */
 export const MUTANT_STARTING_CORRUPTION = 10;
+
+/** The actor update that adds a Mutant's starting Corruption to its current total. */
+export type MutantCorruptionUpdate = {
+    /** Character Corruption is a plain `NumberField` at `system.corruption` (no `.value`). */
+    'system.corruption': number;
+};
+
+/**
+ * Build the update applying the Mutant background's starting Corruption on top
+ * of the character's current Corruption Points.
+ * @param currentCorruption  The character's `system.corruption`.
+ */
+export function mutantCorruptionUpdate(currentCorruption: number): MutantCorruptionUpdate {
+    return { 'system.corruption': currentCorruption + MUTANT_STARTING_CORRUPTION };
+}

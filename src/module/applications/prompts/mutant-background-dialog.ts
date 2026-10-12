@@ -13,7 +13,7 @@
  */
 
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
-import { MUTANT_STARTING_CORRUPTION } from '../../rules/chaos-backgrounds.ts';
+import { MUTANT_STARTING_CORRUPTION, mutantCorruptionUpdate } from '../../rules/chaos-backgrounds.ts';
 import type { WH40KMutantBackgroundTarget } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
@@ -22,8 +22,7 @@ const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Minimal actor surface the dialog touches — kept narrow to avoid Document
- * coupling, and tolerant of both `corruption` schema shapes (a bare number on
- * some lines, `{ value }` on others).
+ * coupling. Corruption is the character's plain number at `system.corruption`.
  *
  * Declared in `types/global.d.ts` rather than here because the launcher
  * signature on `game.wh40k.prompts` needs the same shape, and that interface
@@ -37,10 +36,6 @@ interface MutantBackgroundContext extends Record<string, unknown> {
     startingCorruption: number;
     actorName: string | null;
     canApply: boolean;
-}
-
-function localize(key: string): string {
-    return game.i18n.localize(key);
 }
 
 /**
@@ -117,10 +112,8 @@ class MutantBackgroundDialog extends ApplicationV2Mixin(ApplicationV2 as unknown
         // Apply mechanical effects when an actor was supplied.
         const actor = this.actor;
         if (actor !== null && typeof actor.update === 'function') {
-            const current = readCorruption(actor);
-            const next = current + MUTANT_STARTING_CORRUPTION;
             try {
-                await actor.update({ 'system.corruption.value': next });
+                await actor.update(mutantCorruptionUpdate(actor.system?.corruption ?? 0));
             } catch {
                 /* swallow — chat card still posts so the GM has a record */
             }
@@ -154,17 +147,6 @@ class MutantBackgroundDialog extends ApplicationV2Mixin(ApplicationV2 as unknown
 /* -------------------------------------------- */
 /*  Helpers                                     */
 /* -------------------------------------------- */
-
-/** Read the current corruption value off the actor, tolerating either schema shape. */
-function readCorruption(actor: MutantTargetActor): number {
-    const corruption = actor.system?.corruption;
-    if (typeof corruption === 'number') return corruption;
-    if (corruption !== undefined && typeof corruption.value === 'number') return corruption.value;
-    return 0;
-}
-
-// Suppress unused-warning for the localize helper kept for parity with sibling dialogs.
-void localize;
 
 /** Convenience opener for the dialog. */
 export function openMutantBackgroundDialog(actor: MutantTargetActor | null = null): void {
