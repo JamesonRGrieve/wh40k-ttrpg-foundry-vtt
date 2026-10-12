@@ -36,9 +36,9 @@ describe('evaluateRequisition — the gate', () => {
         // 40 Influence − 20 (rare) − 10 (good) = 10
         expect(gate.target).toBe(10);
         expect(gate.breakdown).toEqual([
-            { label: 'Influence', value: 40 },
-            { label: 'Availability (rare)', value: -20 },
-            { label: 'Craftsmanship (good)', value: -10 },
+            { source: 'rating', value: 40 },
+            { source: 'availability', value: -20, detail: 'rare' },
+            { source: 'craftsmanship', value: -10, detail: 'good' },
         ]);
     });
 
@@ -51,27 +51,27 @@ describe('evaluateRequisition — the gate', () => {
     it('refuses a bound item outright (#390)', () => {
         const gate = evaluateRequisition('influence', { rating: 90 }, { availability: 'common', bound: true });
         expect(gate.allowed).toBe(false);
-        expect(gate.reason).toMatch(/bound/i);
+        expect(gate.reason).toEqual({ key: 'WH40K.Requisition.Refusal.Bound' });
     });
 
     it('refuses when the line has no requisition economy', () => {
         const gate = evaluateRequisition('none', { rating: 50 }, { availability: 'common' });
         expect(gate.allowed).toBe(false);
-        expect(gate.reason).toMatch(/currency/i);
+        expect(gate.reason).toEqual({ key: 'WH40K.Requisition.Refusal.NoEconomy' });
     });
 
     it('gates a pool economy on the pool covering the cost', () => {
         expect(evaluateRequisition('requisition-points', { rating: 0, pool: 10 }, { availability: 'common', cost: 5 }).allowed).toBe(true);
         const short = evaluateRequisition('requisition-points', { rating: 0, pool: 3 }, { availability: 'common', cost: 5 });
         expect(short.allowed).toBe(false);
-        expect(short.reason).toMatch(/only 3 available/);
+        expect(short.reason).toEqual({ key: 'WH40K.Requisition.Refusal.Pool', data: { cost: 5, pool: 3 } });
     });
 
     it('gates Deathwatch Requisition on Renown as well as points', () => {
         const item = { availability: 'common' as const, cost: 5, renownRequired: 20 };
         const blocked = evaluateRequisition('requisition-points', { rating: 0, pool: 100, renown: 10 }, item);
         expect(blocked.allowed).toBe(false);
-        expect(blocked.reason).toMatch(/Renown 20/);
+        expect(blocked.reason).toEqual({ key: 'WH40K.Requisition.Refusal.Renown', data: { required: 20, renown: 10 } });
         expect(evaluateRequisition('requisition-points', { rating: 0, pool: 100, renown: 40 }, item).allowed).toBe(true);
     });
 });

@@ -1,0 +1,41 @@
+{{!--
+    Armoury Requisition chat card (#496) — one block per requested line of an
+    Inquisition Armoury trade: the full target derivation (economy rating ±
+    availability ± craftsmanship, each row hoverable to its source), the roll
+    against it, and whether the line was granted, denied, or refused before any
+    test. Context: integrations/armoury-requisition.ts buildArmouryCardContext.
+--}}
+{{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
+    cardClass="wh40k-armreq-card"
+    outerExtraClass=(concat "tw-overflow-hidden tw-rounded-md tw-border-2 " (themeClassFor 'border'))
+    iconClass="fa-boxes-stacked"
+    title=(localize "WH40K.Requisition.ChatTitle")
+    gameSystem=gameSystem
+    legacyClasses=false
+}}
+    {{#each attempts as |attempt|}}
+    <section class="tw-mb-3 last:tw-mb-0" data-requisition-outcome="{{#if attempt.granted}}granted{{else if attempt.refused}}refused{{else}}denied{{/if}}">
+        <div class="tw-font-bold tw-mb-1">{{attempt.name}}</div>
+        {{#if attempt.refused}}
+            <div class="tw-text-sm tw-text-[var(--wh40k-danger-secondary)]">{{attempt.refusalText}}</div>
+        {{else}}
+            {{#if attempt.tested}}
+                {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=attempt.baseTarget baseLabel=attempt.baseLabel modifierSources=attempt.modifierSources modifiedTarget=attempt.target}}
+                <div class="tw-flex tw-justify-between tw-items-center tw-text-sm">
+                    <span class="tw-text-[var(--wh40k-card-muted)]">{{localize "WH40K.Requisition.Roll"}}</span>
+                    <span class="tw-font-semibold tw-tabular-nums">{{attempt.roll}} / {{attempt.target}}
+                        {{#if attempt.granted}}({{attempt.dos}} {{localize "WH40K.Chat.Roll.DoS"}}){{else}}({{attempt.dof}} {{localize "WH40K.Chat.Roll.DoF"}}){{/if}}
+                    </span>
+                </div>
+            {{/if}}
+        {{/if}}
+        {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs variant=attempt.variant labelKey=attempt.outcomeKey value=attempt.calloutValue}}
+    </section>
+    {{/each}}
+    {{#if ratingLossText}}
+    <div class="tw-text-sm tw-text-center tw-text-[var(--wh40k-danger-secondary)]">{{ratingLossText}}</div>
+    {{/if}}
+    {{#if poolSpentText}}
+    <div class="tw-text-sm tw-text-center">{{poolSpentText}}</div>
+    {{/if}}
+{{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}

@@ -112,6 +112,7 @@ import { WH40KActorProxy } from './documents/actor-proxy.ts';
 import { isCharacterActorType, type WH40KBaseActor } from './documents/base-actor.ts';
 import { WH40KItem } from './documents/item.ts';
 import { HandlebarManager } from './handlebars/handlebars-manager.ts';
+import { registerArmouryRequisitionGate } from './integrations/armoury-requisition.ts';
 import { type FlaggableActor, isItemPilesPile, registerItemPilesValuation } from './integrations/item-piles.ts';
 import { syncSceneSuns } from './integrations/zephyr-cartography.ts';
 import {
@@ -206,6 +207,8 @@ export class HooksManager {
         Hooks.once('init', () => {
             HooksManager.init();
             registerItemPilesValuation();
+            // #496: requisition gates every draw from the Inquisition Armoury merchant.
+            registerArmouryRequisitionGate();
         });
         hooksOn('ready', () => {
             void HooksManager.ready();

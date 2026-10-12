@@ -56,21 +56,36 @@ export interface RequisitionTestInput {
     extra?: number;
 }
 
+/**
+ * Where one component of a requisition target came from. Content-agnostic: the
+ * card localizes the source (and the rating's own economy name) at render time,
+ * so this pure module carries no player-facing English.
+ */
+type RequisitionModifierSource = 'rating' | 'availability' | 'craftsmanship' | 'other';
+
+/** One provenance-bearing component of a requisition target. */
+export interface RequisitionModifier {
+    source: RequisitionModifierSource;
+    value: number;
+    /** The availability / craftsmanship rating the row came from, for its label. */
+    detail?: string | undefined;
+}
+
 export interface RequisitionTestResult {
     target: number;
-    /** Modifier breakdown for chat-card display. */
-    breakdown: { label: string; value: number }[];
+    /** Modifier breakdown for chat-card display — one row per component, never a lumped total. */
+    breakdown: RequisitionModifier[];
 }
 
 export function getRequisitionTestTarget(input: RequisitionTestInput): RequisitionTestResult {
-    const breakdown: { label: string; value: number }[] = [];
-    breakdown.push({ label: 'Influence', value: input.influence });
-    breakdown.push({ label: `Availability (${input.availability})`, value: AVAILABILITY_MODIFIERS[input.availability] });
+    const breakdown: RequisitionModifier[] = [];
+    breakdown.push({ source: 'rating', value: input.influence });
+    breakdown.push({ source: 'availability', value: AVAILABILITY_MODIFIERS[input.availability], detail: input.availability });
     if (input.craftsmanship !== undefined) {
-        breakdown.push({ label: `Craftsmanship (${input.craftsmanship})`, value: CRAFTSMANSHIP_MODIFIERS[input.craftsmanship] });
+        breakdown.push({ source: 'craftsmanship', value: CRAFTSMANSHIP_MODIFIERS[input.craftsmanship], detail: input.craftsmanship });
     }
     if (input.extra !== undefined && input.extra !== 0) {
-        breakdown.push({ label: 'Other', value: input.extra });
+        breakdown.push({ source: 'other', value: input.extra });
     }
     const target = breakdown.reduce((sum, m) => sum + m.value, 0);
     return { target: Math.max(0, target), breakdown };

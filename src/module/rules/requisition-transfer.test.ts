@@ -25,7 +25,7 @@ describe('planRequisition (#496)', () => {
     it('refuses when the armoury holds fewer than asked', () => {
         const plan = planRequisition(request({ stock: { quantity: 1, infinite: false }, taken: 2 }));
         expect(plan.allowed).toBe(false);
-        expect(plan.reason).toContain('holds 1');
+        expect(plan.reason).toEqual({ key: 'WH40K.Requisition.Refusal.Stock', data: { stock: 1, taken: 2 } });
     });
 
     it('supplies any quantity from infinite stock', () => {
@@ -37,13 +37,13 @@ describe('planRequisition (#496)', () => {
         // #390 item that also happens to be unstocked.
         const plan = planRequisition(request({ item: { availability: 'scarce', bound: true }, stock: { quantity: 0, infinite: false } }));
         expect(plan.allowed).toBe(false);
-        expect(plan.reason).toContain('bound');
+        expect(plan.reason?.key).toBe('WH40K.Requisition.Refusal.Bound');
     });
 
     it('refuses a line with no requisition economy before consulting stock', () => {
         const plan = planRequisition(request({ economy: 'none' }));
         expect(plan.allowed).toBe(false);
-        expect(plan.reason).toContain('no requisition economy');
+        expect(plan.reason?.key).toBe('WH40K.Requisition.Refusal.NoEconomy');
     });
 
     it('normalises a nonsense quantity to at least one whole unit', () => {

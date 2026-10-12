@@ -42,7 +42,12 @@ describe('getRequisitionTestTarget', () => {
 
     it('captures every modifier in the breakdown for chat-card display', () => {
         const r = getRequisitionTestTarget({ influence: 40, availability: 'rare', craftsmanship: 'best', extra: -10 });
-        expect(r.breakdown.map((b) => b.label)).toEqual(['Influence', 'Availability (rare)', 'Craftsmanship (best)', 'Other']);
+        expect(r.breakdown).toEqual([
+            { source: 'rating', value: 40 },
+            { source: 'availability', value: -20, detail: 'rare' },
+            { source: 'craftsmanship', value: -30, detail: 'best' },
+            { source: 'other', value: -10 },
+        ]);
     });
 });
 

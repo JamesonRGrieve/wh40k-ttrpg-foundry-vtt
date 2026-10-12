@@ -15,7 +15,23 @@
  * acceptance's "no per-line fork").
  */
 
-import { applyInfluenceLossOnBigFailure, type AvailabilityKey, type CraftsmanshipKey, getRequisitionTestTarget } from './requisition-test.ts';
+import type { I18nKey } from '../types/i18n-keys';
+import {
+    applyInfluenceLossOnBigFailure,
+    type AvailabilityKey,
+    type CraftsmanshipKey,
+    getRequisitionTestTarget,
+    type RequisitionModifier,
+} from './requisition-test.ts';
+
+/**
+ * Why a requisition was refused, as a langpack key plus its format data. The
+ * pure rail never carries English: the caller resolves this through `t()`.
+ */
+export interface RequisitionRefusal {
+    key: I18nKey;
+    data?: Record<string, number> | undefined;
+}
 
 /** The economy a line requisitions with. */
 export type RequisitionEconomy =
@@ -86,11 +102,11 @@ export interface RequisitionGate {
     /** False when the request cannot proceed at all. */
     allowed: boolean;
     /** Why not, when `allowed` is false. */
-    reason?: string | undefined;
+    reason?: RequisitionRefusal | undefined;
     /** Test target, for a test economy. */
     target?: number | undefined;
     /** Modifier provenance, for the chat card (never a lumped total). */
-    breakdown?: { label: string; value: number }[] | undefined;
+    breakdown?: RequisitionModifier[] | undefined;
     /** Points this costs, for a pool economy. */
     cost?: number | undefined;
 }
@@ -108,10 +124,10 @@ export interface RequisitionGate {
  */
 export function evaluateRequisition(economy: RequisitionEconomy, requester: RequesterState, item: RequestedItem): RequisitionGate {
     if (item.bound === true) {
-        return { economy, allowed: false, reason: 'This item is bound and cannot be traded (#390).' };
+        return { economy, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.Bound' } };
     }
     if (economy === 'none') {
-        return { economy, allowed: false, reason: 'This game line has no requisition economy — purchase with currency instead.' };
+        return { economy, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.NoEconomy' } };
     }
 
     if (isTestBasedEconomy(economy)) {
@@ -129,11 +145,16 @@ export function evaluateRequisition(economy: RequisitionEconomy, requester: Requ
     if (economy === 'requisition-points' && item.renownRequired !== undefined) {
         const renown = requester.renown ?? 0;
         if (renown < item.renownRequired) {
-            return { economy, allowed: false, reason: `Requires Renown ${item.renownRequired}; this Battle-Brother has ${renown}.`, cost };
+            return {
+                economy,
+                allowed: false,
+                reason: { key: 'WH40K.Requisition.Refusal.Renown', data: { required: item.renownRequired, renown } },
+                cost,
+            };
         }
     }
     if (pool < cost) {
-        return { economy, allowed: false, reason: `Costs ${cost}; only ${pool} available.`, cost };
+        return { economy, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.Pool', data: { cost, pool } }, cost };
     }
     return { economy, allowed: true, cost };
 }

@@ -19,6 +19,7 @@ import {
     type RequestedItem,
     type RequisitionEconomy,
     type RequisitionGate,
+    type RequisitionRefusal,
     resolveRequisition,
 } from './requisition-rail.ts';
 
@@ -45,7 +46,7 @@ export interface RequisitionPlan {
     gate: RequisitionGate;
     /** False when the request cannot proceed — gate refusal OR insufficient stock. */
     allowed: boolean;
-    reason?: string | undefined;
+    reason?: RequisitionRefusal | undefined;
     /** Units this request would move. */
     taken: number;
 }
@@ -69,7 +70,7 @@ export function planRequisition(request: RequisitionRequest): RequisitionPlan {
         return { gate, allowed: false, reason: gate.reason, taken };
     }
     if (!request.stock.infinite && request.stock.quantity < taken) {
-        return { gate, allowed: false, reason: `The armoury holds ${request.stock.quantity}; ${taken} requested.`, taken };
+        return { gate, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.Stock', data: { stock: request.stock.quantity, taken } }, taken };
     }
     return { gate, allowed: true, taken };
 }

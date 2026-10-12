@@ -785,7 +785,8 @@
                 "Situational": "Situational",
                 "CombatSituational": "Combat Situational",
                 "TargetConditions": "Target Conditions",
-                "TargetCondition": "{condition} (target)"
+                "TargetCondition": "{condition} (target)",
+                "CorruptionTrack": "Corruption Track"
             },
             "ModifierCap": {
                 "Label": "Modifier cap (±60)",
@@ -1439,6 +1440,35 @@
             "Name": "Inquisition Armoury",
             "Created": "Created the {name}. Stock it with what the Inquisition will supply; acolytes requisition from it with an Influence test.",
             "CreateFailed": "Could not create the Inquisition Armoury — see the console. Requisition will fall back to hand-tracked acquisitions."
+        },
+        "Requisition": {
+            "ChatTitle": "Armoury Requisition",
+            "Granted": "Requisition Granted",
+            "Denied": "Requisition Denied",
+            "Refused": "Requisition Refused",
+            "Roll": "Roll",
+            "RatingLoss": "{rating} falls from {before} to {after}.",
+            "PoolSpent": "{pool}: {cost} spent — {after} remaining.",
+            "Economy": {
+                "influence": "Influence",
+                "logistics": "Logistics",
+                "infamy": "Infamy",
+                "requisition-points": "Requisition",
+                "profit-factor": "Profit Factor"
+            },
+            "Source": {
+                "Availability": "Availability ({rating})",
+                "Craftsmanship": "Craftsmanship ({rating})",
+                "Other": "Other"
+            },
+            "Refusal": {
+                "Bound": "This item is bound and cannot be traded.",
+                "NoEconomy": "This game line has no requisition economy — purchase with currency instead.",
+                "Renown": "Requires Renown {required}; this Battle-Brother has {renown}.",
+                "Pool": "Costs {cost}; only {pool} available.",
+                "Stock": "The armoury holds {stock}; {taken} requested.",
+                "Unrated": "{item} has no availability rating the requisition test recognises."
+            }
         },
         "Armour": {
             "Label": "Armour",
@@ -4693,7 +4723,12 @@
             "Benefit": "Benefit"
         },
         "Malignancy": {
-            "Effect": "Effect"
+            "Effect": "Effect",
+            "TestLabel": "Malignancy Test",
+            "Resisted": "The taint is held at bay — no Malignancy manifests.",
+            "Manifests": "Corruption takes form — roll on the Malignancies table.",
+            "TestsDue": "Malignancy Tests due: {count}",
+            "RollTest": "Roll Malignancy Test"
         },
         "Mutation": {
             "Category": "Category",
@@ -5999,7 +6034,8 @@
                 "SleightOfHand": "Sleight of Hand",
                 "ChemUse": "Chem-Use",
                 "Blather": "Blather",
-                "WarCry": "War Cry"
+                "WarCry": "War Cry",
+                "Malignancy": "Malignancy"
             },
             "PsychicPhenomena": "The warp convulses with energy!",
             "Feint": {

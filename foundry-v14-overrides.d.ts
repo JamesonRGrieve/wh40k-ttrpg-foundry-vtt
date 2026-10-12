@@ -738,4 +738,29 @@ declare global {
     }
 }
 
+// =========================================================================
+// Third-party module hooks
+// =========================================================================
+//
+// fvtt-types types `Hooks.on` by hook name, so a module's own hook needs its
+// signature declared here rather than a cast at every registration site.
+declare module 'fvtt-types/configuration' {
+    namespace Hooks {
+        interface HookConfig {
+            /**
+             * Item Piles 3.3.x (`PrivateAPI._tradeItems`): fires on the GM — the trade
+             * runs through `executeAsGM` — synchronously via `Hooks.call`, before any
+             * transaction is prepared. Returning `false` cancels the trade (#496).
+             */
+            'item-piles-preCalculateTradeItems': (
+                seller: import('./src/module/documents/base-actor.ts').WH40KBaseActor,
+                buyer: import('./src/module/documents/base-actor.ts').WH40KBaseActor,
+                prices: import('./src/module/integrations/armoury-requisition.ts').ItemPilesTradePrices,
+                userId: string,
+                interactionId: string | false,
+            ) => boolean | void;
+        }
+    }
+}
+
 export {};
