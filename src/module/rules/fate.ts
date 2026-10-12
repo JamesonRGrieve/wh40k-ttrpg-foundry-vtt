@@ -27,6 +27,36 @@ export type BurnFateUpdate = {
 };
 
 /**
+ * The Fate total once the retired separate `threshold` field (#63) is folded into it.
+ * By the book the threshold IS the total, so the two fields described one
+ * value. `max` is the field every Fate path writes (origin Fate, Burn Fate,
+ * the vitals pips), so it normally wins. A recorded threshold larger than
+ * `max` can only be a total the sheet never raised `max` to (#42 left `max`
+ * at 0 when origin Fate was written to a phantom field). So the larger of the
+ * two is the character's real Fate total, and nothing recorded is lost.
+ */
+export function fateTotalWithLegacyThreshold(max: number, threshold: number): number {
+    return Math.max(nonNegInt(max), nonNegInt(threshold));
+}
+
+/**
+ * An origin's contribution to the Fate total (`fate.max`). An origin whose
+ * Fate is rolled (`fateFormula`, e.g. a home world with the Emperor's
+ * Blessing) contributes the roll; its `fateThreshold` is then only the printed
+ * base the formula already encodes. An origin with no formula contributes its
+ * `fateThreshold` directly, e.g. the DH2 divination "Do not ask why you serve.
+ * Only ask how." (+1 Fate threshold).
+ */
+export function originFateContribution(
+    grants: { fateFormula?: string | undefined; fateThreshold?: number | undefined },
+    rolledFate: number | undefined,
+): number {
+    if (rolledFate !== undefined) return nonNegInt(rolledFate);
+    if ((grants.fateFormula ?? '') !== '') return 0;
+    return nonNegInt(grants.fateThreshold ?? 0);
+}
+
+/**
  * Burn one Fate: the total drops by 1 and the current points are cut to the
  * new total. `null` when there is no Fate left to burn.
  */

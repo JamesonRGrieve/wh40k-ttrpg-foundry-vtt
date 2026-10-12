@@ -18,6 +18,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
 import { deltaFromModifiers, originDeltaFlagPath, originIdentityKey, type OriginModifierBag } from '../../origin-grant-ledger.ts';
 import { AVAILABILITY_KEYS, normaliseAvailability } from '../../rules/acquisition-ladder.ts';
+import { originFateContribution } from '../../rules/fate.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import { resolvePack } from '../../utils/compendium-query.ts';
 import { capitalize } from '../../utils/format.ts';
@@ -93,6 +94,8 @@ interface OriginPathSystemData {
         specialAbilities?: Array<{ name?: string; description?: string }>;
         woundsFormula?: string;
         fateFormula?: string;
+        /** The origin's Fate-total (`fate.max`) grant; see `originFateContribution`. */
+        fateThreshold?: number;
     };
     // Actor-system shaped fields (also read via `actor.system as OriginPathSystemData`)
     originPath?: { divination?: string };
@@ -4906,17 +4909,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Sum rolled wounds + rolled fate across every committed origin so
             // the totals match what the builder previewed at confirm time.
+            // Fate also counts the resolved divination (#316), whose `fateThreshold`
+            // grant (e.g. +1 Fate threshold) lands on the Fate total (#63).
             let woundsRolled = 0;
             let fateRolled = 0;
-            for (const [, selection] of this.selections) {
+            const fateOrigins = [...this.selections.values(), ...(this._divinationSelection !== null ? [this._divinationSelection] : [])];
+            for (const selection of fateOrigins) {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: selection.system shape is OriginPathSystemData | undefined per the open-ended selection map
                 const selSys = selection.system as OriginPathSystemData | undefined;
                 // eslint-disable-next-line no-restricted-syntax -- boundary: rollResults is a runtime-built per-origin Record we read structurally
                 const rollResults = (selSys?.rollResults ?? {}) as Record<string, { rolled?: number } | undefined>;
                 const wRolled = rollResults['wounds']?.rolled;
-                const fRolled = rollResults['fate']?.rolled;
-                if (typeof wRolled === 'number') woundsRolled += wRolled;
-                if (typeof fRolled === 'number') fateRolled += fRolled;
+                if (typeof wRolled === 'number' && selection !== this._divinationSelection) woundsRolled += wRolled;
+                fateRolled += originFateContribution(selSys?.grants ?? {}, rollResults['fate']?.rolled);
             }
             if (woundsRolled > 0) {
                 resourceUpdate['system.wounds.max'] = woundsRolled;

@@ -27,11 +27,11 @@ const STAT_FIELDS = readRepoFile('src/module/data/shared/stat-fields.ts');
 /** A character's `system`, shaped as character.ts + templates/creature.ts declare it. */
 function characterSystem(): {
     wounds: { max: number; value: number; critical: number };
-    fate: { max: number; value: number; threshold: number };
+    fate: { max: number; value: number };
     corruption: number;
     insanity: number;
 } {
-    return { wounds: { max: 12, value: 9, critical: 0 }, fate: { max: 3, value: 2, threshold: 0 }, corruption: 7, insanity: 4 };
+    return { wounds: { max: 12, value: 9, critical: 0 }, fate: { max: 3, value: 2 }, corruption: 7, insanity: 4 };
 }
 
 /** A nested numeric fixture, the shape of an actor's resource fields. */

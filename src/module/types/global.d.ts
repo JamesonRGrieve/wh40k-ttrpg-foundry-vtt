@@ -91,12 +91,8 @@ export interface WH40KWounds {
 /** Fate data structure */
 export interface WH40KFate {
     value: number;
+    /** The Fate total — DH2's "Fate threshold" (rules/fate.ts). */
     max: number;
-    /**
-     * Burn-fate / cheat-death threshold (core.md §"Fate Threshold").
-     * Set from origin-path grants; consulted by `creature.ts:fate.threshold`.
-     */
-    threshold: number;
     total?: number;
     rolled?: boolean;
 }

@@ -159,7 +159,7 @@ describe('_reverseResourceGrant writes the real schema paths (#91 follow-up)', (
     /** A schema-shaped character after an additive grant of 3 Wounds, 1 Fate, 10 Corruption, 5 Insanity. */
     function grantedActor(): ResourceActorStub {
         return {
-            system: { wounds: { max: 15, value: 12, critical: 0 }, fate: { max: 4, value: 3, threshold: 0 }, corruption: 17, insanity: 9 },
+            system: { wounds: { max: 15, value: 12, critical: 0 }, fate: { max: 4, value: 3 }, corruption: 17, insanity: 9 },
             update: vi.fn<(data: Record<string, number>) => Promise<undefined>>().mockResolvedValue(undefined),
         };
     }

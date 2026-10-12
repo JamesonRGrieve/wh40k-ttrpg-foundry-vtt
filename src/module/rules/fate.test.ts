@@ -2,7 +2,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { readRepoFile } from '../testing/repo-file.ts';
-import { burnFateUpdate } from './fate.ts';
+import { burnFateUpdate, fateTotalWithLegacyThreshold, originFateContribution } from './fate.ts';
 
 /**
  * Fate's total is `fate.max` and its current points `fate.value` (#42). Origin
@@ -28,6 +28,38 @@ describe('burnFateUpdate (DH2 core p. 293; DH1 / DW / OW core)', () => {
     });
 });
 
+describe('fateTotalWithLegacyThreshold (#63: the Fate total is the threshold)', () => {
+    it('keeps the Fate total when the retired threshold is at or under it', () => {
+        expect(fateTotalWithLegacyThreshold(3, 0)).toBe(3);
+        expect(fateTotalWithLegacyThreshold(3, 2)).toBe(3);
+        expect(fateTotalWithLegacyThreshold(3, 3)).toBe(3);
+    });
+
+    it('raises the Fate total to a larger recorded threshold, so nothing is lost', () => {
+        expect(fateTotalWithLegacyThreshold(0, 3)).toBe(3);
+        expect(fateTotalWithLegacyThreshold(2, 4)).toBe(4);
+    });
+
+    it('floors junk at zero', () => {
+        expect(fateTotalWithLegacyThreshold(-1, Number.NaN)).toBe(0);
+    });
+});
+
+describe('originFateContribution (#63: origin fateThreshold grants land on the Fate total)', () => {
+    it('a rolled Fate formula is the contribution; the printed base is not added on top', () => {
+        expect(originFateContribution({ fateFormula: '(1-5|=2),(6-10|=3)', fateThreshold: 2 }, 3)).toBe(3);
+    });
+
+    it('an unrolled formula contributes nothing yet', () => {
+        expect(originFateContribution({ fateFormula: '2', fateThreshold: 2 }, undefined)).toBe(0);
+    });
+
+    it('an origin with no formula contributes its fateThreshold (DH2 divination +1 Fate threshold)', () => {
+        expect(originFateContribution({ fateFormula: '', fateThreshold: 1 }, undefined)).toBe(1);
+        expect(originFateContribution({}, undefined)).toBe(0);
+    });
+});
+
 /** Every non-test TypeScript source under `src/module`, repo-relative. */
 function moduleSources(dir: string): string[] {
     return readdirSync(dir).flatMap((name) => {
@@ -41,9 +73,20 @@ describe('Fate is written to its schema fields (#42)', () => {
     const SCHEMA = readRepoFile('src/module/data/actor/templates/creature.ts');
     const ROOT = join(__dirname, '..');
 
-    it('the creature schema declares fate { max, value, threshold } and no total', () => {
+    // Regression (#63): the Fate total IS the threshold; a separate threshold field is gone.
+    it('the creature schema declares fate { max, value } — no total and no separate threshold', () => {
         const fate = /\n(\s*)fate: new SchemaField\(\{\n([\s\S]*?)\n\1\}\),/u.exec(SCHEMA)?.[2] ?? '';
-        expect(fate.match(/^\s*(\w+):/gmu)?.map((field) => field.trim().replace(':', ''))).toEqual(['max', 'value', 'threshold']);
+        expect(fate.match(/^\s*(\w+):/gmu)?.map((field) => field.trim().replace(':', ''))).toEqual(['max', 'value']);
+    });
+
+    it('the creature migration folds a stored threshold into the Fate total', () => {
+        expect(SCHEMA).toContain("fate['max'] = fateTotalWithLegacyThreshold(");
+        expect(SCHEMA).toContain("delete fate['threshold'];");
+    });
+
+    it('no source module reads the retired separate Fate threshold field', () => {
+        const offenders = moduleSources(ROOT).filter((path) => /fate\.threshold\b/u.test(readFileSync(path, 'utf8')));
+        expect(offenders.map((path) => relative(ROOT, path))).toEqual([]);
     });
 
     it('no source module writes or reads the phantom system.fate.total', () => {
@@ -55,6 +98,8 @@ describe('Fate is written to its schema fields (#42)', () => {
         const builder = readRepoFile('src/module/applications/character-creation/origin-path-builder.ts');
         expect(builder).toContain("resourceUpdate['system.fate.max'] = fateRolled;");
         expect(builder).toContain("resourceUpdate['system.fate.value'] = fateRolled;");
+        // #63: each origin's fateThreshold grant feeds that total.
+        expect(builder).toContain('fateRolled += originFateContribution(');
     });
 
     it('both Burn Fate controls burn through burnFateUpdate', () => {

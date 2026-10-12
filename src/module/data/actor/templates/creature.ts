@@ -4,6 +4,7 @@ import type { ChaosAlignment, FatigueModelDef } from '../../../config/game-syste
 import type { WH40KItem } from '../../../documents/item.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
 import { giftDefFromMutation, isGiftItem, resolveGiftForAlignment } from '../../../rules/bc-gifts.ts';
+import { fateTotalWithLegacyThreshold } from '../../../rules/fate.ts';
 import { FATIGUE_MODES, getFatigueHalvedCharacteristic, getFatigueTestModifier, getFatigueThreshold, resolveFatigueModel } from '../../../rules/fatigue.ts';
 import { resolveCraftsmanshipGatedModifiers } from '../../../rules/ow-craftsmanship.ts';
 import { computeArmour } from '../../../utils/armour-calculator.ts';
@@ -301,16 +302,10 @@ export default class CreatureTemplate extends CommonTemplate {
         testModifier: number;
     };
     declare fate: {
+        /** The Fate total — DH2's "Fate threshold" (rules/fate.ts). */
         max: number;
+        /** Fate points left to spend this session. */
         value: number;
-        /**
-         * Burn-fate threshold (core.md §"Fate Threshold"). When a character is
-         * reduced to 0 wounds, burning a Fate Point keeps them alive at the
-         * `threshold` value; below 0 wounds it is consulted to determine the
-         * cheat-death cost. Origin-path grants populate this via the
-         * `fateThreshold` field on the `origin-path` item.
-         */
-        threshold: number;
     };
     /**
      * Shock counter (core.md §"Shock And Snapping Out Of It", p. 287).
@@ -541,7 +536,6 @@ export default class CreatureTemplate extends CommonTemplate {
             fate: new SchemaField({
                 max: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 value: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                threshold: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
             }),
 
             shock: new SchemaField({
@@ -739,6 +733,11 @@ export default class CreatureTemplate extends CommonTemplate {
         const fate = asRawSource(source['fate']);
         if (!fate) return;
         coerceIntFields(fate, ['max', 'value']);
+        // #63: the separate `threshold` is retired — the Fate total (`max`) is the threshold.
+        if ('threshold' in fate) {
+            fate['max'] = fateTotalWithLegacyThreshold(coerceInt(fate['max'], 0), coerceInt(fate['threshold'], 0));
+            delete fate['threshold'];
+        }
     }
 
     /**

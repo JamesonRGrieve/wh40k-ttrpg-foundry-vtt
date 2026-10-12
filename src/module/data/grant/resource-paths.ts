@@ -7,7 +7,7 @@
  * schemas:
  * - wounds: `woundsField()` — `{ max, value, critical }` on every creature
  *   (`templates/creature.ts`) and every NPC (`npc.ts`).
- * - fate: `{ max, value, threshold }` on creatures, `{ value, max }` on NPCs.
+ * - fate: `{ max, value }` on creatures and NPCs; `max` is the Fate total (threshold).
  * - corruption / insanity: plain `NumberField`s on `character.ts` (no `.value`);
  *   NPCs carry neither.
  *

@@ -22,9 +22,8 @@ import { SYSTEM_ID } from './constants.ts';
 export interface OriginAppliedDelta {
     characteristics?: Record<string, number>;
     wounds?: number;
+    /** Fate-total (`fate.max`) contribution; an origin's `fateThreshold` grant lands here too. */
     fate?: number;
-    /** Origin-path `fateThreshold` grant (burn-fate / cheat-death threshold). */
-    fateThreshold?: number;
     /** Corruption-point grant. */
     corruption?: number;
     /** Insanity-point grant. */
@@ -124,7 +123,7 @@ export function originDeltaFlagPath(identityKey: string): string {
  * Each maps to one prior-delta scalar but may fan out to several `system.*`
  * sub-paths (e.g. wounds → `value` + `max`), all sharing that single prior.
  */
-type ReconcilableResource = 'wounds' | 'fate' | 'fateThreshold' | 'corruption' | 'insanity';
+type ReconcilableResource = 'wounds' | 'fate' | 'corruption' | 'insanity';
 
 /** Per-resource `system.*` sub-paths the reverse-then-add writes for one applier. */
 export type ResourcePathMap = Partial<Record<ReconcilableResource, readonly string[]>>;
@@ -177,7 +176,7 @@ function valueAtPath(system: object, path: string): unknown {
  * converges instead of stacking — the ledger idempotency invariant. The
  * resource→path map is a parameter, NOT collapsed: `applyOriginToActor` writes
  * {@link ORIGIN_RESOURCE_PATHS}, while a resource-grant applier might write
- * `wounds.value`+`.max` / `fate.value`+`.max` plus threshold / corruption /
+ * `wounds.value`+`.max` / `fate.value`+`.max` plus corruption /
  * insanity — each passes its own {@link ResourcePathMap}. A resource's single
  * prior reverses across all of its configured sub-paths. Characteristics the
  * actor does not carry are skipped (no advance slot to write) but still recorded

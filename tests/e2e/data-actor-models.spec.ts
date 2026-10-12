@@ -576,28 +576,32 @@ async function probeActorModelFlows(page: Page): Promise<ProbeResult> {
             };
 
             /* ============================================================
-             * Wounds / fate / fate.threshold round-trip through the
+             * Wounds / fate round-trip through the
              * woundsField / fate SchemaField. With no origin-path wound
              * formula, _computeWoundsMax leaves the stored max intact.
+             * A legacy fate.threshold (#63) larger than max folds into the
+             * Fate total and the field is gone.
              * ============================================================ */
             const probeWoundsFate = async (): Promise<void> => {
                 try {
                     const pc = await createPc('dh2-character', 'dh2', {
                         wounds: { max: 14, value: 9, critical: 2 },
-                        fate: { max: 3, value: 2, threshold: 1 },
+                        fate: { max: 2, value: 2, threshold: 3 },
                     });
                     if (pc == null) {
                         note('wounds-fate-resources-roundtrip::dh2', 'create returned null');
                     } else {
                         const w = pc.system?.wounds;
                         const f = pc.system?.fate;
-                        const ok = w?.max === 14 && w.value === 9 && w.critical === 2 && f?.max === 3 && f.value === 2 && f.threshold === 1;
+                        const ok = w?.max === 14 && w.value === 9 && w.critical === 2 && f?.max === 3 && f.value === 2 && f.threshold === undefined;
                         if (ok) {
                             fired['wounds-fate-resources-roundtrip::dh2'] = true;
                         } else {
                             note(
                                 'wounds-fate-resources-roundtrip::dh2',
-                                `expected wounds 14/9/2 fate 3/2/1, got wounds ${w?.max}/${w?.value}/${w?.critical} fate ${f?.max}/${f?.value}/${f?.threshold}`,
+                                `expected wounds 14/9/2 fate 3/2 (threshold folded away), got wounds ${w?.max}/${w?.value}/${w?.critical} fate ${f?.max}/${
+                                    f?.value
+                                }/${String(f?.threshold)}`,
                             );
                         }
                     }

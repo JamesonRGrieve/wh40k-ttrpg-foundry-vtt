@@ -3049,7 +3049,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if ('wounds' in this.actor && 'fate' in this.actor && 'fatigue' in this.actor) {
             const a = this.actor as {
                 wounds: { max: number; value: number; critical: number };
-                fate: { max: number; value: number; threshold: number };
+                fate: { max: number; value: number };
                 fatigue: { value: number };
             };
             prepared.wounds = {
@@ -3061,7 +3061,6 @@ export default class CharacterSheet extends BaseActorSheet {
             prepared.fate = {
                 total: a.fate.max,
                 current: a.fate.value,
-                threshold: a.fate.threshold,
             };
         }
 

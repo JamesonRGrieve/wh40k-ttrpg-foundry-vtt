@@ -146,12 +146,12 @@ describe('origin-grant-ledger: reconcileResourceDeltas convergence (idempotency 
     /** Build the schema-shaped `system` snapshot the helper reads (wounds.max / fate.{max,value} / characteristics.*.advance). */
     function toSystem(state: ResourceState): {
         wounds: { max: number };
-        fate: { max: number; value: number; threshold: number };
+        fate: { max: number; value: number };
         characteristics: Record<string, { advance: number }>;
     } {
         const characteristics: Record<string, { advance: number }> = {};
         for (const [k, advance] of Object.entries(state.characteristics)) characteristics[k] = { advance };
-        return { wounds: { max: state.wounds }, fate: { max: state.fate, value: state.fate, threshold: 0 }, characteristics };
+        return { wounds: { max: state.wounds }, fate: { max: state.fate, value: state.fate }, characteristics };
     }
 
     /** Apply the helper's `system.*` update bag back onto a state snapshot (the actor.update() Foundry does for real). */
@@ -251,7 +251,6 @@ describe('origin-grant-ledger: reconcileResourceDeltas path-map parameterization
     const PROCESSOR_PATHS = {
         wounds: ['wounds.value', 'wounds.max'],
         fate: ['fate.value', 'fate.max'],
-        fateThreshold: ['fate.threshold'],
         corruption: ['corruption'],
         insanity: ['insanity'],
     } as const;
@@ -259,7 +258,7 @@ describe('origin-grant-ledger: reconcileResourceDeltas path-map parameterization
     it("fans a resource's single prior across all its configured sub-paths", () => {
         const system = {
             wounds: { value: 10, max: 10 },
-            fate: { value: 3, max: 3, threshold: 0 },
+            fate: { value: 3, max: 3 },
             corruption: 0,
             insanity: 0,
             characteristics: {},
@@ -271,7 +270,6 @@ describe('origin-grant-ledger: reconcileResourceDeltas path-map parameterization
         // A zero contribution against a zero prior writes nothing but is still recorded.
         expect(updates['system.fate.value']).toBeUndefined();
         expect(newDelta.fate).toBe(0);
-        expect(newDelta.fateThreshold).toBe(0);
         expect(newDelta.corruption).toBe(0);
         expect(newDelta.insanity).toBe(0);
     });
@@ -279,15 +277,15 @@ describe('origin-grant-ledger: reconcileResourceDeltas path-map parameterization
     it('reverses each resource against its own prior delta (no cross-talk between resources)', () => {
         const system = {
             wounds: { value: 14, max: 14 },
-            fate: { value: 5, max: 5, threshold: 2 },
+            fate: { value: 5, max: 5 },
             corruption: 3,
             insanity: 1,
             characteristics: {},
         };
-        const prior: OriginAppliedDelta = { wounds: 4, fate: 2, fateThreshold: 2, corruption: 3, insanity: 1 };
+        const prior: OriginAppliedDelta = { wounds: 4, fate: 2, corruption: 3, insanity: 1 };
         const { updates } = reconcileResourceDeltas(
             system,
-            { characteristics: {}, resources: { wounds: 1, fate: 0, fateThreshold: 0, corruption: 0, insanity: 0 } },
+            { characteristics: {}, resources: { wounds: 1, fate: 0, corruption: 0, insanity: 0 } },
             prior,
             PROCESSOR_PATHS,
         );
@@ -297,7 +295,6 @@ describe('origin-grant-ledger: reconcileResourceDeltas path-map parameterization
         // The rest reverse to baseline independently.
         expect(updates['system.fate.value']).toBe(3);
         expect(updates['system.fate.max']).toBe(3);
-        expect(updates['system.fate.threshold']).toBe(0);
         expect(updates['system.corruption']).toBe(0);
         expect(updates['system.insanity']).toBe(0);
     });

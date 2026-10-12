@@ -48,7 +48,7 @@ function makeOriginActor(): {
         system: {
             characteristics: { willpower: { advance: 0 } },
             wounds: { max: 0 },
-            fate: { max: 0, value: 0, threshold: 0 },
+            fate: { max: 0, value: 0 },
         },
         flags: {},
     };
