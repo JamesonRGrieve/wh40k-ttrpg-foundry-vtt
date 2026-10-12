@@ -15,6 +15,9 @@
  *   - **Time of day** — a plain `HH:MM`, separate from the Imperial stamp because
  *     that format's smallest unit is the year fraction (~8.8h) and cannot express
  *     "evening".
+ *   - **Day phase** — Night / Dawn / Morning / Midday / Afternoon / Dusk / Evening
+ *     on the viewed body's local day, from the same sun curve that darkens the
+ *     scene (`rules/scene-lighting.ts` `dayPhase`).
  *   - **GM-only advance controls** — +1 hour / +1 day / advance N, wrapping
  *     `game.time.advance()`; hidden for players.
  *
@@ -34,8 +37,8 @@
 import { SYSTEM_ID } from '../../constants.ts';
 import { t } from '../../i18n/t.ts';
 import { addSecondsToImperialDate, formatImperialDate } from '../../rules/imperial-date.ts';
-import { type CelestialBody, localDayNumber, localSeason, localTimeOfDay, TERRAN_ROTATION_HOURS } from '../../rules/planetary-calendar.ts';
-import { sceneBodyKey, type WeatherKind, weatherLabelKey } from '../../rules/scene-lighting.ts';
+import { type CelestialBody, localDayNumber, localHourOfDay, localSeason, localTimeOfDay, TERRAN_ROTATION_HOURS } from '../../rules/planetary-calendar.ts';
+import { DAY_PHASE_LABEL_KEYS, dayPhase, sceneBodyKey, type WeatherKind, weatherLabelKey } from '../../rules/scene-lighting.ts';
 import { advanceSeconds, dayNumberSince, formatClock, formatRemaining, type TimeAdvanceUnit } from '../../rules/world-time.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import CelestialBodiesDialog from '../dialogs/celestial-bodies-dialog.ts';
@@ -238,6 +241,9 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
         context['localDay'] = localDay;
         context['localTimeOfDay'] = formatClock(localTime.hour, localTime.minute);
         context['localRotationHours'] = body.rotationHours;
+        const phase = dayPhase(localHourOfDay(elapsed, body), body.rotationHours);
+        context['localDayPhase'] = phase;
+        context['localDayPhaseLabel'] = t(DAY_PHASE_LABEL_KEYS[phase]);
         const season = localSeason(elapsed, body);
         const seasonName = season === null ? '' : game.i18n.localize(season.labelKey);
         context['localSeason'] = seasonName;

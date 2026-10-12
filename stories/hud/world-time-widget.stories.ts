@@ -37,6 +37,9 @@ interface WorldTimeContext {
     localRotationHours: number;
     localDay: number;
     localTimeOfDay: string;
+    /** The day phase key and its localised label (Night, Dawn, Morning, Midday, …). */
+    localDayPhase: string;
+    localDayPhaseLabel: string;
     /** Localised weather of the viewed scene's body ('' when no body is configured). */
     localWeather: string;
 }
@@ -66,6 +69,8 @@ const BASE: WorldTimeContext = {
     localRotationHours: 19,
     localDay: 5,
     localTimeOfDay: '07:12',
+    localDayPhase: 'morning',
+    localDayPhaseLabel: 'Morning',
     localWeather: 'Smog',
 };
 
@@ -86,6 +91,10 @@ export const GmView: Story = {
         void expect(canvasElement.querySelector('[data-action="advanceCustom"]')).not.toBeNull();
         // The Celestial Bodies & Weather editor opener (#588).
         void expect(canvasElement.querySelector('[data-action="editBodies"]')).not.toBeNull();
+        // The named phase of the local day sits under the clock.
+        const phase = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="wt-phase"]');
+        void expect(phase?.textContent.trim()).toBe('Morning');
+        void expect(phase?.dataset['dayPhase']).toBe('morning');
         // The viewed body's current weather is shown.
         void expect(canvasElement.querySelector('[data-wh40k-hook="wt-weather"]')?.textContent.trim()).toBe('Smog');
         void expect(canvasElement.querySelector('[data-wh40k-hook="wt-amount"]')).not.toBeNull();
@@ -102,6 +111,8 @@ export const PlayerView: Story = {
         // The counter and date are visible to players...
         void expect(storyCanvas.getByText('Day 5')).toBeTruthy();
         void expect(canvasElement.querySelector('[data-wh40k-hook="wt-date"]')?.textContent.trim()).toBe('0000-01-06 14:05:09');
+        // ...as is the day phase...
+        void expect(canvasElement.querySelector('[data-wh40k-hook="wt-phase"]')?.textContent.trim()).toBe('Morning');
         // ...but every GM advance control is absent.
         void expect(canvasElement.querySelector('[data-wh40k-hook="wt-gm-controls"]')).toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceHour"]')).toBeNull();

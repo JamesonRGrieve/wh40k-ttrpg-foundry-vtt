@@ -7,7 +7,10 @@ import {
     CELESTIAL_BODY_INPUT_NAME,
     type CelestialBodies,
     type CelestialBodyRow,
+    DAY_PHASE_LABEL_KEYS,
+    DAY_PHASES,
     darknessChanged,
+    dayPhase,
     daylight,
     type LitScene,
     parseCelestialBodies,
@@ -54,6 +57,48 @@ describe('daylight / sceneDarkness', () => {
 
     it('treats a non-positive rotation as permanent day', () => {
         expect(daylight(3, 0)).toBe(1);
+    });
+});
+
+describe('dayPhase', () => {
+    it('walks a Terran day through every phase in order', () => {
+        expect(dayPhase(0, 24)).toBe('night');
+        expect(dayPhase(3, 24)).toBe('night');
+        expect(dayPhase(6, 24)).toBe('dawn');
+        expect(dayPhase(9, 24)).toBe('morning');
+        expect(dayPhase(12, 24)).toBe('midday');
+        expect(dayPhase(15, 24)).toBe('afternoon');
+        expect(dayPhase(18, 24)).toBe('dusk');
+        expect(dayPhase(19.5, 24)).toBe('evening');
+        expect(dayPhase(23, 24)).toBe('night');
+    });
+
+    it('puts dawn and dusk exactly on the darkness ramp', () => {
+        const band = (lit: number): string => (lit === 0 ? 'dark' : lit === 1 ? 'lit' : 'ramp');
+        const PHASE_BAND = { night: 'dark', evening: 'dark', dawn: 'ramp', dusk: 'ramp', morning: 'lit', midday: 'lit', afternoon: 'lit' };
+        const hours = Array.from({ length: 96 }, (_, i) => i / 4);
+        const mismatches = hours.filter((hour) => {
+            const lit = daylight(hour, 24);
+            const expected = PHASE_BAND[dayPhase(hour, 24)];
+            // Dawn/dusk start where the ramp leaves full dark (lit 0) and end before full day.
+            return expected === 'ramp' ? lit === 1 : band(lit) !== expected;
+        });
+        expect(mismatches).toEqual([]);
+    });
+
+    it('scales to the body rotation', () => {
+        expect(dayPhase(10, 20)).toBe('midday');
+        expect(dayPhase(5, 20)).toBe('dawn');
+        expect(dayPhase(15, 20)).toBe('dusk');
+        expect(dayPhase(30, 20)).toBe('midday'); // wraps into the next day
+    });
+
+    it('treats a non-positive rotation as permanent midday, matching daylight', () => {
+        expect(dayPhase(3, 0)).toBe('midday');
+    });
+
+    it('names every phase in the langpack', () => {
+        for (const phase of DAY_PHASES) expect(DAY_PHASE_LABEL_KEYS[phase]).toMatch(/^WH40K\.WorldTime\.Phase\./);
     });
 });
 

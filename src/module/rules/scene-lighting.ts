@@ -15,6 +15,7 @@
  */
 
 import { SYSTEM_ID } from '../constants.ts';
+import type { I18nKey } from '../types/i18n-keys';
 
 /* -------------------------------------------- */
 /*  Weather                                     */
@@ -239,6 +240,44 @@ export function daylight(localHour: number, rotationHours: number): number {
     const elevation = -Math.cos(2 * Math.PI * phase);
     return smoothstep(-TWILIGHT_BAND, TWILIGHT_BAND, elevation);
 }
+
+/** The named parts of a local day, in the order the sun passes through them. */
+export const DAY_PHASES = ['night', 'dawn', 'morning', 'midday', 'afternoon', 'dusk', 'evening'] as const;
+export type DayPhase = (typeof DAY_PHASES)[number];
+
+/** Sun elevation (sine units) above which the day counts as midday. */
+const MIDDAY_ELEVATION = 0.9;
+/** Sun elevation (sine units) below which a setting sun's evening becomes night. */
+const EVENING_ELEVATION = -0.5;
+
+/**
+ * The named phase of the local day, on the same sun curve as {@link daylight}, so the
+ * label changes exactly where the scene starts to brighten or darken: dawn and dusk are
+ * the {@link TWILIGHT_BAND} ramps, midday is the sun's top band, and evening is the
+ * first stretch of darkness after dusk.
+ */
+export function dayPhase(localHour: number, rotationHours: number): DayPhase {
+    if (!(rotationHours > 0)) return 'midday';
+    const phase = (((localHour / rotationHours) % 1) + 1) % 1;
+    const elevation = -Math.cos(2 * Math.PI * phase);
+    const rising = phase < 0.5;
+    if (elevation >= MIDDAY_ELEVATION) return 'midday';
+    if (elevation >= TWILIGHT_BAND) return rising ? 'morning' : 'afternoon';
+    if (elevation >= -TWILIGHT_BAND) return rising ? 'dawn' : 'dusk';
+    if (!rising && elevation >= EVENING_ELEVATION) return 'evening';
+    return 'night';
+}
+
+/** The langpack key naming each day phase. */
+export const DAY_PHASE_LABEL_KEYS: Readonly<Record<DayPhase, I18nKey>> = {
+    night: 'WH40K.WorldTime.Phase.Night',
+    dawn: 'WH40K.WorldTime.Phase.Dawn',
+    morning: 'WH40K.WorldTime.Phase.Morning',
+    midday: 'WH40K.WorldTime.Phase.Midday',
+    afternoon: 'WH40K.WorldTime.Phase.Afternoon',
+    dusk: 'WH40K.WorldTime.Phase.Dusk',
+    evening: 'WH40K.WorldTime.Phase.Evening',
+};
 
 /**
  * The scene darkness level (Foundry `environment.darknessLevel`, 0–1) for a local

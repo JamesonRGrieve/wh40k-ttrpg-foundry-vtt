@@ -6740,6 +6740,15 @@
             "UnitDays": "Days",
             "GmOnly": "Only the GM can advance world time.",
             "TerranStandard": "Terran Standard",
+            "Phase": {
+                "Night": "Night",
+                "Dawn": "Dawn",
+                "Morning": "Morning",
+                "Midday": "Midday",
+                "Afternoon": "Afternoon",
+                "Dusk": "Dusk",
+                "Evening": "Evening"
+            },
             "BodyCycle": "{body} ({hours}h cycle)",
             "Tooltip": {
                 "LocalDay": "Local day: {hours} Terran hours",
