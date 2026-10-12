@@ -20,8 +20,8 @@
  *
  * Pure schema slot — no actor coupling, no Foundry side-effects beyond
  * the field constructors. Non-BC actors still get the field (default 0);
- * the panel and action are gated on `actor._gameSystemId === 'bc'` so the
- * surface is invisible elsewhere.
+ * the action is gated on the actor's own line (`isActorOnLine(actor, 'bc')`,
+ * #596) so the surface is inert elsewhere.
  */
 
 const { NumberField } = foundry.data.fields;

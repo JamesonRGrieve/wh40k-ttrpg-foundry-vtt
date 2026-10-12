@@ -7,8 +7,8 @@
  * to the sheet instance, so the structural contract here is the minimum
  * surface the handler reaches: an `actor` whose `system` carries the
  * `ritualMastery` field contributed by `bc-ritual-template.ts` and whose
- * `_gameSystemId` exposes the active game system so we can no-op for
- * non-BC actors.
+ * `gameSystem` names its line so we can no-op for non-BC actors
+ * (`actor-line-gate.ts`, #596).
  *
  * Flow:
  *
@@ -31,6 +31,7 @@
 import type { BcRitualDeclarations } from '../data/actor/mixins/bc-ritual-template.ts';
 import { emitChatFromTemplate, roll1d100 } from '../rolls/roll-helpers.ts';
 import { computeRitualTarget, resolveContemptOfTheWarp, type RitualModifier, type RitualModifierKind, type RitualTemplate } from '../rules/bc-chaos-ritual.ts';
+import { isActorOnLine, type LineBearer } from './actor-line-gate.ts';
 
 /* -------------------------------------------- */
 /*  Structural sheet contract                   */
@@ -43,7 +44,7 @@ import { computeRitualTarget, resolveContemptOfTheWarp, type RitualModifier, typ
  * uncoupled from the full sheet class.
  */
 interface BcRitualSheetLike {
-    actor: Actor & { readonly _gameSystemId?: string; readonly system: BcRitualDeclarations };
+    actor: Actor & { readonly system: BcRitualDeclarations & LineBearer['system'] };
 }
 
 /* -------------------------------------------- */
@@ -236,7 +237,7 @@ function shapeBreakdown(modifiers: readonly RitualModifier[]): RitualBreakdownRo
  * character.
  */
 export async function bcPerformRitual(this: BcRitualSheetLike, _event: Event, _target: HTMLElement): Promise<void> {
-    if (this.actor._gameSystemId !== 'bc') return;
+    if (!isActorOnLine(this.actor, 'bc')) return;
 
     const initialMastery = this.actor.system.ritualMastery;
 

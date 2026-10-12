@@ -7,8 +7,8 @@
  * to the sheet instance, so the structural contract here is the minimum
  * surface the handler reaches: an `actor` whose `system` carries the
  * fields contributed by `bc-psychic-template.ts` (psyker class, base
- * PR, sustained-power count) and whose `_gameSystemId` exposes the
- * active game system so we can no-op for non-BC actors.
+ * PR, sustained-power count) and whose `gameSystem` names its line so we
+ * can no-op for non-BC actors (`actor-line-gate.ts`, #596).
  *
  * Flow:
  *
@@ -28,6 +28,7 @@
 import type { BcPsychicDeclarations } from '../data/actor/mixins/bc-psychic-template.ts';
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { maxPushLevel, resolvePsychicTest, type PsyMode, type PsykerClass } from '../rules/bc-psychic-strength.ts';
+import { isActorOnLine, type LineBearer } from './actor-line-gate.ts';
 
 /* -------------------------------------------- */
 /*  Structural sheet contract                   */
@@ -45,7 +46,7 @@ import { maxPushLevel, resolvePsychicTest, type PsyMode, type PsykerClass } from
  * `ChatMessage.getSpeaker(...)` without a `Record`-cast escape hatch.
  */
 interface BcPsychicSheetLike {
-    actor: Actor & { readonly _gameSystemId?: string; readonly system: BcPsychicDeclarations };
+    actor: Actor & { readonly system: BcPsychicDeclarations & LineBearer['system'] };
 }
 
 /* -------------------------------------------- */
@@ -159,7 +160,7 @@ async function promptBcPsychicTestInputs(args: {
  * character.
  */
 export async function bcPsychicTest(this: BcPsychicSheetLike, _event: Event, _target: HTMLElement): Promise<void> {
-    if (this.actor._gameSystemId !== 'bc') return;
+    if (!isActorOnLine(this.actor, 'bc')) return;
 
     const system = this.actor.system;
     const psykerClass = system.psykerClass;

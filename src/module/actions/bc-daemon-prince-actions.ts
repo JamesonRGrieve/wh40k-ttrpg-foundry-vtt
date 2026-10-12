@@ -24,6 +24,7 @@ import type { BcDaemonPrinceDeclarations } from '../data/actor/mixins/bc-daemon-
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { APOTHEOSIS_CORRUPTION, isAscended, resolveApotheosis, type ApotheosisOutcome, type DaemonPrinceAlignment } from '../rules/bc-daemon-prince.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { isActorOnLine } from './actor-line-gate.ts';
 
 /* -------------------------------------------- */
 /*  Structural sheet contract                   */
@@ -34,6 +35,8 @@ import { WH40KSettings } from '../wh40k-rpg-settings.ts';
  * what `this` is bound to at runtime) is a superset of this shape.
  */
 interface BcDaemonPrinceActorSystem extends BcDaemonPrinceDeclarations {
+    /** The actor's line, read by the BC gate (#596). */
+    readonly gameSystem: string;
     readonly infamy: number;
     readonly corruption: number;
     readonly chaosAlignment: DaemonPrinceAlignment;
@@ -48,7 +51,6 @@ interface ApotheosisRecord {
 
 interface BcDaemonPrinceSheetLike {
     actor: Actor & {
-        readonly _gameSystemId?: string;
         readonly system: BcDaemonPrinceActorSystem;
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update() return shape is the resolved Document or undefined; treat as unknown to caller
         update: (data: { 'system.daemonPrinceAscension': ApotheosisRecord }) => Promise<unknown>;
@@ -95,7 +97,7 @@ async function promptConfirm(): Promise<boolean> {
  * fires once.
  */
 export async function bcAscend(this: BcDaemonPrinceSheetLike, _event: Event, _target: HTMLElement): Promise<void> {
-    if (this.actor._gameSystemId !== 'bc') return;
+    if (!isActorOnLine(this.actor, 'bc')) return;
 
     const system = this.actor.system;
 
