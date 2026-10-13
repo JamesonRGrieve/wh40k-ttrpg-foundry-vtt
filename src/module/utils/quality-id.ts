@@ -41,13 +41,22 @@ export function parseQualityLevel(identifier: string): ParsedQualityId {
     return { baseId: identifier, level: null, formula: null };
 }
 
+/** The book's rating placeholder at the end of a quality name: `Blast (X)`. */
+const RATING_PLACEHOLDER = /\s*\(X\)$/u;
+
 /**
  * Append the rating suffix to a localized quality label: ` (N)` for a known
  * level, ` (10+1d10)` for a dice rating, ` (X)` when the quality takes a level
  * but none was supplied, nothing otherwise.
+ *
+ * The langpack names a rated quality as the book prints it, placeholder included
+ * (`Blast (X)`), so the placeholder is replaced by the rating rather than kept in
+ * front of it: `Blast (3)`, never `Blast (X) (3)` (seen on the area-attack card and
+ * the weapon sheet's quality tiles).
  */
 export function buildQualityLabel(localizedBase: string, hasLevel: boolean, level: number | null, formula: string | null = null): string {
-    if (formula !== null) return `${localizedBase} (${formula})`;
+    const base = localizedBase.replace(RATING_PLACEHOLDER, '');
+    if (formula !== null) return `${base} (${formula})`;
     if (!hasLevel) return localizedBase;
-    return level !== null ? `${localizedBase} (${level})` : `${localizedBase} (X)`;
+    return level !== null ? `${base} (${level})` : `${base} (X)`;
 }

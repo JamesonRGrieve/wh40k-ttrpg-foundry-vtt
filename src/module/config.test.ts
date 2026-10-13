@@ -52,6 +52,15 @@ describe('buildQualityLabel (#300)', () => {
     it('appends a dice rating as printed', () => {
         expect(buildQualityLabel('Blast', true, null, '10+1d10')).toBe('Blast (10+1d10)');
     });
+
+    // The langpack names rated qualities with the book's placeholder ("Blast (X)"); the
+    // area-attack card read "Blast (X) (3)" and the weapon sheet "Snare (X) (1)".
+    it('replaces the langpack placeholder with the rating instead of appending after it', () => {
+        expect(buildQualityLabel('Blast (X)', true, 3)).toBe('Blast (3)');
+        expect(buildQualityLabel('Snare (X)', true, 1)).toBe('Snare (1)');
+        expect(buildQualityLabel('Blast (X)', true, null, '10+1d10')).toBe('Blast (10+1d10)');
+        expect(buildQualityLabel('Blast (X)', true, null)).toBe('Blast (X)');
+    });
 });
 
 /**
