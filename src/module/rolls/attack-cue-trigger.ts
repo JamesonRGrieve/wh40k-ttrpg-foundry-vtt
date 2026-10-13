@@ -12,9 +12,7 @@
  * on the defender.
  */
 
-import type { AreaTemplateRef } from '../canvas/area-template-canvas.ts';
 import { playCuePlan } from '../canvas/attack-cue-canvas.ts';
-import type { AreaTemplateSpec, AreaTargetResult } from '../rules/area-template.ts';
 import {
     type AttackCueOutcome,
     type CueArea,
@@ -76,9 +74,12 @@ export interface CueActionLike {
         readonly success: boolean;
         readonly rollKey: string;
         readonly isTargetOnly?: boolean | undefined;
-        readonly areaTemplate?: AreaTemplateSpec | null | undefined;
-        readonly areaTemplateRef?: AreaTemplateRef | null | undefined;
-        readonly areaResults?: readonly AreaTargetResult[] | undefined;
+        /** The area the attack's quality declared (#599): its shape, and whether it sits on the impact point. */
+        readonly areaTemplate?: { readonly shape: 'cone' | 'circle'; readonly anchor: string } | null | undefined;
+        /** The template the attack placed on the scene. */
+        readonly areaTemplateRef?: { readonly templateId: string } | null | undefined;
+        /** Who the resolved template caught, and whether the area hit each. */
+        readonly areaResults?: readonly { readonly tokenId: string; readonly hit: boolean }[] | undefined;
     };
     readonly damageData?: { readonly hits: readonly { readonly righteousFury: readonly object[] }[]; readonly additionalHits: number } | undefined;
 }
