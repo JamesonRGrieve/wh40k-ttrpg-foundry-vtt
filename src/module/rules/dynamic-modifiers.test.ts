@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { DynamicModifierEntry, GrantedEffectEntry } from '../data/shared/modifiers-template.ts';
 import {
@@ -5,6 +7,7 @@ import {
     collectDynamicComponents,
     collectGrantedEffects,
     collectGrantedQualities,
+    collectSkillTestComponents,
     consumeArmedTestHooks,
     endBearerTurnForArmedHooks,
     mergeArmedTestHooks,
@@ -19,6 +22,7 @@ import {
     ownsActivatableHook,
     resolveDynamicMagnitude,
 } from './dynamic-modifiers.ts';
+import { evasionHookSituation } from './evasion.ts';
 
 /** A fully-populated default hook; override only the fields under test. */
 function makeHook(overrides: Partial<DynamicModifierEntry> = {}): DynamicModifierEntry {
@@ -567,5 +571,54 @@ describe('when: onDamaged (armed test hooks)', () => {
         expect(readArmedTestHooks([good, { label: 3 }, null, 'x'])).toEqual([good]);
         expect(readArmedTestHooks(undefined)).toEqual([]);
         expect(readArmedTestHooks({ not: 'an array' })).toEqual([]);
+    });
+});
+
+describe('collectSkillTestComponents — hooks on one skill test (#414 onParry)', () => {
+    const parryHook = makeHook({ target: 'skill', targetKey: 'parry', when: 'onParry', value: 10, label: 'Guarded Stance' });
+    const alwaysParry = makeHook({ target: 'skill', targetKey: 'parry', value: 5 });
+    const dodgeHook = makeHook({ target: 'skill', targetKey: 'dodge', value: 15 });
+    const damageHook = makeHook({ target: 'damage', when: 'onParry', value: 3 });
+    const multiplyHook = makeHook({ target: 'skill', targetKey: 'parry', when: 'onParry', mode: 'multiply', value: 2 });
+    const items: DynamicModifierItemLike[] = [
+        { name: 'Parry Talent', system: { modifiers: { dynamicModifiers: [parryHook, alwaysParry, damageHook, multiplyHook] } } },
+        { name: 'Dodge Talent', system: { modifiers: { dynamicModifiers: [dodgeHook] } } },
+    ];
+
+    it('fires an onParry hook on the Parry test — the trigger the Parry test now sets', () => {
+        const rows = collectSkillTestComponents(items, makeCtx(), evasionHookSituation('parry', []), 'parry');
+        expect(rows.map((r) => [r.label, r.value])).toEqual([
+            ['Guarded Stance', 10],
+            ['Parry Talent', 5],
+        ]);
+    });
+
+    it('a Dodge test never reaches an onParry hook', () => {
+        const rows = collectSkillTestComponents(items, makeCtx(), evasionHookSituation('dodge', []), 'dodge');
+        expect(rows.map((r) => [r.label, r.value])).toEqual([['Dodge Talent', 15]]);
+        expect(collectSkillTestComponents(items, makeCtx(), evasionHookSituation('dodge', []), 'parry').map((r) => r.value)).toEqual([5]);
+    });
+
+    it('skips hooks on another axis and non-additive modes', () => {
+        const rows = collectSkillTestComponents(items, makeCtx(), evasionHookSituation('parry', []), 'parry');
+        expect(rows.every((r) => r.target === 'skill' && r.mode === 'add')).toBe(true);
+    });
+
+    it('carries the evader states, so a whileState hook gates on them', () => {
+        const fatigued = makeHook({ target: 'skill', targetKey: 'parry', when: 'onParry', condition: 'whileState', conditionValue: 'fatigued', value: -10 });
+        const bag: DynamicModifierItemLike[] = [{ name: 'Weary Guard', system: { modifiers: { dynamicModifiers: [fatigued] } } }];
+        expect(collectSkillTestComponents(bag, makeCtx(), evasionHookSituation('parry', ['fatigued']), 'parry').map((r) => r.value)).toEqual([-10]);
+        expect(collectSkillTestComponents(bag, makeCtx(), evasionHookSituation('parry', []), 'parry')).toEqual([]);
+    });
+});
+
+describe('the Parry test evaluates its hooks with isParry (#414 regression)', () => {
+    const source = readFileSync(resolve(__dirname, '../rolls/evasion-action-data.ts'), 'utf8');
+
+    it('forActor folds the evader skill-test hooks, built from the evasion situation, onto the test', () => {
+        expect(source).toMatch(/static async forActor\([^)]*\): Promise<EvasionActionData> \{\s*const hookRows = await evasionHookRows\(actor, skill\);/);
+        expect(source).toContain('evasionHookSituation(skill, collectActorStates(actor))');
+        expect(source).toContain('collectSkillTestComponents(');
+        expect(source).toContain('this.#addBucket(EVASION_HOOK_BUCKET, hookRows)');
     });
 });

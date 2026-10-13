@@ -457,6 +457,30 @@ export function collectDynamicComponents(
     return components;
 }
 
+/** The dynamic-modifier target a hook on one skill's own test declares. */
+const SKILL_TEST_TARGET = 'skill';
+
+/**
+ * The bearer's own hooks on one skill test: every additive `target: 'skill'` hook
+ * whose `targetKey` names `skillKey` and whose trigger fires in `situation`.
+ *
+ * Mode `add` only: a test target is a sum of sourced rows, so a multiply / set /
+ * clamp hook has nothing to scale here and is left to the pipelines that own
+ * those modes. The situation carries what is special about the test, which is how
+ * a Parry reaches `when: 'onParry'` (#414). A Dodge, which sets no `isParry`,
+ * never does.
+ */
+export function collectSkillTestComponents(
+    items: Iterable<DynamicModifierItemLike>,
+    ctx: DynamicModifierContext,
+    situation: DynamicModifierSituation,
+    skillKey: string,
+): DynamicComponent[] {
+    return collectDynamicComponents(items, ctx, situation).filter(
+        (component) => component.target === SKILL_TEST_TARGET && component.targetKey === skillKey && component.mode === 'add',
+    );
+}
+
 /**
  * Whether any owned item declares an *activatable* dynamic-modifier hook for the
  * given per-attack effect id (a hook with `condition: 'activated'` and

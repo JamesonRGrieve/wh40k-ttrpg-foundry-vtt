@@ -28,6 +28,7 @@
 
 import type { I18nKey } from '../types/i18n-keys';
 import type { ActionLimit } from './condition-mechanics.ts';
+import type { DynamicModifierSituation } from './dynamic-modifiers.ts';
 
 /** The two evasion skills. */
 export type EvasionSkill = 'dodge' | 'parry';
@@ -205,4 +206,13 @@ export function withoutNegatedHits<T extends { readonly target: { readonly id: s
 /** How many hits of an allocation land on the evading target. */
 export function hitsOnTarget(allocation: readonly { readonly target: { readonly id: string } }[], evaderId: string): number {
     return allocation.filter((hit) => hit.target.id === evaderId).length;
+}
+
+/**
+ * The dynamic-modifier situation an evasion test is evaluated in. A Parry sets
+ * `isParry`, which is the only thing that fires a `when: 'onParry'` hook (#414); a
+ * Dodge leaves it unset. `states` are the evader's own (Fatigued, Braced, …).
+ */
+export function evasionHookSituation(skill: EvasionSkill, states: readonly string[]): DynamicModifierSituation {
+    return skill === 'parry' ? { isParry: true, states } : { states };
 }

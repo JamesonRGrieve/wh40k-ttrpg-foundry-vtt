@@ -16,7 +16,9 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { t } from '../i18n/t.ts';
 import { spendActionForActor } from '../rules/action-economy.ts';
 import { counterAttackOffer, readCombatRoundStamp } from '../rules/counter-attack.ts';
-import { type EvasionSkill, evasionNegation } from '../rules/evasion.ts';
+import { buildCharBonus, collectSkillTestComponents, type DynamicModifierContext, type DynamicModifierItemLike } from '../rules/dynamic-modifiers.ts';
+import { type EvasionSkill, evasionHookSituation, evasionNegation } from '../rules/evasion.ts';
+import { collectActorStates } from '../rules/situation-tags.ts';
 import { weaponParryModifiers } from '../rules/weapon-quality-effects.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { SimpleSkillData } from './action-data.ts';
@@ -29,6 +31,42 @@ import { resolveDegreesMethod } from './roll-helpers.ts';
 const ATTACKER_WEAPON_BUCKET = 'attacker-weapon';
 /** The modifier bucket the parrying weapon's own qualities are folded under. */
 const PARRYING_WEAPON_BUCKET = 'parrying-weapon';
+/** The modifier bucket the evader's own dynamic-modifier hooks on the test are folded under. */
+const EVASION_HOOK_BUCKET = 'evasion-hooks';
+
+/**
+ * The evader's dynamic-modifier hooks on its evasion test, as sourced rows: every
+ * additive hook aimed at the test's skill (`target: 'skill'`, `targetKey` =
+ * `dodge` / `parry`) whose trigger fires in the evasion's situation. A Parry is
+ * evaluated with `isParry`, so `when: 'onParry'` hooks reach the roll (#414). A
+ * dice-valued magnitude is rolled here, before the dialog opens, so the dialog
+ * and the card show the same number.
+ */
+async function evasionHookRows(actor: WH40KBaseActor, skill: EvasionSkill): Promise<RollModifierComponent[]> {
+    const ctx: DynamicModifierContext = {
+        charBonus: buildCharBonus(actor),
+        charTotal: {},
+        dos: 0,
+        pr: 0,
+        cb: 0,
+        level: 0,
+        penetration: 0,
+        armourPoints: 0,
+    };
+    const situation = evasionHookSituation(skill, collectActorStates(actor));
+    const rows: RollModifierComponent[] = [];
+    for (const component of collectSkillTestComponents(actor.items as Iterable<DynamicModifierItemLike>, ctx, situation, skill)) {
+        let value = component.value;
+        if (component.valueFormula !== '') {
+            const roll = new Roll(component.valueFormula, {});
+            // eslint-disable-next-line no-await-in-loop -- sequential by design: each dice-valued hook rolls its own magnitude
+            await roll.evaluate();
+            value = roll.total ?? 0;
+        }
+        rows.push({ key: `${EVASION_HOOK_BUCKET}-${rows.length}`, label: component.label, value, source: component.source });
+    }
+    return rows;
+}
 
 /** The weapon a Parry is made with, and the sourced rows its qualities put on the test. */
 export interface ParryWeapon {
@@ -47,7 +85,7 @@ export class EvasionActionData extends SimpleSkillData {
     /** The Counter Attack this evasion earned (#603) — rendered as the card's control; null for none. */
     counterAttack: CounterAttackCard | null = null;
 
-    constructor(prompt: EvasionPromptContext, skill: EvasionSkill, parryWeapon: ParryWeapon | null = null) {
+    constructor(prompt: EvasionPromptContext, skill: EvasionSkill, parryWeapon: ParryWeapon | null = null, hookRows: readonly RollModifierComponent[] = []) {
         super();
         this.prompt = prompt;
         this.skill = skill;
@@ -60,19 +98,24 @@ export class EvasionActionData extends SimpleSkillData {
         }
         // The parrying weapon's own qualities (Balanced +10, Defensive +15, Unbalanced −10).
         if (this.parryWeapon !== null && this.parryWeapon.rows.length > 0) this.#addBucket(PARRYING_WEAPON_BUCKET, this.parryWeapon.rows);
+        // The evader's own data-driven hooks on this test (an `onParry` hook on a Parry).
+        if (hookRows.length > 0) this.#addBucket(EVASION_HOOK_BUCKET, hookRows);
     }
 
     /**
      * The evasion test a character makes against an attack (#414): a Parry is made
      * with the first equipped melee weapon that can parry, whose qualities become
-     * sourced rows on the test.
+     * sourced rows on the test. The evader's dynamic-modifier hooks on the test's
+     * skill are evaluated first, in the evasion's situation, so a Parry fires its
+     * `onParry` hooks.
      * @param {WH40KBaseActor} actor  The evading character.
      * @param {EvasionPromptContext} prompt  The attack being evaded.
      * @param {EvasionSkill} skill  The evasion skill.
      */
-    static forActor(actor: WH40KBaseActor, prompt: EvasionPromptContext, skill: EvasionSkill): EvasionActionData {
+    static async forActor(actor: WH40KBaseActor, prompt: EvasionPromptContext, skill: EvasionSkill): Promise<EvasionActionData> {
+        const hookRows = await evasionHookRows(actor, skill);
         const weapon = skill === 'parry' ? parryingWeapon(actor.items) : null;
-        if (weapon === null) return new EvasionActionData(prompt, skill);
+        if (weapon === null) return new EvasionActionData(prompt, skill, null, hookRows);
         const line = firstSystemId(actor);
         // eslint-disable-next-line no-restricted-syntax -- boundary: an owned WH40KItem read through the duck-typed QualityItem the quality helpers accept
         const rows = weaponParryModifiers(weapon as Parameters<typeof weaponParryModifiers>[0], line).map((modifier) => ({
@@ -81,7 +124,7 @@ export class EvasionActionData extends SimpleSkillData {
             value: modifier.value,
             source: weapon.name,
         }));
-        return new EvasionActionData(prompt, skill, { id: weapon.id ?? '', rows });
+        return new EvasionActionData(prompt, skill, { id: weapon.id ?? '', rows }, hookRows);
     }
 
     /** Fold a provenance-bearing bucket into the test: its total on the target, its parts on the card. */
