@@ -3233,7 +3233,6 @@ export type I18nKey =
     | 'WH40K.MutantBackground.ApplyButton'
     | 'WH40K.MutantBackground.Cancel'
     | 'WH40K.MutantBackground.ChatTitle'
-    | 'WH40K.MutantBackground.ConvertMalignancy'
     | 'WH40K.MutantBackground.CorruptionUnit'
     | 'WH40K.MutantBackground.Description'
     | 'WH40K.MutantBackground.DialogTitle'

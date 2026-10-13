@@ -2701,13 +2701,12 @@
             "CorruptionUnit": "Corruption Points at character generation",
             "AppliedTo": "Applying to:",
             "TwistedFleshLabel": "Twisted Flesh",
-            "TwistedFleshNote": "When you fail a Malignancy test, you may convert the malignancy into a Mutation instead. The GM resolves the conversion from the Mutation table.",
+            "TwistedFleshNote": "You may always choose to fail a Malignancy Test, and whenever you would gain a Malignancy you may roll on the Mutations table instead. Both choices are offered when you roll an owed Malignancy Test.",
             "Granted": "Granted",
             "ApplyButton": "Apply",
             "Cancel": "Cancel",
             "ChatTitle": "Mutant Background Applied",
-            "AppliedMessage": "The Mutant background has been applied to",
-            "ConvertMalignancy": "Convert Failed Malignancy"
+            "AppliedMessage": "The Mutant background has been applied to"
         },
         "MutationRoll": {
             "DialogTitle": "Roll Mutation",
