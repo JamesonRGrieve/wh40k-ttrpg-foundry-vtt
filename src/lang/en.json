@@ -2900,13 +2900,6 @@
                 "ImpactLegTable": "Table 7-18: Impact Critical Effects — Leg (DH Core p. 239)",
                 "CriticalEffect": "Failed by {degrees} degrees while pushing the limit — immediately roll 1d5 on {table} and apply the result."
             },
-            "LeapingDodge": {
-                "AvoidSpray": "Avoid Spray",
-                "AvoidSprayTooltip": "Everyone caught in the Spray tests to avoid the hit: Agility, or Dodge with Leaping Dodge. Select your token(s) first; otherwise the card's target rolls.",
-                "NoDefender": "Select the token(s) caught in the Spray, or target one before attacking.",
-                "UsingDodge": "{name} avoids the Spray with Dodge (Leaping Dodge).",
-                "AgilityFlavor": "Avoid Spray (Agility)"
-            },
             "FieldVivisection": {
                 "Base": "Medicae ({characteristic}) — Field Vivisection"
             }
@@ -4601,6 +4594,63 @@
                     "DefenderArmour": "Armour ({ship})",
                     "ReboundDie": "{formula} impact"
                 }
+            },
+            "ShipAction": {
+                "Roll": "Roll",
+                "RollTitle": "Roll this action's test and apply its effect",
+                "DialogTitle": "Ship Action",
+                "Unsupported": "Rolling ship actions is a Rogue Trader rule; this ship's game system has none.",
+                "NotRollable": "This action has no automated effect; dispatch its rules card instead.",
+                "NoWeapons": "This ship has no Weapon Component to lock on with.",
+                "Citation": "Rogue Trader Core Rulebook pp.212–218",
+                "ChatSubtitle": "Ship Action Test",
+                "TestTitle": "{test} Test",
+                "ActorLegend": "Acting character aboard {ship}",
+                "ChoiceLegend": "Effect",
+                "MagnitudeTitle": "Effect",
+                "Field": {
+                    "Skill": "{skill} target",
+                    "Target": "Apply to",
+                    "Weapon": "Weapon Component"
+                },
+                "Component": {
+                    "Skill": "Acting character's {skill}",
+                    "Manoeuvrability": "Manoeuvrability ({ship})",
+                    "Detection": "Detection ({ship})",
+                    "Difficulty": "Printed difficulty",
+                    "Effect": "{name}"
+                },
+                "Magnitude": {
+                    "Base": "Success",
+                    "Degrees": "{degrees} extra degree(s), +{step} per {per}"
+                },
+                "Target": {
+                    "morale": "Morale",
+                    "crewPopulation": "Crew Population",
+                    "speed": "Speed (VU)",
+                    "manoeuvrability": "Manoeuvrability",
+                    "detection": "Detection",
+                    "weaponBallisticSkill": "Ballistic Skill Tests to fire {weapon}",
+                    "ballisticSkill": "every Ballistic Skill Test to fire the ship's weapons"
+                },
+                "Duration": {
+                    "turnEnd": "this turn",
+                    "turnStart": "until the start of the ship's next turn"
+                },
+                "Outcome": {
+                    "Failed": "The test fails. The action has no effect.",
+                    "NoEffect": "The action has no automated effect.",
+                    "Modifier": "{value} to {target}, {duration}.",
+                    "Restored": {
+                        "morale": "Last turn's Morale damage reduced: {amount} Morale restored.",
+                        "crewPopulation": "Last turn's Crew Population damage reduced: {amount} Crew Population restored."
+                    },
+                    "NothingToRestore": {
+                        "morale": "The ship took no Morale damage last turn that is left to cancel.",
+                        "crewPopulation": "The ship took no Crew Population damage last turn that is left to cancel."
+                    }
+                },
+                "BsBase": "Crew Rating (Ballistic Skill)"
             },
             "Assault": {
                 "Header": "Ship Assault Actions",
@@ -6329,6 +6379,36 @@
             "ModifiedBy": "Modified by {quality}",
             "MeltaNote": "Melta: Double Penetration"
         },
+        "AreaAttack": {
+            "Area": {
+                "Cone": "cone",
+                "Circle": "blast"
+            },
+            "Summary": {
+                "NoAttackRoll": "{quality}: no attack roll.",
+                "Quality": "{quality}:",
+                "Avoid": "Targets in the {area} test {test} ({modifier}).",
+                "Hit": "Everyone in the {area} ({distance} m) takes a hit."
+            },
+            "Avoid": {
+                "Difficulty": "Difficulty",
+                "Untrained": "Wielder lacks the Weapon Training",
+                "UnbracedHeavy": "Heavy weapon fired unbraced"
+            },
+            "Outcome": {
+                "Hit": "Hit",
+                "Avoided": "Avoided"
+            },
+            "TestLabel": "{test} test",
+            "ResultsTitle": "Targets in the template",
+            "ResolveButton": "Resolve Template Targets",
+            "ResolveTooltip": "Move or rotate this attack's template first if needed (drag it, Shift+wheel to rotate), then roll for every token inside it.",
+            "Placed": "{quality} template placed. Adjust it on the canvas, then press Resolve Template Targets on the attack card.",
+            "Scatter": "The shot scatters {metres} m ({direction}). The template is centred where it lands.",
+            "NoTemplate": "This attack's template is no longer on the scene.",
+            "NoCanvas": "No scene is active, so the template cannot be placed.",
+            "NoTargets": "No tokens are inside the template."
+        },
         "ActionEffect": {
             "Title": {
                 "PsychicPhenomena": "Psychic Phenomena",
@@ -6339,7 +6419,6 @@
                 "Disarm": "Disarm",
                 "AllOutAttack": "All Out Attack",
                 "StunAttack": "Stun Attack",
-                "Spray": "Spray",
                 "Suppressing": "Suppressing",
                 "NearOverheat": "Near Overheat",
                 "CatastrophicJam": "Catastrophic Jam",
@@ -6386,7 +6465,6 @@
                 "Resisted": "Stun roll of {roll} vs {defense}. The attack fails to stun the target!",
                 "Compare": "Stun roll of {roll}, against target TB + head armour. Meeting or beating it stuns the target for rounds equal to the margin and adds 1 Fatigue."
             },
-            "Spray": "Everyone in 30 degree arc must pass an agility test or be hit.",
             "Suppressing": {
                 "Semi": "All targets within a 30 degree arc must pass a Difficult (-10) Pinning test for become Pinned.",
                 "Full": "All targets within a 45 degree arc must pass a Hard (-20) Pinning test for become Pinned."

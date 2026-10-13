@@ -1,0 +1,19 @@
+{{!--
+    Roll button of a rollable ship-action row (#186, #189): rolls the action's
+    test and applies its authored effect. Rows without an automated effect
+    render nothing here and keep only their rules-card Dispatch button.
+
+    Hash params:
+        action — ShipActionRow {uuid, id, rollable}
+--}}
+{{#if action.rollable}}
+    <button type="button"
+            class="tw-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-1 tw-rounded-md tw-border tw-border-[#6a4a1a] tw-bg-[linear-gradient(180deg,#a8782a_0%,#8a5f1e_100%)] tw-text-white tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer"
+            data-action="rollShipAction"
+            data-action-uuid="{{action.uuid}}"
+            data-action-id="{{action.id}}"
+            title="{{localize 'WH40K.Voidcraft.ShipAction.RollTitle'}}">
+        <span class="material-icons tw-text-[0.95em]" aria-hidden="true">casino</span>
+        <span>{{localize "WH40K.Voidcraft.ShipAction.Roll"}}</span>
+    </button>
+{{/if}}

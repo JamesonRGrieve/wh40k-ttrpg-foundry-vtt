@@ -1,3 +1,11 @@
+import {
+    SHIP_EFFECT_EXPIRIES,
+    SHIP_EFFECT_KINDS,
+    SHIP_EFFECT_TARGETS,
+    SHIP_TEST_STATS,
+    type ShipEffectData,
+    type ShipTestStat,
+} from '../../rules/ship-action-effects.ts';
 import { migrateLegacyOrderTest, ORDER_ACTION_TYPES, type OrderActionType } from '../../rules/ship-actions.ts';
 import { SHIP_ACTION_EFFECTS, type ShipActionEffect } from '../../rules/ship-crew-morale.ts';
 import type { RammingProfile } from '../../rules/ship-ramming.ts';
@@ -17,7 +25,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
     declare description: { value: string; chat: string; summary: string };
     declare category: string;
     declare actionType: OrderActionType;
-    declare test: { skill: string; characteristic: string; modifier: number };
+    declare test: { skill: string; characteristic: string; modifier: number; shipStat: ShipTestStat | '' };
     declare requirements: string;
     declare effect: string;
     declare failure: string;
@@ -48,6 +56,13 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
      */
     declare ramming: RammingProfile;
 
+    /**
+     * Optional automated effect of an RT ship action (#186, #189), authored on
+     * the order: Hold Fast! reduces last turn's Morale damage, Lock on Target
+     * adds BS to one Weapon Component, and so on. `kind: ''` on every other order.
+     */
+    declare shipEffect: ShipEffectData;
+
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
@@ -75,12 +90,30 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
             duration: new fields.StringField({ required: false, initial: '', blank: true }),
             typeAndAction: new fields.StringField({ required: false, initial: '', blank: true }),
 
-            // Required test
+            // Required test. `shipStat` (optional, #186) names the ship stat a
+            // Combined Skill Test adds to the skill (RT Core p.212).
             test: new fields.SchemaField({
                 skill: new fields.StringField({ required: true, initial: 'command' }),
                 characteristic: new fields.StringField({ required: false, blank: true }),
                 modifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                shipStat: new fields.StringField({ required: false, initial: '', blank: true, choices: ['', ...SHIP_TEST_STATS] }),
             }),
+
+            // RT ship-action effect (#186, #189). Compendium opt-in; `kind: ''`
+            // leaves the action a rules card. Magnitude is
+            // `base + step × ⌊extra degrees ÷ per⌋` (see rules/ship-action-effects.ts).
+            shipEffect: new fields.SchemaField(
+                {
+                    kind: new fields.StringField({ required: false, initial: '', blank: true, choices: ['', ...SHIP_EFFECT_KINDS] }),
+                    targets: new fields.ArrayField(new fields.StringField({ required: true, blank: false, choices: [...SHIP_EFFECT_TARGETS] })),
+                    base: new fields.NumberField({ required: false, initial: 0, integer: true }),
+                    step: new fields.NumberField({ required: false, initial: 0, integer: true }),
+                    per: new fields.NumberField({ required: false, initial: 1, integer: true, min: 1 }),
+                    rounds: new fields.NumberField({ required: false, initial: 0, integer: true, min: 0 }),
+                    expiry: new fields.StringField({ required: false, initial: '', blank: true, choices: ['', ...SHIP_EFFECT_EXPIRIES] }),
+                },
+                { required: false },
+            ),
 
             // Requirements
             requirements: new fields.HTMLField({ required: false, blank: true }),

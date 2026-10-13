@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import type { ShipEffectView } from '../rules/ship-action-effects.ts';
 import { importModelOrSkip } from '../testing/model-import.ts';
 
 /**
@@ -380,5 +381,92 @@ describe('WH40KStarship · RT Crew/Morale economy (issue #189)', () => {
         expect(fake.system.crew.morale.value).toBe(100);
         // Population deliberately not restored.
         expect(fake.system.crew.population).toBe(70);
+    });
+});
+
+/**
+ * Issue #186 — timed ship-action modifiers live on the ship as ActiveEffects
+ * carrying a structured `shipActionModifier` flag, which `shipActionEffects`
+ * reads back for the central collector.
+ */
+describe('WH40KVoidcraft · ship-action modifiers (issue #186)', () => {
+    interface EffectStub {
+        name: string;
+        active: boolean;
+        flags: { 'wh40k-rpg'?: { shipActionModifier: { target: string; value: number; weaponId: string } } };
+    }
+    interface FakeShip {
+        system: { gameSystem: string };
+        effects: EffectStub[];
+        created: object[];
+        createEmbeddedDocuments: (name: string, data: object[]) => Promise<void>;
+    }
+    interface ShipActionMethods {
+        applyShipActionModifier: (this: FakeShip, input: object) => Promise<void>;
+    }
+
+    async function setup(gameSystem: string): Promise<{ fake: FakeShip; methods: ShipActionMethods; effectsView: () => ShipEffectView[] } | undefined> {
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return undefined;
+        vi.stubGlobal('CONST', { ACTIVE_EFFECT_MODES: { ADD: 2 } });
+        const proto = mod.WH40KVoidcraft.prototype;
+        const fake: FakeShip = {
+            system: { gameSystem },
+            effects: [
+                {
+                    name: 'Lock on Target',
+                    active: true,
+                    flags: { 'wh40k-rpg': { shipActionModifier: { target: 'weaponBallisticSkill', value: 10, weaponId: 'lance' } } },
+                },
+                { name: 'Stunned', active: true, flags: {} },
+            ],
+            created: [],
+            async createEmbeddedDocuments(_name, data) {
+                this.created.push(...data);
+                await Promise.resolve();
+            },
+        };
+        const economy = Object.getOwnPropertyDescriptor(proto, 'usesRTCrewEconomy');
+        if (economy === undefined) throw new Error('usesRTCrewEconomy descriptor missing');
+        Object.defineProperty(fake, 'usesRTCrewEconomy', economy);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: reading the document's prototype method through a structural test interface (the class type and ShipActionMethods do not overlap)
+        const methods = proto as unknown as ShipActionMethods;
+        // Run the real `shipActionEffects` getter with the fake as its receiver.
+        return { fake, methods, effectsView: () => Reflect.get(proto, 'shipActionEffects', fake) };
+    }
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('reads each effect’s ship-action payload, null for any other effect', async () => {
+        const ctx = await setup('rt');
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when runtime unavailable
+        if (ctx === undefined) return;
+        expect(ctx.effectsView()).toEqual([
+            { name: 'Lock on Target', active: true, modifier: { target: 'weaponBallisticSkill', value: 10, weaponId: 'lance' } },
+            { name: 'Stunned', active: true, modifier: null },
+        ]);
+    });
+
+    it('creates a timed ActiveEffect on an RT ship, and nothing on another line’s', async () => {
+        const input = { name: 'Flank Speed', img: 'i.png', origin: 'o', target: 'speed', value: 3, weaponId: '', rounds: 0, expiry: 'turnEnd' };
+        const rt = await setup('rt');
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when runtime unavailable
+        if (rt === undefined) return;
+        await rt.methods.applyShipActionModifier.call(rt.fake, input);
+        expect(rt.fake.created).toEqual([
+            expect.objectContaining({
+                name: 'Flank Speed',
+                changes: [{ key: 'system.speed', mode: 2, value: '3' }],
+                duration: { value: 0, units: 'rounds', expiry: 'turnEnd' },
+            }),
+        ]);
+        const dh2 = await setup('dh2');
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when runtime unavailable
+        if (dh2 === undefined) return;
+        await dh2.methods.applyShipActionModifier.call(dh2.fake, input);
+        expect(dh2.fake.created).toEqual([]);
     });
 });

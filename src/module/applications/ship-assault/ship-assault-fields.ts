@@ -10,7 +10,7 @@ import type { AssaultField, AssaultFieldGroup, AssaultFormValues, ShipAssaultCon
  * bonuses (Reinforcements, Tenebro-Maze, a Ram Ship's +20), talents and GM
  * fiat. The label is what the card names the row by.
  */
-export function situationalFields(ctx: ShipAssaultContext, prefix: string): AssaultField[] {
+export function situationalFields(ctx: Pick<ShipAssaultContext, 'localize'>, prefix: string): AssaultField[] {
     return [
         { name: `${prefix}Value`, kind: 'number', label: ctx.localize('WH40K.Voidcraft.Assault.Field.SituationalValue'), value: 0 },
         {

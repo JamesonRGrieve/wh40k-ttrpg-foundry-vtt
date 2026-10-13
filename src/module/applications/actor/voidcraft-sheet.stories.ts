@@ -12,6 +12,7 @@ import { expect, within } from 'storybook/test';
 import { mockActor } from '../../../../stories/mocks';
 import { seedRandom, randomId, withSystem, type SystemId } from '../../../../stories/mocks/extended';
 import { mockStarshipSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
+import { storyLocalize } from '../../../../stories/mocks/ship-assault';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, assertField, renderSheetParts } from '../../../../stories/test-helpers';
 import tabsSrc from '../../../templates/actor/player/tabs.hbs?raw';
@@ -21,7 +22,9 @@ import extendedActionsTabSrc from '../../../templates/actor/voidcraft/tab-extend
 import manoeuvreActionsTabSrc from '../../../templates/actor/voidcraft/tab-manoeuvre-actions.hbs?raw';
 import statsTabSrc from '../../../templates/actor/voidcraft/tab-stats.hbs?raw';
 import shipWeaponChatSrc from '../../../templates/chat/ship-weapon-chat.hbs?raw';
+import type { ShipEffectData } from '../../rules/ship-action-effects.ts';
 import { shipActionRows, type ShipActionOrderView } from '../../rules/ship-actions.ts';
+import { componentRow, type AssaultComponentRow } from '../ship-assault/ship-assault-card.ts';
 
 initializeStoryHandlebars();
 
@@ -204,6 +207,20 @@ export const SystemIM: Story = makePerSystemVoidcraftStory('im', 'Vagabond-class
 // actionType split the sheet uses on the real pack (no compendium access
 // from inside a Storybook story).
 
+/** No automated effect: the row is a rules card only. */
+const NO_SHIP_EFFECT: ShipEffectData = { kind: '', targets: [], base: 0, step: 0, per: 1, rounds: 0, expiry: '' };
+
+/** The seven actions with an authored effect (#186, #189), as the RT pack carries them. */
+const RT_SHIP_EFFECTS: Readonly<Record<string, ShipEffectData>> = {
+    'Hold Fast!': { kind: 'reducePriorTurnDamage', targets: ['morale'], base: 1, step: 1, per: 1, rounds: 0, expiry: '' },
+    'Triage': { kind: 'reducePriorTurnDamage', targets: ['crewPopulation'], base: 1, step: 1, per: 1, rounds: 0, expiry: '' },
+    'Aid the Machine Spirit': { kind: 'shipModifier', targets: ['manoeuvrability', 'detection'], base: 5, step: 5, per: 2, rounds: 0, expiry: 'turnEnd' },
+    'Flank Speed': { kind: 'shipModifier', targets: ['speed'], base: 1, step: 1, per: 1, rounds: 0, expiry: 'turnEnd' },
+    'Lock on Target': { kind: 'shipModifier', targets: ['weaponBallisticSkill'], base: 5, step: 5, per: 2, rounds: 0, expiry: 'turnEnd' },
+    'Come to New Heading': { kind: 'shipModifier', targets: ['ballisticSkill'], base: -20, step: 0, per: 1, rounds: 0, expiry: 'turnEnd' },
+    'Evasive Manoeuvres': { kind: 'shipModifier', targets: ['ballisticSkill'], base: -10, step: -10, per: 1, rounds: 1, expiry: 'turnStart' },
+};
+
 /** One RT ship order as the sheet sees it after load: name, action type and test. */
 function rtOrder(name: string, actionType: string, skill: string, modifier: number, characteristic = ''): ShipActionOrderView {
     const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -214,11 +231,12 @@ function rtOrder(name: string, actionType: string, skill: string, modifier: numb
         img: '',
         system: {
             actionType,
-            test: { skill, characteristic, modifier },
+            test: { skill, characteristic, modifier, shipStat: '' },
             duration: name === 'Emergency Repairs' ? '1d5 Turns' : '',
             requirements: '',
             typeAndAction: actionType === 'maneuver-action' ? 'Manoeuvre Action' : 'Extended Action',
             description: { value: '' },
+            shipEffect: RT_SHIP_EFFECTS[name] ?? NO_SHIP_EFFECT,
         },
     };
 }
@@ -287,7 +305,16 @@ interface ShipWeaponChatCtx {
         location: string;
         strength: number;
         damageFormula: string;
-        bs: { target: number; total: number; succeeded: boolean; dos: number };
+        bs: {
+            target: number;
+            total: number;
+            succeeded: boolean;
+            dos: number;
+            /** The target's derivation (#186): crew rating ± each live ship-action modifier. */
+            baseLabel?: string;
+            base?: number;
+            modifierSources?: AssaultComponentRow[];
+        };
         hits: number;
         hitsFormula: string;
         damageRolls: Array<{ total: number; formula: string }>;
@@ -367,6 +394,40 @@ export const MacrobatteryFiring: StoryObj<ShipWeaponChatCtx> = {
         // Aftermath panels.
         await expect(storyCanvas.getByText(/Shield absorbed/i)).toBeVisible();
         await expect(storyCanvas.getByText(/Hull/i)).toBeVisible();
+    },
+};
+
+/** A BS row as the sheet builds it from the ship-action collector (#186). */
+function bsRow(name: string, value: number): AssaultComponentRow {
+    return componentRow(
+        { labelKey: 'WH40K.Voidcraft.ShipAction.Component.Effect', value, data: { name } },
+        storyLocalize('WH40K.Voidcraft.ShipAction.Citation'),
+        storyLocalize,
+    );
+}
+
+export const LockedOnFiring: StoryObj<ShipWeaponChatCtx> = {
+    name: 'Issue #186 — Firing with Lock on Target and Evasive Manoeuvres',
+    args: mockShipWeaponChatCtx({
+        resolution: {
+            ...mockShipWeaponChatCtx().resolution,
+            bs: {
+                target: 45,
+                total: 28,
+                succeeded: true,
+                dos: 1,
+                baseLabel: storyLocalize('WH40K.Voidcraft.ShipAction.BsBase'),
+                base: 45,
+                modifierSources: [bsRow('Lock on Target', 10), bsRow('Evasive Manoeuvres', -10)],
+            },
+        },
+    }),
+    render: (args) => renderShipWeaponChatCard(args),
+    play: async ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        await expect(storyCanvas.getByText('Crew Rating (Ballistic Skill)')).toBeVisible();
+        const rows = [...canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-tooltip="modifier"]')];
+        await expect(rows.map((row) => row.textContent.replace(/\s+/g, ' ').trim())).toEqual(['Lock on Target +10', 'Evasive Manoeuvres -10']);
     },
 };
 
@@ -531,6 +592,16 @@ export const ExtendedActions: Story = {
         await expect(storyCanvas.getByText(/Willpower/)).toBeVisible();
         const dispatchButtons = canvasElement.querySelectorAll('[data-action="dispatchExtendedAction"]');
         await expect(dispatchButtons.length).toBe(14);
+        // #186/#189: only the five Extended Actions with an authored effect roll.
+        const rollButtons = [...canvasElement.querySelectorAll<HTMLElement>('[data-action="rollShipAction"]')];
+        await expect(rollButtons.map((button) => button.closest('li')?.querySelector('span')?.textContent.trim())).toEqual([
+            'Aid the Machine Spirit',
+            'Flank Speed',
+            'Hold Fast!',
+            'Lock on Target',
+            'Triage',
+        ]);
+        await expect(rollButtons[0]?.dataset['actionUuid']).toContain('aid-the-machine-spirit');
     },
 };
 
@@ -550,5 +621,7 @@ export const ManoeuvreActions: Story = {
         await expect(storyCanvas.queryByText('Triage')).toBeNull();
         const dispatchButtons = canvasElement.querySelectorAll('[data-action="dispatchManoeuvreAction"]');
         await expect(dispatchButtons.length).toBe(8);
+        // #186: Come to New Heading and Evasive Manoeuvres roll; movement-only manoeuvres stay rules cards.
+        await expect(canvasElement.querySelectorAll('[data-action="rollShipAction"]').length).toBe(2);
     },
 };

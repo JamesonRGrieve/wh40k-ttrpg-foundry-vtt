@@ -3,6 +3,7 @@
  * {@link Localize} that formats `{placeholder}` data like production, and a
  * pair of mock ship profiles.
  */
+import type { ShipActionOrder, ShipActionShip } from '../../src/module/applications/ship-action/ship-action-flow.ts';
 import type { Localize } from '../../src/module/applications/ship-assault/ship-assault-card.ts';
 import type { AssaultShipActor } from '../../src/module/applications/ship-assault/ship-assault-flow.ts';
 import type { ShipAssaultShip } from '../../src/module/rules/ship-assault.ts';
@@ -74,3 +75,39 @@ export function queueStoryRolls(...totals: number[]): void {
     StoryRoll.totals = totals;
     Object.assign(globalThis, { Roll: StoryRoll });
 }
+
+/**
+ * A story ship for the RT ship-action roll (#186, #189): the players' frigate
+ * with two Weapon Components; effects are accepted and dropped.
+ */
+export function storyActionShip(restored = 3): ShipActionShip {
+    return {
+        name: ATTACKER_SHIP.name,
+        system: { gameSystem: 'rt', crew: { crewRating: 40 } },
+        manoeuvrability: ATTACKER_SHIP.manoeuvrability,
+        detection: 25,
+        shipActionEffects: [],
+        shipWeaponChoices: [
+            { id: 'macro', name: 'Sunsear Laser Battery' },
+            { id: 'lance', name: 'Titanforge Lance' },
+        ],
+        reducePriorTurnDamage: async (_pool, amount) => Promise.resolve(Math.min(amount, restored)),
+        applyShipActionModifier: async () => Promise.resolve(),
+    };
+}
+
+/** Hold Fast! and Lock on Target as the RT pack authors them. */
+export const STORY_HOLD_FAST: ShipActionOrder = {
+    uuid: 'Compendium.wh40k-rpg.rt-core-items-ship-orders.Item.s67eT5kqEhgBT2It',
+    name: 'Hold Fast!',
+    img: '',
+    test: { skill: '', characteristic: 'Willpower', modifier: 0, shipStat: '' },
+    shipEffect: { kind: 'reducePriorTurnDamage', targets: ['morale'], base: 1, step: 1, per: 1, rounds: 0, expiry: '' },
+};
+export const STORY_LOCK_ON_TARGET: ShipActionOrder = {
+    uuid: 'Compendium.wh40k-rpg.rt-core-items-ship-orders.Item.O37ZbK1Nvi3cGwGc',
+    name: 'Lock on Target',
+    img: '',
+    test: { skill: 'Scrutiny', characteristic: '', modifier: 0, shipStat: 'detection' },
+    shipEffect: { kind: 'shipModifier', targets: ['weaponBallisticSkill'], base: 5, step: 5, per: 2, rounds: 0, expiry: 'turnEnd' },
+};

@@ -1,4 +1,12 @@
 import { t } from '../i18n/t.ts';
+import {
+    readShipModifierFlag,
+    SHIP_MODIFIER_FLAG_KEY,
+    SHIP_MODIFIER_FLAG_SCOPE,
+    shipModifierEffectSource,
+    type ShipEffectView,
+    type ShipModifierInput,
+} from '../rules/ship-action-effects.ts';
 import { supportsShipAssault, type ShipAssaultShip } from '../rules/ship-assault.ts';
 import {
     emptySnapshot,
@@ -444,6 +452,39 @@ export class WH40KVoidcraft extends WH40KBaseActor {
             'system.priorTurnDamage': snapshot,
         });
         return restored;
+    }
+
+    /**
+     * The ship's ActiveEffects as the ship-action modifier collector reads them
+     * (#186): each effect's name, whether it is live, and its structured
+     * ship-action payload (null for any other effect).
+     */
+    get shipActionEffects(): ShipEffectView[] {
+        return this.effects.map((effect) => ({
+            name: effect.name,
+            active: effect.active,
+            modifier: readShipModifierFlag(
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect#flags is Foundry's untyped per-module flag bag (getFlag only types the 'core' scope); readShipModifierFlag type-guards the value
+                (effect.flags as Record<string, Record<string, unknown> | undefined>)[SHIP_MODIFIER_FLAG_SCOPE]?.[SHIP_MODIFIER_FLAG_KEY],
+            ),
+        }));
+    }
+
+    /** The ship's Weapon Components, for choosing the one Lock on Target aims (#186). */
+    get shipWeaponChoices(): { id: string; name: string }[] {
+        return this.shipWeapons.map((weapon) => ({ id: weapon.id ?? '', name: weapon.name }));
+    }
+
+    /**
+     * Store a timed ship-action modifier (Lock on Target, Aid the Machine
+     * Spirit, Evasive Manoeuvres …, #186) as an ActiveEffect on the ship. RT
+     * only; the effect lapses on its V14 expiry event.
+     */
+    async applyShipActionModifier(input: ShipModifierInput): Promise<void> {
+        if (!this.usesRTCrewEconomy) return;
+        const source = shipModifierEffectSource(input, CONST.ACTIVE_EFFECT_MODES.ADD);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts Foundry's untyped embedded-document create schema
+        await this.createEmbeddedDocuments('ActiveEffect', [source] as unknown as Parameters<typeof this.createEmbeddedDocuments<'ActiveEffect'>>[1]);
     }
 
     /**

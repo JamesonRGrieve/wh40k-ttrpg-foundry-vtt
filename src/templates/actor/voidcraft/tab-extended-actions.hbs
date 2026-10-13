@@ -19,6 +19,7 @@
                                 {{#if action.duration}} &middot; {{localize "WH40K.Voidcraft.ExtendedAction.Duration"}}: {{action.duration}}{{/if}}
                             </span>
                         </div>
+                        {{> systems/wh40k-rpg/templates/actor/voidcraft/ship-action-roll-button.hbs action=action}}
                         <button type="button"
                                 class="tw-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-1 tw-rounded-md tw-border tw-border-[#2a4a6a] tw-bg-[linear-gradient(180deg,#4a6b8a_0%,#3a5a7a_100%)] tw-text-white tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer"
                                 data-action="dispatchExtendedAction"

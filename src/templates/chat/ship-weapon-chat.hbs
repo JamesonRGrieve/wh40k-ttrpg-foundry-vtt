@@ -63,6 +63,16 @@
                     {{/if}}
                 </div>
             </div>
+            {{#if resolution.bs.baseLabel}}
+                {{!-- BS target derivation: crew rating ± each live ship-action modifier (#186), hoverable to its source. --}}
+                <div class="tw-px-3">
+                    {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs
+                        baseTarget=resolution.bs.base
+                        baseLabel=resolution.bs.baseLabel
+                        modifierSources=resolution.bs.modifierSources
+                        modifiedTarget=resolution.bs.target}}
+                </div>
+            {{/if}}
 
             {{#if resolution.bs.succeeded}}
                 {{!-- Hits panel (macrobattery N dice; lance auto-1) --}}

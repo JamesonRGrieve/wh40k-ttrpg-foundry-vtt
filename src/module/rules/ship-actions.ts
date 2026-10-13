@@ -9,6 +9,8 @@
  * system payload, so it is unit-testable against the real pack shape.
  */
 
+import { hasShipEffect, type ShipEffectData } from './ship-action-effects.ts';
+
 /** Every `order` action type the `OrderData` schema accepts. */
 export const ORDER_ACTION_TYPES = ['extended-action', 'reaction', 'shooting-action', 'maneuver-action'] as const;
 export type OrderActionType = (typeof ORDER_ACTION_TYPES)[number];
@@ -25,11 +27,14 @@ export const SHIP_ACTION_ORDER_TYPE: Readonly<Record<ShipActionKind, OrderAction
 /** The schema-cleaned `order` system fields a ship-action row reads. */
 export interface ShipActionOrderSystem {
     actionType: string;
-    test: { skill: string; characteristic: string; modifier: number };
+    /** `shipStat` names the ship stat a Combined Skill Test adds (RT Core p.212); empty otherwise. */
+    test: { skill: string; characteristic: string; modifier: number; shipStat: string };
     duration: string;
     requirements: string;
     typeAndAction: string;
     description: { value: string };
+    /** The authored automated effect (#186); `kind: ''` for a rules-card-only action. */
+    shipEffect: ShipEffectData;
 }
 
 /** The document-level identity a row carries alongside its system fields. */
@@ -53,6 +58,8 @@ export interface ShipActionRow {
     description: string;
     requirements: string;
     typeAndAction: string;
+    /** True when the action rolls its test and applies an authored effect from the sheet. */
+    rollable: boolean;
 }
 
 /**
@@ -77,6 +84,7 @@ export function toShipActionRow(order: ShipActionOrderView): ShipActionRow {
         description: system.description.value,
         requirements: system.requirements,
         typeAndAction: system.typeAndAction,
+        rollable: hasShipEffect(system.shipEffect),
     };
 }
 

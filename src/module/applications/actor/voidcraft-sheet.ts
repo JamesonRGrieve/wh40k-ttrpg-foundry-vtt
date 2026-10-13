@@ -16,10 +16,14 @@ import VoidcraftData, {
 import type OrderData from '../../data/item/order.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
+import { collectShipModifierComponents } from '../../rules/ship-action-effects.ts';
 import { shipActionRows, toShipActionRow, type ShipActionKind, type ShipActionOrderView, type ShipActionRow } from '../../rules/ship-actions.ts';
+import { deriveTarget } from '../../rules/ship-assault.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { isLineOrHomebrewPack, queryItemIndex } from '../../utils/compendium-query.ts';
 import { capitalize } from '../../utils/format.ts';
+import { openShipActionDialog } from '../ship-action/ship-action-dialog.ts';
+import { componentRow } from '../ship-assault/ship-assault-card.ts';
 import { openShipAssaultDialog } from '../ship-assault/ship-assault-dialog.ts';
 import { foundryLocalize, type ShipAssaultTab } from '../ship-assault/ship-assault-flow.ts';
 import { findShipAssault, shipAssaultButtons, type ShipAssaultButton } from '../ship-assault/ship-assault-registry.ts';
@@ -69,6 +73,9 @@ async function loadLineOrders(line: string): Promise<ShipActionOrderView[]> {
         return [];
     }
 }
+
+/** Langpack key of the ship BS test's base row (the crew rating, RT Core p.218). */
+const BS_BASE_KEY = 'WH40K.Voidcraft.ShipAction.BsBase';
 
 /** Localization key per essential slot for the build panel. */
 const ESSENTIAL_SLOT_LABEL_KEY: Record<string, string> = {
@@ -123,6 +130,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             restoreVoidShields: VoidcraftActorSheet.#restoreVoidShields,
             rollShipCriticalHit: VoidcraftActorSheet.#rollShipCriticalHit,
             openShipAssault: VoidcraftActorSheet.#openShipAssault,
+            rollShipAction: VoidcraftActorSheet.#rollShipAction,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
         // `player` opts into the shared sidebar + body grid (dark window body) the
@@ -520,11 +528,19 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         const strength = sys.strength ?? 1;
         const damageFormula = sys.damage ?? '1d10';
 
-        // ── BS Test (1d100 vs crewRating) ───────────────────────────────────
+        // ── BS Test (1d100 vs crewRating ± live ship-action modifiers) ─────
+        // Lock on Target, Come to New Heading and Evasive Manoeuvres (#186)
+        // reach the test through the central collector, one named row each.
+        const bsDerivation = deriveTarget(
+            { labelKey: BS_BASE_KEY, value: crewRating },
+            collectShipModifierComponents(actor.shipActionEffects, { target: 'ballisticSkill', weaponId: weapon.id }),
+        );
+        const bsTarget = bsDerivation.target;
+        const bsCitation = game.i18n.localize('WH40K.Voidcraft.ShipAction.Citation');
         const bsRoll = await new Roll('1d100').evaluate();
         const bsTotal = bsRoll.total;
-        const bsSucceeded = bsTotal <= crewRating;
-        const dos = bsSucceeded ? Math.max(0, Math.floor((crewRating - bsTotal) / 10)) : 0;
+        const bsSucceeded = bsTotal <= bsTarget;
+        const dos = bsSucceeded ? Math.max(0, Math.floor((bsTarget - bsTotal) / 10)) : 0;
 
         // ── Hit resolution ──────────────────────────────────────────────────
         let hits = 0;
@@ -612,7 +628,10 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
                 strength,
                 damageFormula,
                 bs: {
-                    target: crewRating,
+                    target: bsTarget,
+                    baseLabel: foundryLocalize(BS_BASE_KEY),
+                    base: crewRating,
+                    modifierSources: bsDerivation.modifiers.map((component) => componentRow(component, bsCitation, foundryLocalize)),
                     total: bsTotal,
                     succeeded: bsSucceeded,
                     dos,
@@ -885,9 +904,8 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      *
      * Locates the action either by `data-action-uuid` (compendium or world)
      * or `data-action-id` (owned), renders the chat card template, and posts
-     * it to the chat log. Rolling the action's test and applying its effect
-     * (Hold Fast! / Triage via `WH40KVoidcraft.reducePriorTurnDamage`, #189)
-     * is the #186 follow-up.
+     * it to the chat log. Actions with an authored effect also get a Roll
+     * button (`#rollShipAction`) that rolls the test and applies the effect.
      */
     static async #dispatchExtendedAction(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
@@ -948,6 +966,27 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         if (entry === undefined) return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
         openShipAssaultDialog(this.actor as unknown as WH40KVoidcraft, entry);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Roll a starship action that carries an authored effect (#186, #189):
+     * Hold Fast!, Triage, Lock on Target, Aid the Machine Spirit, Flank Speed,
+     * Come to New Heading, Evasive Manoeuvres. The dialog rolls the test and,
+     * on a success, applies the order's `shipEffect` to this ship.
+     */
+    static async #rollShipAction(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
+        const item = await this.#resolveActionItem(target, actor, 'WH40K.Voidcraft.ExtendedAction.Empty');
+        if (item === undefined) return;
+        const view = shipActionOrderView(item);
+        openShipActionDialog(
+            actor,
+            { uuid: view.uuid, name: view.name, img: view.img, test: view.system.test, shipEffect: view.system.shipEffect },
+            view.system.requirements,
+        );
     }
 
     /* -------------------------------------------- */

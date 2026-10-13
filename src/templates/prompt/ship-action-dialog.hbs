@@ -1,0 +1,17 @@
+{{!-- RT ship action dialog (#186, #189): the acting character's skill, a situational modifier and any effect choice, then Roll. --}}
+<div data-wh40k-hook="ship-action-dialog" class="tw-p-4 tw-flex tw-flex-col tw-gap-3 tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="rt">
+    <header>
+        <h2 class="tw-m-0 tw-text-[1.05rem] tw-font-display tw-uppercase tw-tracking-[0.1em] tw-text-amber-200">{{title}}</h2>
+        {{#if requirements}}
+            <p class="tw-m-0 tw-mt-1 tw-text-[0.8rem] tw-italic tw-opacity-80">{{localize "WH40K.Voidcraft.ExtendedAction.Requirements"}}: {{requirements}}</p>
+        {{/if}}
+    </header>
+
+    {{> systems/wh40k-rpg/templates/prompt/partial/ship-field-groups.hbs groups=groups}}
+
+    <footer class="tw-flex tw-justify-end tw-gap-2">
+        <button type="button" data-action="rollShipAction" class="tw-px-3 tw-py-1 tw-rounded-sm tw-border tw-border-amber-400 tw-bg-amber-700 tw-text-white tw-font-semibold">
+            {{localize "WH40K.Voidcraft.ShipAction.Roll"}}
+        </button>
+    </footer>
+</div>

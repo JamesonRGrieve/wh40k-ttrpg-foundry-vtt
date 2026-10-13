@@ -1,0 +1,50 @@
+{{!--
+    The generic input fieldsets of the RT ship dialogs (#186, #188): the ship
+    assault dialog and the ship action dialog render their flows' field groups
+    through this one partial.
+
+    Hash params:
+        groups — AssaultFieldGroup[] {legend, fields: [{name, kind, label, value, options?, min?, max?}]}
+--}}
+{{#each groups as |group|}}
+    <fieldset class="tw-m-0 tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(251,191,36,0.25)]">
+        <legend class="tw-px-1 tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-200">{{group.legend}}</legend>
+        <div class="tw-grid tw-grid-cols-2 tw-gap-2">
+            {{#each group.fields as |field|}}
+                {{#if (eq field.kind "checkbox")}}
+                    <label class="tw-col-span-2 tw-flex tw-items-center tw-gap-2 tw-text-[0.85rem]">
+                        <input type="checkbox" name="{{field.name}}" {{#if field.value}}checked{{/if}} />
+                        <span>{{field.label}}</span>
+                    </label>
+                {{else if (eq field.kind "radio")}}
+                    <div class="tw-col-span-2 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]" role="radiogroup" aria-label="{{field.label}}">
+                        <span class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-100">{{field.label}}</span>
+                        {{#each field.options as |option|}}
+                            <label class="tw-flex tw-items-center tw-gap-2">
+                                <input type="radio" name="{{field.name}}" value="{{option.value}}" {{#if (eq option.value field.value)}}checked{{/if}} />
+                                <span>{{option.label}}</span>
+                            </label>
+                        {{/each}}
+                    </div>
+                {{else if (eq field.kind "select")}}
+                    <label class="tw-col-span-2 tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-100">
+                        <span>{{field.label}}</span>
+                        <select name="{{field.name}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(251,191,36,0.35)] tw-bg-[rgba(0,0,0,0.3)] tw-text-[#e8e4d9] tw-normal-case">
+                            {{#each field.options as |option|}}
+                                <option value="{{option.value}}" {{#if (eq option.value field.value)}}selected{{/if}}>{{option.label}}</option>
+                            {{/each}}
+                        </select>
+                    </label>
+                {{else}}
+                    <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-100">
+                        <span>{{field.label}}</span>
+                        <input type="{{#if (eq field.kind "number")}}number{{else}}text{{/if}}" name="{{field.name}}" value="{{field.value}}"
+                               {{#if (eq field.kind "number")}}step="1"{{/if}}
+                               {{#if field.min includeZero=true}}min="{{field.min}}"{{/if}} {{#if field.max includeZero=true}}max="{{field.max}}"{{/if}}
+                               class="tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(251,191,36,0.35)] tw-bg-[rgba(0,0,0,0.3)] tw-text-[#e8e4d9] tw-normal-case" />
+                    </label>
+                {{/if}}
+            {{/each}}
+        </div>
+    </fieldset>
+{{/each}}

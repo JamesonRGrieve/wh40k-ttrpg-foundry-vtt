@@ -1,6 +1,7 @@
 import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
+import { isShipEffectKind, type ShipEffectData } from '../../rules/ship-action-effects.ts';
 import type { ShipActionOrderSystem, ShipActionOrderView } from '../../rules/ship-actions.ts';
 import { HAS_PRIVATE_CONTENT } from '../../testing/private-content.ts';
 import { readRepoFile } from '../../testing/repo-file.ts';
@@ -131,11 +132,43 @@ function orderSystem(cleaned: JsonObject): ShipActionOrderSystem {
     return {
         actionType: text(cleaned, 'actionType'),
         // `characteristic` has no initial: absent stays absent, as Foundry leaves it.
-        test: { skill: text(test, 'skill'), characteristic: test['characteristic'] === undefined ? '' : text(test, 'characteristic'), modifier },
+        test: {
+            skill: text(test, 'skill'),
+            characteristic: test['characteristic'] === undefined ? '' : text(test, 'characteristic'),
+            modifier,
+            shipStat: text(test, 'shipStat'),
+        },
         duration: text(cleaned, 'duration'),
         requirements: text(cleaned, 'requirements'),
         typeAndAction: text(cleaned, 'typeAndAction'),
         description: { value: text(child(cleaned, 'description'), 'value') },
+        shipEffect: shipEffect(child(cleaned, 'shipEffect')),
+    };
+}
+
+function int(object: JsonObject, key: string): number {
+    const value = object[key];
+    if (typeof value !== 'number') throw new Error(`expected "${key}" to be a number after cleaning`);
+    return value;
+}
+
+/** Read the cleaned `shipEffect` block, failing on a wrong shape. */
+function shipEffect(cleaned: JsonObject): ShipEffectData {
+    const kind = text(cleaned, 'kind');
+    const expiry = text(cleaned, 'expiry');
+    // An ArrayField with no authored value defaults to [] in Foundry.
+    const targets = cleaned['targets'] ?? [];
+    if (!Array.isArray(targets)) throw new Error('expected shipEffect.targets to be an array after cleaning');
+    if (kind !== '' && !isShipEffectKind(kind)) throw new Error(`unknown shipEffect.kind "${kind}"`);
+    if (expiry !== '' && expiry !== 'turnEnd' && expiry !== 'turnStart') throw new Error(`unknown shipEffect.expiry "${expiry}"`);
+    return {
+        kind,
+        targets: targets.filter((target): target is string => typeof target === 'string'),
+        base: int(cleaned, 'base'),
+        step: int(cleaned, 'step'),
+        per: int(cleaned, 'per'),
+        rounds: int(cleaned, 'rounds'),
+        expiry,
     };
 }
 
@@ -178,6 +211,12 @@ describe('OrderData schema', () => {
     it('adds optional duration and typeAndAction fields that default to empty', () => {
         expect(leaf(schema['duration']).options.initial).toBe('');
         expect(leaf(schema['typeAndAction']).options.initial).toBe('');
+    });
+
+    it('adds an optional shipEffect that defaults to no effect, and an optional test.shipStat (#186)', () => {
+        const cleaned = cleanToSchema(schema, {});
+        expect(shipEffect(child(cleaned, 'shipEffect'))).toEqual({ kind: '', targets: [], base: 0, step: 0, per: 1, rounds: 0, expiry: '' });
+        expect(child(cleaned, 'test')['shipStat']).toBe('');
     });
 });
 
@@ -248,5 +287,35 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('RT ship orders through the schema (#186)'
         expect(byName.get('Adjust Speed & Bearing')).toMatchObject({ skill: 'Pilot (Spacecraft)', modifier: -20, duration: '1 Turn' });
         expect(byName.get('Disengage')).toMatchObject({ skill: 'Pilot (Spacecraft)', modifier: 0 });
         expect(rows.filter((row) => row.description === '').map((row) => row.name)).toEqual([]);
+    });
+
+    it('authors the automatable effects as data and leaves the rest rules cards (#186, #189)', () => {
+        const byName = new Map(orders.map((view) => [view.name, view.system]));
+        const summary = (name: string): [string, string[], number, number, number, number, string] => {
+            const system = byName.get(name);
+            if (system === undefined) throw new Error(`missing ${name}`);
+            const { kind, targets, base, step, per, rounds, expiry } = system.shipEffect;
+            return [kind, targets, base, step, per, rounds, expiry];
+        };
+        expect(summary('Hold Fast!')).toEqual(['reducePriorTurnDamage', ['morale'], 1, 1, 1, 0, '']);
+        expect(summary('Triage')).toEqual(['reducePriorTurnDamage', ['crewPopulation'], 1, 1, 1, 0, '']);
+        expect(summary('Aid the Machine Spirit')).toEqual(['shipModifier', ['manoeuvrability', 'detection'], 5, 5, 2, 0, 'turnEnd']);
+        expect(summary('Flank Speed')).toEqual(['shipModifier', ['speed'], 1, 1, 1, 0, 'turnEnd']);
+        expect(summary('Lock on Target')).toEqual(['shipModifier', ['weaponBallisticSkill'], 5, 5, 2, 0, 'turnEnd']);
+        expect(summary('Come to New Heading')).toEqual(['shipModifier', ['ballisticSkill'], -20, 0, 1, 0, 'turnEnd']);
+        expect(summary('Evasive Manoeuvres')).toEqual(['shipModifier', ['ballisticSkill'], -10, -10, 1, 1, 'turnStart']);
+        expect(byName.get('Lock on Target')?.test.shipStat).toBe('detection');
+        expect(byName.get('Evasive Manoeuvres')?.test).toMatchObject({ skill: 'Pilot (Spacecraft)', modifier: -10, shipStat: 'manoeuvrability' });
+
+        const rollable = [...shipActionRows(orders, 'extended'), ...shipActionRows(orders, 'manoeuvre')].filter((row) => row.rollable).map((row) => row.name);
+        expect(rollable).toEqual([
+            'Aid the Machine Spirit',
+            'Flank Speed',
+            'Hold Fast!',
+            'Lock on Target',
+            'Triage',
+            'Come to New Heading',
+            'Evasive Manoeuvres',
+        ]);
     });
 });

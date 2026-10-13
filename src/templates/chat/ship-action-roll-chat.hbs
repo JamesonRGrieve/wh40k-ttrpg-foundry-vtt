@@ -1,0 +1,37 @@
+{{!--
+    RT ship action roll card (#186, #189).
+
+    The action's test as its full derivation (skill ± ship stat ± each live
+    ship-action modifier ± difficulty ± situational = target, every row
+    hoverable to its provenance), then — on a success — the effect's
+    magnitude (success + each degree term = total) and what was applied.
+
+    Context: ShipActionCardData {actionName, img, shipName, gameSystem, test,
+             magnitude, outcome, success}
+--}}
+{{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
+    cardClass="wh40k-ship-action-card"
+    outerExtraClass=(concat "tw-overflow-hidden tw-rounded-md tw-border-2 " (themeClassFor 'border'))
+    image=img
+    imageAlt=actionName
+    title=actionName
+    subtitle=(localize "WH40K.Voidcraft.ShipAction.ChatSubtitle")
+    gameSystem=gameSystem
+    footerLabel=shipName
+}}
+    <div data-wh40k-hook="ship-action-roll" class="tw-p-3 tw-flex tw-flex-col tw-gap-2 tw-text-sm">
+        {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=test}}
+        {{#if magnitude}}
+            <section class="tw-p-2 tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color)] tw-bg-[rgba(0,0,0,0.18)]">
+                <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-[var(--wh40k-card-muted)] tw-mb-1">{{magnitude.title}}</div>
+                {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs
+                    baseTarget=magnitude.base
+                    baseLabel=magnitude.baseLabel
+                    modifierSources=magnitude.rows
+                    modifiedTarget=magnitude.total
+                    targetLabel=(localize "WH40K.Voidcraft.Assault.Total")}}
+            </section>
+        {{/if}}
+        <p class="tw-m-0 tw-font-semibold {{#if success}}tw-text-[var(--wh40k-success-secondary)]{{else}}tw-text-[var(--wh40k-danger-secondary)]{{/if}}" data-outcome="{{#if success}}success{{else}}failure{{/if}}">{{outcome}}</p>
+    </div>
+{{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}
