@@ -2,7 +2,8 @@
     Grapple Controller Panel (#120 — core.md L10155-10180).
 
     Rendered on the Status tab when the actor is mid-grapple (the flag
-    `flags.wh40k.grapple.state` is `'grappling'` or `'controlled'`). Shows
+    `flags['wh40k-rpg'].grapple.state`, read by `readGrappleState`, is
+    `'grappling'` or `'controlled'`). Shows
     the current grapple state badge and exposes the five opposed-Strength
     actions: Damage / Throw Down (controller actions) and Break Free /
     Stand Up / Move (controlled-side actions). The panel does NOT filter

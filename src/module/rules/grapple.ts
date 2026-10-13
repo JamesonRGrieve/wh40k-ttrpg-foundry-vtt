@@ -29,6 +29,31 @@ export { degreesOfSuccess };
 /** Three legal states for a combatant with respect to a grapple. */
 export type GrappleState = 'none' | 'grappling' | 'controlled';
 
+/** The actor flag (under the system scope) a combatant's grapple state is stored in. */
+export const GRAPPLE_FLAG = 'grapple';
+
+const GRAPPLE_STATES: ReadonlySet<string> = new Set<GrappleState>(['none', 'grappling', 'controlled']);
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor flags are an untyped JSON bag; narrowed field by field below
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null;
+}
+
+/**
+ * A combatant's grapple state, read from its flags — the single reader for the
+ * value the grapple controller writes at `flags[SYSTEM_ID][GRAPPLE_FLAG].state`.
+ * Anything absent or unrecognised reads as `none`.
+ * @param {object | undefined} flags  The actor's `flags` bag.
+ * @param {string} scope  The system flag scope (`SYSTEM_ID`).
+ * @returns {GrappleState}  The grapple state.
+ */
+export function readGrappleState(flags: object | undefined, scope: string): GrappleState {
+    const scoped = isRecord(flags) ? flags[scope] : undefined;
+    const grapple = isRecord(scoped) ? scoped[GRAPPLE_FLAG] : undefined;
+    const state = isRecord(grapple) ? grapple['state'] : undefined;
+    return typeof state === 'string' && GRAPPLE_STATES.has(state) ? (state as GrappleState) : 'none';
+}
+
 /** Enumerated controller / controlled actions, all opposed-Strength resolved. */
 type GrappleAction = 'damage-opponent' | 'throw-down-opponent' | 'break-free' | 'stand-up' | 'move-while-grappling';
 

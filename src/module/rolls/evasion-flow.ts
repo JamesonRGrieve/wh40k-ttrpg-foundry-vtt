@@ -20,6 +20,7 @@ import { actionBudgetForActor } from '../rules/action-economy.ts';
 import { resolveActionLimit } from '../rules/condition-mechanics.ts';
 import { activeConditionMechanics, type ConditionBearer } from '../rules/condition-registry.ts';
 import type { EvasionGate, EvasionNegationPart, EvasionSkill } from '../rules/evasion.ts';
+import { readGrappleState } from '../rules/grapple.ts';
 import { canWeaponParry } from '../rules/weapon-quality-effects.ts';
 import type { I18nKey } from '../types/i18n-keys';
 
@@ -214,14 +215,6 @@ export interface EvasionActor extends ConditionBearer {
     readonly flags?: object;
 }
 
-/** The grapple state flag the grapple controller writes (`rules/grapple.ts`). */
-function grappleState(actor: EvasionActor): string {
-    const scoped = isRecord(actor.flags) ? actor.flags[SYSTEM_ID] : undefined;
-    const grapple = isRecord(scoped) ? scoped['grapple'] : undefined;
-    const state = isRecord(grapple) ? grapple['state'] : undefined;
-    return typeof state === 'string' ? state : 'none';
-}
-
 /**
  * What the actor's state allows an evasion: its Reaction budget (null out of
  * combat), the action limit its conditions impose, and whether it is in a grapple.
@@ -231,7 +224,7 @@ export function evasionGateFor(actor: EvasionActor): EvasionGate {
     return {
         reactionRemaining: budget === null ? null : budget.reactionRemaining,
         actionLimit: budget?.actionLimit ?? resolveActionLimit(activeConditionMechanics(actor)).limit,
-        inGrapple: grappleState(actor) !== 'none',
+        inGrapple: readGrappleState(actor.flags, SYSTEM_ID) !== 'none',
     };
 }
 

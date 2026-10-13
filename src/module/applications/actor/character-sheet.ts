@@ -83,6 +83,8 @@ import { getSupportRange } from '../../rules/dw-squad-mode.ts';
 import type { DynamicModifierItemLike } from '../../rules/dynamic-modifiers.ts';
 import { ENCOUNTER_GRANT_FLAG, HATRED_IDENTIFIER, hasFanaticRole, hatredAgainstFoe } from '../../rules/fanatic.ts';
 import {
+    GRAPPLE_FLAG,
+    readGrappleState,
     resolveBreakGrapple,
     resolveDamageOpponent,
     resolveMoveWhileGrappling,
@@ -1295,12 +1297,9 @@ export default class CharacterSheet extends BaseActorSheet {
         // or "Smite the Unholy".
         context.hasCrusader = hasCrusaderRole(Array.from(this.actor.items));
 
-        // Grapple state (#120 — core.md L10155-10180). The flag is set by
-        // combat tooling (Charge / Standard Attack workflow) and read by
-        // the Status tab to surface the controller-actions panel.
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flag bag is keyed by namespace at runtime
-        const grappleFlag = (this.actor.flags as { wh40k?: { grapple?: { state?: GrappleState } } } | undefined)?.wh40k?.grapple;
-        context.grappleState = grappleFlag?.state ?? 'none';
+        // Grapple state (#120 — core.md L10155-10180), read from the system-scoped
+        // flag the grapple controller writes, to surface the controller-actions panel.
+        context.grappleState = readGrappleState(this.actor.flags, SYSTEM_ID);
 
         return context;
     }
@@ -5234,7 +5233,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const result = await this._rollGrappleOpposed(resolveBreakGrapple);
         if (result?.success === true) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flag bag is keyed by namespace at runtime
-            await (this.actor as unknown as { setFlag: (scope: string, key: string, value: unknown) => Promise<unknown> }).setFlag('wh40k-rpg', 'grapple', {
+            await (this.actor as unknown as { setFlag: (scope: string, key: string, value: unknown) => Promise<unknown> }).setFlag(SYSTEM_ID, GRAPPLE_FLAG, {
                 state: 'none',
             });
         }

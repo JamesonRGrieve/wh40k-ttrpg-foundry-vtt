@@ -1,6 +1,11 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { SYSTEM_ID } from '../constants.ts';
 import {
     degreesOfSuccess,
+    GRAPPLE_FLAG,
+    readGrappleState,
     resolveBreakGrapple,
     resolveDamageOpponent,
     resolveMoveWhileGrappling,
@@ -101,5 +106,35 @@ describe('grapple — resolveMoveWhileGrappling', () => {
         expect(r.opponentDoS).toBe(0);
         expect(r.success).toBe(true);
         expect(r.action).toBe('move-while-grappling');
+    });
+});
+
+describe('readGrappleState — reads the flag where the controller writes it (#120)', () => {
+    it('reads the state from the system-scoped flag', () => {
+        expect(readGrappleState({ [SYSTEM_ID]: { [GRAPPLE_FLAG]: { state: 'controlled' } } }, SYSTEM_ID)).toBe('controlled');
+        expect(readGrappleState({ [SYSTEM_ID]: { [GRAPPLE_FLAG]: { state: 'grappling' } } }, SYSTEM_ID)).toBe('grappling');
+    });
+
+    it('regression: the legacy `wh40k` scope the sheet used to read is not the flag', () => {
+        // The sheet read `flags.wh40k.grapple` while Break Free wrote `flags['wh40k-rpg'].grapple`,
+        // so a combatant mid-grapple never got the controller panel.
+        expect(readGrappleState({ wh40k: { [GRAPPLE_FLAG]: { state: 'controlled' } } }, SYSTEM_ID)).toBe('none');
+    });
+
+    it('anything absent or unrecognised reads as none', () => {
+        expect(readGrappleState(undefined, SYSTEM_ID)).toBe('none');
+        expect(readGrappleState({}, SYSTEM_ID)).toBe('none');
+        expect(readGrappleState({ [SYSTEM_ID]: { [GRAPPLE_FLAG]: { state: 'pinned' } } }, SYSTEM_ID)).toBe('none');
+    });
+});
+
+describe('character sheet reads the grapple state through readGrappleState (#120 regression)', () => {
+    // Source-text guard: the sheet cannot load under happy-dom, so pin that it routes
+    // through the shared reader and never re-derives the flag path itself.
+    const source = readFileSync(resolve(__dirname, '../applications/actor/character-sheet.ts'), 'utf8');
+
+    it('uses the shared reader and the system scope', () => {
+        expect(source).toContain('readGrappleState(this.actor.flags, SYSTEM_ID)');
+        expect(source).not.toMatch(/flags[^;\n]*\bwh40k\?\.grapple/);
     });
 });
