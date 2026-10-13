@@ -29,7 +29,7 @@
     {{#each modifierSources as |component|}}
         <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem] tw-pl-3 tw-border-l-2 tw-border-l-[var(--wh40k-border-color)] tw-ml-1 tw-cursor-help" data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{component.tooltipData}}">
             <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{component.label}}</span>
-            <span class="tw-font-semibold {{#if (gt component.value 0)}}tw-text-[var(--wh40k-success-secondary)]{{else if (lt component.value 0)}}wh40k-roll-card__value--negative tw-text-[var(--wh40k-danger-secondary)]{{else}}tw-text-[var(--wh40k-card-text)]{{/if}}">
+            <span class="tw-font-semibold tw-whitespace-nowrap tw-tabular-nums {{#if (gt component.value 0)}}tw-text-[var(--wh40k-success-secondary)]{{else if (lt component.value 0)}}wh40k-roll-card__value--negative tw-text-[var(--wh40k-danger-secondary)]{{else}}tw-text-[var(--wh40k-card-text)]{{/if}}">
                 {{#if (gt component.value 0)}}+{{/if}}{{component.value}}
             </span>
         </div>
