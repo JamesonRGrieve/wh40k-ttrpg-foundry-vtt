@@ -67,6 +67,8 @@ interface PresetStyle {
     ambient: (frame: PresetFrame) => void;
 }
 
+/** Name of the container a visual adds to its token (how a live probe finds it). */
+const STATUS_VISUAL_NAME = 'wh40k-status-visual';
 /** Most particles one visual keeps alive at full intensity. */
 const MAX_PARTICLES = 48;
 /** Alpha of the still ring a static visual draws. */
@@ -274,6 +276,7 @@ export class TokenStatusVisual {
         this.style = visual.preset === '' ? null : PRESET_STYLE[visual.preset];
         this.animated = motion && this.style !== null;
         this.colour = tintColour(visual.tint, this.style?.colour ?? 0xffffff);
+        this.container.name = STATUS_VISUAL_NAME;
         this.container.eventMode = 'none';
         this.container.addChild(this.graphic);
         host.addChild(this.container);

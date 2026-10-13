@@ -568,6 +568,20 @@ recordDimension('token-ring.flow', covered['token-ring.flow'], TOKEN_RING_FLOWS)
 const TOKEN_MASK_FLOWS = ['flag-generates-bust', 'control-token-untouched', 'renders-circular-with-band'];
 recordDimension('token-mask.flow', covered['token-mask.flow'], TOKEN_MASK_FLOWS);
 
+// Status-effect token visuals (#595) exercised by tests/e2e/status-visuals.spec.ts:
+// a condition's authored visual starts, follows its stacks, filters the token art
+// and stops on removal or token deletion on a live canvas. Keep in sync with
+// STATUS_VISUAL_FLOWS there.
+const STATUS_VISUAL_FLOWS = [
+    'condition-item-starts-visual',
+    'filter-applied-to-token-art',
+    'stacks-update-in-place',
+    'removal-stops-visual',
+    'catalog-status-toggle',
+    'token-delete-destroys-visuals',
+];
+recordDimension('status-visual.flow', covered['status-visual.flow'], STATUS_VISUAL_FLOWS);
+
 // Subtlety adjuster dimension exercised by tests/e2e/subtlety.spec.ts.
 // Direction #7: per-flow drive of the content-agnostic adjuster surface
 // (manual / inquest primitives, talent-borne event / passive / clamp

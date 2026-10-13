@@ -20,6 +20,7 @@ class FakeContainer {
     destroyed = false;
     renderable = true;
     eventMode = 'auto';
+    name = '';
     constructor() {
         FakeContainer.live++;
     }
@@ -111,6 +112,7 @@ interface FakeToken {
     id: string;
     destroyed: boolean;
     isVisible: boolean;
+    isPreview: boolean;
     w: number;
     h: number;
     actor: FakeActor | null;
@@ -139,6 +141,7 @@ function makeToken(id: string, actor: FakeActor | null, x = 0): FakeToken {
         id,
         destroyed: false,
         isVisible: true,
+        isPreview: false,
         w: 100,
         h: 100,
         actor,
@@ -267,6 +270,7 @@ describe('status visuals — lifecycle', () => {
         tokens = [token];
         const effect = applyStatus(actor, 'on-fire');
         expect(liveVisuals(token)).toHaveLength(1);
+        expect(liveVisuals(token).at(0)?.name).toBe('wh40k-status-visual');
         expect(statusVisualStats()).toMatchObject({ running: 1, animated: 1, ticking: true });
         expect(tickerAdd).toHaveBeenCalledTimes(1);
 
@@ -375,6 +379,20 @@ describe('status visuals — lifecycle', () => {
         const before = liveVisuals(token).at(0);
         fire('drawToken', token);
         expect(before?.destroyed).toBe(true);
+        expect(liveVisuals(token)).toHaveLength(1);
+        expect(statusVisualStats().running).toBe(1);
+    });
+
+    it('leaves the real token alone while a drag preview of it is drawn and destroyed', () => {
+        const actor = makeActor();
+        const token = makeToken('t1', actor);
+        tokens = [token];
+        applyStatus(actor, 'stunned');
+        const preview = { ...makeToken('t1', actor), isPreview: true };
+        fire('drawToken', preview);
+        fire('refreshToken', preview);
+        fire('destroyToken', preview);
+        expect(liveVisuals(preview)).toHaveLength(0);
         expect(liveVisuals(token)).toHaveLength(1);
         expect(statusVisualStats().running).toBe(1);
     });

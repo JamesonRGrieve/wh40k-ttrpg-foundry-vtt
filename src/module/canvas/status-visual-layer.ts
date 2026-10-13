@@ -56,6 +56,8 @@ interface StatusVisualToken extends StatusVisualHost {
     id: string;
     destroyed: boolean;
     isVisible: boolean;
+    /** A drag / config preview clone of a real token. */
+    isPreview: boolean;
     actor: StatusVisualActor | null;
     getBounds: () => ScreenRect;
 }
@@ -341,12 +343,19 @@ export function registerStatusVisuals(): void {
     hooksOn('createItem', onConditionItem);
     hooksOn('updateItem', onConditionItem);
     hooksOn('deleteItem', onConditionItem);
+    // A drag preview is a clone under the real token's id: it must neither take over
+    // nor tear down the real token's visuals.
     hooksOn('drawToken', (token: StatusVisualToken) => {
+        if (token.isPreview) return;
         layer.clearToken(token.id);
         layer.reconcile(token);
     });
-    hooksOn('refreshToken', (token: StatusVisualToken) => layer.refresh(token));
-    hooksOn('destroyToken', (token: StatusVisualToken) => layer.clearToken(token.id));
+    hooksOn('refreshToken', (token: StatusVisualToken) => {
+        if (!token.isPreview) layer.refresh(token);
+    });
+    hooksOn('destroyToken', (token: StatusVisualToken) => {
+        if (!token.isPreview) layer.clearToken(token.id);
+    });
     hooksOn('canvasReady', () => refreshAllStatusVisuals());
     hooksOn('canvasTearDown', () => layer.clearAll());
     hooksOn('clientSettingChanged', (key: string) => {
