@@ -1,5 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { isCharacterActorType, isVehicleActorType } from './actor-types.ts';
+import { isCharacterActorType, isNpcActorType, isVehicleActorType } from './actor-types.ts';
+
+describe('isNpcActorType', () => {
+    it('accepts every per-line NPC type and the generic fallback', () => {
+        for (const type of ['npc', 'dh2-npc', 'dh1-npc', 'rt-npc', 'dw-npc']) expect(isNpcActorType(type)).toBe(true);
+    });
+
+    it('rejects characters, vehicles, loot and look-alikes', () => {
+        for (const type of ['character', 'dh2-character', 'dh2-terracraft', 'loot', 'npc-crew', '']) expect(isNpcActorType(type)).toBe(false);
+    });
+});
 
 describe('isVehicleActorType', () => {
     it('accepts every per-line and generic craft, voidship and legacy vehicle type', () => {

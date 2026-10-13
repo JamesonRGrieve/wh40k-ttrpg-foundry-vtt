@@ -22,6 +22,14 @@ export function isCharacterActorType(type: string): boolean {
     return type === 'character' || type.endsWith('-character');
 }
 
+/**
+ * True for NPC actor types — the per-line `<system>-npc` types and the generic
+ * `npc` fallback — and false for characters, vehicles and loot.
+ */
+export function isNpcActorType(type: string): boolean {
+    return type === 'npc' || type.endsWith('-npc');
+}
+
 /** The registered actor roles that are vehicles: ground/air/water craft, voidships and the legacy vehicle/starship types. */
 const VEHICLE_ACTOR_ROLES: ReadonlySet<string> = new Set(['vehicle', 'starship', 'terracraft', 'aircraft', 'watercraft', 'voidcraft']);
 

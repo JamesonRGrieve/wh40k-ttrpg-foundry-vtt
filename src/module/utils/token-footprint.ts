@@ -13,6 +13,8 @@
  * re-applies it from the sheet's token-setup action. At token creation
  * (`documents/token.ts`) the scene grid is known, so an actor with an authored
  * physical `footprint` (metres) is refined to its W×H cell footprint (#582).
+ * The v4 world migration (`wh40k-rpg-migrations.ts`) brings tokens that predate
+ * the ladder up to it (#501).
  */
 
 /** Grid squares per size descriptor. Sizes off the scale fall back to 1×1. */
@@ -150,17 +152,25 @@ export function tokenPresetFromActor(input: TokenPresetInput): Record<string, nu
     const isDefault = (currentWidth === 1 && currentHeight === 1) || (currentWidth === ladder && currentHeight === ladder);
     if (input.force !== true && !isDefault) return {};
 
-    const target = dimensionFootprint(input.dimensions, input.grid) ?? { width: ladder, height: ladder };
+    const target = footprintTarget(input);
     if (target.width === currentWidth && target.height === currentHeight) return {};
     return { width: target.width, height: target.height };
+}
+
+/** The footprint token creation presets: authored dimensions on the grid, else the square ladder. */
+function footprintTarget(input: TokenPresetInput): { width: number; height: number } {
+    const ladder = tokenFootprintForSize(input.size);
+    return dimensionFootprint(input.dimensions, input.grid) ?? { width: ladder, height: ladder };
 }
 
 /**
  * Does the incoming `_preCreate` payload already declare a token footprint?
  * The size ladder supplies a DEFAULT — a pack author (or a duplicated actor)
- * that states its own `prototypeToken.width`/`.height` keeps it.
+ * that states its own `prototypeToken.width`/`.height` keeps it. An explicit
+ * 1×1 is Foundry's own default, which importers write verbatim, so it is not
+ * treated as authored: otherwise a Hulking import arrives 1×1 (#501).
  * @param {unknown} createData  The raw `_preCreate` create payload.
- * @returns {boolean}  True when either dimension is explicitly authored.
+ * @returns {boolean}  True when either dimension is authored to a non-default size.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's `_preCreate` create payload, typed `never` by the framework; the typeof guard on the next line is the narrowing
 export function hasAuthoredFootprint(createData: unknown): boolean {
@@ -168,5 +178,23 @@ export function hasAuthoredFootprint(createData: unknown): boolean {
     // eslint-disable-next-line no-restricted-syntax -- boundary: `Reflect.get` on an untyped Foundry payload returns unknown; narrowed by the typeof guard below
     const proto: unknown = Reflect.get(createData, 'prototypeToken');
     if (proto === null || typeof proto !== 'object') return false;
-    return typeof Reflect.get(proto, 'width') === 'number' || typeof Reflect.get(proto, 'height') === 'number';
+    const authored = (key: 'width' | 'height'): boolean => typeof Reflect.get(proto, key) === 'number' && Reflect.get(proto, key) !== DEFAULT_TOKEN_FOOTPRINT;
+    return authored('width') || authored('height');
+}
+
+/**
+ * The footprint upgrade the one-time world migration (#501) applies to a token
+ * (placed, or an actor's prototype) that predates the size ladder: only an actor
+ * the ladder makes bigger than 1×1 (Hulking and up), and only while the token
+ * still sits at the 1×1 default — any other size was set by hand and is kept.
+ * The target is what token creation would preset today ({@link tokenPresetFromActor}):
+ * authored dimensions on the given grid, else the square ladder footprint.
+ * @param {TokenPresetInput} input  The token's current size and its actor's facts.
+ * @returns The new `width` / `height`, or null when the token is left alone.
+ */
+export function legacyFootprintUpgrade(input: TokenPresetInput): { width: number; height: number } | null {
+    if (tokenFootprintForSize(input.size) <= DEFAULT_TOKEN_FOOTPRINT) return null;
+    if (input.currentWidth !== DEFAULT_TOKEN_FOOTPRINT || input.currentHeight !== DEFAULT_TOKEN_FOOTPRINT) return null;
+    const target = footprintTarget(input);
+    return target.width === DEFAULT_TOKEN_FOOTPRINT && target.height === DEFAULT_TOKEN_FOOTPRINT ? null : target;
 }

@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
     DEFAULT_TOKEN_FOOTPRINT,
     dimensionFootprint,
+    hasAuthoredFootprint,
+    legacyFootprintUpgrade,
     metresToSceneUnits,
     prototypeTokenFootprintUpdate,
     tokenFootprintForSize,
@@ -119,5 +121,55 @@ describe('tokenPresetFromActor', () => {
     it('is empty when the footprint already matches', () => {
         expect(tokenPresetFromActor({ currentWidth: 1, currentHeight: 1, size: 4 })).toEqual({});
         expect(tokenPresetFromActor({ currentWidth: 3, currentHeight: 3, size: 7 })).toEqual({});
+    });
+});
+
+describe('hasAuthoredFootprint', () => {
+    it('treats an explicit 1×1 (Foundry default, written verbatim by importers and the pack compiler) as unauthored (#501)', () => {
+        expect(hasAuthoredFootprint({ prototypeToken: { width: 1, height: 1 } })).toBe(false);
+        expect(hasAuthoredFootprint({ prototypeToken: { width: 1 } })).toBe(false);
+    });
+
+    it('treats any non-default dimension as authored', () => {
+        expect(hasAuthoredFootprint({ prototypeToken: { width: 3, height: 3 } })).toBe(true);
+        expect(hasAuthoredFootprint({ prototypeToken: { width: 1, height: 2 } })).toBe(true);
+    });
+
+    it('is false for a payload without a prototype token', () => {
+        expect(hasAuthoredFootprint({})).toBe(false);
+        expect(hasAuthoredFootprint(null)).toBe(false);
+        expect(hasAuthoredFootprint({ prototypeToken: null })).toBe(false);
+    });
+});
+
+describe('legacyFootprintUpgrade (#501 migration)', () => {
+    const metreGrid = { distance: 1, units: 'm' };
+
+    it('grows a 1×1 Hulking-and-larger token to its ladder footprint', () => {
+        expect(legacyFootprintUpgrade({ currentWidth: 1, currentHeight: 1, size: 5 })).toEqual({ width: 2, height: 2 });
+        expect(legacyFootprintUpgrade({ currentWidth: 1, currentHeight: 1, size: 6 })).toEqual({ width: 2, height: 2 });
+    });
+
+    it('uses authored dimensions on the scene grid when present', () => {
+        expect(legacyFootprintUpgrade({ currentWidth: 1, currentHeight: 1, size: 7, dimensions: { length: 6.9, width: 4.6 }, grid: metreGrid })).toEqual({
+            width: 7,
+            height: 5,
+        });
+    });
+
+    it('skips size ≤ 4, even with authored dimensions', () => {
+        for (const size of [1, 2, 3, 4]) expect(legacyFootprintUpgrade({ currentWidth: 1, currentHeight: 1, size })).toBeNull();
+        expect(legacyFootprintUpgrade({ currentWidth: 1, currentHeight: 1, size: 4, dimensions: { length: 6, width: 4 }, grid: metreGrid })).toBeNull();
+        expect(legacyFootprintUpgrade({ currentWidth: 1, currentHeight: 1, size: null })).toBeNull();
+    });
+
+    it('never touches a token that is not at the 1×1 default (hand-resized or already sized)', () => {
+        expect(legacyFootprintUpgrade({ currentWidth: 3, currentHeight: 3, size: 5 })).toBeNull();
+        expect(legacyFootprintUpgrade({ currentWidth: 2, currentHeight: 2, size: 5 })).toBeNull();
+        expect(legacyFootprintUpgrade({ currentWidth: 1, currentHeight: 2, size: 6 })).toBeNull();
+    });
+
+    it('is null when the authored dimensions round to 1×1 anyway', () => {
+        expect(legacyFootprintUpgrade({ currentWidth: 1, currentHeight: 1, size: 5, dimensions: { length: 1, width: 1 }, grid: metreGrid })).toBeNull();
     });
 });

@@ -563,10 +563,15 @@ recordDimension('token-ring.flow', covered['token-ring.flow'], TOKEN_RING_FLOWS)
 // Runtime token-mask dimension exercised by tests/e2e/token-mask.spec.ts.
 // Drives source-code coverage on src/module/canvas/token-mask.ts: the
 // flags.wh40k-rpg.tokenFrame circular bust generated from a rectangular
-// portrait at draw time, with a flagless control token left untouched.
+// portrait at draw time, with an opted-out ringless control token left untouched.
 // Keep in sync with TOKEN_MASK_FLOWS there.
 const TOKEN_MASK_FLOWS = ['flag-generates-bust', 'control-token-untouched', 'renders-circular-with-band'];
 recordDimension('token-mask.flow', covered['token-mask.flow'], TOKEN_MASK_FLOWS);
+
+// PC vs NPC bust-diameter parity (#501) exercised by tests/e2e/token-bust-parity.spec.ts.
+// Keep in sync with TOKEN_BUST_PARITY_FLOWS there.
+const TOKEN_BUST_PARITY_FLOWS = ['ringless-npc-busted', 'pc-and-npc-same-diameter'];
+recordDimension('token-bust-parity.flow', covered['token-bust-parity.flow'], TOKEN_BUST_PARITY_FLOWS);
 
 // Status-effect token visuals (#595) exercised by tests/e2e/status-visuals.spec.ts:
 // a condition's authored visual starts, follows its stacks, filters the token art

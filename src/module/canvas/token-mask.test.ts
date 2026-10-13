@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { computeFrameTransform, type FrameFlagSource, parseTokenFrameFlag, resolveBustContent, resolveTokenFrameFlag } from './token-mask.ts';
+import {
+    type BustPlan,
+    computeFrameTransform,
+    type FrameFlagSource,
+    isPortraitActorType,
+    parseTokenFrameFlag,
+    resolveBustContent,
+    resolveBustPlan,
+    resolveTokenFrameFlag,
+} from './token-mask.ts';
 
 describe('computeFrameTransform', () => {
     it('spans the content circle with the short side of portrait art', () => {
@@ -83,20 +92,26 @@ describe('parseTokenFrameFlag', () => {
     });
 
     it('fills head-biased defaults for a bare enable', () => {
-        expect(parseTokenFrameFlag(true)).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1 });
-        expect(parseTokenFrameFlag({})).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1 });
+        expect(parseTokenFrameFlag(true)).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1.67 });
+        expect(parseTokenFrameFlag({})).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1.67 });
     });
 
     it('keeps explicit coordinates and clamps out-of-range values', () => {
-        expect(parseTokenFrameFlag({ cx: 0.7, cy: 0.2, content: 0.8 })).toEqual({ cx: 0.7, cy: 0.2, content: 0.8, zoom: 1 });
-        expect(parseTokenFrameFlag({ cx: 4, cy: -1 })).toEqual({ cx: 1, cy: 0, content: 0, zoom: 1 });
+        expect(parseTokenFrameFlag({ cx: 0.7, cy: 0.2, content: 0.8 })).toEqual({ cx: 0.7, cy: 0.2, content: 0.8, zoom: 1.67 });
+        expect(parseTokenFrameFlag({ cx: 4, cy: -1 })).toEqual({ cx: 1, cy: 0, content: 0, zoom: 1.67 });
     });
 
     it('keeps an explicit zoom and clamps it to [0.25, 4]', () => {
         expect(parseTokenFrameFlag({ zoom: 1.8 })?.zoom).toBe(1.8);
         expect(parseTokenFrameFlag({ zoom: 10 })?.zoom).toBe(4);
         expect(parseTokenFrameFlag({ zoom: 0 })?.zoom).toBe(0.25);
-        expect(parseTokenFrameFlag({ zoom: Number.NaN })?.zoom).toBe(1);
+        expect(parseTokenFrameFlag({ zoom: Number.NaN })?.zoom).toBe(1.67);
+    });
+
+    it('takes caller defaults for the absent fields only', () => {
+        const cover = { cx: 0.5, cy: 0.5, zoom: 1 };
+        expect(parseTokenFrameFlag({}, cover)).toEqual({ cx: 0.5, cy: 0.5, content: 0, zoom: 1 });
+        expect(parseTokenFrameFlag({ cy: 0.2, zoom: 2 }, cover)).toEqual({ cx: 0.5, cy: 0.2, content: 0, zoom: 2 });
     });
 
     it('ignores non-finite garbage', () => {
@@ -104,7 +119,7 @@ describe('parseTokenFrameFlag', () => {
             cx: 0.5,
             cy: 0.3,
             content: 0,
-            zoom: 1,
+            zoom: 1.67,
         });
     });
 });
@@ -163,12 +178,81 @@ describe('resolveBustContent (global no-clip enforcement)', () => {
         expect(resolveBustContent(2, true, 1)).toBe(1);
     });
 
-    it('uses the full frame for a ringless bust', () => {
-        expect(resolveBustContent(0, false, 1)).toBe(1);
+    it('bakes the enforced fraction into a ringless bust, ignoring the inert subject scale', () => {
+        expect(resolveBustContent(0, false, 1)).toBeCloseTo(0.6, 6);
+        expect(resolveBustContent(0, false, 0.8)).toBeCloseTo(0.6, 6);
     });
 
     it('clamps to 1 and guards a zero/negative subject scale', () => {
         expect(resolveBustContent(0, true, 0.5)).toBe(1); // 0.6 / 0.5 = 1.2 → clamp
         expect(resolveBustContent(0, true, 0)).toBeCloseTo(0.6, 6); // scale 0 → treated as 1
+    });
+});
+
+/** The on-token bust diameter (fraction of the token) a plan renders at: a ringed
+ *  token draws its subject at `content × subjectScale`, a ringless one at `content`. */
+function renderedDiameter(content: number, ringEnabled: boolean, subjectScale: number): number {
+    return ringEnabled ? content * subjectScale : content;
+}
+
+/** Narrow a plan that the test expects to exist; a null plan fails the test. */
+function requirePlan(plan: BustPlan | null): BustPlan {
+    if (plan === null) throw new Error('expected a bust plan, got null');
+    return plan;
+}
+
+describe('bust diameter parity, ring vs ringless (#501)', () => {
+    it.each([0.8, 1])('a ringed token at subject scale %s draws the same bust as a ringless one', (subjectScale) => {
+        const ringed = resolveBustContent(0, true, subjectScale);
+        const ringless = resolveBustContent(0, false, subjectScale);
+        expect(renderedDiameter(ringed, true, subjectScale)).toBeCloseTo(renderedDiameter(ringless, false, subjectScale), 6);
+        expect(renderedDiameter(ringless, false, subjectScale)).toBeCloseTo(0.6, 6);
+    });
+});
+
+describe('isPortraitActorType', () => {
+    it('accepts characters and NPCs of every line, and the generic fallbacks', () => {
+        for (const type of ['dh2-character', 'rt-character', 'character', 'dh2-npc', 'dw-npc', 'npc']) expect(isPortraitActorType(type)).toBe(true);
+    });
+
+    it('rejects loot, vehicles and actorless tokens', () => {
+        for (const type of ['loot', 'dh2-terracraft', 'rt-starship', 'dh2-vehicle', null, undefined]) expect(isPortraitActorType(type)).toBe(false);
+    });
+});
+
+describe('resolveBustPlan (#501)', () => {
+    const plan = (flag: object | boolean | undefined | null, ringEnabled: boolean, actorType: string | null, subjectScale = 1): BustPlan | null =>
+        resolveBustPlan({ flag, ringEnabled, subjectScale, actorType });
+
+    it('busts a ringless, unframed NPC (the mystery-man Citizen) at the PC diameter', () => {
+        const citizen = requirePlan(plan(null, false, 'dh2-npc'));
+        const pc = requirePlan(plan({ cx: 0.5, cy: 0.5 }, true, 'dh2-character', 0.8));
+        expect(renderedDiameter(citizen.content, false, 1)).toBeCloseTo(renderedDiameter(pc.content, true, 0.8), 6);
+    });
+
+    it('gives an unframed portrait the head-biased default frame', () => {
+        expect(plan(undefined, false, 'dh2-npc')?.frame).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1.67 });
+        expect(plan(undefined, true, 'loot')?.frame).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1.67 });
+    });
+
+    it('keeps authored frame values and defaults only the missing ones', () => {
+        // the live PC frame: centre authored, zoom missing
+        expect(plan({ cx: 0.5, cy: 0.5 }, true, 'dh2-character', 0.8)?.frame).toEqual({ cx: 0.5, cy: 0.5, content: 0, zoom: 1.67 });
+        expect(plan({ cx: 0.51, cy: 0.27, zoom: 1.55 }, true, 'dh2-npc', 0.8)?.frame).toEqual({ cx: 0.51, cy: 0.27, content: 0, zoom: 1.55 });
+    });
+
+    it('leaves loot, containers and frameless vehicles on their raw art', () => {
+        expect(plan(null, false, 'loot')).toBeNull();
+        expect(plan(undefined, false, 'dh2-terracraft')).toBeNull();
+        expect(plan(undefined, false, null)).toBeNull();
+    });
+
+    it('lets an explicit false opt a ringless portrait token out, but not a ringed one', () => {
+        expect(plan(false, false, 'dh2-npc')).toBeNull();
+        expect(plan(false, true, 'dh2-npc')).not.toBeNull();
+    });
+
+    it('busts a framed ringless token of any type', () => {
+        expect(plan({ cx: 0.4 }, false, 'loot')?.content).toBeCloseTo(0.6, 6);
     });
 });

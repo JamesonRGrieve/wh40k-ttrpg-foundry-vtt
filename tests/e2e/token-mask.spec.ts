@@ -9,8 +9,8 @@ import { scaledMs } from './lib/timing';
  * (src/module/canvas/token-mask.ts): a token whose document carries
  * `flags.wh40k-rpg.tokenFrame` renders a GPU-generated circular bust from a
  * PLAIN RECTANGULAR portrait — no pre-tokenized image variant involved —
- * seated inside the Dynamic Ring band (75% content). A flagless control
- * token on the same scene keeps its source texture untouched.
+ * seated inside the Dynamic Ring band (75% content). A ringless control token
+ * that opts out (`tokenFrame: false`) keeps its source texture untouched.
  *
  * The geometry (computeFrameTransform / parseTokenFrameFlag) is unit-tested
  * in src/module/canvas/token-mask.test.ts; this spec verifies the canvas
@@ -127,10 +127,11 @@ async function probeTokenMask(page: Page, portrait: string): Promise<ProbeState>
                 ring: { enabled: true },
                 flags: { 'wh40k-rpg': { tokenFrame: { cx: 0.5, cy: 0.3 } } },
             });
-            // the control token: same portrait, no flag and NO ring — a ring-enabled
-            // token is always busted (default centre when unflagged), so only a
-            // ringless, unflagged token is guaranteed to keep its raw art.
-            await control.update({ texture: { src }, ring: { enabled: false } });
+            // the control token: same portrait, NO ring and an explicit tokenFrame
+            // opt-out. A ring-enabled token is always busted, and so is a ringless
+            // character/NPC token with no frame (one bust diameter for every actor
+            // portrait, #501), so only a ringless, opted-out token keeps its raw art.
+            await control.update({ texture: { src }, ring: { enabled: false }, flags: { 'wh40k-rpg': { tokenFrame: false } } });
             // Wait for both meshes to settle: the masked token on its 512x512 bust,
             // the control on the raw (non-square) portrait. The checks below report
             // whichever state never arrives.

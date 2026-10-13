@@ -1,5 +1,5 @@
 import { SYSTEM_ID } from '../constants.ts';
-import { parseTokenFrameFlag, resolveTokenFrameFlag, type FrameFlagSource } from './token-mask.ts';
+import { parseTokenFrameFlag, resolveTokenFrameFlag, type FrameFlagSource, type TokenFrameDefaults } from './token-mask.ts';
 
 /**
  * Rounded-rectangle token ring for non-square tokens (#587).
@@ -23,6 +23,12 @@ const BAND_FRACTION = 0.06;
 const RT_LONG_SIDE = 512;
 /** Label of the band graphic this module owns on a token. */
 const BAND_NAME = 'wh40k-rounded-ring-band';
+/**
+ * Framing for a rounded-rect token's unauthored fields: the art's centre at cover
+ * fit. A rounded token fills its whole footprint with (usually vehicle) art, so
+ * the head-biased, zoomed portrait-bust defaults do not apply.
+ */
+const COVER_FRAME_DEFAULTS: TokenFrameDefaults = { cx: 0.5, cy: 0.5, zoom: 1 };
 
 /** The ring state a token's mode decision reads. */
 export interface RingModeInput {
@@ -197,8 +203,7 @@ export function onRefreshRoundedToken(token: RoundedToken): boolean {
     const renderer = canvas.app?.renderer;
     if (renderer === undefined) return true;
 
-    const frame = parseTokenFrameFlag(resolveTokenFrameFlag(token));
-    const centre = frame === null ? { cx: 0.5, cy: 0.5, zoom: 1 } : { cx: frame.cx, cy: frame.cy, zoom: frame.zoom };
+    const centre = parseTokenFrameFlag(resolveTokenFrameFlag(token), COVER_FRAME_DEFAULTS) ?? COVER_FRAME_DEFAULTS;
     const { width, height } = token.document.getSize();
     const size = roundedTextureSize(width, height);
     const key = `${token.document.texture.src ?? ''}|${size.width}x${size.height}|${centre.cx}|${centre.cy}|${centre.zoom}`;
