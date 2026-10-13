@@ -1,0 +1,43 @@
+{{!-- Scene Environment widget (#604): the viewed scene's gravity, weather and air, and what they do under the world's game line. --}}
+<div class="tw-flex tw-flex-col tw-gap-2 tw-p-3">
+    {{#if hasScene}}
+        <div class="tw-bg-black/30 tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-rounded-[var(--wh40k-radius-md)] tw-p-2 tw-flex tw-flex-col tw-gap-1">
+            <div class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-opacity-50 tw-text-[color:var(--wh40k-bone,#e8dcc8)]">{{localize "WH40K.Environment.SceneLabel" scene=sceneName}}</div>
+            <div class="tw-flex tw-items-baseline tw-justify-between tw-gap-2">
+                <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-wider tw-opacity-60 tw-text-[color:var(--wh40k-bone,#e8dcc8)]"><i class="fas fa-globe" aria-hidden="true"></i> {{localize "WH40K.Environment.GravityLabel"}}</span>
+                <span data-wh40k-hook="env-gravity" data-gravity="{{gravity}}" class="tw-text-[0.8rem] tw-font-semibold tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))]">{{gravityLabel}}</span>
+            </div>
+            <div class="tw-flex tw-items-baseline tw-justify-between tw-gap-2">
+                <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-wider tw-opacity-60 tw-text-[color:var(--wh40k-bone,#e8dcc8)]"><i class="fas fa-cloud-showers-heavy" aria-hidden="true"></i> {{localize "WH40K.Environment.WeatherLabel"}}</span>
+                <span data-wh40k-hook="env-weather" class="tw-text-[0.8rem] tw-font-semibold tw-text-right tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))]">{{weatherLabel}}</span>
+            </div>
+            <div class="tw-flex tw-items-baseline tw-justify-between tw-gap-2">
+                <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-wider tw-opacity-60 tw-text-[color:var(--wh40k-bone,#e8dcc8)]"><i class="fas fa-wind" aria-hidden="true"></i> {{localize "WH40K.Environment.AtmosphereLabel"}}</span>
+                <span data-wh40k-hook="env-atmosphere" data-atmosphere="{{atmosphere}}" class="tw-text-[0.8rem] tw-font-semibold tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))]">{{atmosphereLabel}}</span>
+            </div>
+        </div>
+
+        <div class="tw-bg-black/30 tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-rounded-[var(--wh40k-radius-md)] tw-p-2">
+            <div class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-opacity-50 tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-mb-1">{{localize "WH40K.Environment.PreviewLabel" line=lineLabel}}</div>
+            {{#if unmodelled}}
+                <p data-wh40k-hook="env-unmodelled" class="tw-m-0 tw-text-[0.75rem] tw-italic tw-opacity-70 tw-text-[color:var(--wh40k-bone,#e8dcc8)]">{{localize "WH40K.Environment.Effect.Unmodelled"}}</p>
+            {{else if effects.length}}
+                <ul data-wh40k-hook="env-effects" class="tw-m-0 tw-pl-4 tw-text-[0.75rem] tw-leading-[1.4] tw-text-[color:var(--wh40k-bone,#e8dcc8)]">
+                    {{#each effects}}<li>{{this}}</li>{{/each}}
+                </ul>
+            {{else}}
+                <p data-wh40k-hook="env-none" class="tw-m-0 tw-text-[0.75rem] tw-italic tw-opacity-70 tw-text-[color:var(--wh40k-bone,#e8dcc8)]">{{localize "WH40K.Environment.Effect.None"}}</p>
+            {{/if}}
+        </div>
+
+        {{#if isZeroGravity}}
+            <button type="button" data-action="rollZeroGravity" class="tw-p-1 tw-bg-[var(--wh40k-iron,#3e3e3e)] tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze,#cd7f32)]"><i class="fas fa-person-running" aria-hidden="true"></i> {{localize "WH40K.Environment.RollZeroGravity"}}</button>
+        {{/if}}
+    {{else}}
+        <p data-wh40k-hook="env-no-scene" class="tw-m-0 tw-text-[0.75rem] tw-italic tw-opacity-70 tw-text-[color:var(--wh40k-bone,#e8dcc8)]">{{localize "WH40K.Environment.NoScene"}}</p>
+    {{/if}}
+
+    {{#if isGM}}
+        <button type="button" data-action="editEnvironment" class="tw-p-1 tw-bg-[var(--wh40k-iron,#3e3e3e)] tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze,#cd7f32)]"><i class="fas fa-sliders" aria-hidden="true"></i> {{localize "WH40K.Environment.Edit"}}</button>
+    {{/if}}
+</div>

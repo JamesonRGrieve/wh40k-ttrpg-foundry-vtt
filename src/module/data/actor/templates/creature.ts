@@ -1,12 +1,20 @@
 import { BaseSystemConfig } from '../../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../../config/game-systems/index.ts';
-import type { ChaosAlignment, FatigueModelDef } from '../../../config/game-systems/types.ts';
+import type { ChaosAlignment, FatigueModelDef, GameSystemId } from '../../../config/game-systems/types.ts';
 import type { WH40KItem } from '../../../documents/item.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
 import { giftDefFromMutation, isGiftItem, resolveGiftForAlignment } from '../../../rules/bc-gifts.ts';
 import { fateTotalWithLegacyThreshold } from '../../../rules/fate.ts';
 import { FATIGUE_MODES, getFatigueHalvedCharacteristic, getFatigueTestModifier, getFatigueThreshold, resolveFatigueModel } from '../../../rules/fatigue.ts';
 import { resolveCraftsmanshipGatedModifiers } from '../../../rules/ow-craftsmanship.ts';
+import {
+    actorEnvironmentContext,
+    environmentAgilityBonus,
+    environmentJumpDistance,
+    environmentLiftingSum,
+    environmentMovementRates,
+    type SceneEnvironment,
+} from '../../../rules/scene-environment.ts';
 import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
 import { WH40KSettings } from '../../../wh40k-rpg-settings.ts';
@@ -1324,7 +1332,11 @@ export default class CreatureTemplate extends CommonTemplate {
         // effective bonus so a bonus-only modifier on the initiative characteristic flows in.
         const initChar = this.characteristics[this.initiative.characteristic];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: dynamic key access on characteristics may return undefined at runtime
-        const baseInitBonus = initChar?.effectiveBonus ?? 0;
+        const effectiveInitBonus = initChar?.effectiveBonus ?? 0;
+        // Low/high gravity shifts an Agility-based Initiative where the line says so (#604).
+        const { env, line } = this._sceneEnvironment();
+        const baseInitBonus =
+            this.initiative.characteristic === 'agility' ? environmentAgilityBonus(effectiveInitBonus, env, line, 'initiative') : effectiveInitBonus;
 
         // Apply combat modifiers from items
         const initMod = this._getTotalCombatModifier('initiative');
@@ -1382,7 +1394,21 @@ export default class CreatureTemplate extends CommonTemplate {
     _computeEncumbrance(): void {
         const actor = this.parent as Parameters<typeof computeEncumbrance>[0] | null | undefined;
         if (actor === null || actor === undefined) return;
-        Object.assign(this.encumbrance, computeEncumbrance(actor));
+        // Low/high gravity shifts SB + TB for carrying, lifting and pushing (#604).
+        const { env, line } = this._sceneEnvironment();
+        Object.assign(
+            this.encumbrance,
+            computeEncumbrance(actor, (sum) => environmentLiftingSum(sum, env, line)),
+        );
+    }
+
+    /**
+     * The environment of the scene this creature stands in, and its game line —
+     * the pair every environmental derived-stat change is resolved against (#604).
+     * @protected
+     */
+    _sceneEnvironment(): { env: SceneEnvironment; line: GameSystemId } {
+        return actorEnvironmentContext(this.parent as Parameters<typeof actorEnvironmentContext>[0]);
     }
 
     /* -------------------------------------------- */
@@ -1697,8 +1723,13 @@ export default class CreatureTemplate extends CommonTemplate {
         // modifierSources.movement but never applied.
         const moveMod = sumMovementModifiers(this.modifierSources.movement);
 
+        // The scene's gravity (#604): low/high gravity shifts the Agility Bonus for
+        // movement and scales jumps; zero gravity halves every rate.
+        const { env, line } = this._sceneEnvironment();
+        const moveAb = environmentAgilityBonus(ab, env, line, 'movement');
+
         // Movement based on AB + Size adjustment (PCs take raw values, no floors).
-        const { half, full, charge, run } = computeMovement(ab + moveMod, this.size, false);
+        const { half, full, charge, run } = environmentMovementRates(computeMovement(moveAb + moveMod, this.size, false), env, line);
         this.movement.half = half;
         this.movement.full = full;
         this.movement.charge = charge;
@@ -1708,9 +1739,9 @@ export default class CreatureTemplate extends CommonTemplate {
         // Standing vertical leap: SB / 4 meters (round up to nearest 0.5m)
         // Running horizontal leap: SB meters
         // Jump (vertical jump height in cm): SB × 20
-        this.movement.leapVertical = Math.ceil((sb / 4) * 2) / 2; // Round to nearest 0.5m
-        this.movement.leapHorizontal = sb;
-        this.movement.jump = sb * 20; // in centimeters
+        this.movement.leapVertical = environmentJumpDistance(Math.ceil((sb / 4) * 2) / 2, env, line); // Round to nearest 0.5m
+        this.movement.leapHorizontal = environmentJumpDistance(sb, env, line);
+        this.movement.jump = environmentJumpDistance(sb * 20, env, line); // in centimeters
 
         // Lifting/Carrying capacity based on Strength Bonus
         // Carry: SB × 4.5 kg (sustained carrying)

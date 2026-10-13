@@ -7223,6 +7223,74 @@
                 "Unconscious": "Without fresh oxygen by the end of that time, the character falls Unconscious.",
                 "DiesAfter": "Unconscious and still deprived of oxygen, the character dies after {rounds} rounds.",
                 "DamagePerRound": "Unconscious and still deprived of oxygen, the character suffers {formula} damage each round, ignoring Armour and Toughness, until dead."
+            },
+            "Vacuum": {
+                "Title": "Vacuum",
+                "Subtitle": "Toughness Bonus {tb}",
+                "ExposureLabel": "Exposure",
+                "Sudden": "Sudden exposure (an airlock, a hull breach)",
+                "Gradual": "Gradually worsening atmosphere",
+                "InSpaceLabel": "In the vacuum of space (the extreme cold)",
+                "OxygenLabel": "Has an oxygen source (no suffocation)",
+                "Row": "{rounds} rounds safe, then {formula}",
+                "SafeRounds": "Unharmed for",
+                "Depressurisation": "Then, at the end of each round: {formula} Explosive damage from depressurisation.",
+                "CumulativeTest": "Then, at the end of each round: a Toughness test at a cumulative {step}; success deals {success} Explosive damage, failure {failure}.",
+                "Cold": "At the end of each round in space: a Challenging (+0) Toughness test, or {formula} Energy damage from the cold.",
+                "IgnoresArmourAndToughness": "This damage ignores Armour and Toughness Bonus.",
+                "IgnoresArmour": "Armour does not reduce this damage.",
+                "SuffocationRounds": "Suffocating: breath held for {count} rounds.",
+                "SuffocationMinutes": "Suffocating: breath held for {count} minutes.",
+                "OxygenSource": "An oxygen source spares the character from suffocation."
+            }
+        },
+        "Environment": {
+            "Title": "Scene Environment",
+            "WidgetTitle": "Environment",
+            "Source": "Scene environment",
+            "GmOnly": "Only the GM can set the scene environment.",
+            "NoScene": "No scene is being viewed.",
+            "Edit": "Set Environment",
+            "Save": "Save Environment",
+            "SceneLabel": "Scene: {scene}",
+            "GravityLabel": "Gravity",
+            "AtmosphereLabel": "Atmosphere",
+            "WeatherLabel": "Harsh weather or unnatural conditions",
+            "WeatherHint": "Heavy rain, an ash storm, standing knee-deep in waves of fungus.",
+            "PreviewLabel": "Effects in the {line} rules",
+            "ZeroGravityTest": "Zero Gravity: Charge or Run (Agility)",
+            "RollZeroGravity": "Roll the zero-gravity Agility test",
+            "NoTokens": "Select your tokens on the canvas first.",
+            "Gravity": {
+                "Standard": "Standard gravity",
+                "Low": "Low gravity",
+                "High": "High gravity",
+                "Zero": "Zero gravity"
+            },
+            "Atmosphere": {
+                "Breathable": "Breathable",
+                "Vacuum": "Vacuum",
+                "Venting": "Venting atmosphere"
+            },
+            "Weather": {
+                "Harsh": "Harsh conditions",
+                "Calm": "No harsh conditions"
+            },
+            "Effect": {
+                "None": "No environmental effects.",
+                "Unmodelled": "This game line's environment rules are not modelled.",
+                "AgilityMoveInit": "Agility Bonus {value} for movement and Initiative",
+                "AgilityMove": "Agility Bonus {value} for movement",
+                "Lifting": "Strength + Toughness Bonus {value} for carrying, lifting and pushing",
+                "Throw": "Strength Bonus {value} for throwing",
+                "JumpDoubled": "Jumping and leaping distances doubled",
+                "JumpHalved": "Jumping and leaping distances halved",
+                "ZeroMovement": "Difficult terrain: movement halved",
+                "ZeroManoeuvre": "Charge or Run: Agility test {value}; failure falls Prone",
+                "ZeroPushOff": "A Move must start beside a surface to push off from",
+                "WeatherAttack": "Weapon Skill and Ballistic Skill attack tests {value}",
+                "VacuumSudden": "Vacuum: resolve exposure with the Environmental Hazards tool",
+                "VacuumGradual": "Worsening atmosphere: resolve exposure with the Environmental Hazards tool"
             }
         },
         "XP": {

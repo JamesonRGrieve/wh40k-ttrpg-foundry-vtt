@@ -43,6 +43,7 @@ import { registerCombatTrackerEconomy } from './applications/combat/combat-track
 import { RTCompendiumBrowser } from './applications/compendium-browser.ts';
 import { TooltipsWH40K } from './applications/components/_module.ts';
 import { ConvertActorSystemDialog } from './applications/dialogs/convert-actor-system-dialog.ts';
+import { registerSceneEnvironment } from './applications/hud/scene-environment-hooks.ts';
 import WorldTimeWidget from './applications/hud/world-time-widget.ts';
 import {
     BaseItemSheet,
@@ -361,6 +362,10 @@ export class HooksManager {
 
         // Turn-gate + rate-limit token movement during combat (#235).
         registerMovementEnforcement();
+
+        // Per-scene gravity / weather / vacuum, its widget and its scene-control button (#604).
+        // After the WH40K control group is registered, so the button joins it.
+        registerSceneEnvironment();
 
         // Per-turn action-economy reset (Full/Half/Free/Reaction) during combat (#264).
         registerActionEconomy();

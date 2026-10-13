@@ -1,0 +1,40 @@
+{{!--
+    Vacuum hazard card (#604) — posted per subject by the GM hazard dialog.
+    States how long the subject survives unharmed (Toughness Bonus rounds, or
+    twice that in a worsening atmosphere), the per-round depressurisation damage
+    his own game line prints and what it ignores, the cold of space when he is in
+    it, and — without an oxygen source — the suffocation vacuum composes with.
+
+    Context: actor ({uuid, name}), gameSystem, toughnessBonus, gradual, vacuum
+    (VacuumOutcome), suffocationIsRounds, diesAfterTbRounds, endgameDamage,
+    appliedCondition.
+--}}
+{{#> systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs actorName=actor.name titleKey="WH40K.Hazard.Vacuum.Title" subtitle=(localize "WH40K.Hazard.Vacuum.Subtitle" tb=toughnessBonus) gameSystem=gameSystem}}
+    <p data-wh40k-hook="vacuum-exposure" class="tw-m-0 tw-mt-2 tw-text-[0.8rem] tw-italic tw-text-[var(--wh40k-card-muted)]">{{#if gradual}}{{localize "WH40K.Hazard.Vacuum.Gradual"}}{{else}}{{localize "WH40K.Hazard.Vacuum.Sudden"}}{{/if}}</p>
+    <div class="tw-flex tw-justify-between tw-items-center tw-px-[14px] tw-py-[10px] tw-my-2 tw-bg-[var(--wh40k-warning-bg)] tw-border-l-[3px] tw-border-l-[var(--wh40k-warning-primary)] tw-rounded-r-[4px]">
+        <span class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-warning-secondary)]">{{localize "WH40K.Hazard.Vacuum.SafeRounds"}}</span>
+        <span data-wh40k-hook="vacuum-safe-rounds" class="tw-text-[1.1rem] tw-font-bold tw-text-[color:var(--wh40k-text-dark)]">{{localize "WH40K.Hazard.Suffocation.Rounds" count=vacuum.safeRounds}}</span>
+    </div>
+
+    <ul class="tw-m-0 tw-my-2 tw-pl-5 tw-text-[0.85rem] tw-leading-[1.5]">
+        {{#if vacuum.failureDamage}}
+            <li data-wh40k-hook="vacuum-damage">{{localize "WH40K.Hazard.Vacuum.CumulativeTest" step=vacuum.testPenaltyStep success=vacuum.damage failure=vacuum.failureDamage}}</li>
+        {{else}}
+            <li data-wh40k-hook="vacuum-damage">{{localize "WH40K.Hazard.Vacuum.Depressurisation" formula=vacuum.damage}}</li>
+        {{/if}}
+        {{#if vacuum.cold}}
+            <li data-wh40k-hook="vacuum-cold">{{localize "WH40K.Hazard.Vacuum.Cold" formula=vacuum.cold.damage}}</li>
+        {{/if}}
+        <li>{{#if vacuum.ignoresToughnessBonus}}{{localize "WH40K.Hazard.Vacuum.IgnoresArmourAndToughness"}}{{else}}{{localize "WH40K.Hazard.Vacuum.IgnoresArmour"}}{{/if}}</li>
+        {{#if vacuum.suffocation}}
+            <li data-wh40k-hook="vacuum-suffocation">{{#if suffocationIsRounds}}{{localize "WH40K.Hazard.Vacuum.SuffocationRounds" count=vacuum.suffocation.count}}{{else}}{{localize "WH40K.Hazard.Vacuum.SuffocationMinutes" count=vacuum.suffocation.count}}{{/if}}
+                {{#if diesAfterTbRounds}}{{localize "WH40K.Hazard.Suffocation.DiesAfter" rounds=vacuum.suffocation.roundsUntilDeath}}{{else}}{{localize "WH40K.Hazard.Suffocation.DamagePerRound" formula=endgameDamage}}{{/if}}</li>
+        {{else}}
+            <li>{{localize "WH40K.Hazard.Vacuum.OxygenSource"}}</li>
+        {{/if}}
+    </ul>
+
+    {{#if appliedCondition}}
+        <p class="tw-m-0 tw-my-2 tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-danger-secondary)]">{{localize "WH40K.Condition.Tick.ConditionApplied" condition=appliedCondition}}</p>
+    {{/if}}
+{{/systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs}}

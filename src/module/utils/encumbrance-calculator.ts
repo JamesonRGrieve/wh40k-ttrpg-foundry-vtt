@@ -40,9 +40,14 @@ const ENCUMBRANCE_TABLE = [0.9, 2.25, 4.5, 9, 18, 27, 36, 45, 56, 67, 78, 90, 11
  * Items in ship storage are excluded from weight calculations.
  *
  * @param {Actor} actor - The actor to compute encumbrance for
+ * @param {(sum: number) => number} adjustBonusSum - Adjusts the S+T bonus sum before
+ *   the table lookup (the scene's gravity, #604); identity by default.
  * @returns {object} Encumbrance data with current, max, and encumbered flags
  */
-export function computeEncumbrance(actor: EncumbranceActorView): {
+export function computeEncumbrance(
+    actor: EncumbranceActorView,
+    adjustBonusSum: (sum: number) => number = (sum) => sum,
+): {
     max: number;
     value: number;
     encumbered: boolean;
@@ -83,7 +88,7 @@ export function computeEncumbrance(actor: EncumbranceActorView): {
     // Calculate max carry capacity from S+T bonus using lookup table
     const strengthBonus = Number(actor.characteristics['strength']?.bonus ?? 0);
     const toughnessBonus = Number(actor.characteristics['toughness']?.bonus ?? 0);
-    const attrBonus = Math.max(0, Math.min(strengthBonus + toughnessBonus, ENCUMBRANCE_TABLE.length - 1));
+    const attrBonus = Math.max(0, Math.min(adjustBonusSum(strengthBonus + toughnessBonus), ENCUMBRANCE_TABLE.length - 1));
     const maxWeight = (ENCUMBRANCE_TABLE[attrBonus] as number | undefined) ?? 0;
 
     // Round weights to 2 decimal places for display

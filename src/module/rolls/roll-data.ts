@@ -20,6 +20,7 @@ import {
 } from '../rules/dynamic-modifiers.ts';
 import type { AllocationStrategy, AllocationTarget } from '../rules/hit-allocation.ts';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.ts';
+import { actorEnvironmentContext, collectEnvironmentAttackModifiers, ENVIRONMENT_BUCKET, sumEnvironmentComponents } from '../rules/scene-environment.ts';
 import { AIM_STATE, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
 import { shouldSkipSelfTargetDefenderMods } from '../rules/target-situationals.ts';
 import { targetSizeModifier } from '../rules/target-size.ts';
@@ -813,6 +814,7 @@ export class WeaponRollData extends RollData {
 
         this.applyTargetConditionModifiers();
         this.updateBaseTarget();
+        this.applyEnvironmentModifiers();
 
         // Refresh the displayed aggregate target so the top number reflects
         // every active modifier on every render / form change (#382). Uses the
@@ -888,6 +890,22 @@ export class WeaponRollData extends RollData {
             ...component,
             source: i18n?.format?.('WH40K.Roll.ModifierSource.TargetCondition', { condition: component.source }) ?? component.source,
         }));
+    }
+
+    /**
+     * Path B: the scene environment's modifiers to this attack (#604) — harsh
+     * weather or unnatural conditions make a WS or BS attack test Hard (−20). Folded
+     * as ONE `environment` bucket whose sourced rows the card expands. Reads the
+     * base characteristic, so it runs after {@link updateBaseTarget}: a Knock Down
+     * (a Strength test) is not a WS / BS attack test and takes no penalty.
+     */
+    applyEnvironmentModifiers(): void {
+        const { env, line } = actorEnvironmentContext(this.sourceActor);
+        const isWeaponAttack = this.baseCharacteristicKey === 'weaponSkill' || this.baseCharacteristicKey === 'ballisticSkill';
+        const i18n = runtimeI18n();
+        const components = collectEnvironmentAttackModifiers(env, line, { isWeaponAttack }, (key) => i18n?.localize?.(key) ?? key);
+        this.modifiers[ENVIRONMENT_BUCKET] = sumEnvironmentComponents(components);
+        this.expandedBuckets[ENVIRONMENT_BUCKET] = components;
     }
 
     selectWeapon(weaponName: string): void {

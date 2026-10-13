@@ -30,3 +30,8 @@ flattenLang(enLang, '', LANG_STRINGS);
 export function localizeKey(key: string): string {
     return LANG_STRINGS.get(key) ?? key;
 }
+
+/** Resolve a key like `game.i18n.format`: the English string with its `{placeholders}` filled from `data`. */
+export function formatKey(key: string, data?: Record<string, string>): string {
+    return Object.entries(data ?? {}).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, value), localizeKey(key));
+}

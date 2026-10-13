@@ -70,4 +70,11 @@ describe('computeEncumbrance', () => {
         expect(result.max).toBe(0.9);
         expect(result.encumbered).toBe(true);
     });
+
+    it('looks the capacity up from the adjusted S+T sum (the scene gravity, #604)', () => {
+        const actor = actorView([item(1)], { strength: 3, toughness: 3 });
+        expect(computeEncumbrance(actor).max).toBe(getCarryCapacity(6));
+        expect(computeEncumbrance(actor, (sum) => sum + 4).max).toBe(getCarryCapacity(10));
+        expect(computeEncumbrance(actor, (sum) => sum - 4).max).toBe(getCarryCapacity(2));
+    });
 });

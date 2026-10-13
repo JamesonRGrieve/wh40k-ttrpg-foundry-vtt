@@ -13,6 +13,7 @@ import {
     skillRankFrom,
     splitCharacteristic,
 } from '../../rules/npc-advancement.ts';
+import { actorEnvironmentContext, environmentAgilityBonus, environmentMovementRates } from '../../rules/scene-environment.ts';
 import { computeArmour } from '../../utils/armour-calculator.ts';
 import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
@@ -1404,9 +1405,13 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     _prepareMovement(): void {
         // Respect a printed statblock movement line; only auto-derive when the NPC
         // has no authored movement (migrated from the legacy `move` string sets this).
+        // A printed line is the NPC's own stored value, so the scene's gravity is
+        // not folded into it (writing it here would persist on the next save).
         if (this.movementManual) return;
-        const ab = this.characteristics.agility.effectiveBonus;
-        const { half, full, charge, run } = computeMovement(ab, this.size, true);
+        // The scene's gravity (#604): AB shift for movement, zero gravity halves.
+        const { env, line } = actorEnvironmentContext(this.parent as Parameters<typeof actorEnvironmentContext>[0]);
+        const ab = environmentAgilityBonus(this.characteristics.agility.effectiveBonus, env, line, 'movement');
+        const { half, full, charge, run } = environmentMovementRates(computeMovement(ab, this.size, true), env, line);
         this.movement.half = half;
         this.movement.full = full;
         this.movement.charge = charge;
@@ -1420,7 +1425,10 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     _prepareInitiative(): void {
         const initChar = this.characteristics[this.initiative.characteristic];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: dynamic key access on characteristics may return undefined at runtime
-        this.initiative.bonus = initChar?.effectiveBonus ?? 0;
+        const bonus = initChar?.effectiveBonus ?? 0;
+        // Low/high gravity shifts an Agility-based Initiative where the line says so (#604).
+        const { env, line } = actorEnvironmentContext(this.parent as Parameters<typeof actorEnvironmentContext>[0]);
+        this.initiative.bonus = this.initiative.characteristic === 'agility' ? environmentAgilityBonus(bonus, env, line, 'initiative') : bonus;
     }
 
     /* -------------------------------------------- */

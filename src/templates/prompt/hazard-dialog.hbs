@@ -1,5 +1,5 @@
-{{!-- Environmental hazard dialog (#118) — GM-only. --}}
-{{!-- Resolve a fall or suffocation for the selected tokens' actors, each against its own game line. --}}
+{{!-- Environmental hazard dialog (#118, #604) — GM-only. --}}
+{{!-- Resolve a fall, suffocation or vacuum for the selected tokens' actors, each against its own game line. --}}
 <div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]">
 
     {{!-- Hazard picker --}}
@@ -26,6 +26,26 @@
             <p class="tw-m-0 tw-text-[0.75rem] tw-italic tw-text-[#9a9a8a]">{{localize "WH40K.Hazard.Falling.Hint"}}</p>
         </div>
     {{else}}
+        {{#if isVacuum}}
+            <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-3">
+                <label for="wh40k-hazard-exposure" class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
+                    {{localize "WH40K.Hazard.Vacuum.ExposureLabel"}}
+                </label>
+                <select id="wh40k-hazard-exposure" name="exposure"
+                        class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold">
+                    <option value="sudden" {{#unless exposureGradual}}selected{{/unless}}>{{localize "WH40K.Hazard.Vacuum.Sudden"}}</option>
+                    <option value="gradual" {{#if exposureGradual}}selected{{/if}}>{{localize "WH40K.Hazard.Vacuum.Gradual"}}</option>
+                </select>
+            </div>
+            <label class="tw-flex tw-items-center tw-gap-2 tw-mb-2 tw-cursor-pointer">
+                <input type="checkbox" name="inSpace" {{#if inSpace}}checked{{/if}} class="tw-w-4 tw-h-4 tw-cursor-pointer tw-accent-[var(--wh40k-color-gold)]" />
+                <span class="tw-text-[0.85rem]">{{localize "WH40K.Hazard.Vacuum.InSpaceLabel"}}</span>
+            </label>
+            <label class="tw-flex tw-items-center tw-gap-2 tw-mb-2 tw-cursor-pointer">
+                <input type="checkbox" name="oxygenSource" {{#if oxygenSource}}checked{{/if}} class="tw-w-4 tw-h-4 tw-cursor-pointer tw-accent-[var(--wh40k-color-gold)]" />
+                <span class="tw-text-[0.85rem]">{{localize "WH40K.Hazard.Vacuum.OxygenLabel"}}</span>
+            </label>
+        {{/if}}
         <label class="tw-flex tw-items-center tw-gap-2 tw-mb-4 tw-cursor-pointer">
             <input type="checkbox" name="strenuous" {{#if strenuous}}checked{{/if}} class="tw-w-4 tw-h-4 tw-cursor-pointer tw-accent-[var(--wh40k-color-gold)]" />
             <span class="tw-text-[0.85rem]">{{localize "WH40K.Hazard.Suffocation.StrenuousLabel"}}</span>
@@ -45,6 +65,8 @@
                             {{localize "WH40K.Hazard.Unsupported"}}
                         {{else if ../isFalling}}
                             {{#if this.formula}}{{this.formula}}{{else}}{{localize "WH40K.Hazard.Falling.NoDamage"}}{{/if}}
+                        {{else if ../isVacuum}}
+                            <span data-wh40k-hook="hazard-vacuum-row">{{localize "WH40K.Hazard.Vacuum.Row" rounds=this.vacuum.safeRounds formula=this.vacuum.damage}}</span>
                         {{else}}
                             {{#if (eq this.allotmentUnit "round")}}{{localize "WH40K.Hazard.Suffocation.Rounds" count=this.allotmentCount}}{{else}}{{localize "WH40K.Hazard.Suffocation.Minutes" count=this.allotmentCount}}{{/if}}
                         {{/unless}}

@@ -2,16 +2,20 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import type { GameSystemId } from '../../src/module/config/game-systems/types.ts';
 import { resolveSuffocation, SUFFOCATION_ENDGAME_DAMAGE, SUFFOCATION_FATIGUE_PER_FAILURE } from '../../src/module/rules/hazards.ts';
+import { resolveVacuum } from '../../src/module/rules/scene-environment.ts';
 import fallingSrc from '../../src/templates/chat/hazard-falling-chat.hbs?raw';
 import suffocationSrc from '../../src/templates/chat/hazard-suffocation-chat.hbs?raw';
+import vacuumSrc from '../../src/templates/chat/hazard-vacuum-chat.hbs?raw';
 import { initializeStoryHandlebars } from '../template-support';
 import { renderSheet } from '../test-helpers';
 
 /**
- * Chat cards posted by the GM environmental-hazard dialog (#118): the falling
- * card (hoverable die + fall bonus, apply button into the damage-assignment
- * path) and the suffocation card (breath allotment, per-interval test, endgame),
- * each resolved against the subject's own game line.
+ * Chat cards posted by the GM environmental-hazard dialog (#118, #604): the
+ * falling card (hoverable die + fall bonus, apply button into the
+ * damage-assignment path), the suffocation card (breath allotment,
+ * per-interval test, endgame) and the vacuum card (safe rounds,
+ * depressurisation, the cold, the suffocation it composes with), each resolved
+ * against the subject's own game line.
  */
 initializeStoryHandlebars();
 
@@ -129,6 +133,57 @@ export const SuffocationDH2: StoryObj<SuffocationArgs> = {
         await expect(view.getByText('8 rounds')).toBeTruthy();
         await expect(view.getByText(/dies after 4 rounds/)).toBeTruthy();
         await expect(view.getByText(/Suffocating applied/)).toBeTruthy();
+    },
+};
+
+interface VacuumArgs {
+    gameSystem: GameSystemId;
+    toughnessBonus: number;
+    gradual: boolean;
+    inSpace: boolean;
+    oxygenSource: boolean;
+}
+
+function vacuumContext(args: VacuumArgs): object {
+    const vacuum = resolveVacuum({ ...args, exposure: args.gradual ? 'gradual' : 'sudden', strenuous: false, line: args.gameSystem });
+    return {
+        actor: ACTOR,
+        gameSystem: args.gameSystem,
+        toughnessBonus: args.toughnessBonus,
+        gradual: args.gradual,
+        vacuum,
+        suffocationIsRounds: vacuum?.suffocation?.unit === 'round',
+        diesAfterTbRounds: vacuum?.suffocation?.endgame === 'diesAfterTbRounds',
+        endgameDamage: SUFFOCATION_ENDGAME_DAMAGE,
+        appliedCondition: args.oxygenSource ? '' : 'Suffocating',
+    };
+}
+
+/** DH2 vacuum of space (#604): TB rounds, 1d10 ignoring Armour and TB, the cold, suffocation. */
+export const VacuumDH2: StoryObj<VacuumArgs> = {
+    args: { gameSystem: 'dh2', toughnessBonus: 4, gradual: false, inSpace: true, oxygenSource: false },
+    render: (args) => renderSheet(vacuumSrc, vacuumContext(args)),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(canvasElement.querySelector('[data-wh40k-hook="vacuum-safe-rounds"]')?.textContent.trim()).toBe('4 rounds');
+        await expect(view.getByText(/1d10 Explosive damage from depressurisation/)).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="vacuum-cold"]')).not.toBeNull();
+        await expect(view.getByText('This damage ignores Armour and Toughness Bonus.')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="vacuum-suffocation"]')).not.toBeNull();
+    },
+};
+
+/** Rogue Trader, a venting voidship with a rebreather: twice TB, the cumulative test, no cold, no suffocation. */
+export const VacuumVentingRT: StoryObj<VacuumArgs> = {
+    args: { gameSystem: 'rt', toughnessBonus: 3, gradual: true, inSpace: false, oxygenSource: true },
+    render: (args) => renderSheet(vacuumSrc, vacuumContext(args)),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(canvasElement.querySelector('[data-wh40k-hook="vacuum-safe-rounds"]')?.textContent.trim()).toBe('6 rounds');
+        await expect(view.getByText(/cumulative -10; success deals 1d5 Explosive damage, failure 1d10/)).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="vacuum-cold"]')).toBeNull();
+        await expect(view.getByText('Armour does not reduce this damage.')).toBeTruthy();
+        await expect(view.getByText('An oxygen source spares the character from suffocation.')).toBeTruthy();
     },
 };
 

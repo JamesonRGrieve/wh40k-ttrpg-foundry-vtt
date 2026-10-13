@@ -22,6 +22,13 @@ import { resolveEscapePinningTest, resolvePinningTest } from '../rules/pinning.t
 import { type PortraitActorLike, rerollSpawnPortrait, togglePinnedIndex } from '../rules/portrait-spawn.ts';
 import { type RerollOption, type RerollRollContext, type RerollSpec, rerollApplies, rerollLedgerKey, rerollUseAvailable } from '../rules/reroll.ts';
 import {
+    actorEnvironmentContext,
+    collectZeroGravityManoeuvreModifiers,
+    ENVIRONMENT_BUCKET,
+    environmentAgilityBonus,
+    GRAVITY_LABEL_KEYS,
+} from '../rules/scene-environment.ts';
+import {
     type DesiredSubtletyAdjusterEffect,
     desiredSubtletyAdjusterEffects,
     type ExistingSubtletyAdjusterEffect,
@@ -60,7 +67,17 @@ type RollDataLike = Record<string, unknown> & {
      */
     skillRank?: number;
     modifiers: { modifier: number; situational?: number; [key: string]: number | undefined };
+    /** Sourced parts of a lumped modifier bucket, which the chat card expands into provenance rows. */
+    expandedBuckets: Record<string, SourcedModifierComponent[]>;
 };
+
+/** One provenance-bearing part of a modifier bucket — structurally a `RollModifierComponent`. */
+interface SourcedModifierComponent {
+    key: string;
+    label: string;
+    value: number;
+    source: string;
+}
 
 type CharacteristicLike = Record<string, unknown> & WH40KCharacteristic;
 type SkillLike = Record<string, unknown> & WH40KSkill;
@@ -1010,6 +1027,31 @@ export class WH40KBaseActor extends Actor {
     }
 
     /**
+     * Roll the Agility test a Charge or Run demands in zero gravity (#604): Hard
+     * (−20) in every line, carried as a named Environment row on the card; failure
+     * leaves the character Prone. A no-op outside a zero-gravity scene, or in a line
+     * the environment rules do not model.
+     */
+    rollZeroGravityManoeuvreTest(): void {
+        const agility = this.characteristics['agility'];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
+        if (agility === undefined) return;
+        const { env, line } = actorEnvironmentContext(this);
+        const components = collectZeroGravityManoeuvreModifiers(env, line, (key) => game.i18n.localize(key));
+        if (components.length === 0) return;
+
+        const simpleSkillData = this._buildSimpleSkillRoll({
+            key: 'agility',
+            type: 'characteristic',
+            label: t('WH40K.Environment.ZeroGravityTest'),
+            target: agility.total,
+            situationalKey: 'agility',
+            sourcedModifiers: { bucket: ENVIRONMENT_BUCKET, components },
+        });
+        openRollPrompt(simpleSkillData);
+    }
+
+    /**
      * Roll a Pinning resist test (Challenging +0 Willpower, plus an optional trigger
      * modifier from the source — e.g. Suppressing Fire). Routes through the unified
      * pipeline with `situationalKey='willpower'` so Willpower talents/traits surface
@@ -1203,6 +1245,12 @@ export class WH40KBaseActor extends Actor {
          */
         extraModifiers?: Record<string, number> | undefined;
         /**
+         * A Path B modifier bucket and its provenance-bearing parts (e.g. the scene
+         * environment's rows). The bucket sums into `rollData.modifiers` and the
+         * card expands it into one hoverable row per part. Empty parts are skipped.
+         */
+        sourcedModifiers?: { bucket: string; components: readonly SourcedModifierComponent[] } | undefined;
+        /**
          * A pre-constructed action-data instance to populate instead of a fresh
          * `SimpleSkillData` — lets a caller route a skill roll through a subclass
          * (e.g. `MedicaeActionData`) while reusing this shared setup (#432).
@@ -1236,6 +1284,12 @@ export class WH40KBaseActor extends Actor {
             for (const [key, value] of Object.entries(opts.extraModifiers)) {
                 if (value !== 0) rollData.modifiers[key] = value;
             }
+        }
+
+        if (opts.sourcedModifiers !== undefined && opts.sourcedModifiers.components.length > 0) {
+            const { bucket, components } = opts.sourcedModifiers;
+            rollData.modifiers[bucket] = components.reduce((total, component) => total + component.value, 0);
+            rollData.expandedBuckets[bucket] = [...components];
         }
 
         return simpleSkillData;
@@ -1711,6 +1765,14 @@ export class WH40KBaseActor extends Actor {
 
         // Collect modifiers from items
         this.#collectInitiativeModifiers(breakdown.modifiers);
+
+        // The scene's gravity (#604): the same shift the DataModel folds into the bonus.
+        if (agility !== undefined && initiative.characteristic === 'agility') {
+            const { env, line } = actorEnvironmentContext(this);
+            const effectiveBonus = agility.effectiveBonus ?? agility.bonus;
+            const shift = environmentAgilityBonus(effectiveBonus, env, line, 'initiative') - effectiveBonus;
+            if (shift !== 0) breakdown.modifiers.push({ source: t(GRAVITY_LABEL_KEYS[env.gravity]), value: shift, icon: 'fa-solid fa-globe' });
+        }
 
         return breakdown;
     }

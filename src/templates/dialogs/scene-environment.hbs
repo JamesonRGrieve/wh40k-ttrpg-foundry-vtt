@@ -1,0 +1,51 @@
+{{!-- Scene Environment window (#604) — GM sets the viewed scene's gravity, weather and air; the preview lists their effects. --}}
+<div class="tw-flex tw-flex-col tw-gap-3 tw-p-3">
+    <p class="tw-m-0 tw-text-[0.8rem] tw-opacity-80">{{localize "WH40K.Environment.SceneLabel" scene=sceneName}}</p>
+
+    <div class="form-group">
+        <label for="wh40k-env-gravity">{{localize "WH40K.Environment.GravityLabel"}}</label>
+        <div class="form-fields">
+            <select id="wh40k-env-gravity" name="gravity" data-wh40k-hook="env-gravity-select">
+                {{#each gravityOptions as |option|}}
+                    <option value="{{option.value}}" {{#if option.selected}}selected{{/if}}>{{option.label}}</option>
+                {{/each}}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="wh40k-env-harsh">{{localize "WH40K.Environment.WeatherLabel"}}</label>
+        <div class="form-fields">
+            <input id="wh40k-env-harsh" type="checkbox" name="harshConditions" data-wh40k-hook="env-harsh-input" {{#if harshConditions}}checked{{/if}} />
+        </div>
+        <p class="hint">{{localize "WH40K.Environment.WeatherHint"}}</p>
+    </div>
+
+    <div class="form-group">
+        <label for="wh40k-env-atmosphere">{{localize "WH40K.Environment.AtmosphereLabel"}}</label>
+        <div class="form-fields">
+            <select id="wh40k-env-atmosphere" name="atmosphere" data-wh40k-hook="env-atmosphere-select">
+                {{#each atmosphereOptions as |option|}}
+                    <option value="{{option.value}}" {{#if option.selected}}selected{{/if}}>{{option.label}}</option>
+                {{/each}}
+            </select>
+        </div>
+    </div>
+
+    <div class="tw-bg-black/20 tw-rounded-[var(--wh40k-radius-md)] tw-p-2">
+        <div class="tw-text-[0.7rem] tw-uppercase tw-tracking-wider tw-opacity-70 tw-mb-1">{{localize "WH40K.Environment.PreviewLabel" line=lineLabel}}</div>
+        {{#if unmodelled}}
+            <p data-wh40k-hook="env-unmodelled" class="tw-m-0 tw-text-[0.8rem] tw-italic tw-opacity-70">{{localize "WH40K.Environment.Effect.Unmodelled"}}</p>
+        {{else if effects.length}}
+            <ul data-wh40k-hook="env-effects" class="tw-m-0 tw-pl-4 tw-text-[0.8rem] tw-leading-[1.4]">
+                {{#each effects}}<li>{{this}}</li>{{/each}}
+            </ul>
+        {{else}}
+            <p data-wh40k-hook="env-none" class="tw-m-0 tw-text-[0.8rem] tw-italic tw-opacity-70">{{localize "WH40K.Environment.Effect.None"}}</p>
+        {{/if}}
+    </div>
+
+    <div class="tw-flex tw-justify-end">
+        <button type="button" data-action="save"><i class="fas fa-save" aria-hidden="true"></i> {{localize "WH40K.Environment.Save"}}</button>
+    </div>
+</div>

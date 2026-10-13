@@ -5,11 +5,32 @@ const dh2: HazardSubject = { uuid: 'Actor.a', name: 'A', img: '', line: 'dh2', t
 const dh1: HazardSubject = { ...dh2, uuid: 'Actor.b', line: 'dh1' };
 const im: HazardSubject = { ...dh2, uuid: 'Actor.c', line: 'im' };
 
-describe('isHazardKind (#118)', () => {
-    it('accepts the two hazards and nothing else', () => {
+describe('isHazardKind (#118, #604)', () => {
+    it('accepts the three hazards and nothing else', () => {
         expect(isHazardKind('falling')).toBe(true);
         expect(isHazardKind('suffocation')).toBe(true);
+        expect(isHazardKind('vacuum')).toBe(true);
         expect(isHazardKind('drowning')).toBe(false);
+    });
+});
+
+describe('buildHazardSubjectView — vacuum (#604)', () => {
+    const vacuum = { kind: 'vacuum', metres: 0, strenuous: false, vacuum: { exposure: 'sudden', inSpace: true, oxygenSource: false } } as const;
+
+    it('resolves the exposure against each subject’s own line', () => {
+        expect(buildHazardSubjectView(dh2, vacuum).vacuum).toMatchObject({ safeRounds: 4, damage: '1d10', ignoresToughnessBonus: true });
+        expect(buildHazardSubjectView(dh1, vacuum).vacuum).toMatchObject({ safeRounds: 4, damage: '1d10+3', ignoresToughnessBonus: false });
+        expect(buildHazardSubjectView(dh2, vacuum).formula).toBe('');
+    });
+
+    it('other hazards carry no vacuum outcome; an unmodelled line cannot resolve', () => {
+        expect(buildHazardSubjectView(dh2, { kind: 'suffocation', metres: 0, strenuous: false }).vacuum).toBeNull();
+        expect(canResolveHazard([buildHazardSubjectView(im, vacuum)], 'vacuum')).toBe(false);
+        expect(canResolveHazard([buildHazardSubjectView(im, vacuum), buildHazardSubjectView(dh2, vacuum)], 'vacuum')).toBe(true);
+    });
+
+    it('flags a strenuous request DH1 cannot honour for vacuum too', () => {
+        expect(buildHazardSubjectView(dh1, { ...vacuum, strenuous: true }).strenuousUnsupported).toBe(true);
     });
 });
 

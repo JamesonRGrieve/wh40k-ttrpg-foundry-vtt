@@ -1,6 +1,6 @@
 /**
  * @file HazardDialog — GM-only dialog that resolves an environmental hazard
- * (Falling, Suffocation) for the selected tokens' actors (#118).
+ * (Falling, Suffocation, Vacuum) for the selected tokens' actors (#118, #604).
  *
  * Each subject resolves against its OWN game line through `rules/hazards.ts`
  * (the view-model lives in `hazard-view.ts`):
@@ -12,6 +12,10 @@
  * - **Suffocation** applies the line's Suffocating condition (Path C, when the
  *   line's condition catalog declares one) and posts the breath allotment, the
  *   per-interval Toughness test and what follows once the breath runs out.
+ * - **Vacuum** posts the subject's safe rounds, the depressurisation (and, in
+ *   space, cold) damage his line prints, and — without an oxygen source — the
+ *   suffocation it composes with, applying the Suffocating condition. The
+ *   exposure defaults from the viewed scene's environment (#604).
  *
  * Opened from the WH40K scene-control group (`hooks-manager.ts`).
  */
@@ -28,6 +32,7 @@ import {
     SUFFOCATION_FATIGUE_PER_FAILURE,
 } from '../../rules/hazards.ts';
 import { DEFAULT_HIT_LOCATION, getHitLocationForRoll, hitLocationLabel } from '../../rules/hit-locations.ts';
+import { exposureForAtmosphere, readSceneEnvironment, type VacuumExposure } from '../../rules/scene-environment.ts';
 import type { WH40KBaseActorDocument } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
@@ -46,6 +51,7 @@ const { ApplicationV2 } = foundry.applications.api;
 
 const FALLING_CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/hazard-falling-chat.hbs';
 const SUFFOCATION_CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/hazard-suffocation-chat.hbs';
+const VACUUM_CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/hazard-vacuum-chat.hbs';
 
 /** Status id of the condition a suffocating subject gains (Path C). */
 const SUFFOCATING_CONDITION = 'suffocating';
@@ -56,14 +62,19 @@ const DEFAULT_FALL_METRES = 3;
 const KIND_LABEL_KEYS = {
     falling: 'WH40K.Hazard.Falling.Title',
     suffocation: 'WH40K.Hazard.Suffocation.Title',
+    vacuum: 'WH40K.Hazard.Vacuum.Title',
 } as const satisfies Record<HazardKind, string>;
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface HazardContext extends Record<string, unknown> {
     kinds: Array<{ value: HazardKind; labelKey: string; selected: boolean }>;
     isFalling: boolean;
+    isVacuum: boolean;
     metres: number;
     strenuous: boolean;
+    exposureGradual: boolean;
+    inSpace: boolean;
+    oxygenSource: boolean;
     subjects: HazardSubjectView[];
     cannotResolve: boolean;
 }
@@ -122,14 +133,38 @@ async function resolveFall(actor: WH40KBaseActorDocument, view: HazardSubjectVie
     });
 }
 
+/**
+ * Apply the line's Suffocating condition (Path C) when the line's catalog declares
+ * one and the subject lacks it; returns the applied condition's name, or `''`.
+ */
+async function applySuffocating(actor: WH40KBaseActorDocument, view: HazardSubjectView): Promise<string> {
+    const condition = conditionEffectData(SUFFOCATING_CONDITION, view.line);
+    if (condition === null || actor.statuses.has(SUFFOCATING_CONDITION)) return '';
+    const created = await createConditionEffect(actor, SUFFOCATING_CONDITION);
+    return created === null ? '' : condition.name;
+}
+
+/** Post a subject's vacuum card, applying the suffocation it composes with (#604). */
+async function resolveVacuumFor(actor: WH40KBaseActorDocument, view: HazardSubjectView, exposure: VacuumExposure): Promise<void> {
+    const vacuum = view.vacuum;
+    if (vacuum === null) return;
+    const appliedCondition = vacuum.suffocation === null ? '' : await applySuffocating(actor, view);
+    await emitChatFromTemplate(VACUUM_CHAT_TEMPLATE, {
+        actor,
+        gameSystem: view.line,
+        toughnessBonus: view.toughnessBonus,
+        gradual: exposure === 'gradual',
+        vacuum,
+        suffocationIsRounds: vacuum.suffocation?.unit === 'round',
+        diesAfterTbRounds: vacuum.suffocation?.endgame === 'diesAfterTbRounds',
+        endgameDamage: SUFFOCATION_ENDGAME_DAMAGE,
+        appliedCondition,
+    });
+}
+
 /** Apply the line's Suffocating condition (when it has one) and post the subject's card. */
 async function resolveSuffocationFor(actor: WH40KBaseActorDocument, view: HazardSubjectView): Promise<void> {
-    let appliedCondition = '';
-    const condition = conditionEffectData(SUFFOCATING_CONDITION, view.line);
-    if (condition !== null && !actor.statuses.has(SUFFOCATING_CONDITION)) {
-        const created = await createConditionEffect(actor, SUFFOCATING_CONDITION);
-        if (created !== null) appliedCondition = condition.name;
-    }
+    const appliedCondition = await applySuffocating(actor, view);
     await emitChatFromTemplate(SUFFOCATION_CHAT_TEMPLATE, {
         actor,
         gameSystem: view.line,
@@ -150,12 +185,21 @@ export default class HazardDialog extends ApplicationV2Mixin(ApplicationV2 as un
     declare kind: HazardKind;
     declare metres: number;
     declare strenuous: boolean;
+    declare exposure: VacuumExposure;
+    declare inSpace: boolean;
+    declare oxygenSource: boolean;
 
     constructor(options: ApplicationV2Config.DefaultOptions = {}) {
         super(options);
         this.kind = 'falling';
         this.metres = DEFAULT_FALL_METRES;
         this.strenuous = false;
+        // A scene set to vacuum or venting opens on the vacuum hazard with its exposure (#604).
+        const sceneExposure = exposureForAtmosphere(readSceneEnvironment(canvas.scene).atmosphere);
+        if (sceneExposure !== null) this.kind = 'vacuum';
+        this.exposure = sceneExposure?.exposure ?? 'sudden';
+        this.inSpace = sceneExposure?.inSpace ?? true;
+        this.oxygenSource = false;
     }
 
     /** @override */
@@ -192,7 +236,12 @@ export default class HazardDialog extends ApplicationV2Mixin(ApplicationV2 as un
 
     /** The selected subjects resolved against the current inputs. */
     #subjectViews(): Array<{ actor: WH40KBaseActorDocument; view: HazardSubjectView }> {
-        const input = { kind: this.kind, metres: this.metres, strenuous: this.strenuous };
+        const input = {
+            kind: this.kind,
+            metres: this.metres,
+            strenuous: this.strenuous,
+            vacuum: { exposure: this.exposure, inSpace: this.inSpace, oxygenSource: this.oxygenSource },
+        };
         return selectedActors().map((selected) => ({ actor: selected.actor, view: buildHazardSubjectView(toSubject(selected), input) }));
     }
 
@@ -204,8 +253,12 @@ export default class HazardDialog extends ApplicationV2Mixin(ApplicationV2 as un
             ...context,
             kinds: HAZARD_KINDS.map((value) => ({ value, labelKey: KIND_LABEL_KEYS[value], selected: value === this.kind })),
             isFalling: this.kind === 'falling',
+            isVacuum: this.kind === 'vacuum',
             metres: this.metres,
             strenuous: this.strenuous,
+            exposureGradual: this.exposure === 'gradual',
+            inSpace: this.inSpace,
+            oxygenSource: this.oxygenSource,
             subjects,
             cannotResolve: !canResolveHazard(subjects, this.kind),
         };
@@ -217,7 +270,12 @@ export default class HazardDialog extends ApplicationV2Mixin(ApplicationV2 as un
         if (typeof kind === 'string' && isHazardKind(kind)) this.kind = kind;
         const metres = Number(data['metres']);
         if (Number.isFinite(metres)) this.metres = Math.max(0, Math.trunc(metres));
-        if (this.kind === 'suffocation') this.strenuous = data['strenuous'] === true;
+        if (this.kind !== 'falling') this.strenuous = data['strenuous'] === true;
+        if (this.kind === 'vacuum') {
+            this.exposure = data['exposure'] === 'gradual' ? 'gradual' : 'sudden';
+            this.inSpace = data['inSpace'] === true;
+            this.oxygenSource = data['oxygenSource'] === true;
+        }
         await this.render();
     }
 
@@ -226,9 +284,16 @@ export default class HazardDialog extends ApplicationV2Mixin(ApplicationV2 as un
         for (const { actor, view } of this.#subjectViews()) {
             if (!view.supported) continue;
             // eslint-disable-next-line no-await-in-loop -- sequential: one card per subject, posted in selection order
-            await (this.kind === 'falling' ? resolveFall(actor, view, this.metres) : resolveSuffocationFor(actor, view));
+            await this.#resolveOne(actor, view);
         }
         await this.close();
+    }
+
+    /** Resolve the chosen hazard for one subject. */
+    async #resolveOne(actor: WH40KBaseActorDocument, view: HazardSubjectView): Promise<void> {
+        if (this.kind === 'falling') return resolveFall(actor, view, this.metres);
+        if (this.kind === 'vacuum') return resolveVacuumFor(actor, view, this.exposure);
+        return resolveSuffocationFor(actor, view);
     }
 
     static async #onCancel(this: HazardDialog, event: Event, _target: HTMLElement): Promise<void> {
