@@ -103,6 +103,7 @@ export default class SceneEnvironmentWidget extends HandlebarsApplicationMixin(A
             ui.notifications.info(t('WH40K.Environment.NoTokens'));
             return;
         }
-        for (const token of tokens) token.actor?.rollZeroGravityManoeuvreTest();
+        // An explicit request always rolls (and stamps the turn for the automatic prompts).
+        for (const token of tokens) void token.actor?.rollZeroGravityManoeuvreTest(false);
     }
 }

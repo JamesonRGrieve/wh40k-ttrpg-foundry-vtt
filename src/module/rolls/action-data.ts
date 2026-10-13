@@ -1186,8 +1186,9 @@ export class WeaponActionData extends ActionData {
         await super.performActionAndSendToChat();
         // A Charge declared in the attack dialog is a Charge action: in zero gravity
         // it demands the Hard (−20) Agility test, as a token's Charge move does (#604).
-        // The actor method is a no-op outside a zero-gravity scene.
-        if (isChargeAction(this.rollData.action)) this.rollData.sourceActor?.rollZeroGravityManoeuvreTest();
+        // The actor method is a no-op outside a zero-gravity scene, and skips the
+        // prompt when the Charge's test was already rolled this turn (its move mode).
+        if (isChargeAction(this.rollData.action)) await this.rollData.sourceActor?.rollZeroGravityManoeuvreTest(true);
     }
 
     /**

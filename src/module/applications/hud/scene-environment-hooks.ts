@@ -36,7 +36,7 @@ interface EnvironmentHookScene {
 /** A token document, as the move-mode trigger reads it. */
 interface EnvironmentHookToken {
     parent: Parameters<typeof readSceneEnvironment>[0];
-    actor: { rollZeroGravityManoeuvreTest: () => void } | null;
+    actor: { rollZeroGravityManoeuvreTest: (oncePerTurn: boolean) => Promise<void> } | null;
 }
 
 /** The slice of a scene / token update the hooks inspect. */
@@ -97,7 +97,8 @@ export function registerSceneEnvironment(): void {
         const mode = declaredMoveMode(changed);
         if (mode === undefined || !MANOEUVRE_MODES.has(mode)) return;
         if (readSceneEnvironment(token.parent).gravity !== 'zero') return;
-        token.actor?.rollZeroGravityManoeuvreTest();
+        // Once per turn: a Charge attack from the dialog in the same turn won't ask again.
+        void token.actor?.rollZeroGravityManoeuvreTest(true);
     });
     hooksOn('getSceneControlButtons', (controls: Record<string, foundry.applications.ui.SceneControls.Control>) => {
         // Absent only if the group's own registration was skipped; then there is nowhere to add the button.

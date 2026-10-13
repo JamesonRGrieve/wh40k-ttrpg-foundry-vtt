@@ -6,6 +6,7 @@ import {
     actorSceneEnvironment,
     collectEnvironmentAttackModifiers,
     collectZeroGravityManoeuvreModifiers,
+    currentCombatTurn,
     DEFAULT_SCENE_ENVIRONMENT,
     ENVIRONMENT_BUCKET,
     environmentAgilityBonus,
@@ -19,11 +20,13 @@ import {
     exposureForAtmosphere,
     isDefaultEnvironment,
     parseSceneEnvironment,
+    readCombatTurnStamp,
     readSceneEnvironment,
     resolveVacuum,
     SCENE_ENVIRONMENT_FLAG,
     type SceneEnvironment,
     sumEnvironmentComponents,
+    zeroGravityTestRolledThisTurn,
 } from './scene-environment.ts';
 
 const FFG_LINES: GameSystemId[] = ['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow'];
@@ -136,6 +139,36 @@ describe('gravity: carrying, jumping and movement rates (#604)', () => {
         for (const line of FFG_LINES) expect(environmentMovementRates(rates, env({ gravity: 'zero' }), line)).toEqual({ half: 2, full: 3, charge: 5, run: 9 });
         expect(environmentMovementRates(rates, env({ gravity: 'low' }), 'dh2')).toBe(rates);
         expect(environmentMovementRates(rates, env({ gravity: 'zero' }), 'im')).toBe(rates);
+    });
+});
+
+describe('one zero-gravity test per combat turn (#604)', () => {
+    const turn = { combatId: 'c1', round: 2, turn: 3 };
+
+    it('reads the current combat turn, and null out of combat', () => {
+        expect(currentCombatTurn({ id: 'c1', started: true, round: 2, turn: 3 })).toEqual(turn);
+        expect(currentCombatTurn({ id: 'c1', started: false, round: 0, turn: 0 })).toBeNull();
+        expect(currentCombatTurn({ id: 'c1', started: true, round: 1, turn: null })).toBeNull();
+        expect(currentCombatTurn(null)).toBeNull();
+    });
+
+    it('reads a stored stamp back, rejecting anything malformed', () => {
+        expect(readCombatTurnStamp(turn)).toEqual(turn);
+        expect(readCombatTurnStamp({ combatId: 'c1', round: 2 })).toBeNull();
+        expect(readCombatTurnStamp({ combatId: 1, round: 2, turn: 3 })).toBeNull();
+        expect(readCombatTurnStamp(undefined)).toBeNull();
+    });
+
+    it('is rolled only in the same combat, round and turn', () => {
+        expect(zeroGravityTestRolledThisTurn(turn, { ...turn })).toBe(true);
+        expect(zeroGravityTestRolledThisTurn(turn, { ...turn, turn: 4 })).toBe(false);
+        expect(zeroGravityTestRolledThisTurn(turn, { ...turn, round: 3 })).toBe(false);
+        expect(zeroGravityTestRolledThisTurn(turn, { ...turn, combatId: 'c2' })).toBe(false);
+    });
+
+    it('out of combat, and before any roll, every declaration rolls', () => {
+        expect(zeroGravityTestRolledThisTurn(turn, null)).toBe(false);
+        expect(zeroGravityTestRolledThisTurn(null, turn)).toBe(false);
     });
 });
 

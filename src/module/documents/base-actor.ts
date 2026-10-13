@@ -24,9 +24,13 @@ import { type RerollOption, type RerollRollContext, type RerollSpec, rerollAppli
 import {
     actorEnvironmentContext,
     collectZeroGravityManoeuvreModifiers,
+    currentCombatTurn,
     ENVIRONMENT_BUCKET,
     environmentAgilityBonus,
     GRAVITY_LABEL_KEYS,
+    readCombatTurnStamp,
+    ZERO_GRAVITY_TEST_FLAG,
+    zeroGravityTestRolledThisTurn,
 } from '../rules/scene-environment.ts';
 import {
     type DesiredSubtletyAdjusterEffect,
@@ -1031,14 +1035,25 @@ export class WH40KBaseActor extends Actor {
      * (−20) in every line, carried as a named Environment row on the card; failure
      * leaves the character Prone. A no-op outside a zero-gravity scene, or in a line
      * the environment rules do not model.
+     *
+     * A Charge is one manoeuvre and one test however it was declared. With
+     * `oncePerTurn` (the automatic prompts: a token's Charge / Run move mode, a
+     * Charge attack) the test is skipped when it was already rolled in this
+     * combat turn; the widget's explicit button passes false and always rolls.
+     * Every roll in combat stamps the turn.
+     * @param oncePerTurn  Skip the prompt when the test was already rolled this combat turn.
      */
-    rollZeroGravityManoeuvreTest(): void {
+    async rollZeroGravityManoeuvreTest(oncePerTurn: boolean): Promise<void> {
         const agility = this.characteristics['agility'];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
         if (agility === undefined) return;
         const { env, line } = actorEnvironmentContext(this);
         const components = collectZeroGravityManoeuvreModifiers(env, line, (key) => game.i18n.localize(key));
         if (components.length === 0) return;
+
+        const now = currentCombatTurn(game.combat);
+        if (oncePerTurn && zeroGravityTestRolledThisTurn(readCombatTurnStamp(this.getFlag(SYSTEM_ID, ZERO_GRAVITY_TEST_FLAG)), now)) return;
+        if (now !== null) await this.setFlag(SYSTEM_ID, ZERO_GRAVITY_TEST_FLAG, now);
 
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: 'agility',

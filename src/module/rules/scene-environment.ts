@@ -488,6 +488,61 @@ export function sumEnvironmentComponents(components: readonly EnvironmentCompone
 }
 
 /* -------------------------------------------- */
+/*  One zero-gravity test per manoeuvre         */
+/* -------------------------------------------- */
+
+/**
+ * Actor flag stamped with the combat turn the zero-gravity Charge / Run test was
+ * last rolled in. One Charge is one manoeuvre and one Agility test, however it
+ * was declared — a token's Charge move mode and a Charge attack from the attack
+ * dialog are the same action, so the second prompt in a turn is skipped.
+ */
+export const ZERO_GRAVITY_TEST_FLAG = 'zeroGravityManoeuvreRolled';
+
+/** One combatant's turn: a combat, its round, and the turn index within the round. */
+export interface CombatTurnStamp {
+    readonly combatId: string;
+    readonly round: number;
+    readonly turn: number;
+}
+
+/** The combat as the turn stamp reads it. */
+interface TurnSource {
+    readonly id: string | null;
+    readonly started: boolean;
+    readonly round: number;
+    readonly turn: number | null;
+}
+
+/** The current combat turn, or null out of combat (or before the first turn). */
+export function currentCombatTurn(combat: TurnSource | null | undefined): CombatTurnStamp | null {
+    if (combat?.id == null || !combat.started || combat.turn === null) return null;
+    return { combatId: combat.id, round: combat.round, turn: combat.turn };
+}
+
+/**
+ * A combat-turn stamp read back from an actor flag, or null.
+ * @param flag  The stored stamp.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#getFlag returns unknown; narrowed field by field below
+export function readCombatTurnStamp(flag: unknown): CombatTurnStamp | null {
+    if (typeof flag !== 'object' || flag === null) return null;
+    if (!('combatId' in flag) || !('round' in flag) || !('turn' in flag)) return null;
+    const { combatId, round, turn } = flag;
+    if (typeof combatId !== 'string' || typeof round !== 'number' || typeof turn !== 'number') return null;
+    return { combatId, round, turn };
+}
+
+/**
+ * Whether the zero-gravity test was already rolled in the current combat turn.
+ * Out of combat there is no turn to tie two declarations together, so every
+ * declaration rolls.
+ */
+export function zeroGravityTestRolledThisTurn(lastRolled: CombatTurnStamp | null, now: CombatTurnStamp | null): boolean {
+    return lastRolled !== null && now !== null && lastRolled.combatId === now.combatId && lastRolled.round === now.round && lastRolled.turn === now.turn;
+}
+
+/* -------------------------------------------- */
 /*  Vacuum                                      */
 /* -------------------------------------------- */
 

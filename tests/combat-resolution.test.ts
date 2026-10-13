@@ -381,28 +381,96 @@ describe('actor.rollWeaponAttack dispatch', () => {
 describe('a Charge declared in the attack dialog demands the zero-gravity Agility test (#604)', () => {
     beforeEach(() => installGlobals());
 
+    /** The arguments of the last attack's zero-g test requests. */
+    let chargeArgs: boolean[][] = [];
+
     /** Post an attack under `actionName` and report how often the actor's zero-g test was asked for. */
     async function postAttack(actionName: string): Promise<number> {
         const { ActionData, WeaponActionData } = await import('../src/module/rolls/action-data.ts');
         const action = new WeaponActionData();
         // The attack card itself is out of scope: stub the shared post path.
         vi.spyOn(ActionData.prototype, 'performActionAndSendToChat').mockResolvedValue();
-        const zeroGravityTest = vi.fn();
+        const zeroGravityTest = vi.fn(async (_oncePerTurn: boolean): Promise<void> => Promise.resolve());
         // `Reflect.set`: the attacker is reduced to the one method the Charge path calls.
         Reflect.set(action.rollData, 'sourceActor', { rollZeroGravityManoeuvreTest: zeroGravityTest });
         Reflect.set(action.rollData, 'weapon', { system: {} });
         action.rollData.action = actionName;
         await action.performActionAndSendToChat();
+        chargeArgs = zeroGravityTest.mock.calls;
         return zeroGravityTest.mock.calls.length;
     }
 
-    it('a Charge asks the attacker for the test (the actor decides whether the scene is in zero gravity)', async () => {
+    it('a Charge asks the attacker for the test, once per turn (the actor decides whether the scene is in zero gravity)', async () => {
         expect(await postAttack('Charge')).toBe(1);
+        expect(chargeArgs).toEqual([[true]]);
     });
 
     it('any other attack action does not', async () => {
         expect(await postAttack('Standard Attack')).toBe(0);
         expect(await postAttack('All Out Attack')).toBe(0);
+    });
+});
+
+describe('one zero-gravity Agility test per manoeuvre per combat turn (#604)', () => {
+    /** A zero-gravity DH2 actor in combat, with a recorded turn stamp, and the prompts it opened. */
+    async function zeroGravityActor(): Promise<{
+        actor: { rollZeroGravityManoeuvreTest: WH40KBaseActor['rollZeroGravityManoeuvreTest'] };
+        prompts: () => number;
+        setCombatTurn: (turn: number) => void;
+    }> {
+        installGlobals();
+        const { WH40KBaseActor } = await loadModules();
+        const { registerRollPrompts, resetRollPrompts } = await import('../src/module/rolls/roll-prompt.ts');
+        const openRoll = vi.fn();
+        resetRollPrompts();
+        registerRollPrompts({ openRoll, openDamage: vi.fn() });
+        const combat = { id: 'combat-1', started: true, round: 2, turn: 0 };
+        Reflect.set(game, 'combat', combat);
+        let flag: object | undefined;
+        // Structural stand-in: only what the zero-gravity test reads and writes.
+        const actor = {
+            type: 'dh2-character',
+            token: { parent: { getFlag: (): object => ({ gravity: 'zero' }) } },
+            characteristics: { agility: { total: 40 } },
+            getFlag: (): object | undefined => flag,
+            setFlag: async (_scope: string, _key: string, value: object): Promise<void> => {
+                flag = value;
+                return Promise.resolve();
+            },
+            _buildSimpleSkillRoll: (): object => ({}),
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- intentional: invoke the real prototype method with a structural `this`
+            rollZeroGravityManoeuvreTest: WH40KBaseActor.prototype.rollZeroGravityManoeuvreTest,
+        };
+        return {
+            actor,
+            prompts: () => openRoll.mock.calls.length,
+            setCombatTurn: (turn: number) => {
+                combat.turn = turn;
+            },
+        };
+    }
+
+    it('a Charge move mode then a Charge attack in the same turn prompts once', async () => {
+        const { actor, prompts } = await zeroGravityActor();
+        await actor.rollZeroGravityManoeuvreTest(true);
+        await actor.rollZeroGravityManoeuvreTest(true);
+        expect(prompts()).toBe(1);
+    });
+
+    it('the next turn prompts again', async () => {
+        const { actor, prompts, setCombatTurn } = await zeroGravityActor();
+        await actor.rollZeroGravityManoeuvreTest(true);
+        setCombatTurn(1);
+        await actor.rollZeroGravityManoeuvreTest(true);
+        expect(prompts()).toBe(2);
+    });
+
+    it('the widget button always rolls, and still stamps the turn for the automatic prompts', async () => {
+        const { actor, prompts } = await zeroGravityActor();
+        await actor.rollZeroGravityManoeuvreTest(false);
+        await actor.rollZeroGravityManoeuvreTest(false);
+        await actor.rollZeroGravityManoeuvreTest(true);
+        expect(prompts()).toBe(2);
     });
 });
 
