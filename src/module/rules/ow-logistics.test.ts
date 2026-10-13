@@ -1,247 +1,243 @@
 import { describe, expect, it } from 'vitest';
-import { OW_ACQUISITION_LADDER } from '../config/game-systems/ow-config.ts';
+import { OW_ACQUISITION_LADDER, OW_LOGISTICS_FRONT_CONDITIONS } from '../config/game-systems/ow-config.ts';
+import { AVAILABILITY_KEYS, type AvailabilityKey } from './acquisition-ladder.ts';
 import {
+    FRONT_TIME_KEYS,
     OW_DEFAULT_LOGISTICS_RATING,
-    OW_FRONT_ACTIVE_MOD,
     OW_MUNITORUM_INFLUENCE_BONUS,
-    OW_STANDARD_KIT_BONUS,
-    OW_TIME_IN_FRONT_MOD,
-    OW_TROOP_COUNT_MOD,
-    OW_WAR_CONDITION_MOD,
+    TROOP_COUNT_KEYS,
+    WAR_CONDITION_KEYS,
     computeLogisticsTarget,
     resolveLogisticsTest,
-    type Craftsmanship,
-    type FrontActive,
     type LogisticsContext,
-    type TimeInFront,
-    type TroopCount,
-    type WarCondition,
+    type LogisticsTarget,
+    type LogisticsTestTarget,
 } from './ow-logistics';
 
-/** Neutral baseline context: default rating, no Munitorum, no situational, all axes at the
- *  tier with the smallest absolute modifier. Lands at the unmodified rating (10). */
+/**
+ * Context whose every modifier is 0 (Common availability in the Company or
+ * Less column, 3–6 Months twice, Common craftsmanship) except War Conditions,
+ * which prints no +0 row: Violent Impasse (−10) is used and asserted.
+ */
 function baseline(overrides: Partial<LogisticsContext> = {}): LogisticsContext {
     return {
         rating: OW_DEFAULT_LOGISTICS_RATING,
         munitorum: false,
         situational: 0,
+        availability: 'common',
         troopCount: 'company',
-        timeInFront: 'weeks',
-        frontActive: 'active',
-        warCondition: 'standard',
+        timeInFront: 'months3to6',
+        frontActive: 'months3to6',
+        warCondition: 'violentImpasse',
         standardKit: false,
         craftsmanship: 'common',
         ...overrides,
     };
 }
 
+function expectTest(result: LogisticsTarget): LogisticsTestTarget {
+    if (result.kind !== 'test') throw new Error(`expected a rollable test, got ${result.kind}`);
+    return result;
+}
+
+type Cell = number | 'automatic' | 'discretion';
+
+/** OW core Table 6-2 (p. 163), "Difficulty by Number of Troops", as printed. */
+const TABLE_6_2: Readonly<Record<AvailabilityKey, readonly [Cell, Cell, Cell]>> = {
+    ubiquitous: [30, 'automatic', 'automatic'],
+    abundant: [20, 30, 'automatic'],
+    plentiful: [10, 20, 30],
+    common: [0, 10, 20],
+    average: [-10, 0, 10],
+    scarce: [-20, -10, 0],
+    rare: [-30, -20, -10],
+    veryRare: [-40, -30, -20],
+    extremelyRare: [-50, -40, -30],
+    nearUnique: [-60, -50, -40],
+    unique: ['discretion', -60, -50],
+};
+
 describe('OW Squad Logistics Rating constants', () => {
-    it('default Logistics Rating is 10', () => {
+    it('default Logistics Rating is 10 (p. 161)', () => {
         expect(OW_DEFAULT_LOGISTICS_RATING).toBe(10);
     });
 
-    it('Munitorum Influence Talent grants +5', () => {
+    it('Munitorum Influence Talent grants +5 (p. 161)', () => {
         expect(OW_MUNITORUM_INFLUENCE_BONUS).toBe(5);
     });
 
-    it('Standard kit request grants +20', () => {
-        expect(OW_STANDARD_KIT_BONUS).toBe(20);
+    it('standard kit of a deployed regiment grants +20 (p. 163)', () => {
+        expect(OW_LOGISTICS_FRONT_CONDITIONS.standardKit).toBe(20);
     });
 });
 
-describe('computeLogisticsTarget — baseline + flat bonuses', () => {
-    it('returns the bare rating when all axes are neutral', () => {
-        const { target, breakdown } = computeLogisticsTarget(baseline());
-        expect(target).toBe(10);
-        expect(breakdown.rating).toBe(10);
-        expect(breakdown.munitorum).toBe(0);
-        expect(breakdown.situational).toBe(0);
-        expect(breakdown.standardKit).toBe(0);
-        expect(breakdown.craftsmanship).toBe(0);
+describe('Table 6-2 — Difficulty by Number of Troops', () => {
+    it('prints exactly three troop columns: Company or Less, Single Regiment, Multiple Regiments', () => {
+        expect(TROOP_COUNT_KEYS).toEqual(['company', 'regiment', 'regiments']);
+        expect(Object.keys(OW_LOGISTICS_FRONT_CONDITIONS.availabilityByTroops).sort()).toEqual([...TROOP_COUNT_KEYS].sort());
     });
 
-    it('stacks Munitorum Influence (+5)', () => {
-        const { target, breakdown } = computeLogisticsTarget(baseline({ munitorum: true }));
+    it('the Company or Less column is the line ladder itself (one copy)', () => {
+        expect(OW_LOGISTICS_FRONT_CONDITIONS.availabilityByTroops.company).toBe(OW_ACQUISITION_LADDER.availability);
+    });
+
+    const cells = AVAILABILITY_KEYS.flatMap((availability) =>
+        TROOP_COUNT_KEYS.map((troopCount, column) => ({ availability, troopCount, printed: TABLE_6_2[availability][column] })),
+    );
+
+    it.each(cells)('$availability / $troopCount is stored as printed', ({ availability, troopCount, printed }) => {
+        expect(OW_LOGISTICS_FRONT_CONDITIONS.availabilityByTroops[troopCount][availability]).toBe(printed);
+    });
+
+    it.each(cells.filter((cell) => typeof cell.printed === 'number'))(
+        '$availability / $troopCount adds $printed to the test',
+        ({ availability, troopCount, printed }) => {
+            expect(expectTest(computeLogisticsTarget(baseline({ availability, troopCount }))).breakdown.availability).toBe(printed);
+        },
+    );
+
+    it.each(cells.filter((cell) => typeof cell.printed !== 'number'))(
+        '$availability / $troopCount resolves as $printed',
+        ({ availability, troopCount, printed }) => {
+            expect(computeLogisticsTarget(baseline({ availability, troopCount }))).toEqual({ kind: printed });
+        },
+    );
+
+    it('the item availability moves the target (no longer ignored)', () => {
+        const common = expectTest(computeLogisticsTarget(baseline({ rating: 50 }))).target;
+        const veryRare = expectTest(computeLogisticsTarget(baseline({ rating: 50, availability: 'veryRare' }))).target;
+        expect(common - veryRare).toBe(40);
+    });
+
+    it('an Automatic cell resolves without a roll, whatever the other modifiers', () => {
+        const ctx = baseline({ availability: 'ubiquitous', troopCount: 'regiment', craftsmanship: 'best', warCondition: 'losingBadly' });
+        expect(computeLogisticsTarget(ctx)).toEqual({ kind: 'automatic' });
+    });
+
+    it('a GM’s Discretion cell is never a rollable test', () => {
+        expect(computeLogisticsTarget(baseline({ availability: 'unique', troopCount: 'company' }))).toEqual({ kind: 'discretion' });
+    });
+});
+
+describe('Table 6-2 — front-condition rows', () => {
+    const PRINTED_TIME = [-10, 0, 10, 20, 30];
+
+    it.each(FRONT_TIME_KEYS.map((key, index) => [key, PRINTED_TIME[index]] as const))('Time Spent in Front and Front Active %s = %i', (key, expected) => {
+        expect(OW_LOGISTICS_FRONT_CONDITIONS.timeInFront[key]).toBe(expected);
+        expect(OW_LOGISTICS_FRONT_CONDITIONS.frontActive[key]).toBe(expected);
+        expect(expectTest(computeLogisticsTarget(baseline({ timeInFront: key }))).breakdown.timeInFront).toBe(expected);
+        expect(expectTest(computeLogisticsTarget(baseline({ frontActive: key }))).breakdown.frontActive).toBe(expected);
+    });
+
+    const PRINTED_WAR = [-30, -20, -10, 30, 10, 20];
+
+    it.each(WAR_CONDITION_KEYS.map((key, index) => [key, PRINTED_WAR[index]] as const))('War Conditions %s = %i', (key, expected) => {
+        expect(OW_LOGISTICS_FRONT_CONDITIONS.warCondition[key]).toBe(expected);
+        expect(expectTest(computeLogisticsTarget(baseline({ warCondition: key }))).breakdown.warCondition).toBe(expected);
+    });
+
+    it('prints every row once, in book order', () => {
+        expect(Object.keys(OW_LOGISTICS_FRONT_CONDITIONS.timeInFront)).toEqual([...FRONT_TIME_KEYS]);
+        expect(Object.keys(OW_LOGISTICS_FRONT_CONDITIONS.frontActive)).toEqual([...FRONT_TIME_KEYS]);
+        expect(Object.keys(OW_LOGISTICS_FRONT_CONDITIONS.warCondition)).toEqual([...WAR_CONDITION_KEYS]);
+    });
+});
+
+describe('computeLogisticsTarget — flat bonuses and craftsmanship', () => {
+    it('the baseline lands at the rating plus Violent Impasse (−10)', () => {
+        const { target, breakdown } = expectTest(computeLogisticsTarget(baseline({ rating: 30 })));
+        expect(breakdown).toEqual({
+            rating: 30,
+            munitorum: 0,
+            situational: 0,
+            availability: 0,
+            timeInFront: 0,
+            frontActive: 0,
+            warCondition: -10,
+            standardKit: 0,
+            craftsmanship: 0,
+        });
+        expect(target).toBe(20);
+    });
+
+    it('Munitorum, situational and standard kit stack', () => {
+        const { target, breakdown } = expectTest(computeLogisticsTarget(baseline({ rating: 30, munitorum: true, situational: -5, standardKit: true })));
         expect(breakdown.munitorum).toBe(5);
-        expect(target).toBe(15);
-    });
-
-    it('stacks GM situational adjustment (positive)', () => {
-        const { target } = computeLogisticsTarget(baseline({ situational: 5 }));
-        expect(target).toBe(15);
-    });
-
-    it('stacks GM situational adjustment (negative)', () => {
-        const { target } = computeLogisticsTarget(baseline({ situational: -5 }));
-        expect(target).toBe(5);
-    });
-
-    it('stacks Munitorum + situational + standard kit (+5 +5 +20)', () => {
-        const { target, breakdown } = computeLogisticsTarget(baseline({ munitorum: true, situational: 5, standardKit: true }));
-        expect(breakdown.munitorum).toBe(5);
-        expect(breakdown.situational).toBe(5);
+        expect(breakdown.situational).toBe(-5);
         expect(breakdown.standardKit).toBe(20);
-        expect(target).toBe(40);
+        expect(target).toBe(30 + 5 - 5 + 20 - 10);
     });
 
-    it('clamps the final target to 0 (never negative)', () => {
-        const { target } = computeLogisticsTarget(baseline({ rating: 5, craftsmanship: 'best', warCondition: 'desperate' }));
-        // 5 + 0 + 0 + 0 + 0 + 0 + (-30) + 0 + (-50) = -75 → clamped to 0
-        expect(target).toBe(0);
-    });
-});
-
-describe('computeLogisticsTarget — craftsmanship axis (Table 6-6)', () => {
-    const cases: ReadonlyArray<readonly [Craftsmanship, number]> = [
+    it.each([
         ['poor', 20],
         ['common', 0],
         ['good', -30],
         ['best', -50],
-    ];
-    it.each(cases)('%s craftsmanship contributes %d', (craftsmanship, expected) => {
-        const { breakdown, target } = computeLogisticsTarget(baseline({ craftsmanship }));
-        expect(breakdown.craftsmanship).toBe(expected);
-        expect(target).toBe(Math.max(0, 10 + expected));
+    ] as const)('Table 6-6 %s = %i (p. 167)', (craftsmanship, expected) => {
+        expect(expectTest(computeLogisticsTarget(baseline({ craftsmanship }))).breakdown.craftsmanship).toBe(expected);
     });
 
-    it('reads the craftsmanship axis from the OW acquisition ladder, its single source (#192)', () => {
-        for (const [craftsmanship] of cases) {
-            expect(computeLogisticsTarget(baseline({ craftsmanship })).breakdown.craftsmanship).toBe(OW_ACQUISITION_LADDER.craftsmanship[craftsmanship]);
-        }
+    it('clamps the target to 0', () => {
+        expect(expectTest(computeLogisticsTarget(baseline({ rating: 5, craftsmanship: 'best', warCondition: 'losingBadly' }))).target).toBe(0);
     });
 });
 
-describe('computeLogisticsTarget — troop count axis (Table 6-2 column)', () => {
-    const cases: ReadonlyArray<readonly [TroopCount, number]> = [
-        ['squad', -20],
-        ['platoon', -10],
-        ['company', 0],
-        ['regiment', 10],
-    ];
-    it.each(cases)('%s contributes %d', (troopCount, expected) => {
-        expect(OW_TROOP_COUNT_MOD[troopCount]).toBe(expected);
-        const { breakdown, target } = computeLogisticsTarget(baseline({ troopCount }));
-        expect(breakdown.troopCount).toBe(expected);
-        expect(target).toBe(Math.max(0, 10 + expected));
-    });
-});
-
-describe('computeLogisticsTarget — time-in-front axis', () => {
-    const cases: ReadonlyArray<readonly [TimeInFront, number]> = [
-        ['days', -10],
-        ['weeks', 0],
-        ['months', 10],
-        ['years', 30],
-    ];
-    it.each(cases)('%s contributes %d', (timeInFront, expected) => {
-        expect(OW_TIME_IN_FRONT_MOD[timeInFront]).toBe(expected);
-        const { breakdown, target } = computeLogisticsTarget(baseline({ timeInFront }));
-        expect(breakdown.timeInFront).toBe(expected);
-        expect(target).toBe(Math.max(0, 10 + expected));
-    });
-});
-
-describe('computeLogisticsTarget — front-active axis', () => {
-    const cases: ReadonlyArray<readonly [FrontActive, number]> = [
-        ['lull', 10],
-        ['active', 0],
-        ['major', -20],
-    ];
-    it.each(cases)('%s contributes %d', (frontActive, expected) => {
-        expect(OW_FRONT_ACTIVE_MOD[frontActive]).toBe(expected);
-        const { breakdown, target } = computeLogisticsTarget(baseline({ frontActive }));
-        expect(breakdown.frontActive).toBe(expected);
-        expect(target).toBe(Math.max(0, 10 + expected));
-    });
-});
-
-describe('computeLogisticsTarget — war-condition axis', () => {
-    const cases: ReadonlyArray<readonly [WarCondition, number]> = [
-        ['standard', 0],
-        ['hostile', -20],
-        ['desperate', -30],
-    ];
-    it.each(cases)('%s contributes %d', (warCondition, expected) => {
-        expect(OW_WAR_CONDITION_MOD[warCondition]).toBe(expected);
-        const { breakdown, target } = computeLogisticsTarget(baseline({ warCondition }));
-        expect(breakdown.warCondition).toBe(expected);
-        expect(target).toBe(Math.max(0, 10 + expected));
-    });
-});
-
-describe('computeLogisticsTarget — full worked example', () => {
-    it('matches the spirit of core.md line 7088 (Mordian plasma gun)', () => {
-        // Pick axes such that all four modifiers exercise simultaneously.
-        // squad (-20) + months (+10) + major (-20) + hostile (-20) + standardKit (+20) + Munitorum (+5) + situational (+5) + craftsmanship best (-50)
-        // = 10 + 5 + 5 + (-20) + 10 + (-20) + (-20) + 20 + (-50) = -60 → clamped 0
-        const { target, breakdown } = computeLogisticsTarget(
-            baseline({
-                munitorum: true,
-                situational: 5,
-                troopCount: 'squad',
-                timeInFront: 'months',
-                frontActive: 'major',
-                warCondition: 'hostile',
-                standardKit: true,
-                craftsmanship: 'best',
-            }),
+describe('computeLogisticsTarget — the p. 163 worked example', () => {
+    it('Very Rare plasma gun, five regiments, just deployed, century-old front, Violent Impasse, another regiment’s kit: difficulty +10', () => {
+        const { target, breakdown } = expectTest(
+            computeLogisticsTarget(
+                baseline({
+                    rating: 0,
+                    availability: 'veryRare',
+                    troopCount: 'regiments',
+                    timeInFront: 'under3Months',
+                    frontActive: 'years5plus',
+                    warCondition: 'violentImpasse',
+                    standardKit: true,
+                }),
+            ),
         );
-        expect(breakdown.troopCount).toBe(-20);
-        expect(breakdown.timeInFront).toBe(10);
-        expect(breakdown.frontActive).toBe(-20);
-        expect(breakdown.warCondition).toBe(-20);
+        expect(breakdown.availability).toBe(-20);
+        expect(breakdown.timeInFront).toBe(-10);
+        expect(breakdown.frontActive).toBe(30);
+        expect(breakdown.warCondition).toBe(-10);
         expect(breakdown.standardKit).toBe(20);
-        expect(breakdown.craftsmanship).toBe(-50);
-        expect(target).toBe(0);
+        // "−20 + −10 + 30 + −10 + 20 = Ordinary (+10)" on top of the rating.
+        expect(target).toBe(10);
     });
 });
 
 describe('resolveLogisticsTest', () => {
-    it('returns success with positive DoS when roll is well below target', () => {
-        const ctx = baseline({ rating: 40 });
-        const result = resolveLogisticsTest(ctx, 12);
+    const test40 = (): LogisticsTestTarget => expectTest(computeLogisticsTarget(baseline({ rating: 50 })));
+
+    it('returns success with DoS when the roll is well below the target', () => {
+        const result = resolveLogisticsTest(test40(), 12);
         expect(result.target).toBe(40);
         expect(result.success).toBe(true);
-        expect(result.degreesOfSuccess).toBe(2); // floor((40-12)/10) = 2
+        expect(result.degreesOfSuccess).toBe(2);
         expect(result.degreesOfFailure).toBe(0);
     });
 
-    it('returns success with 0 DoS when roll equals target (boundary)', () => {
-        const ctx = baseline({ rating: 40 });
-        const result = resolveLogisticsTest(ctx, 40);
-        expect(result.success).toBe(true);
-        expect(result.degreesOfSuccess).toBe(0);
-        expect(result.degreesOfFailure).toBe(0);
-    });
-
-    it('returns success with 0 DoS for a marginal success (target - 1)', () => {
-        const ctx = baseline({ rating: 40 });
-        const result = resolveLogisticsTest(ctx, 39);
+    it('a roll equal to the target succeeds with 0 DoS', () => {
+        const result = resolveLogisticsTest(test40(), 40);
         expect(result.success).toBe(true);
         expect(result.degreesOfSuccess).toBe(0);
     });
 
-    it('returns failure with 0 DoF for a marginal failure (target + 1)', () => {
-        const ctx = baseline({ rating: 40 });
-        const result = resolveLogisticsTest(ctx, 41);
+    it('a marginal failure has 0 DoF', () => {
+        const result = resolveLogisticsTest(test40(), 41);
         expect(result.success).toBe(false);
-        expect(result.degreesOfSuccess).toBe(0);
         expect(result.degreesOfFailure).toBe(0);
     });
 
-    it('returns failure with positive DoF when roll is well above target', () => {
-        const ctx = baseline({ rating: 40 });
-        const result = resolveLogisticsTest(ctx, 73);
+    it('returns failure with DoF when the roll is well above the target', () => {
+        const result = resolveLogisticsTest(test40(), 73);
         expect(result.success).toBe(false);
-        expect(result.degreesOfFailure).toBe(3); // floor((73-40)/10) = 3
-        expect(result.degreesOfSuccess).toBe(0);
+        expect(result.degreesOfFailure).toBe(3);
     });
 
-    it('exposes the same breakdown as computeLogisticsTarget', () => {
-        const ctx = baseline({ munitorum: true, standardKit: true, craftsmanship: 'good' });
-        const direct = computeLogisticsTarget(ctx);
-        const resolved = resolveLogisticsTest(ctx, 1);
-        expect(resolved.target).toBe(direct.target);
-        expect(resolved.breakdown).toEqual(direct.breakdown);
+    it('carries the test breakdown through', () => {
+        const test = test40();
+        expect(resolveLogisticsTest(test, 1).breakdown).toBe(test.breakdown);
     });
 });

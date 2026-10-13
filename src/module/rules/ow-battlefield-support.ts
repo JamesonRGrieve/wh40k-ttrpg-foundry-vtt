@@ -20,11 +20,11 @@
  * on the consuming DataModel; the engine never enumerates them.
  *
  * Distinct from `ow-logistics.ts`: that module composes the *baseline*
- * Logistics target from front conditions and craftsmanship; this module
- * shifts that target by an asset-specific modifier and resolves the
- * request → arrival → cooldown lifecycle. Callers compose the two by
- * passing `computeLogisticsTarget(ctx).target` in as
- * `currentLogisticsTarget`.
+ * Logistics target from availability, front conditions and craftsmanship;
+ * this module shifts that target by an asset-specific modifier and resolves
+ * the request → arrival → cooldown lifecycle. Callers compose the two by
+ * passing the `target` of a rollable (`kind: 'test'`)
+ * `computeLogisticsTarget(ctx)` result in as `currentLogisticsTarget`.
  *
  * RNG-free and actor-decoupled.
  */

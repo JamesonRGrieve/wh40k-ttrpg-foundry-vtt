@@ -1,128 +1,101 @@
 /**
- * Storybook stories for the OW Logistics Test dialog (#154).
- * Exercises the axis picker grid + craftsmanship + standard-kit toggle
- * + live target preview against fixed seed states.
+ * Storybook stories for the OW Logistics Test dialog (#154, #192).
+ * Exercises the availability + Table 6-2 front-condition pickers, craftsmanship,
+ * the standard-kit toggle and the live target preview, including the two
+ * Table 6-2 cells that print no number (Automatic, GM's Discretion).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/logistics-test-dialog.hbs?raw';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, renderSheet } from '../../../../stories/test-helpers';
-import {
-    type Craftsmanship,
-    type FrontActive,
-    type TimeInFront,
-    type TroopCount,
-    type WarCondition,
-    computeLogisticsTarget,
-} from '../../rules/ow-logistics.ts';
+import { type LogisticsContext, type LogisticsTarget, computeLogisticsTarget } from '../../rules/ow-logistics.ts';
+import { logisticsOptions } from './logistics-test-rows.ts';
 
-interface OptionRow<T extends string> {
-    id: T;
-    labelKey: string;
-    selected: boolean;
-}
+initializeStoryHandlebars();
 
-interface Args {
+type Args = ReturnType<typeof logisticsOptions> & {
     baseRating: number;
-    troopCountOptions: OptionRow<TroopCount>[];
-    timeInFrontOptions: OptionRow<TimeInFront>[];
-    frontActiveOptions: OptionRow<FrontActive>[];
-    warConditionOptions: OptionRow<WarCondition>[];
-    craftsmanshipOptions: OptionRow<Craftsmanship>[];
     standardKit: boolean;
-    computedTarget: number;
+    outcome: LogisticsTarget['kind'];
+    computedTarget: number | null;
+};
+
+/** The dialog's render context for a request, built as `_prepareContext` builds it. */
+function dialogArgs(ctx: LogisticsContext): Args {
+    const resolved = computeLogisticsTarget(ctx);
+    return {
+        ...logisticsOptions(ctx),
+        baseRating: ctx.rating,
+        standardKit: ctx.standardKit,
+        outcome: resolved.kind,
+        computedTarget: resolved.kind === 'test' ? resolved.target : null,
+    };
 }
 
-function makeTroopCountOptions(selected: TroopCount): OptionRow<TroopCount>[] {
-    return (['squad', 'platoon', 'company', 'regiment'] as const).map((id) => ({
-        id,
-        labelKey: `WH40K.OW.Logistics.TroopCount.${id.charAt(0).toUpperCase()}${id.slice(1)}`,
-        selected: id === selected,
-    }));
-}
-function makeTimeInFrontOptions(selected: TimeInFront): OptionRow<TimeInFront>[] {
-    return (['days', 'weeks', 'months', 'years'] as const).map((id) => ({
-        id,
-        labelKey: `WH40K.OW.Logistics.TimeInFront.${id.charAt(0).toUpperCase()}${id.slice(1)}`,
-        selected: id === selected,
-    }));
-}
-function makeFrontActiveOptions(selected: FrontActive): OptionRow<FrontActive>[] {
-    return (['lull', 'active', 'major'] as const).map((id) => ({
-        id,
-        labelKey: `WH40K.OW.Logistics.FrontActive.${id.charAt(0).toUpperCase()}${id.slice(1)}`,
-        selected: id === selected,
-    }));
-}
-function makeWarConditionOptions(selected: WarCondition): OptionRow<WarCondition>[] {
-    return (['standard', 'hostile', 'desperate'] as const).map((id) => ({
-        id,
-        labelKey: `WH40K.OW.Logistics.WarCondition.${id.charAt(0).toUpperCase()}${id.slice(1)}`,
-        selected: id === selected,
-    }));
-}
-function makeCraftsmanshipOptions(selected: Craftsmanship): OptionRow<Craftsmanship>[] {
-    return (['poor', 'common', 'good', 'best'] as const).map((id) => ({
-        id,
-        labelKey: `WH40K.OW.Logistics.Craftsmanship.${id.charAt(0).toUpperCase()}${id.slice(1)}`,
-        selected: id === selected,
-    }));
-}
-
-const DEFAULT_TARGET = computeLogisticsTarget({
+const DEFAULT_CONTEXT: LogisticsContext = {
     rating: 10,
     munitorum: false,
     situational: 0,
+    availability: 'common',
     troopCount: 'company',
-    timeInFront: 'weeks',
-    frontActive: 'active',
-    warCondition: 'standard',
+    timeInFront: 'months3to6',
+    frontActive: 'months3to6',
+    warCondition: 'violentImpasse',
     standardKit: false,
     craftsmanship: 'common',
-}).target;
+};
 
 const meta = {
     title: 'Prompts/LogisticsTestDialog',
     render: (args) => renderSheet(templateSrc, args),
-    args: {
-        baseRating: 10,
-        troopCountOptions: makeTroopCountOptions('company'),
-        timeInFrontOptions: makeTimeInFrontOptions('weeks'),
-        frontActiveOptions: makeFrontActiveOptions('active'),
-        warConditionOptions: makeWarConditionOptions('standard'),
-        craftsmanshipOptions: makeCraftsmanshipOptions('common'),
-        standardKit: false,
-        computedTarget: DEFAULT_TARGET,
-    },
+    args: dialogArgs(DEFAULT_CONTEXT),
 } satisfies Meta<Args>;
 export default meta;
 
 type Story = StoryObj<Args>;
 
-/** Neutral baseline — Rating 10, Company / Weeks / Active / Standard / Common. */
-export const Default: Story = {};
+/** Fresh dialog — Common item, Company or Less, 3–6 Months twice, Violent Impasse. */
+export const Default: Story = {
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelectorAll('[data-axis="availability"] button')).toHaveLength(11);
+        await expect(canvasElement.querySelectorAll('[data-axis="troopCount"] button')).toHaveLength(3);
+        await expect(canvasElement.querySelectorAll('[data-axis="warCondition"] button')).toHaveLength(6);
+        await expect(canvasElement.querySelector('[data-target-preview]')?.textContent.trim()).toBe('0');
+    },
+};
 
-/** Veteran regiment, lull on the front, Standard war, Best craftsmanship requested. */
-export const VeteranBest: Story = {
-    args: {
-        baseRating: 15,
-        troopCountOptions: makeTroopCountOptions('regiment'),
-        timeInFrontOptions: makeTimeInFrontOptions('years'),
-        frontActiveOptions: makeFrontActiveOptions('lull'),
-        warConditionOptions: makeWarConditionOptions('standard'),
-        craftsmanshipOptions: makeCraftsmanshipOptions('best'),
+/** The p. 163 worked example: Very Rare plasma gun, Multiple Regiments, another regiment's kit. */
+export const WorkedExample: Story = {
+    args: dialogArgs({
+        ...DEFAULT_CONTEXT,
+        availability: 'veryRare',
+        troopCount: 'regiments',
+        timeInFront: 'under3Months',
+        frontActive: 'years5plus',
         standardKit: true,
-        computedTarget: computeLogisticsTarget({
-            rating: 15,
-            munitorum: true,
-            situational: 5,
-            troopCount: 'regiment',
-            timeInFront: 'years',
-            frontActive: 'lull',
-            warCondition: 'standard',
-            standardKit: true,
-            craftsmanship: 'best',
-        }).target,
+    }),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-axis="availability"] [data-selected="on"]')?.getAttribute('data-value')).toBe('veryRare');
+        await expect(canvasElement.querySelector('[data-target-preview]')?.textContent.trim()).toBe('20');
+    },
+};
+
+/** Ubiquitous item with a Single Regiment deployed — Table 6-2 prints "Automatic". */
+export const Automatic: Story = {
+    args: dialogArgs({ ...DEFAULT_CONTEXT, availability: 'ubiquitous', troopCount: 'regiment' }),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-logistics-outcome]')?.getAttribute('data-logistics-outcome')).toBe('automatic');
+        await expect(canvasElement.querySelector<HTMLButtonElement>('[data-action="owRollLogistics"]')?.disabled).toBe(false);
+    },
+};
+
+/** Unique item, Company or Less — Table 6-2 prints "GM's Discretion": the roll is disabled. */
+export const GmDiscretion: Story = {
+    args: dialogArgs({ ...DEFAULT_CONTEXT, availability: 'unique' }),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-logistics-outcome]')?.getAttribute('data-logistics-outcome')).toBe('discretion');
+        await expect(canvasElement.querySelector<HTMLButtonElement>('[data-action="owRollLogistics"]')?.disabled).toBe(true);
     },
 };
 
@@ -130,7 +103,7 @@ export const VeteranBest: Story = {
 export const RollFlow: Story = {
     play: async ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
-        await expect(storyCanvas.getByText(/Logistics/)).toBeTruthy();
+        await expect(storyCanvas.getAllByText(/Logistics/).length).toBeGreaterThan(0);
         clickAction(canvasElement, 'owRollLogistics');
     },
 };

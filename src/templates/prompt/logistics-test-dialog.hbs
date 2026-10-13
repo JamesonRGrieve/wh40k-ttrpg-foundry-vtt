@@ -1,5 +1,5 @@
-{{!-- Only War Logistics Test dialog (#154). --}}
-{{!-- GM/player selects Table 6-2 axes + craftsmanship, then rolls 1d100 vs target. --}}
+{{!-- Only War Logistics Test dialog (#154, #192). --}}
+{{!-- GM/player picks the item's Availability and the Table 6-2 front conditions + craftsmanship, then rolls 1d100 vs target. --}}
 <div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="ow">
 
     <div class="tw-mb-3 tw-text-center tw-text-[0.85rem] tw-text-amber-300 tw-italic">
@@ -14,125 +14,51 @@
         <span class="tw-font-bold tw-tabular-nums tw-text-amber-100" data-base-rating>{{baseRating}}</span>
     </div>
 
-    {{!-- Axis: Troop Count --}}
-    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-3">
-        <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-amber-200">
-            {{localize "WH40K.OW.Logistics.Modifier.TroopCount"}}
-        </label>
-        <div class="tw-grid tw-grid-cols-4 tw-gap-1.5" data-axis="troopCount">
-            {{#each troopCountOptions}}
-                <button type="button"
-                        data-action="owSetAxis"
-                        data-axis="troopCount"
-                        data-value="{{this.id}}"
-                        data-selected="{{#if this.selected}}on{{else}}off{{/if}}"
-                        class="tw-px-2 tw-py-1.5 tw-text-xs tw-uppercase tw-tracking-[0.05em] tw-rounded-sm tw-border tw-cursor-pointer {{#if this.selected}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.2)] tw-text-amber-100{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-300{{/if}}">
-                    {{localize this.labelKey}}
-                </button>
-            {{/each}}
-        </div>
-    </div>
+    {{!-- Table 6-2: the item's Availability, cross-referenced with the troops deployed --}}
+    {{> systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs axis="availability" labelKey="WH40K.OW.Logistics.Modifier.Availability" options=availabilityOptions gridClass="tw-grid-cols-4"}}
+    {{> systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs axis="troopCount" labelKey="WH40K.OW.Logistics.Modifier.TroopCount" options=troopCountOptions gridClass="tw-grid-cols-3"}}
 
-    {{!-- Axis: Time in Front --}}
-    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-3">
-        <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-amber-200">
-            {{localize "WH40K.OW.Logistics.Modifier.TimeInFront"}}
-        </label>
-        <div class="tw-grid tw-grid-cols-4 tw-gap-1.5" data-axis="timeInFront">
-            {{#each timeInFrontOptions}}
-                <button type="button"
-                        data-action="owSetAxis"
-                        data-axis="timeInFront"
-                        data-value="{{this.id}}"
-                        data-selected="{{#if this.selected}}on{{else}}off{{/if}}"
-                        class="tw-px-2 tw-py-1.5 tw-text-xs tw-uppercase tw-tracking-[0.05em] tw-rounded-sm tw-border tw-cursor-pointer {{#if this.selected}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.2)] tw-text-amber-100{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-300{{/if}}">
-                    {{localize this.labelKey}}
-                </button>
-            {{/each}}
-        </div>
-    </div>
+    {{!-- Table 6-2: the three front-condition rows --}}
+    {{> systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs axis="timeInFront" labelKey="WH40K.OW.Logistics.Modifier.TimeInFront" options=timeInFrontOptions gridClass="tw-grid-cols-5"}}
+    {{> systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs axis="frontActive" labelKey="WH40K.OW.Logistics.Modifier.FrontActive" options=frontActiveOptions gridClass="tw-grid-cols-5"}}
+    {{> systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs axis="warCondition" labelKey="WH40K.OW.Logistics.Modifier.WarCondition" options=warConditionOptions gridClass="tw-grid-cols-3"}}
 
-    {{!-- Axis: Front Activity --}}
-    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-3">
-        <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-amber-200">
-            {{localize "WH40K.OW.Logistics.Modifier.FrontActive"}}
-        </label>
-        <div class="tw-grid tw-grid-cols-3 tw-gap-1.5" data-axis="frontActive">
-            {{#each frontActiveOptions}}
-                <button type="button"
-                        data-action="owSetAxis"
-                        data-axis="frontActive"
-                        data-value="{{this.id}}"
-                        data-selected="{{#if this.selected}}on{{else}}off{{/if}}"
-                        class="tw-px-2 tw-py-1.5 tw-text-xs tw-uppercase tw-tracking-[0.05em] tw-rounded-sm tw-border tw-cursor-pointer {{#if this.selected}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.2)] tw-text-amber-100{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-300{{/if}}">
-                    {{localize this.labelKey}}
-                </button>
-            {{/each}}
-        </div>
-    </div>
-
-    {{!-- Axis: War Conditions --}}
-    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-3">
-        <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-amber-200">
-            {{localize "WH40K.OW.Logistics.Modifier.WarCondition"}}
-        </label>
-        <div class="tw-grid tw-grid-cols-3 tw-gap-1.5" data-axis="warCondition">
-            {{#each warConditionOptions}}
-                <button type="button"
-                        data-action="owSetAxis"
-                        data-axis="warCondition"
-                        data-value="{{this.id}}"
-                        data-selected="{{#if this.selected}}on{{else}}off{{/if}}"
-                        class="tw-px-2 tw-py-1.5 tw-text-xs tw-uppercase tw-tracking-[0.05em] tw-rounded-sm tw-border tw-cursor-pointer {{#if this.selected}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.2)] tw-text-amber-100{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-300{{/if}}">
-                    {{localize this.labelKey}}
-                </button>
-            {{/each}}
-        </div>
-    </div>
-
-    {{!-- Craftsmanship picker --}}
-    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-3">
-        <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-amber-200">
-            {{localize "WH40K.OW.Logistics.CraftsmanshipLabel"}}
-        </label>
-        <div class="tw-grid tw-grid-cols-4 tw-gap-1.5" data-axis="craftsmanship">
-            {{#each craftsmanshipOptions}}
-                <button type="button"
-                        data-action="owSetAxis"
-                        data-axis="craftsmanship"
-                        data-value="{{this.id}}"
-                        data-selected="{{#if this.selected}}on{{else}}off{{/if}}"
-                        class="tw-px-2 tw-py-1.5 tw-text-xs tw-uppercase tw-tracking-[0.05em] tw-rounded-sm tw-border tw-cursor-pointer {{#if this.selected}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.2)] tw-text-amber-100{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-300{{/if}}">
-                    {{localize this.labelKey}}
-                </button>
-            {{/each}}
-        </div>
-    </div>
+    {{!-- Table 6-6 --}}
+    {{> systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs axis="craftsmanship" labelKey="WH40K.OW.Logistics.CraftsmanshipLabel" options=craftsmanshipOptions gridClass="tw-grid-cols-4"}}
 
     {{!-- Standard kit toggle --}}
     <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4">
         <button type="button"
                 data-action="owToggleStandardKit"
                 data-toggle-state="{{#if standardKit}}on{{else}}off{{/if}}"
+                aria-pressed="{{#if standardKit}}true{{else}}false{{/if}}"
                 class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer {{#if standardKit}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.18)] tw-text-amber-200{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-100{{/if}}">
             <span class="tw-text-sm tw-uppercase tw-tracking-[0.06em]">{{localize "WH40K.OW.Logistics.StandardKitToggle"}}</span>
             <i class="fas {{#if standardKit}}fa-check-square{{else}}fa-square{{/if}}"></i>
         </button>
     </div>
 
-    {{!-- Live target preview --}}
-    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-mb-3 tw-rounded-md tw-border tw-border-amber-500 tw-bg-[rgba(217,119,6,0.18)]">
+    {{!-- Live target preview: a number, or the cell Table 6-2 prints instead of one --}}
+    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-mb-3 tw-rounded-md tw-border tw-border-amber-500 tw-bg-[rgba(217,119,6,0.18)]" data-logistics-outcome="{{outcome}}">
         <span class="tw-text-sm tw-uppercase tw-tracking-[0.06em] tw-text-amber-100">
             {{localize "WH40K.OW.Logistics.TargetPreview"}}
         </span>
-        <span class="tw-font-bold tw-text-lg tw-tabular-nums tw-text-amber-100" data-target-preview>{{computedTarget}}</span>
+        <span class="tw-font-bold tw-text-lg tw-tabular-nums tw-text-amber-100" data-target-preview>
+            {{#if (eq outcome "automatic")}}{{localize "WH40K.OW.Logistics.Test.Automatic"}}{{else if (eq outcome "discretion")}}{{localize "WH40K.OW.Logistics.Test.Discretion"}}{{else}}{{computedTarget}}{{/if}}
+        </span>
     </div>
+    {{#if (eq outcome "automatic")}}
+        <p class="tw-m-0 tw-mb-3 tw-text-xs tw-italic tw-text-amber-300">{{localize "WH40K.OW.Logistics.Test.AutomaticNote"}}</p>
+    {{else if (eq outcome "discretion")}}
+        <p class="tw-m-0 tw-mb-3 tw-text-xs tw-italic tw-text-amber-300">{{localize "WH40K.OW.Logistics.Test.DiscretionNote"}}</p>
+    {{/if}}
 
     {{!-- Action buttons --}}
     <div class="tw-flex tw-gap-2.5 tw-mt-4 tw-pt-4 tw-border-t tw-border-[rgba(217,119,6,0.25)]">
         <button type="button"
                 data-action="owRollLogistics"
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-amber-600 tw-to-amber-900 tw-text-amber-50 tw-shadow-[0_4px_12px_rgba(217,119,6,0.35)]">
+                {{#if (eq outcome "discretion")}}disabled{{/if}}
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer disabled:tw-cursor-not-allowed disabled:tw-opacity-50 tw-bg-gradient-to-br tw-from-amber-600 tw-to-amber-900 tw-text-amber-50 tw-shadow-[0_4px_12px_rgba(217,119,6,0.35)]">
             <i class="fas fa-dice-d10"></i> {{localize "WH40K.OW.Logistics.RollButton"}}
         </button>
         <button type="button"

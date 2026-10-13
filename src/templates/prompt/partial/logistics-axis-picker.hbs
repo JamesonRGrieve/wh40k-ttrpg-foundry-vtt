@@ -1,0 +1,26 @@
+{{!-- One OW Logistics Test picker (#154, #192): a labelled button grid for a
+     Table 6-2 / 6-6 axis. Each button dispatches `owSetAxis`.
+
+     Hash params:
+       - axis       axis id written to data-axis (availability, troopCount, …)
+       - labelKey   i18n key for the group label
+       - options    [{id, labelKey, selected}]
+       - gridClass  tw-grid-cols-* utility for the button grid
+--}}
+<div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-3">
+    <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-amber-200">{{localize labelKey}}</span>
+    <div class="tw-grid {{gridClass}} tw-gap-1.5" data-axis="{{axis}}" role="radiogroup" aria-label="{{localize labelKey}}">
+        {{#each options}}
+            <button type="button"
+                    data-action="owSetAxis"
+                    data-axis="{{../axis}}"
+                    data-value="{{this.id}}"
+                    data-selected="{{#if this.selected}}on{{else}}off{{/if}}"
+                    role="radio"
+                    aria-checked="{{#if this.selected}}true{{else}}false{{/if}}"
+                    class="tw-px-2 tw-py-1.5 tw-text-xs tw-uppercase tw-tracking-[0.05em] tw-rounded-sm tw-border tw-cursor-pointer {{#if this.selected}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.2)] tw-text-amber-100{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-300{{/if}}">
+                {{localize this.labelKey}}
+            </button>
+        {{/each}}
+    </div>
+</div>

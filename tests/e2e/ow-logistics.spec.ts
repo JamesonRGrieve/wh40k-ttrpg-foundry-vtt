@@ -135,7 +135,8 @@ test.describe.serial('LogisticsTestDialog (Tier B)', () => {
         expect(result.hasTargetPreview, 'Target preview should render').toBe(true);
         expect(result.hasRollButton, 'Roll button should render').toBe(true);
         expect(result.hasCancelButton, 'Cancel button should render').toBe(true);
-        expect(result.troopCountButtons, 'expected four Troop Count buttons').toBe(4);
+        // Table 6-2 prints three troop columns: Company or Less, Single Regiment, Multiple Regiments.
+        expect(result.troopCountButtons, 'expected three Troop Count buttons').toBe(3);
 
         recordCoverage('dialog.render', 'LogisticsTestDialog');
     });

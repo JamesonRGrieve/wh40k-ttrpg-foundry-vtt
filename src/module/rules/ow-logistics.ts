@@ -1,168 +1,92 @@
 /**
- * Only War · Squad Logistics Rating + Logistics Test engine
- * (#154 — OW core.md §"THE LOGISTICS TEST", line 7064).
+ * Only War · Squad Logistics Rating + Logistics Test engine (#154, #192).
  *
- * Pure rules / math layer. The Squad Logistics Rating is the d100
- * target a Guardsman rolls under when requisitioning gear; the engine
- * composes the rating with the cumulative modifiers from
- * **Table 6-2: Availability by Front Conditions** (core.md line 7100)
- * and **Table 6-6: Craftsmanship and Logistics** (core.md line 7273).
+ * OW core p. 162, "The Logistics Test": "This is a 1d100 roll against the
+ * Squad's Logistics Rating … modified based on the item's Availability,
+ * Craftsmanship, and the conditions of the battlefield". The difficulty is the
+ * sum of Table 6-2: Availability by Front Conditions's four cumulative parts —
+ * the item's Availability cross-referenced with the number of troops deployed,
+ * Time Spent in Front, Front Active, War Conditions — plus the +20 for an item
+ * in a deployed regiment's standard kit (p. 163) and Table 6-6: Craftsmanship
+ * and Logistics (p. 167).
  *
- * Per Direction #7 this module holds only content-agnostic primitives:
- * the four front-condition axes (troop count, time in front, front
- * active, war condition), the craftsmanship axis, and the three
- * stacking bonuses (Munitorum Influence Talent, situational GM
- * adjustment, standard-kit request). It does NOT enumerate items,
- * regiments, or talents — those live in compendium documents and are
- * surfaced through structured fields on the consuming DataModel.
+ * Every printed value lives on the OW game-system config
+ * (`OW_LOGISTICS_FRONT_CONDITIONS`, `OW_ACQUISITION_LADDER`); this module holds
+ * only the composition: it names no items, regiments or talents.
  *
- * Distinct from DH2's `requisition-test.ts`: OW uses Squad Logistics
- * Rating (not Influence), Table 6-2's four cumulative front axes (not
- * a single availability tier), and OW-specific craftsmanship deltas
- * (Poor +20 / Good -30 / Best -50 vs DH2 +10 / -20 / -30).
+ * Two Table 6-2 cells carry no number. "Automatic" resolves the test as passed
+ * with no roll — the same reading every other line's ladder gives the word
+ * (`acquisition-ladder.ts`). "GM's Discretion" (Unique, Company or Less) cannot
+ * be rolled at all: the GM rules on it.
  *
  * RNG-free and actor-decoupled; no I/O, no Foundry Document reads.
  */
 
-import { OW_ACQUISITION_LADDER } from '../config/game-systems/ow-config.ts';
+import { OW_ACQUISITION_LADDER, OW_LOGISTICS_FRONT_CONDITIONS } from '../config/game-systems/ow-config.ts';
 import { degreesOfFailure, degreesOfSuccess, isD100Success } from './_dice.ts';
-import type { CraftsmanshipKey } from './acquisition-ladder.ts';
+import { type AvailabilityKey, availabilityTerm, type CraftsmanshipKey } from './acquisition-ladder.ts';
 
 /* -------------------------------------------------------------------- */
 /*  Base rating + flat bonuses                                          */
 /* -------------------------------------------------------------------- */
 
-/** Default starting Logistics Rating for a freshly-founded squad (OW core.md line 7050). */
+/** Default starting Logistics Rating for a freshly-founded squad (OW core p. 161). */
 export const OW_DEFAULT_LOGISTICS_RATING = 10;
 
-/** Munitorum Influence Talent bonus to Squad Logistics Rating (OW core.md line 6287, talent table line 5486). */
+/** Munitorum Influence Talent bonus to Squad Logistics Rating (OW core p. 161, talent p. 149). */
 export const OW_MUNITORUM_INFLUENCE_BONUS = 5;
 
-/**
- * Bonus applied when some regiment fighting in the warzone issues the
- * requested gear as standard (OW core.md line 7084).
- */
-export const OW_STANDARD_KIT_BONUS = 20;
-
 /* -------------------------------------------------------------------- */
-/*  Craftsmanship axis — Table 6-6 (core.md line 7273)                  */
+/*  Table 6-2 axes                                                      */
 /* -------------------------------------------------------------------- */
 
 export type Craftsmanship = CraftsmanshipKey;
 
-/**
- * **Table 6-6: Craftsmanship and Logistics** — OW's own values, read from the
- * line's acquisition ladder (`OW_ACQUISITION_LADDER` in `ow-config.ts`), the
- * single source for them (#192).
- */
-const OW_CRAFTSMANSHIP_MODIFIER = OW_ACQUISITION_LADDER.craftsmanship;
+/** "Difficulty by Number of Troops" column: Company or Less / Single Regiment / Multiple Regiments. */
+export type TroopCount = keyof typeof OW_LOGISTICS_FRONT_CONDITIONS.availabilityByTroops;
 
-/* -------------------------------------------------------------------- */
-/*  Front condition axes — Table 6-2 (core.md line 7100)                */
-/* -------------------------------------------------------------------- */
+/** "Time Spent in Front" row. */
+export type TimeInFront = keyof typeof OW_LOGISTICS_FRONT_CONDITIONS.timeInFront;
 
-/**
- * Number of troops deployed to the front. Table 6-2 expresses this as
- * a 2-D crosstab of Availability × Troop Count, but for the engine
- * we collapse the troop-count axis into a flat modifier and let the
- * availability portion be supplied through a separate item lookup
- * (Table 6-2 column index). The values below are chosen along the
- * "Common" availability row of Table 6-2 (core.md line 7107) so the
- * Common-craftsmanship Common-availability baseline lands at 0 for
- * Company-or-Less troop counts, then steps up by +10 per troop tier
- * — matching how the table's columns shift difficulty by one step.
- *
- * Engines that wish to add the per-availability column delta on top
- * may do so separately; this constant only encodes the troop axis.
- */
-export type TroopCount = 'squad' | 'platoon' | 'company' | 'regiment';
+/** "Front Active" row. */
+export type FrontActive = keyof typeof OW_LOGISTICS_FRONT_CONDITIONS.frontActive;
 
-/**
- * Troop-count axis modifier. Sourced from Table 6-2's column structure
- * (core.md line 7102-7114): each successive column (Company or Less →
- * Single Regiment → Multiple Regiments) raises ease by +10. We extend
- * downward for a sub-Company "Squad / Platoon" deployment (core.md
- * §"REGIMENTAL LOGISTICS" line 7030 references squad-scale Logistics
- * Rating tiers in Table 6-1 line 7072 starting at 5).
- */
-export const OW_TROOP_COUNT_MOD: Record<TroopCount, number> = {
-    /** Single squad-scale deployment — extrapolated below "Company or Less". */
-    squad: -20,
-    /** Platoon-scale deployment — extrapolated one step below "Company or Less". */
-    platoon: -10,
-    /** "Company or Less" column baseline (Table 6-2 line 7107 Common row). */
-    company: 0,
-    /** "Single Regiment" column (Table 6-2 line 7107 Ordinary +10). */
-    regiment: 10,
-};
+/** "War Conditions" row. */
+export type WarCondition = keyof typeof OW_LOGISTICS_FRONT_CONDITIONS.warCondition;
 
-/**
- * How long the squad has been deployed to the current front
- * (OW core.md line 7116-7121, "Time Spent in Front" rows of Table 6-2).
- */
-export type TimeInFront = 'days' | 'weeks' | 'months' | 'years';
+/** The troop columns, in printed order. */
+export const TROOP_COUNT_KEYS = ['company', 'regiment', 'regiments'] as const satisfies readonly TroopCount[];
 
-export const OW_TIME_IN_FRONT_MOD: Record<TimeInFront, number> = {
-    /** Less than 3 Months — Difficult (-10) — core.md line 7117. */
-    days: -10,
-    /** 3-6 Months — Challenging (+0) — core.md line 7118. */
-    weeks: 0,
-    /** 6-12 Months / 1-5 Years — Ordinary (+10) / Routine (+20). We take the
-     *  Ordinary tier as the "months" baseline — core.md line 7119. */
-    months: 10,
-    /** 5+ Years — Easy (+30) — core.md line 7121. */
-    years: 30,
-};
+/** The time rows (shared by Time Spent in Front and Front Active), in printed order. */
+export const FRONT_TIME_KEYS = ['under3Months', 'months3to6', 'months6to12', 'years1to5', 'years5plus'] as const satisfies readonly FrontActive[];
 
-/**
- * How long the front itself has been active. Table 6-2 reuses the same
- * tier structure for "Front Active" (core.md line 7122-7127). We collapse
- * the five rows into three states (lull / active / major) per the brief.
- */
-export type FrontActive = 'lull' | 'active' | 'major';
-
-export const OW_FRONT_ACTIVE_MOD: Record<FrontActive, number> = {
-    /** Front in a lull — equivalent to a long-established quiet front (Easy +30, core.md line 7121 mirror). */
-    lull: 10,
-    /** Active front — 3-6 Months tier — Challenging (+0) — core.md line 7124. */
-    active: 0,
-    /** Major front-wide engagement — newly-formed front, Less than 3 Months — Difficult (-10) — core.md line 7123. */
-    major: -20,
-};
-
-/**
- * Overall war-conditions axis (OW core.md line 7128-7134, "War Conditions"
- * rows of Table 6-2). We collapse the six published tiers into three
- * states (standard / hostile / desperate) per the brief.
- */
-export type WarCondition = 'standard' | 'hostile' | 'desperate';
-
-export const OW_WAR_CONDITION_MOD: Record<WarCondition, number> = {
-    /** Violent Impasse / Near Victorious / Ceasefire baseline — Violent Impasse Difficult (-10) is the canonical "default" cited in the worked example (core.md line 7088); we round to Challenging (+0) so a "standard" war contributes nothing on its own. */
-    standard: 0,
-    /** Faltering — Hard (-20) — core.md line 7130. */
-    hostile: -20,
-    /** Losing Badly — Very Hard (-30) — core.md line 7129. */
-    desperate: -30,
-};
+/** The War Conditions rows, in printed order. */
+export const WAR_CONDITION_KEYS = [
+    'losingBadly',
+    'faltering',
+    'violentImpasse',
+    'ceasefire',
+    'nearVictorious',
+    'dominant',
+] as const satisfies readonly WarCondition[];
 
 /* -------------------------------------------------------------------- */
 /*  Composition                                                         */
 /* -------------------------------------------------------------------- */
 
 /**
- * Inputs to the Logistics Test target calculation. All fields are
- * required — callers default omitted axes to their neutral tier
- * (`craftsmanship: 'common'`, `warCondition: 'standard'`, etc.) before
- * invoking the engine.
+ * Inputs to the Logistics Test difficulty. All fields are required — callers
+ * default omitted axes (an unrated item to `common`, etc.) before invoking.
  */
 export interface LogisticsContext {
     /** Base Squad Logistics Rating (default 10 per `OW_DEFAULT_LOGISTICS_RATING`). */
     readonly rating: number;
     /** True if any squad member has Munitorum Influence (+5 to rating). */
     readonly munitorum: boolean;
-    /** GM situational adjustment, in points (commonly ±5 per core.md line 7050-7056). */
+    /** GM situational adjustment, in points. */
     readonly situational: number;
+    /** The requested item's Availability. */
+    readonly availability: AvailabilityKey;
     readonly troopCount: TroopCount;
     readonly timeInFront: TimeInFront;
     readonly frontActive: FrontActive;
@@ -173,17 +97,14 @@ export interface LogisticsContext {
 }
 
 /**
- * Per-axis modifier values applied to compute the final target.
- *
- * Keys are stable identifiers (the breakdown is consumed by chat cards
- * and dialog summaries); each entry's display label is resolved via
- * `WH40K.OW.Logistics.Modifier.*` at the UI layer.
+ * Per-component values summed into the final target. `availability` is the
+ * Table 6-2 cell for the item's Availability in the deployed troop column.
  */
 export type LogisticsBreakdown = {
     readonly rating: number;
     readonly munitorum: number;
     readonly situational: number;
-    readonly troopCount: number;
+    readonly availability: number;
     readonly timeInFront: number;
     readonly frontActive: number;
     readonly warCondition: number;
@@ -191,42 +112,41 @@ export type LogisticsBreakdown = {
     readonly craftsmanship: number;
 };
 
-export interface LogisticsTarget {
+/** A rollable Logistics Test. */
+export interface LogisticsTestTarget {
+    readonly kind: 'test';
     /** Final d100 target — sum of every breakdown entry, clamped to 0. */
     readonly target: number;
     readonly breakdown: LogisticsBreakdown;
 }
 
+/** What a Logistics request resolves to before any dice are rolled. */
+export type LogisticsTarget = LogisticsTestTarget | { readonly kind: 'automatic' } | { readonly kind: 'discretion' };
+
 /**
- * Compute the d100 target for a Logistics Test from a fully-populated
- * context. The breakdown returned alongside the target enumerates every
- * contributing modifier so chat-card UIs can render them transparently.
+ * Compute the Logistics Test for a fully-populated context. A rollable test
+ * carries every contributing component so the dialog and chat card can show
+ * the full derivation.
  */
 export function computeLogisticsTarget(ctx: LogisticsContext): LogisticsTarget {
+    const fc = OW_LOGISTICS_FRONT_CONDITIONS;
+    const cell = availabilityTerm({ availability: fc.availabilityByTroops[ctx.troopCount], craftsmanship: null }, ctx.availability);
+    if (cell.kind !== 'modifier') return { kind: cell.kind };
+
     const breakdown: LogisticsBreakdown = {
         rating: ctx.rating,
         munitorum: ctx.munitorum ? OW_MUNITORUM_INFLUENCE_BONUS : 0,
         situational: ctx.situational,
-        troopCount: OW_TROOP_COUNT_MOD[ctx.troopCount],
-        timeInFront: OW_TIME_IN_FRONT_MOD[ctx.timeInFront],
-        frontActive: OW_FRONT_ACTIVE_MOD[ctx.frontActive],
-        warCondition: OW_WAR_CONDITION_MOD[ctx.warCondition],
-        standardKit: ctx.standardKit ? OW_STANDARD_KIT_BONUS : 0,
-        craftsmanship: OW_CRAFTSMANSHIP_MODIFIER[ctx.craftsmanship],
+        availability: cell.value,
+        timeInFront: fc.timeInFront[ctx.timeInFront],
+        frontActive: fc.frontActive[ctx.frontActive],
+        warCondition: fc.warCondition[ctx.warCondition],
+        standardKit: ctx.standardKit ? fc.standardKit : 0,
+        craftsmanship: OW_ACQUISITION_LADDER.craftsmanship[ctx.craftsmanship],
     };
 
-    const sum =
-        breakdown.rating +
-        breakdown.munitorum +
-        breakdown.situational +
-        breakdown.troopCount +
-        breakdown.timeInFront +
-        breakdown.frontActive +
-        breakdown.warCondition +
-        breakdown.standardKit +
-        breakdown.craftsmanship;
-
-    return { target: Math.max(0, sum), breakdown };
+    const sum = Object.values(breakdown).reduce((total, value) => total + value, 0);
+    return { kind: 'test', target: Math.max(0, sum), breakdown };
 }
 
 /* -------------------------------------------------------------------- */
@@ -244,22 +164,16 @@ export interface LogisticsTestResult {
 }
 
 /**
- * Resolve a Logistics Test against a context-derived target.
- *
- * Per OW d100 conventions a roll equal to the target is a success
- * (roll-under-or-equal). DoS / DoF are reported per OW core.md line
- * 7066 (each DoS is worth +10) — i.e. one degree per 10-point margin.
+ * Resolve a rolled Logistics Test. A roll equal to the target succeeds
+ * (roll-under-or-equal); degrees follow the OW "extra degrees" convention — a
+ * bare success scores 0 and each full ten of margin adds one.
  */
-export function resolveLogisticsTest(ctx: LogisticsContext, roll: number): LogisticsTestResult {
-    const { target, breakdown } = computeLogisticsTarget(ctx);
-    // OW logistics uses the "extra degrees" convention — a bare success scores 0
-    // and each full ten of margin adds one — so route through the shared
-    // primitives with `extra: true`.
+export function resolveLogisticsTest(test: LogisticsTestTarget, roll: number): LogisticsTestResult {
     return {
-        success: isD100Success(roll, target),
-        degreesOfSuccess: degreesOfSuccess(roll, target, { extra: true }),
-        degreesOfFailure: degreesOfFailure(roll, target, { extra: true }),
-        target,
-        breakdown,
+        success: isD100Success(roll, test.target),
+        degreesOfSuccess: degreesOfSuccess(roll, test.target, { extra: true }),
+        degreesOfFailure: degreesOfFailure(roll, test.target, { extra: true }),
+        target: test.target,
+        breakdown: test.breakdown,
     };
 }

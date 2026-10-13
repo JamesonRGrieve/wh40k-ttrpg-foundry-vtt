@@ -14,8 +14,9 @@ import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 /**
  * Logistics test — core Table 6-2: Availability by Front Conditions, its
  * "Company or Less" column (p. 163), and Table 6-6: Craftsmanship and
- * Logistics (p. 167). The table's Single Regiment / Multiple Regiments
- * columns (larger deployments) are not modelled by this ladder.
+ * Logistics (p. 167). The line's flat ladder (the one every cross-line
+ * consumer reads) is the smallest deployment; the larger-deployment columns
+ * of the same table are `OW_LOGISTICS_FRONT_CONDITIONS.availabilityByTroops`.
  */
 export const OW_ACQUISITION_LADDER = {
     availability: {
@@ -33,6 +34,70 @@ export const OW_ACQUISITION_LADDER = {
     },
     craftsmanship: { poor: 20, common: 0, good: -30, best: -50 },
 } as const satisfies AcquisitionLadder;
+
+/** One availability column of Table 6-2 (a printed cell per rating). */
+type AvailabilityColumn = AcquisitionLadder['availability'];
+
+/**
+ * Core Table 6-2: Availability by Front Conditions (p. 163) in full — the four
+ * cumulative parts of a Logistics Test's difficulty, plus the standard-kit
+ * bonus printed above it (p. 163). Every value was read off the page image.
+ *
+ * - `availabilityByTroops`: "Difficulty by Number of Troops", the item's
+ *   Availability cross-referenced with the deployment size. `company` is the
+ *   line ladder's own column (one copy).
+ * - `timeInFront` / `frontActive`: the two five-row time tables (identical
+ *   values, printed twice).
+ * - `warCondition`: the six War Conditions rows, in printed order.
+ */
+export const OW_LOGISTICS_FRONT_CONDITIONS = {
+    availabilityByTroops: {
+        /** "Company or Less". */
+        company: OW_ACQUISITION_LADDER.availability,
+        /** "Single Regiment". */
+        regiment: {
+            ubiquitous: 'automatic',
+            abundant: 30,
+            plentiful: 20,
+            common: 10,
+            average: 0,
+            scarce: -10,
+            rare: -20,
+            veryRare: -30,
+            extremelyRare: -40,
+            nearUnique: -50,
+            unique: -60,
+        },
+        /** "Multiple Regiments". */
+        regiments: {
+            ubiquitous: 'automatic',
+            abundant: 'automatic',
+            plentiful: 30,
+            common: 20,
+            average: 10,
+            scarce: 0,
+            rare: -10,
+            veryRare: -20,
+            extremelyRare: -30,
+            nearUnique: -40,
+            unique: -50,
+        },
+    },
+    /** "Time Spent in Front". */
+    timeInFront: { under3Months: -10, months3to6: 0, months6to12: 10, years1to5: 20, years5plus: 30 },
+    /** "Front Active". */
+    frontActive: { under3Months: -10, months3to6: 0, months6to12: 10, years1to5: 20, years5plus: 30 },
+    /** "War Conditions". */
+    warCondition: { losingBadly: -30, faltering: -20, violentImpasse: -10, ceasefire: 30, nearVictorious: 10, dominant: 20 },
+    /** "if a piece of equipment is a part of the standard kit for any regiment engaged within the warzone … +20" (p. 163). */
+    standardKit: 20,
+} as const satisfies {
+    availabilityByTroops: Readonly<Record<string, AvailabilityColumn>>;
+    timeInFront: Readonly<Record<string, number>>;
+    frontActive: Readonly<Record<string, number>>;
+    warCondition: Readonly<Record<string, number>>;
+    standardKit: number;
+};
 
 export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'ow' as const;

@@ -8067,39 +8067,50 @@
                     "Success": "Success",
                     "Failure": "Failure",
                     "DoS": "Degrees of Success",
-                    "DoF": "Degrees of Failure"
+                    "DoF": "Degrees of Failure",
+                    "Automatic": "Automatic Success",
+                    "AutomaticNote": "Table 6-2 rates this item Automatic for the troops deployed: it is obtained without a roll.",
+                    "Discretion": "GM's Discretion",
+                    "DiscretionNote": "Table 6-2 leaves this item to the GM's discretion for the troops deployed: the GM rules on the request instead of a roll."
                 },
                 "Modifier": {
                     "Munitorum": "Munitorum Influence",
                     "Situational": "Situational",
                     "StandardKit": "Standard Kit",
-                    "TroopCount": "Troop Count",
-                    "TimeInFront": "Time in Front",
+                    "Availability": "Availability",
+                    "TroopCount": "Troops Deployed",
+                    "TimeInFront": "Time Spent in Front",
                     "FrontActive": "Front Active",
                     "WarCondition": "War Conditions",
                     "Craftsmanship": "Craftsmanship"
                 },
+                "Source": {
+                    "FrontConditions": "Table 6-2: Availability by Front Conditions",
+                    "CraftsmanshipTable": "Table 6-6: Craftsmanship and Logistics",
+                    "StandardKit": "Standard kit of a regiment in the warzone",
+                    "Rating": "Squad Logistics Rating",
+                    "Row": "{table}: {row}",
+                    "AvailabilityRow": "{availability}, {troops}"
+                },
                 "TroopCount": {
-                    "Squad": "Squad",
-                    "Platoon": "Platoon",
                     "Company": "Company or Less",
-                    "Regiment": "Single Regiment"
+                    "Regiment": "Single Regiment",
+                    "Regiments": "Multiple Regiments"
                 },
-                "TimeInFront": {
-                    "Days": "Days (less than 3 months)",
-                    "Weeks": "Weeks (3-6 months)",
-                    "Months": "Months (6-12 months)",
-                    "Years": "Years (5+ years)"
-                },
-                "FrontActive": {
-                    "Lull": "Lull",
-                    "Active": "Active",
-                    "Major": "Major Offensive"
+                "FrontTime": {
+                    "Under3Months": "Less than 3 Months",
+                    "Months3to6": "3–6 Months",
+                    "Months6to12": "6–12 Months",
+                    "Years1to5": "1–5 Years",
+                    "Years5plus": "5+ Years"
                 },
                 "WarCondition": {
-                    "Standard": "Standard",
-                    "Hostile": "Hostile",
-                    "Desperate": "Desperate"
+                    "LosingBadly": "Losing Badly",
+                    "Faltering": "Faltering",
+                    "ViolentImpasse": "Violent Impasse",
+                    "Ceasefire": "Ceasefire",
+                    "NearVictorious": "Near Victorious",
+                    "Dominant": "Dominant"
                 },
                 "Craftsmanship": {
                     "Poor": "Poor",

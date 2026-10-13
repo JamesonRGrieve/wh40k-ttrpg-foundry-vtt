@@ -1,162 +1,134 @@
 /**
- * Storybook stories for the Only War Logistics Test chat card (#154).
- * Exercises three outcomes (success, failure, success with full
- * modifier stack) so review can verify the per-axis breakdown layout
+ * Storybook stories for the Only War Logistics Test chat card (#154, #192).
+ * Exercises a pass, a fail, a full modifier stack, and an item Table 6-2
+ * rates Automatic (no roll), so review can verify the per-component derivation
  * against `computeLogisticsTarget()` in `src/module/rules/ow-logistics.ts`.
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
+import { formatKey } from '../../../stories/mocks/lang-localize';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { renderSheet } from '../../../stories/test-helpers';
-import { type LogisticsBreakdown, computeLogisticsTarget, resolveLogisticsTest } from '../../module/rules/ow-logistics.ts';
+import type { LogisticsChatContext } from '../../module/applications/prompts/logistics-test-dialog.ts';
+import { logisticsRows } from '../../module/applications/prompts/logistics-test-rows.ts';
+import { type LogisticsContext, computeLogisticsTarget, resolveLogisticsTest } from '../../module/rules/ow-logistics.ts';
 import chatSrc from './ow-logistics-chat.hbs?raw';
 
 initializeStoryHandlebars();
 
-interface LogisticsChatCtx {
-    gameSystem: 'ow';
-    success: boolean;
-    roll: number;
-    target: number;
-    degreesOfSuccess: number;
-    degreesOfFailure: number;
-    breakdown: LogisticsBreakdown;
-}
-
-function renderChat(ctx: LogisticsChatCtx): HTMLElement {
+function renderChat(ctx: LogisticsChatContext): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.appendChild(renderSheet(chatSrc, { ...ctx }));
     return wrapper;
 }
 
-/** Baseline "neutral" context — Rating 10, no bonuses, all axes neutral. */
-const NEUTRAL = computeLogisticsTarget({
+/** Card context for a rolled test, built exactly as the dialog builds it. */
+function rolledCard(ctx: LogisticsContext, roll: number): LogisticsChatContext {
+    const test = computeLogisticsTarget(ctx);
+    if (test.kind !== 'test') throw new Error(`story context must be rollable, got ${test.kind}`);
+    const result = resolveLogisticsTest(test, roll);
+    return {
+        gameSystem: 'ow',
+        automatic: false,
+        success: result.success,
+        roll,
+        target: result.target,
+        degreesOfSuccess: result.degreesOfSuccess,
+        degreesOfFailure: result.degreesOfFailure,
+        rows: logisticsRows(ctx, result.breakdown, formatKey),
+    };
+}
+
+/** The p. 163 worked example: Very Rare plasma gun, five regiments deployed. */
+const WORKED_EXAMPLE: LogisticsContext = {
     rating: 10,
     munitorum: false,
     situational: 0,
-    troopCount: 'company',
-    timeInFront: 'weeks',
-    frontActive: 'active',
-    warCondition: 'standard',
-    standardKit: false,
-    craftsmanship: 'common',
-});
-
-const NEUTRAL_RESULT = resolveLogisticsTest(
-    {
-        rating: 10,
-        munitorum: false,
-        situational: 0,
-        troopCount: 'company',
-        timeInFront: 'weeks',
-        frontActive: 'active',
-        warCondition: 'standard',
-        standardKit: false,
-        craftsmanship: 'common',
-    },
-    7,
-);
-
-/** Full-stack context exercising every breakdown row. */
-const STACKED = computeLogisticsTarget({
-    rating: 15,
-    munitorum: true,
-    situational: 5,
-    troopCount: 'regiment',
-    timeInFront: 'years',
-    frontActive: 'lull',
-    warCondition: 'standard',
+    availability: 'veryRare',
+    troopCount: 'regiments',
+    timeInFront: 'under3Months',
+    frontActive: 'years5plus',
+    warCondition: 'violentImpasse',
     standardKit: true,
-    craftsmanship: 'best',
-});
+    craftsmanship: 'common',
+};
 
-const STACKED_RESULT = resolveLogisticsTest(
-    {
-        rating: 15,
-        munitorum: true,
-        situational: 5,
-        troopCount: 'regiment',
-        timeInFront: 'years',
-        frontActive: 'lull',
-        warCondition: 'standard',
-        standardKit: true,
-        craftsmanship: 'best',
-    },
-    25,
-);
-
-/** Hard-failure context — desperate war, brand-new front, Good craftsmanship. */
-const FAIL = computeLogisticsTarget({
-    rating: 8,
-    munitorum: false,
-    situational: -5,
-    troopCount: 'squad',
-    timeInFront: 'days',
-    frontActive: 'major',
-    warCondition: 'desperate',
-    standardKit: false,
-    craftsmanship: 'good',
-});
-
-const FAIL_RESULT = resolveLogisticsTest(
-    {
-        rating: 8,
-        munitorum: false,
-        situational: -5,
-        troopCount: 'squad',
-        timeInFront: 'days',
-        frontActive: 'major',
-        warCondition: 'desperate',
-        standardKit: false,
-        craftsmanship: 'good',
-    },
-    72,
-);
-
-const meta: Meta<LogisticsChatCtx> = {
+const meta: Meta<LogisticsChatContext> = {
     title: 'Chat/OwLogisticsCard',
+    render: (args) => renderChat(args),
 };
 export default meta;
-type Story = StoryObj<LogisticsChatCtx>;
+type Story = StoryObj<LogisticsChatContext>;
 
 export const Success: Story = {
-    name: 'Success — neutral context, marginal pass',
-    args: {
-        gameSystem: 'ow',
-        success: NEUTRAL_RESULT.success,
-        roll: 7,
-        target: NEUTRAL.target,
-        degreesOfSuccess: NEUTRAL_RESULT.degreesOfSuccess,
-        degreesOfFailure: NEUTRAL_RESULT.degreesOfFailure,
-        breakdown: NEUTRAL.breakdown,
+    name: 'Success — the p. 163 worked example',
+    args: rolledCard(WORKED_EXAMPLE, 7),
+    play: async ({ canvasElement }) => {
+        const rows = canvasElement.querySelectorAll('[data-wh40k-tooltip="modifier"]');
+        // rating, availability, time in front, front active, war conditions, standard kit, craftsmanship
+        await expect(rows.length).toBe(7);
+        const availability = canvasElement.querySelector('[data-logistics-row="availability"]');
+        await expect(availability?.textContent).toContain('-20');
+        await expect(availability?.getAttribute('data-wh40k-tooltip-data')).toContain('Multiple Regiments');
     },
-    render: (args) => renderChat(args),
 };
 
 export const FullStack: Story = {
     name: 'Success — Munitorum + situational + standard kit + Best craft',
-    args: {
-        gameSystem: 'ow',
-        success: STACKED_RESULT.success,
-        roll: 25,
-        target: STACKED.target,
-        degreesOfSuccess: STACKED_RESULT.degreesOfSuccess,
-        degreesOfFailure: STACKED_RESULT.degreesOfFailure,
-        breakdown: STACKED.breakdown,
-    },
-    render: (args) => renderChat(args),
+    args: rolledCard(
+        {
+            rating: 40,
+            munitorum: true,
+            situational: 5,
+            availability: 'scarce',
+            troopCount: 'regiment',
+            timeInFront: 'years5plus',
+            frontActive: 'years1to5',
+            warCondition: 'dominant',
+            standardKit: true,
+            craftsmanship: 'best',
+        },
+        25,
+    ),
 };
 
 export const Failure: Story = {
-    name: 'Failure — desperate war, brand-new front',
+    name: 'Failure — losing badly on a new front',
+    args: rolledCard(
+        {
+            rating: 10,
+            munitorum: false,
+            situational: -5,
+            availability: 'rare',
+            troopCount: 'company',
+            timeInFront: 'under3Months',
+            frontActive: 'under3Months',
+            warCondition: 'losingBadly',
+            standardKit: false,
+            craftsmanship: 'good',
+        },
+        72,
+    ),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-logistics-outcome]')?.getAttribute('data-logistics-outcome')).toBe('failure');
+    },
+};
+
+export const Automatic: Story = {
+    name: 'Automatic — Ubiquitous item, Single Regiment deployed',
     args: {
         gameSystem: 'ow',
-        success: FAIL_RESULT.success,
-        roll: 72,
-        target: FAIL.target,
-        degreesOfSuccess: FAIL_RESULT.degreesOfSuccess,
-        degreesOfFailure: FAIL_RESULT.degreesOfFailure,
-        breakdown: FAIL.breakdown,
+        automatic: true,
+        success: true,
+        roll: null,
+        target: null,
+        degreesOfSuccess: 0,
+        degreesOfFailure: 0,
+        rows: [],
     },
-    render: (args) => renderChat(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-logistics-outcome]')?.getAttribute('data-logistics-outcome')).toBe('automatic');
+        await expect(canvasElement.querySelectorAll('[data-wh40k-tooltip="modifier"]').length).toBe(0);
+    },
 };

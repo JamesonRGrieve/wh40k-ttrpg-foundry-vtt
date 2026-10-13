@@ -1,36 +1,41 @@
 /**
- * @file LogisticsTestDialog — OW Squad Logistics Test dialog (#154).
+ * @file LogisticsTestDialog — OW Squad Logistics Test dialog (#154, #192).
  *
- * The player / GM picks the Table 6-2 axis values (troop count, time
- * in front, front activity, war condition), toggles the standard-kit
- * bonus, picks craftsmanship, then clicks Roll. The dialog calls
- * `resolveLogisticsTest(...)` against a 1d100, emits the chat card, and
- * closes.
+ * The player / GM picks the requested item's Availability and the Table 6-2
+ * front conditions (troops deployed, time spent in front, front active, war
+ * conditions), toggles the standard-kit bonus, picks craftsmanship, then
+ * rolls. An item Table 6-2 rates "Automatic" for the deployed troops is
+ * obtained with no roll; a "GM's Discretion" cell cannot be rolled.
  *
- * Pure UI shell over `src/module/rules/ow-logistics.ts` — the dialog
- * holds no rules logic of its own beyond marshalling the actor's
- * persisted Logistics state (`logisticsRating`, `munitorum`,
- * `situational`) into the engine context.
+ * Pure UI shell over `src/module/rules/ow-logistics.ts` — the dialog holds no
+ * rules logic beyond marshalling the actor's persisted Logistics state
+ * (`logisticsRating`, `munitorum`, `situational`) into the engine context.
  *
- * OW-gated: opened only from the OW Logistics panel. The other six
- * game systems neither see nor invoke this dialog.
+ * OW-gated: opened only from the OW Logistics panel. The other game systems
+ * neither see nor invoke this dialog.
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { t } from '../../i18n/t.ts';
+import { type AvailabilityKey, normaliseAvailability, normaliseCraftsmanship } from '../../rules/acquisition-ladder.ts';
 import {
-    OW_DEFAULT_LOGISTICS_RATING,
     type Craftsmanship,
+    computeLogisticsTarget,
+    FRONT_TIME_KEYS,
     type FrontActive,
     type LogisticsContext,
-    type LogisticsTestResult,
-    type TimeInFront,
-    type TroopCount,
-    type WarCondition,
-    computeLogisticsTarget,
+    type LogisticsTarget,
+    OW_DEFAULT_LOGISTICS_RATING,
     resolveLogisticsTest,
+    type TimeInFront,
+    TROOP_COUNT_KEYS,
+    type TroopCount,
+    WAR_CONDITION_KEYS,
+    type WarCondition,
 } from '../../rules/ow-logistics.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import { type LogisticsRow, logisticsOptions, logisticsRows } from './logistics-test-rows.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -40,70 +45,41 @@ interface LogisticsActorSlot {
     readonly situational: number;
 }
 
-interface OptionRow<T extends string> {
-    readonly id: T;
-    readonly labelKey: string;
-    readonly selected: boolean;
-}
-
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface LogisticsContextRow extends Record<string, unknown> {
     readonly baseRating: number;
-    readonly troopCountOptions: ReadonlyArray<OptionRow<TroopCount>>;
-    readonly timeInFrontOptions: ReadonlyArray<OptionRow<TimeInFront>>;
-    readonly frontActiveOptions: ReadonlyArray<OptionRow<FrontActive>>;
-    readonly warConditionOptions: ReadonlyArray<OptionRow<WarCondition>>;
-    readonly craftsmanshipOptions: ReadonlyArray<OptionRow<Craftsmanship>>;
     readonly standardKit: boolean;
-    readonly computedTarget: number;
+    /** `test` | `automatic` | `discretion` — what the request resolves to. */
+    readonly outcome: LogisticsTarget['kind'];
+    readonly computedTarget: number | null;
 }
 
-const TROOP_COUNT_LABELS: Record<TroopCount, string> = {
-    squad: 'WH40K.OW.Logistics.TroopCount.Squad',
-    platoon: 'WH40K.OW.Logistics.TroopCount.Platoon',
-    company: 'WH40K.OW.Logistics.TroopCount.Company',
-    regiment: 'WH40K.OW.Logistics.TroopCount.Regiment',
+/** The chat card's render context. */
+export type LogisticsChatContext = {
+    readonly gameSystem: 'ow';
+    readonly automatic: boolean;
+    readonly success: boolean;
+    readonly roll: number | null;
+    readonly target: number | null;
+    readonly degreesOfSuccess: number;
+    readonly degreesOfFailure: number;
+    readonly rows: readonly LogisticsRow[];
 };
 
-const TIME_IN_FRONT_LABELS: Record<TimeInFront, string> = {
-    days: 'WH40K.OW.Logistics.TimeInFront.Days',
-    weeks: 'WH40K.OW.Logistics.TimeInFront.Weeks',
-    months: 'WH40K.OW.Logistics.TimeInFront.Months',
-    years: 'WH40K.OW.Logistics.TimeInFront.Years',
-};
+type Axis = 'availability' | 'troopCount' | 'timeInFront' | 'frontActive' | 'warCondition' | 'craftsmanship';
 
-const FRONT_ACTIVE_LABELS: Record<FrontActive, string> = {
-    lull: 'WH40K.OW.Logistics.FrontActive.Lull',
-    active: 'WH40K.OW.Logistics.FrontActive.Active',
-    major: 'WH40K.OW.Logistics.FrontActive.Major',
-};
+const AXES: readonly Axis[] = ['availability', 'troopCount', 'timeInFront', 'frontActive', 'warCondition', 'craftsmanship'];
 
-const WAR_CONDITION_LABELS: Record<WarCondition, string> = {
-    standard: 'WH40K.OW.Logistics.WarCondition.Standard',
-    hostile: 'WH40K.OW.Logistics.WarCondition.Hostile',
-    desperate: 'WH40K.OW.Logistics.WarCondition.Desperate',
-};
-
-const CRAFTSMANSHIP_LABELS: Record<Craftsmanship, string> = {
-    poor: 'WH40K.OW.Logistics.Craftsmanship.Poor',
-    common: 'WH40K.OW.Logistics.Craftsmanship.Common',
-    good: 'WH40K.OW.Logistics.Craftsmanship.Good',
-    best: 'WH40K.OW.Logistics.Craftsmanship.Best',
-};
-
-const TROOP_COUNT_IDS: ReadonlyArray<TroopCount> = ['squad', 'platoon', 'company', 'regiment'];
-const TIME_IN_FRONT_IDS: ReadonlyArray<TimeInFront> = ['days', 'weeks', 'months', 'years'];
-const FRONT_ACTIVE_IDS: ReadonlyArray<FrontActive> = ['lull', 'active', 'major'];
-const WAR_CONDITION_IDS: ReadonlyArray<WarCondition> = ['standard', 'hostile', 'desperate'];
-const CRAFTSMANSHIP_IDS: ReadonlyArray<Craftsmanship> = ['poor', 'common', 'good', 'best'];
-
-type Axis = 'troopCount' | 'timeInFront' | 'frontActive' | 'warCondition' | 'craftsmanship';
+function oneOf<T extends string>(values: readonly T[], value: string): value is T {
+    return (values as readonly string[]).includes(value);
+}
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
 export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     declare baseRating: number;
     declare munitorum: boolean;
     declare situational: number;
+    declare availability: AvailabilityKey;
     declare troopCount: TroopCount;
     declare timeInFront: TimeInFront;
     declare frontActive: FrontActive;
@@ -119,11 +95,12 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
             baseRating?: number;
             munitorum?: boolean;
             situational?: number;
+            availability?: AvailabilityKey;
+            craftsmanship?: Craftsmanship;
             troopCount?: TroopCount;
             timeInFront?: TimeInFront;
             frontActive?: FrontActive;
             warCondition?: WarCondition;
-            craftsmanship?: Craftsmanship;
             standardKit?: boolean;
         } = {},
     ) {
@@ -133,11 +110,12 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
         this.baseRating = options.baseRating ?? seed?.logisticsRating ?? OW_DEFAULT_LOGISTICS_RATING;
         this.munitorum = options.munitorum ?? seed?.munitorum ?? false;
         this.situational = Math.trunc(options.situational ?? seed?.situational ?? 0);
-        this.troopCount = options.troopCount ?? 'company';
-        this.timeInFront = options.timeInFront ?? 'weeks';
-        this.frontActive = options.frontActive ?? 'active';
-        this.warCondition = options.warCondition ?? 'standard';
+        this.availability = options.availability ?? 'common';
         this.craftsmanship = options.craftsmanship ?? 'common';
+        this.troopCount = options.troopCount ?? 'company';
+        this.timeInFront = options.timeInFront ?? 'months3to6';
+        this.frontActive = options.frontActive ?? 'months3to6';
+        this.warCondition = options.warCondition ?? 'violentImpasse';
         this.standardKit = options.standardKit === true;
     }
 
@@ -155,7 +133,7 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
             // eslint-disable-next-line @typescript-eslint/unbound-method
             owCancelLogistics: LogisticsTestDialog.#onCancel,
         },
-        position: { width: 540 },
+        position: { width: 600 },
         window: {
             title: 'WH40K.OW.Logistics.Test.Title',
             resizable: false,
@@ -175,37 +153,14 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<LogisticsContextRow> {
         const baseCtx = (await super._prepareContext(options)) as LogisticsContextRow;
         const ctx = this.#buildContext();
-        const { target } = computeLogisticsTarget(ctx);
+        const resolved = computeLogisticsTarget(ctx);
         return {
             ...baseCtx,
+            ...logisticsOptions(ctx),
             baseRating: this.baseRating,
-            troopCountOptions: TROOP_COUNT_IDS.map((id) => ({
-                id,
-                labelKey: TROOP_COUNT_LABELS[id],
-                selected: id === this.troopCount,
-            })),
-            timeInFrontOptions: TIME_IN_FRONT_IDS.map((id) => ({
-                id,
-                labelKey: TIME_IN_FRONT_LABELS[id],
-                selected: id === this.timeInFront,
-            })),
-            frontActiveOptions: FRONT_ACTIVE_IDS.map((id) => ({
-                id,
-                labelKey: FRONT_ACTIVE_LABELS[id],
-                selected: id === this.frontActive,
-            })),
-            warConditionOptions: WAR_CONDITION_IDS.map((id) => ({
-                id,
-                labelKey: WAR_CONDITION_LABELS[id],
-                selected: id === this.warCondition,
-            })),
-            craftsmanshipOptions: CRAFTSMANSHIP_IDS.map((id) => ({
-                id,
-                labelKey: CRAFTSMANSHIP_LABELS[id],
-                selected: id === this.craftsmanship,
-            })),
             standardKit: this.standardKit,
-            computedTarget: target,
+            outcome: resolved.kind,
+            computedTarget: resolved.kind === 'test' ? resolved.target : null,
         };
     }
 
@@ -214,6 +169,7 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
             rating: this.baseRating,
             munitorum: this.munitorum,
             situational: this.situational,
+            availability: this.availability,
             troopCount: this.troopCount,
             timeInFront: this.timeInFront,
             frontActive: this.frontActive,
@@ -223,24 +179,30 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
         };
     }
 
+    #setAxis(axis: Axis, value: string): void {
+        if (axis === 'availability') {
+            const key = normaliseAvailability(value);
+            if (key !== null) this.availability = key;
+        } else if (axis === 'troopCount') {
+            if (oneOf(TROOP_COUNT_KEYS, value)) this.troopCount = value;
+        } else if (axis === 'timeInFront') {
+            if (oneOf(FRONT_TIME_KEYS, value)) this.timeInFront = value;
+        } else if (axis === 'frontActive') {
+            if (oneOf(FRONT_TIME_KEYS, value)) this.frontActive = value;
+        } else if (axis === 'warCondition') {
+            if (oneOf(WAR_CONDITION_KEYS, value)) this.warCondition = value;
+        } else {
+            const key = normaliseCraftsmanship(value);
+            if (key !== null) this.craftsmanship = key;
+        }
+    }
+
     static async #onSetAxis(this: LogisticsTestDialog, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const axis = target.dataset['axis'];
         const value = target.dataset['value'];
-        if (typeof axis !== 'string' || typeof value !== 'string') return;
-        if (!isAxis(axis)) return;
-        if (axis === 'troopCount') {
-            if (isTroopCount(value)) this.troopCount = value;
-        } else if (axis === 'timeInFront') {
-            if (isTimeInFront(value)) this.timeInFront = value;
-        } else if (axis === 'frontActive') {
-            if (isFrontActive(value)) this.frontActive = value;
-        } else if (axis === 'warCondition') {
-            if (isWarCondition(value)) this.warCondition = value;
-        } else if (isCraftsmanship(value)) {
-            // axis === 'craftsmanship'
-            this.craftsmanship = value;
-        }
+        if (axis === undefined || value === undefined || !oneOf(AXES, axis)) return;
+        this.#setAxis(axis, value);
         await this.render();
     }
 
@@ -253,21 +215,39 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
     static async #onRoll(this: LogisticsTestDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const ctx = this.#buildContext();
-        const roll = new Roll('1d100');
-        await roll.evaluate();
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Roll.total is typed loosely on Foundry's surface; the 1d100 evaluator yields a finite integer
-        const rollTotal = Math.trunc(Number(roll.total ?? 0));
-        const result: LogisticsTestResult = resolveLogisticsTest(ctx, rollTotal);
+        const resolved = computeLogisticsTarget(ctx);
+        // A GM's-discretion cell is never rolled: the button is disabled, and this guards a stale click.
+        if (resolved.kind === 'discretion') return;
 
-        const templateData = {
-            gameSystem: 'ow',
-            success: result.success,
-            roll: rollTotal,
-            target: result.target,
-            degreesOfSuccess: result.degreesOfSuccess,
-            degreesOfFailure: result.degreesOfFailure,
-            breakdown: result.breakdown,
-        };
+        let templateData: LogisticsChatContext;
+        if (resolved.kind === 'automatic') {
+            templateData = {
+                gameSystem: 'ow',
+                automatic: true,
+                success: true,
+                roll: null,
+                target: null,
+                degreesOfSuccess: 0,
+                degreesOfFailure: 0,
+                rows: [],
+            };
+        } else {
+            const roll = new Roll('1d100');
+            await roll.evaluate();
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Roll.total is typed loosely on Foundry's surface; the 1d100 evaluator yields a finite integer
+            const rollTotal = Math.trunc(Number(roll.total ?? 0));
+            const result = resolveLogisticsTest(resolved, rollTotal);
+            templateData = {
+                gameSystem: 'ow',
+                automatic: false,
+                success: result.success,
+                roll: rollTotal,
+                target: result.target,
+                degreesOfSuccess: result.degreesOfSuccess,
+                degreesOfFailure: result.degreesOfFailure,
+                rows: logisticsRows(ctx, result.breakdown, t),
+            };
+        }
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ow-logistics-chat.hbs', templateData);
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
@@ -281,11 +261,7 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
         await this.close();
     }
 
-    /**
-     * Convenience opener — instantiate against an actor's persisted
-     * Logistics slot and render. Matches the `ColonyGrowthDialog.show()`
-     * shape so sheets can wire it from a single static method.
-     */
+    /** Convenience opener — instantiate against an actor's persisted Logistics slot and render. */
     static show(actor: WH40KBaseActor): LogisticsTestDialog {
         const dialog = new LogisticsTestDialog({ actor });
         void dialog.render({ force: true });
@@ -293,35 +269,9 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
     }
 }
 
-function isAxis(value: string): value is Axis {
-    return value === 'troopCount' || value === 'timeInFront' || value === 'frontActive' || value === 'warCondition' || value === 'craftsmanship';
-}
-
-function isTroopCount(value: string): value is TroopCount {
-    return value === 'squad' || value === 'platoon' || value === 'company' || value === 'regiment';
-}
-
-function isTimeInFront(value: string): value is TimeInFront {
-    return value === 'days' || value === 'weeks' || value === 'months' || value === 'years';
-}
-
-function isFrontActive(value: string): value is FrontActive {
-    return value === 'lull' || value === 'active' || value === 'major';
-}
-
-function isWarCondition(value: string): value is WarCondition {
-    return value === 'standard' || value === 'hostile' || value === 'desperate';
-}
-
-function isCraftsmanship(value: string): value is Craftsmanship {
-    return value === 'poor' || value === 'common' || value === 'good' || value === 'best';
-}
-
 /**
  * Read the persisted Logistics scalars off an actor's system data.
  * Returns `undefined` when the actor is null (story / probe context).
- * The DataModel schema guarantees the fields are numbers / booleans
- * when present, so no defensive coercion is required here.
  */
 function readLogisticsSlot(actor: WH40KBaseActor | null): LogisticsActorSlot | undefined {
     if (actor === null) return undefined;
