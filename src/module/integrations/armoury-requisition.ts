@@ -16,8 +16,10 @@
  * spent Requisition / Profit Factor pool) is written back, and one chat card
  * prints each attempt's full target derivation and result.
  *
- * The hook is synchronous, so the d100 is evaluated with `Roll#evaluateSync` —
- * core dice need no async fulfilment. Stock is left to Item Piles: it already
+ * The hook is synchronous, and V14's `Roll#evaluateSync` refuses dice terms
+ * outright ("This Roll contains terms that cannot be synchronously evaluated"),
+ * so the d100 face is drawn by the core `Die` term's own generator and recorded
+ * as an evaluated Roll for the card ({@link rollD100Sync}). Stock is left to Item Piles: it already
  * decrements a finite merchant line itself, so writing `stockAfter` here would
  * consume the unit twice.
  *
@@ -439,6 +441,28 @@ export interface RequisitionBuyer {
 /** Chat speaker for the card, resolved only when a card is actually posted. */
 type SpeakerResolver = () => ReturnType<typeof ChatMessage.getSpeaker>;
 
+const D100_FACES = 100;
+
+/**
+ * A 1d100 rolled synchronously, for the synchronous Item Piles hook. V14's
+ * `Roll#evaluateSync` throws on any dice term, so the face comes from the core
+ * `Die` term's own `randomFace()` (Foundry's `CONFIG.Dice.randomUniform`
+ * generator) and is rebuilt into an evaluated Roll, which the chat card carries
+ * like any other roll.
+ */
+function rollD100Sync(): EvaluatedRoll {
+    const face = new foundry.dice.terms.Die({ number: 1, faces: D100_FACES }).randomFace();
+    return Roll.fromData({
+        formula: `1d${D100_FACES}`,
+        results: [face],
+        terms: [{ class: 'Die', number: 1, faces: D100_FACES, modifiers: [], results: [{ result: face, active: true }] }],
+        total: face,
+    });
+}
+
+/** The Roll the card carries. */
+type EvaluatedRoll = ReturnType<typeof Roll.fromData>;
+
 /**
  * The `item-piles-preCalculateTradeItems` handler. Returns `false` to cancel the
  * trade, `undefined` to let it through.
@@ -453,7 +477,7 @@ export function gateArmouryTrade(
     // Identity by flag via the armoury's own finder, so a renamed armoury is still gated.
     if (findArmoury([seller]) === undefined) return undefined;
     const economy = requisitionEconomyFor(buyer.system.gameSystem);
-    const rolls: Roll[] = [];
+    const rolls: EvaluatedRoll[] = [];
     const outcome = resolveArmouryRequisition({
         economy,
         ladder: acquisitionLadderFor(buyer.system.gameSystem),
@@ -461,9 +485,9 @@ export function gateArmouryTrade(
         entries: prices.buyerReceive,
         infiniteStock: hasInfiniteStock(seller),
         rollD100: () => {
-            const roll = new Roll('1d100').evaluateSync();
+            const roll = rollD100Sync();
             rolls.push(roll);
-            return roll.total;
+            return roll.total ?? 0;
         },
         degreesMethod: resolveDegreesMethod(buyer.system.gameSystem),
         partsRequisitionBonus: weaponModificationRulesFor(buyer.system.gameSystem)?.partsRequisitionBonus ?? null,
@@ -477,7 +501,7 @@ export function gateArmouryTrade(
 async function reportArmouryRequisition(
     buyer: RequisitionBuyer,
     outcome: ArmouryRequisitionOutcome,
-    rolls: Roll[],
+    rolls: EvaluatedRoll[],
     userId: string,
     speaker: SpeakerResolver,
 ): Promise<void> {

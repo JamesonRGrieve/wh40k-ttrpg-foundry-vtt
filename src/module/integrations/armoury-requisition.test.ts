@@ -404,20 +404,42 @@ describe('buildArmouryCardContext — roll transparency', () => {
 });
 
 describe('gateArmouryTrade — the Item Piles hook', () => {
-    function stubFoundry(total: number): { create: ReturnType<typeof vi.fn> } {
+    /**
+     * Stub the V14 dice surface the hook really uses. `Roll#evaluateSync` is
+     * deliberately absent: V14 throws on any dice term there, which is the bug
+     * the old evaluateSync stub hid (found by Tier B, #496). The face comes from
+     * `Die#randomFace` and is rebuilt with `Roll.fromData`.
+     */
+    function stubFoundry(total: number): { create: ReturnType<typeof vi.fn>; fromData: ReturnType<typeof vi.fn> } {
         stubI18n();
         const create = vi.fn().mockResolvedValue({});
-        class RollStub {
-            total = total;
-            evaluateSync(): this {
-                return this;
+        const fromData = vi.fn((data: { total: number }) => ({ total: data.total }));
+        class DieStub {
+            randomFace(): number {
+                return total;
             }
         }
-        vi.stubGlobal('Roll', RollStub);
+        vi.stubGlobal('Roll', { fromData });
         vi.stubGlobal('ChatMessage', { create });
-        vi.stubGlobal('foundry', { applications: { handlebars: { renderTemplate: vi.fn().mockResolvedValue('<div></div>') } } });
-        return { create };
+        vi.stubGlobal('foundry', {
+            applications: { handlebars: { renderTemplate: vi.fn().mockResolvedValue('<div></div>') } },
+            dice: { terms: { Die: DieStub } },
+        });
+        return { create, fromData };
     }
+
+    it('rolls the d100 without Roll#evaluateSync, recording an evaluated 1d100 for the card', () => {
+        const { fromData } = stubFoundry(37);
+        const buyer = { system: { gameSystem: 'dh2', influence: 60 }, update: vi.fn().mockResolvedValue({}) };
+        gateArmouryTrade(ARMOURY, buyer, { buyerReceive: [entry(item())] }, 'u1', speaker);
+        expect(fromData).toHaveBeenCalledWith(
+            expect.objectContaining({
+                formula: '1d100',
+                total: 37,
+                terms: [expect.objectContaining({ class: 'Die', faces: 100, results: [{ result: 37, active: true }] })],
+            }),
+        );
+    });
 
     it('leaves every non-armoury trade alone', () => {
         stubFoundry(1);
