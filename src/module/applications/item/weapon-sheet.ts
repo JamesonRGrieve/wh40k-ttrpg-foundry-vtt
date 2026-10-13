@@ -6,6 +6,7 @@ import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 import type { AvailabilityConfig, LabelConfig, LabelAbbreviationConfig, LabelModifierConfig } from '../../config.ts';
 import type { default as WeaponData } from '../../data/item/weapon.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { t } from '../../i18n/t.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
 import { DEFAULT_HIT_LOCATION } from '../../rules/hit-locations.ts';
 import { consumeRounds } from '../../rules/magazine.ts';
@@ -235,7 +236,8 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         context.effectivePenetration = system.effectivePenetration;
         context.effectiveToHit = system.effectiveToHit;
         context.effectiveWeight = system.effectiveWeight;
-        context['fullDamageFormula'] = system.fullDamageFormula;
+        // A weapon that deals no damage (#601) shows the book's dash, not a blank.
+        context['fullDamageFormula'] = system.dealsDamage ? system.fullDamageFormula : system.damageLabel;
 
         // Prepare modifications data for display
         context['modificationsData'] = system.modifications.map((mod, index) => ({
@@ -507,6 +509,10 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
 
         const weapon = this.item;
         const weaponSystem = weapon.system;
+        if (!weaponSystem.dealsDamage) {
+            ui.notifications.info(t('WH40K.Weapon.NoDamageNotice', { name: weapon.name }));
+            return;
+        }
         const formula = weaponSystem.effectiveDamageFormula;
         const damageRoll = await new Roll(formula).evaluate();
 

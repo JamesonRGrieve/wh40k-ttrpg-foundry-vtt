@@ -677,6 +677,8 @@ export class WH40KItem extends WH40KItemContainer {
             // When auto-apply-damage is on, the manual Damage button is redundant (#248) —
             // the weapon card hides it and leans on Attack as the primary action.
             autoApplyDamage: WH40KSettings.isAutoApplyDamageEnabled(),
+            // A weapon that deals no damage (#601) offers no Damage button at all.
+            noDamage: this.isWeapon && (this.system as { dealsDamage?: boolean }).dealsDamage === false,
             ...options,
         };
 

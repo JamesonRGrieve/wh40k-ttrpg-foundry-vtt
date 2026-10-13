@@ -1,3 +1,4 @@
+import { normalizeNoDamageNotation } from '../../rules/no-damage.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
 import FormulaField from '../fields/formula-field.ts';
@@ -8,7 +9,7 @@ import FormulaField from '../fields/formula-field.ts';
  */
 export default class DamageTemplate extends SystemDataModel {
     // Typed property declarations matching defineSchema()
-    declare damage: { formula: string; type: string; bonus: number; penetration: number };
+    declare damage: { formula: string; type: string; bonus: number; penetration: number; none: boolean };
     declare special: Set<string>;
 
     /** @inheritdoc */
@@ -29,6 +30,10 @@ export default class DamageTemplate extends SystemDataModel {
                 // psyker's Psy Rating" → "PR"). When set it is rolled instead of `penetration`.
                 // eslint-disable-next-line no-restricted-syntax -- boundary: FormulaField extends StringField, ctor param shape mismatch
                 penetrationFormula: new FormulaField({ required: false, blank: true, initial: '' } as unknown as ConstructorParameters<typeof FormulaField>[0]),
+                // The book prints a dash: this profile deals no damage, so no damage
+                // roll is made and only the qualities apply (#601). Distinct from an
+                // empty `formula`, which means no dice were authored.
+                none: new fields.BooleanField({ required: false, initial: false }),
             }),
             special: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: [] }),
         };
@@ -47,6 +52,7 @@ export default class DamageTemplate extends SystemDataModel {
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         DamageTemplate.#migrateSpecial(source);
+        normalizeNoDamageNotation(source);
     }
 
     /**
@@ -67,6 +73,7 @@ export default class DamageTemplate extends SystemDataModel {
             type: 'impact',
             bonus: 0,
             penetration: 0,
+            none: false,
         };
     }
 

@@ -47,4 +47,13 @@ describe('weapon card action buttons (#248)', () => {
     it('sendToChat seeds the autoApplyDamage flag from the setting', () => {
         expect(ITEM).toContain('autoApplyDamage: WH40KSettings.isAutoApplyDamageEnabled()');
     });
+
+    it('hides the Damage button for a weapon that deals no damage (#601)', () => {
+        const start = CARD.indexOf('{{#unless noDamage}}');
+        expect(start, 'noDamage guard present').toBeGreaterThan(-1);
+        const guarded = CARD.slice(start, CARD.indexOf('{{/unless}}', start));
+        expect(guarded).toContain('data-action="rollDamage"');
+        expect(guarded).not.toContain('data-action="attack"');
+        expect(ITEM).toContain('noDamage: this.isWeapon && (this.system as { dealsDamage?: boolean }).dealsDamage === false');
+    });
 });

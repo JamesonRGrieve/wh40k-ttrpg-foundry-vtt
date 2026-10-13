@@ -4,6 +4,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { capitalize } from '../../handlebars/handlebars-helpers.ts';
 import { t } from '../../i18n/t.ts';
 import { consumeRounds, frontSegment, type MagazineSegment, magazineFromLegacy, magazineTotal } from '../../rules/magazine.ts';
+import { profileDealsDamage } from '../../rules/no-damage.ts';
 import { applyDeactivationQualities, deactivationStatDeltas, isDeactivated, type WeaponActivationConfig } from '../../rules/weapon-activation.ts';
 import {
     activeFiringMode,
@@ -123,7 +124,7 @@ interface AmmoItemLike {
         removedQualities?: Set<string>;
         fireRateOverride?: number | null;
         hitEffect?: string;
-        damage?: { formula?: string; type?: string; bonus?: number; penetration?: number };
+        damage?: { formula?: string; type?: string; bonus?: number; penetration?: number; none?: boolean };
     };
 }
 
@@ -131,8 +132,8 @@ interface AmmoItemLike {
  * Extract the cached effect fields an ammunition item contributes to a magazine
  * segment (#ammo-system). Shared by `loadAmmo` and `buildClip` so the segment shape
  * is populated identically. `damageOverride` is set only for a full-profile round
- * (a warhead / sniper round with its own `formula`); a delta round leaves it absent
- * and carries its numbers in `modifiers`.
+ * (a warhead / sniper round with its own `formula`, or a payload round that deals
+ * no damage, #601); a delta round leaves it absent and carries its numbers in `modifiers`.
  */
 function ammoSegmentEffects(
     system: AmmoItemLike['system'],
@@ -161,9 +162,11 @@ function ammoSegmentEffects(
         fireRateOverride,
         hitEffect,
     };
-    // `damageOverride` is present ONLY for a full-profile round (formula set); an
-    // absent key (not `undefined`) keeps the segment delta-mode under exactOptionalPropertyTypes.
-    return formula !== '' ? { ...base, damageOverride: { formula, bonus: damage?.bonus ?? 0, penetration: damage?.penetration ?? 0 } } : base;
+    // `damageOverride` is present ONLY for a full-profile round (formula set, or a
+    // "no damage" round whose profile replaces the weapon's with none); an absent key
+    // (not `undefined`) keeps the segment delta-mode under exactOptionalPropertyTypes.
+    const none = damage?.none === true;
+    return formula !== '' || none ? { ...base, damageOverride: { formula, bonus: damage?.bonus ?? 0, penetration: damage?.penetration ?? 0, none } } : base;
 }
 
 /** Minimal shape of an inventory ammunition item used by _returnRoundsToInventory(). */
@@ -303,7 +306,7 @@ export default class WeaponData extends ItemDataModel.mixin(
     declare state: EquippableState;
 
     // Properties from DamageTemplate
-    declare damage: { formula: string; type: string; bonus: number; penetration: number };
+    declare damage: { formula: string; type: string; bonus: number; penetration: number; none: boolean };
     declare special: Set<string>;
     declare modes: WeaponFiringMode[];
     declare activeMode: number;
@@ -399,6 +402,7 @@ export default class WeaponData extends ItemDataModel.mixin(
                                 formula: new fields.StringField({ required: false, blank: true, initial: '' }),
                                 bonus: new fields.NumberField({ required: false, initial: 0, integer: true }),
                                 penetration: new fields.NumberField({ required: false, initial: 0, integer: true }),
+                                none: new fields.BooleanField({ required: false, initial: false }),
                             },
                             { required: false },
                         ),
@@ -1088,6 +1092,21 @@ export default class WeaponData extends ItemDataModel.mixin(
     }
 
     /**
+     * Does an attack with this weapon roll damage? False for a "no damage" profile
+     * (stun / smoke / web grenades and the like, #601), whose attack resolves on its
+     * qualities alone. A firing mode with its own dice, or a chambered full-profile
+     * round, decides in place of the weapon's own profile.
+     * @type {boolean}
+     */
+    get dealsDamage(): boolean {
+        return profileDealsDamage({
+            none: this.damage.none,
+            override: this.loadedAmmo?.damageOverride ?? null,
+            modeDamage: this.activeFiringModeProfile?.damage ?? '',
+        });
+    }
+
+    /**
      * Get effective damage formula (base + modifications).
      * NOTE: This does NOT include Strength Bonus, which is added dynamically at roll time.
      * Strength Bonus is applied in the actor's rollWeaponDamage() method.
@@ -1097,7 +1116,10 @@ export default class WeaponData extends ItemDataModel.mixin(
         // A loaded warhead / sniper round OVERRIDES the dice + bonus outright
         // (#ammo-system); otherwise the weapon's own profile is the base and the
         // ammo's delta is folded via `_modificationModifiers`.
+        if (!this.dealsDamage) return '';
         const override = this.loadedAmmo?.damageOverride ?? null;
+        // An empty formula with no `damage.none` means no dice were authored; it keeps
+        // the legacy default. A "no damage" profile returned '' above (#601).
         const baseFormulaRaw = override !== null ? override.formula : this.damage.formula || '1d10';
         const baseBonusRaw = override !== null ? override.bonus : this.damage.bonus || 0;
         const baseDamage = modeDamageFormula(this.activeFiringModeProfile, baseFormulaRaw);
@@ -1153,6 +1175,7 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @type {string}
      */
     get fullDamageFormula(): string {
+        if (!this.dealsDamage) return '';
         const baseFormula = this.effectiveDamageFormula;
 
         // Melee weapons add Strength Bonus to damage
@@ -1648,7 +1671,7 @@ export default class WeaponData extends ItemDataModel.mixin(
               removedQualities: Set<string>;
               attack: number;
               damageType: string;
-              damageOverride: { formula: string; bonus: number; penetration: number } | null;
+              damageOverride: { formula: string; bonus: number; penetration: number; none?: boolean } | null;
               fireRateOverride: number | null;
               hitEffect: string;
           }
@@ -1665,7 +1688,7 @@ export default class WeaponData extends ItemDataModel.mixin(
             removedQualities: new Set(front.removedQualities),
             attack: front.attack ?? 0,
             damageType: front.damageType ?? '',
-            damageOverride: override !== undefined && override.formula !== '' ? override : null,
+            damageOverride: override !== undefined && (override.formula !== '' || override.none === true) ? override : null,
             fireRateOverride: front.fireRateOverride ?? null,
             hitEffect: front.hitEffect ?? '',
         };

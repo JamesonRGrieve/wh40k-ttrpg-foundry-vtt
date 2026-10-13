@@ -952,6 +952,10 @@ export class WH40KAcolyte extends WH40KBaseActor {
             ui.notifications.warn(game.i18n.localize('WH40K.Warning.WeaponNotEquipped'));
             return;
         }
+        if (weapon.system['dealsDamage'] === false) {
+            ui.notifications.info(t('WH40K.Weapon.NoDamageNotice', { name: weapon.name }));
+            return;
+        }
 
         // Calculate damage with Strength Bonus for melee/thrown weapons
         const isMelee = weapon.system.melee === true || weapon.system.isMeleeWeapon === true;

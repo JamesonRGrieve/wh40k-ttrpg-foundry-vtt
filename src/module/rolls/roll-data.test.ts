@@ -293,3 +293,36 @@ describe('area and no-roll flags resolve after the attack specials (#600)', () =
         expect(readRepoFile('src/module/rolls/action-data.ts')).not.toContain("hasAttackSpecial('Spray')");
     });
 });
+
+describe('a weapon that deals no damage offers no damage roll (#601)', () => {
+    function attack(dealsDamage: boolean, success: boolean, isThrown = false): WeaponRollData {
+        // eslint-disable-next-line no-restricted-syntax -- test: bypass the WH40K-config constructor to unit-test the damage gate
+        const rd = Object.create(WeaponRollData.prototype) as WeaponRollData;
+        Object.defineProperty(rd, 'weapon', { value: { system: { dealsDamage } } });
+        rd.success = success;
+        rd.isThrown = isThrown;
+        return rd;
+    }
+
+    it('a hit with a damaging weapon shows Roll Damage', () => {
+        expect(attack(true, true).noDamage).toBe(false);
+        expect(attack(true, true).showDamage).toBe(true);
+    });
+
+    it('a hit (or a thrown miss) with a no-damage weapon shows none', () => {
+        expect(attack(false, true).noDamage).toBe(true);
+        expect(attack(false, true).showDamage).toBe(false);
+        expect(attack(false, false, true).showDamage).toBe(false);
+    });
+
+    it('a miss shows no damage either way', () => {
+        expect(attack(true, false).showDamage).toBe(false);
+    });
+
+    it('the attack action takes its damage gate from the roll, so auto-damage skips it', () => {
+        const actionData = readRepoFile('src/module/rolls/action-data.ts');
+        const weaponAction = actionData.slice(actionData.indexOf('export class WeaponActionData'), actionData.indexOf('export class PsychicActionData'));
+        expect(weaponAction).toContain('this.hasDamage = !this.rollData.noDamage;');
+        expect(actionData).toContain("if (!this.hasDamage || this.damageData === undefined) return 'action has no damage data';");
+    });
+});

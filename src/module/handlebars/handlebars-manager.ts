@@ -89,6 +89,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs',
             'systems/wh40k-rpg/templates/chat/partial/card-target-row.hbs',
             'systems/wh40k-rpg/templates/chat/partial/area-attack-summary.hbs',
+            'systems/wh40k-rpg/templates/chat/partial/no-damage-note.hbs',
             'systems/wh40k-rpg/templates/chat/partial/extended-test-progress.hbs',
             'systems/wh40k-rpg/templates/chat/partial/reroll-controls.hbs',
             'systems/wh40k-rpg/templates/chat/partial/wounds-callout.hbs',

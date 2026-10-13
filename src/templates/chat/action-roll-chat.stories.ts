@@ -15,6 +15,8 @@
  *   6. SprayNoAttackRoll — no roll/target/DoS rows; the area statement and the
  *                       template resolve control instead (#599 / #600).
  *   7. BlastWithAttackRoll — the roll readout stays; resolve replaces Roll Damage.
+ *   8. DamagingHit    — a hit offers Roll Damage.
+ *   9. NoDamageHit    — a no-damage weapon's hit offers no Roll Damage (#601).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
@@ -69,6 +71,10 @@ interface ActionRollData {
     areaStatement?: string;
     /** Provenance label for a substituted base (Field Vivisection, #101). */
     baseLabel?: string;
+    /** The hit offers Roll Damage (`WeaponRollData.showDamage`). */
+    showDamage?: boolean;
+    /** The weapon deals no damage (#601): its qualities apply, nothing is rolled. */
+    noDamage?: boolean;
 }
 
 interface ActionRollChatCtx {
@@ -428,6 +434,47 @@ export const BlastWithAttackRoll: Story = {
         await expect(canvasElement.querySelector('[data-area-statement]')?.textContent).toContain('Blast (3)');
         await expect(canvasElement.querySelector('.roll-control__resolve-area')).not.toBeNull();
         await expect(canvasElement.querySelector('.roll-control__roll-damage')).toBeNull();
+    },
+};
+
+/** A damaging hit offers Roll Damage on the attack card. */
+export const DamagingHit: Story = {
+    name: 'Hit — Roll Damage offered',
+    args: {
+        id: 'roll-hit',
+        label: 'Ballistic Skill Test',
+        rollData: successRollData({ ignoreControls: false, showDamage: true }),
+        effectOutput: [],
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector<HTMLButtonElement>('.roll-control__roll-damage')?.dataset['rollId']).toBe('roll-hit');
+        await expect(canvasElement.querySelector('[data-no-damage]')).toBeNull();
+    },
+};
+
+/**
+ * A weapon that deals no damage (a Stun Grenade, #601) hits for its qualities alone:
+ * the card notes "No Damage" where Roll Damage would be, and offers nothing to roll.
+ */
+export const NoDamageHit: Story = {
+    name: 'Hit with a no-damage weapon — no Roll Damage',
+    args: {
+        id: 'roll-stun',
+        label: 'Ballistic Skill Test',
+        rollData: successRollData({ name: 'Stun Grenade', effectString: '', ignoreControls: false, showDamage: false, noDamage: true }),
+        effectOutput: [],
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('.roll-control__roll-damage')).toBeNull();
+        const note = canvasElement.querySelector<HTMLElement>('[data-no-damage]');
+        await expect(note).not.toBeNull();
+        await expect(note?.getAttribute('title')).toBe('This weapon deals no damage; only its qualities apply.');
+        await expect(note?.textContent).toContain('No Damage');
+        // The rest of the attack still resolves: the roll readout and Fate refund stay.
+        await expect(canvasElement.textContent).toContain('Roll vs Target');
+        await expect(canvasElement.querySelector('.roll-control__refund')).not.toBeNull();
     },
 };
 

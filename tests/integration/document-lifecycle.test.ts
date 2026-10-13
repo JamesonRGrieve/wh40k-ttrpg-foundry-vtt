@@ -36,6 +36,14 @@ interface ModdedWeapon {
     };
 }
 
+interface NoDamageWeapon {
+    system: {
+        damage: { formula: string; none: boolean };
+        dealsDamage: boolean;
+        effectiveDamageFormula: string;
+    };
+}
+
 describe.skipIf(skipAll)('document lifecycle (Tier A)', () => {
     it('creates an Actor and prepareData runs without throwing', async () => {
         const actor = await createActor(runtime, { type: 'character', name: 'Lifecycle Actor' });
@@ -97,6 +105,33 @@ describe.skipIf(skipAll)('document lifecycle (Tier A)', () => {
         expect(cached).toEqual(zeroed);
         // The aggregation that previously threw now completes and sums to zero.
         expect(item.system._modificationModifiers).toEqual(zeroed);
+    });
+
+    // Regression guard (#601): the books print a dash for "no damage". A stored `'-'`
+    // formula failed FormulaField validation, which left the compendium weapon out of
+    // the hydrate join. `_migrateData` now rewrites it, at every per-line variant level,
+    // to the explicit `{ formula: '', none: true }` profile, which rolls no damage.
+    it.each([
+        ['a flat profile', { formula: '-', type: 'impact', bonus: 0, penetration: 0 }],
+        [
+            'a per-line variant container',
+            { dh2: { formula: '-', type: 'impact', bonus: 0, penetration: 0 }, rt: { formula: '—', type: 'impact', bonus: 0, penetration: 0 } },
+        ],
+    ])('heals a legacy "-" damage formula in %s to a no-damage profile', async (_shape, damage) => {
+        const item = (await createItem(runtime, { type: 'weapon', name: 'Stun Grenade', system: { damage } })) as NoDamageWeapon;
+        expect(item.system.damage.formula).toBe('');
+        expect(item.system.damage.none).toBe(true);
+        expect(item.system.dealsDamage).toBe(false);
+        expect(item.system.effectiveDamageFormula).toBe('');
+    });
+
+    it('keeps the default dice for a weapon with no damage authored, and real dice untouched (#601)', async () => {
+        const blank = (await createItem(runtime, { type: 'weapon', name: 'Blank', system: { damage: { formula: '' } } })) as NoDamageWeapon;
+        expect(blank.system.dealsDamage).toBe(true);
+        expect(blank.system.effectiveDamageFormula).toBe('1d10');
+        const autogun = (await createItem(runtime, { type: 'weapon', name: 'Autogun', system: { damage: { formula: '1d10+3' } } })) as NoDamageWeapon;
+        expect(autogun.system.damage.none).toBe(false);
+        expect(autogun.system.effectiveDamageFormula).toBe('1d10+3');
     });
 
     it('cleanData(_state) round-trips without dropping fields (V14 gotcha #9)', async () => {

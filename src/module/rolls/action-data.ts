@@ -1098,6 +1098,13 @@ export class WeaponActionData extends ActionData {
         this.rollData = new WeaponRollData();
         this.damageData = new WeaponDamageData();
     }
+
+    override async performActionAndSendToChat(): Promise<void> {
+        // A weapon that deals no damage (#601) resolves on its qualities alone, so
+        // there is no damage roll to auto-roll, offer, or post.
+        this.hasDamage = !this.rollData.noDamage;
+        await super.performActionAndSendToChat();
+    }
 }
 
 export class PsychicActionData extends ActionData {

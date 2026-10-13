@@ -143,7 +143,9 @@ export class BasicActionManager {
         event.preventDefault();
         const btn = event.currentTarget as HTMLButtonElement;
         const actionData = this.#resolveStoredAction(btn, game.i18n.localize('WH40K.Notify.Action.RollDataUnavailable'));
-        if (actionData == null) return;
+        // A weapon that deals no damage never renders this button (#601); a card
+        // posted before that gate still must not roll the legacy default dice.
+        if (actionData == null || (actionData.rollData instanceof WeaponRollData && actionData.rollData.noDamage)) return;
 
         // Disable button to prevent double-rolling
         btn.disabled = true;
@@ -516,6 +518,9 @@ export class BasicActionManager {
                 summary: rollData.areaStatement,
                 results: areaResultRows(results),
                 anyHit: results.some((result) => result.hit),
+                // A no-damage area weapon (smoke, stun, #601) catches creatures for its
+                // qualities only: the card lists who is caught and offers no Roll Damage.
+                noDamage: rollData.noDamage,
                 _gameSystemId: firstSystemId(rollData.sourceActor),
             },
             { rolls },

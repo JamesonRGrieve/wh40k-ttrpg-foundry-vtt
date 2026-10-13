@@ -8,7 +8,8 @@
  *   1. SprayResults   — one creature hit (untrained wielder, +20 row), one avoided.
  *   2. AllAvoided     — nobody hit, so no Roll Damage.
  *   3. BlastResults   — a hit area: everyone inside hit, no tests.
- *   4. PerSystem      — the Spray card framed under each of the six FFG lines.
+ *   4. NoDamageBlast  — a no-damage weapon (#601): everyone caught listed, no Roll Damage.
+ *   5. PerSystem      — the Spray card framed under each of the six FFG lines.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
@@ -36,6 +37,8 @@ interface AreaResolutionCtx {
     summary: string;
     results: ResultRow[];
     anyHit: boolean;
+    /** The weapon deals no damage (#601): who is caught takes its qualities only. */
+    noDamage?: boolean;
     gameSystem?: SystemId;
 }
 
@@ -123,6 +126,28 @@ export const BlastResults: Story = {
         await expect(canvasElement.querySelectorAll('[data-area-target][data-area-hit="true"]').length).toBe(2);
         await expect(canvasElement.querySelector('[data-area-roll]')).toBeNull();
         await expect(canvasElement.querySelector('.roll-control__roll-damage')).not.toBeNull();
+    },
+};
+
+export const NoDamageBlast: Story = {
+    name: 'Blast (3) — no-damage weapon, nothing to roll',
+    args: {
+        rollId: 'roll-stun',
+        weaponName: 'Stun Grenade',
+        summary: 'Blast (3): Everyone in the blast (3 m) takes a hit.',
+        results: [
+            { name: 'Cultist', hit: true, outcomeLabel: 'Hit', test: null },
+            { name: 'Servitor', hit: true, outcomeLabel: 'Hit', test: null },
+        ],
+        anyHit: true,
+        noDamage: true,
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        // Everyone caught is still listed: the Concussive quality applies to each.
+        await expect(canvasElement.querySelectorAll('[data-area-target][data-area-hit="true"]').length).toBe(2);
+        await expect(canvasElement.querySelector('.roll-control__roll-damage')).toBeNull();
+        await expect(canvasElement.querySelector('[data-no-damage]')?.textContent).toContain('No Damage');
     },
 };
 

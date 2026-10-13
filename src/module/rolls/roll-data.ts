@@ -709,6 +709,19 @@ export class WeaponRollData extends RollData {
     }
 
     /**
+     * The weapon deals no damage (#601): the attack applies its qualities only, and
+     * neither this card nor the area results card offers a damage roll. Read live,
+     * so a chambered round or an active firing mode with its own dice is honoured.
+     */
+    get noDamage(): boolean {
+        return (this.weapon.system as { dealsDamage?: boolean }).dealsDamage === false;
+    }
+
+    override get showDamage(): boolean {
+        return !this.noDamage && super.showDamage;
+    }
+
+    /**
      * The wielder's state an area's avoidance bonuses read (#599): whether they have
      * the weapon's training, and whether the weapon is Heavy and fired without the
      * wielder being braced.
