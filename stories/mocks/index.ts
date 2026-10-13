@@ -106,7 +106,7 @@ export function mockItem(overrides?: DeepPartial<MockItem>): MockItem {
 
 // ── Characteristic ───────────────────────────────────────────────────────────
 
-export interface MockCharacteristic {
+interface MockCharacteristic {
     short: string;
     label: string;
     total: number;
@@ -140,7 +140,7 @@ function mockCharacteristic(key: string, total = 35, modifier = 0, advance = 0):
     };
 }
 
-export function mockCharacteristics(
+function mockCharacteristics(
     overrides?: Partial<Record<keyof typeof CHARACTERISTIC_DEFAULTS, Partial<MockCharacteristic>>>,
 ): Record<string, MockCharacteristic> {
     const result: Record<string, MockCharacteristic> = {};

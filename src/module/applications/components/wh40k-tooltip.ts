@@ -827,8 +827,6 @@ export class TooltipsWH40K {
     }
 }
 
-export { TooltipsWH40K as WH40KTooltip };
-
 /* -------------------------------------------- */
 /*  Static Tooltip Data Helpers                  */
 /* -------------------------------------------- */
