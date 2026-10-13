@@ -532,6 +532,24 @@ recordDimension('combat.ui', covered['combat.ui'], COMBAT_UI_CLASSES);
 const COMBAT_ATTACK_FLOWS = ['roll-weapon-attack-defined', 'auto-roll-damage-setting', 'auto-damage-gating', 'audit-row-renders'];
 recordDimension('combat.attack-flow', covered['combat.attack-flow'], COMBAT_ATTACK_FLOWS);
 
+// Combat resolution driven from the sheets and chat cards (#414, #603, #607, #101,
+// #120, #484). Each list must match the flow keys its spec records.
+// tests/e2e/evasion-counter-attack.spec.ts — EVASION_FLOWS.
+const EVASION_FLOWS = ['prompt', 'parry-negates', 'counter-attack', 'take-hit', 'counter-attack-spent', 'grapple-blocked'];
+recordDimension('evasion.flow', covered['evasion.flow'], EVASION_FLOWS);
+// tests/e2e/auto-fire-cap.spec.ts — AUTO_FIRE_FLOWS.
+const AUTO_FIRE_FLOWS = ['dh2-capped', 'dh2-under-cap', 'dh1-capped', 'dh1-under-cap'];
+recordDimension('auto-fire.flow', covered['auto-fire.flow'], AUTO_FIRE_FLOWS);
+// tests/e2e/without-talents.spec.ts — WITHOUT_TALENT_FLOWS.
+const WITHOUT_TALENT_FLOWS = ['push-the-limit-row', 'push-the-limit-crit-risk', 'push-the-limit-spent', 'leaping-dodge-spray', 'field-vivisection-swap'];
+recordDimension('without-talents.flow', covered['without-talents.flow'], WITHOUT_TALENT_FLOWS);
+// tests/e2e/grapple-controller-panel.spec.ts — GRAPPLE_FLOWS.
+const GRAPPLE_FLOWS = ['controller-panel', 'controlled-panel', 'break-free'];
+recordDimension('grapple.flow', covered['grapple.flow'], GRAPPLE_FLOWS);
+// tests/e2e/passive-modifiers.spec.ts — PASSIVE_MODIFIER_FLOWS.
+const PASSIVE_MODIFIER_FLOWS = ['skill-test', 'weapon-attack'];
+recordDimension('passive-modifiers.flow', covered['passive-modifiers.flow'], PASSIVE_MODIFIER_FLOWS);
+
 // Character-generation modes (point-buy + roll) exercised by
 // tests/e2e/char-gen-modes.spec.ts. Keep in sync with CHAR_GEN_MODES there.
 const CHAR_GEN_MODES = ['mode-tabs-present', 'point-buy-mode-renders', 'roll-mode-renders'];

@@ -1,115 +1,105 @@
+import type { Page } from '@playwright/test';
+import { actorFlag, createActor, deleteDocuments, openActorSheet, prepareStage, snapWindow } from './combat-resolution-flow';
+import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Grapple Controller Panel visual regression (#120 — core.md L10155-10180).
+ * Tier B — the Grapple Controller Panel on both sides of a grapple (#120 —
+ * core.md L10155-10180).
  *
- * Creates a `dh2-character` with `flags.wh40k.grapple.state='grappling'`,
- * opens the actor sheet, navigates to the Status tab, snaps the rendered
- * panel, and asserts the five action buttons are in the DOM (missing
- * buttons would indicate the partial preload regressed or the gate
- * misfired).
+ * Two DH2 characters are in one grapple: the controller (`grappling`) and the one
+ * held (`controlled`), each read from `flags['wh40k-rpg'].grapple.state` (the
+ * single reader, `readGrappleState`). Each sheet's Overview tab shows the panel
+ * with its own state badge and the five opposed-Strength actions. The held
+ * character clicks Break Free; the opposed Strength test is rolled with fixed dice
+ * (a 05 against the opponent's 99), the grapple ends, and the panel leaves the
+ * sheet. That a held character cannot Dodge or Parry is covered on the attack card
+ * by evasion-counter-attack.spec.ts.
+ *
+ * Each state records a `grapple.flow` coverage key; keep GRAPPLE_FLOWS in sync with
+ * the denominator in scripts/e2e-coverage.mjs.
  */
-test('grapple-controller-panel renders five actions when state=grappling (#120)', async ({ page }) => {
-    await joinOrSkip(page, 'no Gamemaster user available in this test world');
 
-    interface ProbeResult {
-        setupOk: boolean;
-        btnCount: number;
-        hasTitle: boolean;
-        error: string | null;
-    }
-    const result = await page.evaluate(async (): Promise<ProbeResult> => {
-        interface ActorSheet {
-            render: (force?: boolean) => Promise<void>;
-            changeTab?: (tab: string, group: string) => void;
-            element?: HTMLElement | null;
-        }
-        interface ActorDoc {
-            sheet: ActorSheet;
-        }
-        interface ActorCtorShape {
-            create?: (data: object) => Promise<ActorDoc | null>;
-        }
-        interface ProbeGlobal {
-            Actor?: ActorCtorShape;
-        }
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
-        const g = globalThis as unknown as ProbeGlobal;
-        const ActorCls = g.Actor;
-        if (ActorCls?.create == null) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create unavailable' };
+const GRAPPLE_FLOWS = ['controller-panel', 'controlled-panel', 'break-free'] as const;
 
-        let actor: ActorDoc | null;
+const PANEL = '[data-wh40k-hook="grapple-panel"]';
+
+/** The panel's state attribute, badge and action count on a sheet, or null when it is absent. */
+async function readPanel(page: Page, sheetId: string): Promise<{ state: string; badge: string; actions: number } | null> {
+    return page.evaluate(
+        ({ id, selector }) => {
+            const panel = document.getElementById(id)?.querySelector<HTMLElement>(selector);
+            if (panel === null || panel === undefined) return null;
+            return {
+                state: panel.dataset['grappleState'] ?? '',
+                badge: panel.querySelector('header > span')?.textContent.trim() ?? '',
+                actions: panel.querySelectorAll('button[data-action^="grapple"]').length,
+            };
+        },
+        { id: sheetId, selector: PANEL },
+    );
+}
+
+/** Feed Foundry's dice these d100 faces in order (then restore the RNG once they are drawn). */
+async function fixD100(page: Page, faces: number[]): Promise<void> {
+    await page.evaluate((queue) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `CONFIG.Dice` has no browser-side types
+        const dice = (globalThis as unknown as { CONFIG: { Dice: { randomUniform: () => number } } }).CONFIG.Dice;
+        const original = dice.randomUniform;
+        const pending = [...queue];
+        dice.randomUniform = (): number => {
+            const face = pending.shift();
+            if (pending.length === 0) dice.randomUniform = original;
+            // Foundry maps a uniform u to the face ceil((1 − u) × faces) (DiceTerm#mapRandomFace).
+            return face === undefined ? original() : 1 - (face - 0.5) / 100;
+        };
+    }, faces);
+}
+
+test.describe.serial('Grapple controller panel (Tier B, #120)', () => {
+    test('both sides show the panel; Break Free ends the grapple and the panel leaves', async ({ page }) => {
+        await joinOrSkip(page);
+        await prepareStage(page);
+        const character = (name: string, state: string): object => ({
+            name,
+            type: 'dh2-character',
+            img: 'icons/svg/mystery-man.svg',
+            system: { gameSystem: 'dh2', characteristics: { strength: { base: 40, advance: 0, modifier: 0 } } },
+            flags: { 'wh40k-rpg': { grapple: { state } } },
+        });
+        const controller = await createActor(page, { data: character('Grappling Enforcer', 'grappling') });
+        const held = await createActor(page, { data: character('Held Heretic', 'controlled') });
         try {
-            actor = await ActorCls.create({
-                name: 'grapple-panel-probe',
-                type: 'dh2-character',
-                system: { gameSystem: 'dh2' },
-                flags: { wh40k: { grapple: { state: 'grappling' } } },
-            });
-        } catch (createErr) {
-            return { setupOk: false, btnCount: 0, hasTitle: false, error: String((createErr as Error).message) };
-        }
-        if (actor == null) return { setupOk: false, btnCount: 0, hasTitle: false, error: 'Actor.create returned null' };
+            // The controller's side.
+            const controllerSheet = await openActorSheet(page, controller.id, 'overview');
+            await expect(page.locator(`#${controllerSheet} ${PANEL}`)).toBeVisible();
+            expect(await readPanel(page, controllerSheet)).toEqual({ state: 'grappling', badge: 'Grappling', actions: 5 });
+            await page.locator(`#${controllerSheet} ${PANEL}`).scrollIntoViewIfNeeded();
+            expect(await snapWindow(page, 'grapple-controller-sheet', controllerSheet)).not.toBeNull();
+            expect(await snap(page, 'grapple-controller-panel', { selector: `#${controllerSheet} ${PANEL}` })).not.toBeNull();
+            recordCoverage('grapple.flow', 'controller-panel');
 
-        await actor.sheet.render(true);
-        await globalThis.wh40kE2E.settle(250);
+            // The held side.
+            const heldSheet = await openActorSheet(page, held.id, 'overview');
+            await expect(page.locator(`#${heldSheet} ${PANEL}`)).toBeVisible();
+            expect(await readPanel(page, heldSheet)).toEqual({ state: 'controlled', badge: 'Controlled', actions: 5 });
+            await page.locator(`#${heldSheet} ${PANEL}`).scrollIntoViewIfNeeded();
+            expect(await snapWindow(page, 'grapple-controlled-sheet', heldSheet)).not.toBeNull();
+            expect(await snap(page, 'grapple-controlled-panel', { selector: `#${heldSheet} ${PANEL}` })).not.toBeNull();
+            recordCoverage('grapple.flow', 'controlled-panel');
 
-        try {
-            actor.sheet.changeTab?.('overview', 'primary');
-        } catch {
-            /* fall back to whatever tab is open */
-        }
-        // Wait for the grapple panel to render (the assertions below report a miss).
-        await globalThis.wh40kE2E.pollUntil(() => actor.sheet.element?.querySelector('[data-wh40k-hook="grapple-panel"]') != null);
-
-        const root = actor.sheet.element;
-        const panel = root?.querySelector('[data-wh40k-hook="grapple-panel"]') ?? null;
-        const btnCount =
-            panel !== null
-                ? panel.querySelectorAll(
-                      '[data-wh40k-hook="grapple-damage-btn"], [data-wh40k-hook="grapple-throw-btn"], [data-wh40k-hook="grapple-break-btn"], [data-wh40k-hook="grapple-stand-btn"], [data-wh40k-hook="grapple-move-btn"]',
-                  ).length
-                : 0;
-        const hasTitle = Boolean(panel?.querySelector('h3'));
-        return { setupOk: true, btnCount, hasTitle, error: null };
-    });
-
-    expect(result.setupOk, `setup error: ${result.error ?? ''}`).toBe(true);
-
-    await snap(page, 'grapple-controller-panel');
-
-    try {
-        const appLoc = page.locator('.application[data-application-part]').last();
-        if ((await appLoc.count()) > 0) {
-            await appLoc.screenshot({ path: '.e2e-screenshots/grapple-controller-panel__sheet-element.png' });
-        }
-    } catch {
-        /* non-fatal — primary snap already wrote a PNG */
-    }
-
-    expect(result.btnCount, `expected 5 grapple action buttons; got ${result.btnCount}`).toBe(5);
-    expect(result.hasTitle, 'expected grapple panel header (h3) to be in the DOM').toBe(true);
-
-    // Cleanup
-    await page.evaluate(async (): Promise<void> => {
-        interface ActorDoc {
-            delete?: () => Promise<void>;
-        }
-        interface ActorsCollection {
-            getName?: (name: string) => ActorDoc | undefined;
-        }
-        interface CleanupGlobal {
-            game?: { actors?: ActorsCollection };
-        }
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global, no browser-side types
-        const g = globalThis as unknown as CleanupGlobal;
-        const a = g.game?.actors?.getName?.('grapple-panel-probe');
-        try {
-            await a?.delete?.();
-        } catch {
-            /* ignore */
+            // Break Free: 05 against the opponent's 99 wins the opposed Strength test.
+            await fixD100(page, [5, 99]);
+            await page.locator(`#${heldSheet} [data-wh40k-hook="grapple-break-btn"]`).click();
+            await expect.poll(async () => actorFlag(page, held.id, 'grapple'), { message: 'Break Free ends the grapple' }).toEqual({ state: 'none' });
+            await expect(page.locator(`#${heldSheet} ${PANEL}`)).toHaveCount(0);
+            expect(await snapWindow(page, 'grapple-broken-free-sheet', heldSheet)).not.toBeNull();
+            recordCoverage('grapple.flow', 'break-free');
+            expect(GRAPPLE_FLOWS).toHaveLength(3);
+        } finally {
+            await deleteDocuments(page, { actors: [controller.id, held.id] });
         }
     });
 });
