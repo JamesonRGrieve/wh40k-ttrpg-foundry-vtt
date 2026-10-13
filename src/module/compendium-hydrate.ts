@@ -92,14 +92,25 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 /* eslint-disable no-restricted-syntax -- boundary: Foundry system payloads are open-ended Records throughout the join */
-function deepMerge(base: Record<string, unknown>, overlay: Record<string, unknown>): Record<string, unknown> {
+function deepMerge(base: Record<string, unknown>, overlay: Record<string, unknown>, defaults: Record<string, unknown> = {}): Record<string, unknown> {
     const out: Record<string, unknown> = { ...base };
     for (const [key, value] of Object.entries(overlay)) {
         const current = out[key];
+        const fallback = defaults[key];
         if (isPlainObject(current) && isPlainObject(value)) {
-            out[key] = deepMerge(current, value);
+            out[key] = deepMerge(current, value, isPlainObject(fallback) ? fallback : {});
             continue;
         }
+        // An optional field the item never stored is declared `undefined` on its
+        // sealed source (SystemDataModel.shimData), which is "absent", not a value.
+        if (value === undefined) continue;
+        // A lean embed's source is cleaned through its schema, so every field it
+        // never stored holds the schema INITIAL — weapon `class: 'melee'`, `type:
+        // 'primitive'`, armour points 0. Those are not authored values: letting
+        // them win turned every lean weapon into a primitive melee weapon and every
+        // lean armour into AP 0. A value equal to its schema default defers to the
+        // canonical body; anything else the actor stored still wins.
+        if (current !== undefined && key in defaults && sameSourceValue(value, fallback)) continue;
         // A LEAN embed persists no `system` on disk, so the overlay reaching this
         // join is the schema-prepared defaults (or the derived data), NOT authored
         // blanks: an empty-string field — `description.value` / `descriptionText` /
@@ -116,10 +127,43 @@ function deepMerge(base: Record<string, unknown>, overlay: Record<string, unknow
 /**
  * Pure join: canonical source system as the base layer, the item's PERSISTED
  * system overlaid on top (per-actor specialization/level/state/variantOf win).
+ * `schemaDefaults` is the item type's cleaned empty source; a persisted value
+ * equal to its default is the schema filling a gap, so canonical keeps it.
  * No foundry-global dependency — unit-testable (cf. item-variant-utils' shim).
  */
-export function buildHydratedSystem(sourceSystem: Record<string, unknown>, persistedSystem: Record<string, unknown>): Record<string, unknown> {
-    return deepMerge(structuredClone(sourceSystem), persistedSystem);
+export function buildHydratedSystem(
+    sourceSystem: Record<string, unknown>,
+    persistedSystem: Record<string, unknown>,
+    schemaDefaults: Record<string, unknown> = {},
+): Record<string, unknown> {
+    return deepMerge(structuredClone(sourceSystem), persistedSystem, schemaDefaults);
+}
+
+/** Per-type cache of each item system DataModel's cleaned empty source. */
+const SCHEMA_DEFAULTS = new Map<string, Record<string, unknown>>();
+
+/**
+ * The item type's schema initials, as a stored source would carry them: its
+ * system DataModel cleans an empty payload. Empty under headless tooling and
+ * vitest, where no `CONFIG` exists — the join then only defers empty strings.
+ */
+function schemaDefaultsFor(type: string): Record<string, unknown> {
+    const cached = SCHEMA_DEFAULTS.get(type);
+    if (cached !== undefined) return cached;
+    let defaults: Record<string, unknown> = {};
+    if ('CONFIG' in globalThis) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.Item.dataModels is the untyped Foundry registry of system DataModel classes
+        const model = (CONFIG.Item.dataModels as Record<string, { cleanData?: (source: Record<string, unknown>) => Record<string, unknown> } | undefined>)[
+            type
+        ];
+        try {
+            if (typeof model?.cleanData === 'function') defaults = model.cleanData({});
+        } catch (err) {
+            console.warn(`compendium-hydrate: could not read the ${type} schema defaults; schema initials will not defer to canonical`, err);
+        }
+    }
+    SCHEMA_DEFAULTS.set(type, defaults);
+    return defaults;
 }
 /* eslint-enable no-restricted-syntax */
 
@@ -318,10 +362,11 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
         // covers a canonical with no recorded source (#574). A no-op when flat.
         const persisted = item._source?.system ?? item.system;
         const ownedLine = resolveOwnedLineContent(source, persisted, lineKey);
+        const defaults = schemaDefaultsFor(item.type);
         const merged =
             ownedLine === null
-                ? buildHydratedSystem(materializeItemVariants(structuredClone(source.system), lineKey), persisted)
-                : buildHydratedSystem(ownedLine.base, ownedLine.overlay);
+                ? buildHydratedSystem(materializeItemVariants(structuredClone(source.system), lineKey), persisted, defaults)
+                : buildHydratedSystem(ownedLine.base, ownedLine.overlay, defaults);
         // Order-insensitive no-op check (as the actor path uses), so a re-render of
         // an already-hydrated item does not needlessly re-patch and `reset()`.
         if (sameSourceValue(merged, persisted)) continue; // already full — no-op

@@ -305,3 +305,70 @@ describe('hydrateActorInMemory — commits onto a sealed source', () => {
         expect(doc._source.system).toEqual({ variantOf: 'Compendium.x.Actor.base', specialization: 'Las', armour: 25 });
     });
 });
+
+/**
+ * Live in voidship-escapade: a lean stub's `_source.system` is cleaned through
+ * its schema, so every field it never stored holds the schema initial. Those
+ * initials used to win the join, turning every lean weapon into a primitive
+ * melee weapon and every lean armour into AP 0.
+ */
+describe('schema initials defer to the canonical body', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    const weaponDefaults = {
+        class: 'melee',
+        type: 'primitive',
+        damage: { type: 'impact', bonus: 0, penetration: 0 },
+        special: [],
+        requiredTraining: undefined,
+        specialization: '',
+    };
+    const canonicalLaspistol = {
+        class: 'pistol',
+        type: 'las',
+        damage: { type: 'energy', bonus: 2, penetration: 0 },
+        special: ['reliable'],
+        requiredTraining: 'Las',
+    };
+
+    it('keeps the canonical value where the persisted value is only the schema initial', () => {
+        const persisted = {
+            class: 'melee',
+            type: 'primitive',
+            damage: { type: 'impact', bonus: 0, penetration: 0 },
+            special: [],
+            requiredTraining: undefined,
+            specialization: '',
+        };
+        expect(buildHydratedSystem(canonicalLaspistol, persisted, weaponDefaults)).toEqual({ ...canonicalLaspistol, specialization: '' });
+    });
+
+    it('still lets a value the actor genuinely stored win', () => {
+        const persisted = { class: 'basic', type: 'primitive', damage: { type: 'impact', bonus: 5, penetration: 0 }, special: [], specialization: 'Las' };
+        expect(buildHydratedSystem(canonicalLaspistol, persisted, weaponDefaults)).toEqual({
+            class: 'basic',
+            type: 'las',
+            damage: { type: 'energy', bonus: 5, penetration: 0 },
+            special: ['reliable'],
+            requiredTraining: 'Las',
+            specialization: 'Las',
+        });
+    });
+
+    it('reads the defaults from the item type DataModel in the join', async () => {
+        vi.stubGlobal('CONFIG', { Item: { dataModels: { armour: { cleanData: () => ({ armourPoints: { body: 0, head: 0 }, coverage: [] }) } } } });
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, type: 'armour', system: { armourPoints: { body: 4, head: 0 }, coverage: ['body'] } }));
+        const leanArmour = {
+            id: 'a1',
+            name: 'Flak Vest',
+            img: null,
+            type: 'armour',
+            system: { armourPoints: { body: 0, head: 0 }, coverage: [] },
+            _stats: { compendiumSource: 'Compendium.x.Item.flak' },
+        };
+        const patches = await buildHydrationPatches({ items: { contents: [leanArmour] } });
+        expect(patches[0]).toMatchObject({ system: { armourPoints: { body: 4, head: 0 }, coverage: ['body'] } });
+    });
+});

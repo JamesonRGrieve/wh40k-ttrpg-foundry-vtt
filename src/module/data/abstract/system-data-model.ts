@@ -248,7 +248,30 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
         // eslint-disable-next-line no-restricted-syntax -- boundary: return type mirrors parent shimData signature
     ): Record<string, unknown> {
         this._shimData(data, options);
+        SystemDataModel.declareSchemaKeys(data, this.schema.keys());
         return super.shimData(data, options);
+    }
+
+    /**
+     * Declare every top-level schema field on a construction source, absent ones
+     * as `undefined`.
+     *
+     * Foundry seals a model's `_source` right after `shimData`, and the system
+     * model is built over the document's own `_source.system` (`copy: false`). An
+     * optional field with no `initial` (`requiredTraining`, gear `effect`,
+     * cybernetic `drawbacks`) is simply absent from a source that never stored
+     * it, so a later update that sets it tries to ADD a key to the sealed object
+     * and throws "Cannot add property …, object is not extensible", rejecting the
+     * whole update. A declared key is writable through the seal; `undefined` is
+     * what `SchemaField#toObject` already emits for it, so nothing serialises
+     * differently.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry construction source, before the seal
+    static declareSchemaKeys(data: Record<string, unknown>, fieldNames: readonly string[]): void {
+        if (Object.isSealed(data)) return;
+        for (const name of fieldNames) {
+            if (!(name in data)) data[name] = undefined;
+        }
     }
 
     /* -------------------------------------------- */

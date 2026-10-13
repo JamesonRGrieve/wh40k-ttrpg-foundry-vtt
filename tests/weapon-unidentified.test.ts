@@ -35,8 +35,9 @@ describe('weapon identification schema (#262)', () => {
         // The in-memory join overlays the actor's PERSISTED system on top of the
         // canonical body (persisted wins), so a per-instance flag like
         // state.identified is never reset to the compendium default — and because
-        // the join never writes the DB, there is nothing on disk to clobber.
-        expect(HYDRATE).toMatch(/deepMerge\(structuredClone\(sourceSystem\), persistedSystem\)/);
+        // the join never writes the DB, there is nothing on disk to clobber. Only a
+        // value equal to its schema default defers; `identified: false` is not one.
+        expect(HYDRATE).toMatch(/deepMerge\(structuredClone\(sourceSystem\), persistedSystem, schemaDefaults\)/);
         expect(HYDRATE).toMatch(/_source\?\.system \?\? item\.system/);
     });
 });
