@@ -15,11 +15,9 @@ import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { onTurnStart, type TurnCombatant } from './combat-turn-hooks.ts';
-import { evaluateCombatMovement, type MovementEvaluation, type MovementMode, turnMovementAllowance } from './movement-budget.ts';
+import { evaluateCombatMovement, MOVE_MODE_FLAG, type MovementEvaluation, type MovementMode, turnMovementAllowance } from './movement-budget.ts';
 
 const MOVED_FLAG = 'movedThisTurnMetres';
-/** Token flag the move-mode toggle (`setMovementMode`) writes — half/full/charge/run. */
-const MOVEMENT_MODE_FLAG = 'movementAction';
 
 export interface TokenMoveDecisionInput {
     automation: 'full' | 'display' | 'none';
@@ -75,7 +73,7 @@ function writeMovedMetres(combatant: LooseCombatant | TurnCombatant | null | und
 
 /** The token's selected move mode (the move-mode toggle flag); undefined when unset/invalid → full move. */
 function readMovementMode(token: LooseToken): MovementMode | undefined {
-    const raw = (token as FlagAccessor | null | undefined)?.getFlag?.(SYSTEM_ID, MOVEMENT_MODE_FLAG);
+    const raw = (token as FlagAccessor | null | undefined)?.getFlag?.(SYSTEM_ID, MOVE_MODE_FLAG);
     return raw === 'half' || raw === 'full' || raw === 'charge' || raw === 'run' ? raw : undefined;
 }
 

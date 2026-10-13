@@ -97,7 +97,7 @@ import {
 import { canEquipWeapon, computeHandBudget, handsForWeapon, resolveAvailableHands, type HandBudget } from '../../rules/hand-budget.ts';
 import { HIT_LOCATION_IDS, hitLocationLabel, hitLocationRollRange, hitLocationShortLabel } from '../../rules/hit-locations.ts';
 import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
-import { combatMovementView } from '../../rules/movement-budget.ts';
+import { combatMovementView, MOVE_MODE_FLAG } from '../../rules/movement-budget.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
 import { MOUNTED_ACTIONS } from '../../rules/ow-mount.ts';
 import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
@@ -2694,7 +2694,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const inCombat = combat?.started === true;
         // eslint-disable-next-line no-restricted-syntax -- boundary: TokenDocument.getFlag returns Foundry's untyped flag payload
         const token = this.actor.getActiveTokens()[0]?.document as { getFlag?: (s: string, k: string) => unknown } | undefined;
-        const rawMode = token?.getFlag?.('wh40k-rpg', 'movementAction');
+        const rawMode = token?.getFlag?.(SYSTEM_ID, MOVE_MODE_FLAG);
         // Disengage is a Half Action, not a move mode (#416) — no longer a valid selection here.
         const selectedMode = rawMode === 'half' || rawMode === 'full' || rawMode === 'charge' || rawMode === 'run' ? rawMode : undefined;
         const combatant = combat?.combatant;
@@ -4082,7 +4082,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Store movement action on token flags
         // eslint-disable-next-line no-restricted-syntax -- boundary: token.update() accepts untyped data; cast needed to satisfy the overload
-        await token.update({ 'flags.wh40k-rpg.movementAction': movementType } as Record<string, unknown>);
+        await token.update({ [`flags.${SYSTEM_ID}.${MOVE_MODE_FLAG}`]: movementType } as Record<string, unknown>);
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG is untyped Foundry global; double-cast to access wh40k.movementTypes config
         const config = ((CONFIG as unknown as Record<string, unknown>)['wh40k'] as Record<string, unknown> | undefined)?.['movementTypes'] as

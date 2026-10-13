@@ -12,12 +12,10 @@
  */
 
 import { SYSTEM_ID } from '../../constants.ts';
+import { MOVE_MODE_FLAG } from '../../rules/movement-budget.ts';
 import { readSceneEnvironment, SCENE_ENVIRONMENT_FLAG } from '../../rules/scene-environment.ts';
 import { hooksOn } from '../../utils/hooks-on.ts';
 import SceneEnvironmentWidget from './scene-environment-widget.ts';
-
-/** Token flag the move-mode toggle writes — half / full / charge / run (`movement-enforcement.ts`). */
-const MOVEMENT_MODE_FLAG = 'movementAction';
 
 /** The move modes that demand the zero-gravity Agility test. */
 const MANOEUVRE_MODES: ReadonlySet<string> = new Set(['charge', 'run']);
@@ -63,7 +61,7 @@ function environmentChanged(changed: FlagChange): boolean {
 
 /** The move mode a token update declared, or undefined when it set none. */
 function declaredMoveMode(changed: FlagChange): string | undefined {
-    const mode = changed.flags?.[SYSTEM_ID]?.[MOVEMENT_MODE_FLAG];
+    const mode = changed.flags?.[SYSTEM_ID]?.[MOVE_MODE_FLAG];
     return typeof mode === 'string' ? mode : undefined;
 }
 
