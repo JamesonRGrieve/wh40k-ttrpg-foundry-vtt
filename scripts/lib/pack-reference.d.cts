@@ -16,7 +16,7 @@ export interface PackDocument {
 export declare const STUB_IDENTITY_KEYS: readonly ['name', '_id', 'img'];
 
 /** Every key a stub may carry besides `reference`. */
-export declare const STUB_OVERRIDE_KEYS: readonly ['name', '_id', 'img', 'system'];
+export declare const STUB_OVERRIDE_KEYS: readonly ['name', '_id', 'img', 'system', 'addItems'];
 
 export declare function isReferenceStub(doc: unknown): doc is PackDocument & { reference: string };
 

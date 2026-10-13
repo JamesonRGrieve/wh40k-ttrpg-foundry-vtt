@@ -17,13 +17,18 @@
  *   Influence terms and Fate (Enemies Without p. 41, #77).
  *   Objects merge key by key. Arrays and scalars in the overlay replace the
  *   body's value.
+ * - `addItems`: embedded items APPENDED to the body's `items`, never replacing
+ *   them. They are lean compendium-joined items like any actor's. Example: the
+ *   Weapon Training talents those RCs get for their standard weapons ("All have
+ *   any appropriate Weapon Training talents associated with their standard
+ *   weapons", Enemies Without p. 41).
  */
 
 /** Top-level keys that replace the resolved body's value outright. */
 const STUB_IDENTITY_KEYS = Object.freeze(['name', '_id', 'img']);
 
 /** Every key a stub may carry besides `reference`. */
-const STUB_OVERRIDE_KEYS = Object.freeze([...STUB_IDENTITY_KEYS, 'system']);
+const STUB_OVERRIDE_KEYS = Object.freeze([...STUB_IDENTITY_KEYS, 'system', 'addItems']);
 
 function isPlainObject(value) {
     return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -49,9 +54,10 @@ function deepMergeOverlay(base, overlay) {
  * overrides applied.
  */
 function applyReferenceOverrides(resolved, stub) {
-    const { reference: _reference, system, ...identity } = stub;
+    const { reference: _reference, system, addItems, ...identity } = stub;
     const out = { ...resolved, ...identity };
     if (system !== undefined) out.system = deepMergeOverlay(resolved.system ?? {}, system);
+    if (addItems !== undefined) out.items = [...(Array.isArray(resolved.items) ? resolved.items : []), ...addItems];
     return out;
 }
 

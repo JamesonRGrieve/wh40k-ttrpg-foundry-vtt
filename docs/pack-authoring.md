@@ -592,7 +592,7 @@ Pack source files in `_source/` may be authored in one of two formats:
 Reference rules:
 
 - the file must contain the `reference` key and MAY additionally carry any of the
-  **override keys `name`, `_id`, `img`, `system`**, nothing else. The validator
+  **override keys `name`, `_id`, `img`, `system`, `addItems`**, nothing else. The validator
   (`STUB_OVERRIDE_KEYS`, from `scripts/lib/pack-reference.cjs`) warns on any other
   extra key.
 - `name`/`_id`/`img` replace the resolved body's value. `system` is a partial
@@ -602,6 +602,10 @@ Reference rules:
   "uses the rules from the NPC profile" in the bestiary carries only
   `isReinforcement`, `reinforcement` and its `fate`. To diverge a line's stats,
   author a per-line variant container (or `variantOf`) instead.
+- `addItems` is an array of embedded items **appended** to the body's `items`.
+  It never replaces them. Each entry is a lean compendium-joined item with its
+  own `_id`, `name` and `type`. Example: the Weapon Training talents those RCs
+  have "associated with their standard weapons".
 - override `_id` when the stub is a **distinct item** riding a shared body (its own
   identity + UUID); omit `_id` to inherit the target's (a true byte-identical
   alias).
@@ -616,8 +620,8 @@ Build behavior:
 
 - `gulp packs` resolves the reference chain before writing the compendium document.
 - the resolved document is the referenced JSON copied into place, then the stub's
-  `name`/`_id`/`img` applied on top and its `system` overlay deep-merged
-  (`applyReferenceOverrides`, `scripts/lib/pack-reference.cjs`).
+  `name`/`_id`/`img` applied on top, its `system` overlay deep-merged and its
+  `addItems` appended (`applyReferenceOverrides`, `scripts/lib/pack-reference.cjs`).
 - this is a pack-authoring feature, not an alternate Foundry runtime shape — after
   compilation Foundry receives a normal expanded document object.
 
@@ -907,7 +911,8 @@ What it checks (each a separate warning rule):
 
 - **identity** — `name` non-empty, `_id` and `type` present.
 - **reference stubs** — a stub carries `reference` plus at most the override keys
-  `name` / `_id` / `img` / `system` (a non-empty object overlay).
+  `name` / `_id` / `img` / `system` (a non-empty object overlay) / `addItems` (a
+  non-empty array of items with `_id`, `name` and `type`).
 - **cost** — matches the asymmetric *Standard Cost Shape* (no `homebrew` on `dh1`;
   `homebrew.requisition` only on `dh2`; no legacy `value` / `currency`).
 - **state** — transient state lives under `system.state`, not flat on `system.*`.

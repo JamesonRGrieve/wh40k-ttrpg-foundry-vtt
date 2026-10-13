@@ -33,7 +33,8 @@ const PROVENANCE = new Set(['raw', 'homebrew', 'derived']);
  * body's own (a shared body under a local identity or art). `system` is a
  * partial overlay deep-merged onto the body's `system` (a Reinforcement
  * Character stub carries only its RC terms over the bestiary profile, #77).
- * Any other key is a deviation.
+ * `addItems` appends embedded items to the body's `items` (that RC's Weapon
+ * Training talents). Any other key is a deviation.
  */
 const STUB_OVERRIDE_KEYS = new Set(require('../../scripts/lib/pack-reference.cjs').STUB_OVERRIDE_KEYS);
 
@@ -326,7 +327,8 @@ function validateDocument(doc, relFile, warnings) {
 
     // Reference stub: `reference` (required) plus an OPTIONAL override set
     // (STUB_OVERRIDE_KEYS). The build applies name/_id/img over the resolved
-    // body and deep-merges a `system` overlay onto its `system`.
+    // body, deep-merges a `system` overlay onto its `system`, and appends
+    // `addItems` to its `items`.
     if (isPlainObject(doc) && Object.prototype.hasOwnProperty.call(doc, 'reference')) {
         if (typeof doc.reference !== 'string') warn('stub-bad-reference', 'reference is not a string');
         const extra = Object.keys(doc).filter((k) => k !== 'reference' && !STUB_OVERRIDE_KEYS.has(k));
@@ -337,6 +339,14 @@ function validateDocument(doc, relFile, warnings) {
         if ('img' in doc && !nonEmptyString(doc.img)) warn('stub-override-img', 'reference override img is empty');
         if ('system' in doc && (!isPlainObject(doc.system) || Object.keys(doc.system).length === 0)) {
             warn('stub-override-system', 'reference override system is not a non-empty object overlay');
+        }
+        if ('addItems' in doc) {
+            const items = doc.addItems;
+            const valid =
+                Array.isArray(items) &&
+                items.length > 0 &&
+                items.every((item) => isPlainObject(item) && nonEmptyString(item._id) && nonEmptyString(item.name) && nonEmptyString(item.type));
+            if (!valid) warn('stub-add-items', 'reference addItems is not a non-empty array of items with _id, name and type');
         }
         return;
     }

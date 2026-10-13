@@ -50,8 +50,10 @@ interface PackDoc {
     _id?: string;
     name?: string;
     items?: EmbeddedItem[];
-    /** One-key cross-line pointer at the canonical document (see gulpfile `isReferenceStub`). */
+    /** Pointer at the canonical document (see scripts/lib/pack-reference.cjs). */
     reference?: string;
+    /** A stub's items appended to its target's (scripts/lib/pack-reference.cjs). */
+    addItems?: EmbeddedItem[];
 }
 
 const files = existsSync(PACKS_ROOT) ? sourceFiles(PACKS_ROOT) : [];
@@ -78,9 +80,11 @@ function resolveDoc(file: string, seen = new Set<string>()): PackDoc | null {
     if (!existsSync(target)) return null;
     const resolved = resolveDoc(target, seen);
     if (resolved === null) return null;
-    // Per-line override keys (e.g. `img`) win over the canonical body.
-    const { reference: _reference, ...overrides } = doc;
-    return { ...resolved, ...overrides };
+    // Per-line override keys (e.g. `img`) win over the canonical body; a stub's
+    // `addItems` join the body's items, so their join keys are checked too.
+    const { reference: _reference, addItems, ...overrides } = doc;
+    const merged = { ...resolved, ...overrides };
+    return addItems === undefined ? merged : { ...merged, items: [...(resolved.items ?? []), ...addItems] };
 }
 
 /** packName -> set of document ids it contains. */
