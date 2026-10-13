@@ -1,132 +1,100 @@
+import type { Page } from '@playwright/test';
+import { scanContrast } from './lib/contrast';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
-import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
-
-interface MutantDialogProbeResult {
-    rendered: boolean;
-    hasCorruptionCallout: boolean;
-    hasTwistedFleshRow: boolean;
-    hasApplyButton: boolean;
-    hasCancelButton: boolean;
-    actorAttached: boolean;
-    error: string | null;
-}
-
-interface MutantDialogModule {
-    openMutantBackgroundDialog: (actor: object | null) => void;
-}
-
-interface MutantActorGlobal {
-    Actor?: { create?: (data: object, options?: object) => Promise<object | null> };
-}
+import {
+    cleanupProbes,
+    messageIds,
+    openProbeSheet,
+    readActorFlag,
+    readActorSystem,
+    showSheetTab,
+    snapElement,
+    snapMessage,
+    waitForMessage,
+} from './occult-sheet-flow';
 
 /**
- * Tier B coverage of the Mutant Background Dialog (GitHub #91).
+ * Tier B coverage of the Mutant background dialog (#91), opened the way the GM
+ * does — through the `game.wh40k.prompts.openMutantBackgroundDialog(actor)`
+ * launcher — and confirmed with its Apply button:
  *
- * Constructs the dialog directly via its deployed module URL. The
- * surface itself is data-only — `MUTANT_STARTING_CORRUPTION` from
- * `src/module/rules/chaos-backgrounds.ts` drives the +10 callout —
- * but the spec attempts to attach a fresh dh2 actor when one can be
- * created via Foundry's `Actor.create` so the application path is
- * exercised end-to-end. The probe falls back to a null actor when
- * actor creation isn't available.
- *
- * The spec asserts:
- *   1. The dialog renders into a real HTMLElement.
- *   2. A "+10" starting Corruption callout is present.
- *   3. A Twisted Flesh grant row (`[data-talent="twisted-flesh"]`) is present.
- *   4. An "Apply" action button (`[data-action="apply"]`) is present.
- *   5. A "Cancel" action button (`[data-action="cancel"]`) is present.
- *
- * Also snaps the dialog at default readable size for visual review.
+ *   - the dialog names the actor, the +10 starting Corruption and the Twisted
+ *     Flesh grant;
+ *   - Apply writes `system.corruption` (+10) and the Twisted Flesh flag the
+ *     Malignancy flow reads, posts the background card, and closes;
+ *   - Cancel writes nothing.
  */
 
+const DIALOG = 'form.mutant-background-dialog';
+const VITALS = 'section.tab[data-tab="overview"] [data-wh40k-hook="overview-vitals"]';
+
+/** Open the dialog for an actor through the GM launcher; returns the dialog's element id. */
+async function openForActor(page: Page, actorId: string): Promise<string> {
+    await page.evaluate((id) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals (game) have no repo types
+        const w = globalThis as unknown as {
+            game: { actors: { get: (i: string) => object | undefined }; wh40k: { prompts: { openMutantBackgroundDialog: (a: object | null) => void } } };
+        };
+        w.game.wh40k.prompts.openMutantBackgroundDialog(w.game.actors.get(id) ?? null);
+    }, actorId);
+    const dialog = page.locator(DIALOG).last();
+    await expect(dialog.locator('[data-talent="twisted-flesh"]')).toBeVisible();
+    return (await dialog.getAttribute('id')) ?? '';
+}
+
 test.describe.serial('MutantBackgroundDialog (Tier B)', () => {
-    test('opens and renders +10 Corruption + Twisted Flesh grant plus Apply / Cancel', async ({ page }) => {
+    let before: string[] = [];
+
+    test.beforeEach(async ({ page }) => {
         await joinOrSkip(page);
+        before = await messageIds(page);
+    });
 
-        const result = await page.evaluate(async (): Promise<MutantDialogProbeResult> => {
-            const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/mutant-background-dialog.js';
-            let error: string | null = null;
-            let rendered = false;
-            let hasCorruptionCallout = false;
-            let hasTwistedFleshRow = false;
-            let hasApplyButton = false;
-            let hasCancelButton = false;
-            let actorAttached = false;
+    test.afterEach(async ({ page }) => {
+        await cleanupProbes(page, before);
+    });
 
-            try {
-                const mod = (await import(moduleUrl)) as MutantDialogModule;
-                // Best-effort fresh dh2 actor creation. If `Actor.create` is
-                // unavailable in the test world we fall back to null so the
-                // surface still renders for the structural assertions.
-                let actor: object | null = null;
-                try {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side Actor global is runtime-only, no shipped types
-                    const g = globalThis as unknown as MutantActorGlobal;
-                    if (typeof g.Actor?.create === 'function') {
-                        actor = await g.Actor.create(
-                            {
-                                name: 'Mutant Probe',
-                                type: 'dh2-character',
-                            },
-                            { temporary: true },
-                        );
-                        actorAttached = actor !== null;
-                    }
-                } catch {
-                    /* fall through with null actor */
-                }
-
-                const inst = await wh40kOpenDialog('mutant-background-dialog', () => {
-                    mod.openMutantBackgroundDialog(actor);
-                });
-                // Wait for the dialog content (the checks below report a miss).
-                await globalThis.wh40kE2E.pollUntil(() => inst.element?.querySelector('[data-action="apply"]') != null);
-                rendered = inst.element instanceof HTMLElement;
-                if (rendered && inst.element) {
-                    hasCorruptionCallout = inst.element.textContent.includes('+10');
-                    hasTwistedFleshRow = inst.element.querySelector('[data-talent="twisted-flesh"]') !== null;
-                    hasApplyButton = inst.element.querySelector('[data-action="apply"]') !== null;
-                    hasCancelButton = inst.element.querySelector('[data-action="cancel"]') !== null;
-                }
-            } catch (err) {
-                error = err instanceof Error ? err.message : String(err);
-            }
-
-            return {
-                rendered,
-                hasCorruptionCallout,
-                hasTwistedFleshRow,
-                hasApplyButton,
-                hasCancelButton,
-                actorAttached,
-                error,
-            };
+    test('Apply writes +10 Corruption and the Twisted Flesh flag, and posts the card', async ({ page }) => {
+        const { actorId, sheetId } = await openProbeSheet(page, {
+            name: 'Mutant Applicant',
+            type: 'dh2-character',
+            system: { gameSystem: 'dh2', corruption: 0 },
         });
+        await snapElement(page, 'mutant-background-sheet-before', `#${sheetId} ${VITALS}`, sheetId);
 
-        expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
-        expect(result.rendered, 'dialog did not render').toBe(true);
-        expect(result.hasCorruptionCallout, 'expected +10 Corruption callout').toBe(true);
-        expect(result.hasTwistedFleshRow, 'expected Twisted Flesh grant row').toBe(true);
-        expect(result.hasApplyButton, 'expected Apply action button').toBe(true);
-        expect(result.hasCancelButton, 'expected Cancel action button').toBe(true);
+        const dialogId = await openForActor(page, actorId);
+        const dialog = page.locator(`#${dialogId}`);
+        await expect(dialog).toContainText('+10');
+        await expect(dialog).toContainText('Mutant Applicant');
+        await snapElement(page, 'mutant-background-dialog', `#${dialogId}`, dialogId);
 
-        await snap(page, 'mutant-background-dialog');
+        await dialog.locator('[data-action="apply"]').click();
+        await expect.poll(async () => readActorSystem(page, actorId, 'corruption')).toBe(10);
+        expect(await readActorFlag(page, actorId, 'twistedFlesh')).toBe(true);
+        await expect(page.locator(`#${dialogId}`)).toHaveCount(0);
 
+        const card = await waitForMessage(page, before, 'mutant-twisted-flesh-rule');
+        expect(card.content).toContain('Mutant Applicant');
+        expect(card.content).not.toContain('data-action=');
+        await snapMessage(page, 'mutant-background-card', card.id);
+        // The +10 was once dark text on the card's dark green (no colour of its own).
+        const unreadable = await scanContrast(page, `#sidebar .chat-log [data-message-id="${card.id}"] [data-wh40k-system]`);
+        expect(unreadable.filter((run) => run.text.includes('+10'))).toEqual([]);
+
+        await showSheetTab(page, actorId, 'overview');
+        await snapElement(page, 'mutant-background-sheet-after', `#${sheetId} ${VITALS}`, sheetId);
         recordCoverage('dialog.render', 'MutantBackgroundDialog');
+    });
 
-        // Best-effort cleanup so the dialog doesn't leak into later specs.
-        await page.evaluate(() => {
-            const root = document.querySelector<HTMLDialogElement>('.mutant-background-dialog');
-            if (root?.close) {
-                try {
-                    root.close();
-                } catch {
-                    /* ignore */
-                }
-            }
-        });
+    test('Cancel writes nothing', async ({ page }) => {
+        const { actorId } = await openProbeSheet(page, { name: 'Undecided Applicant', type: 'dh2-character', system: { gameSystem: 'dh2', corruption: 3 } });
+        const dialogId = await openForActor(page, actorId);
+        await page.locator(`#${dialogId} [data-action="cancel"]`).click();
+        await expect(page.locator(`#${dialogId}`)).toHaveCount(0);
+        expect(await readActorSystem(page, actorId, 'corruption')).toBe(3);
+        expect(await readActorFlag(page, actorId, 'twistedFlesh')).toBeUndefined();
+        expect(await messageIds(page)).toEqual(before);
     });
 });

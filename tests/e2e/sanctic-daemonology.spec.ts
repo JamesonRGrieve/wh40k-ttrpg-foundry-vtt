@@ -1,7 +1,63 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
-import { snap } from './lib/screenshot';
+import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
+import {
+    addCompendiumItems,
+    cleanupProbes,
+    forceDice,
+    messageIds,
+    openProbeSheet,
+    type ProbeActorData,
+    readActorSystem,
+    showSheetTab,
+    snapElement,
+    snapMessage,
+    waitForMessage,
+} from './occult-sheet-flow';
+
+/** Sacrifice — a Malefic Daemonology power (DH2 Enemies Beyond), not an attack. */
+const SACRIFICE_UUID = 'Compendium.wh40k-rpg.dh2-beyond-items-psychic-powers.Item.fs2LEOnlo15rJYiN';
+/** Psychic Communion — a Sanctic Daemonology power, not an attack. */
+const COMMUNION_UUID = 'Compendium.wh40k-rpg.dh2-beyond-items-psychic-powers.Item.r2CakaLPtwzotW0W';
+/** The Sanctic Purity talent (#131). */
+const SANCTIC_PURITY_UUID = 'Compendium.wh40k-rpg.dh2-beyond-items-talents.Item.2DuNNAkyTTMgGzJb';
+
+/** Dice uniform giving a d100 of 05: a pass, and not a double, so no Phenomena. */
+const ROLL_05 = 0.955;
+/** Dice uniform giving a d100 of 11: a pass AND a double, so Phenomena trigger. */
+const ROLL_11 = 0.895;
+
+/** A psychic power's row in the Combat tab's psychic panel (the Powers tab was folded into Combat). */
+const POWER_ROW = (itemId: string): string => `section.tab[data-tab="combat"] [data-item-type="psychicPower"][data-item-id="${itemId}"]`;
+
+/** A DH2 psyker: Psy Rating 3, every characteristic 50, two Fate. */
+function psyker(name: string): ProbeActorData {
+    const characteristics = Object.fromEntries(
+        ['weaponSkill', 'ballisticSkill', 'strength', 'toughness', 'agility', 'intelligence', 'perception', 'willpower', 'fellowship'].map((key) => [
+            key,
+            { base: 50 },
+        ]),
+    );
+    return { name, type: 'dh2-character', system: { gameSystem: 'dh2', psy: { rating: 3 }, characteristics, corruption: 0, fate: { max: 2, value: 2 } } };
+}
+
+/** Click a power's row in the Combat tab's psychic panel (the row is the Focus Power control) and roll the unified dialog. */
+async function castFromSheet(page: Page, sheetId: string, itemId: string, label: string): Promise<void> {
+    // The row's own hover-revealed invoke button never becomes visible (its group-hover
+    // variant is mis-prefixed, reported to the panel's owner), so click the row, which
+    // carries the same data-action, at its leading edge clear of the inner controls.
+    await page
+        .locator(`#${sheetId} ${POWER_ROW(itemId)}`)
+        .first()
+        .click({ position: { x: 8, y: 8 } });
+    const form = page.locator('form.unified-roll-dialog').last();
+    await expect(form).toBeVisible();
+    const formId = (await form.getAttribute('id')) ?? '';
+    await snapElement(page, label, `#${formId}`, formId);
+    await form.locator('[data-action="systemRoll"]').click();
+}
 
 /**
  * Tier B coverage of the Sanctic Daemonology discipline (GitHub #130 —
@@ -144,7 +200,8 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
             };
         });
 
-        await snap(page, 'sanctic-daemonology');
+        await clearScreenOverlays(page);
+        await snap(page, 'sanctic-daemonology', { selector: '#__c9_sd_host [data-wh40k-hook="sd-card"]' });
 
         // Card captured; tear down the host so it doesn't leak into
         // the next serial test's DOM.
@@ -165,5 +222,77 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
         expect(result.hasWh40kClass, 'card should sit under a .wh40k-rpg ancestor').toBe(true);
 
         recordCoverage('chat.render', 'SancticDaemonology');
+    });
+});
+
+/*
+ * Real casts from the character sheet: Powers tab → Focus Power → unified roll
+ * dialog → Roll → the psychic card, with dice faces fixed through Foundry's
+ * `CONFIG.Dice.randomUniform`.
+ */
+test.describe.serial('Malefic Corruption and Sanctic Purity casts (Tier B)', () => {
+    let before: string[] = [];
+
+    test.beforeEach(async ({ page }) => {
+        await joinOrSkip(page);
+        before = await messageIds(page);
+    });
+
+    test.afterEach(async ({ page }) => {
+        await cleanupProbes(page, before);
+    });
+
+    test('a manifested Malefic power charges Corruption equal to the Psy Rating used (a92810cbc)', async ({ page }) => {
+        const { actorId, sheetId } = await openProbeSheet(page, psyker('Malefic Psyker'));
+        const powerId = (await addCompendiumItems(page, actorId, [SACRIFICE_UUID])).at(0);
+        if (powerId === undefined) throw new Error('Sacrifice was not embedded');
+        await showSheetTab(page, actorId, 'combat');
+        await snapElement(
+            page,
+            'malefic-power-on-sheet',
+            `#${sheetId} section.tab[data-tab="combat"] .wh40k-panel:has(.wh40k-combat-psyker-controls)`,
+            sheetId,
+        );
+
+        await forceDice(page, ROLL_05);
+        await castFromSheet(page, sheetId, powerId, 'malefic-cast-dialog');
+
+        const card = await waitForMessage(page, before, 'Malefic Daemonology');
+        const charged = /\+(\d+) Corruption \(Psy Rating (\d+) used\)/.exec(card.content);
+        expect(charged, 'the card prints the Malefic Corruption row').not.toBeNull();
+        const [, corruption, pr] = charged ?? [];
+        expect(corruption).toBe(pr);
+        await expect.poll(async () => readActorSystem(page, actorId, 'corruption')).toBe(Number(corruption));
+        await snapMessage(page, 'malefic-cast-card-corruption', card.id);
+        recordCoverage('chat.render', 'psychic-action-chat.malefic');
+    });
+
+    test('Sanctic Purity offers to spend Fate on triggered Phenomena; accepting negates them (7fc6b6332)', async ({ page }) => {
+        const { actorId, sheetId } = await openProbeSheet(page, psyker('Sanctic Psyker'));
+        const powerId = (await addCompendiumItems(page, actorId, [COMMUNION_UUID, SANCTIC_PURITY_UUID])).at(0);
+        if (powerId === undefined) throw new Error('Psychic Communion was not embedded');
+        await showSheetTab(page, actorId, 'combat');
+
+        await forceDice(page, ROLL_11);
+        await castFromSheet(page, sheetId, powerId, 'sanctic-cast-dialog');
+
+        // The doubled 11 triggers Phenomena; the talent's offer is a confirmation.
+        const offer = page.locator('.confirmation-dialog').last();
+        await expect(offer).toBeVisible();
+        const offerId = (await offer.getAttribute('id')) ?? '';
+        await snapElement(page, 'sanctic-purity-offer', `#${offerId}`, offerId);
+        await offer.locator('[data-action="confirm"]').click();
+
+        const negated = await waitForMessage(page, before, 'Phenomena Negated');
+        await expect.poll(async () => readActorSystem(page, actorId, 'fate.value')).toBe(1);
+        expect(negated.content).toMatch(/2\s*(→|&rarr;)\s*1/);
+        await snapMessage(page, 'sanctic-purity-negated-card', negated.id);
+
+        const cast = await waitForMessage(page, [...before, negated.id], 'Phenomena roll is suppressed');
+        // A Sanctic power costs no Corruption.
+        expect(cast.content).not.toContain('Malefic Daemonology');
+        expect(await readActorSystem(page, actorId, 'corruption')).toBe(0);
+        await snapMessage(page, 'sanctic-cast-card-negated', cast.id);
+        recordCoverage('chat.render', 'sanctic-purity-negated-chat');
     });
 });
