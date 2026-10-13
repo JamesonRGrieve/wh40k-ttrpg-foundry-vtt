@@ -90,7 +90,7 @@ export function daemonologyLoreTotal(system: RitualActorSystem): number {
 /* -------------------------------------------- */
 
 /** A provenance row in the shape `modifier-breakdown.hbs` renders. */
-export interface CardModifierRow {
+interface CardModifierRow {
     readonly label: string;
     readonly value: number;
     readonly source: string;
@@ -162,7 +162,7 @@ function isExorcismModifierId(value: string): value is ExorcismModifierId {
 }
 
 /** A form field read as a non-negative integer (blank / garbage → 0). */
-export function formInt(data: FormData, name: string, options: { signed?: boolean } = {}): number {
+function formInt(data: FormData, name: string, options: { signed?: boolean } = {}): number {
     const raw = data.get(name);
     const value = typeof raw === 'string' ? Math.trunc(Number(raw)) : 0;
     if (!Number.isFinite(value)) return 0;
@@ -170,7 +170,7 @@ export function formInt(data: FormData, name: string, options: { signed?: boolea
 }
 
 /** A form field read as trimmed text. */
-export function formText(data: FormData, name: string): string {
+function formText(data: FormData, name: string): string {
     const raw = data.get(name);
     return typeof raw === 'string' ? raw.trim() : '';
 }

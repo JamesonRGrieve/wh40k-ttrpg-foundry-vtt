@@ -23,5 +23,3 @@ export const LOCATION_TYPE_SLUGS = [
     'realm',
     'other',
 ] as const;
-
-export type LocationTypeSlug = (typeof LOCATION_TYPE_SLUGS)[number];

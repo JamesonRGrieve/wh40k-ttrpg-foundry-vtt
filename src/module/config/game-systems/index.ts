@@ -121,20 +121,4 @@ export function themeClassFor(systemId: GameSystemId, role: SystemThemeRole): st
 
 // Re-exports
 export { BaseSystemConfig } from './base-system-config.ts';
-export { CareerBasedSystemConfig } from './career-based-system-config.ts';
-export { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-export type {
-    GameSystemId,
-    SkillRankDef,
-    CharacteristicTierDef,
-    FatePointUseDef,
-    OriginStepDef,
-    OriginStepConfig,
-    AdvanceCostResult,
-    AdvanceOption,
-    Prerequisite,
-    ChaosAlignment,
-    SidebarHeaderField,
-    SystemTheme,
-    SystemThemeRole,
-} from './types.ts';
+export type { GameSystemId, FatePointUseDef, SystemThemeRole } from './types.ts';

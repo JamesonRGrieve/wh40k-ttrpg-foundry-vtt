@@ -459,5 +459,3 @@ export class ReloadActionManager {
         return this.findSpareAmmunition(actor, weapon).length > 0;
     }
 }
-
-export const DHReloadActionManager = new ReloadActionManager();

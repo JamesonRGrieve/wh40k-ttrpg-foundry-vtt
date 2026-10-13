@@ -151,56 +151,5 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
     }
 }
 
-/**
- * Batch lookup multiple skills at once
- * More efficient than calling findSkillUuid individually
- *
- * @param {Array<{name: string, specialization?: string}>} skills - Array of skill objects
- * @returns {Map<string, string|null>} - Map of cache keys to UUIDs
- *
- * @example
- * const skills = [
- *   { name: "Awareness" },
- *   { name: "Common Lore", specialization: "Imperium" },
- *   { name: "Tech-Use" }
- * ];
- * const results = await batchFindSkillUuids(skills);
- * // Returns: Map { "Awareness" => "Compendium...", "Common Lore::Imperium" => "Compendium...", ... }
- */
-export function batchFindSkillUuids(skills: Array<{ name: string; specialization?: string }>, gameSystem?: string): Map<string, string | null | undefined> {
-    const results = new Map<string, string | null | undefined>();
-
-    for (const skill of skills) {
-        const uuid = findSkillUuid(skill.name, skill.specialization ?? null, gameSystem);
-        const cacheKey = skill.specialization !== undefined && skill.specialization !== '' ? `${skill.name}::${skill.specialization}` : skill.name;
-        results.set(cacheKey, uuid);
-    }
-
-    return results;
-}
-
-/**
- * Get a skill item from UUID
- *
- * @param {string} uuid - Compendium UUID
- * @returns {Promise<Item|null>} - The skill Item or null
- */
-type SkillItemLike = { type: string };
-
-export async function getSkillFromUuid(uuid: string): Promise<SkillItemLike | null> {
-    if (uuid === '') return null;
-
-    try {
-        const item = (await fromUuid(uuid)) as SkillItemLike | null;
-        if (item !== null && item.type === 'skill') {
-            return item;
-        }
-        return null;
-    } catch (error) {
-        console.error('Error loading skill from UUID:', error);
-        return null;
-    }
-}
-
 // parseSkillName now lives in utils/specialization-name.ts as parseSpecializationName
 // (the inverse of composeSpecializationName) and is re-exported above (#279).

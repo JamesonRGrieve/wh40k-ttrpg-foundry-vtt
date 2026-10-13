@@ -29,7 +29,7 @@
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
-import { applySupportCooldown, requestSupport, type SupportAssetDef, type SupportAssetKind } from '../rules/ow-battlefield-support.ts';
+import { requestSupport, type SupportAssetDef, type SupportAssetKind } from '../rules/ow-battlefield-support.ts';
 import type { I18nKey } from '../types/i18n-keys';
 
 /**
@@ -37,7 +37,7 @@ import type { I18nKey } from '../types/i18n-keys';
  * sheet already exposes `actor` + `_updateSystemField`; this narrows
  * to the two OW Battlefield slots persisted by `ow-battlefield-template`.
  */
-export interface OwBattlefieldHost {
+interface OwBattlefieldHost {
     actor: WH40KBaseActor & {
         name: string;
         system: {
@@ -275,8 +275,3 @@ export async function owToggleAward(this: Host, event: Event, target: HTMLElemen
         rosterSize: next.length,
     });
 }
-
-/* Re-export the canonical cooldown tick helper so callers (turn-end
- * hooks, GM "advance round" actions) read it through the action
- * module without taking a second dependency on the rules file. */
-export { applySupportCooldown };

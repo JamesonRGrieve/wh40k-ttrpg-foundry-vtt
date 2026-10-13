@@ -23,7 +23,7 @@ export function localizeAreaStatement(spec: AreaTemplateSpec, noAttackRoll: bool
 }
 
 /** One provenance row of an avoidance test as the card renders it. */
-export interface AreaComponentRow {
+interface AreaComponentRow {
     label: string;
     value: number;
     /** JSON payload for the shared wh40k-tooltip "modifier" type. */

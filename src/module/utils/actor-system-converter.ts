@@ -156,10 +156,6 @@ export function getCharacterSystemId(type: string): ConvertibleCharacterSystem |
     return type.slice(0, -'-character'.length);
 }
 
-export function getConvertedCharacterType(targetSystem: ConvertibleCharacterSystem): `${ConvertibleCharacterSystem}-character` {
-    return `${targetSystem}-character`;
-}
-
 export function buildConvertedActorSource(actor: ActorDirectoryLike, targetSystem: ConvertibleCharacterSystem): ActorSourceData {
     const kind = getActorKind(actor.type);
     if (!kind) {
@@ -252,28 +248,6 @@ export async function convertCharacterActorSystem(actor: WH40KBaseActor, targetS
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is a Foundry Actor Document projected onto the local ActorDirectoryLike read-surface
     const replacementSource = buildConvertedCharacterSource(actor as unknown as ActorDirectoryLike, targetSystem);
-    const created = await createActorFromSource(replacementSource, actor.name);
-
-    await repointLinkedSceneTokens(actor.id, created.id);
-    await actor.delete();
-
-    return created;
-}
-
-export async function convertActorSystem(actor: WH40KBaseActor, targetSystem: ConvertibleCharacterSystem): Promise<WH40KBaseActor> {
-    if (actor.id === null) {
-        throw new Error(`Actor ${actor.name} is missing an id`);
-    }
-    const currentSystem = getActorSystemId(actor.type);
-    if (currentSystem === null) {
-        throw new Error(`Actor ${actor.id} is not a convertible actor`);
-    }
-    if (currentSystem === targetSystem) {
-        return actor;
-    }
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is a Foundry Actor Document projected onto the local ActorDirectoryLike read-surface
-    const replacementSource = buildConvertedActorSource(actor as unknown as ActorDirectoryLike, targetSystem);
     const created = await createActorFromSource(replacementSource, actor.name);
 
     await repointLinkedSceneTokens(actor.id, created.id);

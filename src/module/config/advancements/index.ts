@@ -47,17 +47,6 @@ function careerRegistry(): Record<string, CareerModule> {
 }
 
 /**
- * Tier labels for characteristic advances
- * @type {Object<string, string>}
- */
-export const ADVANCEMENT_TIERS = {
-    simple: 'WH40K.Advancement.Tier.Simple',
-    intermediate: 'WH40K.Advancement.Tier.Intermediate',
-    trained: 'WH40K.Advancement.Tier.Trained',
-    expert: 'WH40K.Advancement.Tier.Expert',
-};
-
-/**
  * Tier order array
  * @type {string[]}
  */

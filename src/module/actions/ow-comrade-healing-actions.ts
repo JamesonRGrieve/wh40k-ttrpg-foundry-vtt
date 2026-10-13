@@ -38,14 +38,7 @@
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
-import {
-    applyMedicaeAttempt,
-    OW_COMRADE_AUTO_RECOVERY_DAYS,
-    OW_COMRADE_MEDICAE_DIFFICULTY_MODIFIER,
-    processReplacement,
-    type ReplacementSkipReason,
-    tickComradeRecovery,
-} from '../rules/ow-comrade-healing.ts';
+import { applyMedicaeAttempt, processReplacement, type ReplacementSkipReason, tickComradeRecovery } from '../rules/ow-comrade-healing.ts';
 import type { ComradeState } from '../rules/ow-comrade.ts';
 
 /**
@@ -55,7 +48,7 @@ import type { ComradeState } from '../rules/ow-comrade.ts';
  * `refitAvailable` gate, and the `system.comrade.state` track owned
  * by the #152 mixin.
  */
-export interface OwComradeHealingHost {
+interface OwComradeHealingHost {
     actor: WH40KBaseActor & {
         name: string;
         system: {
@@ -258,9 +251,3 @@ export async function owComradeReplace2(this: Host, event: Event, target: HTMLEl
         ...(result.reason !== undefined ? { reason: result.reason } : {}),
     });
 }
-
-/* re-export the canonical constants so consumers (sheet
- * `_prepareContext`, chat card builders) read them through the
- * action module without taking a second dependency on the rules
- * file. */
-export { OW_COMRADE_AUTO_RECOVERY_DAYS, OW_COMRADE_MEDICAE_DIFFICULTY_MODIFIER };

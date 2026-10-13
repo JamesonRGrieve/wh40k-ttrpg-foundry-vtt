@@ -26,7 +26,7 @@ export interface ChoiceLike {
 }
 
 /** Minimal structural view of a choice option. */
-export interface ChoiceOptionLike {
+interface ChoiceOptionLike {
     value?: string | undefined;
     name?: string | undefined;
     label?: string | undefined;

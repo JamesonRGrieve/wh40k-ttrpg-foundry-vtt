@@ -14,11 +14,6 @@ type TransactionResult = {
     newAvailable?: number;
 };
 
-type XPPurchase = {
-    cost: number;
-    reason: string;
-};
-
 type XPSummary = {
     total: number;
     used: number;
@@ -161,48 +156,6 @@ export function assertWithinBudget(actor: WH40KBaseActorDocument): number {
     const experience = actor.system.experience as ExperienceLike | undefined;
     if (experience === undefined) return 0;
     return experienceBalance(experience.total, derivedSpend(experience)).overspent;
-}
-
-/**
- * Authorize several XP spends together — all or nothing.
- *
- * Like {@link authorizeXPSpend}, this only checks; the debit is the costs the
- * caller stamps. Checking the combined cost is what stops a batch that each
- * individually fits but together does not.
- * @param {WH40KBaseActorDocument} actor  The actor spending XP.
- * @param {XPPurchase[]} purchases  The purchases.
- * @returns {Promise<TransactionResult>}  Whether the batch may proceed.
- */
-// eslint-disable-next-line @typescript-eslint/require-await -- the async signature is the call-site contract, matching authorizeXPSpend
-export async function authorizeXPSpendBatch(actor: WH40KBaseActorDocument, purchases: XPPurchase[]): Promise<TransactionResult> {
-    if (purchases.length === 0) {
-        return { success: false, error: 'Invalid arguments' };
-    }
-
-    const totalCost = purchases.reduce((sum, p) => sum + p.cost, 0);
-    const experience = actor.system.experience as ExperienceLike | undefined;
-    if (experience === undefined) {
-        return { success: false, error: game.i18n.localize('WH40K.Advancement.Error.TransactionFailed') };
-    }
-
-    const spent = derivedSpend(experience);
-    const available = experienceBalance(experience.total, spent).available;
-    if (!fitsBudget(experience.total, spent, totalCost)) {
-        return {
-            success: false,
-            error: game.i18n.format('WH40K.Advancement.Error.InsufficientXP', {
-                cost: String(totalCost),
-                available: String(available),
-            }),
-        };
-    }
-
-    const reasons = purchases
-        .map((p: XPPurchase) => p.reason)
-        .filter(Boolean)
-        .join(', ');
-    game.wh40k.log(`XP Batch Transaction: ${actor.name} spent ${totalCost} XP on [${reasons}]. Available: ${available - totalCost}`);
-    return { success: true, newAvailable: available - totalCost };
 }
 
 /**

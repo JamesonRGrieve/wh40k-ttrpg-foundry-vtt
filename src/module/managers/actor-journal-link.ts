@@ -150,7 +150,7 @@ export function hasExplicitJournalLink(actor: JournalLinkedActor): boolean {
 }
 
 /** Whether the current user may view the journal at `uuid` (synchronous; GMs always may). */
-export function journalVisibleToUser(uuid: string): boolean {
+function journalVisibleToUser(uuid: string): boolean {
     if (game.user.isGM) return true;
     const collectionId = compendiumCollectionId(uuid);
     const packVisible = collectionId === null ? null : game.packs.get(collectionId)?.visible ?? false;

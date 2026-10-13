@@ -16,7 +16,7 @@ import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { promptItemChoice } from './skill-use-picker.ts';
 
 /** Langpack key naming each outcome on the choice and on the card. */
-export const MALIGNANCY_OUTCOME_KEYS = {
+const MALIGNANCY_OUTCOME_KEYS = {
     malignancy: 'WH40K.Malignancy.TwistedFlesh.TakeMalignancy',
     mutation: 'WH40K.Malignancy.TwistedFlesh.TakeMutation',
 } as const satisfies Record<MalignancyOutcome, string>;
@@ -26,7 +26,7 @@ export const MALIGNANCY_OUTCOME_KEYS = {
  * without asking; with Twisted Flesh the player chooses, and dismissing the
  * choice keeps the Malignancy (the bonus is opt-in).
  */
-export async function chooseMalignancyOutcome(twistedFlesh: boolean): Promise<MalignancyOutcome> {
+async function chooseMalignancyOutcome(twistedFlesh: boolean): Promise<MalignancyOutcome> {
     const outcomes = malignancyOutcomes(twistedFlesh);
     if (outcomes.length === 1) return 'malignancy';
     const chosen = await promptItemChoice(

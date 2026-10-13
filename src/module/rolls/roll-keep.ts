@@ -13,7 +13,7 @@
  */
 
 /** A d100 test's keep mode. */
-export const ROLL_KEEP_MODES = ['normal', 'advantage', 'disadvantage', 'emphasis'] as const;
+const ROLL_KEEP_MODES = ['normal', 'advantage', 'disadvantage', 'emphasis'] as const;
 export type RollKeepMode = (typeof ROLL_KEEP_MODES)[number];
 
 /** The midpoint of the d100 an emphasis roll is measured from. */

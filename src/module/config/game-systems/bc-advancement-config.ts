@@ -105,11 +105,9 @@ const TALENT_COST_TABLE: Record<PatronStatus, readonly number[]> = {
 
 /** BC tier keys for characteristic advancement (4-tier, `core.md` :2581). */
 export const BC_CHARACTERISTIC_TIERS = ['simple', 'intermediate', 'trained', 'expert'] as const;
-export type BcCharacteristicTier = (typeof BC_CHARACTERISTIC_TIERS)[number];
 
 /** BC skill rank keys (4-rank, `core.md` :2677). */
 export const BC_SKILL_RANK_KEYS = ['known', 'trained', 'experienced', 'veteran'] as const;
-export type BcSkillRankKey = (typeof BC_SKILL_RANK_KEYS)[number];
 
 /**
  * Characteristic affiliation (Table 2-5, `core.md` :2601). Only the four

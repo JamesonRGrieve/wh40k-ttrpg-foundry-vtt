@@ -216,4 +216,4 @@ export function computeArmour(actor: WH40KBaseActor, options: ComputeArmourOptio
     return armour;
 }
 
-export { getArmourPointsObject, getArmourAPForLocation };
+export { getArmourAPForLocation };
