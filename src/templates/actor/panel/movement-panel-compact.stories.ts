@@ -10,6 +10,7 @@
  * Values are fixed for screenshot-diff stability (no Math.random).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import panelSrc from './movement-panel-compact.hbs?raw';
@@ -55,6 +56,11 @@ export const OutOfCombat: Story = {
     render: (args) => renderPanel(args),
 };
 
+/** The move-mode toggles shown as selected (`aria-pressed`). */
+function pressedModes(root: HTMLElement): string[] {
+    return Array.from(root.querySelectorAll<HTMLElement>('[aria-pressed="true"]')).map((el) => el.dataset['movementType'] ?? '');
+}
+
 export const YourTurnChargeSelected: Story = {
     name: 'Your turn — Charge selected, allowance raised to 12m',
     args: {
@@ -62,6 +68,27 @@ export const YourTurnChargeSelected: Story = {
         combatMovement: { inCombat: true, disabled: false, selectedMode: 'charge', remaining: 12 },
     },
     render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        await expect(pressedModes(canvasElement)).toEqual(['charge']);
+    },
+};
+
+/**
+ * The next turn after a Run (#610): the turn end cleared the token's move mode, so
+ * no toggle is pressed and every mode is selectable again.
+ */
+export const NewTurnModeCleared: Story = {
+    name: 'New turn — last turn’s mode cleared, nothing selected',
+    args: {
+        system: { movement: RATES, lifting: LIFTING },
+        combatMovement: { inCombat: true, disabled: false, remaining: 8 },
+    },
+    render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        await expect(pressedModes(canvasElement)).toEqual([]);
+        const selectable = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-action="setMovementMode"]')).map((el) => el.dataset['movementType']);
+        await expect(selectable).toEqual(['half', 'full', 'charge', 'run']);
+    },
 };
 
 export const YourTurnBudgetLow: Story = {
