@@ -27,6 +27,18 @@ interface Preset {
     tags: string[];
 }
 
+/** The NPC surface a preset is read from: its prepared system, and the stored source movement is read from. */
+interface PresetSourceNpc {
+    system: object;
+    _source: { system: object };
+}
+
+/** The NPC surface a preset is written to. */
+interface PresetTargetNpc {
+    name: string;
+    update: (changes: Parameters<WH40KNPC['update']>[0]) => Promise<object | undefined>;
+}
+
 interface DialogState {
     mode: 'library' | 'save' | 'load';
     npc: WH40KNPC | null;
@@ -210,12 +222,12 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
 
     /**
      * Create a preset from an NPC.
-     * @param {WH40KNPC} npc - The NPC actor.
+     * @param {PresetSourceNpc} npc - The NPC actor.
      * @param {string} name - The preset name.
      * @param {string} description - The preset description.
      * @returns {Omit<Preset, 'id' | 'createdAt'>} The preset data.
      */
-    static createPresetFromNPC(npc: WH40KNPC, name: string, description: string = ''): Omit<Preset, 'id' | 'createdAt'> {
+    static createPresetFromNPC(npc: PresetSourceNpc, name: string, description: string = ''): Omit<Preset, 'id' | 'createdAt'> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: NPC system shape varies by gameSystem; cast to local view to extract preset fields
         const system = npc.system as unknown as {
             faction: string;
@@ -259,11 +271,11 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
 
     /**
      * Apply a preset to an NPC.
-     * @param {WH40KNPC} npc - The NPC actor.
+     * @param {PresetTargetNpc} npc - The NPC actor.
      * @param {Preset} preset - The preset data.
      * @returns {Promise<void>}
      */
-    static async applyPresetToNPC(npc: WH40KNPC, preset: Preset): Promise<void> {
+    static async applyPresetToNPC(npc: PresetTargetNpc, preset: Preset): Promise<void> {
         // The preset stores the legacy combined `type`; split it onto the
         // tier/nature axes the NPC schema now uses, and drop role (#257).
         const { tier, nature } = splitNpcType(preset.type);
