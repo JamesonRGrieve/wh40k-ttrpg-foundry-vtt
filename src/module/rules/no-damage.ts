@@ -5,10 +5,10 @@
  * structured `damage.none: true` flag on the `DamageTemplate` profile (with an
  * empty `formula`), which every line's per-line variant branch can carry.
  *
- * An empty `formula` WITHOUT `none` (and without a #608 contextual profile) still
- * means "no damage authored" and keeps the weapon's legacy default dice, so `none`
- * is the only thing that switches the damage roll off. Such a weapon still resolves
- * its attack and applies its qualities
+ * An empty `formula` WITHOUT `none` (and without a #608 contextual profile) means
+ * "no damage authored": {@link classifyDamageProfile} calls it missing, which also
+ * deals no damage, except on the lines kept on the legacy default dice. A no-damage
+ * weapon still resolves its attack and applies its qualities
  * (Concussive, Snare, Smoke, Blind, Haywire, …); it only skips the damage roll.
  *
  * Content-agnostic: no weapon is named here. The flag lives in the compendium data.
@@ -49,15 +49,18 @@ function normalizeDamageValue(damage: unknown): void {
 }
 
 /**
- * What a weapon's own damage profile is made of: dice, `none`, range bands, a table
- * or a borrowed source (#601, #608).
+ * What a weapon's own damage profile is made of. Every authored weapon carries one
+ * explicitly: dice, `none`, range bands, a table or a borrowed source (#601, #608).
  *
  * - `formula`: the authored dice.
  * - `none`: the book's dash; no damage roll.
  * - `bands` / `table` / `mount` / `wielder-melee`: resolved at attack time.
- * - `legacy-default`: no profile authored; the weapon rolls the old default dice.
+ * - `legacy-default`: no profile authored, on a line whose content predates the
+ *   damage audit and keeps the old default dice.
+ * - `missing`: no profile authored on any other line. The weapon deals no damage
+ *   and the GM is told, rather than it silently rolling dice no book printed.
  */
-export type DamageProfileKind = 'formula' | 'none' | 'bands' | 'table' | 'mount' | 'wielder-melee' | 'legacy-default';
+export type DamageProfileKind = 'formula' | 'none' | 'bands' | 'table' | 'mount' | 'wielder-melee' | 'legacy-default' | 'missing';
 
 /** The profile fields that decide its {@link DamageProfileKind}. */
 interface DamageProfileShape {
@@ -68,17 +71,39 @@ interface DamageProfileShape {
     from: '' | 'mount' | 'wielder-melee';
 }
 
-/** The dice an unauthored profile rolls. */
-export const LEGACY_DEFAULT_DAMAGE_FORMULA = '1d10';
+/**
+ * Lines whose weapons were left out of the #601 audit (Imperium Maledictum, by
+ * operator decision): an unauthored profile there keeps the old default dice
+ * instead of becoming a missing profile. A game-line key, not content.
+ */
+const LEGACY_DEFAULT_DAMAGE_LINES: ReadonlySet<string> = new Set(['im']);
 
-/** Classify a weapon's own damage profile. */
-export function classifyDamageProfile(damage: DamageProfileShape): DamageProfileKind {
+/** The dice an unauthored profile rolled before #601, kept only on {@link LEGACY_DEFAULT_DAMAGE_LINES}. */
+const LEGACY_DEFAULT_DAMAGE_FORMULA = '1d10';
+
+/** Classify a weapon's own damage profile for the game line it resolves to. */
+export function classifyDamageProfile(damage: DamageProfileShape, line: string): DamageProfileKind {
     if (damage.formula !== '') return 'formula';
     if (damage.none) return 'none';
     if (damage.bands.length > 0) return 'bands';
     if (damage.table !== '') return 'table';
     if (damage.from !== '') return damage.from;
-    return 'legacy-default';
+    return LEGACY_DEFAULT_DAMAGE_LINES.has(line) ? 'legacy-default' : 'missing';
+}
+
+/** Does the weapon's own profile roll damage? Not for the book's dash, nor for a missing profile. */
+export function ownProfileDealsDamage(kind: DamageProfileKind): boolean {
+    return kind !== 'none' && kind !== 'missing';
+}
+
+/**
+ * The dice the weapon's own fixed profile rolls: the authored formula, the legacy
+ * default on its kept lines, and '' otherwise (no damage, or resolved at attack time).
+ */
+export function ownDamageFormula(kind: DamageProfileKind, formula: string): string {
+    if (kind === 'formula') return formula;
+    if (kind === 'legacy-default') return LEGACY_DEFAULT_DAMAGE_FORMULA;
+    return '';
 }
 
 /** Is this profile resolved at attack time (bands, table, borrowed)? */

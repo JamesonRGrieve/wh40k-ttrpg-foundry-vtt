@@ -15,7 +15,14 @@ import {
     selectDamageBand,
 } from '../../rules/damage-profile.ts';
 import { consumeRounds, frontSegment, type MagazineSegment, magazineFromLegacy, magazineTotal } from '../../rules/magazine.ts';
-import { classifyDamageProfile, type DamageProfileKind, isContextualDamage, LEGACY_DEFAULT_DAMAGE_FORMULA, profileDealsDamage } from '../../rules/no-damage.ts';
+import {
+    classifyDamageProfile,
+    type DamageProfileKind,
+    isContextualDamage,
+    ownDamageFormula,
+    ownProfileDealsDamage,
+    profileDealsDamage,
+} from '../../rules/no-damage.ts';
 import { applyDeactivationQualities, deactivationStatDeltas, isDeactivated, type WeaponActivationConfig } from '../../rules/weapon-activation.ts';
 import {
     activeFiringMode,
@@ -94,6 +101,28 @@ function resolveFlagVariant(value: unknown, lineKey: SupportedLineKey, parent: u
     }
     return false;
 }
+/** Weapons whose missing damage profile was already reported this session. */
+const reportedMissingDamageProfiles = new Set<string>();
+
+/**
+ * Tell the GM, once per weapon, that it has no damage profile (#601). It deals no
+ * damage rather than rolling dice no book printed; the cure is authoring one.
+ */
+function reportMissingDamageProfile(item: WH40KItem): void {
+    // An unsaved item has no uuid yet; its name identifies it for the report.
+    const key = item.uuid ?? item.name;
+    if (reportedMissingDamageProfiles.has(key)) return;
+    reportedMissingDamageProfiles.add(key);
+    console.warn(`${SYSTEM_ID} | weapon: "${item.name}" (${key}) has no damage profile; it deals no damage.`);
+    if (typeof ui === 'undefined' || typeof game === 'undefined') return;
+    // `game.user` and `ui.notifications` exist only on a booted client (not during
+    // data preparation in tooling or before `setup`), hence the widened locals.
+    const session: { user?: { isGM?: boolean } | null } = game;
+    const notifier: { notifications?: { warn: (message: string) => void } } = ui;
+    if (session.user?.isGM !== true) return;
+    notifier.notifications?.warn(t('WH40K.Warning.MissingDamageProfile', { item: item.name }));
+}
+
 const WEAPON_TYPE_CHOICES = [
     'primitive',
     'las',
@@ -1111,16 +1140,22 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @type {boolean}
      */
     get dealsDamage(): boolean {
+        const kind = this.damageProfileKind;
+        if (kind === 'missing') reportMissingDamageProfile(this.parent);
         return profileDealsDamage({
-            none: this.damage.none,
+            none: !ownProfileDealsDamage(kind),
             override: this.loadedAmmo?.damageOverride ?? null,
             modeDamage: this.activeFiringModeProfile?.damage ?? '',
         });
     }
 
-    /** What the weapon's own damage profile is made of (#601, #608). */
+    /**
+     * What the weapon's own damage profile is made of, for the line it resolves to
+     * (#601, #608). An unauthored profile is `missing` and deals no damage, except on
+     * the lines kept on the old default dice.
+     */
     get damageProfileKind(): DamageProfileKind {
-        return classifyDamageProfile(this.damage);
+        return classifyDamageProfile(this.damage, inferActiveGameLine(this.parent));
     }
 
     /**
@@ -1154,8 +1189,7 @@ export default class WeaponData extends ItemDataModel.mixin(
         if (!this.dealsDamage || this.hasContextualDamage) return '';
         const override = this.loadedAmmo?.damageOverride ?? null;
         if (override !== null) return this.#composeDamageFormula(override.formula, override.bonus);
-        const ownFormula = this.damageProfileKind === 'formula' ? this.damage.formula : LEGACY_DEFAULT_DAMAGE_FORMULA;
-        return this.#composeDamageFormula(ownFormula, this.damage.bonus || 0);
+        return this.#composeDamageFormula(ownDamageFormula(this.damageProfileKind, this.damage.formula), this.damage.bonus || 0);
     }
 
     /**
