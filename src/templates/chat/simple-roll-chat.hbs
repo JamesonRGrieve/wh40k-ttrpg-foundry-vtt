@@ -68,6 +68,12 @@
                     <i class="fas fa-reply tw-text-[0.8rem]" aria-hidden="true"></i>
                     <span>{{localize "WH40K.Evasion.CounterAttack" attacker=@root.counterAttack.attackerName}}</span>
                 </button>
+            {{else if @root.counterAttackSpent}}
+                {{!-- The Parry would have earned it, but the per-round hook is spent:
+                      say so rather than leave the control silently out. --}}
+                <p class="tw-m-0 tw-mt-2 tw-text-[0.8rem] tw-italic tw-text-[var(--wh40k-card-muted)]" data-counter-attack-spent>
+                    {{localize "WH40K.Evasion.CounterAttackSpentNote" source=@root.counterAttackSpent}}
+                </p>
             {{/if}}
 
             {{!-- Extended Test ladder (#59) --}}

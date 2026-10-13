@@ -106,6 +106,23 @@ export function counterAttackOffer(input: CounterAttackInput): CounterAttackOffe
     return null;
 }
 
+/**
+ * The item whose per-round hook a successful Parry would have earned, had it not
+ * already been used this round — so the card can say why no counter-attack is
+ * offered instead of silently leaving it out. Null when the Parry earns an offer,
+ * or earns nothing for any other reason (a Dodge, a failure, no hook, out of combat).
+ * @param {CounterAttackInput} input  The evasion, the actor's hooks, and when the hook was last used.
+ * @returns {string | null}  The spent hook's item name, or null.
+ */
+export function spentCounterAttack(input: CounterAttackInput): string | null {
+    if (input.skill !== 'parry' || !input.success || !isSameRound(input.lastUsed, input.now)) return null;
+    if (counterAttackOffer(input) !== null) return null;
+    for (const source of input.sources) {
+        if (source.hooks.some((hook) => hook.limit === 'perRound')) return source.name;
+    }
+    return null;
+}
+
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor flags are an untyped JSON bag; narrowed field by field below
 function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === 'object' && value !== null;

@@ -2157,6 +2157,7 @@ export type I18nKey =
     | 'WH40K.Evasion.Blocked.Unwieldy'
     | 'WH40K.Evasion.CounterAttack'
     | 'WH40K.Evasion.CounterAttackSpent'
+    | 'WH40K.Evasion.CounterAttackSpentNote'
     | 'WH40K.Evasion.CounterAttackTooltip'
     | 'WH40K.Evasion.DeclinedHint'
     | 'WH40K.Evasion.EffectTitle'

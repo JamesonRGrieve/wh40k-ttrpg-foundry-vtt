@@ -15,7 +15,7 @@ import { SYSTEM_ID } from '../constants.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { t } from '../i18n/t.ts';
 import { spendActionForActor } from '../rules/action-economy.ts';
-import { counterAttackOffer, readCombatRoundStamp } from '../rules/counter-attack.ts';
+import { type CounterAttackInput, counterAttackOffer, readCombatRoundStamp, spentCounterAttack } from '../rules/counter-attack.ts';
 import { buildCharBonus, collectSkillTestComponents, type DynamicModifierContext, type DynamicModifierItemLike } from '../rules/dynamic-modifiers.ts';
 import { type EvasionSkill, evasionHookSituation, evasionNegation } from '../rules/evasion.ts';
 import { collectActorStates } from '../rules/situation-tags.ts';
@@ -84,6 +84,8 @@ export class EvasionActionData extends SimpleSkillData {
     outcome: EvasionOutcome | null = null;
     /** The Counter Attack this evasion earned (#603) — rendered as the card's control; null for none. */
     counterAttack: CounterAttackCard | null = null;
+    /** The item whose per-round Counter Attack this Parry would have earned but was already used this round (#603); null otherwise. */
+    counterAttackSpent: string | null = null;
 
     constructor(prompt: EvasionPromptContext, skill: EvasionSkill, parryWeapon: ParryWeapon | null = null, hookRows: readonly RollModifierComponent[] = []) {
         super();
@@ -161,20 +163,27 @@ export class EvasionActionData extends SimpleSkillData {
         const defender = this.rollData.sourceActor;
         if (defender === null) return;
         if (defender.id !== null) spendActionForActor(defender.id, 'reaction');
-        this.counterAttack = this.#counterAttackFor(defender);
+        const input = this.#counterAttackInput(defender);
+        this.counterAttack = this.#counterAttackFor(defender, input);
+        this.counterAttackSpent = spentCounterAttack(input);
     }
 
-    /** The Counter Attack a successful Parry earned this character (#603), or null. */
-    #counterAttackFor(defender: WH40KBaseActor): CounterAttackCard | null {
-        const actorUuid = defender.uuid;
-        if (this.prompt.attackerUuid === '' || actorUuid === null) return null;
-        const offer = counterAttackOffer({
+    /** What decides whether this evasion earns a Counter Attack (#603). */
+    #counterAttackInput(defender: WH40KBaseActor): CounterAttackInput {
+        return {
             skill: this.skill,
             success: this.rollData.success,
             sources: reactionHookSources(defender.items),
             lastUsed: readCombatRoundStamp(defender.getFlag(SYSTEM_ID, COUNTER_ATTACK_FLAG)),
             now: currentCombatRound(game.combat),
-        });
+        };
+    }
+
+    /** The Counter Attack a successful Parry earned this character (#603), or null. */
+    #counterAttackFor(defender: WH40KBaseActor, input: CounterAttackInput): CounterAttackCard | null {
+        const actorUuid = defender.uuid;
+        if (this.prompt.attackerUuid === '' || actorUuid === null) return null;
+        const offer = counterAttackOffer(input);
         if (offer === null) return null;
         return {
             ...offer,

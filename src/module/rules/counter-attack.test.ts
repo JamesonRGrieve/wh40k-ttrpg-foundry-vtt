@@ -3,7 +3,15 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
 import { materializeItemVariants } from '../utils/item-variant-utils.ts';
-import { type CombatRoundStamp, counterAttackOffer, isSameRound, type ReactionHook, type ReactionHookSource, readCombatRoundStamp } from './counter-attack.ts';
+import {
+    type CombatRoundStamp,
+    counterAttackOffer,
+    isSameRound,
+    type ReactionHook,
+    type ReactionHookSource,
+    readCombatRoundStamp,
+    spentCounterAttack,
+} from './counter-attack.ts';
 
 const PER_ROUND: ReactionHook = { trigger: 'parrySuccess', grants: 'attack', limit: 'perRound', attackModifier: -20 };
 const UNLIMITED: ReactionHook = { ...PER_ROUND, limit: 'none' };
@@ -43,6 +51,28 @@ describe('counterAttackOffer (#603)', () => {
             counterAttackOffer({ skill: 'parry', success: true, sources: [{ name: 'Counter Attack', hooks: [UNLIMITED] }], lastUsed: ROUND, now: ROUND }),
         ).not.toBeNull();
         expect(counterAttackOffer({ skill: 'parry', success: true, sources: [COUNTER_ATTACK], lastUsed: ROUND, now: null })).not.toBeNull();
+    });
+});
+
+describe('spentCounterAttack (#603)', () => {
+    it('names the hook a successful Parry would have earned, already used this round', () => {
+        expect(spentCounterAttack({ skill: 'parry', success: true, sources: [COUNTER_ATTACK], lastUsed: ROUND, now: { ...ROUND } })).toBe('Counter Attack');
+    });
+
+    it('is null when the Parry earns the attack', () => {
+        expect(spentCounterAttack({ skill: 'parry', success: true, sources: [COUNTER_ATTACK], lastUsed: null, now: ROUND })).toBeNull();
+        expect(spentCounterAttack({ skill: 'parry', success: true, sources: [COUNTER_ATTACK], lastUsed: ROUND, now: { ...ROUND, round: 3 } })).toBeNull();
+        // An unlimited hook is offered even after a stamp in the same round.
+        expect(
+            spentCounterAttack({ skill: 'parry', success: true, sources: [{ name: 'Counter Attack', hooks: [UNLIMITED] }], lastUsed: ROUND, now: ROUND }),
+        ).toBeNull();
+    });
+
+    it('is null when the Parry would earn nothing anyway', () => {
+        expect(spentCounterAttack({ skill: 'dodge', success: true, sources: [COUNTER_ATTACK], lastUsed: ROUND, now: ROUND })).toBeNull();
+        expect(spentCounterAttack({ skill: 'parry', success: false, sources: [COUNTER_ATTACK], lastUsed: ROUND, now: ROUND })).toBeNull();
+        expect(spentCounterAttack({ skill: 'parry', success: true, sources: [], lastUsed: ROUND, now: ROUND })).toBeNull();
+        expect(spentCounterAttack({ skill: 'parry', success: true, sources: [COUNTER_ATTACK], lastUsed: ROUND, now: null })).toBeNull();
     });
 });
 
