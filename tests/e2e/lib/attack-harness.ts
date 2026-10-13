@@ -224,6 +224,11 @@ export async function installAttackHarness(page: Page): Promise<void> {
                     notices.push(`${type ?? 'info'}: ${message}`);
                     return notify(message, type, options);
                 };
+                // A dialog render that rejects is voided by its caller; surface its reason too.
+                const onRejection = (event: PromiseRejectionEvent): void => {
+                    notices.push(`rejection: ${event.reason instanceof Error ? event.reason.message : String(event.reason)}`);
+                };
+                window.addEventListener('unhandledrejection', onRejection);
                 try {
                     targeted.DHTargetedActionManager.performWeaponAttack(firerToken, targetToken, weapon);
                     const opened = await helpers.pollUntil(() => findDialog()?.rendered === true, helpers.scaledMs(15_000));
@@ -238,6 +243,7 @@ export async function installAttackHarness(page: Page): Promise<void> {
                     }
                 } finally {
                     notifications.notify = notify;
+                    window.removeEventListener('unhandledrejection', onRejection);
                 }
                 const actionId = Object.keys(basic.DHBasicActionManager.storedRolls).find((id) => !storedBefore.has(id)) ?? null;
                 return { messageIds: newMessagesSince(before), actionId, notices };
