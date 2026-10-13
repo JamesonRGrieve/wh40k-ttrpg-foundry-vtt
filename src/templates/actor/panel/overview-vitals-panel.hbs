@@ -15,7 +15,7 @@
                      shown, so the Overview tab is unchanged.
 --}}
             {{!-- Vitals --}}
-            <div class="tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-rounded-[6px] tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-combat)]">
+            <div data-wh40k-hook="overview-vitals" class="tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-rounded-[6px] tw-border tw-border-solid tw-border-[color:rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.4)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-combat)]">
                 {{#unless (eq showHeader false)}}
                 <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.12)_0%,var(--color-bg-tertiary)_100%)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] [&>i]:tw-text-[color:var(--wh40k-accent-combat)]">
                     <i class="fas fa-heartbeat"></i>
@@ -96,6 +96,10 @@
                         </button>
                         <button type="button" class="tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)]" data-action="restoreFate" title="{{localize 'WH40K.Status.RestoreFateTitle'}}">
                             <i class="fas fa-redo"></i>
+                        </button>
+                        {{!-- Burn Fate (#42): the total drops by 1, confirmed first; RAW allows it with no points left. --}}
+                        <button type="button" class="tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--wh40k-wounds-secondary)] hover:tw-text-[color:var(--wh40k-wounds-primary)]" data-action="spendFate" data-fate-action="burn" title="{{localize 'WH40K.ContextMenu.BurnFatePoint'}}" aria-label="{{localize 'WH40K.ContextMenu.BurnFatePoint'}}">
+                            <i class="fas fa-fire" aria-hidden="true"></i>
                         </button>
                     {{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}
                     {{/if}}
