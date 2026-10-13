@@ -14,7 +14,7 @@ import type { Page } from '@playwright/test';
  */
 
 /** The stats of one ship an assault action reads (mirrors `ShipAssaultShip`). */
-export interface AssaultShipProfile {
+interface AssaultShipProfile {
     name: string;
     hullType: string;
     manoeuvrability: number;
@@ -26,19 +26,19 @@ export interface AssaultShipProfile {
 }
 
 /** One side of the action: its stat profile and its crew rating (the default skill target). */
-export interface AssaultShipSpec {
+interface AssaultShipSpec {
     profile: AssaultShipProfile;
     crewRating: number;
 }
 
 /** One queued die result: the roll total and, for a pool, its individual dice. */
-export interface QueuedDie {
+interface QueuedDie {
     total: number;
     dice?: number[];
 }
 
 /** A langpack key resolved in-page (formatted with `data` when given). */
-export interface LabelRequest {
+interface LabelRequest {
     key: string;
     data?: Record<string, string | number>;
 }
@@ -59,7 +59,7 @@ export interface ShipAssaultScenario {
 }
 
 /** The damage calls one ship received. */
-export interface ShipDamageLog {
+interface ShipDamageLog {
     hull: number[];
     crewMorale: Array<[number, number]>;
     criticals: Array<number | null>;

@@ -61,4 +61,4 @@ export async function createItem(runtime: FoundryRuntime, data: CreateData): Pro
 
 // Single-sourced from the engine's canonical list (#312) so the per-system integration
 // loop iterates exactly the systems the system config knows about — no drift.
-export { ALL_SYSTEM_IDS as GAME_SYSTEM_IDS, type GameSystemId } from '../../../src/module/config/game-systems/types.ts';
+export { ALL_SYSTEM_IDS as GAME_SYSTEM_IDS } from '../../../src/module/config/game-systems/types.ts';

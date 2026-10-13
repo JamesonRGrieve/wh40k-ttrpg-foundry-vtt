@@ -248,13 +248,7 @@ export function mockActor(overrides?: DeepPartial<MockActor>): MockActor {
 
 // ── Shared template data ─────────────────────────────────────────────────────
 
-export interface MockModifierBadge {
-    type: string;
-    label: string;
-    value: number;
-}
-
-export interface MockModifierGroupEntry {
+interface MockModifierGroupEntry {
     id: string;
     name: string;
     img: string;
@@ -276,25 +270,14 @@ export interface MockActiveEffect {
     changes?: Array<{ label: string; value: string }>;
 }
 
-export interface MockWeaponQuality {
+interface MockWeaponQuality {
     identifier: string;
     label: string;
     level?: number;
     description: string;
 }
 
-export function mockModifierBadge(overrides?: DeepPartial<MockModifierBadge>): MockModifierBadge {
-    return deepMerge(
-        {
-            type: 'damage',
-            label: 'Damage',
-            value: 2,
-        },
-        overrides,
-    );
-}
-
-export function mockModifierEntry(overrides?: DeepPartial<MockModifierGroupEntry>): MockModifierGroupEntry {
+function mockModifierEntry(overrides?: DeepPartial<MockModifierGroupEntry>): MockModifierGroupEntry {
     const id = `modifier-${Math.random().toString(36).slice(2, 8)}`;
     const base: MockModifierGroupEntry = {
         id,
@@ -327,7 +310,7 @@ export function mockActiveEffect(overrides?: DeepPartial<MockActiveEffect>): Moc
     return deepMerge(base, overrides);
 }
 
-export function mockWeaponQuality(overrides?: DeepPartial<MockWeaponQuality>): MockWeaponQuality {
+function mockWeaponQuality(overrides?: DeepPartial<MockWeaponQuality>): MockWeaponQuality {
     return deepMerge(
         {
             identifier: 'accurate',

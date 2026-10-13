@@ -15,7 +15,7 @@
  * regressions are invisible — the homologation rule from CLAUDE.md needs this.
  */
 
-import { mockActor, mockCharacteristics, type MockActor, type MockItem } from './index';
+import { mockActor, type MockActor, type MockItem } from './index';
 
 // ── Seeded RNG ──────────────────────────────────────────────────────────────
 
@@ -233,27 +233,3 @@ export function mockGenericItem(type: string, overrides?: Partial<MockItem>): Mo
         ...(overrides ?? {}),
     };
 }
-
-// Convenience exports so symmetry-style tests don't need to constantly
-// import mockGenericItem with a type string.
-export const mockAmmoItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('ammo', o);
-export const mockCombatActionItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('combat-action', o);
-export const mockConditionItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('condition', o);
-export const mockCriticalInjuryItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('critical-injury', o);
-export const mockCyberneticItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('cybernetic', o);
-export const mockForceFieldItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('force-field', o);
-export const mockJournalEntryItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('journal-entry', o);
-export const mockOriginPathItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('origin-path', o);
-export const mockPeerEnemyItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('peer-enemy', o);
-export const mockStorageLocationItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('storage-location', o);
-export const mockWeaponModItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('weapon-mod', o);
-export const mockWeaponQualityItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('weapon-quality', o);
-export const mockPsychicPowerItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('psychic-power', o);
-export const mockShipComponentItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('ship-component', o);
-export const mockShipWeaponItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('ship-weapon', o);
-export const mockShipUpgradeItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('ship-upgrade', o);
-export const mockTraitItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('trait', o);
-export const mockSkillItem = (o?: Partial<MockItem>): MockItem => mockGenericItem('skill', o);
-
-// Re-export characteristics helper so consumers can build sliced characters.
-export { mockCharacteristics };

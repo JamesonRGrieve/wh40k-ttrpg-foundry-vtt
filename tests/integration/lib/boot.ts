@@ -7,7 +7,7 @@
  * Booting Foundry outside its native browser environment is best-effort: V14
  * uses real Canvas / WebGL / IndexedDB extensively. If boot throws, the
  * harness records the failure on `bootResult.error`; test files inspect this
- * via `getRuntime()` and skip themselves rather than fail the whole suite.
+ * via `bootFoundryOnce()` and skip themselves rather than fail the whole suite.
  * That lets us land the scaffold and grow Tier A coverage incrementally
  * without a flaky red CI.
  */
@@ -64,10 +64,6 @@ export async function bootFoundryOnce(): Promise<BootResult> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: concurrency-safe one-shot cache write (not a schema default)
     cached ??= result;
     return cached;
-}
-
-export function getRuntime(): FoundryRuntime | undefined {
-    return cached?.runtime;
 }
 
 /**
