@@ -136,8 +136,8 @@ interface OverlayClearOptions {
 
 /**
  * Make the screen capture-clean. The cheap pass, run by every {@link snap}: unpause,
- * end any active tour and stop the welcome tour from starting later, and dismiss
- * every notification (the headless "no hardware acceleration" warning covered sheet
+ * end any active tour and stop the welcome tour from starting later, hide any hover
+ * tooltip, and dismiss every notification (the headless "no hardware acceleration" warning covered sheet
  * headers in most actor screenshots). With `closeWindows`, also close every floating
  * application window whose id does not contain `keepIdFragment`. Best-effort.
  *
@@ -156,6 +156,7 @@ async function clearOverlays(page: Page, options: OverlayClearOptions): Promise<
                     paused?: boolean;
                     togglePause?: (state: boolean) => void;
                     tours?: { get?: (id: string) => { start?: () => Promise<void> } | undefined };
+                    tooltip?: { deactivate?: () => void };
                 };
                 ui?: { notifications?: { clear?: () => void } };
                 foundry?: {
@@ -177,6 +178,8 @@ async function clearOverlays(page: Page, options: OverlayClearOptions): Promise<
                 n.remove();
             });
             g.ui?.notifications?.clear?.();
+            // A hover tooltip left up by the last click (a move-mode toggle's covered its panel).
+            g.game?.tooltip?.deactivate?.();
             // Toasts, and the chat popouts shown over the canvas while the sidebar is collapsed.
             document.querySelectorAll('#notifications > *, #chat-notifications .chat-message').forEach((n) => {
                 n.remove();
