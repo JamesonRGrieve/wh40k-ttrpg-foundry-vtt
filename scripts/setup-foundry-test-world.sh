@@ -46,6 +46,24 @@ fi
 
 mkdir -p "${SYSTEMS_DIR}" "${WORLDS_DIR}" "${CONFIG_DIR}"
 
+# A Foundry server that dies uncleanly leaves its options.json.lock directory
+# behind, and every later boot on this data dir then refuses to start ("already
+# locked by another process"). Remove it only when no live node process is
+# serving this exact data dir. The launching shell's own command line also
+# contains the --dataPath string, so match on the executable, not argv alone
+# (Foundry renames its main thread, so the process name is not reliable).
+foundry_serving_data_dir() {
+    local pid
+    for pid in $(pgrep -f -- "--dataPath=${DATA_DIR}" || true); do
+        [[ "$(readlink "/proc/${pid}/exe" 2>/dev/null)" == */node ]] && return 0
+    done
+    return 1
+}
+if [[ -d "${CONFIG_DIR}/options.json.lock" ]] && ! foundry_serving_data_dir; then
+    echo "[setup-foundry-test-world] removing stale ${CONFIG_DIR}/options.json.lock (no live Foundry on this data dir)"
+    rm -rf "${CONFIG_DIR}/options.json.lock"
+fi
+
 # Install the working-tree dist/ as the system. The static, lock-free assets
 # (module / icons / images / templates / css / lang / system.json) are
 # symlinked so each world tracks the live build, but the LevelDB compendium
