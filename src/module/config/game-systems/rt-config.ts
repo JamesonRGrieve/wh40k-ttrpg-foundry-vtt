@@ -6,6 +6,7 @@
 // The RT career registry is read from the compendium-backed boot cache.
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import type { BurstCapRules } from '../../rules/auto-fire.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { type CareerTable, getCareerAdvancementRegistry } from '../advancements/career-advancement-cache.ts';
 import { getCareerKeyFromName } from '../advancements/index.ts';
@@ -40,6 +41,13 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly acquisitionLadder: AcquisitionLadder = RT_ACQUISITION_LADDER;
     readonly inquestRules = null;
     readonly itemRepair = null;
+    /**
+     * RT core with the 1.4 errata (pp. 239/242): "The total number of hits scored
+     * by a weapon cannot exceed the weapon's … Rate of Fire"; Suppressing Fire:
+     * "The number of hits scored may not exceed …"; Storm: the errata FAQ answers
+     * "Double the Rate of Fire" — #607.
+     */
+    readonly burstRules: BurstCapRules = { burstCap: 'total', suppressingCap: 'total', stormCap: 'double-rof' };
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.rt';
     readonly cssClass = 'rogue-trader';
     readonly theme = {

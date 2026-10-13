@@ -4,6 +4,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { BurstCapRules } from '../../rules/auto-fire.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
@@ -16,6 +17,13 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly acquisitionLadder = null;
     readonly inquestRules = null;
     readonly itemRepair = null;
+    /**
+     * DW core: "The number of extra hits scored in this manner cannot exceed the
+     * weapon's … Rate of Fire" (both bursts); Suppressing Fire: "The number of
+     * hits scored may not exceed …"; Storm: "to a maximum of twice the weapon's
+     * Full Automatic rate of fire" — #607.
+     */
+    readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dw';
     readonly cssClass = 'deathwatch';
     readonly theme = {

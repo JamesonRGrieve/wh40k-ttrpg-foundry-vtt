@@ -2,10 +2,11 @@
 /*  Ammo Effects Table                          */
 /* -------------------------------------------- */
 
+import { burstRulesFor } from '../config/game-systems/index.ts';
 import type { ActionData } from '../rolls/action-data.ts';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import type { WH40KItemDocument } from '../types/global.d.ts';
-import { resolveBurst } from './auto-fire.ts';
+import { capBurstToShots, resolveBurst } from './auto-fire.ts';
 import { consumeRounds, type MagazineSegment, refundRounds } from './magazine.ts';
 import { chosenQualityEffects } from './weapon-quality-payloads.ts';
 
@@ -180,7 +181,7 @@ export function calculateAmmoInformation(rollData: AmmoRollData): void {
     const usesAmmo = rollData.weapon.usesAmmo;
     const affordableShots = usesAmmo ? Math.floor(rollData.weapon.system.clip.value / ammoPerShot) : null;
 
-    const burst = resolveBurst({
+    const resolved = resolveBurst({
         action: rollData.action,
         rateOfFire: {
             semi: rollData.weapon.system.attack?.rateOfFire?.semi ?? 0,
@@ -188,18 +189,20 @@ export function calculateAmmoInformation(rollData: AmmoRollData): void {
         },
         storm: rollData.hasAttackSpecial('Storm'),
         affordableShots,
+        rules: burstRulesFor(rollData.gameSystemId),
     });
 
     // Ammunition fire-rate override (e.g. Hot-shot Charge Packs → single shot),
     // data-driven from the chambered round's `fireRateOverride`. It caps both the
     // rounds fired and the hits, since it re-rates the weapon itself.
     const override = rollData.weapon.system.loadedAmmo?.fireRateOverride;
-    const shotsFired = override === undefined || override === null ? burst.shotsFired : Math.min(burst.shotsFired, override);
-    const maxHits = Math.min(burst.maxHits, shotsFired);
+    const burst = override === undefined || override === null ? resolved : capBurstToShots(resolved, Math.min(resolved.shotsFired, override));
 
     rollData.ammoPerShot = ammoPerShot;
-    rollData.fireRate = maxHits;
-    rollData.shotsFired = shotsFired;
+    rollData.fireRate = burst.maxHits;
+    rollData.shotsFired = burst.shotsFired;
+    rollData.burstCapComponents = burst.capComponents;
+    const shotsFired = burst.shotsFired;
     rollData.ammoText = ammoText(rollData.weapon) ?? '';
 
     if (!usesAmmo) {

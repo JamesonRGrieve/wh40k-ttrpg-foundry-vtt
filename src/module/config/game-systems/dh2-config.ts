@@ -5,6 +5,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder, CraftsmanshipKey } from '../../rules/acquisition-ladder.ts';
+import type { BurstCapRules } from '../../rules/auto-fire.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
@@ -78,6 +79,12 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly acquisitionLadder: AcquisitionLadder = DH2_ACQUISITION_LADDER;
     readonly inquestRules: InquestRules = DH2_INQUEST_RULES;
     readonly itemRepair: ItemRepairRules = DH2_ITEM_REPAIR_RULES;
+    /**
+     * DH2 core ch. VII: "The number of total hits scored in this manner cannot
+     * exceed the weapon's … rate of fire" (both bursts and Suppressing Fire);
+     * Storm: "up to the weapon's firing rate, as normal" (p. 149) — #607.
+     */
+    readonly burstRules: BurstCapRules = { burstCap: 'total', suppressingCap: 'total', stormCap: 'rof' };
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dh2';
     readonly cssClass = 'dark-heresy';
     readonly theme = {

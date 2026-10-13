@@ -77,6 +77,15 @@
                     </div>
                 {{/if}}
 
+                {{!-- Hit ceiling (#607): the burst's max hits, each part hoverable to the
+                      line rule that put it there (rate of fire, Storm, the first hit an
+                      extra-hit cap leaves outside it, a short clip). --}}
+                {{#if hitCeiling}}
+                    <div data-hit-ceiling>
+                        {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=hitCeiling.base.value baseLabel=hitCeiling.base.label baseTooltipData=hitCeiling.base.tooltipData modifierSources=hitCeiling.parts activeModifiers=null modifiedTarget=hitCeiling.total targetLabel=(localize "WH40K.Roll.HitCeiling.Label")}}
+                    </div>
+                {{/if}}
+
                 {{!-- Effects --}}
                 {{#each @root.effectOutput as |effect|}}
                     <div class="tw-flex tw-items-start tw-gap-[var(--wh40k-space-sm)] tw-py-1.5 tw-text-[0.85rem]">

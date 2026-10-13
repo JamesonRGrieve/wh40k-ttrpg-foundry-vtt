@@ -4,6 +4,7 @@
  */
 
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import type { BurstCapRules } from '../../rules/auto-fire.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { BaseSystemConfig } from './base-system-config.ts';
@@ -90,6 +91,16 @@ export function inquestRulesFor(line: string | undefined): InquestRules | null {
 export function itemRepairRulesFor(line: string | undefined): ItemRepairRules | null {
     if (line === undefined) return null;
     return SystemConfigRegistry.getOrNull(line)?.itemRepair ?? null;
+}
+
+/**
+ * A line's printed burst ceiling (#607), or `null` for an unknown line or one
+ * that prints no rate-of-fire bursts.
+ * @param line  `system.gameSystem` id.
+ */
+export function burstRulesFor(line: string | undefined): BurstCapRules | null {
+    if (line === undefined) return null;
+    return SystemConfigRegistry.getOrNull(line)?.burstRules ?? null;
 }
 
 /**

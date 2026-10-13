@@ -5,6 +5,7 @@ import { aimModifiers } from '../rules/aim.ts';
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.ts';
 import { type AreaTargetResult, type AreaTemplateSpec, type AvoidanceWielder, attackHasNoAttackRoll, resolveAreaTemplate } from '../rules/area-template.ts';
 import { calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../rules/attack-specials.ts';
+import type { BurstCapComponent } from '../rules/auto-fire.ts';
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.ts';
 import { activeConditionMechanics, type ConditionBearer } from '../rules/condition-registry.ts';
 import { WH40K } from '../rules/config.ts';
@@ -44,6 +45,7 @@ import {
 import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { aggregateModifierTotal, aggregateRollTarget } from './aggregate-target.ts';
+import type { HitCeilingCard } from './hit-ceiling.ts';
 import { passiveCombatModifiers } from './passive-modifiers.ts';
 import type { RollKeepMode } from './roll-keep.ts';
 
@@ -624,12 +626,17 @@ export class WeaponRollData extends RollData {
     ammoText: string = '';
     ammoPerShot: number = 1;
     /**
-     * Ceiling on hits this attack may score — the mode's rate of fire (#511: NOT
-     * Storm-doubled). Distinct from {@link shotsFired}, which is the ammunition.
+     * Ceiling on hits this attack may score — the mode's rate of fire under the
+     * line's burst rule (#607: total vs extra hits, and whether Storm doubles it).
+     * Distinct from {@link shotsFired}, which is the ammunition.
      */
     fireRate: number = 1;
     /** Rounds/charges that actually leave the weapon — Storm-doubled, clip-clamped. */
     shotsFired: number = 1;
+    /** The parts {@link fireRate} is built from under the line's burst rule (#607); empty for a non-burst action. */
+    burstCapComponents: readonly BurstCapComponent[] = [];
+    /** The hit ceiling as hoverable card rows, localized at commit (#607); null for a non-burst action. */
+    hitCeiling: HitCeilingCard | null = null;
     /**
      * How a burst's extra hits are spread (#513). `'original'` keeps everything on
      * the declared target — the single-target default.
@@ -787,12 +794,11 @@ export class WeaponRollData extends RollData {
         updateAttackSpecials(this);
         updateAvailableCombatActions(this);
         calculateCombatActionModifier(this);
-        if (weaponSystem.usesAmmo === true) {
-            this.usesAmmo = true;
-            calculateAmmoInformation(this as Parameters<typeof calculateAmmoInformation>[0]);
-        } else {
-            this.usesAmmo = false;
-        }
+        this.usesAmmo = weaponSystem.usesAmmo === true;
+        // Resolved for EVERY weapon: a burst's hit ceiling is a property of its rate
+        // of fire, not of ammunition (#512, #607) — only the clip arithmetic is
+        // skipped for a weapon that consumes none.
+        calculateAmmoInformation(this as Parameters<typeof calculateAmmoInformation>[0]);
         calculateWeaponRange(this);
 
         // The area and no-roll flags read the attack specials and the range, so they

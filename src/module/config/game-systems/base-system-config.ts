@@ -5,6 +5,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import type { BurstCapRules } from '../../rules/auto-fire.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
@@ -78,6 +79,14 @@ export abstract class BaseSystemConfig {
      * repair difficulty to the GM.
      */
     abstract readonly itemRepair: ItemRepairRules | null;
+
+    /**
+     * The line's printed burst ceiling (#607): whether a Semi-Auto / Full Auto
+     * Burst caps the TOTAL or only the EXTRA hits at the rate of fire, what
+     * Suppressing Fire caps, and whether Storm doubles the ceiling. `null` for a
+     * line that prints no rate-of-fire bursts.
+     */
+    abstract readonly burstRules: BurstCapRules | null;
 
     // ── Starting Resources ────────────────────────────────────────
 

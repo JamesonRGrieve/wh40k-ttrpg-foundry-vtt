@@ -17,6 +17,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import type { BurstCapRules } from '../../rules/auto-fire.ts';
 import {
     type ChaosAdvanceEntry,
     deriveAlignmentFromTally,
@@ -70,6 +71,13 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      */
     readonly inquestRules = null;
     readonly itemRepair = null;
+    /**
+     * BC core: "The number of extra hits scored in this manner cannot exceed the
+     * weapon's … rate of fire" (both bursts); Suppressing Fire: "The number of
+     * hits scored may not exceed …"; Storm: "to a maximum of twice the weapon's
+     * Full Automatic rate of fire" — #607.
+     */
+    readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
     readonly acquisitionLadder: AcquisitionLadder = {
         availability: {
             ubiquitous: 70,

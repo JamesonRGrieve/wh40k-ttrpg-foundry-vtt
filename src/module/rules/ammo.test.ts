@@ -24,6 +24,9 @@ interface WeaponStub {
 
 interface RollDataStub {
     action: string;
+    /** The attacker's game line; unset = no line (no printed burst rule). */
+    gameSystemId?: string;
+    burstCapComponents?: readonly { key: string; value: number }[];
     weapon: WeaponStub;
     hasAttackSpecial: (name: string) => boolean;
     /** The attacker's chosen firing options (selectable qualities); none by default. */
@@ -130,6 +133,32 @@ describe('calculateAmmoInformation — bursts', () => {
         expect(d.shotsFired).toBe(1);
         expect(d.fireRate).toBe(1);
         expect(d.ammoUsed).toBe(1);
+    });
+
+    it('#607: an extra-hit line (BC) lets a full burst land its rate of fire plus the first hit', () => {
+        const d = calculate({ ...rollData('Full Auto Burst'), gameSystemId: 'bc' });
+        expect(d.shotsFired).toBe(6);
+        expect(d.fireRate).toBe(7);
+        expect(d.burstCapComponents).toEqual([
+            { key: 'rof', value: 6 },
+            { key: 'first-hit', value: 1 },
+        ]);
+    });
+
+    it('#607: a total-hit line (DH2) keeps the ceiling at the rate of fire', () => {
+        const d = calculate({ ...rollData('Full Auto Burst'), gameSystemId: 'dh2' });
+        expect(d.fireRate).toBe(6);
+    });
+
+    it('#607: a re-rating round cuts an extra-hit ceiling to the one round it fires', () => {
+        const d = calculate({
+            ...rollData('Full Auto Burst', {
+                system: { clip: { value: 100 }, attack: { rateOfFire: { semi: 3, full: 6 } }, loadedAmmo: { fireRateOverride: 1 } },
+            }),
+            gameSystemId: 'bc',
+        });
+        expect(d.shotsFired).toBe(1);
+        expect(d.fireRate).toBe(1);
     });
 
     it('a standard attack is a single shot', () => {

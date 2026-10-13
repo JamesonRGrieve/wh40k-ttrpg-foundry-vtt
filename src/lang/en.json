@@ -790,6 +790,21 @@
                 "Failure": "{dof} DoF = 1 + {degree} (roll {roll} vs target {target})",
                 "Tooltip": "Degrees = 1 + the difference between the roll and the target, by tens under the active degrees mode (DH2 Gen 2 = tens digit; Gen 1 = margin ÷ 10)."
             },
+            "HitCeiling": {
+                "Label": "Max hits",
+                "RateOfFireSemi": "Rate of fire (semi-auto)",
+                "RateOfFireFull": "Rate of fire (full auto)",
+                "Storm": "Storm",
+                "FirstHit": "First hit",
+                "RoundsFired": "Rounds fired",
+                "SourceTotal": "{line}: total hits capped at the rate of fire",
+                "SourceExtra": "{line}: extra hits capped at the rate of fire",
+                "SourceUnruled": "No printed burst rule: total hits capped at the rate of fire",
+                "SourceStormDouble": "{line}: Storm doubles the ceiling",
+                "SourceStormNormal": "{line}: Storm leaves the ceiling at the rate of fire",
+                "SourceFirstHit": "{line}: the first hit sits outside the extra-hit cap",
+                "SourceAmmo": "A burst cannot land more hits than the rounds it fired"
+            },
             "SpreadHits": "Spread hits",
             "SpreadHitsHint": "Allocate extra hits to nearby enemies within 2m that are no harder to hit:",
             "FiringOptions": "Firing options",

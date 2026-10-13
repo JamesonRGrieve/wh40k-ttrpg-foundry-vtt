@@ -6,6 +6,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import type { BurstCapRules } from '../../rules/auto-fire.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 
@@ -39,6 +40,13 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly acquisitionLadder: AcquisitionLadder = OW_ACQUISITION_LADDER;
     readonly inquestRules = null;
     readonly itemRepair = null;
+    /**
+     * OW core: "The number of extra hits scored in this manner cannot exceed the
+     * weapon's … rate of fire" (both bursts); Suppressing Fire: "The number of
+     * hits scored may not exceed …"; Storm: "up to the weapon's firing rate, as
+     * normal" — #607.
+     */
+    readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'rof' };
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.ow';
     readonly cssClass = 'only-war';
     readonly theme = {

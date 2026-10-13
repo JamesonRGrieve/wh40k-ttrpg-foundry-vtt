@@ -63,6 +63,7 @@ import { areaQualityLabel, localizeAreaStatement } from './area-statement.ts';
 import { CUE_EFFECT, cueAttackResolved, cueHitsResolved } from './attack-cue-trigger.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, WeaponDamageData } from './damage-data.ts';
 import type { ExtendedTestChatContext } from './extended-test-data.ts';
+import { localizeHitCeiling } from './hit-ceiling.ts';
 import { resolveGainedMalignancy } from './malignancy-outcome.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
 import { emitChatFromTemplate, getDegreeForMode, isD100Success, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
@@ -1111,6 +1112,8 @@ export class WeaponActionData extends ActionData {
         // A weapon that deals no damage (#601) resolves on its qualities alone, so
         // there is no damage roll to auto-roll, offer, or post.
         this.hasDamage = !this.rollData.noDamage;
+        // The burst's hit ceiling, with each part's rule, for the card (#607).
+        this.rollData.hitCeiling = localizeHitCeiling(this.rollData);
         await super.performActionAndSendToChat();
     }
 }

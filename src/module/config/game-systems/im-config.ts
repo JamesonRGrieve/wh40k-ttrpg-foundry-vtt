@@ -16,6 +16,8 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly acquisitionLadder = null;
     readonly inquestRules = null;
     readonly itemRepair = null;
+    /** IM prints no rate-of-fire bursts. */
+    readonly burstRules = null;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.im';
     readonly cssClass = 'imperium-maledictum';
     readonly theme = {

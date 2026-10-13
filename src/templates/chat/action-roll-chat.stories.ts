@@ -17,6 +17,8 @@
  *   7. BlastWithAttackRoll — the roll readout stays; resolve replaces Roll Damage.
  *   8. DamagingHit    — a hit offers Roll Damage.
  *   9. NoDamageHit    — a no-damage weapon's hit offers no Roll Damage (#601).
+ *  10. BurstHitCeiling — a burst's per-line hit ceiling, each part hoverable (#607).
+ *  11. NoHitCeilingOnSingleShot — a single shot shows no ceiling block.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
@@ -75,6 +77,12 @@ interface ActionRollData {
     showDamage?: boolean;
     /** The weapon deals no damage (#601): its qualities apply, nothing is rolled. */
     noDamage?: boolean;
+    /** A burst's hit ceiling with each part's line rule (#607). */
+    hitCeiling?: {
+        base: { label: string; value: number; tooltipData: string };
+        parts: { label: string; value: number; tooltipData: string }[];
+        total: number;
+    };
 }
 
 interface ActionRollChatCtx {
@@ -492,5 +500,72 @@ export const FieldVivisectionBase: Story = {
         await expect(canvasElement.textContent).toContain('Medicae (BS) — Field Vivisection');
         await expect(canvasElement.querySelector('.roll-control__resolve-area')).toBeNull();
         await expect(canvasElement.querySelector('[data-area-statement]')).toBeNull();
+    },
+};
+
+/** One hit-ceiling row as `localizeHitCeiling` builds it: hoverable to the line rule. */
+function ceilingRow(label: string, value: number, source: string): { label: string; value: number; tooltipData: string } {
+    return { label, value, tooltipData: JSON.stringify({ title: label, sources: [{ name: source, value }] }) };
+}
+
+/**
+ * #607: a Black Crusade Storm weapon's full-auto burst. BC caps the EXTRA hits and
+ * Storm doubles the ceiling, so the card shows RoF 4 + Storm 4 + the first hit = 9,
+ * each part hoverable to the rule that put it there.
+ */
+export const BurstHitCeiling: Story = {
+    name: 'Full Auto Burst — per-line hit ceiling (BC, Storm)',
+    args: {
+        id: 'roll-burst-ceiling',
+        label: 'Ballistic Skill Test',
+        rollData: successRollData({
+            name: 'Combi-Bolter',
+            action: 'Full Auto Burst',
+            gameSystem: 'bc',
+            usesAmmo: true,
+            hitCeiling: {
+                base: ceilingRow('Rate of fire (full auto)', 4, 'Black Crusade: extra hits capped at the rate of fire'),
+                parts: [
+                    ceilingRow('Storm', 4, 'Black Crusade: Storm doubles the ceiling'),
+                    ceilingRow('First hit', 1, 'Black Crusade: the first hit sits outside the extra-hit cap'),
+                ],
+                total: 9,
+            },
+        }),
+        effectOutput: [],
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        const block = canvasElement.querySelector<HTMLElement>('[data-hit-ceiling]');
+        await expect(block).not.toBeNull();
+        const rows = block?.querySelectorAll<HTMLElement>('[data-wh40k-tooltip="modifier"]') ?? [];
+        // The rate of fire AND each part are hoverable rows — no part is lumped.
+        await expect(rows.length).toBe(3);
+        const sources = Array.from(
+            rows,
+            (row) => (JSON.parse(row.getAttribute('data-wh40k-tooltip-data') ?? '{}') as { sources: { name: string }[] }).sources[0]?.name,
+        );
+        await expect(sources).toEqual([
+            'Black Crusade: extra hits capped at the rate of fire',
+            'Black Crusade: Storm doubles the ceiling',
+            'Black Crusade: the first hit sits outside the extra-hit cap',
+        ]);
+        await expect(block?.textContent).toContain('Max hits');
+        await expect(block?.textContent).toContain('9');
+    },
+};
+
+/** A single-shot attack has no hit ceiling block. */
+export const NoHitCeilingOnSingleShot: Story = {
+    name: 'Standard Attack — no hit ceiling',
+    args: {
+        id: 'roll-single',
+        label: 'Ballistic Skill Test',
+        rollData: successRollData(),
+        effectOutput: [],
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-hit-ceiling]')).toBeNull();
     },
 };

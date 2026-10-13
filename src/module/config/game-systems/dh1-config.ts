@@ -5,6 +5,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import type { BurstCapRules } from '../../rules/auto-fire.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
@@ -23,6 +24,14 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
      */
     readonly inquestRules = null;
     readonly itemRepair = null;
+    /**
+     * DH1 core: "The number of extra hits you can score in this manner may not
+     * exceed the … rate of fire" (both bursts); Suppressing Fire: "The number of
+     * hits scored may not exceed …". DH1 core prints no Storm; Ascension, Daemon
+     * Hunter and Blood of Martyrs make every hit "up to the weapon's listed rate
+     * of fire" two hits, i.e. twice the ceiling — #607.
+     */
+    readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
     readonly acquisitionLadder: AcquisitionLadder = {
         availability: {
             ubiquitous: 70,
