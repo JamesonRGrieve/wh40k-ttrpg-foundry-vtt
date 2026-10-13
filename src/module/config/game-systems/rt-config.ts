@@ -7,6 +7,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstCapRules } from '../../rules/auto-fire.ts';
+import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { type CareerTable, getCareerAdvancementRegistry } from '../advancements/career-advancement-cache.ts';
 import { getCareerKeyFromName } from '../advancements/index.ts';
@@ -48,6 +49,13 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
      * "Double the Rate of Fire" — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'total', suppressingCap: 'total', stormCap: 'double-rof' };
+    /** RT core: "When Dodging Fully-Automatic or Semi-Automatic Bursts, each degree of success on the Dodge Test negates one additional hit." — #414. */
+    readonly evasionRules: EvasionRules = {
+        multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],
+        twinLinked: false,
+        anyMultiHit: false,
+        stormTwoPerDegree: false,
+    };
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.rt';
     readonly cssClass = 'rogue-trader';
     readonly theme = {

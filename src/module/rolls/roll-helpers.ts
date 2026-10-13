@@ -1,3 +1,4 @@
+import { SYSTEM_ID } from '../constants.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { ActionData } from './action-data.ts';
@@ -138,13 +139,28 @@ export function applyRollModeWhispers(chatData: Record<string, unknown>): void {
  */
 export async function postChatCard(
     content: string,
-    // eslint-disable-next-line no-restricted-syntax -- boundary: speaker is an opaque Foundry ChatSpeaker bag passed straight through to ChatMessage.create
-    opts: { rolls?: Roll[] | undefined; speaker?: unknown; rollMode?: string | undefined; flavor?: string | undefined; type?: number | undefined } = {},
-): Promise<void> {
+    opts: {
+        rolls?: Roll[] | undefined;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: speaker is an opaque Foundry ChatSpeaker bag passed straight through to ChatMessage.create
+        speaker?: unknown;
+        rollMode?: string | undefined;
+        flavor?: string | undefined;
+        type?: number | undefined;
+        flags?: ChatCardFlags | undefined;
+    } = {},
+): Promise<string | null> {
     const chatData = buildChatPayload(content, { ...opts, applyWhispers: true });
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped Foundry payload
-    await ChatMessage.create(chatData);
+    const message = await ChatMessage.create(chatData);
+    return message?.id ?? null;
 }
+
+/**
+ * System-scoped flags a card carries for the clients that react to it (e.g. the
+ * evasion outcome an attack card waits on, #414). Stored under `flags['wh40k-rpg']`.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document flags are an untyped JSON bag; each reader validates its own key
+export type ChatCardFlags = Record<string, unknown>;
 
 /** Options controlling how {@link emitChatFromTemplate} builds its payload.
  * Each field maps a chat key the prompt-dialog / rules / action-manager call
@@ -168,6 +184,10 @@ export interface EmitChatOptions {
     flavor?: string | undefined;
     /** Chat message type (a `CONST.CHAT_MESSAGE_TYPES` value). */
     type?: number | undefined;
+    /** System-scoped flags for the clients that react to the card. */
+    flags?: ChatCardFlags | undefined;
+    /** User ids to whisper the card to (overrides any roll-mode whisper). */
+    whisper?: readonly string[] | undefined;
 }
 
 /**
@@ -189,7 +209,9 @@ function buildChatPayload(content: string, opts: EmitChatOptions): Record<string
     if (opts.speaker !== undefined) chatData['speaker'] = opts.speaker;
     if (opts.flavor !== undefined) chatData['flavor'] = opts.flavor;
     if (opts.type !== undefined) chatData['type'] = opts.type;
+    if (opts.flags !== undefined && Object.keys(opts.flags).length > 0) chatData['flags'] = { [SYSTEM_ID]: opts.flags };
     if (opts.applyWhispers === true) applyRollModeWhispers(chatData);
+    if (opts.whisper !== undefined) chatData['whisper'] = [...opts.whisper];
     return chatData;
 }
 
@@ -237,17 +259,15 @@ interface PostInstanceOptions {
      * flattening (e.g. a nested pre-flattened `rollData`). */
     // eslint-disable-next-line no-restricted-syntax -- boundary: a pre-flattened Handlebars context bag, merged onto the template context as-is
     extraContext?: Record<string, unknown> | undefined;
+    /** System-scoped flags for the clients that react to the card. */
+    flags?: ChatCardFlags | undefined;
 }
 
 /**
  * Flatten a runtime instance's getters into a Handlebars context, surface the
- * card's per-system `_gameSystemId` from `opts.actor`, render `template`, and
- * post the result. The single home of the `resolveGettersForTemplate → set
- * _gameSystemId → renderTemplate → postChatCard` idiom that
- * {@link sendActionDataToChat}, ForceFieldData, and AssignDamageData each
- * re-implemented (#368).
+ * card's per-system `_gameSystemId` from `opts.actor`, and render `template`.
  */
-export async function postFlattenedInstanceToChat(instance: object, template: string, opts: PostInstanceOptions = {}): Promise<void> {
+async function renderFlattenedInstance(instance: object, template: string, opts: PostInstanceOptions): Promise<string> {
     // Flatten own + inherited-getter values so Handlebars can read prototype
     // getters (passing the live instance renders those fields blank — the
     // proto-property guard). See {@link resolveGettersForTemplate}.
@@ -258,21 +278,57 @@ export async function postFlattenedInstanceToChat(instance: object, template: st
     // outside any sheet root) rather than falling back to the RT default (#422).
     const systemId = firstSystemId(opts.actor);
     if (systemId !== undefined) context['_gameSystemId'] = systemId;
-    const html = await foundry.applications.handlebars.renderTemplate(template, context);
-    await postChatCard(html, { rolls: opts.rolls });
+    return foundry.applications.handlebars.renderTemplate(template, context);
 }
 
-export async function sendActionDataToChat(actionData: ActionData): Promise<void> {
+/**
+ * Flatten a runtime instance's getters into a Handlebars context, surface the
+ * card's per-system `_gameSystemId` from `opts.actor`, render `template`, and
+ * post the result. The single home of the `resolveGettersForTemplate → set
+ * _gameSystemId → renderTemplate → postChatCard` idiom that
+ * {@link sendActionDataToChat}, ForceFieldData, and AssignDamageData each
+ * re-implemented (#368).
+ * @returns {Promise<string | null>}  The posted message's id.
+ */
+export async function postFlattenedInstanceToChat(instance: object, template: string, opts: PostInstanceOptions = {}): Promise<string | null> {
+    const html = await renderFlattenedInstance(instance, template, opts);
+    return postChatCard(html, { rolls: opts.rolls, flags: opts.flags });
+}
+
+/** The render options an action card is posted — and re-rendered — with. */
+function actionDataRenderOptions(actionData: ActionData): PostInstanceOptions {
     const rollData = actionData.rollData as typeof actionData.rollData & { isManualRoll?: boolean };
     const roll = rollData.roll;
-    const rolls = roll != null && rollData.isManualRoll !== true ? [roll] : undefined;
-    // The ActionData's RollData is flattened separately and nested under `rollData`
-    // so the template can read its prototype getters too.
-    await postFlattenedInstanceToChat(actionData, actionData.template, {
+    return {
         actor: actionData.rollData.sourceActor,
-        rolls,
+        rolls: roll != null && rollData.isManualRoll !== true ? [roll] : undefined,
+        // The ActionData's RollData is flattened separately and nested under `rollData`
+        // so the template can read its prototype getters too.
         extraContext: { rollData: resolveGettersForTemplate(actionData.rollData) },
-    });
+        flags: actionData.chatFlags,
+    };
+}
+
+/**
+ * Post an action's card.
+ * @returns {Promise<string | null>}  The posted message's id, for an in-place re-render ({@link rerenderActionDataInChat}).
+ */
+export async function sendActionDataToChat(actionData: ActionData): Promise<string | null> {
+    return postFlattenedInstanceToChat(actionData, actionData.template, actionDataRenderOptions(actionData));
+}
+
+/**
+ * Re-render an action's posted card in place from its current state — e.g. once
+ * the defender's evasion has resolved against the attack (#414). Only the client
+ * that posted the card holds its ActionData, and the poster owns the message, so
+ * the update is permitted there. A card that was never posted is left alone.
+ */
+export async function rerenderActionDataInChat(actionData: ActionData): Promise<void> {
+    if (actionData.messageId === null) return;
+    const message = game.messages.get(actionData.messageId);
+    if (message === undefined) return;
+    const content = await renderFlattenedInstance(actionData, actionData.template, actionDataRenderOptions(actionData));
+    await message.update({ content });
 }
 
 export function recursiveUpdate(targetObject: DotNotationTarget, updateObject: DotNotationTarget): void {

@@ -20,14 +20,18 @@ import {
     type StatefulItem,
     DosReadoutActionData,
     MalignancyTestActionData,
+    type SkillRollOptions,
     SkillUseActionData,
     XenosLoreActionData,
 } from '../rolls/action-data.ts';
+import { EvasionActionData } from '../rolls/evasion-action-data.ts';
+import type { EvasionPromptContext } from '../rolls/evasion-flow.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { resolveGainedMalignancy } from '../rolls/malignancy-outcome.ts';
 import { openDamagePrompt, openRollPrompt } from '../rolls/roll-prompt.ts';
 import { firstTargetedActor, promptItemChoice } from '../rolls/skill-use-picker.ts';
 import { TWISTED_FLESH_FLAG } from '../rules/chaos-backgrounds.ts';
+import type { EvasionSkill } from '../rules/evasion.ts';
 import { craftsmanshipRepairModifier } from '../rules/item-repair.ts';
 import { corruptionTrackModifier, malignancyTestsQueued } from '../rules/malignancy-test.ts';
 import { getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
@@ -541,15 +545,15 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} skillName - The skill key or name
      * @param {string} [specialityName] - Optional speciality name for specialist skills
      * @param {Object} [options] - Additional roll options
+     * @param {SimpleSkillData} [options.instance] - Route the test through this action subclass (e.g. an evasion, #414)
      * @returns {Promise<ChatMessage|null>}
      */
-    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/require-await -- boundary: roll options accept ad-hoc consumer-supplied fields; signature returns Promise for caller compat
-    async rollSkill(skillName: string, specialityName?: string | number, _options: Record<string, unknown> = {}): Promise<void> {
+    async rollSkill(skillName: string, specialityName?: string | number, options: SkillRollOptions = {}): Promise<void> {
         const resolvedSkillName = this._resolveSkillName(skillName);
         const skill = this.skills[resolvedSkillName] as WH40KSkill | undefined;
         if (skill === undefined) {
             ui.notifications.warn(game.i18n.format('WH40K.Notify.Acolyte.SkillNotFound', { skill: skillName }));
-            return;
+            return Promise.resolve();
         }
         let label = skill.label;
         let targetValue = skill.current;
@@ -575,23 +579,42 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // for a target and routes through MedicaeActionData, which auto-applies the
         // healing on resolution. General / informational uses fall through to the
         // normal test below.
-        if (hasSkillUses(resolvedSkillName) && this._dispatchSkillUse(resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank)) {
-            return;
+        // A caller-supplied action (an evasion, #414) owns the outcome, so the
+        // skill's Special Uses and readout are not offered.
+        if (
+            options.instance === undefined &&
+            hasSkillUses(resolvedSkillName) &&
+            this._dispatchSkillUse(resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank)
+        ) {
+            return Promise.resolve();
         }
 
         // Skills with a degrees-of-success readout (#437 knowledge/investigation) route
         // through DosReadoutActionData, which surfaces the DoS interpretation on the card.
         const readoutFamily = getSkillReadout(resolvedSkillName);
+        const instance = options.instance ?? (readoutFamily !== null ? new DosReadoutActionData(readoutFamily) : undefined);
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: resolvedSkillName,
             type: 'skill',
             label: game.i18n.format('WH40K.Roll.TestLabel', { name: label ?? resolvedSkillName }),
             target: targetValue,
             situationalKey: resolvedSkillName,
-            ...(readoutFamily !== null ? { instance: new DosReadoutActionData(readoutFamily) } : {}),
+            ...(instance !== undefined ? { instance } : {}),
             ...(skillRank !== undefined ? { skillRank } : {}),
         });
         openRollPrompt(simpleSkillData);
+        return Promise.resolve();
+    }
+
+    /**
+     * Roll this character's Dodge or Parry against the attack a prompt names (#414),
+     * through the normal skill pipeline: the card shows every modifier with its source,
+     * then scores the result against the attack.
+     * @param {EvasionPromptContext} prompt  The attack being evaded.
+     * @param {EvasionSkill} skill  The evasion skill.
+     */
+    async rollEvasionTest(prompt: EvasionPromptContext, skill: EvasionSkill): Promise<void> {
+        return this.rollSkill(skill, undefined, { instance: new EvasionActionData(prompt, skill) });
     }
 
     /**

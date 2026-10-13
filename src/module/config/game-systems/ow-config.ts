@@ -7,6 +7,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstCapRules } from '../../rules/auto-fire.ts';
+import type { EvasionRules } from '../../rules/evasion.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 
@@ -47,6 +48,18 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      * normal" — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'rof' };
+    /**
+     * OW core: "When Evading Swift Attacks, Lightning Attacks, Full Auto Bursts,
+     * Semi-Auto Bursts, or any weapon with the Twin-Linked Quality, each Degree of
+     * Success … negates one additional hit. When Evading weapons with the Storm
+     * Quality, each Degree of Success … negates two hits." — #414.
+     */
+    readonly evasionRules: EvasionRules = {
+        multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst', 'Swift Attack', 'Lightning Attack'],
+        twinLinked: true,
+        anyMultiHit: false,
+        stormTwoPerDegree: true,
+    };
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.ow';
     readonly cssClass = 'only-war';
     readonly theme = {

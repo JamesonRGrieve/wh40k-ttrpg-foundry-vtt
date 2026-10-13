@@ -34,6 +34,10 @@ interface LabelDescriptionConfig {
     label: string;
     description: string;
 }
+/** An armour special property; `wardsAgainstWarp` marks one a Warp Weapon cannot ignore (#414). */
+interface ArmourPropertyConfig extends LabelDescriptionConfig {
+    wardsAgainstWarp?: true;
+}
 interface LabelIconConfig {
     label: string;
     icon: string;
@@ -165,7 +169,7 @@ export interface WH40KSystemConfig {
     weaponClasses: Record<string, LabelConfig>;
     weaponTypes: Record<string, LabelConfig>;
     armourTypes: Record<string, LabelConfig>;
-    armourProperties: Record<string, LabelDescriptionConfig>;
+    armourProperties: Record<string, ArmourPropertyConfig>;
     bodyLocations: Record<string, BodyLocationConfig>;
     sizes: Record<number, LabelModifierConfig>;
     psychicDisciplines: Record<string, LabelConfig>;
@@ -545,13 +549,18 @@ WH40K.armourProperties = {
         label: 'WH40K.ArmourProperty.AutoStabilized',
         description: 'WH40K.ArmourProperty.AutoStabilizedDesc',
     },
+    // A Warp Weapon ignores armour "unless the armour is created from psychoactive
+    // materials or is somehow warded against the Warp" (DH2, OW) / "carries the holy
+    // quality" (DH1, DW, RT) / is "specially warded" (BC) — #414.
     'hexagrammic': {
         label: 'WH40K.ArmourProperty.Hexagrammic',
         description: 'WH40K.ArmourProperty.HexagrammicDesc',
+        wardsAgainstWarp: true,
     },
     'blessed': {
         label: 'WH40K.ArmourProperty.Blessed',
         description: 'WH40K.ArmourProperty.BlessedDesc',
+        wardsAgainstWarp: true,
     },
     'camouflage': {
         label: 'WH40K.ArmourProperty.Camouflage',

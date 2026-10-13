@@ -5,6 +5,7 @@
 
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstCapRules } from '../../rules/auto-fire.ts';
+import type { EvasionRules } from '../../rules/evasion.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { BaseSystemConfig } from './base-system-config.ts';
@@ -101,6 +102,16 @@ export function itemRepairRulesFor(line: string | undefined): ItemRepairRules | 
 export function burstRulesFor(line: string | undefined): BurstCapRules | null {
     if (line === undefined) return null;
     return SystemConfigRegistry.getOrNull(line)?.burstRules ?? null;
+}
+
+/**
+ * A line's printed evasion rule for multi-hit attacks (#414), or `null` for an
+ * unknown line or one modelled only as the single negated hit.
+ * @param line  `system.gameSystem` id.
+ */
+export function evasionRulesFor(line: string | undefined): EvasionRules | null {
+    if (line === undefined) return null;
+    return SystemConfigRegistry.getOrNull(line)?.evasionRules ?? null;
 }
 
 /**

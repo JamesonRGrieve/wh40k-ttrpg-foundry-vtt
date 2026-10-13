@@ -1,0 +1,10 @@
+{{!--
+    Evasion declined (#414) — the defender takes the hit: no test, no Reaction
+    spent. The card carries the outcome flag the attacking client applies.
+
+    Context:
+        summary — the localized statement ("Lucius takes the hit.")
+--}}
+{{#> systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs overline=(localize "WH40K.Evasion.EffectTitle") title=summary}}
+    <p class="tw-m-0 tw-text-[0.8rem] tw-text-[var(--wh40k-card-muted)]" data-evasion-declined>{{localize "WH40K.Evasion.DeclinedHint"}}</p>
+{{/systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs}}

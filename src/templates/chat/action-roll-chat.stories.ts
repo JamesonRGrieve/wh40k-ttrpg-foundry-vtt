@@ -19,6 +19,7 @@
  *   9. NoDamageHit    — a no-damage weapon's hit offers no Roll Damage (#601).
  *  10. BurstHitCeiling — a burst's per-line hit ceiling, each part hoverable (#607).
  *  11. NoHitCeilingOnSingleShot — a single shot shows no ceiling block.
+ *  12. EvasionPending / EvasionNegatedHits / FullyEvaded — the evasion window (#414).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
@@ -90,6 +91,13 @@ interface ActionRollChatCtx {
     label: string;
     rollData: ActionRollData;
     effectOutput: never[];
+    /** The attack's evasion window (#414). */
+    evasion?: {
+        status: 'pending' | 'blocked' | 'resolved' | 'forced';
+        summary: string;
+        rows: { label: string; value: number; tooltipData: string }[];
+        fullyEvaded: boolean;
+    };
 }
 
 function sourced(label: string, value: number, source: string, detail: Record<string, string | number | boolean> = {}): SourcedComponent {
@@ -552,6 +560,85 @@ export const BurstHitCeiling: Story = {
         ]);
         await expect(block?.textContent).toContain('Max hits');
         await expect(block?.textContent).toContain('9');
+    },
+};
+
+/** One evasion negation row as `resolvedAttackEvasion` builds it: hoverable to its rule. */
+function evasionRow(label: string, value: number, source: string): { label: string; value: number; tooltipData: string } {
+    return { label, value, tooltipData: JSON.stringify({ title: label, sources: [{ name: source, value }] }) };
+}
+
+/** #414: a hit against a defender who has yet to answer — damage waits, Roll Damage stays for the GM. */
+export const EvasionPending: Story = {
+    name: 'Hit — awaiting the defender’s evasion',
+    args: {
+        id: 'roll-evasion-pending',
+        label: 'Ballistic Skill Test',
+        rollData: successRollData({ action: 'Full Auto Burst', ignoreControls: false, showDamage: true }),
+        effectOutput: [],
+        evasion: { status: 'pending', summary: 'Awaiting Lucius Varn’s evasion', rows: [], fullyEvaded: false },
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        const block = canvasElement.querySelector<HTMLElement>('[data-evasion-status]');
+        await expect(block?.dataset['evasionStatus']).toBe('pending');
+        await expect(block?.textContent).toContain('Awaiting Lucius Varn’s evasion');
+        await expect(canvasElement.querySelector('.roll-control__roll-damage')).not.toBeNull();
+        // The old shared-log reaction buttons are gone: the defender is prompted instead.
+        await expect(canvasElement.querySelector('.roll-control__attempt-dodge')).toBeNull();
+    },
+};
+
+/** #414: a Dodge that thinned a burst — each part of the negation a hoverable row naming its rule. */
+export const EvasionNegatedHits: Story = {
+    name: 'Burst — Dodge negates 3 of 4 hits',
+    args: {
+        id: 'roll-evasion-negated',
+        label: 'Ballistic Skill Test',
+        rollData: successRollData({ action: 'Full Auto Burst', ignoreControls: false, showDamage: true }),
+        effectOutput: [],
+        evasion: {
+            status: 'resolved',
+            summary: 'Lucius Varn’s Dodge negates 3 of 4 hits',
+            rows: [
+                evasionRow('The hit', 1, 'A successful evasion negates the hit'),
+                evasionRow('Degrees of success', 2, 'Each degree of success negates one additional hit of a multi-hit attack'),
+            ],
+            fullyEvaded: false,
+        },
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        const block = canvasElement.querySelector<HTMLElement>('[data-evasion-status]');
+        await expect(block?.textContent).toContain('negates 3 of 4 hits');
+        const rows = block?.querySelectorAll<HTMLElement>('[data-wh40k-tooltip="modifier"]') ?? [];
+        await expect(rows.length).toBe(2);
+        const source = (JSON.parse(rows[1]?.getAttribute('data-wh40k-tooltip-data') ?? '{}') as { sources: { name: string }[] }).sources[0]?.name;
+        await expect(source).toBe('Each degree of success negates one additional hit of a multi-hit attack');
+        // One hit still lands, so damage is still offered.
+        await expect(canvasElement.querySelector('.roll-control__roll-damage')).not.toBeNull();
+    },
+};
+
+/** #414: every hit evaded — the card offers no Roll Damage. */
+export const FullyEvaded: Story = {
+    name: 'Hit — fully evaded, no Roll Damage',
+    args: {
+        id: 'roll-evaded',
+        label: 'Weapon Skill Test',
+        rollData: successRollData({ ignoreControls: false, showDamage: true }),
+        effectOutput: [],
+        evasion: {
+            status: 'resolved',
+            summary: 'Lucius Varn’s Parry evades the attack',
+            rows: [evasionRow('The hit', 1, 'A successful evasion negates the hit')],
+            fullyEvaded: true,
+        },
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('.roll-control__roll-damage')).toBeNull();
+        await expect(canvasElement.querySelector('[data-fully-evaded]')?.textContent).toContain('Evaded');
     },
 };
 

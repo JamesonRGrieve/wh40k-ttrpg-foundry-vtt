@@ -5,6 +5,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { BurstCapRules } from '../../rules/auto-fire.ts';
+import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
@@ -24,6 +25,13 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
      * Full Automatic rate of fire" — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
+    /** DW core: "When Dodging Full Auto or Semi-Auto Bursts, each Degree of Success on the Dodge Test negates one additional hit." — #414. */
+    readonly evasionRules: EvasionRules = {
+        multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],
+        twinLinked: false,
+        anyMultiHit: false,
+        stormTwoPerDegree: false,
+    };
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dw';
     readonly cssClass = 'deathwatch';
     readonly theme = {

@@ -4,18 +4,42 @@
 import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
 import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.ts';
 import { tokensInAreaTemplate } from '../canvas/area-template-canvas.ts';
+import { WH40K } from '../config.ts';
+import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
 import type { ActionData } from '../rolls/action-data.ts';
 import { areaResultRows } from '../rolls/area-statement.ts';
 import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';
 import { Hit } from '../rolls/damage-data.ts';
+import {
+    closeEvasionPrompt,
+    defenderWeaponsCanParry,
+    EVASION_DECLINED_TEMPLATE,
+    EVASION_OUTCOME_FLAG,
+    EVASION_PROMPT_FLAG,
+    type EvasionOutcome,
+    type EvasionPromptContext,
+    evasionGateFor,
+    evasionOutcomeSummary,
+    findEvasionOutcome,
+    forcedAttackEvasion,
+    readEvasionOutcome,
+    readEvasionPrompt,
+    resolvedAttackEvasion,
+} from '../rolls/evasion-flow.ts';
 import { WeaponRollData } from '../rolls/roll-data.ts';
-import { uuid, postChatCard, emitChatFromTemplate, roll1d100 } from '../rolls/roll-helpers.ts';
-import { actionBudgetForActor, spendActionForActor } from '../rules/action-economy.ts';
+import { uuid, postChatCard, emitChatFromTemplate, rerenderActionDataInChat, roll1d100 } from '../rolls/roll-helpers.ts';
 import { type AreaTargetResult, areaAvoidanceComponents, areaHitResult, avoidanceResult } from '../rules/area-template.ts';
 import { assassinsStrikeTest } from '../rules/assassins-strike.ts';
+import { type EvasionSkill, evasionBlockReason, parryBlockReason } from '../rules/evasion.ts';
 import { DEFAULT_HIT_LOCATION, resolveHitLocationId } from '../rules/hit-locations.ts';
-import { weaponHasQuality } from '../rules/weapon-quality-effects.ts';
+import {
+    armourCoveringLocation,
+    warpWardingProperties,
+    weaponHasQuality,
+    weaponIgnoresArmor,
+    type WornArmourCandidate,
+} from '../rules/weapon-quality-effects.ts';
 import { sprayAvoidanceTest } from '../rules/without-talents.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
@@ -23,6 +47,9 @@ import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
 type CanvasToken = foundry.canvas.placeables.Token;
+
+/** The armour property ids a Warp Weapon cannot pass through (#414). */
+const WARP_WARDING_PROPERTIES = warpWardingProperties(WH40K.armourProperties);
 
 /** The card listing who an area attack caught (#599). */
 const AREA_RESOLUTION_TEMPLATE = 'systems/wh40k-rpg/templates/chat/area-resolution-chat.hbs';
@@ -38,11 +65,20 @@ type WithRollSkill = WH40KBaseActorDocument & {
     rollSkill?: (skill: string, spec?: string, opts?: Record<string, unknown>) => Promise<void>;
 };
 
+/** An actor that can roll an evasion test against an attack (characters and NPCs, #414). */
+type WithEvasionTest = WH40KBaseActorDocument & {
+    rollEvasionTest?: (prompt: EvasionPromptContext, skill: EvasionSkill) => Promise<void>;
+};
+
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
     storedRolls: Record<string, ActionData> = {};
 
     initializeHooks(): void {
+        // The evasion window (#414) rides on chat messages every client receives.
+        Hooks.on('createChatMessage', (message: ChatMessage) => {
+            this.#onCreateChatMessage(message);
+        });
         // Add show/hide support for chat messages
         Hooks.on('renderChatMessageHTML', (message: ChatMessage, html: HTMLElement, context: ChatMessage.MessageData) => {
             game.wh40k.log('renderChatMessageHTML', { message, html, context });
@@ -106,22 +142,140 @@ export class BasicActionManager {
                     void this._hordeBreakTest(ev);
                 });
             });
-            html.querySelectorAll('.roll-control__attempt-dodge').forEach((el) => {
-                el.addEventListener('click', (ev: Event) => {
-                    void this._attemptReaction(ev, 'dodge');
-                });
-            });
-            html.querySelectorAll('.roll-control__attempt-parry').forEach((el) => {
-                el.addEventListener('click', (ev: Event) => {
-                    void this._attemptReaction(ev, 'parry');
-                });
-            });
+            // Evasion prompt (#414): the defender's owners / the GM answer the attack.
+            const prompt = readEvasionPrompt(message.getFlag(SYSTEM_ID, EVASION_PROMPT_FLAG));
+            if (prompt !== null) this.#wireEvasionPrompt(html, prompt);
             html.querySelectorAll('.roll-control__resolve-area').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._resolveArea(ev);
                 });
             });
         });
+    }
+
+    /**
+     * Wire a rendered evasion prompt (#414): Dodge / Parry / Take the hit for the
+     * defender's owners and the GM. A prompt the defender has already answered
+     * renders closed.
+     */
+    #wireEvasionPrompt(html: HTMLElement, prompt: EvasionPromptContext): void {
+        if (findEvasionOutcome(prompt.attackId) !== null) {
+            closeEvasionPrompt(html, prompt.attackId, t('WH40K.Evasion.AlreadyAnswered'));
+            return;
+        }
+        html.querySelectorAll<HTMLButtonElement>('.roll-control__evade').forEach((el) => {
+            el.addEventListener('click', (ev: Event) => {
+                const skill = el.dataset['skill'];
+                if (skill === 'dodge' || skill === 'parry') void this._evade(ev, prompt, skill);
+            });
+        });
+        html.querySelectorAll<HTMLButtonElement>('.roll-control__take-hit').forEach((el) => {
+            el.addEventListener('click', (ev: Event) => {
+                void this._takeHit(ev, prompt);
+            });
+        });
+    }
+
+    /**
+     * Handle a newly created chat message for the evasion window (#414): notify a
+     * prompt's recipients, and apply an outcome to the attack this client holds.
+     */
+    #onCreateChatMessage(message: ChatMessage): void {
+        const prompt = readEvasionPrompt(message.getFlag(SYSTEM_ID, EVASION_PROMPT_FLAG));
+        if (prompt !== null && !message.isAuthor && message.whisper.includes(game.user.id)) {
+            ui.notifications.info(t('WH40K.Evasion.PromptNotice', { defender: prompt.defenderName, attacker: prompt.attackerName }));
+        }
+        const outcome = readEvasionOutcome(message.getFlag(SYSTEM_ID, EVASION_OUTCOME_FLAG));
+        if (outcome === null) return;
+        for (const element of document.querySelectorAll<HTMLElement>(`[data-evasion-prompt="${CSS.escape(outcome.attackId)}"]`)) {
+            closeEvasionPrompt(element, outcome.attackId, t('WH40K.Evasion.AlreadyAnswered'));
+        }
+        void this.applyEvasionOutcome(outcome);
+    }
+
+    /**
+     * The defender answers the attack with Dodge or Parry (#414). Only the defender's
+     * owners and the GM may answer; the test is refused, with the reason, for a
+     * defender in a grapple or without a Reaction, and a Parry for a ranged attack,
+     * a Flexible attacking weapon, or a defender holding only Unwieldy weapons.
+     */
+    async _evade(event: Event, prompt: EvasionPromptContext, skill: EvasionSkill): Promise<void> {
+        event.preventDefault();
+        const defender = await this.#evasionDefender(prompt);
+        if (defender === null) return;
+        const blocked =
+            evasionBlockReason(evasionGateFor(defender)) ??
+            (skill === 'parry'
+                ? parryBlockReason({
+                      isMeleeAttack: prompt.isMeleeAttack,
+                      attackerPreventsParry: prompt.attackerPreventsParry,
+                      defenderWeaponsCanParry: defenderWeaponsCanParry(defender.items),
+                  })
+                : null);
+        if (blocked !== null) {
+            ui.notifications.warn(t(blocked));
+            return;
+        }
+        const roller = defender as WithEvasionTest;
+        if (roller.rollEvasionTest === undefined) {
+            ui.notifications.warn(t('WH40K.Notify.Action.DefenderReactionFailed'));
+            return;
+        }
+        await roller.rollEvasionTest(prompt, skill);
+    }
+
+    /** The defender takes the hit (#414): no test, no Reaction spent, and the attack's damage proceeds. */
+    async _takeHit(event: Event, prompt: EvasionPromptContext): Promise<void> {
+        event.preventDefault();
+        const defender = await this.#evasionDefender(prompt);
+        if (defender === null) return;
+        const outcome: EvasionOutcome = {
+            attackId: prompt.attackId,
+            defenderName: prompt.defenderName,
+            skill: null,
+            success: false,
+            hitsLanded: prompt.hitsLanded,
+            negated: 0,
+            remaining: prompt.hitsLanded,
+            parts: [],
+        };
+        await emitChatFromTemplate(
+            EVASION_DECLINED_TEMPLATE,
+            { summary: evasionOutcomeSummary(outcome), actor: defender },
+            { speaker: ChatMessage.getSpeaker({ actor: defender }), flags: { [EVASION_OUTCOME_FLAG]: outcome } },
+        );
+    }
+
+    /** The prompt's defender, when this user may answer for it and the attack is still open; null (with a notice) otherwise. */
+    async #evasionDefender(prompt: EvasionPromptContext): Promise<WH40KBaseActorDocument | null> {
+        const defender = await this.#actorFromUuid(prompt.defenderUuid);
+        if (defender === null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Combat.NoDefender'));
+            return null;
+        }
+        if (!game.user.isGM && !defender.isOwner) {
+            ui.notifications.warn(t('WH40K.Evasion.NotYours', { defender: defender.name }));
+            return null;
+        }
+        if (findEvasionOutcome(prompt.attackId) !== null) {
+            ui.notifications.warn(t('WH40K.Evasion.AlreadyAnswered'));
+            return null;
+        }
+        return defender;
+    }
+
+    /**
+     * Apply the defender's evasion to the attack this client posted (#414): drop the
+     * negated hits, re-render the attack card, and let damage proceed on what is left.
+     * Every other client holds no ActionData for the attack and ignores the outcome;
+     * an attack whose damage was already rolled over a pending window keeps it.
+     */
+    async applyEvasionOutcome(outcome: EvasionOutcome): Promise<void> {
+        const actionData = this.getActionData(outcome.attackId);
+        if (actionData?.evasion?.status !== 'pending') return;
+        actionData.evasion = resolvedAttackEvasion(outcome);
+        await rerenderActionDataInChat(actionData);
+        await actionData.maybeAutoRollDamage();
     }
 
     _toggleExpandChatMessage(event: Event): void {
@@ -146,6 +300,21 @@ export class BasicActionManager {
         // A weapon that deals no damage never renders this button (#601); a card
         // posted before that gate still must not roll the legacy default dice.
         if (actionData == null || (actionData.rollData instanceof WeaponRollData && actionData.rollData.noDamage)) return;
+
+        // The evasion window (#414): every hit evaded leaves nothing to roll; while the
+        // defender has yet to answer, only the GM may roll over it (and closes it).
+        if (actionData.evasion?.outcome?.remaining === 0) {
+            ui.notifications.info(t('WH40K.Evasion.FullyEvaded', { defender: actionData.evasion.defenderName }));
+            return;
+        }
+        if (actionData.evasion?.status === 'pending') {
+            if (!game.user.isGM) {
+                ui.notifications.warn(t('WH40K.Evasion.AwaitingDefender', { defender: actionData.evasion.defenderName }));
+                return;
+            }
+            actionData.evasion = forcedAttackEvasion(actionData.evasion);
+            await rerenderActionDataInChat(actionData);
+        }
 
         // Disable button to prevent double-rolling
         btn.disabled = true;
@@ -184,9 +353,9 @@ export class BasicActionManager {
         // / special / embedded attackSpecial items — the existing helper
         // is the single point of truth for quality detection (no string
         // literal name match anywhere else in src/).
-        const weapon = actionData.rollData.weapon ?? actionData.rollData.power;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: actionData.rollData.weapon is a typed WH40KItemDocument; weaponHasQuality accepts a duck-typed QualityItem
-        const explosive = weaponHasQuality(weapon as Parameters<typeof weaponHasQuality>[0], 'explosive');
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actionData.rollData.weapon is a typed WH40KItemDocument; the quality helpers accept a duck-typed QualityItem
+        const weapon = (actionData.rollData.weapon ?? actionData.rollData.power) as Parameters<typeof weaponHasQuality>[0];
+        const explosive = weaponHasQuality(weapon, 'explosive');
         for (const hit of actionData.damageData?.hits ?? []) {
             hit.isExplosive = explosive;
         }
@@ -213,6 +382,14 @@ export class BasicActionManager {
             await previous;
             const hitTarget = hit.targetUuid === '' ? damageTarget : await this.#actorFromUuid(hit.targetUuid);
             if (hitTarget == null) return;
+            // Warp Weapon (#414): the hit passes through this target's armour and cover
+            // unless a warded piece covers the struck location.
+            hit.armourIgnored = weaponIgnoresArmor(
+                weapon,
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's actor.items is an EmbeddedCollection of untyped-system Items; armourCoveringLocation reads only type / equipped / coverage / properties
+                armourCoveringLocation(hitTarget.items as unknown as Iterable<WornArmourCandidate>, hit.location),
+                WARP_WARDING_PROPERTIES,
+            );
             // eslint-disable-next-line no-restricted-syntax -- boundary: the target is an opaque Foundry Actor; AssignDamageData consumes the untyped ActorLike system shape
             const assign = new AssignDamageData(hitTarget as unknown as ActorLike, hit);
             assign.update();
@@ -395,54 +572,6 @@ export class BasicActionManager {
         } catch {
             btn.disabled = false;
         }
-    }
-
-    /**
-     * Chat-card defender reaction (#414): the target of a resolved attack rolls
-     * their own Dodge (any attack) or Parry (melee) test and spends their
-     * Reaction for the round via the action economy (#264). The evasion skill is
-     * the defender's own, resolved through their roll pipeline — scoped to their
-     * game line, never hardcoded (Direction #7). The button disables once used; a
-     * defender with no Reaction left this round is blocked with a notice. Out of
-     * combat (no action budget) the test still rolls, spending nothing.
-     */
-    async _attemptReaction(event: Event, skill: 'dodge' | 'parry'): Promise<void> {
-        event.preventDefault();
-        const btn = event.currentTarget as HTMLButtonElement;
-        const actionData = this.#resolveStoredAction(btn, game.i18n.localize('WH40K.FateActionExpired'));
-        if (actionData == null) return;
-
-        const defender = actionData.rollData.targetActor;
-        if (defender == null) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Combat.NoDefender'));
-            return;
-        }
-
-        // If the defender is in combat, a Reaction must be available this round.
-        const defenderId = defender.id ?? null;
-        if (defenderId !== null) {
-            const budget = actionBudgetForActor(defenderId);
-            if (budget !== null && budget.reactionRemaining <= 0) {
-                // A condition that removes reactions (`actionLimit: noActions`) is a
-                // different refusal from having already spent this round's one.
-                const reason = budget.actionLimit === 'noActions' ? 'WH40K.Combat.ReactionBlockedByCondition' : 'WH40K.Combat.ReactionUsed';
-                ui.notifications.warn(game.i18n.localize(reason));
-                return;
-            }
-        }
-
-        // Disable immediately so the same card cannot double-spend the reaction.
-        btn.disabled = true;
-        try {
-            await (defender as { rollSkill?: (skill: string) => Promise<void> }).rollSkill?.(skill);
-        } catch {
-            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Action.DefenderReactionFailed'));
-            btn.disabled = false;
-            return;
-        }
-
-        // Spend the Reaction once the test has been dispatched.
-        if (defenderId !== null) spendActionForActor(defenderId, 'reaction');
     }
 
     /**
@@ -728,6 +857,7 @@ export class BasicActionManager {
         // attributes; coerce explicitly so the DW horde branch reads a real
         // boolean for `magnitudeLossForHit(damage, isExplosive)`.
         hitData.isExplosive = isExplosive === 'true';
+        hitData.armourIgnored = div.dataset['armourIgnored'] === 'true';
 
         const targetUuid = div.dataset['targetUuid'];
 

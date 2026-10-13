@@ -333,6 +333,14 @@ export class Hit {
     isExplosive = false;
 
     /**
+     * The source weapon ignores the struck location's armour and cover — Warp
+     * Weapon against armour no warded piece covers (#414). Decided by the damage
+     * chat-card renderer, which knows both the weapon and the target, and passed
+     * through `data-armour-ignored` to the assign-damage flow.
+     */
+    armourIgnored = false;
+
+    /**
      * Effective-damage preview vs the current target (#247), filled by the damage
      * chat-card renderer when an attack resolves with a target selected — total
      * damage after the target's location armour (− penetration) and Toughness Bonus.

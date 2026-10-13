@@ -83,6 +83,8 @@ interface HitLike {
      * additional Hit", core.md p. 359).
      */
     isExplosive?: boolean;
+    /** The source weapon ignores this location's armour and cover (Warp Weapon vs unwarded armour, #414). */
+    armourIgnored?: boolean;
 }
 
 export class AssignDamageData {
@@ -176,6 +178,12 @@ export class AssignDamageData {
                     this.tb = locationArmour.toughnessBonus;
                 }
             }
+        }
+        // A Warp Weapon passes through armour and cover alike (#414) — decided where the
+        // hit met its weapon and its target's worn armour (`weaponIgnoresArmor`).
+        if (this.hit.armourIgnored === true) {
+            this.ignoreArmour = true;
+            this.coverAP = 0;
         }
         this.armour += this.coverAP;
     }

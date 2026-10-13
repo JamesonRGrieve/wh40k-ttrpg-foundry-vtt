@@ -1,0 +1,56 @@
+{{!--
+    Evasion prompt (#414) — whispered to the defender's owners and the GM when an
+    attack hits. Dodge answers any attack; Parry answers a melee attack, and is
+    closed (with the reason) for a Flexible attacking weapon or a defender holding
+    only weapons that cannot parry. Take the hit lets the damage proceed. A
+    prompt already answered renders closed (`data-evasion-status`).
+
+    Context:
+        prompt            — EvasionPromptContext (attacker, weapon, defender, hits)
+        parryBlocked      — localized reason Parry is closed, or ''
+        parryPenaltyNote  — localized note of the attacking weapon's Parry penalty, or ''
+--}}
+{{#> systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs
+    overline=(localize "WH40K.Evasion.PromptOverline")
+    title=prompt.defenderName
+    subtitle=(localize "WH40K.Evasion.PromptLine" attacker=prompt.attackerName weapon=prompt.weaponName hits=prompt.hitsLanded)}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5" data-evasion-prompt="{{prompt.attackId}}">
+        {{#if parryPenaltyNote}}
+            <p class="tw-m-0 tw-flex tw-justify-between tw-text-[0.8rem] tw-text-[var(--wh40k-card-muted)]" data-parry-penalty>
+                <span>{{parryPenaltyNote}}</span>
+                <span class="tw-font-semibold tw-text-[var(--wh40k-danger-secondary)]">{{prompt.parryPenalty}}</span>
+            </p>
+        {{/if}}
+        <div class="tw-flex tw-gap-1.5">
+            <button
+                type="button"
+                class="roll-control__evade tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                data-skill="dodge"
+                title="{{localize 'WH40K.Combat.AttemptDodgeTooltip'}}"
+            >
+                <i class="fas fa-wind tw-text-[0.75rem]" aria-hidden="true"></i>
+                <span>{{localize "WH40K.Combat.AttemptDodge"}}</span>
+            </button>
+            <button
+                type="button"
+                class="roll-control__evade tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                data-skill="parry"
+                {{#if parryBlocked}}disabled title="{{parryBlocked}}"{{else}}title="{{localize 'WH40K.Combat.AttemptParryTooltip'}}"{{/if}}
+            >
+                <i class="fas fa-hand-paper tw-text-[0.75rem]" aria-hidden="true"></i>
+                <span>{{localize "WH40K.Combat.AttemptParry"}}</span>
+            </button>
+            <button
+                type="button"
+                class="roll-control__take-hit tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                title="{{localize 'WH40K.Evasion.TakeHitTooltip'}}"
+            >
+                <span>{{localize "WH40K.Evasion.TakeHit"}}</span>
+            </button>
+        </div>
+        {{#if parryBlocked}}
+            <p class="tw-m-0 tw-text-[0.75rem] tw-italic tw-text-[var(--wh40k-card-muted)]" data-parry-blocked>{{parryBlocked}}</p>
+        {{/if}}
+        <p class="tw-m-0 tw-text-[0.8rem] tw-font-semibold tw-text-[var(--wh40k-card-muted)]" data-evasion-status hidden></p>
+    </div>
+{{/systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs}}

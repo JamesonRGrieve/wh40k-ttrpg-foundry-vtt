@@ -31,6 +31,27 @@ export const SimpleSuccess: Story = {
     },
 };
 
+/**
+ * A Dodge resolved against a burst (#414): the evasion test's card states what it
+ * did to the attack, beside its sourced modifier breakdown and degrees.
+ */
+export const SimpleEvasionOutcome: Story = {
+    name: 'Simple Roll / Evasion scored against the attack',
+    render: () =>
+        renderSheet(
+            simpleRollChatSrc,
+            mockRollData({
+                rollData: { name: 'Dodge Test', type: 'Skill' },
+                effectOutput: [{ name: 'Evasion', effect: 'Lucius Varn’s Dodge negates 3 of 4 hits' }],
+            }),
+        ),
+    play: async ({ canvasElement }) => {
+        const effect = canvasElement.querySelector('[data-roll-effect]');
+        await expect(effect?.textContent).toContain('Evasion');
+        await expect(effect?.textContent).toContain('negates 3 of 4 hits');
+    },
+};
+
 export const SimpleSuccessWithFateControls: Story = {
     name: 'Simple Roll / Success + Fate (reroll & +DoS)',
     render: () => renderSheet(simpleRollChatSrc, mockRollData({ id: 'roll-fate-success', sourceFatePoints: 2, rerollOptions: [fateRerollOption] })),
@@ -164,6 +185,42 @@ export const DamageWithRighteousFury: Story = {
         await expect(fury?.textContent).toContain('4');
         await expect(fury?.textContent).toContain('Stunned for 1 round');
         await expect(canvasElement.textContent).not.toContain('Not Confirmed');
+    },
+};
+
+/**
+ * A Warp Weapon hit against unwarded armour (#414): the effective damage ignores the
+ * location's armour and cover, and the card says why; the assign button carries it on.
+ */
+export const DamageWarpWeaponIgnoresArmour: Story = {
+    name: 'Damage Roll / Warp Weapon ignores armour',
+    render: () =>
+        renderSheet(
+            damageRollChatSrc,
+            mockDamageRollData({
+                targetActor: { uuid: 'Actor.target', name: 'Cultist' },
+                hits: [
+                    {
+                        location: 'Body',
+                        damageRoll: { formula: '1d10+4', result: '7 + 4' },
+                        modifiers: {},
+                        totalDamage: 11,
+                        damageType: 'Energy',
+                        totalPenetration: 0,
+                        totalFatigue: 0,
+                        effects: [],
+                        hasEffective: true,
+                        effectiveDamage: 8,
+                        effectiveArmour: 0,
+                        effectiveTb: 3,
+                        armourIgnored: true,
+                    },
+                ],
+            }),
+        ),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-armour-ignored]')?.textContent).toContain('Warp Weapon');
+        await expect(canvasElement.querySelector<HTMLElement>('.roll-control__assign-damage')?.dataset['armourIgnored']).toBe('true');
     },
 };
 

@@ -18,6 +18,8 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly itemRepair = null;
     /** IM prints no rate-of-fire bursts. */
     readonly burstRules = null;
+    /** IM's evasion is not modelled beyond the single negated hit. */
+    readonly evasionRules = null;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.im';
     readonly cssClass = 'imperium-maledictum';
     readonly theme = {

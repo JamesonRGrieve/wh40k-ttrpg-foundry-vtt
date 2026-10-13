@@ -1,6 +1,10 @@
 import { isAuthoredOnCreate, type NpcArmourPatch, resolveArmourEdit } from '../data/actor/npc-armour-edit.ts';
 import type NPCData from '../data/actor/npc.ts';
+import type { SkillRollOptions } from '../rolls/action-data.ts';
+import { EvasionActionData } from '../rolls/evasion-action-data.ts';
+import type { EvasionPromptContext } from '../rolls/evasion-flow.ts';
 import { openRollPrompt } from '../rolls/roll-prompt.ts';
+import type { EvasionSkill } from '../rules/evasion.ts';
 import { hasAuthoredFootprint, prototypeTokenFootprintUpdate } from '../utils/token-footprint.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 
@@ -240,9 +244,10 @@ export class WH40KNPC extends WH40KBaseActor {
      * Roll a skill test for this NPC.
      * @param {string} skillName - The skill key (e.g., "awareness", "dodge").
      * @param {string} [flavor] - Optional flavor text.
+     * @param {SkillRollOptions} [options] - Route the test through an action subclass (an evasion, #414).
      * @returns {Promise<Roll>}
      */
-    rollSkill(skillName: string, flavor?: string): void {
+    rollSkill(skillName: string, flavor?: string, options: SkillRollOptions = {}): void {
         const target = this.system.getSkillTarget(skillName);
         const skill = this.system.trainedSkills[skillName];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- skill may be undefined per noUncheckedIndexedAccess; optional chain is intentional
@@ -254,8 +259,19 @@ export class WH40KNPC extends WH40KBaseActor {
             label: game.i18n.format('WH40K.Roll.TestLabel', { name: skillLabel }),
             target,
             nameOverride: flavor !== undefined && flavor !== '' ? flavor : undefined,
+            instance: options.instance,
         });
         openRollPrompt(simpleSkillData);
+    }
+
+    /**
+     * Roll this NPC's Dodge or Parry against the attack a prompt names (#414).
+     * @param {EvasionPromptContext} prompt  The attack being evaded.
+     * @param {EvasionSkill} skill  The evasion skill.
+     */
+    async rollEvasionTest(prompt: EvasionPromptContext, skill: EvasionSkill): Promise<void> {
+        this.rollSkill(skill, undefined, { instance: new EvasionActionData(prompt, skill) });
+        return Promise.resolve();
     }
 
     /* -------------------------------------------- */

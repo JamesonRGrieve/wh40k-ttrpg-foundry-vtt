@@ -13,6 +13,7 @@ import { autoFailingConditions, helplessAutoHitConditions, rolledCharacteristic 
 import { activeConditionMechanics } from '../rules/condition-registry.ts';
 import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
 import { ARMED_TEST_HOOKS_FLAG, consumeArmedTestHooks, readArmedTestHooks } from '../rules/dynamic-modifiers.ts';
+import { evasionBlockReason, hitsOnTarget, parryBlockReason, withoutNegatedHits } from '../rules/evasion.ts';
 import { type EffectRecipientLike, gmProxyActorUpdate, gmProxyCreateActorEffects } from '../rules/gm-proxy.ts';
 import { DAMAGE_TIER_LABEL_KEYS, firstAidTierPenalty, getDamageTier } from '../rules/healing.ts';
 import { type AllocationTarget, allocateHits } from '../rules/hit-allocation.ts';
@@ -53,6 +54,7 @@ import { shouldSkipSelfTargetDefenderMods } from '../rules/target-situationals.t
 import { isWarpWeak, type WarpWeaknessScene } from '../rules/warp-weakness.ts';
 import { shouldDestroyOnCriticalFail, weaponDestroysOnCriticalFail } from '../rules/weapon-destroy.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
+import { attackerWeaponPreventsParry, getAttackerWeaponParryPenalty } from '../rules/weapon-quality-effects.ts';
 import { attackTriggersRecharge } from '../rules/weapon-recharge.ts';
 import { DAY_SECONDS } from '../rules/world-time.ts';
 import { XENOS_REPAIR_INSIGHT_FLAG, type XenosRepairInsight } from '../rules/xenos-equipment.ts';
@@ -62,11 +64,30 @@ import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { areaQualityLabel, localizeAreaStatement } from './area-statement.ts';
 import { CUE_EFFECT, cueAttackResolved, cueHitsResolved } from './attack-cue-trigger.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, WeaponDamageData } from './damage-data.ts';
+import {
+    type AttackEvasion,
+    defenderWeaponsCanParry,
+    EVASION_PROMPT_FLAG,
+    EVASION_PROMPT_TEMPLATE,
+    type EvasionPromptContext,
+    evasionGateFor,
+    evasionRecipients,
+    openAttackEvasion,
+} from './evasion-flow.ts';
 import type { ExtendedTestChatContext } from './extended-test-data.ts';
 import { localizeHitCeiling } from './hit-ceiling.ts';
 import { resolveGainedMalignancy } from './malignancy-outcome.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
-import { emitChatFromTemplate, getDegreeForMode, isD100Success, resolveDegreesMethod, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
+import {
+    type ChatCardFlags,
+    emitChatFromTemplate,
+    getDegreeForMode,
+    isD100Success,
+    resolveDegreesMethod,
+    roll1d100,
+    sendActionDataToChat,
+    uuid,
+} from './roll-helpers.ts';
 import { keepModeCardNote } from './roll-keep.ts';
 
 /** The "Phenomena Negated" card Sanctic Purity posts when the psyker spends Fate. */
@@ -128,6 +149,16 @@ export class ActionData {
      * before handing it to `chat/partial/extended-test-progress.hbs`.
      */
     extendedTest: ExtendedTestChatContext | undefined;
+    /** The id of the chat card this action posted, so it can be re-rendered in place (#414); null until posted. */
+    messageId: string | null = null;
+    /** System-scoped flags the action's card carries for the clients that react to it (#414). */
+    chatFlags: ChatCardFlags = {};
+    /**
+     * The evasion window this attack opened against its target (#414): pending until
+     * the defender answers, blocked when the defender cannot react, resolved with the
+     * hits the evasion negated. Null when the attack offers no evasion.
+     */
+    evasion: AttackEvasion | null = null;
 
     constructor() {
         this.rollData = new RollData();
@@ -709,7 +740,10 @@ export class ActionData {
                 strategy: weaponRollData.hitAllocation,
             });
 
-            for (const allocated of allocation) {
+            // The declared target's evasion (#414) took its hits off the end of its share.
+            const landing = withoutNegatedHits(allocation, this.#declaredTarget().id, this.evasion?.outcome?.negated ?? 0);
+
+            for (const allocated of landing) {
                 // eslint-disable-next-line no-await-in-loop -- sequential roll generation; each createHit advances dice state
                 const hit = await Hit.createHit(attackData, allocated.hitIndexForTarget);
                 hit.targetName = allocated.target.name;
@@ -788,6 +822,33 @@ export class ActionData {
     }
 
     /** The declared target, as an allocation entry. Falls back to an unnamed placeholder. */
+    /**
+     * Open the attack's evasion window (#414) before its card renders, so the card
+     * shows it. Only a weapon attack offers one; see {@link WeaponActionData}.
+     */
+    openEvasion(): void {
+        this.evasion = null;
+    }
+
+    /** Prompt the defender to answer an open evasion window (#414); a no-op unless one is pending. */
+    async promptEvasion(): Promise<void> {
+        return Promise.resolve();
+    }
+
+    /** How many of this attack's hits land on its declared target — the hits its evasion answers. */
+    protected hitsOnDeclaredTarget(): number {
+        const damageData = this.damageData;
+        if (damageData === undefined) return 0;
+        const weaponRollData = this.rollData as WeaponRollData;
+        const allocation = allocateHits({
+            hitCount: 1 + Math.max(0, damageData.additionalHits),
+            originalTarget: this.#declaredTarget(),
+            extraTargets: this.#spreadTargets(weaponRollData),
+            strategy: weaponRollData.hitAllocation,
+        });
+        return hitsOnTarget(allocation, this.#declaredTarget().id);
+    }
+
     #declaredTarget(): AllocationTarget {
         // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor kept untyped to avoid a circular import
         const target = this.rollData.targetActor as { id?: string; name?: string } | undefined;
@@ -976,12 +1037,15 @@ export class ActionData {
             await this.prepareAreaAttack();
         }
 
+        this.openEvasion();
+
         this.rollData.render = (await this.rollData.roll?.render()) ?? null;
         if (this.rollData.template !== undefined) {
             this.template = this.rollData.template;
         }
 
-        await sendActionDataToChat(this);
+        this.messageId = await sendActionDataToChat(this);
+        await this.promptEvasion();
 
         // Play the attack's cue (#594) from the outcome the card shows: shots or
         // swings per hit landed, a miss past the target, a jam, an area's cone or
@@ -1062,6 +1126,10 @@ export class ActionData {
         // counts as a "hit" for auto-damage purposes.
         if (!(this.rollData.success || this.rollData.isThrown === true)) return 'attack missed';
         if (!WH40KSettings.isAutoRollDamageEnabled()) return 'auto-roll-damage setting is off';
+        // The defender may still Dodge / Parry (#414): damage waits for the answer, so
+        // a successful evasion means it was never applied rather than applied and undone.
+        if (this.evasion?.status === 'pending') return 'awaiting the defender’s evasion';
+        if (this.evasion?.outcome?.remaining === 0) return 'the defender evaded every hit';
         // An area attack's hits come from the creatures in its template, which the
         // card resolves once the user has placed it (#599).
         if (this.#areaTemplate() !== null) return 'area attack awaits its template resolution';
@@ -1115,6 +1183,69 @@ export class WeaponActionData extends ActionData {
         // The burst's hit ceiling, with each part's rule, for the card (#607).
         this.rollData.hitCeiling = localizeHitCeiling(this.rollData);
         await super.performActionAndSendToChat();
+    }
+
+    /**
+     * A hit against a target opens an evasion window (#414) — unless there is no
+     * attack roll to evade (Spray) or an area template resolves who is caught. The
+     * window is closed from the start when the defender cannot react (Reaction
+     * spent, a condition, a grapple), and the card says why.
+     */
+    override openEvasion(): void {
+        const rollData = this.rollData;
+        const defender = rollData.targetActor;
+        if (!rollData.success || rollData.noAttackRoll || rollData.areaTemplate !== null || defender === null) {
+            this.evasion = null;
+            return;
+        }
+        const hitsLanded = this.hitsOnDeclaredTarget();
+        if (hitsLanded === 0) {
+            this.evasion = null;
+            return;
+        }
+        this.evasion = openAttackEvasion(defender.name, hitsLanded, evasionBlockReason(evasionGateFor(defender)));
+    }
+
+    /** Whisper the defender's owners and the GMs the Dodge / Parry / Take the hit prompt (#414). */
+    override async promptEvasion(): Promise<void> {
+        const defender = this.rollData.targetActor;
+        if (this.evasion?.status !== 'pending' || defender?.uuid == null) return;
+        const weapon = this.rollData.weapon;
+        const line = this.rollData.gameSystemId;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.weapon is a typed WH40KItemDocument; the quality helpers accept a duck-typed QualityItem
+        const quality = weapon as Parameters<typeof attackerWeaponPreventsParry>[0];
+        const prompt: EvasionPromptContext = {
+            attackId: this.id,
+            attackerName: this.rollData.sourceActor?.name ?? '',
+            weaponName: weapon.name,
+            defenderUuid: defender.uuid,
+            defenderName: defender.name,
+            action: this.rollData.action,
+            hitsLanded: this.evasion.hitsLanded,
+            isMeleeAttack: weapon.isMelee,
+            storm: this.rollData.hasAttackSpecial('Storm'),
+            twinLinked: this.rollData.hasAttackSpecial('Twin-Linked'),
+            attackerPreventsParry: attackerWeaponPreventsParry(quality),
+            parryPenalty: getAttackerWeaponParryPenalty(quality, line),
+        };
+        const parryBlock = parryBlockReason({
+            isMeleeAttack: prompt.isMeleeAttack,
+            attackerPreventsParry: prompt.attackerPreventsParry,
+            defenderWeaponsCanParry: defenderWeaponsCanParry(defender.items),
+        });
+        await emitChatFromTemplate(
+            EVASION_PROMPT_TEMPLATE,
+            {
+                prompt,
+                parryBlocked: parryBlock === null ? '' : t(parryBlock),
+                parryPenaltyNote: prompt.parryPenalty === 0 ? '' : t('WH40K.Evasion.AttackerWeaponParryPenalty', { weapon: prompt.weaponName }),
+                sourceActor: this.rollData.sourceActor,
+            },
+            {
+                whisper: evasionRecipients(game.users, (user) => defender.testUserPermission(user, 'OWNER')),
+                flags: { [EVASION_PROMPT_FLAG]: prompt },
+            },
+        );
     }
 }
 
@@ -1254,6 +1385,12 @@ export class SimpleSkillData extends ActionData {
         this.hasDamage = false;
         this.rollData = new RollData();
     }
+}
+
+/** Options an actor's `rollSkill` takes. */
+export interface SkillRollOptions {
+    /** Route the test through this action subclass instead of a plain skill test (an evasion, #414). */
+    instance?: SimpleSkillData | undefined;
 }
 
 /** A chem/drug item as the Chem-Use flow reads it (#441) — its dose payload + uses. */

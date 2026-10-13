@@ -121,6 +121,39 @@ describe('AssignDamageData cover AP wiring', () => {
     });
 });
 
+describe('Warp Weapon ignores armour and cover (#414)', () => {
+    it('a hit flagged armourIgnored drops the location armour and the cover AP', () => {
+        const data = new AssignDamageData(buildActor(), {
+            location: 'Body',
+            damageType: 'Energy',
+            totalDamage: 10,
+            totalPenetration: 0,
+            totalFatigue: 0,
+            coverAP: 6,
+            armourIgnored: true,
+        });
+        data.update();
+        expect(data.ignoreArmour).toBe(true);
+        expect(data.coverAP).toBe(0);
+        // 10 damage − (0 armour + TB 3) = 7.
+        expect(data.previewReducedDamage().effective).toBe(7);
+    });
+
+    it('an ordinary hit keeps both', () => {
+        const data = new AssignDamageData(buildActor(), {
+            location: 'Body',
+            damageType: 'Energy',
+            totalDamage: 10,
+            totalPenetration: 0,
+            totalFatigue: 0,
+            coverAP: 6,
+        });
+        data.update();
+        expect(data.ignoreArmour).toBe(false);
+        expect(data.armour).toBe(10);
+    });
+});
+
 describe('Righteous Fury no-break branch (#109)', () => {
     it('damage breaks through normally — RF count does not add extra', async () => {
         const actor = buildActor();

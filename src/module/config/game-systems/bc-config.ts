@@ -27,6 +27,7 @@ import {
     tallyAdvancesByAlignment,
     type AlignmentTally,
 } from '../../rules/bc-alignment-derivation.ts';
+import type { EvasionRules } from '../../rules/evasion.ts';
 import { capitalize } from '../../utils/format.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import {
@@ -78,6 +79,18 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * Full Automatic rate of fire" — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
+    /**
+     * BC core: "When Evading Full Auto or Semi-Auto Bursts, each Degree of Success
+     * on the Dodge Test negates one additional hit. When Evading Swift or Lightning
+     * Attacks, each Degree of Success on the Dodge or Parry Test negates one
+     * additional hit." No Storm or Twin-Linked rule — #414.
+     */
+    readonly evasionRules: EvasionRules = {
+        multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst', 'Swift Attack', 'Lightning Attack'],
+        twinLinked: false,
+        anyMultiHit: false,
+        stormTwoPerDegree: false,
+    };
     readonly acquisitionLadder: AcquisitionLadder = {
         availability: {
             ubiquitous: 70,

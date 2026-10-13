@@ -6,6 +6,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstCapRules } from '../../rules/auto-fire.ts';
+import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
@@ -87,6 +88,14 @@ export abstract class BaseSystemConfig {
      * line that prints no rate-of-fire bursts.
      */
     abstract readonly burstRules: BurstCapRules | null;
+
+    /**
+     * The line's printed evasion rule for multi-hit attacks (#414): which attacks
+     * a degree of success on a Dodge / Parry thins out, and whether Storm makes
+     * it two hits a degree. `null` for a line whose evasion is modelled only as
+     * the single negated hit.
+     */
+    abstract readonly evasionRules: EvasionRules | null;
 
     // ── Starting Resources ────────────────────────────────────────
 

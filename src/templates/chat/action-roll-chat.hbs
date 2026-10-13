@@ -152,6 +152,24 @@
                   {{/unless}}
                 {{/unless}}
 
+                {{!-- Evasion window (#414): the defender's Dodge / Parry against this hit —
+                      awaiting the answer, closed by the defender's state, or resolved with
+                      each part of the negation a hoverable row naming its rule. --}}
+                {{#if @root.evasion}}
+                    <div class="tw-mt-2 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-[3px] tw-border-[var(--wh40k-border-color)] tw-rounded-[0_4px_4px_0]" data-evasion-status="{{@root.evasion.status}}">
+                        <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-[0.85rem] tw-font-semibold tw-text-[var(--wh40k-card-text)]">
+                            <i class="fas fa-wind tw-text-[0.75rem] tw-text-gold" aria-hidden="true"></i>
+                            <span>{{@root.evasion.summary}}</span>
+                        </div>
+                        {{#each @root.evasion.rows as |row|}}
+                            <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.85rem] tw-pl-3 tw-border-l-2 tw-border-l-[var(--wh40k-border-color)] tw-ml-1 tw-cursor-help" data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{row.tooltipData}}">
+                                <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{row.label}}</span>
+                                <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{row.value}}</span>
+                            </div>
+                        {{/each}}
+                    </div>
+                {{/if}}
+
                 {{!-- Action Controls --}}
                 {{#unless ignoreControls}}
                     <div class="tw-flex tw-flex-col tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
@@ -168,6 +186,11 @@
                             </button>
                         {{else if noDamage}}
                             {{> systems/wh40k-rpg/templates/chat/partial/no-damage-note.hbs}}
+                        {{else if @root.evasion.fullyEvaded}}
+                            <p class="tw-m-0 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" data-fully-evaded>
+                                <i class="fas fa-wind tw-text-[0.8rem]" aria-hidden="true"></i>
+                                <span>{{localize "WH40K.Evasion.Evaded"}}</span>
+                            </p>
                         {{else if showDamage}}
                             <button class="roll-control__roll-damage tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
                                 <span class="material-icons tw-text-[16px]">bolt</span>
@@ -192,36 +215,6 @@
                             {{/unless}}{{/if}}
                             {{> systems/wh40k-rpg/templates/chat/partial/reroll-controls.hbs rerollOptions=@root.rerollOptions rollId=@root.id}}
                         </div>
-                        {{!-- Defender reactions (#414): on a hit against a target, let the
-                              defender Attempt Dodge (any attack) or Parry (melee), rolling
-                              their own reaction test and spending their Reaction for the round. --}}
-                        {{!-- No attack roll (Spray) means no hit to dodge: the template's avoidance test replaces it. --}}
-                        {{#if success}}{{#unless noAttackRoll}}
-                            {{#if targetActor}}
-                                <div class="tw-flex tw-gap-1.5">
-                                    <button
-                                        class="roll-control__attempt-dodge tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_var(--wh40k-gold-glow)] hover:-tw-translate-y-px active:tw-translate-y-0 disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
-                                        data-roll-id="{{@root.id}}"
-                                        title="{{localize 'WH40K.Combat.AttemptDodgeTooltip'}}"
-                                    >
-                                        <i class="fas fa-wind tw-text-[0.75rem]"></i>
-                                        <span>{{localize "WH40K.Combat.AttemptDodge"}}</span>
-                                    </button>
-                                    {{#if weapon}}
-                                        {{#unless weapon.system.isRangedWeapon}}
-                                            <button
-                                                class="roll-control__attempt-parry tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_var(--wh40k-gold-glow)] hover:-tw-translate-y-px active:tw-translate-y-0 disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
-                                                data-roll-id="{{@root.id}}"
-                                                title="{{localize 'WH40K.Combat.AttemptParryTooltip'}}"
-                                            >
-                                                <i class="fas fa-hand-paper tw-text-[0.75rem]"></i>
-                                                <span>{{localize "WH40K.Combat.AttemptParry"}}</span>
-                                            </button>
-                                        {{/unless}}
-                                    {{/if}}
-                                </div>
-                            {{/if}}
-                        {{/unless}}{{/if}}
                         {{!-- Assassin's Strike post-attack Acrobatics + Half Move (#149 — DH2 errata L75) --}}
                         {{#if @root.hasAssassinsStrike}}
                             {{#if success}}

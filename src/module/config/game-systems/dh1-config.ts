@@ -6,6 +6,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstCapRules } from '../../rules/auto-fire.ts';
+import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
@@ -32,6 +33,13 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
      * of fire" two hits, i.e. twice the ceiling — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
+    /** DH1 core: "When Dodging Full or Semi-Automatic fire, each degree of success negates an additional hit." — #414. */
+    readonly evasionRules: EvasionRules = {
+        multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],
+        twinLinked: false,
+        anyMultiHit: false,
+        stormTwoPerDegree: false,
+    };
     readonly acquisitionLadder: AcquisitionLadder = {
         availability: {
             ubiquitous: 70,

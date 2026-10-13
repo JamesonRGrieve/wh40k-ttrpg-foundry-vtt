@@ -811,6 +811,48 @@
             "FiringOptionHint": "Use this quality for this attack only",
             "FiringOptionSource": "Attacker's choice"
         },
+        "Evasion": {
+            "EffectTitle": "Evasion",
+            "PromptOverline": "Evasion",
+            "PromptLine": "{attacker} hits with {weapon}: {hits} hit(s) incoming",
+            "PromptNotice": "{defender} is hit by {attacker}: Dodge, Parry or take the hit in chat.",
+            "TakeHit": "Take the hit",
+            "TakeHitTooltip": "Make no evasion test: the attack's damage proceeds.",
+            "DeclinedHint": "No evasion test; the attack's damage proceeds.",
+            "NotYours": "Only {defender}'s owner or the GM can answer this attack.",
+            "AlreadyAnswered": "This attack has already been answered.",
+            "AwaitingDefender": "Waiting for {defender} to Dodge, Parry or take the hit.",
+            "FullyEvaded": "{defender} evaded every hit: there is no damage to roll.",
+            "Evaded": "Evaded",
+            "AttackerWeaponParryPenalty": "Parrying {weapon}",
+            "Summary": {
+                "Pending": "Awaiting {defender}'s evasion",
+                "Blocked": "{defender} cannot evade: {reason}",
+                "Forced": "Damage rolled before {defender} answered",
+                "Declined": "{defender} takes the hit",
+                "Failed": "{defender}'s {skill} fails: every hit lands",
+                "Evaded": "{defender}'s {skill} evades the attack",
+                "Negated": "{defender}'s {skill} negates {negated} of {landed} hits"
+            },
+            "Part": {
+                "Hit": "The hit",
+                "Degrees": "Degrees of success",
+                "Storm": "Storm (two per degree)",
+                "Cap": "Hits landed"
+            },
+            "Source": {
+                "Hit": "A successful evasion negates the hit",
+                "Degrees": "Each degree of success negates one additional hit of a multi-hit attack",
+                "Storm": "Each degree of success negates two hits of a Storm weapon",
+                "Cap": "No more hits are negated than landed"
+            },
+            "Blocked": {
+                "Grappled": "participants in a grapple cannot use Reactions",
+                "ParryRanged": "only a melee attack can be Parried",
+                "Flexible": "a Flexible weapon cannot be Parried",
+                "Unwieldy": "an Unwieldy weapon cannot be used to Parry"
+            }
+        },
         "Assistance": {
             "Label": "Assistants",
             "Tooltip": "Each assistant grants +10 to the test, up to the table cap (core.md §\"Assistance\", p. 25).",
@@ -5653,6 +5695,8 @@
                 "EffectiveVs": "Effective vs {target}",
                 "Effective": "Effective",
                 "AfterArmour": "after armour {armour} (post-pen) + TB {toughness}",
+                "ArmourIgnoredWarpWeapon": "Warp Weapon: armour and cover ignored",
+                "ArmourIgnoredWarpWeaponTooltip": "A Warp Weapon ignores armour and cover unless a warded or holy piece covers the struck location.",
                 "Absorbed": "Absorbed (1)",
                 "AbsorbedTooltip": "Defences fully absorbed the hit; RAW applies 1 point of damage.",
                 "DamageDieTooltip": "DH2 core: replace one damage die with DoS ({dos}).",

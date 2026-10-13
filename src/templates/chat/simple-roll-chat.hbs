@@ -41,6 +41,15 @@
 
             {{/if}}{{!-- end isTargetOnly else --}}
 
+            {{!-- Effects the resolved test produced (a skill-use readout, an evasion
+                  scored against its attack, #414) — the same rows the action card shows. --}}
+            {{#each @root.effectOutput as |effect|}}
+                <div class="tw-flex tw-items-start tw-gap-[var(--wh40k-space-sm)] tw-py-1.5 tw-text-[0.85rem]" data-roll-effect>
+                    <span class="tw-font-semibold tw-text-gold tw-shrink-0">{{effect.name}}</span>
+                    <span class="tw-text-[var(--wh40k-card-text)] tw-opacity-90">{{effect.effect}}</span>
+                </div>
+            {{/each}}
+
             {{!-- Extended Test ladder (#59) --}}
             {{#if extendedTest}}
                 {{> systems/wh40k-rpg/templates/chat/partial/extended-test-progress.hbs extendedTest=extendedTest}}

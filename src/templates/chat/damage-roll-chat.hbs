@@ -58,6 +58,9 @@
                         <span class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-card-muted)]">
                             {{#if @root.targetName}}{{localize "WH40K.Chat.Damage.EffectiveVs" target=@root.targetName}}{{else}}{{localize "WH40K.Chat.Damage.Effective"}}{{/if}}
                             <span class="tw-block tw-text-[0.7rem] tw-normal-case tw-opacity-80">{{localize "WH40K.Chat.Damage.AfterArmour" armour=hit.effectiveArmour toughness=hit.effectiveTb}}</span>
+                            {{#if hit.armourIgnored}}
+                                <span class="tw-block tw-text-[0.7rem] tw-normal-case tw-text-[var(--wh40k-warning-secondary)] tw-cursor-help" data-armour-ignored data-tooltip="{{localize 'WH40K.Chat.Damage.ArmourIgnoredWarpWeaponTooltip'}}">{{localize "WH40K.Chat.Damage.ArmourIgnoredWarpWeapon"}}</span>
+                            {{/if}}
                         </span>
                         {{#if hit.effectiveAbsorbed}}
                         <span class="tw-text-[0.95rem] tw-font-bold tw-text-[var(--wh40k-card-muted)]" title="{{localize 'WH40K.Chat.Damage.AbsorbedTooltip'}}">{{localize "WH40K.Chat.Damage.Absorbed"}}</span>
@@ -122,6 +125,7 @@
                                 data-target-uuid="{{#if hit.targetUuid}}{{hit.targetUuid}}{{else}}{{@root.targetActor.uuid}}{{/if}}"
                                 data-damage-type="{{hit.damageType}}"
                                 data-is-explosive="{{hit.isExplosive}}"
+                                data-armour-ignored="{{hit.armourIgnored}}"
                             >
                                 <span class="material-icons">api</span>
                                 <span>{{localize "WH40K.Combat.AssignDamage"}}</span>

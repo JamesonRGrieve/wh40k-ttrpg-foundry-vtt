@@ -6,6 +6,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder, CraftsmanshipKey } from '../../rules/acquisition-ladder.ts';
 import type { BurstCapRules } from '../../rules/auto-fire.ts';
+import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
@@ -85,6 +86,19 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
      * Storm: "up to the weapon's firing rate, as normal" (p. 149) — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'total', suppressingCap: 'total', stormCap: 'rof' };
+    /**
+     * DH2 core ch. VII, Evasion: "When Evading Swift Attacks, Lightning Attacks,
+     * Full Auto Bursts, Semi-Auto Bursts, attacks from weapons with the Twin-Linked
+     * quality, or any other attacks that would inflict multiple hits, each degree of
+     * success … negates one additional hit. When Evading attacks from weapons with
+     * the Storm quality, each degree of success on the test negates two hits." — #414.
+     */
+    readonly evasionRules: EvasionRules = {
+        multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst', 'Swift Attack', 'Lightning Attack'],
+        twinLinked: true,
+        anyMultiHit: true,
+        stormTwoPerDegree: true,
+    };
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dh2';
     readonly cssClass = 'dark-heresy';
     readonly theme = {

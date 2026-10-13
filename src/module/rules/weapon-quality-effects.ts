@@ -280,18 +280,20 @@ export function attackerWeaponPreventsParry(attackerWeapon: QualityItem | null |
 }
 
 /**
- * Get parry penalty for the attacker's weapon (when being parried).
- * Some qualities (like Fast) impose penalties on enemies trying to parry.
+ * The penalty the attacker's weapon imposes on a defender's Parry (#414). Fast:
+ * "Opponents that would Parry an attack against a weapon with the Fast quality
+ * take a –20 penalty" (DH1 Inquisitor's Handbook). The value is the quality's
+ * authored `enemyParryPenalty`, resolved for the attacker's line.
  *
  * @param {Item} attackerWeapon - The weapon being parried against
+ * @param {string} [systemId] - The attacker's game line
  * @returns {number} Penalty to apply to defender's parry test
  */
-export function getAttackerWeaponParryPenalty(attackerWeapon: QualityItem | null | undefined): number {
+export function getAttackerWeaponParryPenalty(attackerWeapon: QualityItem | null | undefined, systemId?: string): number {
     if (!attackerWeapon) return 0;
 
-    // Fast: Enemies suffer -20 to parry this weapon
     if (weaponHasQuality(attackerWeapon, 'fast')) {
-        return getWeaponQualityMechanics('fast')?.enemyParryPenalty ?? 0;
+        return getWeaponQualityMechanics('fast', systemId)?.enemyParryPenalty ?? 0;
     }
 
     return 0;
@@ -401,25 +403,77 @@ export function calculateExoticQualityDamageModifiers(damageContext: ExoticDamag
     return modifiers;
 }
 
+/** A worn armour piece as the Warp Weapon check reads it: its special property ids. */
+export interface WardableArmour {
+    readonly properties: Iterable<string>;
+}
+
+/** An owned item as {@link armourCoveringLocation} reads it. */
+export interface WornArmourCandidate {
+    readonly type: string;
+    /** An armour item's system (`data/item/armour.ts`): equip state, coverage and special properties are schema-required. */
+    readonly system: { readonly state: { readonly equipped: boolean }; readonly coverage: Iterable<string>; readonly properties: Iterable<string> };
+}
+
+/** A location as an upper-cased, space-free key, so `Right Arm`, `rightArm` and `RIGHTARM` agree. */
+function locationKey(location: string): string {
+    return location.replace(/\s/g, '').toUpperCase();
+}
+
 /**
- * Check if weapon ignores armor due to Warp Weapon quality.
- * Returns true if armor should be ignored (for non-warded armor).
- *
- * @param {Item} weapon - The weapon item
- * @param {Item} armor - The armor item (if any)
- * @returns {boolean} True if weapon ignores this armor
+ * The worn (equipped) armour pieces that cover a hit location.
+ * @param {Iterable<WornArmourCandidate>} items  The target's owned items.
+ * @param {string} location  The struck location (`body`, `Right Arm`, …).
+ * @returns {WardableArmour[]}  The covering pieces' properties.
  */
-export function weaponIgnoresArmor(weapon: QualityItem | null | undefined, armor: QualityItem | null | undefined): boolean {
-    if (!weapon || !armor) return false;
-
-    // Warp Weapon: Ignores non-warded armor
-    if (weaponHasQuality(weapon, 'warp-weapon')) {
-        // Check if armor is warded
-        const isWarded = armor.system?.special?.has('warded') === true || armor.system?.effectiveSpecial?.has('warded') === true;
-        return !isWarded; // Ignore if NOT warded
+export function armourCoveringLocation(items: Iterable<WornArmourCandidate>, location: string): WardableArmour[] {
+    const key = locationKey(location);
+    const pieces: WardableArmour[] = [];
+    for (const item of items) {
+        // Only an armour item carries coverage; the type check comes first.
+        if (item.type !== 'armour' || !item.system.state.equipped) continue;
+        const coverage = Array.from(item.system.coverage, locationKey);
+        if (coverage.includes('ALL') || coverage.includes(key)) pieces.push({ properties: item.system.properties });
     }
+    return pieces;
+}
 
-    return false;
+/**
+ * The armour property ids that ward against the Warp, read off the armour-property
+ * vocabulary's `wardsAgainstWarp` flags.
+ * @param {Readonly<Record<string, { wardsAgainstWarp?: true }>>} properties  The armour-property vocabulary.
+ * @returns {Set<string>}  The warding property ids.
+ */
+export function warpWardingProperties(properties: Readonly<Record<string, { readonly wardsAgainstWarp?: true }>>): Set<string> {
+    return new Set(
+        Object.entries(properties)
+            .filter(([, property]) => property.wardsAgainstWarp === true)
+            .map(([id]) => id),
+    );
+}
+
+/**
+ * Whether a weapon ignores the armour (and cover) at the struck location (#414).
+ *
+ * Warp Weapon, every line: the attack is "able to ignore such mundane things as
+ * armour or cover … unless the armour is created from psychoactive materials or
+ * is somehow warded against the Warp" (DH2, OW; DH1 / DW / RT: "carries the holy
+ * quality"; BC: "armour specially warded work[s] normally"). So the armour holds
+ * when ANY piece covering the location carries a warding property; with no
+ * warded piece (or no armour at all) the hit ignores it.
+ * @param {QualityItem | null | undefined} weapon  The attacking weapon.
+ * @param {readonly WardableArmour[]} coveringArmour  The worn armour covering the struck location.
+ * @param {ReadonlySet<string>} wardingProperties  The armour property ids that ward against the Warp.
+ * @returns {boolean}  True when the hit ignores the location's armour and cover.
+ */
+export function weaponIgnoresArmor(
+    weapon: QualityItem | null | undefined,
+    coveringArmour: readonly WardableArmour[],
+    wardingProperties: ReadonlySet<string>,
+): boolean {
+    if (!weapon || !weaponHasQuality(weapon, 'warp-weapon')) return false;
+    const warded = coveringArmour.some((piece) => Array.from(piece.properties).some((property) => wardingProperties.has(property)));
+    return !warded;
 }
 
 /**
