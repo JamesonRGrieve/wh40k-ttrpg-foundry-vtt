@@ -122,6 +122,30 @@ export function clickAction(container: ParentNode | HTMLElement, action: string)
     el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
 }
 
+/** One click {@link captureActionClicks} saw: the `data-action` and the clicked element's other data attributes. */
+export interface CapturedActionClick {
+    action: string;
+    dataset: Record<string, string | undefined>;
+}
+
+/**
+ * Record every `[data-action]` click inside `container`, resolved the way
+ * ApplicationV2's delegated handler resolves it (the closest `[data-action]`
+ * ancestor of the event target). A story has no application to dispatch to, so
+ * this is how a play asserts that a control sends the action (and data) its
+ * handler expects. Returns the live list; read it after clicking.
+ */
+export function captureActionClicks(container: HTMLElement): CapturedActionClick[] {
+    const seen: CapturedActionClick[] = [];
+    container.addEventListener('click', (event) => {
+        const el = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-action]') : null;
+        if (el === null) return;
+        const { action, ...dataset } = el.dataset;
+        seen.push({ action: action ?? '', dataset });
+    });
+    return seen;
+}
+
 /**
  * Fill form fields and dispatch a submit on the enclosing form. Field names
  * map to `name="..."` attributes (e.g. `system.wounds.value`). Throws if a
