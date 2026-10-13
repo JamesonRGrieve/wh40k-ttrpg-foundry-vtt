@@ -33,7 +33,15 @@
  * because it never persists.
  */
 
-import { inferActiveGameLine, materializeItemVariants, resolveOwnedLineContent, sameSourceValue } from './utils/item-variant-utils.ts';
+import { recoverOwnedItemLink } from './utils/compendium-query.ts';
+import {
+    inferActiveGameLine,
+    materializeItemVariants,
+    ownerGameLine,
+    resolveOwnedLineContent,
+    type SupportedLineKey,
+    sameSourceValue,
+} from './utils/item-variant-utils.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: Foundry item/actor types carry open-ended Record<string,unknown> at framework boundaries */
 type HydratableItem = {
@@ -207,6 +215,52 @@ function joinUuid(item: HydratableItem): string | null {
     return item._stats?.compendiumSource ?? variantOfUuid(item.system);
 }
 
+/** Session cache of recovered links, keyed by line/type/identifier/name; `null` = none or ambiguous. */
+const RECOVERED_LINKS = new Map<string, string | null>();
+
+/**
+ * The canonical UUID for an owned item stored with NO join key (#484).
+ *
+ * An item added before compendium links were recorded — or copied in some way
+ * that dropped `_stats.compendiumSource` — could never be joined, so content
+ * authored on the canonical later (Superior Chirurgeon's `modifiers.skills.medicae
+ * = 20`) never reached it. Its canonical is recovered deterministically from the
+ * OWNER's line packs: by `system.identifier`, else by exact name, and only when
+ * exactly one candidate matches. Anything else leaves the item self-contained.
+ * `null` under headless tooling and vitest, where no `game.packs` exists.
+ */
+async function recoverJoinUuid(item: HydratableItem, ownerLine: SupportedLineKey | null): Promise<string | null> {
+    if (typeof game === 'undefined' || !('packs' in game)) return null;
+    const name = item.name ?? '';
+    // Not a warning: most unlinked items are genuinely self-contained (an NPC's
+    // inline natural weapon), so a miss is logged on the system's debug channel.
+    if (ownerLine === null) {
+        game.wh40k.log(`compendium-hydrate: ${name} has no compendium link and its owner names no game line; leaving it unjoined`);
+        return null;
+    }
+    const persisted = item._source?.system ?? item.system;
+    const rawIdentifier = persisted['identifier'];
+    const identifier = typeof rawIdentifier === 'string' ? rawIdentifier : '';
+    const key = [ownerLine, item.type, identifier, identifier === '' ? name : ''].join('|');
+    const cached = RECOVERED_LINKS.get(key);
+    if (cached !== undefined) return cached;
+
+    let recovered: string | null;
+    try {
+        recovered = await recoverOwnedItemLink({ type: item.type, identifier, name, linePrefix: ownerLine });
+    } catch (err) {
+        // Same best-effort contract as the join: an index that cannot load leaves
+        // the item as stored, and is retried on the next pass (not cached).
+        game.wh40k.log(`compendium-hydrate: could not search the ${ownerLine} packs for ${name}; leaving it unjoined`, err);
+        return null;
+    }
+    if (recovered === null) {
+        game.wh40k.log(`compendium-hydrate: ${name} (${item.type}) has no compendium link and no unique ${ownerLine} match; leaving it unjoined`);
+    }
+    RECOVERED_LINKS.set(key, recovered);
+    return recovered;
+}
+
 /**
  * How many `variantOf` hops to follow before giving up.
  *
@@ -345,9 +399,10 @@ interface HydrationResult {
 
 /**
  * Build the per-item hydration patches for an actor, its own variant-chain
- * join, and the list of join keys that did not resolve. Items with neither a
- * `compendiumSource` nor a `variantOf` are left alone (they are self-contained),
- * as is an actor that is its own base.
+ * join, and the list of join keys that did not resolve. An item with neither a
+ * `compendiumSource` nor a `variantOf` joins the unique canonical recovered from
+ * its owner's line packs (#484, {@link recoverJoinUuid}); with none, it is left
+ * alone as self-contained. An actor that is its own base is left alone too.
  */
 async function buildHydration(actor: HydratableActor): Promise<HydrationResult> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payloads are open-ended Records
@@ -357,10 +412,17 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
     // The line all of this actor's embedded items resolve their per-line variant
     // containers to (their owning actor's line), computed once for the pass.
     const lineKey = inferActiveGameLine({ actor });
+    const ownerLine = ownerGameLine(actor);
 
     for (const item of actor.items.contents) {
-        const uuid = joinUuid(item);
-        if (uuid === null || item.id === null) continue;
+        if (item.id === null) continue;
+        const storedUuid = joinUuid(item);
+        // eslint-disable-next-line no-await-in-loop -- sequential is intentional: recovery shares the session link cache, so a repeated item searches once
+        const uuid = storedUuid ?? (await recoverJoinUuid(item, ownerLine));
+        if (uuid === null) continue;
+        // A recovered link is recorded on the item (in memory, like the join) so
+        // every consumer of `_stats.compendiumSource` sees it.
+        const recoveredLink = storedUuid === null ? uuid : null;
 
         let source = cache.get(uuid);
         if (source === undefined) {
@@ -404,10 +466,11 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
                 : buildHydratedSystem(ownedLine.base, ownedLine.overlay, defaults);
         // Order-insensitive no-op check (as the actor path uses), so a re-render of
         // an already-hydrated item does not needlessly re-patch and `reset()`.
-        if (sameSourceValue(merged, persisted)) continue; // already full — no-op
+        if (recoveredLink === null && sameSourceValue(merged, persisted)) continue; // already full — no-op
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payload
         const patch: Record<string, unknown> = { _id: item.id, system: merged };
+        if (recoveredLink !== null) patch['compendiumSource'] = recoveredLink;
         const persistedImg = item._source?.img ?? item.img;
         if (source.img !== null && persistedImg !== source.img) patch['img'] = source.img;
         patches.push(patch);
@@ -483,6 +546,9 @@ async function hydrateActorReporting(actor: HydratableActor): Promise<{ patched:
         // system's `ready` before conditions, caches and the event graph loaded.
         try {
             item?.updateSource?.({ system: patch['system'], ...(patch['img'] !== undefined ? { img: patch['img'] } : {}) }, REPLACE_SYSTEM);
+            // A recovered link merges INTO `_stats` (recursive) — replacing it
+            // wholesale would drop the item's other document stats.
+            if (typeof patch['compendiumSource'] === 'string') item?.updateSource?.({ _stats: { compendiumSource: patch['compendiumSource'] } });
             patched += 1;
         } catch (err) {
             console.error(

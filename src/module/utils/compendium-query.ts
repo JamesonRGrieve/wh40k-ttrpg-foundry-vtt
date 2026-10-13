@@ -73,6 +73,61 @@ export function pickLineEntry(entries: readonly IdentifiedPackEntry[], linePrefi
     return onLine ?? entries.at(0) ?? null;
 }
 
+/** One compendium Item index entry, reduced to what an owned-item link recovery matches on. */
+export interface LinkCandidate {
+    uuid: string;
+    packId: string;
+    type: string;
+    name: string;
+    identifier: string;
+}
+
+/** What an owned item with no compendium link is matched by (#484). */
+export interface OwnedItemLinkQuery {
+    /** The owned item's type — a candidate of another type never matches. */
+    type: string;
+    /** The owned item's `system.identifier`, or `''` when it has none. */
+    identifier: string;
+    /** The owned item's name, matched exactly only when it has no identifier. */
+    name: string;
+    /** The OWNER's game line (`dh2`), which scopes the search to its packs and its homebrew packs. */
+    linePrefix: string;
+}
+
+/**
+ * The single canonical UUID an unlinked owned item resolves to, or `null`. Pure.
+ *
+ * The same talent exists in several lines under different UUIDs, so only the
+ * owner's line (and that line's homebrew packs) is searched. An identifier match
+ * is used when the item has one; an exact name match only when it has none. Any
+ * result other than exactly one candidate is ambiguous or absent, and returns
+ * `null` — a wrong link would graft another document's body onto the item.
+ */
+export function pickUniqueLinkCandidate(candidates: readonly LinkCandidate[], query: OwnedItemLinkQuery): string | null {
+    const onLine = candidates.filter((c) => c.type === query.type && isLineOrHomebrewPack(c.packId, query.linePrefix));
+    let matches: LinkCandidate[] = [];
+    if (query.identifier !== '') matches = onLine.filter((c) => c.identifier === query.identifier);
+    else if (query.name !== '') matches = onLine.filter((c) => c.name === query.name);
+    return matches.length === 1 ? matches[0]?.uuid ?? null : null;
+}
+
+/**
+ * Recover the compendium link of an owned item stored without one (#484): load
+ * the owner line's Item pack indexes and pick the unique match. See
+ * {@link pickUniqueLinkCandidate} for the matching rules.
+ */
+export async function recoverOwnedItemLink(query: OwnedItemLinkQuery): Promise<string | null> {
+    const collect = (entry: CompendiumIndexEntry, pack: { readonly metadata: { readonly id: string } }): LinkCandidate | undefined => {
+        if (entry.type !== query.type || entry.uuid === undefined) return undefined;
+        const system = entry['system'];
+        const identifier =
+            typeof system === 'object' && system !== null && 'identifier' in system && typeof system.identifier === 'string' ? system.identifier : '';
+        return { uuid: entry.uuid, packId: pack.metadata.id, type: entry.type, name: entry.name, identifier };
+    };
+    const candidates = await queryItemIndex(['system.identifier'], collect, true, (packId) => isLineOrHomebrewPack(packId, query.linePrefix));
+    return pickUniqueLinkCandidate(candidates, query);
+}
+
 /**
  * UUID of the system compendium Item of `type` whose `system.identifier` is
  * `identifier`, preferring the given line's packs — so a mechanic can reach a

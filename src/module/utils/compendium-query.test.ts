@@ -1,5 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { findItemUuidByIdentifier, pickLineEntry, queryItemIndex, resolvePack } from './compendium-query.ts';
+import {
+    findItemUuidByIdentifier,
+    type LinkCandidate,
+    pickLineEntry,
+    pickUniqueLinkCandidate,
+    queryItemIndex,
+    recoverOwnedItemLink,
+    resolvePack,
+} from './compendium-query.ts';
 
 /**
  * Coverage for the shared compendium pack-resolution helpers (#289) that #307's
@@ -234,5 +242,80 @@ describe('findItemUuidByIdentifier', () => {
     it('returns null when no Item carries the identifier', async () => {
         setPacks([pack({ id: 'wh40k-rpg.dh2-x', name: 'x', entries: [{ _id: 'a', name: 'Hatred', type: 'talent', uuid: 'u' }] })]);
         expect(await findItemUuidByIdentifier('talent', 'hatred', 'dh2')).toBeNull();
+    });
+});
+
+/**
+ * #484: an owned item stored with no compendium link is matched to its canonical
+ * deterministically — on the owner's line only, by identifier (else exact name),
+ * and only when exactly one candidate matches. A wrong link would graft another
+ * document's body onto the item, so every non-unique case returns null.
+ */
+describe('pickUniqueLinkCandidate', () => {
+    const candidate = (packId: string, uuid: string, name: string, identifier: string, type = 'talent'): LinkCandidate => ({
+        uuid,
+        packId,
+        type,
+        name,
+        identifier,
+    });
+    const dh2 = candidate('wh40k-rpg.dh2-core-items-talents', 'Compendium.dh2.sc', 'Superior Chirurgeon', 'superiorChirurgeon');
+    const dh1 = candidate('wh40k-rpg.dh1-core-items-talents', 'Compendium.dh1.sc', 'Superior Chirurgeon', 'superiorChirurgeon');
+    const query = { type: 'talent', identifier: 'superiorChirurgeon', name: 'Superior Chirurgeon', linePrefix: 'dh2' };
+
+    it("matches by identifier on the owner's line, ignoring the same talent on another line", () => {
+        expect(pickUniqueLinkCandidate([dh1, dh2], query)).toBe('Compendium.dh2.sc');
+    });
+
+    it("includes the owner line's homebrew packs", () => {
+        const hb = candidate('wh40k-rpg.hb-dh2-items-talents', 'Compendium.hb.sc', 'Superior Chirurgeon', 'superiorChirurgeon');
+        expect(pickUniqueLinkCandidate([dh1, hb], query)).toBe('Compendium.hb.sc');
+    });
+
+    it('returns null when two candidates on the line share the identifier', () => {
+        const dup = candidate('wh40k-rpg.dh2-beyond-items-talents', 'Compendium.dh2.dup', 'Superior Chirurgeon', 'superiorChirurgeon');
+        expect(pickUniqueLinkCandidate([dh2, dup], query)).toBeNull();
+    });
+
+    it('returns null when only another line holds the item', () => {
+        expect(pickUniqueLinkCandidate([dh1], query)).toBeNull();
+    });
+
+    it('never matches a candidate of another item type', () => {
+        expect(pickUniqueLinkCandidate([{ ...dh2, type: 'trait' }], query)).toBeNull();
+    });
+
+    it('falls back to an exact name match only when the item has no identifier', () => {
+        const renamed = candidate('wh40k-rpg.dh2-core-items-talents', 'Compendium.dh2.other', 'Superior Chirurgeon', 'somethingElse');
+        expect(pickUniqueLinkCandidate([renamed], { ...query, identifier: '' })).toBe('Compendium.dh2.other');
+        // With an identifier, a same-named candidate under another identifier is not a match.
+        expect(pickUniqueLinkCandidate([renamed], query)).toBeNull();
+    });
+
+    it('returns null for an exact name shared by two candidates, and for no identifier and no name', () => {
+        const twin = candidate('wh40k-rpg.dh2-beyond-items-talents', 'Compendium.dh2.twin', 'Superior Chirurgeon', 'x');
+        expect(pickUniqueLinkCandidate([dh2, twin], { ...query, identifier: '' })).toBeNull();
+        expect(pickUniqueLinkCandidate([dh2], { ...query, identifier: '', name: '' })).toBeNull();
+    });
+});
+
+describe('recoverOwnedItemLink', () => {
+    it("loads only the owner line's (and its homebrew) indexes and returns the unique match", async () => {
+        const dh1Pack = pack({
+            id: 'wh40k-rpg.dh1-core-items-talents',
+            name: 'dh1-core-items-talents',
+            entries: [{ _id: 'a', name: 'Superior Chirurgeon', type: 'talent', uuid: 'Compendium.dh1.a', system: { identifier: 'superiorChirurgeon' } }],
+        });
+        const dh2Pack = pack({
+            id: 'wh40k-rpg.dh2-core-items-talents',
+            name: 'dh2-core-items-talents',
+            entries: [{ _id: 'b', name: 'Superior Chirurgeon', type: 'talent', uuid: 'Compendium.dh2.b', system: { identifier: 'superiorChirurgeon' } }],
+        });
+        setPacks([dh1Pack, dh2Pack]);
+        await expect(recoverOwnedItemLink({ type: 'talent', identifier: 'superiorChirurgeon', name: 'Superior Chirurgeon', linePrefix: 'dh2' })).resolves.toBe(
+            'Compendium.dh2.b',
+        );
+        expect(dh1Pack.getIndex).not.toHaveBeenCalled();
+        expect(dh2Pack.getIndex).toHaveBeenCalledWith({ fields: ['system.identifier'] });
     });
 });

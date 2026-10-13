@@ -357,6 +357,27 @@ describe('schema initials defer to the canonical body', () => {
         });
     });
 
+    /**
+     * #484 reverse staleness: a linked talent stored before its canonical gained
+     * `modifiers.skills.medicae = 20` carries the schema's EMPTY modifiers block.
+     * Empty maps merge (they hold no key to win) and zeroed/empty-array leaves are
+     * schema initials, so the stale block cannot shadow the canonical +20.
+     */
+    it('a stale empty modifiers block does not shadow the canonical modifiers (#484)', () => {
+        const emptyModifiers = {
+            characteristics: {},
+            skills: {},
+            combat: { attack: 0, damage: 0, penetration: 0, defense: 0, initiative: 0, speed: 0 },
+            resources: { wounds: 0, fate: 0, insanity: 0, corruption: 0 },
+            other: [],
+            situational: { characteristics: [], skills: [], combat: [] },
+        };
+        const canonical = { identifier: 'superiorChirurgeon', modifiers: { ...structuredClone(emptyModifiers), skills: { medicae: 20 } } };
+        const persisted = { identifier: 'superiorChirurgeon', modifiers: structuredClone(emptyModifiers) };
+        const merged = buildHydratedSystem(canonical, persisted, { identifier: '', modifiers: structuredClone(emptyModifiers) });
+        expect(merged['modifiers']).toEqual(canonical.modifiers);
+    });
+
     it('reads the defaults from the item type DataModel in the join', async () => {
         vi.stubGlobal('CONFIG', { Item: { dataModels: { armour: { cleanData: () => ({ armourPoints: { body: 0, head: 0 }, coverage: [] }) } } } });
         vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, type: 'armour', system: { armourPoints: { body: 4, head: 0 }, coverage: ['body'] } }));
@@ -403,5 +424,121 @@ describe('instance state is never deferred to canonical', () => {
             uses: { value: null, max: 3 },
             quantity: 1,
         });
+    });
+
+    it('a talent joined through a RECOVERED link still keeps its stored XP cost (#484)', async () => {
+        installPacks([indexPack('wh40k-rpg.dh2-core-items-talents', [indexEntry('Compendium.dh2.ic', 'Iron Cost', 'ironCost')])]);
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, type: 'talent', system: { identifier: 'ironCost', cost: 0, benefit: 'x' } }));
+        const item = { id: 't1', name: 'Iron Cost', img: null, type: 'talent', system: { identifier: 'ironCost', cost: 300 } };
+        const patches = await buildHydrationPatches({ type: 'dh2-character', items: { contents: [item] } });
+        expect(patches[0]).toMatchObject({ system: { cost: 300, benefit: 'x' }, compendiumSource: 'Compendium.dh2.ic' });
+        vi.unstubAllGlobals();
+    });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  #484 — owned items stored with NO compendium link                          */
+/* -------------------------------------------------------------------------- */
+
+interface IndexEntryStub {
+    _id: string;
+    name: string;
+    type: string;
+    uuid: string;
+    system: { identifier: string };
+}
+interface IndexPackStub {
+    metadata: { id: string; system: string };
+    documentName: string;
+    getIndex: () => Promise<IndexEntryStub[]>;
+}
+
+function indexEntry(uuid: string, name: string, identifier: string, type = 'talent'): IndexEntryStub {
+    return { _id: uuid, name, type, uuid, system: { identifier } };
+}
+function indexPack(id: string, entries: IndexEntryStub[]): IndexPackStub {
+    return { metadata: { id, system: 'wh40k-rpg' }, documentName: 'Item', getIndex: vi.fn().mockResolvedValue(entries) };
+}
+/** `game.packs` as `queryItemIndex` reads it, plus the system debug channel; returns the `game.wh40k.log` spy. */
+function installPacks(packs: IndexPackStub[]): ReturnType<typeof vi.fn> {
+    const log = vi.fn();
+    vi.stubGlobal('game', { packs: { filter: (predicate: (pack: IndexPackStub) => boolean) => packs.filter(predicate) }, wh40k: { log } });
+    return log;
+}
+
+/**
+ * The live shape behind #484: a Superior Chirurgeon owned before compendium links
+ * were recorded has no `_stats.compendiumSource`, so the join never enriched it and
+ * the +20 Medicae authored on the canonical never reached the actor. The join now
+ * recovers the canonical from the OWNER's line packs and records the link.
+ */
+describe('buildHydrationPatches — recovers the link of an unlinked owned item (#484)', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        vi.restoreAllMocks();
+    });
+
+    const canonicalSc = (identifier: string): { img: null; type: string; system: { identifier: string; modifiers: { skills: Record<string, number> } } } => ({
+        img: null,
+        type: 'talent',
+        system: { identifier, modifiers: { skills: { medicae: 20 } } },
+    });
+
+    it("joins the unique match on the owner's line and records the recovered link", async () => {
+        installPacks([
+            indexPack('wh40k-rpg.dh1-core-items-talents', [indexEntry('Compendium.dh1.sc', 'Superior Chirurgeon', 'scRecover')]),
+            indexPack('wh40k-rpg.dh2-core-items-talents', [indexEntry('Compendium.dh2.sc', 'Superior Chirurgeon', 'scRecover')]),
+        ]);
+        const fromUuidSpy = vi.fn().mockResolvedValue(canonicalSc('scRecover'));
+        vi.stubGlobal('fromUuid', fromUuidSpy);
+        const item = { id: 't1', name: 'Superior Chirurgeon', img: null, type: 'talent', system: { identifier: 'scRecover' } };
+        const patches = await buildHydrationPatches({ type: 'dh2-character', items: { contents: [item] } });
+        expect(fromUuidSpy).toHaveBeenCalledWith('Compendium.dh2.sc');
+        expect(patches).toEqual([
+            { _id: 't1', system: { identifier: 'scRecover', modifiers: { skills: { medicae: 20 } } }, compendiumSource: 'Compendium.dh2.sc' },
+        ]);
+    });
+
+    it('falls back to an exact name match when the item has no identifier', async () => {
+        installPacks([indexPack('wh40k-rpg.dh2-core-items-talents', [indexEntry('Compendium.dh2.byName', 'Superior Chirurgeon (by name)', 'whatever')])]);
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue(canonicalSc('whatever')));
+        const item = { id: 't1', name: 'Superior Chirurgeon (by name)', img: null, type: 'talent', system: { identifier: '' } };
+        const patches = await buildHydrationPatches({ type: 'dh2-character', items: { contents: [item] } });
+        expect(patches[0]).toMatchObject({ compendiumSource: 'Compendium.dh2.byName', system: { modifiers: { skills: { medicae: 20 } } } });
+    });
+
+    it('leaves an ambiguous item untouched — never guesses — and says so on the debug channel', async () => {
+        const log = installPacks([
+            indexPack('wh40k-rpg.dh2-core-items-talents', [indexEntry('Compendium.dh2.a', 'Superior Chirurgeon', 'scAmbiguous')]),
+            indexPack('wh40k-rpg.dh2-beyond-items-talents', [indexEntry('Compendium.dh2.b', 'Superior Chirurgeon', 'scAmbiguous')]),
+        ]);
+        const fromUuidSpy = vi.fn();
+        vi.stubGlobal('fromUuid', fromUuidSpy);
+        const item = { id: 't1', name: 'Superior Chirurgeon', img: null, type: 'talent', system: { identifier: 'scAmbiguous' } };
+        await expect(buildHydrationPatches({ type: 'dh2-character', items: { contents: [item] } })).resolves.toEqual([]);
+        expect(fromUuidSpy).not.toHaveBeenCalled();
+        expect(log).toHaveBeenCalledWith(expect.stringContaining('no unique dh2 match'));
+    });
+
+    it("does not reach into another line's packs", async () => {
+        installPacks([indexPack('wh40k-rpg.dh1-core-items-talents', [indexEntry('Compendium.dh1.sc', 'Superior Chirurgeon', 'scOtherLine')])]);
+        const fromUuidSpy = vi.fn();
+        vi.stubGlobal('fromUuid', fromUuidSpy);
+        const item = { id: 't1', name: 'Superior Chirurgeon', img: null, type: 'talent', system: { identifier: 'scOtherLine' } };
+        await expect(buildHydrationPatches({ type: 'dh2-character', items: { contents: [item] } })).resolves.toEqual([]);
+        expect(fromUuidSpy).not.toHaveBeenCalled();
+    });
+
+    it('commits the recovered link into _stats without replacing the other document stats', async () => {
+        installPacks([indexPack('wh40k-rpg.dh2-core-items-talents', [indexEntry('Compendium.dh2.commit', 'Superior Chirurgeon', 'scCommit')])]);
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue(canonicalSc('scCommit')));
+        const updateSource = vi.fn();
+        const item = { id: 't1', name: 'Superior Chirurgeon', img: null, type: 'talent', system: { identifier: 'scCommit' }, updateSource };
+        const actor = { type: 'dh2-character', items: { contents: [item] }, reset: vi.fn() };
+        await expect(hydrateActorInMemory(actor)).resolves.toBe(1);
+        expect(updateSource).toHaveBeenCalledWith({ system: { identifier: 'scCommit', modifiers: { skills: { medicae: 20 } } } }, { recursive: false });
+        // Recursive (no options): merges compendiumSource into the existing _stats.
+        expect(updateSource).toHaveBeenCalledWith({ _stats: { compendiumSource: 'Compendium.dh2.commit' } });
+        expect(actor.reset).toHaveBeenCalledOnce();
     });
 });
