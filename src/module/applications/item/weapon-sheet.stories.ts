@@ -59,6 +59,18 @@ export const NoAmmoLoaded: Story = {
     },
 };
 
+/** A weapon that deals no damage (#601) shows the book's dash in the damage tile, not a blank or a default 1d10. */
+export const NoDamageDash: Story = {
+    args: {
+        overrides: { fullDamageFormula: '—' },
+    },
+    play: async ({ canvasElement }) => {
+        const tile = canvasElement.querySelector('[data-action="rollDamage"] span.tw-font-display, .tw-font-display.tw-text-\\[1\\.4rem\\]');
+        await expect(tile?.textContent.trim()).toBe('—');
+        await expect(canvasElement.textContent).not.toContain('1d10+5');
+    },
+};
+
 export const RendersWeaponName: Story = {
     play: async ({ canvasElement }) => {
         const withinCanvas = within(canvasElement);
