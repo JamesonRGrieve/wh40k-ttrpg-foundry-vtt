@@ -105,6 +105,13 @@ export interface RequestedItem {
     renownRequired?: number | undefined;
     /** Refused outright when set — #390's undroppable/untradable flag. */
     bound?: boolean | undefined;
+    /**
+     * The line's bonus for taking a weapon modification as parts to fit
+     * personally (DH2 core p. 162, #136). Set by the caller only for a weapon
+     * modification on a line that prints the bonus — OW prints none, so the
+     * Logistics path never sees it.
+     */
+    modificationParts?: number | undefined;
 }
 
 /** The gate's verdict, before any dice are rolled. */
@@ -163,6 +170,7 @@ export function evaluateRequisition(
             ladder,
             availability: item.availability,
             ...(item.craftsmanship === undefined ? {} : { craftsmanship: item.craftsmanship }),
+            modificationParts: item.modificationParts,
         });
         if (result.kind === 'automatic') return { economy, allowed: true, automatic: true };
         if (result.kind === 'discretion') return { economy, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.Discretion' } };
@@ -235,7 +243,7 @@ export interface RequisitionOutcome {
  * @param {RequesterState} requester  Standing before the attempt.
  * @param {object} [roll]  Test result; required for a test economy.
  * @param {boolean} roll.success  Whether the test passed.
- * @param {number} roll.degreesOfFailure  DoF counted `plusOne` (a bare fail is 1), for the line's failure loss.
+ * @param {number} roll.degreesOfFailure  DoF as the roll engine counts it for the line (a bare fail is 1), for the line's failure loss.
  * @returns {RequisitionOutcome}  Transfer decision and post-attempt standing.
  */
 export function resolveRequisition(

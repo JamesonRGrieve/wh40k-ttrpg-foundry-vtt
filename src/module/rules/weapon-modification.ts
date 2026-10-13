@@ -50,6 +50,13 @@ export interface WeaponModificationRules {
     readonly removalSkill: ModificationSkill | null;
     /** The line's xenos-equipment step (shared with repair), or null. */
     readonly xenos: XenosRepairRules | null;
+    /**
+     * The requisition bonus for taking a modification as parts to fit
+     * personally, or null where the book prints none. DH2 core p. 162: "he
+     * gains a +30 bonus to the modification's Availability when making the
+     * requisition test to acquire it."
+     */
+    readonly partsRequisitionBonus: number | null;
 }
 
 /**

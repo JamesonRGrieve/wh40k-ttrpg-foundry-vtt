@@ -37,6 +37,8 @@ export const TRADE_ARMOURER_FITTING_RULES: WeaponModificationRules = {
     damagesWeaponAtDegreesOfFailure: null,
     removalSkill: null,
     xenos: null,
+    // DH1 / RT / OW print no requisition bonus for taking a modification as parts.
+    partsRequisitionBonus: null,
 };
 
 export abstract class BaseSystemConfig {

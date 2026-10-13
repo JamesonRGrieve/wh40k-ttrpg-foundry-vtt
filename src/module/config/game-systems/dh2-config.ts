@@ -74,6 +74,8 @@ export const DH2_WEAPON_MODIFICATION_RULES: WeaponModificationRules = {
     damagesWeaponAtDegreesOfFailure: 2,
     removalSkill: { skill: 'techUse', specialisation: null },
     xenos: DH2_XENOS_EQUIPMENT_RULES,
+    // p. 162 "Applying Personal Modifications": "+30 bonus to the modification's Availability" to requisition the parts.
+    partsRequisitionBonus: 30,
 };
 
 /**

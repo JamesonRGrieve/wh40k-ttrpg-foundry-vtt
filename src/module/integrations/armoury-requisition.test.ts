@@ -28,6 +28,16 @@ function entry(requested: RequisitionableItem, quantity = 1): ItemPilesTradeEntr
     return { type: 'item', quantity, item: requested };
 }
 
+type ResolveInput = Parameters<typeof resolveArmouryRequisition>[0];
+
+/**
+ * Resolve a trade on the DH2-shaped defaults most cases use — Gen 2 degrees and
+ * no parts bonus — so each test states only what it is about.
+ */
+function resolve(input: Omit<ResolveInput, 'degreesMethod' | 'partsRequisitionBonus'> & Partial<ResolveInput>): ReturnType<typeof resolveArmouryRequisition> {
+    return resolveArmouryRequisition({ degreesMethod: 'gen2', partsRequisitionBonus: null, ...input });
+}
+
 const SPEAKER = { scene: null, actor: null, token: null, alias: 'Acolyte' };
 const speaker = (): typeof SPEAKER => SPEAKER;
 
@@ -72,37 +82,47 @@ describe('readRequesterState', () => {
 
 describe('requestedItemFrom', () => {
     it('normalises the stored availability and keeps a known craftsmanship', () => {
-        expect(requestedItemFrom(item({ availability: 'very-rare', craftsmanship: 'best' }), 'influence')).toEqual({
+        expect(requestedItemFrom(item({ availability: 'very-rare', craftsmanship: 'best' }), 'influence', null)).toEqual({
             availability: 'veryRare',
             craftsmanship: 'best',
             bound: false,
             cost: undefined,
             renownRequired: undefined,
+            modificationParts: undefined,
         });
     });
 
     it('returns null for an availability the requisition test cannot price', () => {
-        expect(requestedItemFrom(item({ availability: 'uncommon' }), 'influence')).toBeNull();
+        expect(requestedItemFrom(item({ availability: 'uncommon' }), 'influence', null)).toBeNull();
     });
 
     it('drops an Astartes-grade craftsmanship the test table does not carry', () => {
-        expect(requestedItemFrom(item({ craftsmanship: 'master' }), 'influence')?.craftsmanship).toBeUndefined();
+        expect(requestedItemFrom(item({ craftsmanship: 'master' }), 'influence', null)?.craftsmanship).toBeUndefined();
     });
 
     it('prices a Deathwatch line in Requisition and gates it on the Renown rank minimum', () => {
-        const dw = requestedItemFrom(item({ renown: 'distinguished', cost: { dw: { requisition: 15 } } }), 'requisition-points');
+        const dw = requestedItemFrom(item({ renown: 'distinguished', cost: { dw: { requisition: 15 } } }), 'requisition-points', null);
         expect(dw?.cost).toBe(15);
         expect(dw?.renownRequired).toBe(40);
     });
 
     it('prices a Rogue Trader line in Profit Factor', () => {
-        expect(requestedItemFrom(item({ cost: { rt: { profitFactor: 3 } } }), 'profit-factor')?.cost).toBe(3);
+        expect(requestedItemFrom(item({ cost: { rt: { profitFactor: 3 } } }), 'profit-factor', null)?.cost).toBe(3);
+    });
+
+    it('takes a weapon modification as parts, with the line’s printed bonus (#136)', () => {
+        const parts = { ...item({}, 'Red-Dot Laser Sight'), type: 'weaponModification' };
+        expect(requestedItemFrom(parts, 'influence', 30)?.modificationParts).toBe(30);
+        // A line that prints no bonus (DH1 / RT / OW: null) adds no row.
+        expect(requestedItemFrom(parts, 'influence', null)?.modificationParts).toBeUndefined();
+        // Anything that is not a weapon modification is not parts.
+        expect(requestedItemFrom({ ...item(), type: 'weapon' }, 'influence', 30)?.modificationParts).toBeUndefined();
     });
 });
 
 describe('resolveArmouryRequisition', () => {
     it('grants a line whose Influence test passes, without touching standing', () => {
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'influence',
             ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 50 },
@@ -118,7 +138,7 @@ describe('resolveArmouryRequisition', () => {
 
     it('grants a rating the ladder prints "Automatic" without rolling', () => {
         const rollD100 = vi.fn(() => 100);
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'influence',
             ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 5 },
@@ -132,7 +152,7 @@ describe('resolveArmouryRequisition', () => {
     });
 
     it('DH2: denies a failed test and drops Influence by the DoF beyond Fellowship bonus (core p. 269)', () => {
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'influence',
             ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 40, fellowshipBonus: 3 },
@@ -146,8 +166,52 @@ describe('resolveArmouryRequisition', () => {
         expect(standingUpdate(outcome)).toEqual({ 'system.influence': 35 });
     });
 
+    it('counts degrees with the line’s own method: Gen 1 (DH1) full tens, Gen 2 (DH2) tens digits (#496)', () => {
+        const fail = (degreesMethod: 'gen1' | 'gen2'): number | undefined =>
+            resolve({
+                economy: 'influence',
+                ladder: DH2_ACQUISITION_LADDER,
+                requester: { rating: 35 },
+                // Rare −20 → target 15; a 24 misses by 9 points but crosses one tens digit.
+                entries: [entry(item({ availability: 'rare' }))],
+                infiniteStock: true,
+                rollD100: () => 24,
+                degreesMethod,
+            }).attempts[0]?.dof;
+        expect(fail('gen1')).toBe(1);
+        expect(fail('gen2')).toBe(2);
+        const pass = (degreesMethod: 'gen1' | 'gen2'): number | undefined =>
+            resolve({
+                economy: 'influence',
+                ladder: DH2_ACQUISITION_LADDER,
+                requester: { rating: 41 },
+                // target 21; a 19 succeeds by 2 points but crosses one tens digit.
+                entries: [entry(item({ availability: 'rare' }))],
+                infiniteStock: true,
+                rollD100: () => 19,
+                degreesMethod,
+            }).attempts[0]?.dos;
+        expect(pass('gen1')).toBe(1);
+        expect(pass('gen2')).toBe(2);
+    });
+
+    it('DH2: weapon-modification parts take +30, printed as their own row (core p. 162, #136)', () => {
+        const outcome = resolve({
+            economy: 'influence',
+            ladder: DH2_ACQUISITION_LADDER,
+            requester: { rating: 40 },
+            entries: [entry({ ...item({ availability: 'rare' }, 'Red-Dot Laser Sight'), type: 'weaponModification' })],
+            infiniteStock: true,
+            rollD100: () => 45,
+            partsRequisitionBonus: 30,
+        });
+        // 40 − 20 (Rare) + 30 (parts) = 50.
+        expect(outcome.attempts[0]).toMatchObject({ outcome: 'granted', target: 50 });
+        expect(outcome.attempts[0]?.breakdown).toContainEqual({ source: 'modificationParts', value: 30 });
+    });
+
     it('OW: a failed Logistics request costs no Logistics Rating, however badly it fails (#496)', () => {
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'logistics',
             ladder: OW_ACQUISITION_LADDER,
             requester: readRequesterState({ logisticsRating: 30 }, 'logistics'),
@@ -165,7 +229,7 @@ describe('resolveArmouryRequisition', () => {
             logisticsRating: 30,
             logisticsFront: { troopCount: 'regiments', timeInFront: 'months6to12', frontActive: 'years1to5', warCondition: 'nearVictorious' },
         };
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'logistics',
             ladder: OW_ACQUISITION_LADDER,
             requester: readRequesterState(system, 'logistics'),
@@ -179,7 +243,7 @@ describe('resolveArmouryRequisition', () => {
 
     it('refuses a bound item without rolling', () => {
         const rollD100 = vi.fn(() => 1);
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'influence',
             ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 90 },
@@ -193,7 +257,7 @@ describe('resolveArmouryRequisition', () => {
     });
 
     it('refuses an unrated line by name', () => {
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'influence',
             ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 90 },
@@ -205,7 +269,7 @@ describe('resolveArmouryRequisition', () => {
     });
 
     it('refuses more than a finite armoury holds', () => {
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'influence',
             ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 90 },
@@ -217,7 +281,7 @@ describe('resolveArmouryRequisition', () => {
     });
 
     it('spends a Deathwatch Requisition pool line by line and stops at the first refusal', () => {
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'requisition-points',
             ladder: null,
             requester: { rating: 0, pool: 20, renown: 10 },
@@ -232,7 +296,7 @@ describe('resolveArmouryRequisition', () => {
     });
 
     it('ignores currency/attribute lines of the trade', () => {
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'influence',
             ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 50 },
@@ -265,7 +329,7 @@ function stubI18n(): void {
 describe('buildArmouryCardContext — roll transparency', () => {
     it('prints the rating as the base and one hoverable provenance row per modifier', () => {
         stubI18n();
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'influence',
             ladder: DH2_ACQUISITION_LADDER,
             requester: { rating: 40 },
@@ -289,7 +353,7 @@ describe('buildArmouryCardContext — roll transparency', () => {
 
     it('OW: prints the same Table 6-2 / 6-6 provenance rows as the Logistics Test card (#496)', () => {
         stubI18n();
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'logistics',
             ladder: OW_ACQUISITION_LADDER,
             requester: readRequesterState({ logisticsRating: 40, munitorum: true }, 'logistics'),
@@ -305,9 +369,29 @@ describe('buildArmouryCardContext — roll transparency', () => {
         expect(attempt?.target).toBe(0);
     });
 
+    it('names the weapon-modification parts bonus as its own hoverable row (#136)', () => {
+        stubI18n();
+        const outcome = resolve({
+            economy: 'influence',
+            ladder: DH2_ACQUISITION_LADDER,
+            requester: { rating: 40 },
+            entries: [entry({ ...item({ availability: 'rare' }, 'Red-Dot Laser Sight'), type: 'weaponModification' })],
+            infiniteStock: true,
+            rollD100: () => 45,
+            partsRequisitionBonus: 30,
+        });
+        const rows = buildArmouryCardContext(outcome, 'dh2').attempts.at(0)?.modifierSources ?? [];
+        const parts = rows.find((r) => r.label === 'WH40K.Requisition.Source.ModificationParts');
+        expect(parts?.value).toBe(30);
+        expect(JSON.parse(parts?.tooltipData ?? '{}')).toEqual({
+            title: 'WH40K.Requisition.Source.ModificationParts',
+            sources: [{ name: 'WH40K.Requisition.Source.ModificationParts', value: 30 }],
+        });
+    });
+
     it('reports a refusal through the langpack, never hard-coded English', () => {
         stubI18n();
-        const outcome = resolveArmouryRequisition({
+        const outcome = resolve({
             economy: 'none',
             ladder: null,
             requester: { rating: 0 },
@@ -364,5 +448,16 @@ describe('gateArmouryTrade — the Item Piles hook', () => {
             expect(create).toHaveBeenCalledTimes(1);
         });
         expect(buyer.update).not.toHaveBeenCalled();
+    });
+
+    it('reads the buyer line’s parts bonus: a DH2 weapon modification passes at +30 (#136)', () => {
+        stubFoundry(25);
+        const parts = { ...item({ availability: 'rare' }, 'Red-Dot Laser Sight'), type: 'weaponModification' };
+        // 20 Influence − 20 (Rare) + 30 (parts) = 30: a 25 passes, where the bare item (target 0) would fail.
+        const dh2 = { system: { gameSystem: 'dh2', influence: 20 }, update: vi.fn().mockResolvedValue({}) };
+        expect(gateArmouryTrade(ARMOURY, dh2, { buyerReceive: [entry(parts)] }, 'u1', speaker)).toBeUndefined();
+        // DH1 prints no parts bonus: 20 − 10 (DH1 Rare) = 10, so the same 25 fails.
+        const dh1 = { system: { gameSystem: 'dh1', influence: 20 }, update: vi.fn().mockResolvedValue({}) };
+        expect(gateArmouryTrade(ARMOURY, dh1, { buyerReceive: [entry(parts)] }, 'u1', speaker)).toBe(false);
     });
 });

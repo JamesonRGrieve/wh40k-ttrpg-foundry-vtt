@@ -26,10 +26,11 @@
  */
 
 import { logisticsRows } from '../applications/prompts/logistics-test-rows.ts';
-import { acquisitionLadderFor } from '../config/game-systems/index.ts';
+import { acquisitionLadderFor, weaponModificationRulesFor } from '../config/game-systems/index.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
-import { degreesOfFailure, degreesOfSuccess, isD100Success } from '../rules/_dice.ts';
+import { getDegreeForMode, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
+import { isD100Success } from '../rules/_dice.ts';
 import {
     type AcquisitionLadder,
     type AvailabilityKey,
@@ -60,6 +61,8 @@ export interface ItemPilesTradePrices {
 /** The physical-item fields the requisition reads off a merchant line. */
 export interface RequisitionableItem {
     name: string;
+    /** The Item type; a `weaponModification` is requisitioned as parts (#136). */
+    type?: string | undefined;
     system: {
         availability?: string | undefined;
         craftsmanship?: string | undefined;
@@ -130,7 +133,7 @@ export function readRequesterState(system: RequisitionerSystem, economy: Requisi
  * The item as the rail sees it, or `null` when its availability is not a rating
  * the requisition test knows (an `uncommon` / restricted line cannot be priced).
  */
-export function requestedItemFrom(item: RequisitionableItem, economy: RequisitionEconomy): RequestedItem | null {
+export function requestedItemFrom(item: RequisitionableItem, economy: RequisitionEconomy, partsRequisitionBonus: number | null): RequestedItem | null {
     const availability: AvailabilityKey | null = normaliseAvailability(item.system.availability);
     if (availability === null) return null;
     const craftsmanship = normaliseCraftsmanship(item.system.craftsmanship);
@@ -144,8 +147,14 @@ export function requestedItemFrom(item: RequisitionableItem, economy: Requisitio
         bound: item.system.bound === true,
         cost,
         renownRequired: isRenownRank(renownRank) ? RENOWN_THRESHOLDS[renownRank].min : undefined,
+        // A weapon modification drawn from the armoury lands in the inventory as parts for the
+        // personal-fitting flow (#136), so it takes the line's parts bonus where one is printed.
+        modificationParts: item.type === 'weaponModification' && partsRequisitionBonus !== null ? partsRequisitionBonus : undefined,
     };
 }
+
+/** A line's degrees-of-success counting method, as the roll engine resolves it. */
+type DegreesMethod = ReturnType<typeof resolveDegreesMethod>;
 
 /** The outcome of one requested line. */
 interface ArmouryAttempt {
@@ -187,6 +196,10 @@ export function resolveArmouryRequisition(input: {
     entries: readonly ItemPilesTradeEntry[];
     infiniteStock: boolean;
     rollD100: () => number;
+    /** The buyer's line's degrees method (`resolveDegreesMethod`): Gen 1 counts full tens of margin, Gen 2 the tens digits. */
+    degreesMethod: DegreesMethod;
+    /** The buyer's line's bonus for a weapon modification taken as parts (#136), or null where the book prints none. */
+    partsRequisitionBonus: number | null;
 }): ArmouryRequisitionOutcome {
     const { economy } = input;
     let standing: RequesterState = { ...input.requester };
@@ -196,7 +209,7 @@ export function resolveArmouryRequisition(input: {
     for (const entry of input.entries) {
         const item = entry.item;
         if (entry.type !== 'item' || item === undefined) continue;
-        const requested = requestedItemFrom(item, economy);
+        const requested = requestedItemFrom(item, economy, input.partsRequisitionBonus);
         if (requested === null) {
             attempts.push({ name: item.name, outcome: 'refused', refusal: { key: 'WH40K.Requisition.Refusal.Unrated', data: { item: item.name } } });
             allowed = false;
@@ -222,7 +235,9 @@ export function resolveArmouryRequisition(input: {
             const total = input.rollD100();
             const target = plan.gate.target ?? 0;
             const success = isD100Success(total, target);
-            rolled = { total, success, dos: success ? degreesOfSuccess(total, target) : 0, dof: success ? 0 : degreesOfFailure(total, target) };
+            // The line's own count, as the roll engine counts it: one, plus the method's further degrees.
+            const degrees = 1 + (success ? getDegreeForMode(input.degreesMethod, target, total) : getDegreeForMode(input.degreesMethod, total, target));
+            rolled = { total, success, dos: success ? degrees : 0, dof: success ? 0 : degrees };
         }
         const result = applyRequisition(plan, request, rolled === undefined ? undefined : { success: rolled.success, degreesOfFailure: rolled.dof });
         standing = { ...standing, rating: result.ratingAfter, pool: result.poolAfter };
@@ -314,6 +329,7 @@ function modifierLabel(modifier: RequisitionModifier, translate: Translate): str
     if (craftsmanship !== null) {
         return translate('WH40K.Requisition.Source.Craftsmanship', { rating: translate(CRAFTSMANSHIP_LABEL_KEYS[craftsmanship]) });
     }
+    if (modifier.source === 'modificationParts') return translate('WH40K.Requisition.Source.ModificationParts');
     return translate('WH40K.Requisition.Source.Other');
 }
 
@@ -449,6 +465,8 @@ export function gateArmouryTrade(
             rolls.push(roll);
             return roll.total;
         },
+        degreesMethod: resolveDegreesMethod(buyer.system.gameSystem),
+        partsRequisitionBonus: weaponModificationRulesFor(buyer.system.gameSystem)?.partsRequisitionBonus ?? null,
     });
     if (outcome.attempts.length === 0) return undefined;
     void reportArmouryRequisition(buyer, outcome, rolls, userId, speaker);

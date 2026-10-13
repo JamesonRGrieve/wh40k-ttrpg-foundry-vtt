@@ -19,6 +19,13 @@ export interface RequisitionTestInput {
     ladder: AcquisitionLadder;
     availability: AvailabilityKey;
     craftsmanship?: CraftsmanshipKey;
+    /**
+     * The line's bonus for requisitioning a weapon modification as parts to fit
+     * personally (DH2 core p. 162: "+30 bonus to the modification's
+     * Availability"); absent when the request is not for parts or the line
+     * prints no such bonus.
+     */
+    modificationParts?: number | undefined;
     /** GM-supplied free-form modifier (e.g. Peer +10, faction discount, etc.). */
     extra?: number;
 }
@@ -28,7 +35,7 @@ export interface RequisitionTestInput {
  * card localizes the source (and the rating's own economy name) at render time,
  * so this pure module carries no player-facing English.
  */
-type RequisitionModifierSource = 'rating' | 'availability' | 'craftsmanship' | 'other';
+type RequisitionModifierSource = 'rating' | 'availability' | 'craftsmanship' | 'modificationParts' | 'other';
 
 /** One provenance-bearing component of a requisition target. */
 export interface RequisitionModifier {
@@ -64,6 +71,9 @@ export function getRequisitionTestTarget(input: RequisitionTestInput): Requisiti
     const craftsmanship = input.ladder.craftsmanship;
     if (input.craftsmanship !== undefined && craftsmanship !== null) {
         breakdown.push({ source: 'craftsmanship', value: craftsmanship[input.craftsmanship], detail: input.craftsmanship });
+    }
+    if (input.modificationParts !== undefined) {
+        breakdown.push({ source: 'modificationParts', value: input.modificationParts });
     }
     if (input.extra !== undefined && input.extra !== 0) {
         breakdown.push({ source: 'other', value: input.extra });

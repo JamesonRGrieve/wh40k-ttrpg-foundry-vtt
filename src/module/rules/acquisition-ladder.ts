@@ -77,8 +77,10 @@ export function availabilityTerm(ladder: AcquisitionLadder, availability: Availa
 
 /**
  * The rating left after a FAILED acquisition test, under the line's printed
- * failure loss. `degreesOfFailure` is the `plusOne` count (a bare fail is 1),
- * which is what the requisition rail rolls with; a `fullTens` rule converts.
+ * failure loss. `degreesOfFailure` is the roll engine's count for the line (a
+ * bare fail is 1, plus the line's Gen 1 / Gen 2 further degrees), which is what
+ * the requisition rail rolls with; a `fullTens` rule, which prints no leading
+ * degree, converts by dropping it.
  * The rating never falls below 0.
  */
 export function ratingAfterFailure(loss: AcquisitionFailureLoss | null, rating: number, degreesOfFailure: number, fellowshipBonus: number): number {

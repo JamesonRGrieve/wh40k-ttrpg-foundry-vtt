@@ -4740,6 +4740,7 @@ export type I18nKey =
     | 'WH40K.Requisition.Roll'
     | 'WH40K.Requisition.Source.Availability'
     | 'WH40K.Requisition.Source.Craftsmanship'
+    | 'WH40K.Requisition.Source.ModificationParts'
     | 'WH40K.Requisition.Source.Other'
     | 'WH40K.Reroll.Button'
     | 'WH40K.Reroll.ConfirmContent'

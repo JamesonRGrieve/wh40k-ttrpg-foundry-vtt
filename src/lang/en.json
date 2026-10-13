@@ -1536,6 +1536,7 @@
             "Source": {
                 "Availability": "Availability ({rating})",
                 "Craftsmanship": "Craftsmanship ({rating})",
+                "ModificationParts": "Modification parts, to fit personally",
                 "Other": "Other"
             },
             "Refusal": {

@@ -24,6 +24,7 @@ import {
     readRequesterState,
     resolveArmouryRequisition,
 } from '../../module/integrations/armoury-requisition';
+import { resolveDegreesMethod } from '../../module/rolls/roll-helpers';
 import type { AcquisitionLadder } from '../../module/rules/acquisition-ladder';
 import type { RequisitionEconomy } from '../../module/rules/requisition-rail';
 import type { I18nKey } from '../../module/types/i18n-keys';
@@ -56,6 +57,7 @@ function card(opts: {
     rating?: number;
     pool?: number;
     fellowshipBonus?: number;
+    partsRequisitionBonus?: number;
     entries: ItemPilesTradeEntry[];
     roll: number;
     gameSystem: SystemId;
@@ -71,6 +73,9 @@ function card(opts: {
         entries: opts.entries,
         infiniteStock: true,
         rollD100: () => opts.roll,
+        // The card's line decides how degrees are counted (Gen 1: DH1 / DW / RT).
+        degreesMethod: resolveDegreesMethod(opts.gameSystem),
+        partsRequisitionBonus: opts.partsRequisitionBonus ?? null,
     });
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
@@ -105,6 +110,28 @@ export const DeniedWithInfluenceLoss: Story = {
         const scope = within(canvasElement);
         await expect(scope.getByText('Requisition Denied')).toBeTruthy();
         await expect(scope.getByText('Influence falls from 40 to 34.')).toBeTruthy();
+    },
+};
+
+export const ModificationParts: Story = {
+    name: 'Granted — DH2 weapon-modification parts (+30, p. 162)',
+    render: () =>
+        card({
+            economy: 'influence',
+            rating: 40,
+            partsRequisitionBonus: 30,
+            entries: [
+                { type: 'item', quantity: 1, item: { name: 'Red-Dot Laser Sight', type: 'weaponModification', system: { availability: 'rare', quantity: 1 } } },
+            ],
+            roll: 45,
+            gameSystem: 'dh2',
+        }),
+    play: async ({ canvasElement }) => {
+        const scope = within(canvasElement);
+        await expect(scope.getByText('Requisition Granted')).toBeTruthy();
+        await expect(scope.getByText('Modification parts, to fit personally')).toBeTruthy();
+        // Availability (Rare) and the parts row, each hoverable.
+        await expect(canvasElement.querySelectorAll('[data-wh40k-tooltip="modifier"]').length).toBe(2);
     },
 };
 
